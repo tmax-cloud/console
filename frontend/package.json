@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "rm -rf ./public/dist/ && ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode development --watch --progress",
-    "build": "rm -rf ./public/dist && NODE_ENV=production ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=production",
+    "build": "rm -rf ./public/dist && cross-env NODE_ENV=production ts-node -O {\"\"\"module\"\"\":\"\"\"commonjs\"\"\"} ./node_modules/webpack/bin/webpack.js --mode=production",
     "coverage": "jest --coverage .",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --color .",
     "test": "jest",
@@ -54,6 +54,7 @@
     ]
   },
   "dependencies": {
+    "cross-env": "^5.0.5",
     "brace": "0.11.x",
     "classnames": "2.x",
     "core-js": "2.x",
