@@ -120,7 +120,8 @@ $color-bookmarker: #DDD;
 }
 
 .co-namespace-selector {
-  background-color: #292E34;
+  //background-color: #292E34;
+  background-color: #F4F6F9;
   color: $color-os-nav-title;
   display: flex;
   font-size: ($font-size-base + 1);
@@ -129,7 +130,7 @@ $color-bookmarker: #DDD;
   white-space: nowrap;
 
   @media (min-width: $grid-float-breakpoint) {
-    border-left: 1px solid $color-os-nav-item-seperator;
+    border-left: 1px solid #F4F6F9; //$color-os-nav-item-seperator;
     font-size: ($font-size-base + 3);
     height: $co-namespace-selector-desktop;
   }
@@ -139,6 +140,7 @@ $color-bookmarker: #DDD;
   }
 
   .dropdown__not-btn {
+    color: #787878;
     align-items: baseline;
     display: flex;
     padding: 2px 15px;

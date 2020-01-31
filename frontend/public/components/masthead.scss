@@ -1,6 +1,6 @@
 .co-masthead {
   align-items: center;
-  background-color: $color-pf-black;
+  background-color: #31475E;
   color: $color-os-nav-title;
   display: flex;
   height: $masthead-height-mobile;
@@ -25,7 +25,7 @@
     display: flex;
     height: 100%;
     @media (min-width: $grid-float-breakpoint) {
-      margin-left: 20px;
+      //margin-left: 20px;
       margin-right: 10px;
     }
     img {
