@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+export OPENSHIFT_API=https://192.168.6.36:8443
+
 ./bin/bridge \
     --base-address=http://localhost:9000 \
     --ca-file=examples/ca.crt \
