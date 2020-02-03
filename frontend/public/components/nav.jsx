@@ -222,6 +222,7 @@ const NavSection = connect(navSectionStateToProps)(
       const maxHeight = !this.state.isOpen ? 0 : 29 * _.get(this.props.children, 'length', 1);
 
       const iconClassName = icon && `${icon} navigation-container__section__title__icon ${isActive ? 'navigation-container__section__title__icon--active' : ''}`;
+      const secionTitleClassName = `navigation-container__section__title ${isActive ? 'navigation-container__section__title--active' : ''}`;
       const sectionClassName = isActive && href ? 'navigation-container__section navigation-container__section--active' : 'navigation-container__section';
 
       const Children = React.Children.map(children, c => {
@@ -239,7 +240,7 @@ const NavSection = connect(navSectionStateToProps)(
       });
 
       return <div className={classNames(sectionClassName, klass)}>
-        <div id={id} className="navigation-container__section__title" onClick={this.toggle}>
+        <div id={id} className={secionTitleClassName} onClick={this.toggle}>
           {icon && <i className={iconClassName} aria-hidden="true"></i>}
           {img && <img src={isActive && activeImg ? activeImg : img} />}
           { !href

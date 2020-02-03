@@ -46,6 +46,7 @@ $active-border: 3px;
 }
 
 .navigation-container {
+  border-right: 1px solid #BCBDBE;
   flex: 1 1 auto;
   overflow-x: hidden;
   overflow-y: auto;
@@ -63,7 +64,7 @@ $active-border: 3px;
 .navigation-container__section__separator {
   // border-bottom: 1px solid $color-os-nav-item-seperator;
   border-bottom: 1px solid #bcbdbe;
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
 .navigation-container__section--active {
@@ -89,6 +90,7 @@ $active-border: 3px;
   cursor: pointer;
   display: flex;
   font-size: 15px;
+  font-weight: bold;
   line-height: 20px;
   padding: 20px 0px 20px $section-padding-left;
   width: 100%;
@@ -131,6 +133,10 @@ $active-border: 3px;
   }
 }
 
+.navigation-container__section__title--active {
+  color: #1566c0;
+}
+
 .navigation-container__section__title__icon--active {
-  color: $color-os-nav-border-left-active;
+  color: #1566c0;
 }
