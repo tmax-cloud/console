@@ -203,3 +203,45 @@ tags-input .autocomplete .suggestion-item em {
 .ReactVirtualized__Grid__innerScrollContainer {
   overflow: visible !important;
 }
+
+.btn {
+  border: 0px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #1E6CB9;
+  background-image: none;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #175B9E;
+  background-image: none;
+}
+
+.btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary .open .dropdown-toggle.btn-primary {
+  background-color: #0F4B86;
+  background-image: none;
+}
+
+
+.btn-default {
+  background-color: #E9E9E9;
+  background-image: none;
+  color: #4D5258;
+}
+
+.btn-default:hover {
+  background-color: #D0D0D0 ;
+  background-image: none;
+}
+
+.btn-default:focus, .btn-default:active, .btn-default.active, .btn-default .open .dropdown-toggle.btn-default {
+  background-color: #BBBBBB;
+  background-image: none;
+}
+
