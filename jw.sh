@@ -7,7 +7,7 @@ fi
 
 ./build.sh
 
-docker build -t 192.168.6.110:5000/hypercloud-ori:${TAG}
+docker build -t 192.168.6.110:5000/hypercloud-ori:${TAG} .
 
 echo "192.168.6.110:5000/hypercloud-ori:${TAG} Created"
 
