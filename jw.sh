@@ -10,6 +10,5 @@ git pull
 ./build.sh
 
 docker build -t 192.168.6.110:5000/hypercloud-ori:${TAG} .
-
+docker tag 192.168.6.110:5000/hypercloud-ori:${TAG} 192.168.6.110:5000/hypercloud-ori:latest
 echo "192.168.6.110:5000/hypercloud-ori:${TAG} Created"
-
