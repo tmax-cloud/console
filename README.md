@@ -32,9 +32,9 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 ## openshift oAuthClient 인증서 적용
 - ip주소와 사용할 port정보(default:9000)를 통해 인증서 요청 (to 서버관리자)
 - 두개의 파일 (console-client-secret, ca.crt) ./exaples 폴더에 복사
-
-### 인증 가이드
-## oAuthClient secret 발급 방법
+---
+## 인증 가이드
+### oAuthClient secret 발급 방법
 - console-oauth-client.yaml 수정
     - client name → console-oauth-client-${NAME}
     - redirectURL → 개발IP
@@ -43,7 +43,7 @@ oc process -f examples/console-oauth-clinet.yaml | oc apply -f -
 oc get oauthclient console-oauth-client-${NAME} -o jsonpath='{.secret}' > examples/USER/console-client-secret
 ```
 
-## CA 인증서 발급
+### CA 인증서 발급
 ```
 oc get secrets -n default --field-selector type=kubernetes.io/service-account-token -o json | \
     jq '.items[0].data."service-ca.crt"' -r | python -m base64 -d > examples/ca.crt
