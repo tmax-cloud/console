@@ -1,8 +1,8 @@
 HyperCloud Console
 =========================
 **HyperCloud - Cluster Console 코드 프로젝트 입니다.**
-- openshift origin-web-console 코드 원본 [GIT](https://quay.io/repository/openshift/origin-console?tab=tags)
-- HyperCloud - Service Catalog, Application Console UI코드는 [다른 프로젝트](https://quay.io/repository/openshift/origin-console?tab=tags)에서 관리 됩니다.
+- openshift origin-web-console 코드 원본 [GIT](https://github.com/openshift/console/tree/release-3.11)
+- HyperCloud - Service Catalog, Application Console UI코드는 [다른 프로젝트](https://gitlab.ck:10080/pk3/HyperCloud-ogl)에서 관리 됩니다.
 - 메인 작업은 **dev** Branch에서 진행 됩니다.
 ## 개발 전 체크사항
 
