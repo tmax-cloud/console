@@ -1,8 +1,8 @@
 HyperCloud Console
 =========================
-HyperCloud - Service Catalog, Application Console UI 코드 프로젝트 입니다.
+**HyperCloud - Service Catalog, Application Console UI 코드 프로젝트 입니다.**
 - openshift origin-web-console 코드 원본 [링크](https://quay.io/repository/openshift/origin-console?tab=tags)
-- clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console 에 파일이 담기도록 합시다. (빌드시에 안돌아가는 스크립트들이 있음)
+- clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
 - 메인 작업은 **dev** Branch에서 진행 됩니다.
 ## 개발 전 체크사항
 
@@ -27,6 +27,8 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 ```
 ./examples/run-bridge.sh
 ```
+개발IP:port(default 9000)로 UI 접근 가능합니다.
+ 
  *oAuth 인증서 적용을 꼭 확인합시다.
 
 ## openshift oAuthClient 인증서 적용
@@ -34,7 +36,7 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 - 두개의 파일 (console-client-secret, ca.crt) ./exaples 폴더에 복사
 ---
 ## 인증 가이드
-### oAuthClient secret 발급 방법
+### oAuthClient secret 등록, 발급 방법
 - console-oauth-client.yaml 수정
     - client name → console-oauth-client-${NAME}
     - redirectURL → 개발IP
