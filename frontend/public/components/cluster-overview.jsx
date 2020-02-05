@@ -240,7 +240,7 @@ const ClusterOverviewPage_ = props => {
   const { OPENSHIFT: openshiftFlag, PROJECTS_AVAILABLE: projectsFlag } = props.flags;
   const fake = !flagPending(openshiftFlag) && !flagPending(projectsFlag) && openshiftFlag && !projectsFlag;
   const namespace = _.get(props, 'match.params.ns');
-  const title = namespace ? `Status of ${ namespace }` : 'Cluster Status JW TEST';
+  const title = namespace ? `Status of ${ namespace }` : 'Cluster Status';
 
   return <React.Fragment>
     <StartGuide dismissible={true} style={{margin: 15}} />
