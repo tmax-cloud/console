@@ -1,12 +1,13 @@
 HyperCloud Console
 =========================
 **HyperCloud - Cluster Console 코드 프로젝트 입니다.**
-- openshift origin-web-console 코드 원본 [링크](https://quay.io/repository/openshift/origin-console?tab=tags)
-- clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
+- openshift origin-web-console 코드 원본 [GIT](https://quay.io/repository/openshift/origin-console?tab=tags)
+- HyperCloud - Service Catalog, Application Console UI코드는 [다른 프로젝트](https://quay.io/repository/openshift/origin-console?tab=tags)에서 관리 됩니다.
 - 메인 작업은 **dev** Branch에서 진행 됩니다.
 ## 개발 전 체크사항
 
-UI : node.js >= 10.17 & yarn >= 1.3.2 & go >= 1.8 & python......
+- nodeJs >= 10.17 & yarn >= 1.3.2 & go >= 1.8 & python......
+- clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
 
 ## 빌드
 
