@@ -176,22 +176,22 @@ const GraphsPage = ({fake, limited, namespace, openshiftFlag}) => {
           <SoftwareDetails />
         </div>
       </div>
-      <div className="group">
+      {/* <div className="group">
         <div className="group__title">
           <h2 className="h3">Documentation</h2>
         </div>
         <div className="container-fluid group__body group__documentation">
           <DocumentationLinks />
         </div>
-      </div>
-      <div className="group">
+      </div> */}
+      {/* <div className="group">
         <div className="group__title">
           <h2 className="h3">Additional Support</h2>
         </div>
         <div className="container-fluid group__body group__additional-support">
           <AdditionalSupportLinks />
         </div>
-      </div>
+      </div> */}
     </div>
   </div>;
 
