@@ -45,10 +45,12 @@ body,
 
 
 .sidebar-toggle {
-  background-color: transparent;
+  //background-color: transparent;
+  background-color: #ec3854;
   border: 0;
-  margin: 4px 5px;
-  padding: 9px 10px;
+  //margin: 4px 5px;
+  //padding: 9px 10px;
+  padding: 13px 16px;
   position: fixed;
   z-index: $masthead-z-index;
   @media (min-width: $grid-float-breakpoint) {
