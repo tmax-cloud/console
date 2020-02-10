@@ -7,6 +7,10 @@ fi
 
 git pull
 
+git tag ${TAG}
+
+git push origin --tags
+
 ./build.sh
 
 docker build -t 192.168.6.110:5000/hypercloud-ori:${TAG} .
