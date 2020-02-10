@@ -3,7 +3,8 @@
   background-color: #31475E;
   color: $color-os-nav-title;
   display: flex;
-  height: $masthead-height-mobile;
+  //height: $masthead-height-mobile;
+  height: 40px;
   left: 0;
   position: fixed;
   right: 0;
@@ -12,7 +13,8 @@
     padding-left: 50px; // make space for .sidebar-toggle
   }
   @media(min-width: $grid-float-breakpoint) {
-    height: $masthead-height-desktop;
+    //height: $masthead-height-desktop;
+    height: 40px;
   }
   &__console-picker {
     margin-left: 10px;
@@ -34,7 +36,9 @@
   }
   &__logo-link {
     display: flex;
-    height: 100%;
+    //height: 100%;
+    width: 143px;
+    height: 40px;
   }
   &__user {
     display: none;

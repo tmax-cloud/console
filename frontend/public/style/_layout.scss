@@ -8,10 +8,12 @@ body,
 }
 
 #content {
-  padding-top: $masthead-height-mobile;
+  //padding-top: $masthead-height-mobile;
+  padding-top: 40px;
   @media (min-width: $grid-float-breakpoint) {
     padding-left: $sidebar-width;
-    padding-top: $masthead-height-desktop;
+    //padding-top: $masthead-height-desktop;
+    padding-top: 40px;
   }
 }
 
@@ -23,7 +25,8 @@ body,
   flex-direction: column;
   left: 0;
   position: fixed;
-  top: $masthead-height-mobile;
+  //top: $masthead-height-mobile;
+  top: 40px;
   width: $sidebar-width;
   z-index: $sidebar-z-index;
   @media (max-width: $grid-float-breakpoint-max) {
@@ -35,7 +38,8 @@ body,
     }
   }
   @media (min-width: $grid-float-breakpoint) {
-    top: $masthead-height-desktop;
+    //top: $masthead-height-desktop;
+    top: 40px;
   }
 }
 
