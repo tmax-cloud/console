@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export OPENSHIFT_API=https://192.168.6.36:8443
+export OPENSHIFT_API=https://192.168.8.54:8443
 
 ./bin/bridge \
     --base-address=http://localhost:9000 \
