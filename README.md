@@ -42,7 +42,7 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
     - client name → console-oauth-client-${NAME}
     - redirectURL → 개발IP
 ```
-oc process -f examples/console-oauth-clinet.yaml | oc apply -f -
+oc process -f examples/console-oauth-client.yaml | oc apply -f -
 oc get oauthclient console-oauth-client-${NAME} -o jsonpath='{.secret}' > examples/USER/console-client-secret
 ```
 
