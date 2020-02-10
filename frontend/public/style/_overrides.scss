@@ -210,6 +210,9 @@ tags-input .autocomplete .suggestion-item em {
   font-size: 13px;
   font-weight: normal;
   text-align: center;
+  &:active {
+    box-shadow: none;
+  }
 }
 
 .btn-primary {
@@ -226,6 +229,12 @@ tags-input .autocomplete .suggestion-item em {
 .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary .open .dropdown-toggle.btn-primary {
   background-color: #0F4B86;
   background-image: none;
+  border: 0px;
+}
+
+.btn-primary:active:hover, .btn-primary:active:focus, .btn-primary:active.focus, .btn-primary.active:hover, .btn-primary.active:focus, .btn-primary.active.focus, .btn-primary .open .dropdown-toggle.btn-primary:hover, .btn-primary .open .dropdown-toggle.btn-primary:focus, .btn-primary .open .dropdown-toggle.btn-primary.focus {
+  background-color: #0F4B86;
+  border: 0px;
 }
 
 
@@ -234,6 +243,8 @@ tags-input .autocomplete .suggestion-item em {
   background-image: none;
   color: #4D5258;
 }
+
+
 
 .btn-default:hover {
   background-color: #D0D0D0 ;
@@ -245,3 +256,7 @@ tags-input .autocomplete .suggestion-item em {
   background-image: none;
 }
 
+.btn-default:active:hover, .btn-default:active:focus, .btn-default:active.focus, .btn-default.active:hover, .btn-default.active:focus, .btn-default.active.focus, .btn-default .open .dropdown-toggle.btn-default:hover, .btn-default .open .dropdown-toggle.btn-default:focus, .btn-default .open .dropdown-toggle.btn-default.focus {
+  background-color: #BBBBBB;
+  border: 0px;
+}
