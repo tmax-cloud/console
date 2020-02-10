@@ -18,6 +18,8 @@
   }
   &__console-picker {
     margin-left: 10px;
+    top: 184px;
+    right: 15px;
     @media(max-width: $grid-float-breakpoint-max) {
       display: none;
     }
@@ -70,8 +72,10 @@
 }
 
 .contextselector-pf .bootstrap-select > .dropdown-toggle {
+  height: 40px;
   font-weight: 300;
-  padding-top: 19px;
+  //padding-top: 19px;
+  padding-top: 10px;
   width: 100%;
   &:focus {
     outline: 0 !important;
