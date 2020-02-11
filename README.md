@@ -5,11 +5,11 @@ HyperCloud Console
 - HyperCloud - Service Catalog, Application Console UI코드는 [다른 프로젝트](https://gitlab.ck:10080/pk3/HyperCloud-ogl)에서 관리 됩니다.
 - 메인 작업은 **dev** Branch에서 진행 됩니다.
 
-## 개발 전 체크사항
+### 개발 전 체크사항
 - nodeJs >= 10.17 & yarn >= 1.3.2 & go >= 1.8 & python......
 - clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
 
-## 빌드
+### 빌드
 
 ```
 ./build.sh
@@ -18,7 +18,7 @@ HyperCloud Console
 build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파일들로 이미징 작업을 하게 됩니다.
 
 
-## 개발 확인
+### 개발 확인
 - openshift oAuthClient 인증서 적용
     - ip주소와 사용할 port정보(default:9000)를 통해 인증서 요청 (to 서버관리자)
     - 두개의 파일 (console-client-secret, ca.crt) ./exaples 폴더에 복사
@@ -34,7 +34,7 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 개발IP:port(default 9000)로 UI 접근 가능합니다.
  
 ---
-## 서버 인증 가이드
+### 서버 인증 가이드
 - oAuthClient secret 등록, 발급 방법
     - console-oauth-client.yaml 수정
         - client name → console-oauth-client-${NAME}
@@ -52,7 +52,7 @@ oc get secrets -n default --field-selector type=kubernetes.io/service-account-to
 # Note: use "openssl base64" because the "base64" tool is different between mac and linux
 ```
 
-## 추가 TMI
+### 추가 TMI
 - linux에서 build하고 싶을 때, ./frontend/package.json의 scripts.build 수정 (\"\"\" -> \") 
 - 서버 개발 체크사항
     - [node.js](https://nodejs.org/) >= 10.17 & [yarn](https://yarnpkg.com/en/docs/install) >= 1.3.2 & python
