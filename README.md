@@ -33,7 +33,8 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 ```
 개발IP:port(default 9000)로 UI 접근 가능합니다.
  
-=========================
+---
+***
 ### 서버 인증 가이드
 - oAuthClient secret 등록, 발급 방법
     - console-oauth-client.yaml 수정
