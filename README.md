@@ -19,6 +19,9 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 
 
 ## 개발 확인
+- openshift oAuthClient 인증서 적용
+    - ip주소와 사용할 port정보(default:9000)를 통해 인증서 요청 (to 서버관리자)
+    - 두개의 파일 (console-client-secret, ca.crt) ./exaples 폴더에 복사
 - ./examples/config.yaml 수정
     - 6행 개발IP로 수정
 - ./examples/run-bridge.sh 수정
@@ -30,23 +33,19 @@ build 후, ./frontend/public/dist 폴더에 파일들이 생성되며, 이 파�
 ```
 개발IP:port(default 9000)로 UI 접근 가능합니다.
  
- *oAuth 인증서 적용을 꼭 확인합시다.
-
-## openshift oAuthClient 인증서 적용
-- ip주소와 사용할 port정보(default:9000)를 통해 인증서 요청 (to 서버관리자)
-- 두개의 파일 (console-client-secret, ca.crt) ./exaples 폴더에 복사
 ---
-## 인증 가이드
-### oAuthClient secret 등록, 발급 방법
-- console-oauth-client.yaml 수정
-    - client name → console-oauth-client-${NAME}
-    - redirectURL → 개발IP
-```
-oc process -f examples/console-oauth-client.yaml | oc apply -f -
-oc get oauthclient console-oauth-client-${NAME} -o jsonpath='{.secret}' > examples/USER/console-client-secret
-```
+## 서버 인증 가이드
+- oAuthClient secret 등록, 발급 방법
+    - console-oauth-client.yaml 수정
+        - client name → console-oauth-client-${NAME}
+        - redirectURL → 개발IP
+    ```
+    oc process -f examples/console-oauth-client.yaml | oc apply -f -
+    oc get oauthclient console-oauth-client-${NAME} -o jsonpath='{.secret}' > examples/USER/console-client-secret
+    ```
 
-### CA 인증서 발급
+- CA 인증서 발급
+    - user dependency가 없으므로 한 파일로 여럿 사용 가능 
 ```
 oc get secrets -n default --field-selector type=kubernetes.io/service-account-token -o json | \
     jq '.items[0].data."service-ca.crt"' -r | python -m base64 -d > examples/ca.crt
