@@ -1,5 +1,6 @@
 const getProductName = () => {
-  switch ((window as any).SERVER_FLAGS.branding) {
+  return 'HyperCloud';
+  /*switch ((window as any).SERVER_FLAGS.branding) {
     case 'ocp':
       return 'OpenShift Container Platform';
     case 'online':
@@ -10,6 +11,6 @@ const getProductName = () => {
       return 'Azure Red Hat OpenShift';
     default:
       return 'OKD';
-  }
+  }*/
 };
 export const productName = getProductName();
