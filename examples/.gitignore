@@ -1,5 +1,3 @@
 ca.crt
 console-client-secret
 config.local.yaml
-config.yaml
-run-bridge.sh
