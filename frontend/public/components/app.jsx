@@ -8,6 +8,7 @@ import * as PropTypes from 'prop-types';
 
 import store from '../redux';
 import { productName } from '../branding';
+import LoginComponent from './login';
 import { ALL_NAMESPACES_KEY } from '../const';
 import { connectToFlags, featureActions, flagPending, FLAGS } from '../features';
 import { detectMonitoringURLs } from '../monitoring';
@@ -43,7 +44,7 @@ const RedirectComponent = props => {
 
 // Ensure a *const* function wrapper for each namespaced Component so that react router doesn't recreate them
 const Memoized = new Map();
-function NamespaceFromURL (Component) {
+function NamespaceFromURL(Component) {
   let C = Memoized.get(Component);
   if (!C) {
     C = function NamespaceInjector(props) {
@@ -73,7 +74,7 @@ const NamespaceRedirect = () => {
   return <Redirect to={to} />;
 };
 
-const ActiveNamespaceRedirect = ({location}) => {
+const ActiveNamespaceRedirect = ({ location }) => {
   const activeNamespace = getActiveNamespace();
 
   let to;
@@ -97,14 +98,17 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   if (openshiftFlag) {
     return <Redirect to="/k8s/cluster/projects" />;
   }
-
+  if (window.SERVER_FLAGS.googleTagManagerID === '') {
+    console.log('gj login test');
+    return <Redirect to="/login-test" />;
+  }
   return <NamespaceRedirect />;
 });
 
 const LazyRoute = (props) => <Route {...props} component={(componentProps) => <AsyncComponent loader={props.loader} kind={props.kind} {...componentProps} />} />;
 
 class App extends React.PureComponent {
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
     const oldLocation = _.omit(prevProps.location, ['key']);
@@ -118,7 +122,7 @@ class App extends React.PureComponent {
     analyticsSvc.route(pathname);
   }
 
-  render () {
+  render() {
     return <React.Fragment>
       <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
       <Masthead />
@@ -136,7 +140,7 @@ class App extends React.PureComponent {
 
           <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} />
 
-          <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({match}) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
+          <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({ match }) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
 
           <LazyRoute path={`/k8s/ns/:ns/${ClusterServiceVersionModel.plural}/:appName/:plural/new`} exact loader={() => import('./cloud-services/create-crd-yaml').then(m => m.CreateCRDYAML)} />
           <Route path={`/k8s/ns/:ns/${ClusterServiceVersionModel.plural}/:appName/:plural/:name`} component={ResourceDetailsPage} />
@@ -175,6 +179,8 @@ class App extends React.PureComponent {
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/edit" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
 
+          <Route path="/login-test" exact component={LoginComponent} />  {/* Login template 임의 추가 */}
+
           <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
           <LazyRoute path="/k8s/cluster/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => m.CreateYAML)} />
           <Route path="/k8s/cluster/:plural/:name" component={ResourceDetailsPage} />
@@ -204,12 +210,12 @@ _.each(featureActions, store.dispatch);
 store.dispatch(k8sActions.getResources());
 store.dispatch(detectMonitoringURLs);
 
-analyticsSvc.push({tier: 'tectonic'});
+analyticsSvc.push({ tier: 'tectonic' });
 
 // Used by GUI tests to check for unhandled exceptions
 window.windowError = false;
 
-window.onerror = function (message, source, lineno, colno, optError={}) {
+window.onerror = function (message, source, lineno, colno, optError = {}) {
   try {
     const e = `${message} ${source} ${lineno} ${colno}`;
     analyticsSvc.error(e, null, optError.stack);
@@ -243,7 +249,7 @@ if ('serviceWorker' in navigator) {
     import('file-loader?name=load-test.sw.js!../load-test.sw.js')
       .then(() => navigator.serviceWorker.register('/load-test.sw.js'))
       .then(() => new Promise(r => navigator.serviceWorker.controller ? r() : navigator.serviceWorker.addEventListener('controllerchange', () => r())))
-      .then(() => navigator.serviceWorker.controller.postMessage({topic: 'setFactor', value: window.SERVER_FLAGS.loadTestFactor}));
+      .then(() => navigator.serviceWorker.controller.postMessage({ topic: 'setFactor', value: window.SERVER_FLAGS.loadTestFactor }));
   } else {
     navigator.serviceWorker.getRegistrations()
       .then((registrations) => registrations.forEach(reg => reg.unregister()))
