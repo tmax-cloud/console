@@ -19,8 +19,8 @@ export const kindToAbbr = kind =>
   (kind.replace(/[^A-Z]/g, "") || kind.toUpperCase()).slice(0, 3);
 
 export const getResources = () =>
-  coFetchJSON("https://192.168.8.27:6443/apis").then(res => {
-    // coFetchJSON("api/kubernetes/apis").then(res => {
+  // coFetchJSON("api/kubernetes/apis").then(res => {
+  coFetchJSON("https://192.168.8.27:31303/api/kubernetes/apis").then(res => {
     const preferredVersions = res.groups.map(group => group.preferredVersion);
     const all: Promise<APIResourceList>[] = _.flatten(
       res.groups.map(group =>
@@ -29,7 +29,7 @@ export const getResources = () =>
     )
       .concat(["/api/v1"])
       // .map(p => coFetchJSON(`api/kubernetes${p}`).catch(err => err));
-      .map(p => coFetchJSON(`https://192.168.8.27:6443${p}`).catch(err => err));
+      .map(p => coFetchJSON(`https://192.168.8.27:31303/api/kubernetes${p}`).catch(err => err));
     console.log("res: ", res);
     return Promise.all(all).then(data => {
       const resourceSet = new Set();

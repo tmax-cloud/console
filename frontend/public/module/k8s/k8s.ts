@@ -17,9 +17,9 @@ export const getQN: (obj: K8sResourceKind) => string = ({
 
 // export const k8sBasePath = `${
 //   (window as any).SERVER_FLAGS.basePath
-// }api/kubernetes`;
+//   }api/kubernetes`;
 // export const k8sBasePath = `http://192.168.8.60:8787`;
-export const k8sBasePath = "https://192.168.8.27:6443";
+export const k8sBasePath = "https://192.168.8.27:31303/api/kubernetes";
 
 export const isGroupVersionKind = (ref: GroupVersionKind | string) =>
   ref.split(":").length === 3;
@@ -33,8 +33,8 @@ export const groupVersionFor = (apiVersion: string) => ({
 export const referenceFor = (obj: K8sResourceKind): GroupVersionKind =>
   obj.kind && obj.apiVersion
     ? `${groupVersionFor(obj.apiVersion).group}:${
-        groupVersionFor(obj.apiVersion).version
-      }:${obj.kind}`
+    groupVersionFor(obj.apiVersion).version
+    }:${obj.kind}`
     : "";
 
 export const referenceForCRD = (
@@ -46,7 +46,7 @@ export const referenceForOwnerRef = (
   ownerRef: OwnerReference
 ): GroupVersionKind =>
   `${groupVersionFor(ownerRef.apiVersion).group}:${
-    groupVersionFor(ownerRef.apiVersion).version
+  groupVersionFor(ownerRef.apiVersion).version
   }:${ownerRef.kind}`;
 
 export const referenceForModel = (model: K8sKind): GroupVersionKind =>
