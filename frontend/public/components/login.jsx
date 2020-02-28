@@ -11,7 +11,7 @@ import { sha512 } from 'js-sha512';
 
 class LoginComponent extends Component {
   onClick = () => {
-    const AUTH_SERVER_URL = 'http://192.168.6.225:8088/v3/_api/authenticate';
+    const AUTH_SERVER_URL = 'https://192.168.6.225:8088/v3/_api/authenticate';
     
     let id = document.getElementById('loginId').value;
     let pw = document.getElementById('inputPassword').value;
