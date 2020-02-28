@@ -28,7 +28,8 @@ class LoginComponent extends Component {
         if (data.dto.result !== 'true') {
           return;
         }
-        window.location = 'http://192.168.8.59:9000/status/all-namespaces';
+        
+        window.location = `${window.SERVER_FLAGS.basePath}/status/all-namespaces`;
       })
       .catch(error => {
         console.log(error);

@@ -257,10 +257,9 @@ if ('serviceWorker' in navigator) {
       .catch(e => console.warn('Error unregistering service workers', e));
   }
 }
-const loginPath = 'http://192.168.8.59:9000/login';
 render((
   <Provider store={store}>
-    <Router history={history} basename={loginPath}>
+    <Router history={history} basename={window.SERVER_FLAGS.basePath}>
       <Switch>
         <Route path="/login" component={LoginComponent} />
         <Route path="/" component={App} />
