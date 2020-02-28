@@ -1,14 +1,13 @@
 import * as React from 'react';
-
 import * as _ from 'lodash-es';
 import { Link } from 'react-router-dom';
 import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
 import { FLAGS, connectToFlags, flagPending } from '../features';
 import { authSvc } from '../module/auth';
 import { Dropdown, ActionsMenu } from './utils';
-
 import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
+import LoginComponent from './login';
 
 const developerConsoleURL = (window as any).SERVER_FLAGS.developerConsoleURL;
 
@@ -27,29 +26,40 @@ const UserMenu: React.StatelessComponent<UserMenuProps> = ({username, actions}) 
 };
 
 const UserMenuWrapper = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)((props: FlagsProps) => {
-  if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
-    return null;
-  }
+  // if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
+  //   return null;
+  // }
 
   const actions: Actions = [];
-  if (props.flags[FLAGS.AUTH_ENABLED]) {
-    const logout = e => {
-      e.preventDefault();
-      if (props.flags[FLAGS.OPENSHIFT]) {
-        authSvc.deleteOpenShiftToken().then(() => authSvc.logout());
-      } else {
-        authSvc.logout();
-      }
-    };
-    actions.push({
-      label: 'Logout',
-      callback: logout
-    });
-  }
+  // if (props.flags[FLAGS.AUTH_ENABLED]) {
+  //   const logout = e => {
+  //     e.preventDefault();
+  //     if (props.flags[FLAGS.OPENSHIFT]) {
+  //       authSvc.deleteOpenShiftToken().then(() => authSvc.logout());
+  //     } else {
+  //       authSvc.logout();
+  //     }
+  //   };
+  //   actions.push({
+  //     label: 'Logout',
+  //     callback: logout
+  //   });
+  // }
+  const logout = e => {
+    e.preventDefault();
+    // TODO 세션 스토리지, 로컬 스토리지, 토큰 등 지우기 
+    localStorage.clear();
+    const url_ = window.location.href.split('/')[2]
+    window.location.href = `http://${url_}/login`;
+  };
+  actions.push({
+    label: 'Logout',
+    callback: logout
+  });
 
-  if (props.flags[FLAGS.OPENSHIFT]) {
+  //if (props.flags[FLAGS.OPENSHIFT]) {
     return <OSUserMenu actions={actions} />;
-  }
+  //}
 
   actions.unshift({
     label: 'My Account',
@@ -73,10 +83,12 @@ export class OSUserMenu extends SafetyFirst<OSUserMenuProps, OSUserMenuState> {
   }
 
   _getUserInfo() {
-    coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')
-      .then((user) => {
-        this.setState({ username: _.get(user, 'fullName') || user.metadata.name });
-      }).catch(() => this.setState({ username: null }));
+    // TODO 유저 정보 조회 서비스 연동 
+    this.setState({username: 'admin'});
+    // coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')
+    //   .then((user) => {
+    //     this.setState({ username: _.get(user, 'fullName') || user.metadata.name });
+    //   }).catch(() => this.setState({ username: null }));
   }
 
   render () {
