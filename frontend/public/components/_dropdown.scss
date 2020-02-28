@@ -59,7 +59,7 @@ $color-bookmarker: #DDD;
 }
 
 .dropdown-menu {
-  display: block;
+  display: block !important;
 
   ul {
     padding: 0;
