@@ -10,15 +10,6 @@ import '../style.scss';
 import { sha512 } from 'js-sha512';
 
 class LoginComponent extends Component {
-  componentDidMount() {
-    // if (document.getElementsByTagName('header')[0] !== undefined && document.getElementsByTagName('header')[0] !== null) {
-      document.getElementsByTagName('header')[0].style.display = 'none';
-    //}
-    // if (document.getElementById('sidebar') !== undefined && document.getElementById('sidebar') !== null) {
-      document.getElementById('sidebar').style.display = 'none';
-    //}
-  }
-
   onClick = () => {
     const AUTH_SERVER_URL = 'http://192.168.6.225:8088/v3/_api/authenticate';
     
@@ -32,43 +23,18 @@ class LoginComponent extends Component {
       }
     };
 
-    // axios.post('http://172.22.6.8:8088/v3/_api/authenticate', json).then(response => {
-    //   if (response.status !== 200) {
-    //     console.log(response);
-    //   } else {
-    //     window.SERVER_FLAGS.googleTagManagerID = 'login';
-    //     document.getElementsByTagName('header')[0].style.display = 'block';
-    //     document.getElementById('sidebar').style.display = 'block';
-    //     window.location = 'http://192.168.8.59:9000/status/all-namespaces';
-    //     //return (<Redirect to="/status/all-namespaces" />);
-    //   }
-    // });
-
     coFetchJSON.post(AUTH_SERVER_URL, json)
       .then(data => {
         if (data.dto.result !== 'true') {
           return;
         }
-        document.getElementsByTagName('header')[0].style.display = 'block';
-        document.getElementById('sidebar').style.display = 'block';
-
         window.location = 'http://192.168.8.59:9000/status/all-namespaces';
       })
       .catch(error => {
         console.log(error);
       });
   };
-  // constructor(props) {
-  //   super(props);
-  //   window.onload = function () {
-  //     if (document.getElementsByTagName('header')[0] !== undefined && document.getElementsByTagName('header')[0] !== null) {
-  //       document.getElementsByTagName('header')[0].style.display = 'none';
-  //     }
-  //     if (document.getElementById('sidebar') !== undefined && document.getElementById('sidebar') !== null) {
-  //       document.getElementById('sidebar').style.display = 'none';
-  //     }
-  //   };
-  // }
+  
   render() {
     return (
       <div id="login">

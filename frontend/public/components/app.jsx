@@ -90,6 +90,7 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
+  console.log('default page?');
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag)) {
     return <Loading />;
@@ -99,7 +100,7 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
     return <Redirect to="/k8s/cluster/projects" />;
   }
   if (window.SERVER_FLAGS.googleTagManagerID === '') {
-    return <Redirect to="/login-test" />;
+    return <Redirect to="/login" />;
   }
   return <NamespaceRedirect />;
 });
@@ -160,7 +161,7 @@ class App extends React.PureComponent {
             // <LazyRoute path="/k8s/cluster/clusterroles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             // <LazyRoute path="/k8s/cluster/clusterroles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
           }
-          <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} />
+          <Switch path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} />
 
           {
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
@@ -178,7 +179,7 @@ class App extends React.PureComponent {
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/edit" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
 
-          <Route path="/login-test" exact component={LoginComponent} />  {/* Login template 임의 추가 */}
+          <Route path="/login" exact component={LoginComponent} />  {/* Login template 임의 추가 */}
 
           <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
           <LazyRoute path="/k8s/cluster/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => m.CreateYAML)} />
@@ -256,11 +257,14 @@ if ('serviceWorker' in navigator) {
       .catch(e => console.warn('Error unregistering service workers', e));
   }
 }
-
+const loginPath = 'http://192.168.8.59:9000/login';
 render((
   <Provider store={store}>
-    <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-      <Route path="/" component={App} />
+    <Router history={history} basename={loginPath}>
+      <Switch>
+        <Route path="/login" component={LoginComponent} />
+        <Route path="/" component={App} />
+      </Switch>
     </Router>
   </Provider>
 ), document.getElementById('app'));
