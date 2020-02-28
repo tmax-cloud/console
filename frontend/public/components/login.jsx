@@ -12,7 +12,7 @@ import { sha512 } from 'js-sha512';
 class LoginComponent extends Component {
   componentDidMount() {
     // if (document.getElementsByTagName('header')[0] !== undefined && document.getElementsByTagName('header')[0] !== null) {
-      //document.getElementsByTagName('header')[0].style.display = 'none';
+      document.getElementsByTagName('header')[0].style.display = 'none';
     //}
     // if (document.getElementById('sidebar') !== undefined && document.getElementById('sidebar') !== null) {
       document.getElementById('sidebar').style.display = 'none';
