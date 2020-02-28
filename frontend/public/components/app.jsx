@@ -1,5 +1,5 @@
 import * as _ from 'lodash-es';
-import * as React from 'react';
+import React, {useState} from 'react';
 import { render } from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
@@ -90,7 +90,14 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
-  console.log('default page?');
+  const [login, setLogin] = useState(0);
+  
+   if (login === 0) {
+     setLogin(login+1);
+   } else {
+    return <Redirect to="/login" />;
+   }
+  
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag)) {
     return <Loading />;
@@ -99,9 +106,7 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   if (openshiftFlag) {
     return <Redirect to="/k8s/cluster/projects" />;
   }
-  if (window.SERVER_FLAGS.googleTagManagerID === '') {
-    return <Redirect to="/login" />;
-  }
+  
   return <NamespaceRedirect />;
 });
 
