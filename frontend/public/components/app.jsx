@@ -99,7 +99,6 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
     return <Redirect to="/k8s/cluster/projects" />;
   }
   if (window.SERVER_FLAGS.googleTagManagerID === '') {
-    console.log('gj login test');
     return <Redirect to="/login-test" />;
   }
   return <NamespaceRedirect />;

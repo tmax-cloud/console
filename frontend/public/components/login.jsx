@@ -7,21 +7,28 @@ import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
 import '../style.scss';
-// import axios from 'axios';
-// import { ClusterOverviewPage } from './cluster-overview';
+import { sha512 } from 'js-sha512';
 
 class LoginComponent extends Component {
+  componentDidMount() {
+    // if (document.getElementsByTagName('header')[0] !== undefined && document.getElementsByTagName('header')[0] !== null) {
+      //document.getElementsByTagName('header')[0].style.display = 'none';
+    //}
+    // if (document.getElementById('sidebar') !== undefined && document.getElementById('sidebar') !== null) {
+      document.getElementById('sidebar').style.display = 'none';
+    //}
+  }
+
   onClick = () => {
+    const AUTH_SERVER_URL = 'http://192.168.6.225:8088/v3/_api/authenticate';
+    
     let id = document.getElementById('loginId').value;
     let pw = document.getElementById('inputPassword').value;
-    if (pw !== 'admin') {
-      console.error('Email or Password Invalid');
-      return;
-    }
+
     const json = {
       'dto':
       {
-        'user_id': id, 'password': 'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec'
+        'user_id': id, 'password': sha512(pw)
       }
     };
 
@@ -37,8 +44,11 @@ class LoginComponent extends Component {
     //   }
     // });
 
-    coFetchJSON.post('http://172.22.6.8:8088/v3/_api/authenticate', json)
+    coFetchJSON.post(AUTH_SERVER_URL, json)
       .then(data => {
+        if (data.dto.result !== 'true') {
+          return;
+        }
         document.getElementsByTagName('header')[0].style.display = 'block';
         document.getElementById('sidebar').style.display = 'block';
 
@@ -48,17 +58,17 @@ class LoginComponent extends Component {
         console.log(error);
       });
   };
-  constructor(props) {
-    super(props);
-    window.onload = function () {
-      if (document.getElementsByTagName('header')[0] !== undefined && document.getElementsByTagName('header')[0] !== null) {
-        document.getElementsByTagName('header')[0].style.display = 'none';
-      }
-      if (document.getElementById('sidebar') !== undefined && document.getElementById('sidebar') !== null) {
-        document.getElementById('sidebar').style.display = 'none';
-      }
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   window.onload = function () {
+  //     if (document.getElementsByTagName('header')[0] !== undefined && document.getElementsByTagName('header')[0] !== null) {
+  //       document.getElementsByTagName('header')[0].style.display = 'none';
+  //     }
+  //     if (document.getElementById('sidebar') !== undefined && document.getElementById('sidebar') !== null) {
+  //       document.getElementById('sidebar').style.display = 'none';
+  //     }
+  //   };
+  // }
   render() {
     return (
       <div id="login">
