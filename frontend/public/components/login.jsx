@@ -28,8 +28,8 @@ class LoginComponent extends Component {
         if (data.dto.result !== 'true') {
           return;
         }
-        
-        window.location = `${window.SERVER_FLAGS.basePath}/status/all-namespaces`;
+        const url_ = window.location.href.split('/login')[0]
+        window.location = `${url_}/status/all-namespaces`;
       })
       .catch(error => {
         console.log(error);
