@@ -1,0 +1,239 @@
+@media screen and (max-height: 580px) {
+    #bg-large {
+        top: 0;
+        left: 0;
+        position: absolute;
+        height: 583px !important;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    #bg-large:after {
+        clear: both;
+    }
+
+    .bg-navy {
+        height: 580px !important;
+    }
+
+    #bg-big-blank {
+        position: absolute !important;
+        height: 100% !important;
+        right: -20% !important;
+        width: 70% !important;
+
+    }
+
+    #bg-small {
+        position: absolute;
+        width: 1180px;
+        margin-top: 0px !important;
+        top: 0% !important;
+        height: 580px;
+        box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.25);
+        border: #FFFFFF solid 1px;
+    }
+
+    #contents {
+        position: absolute;
+        top: 0% !important;
+        height: 580px;
+        margin-top: 0px !important;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    #bg-large {
+        position: absolute;
+        height: 100%;
+        top: 0;
+        left: 0;
+        width: 1182px !important;
+        overflow: hidden;
+    }
+
+    #bg-large:after {
+        clear: both;
+        top: 0;
+    }
+
+    .bg-navy {
+        width: 1180px !important;
+    }
+
+    #bg-big-blank {
+        position: absolute !important;
+        height: 100% !important;
+        right: -20% !important;
+        width: 70% !important;
+    }
+
+    #bg-small {
+        position: absolute;
+        width: 1180px;
+        margin-left: 0px !important;
+        height: 580px;
+        left: 0% !important;
+        box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.25);
+        border: #FFFFFF solid 1px;
+    }
+
+    #contents {
+        position: absolute;
+        width: 1180px;
+        margin-left: 0px !important;
+        left: 0% !important;
+    }
+}
+
+.bg-navy {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.bg-blank {
+    position: fixed;
+    bottom: 0;
+    transform: skewX(-10deg);
+    right: -20%;
+    box-sizing: border-box;
+}
+
+.inner_logo {
+    position: absolute;
+    width: 30vw;
+    height: 30vh;
+    max-width: 400px;
+    max-height: 200px;
+    left: 12%;
+    top: 33%;
+}
+
+.logo {
+    margin: 35px 0 0;
+}
+
+.inner_login {
+    position: absolute;
+    width: 30vw;
+    height: 30vh;
+    max-width: 400px;
+    max-height: 200px;
+    left: 59%;
+    top: 35%;
+}
+
+.box_login {
+    position: absolute;
+    margin: 20px 0 0;
+    max-width: 345px;
+    max-height: 46px;
+    border: 1px solid #ECECEC;
+    border-radius: 23px;
+    background-color: #ECECEC;
+    box-sizing: border-box;
+}
+
+.inp_text {
+    width: 100%;
+    width: 345px;
+    height: 46px;
+    margin: 0;
+    border: none;
+    padding: 0px 20px;
+    box-sizing: border-box;
+}
+
+.inp_text input {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 15.86px;
+    color: #9B9B9B;
+    border: none;
+    outline: 0;
+    background-color: transparent;
+}
+
+.box_error {
+    width: 239px;
+    height: 18px;
+    margin-top: 71px;
+    margin-left: 19px;
+}
+
+.btn_login {
+    position: absolute;
+    margin: 10px 0 0;
+    width: 345px;
+    height: 53px;
+    border-radius: 26.5px;
+    font-size: 18px;
+    border: 0;
+    color: #fff;
+    box-sizing: border-box;
+    background-color: #1A3755;
+}
+
+#login {
+    height: 100%;
+    overflow: hidden;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+
+#bg-big-blank {
+    min-width: 50%;
+    min-height: 100%;
+    width: 70%;
+    background-color: #ECECEC;
+}
+
+#bg-small {
+    position: absolute;
+    width: 1180px;
+    margin-left: -590px;
+    min-width: 1180px;
+    height: 580px;
+    min-height: 580px;
+    left: 50%;
+    top: 50%;
+    margin-top: -290px;
+    box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.25);
+    border: #FFFFFF solid 1px;
+}
+
+#bg-small-middle {
+    position: absolute;
+    width: 25%;
+    height: 100%;
+    right: 25%;
+    background-color: #FFFFFF;
+}
+
+#bg-small-blank {
+    position: absolute;
+    width: 30%;
+    height: 100%;
+    right: 0%;
+    background-color: #FFFFFF;
+    position: absolute;
+}
+
+#contents {
+    position: absolute;
+    width: 1180px;
+    margin-left: -590px;
+    min-width: 1180px;
+    height: 580px;
+    min-height: 580px;
+    left: 50%;
+    top: 50%;
+    margin-top: -290px;
+}

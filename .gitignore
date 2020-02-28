@@ -11,4 +11,6 @@
 /frontend/public/dist
 /frontend/npm-debug.log
 /frontend/yarn-error.log
+/frontend/node_modules
 /frontend/gui_test_screenshots
+*.iml
