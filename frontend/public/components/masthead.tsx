@@ -2,11 +2,6 @@ import * as React from 'react';
 
 import * as _ from 'lodash-es';
 import { Link } from 'react-router-dom';
-import * as okdLogoImg from '../imgs/okd-logo.svg';
-import * as ocpLogoImg from '../imgs/openshift-platform-logo.svg';
-import * as onlineLogoImg from '../imgs/openshift-online-logo.svg';
-import * as dedicatedLogoImg from '../imgs/openshift-dedicated-logo.svg';
-import * as azureLogoImg from '../imgs/azure-red-hat-openshift-logo.svg';
 import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
 import { FLAGS, connectToFlags, flagPending } from '../features';
 import { authSvc } from '../module/auth';
@@ -104,35 +99,11 @@ const ContextSwitcher = () => {
 };
 
 export const LogoImage = () => {
-  let logoImg, logoAlt;
+  let logoImg = hyperCloudLogoImg; 
+  let logoAlt = 'HyperCloud';
 
   // Webpack won't bundle these images if we don't directly reference them, hence the switch
-  switch ((window as any).SERVER_FLAGS.branding) {
-    case 'ocp':
-      logoImg = ocpLogoImg;
-      logoAlt = 'OpenShift Container Platform';
-      break;
-    case 'online':
-      logoImg = onlineLogoImg;
-      logoAlt = 'OpenShift Online';
-      break;
-    case 'dedicated':
-      logoImg = dedicatedLogoImg;
-      logoAlt = 'OpenShift Dedicated';
-      break;
-    case 'azure':
-      logoImg = azureLogoImg;
-      logoAlt = 'Azure Red Hat OpenShift';
-      break;
-    case 'hypercloud':
-      logoImg = hyperCloudLogoImg;
-      logoAlt = 'HyperCloud';
-      break;
-    default:
-      logoImg = okdLogoImg;
-      logoAlt = 'OKD';
-  }
-
+  
   return <div className="co-masthead__logo">
     <Link to="/" className="co-masthead__logo-link"><img src={logoImg} alt={logoAlt} /></Link>
   </div>;
