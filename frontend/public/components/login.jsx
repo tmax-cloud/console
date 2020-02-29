@@ -10,6 +10,7 @@ import '../style.scss';
 import { sha512 } from 'js-sha512';
 
 class LoginComponent extends Component {
+  // useState 대신 useRef 써도 됨
   state = {
     id: '',
     pw: '',
@@ -37,8 +38,9 @@ class LoginComponent extends Component {
             this.setState({error: data.dto.error});
             return;
           }
-          const url_ = window.location.href.split('/login')[0]
-          window.location = `${url_}/status/all-namespaces`;
+          // const url_ = window.location.href.split('/login')[0]
+          // window.location = `${url_}/status/all-namespaces`;
+          this.props.history.push('/status/all-namespaces');
         })
         .catch(error => {
           console.log(error);
