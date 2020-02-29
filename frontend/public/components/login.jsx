@@ -24,7 +24,7 @@ class LoginComponent extends Component {
 
     const AUTH_SERVER_URL = 'https://192.168.6.225:8088/v3/_api/authenticate';
     
-    if (this.state.id !== undefined && this.state.pw !== undefined) {
+    //if (this.state.id !== undefined && this.state.pw !== undefined) {
       const json = {
         'dto':
         {
@@ -45,7 +45,7 @@ class LoginComponent extends Component {
         .catch(error => {
           console.log(error);
         });
-  }
+  //}
   };
   
   render() {
