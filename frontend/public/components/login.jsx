@@ -14,7 +14,21 @@ class LoginComponent extends Component {
   state = {
     id: '',
     pw: '',
-    error: ''
+    error: '',
+  };
+
+  constructor(props) {
+    super(props);
+    if (props.history.action !== 'REPLACE') {
+      history.pushState(null, null, location.href);
+      window.onpopstate = function(event) {	
+      history.go(1);
+      } 
+    }
+  };
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
   };
 
   onClick = (e) => {
