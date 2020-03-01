@@ -266,6 +266,10 @@ const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({flags}) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
+
+  // Hide the cluster picker temporarily
+  return null;
+
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag) || openshiftFlag) {
     return null;
