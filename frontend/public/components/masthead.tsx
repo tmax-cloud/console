@@ -7,7 +7,7 @@ import { authSvc } from '../module/auth';
 import { Dropdown, ActionsMenu } from './utils';
 import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
-import LoginComponent from './login';
+//import LoginComponent from './login';
 
 const developerConsoleURL = (window as any).SERVER_FLAGS.developerConsoleURL;
 
@@ -26,40 +26,40 @@ const UserMenu: React.StatelessComponent<UserMenuProps> = ({username, actions}) 
 };
 
 const UserMenuWrapper = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)((props: FlagsProps) => {
-  // if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
-  //   return null;
-  // }
+  if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
+    return null;
+  }
 
   const actions: Actions = [];
-  // if (props.flags[FLAGS.AUTH_ENABLED]) {
-  //   const logout = e => {
-  //     e.preventDefault();
-  //     if (props.flags[FLAGS.OPENSHIFT]) {
-  //       authSvc.deleteOpenShiftToken().then(() => authSvc.logout());
-  //     } else {
-  //       authSvc.logout();
-  //     }
-  //   };
-  //   actions.push({
-  //     label: 'Logout',
-  //     callback: logout
-  //   });
-  // }
-  const logout = e => {
-    e.preventDefault();
-    // TODO 세션 스토리지, 로컬 스토리지, 토큰 등 지우기 
-    localStorage.clear();
-    const url_ = window.location.href.split('/')[2]
-    window.location.href = `http://${url_}/login`;
-  };
-  actions.push({
-    label: 'Logout',
-    callback: logout
-  });
+  if (props.flags[FLAGS.AUTH_ENABLED]) {
+    const logout = e => {
+      e.preventDefault();
+      if (props.flags[FLAGS.OPENSHIFT]) {
+        authSvc.deleteOpenShiftToken().then(() => authSvc.logout());
+      } else {
+        authSvc.logout();
+      }
+    };
+    actions.push({
+      label: 'Logout',
+      callback: logout
+    });
+  }
+  // const logout = e => {
+  //   e.preventDefault();
+  //   // TODO 세션 스토리지, 로컬 스토리지, 토큰 등 지우기 
+  //   localStorage.clear();
+  //   const url_ = window.location.href.split('/')[2]
+  //   window.location.href = `http://${url_}/login`;
+  // };
+  // actions.push({
+  //   label: 'Logout',
+  //   callback: logout
+  // });
 
-  //if (props.flags[FLAGS.OPENSHIFT]) {
+  if (props.flags[FLAGS.OPENSHIFT]) {
     return <OSUserMenu actions={actions} />;
-  //}
+  }
 
   actions.unshift({
     label: 'My Account',
