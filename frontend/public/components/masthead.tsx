@@ -5,7 +5,7 @@ import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
 import { FLAGS, connectToFlags, flagPending } from '../features';
 import { authSvc } from '../module/auth';
 import { Dropdown, ActionsMenu } from './utils';
-import { coFetchJSON } from '../co-fetch';
+//import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
 //import LoginComponent from './login';
 
