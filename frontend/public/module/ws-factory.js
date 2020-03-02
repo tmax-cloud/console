@@ -30,6 +30,11 @@ export function WSFactory(id, options) {
   this.id = id;
   this.options = options;
   this.bufferMax = options.bufferMax || 0;
+
+  // TODO: k8s.ts에 하드하게 넣은 값 빼기
+  // options.path = options.path.split('https://192.168.8.27:6443')[1];
+  options.path = options.path.split('https://192.168.8.27:31303/api/kubernetes')[1];
+
   this.url = createURL(options.host, options.path);
   this._paused = false;
   this._handlers = {
@@ -49,7 +54,7 @@ export function WSFactory(id, options) {
   }
 }
 
-WSFactory.prototype._reconnect = function() {
+WSFactory.prototype._reconnect = function () {
   if (this._connectionAttempt || this._state === 'destroyed') {
     return;
   }
@@ -78,7 +83,7 @@ WSFactory.prototype._reconnect = function() {
   this._connectionAttempt = setTimeout(attempt, delay);
 };
 
-WSFactory.prototype._connect = function() {
+WSFactory.prototype._connect = function () {
   const that = this;
   this._state = 'init';
   this._messageBuffer = [];
@@ -90,7 +95,7 @@ WSFactory.prototype._connect = function() {
     return;
   }
 
-  this.ws.onopen = function() {
+  this.ws.onopen = function () {
     console.log(`websocket open: ${that.id}`);
     that._state = 'open';
     that._triggerEvent('open');
@@ -110,17 +115,17 @@ WSFactory.prototype._connect = function() {
     that._state = 'error';
     that._triggerEvent('error', evt);
   };
-  this.ws.onmessage = function(evt) {
+  this.ws.onmessage = function (evt) {
     const msg = (that.options && that.options.jsonParse) ? JSON.parse(evt.data) : evt.data;
     // In some browsers, onmessage can fire after onclose/error. Don't update state to be incorrect.
-    if (that._state !== 'destroyed' && that._state !== 'closed'){
+    if (that._state !== 'destroyed' && that._state !== 'closed') {
       that._state = 'open';
     }
     that._triggerEvent('message', msg);
   };
 };
 
-WSFactory.prototype._registerHandler = function(type, fn) {
+WSFactory.prototype._registerHandler = function (type, fn) {
   if (this._state === 'destroyed') {
     return;
   }
@@ -128,12 +133,12 @@ WSFactory.prototype._registerHandler = function(type, fn) {
 };
 
 // Invoke all registered handler callbacks for a given event type.
-WSFactory.prototype._invokeHandlers = function(type, data) {
+WSFactory.prototype._invokeHandlers = function (type, data) {
   const handlers = this._handlers[type];
   if (!handlers) {
     return;
   }
-  handlers.forEach(function(h) {
+  handlers.forEach(function (h) {
     try {
       h(data);
     } catch (e) {
@@ -143,7 +148,7 @@ WSFactory.prototype._invokeHandlers = function(type, data) {
 };
 
 // Triggers event to be buffered or invoked depending on config.
-WSFactory.prototype._triggerEvent = function(type, event) {
+WSFactory.prototype._triggerEvent = function (type, event) {
   if (this._state === 'destroyed') {
     return;
   }
@@ -162,38 +167,38 @@ WSFactory.prototype._triggerEvent = function(type, event) {
   this._invokeHandlers(type, event);
 };
 
-WSFactory.prototype.onmessage = function(fn) {
+WSFactory.prototype.onmessage = function (fn) {
   this._registerHandler('message', fn);
   return this;
 };
 
-WSFactory.prototype.onbulkmessage = function(fn) {
+WSFactory.prototype.onbulkmessage = function (fn) {
   this._registerHandler('bulkmessage', fn);
   return this;
 };
 
 
-WSFactory.prototype.onerror = function(fn) {
+WSFactory.prototype.onerror = function (fn) {
   this._registerHandler('error', fn);
   return this;
 };
 
-WSFactory.prototype.onopen = function(fn) {
+WSFactory.prototype.onopen = function (fn) {
   this._registerHandler('open', fn);
   return this;
 };
 
-WSFactory.prototype.onclose = function(fn) {
+WSFactory.prototype.onclose = function (fn) {
   this._registerHandler('close', fn);
   return this;
 };
 
-WSFactory.prototype.ondestroy = function(fn) {
+WSFactory.prototype.ondestroy = function (fn) {
   this._registerHandler('destroy', fn);
   return this;
 };
 
-WSFactory.prototype.flushMessageBuffer = function() {
+WSFactory.prototype.flushMessageBuffer = function () {
   if (this._paused) {
     return;
   }
@@ -212,28 +217,28 @@ WSFactory.prototype.flushMessageBuffer = function() {
 };
 
 // Pausing prevents any buffer flushing until unpaused.
-WSFactory.prototype.pause = function() {
+WSFactory.prototype.pause = function () {
   this._paused = true;
 };
 
-WSFactory.prototype.unpause = function() {
+WSFactory.prototype.unpause = function () {
   this._paused = false;
   this.flushMessageBuffer();
 };
 
-WSFactory.prototype.isPaused = function() {
+WSFactory.prototype.isPaused = function () {
   return this._paused;
 };
 
-WSFactory.prototype.state = function() {
+WSFactory.prototype.state = function () {
   return this._state;
 };
 
-WSFactory.prototype.bufferSize = function() {
+WSFactory.prototype.bufferSize = function () {
   return this._messageBuffer.length;
 };
 
-WSFactory.prototype.destroy = function(timedout) {
+WSFactory.prototype.destroy = function (timedout) {
   console.log(`destroying websocket: ${this.id}`);
   if (this._state === 'destroyed') {
     return;
