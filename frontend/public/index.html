@@ -21,7 +21,7 @@
         jwToken = window.sessionStorage.getItem('jwToken');
       } else if(jwToken) {
       } else {
-        window.location.href = "http://192.168.8.27:7179";
+        window.location.href = "http://192.168.8.27:7179?redirect=" + window.location.origin;
       }
     </script>
   </head>
