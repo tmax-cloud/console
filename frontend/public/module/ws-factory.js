@@ -14,7 +14,7 @@ function createURL(host, path) {
     } else {
       url = 'ws://';
     }
-    //url += location.host;
+    url += location.host;
   } else {
     url = host;
   }

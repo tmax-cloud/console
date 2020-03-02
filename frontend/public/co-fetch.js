@@ -9,7 +9,7 @@ const initDefaults = {
   headers: {},
   credentials: "same-origin"
 };
-
+console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+jwToken);
 // TODO: url can be url or path, but shouldLogout only handles paths
 export const shouldLogout = url => {
   const k8sRegex = new RegExp(
@@ -115,8 +115,9 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
   }
 
   if (url.indexOf('authenticate') < 0) {
-    allOptions.headers.Authorization =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Im9FUU9CQWpDSXBVeXNFeEtLV2xtRjc2aEZidy1ES1ViYlNxdFExX0s0cWsifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXRva2VuLTR2Mm1zIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiZTMyM2U3MGUtYmY1ZC00MTQwLTgxZmUtYzkwMmUxNmI1MWJhIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6YWRtaW4ifQ.cLYwNQ2dTRS2XE2IHnMhzaRMPhTxjs89cqV13LWUs_YwJyeljWRpjmes9bwXl4OzbZB8hwLcKXz1oLrk6eYYeDRCEhgoxr4Rjxe-uw7VJca5uFi6q-Gq0fU6nXvKBQ00Uu5O1Gx4sW2rio0jmvT5yDl-ALcyzrrtzLrxDwSsuvhjj2z_iJqC_RCqE0-ZXKITiGuNTqzNnqWYtelUmp8xTEjUBYx6BHUfh69kKUhbk3Wro_4uF-aFBQaMeEsOOGucZRIajwgR6VP9xplNMB6eMxBzX9Gkcn5QNDeoiRlbpjh4MGsqXAIrUFntK4ZBSL_VYoCLHfLjuZTjaiPxAXxzMA";
+    allOptions.headers.Authorization = jwToken;
+    // allOptions.headers.Authorization =
+    //   "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Im9FUU9CQWpDSXBVeXNFeEtLV2xtRjc2aEZidy1ES1ViYlNxdFExX0s0cWsifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXRva2VuLTR2Mm1zIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiZTMyM2U3MGUtYmY1ZC00MTQwLTgxZmUtYzkwMmUxNmI1MWJhIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6YWRtaW4ifQ.cLYwNQ2dTRS2XE2IHnMhzaRMPhTxjs89cqV13LWUs_YwJyeljWRpjmes9bwXl4OzbZB8hwLcKXz1oLrk6eYYeDRCEhgoxr4Rjxe-uw7VJca5uFi6q-Gq0fU6nXvKBQ00Uu5O1Gx4sW2rio0jmvT5yDl-ALcyzrrtzLrxDwSsuvhjj2z_iJqC_RCqE0-ZXKITiGuNTqzNnqWYtelUmp8xTEjUBYx6BHUfh69kKUhbk3Wro_4uF-aFBQaMeEsOOGucZRIajwgR6VP9xplNMB6eMxBzX9Gkcn5QNDeoiRlbpjh4MGsqXAIrUFntK4ZBSL_VYoCLHfLjuZTjaiPxAXxzMA";
   }
   // Initiate both the fetch promise and a timeout promise
   return Promise.race([

@@ -1,19 +1,13 @@
 import * as React from 'react';
-
 import * as _ from 'lodash-es';
 import { Link } from 'react-router-dom';
-import * as okdLogoImg from '../imgs/okd-logo.svg';
-import * as ocpLogoImg from '../imgs/openshift-platform-logo.svg';
-import * as onlineLogoImg from '../imgs/openshift-online-logo.svg';
-import * as dedicatedLogoImg from '../imgs/openshift-dedicated-logo.svg';
-import * as azureLogoImg from '../imgs/azure-red-hat-openshift-logo.svg';
 import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
 import { FLAGS, connectToFlags, flagPending } from '../features';
 import { authSvc } from '../module/auth';
 import { Dropdown, ActionsMenu } from './utils';
-
-import { coFetchJSON } from '../co-fetch';
+//import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
+//import LoginComponent from './login';
 
 const developerConsoleURL = (window as any).SERVER_FLAGS.developerConsoleURL;
 
@@ -51,6 +45,17 @@ const UserMenuWrapper = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)((pro
       callback: logout
     });
   }
+  // const logout = e => {
+  //   e.preventDefault();
+  //   // TODO 세션 스토리지, 로컬 스토리지, 토큰 등 지우기 
+  //   localStorage.clear();
+  //   const url_ = window.location.href.split('/')[2]
+  //   window.location.href = `http://${url_}/login`;
+  // };
+  // actions.push({
+  //   label: 'Logout',
+  //   callback: logout
+  // });
 
   if (props.flags[FLAGS.OPENSHIFT]) {
     return <OSUserMenu actions={actions} />;
@@ -78,10 +83,12 @@ export class OSUserMenu extends SafetyFirst<OSUserMenuProps, OSUserMenuState> {
   }
 
   _getUserInfo() {
-    coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')
-      .then((user) => {
-        this.setState({ username: _.get(user, 'fullName') || user.metadata.name });
-      }).catch(() => this.setState({ username: null }));
+    // TODO 유저 정보 조회 서비스 연동 
+    this.setState({username: 'admin'});
+    // coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')
+    //   .then((user) => {
+    //     this.setState({ username: _.get(user, 'fullName') || user.metadata.name });
+    //   }).catch(() => this.setState({ username: null }));
   }
 
   render () {
@@ -104,35 +111,11 @@ const ContextSwitcher = () => {
 };
 
 export const LogoImage = () => {
-  let logoImg, logoAlt;
+  let logoImg = hyperCloudLogoImg; 
+  let logoAlt = 'HyperCloud';
 
   // Webpack won't bundle these images if we don't directly reference them, hence the switch
-  switch ((window as any).SERVER_FLAGS.branding) {
-    case 'ocp':
-      logoImg = ocpLogoImg;
-      logoAlt = 'OpenShift Container Platform';
-      break;
-    case 'online':
-      logoImg = onlineLogoImg;
-      logoAlt = 'OpenShift Online';
-      break;
-    case 'dedicated':
-      logoImg = dedicatedLogoImg;
-      logoAlt = 'OpenShift Dedicated';
-      break;
-    case 'azure':
-      logoImg = azureLogoImg;
-      logoAlt = 'Azure Red Hat OpenShift';
-      break;
-    case 'hypercloud':
-      logoImg = hyperCloudLogoImg;
-      logoAlt = 'HyperCloud';
-      break;
-    default:
-      logoImg = okdLogoImg;
-      logoAlt = 'OKD';
-  }
-
+  
   return <div className="co-masthead__logo">
     <Link to="/" className="co-masthead__logo-link"><img src={logoImg} alt={logoAlt} /></Link>
   </div>;

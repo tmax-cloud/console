@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, setState } from 'react';
 //import { Link } from 'react-router-dom';
 // import { Redirect } from 'react-router-dom';
 //import { App } from './app';
@@ -10,29 +10,56 @@ import '../style.scss';
 import { sha512 } from 'js-sha512';
 
 class LoginComponent extends Component {
-  onClick = () => {
-    const AUTH_SERVER_URL = 'http://192.168.6.225:8088/v3/_api/authenticate';
+  // useState 대신 useRef 써도 됨
+  state = {
+    id: '',
+    pw: '',
+    error: '',
+  };
+
+  constructor(props) {
+    super(props);
+    if (props.history.action !== 'REPLACE') {
+      history.pushState(null, null, location.href);
+      window.onpopstate = function(event) {	
+      history.go(1);
+      } 
+    }
+  };
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+  };
+
+  onClick = (e) => {
+    if (e.type === 'keypress' && e.key !== 'Enter') {
+      return;
+    }
+
+    const AUTH_SERVER_URL = 'https://192.168.6.225:8088/v3/_api/authenticate';
     
-    let id = document.getElementById('loginId').value;
-    let pw = document.getElementById('inputPassword').value;
-
-    const json = {
-      'dto':
-      {
-        'user_id': id, 'password': sha512(pw)
-      }
-    };
-
-    coFetchJSON.post(AUTH_SERVER_URL, json)
-      .then(data => {
-        if (data.dto.result !== 'true') {
-          return;
+    //if (this.state.id !== undefined && this.state.pw !== undefined) {
+      const json = {
+        'dto':
+        {
+          'user_id': this.state.id, 'password': sha512(this.state.pw)
         }
-        window.location = 'http://192.168.8.59:9000/status/all-namespaces';
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      };
+      
+      coFetchJSON.post(AUTH_SERVER_URL, json)
+        .then(data => {
+          if (data.dto.result !== 'true') {
+            this.setState({error: data.dto.error});
+            return;
+          }
+          // const url_ = window.location.href.split('/login')[0]
+          // window.location = `${url_}/status/all-namespaces`;
+          this.props.history.push('/status/all-namespaces');
+        })
+        .catch(error => {
+          console.log(error);
+        });
+  //}
   };
   
   render() {
@@ -65,14 +92,15 @@ class LoginComponent extends Component {
               <input type="hidden"></input>
               <div className="box_login">
                 <div className="inp_text">
-                  <input type="text" id="loginId" autoFocus="autofocus" placeholder="Email"></input>
+                  <input type="text" id="loginId" autoFocus="autofocus" placeholder="Email" value={this.state.id} onKeyPress={this.onClick} onChange={(e) => {this.setState({id: e.target.value})}}></input>
                 </div>
                 <div className="box_login">
                   <div className="inp_text">
-                    <input type="password" id="inputPassword" placeholder="Password"></input>
+                    <input type="password" id="inputPassword" placeholder="Password" value={this.state.pw} onKeyPress={this.onClick} onChange={(e) => {this.setState({pw: e.target.value})}}></input>
                   </div>
                 </div>
                 <div className="box_error">
+                  <p className="error_text">{this.state.error}</p>
                 </div>
                 <div>
                   <button type="button" onClick={this.onClick} className="btn_login" style={{ cursor: 'pointer' }}>Login</button>
