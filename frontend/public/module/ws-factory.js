@@ -33,7 +33,7 @@ export function WSFactory(id, options) {
 
   // TODO: k8s.ts에 하드하게 넣은 값 빼기
   // options.path = options.path.split('https://192.168.8.27:6443')[1];
-  options.path = options.path.split('https://192.168.8.27:31303/api/kubernetes')[1];
+  options.path = options.path.split('https://192.168.8.27:31303')[1];
 
   this.url = createURL(options.host, options.path);
   this._paused = false;
