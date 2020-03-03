@@ -18,8 +18,8 @@ export const getQN: (obj: K8sResourceKind) => string = ({
 // export const k8sBasePath = `${
 //   (window as any).SERVER_FLAGS.basePath
 //   }api/kubernetes`;
-// export const k8sBasePath = `http://192.168.8.60:8787`;
 export const k8sBasePath = "https://192.168.8.27:31303/api/kubernetes";
+// export const k8sBasePath = "https://192.168.8.27:6443";
 
 export const isGroupVersionKind = (ref: GroupVersionKind | string) =>
   ref.split(":").length === 3;
