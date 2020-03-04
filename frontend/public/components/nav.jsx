@@ -379,6 +379,10 @@ export class Nav extends React.Component {
             <HrefLink href="/search" name="Search" onClick={this.close} startsWith={searchStartsWith} />
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
           </NavSection>
+          <NavSection text="Service Catalog" icon="pficon pficon-home">
+            <ResourceNSLink resource="template" name="Template" onClick={this.close} />
+            <ResourceNSLink resource="templateinstance" name="Template Instance" onClick={this.close} />
+          </NavSection>
 
           <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
             <ResourceNSLink model={ClusterServiceVersionModel} resource={ClusterServiceVersionModel.plural} name="Cluster Service Versions" onClick={this.close} />
