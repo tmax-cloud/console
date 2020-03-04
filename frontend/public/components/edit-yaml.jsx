@@ -66,7 +66,11 @@ export const EditYAML = connect(stateToProps)(
 
       // Retrieve k8s API spec for autocompletion
       if (!window.sessionStorage.getItem(`${window.SERVER_FLAGS.consoleVersion}--swagger.json`)) {
-        coFetchJSON('api/kubernetes/swagger.json')
+        // coFetchJSON('api/kubernetes/swagger.json')
+        coFetchJSON('openapi/v2')
+          .then(response => {
+            return response;
+          })
           .then(swagger => window.sessionStorage.setItem(`${window.SERVER_FLAGS.consoleVersion}--swagger.json`, JSON.stringify(swagger)));
       }
     }
