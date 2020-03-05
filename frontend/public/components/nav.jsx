@@ -380,8 +380,8 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
           </NavSection>
           <NavSection text="Service Catalog" icon="pficon pficon-home">
-            <ResourceNSLink resource="template" name="Template" onClick={this.close} />
-            <ResourceNSLink resource="templateinstance" name="Template Instance" onClick={this.close} />
+            <ResourceNSLink resource="templates" name="Template" onClick={this.close} />
+            <ResourceNSLink resource="templateinstances" name="Template Instance" onClick={this.close} />
           </NavSection>
 
           <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
