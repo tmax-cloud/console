@@ -14,6 +14,57 @@ apiVersion: ''
 kind: ''
 metadata:
   name: example
+`).setIn([referenceForModel(k8sModels.TemplateModel), 'default'], `
+apiVersion: tmax.co.kr/v1
+kind: Template
+metadata:
+  name: example-template
+  namespace: default
+objects:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: example
+    labels:
+      app: example
+  spec:
+    selector:
+      matchLabels:
+        app: example
+    template:
+      metadata:
+        labels:
+          app: example
+      spec:
+        containers:
+        - name: example
+          image: example/image:version
+          ports:
+          - name: example
+            containerPort: 80
+
+`).setIn([referenceForModel(k8sModels.TemplateInstanceModel), 'default'], `
+apiVersion: tmax.co.kr/v1
+kind: TemplateInstance
+metadata:
+  name: example-instance
+  namespace: default
+spec:
+  template:
+    metadata:
+      name: example-template
+    parameters:
+    - description: Example Name.
+      displayName: Name
+      name: NAME
+      required: true
+      value: example-instance
+    - description: Example Image.
+      displayName: Image
+      name: IMAGE
+      required: true
+      value: example/image:version
+
 `).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'default'], `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
