@@ -13,7 +13,7 @@ const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Co
 const TemplateHeader = props => <ListHeader>
     <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">Name</ColHead>
     <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.namespace">Namespace</ColHead>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.namespace">Object Number</ColHead>
+    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.namespace">Object Count</ColHead>
     <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">Created</ColHead>
 </ListHeader>;
 
