@@ -54,6 +54,21 @@ export const TemplateModel: K8sKind = {
   id: "template",
   crd: true
 };
+
+export const TemplateInstanceModel: K8sKind = {
+  kind: "TemplateInstance",
+  namespaced: true,
+  label: "Template Instance",
+  plural: "templateinstances",
+  apiVersion: "v1",
+  abbr: "TI",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Template Instances",
+  path: "templateinstances",
+  id: "templateinstance",
+  crd: true
+}
+
 export const SubscriptionModel: K8sKind = {
   kind: 'Subscription',
   label: 'Subscription',
