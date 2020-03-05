@@ -41,6 +41,19 @@ export const InstallPlanModel: K8sKind = {
   plural: 'installplans',
 };
 
+export const TemplateModel: K8sKind = {
+  kind: "Template",
+  namespaced: true,
+  label: "Template",
+  plural: "templates",
+  apiVersion: "v1",
+  abbr: "T",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Templates",
+  path: "templates",
+  id: "template",
+  crd: true
+};
 export const SubscriptionModel: K8sKind = {
   kind: 'Subscription',
   label: 'Subscription',
