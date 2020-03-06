@@ -329,9 +329,9 @@ export class Nav extends React.Component {
     this.preventScroll = e => this.preventScroll_(e);
     this.close = () => this.close_();
     this.toggle = () => this.toggle_();
-
     this.state = {
       isOpen: false,
+      isAdmin: true,
     };
   }
 
@@ -365,7 +365,7 @@ export class Nav extends React.Component {
   }
 
   render () {
-    const { isOpen } = this.state;
+    const { isOpen, isAdmin } = this.state;
 
 
     return <React.Fragment>
@@ -432,7 +432,7 @@ export class Nav extends React.Component {
           </NavSection>
 
           <NavSection text="Storage" icon="pficon pficon-container-node">
-            <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />
+            { isAdmin && <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} /> }
             {/* data volume 추가 */}
             <ResourceNSLink resource="data volumes" name="Data Volumes" onClick={this.close} />
             <ResourceClusterLink resource="persistentvolumes" name="Persistent Volumes" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
@@ -455,9 +455,9 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="pipelineruns" name="Pipeline Runs" onClick={this.close} />
             <ResourceNSLink resource="pipelineresources" name="Pipeline Resources" onClick={this.close} />
           </NavSection>
-          
+
           <NavSection text="Security" icon="pficon pficon-cloud-security">
-            <ResourceNSLink resource="podsecuritypolicies" name="Pod Security Policies" onClick={this.close} />
+            { isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="Pod Security Policies" onClick={this.close} /> }
             <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} />
           </NavSection>
 
@@ -465,20 +465,20 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="metering" name="Metering" onClick={this.close} />
             <ResourceNSLink resource="imageregistries" name="Image Registries" onClick={this.close} />
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
-            <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />
-            <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} />
+            { !isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} /> }
+            { isAdmin && <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} /> }
             {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-            <ResourceClusterLink resource="namespaces" name="Namespaces" onClick={this.close} required={FLAGS.CAN_LIST_NS} />
+            { isAdmin && <ResourceClusterLink resource="namespaces" name="Namespaces" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> }
             <ResourceNSLink resource="resourcequotas" name="Resource Quotas" onClick={this.close} />
-            <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />
+            { !isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} /> }
           </NavSection>
 
           <NavSection text="Authentication/Authorization" icon="fa fa-cog">
-            <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />
-            <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />
+            { isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} /> }
+            { isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} /> }
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
             <ResourceNSLink resource="roles" name="Roles" startsWith={rolesStartsWith} onClick={this.close} />
-            <ResourceNSLink resource="users" name="Users" onClick={this.close} />
+            { isAdmin && <ResourceNSLink resource="users" name="Users" onClick={this.close} /> }
             <ResourceNSLink resource="serviceaccounts" name="Service Accounts" onClick={this.close} />
           </NavSection>
 
