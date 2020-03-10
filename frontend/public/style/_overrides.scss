@@ -164,14 +164,14 @@ tags-input .tags .input {
   outline: none;
   padding: 0;
   // Since iOS phone text input size is larger, remove border and margin and increase line-height
-  @supports (-webkit-overflow-scrolling: touch) { // Target mobile Safari
-    @media (max-width: $grid-float-breakpoint-max) { // Target phones
-      border: 0;
-      line-height: 24px;
-      margin-bottom: 0;
-      margin-top: 0;
-    }
-  }
+  // @supports (-webkit-overflow-scrolling: touch) { // Target mobile Safari
+  //   @media (max-width: $grid-float-breakpoint-max) { // Target phones
+  //     border: 0;
+  //     line-height: 24px;
+  //     margin-bottom: 0;
+  //     margin-top: 0;
+  //   }
+  // }
 }
 tags-input .tags .input.invalid-tag {
   color: $red-invalid;
@@ -308,3 +308,24 @@ tags-input .autocomplete .suggestion-item em {
   background-color: #BBBBBB;
   border: 0px;
 }
+
+.alert-danger {
+  color: #FD5461;
+  font-size: 12px;
+  background-color: transparent;
+  border: 0px;
+}
+
+// .alert-info {
+//   color: #FD5461;
+//   font-size: 12px;
+//   background-color: transparent;
+//   border: 0px;
+// }
+
+// .alert-success {
+//   color: #FD5461;
+//   font-size: 12px;
+//   background-color: transparent;
+//   border: 0px;
+// }
