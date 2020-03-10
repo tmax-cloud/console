@@ -384,7 +384,7 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
           </NavSection> */}
           {/* Service Catalog 전체 추가 */}
-          <NavSection text="Service Catalog" icon="pficon pficon-template">
+          <NavSection text="Service Catalogs" icon="pficon pficon-catalog">
             <ResourceNSLink resource="clusterservicebrokers" name="Cluster Service Brokers" onClick={this.close} />
             <ResourceNSLink resource="clusterserviceclasses" name="Cluster Service Classes" onClick={this.close} />
             <ResourceNSLink resource="clusterserviceplans" name="Cluster Service Plans" onClick={this.close} />
@@ -402,7 +402,7 @@ export class Nav extends React.Component {
             <ResourceNSLink model={InstallPlanModel} resource={InstallPlanModel.plural} name="Install Plans" onClick={this.close} />
           </NavSection> */}
 
-          <NavSection text="Workloads" icon="fa fa-folder-open-o">
+          <NavSection text="Workloads" icon="fa fa-briefcase">
             <ResourceNSLink resource="pods" name="Pods" onClick={this.close} />
             <ResourceNSLink resource="daemonsets" name="Daemon Sets" onClick={this.close} />
             <ResourceNSLink resource="deployments" name="Deployments" onClick={this.close} />
@@ -421,7 +421,7 @@ export class Nav extends React.Component {
             {/* <Sep /> */}
           </NavSection>
 
-          <NavSection text="Network" icon="pficon pficon-network">
+          <NavSection text="Networks" icon="pficon pficon-network">
             {/* istio, virtual service 추가 */}
             <ResourceNSLink resource="istiogateways" name="Istio Gateways" onClick={this.close} />
             <ResourceNSLink resource="virtualservices" name="Virtual Services" onClick={this.close} />
@@ -431,10 +431,10 @@ export class Nav extends React.Component {
             {/* <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} /> */}
           </NavSection>
 
-          <NavSection text="Storage" icon="pficon pficon-container-node">
+          <NavSection text="Storages" icon="fa fa-database">
             { isAdmin && <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} /> }
             {/* data volume 추가 */}
-            <ResourceNSLink resource="data volumes" name="Data Volumes" onClick={this.close} />
+            <ResourceNSLink resource="datavolumes" name="Data Volumes" onClick={this.close} />
             <ResourceClusterLink resource="persistentvolumes" name="Persistent Volumes" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
             <ResourceNSLink resource="persistentvolumeclaims" name="Persistent Volume Claims" onClick={this.close} />
           </NavSection>
@@ -448,7 +448,7 @@ export class Nav extends React.Component {
           {/* <MonitoringNavSection closeMenu={this.close} /> */}
 
           {/* CI/CD 전체 추가 */}
-          <NavSection text="CI/CD" icon="pficon pficon-build">
+          <NavSection text="CI/CD" icon="pficon pficon-process-automation">
             <ResourceNSLink resource="tasks" name="Tasks" onClick={this.close} />
             <ResourceNSLink resource="taskruns" name="Task Runs" onClick={this.close} />
             <ResourceNSLink resource="pipelines" name="Pipelines" onClick={this.close} />
@@ -456,12 +456,12 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="pipelineresources" name="Pipeline Resources" onClick={this.close} />
           </NavSection>
 
-          <NavSection text="Security" icon="pficon pficon-cloud-security">
+          <NavSection text="Securities" icon="fa fa-shield">
             { isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="Pod Security Policies" onClick={this.close} /> }
             <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} />
           </NavSection>
 
-          <NavSection text="Management" icon="fa fa-suitcase">
+          <NavSection text="Managements" icon="pficon pficon-services">
             <ResourceNSLink resource="metering" name="Metering" onClick={this.close} />
             <ResourceNSLink resource="imageregistries" name="Image Registries" onClick={this.close} />
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
@@ -473,7 +473,7 @@ export class Nav extends React.Component {
             { !isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} /> }
           </NavSection>
 
-          <NavSection text="Authentication/Authorization" icon="fa fa-cog">
+          <NavSection text="Auth" icon="fa fa-id-card-o">
             { isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} /> }
             { isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} /> }
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
