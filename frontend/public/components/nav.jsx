@@ -434,7 +434,7 @@ export class Nav extends React.Component {
           <NavSection text="Storage" icon="pficon pficon-container-node">
             { isAdmin && <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} /> }
             {/* data volume 추가 */}
-            <ResourceNSLink resource="data volumes" name="Data Volumes" onClick={this.close} />
+            <ResourceNSLink resource="datavolumes" name="Data Volumes" onClick={this.close} />
             <ResourceClusterLink resource="persistentvolumes" name="Persistent Volumes" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
             <ResourceNSLink resource="persistentvolumeclaims" name="Persistent Volume Claims" onClick={this.close} />
           </NavSection>
@@ -473,7 +473,7 @@ export class Nav extends React.Component {
             { !isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} /> }
           </NavSection>
 
-          <NavSection text="Authentication/Authorization" icon="fa fa-cog">
+          <NavSection text="Auth" icon="fa fa-cog">
             { isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} /> }
             { isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} /> }
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
