@@ -271,8 +271,6 @@ const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({flags}) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
 
-  // Hide the cluster picker temporarily
-  return null;
 
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag) || openshiftFlag) {
@@ -376,7 +374,7 @@ export class Nav extends React.Component {
         <span className="icon-bar" aria-hidden="true"></span>
       </button>
       <div id="sidebar" className={classNames({'open': isOpen})}>
-        <ClusterPickerNavSection />
+        {/* <ClusterPickerNavSection /> */}
         <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
           <NavSection text="홈" icon="pficon pficon-home">
             <HrefLink href="/status" name="Status" activePath="/status/" onClick={this.close} />
@@ -445,7 +443,7 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="imagestreams" name={ImageStreamModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} startsWith={imagestreamsStartsWith} />
           </NavSection> */}
 
-          {/* <MonitoringNavSection closeMenu={this.close} /> */}
+          <MonitoringNavSection closeMenu={this.close} />
 
           {/* CI/CD 전체 추가 */}
           <NavSection text="CI/CD" icon="pficon pficon-process-automation">
