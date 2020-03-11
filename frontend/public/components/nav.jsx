@@ -378,11 +378,11 @@ export class Nav extends React.Component {
       <div id="sidebar" className={classNames({'open': isOpen})}>
         <ClusterPickerNavSection />
         <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-          {/* <NavSection text="Home" icon="pficon pficon-home">
+          <NavSection text="홈" icon="pficon pficon-home">
             <HrefLink href="/status" name="Status" activePath="/status/" onClick={this.close} />
             <HrefLink href="/search" name="Search" onClick={this.close} startsWith={searchStartsWith} />
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
-          </NavSection> */}
+          </NavSection>
           {/* Service Catalog 전체 추가 */}
           <NavSection text="Service Catalogs" icon="pficon pficon-catalog">
             <ResourceNSLink resource="clusterservicebrokers" name="Cluster Service Brokers" onClick={this.close} />
@@ -464,7 +464,7 @@ export class Nav extends React.Component {
           <NavSection text="Managements" icon="pficon pficon-services">
             <ResourceNSLink resource="metering" name="Metering" onClick={this.close} />
             <ResourceNSLink resource="imageregistries" name="Image Registries" onClick={this.close} />
-            <ResourceNSLink resource="events" name="Events" onClick={this.close} />
+            <ResourceNSLink resource="kubeevents" name="Events" onClick={this.close} />
             { !isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} /> }
             { isAdmin && <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} /> }
             {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
