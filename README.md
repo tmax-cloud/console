@@ -11,10 +11,10 @@ HyperCloud Console
   - nvm 명령어 
     - Node 버전 설치: nvm install $version ex) nvm install 10.17.0 // 설치된 Node 목록 확인: nvm ls // 사용할 Node 설정: nvm use $version
   - python 설치, error MSB3428 문제 해결: 
-    1. python 설치 되어있을 시, 프로그램 추가, 제거에서 파이썬 제거 
-    2. 관리자 관한으로 power shell 실행 
-    3. npm install --global --production windows-build-tools@4.0.0 
-    4. npm install -g --production windows-build-tools (완료까지 시간이 걸림)
+    - python 설치 되어있을 시, "프로그램 추가, 제거"에서 파이썬 제거 
+    - 관리자 관한으로 power shell 실행 
+    - npm install --global --production windows-build-tools@4.0.0 
+    - npm install -g --production windows-build-tools (완료까지 시간이 걸림)
 - clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
 ---
 ### 빌드
