@@ -113,6 +113,18 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
 const LazyRoute = (props) => <Route {...props} component={(componentProps) => <AsyncComponent loader={props.loader} kind={props.kind} {...componentProps} />} />;
 
 class App extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAdmin: true
+    };
+    this.changeRole = () => this.changeRole_();
+  }
+  changeRole_ () {
+    this.setState({
+      isAdmin: !this.state.isAdmin
+    });
+  }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
@@ -131,7 +143,7 @@ class App extends React.PureComponent {
     return <React.Fragment>
       <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
       <Masthead />
-      <Nav />
+      <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} />
       <div id="content">
         <Route path={namespacedRoutes} component={NamespaceSelector} />
         <GlobalNotifications />

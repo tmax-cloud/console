@@ -331,7 +331,6 @@ export class Nav extends React.Component {
     this.toggle = () => this.toggle_();
     this.state = {
       isOpen: false,
-      isAdmin: true,
     };
   }
 
@@ -365,7 +364,8 @@ export class Nav extends React.Component {
   }
 
   render() {
-    const { isOpen, isAdmin } = this.state;
+    const { isOpen } = this.state;
+    const { isAdmin } = this.props;
 
 
     return <React.Fragment>
@@ -494,6 +494,7 @@ export class Nav extends React.Component {
           </NavSection> */}
 
           <UserNavSection closeMenu={this.close} />
+          <i style={{ fontSize: '10px', color: '#7878783d', cursor: 'pointer' }} className={`fa fa-${isAdmin ? 'star' : 'star-o'}`} onClick={this.props.changeRole} aria-hidden="true"></i>
         </div>
       </div>
     </React.Fragment>;
