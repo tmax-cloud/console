@@ -7,7 +7,7 @@ HyperCloud Console
 ---
 ### 개발 전 체크사항
 - nodeJs >= 10.17 & yarn >= 1.3.2 & go >= 1.8 & python......
-- (비고) nodeJs의 버전은  ">=8.x <=10.x" 에서 build.sh 가 실행 됨, nvm (node버전 관리툴)을 이용해서 버전 맞춰 주기바랍니다. [참고 블로그](http://hong.adfeel.info/backend/nodejs/window%EC%97%90%EC%84%9C-nvmnode-version-manager-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/)
+- (비고) nodeJs의 버전은  ">=8.x <=10.x" 에서 build.sh 가 실행 됨, nvm (node버전 관리툴)을 이용해 nodeJS 버전 맞춰주세요. [참고 블로그](http://hong.adfeel.info/backend/nodejs/window%EC%97%90%EC%84%9C-nvmnode-version-manager-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/)
 - clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
 ---
 ### 빌드
