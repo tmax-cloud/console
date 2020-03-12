@@ -271,9 +271,6 @@ const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
 
-  // Hide the cluster picker temporarily
-  return null;
-
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag) || openshiftFlag) {
     return null;
@@ -376,7 +373,7 @@ export class Nav extends React.Component {
         <span className="icon-bar" aria-hidden="true"></span>
       </button>
       <div id="sidebar" className={classNames({ 'open': isOpen })}>
-        <ClusterPickerNavSection />
+        {/* <ClusterPickerNavSection /> */}
         <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
           <NavSection text="홈" icon="pficon pficon-home">
             <HrefLink href="/status" name="Status" activePath="/status/" onClick={this.close} />
@@ -464,13 +461,13 @@ export class Nav extends React.Component {
           <NavSection text="Managements" icon="pficon pficon-services">
             <ResourceNSLink resource="metering" name="미터링" onClick={this.close} />
             <ResourceNSLink resource="imageregistries" name="이미지" onClick={this.close} />
-            <ResourceNSLink resource="events" name="이벤트" onClick={this.close} />
             {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />}
             {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />}
             {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
             {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
             <ResourceNSLink resource="resourcequotas" name="리소스 할당량" onClick={this.close} />
             {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
+            <ResourceClusterLink resource="customresourcedefinitions" name="CRDs" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
           </NavSection>
 
           <NavSection text="Auth" icon="fa fa-id-card-o">
@@ -490,7 +487,6 @@ export class Nav extends React.Component {
           {/* <NavSection text="Administration" icon="fa fa-cog">
             <HrefLink href="/settings/cluster" name="Cluster Settings" onClick={this.close} startsWith={clusterSettingsStartsWith} disallowed={FLAGS.OPENSHIFT} />
             <ResourceNSLink resource="chargeback.coreos.com:v1alpha1:Report" name="Chargeback" onClick={this.close} disallowed={FLAGS.OPENSHIFT} />
-            <ResourceClusterLink resource="customresourcedefinitions" name="CRDs" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
           </NavSection> */}
 
           <UserNavSection closeMenu={this.close} />
