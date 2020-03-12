@@ -11,8 +11,8 @@ import {
   ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference, referenceForModel } from '../module/k8s';
-import { TemplateModel } from '../models';
+import { kindForReference } from '../module/k8s';
+// import { TemplateModel } from '../models';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -59,11 +59,11 @@ const TemplateRow = () =>
         <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind={referenceForModel(TemplateModel)}
+            kind="Template"
             resource={obj}
           />
           <ResourceLink
-            kind={referenceForModel(TemplateModel)}
+            kind="Template"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
@@ -119,7 +119,7 @@ export const TemplatesPage = props => (
     {...props}
     ListComponent={TemplateList}
     canCreate={true}
-    kind={referenceForModel(TemplateModel)}
+    kind="Template"
   />
 );
 TemplatesPage.displayName = 'TemplatesPage';
@@ -141,6 +141,7 @@ export const TemplatesDetailsPage = props => (
         path: props.match.url
       })
     }
+    kind="Template"
     menuActions={menuActions}
     pages={[
       navFactory.details(DetailsForKind(props.kind)),

@@ -18,7 +18,8 @@ import {
   kindForReference,
   referenceForModel
 } from '../module/k8s';
-import { TemplateInstanceModel } from '../models';
+// import { TemplateInstanceModel } from '../models';
+import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
   Cog.factory.ModifyLabels,
@@ -64,14 +65,17 @@ const TemplateInstanceHeader = props => (
 );
 
 // template-instance status 값
-const templateInstancePhase = pod => {
+const templateInstancePhase = instance => {
   let phase = '';
-  pod.status.conditions.forEach(cur => {
-    if (cur.type === 'Phase') {
-      phase = cur.status;
-    }
-  });
-  return phase;
+  if (instance.status) {
+    instance.status.conditions.forEach(cur => {
+      if (cur.type === 'Phase') {
+        phase = cur.status;
+      }
+    });
+    return phase;
+  }
+
 };
 
 const TemplateInstanceRow = kind =>
@@ -83,11 +87,11 @@ const TemplateInstanceRow = kind =>
         <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind={referenceForModel(TemplateInstanceModel)}
+            kind="TemplateInstance"
             resource={obj}
           />
           <ResourceLink
-            kind={referenceForModel(TemplateInstanceModel)}
+            kind="TemplateInstance"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
@@ -127,7 +131,6 @@ const Details = ({ obj: templateinstance }) => {
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={templateinstance} />
-            {/* </ResourceSummary> */}
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
@@ -176,18 +179,36 @@ export const TemplateInstancesPage = props => (
     {...props}
     ListComponent={TemplateInstanceList}
     canCreate={true}
-    kind={referenceForModel(TemplateInstanceModel)}
+    kind="TemplateInstance"
   />
 );
 TemplateInstancesPage.displayName = 'TemplateInstancesPage';
 
-export const TemplateInstancesDetailsPage = props => {
-  const pages = [
-    // navFactory.details(DetailsForKind(props.kind)),
-    navFactory.details(Details),
-    navFactory.editYaml()
-  ];
-  return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-};
+// export const TemplateInstancesDetailsPage = props => {
+//   const pages = [
+//     // navFactory.details(DetailsForKind(props.kind)),
+//     navFactory.details(Details),
+//     navFactory.editYaml()
+//   ];
+//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
+// };
+
+export const TemplateInstancesDetailsPage = props => (
+  <DetailsPage
+    {...props}
+    breadcrumbsFor={obj =>
+      breadcrumbsForOwnerRefs(obj).concat({
+        name: 'Template Instances Details',
+        path: props.match.url
+      })
+    }
+    kind="TemplateInstance"
+    menuActions={menuActions}
+    pages={[
+      navFactory.details(Details),
+      navFactory.editYaml()
+    ]}
+  />
+);
 
 TemplateInstancesDetailsPage.displayName = 'TemplateInstancesDetailsPage';

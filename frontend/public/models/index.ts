@@ -52,7 +52,7 @@ export const TemplateModel: K8sKind = {
   labelPlural: "Templates",
   path: "templates",
   id: "template",
-  crd: true
+  crd: false
 };
 
 export const TemplateInstanceModel: K8sKind = {
@@ -66,7 +66,8 @@ export const TemplateInstanceModel: K8sKind = {
   labelPlural: "Template Instances",
   path: "templateinstances",
   id: "templateinstance",
-  crd: true
+  crd: false
+}
 
 export const RegistryModel: K8sKind = {
   kind: "Registry",
@@ -120,7 +121,7 @@ export const PrometheusModel: K8sKind = {
   namespaced: true,
   crd: true,
   plural: 'prometheuses',
-  propagationPolicy : 'Foreground',
+  propagationPolicy: 'Foreground',
 };
 
 export const ServiceMonitorModel: K8sKind = {
@@ -134,7 +135,7 @@ export const ServiceMonitorModel: K8sKind = {
   namespaced: true,
   crd: true,
   plural: 'servicemonitors',
-  propagationPolicy : 'Foreground',
+  propagationPolicy: 'Foreground',
 };
 
 export const AlertmanagerModel: K8sKind = {
@@ -148,7 +149,7 @@ export const AlertmanagerModel: K8sKind = {
   namespaced: true,
   crd: true,
   plural: 'alertmanagers',
-  propagationPolicy : 'Foreground',
+  propagationPolicy: 'Foreground',
 };
 
 export const ClusterModel: K8sKind = {
@@ -695,7 +696,7 @@ export const CronJobModel: K8sKind = {
   kind: 'CronJob',
   id: 'cronjob',
   labelPlural: 'Cron Jobs',
-  propagationPolicy : 'Foreground',
+  propagationPolicy: 'Foreground',
 };
 
 export const StorageClassModel: K8sKind = {
