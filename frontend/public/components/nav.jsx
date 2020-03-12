@@ -378,11 +378,11 @@ export class Nav extends React.Component {
       <div id="sidebar" className={classNames({ 'open': isOpen })}>
         <ClusterPickerNavSection />
         <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-          {/* <NavSection text="Home" icon="pficon pficon-home">
+          <NavSection text="홈" icon="pficon pficon-home">
             <HrefLink href="/status" name="Status" activePath="/status/" onClick={this.close} />
             <HrefLink href="/search" name="Search" onClick={this.close} startsWith={searchStartsWith} />
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
-          </NavSection> */}
+          </NavSection>
           {/* Service Catalog 전체 추가 */}
           <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
             <ResourceNSLink resource="clusterservicebrokers" name="Cluster Service Brokers" onClick={this.close} />
