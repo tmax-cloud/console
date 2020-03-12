@@ -5,6 +5,7 @@ import { Map as ImmutableMap } from 'immutable';
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import {
+  RegistryModel,
   TemplateModel,
   TemplateInstanceModel,
   ClusterModel,
@@ -51,6 +52,7 @@ import {
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(RegistryModel), () => import('./registry' /* webpackChunkName: "template" */).then(m => m.RegistryDetailsPage))
   .set(referenceForModel(TemplateInstanceModel), () => import('./template-instance' /* webpackChunkName: "template" */).then(m => m.TemplateInstancesDetailsPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesDetailsPage))
   .set(referenceForModel(ClusterModel), () => import('./clusters' /* webpackChunkName: "clusters" */).then(m => m.ClustersPage))
@@ -94,6 +96,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(RegistryModel), () => import('./registry' /* webpackChunkName: "template" */).then(m => m.RegistryPage))
   .set(referenceForModel(TemplateInstanceModel), () => import('./template-instance' /* webpackChunkName: "template" */).then(m => m.TemplateInstancesPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesPage))
   .set(referenceForModel(ClusterModel), () => import('./clusters' /* webpackChunkName: "clusters" */).then(m => m.ClustersPage))

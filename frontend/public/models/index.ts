@@ -67,6 +67,19 @@ export const TemplateInstanceModel: K8sKind = {
   path: "templateinstances",
   id: "templateinstance",
   crd: true
+
+export const RegistryModel: K8sKind = {
+  kind: "Registry",
+  namespaced: true,
+  label: "Registry",
+  plural: "imageregistries",
+  apiVersion: "v1",
+  abbr: "R",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Registrys",
+  path: "imageregistries",
+  id: "registry",
+  crd: false
 }
 
 export const SubscriptionModel: K8sKind = {

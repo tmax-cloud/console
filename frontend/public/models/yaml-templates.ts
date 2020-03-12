@@ -14,6 +14,20 @@ apiVersion: ''
 kind: ''
 metadata:
   name: example
+`).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
+apiVersion: tmax.co.kr/v1
+kind: Registry
+metadata: 
+  name: example-registry
+  namespace: hypercloud-system
+  labels:
+    obj: registry
+spec:
+  image: example/registry:b004
+  description: example
+  storageSize: example
+  loginId: example
+  loginPassword: example
 `).setIn([referenceForModel(k8sModels.TemplateModel), 'default'], `
 apiVersion: tmax.co.kr/v1
 kind: Template
