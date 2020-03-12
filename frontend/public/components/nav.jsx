@@ -45,7 +45,7 @@ class NavLink extends React.PureComponent {
     const { isActive, isExternal, id, name, target, onClick } = this.props;
 
     return <li className={classNames('co-m-nav-link', { active: isActive, 'co-m-nav-link__external': isExternal })}>
-      <Link id={id} to={this.to} target={target} onClick={onClick} className={classNames({'co-external-link': isExternal})}>{name}</Link>
+      <Link id={id} to={this.to} target={target} onClick={onClick} className={classNames({ 'co-external-link': isExternal })}>{name}</Link>
     </li>;
   }
 }
@@ -62,12 +62,12 @@ NavLink.propTypes = {
 
 
 class ResourceNSLink extends NavLink {
-  static isActive (props, resourcePath, activeNamespace) {
+  static isActive(props, resourcePath, activeNamespace) {
     const href = stripNS(formatNamespacedRouteForResource(props.resource, activeNamespace));
     return matchesPath(resourcePath, href) || matchesModel(resourcePath, props.model);
   }
 
-  get to () {
+  get to() {
     const { resource, activeNamespace } = this.props;
     return formatNamespacedRouteForResource(resource, activeNamespace);
   }
@@ -82,11 +82,11 @@ ResourceNSLink.propTypes = {
 };
 
 class ResourceClusterLink extends NavLink {
-  static isActive (props, resourcePath) {
+  static isActive(props, resourcePath) {
     return resourcePath === props.resource || _.startsWith(resourcePath, `${props.resource}/`);
   }
 
-  get to () {
+  get to() {
     return `/k8s/cluster/${this.props.resource}`;
   }
 }
@@ -98,12 +98,12 @@ ResourceClusterLink.propTypes = {
 };
 
 class HrefLink extends NavLink {
-  static isActive (props, resourcePath) {
+  static isActive(props, resourcePath) {
     const noNSHref = stripNS(props.href);
     return resourcePath === noNSHref || _.startsWith(resourcePath, `${noNSHref}/`);
   }
 
-  get to () {
+  get to() {
     return this.props.href;
   }
 }
@@ -114,7 +114,7 @@ HrefLink.propTypes = {
   href: PropTypes.string.isRequired,
 };
 
-const navSectionStateToProps = (state, {required}) => {
+const navSectionStateToProps = (state, { required }) => {
   const flags = state[featureReducerName];
   const canRender = required ? flags.get(required) : true;
 
@@ -127,7 +127,7 @@ const navSectionStateToProps = (state, {required}) => {
 
 const NavSection = connect(navSectionStateToProps)(
   class NavSection extends React.Component {
-    constructor (props) {
+    constructor(props) {
       super(props);
       this.toggle = e => this.toggle_(e);
       this.open = () => this.open_();
@@ -140,7 +140,7 @@ const NavSection = connect(navSectionStateToProps)(
       }
     }
 
-    shouldComponentUpdate (nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
       const { isOpen } = this.state;
 
       if (isOpen !== nextProps.isOpen) {
@@ -154,7 +154,7 @@ const NavSection = connect(navSectionStateToProps)(
       return nextProps.location !== this.props.location || nextProps.flags !== this.props.flags;
     }
 
-    getActiveChild () {
+    getActiveChild() {
       const { activeNamespace, location, children } = this.props;
 
       if (!children) {
@@ -184,15 +184,15 @@ const NavSection = connect(navSectionStateToProps)(
       }
 
       const activeChild = this.getActiveChild();
-      const state = {activeChild};
+      const state = { activeChild };
       if (activeChild && !prevState.activeChild) {
         state.isOpen = true;
       }
       this.setState(state);
     }
 
-    open_ () {
-      this.setState({isOpen: true});
+    open_() {
+      this.setState({ isOpen: true });
     }
 
     toggle_(e) {
@@ -207,10 +207,10 @@ const NavSection = connect(navSectionStateToProps)(
         onClick();
       }
 
-      this.setState({isOpen: !this.state.isOpen});
+      this.setState({ isOpen: !this.state.isOpen });
     }
 
-    render () {
+    render() {
       if (!this.props.canRender) {
         return null;
       }
@@ -233,26 +233,26 @@ const NavSection = connect(navSectionStateToProps)(
         if (!c) {
           return null;
         }
-        const {name, required, disallowed} = c.props;
+        const { name, required, disallowed } = c.props;
         if (required && (flagPending(flags.get(required)) || !flags.get(required))) {
           return null;
         }
         if (disallowed && (flagPending(flags.get(disallowed)) || flags.get(disallowed))) {
           return null;
         }
-        return React.cloneElement(c, {key: name, isActive: name === this.state.activeChild, activeNamespace});
+        return React.cloneElement(c, { key: name, isActive: name === this.state.activeChild, activeNamespace });
       });
 
       return <div className={classNames(sectionClassName, klass)}>
         <div id={id} className={secionTitleClassName} onClick={this.toggle}>
           {icon && <i className={iconClassName} aria-hidden="true"></i>}
           {img && <img src={isActive && activeImg ? activeImg : img} />}
-          { !href
+          {!href
             ? text
             : <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>{text}</Link>
           }
         </div>
-        {Children && <ul className="navigation-container__list" style={{maxHeight}}>{Children}</ul>}
+        {Children && <ul className="navigation-container__list" style={{ maxHeight }}>{Children}</ul>}
       </div>;
     }
   }
@@ -267,10 +267,12 @@ const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
 const imagestreamsStartsWith = ['imagestreams', 'imagestreamtags'];
 const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 
-const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({flags}) => {
+const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
 
+  // Hide the cluster picker temporarily
+  return null;
 
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag) || openshiftFlag) {
@@ -282,7 +284,7 @@ const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({flags}) => {
   </div>;
 });
 
-const MonitoringNavSection_ = ({urls, closeMenu}) => {
+const MonitoringNavSection_ = ({ urls, closeMenu }) => {
   const prometheusURL = urls[MonitoringRoutes.Prometheus];
   const alertManagerURL = urls[MonitoringRoutes.AlertManager];
   const grafanaURL = urls[MonitoringRoutes.Grafana];
@@ -296,7 +298,7 @@ const MonitoringNavSection_ = ({urls, closeMenu}) => {
 };
 const MonitoringNavSection = connectToURLs(MonitoringRoutes.Prometheus, MonitoringRoutes.AlertManager, MonitoringRoutes.Grafana)(MonitoringNavSection_);
 
-const UserNavSection = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)(({flags, closeMenu}) => {
+const UserNavSection = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)(({ flags, closeMenu }) => {
   if (!flags[FLAGS.AUTH_ENABLED] || flagPending(flags[FLAGS.OPENSHIFT])) {
     return null;
   }
@@ -321,7 +323,7 @@ const UserNavSection = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)(({fla
 });
 
 export class Nav extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.scroller = React.createRef();
     this.preventScroll = e => this.preventScroll_(e);
@@ -335,7 +337,7 @@ export class Nav extends React.Component {
 
   // Edge disobeys the spec and doesn't fire off wheel events: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/7134034/
   // TODO maybe bind to touch events or something? (onpointermove)
-  preventScroll_ (e) {
+  preventScroll_(e) {
     const elem = this.scroller.current;
 
     const scrollTop = elem.scrollTop; // scroll position
@@ -353,16 +355,16 @@ export class Nav extends React.Component {
     }
   }
 
-  close_ () {
-    this.setState({isOpen: false});
+  close_() {
+    this.setState({ isOpen: false });
   }
 
-  toggle_ () {
+  toggle_() {
     const { isOpen } = this.state;
-    this.setState({isOpen: !isOpen});
+    this.setState({ isOpen: !isOpen });
   }
 
-  render () {
+  render() {
     const { isOpen, isAdmin } = this.state;
 
 
@@ -373,23 +375,23 @@ export class Nav extends React.Component {
         <span className="icon-bar" aria-hidden="true"></span>
         <span className="icon-bar" aria-hidden="true"></span>
       </button>
-      <div id="sidebar" className={classNames({'open': isOpen})}>
-        {/* <ClusterPickerNavSection /> */}
+      <div id="sidebar" className={classNames({ 'open': isOpen })}>
+        <ClusterPickerNavSection />
         <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-          <NavSection text="홈" icon="pficon pficon-home">
+          {/* <NavSection text="Home" icon="pficon pficon-home">
             <HrefLink href="/status" name="Status" activePath="/status/" onClick={this.close} />
             <HrefLink href="/search" name="Search" onClick={this.close} startsWith={searchStartsWith} />
             <ResourceNSLink resource="events" name="Events" onClick={this.close} />
-          </NavSection>
+          </NavSection> */}
           {/* Service Catalog 전체 추가 */}
-          <NavSection text="Service Catalogs" icon="pficon pficon-catalog">
+          <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
             <ResourceNSLink resource="clusterservicebrokers" name="Cluster Service Brokers" onClick={this.close} />
             <ResourceNSLink resource="clusterserviceclasses" name="Cluster Service Classes" onClick={this.close} />
             <ResourceNSLink resource="clusterserviceplans" name="Cluster Service Plans" onClick={this.close} />
-            <ResourceNSLink resource="serviceinstances" name="Service Instances" onClick={this.close} />
+            <ResourceNSLink resource="serviceinstances" name="서비스 인스턴스" onClick={this.close} />
             <ResourceNSLink resource="servicebindings" name="Service Bindings" onClick={this.close} />
-            <ResourceNSLink resource="templates" name="Templates" onClick={this.close} />
-            <ResourceNSLink resource="templateinstances" name="Template Instances" onClick={this.close} />
+            <ResourceNSLink resource="templates" name="템플릿" onClick={this.close} />
+            <ResourceNSLink resource="templateinstances" name="템플릿 인스턴스" onClick={this.close} />
           </NavSection>
 
           {/* <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
@@ -400,40 +402,40 @@ export class Nav extends React.Component {
             <ResourceNSLink model={InstallPlanModel} resource={InstallPlanModel.plural} name="Install Plans" onClick={this.close} />
           </NavSection> */}
 
-          <NavSection text="Workloads" icon="fa fa-briefcase">
-            <ResourceNSLink resource="pods" name="Pods" onClick={this.close} />
-            <ResourceNSLink resource="daemonsets" name="Daemon Sets" onClick={this.close} />
-            <ResourceNSLink resource="deployments" name="Deployments" onClick={this.close} />
-            <ResourceNSLink resource="statefulsets" name="Stateful Sets" onClick={this.close} />
+          <NavSection text="워크로드" icon="fa fa-briefcase">
+            <ResourceNSLink resource="pods" name="파드" onClick={this.close} />
+            <ResourceNSLink resource="daemonsets" name="데몬셋" onClick={this.close} />
+            <ResourceNSLink resource="deployments" name="디플로이먼트" onClick={this.close} />
+            <ResourceNSLink resource="statefulsets" name="스테이트풀셋" onClick={this.close} />
             {/* VM 추가 */}
-            <ResourceNSLink resource="virtualmachineinstances" name="Virtual Machine Instances" onClick={this.close} /> 
-            <ResourceNSLink resource="virtualmachines" name="Virtual Machines" onClick={this.close} />
+            <ResourceNSLink resource="virtualmachineinstances" name="Virtual Machine Instances" onClick={this.close} />
+            <ResourceNSLink resource="virtualmachines" name="가상머신" onClick={this.close} />
             <ResourceNSLink resource="configmaps" name="Config Maps" onClick={this.close} />
             <ResourceNSLink resource="secrets" name="Secrets" onClick={this.close} />
-            <ResourceNSLink resource="replicasets" name="Replica Sets" onClick={this.close} />
-            <ResourceNSLink resource="replicationcontrollers" name="Replication Controllers" onClick={this.close} />
+            <ResourceNSLink resource="replicasets" name="레플리카셋" onClick={this.close} />
+            <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} />
             <ResourceNSLink resource="horizontalpodautoscalers" name="HPAs" onClick={this.close} />
             <ResourceNSLink resource="jobs" name="Jobs" onClick={this.close} />
-            <ResourceNSLink resource="cronjobs" name="Cron Jobs" onClick={this.close} />
+            <ResourceNSLink resource="cronjobs" name="크론잡" onClick={this.close} />
             {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
             {/* <Sep /> */}
           </NavSection>
 
-          <NavSection text="Networks" icon="pficon pficon-network">
+          <NavSection text="네트워크" icon="pficon pficon-network">
             {/* istio, virtual service 추가 */}
             <ResourceNSLink resource="istiogateways" name="Istio Gateways" onClick={this.close} />
             <ResourceNSLink resource="virtualservices" name="Virtual Services" onClick={this.close} />
-            <ResourceNSLink resource="ingresses" name="Ingresses" onClick={this.close} />
-            <ResourceNSLink resource="services" name="Services" onClick={this.close} />
+            <ResourceNSLink resource="ingresses" name="인그레스" onClick={this.close} />
+            <ResourceNSLink resource="services" name="서비스" onClick={this.close} />
             {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
             {/* <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} /> */}
           </NavSection>
 
-          <NavSection text="Storages" icon="fa fa-database">
-            { isAdmin && <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} /> }
+          <NavSection text="스토리지" icon="fa fa-database">
+            {isAdmin && <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />}
             {/* data volume 추가 */}
             <ResourceNSLink resource="datavolumes" name="Data Volumes" onClick={this.close} />
-            <ResourceClusterLink resource="persistentvolumes" name="Persistent Volumes" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
+            <ResourceClusterLink resource="persistentvolumes" name="영구볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
             <ResourceNSLink resource="persistentvolumeclaims" name="Persistent Volume Claims" onClick={this.close} />
           </NavSection>
 
@@ -443,46 +445,46 @@ export class Nav extends React.Component {
             <ResourceNSLink resource="imagestreams" name={ImageStreamModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} startsWith={imagestreamsStartsWith} />
           </NavSection> */}
 
-          <MonitoringNavSection closeMenu={this.close} />
+          {/* <MonitoringNavSection closeMenu={this.close} /> */}
 
           {/* CI/CD 전체 추가 */}
           <NavSection text="CI/CD" icon="pficon pficon-process-automation">
             <ResourceNSLink resource="tasks" name="Tasks" onClick={this.close} />
             <ResourceNSLink resource="taskruns" name="Task Runs" onClick={this.close} />
-            <ResourceNSLink resource="pipelines" name="Pipelines" onClick={this.close} />
+            <ResourceNSLink resource="pipelines" name="파이프라인" onClick={this.close} />
             <ResourceNSLink resource="pipelineruns" name="Pipeline Runs" onClick={this.close} />
             <ResourceNSLink resource="pipelineresources" name="Pipeline Resources" onClick={this.close} />
           </NavSection>
 
           <NavSection text="Securities" icon="fa fa-shield">
-            { isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="Pod Security Policies" onClick={this.close} /> }
-            <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} />
+            {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드보안정책" onClick={this.close} />}
+            <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
           </NavSection>
 
           <NavSection text="Managements" icon="pficon pficon-services">
-            <ResourceNSLink resource="metering" name="Metering" onClick={this.close} />
-            <ResourceNSLink resource="imageregistries" name="Image Registries" onClick={this.close} />
-            <ResourceNSLink resource="kubeevents" name="Events" onClick={this.close} />
-            { !isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} /> }
-            { isAdmin && <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} /> }
+            <ResourceNSLink resource="metering" name="미터링" onClick={this.close} />
+            <ResourceNSLink resource="imageregistries" name="이미지" onClick={this.close} />
+            <ResourceNSLink resource="events" name="이벤트" onClick={this.close} />
+            {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />}
+            {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />}
             {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-            { isAdmin && <ResourceClusterLink resource="namespaces" name="Namespaces" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> }
-            <ResourceNSLink resource="resourcequotas" name="Resource Quotas" onClick={this.close} />
-            { !isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} /> }
+            {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
+            <ResourceNSLink resource="resourcequotas" name="리소스 할당량" onClick={this.close} />
+            {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
           </NavSection>
 
           <NavSection text="Auth" icon="fa fa-id-card-o">
-            { isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} /> }
-            { isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} /> }
+            {isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />}
+            {isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />}
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
             <ResourceNSLink resource="roles" name="Roles" startsWith={rolesStartsWith} onClick={this.close} />
-            { isAdmin && <ResourceNSLink resource="users" name="Users" onClick={this.close} /> }
+            {isAdmin && <ResourceNSLink resource="users" name="사용자" onClick={this.close} />}
             <ResourceNSLink resource="serviceaccounts" name="Service Accounts" onClick={this.close} />
           </NavSection>
 
-          <NavSection text="Hosts" icon="pficon pficon-server">
+          <NavSection text="호스트" icon="pficon pficon-server">
             {/* <ResourceClusterLink resource="nodes" name="Nodes" onClick={this.close} /> */}
-            <ResourceClusterLink resource="nodes" name="Nodes" onClick={this.close} required={FLAGS.CAN_LIST_NODE} />
+            <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} />
           </NavSection>
 
           {/* <NavSection text="Administration" icon="fa fa-cog">
