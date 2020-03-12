@@ -10,19 +10,19 @@ HyperCloud Console
 - (비고) nodeJs의 버전은  ">=8.x <=10.x" 에서 build.sh 가 실행 됨, nvm (node버전 관리툴)을 이용해 nodeJS 버전 맞춰주세요. [참고 블로그](http://hong.adfeel.info/backend/nodejs/window%EC%97%90%EC%84%9C-nvmnode-version-manager-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/)
 - (비고) nvm 필요 명령어 
 | nvm 필요 명령어 | 
-| ------ | 
-| # Node 버전 설치 | 
-| $ nvm install <version>  # ex> nvm install 8.9.4 |
-| |
-| # 설치된 Node 버전 목록 확인|
-| $ nvm ls  |
-||
-| # 사용할 Node 설정  |
-| $ nvm use <version>  # ex> nvm use 8.9.4  |
-| $ nvm use <alias>  # ex> nvm use default|
-||
-| # 사용할 alias 설정|
-| $ nvm alias <alias> <version>  # ex> nvm alias test-v 8.9.4 |
+| ------ |
+| # Node 버전 설치  
+$ nvm install <version>  # ex> nvm install 8.9.4
+
+# 설치된 Node 버전 목록 확인
+$ nvm ls  
+
+# 사용할 Node 설정  
+$ nvm use <version>  # ex> nvm use 8.9.4  
+$ nvm use <alias>  # ex> nvm use default
+
+# 사용할 alias 설정
+$ nvm alias <alias> <version>  # ex> nvm alias test-v 8.9.4 | 
 
 - clone시에 C:\Users\USER_NAME\go\src\github.com\openshift\console에 파일이 담기도록 합시다. (빌드시 안돌아가는 스크립트들이 있음)
 ---
