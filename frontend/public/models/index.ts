@@ -25,7 +25,7 @@ export const ClusterServiceVersionModel: K8sKind = {
   namespaced: true,
   crd: true,
   plural: 'clusterserviceversions',
-  propagationPolicy : 'Foreground',
+  propagationPolicy: 'Foreground',
 };
 
 export const InstallPlanModel: K8sKind = {
@@ -107,7 +107,7 @@ export const EtcdClusterModel: K8sKind = {
   namespaced: true,
   crd: true,
   plural: 'etcdclusters',
-  propagationPolicy : 'Foreground',
+  propagationPolicy: 'Foreground',
 };
 
 export const PrometheusModel: K8sKind = {
@@ -620,7 +620,71 @@ export const PersistentVolumeClaimModel: K8sKind = {
   id: 'persistentvolumeclaim',
   labelPlural: 'Persistent Volume Claims'
 };
-
+export const TaskModel: K8sKind = {
+  kind: "Task",
+  namespaced: true,
+  label: "Task",
+  plural: "tasks",
+  apiVersion: "v1",
+  abbr: "TASK",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Tasks",
+  path: "tasks",
+  id: "task",
+  crd: false
+};
+export const TaskRunModel: K8sKind = {
+  kind: "TaskRun",
+  namespaced: true,
+  label: "Task Run",
+  plural: "taskruns",
+  apiVersion: "v1",
+  abbr: "TR",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Task Runs",
+  path: "taskruns",
+  id: "taskrun",
+  crd: false
+};
+export const PipelineResourceModel: K8sKind = {
+  kind: "PipelineResource",
+  namespaced: true,
+  label: "Pipeline Resource",
+  plural: "pipelineresources",
+  apiVersion: "v1",
+  abbr: "PR",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Pipeline Resources",
+  path: "pipelineresources",
+  id: "pipelineresource",
+  crd: false
+};
+export const PipelineModel: K8sKind = {
+  kind: "Pipeline",
+  namespaced: true,
+  label: "Pipeline",
+  plural: "pipelines",
+  apiVersion: "v1",
+  abbr: "T",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Pipelines",
+  path: "pipelines",
+  id: "pipeline",
+  crd: false
+};
+export const PipelineRunModel: K8sKind = {
+  kind: "PipelineRun",
+  namespaced: true,
+  label: "Pipeline Run",
+  plural: "pipelineruns",
+  apiVersion: "v1",
+  abbr: "T",
+  apiGroup: "tmax.co.kr",
+  labelPlural: "Pipeline Runs",
+  path: "pipelineruns",
+  id: "pipelinerun",
+  crd: false
+};
 export const PetsetModel: K8sKind = {
   apiVersion: 'v1',
   label: 'Petset',
