@@ -4,7 +4,7 @@
   color: $color-os-nav-title;
   display: flex;
   //height: $masthead-height-mobile;
-  height: 60px;
+  height: 56px;
   left: 0;
   position: fixed;
   right: 0;
@@ -14,7 +14,7 @@
   }
   @media(min-width: $grid-float-breakpoint) {
     //height: $masthead-height-desktop;
-    height: 60px;
+    height: 56px;
   }
   &__console-picker {
     margin-left: 10px;
@@ -39,8 +39,8 @@
   &__logo-link {
     display: flex;
     //height: 100%;
-    width: 213px;
-    height: 60px;
+    width: 199px;
+    height: 56px;
   }
   &__user {
     display: none;
@@ -72,7 +72,7 @@
 }
 
 .contextselector-pf .bootstrap-select > .dropdown-toggle {
-  height: 60px;
+  height: 56px;
   font-weight: 300;
   //padding-top: 19px;
   padding-top: 10px;
