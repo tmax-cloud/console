@@ -24,12 +24,12 @@ const menuActions = [
 
 const TaskHeader = props => (
     <ListHeader>
-        <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+        <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
             Name
     </ColHead>
         <ColHead
             {...props}
-            className="col-xs-3 col-sm-3"
+            className="col-xs-4 col-sm-4"
             sortField="metadata.namespace"
         >
             Namespace
@@ -37,7 +37,7 @@ const TaskHeader = props => (
 
         <ColHead
             {...props}
-            className="col-sm-3 hidden-xs"
+            className="col-sm-4 hidden-xs"
             sortField="metadata.creationTimestamp"
         >
             Created
@@ -50,7 +50,7 @@ const TaskRow = () =>
     function TaskRow({ obj }) {
         return (
             <div className="row co-resource-list__item">
-                <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
+                <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
                     <ResourceCog
                         actions={menuActions}
                         kind="Task"
@@ -63,7 +63,7 @@ const TaskRow = () =>
                         title={obj.metadata.name}
                     />
                 </div>
-                <div className="col-xs-3 col-sm-3 co-break-word">
+                <div className="col-xs-4 col-sm-4 co-break-word">
                     {obj.metadata.namespace ? (
                         <ResourceLink
                             kind="Namespace"
@@ -74,10 +74,8 @@ const TaskRow = () =>
                             'None'
                         )}
                 </div>
-                <div className="col-xs-3 col-sm-3 co-break-word">
-                    {(obj.objects && obj.objects.length) || 'None'}
-                </div>
-                <div className="col-xs-3 col-sm-3 hidden-xs">
+
+                <div className="col-xs-4 col-sm-4 hidden-xs">
                     {fromNow(obj.metadata.creationTimestamp)}
                 </div>
             </div>
