@@ -14,6 +14,142 @@ apiVersion: ''
 kind: ''
 metadata:
   name: example
+`)
+  .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+    name: example-task
+    namespace: example-namespace
+spec:
+    inputs:
+        resources:
+            - name: git-source
+              type: git
+        params:
+            - name: example-string
+              type: string
+              description: a sample string
+              default: default-string-value
+    outputs:
+        resources:
+            - name: output-image
+              type: image
+    steps:
+        - name: sample-job
+          image: sample-image-name:latest
+          env:
+            - name: "SAMPLE_ENV"
+              value: "hello/world/"
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - "echo helloworld"
+`)
+  .setIn([referenceForModel(k8sModels.TaskRunModel), 'default'], `
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+    name: example-taskrun
+    namespace: example-namespace
+spec:
+    serviceAccountName: example-san
+    taskRef:
+        name: example-task
+    inputs:
+        resources:
+            - name: git-source
+              resourceRef:
+                name: example-pipeline-resource-git
+        params:
+            - name: example-string
+              value: input-string
+    outputs:
+        resources:
+            - name: output-image
+              resourceRef:
+                name: example-pipeline-resource-image
+`).setIn([referenceForModel(k8sModels.PipelineResourceModel), 'default'], `
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+    name: example-pipeline-resource-git
+    namespace: example-namespace
+spec:
+    type: git
+    params:
+        - name: revision
+          value: master
+        - name: url
+          value: https://github.com/sample/git/url
+`).setIn([referenceForModel(k8sModels.PipelineModel), 'default'], `
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: example-namespace
+spec:
+    resources:
+        resources:
+            - name: source-repo
+              type: git
+            - name: sample-image
+              type: image
+    tasks:
+        - name: task1
+          taskRef:
+            name: example-task1
+          params:
+            - name: example-string
+              value: sample-string1
+          resources:
+            inputs:
+                - name: example-pipeline-resource-git
+                  resource: source-repo
+            outputs:
+                - name: example-pipeline-resource-image
+                  resource: sample-image
+        - name: task2
+          taskRef:
+            name: example-task2
+          resources:
+            inputs:
+                - name: example-input-image
+                  resource: sample-image
+                  from:
+                    - task1
+`).setIn([referenceForModel(k8sModels.PipelineRunModel), 'default'], `
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+    name: example-pipeline-run
+    namespace: example-namespace
+spec:
+    serviceAccountName: example-san
+    pipelineRef:
+        name: example-pipeline
+    resources:
+        - name: source-repo
+          resourceRef:
+            name: example-pipeline-resource-git
+        - name: sample-image
+          resourceRef:
+            name: example-pipeline-resource-image
+`).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
+apiVersion: tmax.co.kr/v1
+kind: Registry
+metadata: 
+  name: example-registry
+  namespace: hypercloud-system
+  labels:
+    obj: registry
+spec:
+  image: example/registry:b004
+  description: example
+  storageSize: example
+  loginId: example
+  loginPassword: example
 `).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
 apiVersion: tmax.co.kr/v1
 kind: Registry
