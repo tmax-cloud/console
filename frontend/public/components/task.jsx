@@ -85,6 +85,22 @@ const TaskRow = () =>
     };
 
 
+const DetailsForKind = kind =>
+    function DetailsForKind_({ obj }) {
+        return (
+            <React.Fragment>
+                <div className="co-m-pane__body">
+                    <SectionHeading text={`${kindForReference(kind)} Overview`} />
+                    <ResourceSummary
+                        resource={obj}
+                        podSelector="spec.podSelector"
+                        showNodeSelector={false}
+                    />
+                </div>
+            </React.Fragment>
+        );
+    };
+
 
 export const TaskList = props => {
     const { kinds } = props;
@@ -103,14 +119,6 @@ export const TasksPage = props => (
     />
 );
 TasksPage.displayName = 'TasksPage';
-
-// export const TaskDetailsPage = props => {
-//   const pages = [
-//     navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
 
 export const TaskDetailsPage = props => (
     <DetailsPage
