@@ -9,11 +9,11 @@ body,
 
 #content {
   //padding-top: $masthead-height-mobile;
-  padding-top: 40px;
+  padding-top: 60px;
   @media (min-width: $grid-float-breakpoint) {
     padding-left: $sidebar-width;
     //padding-top: $masthead-height-desktop;
-    padding-top: 40px;
+    padding-top: 60px;
   }
 }
 
@@ -26,7 +26,7 @@ body,
   left: 0;
   position: fixed;
   //top: $masthead-height-mobile;
-  top: 40px;
+  top: 60px;
   width: $sidebar-width;
   z-index: $sidebar-z-index;
   @media (max-width: $grid-float-breakpoint-max) {
@@ -39,7 +39,7 @@ body,
   }
   @media (min-width: $grid-float-breakpoint) {
     //top: $masthead-height-desktop;
-    top: 40px;
+    top: 60px;
   }
 }
 
@@ -50,7 +50,8 @@ body,
   border: 0;
   //margin: 4px 5px;
   //padding: 9px 10px;
-  padding: 13px 15px;
+  margin-left: -1px;
+  padding: 23px 15px;
   position: fixed;
   z-index: $masthead-z-index;
   @media (min-width: $grid-float-breakpoint) {
