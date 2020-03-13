@@ -80,7 +80,7 @@ export const RegistryModel: K8sKind = {
   labelPlural: "Registrys",
   path: "imageregistries",
   id: "registry",
-  crd: false
+  crd: true
 }
 
 export const SubscriptionModel: K8sKind = {
