@@ -241,12 +241,12 @@ export const ListPage = props => {
   const { labelPlural, plural, namespaced, label } = ko;
   const title = props.title || labelPlural;
   let href = namespaced ? `/k8s/ns/${namespace || 'default'}/${plural}/new` : `/k8s/cluster/${plural}/new`;
-  // if (ko.crd) {
-  //   try {
-  //     const ref = referenceForModel(ko);
-  //     href = namespaced ? `/k8s/ns/${namespace || 'default'}/${ref}/new` : `/k8s/cluster/${ref}/new`;
-  //   } catch (unused) { /**/ }
-  // }
+  if (ko.crd) {
+    try {
+      const ref = referenceForModel(ko);
+      href = namespaced ? `/k8s/ns/${namespace || 'default'}/${ref}/new` : `/k8s/cluster/${ref}/new`;
+    } catch (unused) { /**/ }
+  }
 
   createProps = createProps || (createHandler ? { onClick: createHandler } : { to: href });
   const resources = [{ kind, name, namespaced, selector, fieldSelector, filters, limit }];

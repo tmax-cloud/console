@@ -23,10 +23,9 @@ export const resourcePathFromModel = (model, name, namespace) => {
     url += namespace ? `ns/${namespace}/` : 'all-namespaces/';
   }
 
-  // if (crd) {
-  //   url += referenceForModel(model);
-  // } else 
-  if (path) {
+  if (crd) {
+    url += referenceForModel(model);
+  } else if (path) {
     url += path;
   }
 

@@ -11,8 +11,7 @@ import {
   ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference, referenceForModel } from '../module/k8s';
-import { RegistryModel } from '../models';
+import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
