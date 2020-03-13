@@ -11,8 +11,8 @@ import {
   ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference } from '../module/k8s';
-// import { TemplateModel } from '../models';
+import { kindForReference, referenceForModel } from '../module/k8s';
+import { RegistryModel } from '../models';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -22,7 +22,7 @@ const menuActions = [
   Cog.factory.Delete
 ];
 
-const TemplateHeader = props => (
+const RegistryHeader = props => (
   <ListHeader>
     <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
       Name
@@ -51,19 +51,19 @@ const TemplateHeader = props => (
   </ListHeader>
 );
 
-const TemplateRow = () =>
+const RegistryRow = () =>
   // eslint-disable-next-line no-shadow
-  function TemplateRow({ obj }) {
+  function RegistryRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind="Template"
+            kind="Registry"
             resource={obj}
           />
           <ResourceLink
-            kind="Template"
+            kind="Registry"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
@@ -106,23 +106,23 @@ const DetailsForKind = kind =>
     );
   };
 
-export const TemplateList = props => {
+export const RegistryList = props => {
   const { kinds } = props;
-  const Row = TemplateRow(kinds[0]);
-  Row.displayName = 'TemplateRow';
-  return <List {...props} Header={TemplateHeader} Row={Row} />;
+  const Row = RegistryRow(kinds[0]);
+  Row.displayName = 'RegistryRow';
+  return <List {...props} Header={RegistryHeader} Row={Row} />;
 };
-TemplateList.displayName = TemplateList;
+RegistryList.displayName = RegistryList;
 
-export const TemplatesPage = props => (
+export const RegistryPage = props => (
   <ListPage
     {...props}
-    ListComponent={TemplateList}
+    ListComponent={RegistryList}
     canCreate={true}
-    kind="Template"
+    kind="Registry"
   />
 );
-TemplatesPage.displayName = 'TemplatesPage';
+RegistryPage.displayName = 'RegistryPage';
 
 // export const TemplatesDetailsPage = props => {
 //   const pages = [
@@ -132,16 +132,16 @@ TemplatesPage.displayName = 'TemplatesPage';
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
 
-export const TemplatesDetailsPage = props => (
+export const RegistryDetailsPage = props => (
   <DetailsPage
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Template Details',
+        name: 'Registry Details',
         path: props.match.url
       })
     }
-    kind="Template"
+    kind="Registry"
     menuActions={menuActions}
     pages={[
       navFactory.details(DetailsForKind(props.kind)),
@@ -150,4 +150,4 @@ export const TemplatesDetailsPage = props => (
   />
 );
 
-TemplatesDetailsPage.displayName = 'TemplatesDetailsPage';
+RegistryDetailsPage.displayName = 'RegistryDetailsPage';
