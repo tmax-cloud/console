@@ -73,14 +73,14 @@ export const RegistryModel: K8sKind = {
   kind: "Registry",
   namespaced: true,
   label: "Registry",
-  plural: "imageregistries",
+  plural: "registries",
   apiVersion: "v1",
   abbr: "R",
   apiGroup: "tmax.co.kr",
   labelPlural: "Registrys",
-  path: "imageregistries",
+  path: "registries",
   id: "registry",
-  crd: true
+  crd: false
 }
 
 export const SubscriptionModel: K8sKind = {
