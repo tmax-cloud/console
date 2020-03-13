@@ -11,7 +11,7 @@ import { connectToFlags, FLAGS } from '../../features';
 const unknownKinds = new Set();
 
 export const resourcePathFromModel = (model, name, namespace) => {
-  const {path, namespaced, crd} = model;
+  const { path, namespaced, crd } = model;
 
   let url = '/k8s/';
 
@@ -23,9 +23,10 @@ export const resourcePathFromModel = (model, name, namespace) => {
     url += namespace ? `ns/${namespace}/` : 'all-namespaces/';
   }
 
-  if (crd) {
-    url += referenceForModel(model);
-  } else if (path) {
+  // if (crd) {
+  //   url += referenceForModel(model);
+  // } else 
+  if (path) {
     url += path;
   }
 
@@ -58,7 +59,7 @@ export const resourcePath = (kind, name, namespace) => {
 export const resourceObjPath = (obj, kind) => resourcePath(kind, _.get(obj, 'metadata.name'), _.get(obj, 'metadata.namespace'));
 
 export const ResourceLink = connectToModel(
-  ({className, kind, name, namespace, title, displayName, linkTo = true, kindsInFlight}) => {
+  ({ className, kind, name, namespace, title, displayName, linkTo = true, kindsInFlight }) => {
     if (kindsInFlight) {
       return null;
     }
@@ -74,7 +75,7 @@ export const ResourceLink = connectToModel(
 ResourceLink.displayName = 'ResourceLink';
 
 const NodeLink_ = (props) => {
-  const {name, flags} = props;
+  const { name, flags } = props;
   if (!name) {
     return <React.Fragment>-</React.Fragment>;
   }

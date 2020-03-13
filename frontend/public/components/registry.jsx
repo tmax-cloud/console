@@ -59,11 +59,11 @@ const RegistryRow = () =>
         <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind="Registry"
+            kind={referenceForModel(RegistryModel)}
             resource={obj}
           />
           <ResourceLink
-            kind="Registry"
+            kind={referenceForModel(RegistryModel)}
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
@@ -119,7 +119,7 @@ export const RegistryPage = props => (
     {...props}
     ListComponent={RegistryList}
     canCreate={true}
-    kind="Registry"
+    kind={referenceForModel(RegistryModel)}
   />
 );
 RegistryPage.displayName = 'RegistryPage';
@@ -141,7 +141,7 @@ export const RegistryDetailsPage = props => (
         path: props.match.url
       })
     }
-    kind="Registry"
+    kind={referenceForModel(RegistryModel)}
     menuActions={menuActions}
     pages={[
       navFactory.details(DetailsForKind(props.kind)),
