@@ -12,7 +12,6 @@ import {
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
-// import { TemplateModel } from '../models';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -123,14 +122,6 @@ export const TemplatesPage = props => (
   />
 );
 TemplatesPage.displayName = 'TemplatesPage';
-
-// export const TemplatesDetailsPage = props => {
-//   const pages = [
-//     navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
 
 export const TemplatesDetailsPage = props => (
   <DetailsPage

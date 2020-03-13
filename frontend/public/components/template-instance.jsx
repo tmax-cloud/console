@@ -16,9 +16,7 @@ import { fromNow } from './utils/datetime';
 import {
   referenceFor,
   kindForReference,
-  referenceForModel
 } from '../module/k8s';
-// import { TemplateInstanceModel } from '../models';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -150,22 +148,6 @@ const Details = ({ obj: templateinstance }) => {
   )
 }
 
-// const DetailsForKind = kind =>
-//   function DetailsForKind_({ obj }) {
-//     return (
-//       <React.Fragment>
-//         <div className="co-m-pane__body">
-//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
-//           <ResourceSummary
-//             resource={obj}
-//             podSelector="spec.podSelector"
-//             showNodeSelector={false}
-//           />
-//         </div>
-//       </React.Fragment>
-//     );
-//   };
-
 export const TemplateInstanceList = props => {
   const { kinds } = props;
   const Row = TemplateInstanceRow(kinds[0]);
@@ -183,15 +165,6 @@ export const TemplateInstancesPage = props => (
   />
 );
 TemplateInstancesPage.displayName = 'TemplateInstancesPage';
-
-// export const TemplateInstancesDetailsPage = props => {
-//   const pages = [
-//     // navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.details(Details),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
 
 export const TemplateInstancesDetailsPage = props => (
   <DetailsPage

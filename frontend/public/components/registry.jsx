@@ -11,8 +11,7 @@ import {
   ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference, referenceForModel } from '../module/k8s';
-import { RegistryModel } from '../models';
+import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -36,13 +35,6 @@ const RegistryHeader = props => (
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-3 col-sm-3"
-      sortField="metadata.namespace"
-    >
-      Object Count
-    </ColHead>
-    <ColHead
-      {...props}
       className="col-sm-3 hidden-xs"
       sortField="metadata.creationTimestamp"
     >
@@ -59,11 +51,11 @@ const RegistryRow = () =>
         <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind={referenceForModel(RegistryModel)}
+            kind="Registry"
             resource={obj}
           />
           <ResourceLink
-            kind={referenceForModel(RegistryModel)}
+            kind="Registry"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
@@ -79,9 +71,6 @@ const RegistryRow = () =>
           ) : (
               'None'
             )}
-        </div>
-        <div className="col-xs-3 col-sm-3 co-break-word">
-          {(obj.objects && obj.objects.length) || 'None'}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
@@ -119,7 +108,7 @@ export const RegistryPage = props => (
     {...props}
     ListComponent={RegistryList}
     canCreate={true}
-    kind={referenceForModel(RegistryModel)}
+    kind="Registry"
   />
 );
 RegistryPage.displayName = 'RegistryPage';
@@ -141,7 +130,7 @@ export const RegistryDetailsPage = props => (
         path: props.match.url
       })
     }
-    kind={referenceForModel(RegistryModel)}
+    kind="Registry"
     menuActions={menuActions}
     pages={[
       navFactory.details(DetailsForKind(props.kind)),
