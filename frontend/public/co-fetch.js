@@ -116,7 +116,7 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
   if (url.indexOf('authenticate') < 0) {
     //allOptions.headers.Authorization = "Bearer " + jwToken;
     allOptions.headers.Authorization =
-      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiZWJjMzJkMDMtN2ExMy00YmY4LTliNjktYzFhNzUyNzE5Yjk0IiwiaXNzIjoiVG1heC1Qcm9BdXRoLVdlYkhvb2siLCJpZCI6ImFkbWluQHRtYXguY28ua3IiLCJleHAiOjE1ODQzNDk0Mjl9.-_G76HO3wJ36k_zBnd8kIi_iFVBAKmzZywihYD8_P0I";
+      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgtV2ViSG9vayIsImlkIjoid3ltaW4tdG1heC5jby5rciIsImV4cCI6MTU4MzEyMTQ5M30.hjvrlaLDFuSjchJKarGKbuWOuafhsuCQgBDo-pqsZvg";
   }
   // Initiate both the fetch promise and a timeout promise
   return Promise.race([
