@@ -80,7 +80,16 @@ func checkSameOrigin(r *http.Request) bool {
 	if err != nil {
 		return false
 	}
-	return equalASCIIFold(u.Host, r.Host)
+	// return equalASCIIFold(u.Host, r.Host)
+
+	// NOTE: 아래 코드는 다음 에러를 회피하기 위해 삽입되었다. // 정동민
+	// CheckOrigin 'https://192.168.8.27' != 'https://192.168.8.27:31303'
+	// Failed to upgrade websocket to client: 'websocket: request origin not allowed by Upgrader.CheckOrigin'
+	uHost, _, _ := net.SplitHostPort(u.Host)
+	rHost, _, _ := net.SplitHostPort(r.Host)
+
+	return equalASCIIFold(uHost, rHost)
+	// NOTE: 여기까지
 }
 
 func (u *Upgrader) selectSubprotocol(r *http.Request, responseHeader http.Header) string {
@@ -130,10 +139,14 @@ func (u *Upgrader) Upgrade(w http.ResponseWriter, r *http.Request, responseHeade
 		return u.returnError(w, r, http.StatusInternalServerError, "websocket: application specific 'Sec-Websocket-Extensions' headers are unsupported")
 	}
 
+	// NOTE: 아래 코드는 다음 에러를 회피하기 위해 삽입되었다. // 정동민
+	// CheckOrigin 'https://192.168.8.27' != 'https://192.168.8.27:31303'
+	// Failed to upgrade websocket to client: 'websocket: request origin not allowed by Upgrader.CheckOrigin'
+
 	checkOrigin := u.CheckOrigin
-	if checkOrigin == nil {
-		checkOrigin = checkSameOrigin
-	}
+	// if checkOrigin == nil {
+	checkOrigin = checkSameOrigin
+	// }
 	if !checkOrigin(r) {
 		return u.returnError(w, r, http.StatusForbidden, "websocket: request origin not allowed by Upgrader.CheckOrigin")
 	}

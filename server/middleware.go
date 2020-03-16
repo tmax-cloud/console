@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/openshift/console/auth"
@@ -25,7 +24,7 @@ func authMiddlewareWithUser(a *auth.Authenticator, handlerFunc func(user *auth.U
 			return
 		}
 
-		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
+		// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
 
 		safe := false
 		switch r.Method {
@@ -66,7 +65,8 @@ func securityHeadersMiddleware(hdlr http.Handler) http.HandlerFunc {
 		// Less information leakage about what domains we link to
 		w.Header().Set("X-DNS-Prefetch-Control", "off")
 		// Less information leakage about what domains we link to
-		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		// w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		w.Header().Set("Referrer-Policy", "no-referrer-when-downgrade")
 		hdlr.ServeHTTP(w, r)
 	}
 }

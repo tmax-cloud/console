@@ -93,7 +93,9 @@ type Server struct {
 }
 
 func (s *Server) authDisabled() bool {
-	return s.Auther == nil
+	// return s.Auther == nil
+	return true
+	// NOTE: authDisabled true로 테스트 // 정동민
 }
 
 func (s *Server) prometheusProxyEnabled() bool {
@@ -188,7 +190,7 @@ func (s *Server) HTTPHandler() http.Handler {
 	handle(k8sProxyEndpoint, http.StripPrefix(
 		proxy.SingleJoiningSlash(s.BaseURL.Path, k8sProxyEndpoint),
 		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
-			r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
+			// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
 			k8sProxy.ServeHTTP(w, r)
 		})),
 	)
@@ -200,7 +202,7 @@ func (s *Server) HTTPHandler() http.Handler {
 		handle(prometheusProxyAPIPath, http.StripPrefix(
 			proxy.SingleJoiningSlash(s.BaseURL.Path, prometheusProxyAPIPath),
 			authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
-				r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
+				// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
 				prometheusProxy.ServeHTTP(w, r)
 			})),
 		)
@@ -577,7 +579,7 @@ func (s *Server) handleOpenShiftTokenDeletion(user *auth.User, w http.ResponseWr
 	}
 
 	// Delete the OpenShift OAuthAccessToken.
-	path := "/apis/oauth.openshift.io/v1/oauthaccesstokens/" + user.Token
+	path := "/apis/oauth.openshift.io/v1/oauthaccesstokens/" // + user.Token
 	url := proxy.SingleJoiningSlash(s.K8sProxyConfig.Endpoint.String(), path)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
@@ -585,7 +587,7 @@ func (s *Server) handleOpenShiftTokenDeletion(user *auth.User, w http.ResponseWr
 		return
 	}
 
-	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
+	// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
 	resp, err := s.K8sClient.Do(req)
 	if err != nil {
 		sendResponse(w, http.StatusBadGateway, apiError{fmt.Sprintf("Failed to delete token: %v", err)})

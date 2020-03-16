@@ -218,9 +218,24 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				log.Printf("CheckOrigin: No origin header. Denying request to %v", r.URL)
 				return false
 			}
-			if p.config.Origin == origin[0] {
+			// if p.config.Origin == origin[0] {
+			// 	return true
+			// }
+
+			// NOTE: 아래 코드는 다음 에러를 회피하기 위해 삽입되었다. // 정동민
+			// CheckOrigin 'https://192.168.8.27' != 'https://192.168.8.27:31303'
+			// Failed to upgrade websocket to client: 'websocket: request origin not allowed by Upgrader.CheckOrigin'
+
+			pOriginParsed, _ := url.Parse(p.config.Origin)
+			pHost, _, _ := net.SplitHostPort(pOriginParsed.Host)
+
+			rOriginParsed, _ := url.Parse(origin[0])
+			rHost, _, _ := net.SplitHostPort(rOriginParsed.Host)
+
+			if pHost == rHost {
 				return true
 			}
+			// NOTE: 여기까지
 			log.Printf("CheckOrigin '%v' != '%v'", p.config.Origin, origin[0])
 			return false
 		},

@@ -31,9 +31,10 @@ export function WSFactory(id, options) {
   this.options = options;
   this.bufferMax = options.bufferMax || 0;
 
-  // TODO: k8s.ts에 하드하게 넣은 값 빼기
-  // options.path = options.path.split('https://192.168.8.27:6443')[1];
-  options.path = options.path.split('https://192.168.8.27:31303')[1];
+  // NOTE: 웹소켓 경로에 http:// 나 https:// 포함된 경우, 마지막 포트 다음부분만 사용 // 정동민
+  if(/:\/\//.test(options.path)){
+    options.path = options.path.replace(/.*:\d{1,5}(\/.*)/,'$1');
+  }
 
   this.url = createURL(options.host, options.path);
   this._paused = false;
