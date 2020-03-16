@@ -116,7 +116,7 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
   if (url.indexOf('authenticate') < 0) {
     //allOptions.headers.Authorization = "Bearer " + jwToken;
     allOptions.headers.Authorization =
-      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiZWJjMzJkMDMtN2ExMy00YmY4LTliNjktYzFhNzUyNzE5Yjk0IiwiaXNzIjoiVG1heC1Qcm9BdXRoLVdlYkhvb2siLCJpZCI6ImFkbWluQHRtYXguY28ua3IiLCJleHAiOjE1ODQzNDk0Mjl9.-_G76HO3wJ36k_zBnd8kIi_iFVBAKmzZywihYD8_P0I";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImhjLWFkbWluLXRva2VuLTRoenF6Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImhjLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMzk3MjI5YTUtYWUxYy00ODk4LTkxMTUtZmYwN2JmMzQ5Y2FmIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6aGMtYWRtaW4ifQ.aR9me9pzNVOvseenYW48w5I6WJVxdkP3WgcAyq1XiiJfEXNkEjFNQy-picf3tHGU4W4iLfMH-VQXF65CbkbxjFlaSBWeTZbxMgAqod-HcdR0ecD2i-84Vi-6RVNI9ejx_hDBPCcLx0C_3zNnTRQxi0OIzBLv8fChxs28FsDXY775LFy42eMJeW16mgh6LEdKacYFfnyzdWBCeYXHf_PDv2kaF9ylrzStXxtATL0kVj-NgodWnct3OEhMMBzW6RiFNENEwycNJZRIPkUjTv3P55eb27pg93xxhkbFjJdQJM-pvEMZJNdiupoHQHpaInO9leiPTI28iR2TOOFCuy4CQQ";
   }
   // Initiate both the fetch promise and a timeout promise
   return Promise.race([
