@@ -8,7 +8,7 @@ import * as PropTypes from 'prop-types';
 
 import store from '../redux';
 import { productName } from '../branding';
-//import LoginComponent from './login';
+import LoginComponent from './login';
 import { ALL_NAMESPACES_KEY } from '../const';
 import { connectToFlags, featureActions, flagPending, FLAGS } from '../features';
 import { detectMonitoringURLs } from '../monitoring';
@@ -90,14 +90,22 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
-  // const [login, setLogin] = useState(0);
-  
-  //  if (login === 0) {
-  //    setLogin(login+1);
-  //  } else {
-  //   return <Redirect to="/login" />;
-  //  }
-  
+
+  if (window.SERVER_FLAGS.releaseModeFlag) {
+    // const [login, setLogin] = useState(0);
+    
+    // if (login === 0) {
+    //   setLogin(login+1);
+    // } else {
+    //   return <Redirect to="/login" />;
+    // }
+
+    if (!window.localStorage.getItem('accessToken')) {
+        return <Redirect to="/login" />;
+    }
+
+  }
+
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag)) {
     return <Loading />;
@@ -115,6 +123,7 @@ const LazyRoute = (props) => <Route {...props} component={(componentProps) => <A
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
+    
     this.state = {
       isAdmin: true
     };
@@ -196,7 +205,7 @@ class App extends React.PureComponent {
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/edit" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
 
-          {/* <Route path="/login" exact component={LoginComponent} />   Login template 임의 추가 */}
+          <Route path="/login" exact component={LoginComponent} />   
 
           <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
           <LazyRoute path="/k8s/cluster/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => m.CreateYAML)} />
@@ -278,7 +287,7 @@ render((
   <Provider store={store}>
     <Router history={history} basename={window.SERVER_FLAGS.basePath}>
       <Switch>
-        {/*<Route path="/login" component={LoginComponent} />*/}
+        <Route path="/login" component={LoginComponent} />
         <Route path="/" component={App} />
       </Switch>
     </Router>
