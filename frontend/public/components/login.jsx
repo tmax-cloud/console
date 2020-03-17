@@ -55,7 +55,7 @@ class LoginComponent extends Component {
       return;
     }
 
-    const AUTH_SERVER_URL = 'http://192.168.6.213:28677/login';
+    const AUTH_SERVER_URL = `${document.location.origin}/userlogin`;
     
     //if (this.state.id !== undefined && this.state.pw !== undefined) {
       const json = {

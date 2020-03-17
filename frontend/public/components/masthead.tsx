@@ -52,7 +52,7 @@ const UserMenuWrapper = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)((pro
     e.preventDefault();
     
     // TODO 로그아웃 api 연동
-    const AUTH_SERVER_URL = 'http://192.168.6.213:28677/logout';
+    const AUTH_SERVER_URL = `${document.location.origin}/userlogout`;
     
     const json = {
       'accessToken': localStorage.getItem('accessToken')
