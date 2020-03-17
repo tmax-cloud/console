@@ -87,6 +87,10 @@ func main() {
 	fGoogleTagManagerID := fs.String("google-tag-manager-id", "", "Google Tag Manager ID. External analytics are disabled if this is not set.")
 
 	fLoadTestFactor := fs.Int("load-test-factor", 0, "DEV ONLY. The factor used to multiply k8s API list responses for load testing purposes.")
+	// NOTE: login endpoint 추가 // 정동민
+	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
+	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
+	// NOTE: 여기까지
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
 
@@ -226,9 +230,24 @@ func main() {
 		log.Warning("cookies are not secure because base-address is not https!")
 	}
 
+	// NOTE: loginEndpoint 추가 //정동민
+	var loginEndpoint *url.URL
+	var logoutEndpoint *url.URL
+	var openapiEndpoint *url.URL
 	var k8sEndpoint *url.URL
 	switch *fK8sMode {
 	case "in-cluster":
+		loginEndpoint = validateFlagIsURL("logout-endpoint", *fLoginEndpoint)
+		srv.LoginProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        loginEndpoint,
+		}
+		logoutEndpoint = validateFlagIsURL("logout-endpoint", *fLogoutEndpoint)
+		srv.LogoutProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        logoutEndpoint,
+		}
+		// NOTE: 여기까지
 		host, port := os.Getenv("KUBERNETES_SERVICE_HOST"), os.Getenv("KUBERNETES_SERVICE_PORT")
 		if len(host) == 0 || len(port) == 0 {
 			log.Fatalf("unable to load in-cluster configuration, KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT must be defined")
@@ -259,6 +278,15 @@ func main() {
 
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 
+		// NOTE: openapiEndpoint 추가 // 정동민
+		openapiEndpoint = k8sEndpoint
+		srv.OpenapiProxyConfig = &proxy.Config{
+			TLSClientConfig: tlsConfig,
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        openapiEndpoint,
+		}
+		// NOTE: 여기까지
+
 		// If running in an OpenShift cluster, set up a proxy to the prometheus-k8s serivce running in the openshift-monitoring namespace.
 		if _, err := os.Stat(openshiftInClusterServiceCA); err == nil {
 			serviceCertPEM, err := ioutil.ReadFile(openshiftInClusterServiceCA)
@@ -282,6 +310,32 @@ func main() {
 		}
 
 	case "off-cluster":
+		// NOTE: loginEndpoint 추가 // 정동민
+		loginEndpoint = validateFlagIsURL("login-endpoint", *fLoginEndpoint)
+		srv.LoginProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        loginEndpoint,
+		}
+		logoutEndpoint = validateFlagIsURL("logout-endpoint", *fLogoutEndpoint)
+		srv.LogoutProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        logoutEndpoint,
+		}
+		openapiEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint-for-openapi", *fK8sModeOffClusterEndpoint)
+		srv.OpenapiProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        openapiEndpoint,
+		}
+		// NOTE: 여기까지 // 정동민
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)
 
 		srv.K8sProxyConfig = &proxy.Config{

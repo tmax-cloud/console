@@ -39,6 +39,10 @@ const (
 	authLogoutEndpoint        = "/auth/logout"
 	k8sProxyEndpoint          = "/api/kubernetes/"
 	prometheusProxyEndpoint   = "/api/prometheus"
+	loginProxyEndpoint        = "/userlogin"
+	logoutProxyEndpoint       = "/userlogout"
+	openapiProxyEndpoint      = "/openapi/v2/"
+	// NOTE: login api 프록시를 위해 loginProxyEndpoint 추가 // 정동민
 )
 
 var (
@@ -92,6 +96,10 @@ type Server struct {
 	// A client with the correct TLS setup for communicating with the API server.
 	K8sClient             *http.Client
 	PrometheusProxyConfig *proxy.Config
+	LoginProxyConfig      *proxy.Config
+	LogoutProxyConfig     *proxy.Config
+	OpenapiProxyConfig    *proxy.Config
+	// NOTE: login api 프록시를 위해 LoginProxyConfig 추가 // 정동민
 }
 
 func (s *Server) authDisabled() bool {
@@ -196,7 +204,32 @@ func (s *Server) HTTPHandler() http.Handler {
 			k8sProxy.ServeHTTP(w, r)
 		})),
 	)
-
+	// NOTE: login proxy를 등록한다 // 정동민
+	loginProxyAPIPath := loginProxyEndpoint
+	loginProxy := proxy.NewProxy(s.LoginProxyConfig)
+	handle(loginProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, loginProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			loginProxy.ServeHTTP(w, r)
+		})),
+	)
+	logoutProxyAPIPath := logoutProxyEndpoint
+	logoutProxy := proxy.NewProxy(s.LogoutProxyConfig)
+	handle(logoutProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, logoutProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			logoutProxy.ServeHTTP(w, r)
+		})),
+	)
+	openapiProxyAPIPath := openapiProxyEndpoint
+	openapiProxy := proxy.NewProxy(s.OpenapiProxyConfig)
+	handle(openapiProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, openapiProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			openapiProxy.ServeHTTP(w, r)
+		})),
+	)
+	// NOTE: 여기까지
 	if s.prometheusProxyEnabled() {
 		// Only proxy requests to the Prometheus API, not the UI.
 		prometheusProxyAPIPath := prometheusProxyEndpoint + "/api/"
