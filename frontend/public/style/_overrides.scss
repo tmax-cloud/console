@@ -4,53 +4,56 @@
    rather than overriding or bringing in built assets.
    The coreos-web project is no longer actively maintained */
 
-  //  @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 100;
-  //   src: url(fonts/NotoSansCJKkr-Thin.otf) format('opentype');
-  // }
-  // @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 300;
-  //   src: url(fonts/NotoSansCJKkr-Light.otf) format('opentype');
-  // }
-  // @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 350;
-  //   src: url(fonts/NotoSansCJKkr-DemiLight.otf) format('opentype');
-  // }
-  // @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 400;
-  //   src: url(fonts/NotoSansCJKkr-Regular.otf) format('opentype');
-  // }
-  // @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 500;
-  //   src: url(fonts/NotoSansCJKkr-Medium.otf) format('opentype');
-  // }
-  // @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 700;
-  //   src: url(fonts/NotoSansCJKkr-Bold.otf) format('opentype');
-  // }
-  // @font-face {
-  //   font-family: 'Noto Sans CJK KR';
-  //   font-style: normal;
-  //   font-weight: 900;
-  //   src: url(fonts/NotoSansCJKkr-Black.otf) format('opentype');
-  // } 
+   @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 100;
+    src: url(fonts/NotoSansCJKkr-Thin.otf) format('opentype');
+  }
+  @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 300;
+    src: url(fonts/NotoSansCJKkr-Light.otf) format('opentype');
+  }
+  @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 350;
+    src: url(fonts/NotoSansCJKkr-DemiLight.otf) format('opentype');
+  }
+  @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/NotoSansCJKkr-Regular.otf) format('opentype');
+  }
+  @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 500;
+    src: url(fonts/NotoSansCJKkr-Medium.otf) format('opentype');
+  }
+  @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 700;
+    src: url(fonts/NotoSansCJKkr-Bold.otf) format('opentype');
+  }
+  @font-face {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 900;
+    src: url(fonts/NotoSansCJKkr-Black.otf) format('opentype');
+  } 
   
-  // * {
-  //   font-family: 'Noto Sans CJK KR', sans-serif; // !important;
-  // }
+  * {
+    font-family: 'Noto Sans CJK KR', sans-serif; // !important;
+  }
 
+  .ace_content * {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
+}
 // override patternfly's extra thin font weight for headers
 h1,
 .h1,
