@@ -19,16 +19,35 @@ class LoginComponent extends Component {
 
   constructor(props) {
     super(props);
-    if (props.history.action !== 'REPLACE') {
+
+    if (props.history.action === 'POP') {
+      history.go(1);
+    }
+    
+    if (document.referrer) {
       history.pushState(null, null, location.href);
       window.onpopstate = function(event) {	
       history.go(1);
-      } 
     }
-  };
+    // if (localStorage.getItem('accessToken') === '') {
+    //   // 로그아웃 된 상태 
+    //   history.pushState(null, null, location.href);
+    //   // this.props.history.push('/login');  
+    //   window.onpopstate = function(event) {	
+    //   history.go(1);
+    // }
+    
+    // if (props.history.action !== 'REPLACE') {
+    //   history.pushState(null, null, location.href);
+    //   window.onpopstate = function(event) {	
+    //   history.go(1);
+    //   } 
+    // }
+  }
+}
 
   componentWillUnmount() {
-    console.log('componentWillUnmount');
+    // console.log('componentWillUnmount');
   };
 
   onClick = (e) => {
@@ -36,28 +55,32 @@ class LoginComponent extends Component {
       return;
     }
 
-    const AUTH_SERVER_URL = 'https://192.168.6.225:8088/v3/_api/authenticate';
+    const AUTH_SERVER_URL = 'http://192.168.6.213:28677/login';
     
     //if (this.state.id !== undefined && this.state.pw !== undefined) {
       const json = {
-        'dto':
-        {
-          'user_id': this.state.id, 'password': sha512(this.state.pw)
-        }
+        'id': this.state.id,
+        'password': sha512(this.state.pw)
+        
       };
       
       coFetchJSON.post(AUTH_SERVER_URL, json)
         .then(data => {
-          if (data.dto.result !== 'true') {
+          if (data.accessToken) {
+            window.localStorage.setItem('accessToken', data.accessToken);
+            this.props.history.push('/status/all-namespaces');  
+          } else {
             this.setState({error: data.dto.error});
             return;
           }
+          
           // const url_ = window.location.href.split('/login')[0]
           // window.location = `${url_}/status/all-namespaces`;
-          this.props.history.push('/status/all-namespaces');
+          
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
+          this.setState({error: error.message});
         });
   //}
   };

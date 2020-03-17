@@ -9,7 +9,6 @@ import (
 	"errors"
 	"net"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 )
@@ -72,24 +71,27 @@ func (u *Upgrader) returnError(w http.ResponseWriter, r *http.Request, status in
 
 // checkSameOrigin returns true if the origin is not set or is equal to the request host.
 func checkSameOrigin(r *http.Request) bool {
-	origin := r.Header["Origin"]
-	if len(origin) == 0 {
-		return true
-	}
-	u, err := url.Parse(origin[0])
-	if err != nil {
-		return false
-	}
-	// return equalASCIIFold(u.Host, r.Host)
+	// origin := r.Header["Origin"]
+	// if len(origin) == 0 {
+	// 	return true
+	// }
+	// u, err := url.Parse(origin[0])
+	// if err != nil {
+	// 	return false
+	// }
+	// // return equalASCIIFold(u.Host, r.Host)
 
-	// NOTE: 아래 코드는 다음 에러를 회피하기 위해 삽입되었다. // 정동민
-	// CheckOrigin 'https://192.168.8.27' != 'https://192.168.8.27:31303'
-	// Failed to upgrade websocket to client: 'websocket: request origin not allowed by Upgrader.CheckOrigin'
-	uHost, _, _ := net.SplitHostPort(u.Host)
-	rHost, _, _ := net.SplitHostPort(r.Host)
-
-	return equalASCIIFold(uHost, rHost)
-	// NOTE: 여기까지
+	// // NOTE: 아래 코드는 다음 에러를 회피하기 위해 삽입되었다. // 정동민
+	// // CheckOrigin 'https://192.168.8.27' != 'https://192.168.8.27:31303'
+	// // Failed to upgrade websocket to client: 'websocket: request origin not allowed by Upgrader.CheckOrigin'
+	// uHost, _, _ := net.SplitHostPort(u.Host)
+	// rHost, _, _ := net.SplitHostPort(r.Host)
+	// log.Printf("uHost and rHost 비교해보기, %v, %v", uHost, rHost)
+	// // "uHost and rHost 비교해보기, 192.168.8.25, 192.168.6.196" 라고 뜨는 것 확인.
+	// return equalASCIIFold(uHost, rHost)
+	// // NOTE: 여기까지
+	return true
+	// NOTE: 전부 주석처리 후 return true로 테스트 // 정동민
 }
 
 func (u *Upgrader) selectSubprotocol(r *http.Request, responseHeader http.Header) string {
