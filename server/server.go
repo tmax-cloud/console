@@ -41,7 +41,7 @@ const (
 	prometheusProxyEndpoint   = "/api/prometheus"
 	loginProxyEndpoint        = "/userlogin"
 	logoutProxyEndpoint       = "/userlogout"
-	openapiProxyEndpoint      = "/openapi/v2/"
+	openapiProxyEndpoint      = "/openapi/"
 	// NOTE: login api 프록시를 위해 loginProxyEndpoint 추가 // 정동민
 )
 

@@ -90,6 +90,7 @@ func main() {
 	// NOTE: login endpoint 추가 // 정동민
 	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
 	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
+	fOpenapiEndpoint := fs.String("openapi-endpoint", "", "URL of the openapi API server.")
 	// NOTE: 여기까지
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
@@ -279,7 +280,7 @@ func main() {
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 
 		// NOTE: openapiEndpoint 추가 // 정동민
-		openapiEndpoint = k8sEndpoint
+		openapiEndpoint = &url.URL{Scheme: "https", Host: host + ":" + port, Path: "/openapi"}
 		srv.OpenapiProxyConfig = &proxy.Config{
 			TLSClientConfig: tlsConfig,
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
@@ -327,7 +328,7 @@ func main() {
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        logoutEndpoint,
 		}
-		openapiEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint-for-openapi", *fK8sModeOffClusterEndpoint)
+		openapiEndpoint = validateFlagIsURL("openapi-endpoint", *fOpenapiEndpoint)
 		srv.OpenapiProxyConfig = &proxy.Config{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
