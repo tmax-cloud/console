@@ -35,6 +35,11 @@ export const shouldLogout = url => {
 };
 
 const validateStatus = (response, url) => {
+  if (url.indexOf('logout') > 0) {
+    if (response.status === 200) {
+      return response;
+    } 
+  }
   if (response.ok) {
     return response;
   }
@@ -113,11 +118,15 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
     delete allOptions.headers["X-CSRFToken"];
   }
 
-  if (url.indexOf('authenticate') < 0) {
-    //allOptions.headers.Authorization = "Bearer " + jwToken;
-    allOptions.headers.Authorization =
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0) {
+    if (!window.SERVER_FLAGS.releaseModeFlag) {
+      allOptions.headers.Authorization =
       "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgtV2ViSG9vayIsImlkIjoid3ltaW4tdG1heC5jby5rciIsImV4cCI6MTU4MzEyMTQ5M30.hjvrlaLDFuSjchJKarGKbuWOuafhsuCQgBDo-pqsZvg";
+    } else {
+      allOptions.headers.Authorization = "Bearer " + window.localStorage.getItem('accessToken');
+    }
   }
+  
   // Initiate both the fetch promise and a timeout promise
   return Promise.race([
     fetch(url, allOptions).then(response => validateStatus(response, url)),
@@ -145,7 +154,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
   }
 
   if (url === 'openapi/v2') {
-    url = 'https://192.168.8.27:6443/openapi/v2';
+    url = 'https://192.168.6.169:6443/openapi/v2';
     headers['Content-Type'] = 'application/json';
   }
   // if
@@ -157,6 +166,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
     if (url === 'openapi/v2' && response.ok) {
       return response;
     }
+    
     if (!response.ok) {
       return response.text().then(text => {
         analyticsSvc.error(`${text}: ${method} ${response.url}`);
@@ -167,19 +177,36 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
     if (response.headers.get("Content-Length") === "0") {
       return Promise.resolve({});
     }
+    
+    if (url.indexOf('logout') > 0) {
+      return response;
+    }
+    
     return response.json();
   });
 };
 
 const coFetchSendJSON = (url, method, json = null, options = {}) => {
-  const allOptions = {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": `application/${
-        method === "PATCH" ? "json-patch+json" : "json"
-        };charset=UTF-8`
-    }
-  };
+  const allOptions;
+
+  if (url.indexOf('login') > 0 || url.indexOf('logout') > 0) {
+    allOptions = {
+      headers: {
+        Accept: "application/json"
+      }
+    };
+  } else {
+    allOptions = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": `application/${
+          method === "PATCH" ? "json-patch+json" : "json"
+          };charset=UTF-8`
+      }
+    };
+  }
+
+
   // allOptions.headers.Authorization =
   //   "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Im9FUU9CQWpDSXBVeXNFeEtLV2xtRjc2aEZidy1ES1ViYlNxdFExX0s0cWsifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXRva2VuLTR2Mm1zIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiZTMyM2U3MGUtYmY1ZC00MTQwLTgxZmUtYzkwMmUxNmI1MWJhIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6YWRtaW4ifQ.cLYwNQ2dTRS2XE2IHnMhzaRMPhTxjs89cqV13LWUs_YwJyeljWRpjmes9bwXl4OzbZB8hwLcKXz1oLrk6eYYeDRCEhgoxr4Rjxe-uw7VJca5uFi6q-Gq0fU6nXvKBQ00Uu5O1Gx4sW2rio0jmvT5yDl-ALcyzrrtzLrxDwSsuvhjj2z_iJqC_RCqE0-ZXKITiGuNTqzNnqWYtelUmp8xTEjUBYx6BHUfh69kKUhbk3Wro_4uF-aFBQaMeEsOOGucZRIajwgR6VP9xplNMB6eMxBzX9Gkcn5QNDeoiRlbpjh4MGsqXAIrUFntK4ZBSL_VYoCLHfLjuZTjaiPxAXxzMA";
   if (json) {
