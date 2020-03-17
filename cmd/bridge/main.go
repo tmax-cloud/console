@@ -173,7 +173,7 @@ func main() {
 		DocumentationBaseURL: documentationBaseURL,
 		GoogleTagManagerID:   *fGoogleTagManagerID,
 		LoadTestFactor:       *fLoadTestFactor,
-		ReleaseModeFlag:		  *fReleaseModeFlag,
+		ReleaseModeFlag:      *fReleaseModeFlag,
 	}
 
 	if (*fKubectlClientID == "") != (*fKubectlClientSecret == "" && *fKubectlClientSecretFile == "") {
@@ -280,7 +280,7 @@ func main() {
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 
 		// NOTE: openapiEndpoint 추가 // 정동민
-		openapiEndpoint = &url.URL{Scheme: "https", Host: host + ":" + port, Path: "/openapi"}
+		openapiEndpoint = &url.URL{Scheme: "https", Host: host + ":" + port, Path: "/openapi/"}
 		srv.OpenapiProxyConfig = &proxy.Config{
 			TLSClientConfig: tlsConfig,
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
