@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript">
       window.SERVER_FLAGS = [[.]];
-      var jwToken = window.sessionStorage.getItem('jwToken');
-      if(window.location.href.split('token=')[1] && jwToken == null){
-        window.sessionStorage.setItem('jwToken', window.location.href.split('token=')[1]); 
-        jwToken = window.sessionStorage.getItem('jwToken');
-      } else if(jwToken) {
-      } else {
-        window.location.href = "http://192.168.8.27:7179?redirect=" + window.location.origin;
-      }
+      // var jwToken = window.sessionStorage.getItem('jwToken');
+      // if(window.location.href.split('token=')[1] && jwToken == null){
+      //   window.sessionStorage.setItem('jwToken', window.location.href.split('token=')[1]); 
+      //   jwToken = window.sessionStorage.getItem('jwToken');
+      // } else if(jwToken) {
+      // } else {
+      //   window.location.href = "http://192.168.8.27:7179?redirect=" + window.location.origin;
+      // }
     </script>
   </head>
   <body>
