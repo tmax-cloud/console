@@ -137,35 +137,27 @@ spec:
           resourceRef:
             name: example-pipeline-resource-image
 `).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
-apiVersion: tmax.co.kr/v1
+apiVersion: tmax.io/v1
 kind: Registry
 metadata: 
-  name: example-registry
-  namespace: hypercloud-system
+  name: example
+  namespace: example
   labels:
     obj: registry
 spec:
   image: example/registry:b004
   description: example
-  storageSize: example
   loginId: example
   loginPassword: example
-`).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
-apiVersion: tmax.co.kr/v1
-kind: Registry
-metadata: 
-  name: example-registry
-  namespace: hypercloud-system
-  labels:
-    obj: registry
-spec:
-  image: example/registry:b004
-  description: example
-  storageSize: example
-  loginId: example
-  loginPassword: example
+  service:
+     nodeIP: example
+     type: example
+  persistentVolumeClaim:
+     accessModes: example
+     storageSize: example
+     storageClassName: example
 `).setIn([referenceForModel(k8sModels.TemplateModel), 'default'], `
-apiVersion: tmax.co.kr/v1
+apiVersion: tmax.io/v1
 kind: Template
 metadata:
   name: example-template
@@ -194,7 +186,7 @@ objects:
             containerPort: 80
 
 `).setIn([referenceForModel(k8sModels.TemplateInstanceModel), 'default'], `
-apiVersion: tmax.co.kr/v1
+apiVersion: tmax.io/v1
 kind: TemplateInstance
 metadata:
   name: example-instance
