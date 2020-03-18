@@ -9,6 +9,7 @@ import { coFetchJSON } from '../co-fetch';
 import '../style.scss';
 import { sha512 } from 'js-sha512';
 
+
 class LoginComponent extends Component {
   // useState 대신 useRef 써도 됨
   state = {
@@ -68,7 +69,8 @@ class LoginComponent extends Component {
         .then(data => {
           if (data.accessToken) {
             window.localStorage.setItem('accessToken', data.accessToken);
-            this.props.history.push('/status/all-namespaces');  
+            this.props.history.push('/');  
+            this.props.history.go(0);
           } else {
             this.setState({error: data.dto.error});
             return;
