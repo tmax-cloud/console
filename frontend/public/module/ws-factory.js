@@ -7,7 +7,7 @@
 
 function createURL(host, path) {
   let url;
-
+  const masterToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgtV2ViSG9vayIsImlkIjoid3ltaW4tdG1heC5jby5rciIsImV4cCI6MTU4MzEyMTQ5M30.hjvrlaLDFuSjchJKarGKbuWOuafhsuCQgBDo-pqsZvg';
   if (host === 'auto') {
     if (location.protocol === 'https:') {
       url = 'wss://';
@@ -18,11 +18,16 @@ function createURL(host, path) {
   } else {
     url = host;
   }
-
   if (path) {
-    url += path;
+    //release모드가 아닌경우 -> 마스터 토큰사용
+    let token = '';
+    token = window.SERVER_FLAGS.releaseModeFlag ? window.localStorage.getItem('accessToken') : masterToken;
+    if (path.indexOf('?') !== -1) {
+      url += path + '&token=' + masterToken;
+    } else {
+      url += path + '?token' + masterToken;
+    }
   }
-
   return url;
 }
 
@@ -32,8 +37,8 @@ export function WSFactory(id, options) {
   this.bufferMax = options.bufferMax || 0;
 
   // NOTE: 웹소켓 경로에 http:// 나 https:// 포함된 경우, 마지막 포트 다음부분만 사용 // 정동민
-  if(/:\/\//.test(options.path)){
-    options.path = options.path.replace(/.*:\d{1,5}(\/.*)/,'$1');
+  if (/:\/\//.test(options.path)) {
+    options.path = options.path.replace(/.*:\d{1,5}(\/.*)/, '$1');
   }
 
   this.url = createURL(options.host, options.path);
@@ -89,7 +94,7 @@ WSFactory.prototype._connect = function () {
   this._state = 'init';
   this._messageBuffer = [];
   try {
-    this.ws = new WebSocket(this.url, this.options.subprotocols);
+    this.ws = new WebSocket(this.url);
   } catch (e) {
     console.error('Error creating websocket:', e);
     this._reconnect();
