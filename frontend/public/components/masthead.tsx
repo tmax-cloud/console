@@ -63,8 +63,8 @@ const UserMenuWrapper = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)((pro
         localStorage.clear();
         localStorage.setItem('logouted', 'true');
         
-        const url_ = window.location.href.split('/')[2]
-        window.location.href = `http://${url_}`;
+        // const url_ = window.location.href.split('/')[2]
+        window.location.href = `${document.location.origin}`;
       })
       .catch(error => {
         console.log(error);
