@@ -23,9 +23,9 @@ function createURL(host, path) {
     let token = '';
     token = window.SERVER_FLAGS.releaseModeFlag ? window.localStorage.getItem('accessToken') : masterToken;
     if (path.indexOf('?') !== -1) {
-      url += path + '&token=' + masterToken;
+      url += path + '&token=' + token;
     } else {
-      url += path + '?token' + masterToken;
+      url += path + '?token=' + token;
     }
   }
   return url;
