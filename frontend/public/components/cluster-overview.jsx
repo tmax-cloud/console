@@ -131,7 +131,7 @@ const LimitedGraphs = ({openshiftFlag}) => {
     return null;
   }
   // Use the shorter 'OpenShift Console' instead of 'OpenShift Container Platform Console' since the title appears in the chart.
-  const consoleName = window.SERVER_FLAGS.branding === 'okd' ? 'OKD Console' : 'OpenShift Console';
+  const consoleName = 'HyperCloud Console';
   return <div className="group">
     <div className="group__title">
       <h2 className="h3">Health</h2>

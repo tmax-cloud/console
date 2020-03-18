@@ -8,7 +8,8 @@ class ServiceClassCard extends Component {
     if (e.target.closest('.card-pf').classList.contains('active')) {
       e.target.classList.remove('active');
     } else {
-      document.querySelectorAll('.card-pf-view-single-select').forEach(card => {
+      const cardList = document.querySelectorAll('.card-pf-view-single-select');
+      Array.prototype.forEach.call(cardList, (card) => {
         card.classList.remove('active');
       });
       e.target.closest('.card-pf').classList.add('active');
@@ -108,11 +109,11 @@ const CardList = ({ data }) => {
     <div className="cards-pf">
       <div className="container-fluid container-cards-pf">
         <div className="row row-cards-pf">
-          {data.map(item => (
+          {data.map((item, index) => (
             <ServiceClassCard
+              key={index}
               isRecommended={true}
-              isNew={true}
-            ></ServiceClassCard>
+              isNew={true} />
           ))}
         </div>
       </div>
