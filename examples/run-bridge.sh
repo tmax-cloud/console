@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 ./bin/bridge \
-    --listen=http://192.168.8.25:9000 \
-    --base-address=http://192.168.8.25:9000 \
+    --listen=https://192.168.8.25:9000 \
+    --base-address=https://192.168.8.25:9000 \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
     --k8s-mode=off-cluster \
@@ -13,4 +13,6 @@
     --public-dir=./frontend/public/dist \
     --login-endpoint=http://192.168.6.213:28677/login \
     --logout-endpoint=http://192.168.6.213:28677/logout \
-    --openapi-endpoint=https://192.168.6.196:6443/openapi
+    --openapi-endpoint=https://192.168.6.196:6443/openapi \
+    --prometheus-endpoint=http://192.168.6.224:9090/api \
+    --release-mode=false \
