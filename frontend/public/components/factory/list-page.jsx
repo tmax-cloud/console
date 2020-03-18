@@ -12,6 +12,9 @@ import { ErrorPage404 } from '../error';
 import { makeReduxID, makeQuery } from '../utils/k8s-watcher';
 import { referenceForModel } from '../../module/k8s';
 
+// import i18n from '../utils/i18n';
+import { useTranslation } from 'react-i18next';
+
 export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => <div className="btn-group btn-group-sm" data-toggle="buttons">
   <label className={classNames('btn compaction-btn', expand ? 'btn-default' : 'btn-primary')}>
     <input type="radio" onClick={() => onExpandChange(false)} /> Compact
@@ -235,6 +238,8 @@ FireMan_.propTypes = {
 
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
+  const { t } = useTranslation('lang', { useSuspense: false });
+  // const { t } = useTranslation();
   const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
@@ -262,7 +267,7 @@ export const ListPage = props => {
     filterLabel={filterLabel || `${labelPlural} by name`}
     selectorFilterLabel="Filter by selector (app=nginx) ..."
     createProps={createProps}
-    title={title}
+    title={t(title)}
     showTitle={showTitle}
     canCreate={props.canCreate}
     canExpand={props.canExpand}
@@ -279,6 +284,7 @@ export const ListPage = props => {
     fake={fake}
   />;
 };
+
 
 ListPage.displayName = 'ListPage';
 
