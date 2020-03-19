@@ -86,37 +86,46 @@ const detectCalicoFlags = dispatch => coFetchJSON(calicoDaemonSetPath)
 
 // FIXME: /oapi is deprecated. What else can we use to detect OpenShift?
 const openshiftPath = `${k8sBasePath}/oapi/v1`;
-const detectOpenShift = dispatch => coFetchJSON(openshiftPath)
-  .then(
-    res => setFlag(dispatch, FLAGS.OPENSHIFT, _.size(res.resources) > 0),
-    err => _.get(err, 'response.status') === 404
-      ? setFlag(dispatch, FLAGS.OPENSHIFT, false)
-      : handleError(err, FLAGS.OPENSHIFT, dispatch, detectOpenShift)
-  );
+const detectOpenShift = dispatch => {
+  setFlag(dispatch, FLAGS.OPENSHIFT, false);
+};
+// const detectOpenShift = dispatch => coFetchJSON(openshiftPath)
+//   .then(
+//     res => setFlag(dispatch, FLAGS.OPENSHIFT, _.size(res.resources) > 0),
+//     err => _.get(err, 'response.status') === 404
+//       ? setFlag(dispatch, FLAGS.OPENSHIFT, false)
+//       : handleError(err, FLAGS.OPENSHIFT, dispatch, detectOpenShift)
+//   );
 
 const projectListPath = `${k8sBasePath}/apis/project.openshift.io/v1/projects?limit=1`;
-const detectProjectsAvailable = dispatch => coFetchJSON(projectListPath)
-  .then(
-    res => setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, !_.isEmpty(res.items)),
-    err => _.get(err, 'response.status') === 404
-      ? setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, false)
-      : handleError(err, FLAGS.PROJECTS_AVAILABLE, dispatch, detectProjectsAvailable)
-  );
+const detectProjectsAvailable = dispatch => {
+  setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, false);
+};
+// const detectProjectsAvailable = dispatch => coFetchJSON(projectListPath)
+//   .then(
+//     res => setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, !_.isEmpty(res.items)),
+//     err => _.get(err, 'response.status') === 404
+//       ? setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, false)
+//       : handleError(err, FLAGS.PROJECTS_AVAILABLE, dispatch, detectProjectsAvailable)
+//   );
 
 const projectRequestPath = `${k8sBasePath}/apis/project.openshift.io/v1/projectrequests`;
-const detectCanCreateProject = dispatch => coFetchJSON(projectRequestPath)
-  .then(
-    res => setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, res.status === 'Success'),
-    err => {
-      const status = _.get(err, 'response.status');
-      if (status === 403) {
-        setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, false);
-        dispatch(UIActions.setCreateProjectMessage(err.message));
-      } else if (!_.includes([400, 404, 500], status)) {
-        retryFlagDetection(dispatch, detectCanCreateProject);
-      }
-    }
-  );
+const detectCanCreateProject = dispatch => {
+  setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, false);
+}
+// const detectCanCreateProject = dispatch => coFetchJSON(projectRequestPath)
+//   .then(
+//     res => setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, res.status === 'Success'),
+//     err => {
+//       const status = _.get(err, 'response.status');
+//       if (status === 403) {
+//         setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, false);
+//         dispatch(UIActions.setCreateProjectMessage(err.message));
+//       } else if (!_.includes([400, 404, 500], status)) {
+//         retryFlagDetection(dispatch, detectCanCreateProject);
+//       }
+//     }
+//   );
 
 export let featureActions = [
   detectCalicoFlags,
