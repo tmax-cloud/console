@@ -5,7 +5,7 @@ import { Map as ImmutableMap } from 'immutable';
 import * as _ from 'lodash-es';
 
 import { k8sBasePath } from './module/k8s/k8s';
-import { coFetchJSON } from './co-fetch';
+// import { coFetchJSON } from './co-fetch';
 
 export enum MonitoringRoutes {
   Prometheus = 'prometheus-k8s',
@@ -16,7 +16,7 @@ export enum MonitoringRoutes {
 const SET_MONITORING_URL = 'setMonitoringURL';
 const DEFAULTS = _.mapValues(MonitoringRoutes, undefined);
 
-const monitoringRoutes = `${k8sBasePath}/apis/route.openshift.io/v1/namespaces/openshift-monitoring/routes/`;
+// const monitoringRoutes = `${k8sBasePath}/apis/route.openshift.io/v1/namespaces/openshift-monitoring/routes/`;
 export const detectMonitoringURLs = dispatch => {
   console.log('detectMonitoringURLs')
 }

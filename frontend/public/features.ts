@@ -9,7 +9,7 @@ import { k8sBasePath, referenceForModel } from './module/k8s/k8s';
 import { k8sCreate } from './module/k8s/resource';
 import { types } from './module/k8s/k8s-actions';
 import { coFetchJSON } from './co-fetch';
-import { UIActions } from './ui/ui-actions';
+// import { UIActions } from './ui/ui-actions';
 
 /* global
   FLAGS: false,
@@ -85,7 +85,7 @@ const detectCalicoFlags = dispatch => coFetchJSON(calicoDaemonSetPath)
   );
 
 // FIXME: /oapi is deprecated. What else can we use to detect OpenShift?
-const openshiftPath = `${k8sBasePath}/oapi/v1`;
+// const openshiftPath = `${k8sBasePath}/oapi/v1`;
 const detectOpenShift = dispatch => {
   setFlag(dispatch, FLAGS.OPENSHIFT, false);
 };
@@ -97,7 +97,7 @@ const detectOpenShift = dispatch => {
 //       : handleError(err, FLAGS.OPENSHIFT, dispatch, detectOpenShift)
 //   );
 
-const projectListPath = `${k8sBasePath}/apis/project.openshift.io/v1/projects?limit=1`;
+// const projectListPath = `${k8sBasePath}/apis/project.openshift.io/v1/projects?limit=1`;
 const detectProjectsAvailable = dispatch => {
   setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, false);
 };
