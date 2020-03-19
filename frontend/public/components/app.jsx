@@ -1,5 +1,5 @@
 import * as _ from 'lodash-es';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { render } from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
@@ -93,7 +93,7 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
 
   if (window.SERVER_FLAGS.releaseModeFlag) {
     // const [login, setLogin] = useState(0);
-    
+
     // if (login === 0) {
     //   setLogin(login+1);
     // } else {
@@ -101,7 +101,7 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
     // }
 
     if (!window.localStorage.getItem('accessToken')) {
-        return <Redirect to="/login" />;
+      return <Redirect to="/login" />;
     }
 
   }
@@ -114,7 +114,7 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   if (openshiftFlag) {
     return <Redirect to="/k8s/cluster/projects" />;
   }
-  
+
   return <NamespaceRedirect />;
 });
 
@@ -123,13 +123,13 @@ const LazyRoute = (props) => <Route {...props} component={(componentProps) => <A
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       isAdmin: true
     };
     this.changeRole = () => this.changeRole_();
   }
-  changeRole_ () {
+  changeRole_() {
     this.setState({
       isAdmin: !this.state.isAdmin
     });
@@ -193,7 +193,7 @@ class App extends React.PureComponent {
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
           }
-
+          <LazyRoute path="/k8s/ns/:ns/templateinstances/new/:type" exact kind="TemplateInstance" loader={() => import('./templateInstances/create-templateInstance').then(m => m.CreateTemplateInstance)} />
           <LazyRoute path="/k8s/ns/:ns/secrets/new/:type" exact kind="Secret" loader={() => import('./secrets/create-secret' /* webpackChunkName: "create-secret" */).then(m => m.CreateSecret)} />
           <LazyRoute path="/k8s/ns/:ns/secrets/:name/edit" exact kind="Secret" loader={() => import('./secrets/create-secret' /* webpackChunkName: "create-secret" */).then(m => m.EditSecret)} />
           <LazyRoute path="/k8s/ns/:ns/secrets/:name/edit-yaml" exact kind="Secret" loader={() => import('./create-yaml').then(m => m.EditYAMLPage)} />
@@ -205,7 +205,7 @@ class App extends React.PureComponent {
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/edit" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
 
-          <Route path="/login" exact component={LoginComponent} />   
+          <Route path="/login" exact component={LoginComponent} />
 
           <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
           <LazyRoute path="/k8s/cluster/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => m.CreateYAML)} />
