@@ -44,7 +44,7 @@ const Graphs = requirePrometheus(connectToURLs(MonitoringRoutes.AlertManager)(({
     <div className="group">
       <div className="group__title">
         <h2 className="h3">Health</h2>
-        {!isOpenShift && <DashboardLink id="qa_dashboard_k8s_health" to="/grafana/dashboard/db/kubernetes-cluster-health?orgId=1" />}
+        {/* {!isOpenShift && <DashboardLink id="qa_dashboard_k8s_health" to="/grafana/dashboard/db/kubernetes-cluster-health?orgId=1" />} */}
       </div>
       <div className="container-fluid group__body">
         <div className="row">
@@ -78,7 +78,7 @@ const Graphs = requirePrometheus(connectToURLs(MonitoringRoutes.AlertManager)(({
       <div className="group">
         <div className="group__title">
           <h2 className="h3">Control Plane Status</h2>
-          {!isOpenShift && <DashboardLink to="/grafana/dashboard/db/kubernetes-control-plane-status?orgId=1" />}
+          {/* {!isOpenShift && <DashboardLink to="/grafana/dashboard/db/kubernetes-control-plane-status?orgId=1" />} */}
         </div>
         <div className="container-fluid group__body group__graphs">
           <div className="row">
@@ -103,7 +103,7 @@ const Graphs = requirePrometheus(connectToURLs(MonitoringRoutes.AlertManager)(({
       <div className="group">
         <div className="group__title">
           <h2 className="h3">Capacity Planning</h2>
-          {!isOpenShift && <DashboardLink to="/grafana/dashboard/db/kubernetes-capacity-planning?orgId=1" />}
+          {/* {!isOpenShift && <DashboardLink to="/grafana/dashboard/db/kubernetes-capacity-planning?orgId=1" />} */}
         </div>
         <div className="container-fluid group__body group__graphs">
           <div className="row">
