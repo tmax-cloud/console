@@ -109,7 +109,7 @@ const detectProjectsAvailable = dispatch => {
 //       : handleError(err, FLAGS.PROJECTS_AVAILABLE, dispatch, detectProjectsAvailable)
 //   );
 
-const projectRequestPath = `${k8sBasePath}/apis/project.openshift.io/v1/projectrequests`;
+// const projectRequestPath = `${k8sBasePath}/apis/project.openshift.io/v1/projectrequests`;
 const detectCanCreateProject = dispatch => {
   setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, false);
 }

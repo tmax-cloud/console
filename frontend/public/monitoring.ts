@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Map as ImmutableMap } from 'immutable';
 import * as _ from 'lodash-es';
 
-import { k8sBasePath } from './module/k8s/k8s';
+// import { k8sBasePath } from './module/k8s/k8s';
 // import { coFetchJSON } from './co-fetch';
 
 export enum MonitoringRoutes {
