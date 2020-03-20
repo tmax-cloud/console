@@ -240,7 +240,7 @@ func main() {
 	var k8sEndpoint *url.URL
 	switch *fK8sMode {
 	case "in-cluster":
-		loginEndpoint = validateFlagIsURL("logout-endpoint", *fLoginEndpoint)
+		loginEndpoint = validateFlagIsURL("login-endpoint", *fLoginEndpoint)
 		srv.LoginProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        loginEndpoint,
