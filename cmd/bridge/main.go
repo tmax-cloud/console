@@ -91,6 +91,7 @@ func main() {
 	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
 	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
 	fOpenapiEndpoint := fs.String("openapi-endpoint", "", "URL of the openapi API server.")
+	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
 	// NOTE: 여기까지
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
@@ -235,10 +236,11 @@ func main() {
 	var loginEndpoint *url.URL
 	var logoutEndpoint *url.URL
 	var openapiEndpoint *url.URL
+	var prometheusEndpoint *url.URL
 	var k8sEndpoint *url.URL
 	switch *fK8sMode {
 	case "in-cluster":
-		loginEndpoint = validateFlagIsURL("logout-endpoint", *fLoginEndpoint)
+		loginEndpoint = validateFlagIsURL("login-endpoint", *fLoginEndpoint)
 		srv.LoginProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        loginEndpoint,
@@ -247,6 +249,11 @@ func main() {
 		srv.LogoutProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        logoutEndpoint,
+		}
+		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
+		srv.PrometheusProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        prometheusEndpoint,
 		}
 		// NOTE: 여기까지
 		host, port := os.Getenv("KUBERNETES_SERVICE_HOST"), os.Getenv("KUBERNETES_SERVICE_PORT")
@@ -288,27 +295,28 @@ func main() {
 		}
 		// NOTE: 여기까지
 
-		// If running in an OpenShift cluster, set up a proxy to the prometheus-k8s serivce running in the openshift-monitoring namespace.
-		if _, err := os.Stat(openshiftInClusterServiceCA); err == nil {
-			serviceCertPEM, err := ioutil.ReadFile(openshiftInClusterServiceCA)
-			if err != nil {
-				log.Fatalf("failed to read service-ca.crt file: %v", err)
-			}
-			prometheusProxyRootCAs := x509.NewCertPool()
-			if !prometheusProxyRootCAs.AppendCertsFromPEM(serviceCertPEM) {
-				log.Fatalf("no CA found for Kubernetes services")
-			}
-			prometheusTLSConfig := &tls.Config{RootCAs: prometheusProxyRootCAs}
-			// Only proxy requests to the Prometheus API, not the UI.
-			srv.PrometheusProxyConfig = &proxy.Config{
-				TLSClientConfig: prometheusTLSConfig,
-				HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-				Endpoint:        &url.URL{Scheme: "https", Host: openshiftPrometheusHost, Path: "/api"},
-			}
-		} else if !os.IsNotExist(err) {
-			// Ignore errors when the file does not exist, which is the case if not running on OpenShift. Fail on other errors.
-			log.Fatalf("failed to stat service-ca.crt file: %v", err)
-		}
+		// NOTE: 아래 코드 주석처리
+		// // If running in an OpenShift cluster, set up a proxy to the prometheus-k8s serivce running in the openshift-monitoring namespace.
+		// if _, err := os.Stat(openshiftInClusterServiceCA); err == nil {
+		// 	serviceCertPEM, err := ioutil.ReadFile(openshiftInClusterServiceCA)
+		// 	if err != nil {
+		// 		log.Fatalf("failed to read service-ca.crt file: %v", err)
+		// 	}
+		// 	prometheusProxyRootCAs := x509.NewCertPool()
+		// 	if !prometheusProxyRootCAs.AppendCertsFromPEM(serviceCertPEM) {
+		// 		log.Fatalf("no CA found for Kubernetes services")
+		// 	}
+		// 	prometheusTLSConfig := &tls.Config{RootCAs: prometheusProxyRootCAs}
+		// 	// Only proxy requests to the Prometheus API, not the UI.
+		// 	srv.PrometheusProxyConfig = &proxy.Config{
+		// 		TLSClientConfig: prometheusTLSConfig,
+		// 		HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+		// 		Endpoint:        &url.URL{Scheme: "https", Host: openshiftPrometheusHost, Path: "/api"},
+		// 	}
+		// } else if !os.IsNotExist(err) {
+		// 	// Ignore errors when the file does not exist, which is the case if not running on OpenShift. Fail on other errors.
+		// 	log.Fatalf("failed to stat service-ca.crt file: %v", err)
+		// }
 
 	case "off-cluster":
 		// NOTE: loginEndpoint 추가 // 정동민
@@ -335,6 +343,11 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        openapiEndpoint,
+		}
+		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
+		srv.PrometheusProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        prometheusEndpoint,
 		}
 		// NOTE: 여기까지 // 정동민
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)

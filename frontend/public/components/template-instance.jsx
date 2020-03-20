@@ -156,14 +156,28 @@ export const TemplateInstanceList = props => {
 };
 TemplateInstanceList.displayName = TemplateInstanceList;
 
-export const TemplateInstancesPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={TemplateInstanceList}
-    canCreate={true}
-    kind="TemplateInstance"
-  />
-);
+// export const TemplateInstancesPage = props => (
+//   <ListPage
+//     {...props}
+//     ListComponent={TemplateInstanceList}
+//     canCreate={true}
+//     kind="TemplateInstance"
+//   />
+// );
+const TemplateInstancesPage = props => {
+  const createItems = {
+    form: '서비스 인스턴스 (폼 에디터)',
+    yaml: '서비스 인스턴스 (YAML 에디터)'
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/templateinstances/new${type !== 'yaml' ? '/' + type : ''}`
+  };
+  return <ListPage ListComponent={TemplateInstanceList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
+export { TemplateInstancesPage };
+
 TemplateInstancesPage.displayName = 'TemplateInstancesPage';
 
 export const TemplateInstancesDetailsPage = props => (

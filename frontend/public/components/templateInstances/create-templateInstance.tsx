@@ -3,15 +3,18 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
-import { ButtonBar, Firehose, history, kindObj, StatusBox, FileInput } from '../utils';
+import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
+import { connectToFlags, FLAGS, flagPending } from '../../features';
+import * as k8sModels from '../../models';
+
 
 enum SecretTypeAbstraction {
   generic = 'generic',
-  form = 'form'
+  form = 'form',
 }
+
 
 export enum SecretType {
   basicAuth = 'kubernetes.io/basic-auth',
@@ -29,20 +32,40 @@ export type BasicAuthSubformState = {
 };
 
 const secretFormExplanation = {
-  [SecretTypeAbstraction.form]: '폼 에디터로 pod생성.',
+  [SecretTypeAbstraction.form]: '폼 형식을 통한 템플릿 인스턴스 생성',
 };
 
 const determineDefaultSecretType = (typeAbstraction: SecretTypeAbstraction) => {
-  return SecretType.basicAuth;
+  return typeAbstraction === SecretTypeAbstraction.form ? SecretType.basicAuth : SecretType.opaque;
 };
 
 
 const determineSecretTypeAbstraction = (data) => {
   return SecretTypeAbstraction.form;
 };
+const NsDropdown_ = props => {
+  const openshiftFlag = props.flags[FLAGS.OPENSHIFT];
+  if (flagPending(openshiftFlag)) {
+    return null;
+  }
+  const kind = openshiftFlag ? 'Project' : 'Namespace';
+  const resources = [{ kind }];
+  return <select {...props} desc="Namespaces" resources={resources} selectedKeyKind={kind} placeholder="Select namespace" />;
+};
+const NsDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsDropdown_);
+const Section = ({ label, children }) => <div className="row">
+  <div className="col-xs-2">
+    <strong>{label}</strong>
+  </div>
+  <div className="col-xs-10">
+    {children}
+  </div>
+</div>;
 
-// withSecretForm returns SubForm which is a Higher Order Component for all the types of secret forms.
-const withSecretForm = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
+
+// Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
+const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
+
   constructor(props) {
     super(props);
     const existingSecret = _.pick(props.obj, ['metadata', 'type']);
@@ -50,7 +73,7 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
     const secret = _.defaultsDeep({}, props.fixed, existingSecret, {
       apiVersion: 'v1',
       data: {},
-      kind: 'Pod',
+      kind: 'Secret',
       metadata: {
         name: '',
       },
@@ -68,6 +91,7 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
     this.onNameChanged = this.onNameChanged.bind(this);
     this.save = this.save.bind(this);
   }
+
   onDataChanged(secretsData) {
     this.setState({
       stringData: { ...secretsData.stringData },
@@ -91,7 +115,7 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
       : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
     ).then(() => {
       this.setState({ inProgress: false });
-      history.push(formatNamespacedRouteForResource('pods'));
+      history.push(formatNamespacedRouteForResource('templateinstances'));
     }, err => this.setState({ error: err.message, inProgress: false }));
   }
   render() {
@@ -106,7 +130,7 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
 
         <fieldset disabled={!this.props.isCreate}>
           <div className="form-group">
-            <label className="control-label" htmlFor="secret-name">Secret Name</label>
+            <label className="control-label" htmlFor="secret-name">템플릿 인스턴스 이름</label>
             <div>
               <input className="form-control"
                 type="text"
@@ -115,26 +139,35 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
                 aria-describedby="secret-name-help"
                 id="secret-name"
                 required />
-              <p className="help-block" id="secret-name-help">Unique name of the new secret.</p>
+              <p className="help-block" id="secret-name-help">Unique name of the new service Instance.</p>
             </div>
           </div>
+          <div className="form-group">
+            <label className="control-label" htmlFor="secret-type" >템플릿</label>
+            <NsDropdown />
+            {/* <div>
+              <select value={this.state.type} className="form-control" id="secret-type">
+                <option value={SecretType.basicAuth}>template 1</option>
+                <option value={SecretType.sshAuth}>template 2</option>
+              </select>
+            </div> */}
+          </div>
         </fieldset>
-        <SubForm
-          onChange={this.onDataChanged.bind(this)}
-          stringData={this.state.stringData}
-          secretType={this.state.secret.type}
-          isCreate={this.props.isCreate}
-        />
+        <Section label="parameters">
+          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+        </Section>
+        <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-          <Link to={formatNamespacedRouteForResource('secrets')} className="btn btn-default" id="cancel">Cancel</Link>
+          <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
         </ButtonBar>
       </form>
     </div>;
   }
 };
 
-class PodForm extends React.Component<PodFormProps, PodFormState> {
+
+class SourceSecretForm extends React.Component<SourceSecretFormProps, SourceSecretFormState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -156,31 +189,16 @@ class PodForm extends React.Component<PodFormProps, PodFormState> {
   }
   render() {
     return <React.Fragment>
-      {this.props.isCreate
-        ? <div className="form-group">
-          <label className="control-label" htmlFor="secret-type" >Authentication Type</label>
-          <div>
-            <select onChange={this.changeAuthenticationType} value={this.state.type} className="form-control" id="secret-type">
-              <option value={SecretType.basicAuth}>Basic Authentication</option>
-              <option value={SecretType.sshAuth}>SSH Key</option>
-            </select>
-          </div>
-        </div>
-        : null
-      }
-      {this.state.type === SecretType.basicAuth
-        ? <BasicAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
-        : <SSHAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
-      }
+      <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
     </React.Fragment>;
   }
 }
 
 const secretFormFactory = secretType => {
-  return withSecretForm(PodForm);
+  return secretType === SecretTypeAbstraction.form ? Requestform(SourceSecretForm) : Requestform(SourceSecretForm);
 };
 
-class BasicAuthSubform extends React.Component<BasicAuthSubformProps, BasicAuthSubformState> {
+class Optionalform extends React.Component<BasicAuthSubformProps, BasicAuthSubformState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -197,73 +215,28 @@ class BasicAuthSubform extends React.Component<BasicAuthSubformProps, BasicAuthS
   render() {
     return <React.Fragment>
       <div className="form-group">
-        <label className="control-label" htmlFor="username">Username</label>
+        <label className="control-label" htmlFor="username">Label</label>
         <div>
-          <input className="form-control"
-            id="username"
-            aria-describedby="username-help"
-            type="text"
-            name="username"
-            onChange={this.changeData}
-            value={this.state.username} />
-          <p className="help-block" id="username-help">Optional username for Git authentication.</p>
+          <SelectorInput labelClassName="co-text-namespace" tags={[]} />
         </div>
       </div>
       <div className="form-group">
-        <label className="control-label" htmlFor="password">Password or Token</label>
+        <label className="control-label" htmlFor="password">Annotation</label>
         <div>
           <input className="form-control"
-            id="password"
+            id="annotation"
             aria-describedby="password-help"
-            type="password"
-            name="password"
+            type="text"
+            name="annotation"
             onChange={this.changeData}
             value={this.state.password}
             required />
-          <p className="help-block" id="password-help">Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.</p>
         </div>
       </div>
     </React.Fragment>;
   }
 }
 
-class SSHAuthSubform extends React.Component<SSHAuthSubformProps, SSHAuthSubformState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      'ssh-privatekey': this.props.stringData['ssh-privatekey'] || '',
-    };
-    this.changeData = this.changeData.bind(this);
-    this.onFileChange = this.onFileChange.bind(this);
-  }
-  changeData(event) {
-    this.setState({
-      'ssh-privatekey': event.target.value
-    }, () => this.props.onChange(this.state));
-  }
-  onFileChange(fileData) {
-    this.setState({
-      'ssh-privatekey': fileData
-    }, () => this.props.onChange(this.state));
-  }
-  render() {
-    return <div className="form-group">
-      <label className="control-label" htmlFor="ssh-privatekey">SSH Private Key</label>
-      <div>
-        <FileInput onChange={this.onFileChange} />
-        <p className="help-block">Upload your private SSH key file.</p>
-        <textarea className="form-control co-create-secret-form__textarea"
-          id="ssh-privatekey"
-          name="privateKey"
-          onChange={this.changeData}
-          value={this.state['ssh-privatekey']}
-          aria-describedby="ssh-privatekey-help"
-          required />
-        <p className="help-block" id="ssh-privatekey-help">Private SSH key file for Git authentication.</p>
-      </div>
-    </div>;
-  }
-}
 
 const SecretLoadingWrapper = props => {
   const secretTypeAbstraction = determineSecretTypeAbstraction(_.get(props.obj.data, 'data'));
@@ -279,8 +252,16 @@ const SecretLoadingWrapper = props => {
   </StatusBox>;
 };
 
-export const CreateSecret = ({ match: { params } }) => {
+export const CreateTemplateInstance = ({ match: { params } }) => {
   const SecretFormComponent = secretFormFactory(params.type);
+  const namespace = document.location.href.split('ns/')[1].split('/')[0];
+  fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myJson) {
+      console.log(myJson.items);
+    });
   return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
     secretTypeAbstraction={params.type}
     explanation={secretFormExplanation[params.type]}
@@ -314,14 +295,14 @@ export type BaseEditSecretProps_ = {
   explanation: string,
 };
 
-export type PodFormState = {
+export type SourceSecretFormState = {
   type: SecretType,
   stringData: {
     [key: string]: string
   },
 };
 
-export type PodFormProps = {
+export type SourceSecretFormProps = {
   onChange: Function;
   stringData: {
     [key: string]: string
@@ -347,5 +328,4 @@ export type SSHAuthSubformProps = {
     [key: string]: string
   },
 };
-
 /* eslint-enable no-undef */

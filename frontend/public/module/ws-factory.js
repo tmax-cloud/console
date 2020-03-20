@@ -23,9 +23,9 @@ function createURL(host, path) {
     let token = '';
     token = window.SERVER_FLAGS.releaseModeFlag ? window.localStorage.getItem('accessToken') : masterToken;
     if (path.indexOf('?') !== -1) {
-      url += path + '&token=' + masterToken;
+      url += path + '&token=' + token;
     } else {
-      url += path + '?token' + masterToken;
+      url += path + '?token=' + token;
     }
   }
   return url;
@@ -94,7 +94,7 @@ WSFactory.prototype._connect = function () {
   this._state = 'init';
   this._messageBuffer = [];
   try {
-    this.ws = new WebSocket(this.url);
+    this.ws = new WebSocket(this.url, this.options.subprotocols);
   } catch (e) {
     console.error('Error creating websocket:', e);
     this._reconnect();
