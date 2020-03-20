@@ -3,16 +3,18 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
+import { connectToFlags, FLAGS, flagPending } from '../../features';
+import * as k8sModels from '../../models';
 
 
 enum SecretTypeAbstraction {
   generic = 'generic',
   form = 'form',
 }
+
 
 export enum SecretType {
   basicAuth = 'kubernetes.io/basic-auth',
@@ -41,11 +43,29 @@ const determineDefaultSecretType = (typeAbstraction: SecretTypeAbstraction) => {
 const determineSecretTypeAbstraction = (data) => {
   return SecretTypeAbstraction.form;
 };
+const NsDropdown_ = props => {
+  const openshiftFlag = props.flags[FLAGS.OPENSHIFT];
+  if (flagPending(openshiftFlag)) {
+    return null;
+  }
+  const kind = openshiftFlag ? 'Project' : 'Namespace';
+  const resources = [{ kind }];
+  return <select {...props} desc="Namespaces" resources={resources} selectedKeyKind={kind} placeholder="Select namespace" />;
+};
+const NsDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsDropdown_);
+const Section = ({ label, children }) => <div className="row">
+  <div className="col-xs-2">
+    <strong>{label}</strong>
+  </div>
+  <div className="col-xs-10">
+    {children}
+  </div>
+</div>;
 
 
+// Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
+const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
 
-// withSecretForm returns SubForm which is a Higher Order Component for all the types of secret forms.
-const withSecretForm = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
   constructor(props) {
     super(props);
     const existingSecret = _.pick(props.obj, ['metadata', 'type']);
@@ -71,6 +91,7 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
     this.onNameChanged = this.onNameChanged.bind(this);
     this.save = this.save.bind(this);
   }
+
   onDataChanged(secretsData) {
     this.setState({
       stringData: { ...secretsData.stringData },
@@ -123,22 +144,19 @@ const withSecretForm = (SubForm) => class SecretFormComponent extends React.Comp
           </div>
           <div className="form-group">
             <label className="control-label" htmlFor="secret-type" >템플릿</label>
-            <div>
+            <NsDropdown />
+            {/* <div>
               <select value={this.state.type} className="form-control" id="secret-type">
-                <option value={SecretType.basicAuth}>Basic Authentication</option>
-                <option value={SecretType.sshAuth}>SSH Key</option>
+                <option value={SecretType.basicAuth}>template 1</option>
+                <option value={SecretType.sshAuth}>template 2</option>
               </select>
-            </div>
+            </div> */}
           </div>
         </fieldset>
-        <BasicAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
-        <SSHAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
-        <SubForm
-          onChange={this.onDataChanged.bind(this)}
-          stringData={this.state.stringData}
-          secretType={this.state.secret.type}
-          isCreate={this.props.isCreate}
-        />
+        <Section label="parameters">
+          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+        </Section>
+        <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
           <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
@@ -171,16 +189,16 @@ class SourceSecretForm extends React.Component<SourceSecretFormProps, SourceSecr
   }
   render() {
     return <React.Fragment>
-      <BasicAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
+      <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
     </React.Fragment>;
   }
 }
 
 const secretFormFactory = secretType => {
-  return secretType === SecretTypeAbstraction.form ? withSecretForm(SourceSecretForm) : withSecretForm(SourceSecretForm);
+  return secretType === SecretTypeAbstraction.form ? Requestform(SourceSecretForm) : Requestform(SourceSecretForm);
 };
 
-class BasicAuthSubform extends React.Component<BasicAuthSubformProps, BasicAuthSubformState> {
+class Optionalform extends React.Component<BasicAuthSubformProps, BasicAuthSubformState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -219,30 +237,6 @@ class BasicAuthSubform extends React.Component<BasicAuthSubformProps, BasicAuthS
   }
 }
 
-class SSHAuthSubform extends React.Component<SSHAuthSubformProps, SSHAuthSubformState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      'ssh-privatekey': this.props.stringData['ssh-privatekey'] || '',
-    };
-    this.changeData = this.changeData.bind(this);
-    this.onFileChange = this.onFileChange.bind(this);
-  }
-  changeData(event) {
-    this.setState({
-      'ssh-privatekey': event.target.value
-    }, () => this.props.onChange(this.state));
-  }
-  onFileChange(fileData) {
-    this.setState({
-      'ssh-privatekey': fileData
-    }, () => this.props.onChange(this.state));
-  }
-  render() {
-    return <div className="form-group">
-    </div>;
-  }
-}
 
 const SecretLoadingWrapper = props => {
   const secretTypeAbstraction = determineSecretTypeAbstraction(_.get(props.obj.data, 'data'));
@@ -260,6 +254,14 @@ const SecretLoadingWrapper = props => {
 
 export const CreateTemplateInstance = ({ match: { params } }) => {
   const SecretFormComponent = secretFormFactory(params.type);
+  const namespace = document.location.href.split('ns/')[1].split('/')[0];
+  fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myJson) {
+      console.log(myJson.items);
+    });
   return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
     secretTypeAbstraction={params.type}
     explanation={secretFormExplanation[params.type]}
