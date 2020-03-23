@@ -1,6 +1,20 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+export const NamespaceClaimModel: K8sKind = {
+  kind: "NamespaceClaim",
+  namespaced: false,
+  label: "Namespace Claim",
+  plural: "namespaceclaims",
+  apiVersion: "v1",
+  abbr: "NC",
+  apiGroup: "tmax.io",
+  labelPlural: "Namespace Claims",
+  path: "namespaceclaims",
+  id: "namespaceclaim",
+  crd: false
+}
+
 export const CatalogSourceModel: K8sKind = {
   kind: 'CatalogSource',
   label: 'CatalogSource',

@@ -10,10 +10,6 @@ import * as k8sModels from '../models';
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
   .setIn(['DEFAULT', 'default'], `
-apiVersion: ''
-kind: ''
-metadata:
-  name: example
 `)
   .setIn([referenceForModel(k8sModels.ServiceBrokerModel), 'default'], `
 apiVersion: servicecatalog.k8s.io/v1beta1
@@ -24,6 +20,15 @@ metadata:
 spec:
   url: http://broker-service-url:broker-port
 
+  .setIn([referenceForModel(k8sModels.NamespaceClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: NamespaceClaim
+  metadata:
+    name: example
+  spec:
+    hard:
+      limits.cpu: "1" 
+`)
 `)
   .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
 apiVersion: tekton.dev/v1alpha1

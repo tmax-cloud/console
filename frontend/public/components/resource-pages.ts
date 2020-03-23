@@ -4,9 +4,10 @@ import { Map as ImmutableMap } from 'immutable';
 
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
-import { ServiceBrokerModel, ServiceClassModel, ServicePlanModel, TaskModel, TaskRunModel, PipelineResourceModel, PipelineModel, PipelineRunModel, RegistryModel, TemplateModel, TemplateInstanceModel, ClusterModel, ConfigMapModel, DaemonSetModel, DeploymentModel, DeploymentConfigModel, BuildConfigModel, BuildModel, ImageStreamModel, JobModel, CronJobModel, ProjectModel, NamespaceModel, NetworkPolicyModel, NodeModel, PodModel, ReplicaSetModel, ReplicationControllerModel, SecretModel, ServiceAccountModel, ServiceModel, IngressModel, RouteModel, RoleModel, RoleBindingModel, PrometheusModel, ServiceMonitorModel, AlertmanagerModel, StatefulSetModel, ResourceQuotaModel, HorizontalPodAutoscalerModel, PersistentVolumeModel, PersistentVolumeClaimModel, StorageClassModel, CustomResourceDefinitionModel, ClusterServiceVersionModel, SubscriptionModel, InstallPlanModel, ImageStreamTagModel, ClusterRoleModel, ContainerModel, CatalogSourceModel, ServiceInstanceModel } from '../models';
+import { NamespaceClaimModel, ResourceQuotaClaimModel, RoleBindingClaimModel, UserModel, ServiceBrokerModel, ServiceClassModel, ServicePlanModel, TaskModel, TaskRunModel, PipelineResourceModel, PipelineModel, PipelineRunModel, RegistryModel, TemplateModel, TemplateInstanceModel, ClusterModel, ConfigMapModel, DaemonSetModel, DeploymentModel, DeploymentConfigModel, BuildConfigModel, BuildModel, ImageStreamModel, JobModel, CronJobModel, ProjectModel, NamespaceModel, NetworkPolicyModel, NodeModel, PodModel, ReplicaSetModel, ReplicationControllerModel, SecretModel, ServiceAccountModel, ServiceModel, IngressModel, RouteModel, RoleModel, RoleBindingModel, PrometheusModel, ServiceMonitorModel, AlertmanagerModel, StatefulSetModel, ResourceQuotaModel, HorizontalPodAutoscalerModel, PersistentVolumeModel, PersistentVolumeClaimModel, StorageClassModel, CustomResourceDefinitionModel, ClusterServiceVersionModel, SubscriptionModel, InstallPlanModel, ImageStreamTagModel, ClusterRoleModel, ContainerModel, CatalogSourceModel, ServiceInstanceModel } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(NamespaceClaimModel), () => import('./namespace-claim' /* webpackChunkName: "task" */).then(m => m.NamespaceClaimsDetailsPage))
   .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesDetailsPage))
   .set(referenceForModel(ServicePlanModel), () => import('./service-plan' /* webpackChunkName: "task" */).then(m => m.ServicePlansDetailsPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersDetailsPage))
@@ -60,6 +61,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(NamespaceClaimModel), () => import('./namespace-claim' /* webpackChunkName: "task" */).then(m => m.NamespaceClaimsPage))
   .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesPage))
   .set(referenceForModel(ServicePlanModel), () => import('./service-plan' /* webpackChunkName: "task" */).then(m => m.ServicePlansPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersPage))
