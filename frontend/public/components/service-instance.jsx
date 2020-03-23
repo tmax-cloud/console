@@ -1,4 +1,3 @@
-import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
@@ -9,7 +8,6 @@ import {
   SectionHeading,
   ResourceLink,
   ResourceSummary,
-  kindObj,
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -101,11 +99,7 @@ export const ServiceInstanceList = props => {
   const Row = ServiceInstanceRow(kinds[0]);
   Row.displayName = 'ServiceInstanceRow';
   return (
-    <div>
-      <List {...props} Header={ServiceInstanceHeader} Row={Row} />
-      <CardList data={[{isNew: true, isRecommended: true}, {isNew: false, isRecommended:false},{isNew: true, isRecommended: true},{isNew: false,  isRecommended: true},{isNew: true, isRecommended: false},{},{},{},{},
-    {},{}]}/>
-    </div>
+    <List {...props} Header={ServiceInstanceHeader} Row={Row} />
   );
 };
 ServiceInstanceList.displayName = ServiceInstanceList;
@@ -113,11 +107,11 @@ ServiceInstanceList.displayName = ServiceInstanceList;
 export const ServiceInstancesPage = props => {
 const createItems = {
     form: '인스턴스 (폼 에디터)',
-    yaml: '인스턴스 (YAML 에디터)'
+    yaml: '인스턴스 (YAML 에디터)',
   };  
   const createProps = {
     items: createItems,
-    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/templateinstances  new${type !== 'yaml' ? '/' + type : ''}`
+    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new${type !== 'yaml' ? '/' + type : ''}`
   };
   return <ListPage
     {...props}
