@@ -7,13 +7,12 @@ import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
-
+import { coFetch } from '../../co-fetch';
 
 enum SecretTypeAbstraction {
   generic = 'generic',
   form = 'form',
 }
-
 
 export enum SecretType {
   basicAuth = 'kubernetes.io/basic-auth',
@@ -70,19 +69,46 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       type: defaultSecretType,
     });
 
-
     this.state = {
       secretTypeAbstraction: this.props.secretTypeAbstraction,
       secret: secret,
       inProgress: false,
       type: defaultSecretType,
       stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
+      templateList: [{ name: 'template1', value: 1 }, { name: 'template2', value: 2 }],
+      paramsNum: 0
     };
     this.onDataChanged = this.onDataChanged.bind(this);
     this.onNameChanged = this.onNameChanged.bind(this);
+    this.onTemplateChanged = this.onTemplateChanged.bind(this);
     this.save = this.save.bind(this);
   }
+  getTemplateList() {
+    const namespace = document.location.href.split('ns/')[1].split('/')[0];
+    // fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
+    //   .then(function (response) {
+    //     return response.json();
+    //   })
+    //   .then(function (myJson) {
+    //     console.log(myJson.items);
+    //     this.state.templateList = myJson.items;
+    //   })
+    //   .catch(function (myJson) {
+    //     this.state.templateList = [];
+    //   });
 
+
+    coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
+      .then((response) => {
+        return response.json();
+      }).then(function (myJson) {
+        console.log(myJson.items);
+        this.state.templateList = myJson.items;
+      })
+      .catch(function (myJson) {
+        this.state.templateList = [];
+      });
+  }
   onDataChanged(secretsData) {
     this.setState({
       stringData: { ...secretsData.stringData },
@@ -93,6 +119,25 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let secret = { ...this.state.secret };
     secret.metadata.name = event.target.value;
     this.setState({ secret });
+  }
+  onTemplateChanged(event) {
+    console.log(event.target.value)
+    this.setState({
+      paramsNum: Number(event.target.value)
+    });
+    console.log('state값', this.state);
+    // fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' +
+    //   + '/templates?limit=250')
+    //   .then(function (response) {
+    //     return response.json();
+    //   })
+    //   .then(function (myJson) {
+    //     console.log(myJson.items);
+    //     this.state.templateList = myJson.items;
+    //   })
+    //   .catch(function (myJson) {
+    //     this.state.templateList = [];
+    //   });
   }
   save(e) {
     e.preventDefault();
@@ -111,10 +156,19 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   render() {
     const title = `${this.props.titleVerb} ${_.upperFirst(this.state.secretTypeAbstraction)} Secret`;
-    let options = ['example-template1', 'example-template2', 'example-template3'].map(function (template) {
-      return <option value={template} key={template}>{template}</option>;
+    let options = this.state.templateList.map(function (template) {
+      return <option value={template.value}>{template.name}</option>;
     });
 
+    let paramDivs = [];
+    paramDivs = paramDivs.map(function (parameters) {
+      for (let i = 0; i < this.state.paramsNum; i++) {
+        return <Section label={this.state.paramsNum} >
+          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+        </Section>
+      }
+    });
+    this.getTemplateList();
     return <div className="co-m-pane__body">
       < Helmet >
         <title>{title}</title>
@@ -140,15 +194,16 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           <div className="form-group">
             <label className="control-label" htmlFor="secret-type" >템플릿</label>
             <div>
-              <select className="form-control" id="secret-type">
+              <select onChange={this.onTemplateChanged} className="form-control" id="secret-type">
                 {options}
               </select>
             </div>
           </div>
         </fieldset>
-        <Section label="parameters">
-          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
-        </Section>
+        <div>
+          {paramDivs}
+        </div>
+
         <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
@@ -247,14 +302,14 @@ const SecretLoadingWrapper = props => {
 
 export const CreateTemplateInstance = ({ match: { params } }) => {
   const SecretFormComponent = secretFormFactory(params.type);
-  const namespace = document.location.href.split('ns/')[1].split('/')[0];
-  fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (myJson) {
-      console.log(myJson.items);
-    });
+  // const namespace = document.location.href.split('ns/')[1].split('/')[0];
+  // fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
+  //   .then(function (response) {
+  //     return response.json();
+  //   })
+  //   .then(function (myJson) {
+  //     console.log(myJson.items);
+  //   });
   return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
     secretTypeAbstraction={params.type}
     explanation={secretFormExplanation[params.type]}
@@ -275,6 +330,8 @@ export type BaseEditSecretState_ = {
   type: SecretType,
   stringData: { [key: string]: string },
   error?: any,
+  templateList: Array<any>,
+  paramsNum: Number
 };
 
 export type BaseEditSecretProps_ = {
