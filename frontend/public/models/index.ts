@@ -43,6 +43,20 @@ export const ResourceQuotaClaimModel: K8sKind = {
   crd: false
 }
 
+export const RoleBindingClaimModel: K8sKind = {
+  kind: "RoleBindingClaim",
+  namespaced: true,
+  label: "Role Binding Claim",
+  plural: "rolebindingclaims",
+  apiVersion: "v1",
+  abbr: "RBC",
+  apiGroup: "tmax.io",
+  labelPlural: "Role Binding Claims",
+  path: "rolebindingclaims",
+  id: "rolebindingclaim",
+  crd: false
+}
+
 export const CatalogSourceModel: K8sKind = {
   kind: 'CatalogSource',
   label: 'CatalogSource',

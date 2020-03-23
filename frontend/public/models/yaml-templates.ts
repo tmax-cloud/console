@@ -51,6 +51,19 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     hard:
       limits.cpu: "2"
 `)
+  .setIn([referenceForModel(k8sModels.RoleBindingClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: RoleBindingClaim
+  metadata:
+    name: example
+    namespace: example
+  subjects:
+  - kind: User
+    name: example@tmax.co.kr
+  roleRef:
+    kind: ClusterRole
+    name: namespace-user
+    apiGroup: rbac.authorization.k8s.io
 `)
   .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
 apiVersion: tekton.dev/v1alpha1

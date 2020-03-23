@@ -476,6 +476,7 @@ export class Nav extends React.Component {
             {isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />}
             {isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />}
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
+            <ResourceNSLink resource="rolebindingclaims" name="Role Binding Claims" onClick={this.close} startsWith={rolebindingsStartsWith} />
             <ResourceNSLink resource="roles" name="Roles" startsWith={rolesStartsWith} onClick={this.close} />
             {isAdmin && <ResourceNSLink resource="users" name="사용자" onClick={this.close} />}
             <ResourceNSLink resource="serviceaccounts" name="Service Accounts" onClick={this.close} />
