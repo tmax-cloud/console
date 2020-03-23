@@ -776,6 +776,20 @@ export const StorageClassModel: K8sKind = {
   id: 'storageclass'
 };
 
+export const ServiceBrokerModel: K8sKind = {
+  kind: "ServiceBroker",
+  namespaced: true,
+  label: "Service Broker",
+  plural: "servicebrokers",
+  apiVersion: "v1beta1",
+  abbr: "SB",
+  apiGroup: "servicecatalog.k8s.io",
+  labelPlural: "Service Brokers",
+  path: "servicebrokers",
+  id: "servicebroker",
+  crd: false
+}
+
 export const ClusterServiceBrokerModel: K8sKind = {
   label: 'Cluster Service Broker',
   labelPlural: 'Cluster Service Brokers',

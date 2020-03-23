@@ -15,6 +15,16 @@ kind: ''
 metadata:
   name: example
 `)
+  .setIn([referenceForModel(k8sModels.ServiceBrokerModel), 'default'], `
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBroker
+metadata:
+  name: example-broker
+  namespace: hypercloud4-system
+spec:
+  url: http://broker-service-url:broker-port
+
+`)
   .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
 apiVersion: tekton.dev/v1alpha1
 kind: Task
