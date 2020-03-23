@@ -9,6 +9,7 @@ import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
 
+
 enum SecretTypeAbstraction {
   generic = 'generic',
   form = 'form',
@@ -85,29 +86,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   getTemplateList() {
     const namespace = document.location.href.split('ns/')[1].split('/')[0];
-    // fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
-    //   .then(function (response) {
-    //     return response.json();
-    //   })
-    //   .then(function (myJson) {
-    //     console.log(myJson.items);
-    //     this.state.templateList = myJson.items;
-    //   })
-    //   .catch(function (myJson) {
-    //     this.state.templateList = [];
-    //   });
-
 
     coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
       .then((response) => {
         return response.json();
       }).then(function (myJson) {
-        console.log(myJson.items);
-        this.state.templateList = myJson.items;
+        let templateList = myJson.items.map(function (template) {
+          return template.metadata.name
+        })
+        return templateList;
       })
       .catch(function (myJson) {
         this.state.templateList = [];
       });
+
   }
   onDataChanged(secretsData) {
     this.setState({
@@ -154,8 +146,12 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       history.push(formatNamespacedRouteForResource('templateinstances'));
     }, err => this.setState({ error: err.message, inProgress: false }));
   }
+
+  // componentDidMount() {
+  //   super.componentDidMount();
+  //   this.getTemplateList();
+  // }
   render() {
-    const title = `${this.props.titleVerb} ${_.upperFirst(this.state.secretTypeAbstraction)} Secret`;
     let options = this.state.templateList.map(function (template) {
       return <option value={template.value}>{template.name}</option>;
     });
@@ -169,12 +165,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       }
     });
     this.getTemplateList();
+    // templateList = templateList.map(function (template) {
+    //   return <option value={template}>{template}</option>;
+    // });
     return <div className="co-m-pane__body">
       < Helmet >
-        <title>{title}</title>
+        <title>Create Template Instance</title>
       </Helmet >
       <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">{title}</h1>
+        <h1 className="co-m-pane__heading">Create Template Instance</h1>
         <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
         <fieldset disabled={!this.props.isCreate}>
@@ -200,10 +199,12 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
         </fieldset>
-        <div>
-          {paramDivs}
-        </div>
-
+        <Section label='Param 1' >
+          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+        </Section>
+        <Section label='Param 2' >
+          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+        </Section>
         <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
