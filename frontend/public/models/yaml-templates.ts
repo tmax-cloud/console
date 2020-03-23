@@ -10,6 +10,27 @@ import * as k8sModels from '../models';
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
   .setIn(['DEFAULT', 'default'], `
+  apiVersion: ''
+  kind: ''
+  metadata:
+    name: example
+`)
+  .setIn([referenceForModel(k8sModels.UserModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: User
+  metadata: 
+    name: example-tmax.co.kr
+    labels: 
+      encrypted: f
+  userInfo:
+    name: example
+    password: "example"
+    email: example@tmax.co.kr
+    department: Cloud
+    position: developer
+    phone: 010-0000-0000
+    description: For Example
+  status: active
 `)
   .setIn([referenceForModel(k8sModels.ServiceBrokerModel), 'default'], `
 apiVersion: servicecatalog.k8s.io/v1beta1
