@@ -7,6 +7,7 @@ import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import { ServiceBrokerModel, ServiceClassModel, ServicePlanModel, TaskModel, TaskRunModel, PipelineResourceModel, PipelineModel, PipelineRunModel, RegistryModel, TemplateModel, TemplateInstanceModel, ClusterModel, ConfigMapModel, DaemonSetModel, DeploymentModel, DeploymentConfigModel, BuildConfigModel, BuildModel, ImageStreamModel, JobModel, CronJobModel, ProjectModel, NamespaceModel, NetworkPolicyModel, NodeModel, PodModel, ReplicaSetModel, ReplicationControllerModel, SecretModel, ServiceAccountModel, ServiceModel, IngressModel, RouteModel, RoleModel, RoleBindingModel, PrometheusModel, ServiceMonitorModel, AlertmanagerModel, StatefulSetModel, ResourceQuotaModel, HorizontalPodAutoscalerModel, PersistentVolumeModel, PersistentVolumeClaimModel, StorageClassModel, CustomResourceDefinitionModel, ClusterServiceVersionModel, SubscriptionModel, InstallPlanModel, ImageStreamTagModel, ClusterRoleModel, ContainerModel, CatalogSourceModel, ServiceInstanceModel } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesDetailsPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersDetailsPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "task" */).then(m => m.ServiceInstancesDetailsPage))
   .set(referenceForModel(TaskModel), () => import('./task' /* webpackChunkName: "task" */).then(m => m.TaskDetailsPage))
@@ -58,6 +59,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "task" */).then(m => m.ServiceInstancesPage))
   .set(referenceForModel(TaskModel), () => import('./task' /* webpackChunkName: "task" */).then(m => m.TasksPage))

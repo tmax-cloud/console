@@ -383,6 +383,7 @@ export class Nav extends React.Component {
           {/* Service Catalog 전체 추가 */}
           <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
             <ResourceNSLink resource="servicebrokers" name="Cluster Service Brokers" onClick={this.close} />
+            <ResourceNSLink resource="serviceclasses" name="Cluster Service Classes" onClick={this.close} />
             <ResourceNSLink resource="serviceinstances" name="서비스 인스턴스" onClick={this.close} />
             <ResourceNSLink resource="servicebindings" name="Service Bindings" onClick={this.close} />
             <ResourceNSLink resource="templates" name="템플릿" onClick={this.close} />
