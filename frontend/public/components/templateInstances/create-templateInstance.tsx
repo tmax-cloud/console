@@ -77,33 +77,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       type: defaultSecretType,
       stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
       templateList: [],
-      paramsNum: 0
+      paramsNum: 0,
+      selectedTemplate: ''
     };
     this.onDataChanged = this.onDataChanged.bind(this);
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onTemplateChanged = this.onTemplateChanged.bind(this);
+    this.getParams = this.getParams.bind(this);
     this.save = this.save.bind(this);
-  }
-  getTemplateList() {
-    const namespace = document.location.href.split('ns/')[1].split('/')[0];
-
-    coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
-      .then((response) => {
-        return response.json();
-      })
-      .then((myJson) => {
-        let templateList = myJson.items.map(function (template) {
-          return template.metadata.name
-        })
-        this.setState({
-          templateList: templateList
-        });
-      })
-      .catch(function (myJson) {
-        this.state.templateList = [];
-      });
-
-
   }
   onDataChanged(secretsData) {
     this.setState({
@@ -116,24 +97,33 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     secret.metadata.name = event.target.value;
     this.setState({ secret });
   }
+  getParams() {
+    const namespace = document.location.href.split('ns/')[1].split('/')[0];
+    let template = this.state.selectedTemplate;
+    console.log('getParams시작')
+    coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
+      .then(res => res.json())
+      .then((myJson) => {
+        console.log(myJson);
+      },
+        // 주의: 컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 
+        // 에러를 catch() 블록(block)에서 처리하기보다는 
+        // 이 부분에서 처리하는 것이 중요합니다.
+        (error) => {
+          this.setState({
+            error
+          });
+        }
+      )
+      .catch(function (myJson) {
+        this.state.templateList = [];
+      });
+  }
   onTemplateChanged(event) {
-    console.log(event.target.value)
     this.setState({
-      paramsNum: Number(event.target.value)
-    });
-    console.log('state값', this.state);
-    // fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' +
-    //   + '/templates?limit=250')
-    //   .then(function (response) {
-    //     return response.json();
-    //   })
-    //   .then(function (myJson) {
-    //     console.log(myJson.items);
-    //     this.state.templateList = myJson.items;
-    //   })
-    //   .catch(function (myJson) {
-    //     this.state.templateList = [];
-    //   });
+      selectedTemplate: event.target.value
+    }, () => { this.getParams() });
+    console.log(event.target.value);
   }
   save(e) {
     e.preventDefault();
@@ -160,7 +150,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           return template.metadata.name
         });
         this.setState({
-          templateList: templateList
+          templateList: templateList,
+          selectedTemplate: templateList[0]
         });
       },
         // 주의: 컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 
@@ -179,7 +170,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   render() {
     const { templateList } = this.state;
     let options = templateList.map(function (template) {
-      return <option >{template}</option>;
+      return <option value={template}>{template}</option>;
     });
 
     let paramDivs = [];
@@ -216,7 +207,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           <div className="form-group">
             <label className="control-label" htmlFor="secret-type" >템플릿</label>
             <div>
-              <select onChange={this.onTemplateChanged} className="form-control" id="secret-type">
+              <select onChange={this.onTemplateChanged} className="form-control" id="template">
                 {options}
               </select>
             </div>
@@ -355,7 +346,8 @@ export type BaseEditSecretState_ = {
   stringData: { [key: string]: string },
   error?: any,
   templateList: Array<any>,
-  paramsNum: Number
+  paramsNum: Number,
+  selectedTemplate: string
 };
 
 export type BaseEditSecretProps_ = {
