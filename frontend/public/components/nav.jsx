@@ -382,9 +382,9 @@ export class Nav extends React.Component {
           </NavSection>
           {/* Service Catalog 전체 추가 */}
           <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
-            <ResourceNSLink resource="clusterservicebrokers" name="Cluster Service Brokers" onClick={this.close} />
-            <ResourceNSLink resource="clusterserviceclasses" name="Cluster Service Classes" onClick={this.close} />
-            <ResourceNSLink resource="clusterserviceplans" name="Cluster Service Plans" onClick={this.close} />
+            <ResourceNSLink resource="servicebrokers" name="Cluster Service Brokers" onClick={this.close} />
+            <ResourceNSLink resource="serviceclasses" name="Cluster Service Classes" onClick={this.close} />
+            <ResourceNSLink resource="serviceplans" name="Cluster Service Plans" onClick={this.close} />
             <ResourceNSLink resource="serviceinstances" name="서비스 인스턴스" onClick={this.close} />
             <ResourceNSLink resource="servicebindings" name="Service Bindings" onClick={this.close} />
             <ResourceNSLink resource="templates" name="템플릿" onClick={this.close} />
@@ -465,7 +465,9 @@ export class Nav extends React.Component {
             {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />}
             {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
             {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
+            <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
             <ResourceNSLink resource="resourcequotas" name="리소스 할당량" onClick={this.close} />
+            <ResourceNSLink resource="resourcequotaclaims" name="리소스 할당량 클레임" onClick={this.close} />
             {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
             <ResourceClusterLink resource="customresourcedefinitions" name="CRDs" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
           </NavSection>
@@ -474,6 +476,7 @@ export class Nav extends React.Component {
             {isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />}
             {isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />}
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
+            <ResourceNSLink resource="rolebindingclaims" name="Role Binding Claims" onClick={this.close} startsWith={rolebindingsStartsWith} />
             <ResourceNSLink resource="roles" name="Roles" startsWith={rolesStartsWith} onClick={this.close} />
             {isAdmin && <ResourceNSLink resource="users" name="사용자" onClick={this.close} />}
             <ResourceNSLink resource="serviceaccounts" name="Service Accounts" onClick={this.close} />
