@@ -8,10 +8,12 @@ import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from 
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 
+
 enum SecretTypeAbstraction {
   generic = 'generic',
   form = 'form',
 }
+
 
 export enum SecretType {
   basicAuth = 'kubernetes.io/basic-auth',
@@ -68,6 +70,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       type: defaultSecretType,
     });
 
+
     this.state = {
       secretTypeAbstraction: this.props.secretTypeAbstraction,
       secret: secret,
@@ -91,9 +94,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     secret.metadata.name = event.target.value;
     this.setState({ secret });
   }
-  onTemplateChanged(data) {
-    console.log(data);
-  }
   save(e) {
     e.preventDefault();
     const { kind, metadata } = this.state.secret;
@@ -111,16 +111,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   render() {
     const title = `${this.props.titleVerb} ${_.upperFirst(this.state.secretTypeAbstraction)} Secret`;
-    // var options = this.props.answers.map(function(answer) {
-    //   return <option value={answer} key={answer}>{answer}</option>;
-    // });
-    // let options = [1, 2, 3, 4, 5].map(function (answer) {
-    //   return <option value={answer} key={answer}>{answer}</option>;
-    // });
+    let options = ['example-template1', 'example-template2', 'example-template3'].map(function (template) {
+      return <option value={template} key={template}>{template}</option>;
+    });
+
     return <div className="co-m-pane__body">
-      <Helmet>
+      < Helmet >
         <title>{title}</title>
-      </Helmet>
+      </Helmet >
       <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
         <h1 className="co-m-pane__heading">{title}</h1>
         <p className="co-m-pane__explanation">{this.props.explanation}</p>
@@ -142,24 +140,12 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           <div className="form-group">
             <label className="control-label" htmlFor="secret-type" >템플릿</label>
             <div>
-              <select onChange={this.onDataChanged} value={this.state.type} className="form-control" id="secret-type">
-                <option value={SecretType.basicAuth}>템플릿1</option>
-                <option value={SecretType.sshAuth}>템플릿2</option>
+              <select className="form-control" id="secret-type">
+                {options}
               </select>
             </div>
           </div>
-
         </fieldset>
-        <SubForm
-          onChange={this.onDataChanged.bind(this)}
-          stringData={this.state.stringData}
-          secretType={this.state.secret.type}
-          isCreate={this.props.isCreate}
-        />
-        {this.state.type === SecretType.basicAuth
-          ? <BasicAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
-          : <SSHAuthSubform onChange={this.onDataChanged} stringData={this.state.stringData} />
-        }
         <Section label="parameters">
           <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
         </Section>
@@ -169,93 +155,10 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
         </ButtonBar>
       </form>
-    </div>;
+    </div >;
   }
 };
 
-class BasicAuthSubform extends React.Component<BasicAuthSubformProps, BasicAuthSubformState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: this.props.stringData.username || '',
-      password: this.props.stringData.password || '',
-    };
-    this.changeData = this.changeData.bind(this);
-  }
-  changeData(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    } as BasicAuthSubformState, () => this.props.onChange(this.state));
-  }
-  render() {
-    return <React.Fragment>
-      <div className="form-group">
-        <label className="control-label" htmlFor="username">Username</label>
-        <div>
-          <input className="form-control"
-            id="username"
-            aria-describedby="username-help"
-            type="text"
-            name="username"
-            onChange={this.changeData}
-            value={this.state.username} />
-          <p className="help-block" id="username-help">Optional username for Git authentication.</p>
-        </div>
-      </div>
-      <div className="form-group">
-        <label className="control-label" htmlFor="password">Password or Token</label>
-        <div>
-          <input className="form-control"
-            id="password"
-            aria-describedby="password-help"
-            type="password"
-            name="password"
-            onChange={this.changeData}
-            value={this.state.password}
-            required />
-          <p className="help-block" id="password-help">Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.</p>
-        </div>
-      </div>
-    </React.Fragment>;
-  }
-}
-
-class SSHAuthSubform extends React.Component<SSHAuthSubformProps, SSHAuthSubformState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      'ssh-privatekey': this.props.stringData['ssh-privatekey'] || '',
-    };
-    this.changeData = this.changeData.bind(this);
-    this.onFileChange = this.onFileChange.bind(this);
-  }
-  changeData(event) {
-    this.setState({
-      'ssh-privatekey': event.target.value
-    }, () => this.props.onChange(this.state));
-  }
-  onFileChange(fileData) {
-    this.setState({
-      'ssh-privatekey': fileData
-    }, () => this.props.onChange(this.state));
-  }
-  render() {
-    return <div className="form-group">
-      <label className="control-label" htmlFor="ssh-privatekey">SSH Private Key</label>
-      <div>
-        <p className="help-block">Upload your private SSH key file.</p>
-        <textarea className="form-control co-create-secret-form__textarea"
-          id="ssh-privatekey"
-          name="privateKey"
-          onChange={this.changeData}
-          value={this.state['ssh-privatekey']}
-          aria-describedby="ssh-privatekey-help"
-          required />
-        <p className="help-block" id="ssh-privatekey-help">Private SSH key file for Git authentication.</p>
-      </div>
-    </div>;
-  }
-}
 
 class SourceSecretForm extends React.Component<SourceSecretFormProps, SourceSecretFormState> {
   constructor(props) {
