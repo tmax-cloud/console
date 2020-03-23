@@ -32,15 +32,6 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     description: For Example
   status: active
 `)
-  .setIn([referenceForModel(k8sModels.ServiceBrokerModel), 'default'], `
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBroker
-metadata:
-  name: example-broker
-  namespace: hypercloud4-system
-spec:
-  url: http://broker-service-url:broker-port
-
   .setIn([referenceForModel(k8sModels.NamespaceClaimModel), 'default'], `
   apiVersion: tmax.io/v1
   kind: NamespaceClaim
@@ -49,6 +40,16 @@ spec:
   spec:
     hard:
       limits.cpu: "1" 
+`)
+  .setIn([referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: ResourceQuotaClaim
+  metadata:
+    name: example
+    namespace: example
+  spec:
+    hard:
+      limits.cpu: "2"
 `)
 `)
   .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `

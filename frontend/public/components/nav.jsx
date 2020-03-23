@@ -467,6 +467,7 @@ export class Nav extends React.Component {
             {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
             <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
             <ResourceNSLink resource="resourcequotas" name="리소스 할당량" onClick={this.close} />
+            <ResourceNSLink resource="resourcequotaclaims" name="리소스 할당량 클레임" onClick={this.close} />
             {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
             <ResourceClusterLink resource="customresourcedefinitions" name="CRDs" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
           </NavSection>

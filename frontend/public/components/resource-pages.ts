@@ -8,6 +8,7 @@ import { NamespaceClaimModel, ResourceQuotaClaimModel, RoleBindingClaimModel, Us
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(NamespaceClaimModel), () => import('./namespace-claim' /* webpackChunkName: "task" */).then(m => m.NamespaceClaimsDetailsPage))
+  .set(referenceForModel(ResourceQuotaClaimModel), () => import('./resource-quota-claim' /* webpackChunkName: "task" */).then(m => m.ResourceQuotaClaimsDetailsPage))
   .set(referenceForModel(UserModel), () => import('./user' /* webpackChunkName: "task" */).then(m => m.UsersDetailsPage))
   .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesDetailsPage))
   .set(referenceForModel(ServicePlanModel), () => import('./service-plan' /* webpackChunkName: "task" */).then(m => m.ServicePlansDetailsPage))
@@ -63,6 +64,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(NamespaceClaimModel), () => import('./namespace-claim' /* webpackChunkName: "task" */).then(m => m.NamespaceClaimsPage))
+  .set(referenceForModel(ResourceQuotaClaimModel), () => import('./resource-quota-claim' /* webpackChunkName: "task" */).then(m => m.ResourceQuotaClaimsPage))
   .set(referenceForModel(UserModel), () => import('./user' /* webpackChunkName: "task" */).then(m => m.UsersPage))
   .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesPage))
   .set(referenceForModel(ServicePlanModel), () => import('./service-plan' /* webpackChunkName: "task" */).then(m => m.ServicePlansPage))

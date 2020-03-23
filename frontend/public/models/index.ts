@@ -29,6 +29,20 @@ export const NamespaceClaimModel: K8sKind = {
   crd: false
 }
 
+export const ResourceQuotaClaimModel: K8sKind = {
+  kind: "ResourceQuotaClaim",
+  namespaced: true,
+  label: "Resource Quota Claim",
+  plural: "resourcequotaclaims",
+  apiVersion: "v1",
+  abbr: "RQC",
+  apiGroup: "tmax.io",
+  labelPlural: "Resource Quota Claims",
+  path: "resourcequotaclaims",
+  id: "resourcequotaclaim",
+  crd: false
+}
+
 export const CatalogSourceModel: K8sKind = {
   kind: 'CatalogSource',
   label: 'CatalogSource',
