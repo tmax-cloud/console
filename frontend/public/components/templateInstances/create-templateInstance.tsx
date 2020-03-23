@@ -77,7 +77,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       type: defaultSecretType,
       stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
       templateList: [],
-      paramsNum: 0,
+      paramList: [],
       selectedTemplate: ''
     };
     this.onDataChanged = this.onDataChanged.bind(this);
@@ -104,7 +104,27 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
       .then(res => res.json())
       .then((myJson) => {
-        console.log(myJson);
+        let stringobj = JSON.stringify(myJson.objects);
+        let param = [];
+        console.log(stringobj)
+        for (let i = 0; i < stringobj.length; i++) {
+          let word = ''
+          if (stringobj[i] === '$') {
+            let n = i + 2;
+            while (stringobj[n] !== '}') {
+              word = word + stringobj[n];
+              n++
+            } param.push(word)
+          }
+
+        }
+        let paramList = Array.from(new Set(param));
+        console.log(paramList);
+        if (paramList.length) {
+          this.setState({
+            paramList: paramList
+          });
+        }
       },
         // 주의: 컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 
         // 에러를 catch() 블록(block)에서 처리하기보다는 
@@ -116,7 +136,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         }
       )
       .catch(function (myJson) {
-        this.state.templateList = [];
+        console.log(myJson);
       });
   }
   onTemplateChanged(event) {
@@ -168,18 +188,16 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       });
   }
   render() {
-    const { templateList } = this.state;
+    const { templateList, paramList } = this.state;
     let options = templateList.map(function (template) {
       return <option value={template}>{template}</option>;
     });
-
-    let paramDivs = [];
-    paramDivs = paramDivs.map(function (parameters) {
-      for (let i = 0; i < this.state.paramsNum; i++) {
-        return <Section label={this.state.paramsNum} >
-          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
-        </Section>
-      }
+    // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
+    this.getParams();
+    let paramDivs = paramList.map(function (parameter) {
+      return <Section label={parameter} >
+        <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+      </Section>
     });
 
     return <div className="co-m-pane__body">
@@ -213,12 +231,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
         </fieldset>
-        <Section label='Param 1' >
-          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
-        </Section>
-        <Section label='Param 2' >
-          <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
-        </Section>
+        {paramDivs}
         <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
@@ -317,14 +330,6 @@ const SecretLoadingWrapper = props => {
 
 export const CreateTemplateInstance = ({ match: { params } }) => {
   const SecretFormComponent = secretFormFactory(params.type);
-  // const namespace = document.location.href.split('ns/')[1].split('/')[0];
-  // fetch(document.location.origin + '/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
-  //   .then(function (response) {
-  //     return response.json();
-  //   })
-  //   .then(function (myJson) {
-  //     console.log(myJson.items);
-  //   });
   return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
     secretTypeAbstraction={params.type}
     explanation={secretFormExplanation[params.type]}
@@ -346,7 +351,7 @@ export type BaseEditSecretState_ = {
   stringData: { [key: string]: string },
   error?: any,
   templateList: Array<any>,
-  paramsNum: Number,
+  paramList: Array<any>,
   selectedTemplate: string
 };
 
