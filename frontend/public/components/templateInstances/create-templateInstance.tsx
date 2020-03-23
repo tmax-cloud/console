@@ -76,7 +76,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       inProgress: false,
       type: defaultSecretType,
       stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
-      templateList: [{ name: 'template1', value: 1 }, { name: 'template2', value: 2 }],
+      templateList: [],
       paramsNum: 0
     };
     this.onDataChanged = this.onDataChanged.bind(this);
@@ -90,15 +90,19 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
       .then((response) => {
         return response.json();
-      }).then(function (myJson) {
+      })
+      .then((myJson) => {
         let templateList = myJson.items.map(function (template) {
           return template.metadata.name
         })
-        return templateList;
+        this.setState({
+          templateList: templateList
+        });
       })
       .catch(function (myJson) {
         this.state.templateList = [];
       });
+
 
   }
   onDataChanged(secretsData) {
@@ -147,13 +151,35 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }, err => this.setState({ error: err.message, inProgress: false }));
   }
 
-  // componentDidMount() {
-  //   super.componentDidMount();
-  //   this.getTemplateList();
-  // }
+  componentDidMount() {
+    const namespace = document.location.href.split('ns/')[1].split('/')[0];
+    coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
+      .then(res => res.json())
+      .then((myJson) => {
+        let templateList = myJson.items.map(function (template) {
+          return template.metadata.name
+        });
+        this.setState({
+          templateList: templateList
+        });
+      },
+        // 주의: 컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 
+        // 에러를 catch() 블록(block)에서 처리하기보다는 
+        // 이 부분에서 처리하는 것이 중요합니다.
+        (error) => {
+          this.setState({
+            error
+          });
+        }
+      )
+      .catch(function (myJson) {
+        this.state.templateList = [];
+      });
+  }
   render() {
-    let options = this.state.templateList.map(function (template) {
-      return <option value={template.value}>{template.name}</option>;
+    const { templateList } = this.state;
+    let options = templateList.map(function (template) {
+      return <option >{template}</option>;
     });
 
     let paramDivs = [];
@@ -164,16 +190,13 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         </Section>
       }
     });
-    this.getTemplateList();
-    // templateList = templateList.map(function (template) {
-    //   return <option value={template}>{template}</option>;
-    // });
+
     return <div className="co-m-pane__body">
       < Helmet >
-        <title>Create Template Instance</title>
+        <title>템플릿 인스턴스 생성</title>
       </Helmet >
       <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">Create Template Instance</h1>
+        <h1 className="co-m-pane__heading">템플릿 인스턴스 생성</h1>
         <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
         <fieldset disabled={!this.props.isCreate}>
