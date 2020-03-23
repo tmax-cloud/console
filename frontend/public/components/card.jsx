@@ -22,7 +22,7 @@ class ServiceClassCard extends Component {
   render() {
     const { index, isRecommended, isNew, isActive, onClickCard } = this.props;
     return (
-      <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" onClick={() => onClickCard(index)} style={{ paddingReft: '10px', paddingRight: '10px'}}>
+      <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" onClick={() => onClickCard(index)} style={{ paddingLeft: '10px', paddingRight: '10px'}}>
         <div className={`card-pf card-pf-view card-pf-view-select card-pf-view-single-select ${isActive && 'active'}`} style={{ height: '184px', margin: '0 0 20px', padding: '0 20px 20px 20px', border:`${!isActive ? '1px solid #C5C5C8' : '1px solid #39a5dc'}`, borderRadius:'2px' }}>
           <div className="card-bookmark" style={{ marginLeft: '-10px' }}>
             <img
