@@ -8,6 +8,7 @@ import { ServiceBrokerModel, ServiceClassModel, ServicePlanModel, TaskModel, Tas
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesDetailsPage))
+  .set(referenceForModel(ServicePlanModel), () => import('./service-plan' /* webpackChunkName: "task" */).then(m => m.ServicePlansDetailsPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersDetailsPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "task" */).then(m => m.ServiceInstancesDetailsPage))
   .set(referenceForModel(TaskModel), () => import('./task' /* webpackChunkName: "task" */).then(m => m.TaskDetailsPage))
@@ -60,6 +61,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(ServiceClassModel), () => import('./service-class' /* webpackChunkName: "task" */).then(m => m.ServiceClassesPage))
+  .set(referenceForModel(ServicePlanModel), () => import('./service-plan' /* webpackChunkName: "task" */).then(m => m.ServicePlansPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "task" */).then(m => m.ServiceInstancesPage))
   .set(referenceForModel(TaskModel), () => import('./task' /* webpackChunkName: "task" */).then(m => m.TasksPage))

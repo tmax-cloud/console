@@ -804,6 +804,20 @@ export const ServiceClassModel: K8sKind = {
   crd: false
 }
 
+export const ServicePlanModel: K8sKind = {
+  kind: "ServicePlan",
+  namespaced: true,
+  label: "Service Plan",
+  plural: "serviceplans",
+  apiVersion: "v1beta1",
+  abbr: "SP",
+  apiGroup: "servicecatalog.k8s.io",
+  labelPlural: "Service Plans",
+  path: "serviceplans",
+  id: "serviceplan",
+  crd: false
+}
+
 export const ClusterServiceBrokerModel: K8sKind = {
   label: 'Cluster Service Broker',
   labelPlural: 'Cluster Service Brokers',
