@@ -8,7 +8,9 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary
+  ResourceSummary,
+  ScrollToTopOnMount,
+  kindObj
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -32,6 +34,13 @@ const NamespaceClaimHeader = props => (
       sortField="metadata.namespace"
     >
       Namespace
+    </ColHead>
+    <ColHead
+      {...props}
+      className="col-xs-3 col-sm-3"
+      sortField="status.status"
+    >
+      Status
     </ColHead>
     <ColHead
       {...props}
@@ -73,27 +82,60 @@ const NamespaceClaimRow = () =>
             )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
+          {obj.status.status}
+        </div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
         </div>
       </div>
     );
   };
 
-const DetailsForKind = kind =>
-  function DetailsForKind_({ obj }) {
-    return (
-      <React.Fragment>
-        <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
-          <ResourceSummary
-            resource={obj}
-            podSelector="spec.podSelector"
-            showNodeSelector={false}
-          />
+// const DetailsForKind = kind =>
+//   function DetailsForKind_({ obj }) {
+//     return (
+//       <React.Fragment>
+//         <div className="co-m-pane__body">
+//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
+//           <ResourceSummary
+//             resource={obj}
+//             podSelector="spec.podSelector"
+//             showNodeSelector={false}
+//           />
+//         </div>
+//       </React.Fragment>
+//     );
+//   };
+
+
+const Details = ({ obj: namespaceinstance }) => {
+  return (
+    <React.Fragment>
+      <ScrollToTopOnMount />
+
+      <div className="co-m-pane__body">
+        <SectionHeading text="Pod Overview" />
+        <div className="row">
+          <div className="col-sm-6">
+            <ResourceSummary resource={namespaceinstance} />
+          </div>
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>Status</dt>
+              <dd>{namespaceinstance.status.status}</dd>
+              {/* {activeDeadlineSeconds && (
+                <React.Fragment>
+                  <dt>Active Deadline</dt>
+                  <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                </React.Fragment>
+              )} */}
+            </dl>
+          </div>
         </div>
-      </React.Fragment>
-    );
-  };
+      </div>
+    </React.Fragment>
+  );
+};
 
 export const NamespaceClaimList = props => {
   const { kinds } = props;
@@ -125,7 +167,7 @@ export const NamespaceClaimsDetailsPage = props => (
     kind="NamespaceClaim"
     menuActions={menuActions}
     pages={[
-      navFactory.details(DetailsForKind(props.kind)),
+      navFactory.details(Details),
       navFactory.editYaml()
     ]}
   />
