@@ -142,7 +142,6 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
   // webserver에 올린 swagger json file 불러오기
   const xhr = new XMLHttpRequest();
   xhr.addEventListener('load', () => {
-    console.log('load2', xhr);
     const swagger: SwaggerAPISpec = JSON.parse(xhr.response);
 
     if (kind.length && apiVersion.length && swagger) {
