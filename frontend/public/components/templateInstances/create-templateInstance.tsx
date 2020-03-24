@@ -33,20 +33,29 @@ const Section = ({ label, children, id }) => <div className="row">
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
   constructor(props) {
+    console.log(props)
     super(props);
-    const existingSecret = _.pick(props.obj, ['metadata', 'type']);
-    const secret = _.defaultsDeep({}, props.fixed, existingSecret, {
+    const existingTemplateInstance = _.pick(props.obj, ['metadata', 'type']);
+    const templateInstance = _.defaultsDeep({}, props.fixed, existingTemplateInstance, {
       apiVersion: 'tmax.io/v1',
       data: {},
       kind: "TemplateInstance",
       metadata: {
         name: '',
       },
+      spec: {
+        template: {
+          metadata: {
+            name: ''
+          },
+          parameters: []
+        }
+      }
     });
 
     this.state = {
       secretTypeAbstraction: this.props.secretTypeAbstraction,
-      secret: secret,
+      templateInstance: templateInstance,
       inProgress: false,
       stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
       templateList: [],
@@ -58,6 +67,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onTemplateChanged = this.onTemplateChanged.bind(this);
     this.getParams = this.getParams.bind(this);
+    this.onParamValueChanged = this.onParamValueChanged.bind(this);
     this.save = this.save.bind(this);
   }
   onDataChanged(secretsData) {
@@ -66,9 +76,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
   }
   onNameChanged(event) {
-    let secret = { ...this.state.secret };
-    secret.metadata.name = event.target.value;
-    this.setState({ secret });
+    let templateInstance = { ...this.state.templateInstance };
+    templateInstance.metadata.name = event.target.value;
+    this.setState({ templateInstance });
   }
   getParams() {
     const namespace = document.location.href.split('ns/')[1].split('/')[0];
@@ -116,17 +126,28 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       });
   }
   onTemplateChanged(event) {
+    let templateInstance = { ...this.state.templateInstance };
+    templateInstance.spec.template.metadata.name = event.target.value;
     this.setState({
       selectedTemplate: event.target.value,
-      editParamList: true
+      editParamList: true,
+      templateInstance: templateInstance
+    });
+  }
+  onParamValueChanged(event) {
+    let key = event.target.id
+    let templateInstance = { ...this.state.templateInstance };
+    templateInstance.spec.template.parameters[key] = event.target.value;
+    this.setState({
+      templateInstance: templateInstance
     });
   }
   save(e) {
     e.preventDefault();
-    const { kind, metadata } = this.state.secret;
+    const { kind, metadata } = this.state.templateInstance;
     this.setState({ inProgress: true });
 
-    const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData });
+    const newSecret = _.assign({}, this.state.templateInstance, { stringData: this.state.stringData });
     const ko = kindObj(kind);
     (this.props.isCreate
       ? k8sCreate(ko, newSecret)
@@ -173,9 +194,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     if (this.state.editParamList) {
       this.getParams();
     }
-    let paramDivs = paramList.map(function (parameter) {
+    let paramDivs = paramList.map((parameter) => {
       return <Section label={parameter} id={parameter}>
-        <input className="form-control" type="text" placeholder="value" required id={parameter} />
+        <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder="value" id={parameter} required />
       </Section>
     });
 
@@ -193,10 +214,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
               <input className="form-control"
                 type="text"
                 onChange={this.onNameChanged}
-                value={this.state.secret.metadata.name}
+                value={this.state.templateInstance.metadata.name}
                 id="template-instance-name"
                 required />
-              <p className="help-block" id="secret-name-help">Unique name of the new service Instance.</p>
             </div>
           </div>
           <div className="form-group">
@@ -284,7 +304,7 @@ export const EditSecret = ({ match: { params }, kind }) => <Firehose resources={
 
 export type BaseEditSecretState_ = {
   secretTypeAbstraction?: CreateType,
-  secret: K8sResourceKind,
+  templateInstance: K8sResourceKind,
   inProgress: boolean,
   stringData: { [key: string]: string },
   error?: any,
