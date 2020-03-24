@@ -8,7 +8,9 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary
+  ResourceSummary,
+  ScrollToTopOnMount,
+  kindObj
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -111,21 +113,56 @@ const ServicePlanRow = () =>
     );
   };
 
-const DetailsForKind = kind =>
-  function DetailsForKind_({ obj }) {
-    return (
-      <React.Fragment>
-        <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
-          <ResourceSummary
-            resource={obj}
-            podSelector="spec.podSelector"
-            showNodeSelector={false}
-          />
+// const DetailsForKind = kind =>
+//   function DetailsForKind_({ obj }) {
+//     return (
+//       <React.Fragment>
+//         <div className="co-m-pane__body">
+//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
+//           <ResourceSummary
+//             resource={obj}
+//             podSelector="spec.podSelector"
+//             showNodeSelector={false}
+//           />
+//         </div>
+//       </React.Fragment>
+//     );
+//   };
+
+const Details = ({ obj: serviceplan }) => {
+  return (
+    <React.Fragment>
+      <ScrollToTopOnMount />
+
+      <div className="co-m-pane__body">
+        <SectionHeading text="Pod Overview" />
+        <div className="row">
+          <div className="col-sm-6">
+            <ResourceSummary resource={serviceplan} />
+          </div>
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>Bindable</dt>
+              <dd>{serviceplan.spec.bindable ? 'True' : 'False'}</dd>
+              <dt>External Name</dt>
+              <dd>{serviceplan.spec.externalName}</dd>
+              <dt>Service Broker</dt>
+              <dd>{serviceplan.spec.serviceBrokerName}</dd>
+              <dt>Service Class</dt>
+              <dd>{serviceplan.spec.serviceClassRef.name}</dd>
+              {/* {activeDeadlineSeconds && (
+                <React.Fragment>
+                  <dt>Active Deadline</dt>
+                  <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                </React.Fragment>
+              )} */}
+            </dl>
+          </div>
         </div>
-      </React.Fragment>
-    );
-  };
+      </div>
+    </React.Fragment>
+  )
+}
 
 export const ServicePlanList = props => {
   const { kinds } = props;
@@ -157,7 +194,7 @@ export const ServicePlansDetailsPage = props => (
     kind="ServicePlan"
     menuActions={menuActions}
     pages={[
-      navFactory.details(DetailsForKind(props.kind)),
+      navFactory.details(Details),
       navFactory.editYaml()
     ]}
   />
