@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -56,10 +55,11 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             secret: secret,
             inProgress: false,
             stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
-            templateList: [],
-            paramList: [],
+            selectorList: _.isEmpty(props.selectorList) ? [['', '']] : _.toPairs(props.selectorList),
+            paramList: [['', '', '', '']],
             selectedTemplate: ''
         };
+
         this.onDataChanged = this.onDataChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onTemplateChanged = this.onTemplateChanged.bind(this);
@@ -126,7 +126,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
                 <fieldset disabled={!this.props.isCreate}>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">서비스 이름</label>
+                        <label className="control-label" htmlFor="secret-name">Name</label>
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -139,15 +139,57 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">포트</label>
-                        <div>
-
+                        <label className="control-label" htmlFor="secret-name">Port</label>
+                        <div className="col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                name
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                protocol
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                port
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                targetPort
+                            </div>
+                        </div>
+                        <div className="col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="name" required />
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <select className="form-control" id="protocol">
+                                    <option value='TCP'>TCP</option>
+                                    <option value='UDP'>UDP</option>
+                                    <option value='SCDP'>SCDP</option>
+                                </select>
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="port" required />
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="targetPort" />
+                            </div>
                         </div>
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="secret-name">Selector</label>
-                        <div>
-
+                        <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                key
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                value
+                            </div>
+                        </div>
+                        <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="key" required />
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="value" />
+                            </div>
                         </div>
                     </div>
                     <div className="form-group">
@@ -241,7 +283,7 @@ export type BaseEditSecretState_ = {
     inProgress: boolean,
     stringData: { [key: string]: string },
     error?: any,
-    templateList: Array<any>,
+    selectorList: Array<any>,
     paramList: Array<any>,
     selectedTemplate: string
 };
