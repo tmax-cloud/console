@@ -19,14 +19,14 @@ const determineCreateType = (data) => {
     return CreateType.form;
 };
 
-const Section = ({ label, children, id }) => <div className="row">
-    <div className="col-xs-2">
-        <div>{label}</div>
-    </div>
-    <div className="col-xs-2" id={id}>
-        {children}
-    </div>
-</div>;
+// const Section = ({ label, children, id }) => <div className="row">
+//     <div className="col-xs-2">
+//         <div>{label}</div>
+//     </div>
+//     <div className="col-xs-2" id={id}>
+//         {children}
+//     </div>
+// </div>;
 
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
 
@@ -69,41 +69,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     getParams() {
         console.log('getParams시작')
-        // coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
-        //     .then(res => res.json())
-        //     .then((myJson) => {
-        //         let stringobj = JSON.stringify(myJson.objects);
-        //         let param = [];
-        //         console.log(stringobj)
-        //         for (let i = 0; i < stringobj.length; i++) {
-        //             let word = ''
-        //             if (stringobj[i] === '$') {
-        //                 let n = i + 2;
-        //                 while (stringobj[n] !== '}') {
-        //                     word = word + stringobj[n];
-        //                     n++
-        //                 } param.push(word)
-        //             }
 
-        //         }
-        //         let paramList = Array.from(new Set(param));
-        //         console.log(paramList);
-        //         if (paramList.length) {
-        //             this.setState({
-        //                 paramList: paramList
-        //             });
-        //         }
-        //     },
-        //         //컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 에러를 이 부분에서 처리
-        //         (error) => {
-        //             this.setState({
-        //                 error
-        //             });
-        //         }
-        //     )
-        //     .catch(function (myJson) {
-        //         console.log(myJson);
-        //     });
     }
     onTemplateChanged(event) {
         this.setState({
@@ -131,14 +97,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.getParams();
     }
     render() {
-        const { paramList } = this.state;
+        // const { paramList } = this.state;
         // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
         this.getParams();
-        let paramDivs = paramList.map(function (parameter) {
-            return <Section label={parameter} id={parameter}>
-                <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
-            </Section>
-        });
+        // let paramDivs = paramList.map(function (parameter) {
+        //     return <Section label={parameter} id={parameter}>
+        //         <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
+        //     </Section>
+        // });
 
         return <div className="co-m-pane__body">
             < Helmet >
@@ -159,14 +125,21 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                                 aria-describedby="secret-name-help"
                                 id="secret-name"
                                 required />
-                            <p className="help-block" id="secret-name-help">Unique name of the new service Instance.</p>
+
                         </div>
                     </div>
 
                 </fieldset>
-                <label className="control-label" htmlFor="secret-name">Parameters </label>
-                <div>
-                    {paramDivs}
+                <div className="form-group">
+                    <label className="control-label" htmlFor="secret-type" >Type</label>
+                    <div>
+                        <select className="form-control" id="secret-type">
+                            <option >Cluster IP</option>
+                            <option >External Name</option>
+                            <option >Load Balancer</option>
+                            <option >Node Port</option>
+                        </select>
+                    </div>
                 </div>
                 <React.Fragment>
                     <div className="form-group">
