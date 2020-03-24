@@ -145,8 +145,8 @@ const Details = ({ obj: templateinstance }) => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export const TemplateInstanceList = props => {
   const { kinds } = props;
