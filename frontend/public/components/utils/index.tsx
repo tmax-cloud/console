@@ -54,3 +54,7 @@ export const enum NameValueEditorPair {
   Value,
   Index
 }
+
+export const enum StatusEditorPair {
+  Status = ''
+}
