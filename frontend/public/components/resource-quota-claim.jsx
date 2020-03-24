@@ -20,7 +20,8 @@ const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
   Cog.factory.Edit,
-  Cog.factory.Delete
+  Cog.factory.Delete,
+  Cog.factory.EditStatus
 ];
 
 const ResourceQuotaClaimHeader = props => (
@@ -159,7 +160,7 @@ export const ResourceQuotaClaimsDetailsPage = props => (
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ResourceQuotaClaim Details',
+        name: 'Resource Quota Claim Details',
         path: props.match.url
       })
     }

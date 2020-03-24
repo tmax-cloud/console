@@ -2,6 +2,7 @@ export * from './configure-count-modal';
 export * from './configure-operator-modal';
 export * from './configure-operator-channel-modal';
 export * from './confirm-modal';
+export * from './configure-status-modal';
 export * from './create-namespace-modal';
 export * from './delete-namespace-modal';
 export * from './error-modal';

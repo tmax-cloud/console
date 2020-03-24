@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { Tooltip } from './tooltip';
 
-import { annotationsModal, configureReplicaCountModal, labelsModal, podSelectorModal, deleteModal } from '../modals';
+import { annotationsModal, configureReplicaCountModal, labelsModal, podSelectorModal, deleteModal, configureStatusModal } from '../modals';
 import { DropdownMixin } from './dropdown';
 import { history, resourceObjPath } from './index';
 import { referenceForModel, K8sResourceKind, K8sResourceKindReference, K8sKind } from '../../module/k8s';
@@ -63,6 +63,13 @@ const cogFactory: CogFactory = {
     label: `${kind.kind === 'Pod' ? 'View' : 'Edit'} Environment`,
     href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/environment`,
   }),
+  EditStatus: (kind, obj) => ({
+    label: 'Edit Status',
+    callback: () => configureStatusModal({
+      resourceKind: kind,
+      resource: obj,
+    }),
+  })
 };
 
 // The common menu actions that most resource share
