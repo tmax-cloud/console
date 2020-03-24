@@ -90,6 +90,7 @@ func main() {
 	// NOTE: login endpoint 추가 // 정동민
 	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
 	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
+	fRefreshEndpoint := fs.String("refresh-endpoint", "", "URL of the refresh API server.")
 	fOpenapiEndpoint := fs.String("openapi-endpoint", "", "URL of the openapi API server.")
 	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
 	// NOTE: 여기까지
@@ -235,6 +236,7 @@ func main() {
 	// NOTE: loginEndpoint 추가 //정동민
 	var loginEndpoint *url.URL
 	var logoutEndpoint *url.URL
+	var refreshEndpoint *url.URL
 	var openapiEndpoint *url.URL
 	var prometheusEndpoint *url.URL
 	var k8sEndpoint *url.URL
@@ -249,6 +251,11 @@ func main() {
 		srv.LogoutProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        logoutEndpoint,
+		}
+		refreshEndpoint = validateFlagIsURL("refresh-endpoint", *fRefreshEndpoint)
+		srv.RefreshProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        refreshEndpoint,
 		}
 		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
 		srv.PrometheusProxyConfig = &proxy.Config{
@@ -335,6 +342,14 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        logoutEndpoint,
+		}
+		refreshEndpoint = validateFlagIsURL("refresh-endpoint", *fRefreshEndpoint)
+		srv.RefreshProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        refreshEndpoint,
 		}
 		openapiEndpoint = validateFlagIsURL("openapi-endpoint", *fOpenapiEndpoint)
 		srv.OpenapiProxyConfig = &proxy.Config{
