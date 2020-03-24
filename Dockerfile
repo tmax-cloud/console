@@ -2,6 +2,7 @@ FROM openshift/origin-base
 RUN mkdir -p /opt/bridge/bin
 COPY ./bin/bridge /opt/bridge/bin
 COPY ./frontend/public/dist /opt/bridge/static
+COPY ./swagger/autocomplete--swagger /opt/bridge/static/assets
 
 WORKDIR /
 
