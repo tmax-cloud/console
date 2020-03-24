@@ -36,9 +36,9 @@ export function WSFactory(id, options) {
   this.options = options;
   this.bufferMax = options.bufferMax || 0;
 
-  // NOTE: 웹소켓 경로에 http:// 나 https:// 포함된 경우, 마지막 포트 다음부분만 사용 // 정동민
-  if (/:\/\//.test(options.path)) {
-    options.path = options.path.replace(/.*:\d{1,5}(\/.*)/, '$1');
+  // NOTE: 웹소켓 경로에 http// 나 https// 포함된 경우, 마지막 포트 다음부분만 사용 // 정동민
+  if (/\/\//.test(options.path)) {
+    options.path = options.path.replace(/(?:.*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d{1,5})?)(\/.*)/, '$1');
   }
 
   this.url = createURL(options.host, options.path);
