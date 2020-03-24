@@ -6,7 +6,7 @@ import { Cog, navFactory, LabelList, ResourceCog, SectionHeading, ResourceIcon, 
 
 const menuActions = [Cog.factory.ModifyPodSelector, ...Cog.factory.common];
 
-const ServiceIP = ({s}) => {
+const ServiceIP = ({ s }) => {
   const children = _.map(s.spec.ports, (portObj, i) => {
     const clusterIP = s.spec.clusterIP === 'None' ? 'None' : `${s.spec.clusterIP}:${portObj.port}`;
     return <div key={i}>{clusterIP}</div>;
@@ -23,7 +23,7 @@ const ServiceHeader = props => <ListHeader>
   <ColHead {...props} className="col-lg-2 hidden-md hidden-sm hidden-xs" sortField="spec.clusterIP">Location</ColHead>
 </ListHeader>;
 
-const ServiceRow = ({obj: s}) => <ResourceRow obj={s}>
+const ServiceRow = ({ obj: s }) => <ResourceRow obj={s}>
   <div className="col-lg-3 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
     <ResourceCog actions={menuActions} kind="Service" resource={s} />
     <ResourceLink kind="Service" name={s.metadata.name} namespace={s.metadata.namespace} title={s.metadata.uid} />
@@ -42,7 +42,7 @@ const ServiceRow = ({obj: s}) => <ResourceRow obj={s}>
   </div>
 </ResourceRow>;
 
-const ServiceAddress = ({s}) => {
+const ServiceAddress = ({ s }) => {
   const ServiceIPsRow = (name, desc, ips, note = null) => <div className="co-ip-row">
     <div className="row">
       <div className="col-xs-6">
@@ -78,7 +78,7 @@ const ServiceAddress = ({s}) => {
   </div>;
 };
 
-const ServicePortMapping = ({ports}) => <div>
+const ServicePortMapping = ({ ports }) => <div>
   <div className="row co-ip-header">
     <div className="col-xs-3">Name</div>
     <div className="col-xs-3">Port</div>
@@ -109,7 +109,7 @@ const ServicePortMapping = ({ports}) => <div>
   </div>
 </div>;
 
-const Details = ({obj: s}) => <div className="co-m-pane__body">
+const Details = ({ obj: s }) => <div className="co-m-pane__body">
   <div className="row">
     <div className="col-sm-6">
       <SectionHeading text="Service Overview" />
@@ -134,7 +134,7 @@ const Details = ({obj: s}) => <div className="co-m-pane__body">
   </div>
 </div>;
 
-const {details, pods, editYaml} = navFactory;
+const { details, pods, editYaml } = navFactory;
 const ServicesDetailsPage = props => <DetailsPage
   {...props}
   menuActions={menuActions}
@@ -142,6 +142,18 @@ const ServicesDetailsPage = props => <DetailsPage
 />;
 
 const ServicesList = props => <List {...props} Header={ServiceHeader} Row={ServiceRow} />;
-const ServicesPage = props => <ListPage canCreate={true} ListComponent={ServicesList} {...props} />;
+//const ServicesPage = props => <ListPage canCreate={true} ListComponent={ServicesList} {...props} />;
+const ServicesPage = props => {
+  const createItems = {
+    form: '서비스 (폼 에디터)',
+    yaml: '서비스 (YAML 에디터)'
+  };
 
-export {ServicesList, ServicesPage, ServicesDetailsPage};
+  const createProps = {
+    items: createItems,
+    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/services/new${type !== 'yaml' ? '/' + type : ''}`
+  };
+  return <ListPage ListComponent={ServicesList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
+
+export { ServicesList, ServicesPage, ServicesDetailsPage };
