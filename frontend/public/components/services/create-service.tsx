@@ -12,7 +12,7 @@ enum CreateType {
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 템플릿 서비스 생성',
+    [CreateType.form]: '폼 형식을 통한 서비스 생성',
 };
 
 const determineCreateType = (data) => {
@@ -40,6 +40,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             metadata: {
                 name: '',
             },
+            spec: {
+                ports: [{
+                    protocol: 'TCP',
+                    port: 80,
+                    targetPort: 9376
+                }]
+
+            }
+
         });
 
         this.state = {
@@ -89,7 +98,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push(formatNamespacedRouteForResource('templateinstances'));
+            console.log(this.state)
+            history.push(formatNamespacedRouteForResource('services'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
@@ -128,32 +138,44 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
                         </div>
                     </div>
-
-                </fieldset>
-                <div className="form-group">
-                    <label className="control-label" htmlFor="secret-type" >Type</label>
-                    <div>
-                        <select className="form-control" id="secret-type">
-                            <option >Cluster IP</option>
-                            <option >External Name</option>
-                            <option >Load Balancer</option>
-                            <option >Node Port</option>
-                        </select>
-                    </div>
-                </div>
-                <React.Fragment>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="username">Label</label>
+                        <label className="control-label" htmlFor="secret-name">포트</label>
                         <div>
-                            <SelectorInput labelClassName="co-text-namespace" tags={[]} />
+
                         </div>
                     </div>
-                </React.Fragment>
-                <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
-                    <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-                    <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
-                </ButtonBar>
+                    <div className="form-group">
+                        <label className="control-label" htmlFor="secret-name">Selector</label>
+                        <div>
+
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label" htmlFor="secret-type" >Type</label>
+                        <div>
+                            <select className="form-control" id="secret-type">
+                                <option >Cluster IP</option>
+                                <option >External Name</option>
+                                <option >Load Balancer</option>
+                                <option >Node Port</option>
+                            </select>
+                        </div>
+                    </div>
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Label</label>
+                            <div>
+                                <SelectorInput labelClassName="co-text-namespace" tags={[]} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                    <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
+                        <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
+                        <Link to={formatNamespacedRouteForResource('services')} className="btn btn-default" id="cancel">Cancel</Link>
+                    </ButtonBar>
+                </fieldset>
             </form>
+
         </div >;
     }
 };
