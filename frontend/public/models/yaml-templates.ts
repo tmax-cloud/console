@@ -10,10 +10,60 @@ import * as k8sModels from '../models';
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
   .setIn(['DEFAULT', 'default'], `
-apiVersion: ''
-kind: ''
-metadata:
-  name: example
+  apiVersion: ''
+  kind: ''
+  metadata:
+    name: example
+`)
+  .setIn([referenceForModel(k8sModels.UserModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: User
+  metadata: 
+    name: example-tmax.co.kr
+    labels: 
+      encrypted: f
+  userInfo:
+    name: example
+    password: "example"
+    email: example@tmax.co.kr
+    department: Cloud
+    position: developer
+    phone: 010-0000-0000
+    description: For Example
+  status: active
+`)
+  .setIn([referenceForModel(k8sModels.NamespaceClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: NamespaceClaim
+  metadata:
+    name: example
+  spec:
+    hard:
+      limits.cpu: "1" 
+`)
+  .setIn([referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: ResourceQuotaClaim
+  metadata:
+    name: example
+    namespace: example
+  spec:
+    hard:
+      limits.cpu: "2"
+`)
+  .setIn([referenceForModel(k8sModels.RoleBindingClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: RoleBindingClaim
+  metadata:
+    name: example
+    namespace: example
+  subjects:
+  - kind: User
+    name: example@tmax.co.kr
+  roleRef:
+    kind: ClusterRole
+    name: namespace-user
+    apiGroup: rbac.authorization.k8s.io
 `)
   .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
 apiVersion: tekton.dev/v1alpha1

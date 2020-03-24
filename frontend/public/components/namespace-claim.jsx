@@ -1,3 +1,4 @@
+import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
@@ -7,35 +8,34 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary,
+  ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
-import { CardList } from './card';
-
+import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
   Cog.factory.Edit,
-  Cog.factory.Delete,
+  Cog.factory.Delete
 ];
 
-const ServiceInstanceHeader = props => (
+const NamespaceClaimHeader = props => (
   <ListHeader>
-    <ColHead {...props} className="col-xs-6 col-sm-4" sortField="metadata.name">
+    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
       Name
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-6 col-sm-4"
+      className="col-xs-3 col-sm-3"
       sortField="metadata.namespace"
     >
       Namespace
     </ColHead>
     <ColHead
       {...props}
-      className="col-sm-4 hidden-xs"
+      className="col-sm-3 hidden-xs"
       sortField="metadata.creationTimestamp"
     >
       Created
@@ -43,24 +43,25 @@ const ServiceInstanceHeader = props => (
   </ListHeader>
 );
 
-const ServiceInstanceRow = () =>
-  function ServiceInstanceRow({ obj }) {
+const NamespaceClaimRow = () =>
+  // eslint-disable-next-line no-shadow
+  function NamespaceClaimRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-6 col-sm-4 co-resource-link-wrapper">
+        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind="ServiceInstance"
+            kind="NamespaceClaim"
             resource={obj}
           />
           <ResourceLink
-            kind="ServiceInstance"
+            kind="NamespaceClaim"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
           />
         </div>
-        <div className="col-xs-6 col-sm-4 co-break-word">
+        <div className="col-xs-3 col-sm-3 co-break-word">
           {obj.metadata.namespace ? (
             <ResourceLink
               kind="Namespace"
@@ -68,10 +69,10 @@ const ServiceInstanceRow = () =>
               title={obj.metadata.namespace}
             />
           ) : (
-            'None'
-          )}
+              'None'
+            )}
         </div>
-        <div className="col-xs-6 col-sm-4 hidden-xs">
+        <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
         </div>
       </div>
@@ -94,42 +95,40 @@ const DetailsForKind = kind =>
     );
   };
 
-export const ServiceInstanceList = props => {
+export const NamespaceClaimList = props => {
   const { kinds } = props;
-  const Row = ServiceInstanceRow(kinds[0]);
-  Row.displayName = 'ServiceInstanceRow';
-  return (
-    <List {...props} Header={ServiceInstanceHeader} Row={Row} />
-  );
+  const Row = NamespaceClaimRow(kinds[0]);
+  Row.displayName = 'NamespaceClaimRow';
+  return <List {...props} Header={NamespaceClaimHeader} Row={Row} />;
 };
-ServiceInstanceList.displayName = ServiceInstanceList;
+NamespaceClaimList.displayName = NamespaceClaimList;
 
-export const ServiceInstancesPage = props => {
-const createItems = {
-    form: '인스턴스 (폼 에디터)',
-    yaml: '인스턴스 (YAML 에디터)',
-  };  
-  const createProps = {
-    items: createItems,
-    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new${type !== 'yaml' ? '/' + type : ''}`
-  };
-  return <ListPage
+export const NamespaceClaimsPage = props => (
+  <ListPage
     {...props}
-    ListComponent={ServiceInstanceList}
+    ListComponent={NamespaceClaimList}
     canCreate={true}
-    createProps={createProps} 
-    // FIXME
-    // canCreate={props.canCreate || _.get(kindObj(props.kind), 'crd')}
+    kind="NamespaceClaim"
   />
-};
-ServiceInstancesPage.displayName = 'ServiceInstancesPage';
+);
+NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 
-export const ServiceInstancesDetailsPage = props => {
-  const pages = [
-    navFactory.details(DetailsForKind(props.kind)),
-    navFactory.editYaml(),
-  ];
-  return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-};
+export const NamespaceClaimsDetailsPage = props => (
+  <DetailsPage
+    {...props}
+    breadcrumbsFor={obj =>
+      breadcrumbsForOwnerRefs(obj).concat({
+        name: 'NamespaceClaim Details',
+        path: props.match.url
+      })
+    }
+    kind="NamespaceClaim"
+    menuActions={menuActions}
+    pages={[
+      navFactory.details(DetailsForKind(props.kind)),
+      navFactory.editYaml()
+    ]}
+  />
+);
 
-ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
+NamespaceClaimsDetailsPage.displayName = 'NamespaceClaimsDetailsPage';

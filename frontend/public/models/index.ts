@@ -1,6 +1,62 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+export const UserModel: K8sKind = {
+  kind: "User",
+  namespaced: false,
+  label: "User",
+  plural: "users",
+  apiVersion: "v1",
+  abbr: "U",
+  apiGroup: "tmax.io",
+  labelPlural: "Users",
+  path: "users",
+  id: "user",
+  crd: false
+}
+
+export const NamespaceClaimModel: K8sKind = {
+  kind: "NamespaceClaim",
+  namespaced: false,
+  label: "Namespace Claim",
+  plural: "namespaceclaims",
+  apiVersion: "v1",
+  abbr: "NC",
+  apiGroup: "tmax.io",
+  labelPlural: "Namespace Claims",
+  path: "namespaceclaims",
+  id: "namespaceclaim",
+  crd: false
+}
+
+export const ResourceQuotaClaimModel: K8sKind = {
+  kind: "ResourceQuotaClaim",
+  namespaced: true,
+  label: "Resource Quota Claim",
+  plural: "resourcequotaclaims",
+  apiVersion: "v1",
+  abbr: "RQC",
+  apiGroup: "tmax.io",
+  labelPlural: "Resource Quota Claims",
+  path: "resourcequotaclaims",
+  id: "resourcequotaclaim",
+  crd: false
+}
+
+export const RoleBindingClaimModel: K8sKind = {
+  kind: "RoleBindingClaim",
+  namespaced: true,
+  label: "Role Binding Claim",
+  plural: "rolebindingclaims",
+  apiVersion: "v1",
+  abbr: "RBC",
+  apiGroup: "tmax.io",
+  labelPlural: "Role Binding Claims",
+  path: "rolebindingclaims",
+  id: "rolebindingclaim",
+  crd: false
+}
+
 export const CatalogSourceModel: K8sKind = {
   kind: 'CatalogSource',
   label: 'CatalogSource',
@@ -775,6 +831,48 @@ export const StorageClassModel: K8sKind = {
   kind: 'StorageClass',
   id: 'storageclass'
 };
+
+export const ServiceBrokerModel: K8sKind = {
+  kind: "ServiceBroker",
+  namespaced: true,
+  label: "Service Broker",
+  plural: "servicebrokers",
+  apiVersion: "v1beta1",
+  abbr: "SB",
+  apiGroup: "servicecatalog.k8s.io",
+  labelPlural: "Service Brokers",
+  path: "servicebrokers",
+  id: "servicebroker",
+  crd: false
+}
+
+export const ServiceClassModel: K8sKind = {
+  kind: "ServiceClass",
+  namespaced: true,
+  label: "Service Class",
+  plural: "serviceclasses",
+  apiVersion: "v1beta1",
+  abbr: "SC",
+  apiGroup: "servicecatalog.k8s.io",
+  labelPlural: "Service Classes",
+  path: "serviceclasses",
+  id: "serviceclass",
+  crd: false
+}
+
+export const ServicePlanModel: K8sKind = {
+  kind: "ServicePlan",
+  namespaced: true,
+  label: "Service Plan",
+  plural: "serviceplans",
+  apiVersion: "v1beta1",
+  abbr: "SP",
+  apiGroup: "servicecatalog.k8s.io",
+  labelPlural: "Service Plans",
+  path: "serviceplans",
+  id: "serviceplan",
+  crd: false
+}
 
 export const ClusterServiceBrokerModel: K8sKind = {
   label: 'Cluster Service Broker',
