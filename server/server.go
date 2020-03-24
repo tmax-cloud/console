@@ -41,6 +41,7 @@ const (
 	prometheusProxyEndpoint   = "/api/prometheus"
 	loginProxyEndpoint        = "/userlogin"
 	logoutProxyEndpoint       = "/userlogout"
+	refreshProxyEndpoint      = "/tokenrefresh"
 	openapiProxyEndpoint      = "/openapi/"
 	// NOTE: login api 프록시를 위해 loginProxyEndpoint 추가 // 정동민
 )
@@ -98,6 +99,7 @@ type Server struct {
 	PrometheusProxyConfig *proxy.Config
 	LoginProxyConfig      *proxy.Config
 	LogoutProxyConfig     *proxy.Config
+	RefreshProxyConfig    *proxy.Config
 	OpenapiProxyConfig    *proxy.Config
 	// NOTE: login api 프록시를 위해 LoginProxyConfig 추가 // 정동민
 }
@@ -219,6 +221,14 @@ func (s *Server) HTTPHandler() http.Handler {
 		proxy.SingleJoiningSlash(s.BaseURL.Path, logoutProxyAPIPath),
 		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 			logoutProxy.ServeHTTP(w, r)
+		})),
+	)
+	refreshProxyAPIPath := refreshProxyEndpoint
+	refreshProxy := proxy.NewProxy(s.RefreshProxyConfig)
+	handle(refreshProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, refreshProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			refreshProxy.ServeHTTP(w, r)
 		})),
 	)
 	openapiProxyAPIPath := openapiProxyEndpoint
