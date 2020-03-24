@@ -14,6 +14,15 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   kind: ''
   metadata:
     name: example
+  .setIn([referenceForModel(k8sModels.ServiceBindingModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ServiceBinding
+  metadata:
+    name: example-binding
+    namespace: hypercloud4-system
+  spec:
+    instanceRef:
+      name: example-instance
 `)
   .setIn([referenceForModel(k8sModels.UserModel), 'default'], `
   apiVersion: tmax.io/v1
