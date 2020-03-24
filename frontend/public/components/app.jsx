@@ -193,6 +193,7 @@ class App extends React.PureComponent {
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
           }
+          <LazyRoute path="/k8s/ns/:ns/services/new/:type" exact kind="Service" loader={() => import('./services/create-service').then(m => m.CreateService)} />
           <LazyRoute path="/k8s/ns/:ns/serviceinstances/new/:type" exact kind="ServiceInstance" loader={() => import('./service-instances/create-service-instance').then(m => m.CreateServiceInstance)} />
           <LazyRoute path="/k8s/ns/:ns/templateinstances/new/:type" exact kind="TemplateInstance" loader={() => import('./templateInstances/create-templateInstance').then(m => m.CreateTemplateInstance)} />
           <LazyRoute path="/k8s/ns/:ns/secrets/new/:type" exact kind="Secret" loader={() => import('./secrets/create-secret' /* webpackChunkName: "create-secret" */).then(m => m.CreateSecret)} />
