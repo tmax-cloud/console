@@ -38,7 +38,7 @@ export function WSFactory(id, options) {
 
   // NOTE: 웹소켓 경로에 http//, https//, http://, https:// 포함된 경우, 그 다음 /부터 사용 // 정동민
   if (/(?:https|http):?\/\//.test(options.path)) {
-    options.path = options.path.replace(/(?:https|http):?\/\/.+?\//, '$1');
+    options.path = options.path.replace(/(?:https|http):?\/\/.+?\//, '/');
   }
 
   this.url = createURL(options.host, options.path);
