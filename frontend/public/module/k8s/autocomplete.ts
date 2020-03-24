@@ -138,18 +138,39 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
 
   const kind = valueFor('kind');
   const apiVersion = valueFor('apiVersion');
-  const swagger: SwaggerAPISpec = JSON.parse(window.sessionStorage.getItem(`${(window as any).SERVER_FLAGS.consoleVersion}--swagger.json`));
 
-  if (kind.length && apiVersion.length && swagger) {
-    const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`${apiVersion.replace('/', '.')}.${kind}`));
-    const results = Object.keys(_.get(swagger.definitions, [`${defKey}Spec`, 'properties'], {})).map(prop => ({
-      name: prop,
-      score: 10000,
-      value: prop,
-      meta: kind,
-    }));
-    callback(null, results);
-  }
+  // webserver에 올린 swagger json file 불러오기
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener('load', () => {
+    console.log('load2', xhr);
+    const swagger: SwaggerAPISpec = JSON.parse(xhr.response);
+
+    if (kind.length && apiVersion.length && swagger) {
+      const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`${apiVersion.replace('/', '.')}.${kind}`));
+      const results = Object.keys(_.get(swagger.definitions, [`${defKey}Spec`, 'properties'], {})).map(prop => ({
+        name: prop,
+        score: 10000,
+        value: prop,
+        meta: kind,
+      }));
+      callback(null, results);
+    }
+  });
+  xhr.open('GET', `${document.location.origin}/static/assets/autocomplete--swagger.json`);
+  xhr.send();
+
+  // const swagger: SwaggerAPISpec = JSON.parse(window.sessionStorage.getItem(`${(window as any).SERVER_FLAGS.consoleVersion}--swagger.json`));
+
+  // if (kind.length && apiVersion.length && swagger) {
+  //   const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`${apiVersion.replace('/', '.')}.${kind}`));
+  //   const results = Object.keys(_.get(swagger.definitions, [`${defKey}Spec`, 'properties'], {})).map(prop => ({
+  //     name: prop,
+  //     score: 10000,
+  //     value: prop,
+  //     meta: kind,
+  //   }));
+  //   callback(null, results);
+  // }
 };
 
 /**
