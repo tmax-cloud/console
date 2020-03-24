@@ -35,6 +35,8 @@ spec:
         - mountPath: /var/https-cert
           name: https-cert
           readOnly: true
+        - mountPath: /var/console
+          name: console-mnt
         name: console
         ports:
         - containerPort: 6443
@@ -58,4 +60,7 @@ spec:
         secret:
           defaultMode: 288
           secretName: console-https-secret
+      - name: console-mnt
+        hostPath: 
+          path: /root/hypercloud4.1-console/mnt/var
      
