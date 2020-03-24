@@ -213,7 +213,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
               <SelectorInput labelClassName="co-text-namespace" tags={[]} />
             </div>
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label className="control-label" htmlFor="password">Annotation</label>
             <div className="row">
               <div className="col-xs-2">
@@ -223,8 +223,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <input className="form-control" type="text" placeholder="value" />
               </div>
             </div>
-          </div>
-        </React.Fragment>;
+          </div> */}
+        </React.Fragment>
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
           <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
