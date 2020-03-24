@@ -13,6 +13,7 @@
     --public-dir=./frontend/public/dist \
     --login-endpoint=http://192.168.6.211:28677/login \
     --logout-endpoint=http://192.168.6.211:28677/logout \
+    --refresh-endpoint=http://192.168.6.211:28677/refresh \
     --openapi-endpoint=https://192.168.6.196:6443/openapi \
     --prometheus-endpoint=http://192.168.6.215:9090/api \
     --release-mode=false \
