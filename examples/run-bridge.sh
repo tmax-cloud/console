@@ -15,4 +15,4 @@
     --logout-endpoint=http://192.168.6.211:28677/logout \
     --openapi-endpoint=https://192.168.6.196:6443/openapi \
     --prometheus-endpoint=http://192.168.6.215:9090/api \
-    --release-mode=false \
+    --release-mode=true \
