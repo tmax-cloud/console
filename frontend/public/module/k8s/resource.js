@@ -82,6 +82,11 @@ export const k8sPatch = (kind, resource, data) => coFetchJSON.patch(
   resourceURL(kind, {ns: resource.metadata.namespace, name: resource.metadata.name}),
   data
 );
+export const k8sPatch2 = (kind, resource, data, opts) => coFetchJSON.patch(
+  resourceURL(kind, { ns: resource.metadata.namespace, name: resource.metadata.name, path: opts.path }),
+  data,
+  opts
+);
 
 export const k8sKill = (kind, resource, opts = {}, json = null) => coFetchJSON.delete(
   resourceURL(kind, Object.assign({ns: resource.metadata.namespace, name: resource.metadata.name}, opts)), opts, json
