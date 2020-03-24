@@ -9,7 +9,6 @@ import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
 
-
 enum SecretTypeAbstraction {
   generic = 'generic',
   form = 'form',
@@ -43,11 +42,11 @@ const determineSecretTypeAbstraction = (data) => {
   return SecretTypeAbstraction.form;
 };
 
-const Section = ({ label, children }) => <div className="row">
+const Section = ({ label, children, id }) => <div className="row">
   <div className="col-xs-2">
-    <strong>{label}</strong>
+    <div>{label}</div>
   </div>
-  <div className="col-xs-10">
+  <div className="col-xs-2" id={id}>
     {children}
   </div>
 </div>;
@@ -195,7 +194,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
     this.getParams();
     let paramDivs = paramList.map(function (parameter) {
-      return <Section label={parameter} >
+      return <Section label={parameter} id={parameter}>
         <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
       </Section>
     });
@@ -231,7 +230,10 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
         </fieldset>
-        {paramDivs}
+        <label className="control-label" htmlFor="secret-name">Parameters </label>
+        <div>
+          {paramDivs}
+        </div>
         <Optionalform onChange={this.onDataChanged} stringData={this.state.stringData} />
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
@@ -298,15 +300,13 @@ class Optionalform extends React.Component<BasicAuthSubformProps, BasicAuthSubfo
       </div>
       <div className="form-group">
         <label className="control-label" htmlFor="password">Annotation</label>
-        <div>
-          <input className="form-control"
-            id="annotation"
-            aria-describedby="password-help"
-            type="text"
-            name="annotation"
-            onChange={this.changeData}
-            value={this.state.password}
-            required />
+        <div className="row">
+          <div className="col-xs-2">
+            <input className="form-control" type="text" placeholder="key" />
+          </div>
+          <div className="col-xs-2" >
+            <input className="form-control" type="text" placeholder="value" />
+          </div>
         </div>
       </div>
     </React.Fragment>;
