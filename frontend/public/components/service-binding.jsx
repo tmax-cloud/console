@@ -8,7 +8,9 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary
+  ResourceSummary,
+  ScrollToTopOnMount,
+  kindObj
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -23,19 +25,33 @@ const menuActions = [
 
 const ServiceBindingHeader = props => (
   <ListHeader>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
       Name
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-3 col-sm-3"
+      className="col-xs-2 col-sm-2"
       sortField="metadata.namespace"
     >
       Namespace
     </ColHead>
     <ColHead
       {...props}
-      className="col-sm-3 hidden-xs"
+      className="col-sm-2 hidden-xs"
+      sortField="spec.instanceRef.name"
+    >
+      Service Instance
+    </ColHead>
+    <ColHead
+      {...props}
+      className="col-sm-2 hidden-xs"
+      sortField="spec.secretName"
+    >
+      Secret
+    </ColHead>
+    <ColHead
+      {...props}
+      className="col-sm-4 hidden-xs"
       sortField="metadata.creationTimestamp"
     >
       Created
@@ -48,7 +64,7 @@ const ServiceBindingRow = () =>
   function ServiceBindingRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
+        <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
             kind="ServiceBinding"
@@ -61,7 +77,7 @@ const ServiceBindingRow = () =>
             title={obj.metadata.name}
           />
         </div>
-        <div className="col-xs-3 col-sm-3 co-break-word">
+        <div className="col-xs-2 col-sm-2 co-break-word">
           {obj.metadata.namespace ? (
             <ResourceLink
               kind="Namespace"
@@ -72,28 +88,65 @@ const ServiceBindingRow = () =>
               'None'
             )}
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">
+        <div className="col-xs-2 col-sm-2 hidden-xs">
+          {obj.spec.instanceRef.name}
+        </div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">
+          {obj.spec.secretName}
+        </div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
         </div>
       </div>
     );
   };
 
-const DetailsForKind = kind =>
-  function DetailsForKind_({ obj }) {
-    return (
-      <React.Fragment>
-        <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
-          <ResourceSummary
-            resource={obj}
-            podSelector="spec.podSelector"
-            showNodeSelector={false}
-          />
+// const DetailsForKind = kind =>
+//   function DetailsForKind_({ obj }) {
+//     return (
+//       <React.Fragment>
+//         <div className="co-m-pane__body">
+//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
+//           <ResourceSummary
+//             resource={obj}
+//             podSelector="spec.podSelector"
+//             showNodeSelector={false}
+//           />
+//         </div>
+//       </React.Fragment>
+//     );
+//   };
+
+const Details = ({ obj: servicebinding }) => {
+  return (
+    <React.Fragment>
+      <ScrollToTopOnMount />
+
+      <div className="co-m-pane__body">
+        <SectionHeading text="Pod Overview" />
+        <div className="row">
+          <div className="col-sm-6">
+            <ResourceSummary resource={servicebinding} />
+          </div>
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>Service Instance</dt>
+              <dd>{servicebinding.spec.instanceRef.name}</dd>
+              <dt>Secret</dt>
+              <dd>{servicebinding.spec.secretName}</dd>
+              {/* {activeDeadlineSeconds && (
+                <React.Fragment>
+                  <dt>Active Deadline</dt>
+                  <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                </React.Fragment>
+              )} */}
+            </dl>
+          </div>
         </div>
-      </React.Fragment>
-    );
-  };
+      </div>
+    </React.Fragment>
+  );
+};
 
 export const ServiceBindingList = props => {
   const { kinds } = props;
@@ -125,7 +178,7 @@ export const ServiceBindingsDetailsPage = props => (
     kind="ServiceBinding"
     menuActions={menuActions}
     pages={[
-      navFactory.details(DetailsForKind(props.kind)),
+      navFactory.details(Details),
       navFactory.editYaml()
     ]}
   />
