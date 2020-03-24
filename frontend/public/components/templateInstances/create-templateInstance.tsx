@@ -52,6 +52,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
       templateList: [],
       paramList: [],
+      editParamList: false,
       selectedTemplate: ''
     };
     this.onDataChanged = this.onDataChanged.bind(this);
@@ -79,12 +80,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       .then((myJson) => {
         let stringobj = JSON.stringify(myJson.objects);
         let param = [];
-        console.log(stringobj)
         for (let i = 0; i < stringobj.length; i++) {
           let word = ''
           if (stringobj[i] === '$') {
             let n = i + 2;
-            while (stringobj[n] !== '}') {
+            let endPoint = '}'
+            if (stringobj[n - 1] == '(') {
+              endPoint = ')'
+            }
+            while (stringobj[n] !== endPoint) {
               word = word + stringobj[n];
               n++
             } param.push(word)
@@ -95,7 +99,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         console.log(paramList);
         if (paramList.length) {
           this.setState({
-            paramList: paramList
+            paramList: paramList,
+            editParamList: false
           });
         }
       },
@@ -112,9 +117,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   onTemplateChanged(event) {
     this.setState({
-      selectedTemplate: event.target.value
+      selectedTemplate: event.target.value,
+      editParamList: true
     });
-    console.log(event.target.value);
   }
   save(e) {
     e.preventDefault();
@@ -141,7 +146,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         });
         this.setState({
           templateList: templateList,
-          selectedTemplate: templateList[0]
+          selectedTemplate: templateList[0],
+          editParamList: true
         });
       },
         (error) => {
@@ -164,7 +170,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       return <option value={template}>{template}</option>;
     });
     // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
-    this.getParams();
+    if (this.state.editParamList) {
+      this.getParams();
+    }
     let paramDivs = paramList.map(function (parameter) {
       return <Section label={parameter} id={parameter}>
         <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
@@ -297,6 +305,7 @@ export type BaseEditSecretState_ = {
   error?: any,
   templateList: Array<any>,
   paramList: Array<any>,
+  editParamList: boolean,
   selectedTemplate: string
 };
 
