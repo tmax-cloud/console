@@ -38,6 +38,9 @@ const actions = {
   [types.modifyObject]: action_(types.modifyObject),
 
   getResources: () => dispatch => {
+    if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+      return;
+    }
     dispatch({type: types.getResourcesInFlight});
     getResources_()
       .then(resources => dispatch({type: types.resources, resources}))

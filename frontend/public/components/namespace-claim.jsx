@@ -20,7 +20,8 @@ const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
   Cog.factory.Edit,
-  Cog.factory.Delete
+  Cog.factory.Delete,
+  Cog.factory.EditStatus
 ];
 
 const NamespaceClaimHeader = props => (
@@ -160,7 +161,7 @@ export const NamespaceClaimsDetailsPage = props => (
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'NamespaceClaim Details',
+        name: 'Namespace Claim Details',
         path: props.match.url
       })
     }

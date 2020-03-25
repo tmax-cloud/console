@@ -8,13 +8,13 @@ import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from 
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
-
+import { AsyncComponent } from '../utils/async';
 enum CreateType {
     generic = 'generic',
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 템플릿 인스턴스 생성',
+    [CreateType.form]: '폼 형식을 통한 파이프라인 리소스 생성',
 };
 
 const determineCreateType = (data) => {
@@ -30,6 +30,8 @@ const Section = ({ label, children, id }) => <div className="row">
     </div>
 </div>;
 
+const NameValueEditorComponent = (props) => <AsyncComponent loader={() => import('../utils/name-value-editor.jsx').then(c => c.NameValueEditor)} {...props} />;
+
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
     constructor(props) {
@@ -39,10 +41,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             apiVersion: 'v1',
             // apiGroup: "tmax.io",
             data: {},
-            kind: "Secret",
+            kind: "PipelineResource",
             metadata: {
                 name: '',
+                namespace: _.pick(props.obj, ['metadata', 'namespace'])
             },
+            spec: {
+                params: []
+            }
         });
 
         this.state = {
@@ -50,15 +56,12 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             secret: secret,
             inProgress: false,
             stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
-            templateList: [],
-            paramList: [],
-            editParamList: false,
-            selectedTemplate: ''
+            pipelineResourceTypeList: ['git', 'image'],
+            selectedPipelineResourceType: 'git',
         };
         this.onDataChanged = this.onDataChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
-        this.onTemplateChanged = this.onTemplateChanged.bind(this);
-        this.getParams = this.getParams.bind(this);
+        this.onTypeChanged = this.onTypeChanged.bind(this);
         this.save = this.save.bind(this);
     }
     onDataChanged(secretsData) {
@@ -71,58 +74,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         secret.metadata.name = event.target.value;
         this.setState({ secret });
     }
-    getParams() {
-        const namespace = document.location.href.split('ns/')[1].split('/')[0];
-        let template = this.state.selectedTemplate;
-        console.log('getParams시작')
-        coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
-            .then(res => res.json())
-            .then((myJson) => {
-                let stringobj = JSON.stringify(myJson.objects);
-                let param = [];
-                for (let i = 0; i < stringobj.length; i++) {
-                    let word = ''
-                    if (stringobj[i] === '$') {
-                        let n = i + 2;
-                        if (stringobj[n - 1] == '{') {
-                            while (stringobj[n] !== '}') {
-                                word = word + stringobj[n];
-                                n++
-                            } param.push(word)
-                        }
-
-                    }
-
-                }
-                let paramList = Array.from(new Set(param));
-                console.log(paramList);
-                if (paramList.length) {
-                    this.setState({
-                        paramList: paramList,
-                        editParamList: false
-                    });
-                } else {
-                    this.setState({
-                        paramList: [],
-                        editParamList: false
-                    });
-                }
-            },
-                //컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 에러를 이 부분에서 처리
-                (error) => {
-                    this.setState({
-                        error
-                    });
-                }
-            )
-            .catch(function (myJson) {
-                console.log(myJson);
-            });
-    }
-    onTemplateChanged(event) {
+    onTypeChanged(event) {
         this.setState({
-            selectedTemplate: event.target.value,
-            editParamList: true
+            selectedPipelineResourceType: event.target.value,
         });
     }
     save(e) {
@@ -132,68 +86,39 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
         const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData });
         const ko = kindObj(kind);
+        console.log(kind); // Secret 
+        console.log(this.state.stringData); // null 
+        console.log(this.state.secret); // 여기에 metadata, data, kind 가 들어감
+        return;
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push('/k8s/ns/' + metadata.namespace + '/serviceinstances');
+            console.log(this.state)
+            history.push(formatNamespacedRouteForResource('services'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
-    getTemplateList() {
-        const namespace = document.location.href.split('ns/')[1].split('/')[0];
-        coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates')
-            .then(res => res.json())
-            .then((myJson) => {
-                let templateList = myJson.items.map(function (template) {
-                    return template.metadata.name
-                });
-                this.setState({
-                    templateList: templateList,
-                    selectedTemplate: templateList[0],
-                    editParamList: false
-                });
-            },
-                (error) => {
-                    this.setState({
-                        error
-                    });
-                }
-            )
-            .catch(function (myJson) {
-                this.state.templateList = [];
-            });
-    }
-    componentDidMount() {
-        this.getTemplateList();
-        this.getParams();
-    }
+    // componentDidMount() {
+        
+    // }
     render() {
-        const { templateList, paramList } = this.state;
-        let options = templateList.map(function (template) {
-            return <option value={template}>{template}</option>;
+        const { pipelineResourceTypeList } = this.state;
+        let options = pipelineResourceTypeList.map(function (type_) {
+            return <option value={type_}>{type_}</option>;
         });
-        // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
-        if (this.state.editParamList) {
-            this.getParams();
-        }
-        let paramDivs = paramList.map(function (parameter) {
-            return <Section label={parameter} id={parameter}>
-                <input className="form-control" type="text" placeholder="value" required id={parameter} />
-            </Section>
-        });
-
+        
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>미리연구원님 선물이예요</title>
+                <title>파이프라인 리소스 생성</title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">템플릿 인스턴스 생성</h1>
+                <h1 className="co-m-pane__heading">파이프라인 리소스 생성</h1>
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">템플릿 인스턴스 이름</label>
+                        <label className="control-label" htmlFor="secret-name">파이프라인 리소스 이름</label>
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -205,18 +130,17 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >템플릿</label>
+                        <label className="control-label" htmlFor="secret-type" >유형</label>
                         <div>
-                            <select onChange={this.onTemplateChanged} className="form-control" id="template">
+                            <select onChange={this.onTypeChanged} className="form-control" id="template">
                                 {options}
                             </select>
                         </div>
                     </div>
                 </fieldset>
                 <label className="control-label" htmlFor="secret-name">Parameters </label>
-                <div>
-                    {paramDivs}
-                </div>
+                <NameValueEditorComponent nameValuePairs={[""]} nameString="name" valueString="value" />
+                {/*
                 <React.Fragment>
                     <div className="form-group">
                         <label className="control-label" htmlFor="username">Label</label>
@@ -224,7 +148,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             <SelectorInput labelClassName="co-text-namespace" tags={[]} />
                         </div>
                     </div>
-                    {/* <div className="form-group">
+                     <div className="form-group">
             <label className="control-label" htmlFor="password">Annotation</label>
             <div className="row">
               <div className="col-xs-2">
@@ -234,11 +158,13 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <input className="form-control" type="text" placeholder="value" />
               </div>
             </div>
-          </div> */}
-                </React.Fragment>
+          </div> 
+                </React.Fragment>*/}
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
+                    <div style={{marginTop: '10px'}}>
                     <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-                    <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
+                    <Link to={formatNamespacedRouteForResource('pipelineresources')} className="btn btn-default" id="cancel">Cancel</Link>
+                    </div>
                 </ButtonBar>
             </form>
         </div >;
@@ -304,10 +230,9 @@ export type BaseEditSecretState_ = {
     inProgress: boolean,
     stringData: { [key: string]: string },
     error?: any,
-    templateList: Array<any>,
-    paramList: Array<any>,
-    editParamList: boolean,
-    selectedTemplate: string
+    
+    pipelineResourceTypeList: Array<any>,
+    selectedPipelineResourceType: string,
 };
 
 export type BaseEditSecretProps_ = {

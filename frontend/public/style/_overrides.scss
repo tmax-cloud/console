@@ -332,3 +332,11 @@ tags-input .autocomplete .suggestion-item em {
   background-color: transparent;
   border: 0px;
 }
+
+.btn-token-refresh:focus, .btn-token-refresh.focus, .btn-token-refresh:active, .btn-token-refresh.active, .btn-token-refresh .open .dropdown-toggle.btn-token-refresh {
+  font-weight: initial !important;
+  background-color: #31475E !important;
+  border-color: #FFFFFF !important;
+  background-image: none !important;
+  color: #FFFFFF !important;
+}

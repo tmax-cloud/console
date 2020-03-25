@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { Component } from 'react';
 import * as _ from 'lodash-es';
 import { Link } from 'react-router-dom';
 import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
@@ -138,16 +138,147 @@ export const LogoImage = () => {
     <Link to="/" className="co-masthead__logo-link"><img src={logoImg} alt={logoAlt} /></Link>
   </div>;
 };
+export class ExpTimer extends Component {
+  public timerID: number = 0;
+  public expTime: number = 0;
+  
+  state = {
+    expMin: '',
+    expSec: ''
+  };
 
-export const Masthead = () => <header role="banner" className="co-masthead">
-  <LogoImage />
-  {developerConsoleURL && <div className="co-masthead__console-picker">
-    <ContextSwitcher />
-  </div>}
-  {releaseModeFlag && <div className="co-masthead__user">
-    <UserMenuWrapper />
-  </div>}
-</header>;
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    if (window.localStorage.getItem('accessToken')) {
+      const curTime = new Date();
+      const tokenExpTime = new Date(JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).exp * 1000);
+      
+      const logoutTime = (tokenExpTime.getTime() - curTime.getTime())/1000;
+      if (logoutTime < 0) {
+        localStorage.clear();
+        localStorage.setItem('logouted', 'true');
+        window.location.href = `${document.location.origin}`;
+      } 
+
+      this.expTime = logoutTime;
+      this.timerID = window.setInterval(() => this.tick(), 1000);
+    } else {
+      return;
+    }
+  }
+
+  tokRefresh() {
+    const curTime = new Date();
+      const tokenExpTime = new Date(JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).exp * 1000);
+      
+      const logoutTime = (tokenExpTime.getTime() - curTime.getTime())/1000;
+      if (logoutTime < 0) {
+        localStorage.clear();
+        localStorage.setItem('logouted', 'true');
+        window.location.href = `${document.location.origin}`;
+      } 
+
+      this.expTime = logoutTime;
+  }
+
+  componentDidUpdate() {
+    // console.log('ExpTimer componentDidUpdate');
+    if (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken')) {
+        localStorage.clear();
+        localStorage.setItem('logouted', 'true');
+        window.location.href = `${document.location.origin}`;
+    } 
+  }
+
+  componentWillUnmount() {
+    // 타이머 등록 해제
+    window.clearInterval(this.timerID);
+  }
+
+  numFormat(num) {
+    var val = Number(num).toString(); 
+    if(num < 10 && val.length == 1) {
+      val = '0' + val;
+    }
+    return val;
+  }
+
+  tick() {
+    this.expTime -= 1;
+    // Test 용으로 짝수 분에 튕기도록 
+    if (this.expTime === 0 || this.expTime < 0 /*|| Math.floor(this.expTime / 60 % 2) === 0*/) {
+      localStorage.clear();
+      localStorage.setItem('logouted', 'true');
+      window.location.href = `${document.location.origin}`;
+    }
+    // console.log(Math.floor(this.expTime / 60) + " Min " + Math.floor(this.expTime % 60) + " Sec");
+    this.setState({expMin: this.numFormat(Math.floor(this.expTime / 60))});
+    this.setState({expSec: this.numFormat(Math.floor(this.expTime % 60))});
+  }
+
+  render() {
+    const {expMin, expSec} = this.state;
+    return(
+      <div className="exp-timer">
+        <i className="fa fa-clock-o" aria-hidden="true"></i>
+        <span className="co-masthead__timer__span">
+          <span>{expMin}</span>
+          :
+          <span>{expSec}</span>
+        </span>
+      </div>
+    );  
+  }
+}
+
+export const Masthead = () => {
+  let timerRef = null;
+
+  const tokenRefresh = () => {
+    const AUTH_SERVER_URL = `${document.location.origin}/tokenrefresh`;
+    
+      const json = {
+        'accessToken': window.localStorage.getItem('accessToken'),
+        'refreshToken': window.localStorage.getItem('refreshToken')
+      };
+      
+      coFetchJSON.post(AUTH_SERVER_URL, json)
+        .then(data => {
+          // console.log(data);
+          if (data.accessToken) {
+            window.localStorage.setItem('accessToken', data.accessToken);
+            timerRef.tokRefresh();
+            return;
+          } else {
+            return;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+  }
+
+  return(
+    <header role="banner" className="co-masthead">
+      <LogoImage />
+        {developerConsoleURL && <div className="co-masthead__console-picker">
+          <ContextSwitcher />
+      </div>}
+      {releaseModeFlag && <div className="co-masthead__timer">
+        <ExpTimer ref={(input) => { timerRef = input; }} />
+      </div>}
+      {releaseModeFlag && <div className="co-masthead__expire">
+        <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>시간 연장</button>
+      </div>}
+      {releaseModeFlag && <div className="co-masthead__user">
+        <UserMenuWrapper />
+      </div>}
+    </header>
+  );
+}
 
 /* eslint-disable no-undef */
 export type FlagsProps = {

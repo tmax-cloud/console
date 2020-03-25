@@ -67,8 +67,9 @@ class LoginComponent extends Component {
       
       coFetchJSON.post(AUTH_SERVER_URL, json)
         .then(data => {
-          if (data.accessToken) {
+          if (data.accessToken && data.refreshToken) {
             window.localStorage.setItem('accessToken', data.accessToken);
+            window.localStorage.setItem('refreshToken', data.refreshToken);
             this.props.history.push('/');  
             this.props.history.go(0);
           } else {
@@ -80,8 +81,10 @@ class LoginComponent extends Component {
           // window.location = `${url_}/status/all-namespaces`;
           
         })
-        .catch(error => {
-          // console.log(error);
+        .catch((error, res) => {
+          console.log('miri test 2');
+          console.log(res);
+          console.log(error.response);
           this.setState({error: error.message});
         });
   //}
