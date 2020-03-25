@@ -82,9 +82,6 @@ class LoginComponent extends Component {
           
         })
         .catch((error, res) => {
-          console.log('miri test 2');
-          console.log(res);
-          console.log(error.response);
           this.setState({error: error.message});
         });
   //}
