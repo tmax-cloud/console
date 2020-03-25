@@ -78,11 +78,17 @@ const handleError = (res, flag, dispatch, cb) => {
 };
 
 const calicoDaemonSetPath = `${k8sBasePath}/apis/apps/v1/daemonsets?fieldSelector=metadata.name%3Dkube-calico`;
-const detectCalicoFlags = dispatch => coFetchJSON(calicoDaemonSetPath)
+const detectCalicoFlags = dispatch => {
+  if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+    return;
+  }
+  
+  coFetchJSON(calicoDaemonSetPath)
   .then(
     res => setFlag(dispatch, FLAGS.CALICO, _.size(res.items) > 0),
     err => handleError(err, FLAGS.CALICO, dispatch, detectCalicoFlags)
   );
+}
 
 // FIXME: /oapi is deprecated. What else can we use to detect OpenShift?
 // const openshiftPath = `${k8sBasePath}/oapi/v1`;
@@ -146,6 +152,9 @@ export let featureActions = [
     spec: { resourceAttributes }
   };
   const fn = (dispatch) => {
+    if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+      return;
+    }
     return k8sCreate(SelfSubjectAccessReviewModel, req)
       .then(
         (res) => setFlag(dispatch, FLAG, res.status.allowed),

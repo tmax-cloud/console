@@ -106,6 +106,12 @@ const getCSRFToken = () =>
     .pop();
 
 export const coFetch = (url, options = {}, timeout = 20000) => {
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+    if (window.SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+      return;
+    }
+  }
+
   const allOptions = _.defaultsDeep({}, initDefaults, options);
   if (allOptions.method !== "GET") {
     allOptions.headers["X-CSRFToken"] = getCSRFToken();
@@ -118,7 +124,7 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
     delete allOptions.headers["X-CSRFToken"];
   }
 
-  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0) {
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
     if (!window.SERVER_FLAGS.releaseModeFlag) {
       allOptions.headers.Authorization =
       "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgtV2ViSG9vayIsImlkIjoid3ltaW4tdG1heC5jby5rciIsImV4cCI6MTU4MzEyMTQ5M30.hjvrlaLDFuSjchJKarGKbuWOuafhsuCQgBDo-pqsZvg";
@@ -143,6 +149,12 @@ export const coFetchUtils = {
 };
 
 export const coFetchJSON = (url, method = "GET", options = {}) => {
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+    if (window.SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+      return;
+    }
+  }
+
   const headers = { Accept: "application/json" };
   const { kind, name } = store.getState().UI.get("impersonate", {});
   if ((kind === "User" || kind === "Group") && name) {
@@ -189,7 +201,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
 const coFetchSendJSON = (url, method, json = null, options = {}) => {
   const allOptions;
 
-  if (url.indexOf('login') > 0 || url.indexOf('logout') > 0) {
+  if (url.indexOf('login') > 0 || url.indexOf('logout') > 0 || url.indexOf('tokenrefresh') > 0) {
     allOptions = {
       headers: {
         Accept: "application/json"
