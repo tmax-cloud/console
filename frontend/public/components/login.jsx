@@ -6,7 +6,6 @@ import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
-import '../style.scss';
 import { sha512 } from 'js-sha512';
 
 
