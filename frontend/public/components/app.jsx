@@ -134,6 +134,15 @@ class App extends React.PureComponent {
       isAdmin: !this.state.isAdmin
     });
   }
+  componentDidMount() {
+    if (window.SERVER_FLAGS.releaseModeFlag && window.localStorage.getItem('refreshToken') && window.localStorage.getItem('accessToken')) {
+      const userRole = JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role;
+      // console.log(userRole);
+      if (userRole !== 'cluster-admin') {
+        this.changeRole_();
+      }
+    }
+  }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
