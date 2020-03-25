@@ -52,7 +52,7 @@ echo "==============================================================="
 if [ -z $(kubectl get ns | grep console-system | awk '{print $1}') ]; then 
     kubectl create -f ${file_initialzation}
 else
-    echo namespace exsit
+    echo "namespace exist"
     kubectl get ns 
 fi 
 echo ""
@@ -60,7 +60,7 @@ echo ""
 if [ -z $(kubectl get secret -n console-system | grep console-https-secret | awk '{print $1}') ]; then 
     kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n console-system
 else
-    echo secret exist 
+    echo "secret exist" 
     kubectl get secret console-https-secret -n console-system
 fi 
 echo ""
@@ -68,15 +68,15 @@ echo ""
 if [ -z $(kubectl get deployment -n console-system | grep console | awk '{print $1}') ]; then 
     kubectl create -f ${file_ui_pod_temp}
 else
-    echo deployment exist 
+    echo "deployment exist" 
     kubectl get deployment -n console-system
 fi 
 echo ""
 # Create Service 
-if [ -z $(kubectl get po -n console-system | grep console | awk '{print $1}') ]; then 
+if [ -z $(kubectl get svc -n console-system | grep console | awk '{print $1}') ]; then 
     kubectl create -f ${file_hypercloud_ui_svc}
 else
-    echo service exsit 
+    echo "service exist" 
     kubectl get svc -n console-system 
 fi
 echo ""
