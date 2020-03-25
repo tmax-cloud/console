@@ -3,89 +3,289 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
-import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
+import { k8sCreate, k8sList, k8sGet, k8sUpdate, K8sResourceKind } from '../../module/k8s';
+import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
+// import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
+
 enum CreateType {
     generic = 'generic',
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 서비스 생성',
+    [CreateType.form]: '폼 형식을 통한 파이프라인 런 생성',
 };
 
-const determineCreateType = (data) => {
-    return CreateType.form;
-};
+// const determineCreateType = (data) => {
+//     return CreateType.form;
+// };
 
-const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditServiceProps_, BaseEditServiceState_> {
+const Section = ({ label, children, id }) => <div className="row">
+    <div className="col-xs-2">
+        <div>{label}</div>
+    </div>
+    <div className="col-xs-2" id={id}>
+        {children}
+    </div>
+</div>;
+
+const RefList = ({ list, type }) => {
+    const resources = list
+        .filter(cur => {
+            return (cur.type === type);
+        })
+        .map(cur => {
+            return <option value={cur.name}>{cur.name}</option>
+        });
+    return resources;
+}
+
+// const Requestform = () =>
+class PipelineRunFormComponent extends React.Component<PipelineRunProps_, PipelineRunState_>  {
     constructor(props) {
         super(props);
-        const existingService = _.pick(props.obj, ['metadata', 'type']);
-        const service = _.defaultsDeep({}, props.fixed, existingService, {
-            apiVersion: 'v1',
-            data: {},
-            kind: 'Service',
+        const existingPipelineRun = _.pick(props.obj, ['metadata', 'type']);
+        const pipelineRun = _.defaultsDeep({}, props.fixed, existingPipelineRun, {
+            apiVersion: 'tekton.dev/v1alpha1',
+            kind: 'PipelineRun',
             metadata: {
                 name: '',
+                namespace: ''
             },
             spec: {
-                ports: [{
-                    protocol: 'TCP',
-                    port: 80
-                }]
-
+                params: [],
+                pipelineRef: {
+                    name: ''
+                },
+                resources: []
             }
-
         });
 
         this.state = {
-            secretTypeAbstraction: this.props.secretTypeAbstraction,
-            secret: service,
-            inProgress: false,
+            pipelineRunTypeAbstraction: this.props.pipelineRunTypeAbstraction,
+            pipelineRun: pipelineRun,
+            inProgress: false,        // 뭔지 잘 모르겠음
             stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
-            selectorList: _.isEmpty(props.selectorList) ? [['', '']] : _.toPairs(props.selectorList),
-            portList: [['', '', '', '']],
-            type: ''
+            type: 'form',
+            pipelineList: [],
+            paramList: [],
+            selectedPipeLine: '',
+            selectedPipeLineNs: '',
+            selectedParam: '',
+            resourceList: [],
+            resourceRefList: [],
+            selectedResourceRef: ''
         };
+        this.getPipelineList = this.getPipelineList.bind(this);
+        this.getPipelineDetails = this.getPipelineDetails.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
-        this.onTypeChanged = this.onTypeChanged.bind(this);
+        this.onParamChanged = this.onParamChanged.bind(this);
+        this.onResourceChanged = this.onResourceChanged.bind(this);
+        this.onPipelineChange = this.onPipelineChange.bind(this);
+        this.getPipelineResourceList = this.getPipelineResourceList.bind(this);
         this.save = this.save.bind(this);
-    }
-    onNameChanged(event) {
-        let secret = { ...this.state.secret };
-        secret.metadata.name = event.target.value;
-        this.setState({ secret });
-    }
-    onTypeChanged(event) {
-        this.setState({
-            type: event.target.value
-        });
-        console.log(event.target.value);
-    }
-    save(e) {
-        e.preventDefault();
-        const { kind, metadata } = this.state.secret;
-        this.setState({ inProgress: true });
-        const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData });
-        const ko = kindObj(kind);
-        (this.props.isCreate
-            ? k8sCreate(ko, newSecret)
-            : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
-        ).then(() => {
-            this.setState({ inProgress: false });
-            console.log(this.state)
-            history.push(formatNamespacedRouteForResource('services'));
-        }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
     componentDidMount() {
+        this.getPipelineList();
+
+    }
+
+    onNameChanged(event) {
+        let pipelineRun = { ...this.state.pipelineRun };
+        pipelineRun.metadata.name = String(event.target.value);
+        this.setState({ pipelineRun });
+    }
+
+    onPipelineChange(event) {
+        this.setState({
+            selectedPipeLine: event.target.value
+        },
+            () => {
+                this.getPipelineDetails();
+            }
+        );
+        let pipelineRun = { ...this.state.pipelineRun };
+        pipelineRun.spec.pipelineRef.name = event.target.value;
+        this.setState({ pipelineRun });
+    }
+
+    onParamChanged(event) {
+        let pipelineRun = { ...this.state.pipelineRun };
+        pipelineRun.spec.params.some((cur, idx) => {
+
+            if (cur.name === event.target.id) {
+                pipelineRun.spec.params.splice(idx, 1);
+            }
+            return (cur.name === event.target.id)
+        })
+
+        pipelineRun.spec.params.push({
+            name: event.target.id,
+            value: String(event.target.value)
+        })
+        this.setState({ pipelineRun });
+    }
+
+    onResourceChanged(event) {
+        let pipelineRun = { ...this.state.pipelineRun };
+
+        pipelineRun.spec.resources.some((cur, idx) => {
+            if (cur.name === event.target.id) {
+                pipelineRun.spec.resources.splice(idx, 1);
+            }
+            return (cur.name === event.target.id)
+        })
+
+        pipelineRun.spec.resources.push({
+            name: event.target.id,
+            resourceRef: {
+                name: event.target.value
+            }
+        })
+        this.setState({ pipelineRun });
+        console.log(this.state.pipelineRun);
+    }
+
+    getPipelineList() {
+        const ko = kindObj('Pipeline');
+
+        k8sList(ko)
+            .then(reponse => reponse)
+            .then((data) => {
+                let pipelineList = data.map(cur => {
+                    return {
+                        name: cur.metadata.name,
+                        ns: cur.metadata.namespace
+                    }
+                })
+                let pipelineRun = { ...this.state.pipelineRun };
+                pipelineRun.spec.pipelineRef.name = pipelineList[0].name;
+                this.setState({ pipelineRun });
+
+                this.setState({
+                    pipelineList: pipelineList,
+                    selectedPipeLine: pipelineList[0].name,
+                    selectedPipeLineNs: pipelineList[0].ns
+                }, this.getPipelineDetails);
+            }, err => {
+                this.setState({ error: err.message, inProgress: false })
+                this.setState({ pipelineList: [] });
+            });
+    }
+
+    getPipelineDetails() {
+        const ko = kindObj('Pipeline');
+
+        k8sGet(ko, this.state.selectedPipeLine, this.state.selectedPipeLineNs)
+            .then(reponse => reponse)
+            .then((details) => {
+                let paramList = details.spec.params.map(cur => {
+                    return {
+                        name: cur.name,
+                        type: cur.type
+                    }
+                });
+                let resourceList = details.spec.resources.map(cur => {
+                    return {
+                        name: cur.name,
+                        type: cur.type
+                    }
+                })
+
+                let pipelineRun = { ...this.state.pipelineRun };
+                let initParamList = details.spec.params.map(cur => {
+                    return {
+                        name: cur.name,
+                        value: ''
+                    }
+                });
+                !pipelineRun.spec.params.length && pipelineRun.spec.params.push(...initParamList);
+                this.setState({ pipelineRun });
+
+                this.setState({
+                    resourceList: resourceList,
+                    paramList: paramList,
+                    selectedParam: paramList[0].name
+                }, resourceList.forEach(cur => {
+                    this.getPipelineResourceList(cur.name, cur.type);
+                }))
+            }, err => {
+                this.setState({ error: err.message, inProgress: false })
+                this.setState({ paramList: [] });
+            })
+    }
+
+    getPipelineResourceList(resourceName, resourceType) {
+        const ko = kindObj('PipelineResource');
+
+        k8sList(ko)
+            .then(reponse => reponse)
+            .then((data) => {
+                let resourceRefList = data
+                    .map(cur => {
+                        return {
+                            name: cur.metadata.name,
+                            type: cur.spec.type
+                        }
+                    });
+
+                let pipelineRun = { ...this.state.pipelineRun };
+                let initResourceList = { name: resourceName, resourceRef: { name: resourceRefList[0].name } }
+
+                !pipelineRun.spec.resources.length && pipelineRun.spec.resources.push(initResourceList);
+                this.setState({ pipelineRun });
+
+
+                this.setState({
+                    resourceRefList: resourceRefList
+                })
+            }, err => {
+                this.setState({ error: err.message, inProgress: false })
+                this.setState({ resourceRefList: [] });
+            });
+    }
+
+    save(e) {
+        e.preventDefault();
+        const { kind, metadata } = this.state.pipelineRun;
+        this.setState({ inProgress: true });
+        const newPipelineRun = _.assign({}, this.state.pipelineRun);
+        const ko = kindObj(kind);
+        (this.props.isCreate
+            ? k8sCreate(ko, newPipelineRun)
+            : k8sUpdate(ko, newPipelineRun, metadata.namespace, newPipelineRun.metadata.name)
+        ).then(() => {
+            this.setState({ inProgress: false });
+            console.log(this.state)
+            history.push(formatNamespacedRouteForResource('pipelineruns'));
+        }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
     render() {
+        const { pipelineList, paramList, resourceList, resourceRefList } = this.state;
+
+        let options = pipelineList.map(cur => {
+            return <option value={cur.name}>{cur.name}</option>;
+        });
+
+        let paramDivs = paramList.map(cur => {
+            return <Section label={cur.name} id={cur.name}>
+                <input className="form-control" type="text" placeholder="value" id={cur.name} onChange={this.onParamChanged} />
+            </Section>
+        });
+
+        let resourceDivs = resourceList.map(cur => {
+            return <Section label={cur.name} id={cur.name}>
+                <select className="form-control" id={cur.name} onChange={this.onResourceChanged}>
+                    <RefList list={resourceRefList} type={cur.type} />
+                </select>
+            </Section>
+        });
+
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>Create Pinpeline Run</title>
+                <title>Create Pipeline Run</title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
                 <h1 className="co-m-pane__heading">Create Pinpeline Run</h1>
@@ -98,76 +298,31 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             <input className="form-control"
                                 type="text"
                                 onChange={this.onNameChanged}
-                                value={this.state.secret.metadata.name}
+                                value={this.state.pipelineRun.metadata.name}
                                 aria-describedby="secret-name-help"
-                                id="secret-name"
+                                id="pipelinerun-name"
                                 required />
 
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Port</label>
-                        <div className="col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                name
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                protocol
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                port
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                targetPort
-                            </div>
-                        </div>
-                        <div className="col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="name" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <select className="form-control" id="protocol">
-                                    <option value='TCP'>TCP</option>
-                                    <option value='UDP'>UDP</option>
-                                    <option value='SCDP'>SCDP</option>
-                                </select>
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="port" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="targetPort" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Selector</label>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                key
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                value
-                            </div>
-                        </div>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="key" />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="value" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >Type</label>
+                        <label className="control-label" htmlFor="secret-type" >Pipeline</label>
                         <div>
-                            <select className="form-control" id="secret-type">
-                                <option >Cluster IP</option>
-                                <option >External Name</option>
-                                <option >Load Balancer</option>
-                                <option >Node Port</option>
+                            <select onChange={this.onPipelineChange} className="form-control" id="pipeline">
+                                {options}
                             </select>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label" htmlFor="secret-type" >Params</label>
+                        <div>
+                            <ul>{paramDivs}</ul>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label" htmlFor="secret-type" >Resources</label>
+                        <div>
+                            <ul>{resourceDivs}</ul>
                         </div>
                     </div>
                     <React.Fragment>
@@ -180,7 +335,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     </React.Fragment>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-                        <Link to={formatNamespacedRouteForResource('services')} className="btn btn-default" id="cancel">Cancel</Link>
+                        <Link to={formatNamespacedRouteForResource('pipelineruns')} className="btn btn-default" id="cancel">Cancel</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
@@ -189,88 +344,73 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
 };
 
-
-class SourceSecretForm extends React.Component<SourceSecretFormProps> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            stringData: this.props.stringData || {},
-        };
-        this.onDataChanged = this.onDataChanged.bind(this);
-    }
-    onDataChanged(secretsData) {
-        this.setState({
-            stringData: { ...secretsData },
-        }, () => this.props.onChange(this.state));
-    }
-    render() {
-        return <React.Fragment>
-        </React.Fragment>;
-    }
-}
-
-const secretFormFactory = secretType => {
-    return Requestform(SourceSecretForm);
-};
-
-
-
-const SecretLoadingWrapper = props => {
-    const secretTypeAbstraction = determineCreateType(_.get(props.obj.data, 'data'));
-    const SecretFormComponent = secretFormFactory(secretTypeAbstraction);
-    const fixed = _.reduce(props.fixedKeys, (acc, k) => ({ ...acc, k: _.get(props.obj.data, k) }), {});
-    return <StatusBox {...props.obj}>
-        <SecretFormComponent {...props}
-            secretTypeAbstraction={secretTypeAbstraction}
-            obj={props.obj.data}
-            fixed={fixed}
-            explanation={pageExplanation[secretTypeAbstraction]}
-        />
-    </StatusBox>;
-};
-
 export const CreatePipelineRun = ({ match: { params } }) => {
-    const SecretFormComponent = secretFormFactory(params.type);
-    return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
-        secretTypeAbstraction={params.type}
+    // const PipelineRunFormComponent = PipelineRunFormFactory(params.type);
+    return <PipelineRunFormComponent
+        fixed={{ metadata: { namespace: params.ns } }}
+        pipelineRunTypeAbstraction={params.type}
         explanation={pageExplanation[params.type]}
         titleVerb="Create"
         isCreate={true}
     />;
 };
 
-export const EditSecret = ({ match: { params }, kind }) => <Firehose resources={[{ kind: kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-    <SecretLoadingWrapper fixedKeys={['kind', 'metadata']} titleVerb="Edit" saveButtonText="Save Changes" />
-</Firehose>;
+
+// const PipelineRunFormFactory = secretType => {
+//     return Requestform();
+// return Requestform(SourceSecretForm);
+// };
 
 
-export type BaseEditServiceState_ = {
-    secretTypeAbstraction?: CreateType,
-    secret: K8sResourceKind,
-    inProgress: boolean,
+// 나중에 edit 할 때 필요한 것들!!!!!!!
+// const SecretLoadingWrapper = props => {
+//     const secretTypeAbstraction = determineCreateType(_.get(props.obj.data, 'data'));
+//     const PipelineRunFormComponent = secretFormFactory(secretTypeAbstraction);
+//     const fixed = _.reduce(props.fixedKeys, (acc, k) => ({ ...acc, k: _.get(props.obj.data, k) }), {});
+//     return <StatusBox {...props.obj}>
+//         <PipelineRunFormComponent {...props}
+//             secretTypeAbstraction={secretTypeAbstraction}
+//             obj={props.obj.data}
+//             fixed={fixed}
+//             explanation={pageExplanation[secretTypeAbstraction]}
+//         />
+//     </StatusBox>;
+// };
+
+
+// 나중에 edit 할 때 필요한 것들!!!!!!!
+// export const EditSecret = ({ match: { params }, kind }) => <Firehose resources={[{ kind: kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
+//     <SecretLoadingWrapper fixedKeys={['kind', 'metadata']} titleVerb="Edit" saveButtonText="Save Changes" />
+// </Firehose>;
+
+
+export type PipelineRunState_ = {
+    pipelineRunTypeAbstraction?: CreateType,
+    pipelineRun: K8sResourceKind,
+    inProgress: boolean,        // 뭔지 잘 모르겠음
     stringData: { [key: string]: string },
     error?: any,
-    portList: Array<any>,
-    selectorList: Array<any>,
-    type: string
+    type: string,
+    pipelineList: Array<any>,
+    selectedPipeLine: string,
+    selectedPipeLineNs: string,
+    paramList: Array<any>,
+    selectedParam: string,
+    resourceList: Array<any>,
+    resourceRefList: Array<any>,
+    selectedResourceRef: string
 };
 
-export type BaseEditServiceProps_ = {
+export type PipelineRunProps_ = {
     obj?: K8sResourceKind,
     fixed: any,
     kind?: string,
     isCreate: boolean,
     titleVerb: string,
-    secretTypeAbstraction?: CreateType,
+    pipelineRunTypeAbstraction?: CreateType,
     saveButtonText?: string,
     explanation: string,
 };
 
-export type SourceSecretFormProps = {
-    onChange: Function;
-    stringData: {
-        [key: string]: string
-    },
-    isCreate: boolean,
-};
+
 /* eslint-enable no-undef */
