@@ -4,11 +4,11 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
-import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
+import { ButtonBar, Firehose, history, kindObj, StatusBox } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import * as k8sModels from '../../models';
-import { coFetch } from '../../co-fetch';
-import { AsyncComponent } from '../utils/async';
+// import * as k8sModels from '../../models';
+// import { coFetch } from '../../co-fetch';
+// import { AsyncComponent } from '../utils/async';
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -21,16 +21,16 @@ const determineCreateType = (data) => {
     return CreateType.form;
 };
 
-const Section = ({ label, children, id }) => <div className="row">
-    <div className="col-xs-2">
-        <div>{label}</div>
-    </div>
-    <div className="col-xs-2" id={id}>
-        {children}
-    </div>
-</div>;
+// const Section = ({ label, children, id }) => <div className="row">
+//     <div className="col-xs-2">
+//         <div>{label}</div>
+//     </div>
+//     <div className="col-xs-2" id={id}>
+//         {children}
+//     </div>
+// </div>;
 
-const NameValueEditorComponent = (props) => <AsyncComponent loader={() => import('../utils/name-value-editor.jsx').then(c => c.NameValueEditor)} {...props} />;
+// const NameValueEditorComponent = (props) => <AsyncComponent loader={() => import('../utils/name-value-editor.jsx').then(c => c.NameValueEditor)} {...props} />;
 
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
@@ -139,7 +139,61 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     </div>
                 </fieldset>
                 <label className="control-label" htmlFor="secret-name">Parameters </label>
-                <NameValueEditorComponent nameValuePairs={[""]} nameString="name" valueString="value" />
+                {/* Type = git 일 때*/}
+                { (this.state.selectedPipelineResourceType === 'git') && <div>
+                <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                key
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                value
+                            </div>
+                        </div>
+                        <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="key" required />
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="value" />
+                            </div>
+                        </div>
+                        <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                key
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                value
+                            </div>
+                        </div>
+                        <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="key" required />
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="value" />
+                            </div>
+                        </div>
+                </div> }
+                {/* Type = image 일 때*/}
+                { (this.state.selectedPipelineResourceType !== 'git') && <div>
+                <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                key
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                value
+                            </div>
+                        </div>
+                        <div className="form-group col-md-12 col-xs-12">
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="key" required />
+                            </div>
+                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                <input className="form-control" type="text" placeholder="value" />
+                            </div>
+                        </div>
+                </div> }
+                {/* <NameValueEditorComponent nameValuePairs={[""]} nameString="name" valueString="value" /> */}
                 {/*
                 <React.Fragment>
                     <div className="form-group">
