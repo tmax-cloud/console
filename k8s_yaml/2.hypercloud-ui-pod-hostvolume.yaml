@@ -28,6 +28,7 @@ spec:
         - --tls-key-file=/var/https-cert/tls.key
         - --login-endpoint=http://@@AUTH@@/login
         - --logout-endpoint=http://@@AUTH@@/logout  
+        - --refresh-endpoint=http://@@AUTH@@/refresh
         - --prometheus-endpoint=http://@@PROM@@/api
         image: 192.168.6.110:5000/hypercloud-console:@@TAG@@
         imagePullPolicy: IfNotPresent
