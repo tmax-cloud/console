@@ -52,9 +52,17 @@ export * from './scroll-to-top-on-mount';
 export const enum NameValueEditorPair {
   Name = 0,
   Value,
-  Index
+  Index,
 }
 
 export const enum StatusEditorPair {
-  Status = ''
+  Status = '',
+}
+
+export const enum PortEditorPair {
+  Name,
+  Protocol,
+  Port,
+  TargetPort,
+  Index,
 }
