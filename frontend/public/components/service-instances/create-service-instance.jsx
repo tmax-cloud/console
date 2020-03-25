@@ -8,6 +8,8 @@ import { CardList } from '../card';
 
 import { Firehose, StatusBox } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
+import * as k8sModels from '../../models';
+import { coFetch } from '../../co-fetch';
 
 const ServiceInstanceTypeAbstraction = {
   generic: 'generic',
@@ -46,6 +48,7 @@ const withServiceInstanceForm = SubForm =>
     constructor(props) {
       super(props);
       this.state = {
+        classList: [],
         steps: [
           {
             title: '서비스 클래스 선택',
@@ -59,15 +62,37 @@ const withServiceInstanceForm = SubForm =>
       this.onClickNext = this.onClickNext.bind(this);
       this.onClickBack = this.onClickBack.bind(this);
     }
+    getClassList() {
+      // coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
+      coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/serviceclasses`)
+        .then(res => res.json())
+        .then(res => {
+          const classListData = res.items.map(item => {
+            return {
+              name: _.get(item, 'metadata.name'),
+              uid: _.get(item, 'metadata.uid'),
+              description: _.get(item, 'spec.description') || '',
+              imageUrl: _.get(item, 'spec.externalMetadata.imageUrl') || '',
+              longDescription: _.get(item, 'spec.externalMetadata.longDescription') || '',
+              providerDisplayName: _.get(item, 'spec.externalMetadata.providerDisplayName') || '',
+              ...item,
+              isActive: false,
+            };
+          });
+          this.setState({ classList: classListData });
+        })
+        .catch(error => {
+          // this.state.templateList = [];
+          console.log('error', error);
+        });
+    }
     onClickBack() {
-      console.log('onClickBack');
       const { currentStep } = this.state;
       this.setState({
         currentStep: currentStep - 1,
       });
     }
     onClickNext() {
-      console.log('onClickNext');
       const { currentStep } = this.state;
       this.setState({
         currentStep: currentStep + 1,
@@ -75,6 +100,9 @@ const withServiceInstanceForm = SubForm =>
     }
     save(e) {
       e.preventDefault();
+    }
+    componentDidMount() {
+      this.getClassList();
     }
     render() {
       const title = 'Create Service Instance';
@@ -89,7 +117,7 @@ const withServiceInstanceForm = SubForm =>
             {/* <p className="co-m-pane__explanation">{this.props.explanation}</p> */}
             <Stepper steps={steps} activeStep={currentStep} />
             {/* stepper */}
-            {currentStep === 0 && <CardList data={[{ isNew: true, isRecommended: true }, { isNew: false, isRecommended: false }, { isNew: true, isRecommended: true }, { isNew: true, isRecommended: false }, {}, {}, {}, {}, {}, { isRecommended: true }]} />}
+            {currentStep === 0 && <CardList classList={this.state.classList} />}
             {currentStep === 1 && (
               <React.Fragment>
                 <div className="form-group">
@@ -226,7 +254,7 @@ const ServiceInstanceLoadingWrapper = props => {
 
 export const CreateServiceInstance = ({ match: { params } }) => {
   const ServiceInstanceFormComponent = serviceInstanceFormFactory(params.type);
-  return <ServiceInstanceFormComponent />;
+  return <ServiceInstanceFormComponent namespace={params.ns} />;
 };
 
 export const EditServiceInstance = ({ match: { params }, kind }) => (

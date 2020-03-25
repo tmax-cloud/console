@@ -18,21 +18,11 @@ const determineCreateType = (data) => {
     return CreateType.form;
 };
 
-// const Section = ({ label, children, id }) => <div className="row">
-//     <div className="col-xs-2">
-//         <div>{label}</div>
-//     </div>
-//     <div className="col-xs-2" id={id}>
-//         {children}
-//     </div>
-// </div>;
-
-const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
-
+const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditServiceProps_, BaseEditServiceState_> {
     constructor(props) {
         super(props);
-        const existingSecret = _.pick(props.obj, ['metadata', 'type']);
-        const secret = _.defaultsDeep({}, props.fixed, existingSecret, {
+        const existingService = _.pick(props.obj, ['metadata', 'type']);
+        const service = _.defaultsDeep({}, props.fixed, existingService, {
             apiVersion: 'v1',
             data: {},
             kind: 'Service',
@@ -42,8 +32,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             spec: {
                 ports: [{
                     protocol: 'TCP',
-                    port: 80,
-                    targetPort: 9376
+                    port: 80
                 }]
 
             }
@@ -52,37 +41,25 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
         this.state = {
             secretTypeAbstraction: this.props.secretTypeAbstraction,
-            secret: secret,
+            secret: service,
             inProgress: false,
             stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
             selectorList: _.isEmpty(props.selectorList) ? [['', '']] : _.toPairs(props.selectorList),
-            paramList: [['', '', '', '']],
-            selectedTemplate: ''
+            portList: [['', '', '', '']],
+            type: ''
         };
-
-        this.onDataChanged = this.onDataChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
-        this.onTemplateChanged = this.onTemplateChanged.bind(this);
-        this.getParams = this.getParams.bind(this);
+        this.onTypeChanged = this.onTypeChanged.bind(this);
         this.save = this.save.bind(this);
-    }
-    onDataChanged(secretsData) {
-        this.setState({
-            stringData: { ...secretsData.stringData }
-        });
     }
     onNameChanged(event) {
         let secret = { ...this.state.secret };
         secret.metadata.name = event.target.value;
         this.setState({ secret });
     }
-    getParams() {
-        console.log('getParams시작')
-
-    }
-    onTemplateChanged(event) {
+    onTypeChanged(event) {
         this.setState({
-            selectedTemplate: event.target.value
+            type: event.target.value
         });
         console.log(event.target.value);
     }
@@ -90,7 +67,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         e.preventDefault();
         const { kind, metadata } = this.state.secret;
         this.setState({ inProgress: true });
-
         const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData });
         const ko = kindObj(kind);
         (this.props.isCreate
@@ -104,24 +80,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
 
     componentDidMount() {
-        this.getParams();
     }
-    render() {
-        // const { paramList } = this.state;
-        // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
-        this.getParams();
-        // let paramDivs = paramList.map(function (parameter) {
-        //     return <Section label={parameter} id={parameter}>
-        //         <input className="form-control" type="text" placeholder="value" required id="role-binding-name" />
-        //     </Section>
-        // });
 
+    render() {
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>서비스 생성</title>
+                <title>Create Pinpeline Run</title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">서비스 생성</h1>
+                <h1 className="co-m-pane__heading">Create Pinpeline Run</h1>
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
@@ -185,7 +152,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                         <div className="form-group col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="key" required />
+                                <input className="form-control" type="text" placeholder="key" />
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 <input className="form-control" type="text" placeholder="value" />
@@ -243,7 +210,7 @@ class SourceSecretForm extends React.Component<SourceSecretFormProps> {
 }
 
 const secretFormFactory = secretType => {
-    return secretType === CreateType.form ? Requestform(SourceSecretForm) : Requestform(SourceSecretForm);
+    return Requestform(SourceSecretForm);
 };
 
 
@@ -262,7 +229,7 @@ const SecretLoadingWrapper = props => {
     </StatusBox>;
 };
 
-export const CreateService = ({ match: { params } }) => {
+export const CreatePipelineRun = ({ match: { params } }) => {
     const SecretFormComponent = secretFormFactory(params.type);
     return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
         secretTypeAbstraction={params.type}
@@ -277,18 +244,18 @@ export const EditSecret = ({ match: { params }, kind }) => <Firehose resources={
 </Firehose>;
 
 
-export type BaseEditSecretState_ = {
+export type BaseEditServiceState_ = {
     secretTypeAbstraction?: CreateType,
     secret: K8sResourceKind,
     inProgress: boolean,
     stringData: { [key: string]: string },
     error?: any,
+    portList: Array<any>,
     selectorList: Array<any>,
-    paramList: Array<any>,
-    selectedTemplate: string
+    type: string
 };
 
-export type BaseEditSecretProps_ = {
+export type BaseEditServiceProps_ = {
     obj?: K8sResourceKind,
     fixed: any,
     kind?: string,

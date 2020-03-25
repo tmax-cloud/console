@@ -104,7 +104,7 @@ export const ServiceInstancesPage = props => {
   };
   const createProps = {
     items: createItems,
-    createLink: type => `/k8s/ns/${props.namespace || 'all-namespaces'}/serviceinstances/new${type !== 'yaml' ? '/' + type : ''}`,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new/${type !== 'yaml' ? type : ''}`,
   };
   return (
     <ListPage

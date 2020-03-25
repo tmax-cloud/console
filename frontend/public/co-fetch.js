@@ -204,18 +204,26 @@ const coFetchSendJSON = (url, method, json = null, options = {}) => {
   if (url.indexOf('login') > 0 || url.indexOf('logout') > 0 || url.indexOf('tokenrefresh') > 0) {
     allOptions = {
       headers: {
-        Accept: "application/json"
+        Accept: 'application/json'
+      }
+    };
+  } else if ((!_.isEmpty(options)) && options.path === 'status') {
+    allOptions = {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/merge-patch+json;application/json-patch+json'
       }
     };
   } else {
     allOptions = {
       headers: {
-        Accept: "application/json",
-        "Content-Type": `application/${
-          method === "PATCH" ? "json-patch+json" : "json"
+        Accept: 'application/json',
+        'Content-Type': `application/${
+          method === 'PATCH' ? 'json-patch+json' : 'json'
           };charset=UTF-8`
       }
     };
+    console.log(allOptions);
   }
 
 

@@ -20,7 +20,8 @@ const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
   Cog.factory.Edit,
-  Cog.factory.Delete
+  Cog.factory.Delete,
+  Cog.factory.EditStatus
 ];
 
 const RoleBindingClaimHeader = props => (
@@ -159,7 +160,7 @@ export const RoleBindingClaimsDetailsPage = props => (
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'RoleBindingClaim Details',
+        name: 'Role Binding Claim Details',
         path: props.match.url
       })
     }
