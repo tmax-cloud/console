@@ -154,15 +154,6 @@ export const TemplateInstanceList = props => {
   return <List {...props} Header={TemplateInstanceHeader} Row={Row} />;
 };
 TemplateInstanceList.displayName = TemplateInstanceList;
-
-// export const TemplateInstancesPage = props => (
-//   <ListPage
-//     {...props}
-//     ListComponent={TemplateInstanceList}
-//     canCreate={true}
-//     kind="TemplateInstance"
-//   />
-// );
 const TemplateInstancesPage = props => {
   const createItems = {
     form: '서비스 인스턴스 (폼 에디터)',

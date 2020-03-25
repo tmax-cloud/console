@@ -10,11 +10,11 @@ import { EnvironmentPage } from './environment';
 import { ResourceEventStream } from './events';
 import { formatDuration } from './utils/datetime';
 
-const {ModifyCount, EditEnvironment, common} = Cog.factory;
+const { ModifyCount, EditEnvironment, common } = Cog.factory;
 
 const UpdateStrategy = (kind, deployment) => ({
   label: 'Edit Update Strategy',
-  callback: () => configureUpdateStrategyModal({deployment}),
+  callback: () => configureUpdateStrategyModal({ deployment }),
 });
 
 const menuActions = [
@@ -24,7 +24,7 @@ const menuActions = [
   ...common,
 ];
 
-const ContainerRow = ({container}) => {
+const ContainerRow = ({ container }) => {
   const resourceLimits = _.get(container, 'resources.limits');
   const ports = _.get(container, 'ports');
   return <div className="row">
@@ -37,7 +37,7 @@ const ContainerRow = ({container}) => {
   </div>;
 };
 
-export const ContainerTable = ({containers}) => <div className="co-m-table-grid co-m-table-grid--bordered">
+export const ContainerTable = ({ containers }) => <div className="co-m-table-grid co-m-table-grid--bordered">
   <div className="row co-m-table-grid__head">
     <div className="col-xs-6 col-sm-4 col-md-3">Name</div>
     <div className="col-xs-6 col-sm-4 col-md-3">Image</div>
@@ -49,7 +49,7 @@ export const ContainerTable = ({containers}) => <div className="co-m-table-grid 
   </div>
 </div>;
 
-const DeploymentDetails = ({obj: deployment}) => {
+const DeploymentDetails = ({ obj: deployment }) => {
   const isRecreate = (deployment.spec.strategy.type === 'Recreate');
   const progressDeadlineSeconds = _.get(deployment, 'spec.progressDeadlineSeconds');
 
@@ -93,7 +93,7 @@ const DeploymentDetails = ({obj: deployment}) => {
   </React.Fragment>;
 };
 
-const envPath = ['spec','template','spec','containers'];
+const envPath = ['spec', 'template', 'spec', 'containers'];
 const environmentComponent = (props) => <EnvironmentPage
   obj={props.obj}
   rawEnvData={props.obj.spec.template.spec.containers}
@@ -101,7 +101,7 @@ const environmentComponent = (props) => <EnvironmentPage
   readOnly={false}
 />;
 
-const {details, editYaml, pods, envEditor, events} = navFactory;
+const { details, editYaml, pods, envEditor, events } = navFactory;
 const DeploymentsDetailsPage = props => <DetailsPage
   {...props}
   menuActions={menuActions}
@@ -110,6 +110,16 @@ const DeploymentsDetailsPage = props => <DetailsPage
 
 const Row = props => <WorkloadListRow {...props} kind="Deployment" actions={menuActions} />;
 const DeploymentsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
-const DeploymentsPage = props => <ListPage canCreate={true} ListComponent={DeploymentsList} {...props} />;
+const DeploymentsPage = props => {
+  const createItems = {
+    form: 'Deployment (폼 에디터)',
+    yaml: 'Deployment (YAML 에디터)'
+  };
 
-export {DeploymentsList, DeploymentsPage, DeploymentsDetailsPage};
+  const createProps = {
+    items: createItems,
+    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/deployments/new${type !== 'yaml' ? '/' + type : ''}`
+  };
+  return <ListPage ListComponent={DeploymentsList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
+export { DeploymentsList, DeploymentsPage, DeploymentsDetailsPage };
