@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
-import { ButtonBar, Firehose, history, kindObj, StatusBox } from '../utils';
+import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 // import * as k8sModels from '../../models';
 // import { coFetch } from '../../co-fetch';
@@ -38,16 +38,21 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         super(props);
         const existingSecret = _.pick(props.obj, ['metadata', 'type']);
         const secret = _.defaultsDeep({}, props.fixed, existingSecret, {
-            apiVersion: 'v1',
-            // apiGroup: "tmax.io",
-            data: {},
+            apiVersion: 'tekton.dev/v1alpha1',
             kind: "PipelineResource",
             metadata: {
                 name: '',
                 namespace: _.pick(props.obj, ['metadata', 'namespace'])
             },
             spec: {
-                params: []
+                type: 'git',
+                params: [{
+                    "name": "url",
+                    "value": ""
+                },{
+                    "name": "revision",
+                    "value": "master"
+                }]
             }
         });
 
@@ -61,6 +66,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         };
         this.onDataChanged = this.onDataChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
+        this.onUrlChanged = this.onUrlChanged.bind(this);
+        this.onRevisionChanged = this.onRevisionChanged.bind(this);
         this.onTypeChanged = this.onTypeChanged.bind(this);
         this.save = this.save.bind(this);
     }
@@ -68,6 +75,16 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.setState({
             stringData: { ...secretsData.stringData }
         });
+    }
+    onUrlChanged(event) {
+        let secret = { ...this.state.secret };
+        secret.spec.params[0].value = event.target.value;
+        this.setState({ secret });
+    }
+    onRevisionChanged(event) {
+        let secret = { ...this.state.secret };
+        secret.spec.params[1].value = event.target.value;
+        this.setState({ secret });
     }
     onNameChanged(event) {
         let secret = { ...this.state.secret };
@@ -78,25 +95,26 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.setState({
             selectedPipelineResourceType: event.target.value,
         });
+        let secret = { ...this.state.secret };
+        secret.spec.params.type = event.target.value;
+        this.setState({ secret });
     }
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.secret;
         this.setState({ inProgress: true });
 
-        const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData });
+        const newSecret = _.assign({}, this.state.secret);
         const ko = kindObj(kind);
-        console.log(kind); // Secret 
-        console.log(this.state.stringData); // null 
-        console.log(this.state.secret); // 여기에 metadata, data, kind 가 들어감
-        return;
+        // console.log(_.assign({}, this.state.secret));
+        
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
             console.log(this.state)
-            history.push(formatNamespacedRouteForResource('services'));
+            history.push(formatNamespacedRouteForResource('pipelineresources'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
     // componentDidMount() {
@@ -143,34 +161,18 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 { (this.state.selectedPipelineResourceType === 'git') && <div>
                 <div className="form-group col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                key
+                                revision
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                value
-                            </div>
-                        </div>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="key" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="value" />
+                                <input className="form-control" type="text" value={this.state.secret.spec.params[1].value} placeholder="master" onChange={this.onRevisionChanged}/>
                             </div>
                         </div>
                         <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                key
+                        <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                                url
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                value
-                            </div>
-                        </div>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="key" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="value" />
+                                <input required className="form-control" type="text" value={this.state.secret.spec.params[0].value} placeholder="" onChange={this.onUrlChanged}/>
                             </div>
                         </div>
                 </div> }
@@ -178,18 +180,10 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 { (this.state.selectedPipelineResourceType !== 'git') && <div>
                 <div className="form-group col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                key
+                                url
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                value
-                            </div>
-                        </div>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="key" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="value" />
+                                <input required className="form-control" type="text" value={this.state.secret.spec.params[0].value} placeholder="value" onChange={this.onUrlChanged}/>
                             </div>
                         </div>
                 </div> }
@@ -214,6 +208,16 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div> 
                 </React.Fragment>*/}
+
+                {/* 미리: 레이블은 추후에 구현할 것임 
+                <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Label</label>
+                            <div>
+                                <SelectorInput labelClassName="co-text-namespace" tags={[]} />
+                            </div>
+                        </div>
+                </React.Fragment> */}
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                     <div style={{marginTop: '10px'}}>
                     <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
