@@ -2,5 +2,5 @@
 
 set -e
 
-./build-backend-release.sh
-./build-frontend-release.sh
+./script-release/build-backend-release.sh
+./script-release/build-frontend-release.sh
