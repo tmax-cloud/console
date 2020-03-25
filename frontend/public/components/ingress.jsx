@@ -38,7 +38,7 @@ const IngressListHeader = props => <ListHeader>
   <ColHead {...props} className="col-md-3 hidden-sm hidden-xs" sortFunc="ingressValidHosts">Hosts</ColHead>
 </ListHeader>;
 
-const IngressListRow = ({obj: ingress}) => <ResourceRow obj={ingress}>
+const IngressListRow = ({ obj: ingress }) => <ResourceRow obj={ingress}>
   <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
     <ResourceCog actions={menuActions} kind="Ingress" resource={ingress} />
     <ResourceLink kind="Ingress" name={ingress.metadata.name}
@@ -60,7 +60,7 @@ const RulesHeader = () => <div className="row co-m-table-grid__head">
   <div className="col-xs-2">Service Port</div>
 </div>;
 
-const RulesRow = ({rule, namespace}) => {
+const RulesRow = ({ rule, namespace }) => {
 
   return <div className="row co-resource-list__item">
     <div className="col-xs-3 co-break-word">
@@ -113,7 +113,7 @@ const RulesRows = (props) => {
   return <EmptyBox label="Rules" />;
 };
 
-const Details = ({obj: ingress}) => <React.Fragment>
+const Details = ({ obj: ingress }) => <React.Fragment>
   <div className="co-m-pane__body">
     <SectionHeading text="Ingress Overview" />
     <ResourceSummary resource={ingress} showPodSelector={false} showNodeSelector={false}>
@@ -137,6 +137,16 @@ const IngressesDetailsPage = props => <DetailsPage
   pages={[navFactory.details(detailsPage(Details)), navFactory.editYaml()]}
 />;
 const IngressesList = props => <List {...props} Header={IngressListHeader} Row={IngressListRow} />;
-const IngressesPage = props => <ListPage ListComponent={IngressesList} canCreate={true} {...props} />;
+const IngressesPage = props => {
+  const createItems = {
+    form: '인그레스 (폼 에디터)',
+    yaml: '인그레스 (YAML 에디터)'
+  };
 
-export {IngressesList, IngressesPage, IngressesDetailsPage};
+  const createProps = {
+    items: createItems,
+    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/ingresses/new${type !== 'yaml' ? '/' + type : ''}`
+  };
+  return <ListPage ListComponent={IngressesList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
+export { IngressesList, IngressesPage, IngressesDetailsPage };
