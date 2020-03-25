@@ -18,10 +18,10 @@ const ADMIN_RESOURCES = new Set([
 export const kindToAbbr = kind =>
   (kind.replace(/[^A-Z]/g, "") || kind.toUpperCase()).slice(0, 3);
 
-export const getResources = () => 
+export const getResources = () =>
   // coFetchJSON("api/kubernetes/apis").then(res => {
   // coFetchJSON("https://192.168.8.27:6443/apis").then(res => {
-    
+
   coFetchJSON(`${document.location.origin}/api/kubernetes/apis`).then(res => {
     const preferredVersions = res.groups.map(group => group.preferredVersion);
     const all: Promise<APIResourceList>[] = _.flatten(
@@ -77,7 +77,7 @@ export const getResources = () =>
           });
 
       const models = _.flatten(data.filter(d => d.resources).map(defineModels));
-      allResources.forEach(r =>
+      allResources.forEach((r: string) =>
         ADMIN_RESOURCES.has(r.split("/")[0])
           ? adminResources.push(r)
           : safeResources.push(r)
