@@ -29,13 +29,12 @@ class ConfigureStatusModal extends PromiseComponent {
 
   _submit(event) {
     event.preventDefault();
-    const data = {
+    let data = (StatusEditorPair.Status === 'Reject') ? {
       status: {
-        status: StatusEditorPair.Status
+        status: StatusEditorPair.Status,
+        reason: StatusEditorPair.Reason
       }
-    };
-    console.log('PROPS:', this.props, 'data: ', data);
-
+    } : { status: { status: StatusEditorPair.Status } };
 
     const op = {
       path: this.props.path
