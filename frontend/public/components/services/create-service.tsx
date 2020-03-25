@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
+import { PortEditor } from '../utils/port-editor';
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -57,7 +58,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
             selectorList: _.isEmpty(props.selectorList) ? [['', '']] : _.toPairs(props.selectorList),
             paramList: [['', '', '', '']],
-            selectedTemplate: ''
+            selectedTemplate: '',
+            ports: [['','','','']]
         };
 
         this.onDataChanged = this.onDataChanged.bind(this);
@@ -65,6 +67,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.onTemplateChanged = this.onTemplateChanged.bind(this);
         this.getParams = this.getParams.bind(this);
         this.save = this.save.bind(this);
+        this._updatePorts = this._updatePorts.bind(this);
     }
     onDataChanged(secretsData) {
         this.setState({
@@ -85,6 +88,11 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             selectedTemplate: event.target.value
         });
         console.log(event.target.value);
+    }
+    _updatePorts(ports) {
+      this.setState({
+        ports: ports.portPairs
+      });
     }
     save(e) {
         e.preventDefault();
@@ -140,7 +148,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="secret-name">Port</label>
-                        <div className="col-md-12 col-xs-12">
+                        <PortEditor portPairs={this.state.ports}  updateParentData={this._updatePorts} />
+                        {/* <div className="col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 name
                             </div>
@@ -153,7 +162,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 targetPort
                             </div>
-                        </div>
+                        </div> */}
                         <div className="col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 <input className="form-control" type="text" placeholder="name" required />
@@ -285,7 +294,8 @@ export type BaseEditSecretState_ = {
     error?: any,
     selectorList: Array<any>,
     paramList: Array<any>,
-    selectedTemplate: string
+    selectedTemplate: string,
+    ports: Array<any>
 };
 
 export type BaseEditSecretProps_ = {
