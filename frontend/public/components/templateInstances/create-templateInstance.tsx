@@ -38,7 +38,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     const existingTemplateInstance = _.pick(props.obj, ['metadata', 'type']);
     const templateInstance = _.defaultsDeep({}, props.fixed, existingTemplateInstance, {
       apiVersion: 'tmax.io/v1',
-      data: {},
       kind: "TemplateInstance",
       metadata: {
         name: '',
@@ -57,23 +56,16 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       secretTypeAbstraction: this.props.secretTypeAbstraction,
       templateInstance: templateInstance,
       inProgress: false,
-      stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
       templateList: [],
       paramList: [],
-      editParamList: false,
+      editParamList: true,
       selectedTemplate: ''
     };
-    this.onDataChanged = this.onDataChanged.bind(this);
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onTemplateChanged = this.onTemplateChanged.bind(this);
     this.getParams = this.getParams.bind(this);
     this.onParamValueChanged = this.onParamValueChanged.bind(this);
     this.save = this.save.bind(this);
-  }
-  onDataChanged(secretsData) {
-    this.setState({
-      stringData: { ...secretsData.stringData }
-    });
   }
   onNameChanged(event) {
     let templateInstance = { ...this.state.templateInstance };
@@ -82,6 +74,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   getParams() {
     const namespace = document.location.href.split('ns/')[1].split('/')[0];
+    let templateInstance = { ...this.state.templateInstance };
     let template = this.state.selectedTemplate;
     coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
       .then(res => res.json())
@@ -101,11 +94,18 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           }
         }
         let paramList = Array.from(new Set(param));
-        console.log(paramList);
         if (paramList.length) {
+          //paramList가 ['key1','key2']인경우 [{name: key1, value : 'value'},{name: key2, value : 'value'}]로 만들어야 함 
+          let parameters = [];
+          paramList.forEach((key) => {
+            let newObj = { name: key, value: '' };
+            parameters.push(newObj)
+          })
+          templateInstance.spec.template.parameters = parameters;
           this.setState({
             paramList: paramList,
-            editParamList: false
+            editParamList: false,
+            templateInstance: templateInstance
           });
         } else {
           this.setState({
@@ -135,9 +135,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
   }
   onParamValueChanged(event) {
+    console.log('onParamValueChanged불림')
     let key = event.target.id
     let templateInstance = { ...this.state.templateInstance };
-    templateInstance.spec.template.parameters[key] = event.target.value;
+    templateInstance.spec.template.parameters.forEach(obj => {
+      if (obj.name === key) {
+        obj.value = event.target.value;
+      }
+    });
     this.setState({
       templateInstance: templateInstance
     });
@@ -147,7 +152,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     const { kind, metadata } = this.state.templateInstance;
     this.setState({ inProgress: true });
 
-    const newSecret = _.assign({}, this.state.templateInstance, { stringData: this.state.stringData });
+    const newSecret = _.assign({}, this.state.templateInstance);
     const ko = kindObj(kind);
     (this.props.isCreate
       ? k8sCreate(ko, newSecret)
@@ -168,7 +173,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.setState({
           templateList: templateList,
           selectedTemplate: templateList[0],
-          editParamList: false
+          editParamList: true
         });
       },
         (error) => {
@@ -232,14 +237,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         <div>
           {paramDivs}
         </div>
-        <React.Fragment>
-          <div className="form-group">
-            <label className="control-label" htmlFor="username">Label</label>
-            <div>
-              <SelectorInput labelClassName="co-text-namespace" tags={[]} />
-            </div>
-          </div>
-        </React.Fragment>
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
           <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
           <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
@@ -306,7 +303,6 @@ export type BaseEditSecretState_ = {
   secretTypeAbstraction?: CreateType,
   templateInstance: K8sResourceKind,
   inProgress: boolean,
-  stringData: { [key: string]: string },
   error?: any,
   templateList: Array<any>,
   paramList: Array<any>,
