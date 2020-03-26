@@ -266,7 +266,7 @@ export const ListPage = props => {
     showTitle={showTitle}
     canCreate={props.canCreate}
     canExpand={props.canExpand}
-    createButtonText={createButtonText || `Create ${label}`}
+    createButtonText={createButtonText || `Create`}
     textFilter={props.textFilter}
     resources={resources}
     autoFocus={props.autoFocus}

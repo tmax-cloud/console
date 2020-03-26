@@ -38,8 +38,8 @@ export class PortEditor extends React.Component {
       <React.Fragment>
         <div className="row">
           <div className="col-md-2 col-xs-2 text-secondary">{nameString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{protocolString.toUpperCase()}</div>
           <div className="col-md-2 col-xs-2 text-secondary">{portString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{protocolString.toUpperCase()}</div>
           <div className="col-md-2 col-xs-2 text-secondary">{targetPortString.toUpperCase()}</div>
         </div>
         {portItems}
@@ -101,7 +101,7 @@ class PortPairElement extends React.Component {
   }
 
   render() {
-    const { nameString, protocolString, portString, targetPortString, allowSorting, readOnly, pair } = this.props;
+    const { nameString, portString, targetPortString, allowSorting, readOnly, pair } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -115,10 +115,14 @@ class PortPairElement extends React.Component {
           <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[PortEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={protocolString.toLowerCase()} value={pair[PortEditorPair.Protocol] || ''} onChange={this._onChangeProtocol} disabled={readOnly} />
+          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} disabled={readOnly} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
-          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} disabled={readOnly} />
+          <select value={pair[PortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">
+            <option value='TCP'>TCP</option>
+            <option value='UDP'>UDP</option>
+            <option value='SCDP'>SCDP</option>
+          </select>
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
           <input type="text" className="form-control" placeholder={targetPortString.toLowerCase()} value={pair[PortEditorPair.TargetPort] || ''} onChange={this._onChangeTargetPort} disabled={readOnly} />

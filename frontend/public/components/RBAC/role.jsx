@@ -34,7 +34,7 @@ const Header = props => <ListHeader>
   <ColHead {...props} className="col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
 </ListHeader>;
 
-const Row = ({obj: role}) => <div className="row co-resource-list__item">
+const Row = ({ obj: role }) => <div className="row co-resource-list__item">
   <div className="col-xs-6 co-resource-link-wrapper">
     <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
     <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
@@ -45,16 +45,16 @@ const Row = ({obj: role}) => <div className="row co-resource-list__item">
 </div>;
 
 class Details extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {};
-    this.changeFilter = e => this.setState({ruleFilter: e.target.value});
+    this.changeFilter = e => this.setState({ ruleFilter: e.target.value });
   }
 
-  render () {
+  render() {
     const ruleObj = this.props.obj;
-    const {creationTimestamp, name, namespace} = ruleObj.metadata;
-    const {ruleFilter} = this.state;
+    const { creationTimestamp, name, namespace } = ruleObj.metadata;
+    const { ruleFilter } = this.state;
 
     let rules = ruleObj.rules;
     if (ruleFilter) {
@@ -112,7 +112,7 @@ const BindingHeader = props => <ListHeader>
   <ColHead {...props} className="col-xs-2" sortField="metadata.namespace">Namespace</ColHead>
 </ListHeader>;
 
-const BindingRow = ({obj: binding}) => <ResourceRow obj={binding}>
+const BindingRow = ({ obj: binding }) => <ResourceRow obj={binding}>
   <div className="col-xs-4">
     <BindingName binding={binding} />
   </div>
@@ -130,17 +130,16 @@ const BindingRow = ({obj: binding}) => <ResourceRow obj={binding}>
 const BindingsListComponent = props => <BindingsList {...props} Header={BindingHeader} Row={BindingRow} />;
 
 export const BindingsForRolePage = (props) => {
-  const {match: {params: {name, ns}}, obj:{kind}} = props;
-  let resources = [{kind: 'RoleBinding', namespaced: true}];
+  const { match: { params: { name, ns } }, obj: { kind } } = props;
+  let resources = [{ kind: 'RoleBinding', namespaced: true }];
   if (!ns) {
-    resources.push({kind: 'ClusterRoleBinding', namespaced: false, optional: true});
+    resources.push({ kind: 'ClusterRoleBinding', namespaced: false, optional: true });
   }
   return <MultiListPage
     canCreate={true}
-    createButtonText="Create Binding"
-    createProps={{to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}`}}
+    createProps={{ to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}` }}
     ListComponent={BindingsListComponent}
-    staticFilters={[{'role-binding-roleRef': name}]}
+    staticFilters={[{ 'role-binding-roleRef': name }]}
     resources={resources}
     textFilter="role-binding"
     filterLabel="Role Bindings by role or subject"
@@ -150,7 +149,7 @@ export const BindingsForRolePage = (props) => {
 
 export const RolesDetailsPage = props => <DetailsPage
   {...props}
-  pages={[navFactory.details(Details), navFactory.editYaml(), {href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage}]}
+  pages={[navFactory.details(Details), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]}
   menuActions={menuActions} />;
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
@@ -169,29 +168,28 @@ export const roleType = role => {
   return role.metadata.namespace ? 'namespace' : 'cluster';
 };
 
-export const RolesPage = connectToFlags(FLAGS.PROJECTS_AVAILBLE, FLAGS.PROJECTS_AVAILBLE)(({namespace, showTitle, flags}) => {
+export const RolesPage = connectToFlags(FLAGS.PROJECTS_AVAILBLE, FLAGS.PROJECTS_AVAILBLE)(({ namespace, showTitle, flags }) => {
   const projectsAvailable = !flagPending(flags.PROJECTS_AVAILBLE) && flags.PROJECTS_AVAILBLE;
   return <MultiListPage
     ListComponent={RolesList}
     canCreate={true}
     showTitle={showTitle}
     namespace={namespace}
-    createButtonText="Create Role"
-    createProps={{to: `/k8s/ns/${namespace || 'default'}/roles/new`}}
+    createProps={{ to: `/k8s/ns/${namespace || 'default'}/roles/new` }}
     filterLabel="Roles by name"
     flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
     resources={[
-      {kind: 'Role', namespaced: true, optional: !projectsAvailable},
-      {kind: 'ClusterRole', namespaced: false, optional: true},
+      { kind: 'Role', namespaced: true, optional: !projectsAvailable },
+      { kind: 'ClusterRole', namespaced: false, optional: true },
     ]}
     rowFilters={[{
       type: 'role-kind',
       selected: ['cluster', 'namespace'],
       reducer: roleType,
       items: [
-        {id: 'cluster', title: 'Cluster-wide Roles'},
-        {id: 'namespace', title: 'Namespace Roles'},
-        {id: 'system', title: 'System Roles'},
+        { id: 'cluster', title: 'Cluster-wide Roles' },
+        { id: 'namespace', title: 'Namespace Roles' },
+        { id: 'system', title: 'System Roles' },
       ],
     }]}
     title="Roles"
