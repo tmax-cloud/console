@@ -14,7 +14,7 @@ enum CreateType {
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 파이프라인 리소스 생성',
+    [CreateType.form]: 'Create Pipeline Resource using Form Editor',
 };
 
 const determineCreateType = (data) => {
@@ -151,15 +151,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>파이프라인 리소스 생성</title>
+                <title>Create Pipeline Resource</title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">파이프라인 리소스 생성</h1>
+                <h1 className="co-m-pane__heading">Create Pipeline Resource</h1>
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">파이프라인 리소스 이름</label>
+                        <label className="control-label" htmlFor="secret-name">Name</label>
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -171,7 +171,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >유형</label>
+                        <label className="control-label" htmlFor="secret-type" >Type</label>
                         <div>
                             <select onChange={this.onTypeChanged} className="form-control" id="template">
                                 {options}
