@@ -64,13 +64,25 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
         this.setState({
             ports: ports.portPairs
         });
+        console.log(this.state)
     }
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.service;
+        let service = { ...this.state.service };
         this.setState({ inProgress: true });
+        let portList = [];
+        this.state.ports.forEach(port => {
+            let obj = { name: port[0], port: Number(port[1]), protocol: port[2], targetPort: Number(port[3]) };
+            portList.push(obj)
+        });
+        service.spec.ports = portList;
+        this.setState({ service });
         const newSecret = _.assign({}, this.state.service);
         const ko = kindObj(kind);
+
+
+
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
@@ -80,9 +92,6 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
             history.push(formatNamespacedRouteForResource('services'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
-    componentDidMount() {
-    }
-
     render() {
         return <div className="co-m-pane__body">
             < Helmet >
@@ -113,10 +122,10 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                         <label className="control-label" htmlFor="service-type">Type</label>
                         <div>
                             <select className="form-control" id="service-type" onChange={this.onTypeChanged}>
-                                <option >Cluster IP</option>
-                                <option >External Name</option>
-                                <option >Load Balancer</option>
-                                <option >Node Port</option>
+                                <option >ClusterIP</option>
+                                <option >ExternalName</option>
+                                <option >LoadBalancer</option>
+                                <option >NodePort</option>
                             </select>
                         </div>
                     </div>
