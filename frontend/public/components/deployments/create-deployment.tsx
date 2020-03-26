@@ -6,13 +6,14 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
+import { AsyncComponent } from '../utils/async';
 
 enum CreateType {
     generic = 'generic',
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 디플로이먼트 생성',
+    [CreateType.form]: 'Create Deployment using Form Editor',
 };
 
 const determineCreateType = (data) => {
@@ -28,6 +29,8 @@ const Section = ({ label, children, id }) => <div className="row">
     </div>
 </div>;
 
+const NameValueEditorComponent = (props) => <AsyncComponent loader={() => import('../utils/name-value-editor.jsx').then(c => c.NameValueEditor)} {...props} />;
+
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
     constructor(props) {
@@ -38,23 +41,23 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             kind: "Deployment",
             metadata: {
                 name: '',
-                labels: { app: 'test' }
+                labels: {}
             },
             spec: {
                 replicas: 1,
                 selector: {
-                    matchLabels: { app: 'test' }
+                    matchLabels: { app: '' }
                 },
                 template: {
                     metadata: {
-                        labels: { app: 'test' }
+                        labels: { app: '' }
                     },
                     spec: {
                         containers: [{
                             name: 'hello-hypercloud',
                             image: 'hypercloud/hello-hypercloud'
                         }],
-                        restartPolicy: 'Always'
+                        restartPolicy: 'Always',
                     }
                 }
             }
@@ -67,20 +70,35 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             templateList: [],
             paramList: [],
             editParamList: true,
-            selectedTemplate: ''
+            selectedTemplate: '',
+            restartPolicyTypeList: ['Always', 'OnFailure', 'Never'],
         };
 
         this.onNameChanged = this.onNameChanged.bind(this);
+        this.onNameFocusOut = this.onNameFocusOut.bind(this);
         this.onImageChanged = this.onImageChanged.bind(this);
         this.onImagePullPolicyChanged = this.onImagePullPolicyChanged.bind(this);
         this.onReplicasChanged = this.onReplicasChanged.bind(this);
         this.onLabelChanged = this.onLabelChanged.bind(this);
         this.save = this.save.bind(this);
+        this.onRestartPolicyChanged = this.onRestartPolicyChanged.bind(this);
     }
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
         deployment.metadata.name = event.target.value;
         deployment.metadata.labels.app = event.target.value;
+        this.setState({ deployment });
+    }
+    onNameFocusOut(event) {
+        // name 변경 시 
+        let deployment = { ...this.state.deployment };
+        deployment.spec.selector.matchLabels.app = event.target.value;
+        deployment.spec.template.metadata.labels.app = event.target.value;
+        this.setState({ deployment });
+    }
+    onRestartPolicyChanged(event) {
+        let deployment = { ...this.state.deployment };
+        deployment.spec.template.spec.restartPolicy = event.target.value;
         this.setState({ deployment });
     }
     onImageChanged(event) {
@@ -109,12 +127,10 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     return;
                 }
                 document.getElementById('labelErrMsg').style.display = 'none';
-                deployment.spec.selector.matchLabels.push(item.split('=')[1]);
             })
         }
         this.setState({ deployment });
     }
-
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.deployment;
@@ -133,6 +149,12 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     componentDidMount() {
     }
     render() {
+
+        const { restartPolicyTypeList } = this.state;
+        let options = restartPolicyTypeList.map(function (type_) {
+            return <option value={type_}>{type_}</option>;
+        });
+
         return <div className="co-m-pane__body">
             < Helmet >
                 <title>Create Deployment</title>
@@ -147,6 +169,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             <input className="form-control"
                                 type="text"
                                 onChange={this.onNameChanged}
+                                onBlur={this.onNameFocusOut}
                                 value={this.state.deployment.metadata.name}
                                 id="deplaoyment-name"
                                 required />
@@ -182,7 +205,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                                 required />
                         </div>
                     </div>
-
                 </fieldset>
                 <div className="form-group">
                     <React.Fragment>
@@ -196,6 +218,104 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
                         <p>Lables must be 'key=value' form.</p>
                     </div>
+                </div>
+
+                {/* Run command */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Run command</label>
+                            <div>
+                                
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Run command arguments */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Run command arguments</label>
+                            <div>
+                                
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Environment variables */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Environment variables</label>
+                            <div>
+                            
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Port */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Port</label>
+                            <div>
+                                
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Volumes */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Volumes</label>
+                            <div>
+                                
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Resource(Request) */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Resource(Request)</label>
+                            <div>
+                            
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Resource(Limits) */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Resource(Limits)</label>
+                            <div>
+                            
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Restart Policy */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Restart Policy</label>
+                            <div>
+                                <select onChange={this.onRestartPolicyChanged} className="form-control" id="template">
+                                    {options}
+                                </select>
+                            </div>
+                        </div>
+                    </React.Fragment>
                 </div>
 
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
@@ -266,7 +386,8 @@ export type BaseEditSecretState_ = {
     templateList: Array<any>,
     paramList: Array<any>,
     editParamList: boolean,
-    selectedTemplate: string
+    selectedTemplate: string,
+    restartPolicyTypeList: Array<any>,
 };
 
 export type BaseEditSecretProps_ = {

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
-import { PortEditorPair } from './index';
+import { AdvancedPortEditorPair } from './index';
 
-export class PortEditor extends React.Component {
+export class AdvancedPortEditor extends React.Component {
   constructor(props) {
     super(props);
     this._append = this._append.bind(this);
@@ -39,7 +39,7 @@ export class PortEditor extends React.Component {
   render() {
     const { nameString, protocolString, portString, targetPortString, addString, portPairs, allowSorting, readOnly, nameValueId } = this.props;
     const portItems = portPairs.map((pair, i) => {
-      const key = _.get(pair, [PortEditorPair.Index], i);
+      const key = _.get(pair, [AdvancedPortEditorPair.Index], i);
       return <PortPairElement onChange={this._change} index={i} nameString={nameString} protocolString={protocolString} portString={portString} targetPortString={targetPortString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
@@ -67,7 +67,7 @@ export class PortEditor extends React.Component {
     );
   }
 }
-PortEditor.defaultProps = {
+AdvancedPortEditor.defaultProps = {
   nameString: 'Name',
   protocolString: 'Protocol',
   portString: 'Port',
@@ -93,19 +93,19 @@ class PortPairElement extends React.Component {
   }
   _onChangeName(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, PortEditorPair.Name);
+    onChange(e, index, AdvancedPortEditorPair.Name);
   }
   _onChangeProtocol(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, PortEditorPair.Protocol);
+    onChange(e, index, AdvancedPortEditorPair.Protocol);
   }
   _onChangePort(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, PortEditorPair.Port);
+    onChange(e, index, AdvancedPortEditorPair.Port);
   }
   _onChangeTargetPort(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, PortEditorPair.TargetPort);
+    onChange(e, index, AdvancedPortEditorPair.TargetPort);
   }
 
   render() {
@@ -120,20 +120,20 @@ class PortPairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[PortEditorPair.Name]} onChange={this._onChangeName} />
+          <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[AdvancedPortEditorPair.Name]} onChange={this._onChangeName} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} />
+          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[AdvancedPortEditorPair.Port] || ''} onChange={this._onChangePort} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
-          <select value={pair[PortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">
+          <select value={pair[AdvancedPortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">
             <option value='TCP'>TCP</option>
             <option value='UDP'>UDP</option>
             <option value='SCDP'>SCDP</option>
           </select>
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
-          <input type="text" className="form-control" placeholder={targetPortString.toLowerCase()} value={pair[PortEditorPair.TargetPort] || ''} onChange={this._onChangeTargetPort} disabled={readOnly} />
+          <input type="text" className="form-control" placeholder={targetPortString.toLowerCase()} value={pair[AdvancedPortEditorPair.TargetPort] || ''} onChange={this._onChangeTargetPort} disabled={readOnly} />
         </div>
 
         {readOnly ? null : (
