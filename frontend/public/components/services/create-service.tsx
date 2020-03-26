@@ -117,8 +117,8 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="secret-name">Port</label>
-                        <PortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
-                        {/* <div className="col-md-12 col-xs-12">
+                        {/* <PortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} /> */}
+                        <div className="col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 name
                             </div>
@@ -131,7 +131,7 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 targetPort
                             </div>
-                        </div> */}
+                        </div>
                         <div className="col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 <input className="form-control" type="text" placeholder="name" required />
@@ -153,21 +153,8 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="secret-name">Selector</label>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                key
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                value
-                            </div>
-                        </div>
-                        <div className="form-group col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="key" />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="value" />
-                            </div>
+                        <div>
+                            <SelectorInput labelClassName="co-text-namespace" tags={[]} />
                         </div>
                     </div>
                     <div className="form-group">
