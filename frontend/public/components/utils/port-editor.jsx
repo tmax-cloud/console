@@ -10,9 +10,17 @@ export class PortEditor extends React.Component {
     this._change = this._change.bind(this);
     this._remove = this._remove.bind(this);
   }
-  _append() {
+  _append(event) {
     const { updateParentData, portPairs, nameValueId, allowSorting } = this.props;
-    updateParentData({ portPairs: allowSorting ? portPairs.concat([['', '', '', '', portPairs.length]]) : portPairs.concat([['', '', '', '']]) }, nameValueId);
+    let lastIndex = this.props.portPairs.length - 1;
+    let lastData = this.props.portPairs[lastIndex];
+    if (lastData[0] !== '' && lastData[1] !== '') {
+      lastData[2] === '' ? lastData[2] = 'TCP' : lastData[2];
+      lastData[3] === '' ? lastData[3] = lastData[1] : lastData[3];
+      updateParentData({ portPairs: allowSorting ? portPairs.concat([['', '', 'TCP', '', portPairs.length]]) : portPairs.concat([['', '', '', '']]) }, nameValueId);
+    } else {
+      return
+    }
   }
 
   _remove(i) {
@@ -112,10 +120,10 @@ class PortPairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[PortEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
+          <input type="text" className="form-control" required placeholder={nameString.toLowerCase()} value={pair[PortEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} disabled={readOnly} />
+          <input type="text" className="form-control" required placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} disabled={readOnly} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
           <select value={pair[PortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">

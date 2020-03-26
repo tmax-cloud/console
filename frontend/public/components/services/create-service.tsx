@@ -12,7 +12,7 @@ enum CreateType {
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 서비스 생성',
+    [CreateType.form]: '',
 };
 
 const determineCreateType = (data) => {
@@ -50,7 +50,7 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
             type: '',
             paramList: [],
             selectedTemplate: '',
-            ports: [['', '', '', '']]
+            ports: [['', '', 'TCP', '']]
         };
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onTypeChanged = this.onTypeChanged.bind(this);
@@ -95,10 +95,10 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
     render() {
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>서비스 생성</title>
+                <title>Create Service</title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">서비스 생성</h1>
+                <h1 className="co-m-pane__heading">Create Service</h1>
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
@@ -110,52 +110,13 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                                 onChange={this.onNameChanged}
                                 value={this.state.secret.metadata.name}
                                 aria-describedby="secret-name-help"
-                                id="secret-name"
+                                id="service-name"
                                 required />
-
                         </div>
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="secret-name">Port</label>
-                        {/* <PortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} /> */}
-                        <div className="col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                name
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                protocol
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                port
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                targetPort
-                            </div>
-                        </div>
-                        <div className="col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="name" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <select className="form-control" id="protocol">
-                                    <option value='TCP'>TCP</option>
-                                    <option value='UDP'>UDP</option>
-                                    <option value='SCDP'>SCDP</option>
-                                </select>
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="port" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="targetPort" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Selector</label>
-                        <div>
-                            <SelectorInput labelClassName="co-text-namespace" tags={[]} />
-                        </div>
+                        <PortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="secret-type" >Type</label>

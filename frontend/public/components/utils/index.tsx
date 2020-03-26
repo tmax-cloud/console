@@ -62,8 +62,8 @@ export const enum StatusEditorPair {
 
 export const enum PortEditorPair {
   Name,
-  Protocol,
   Port,
+  Protocol,
   TargetPort,
   Index,
 }
