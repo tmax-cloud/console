@@ -76,54 +76,57 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     const namespace = document.location.href.split('ns/')[1].split('/')[0];
     let templateInstance = { ...this.state.templateInstance };
     let template = this.state.selectedTemplate;
-    coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
-      .then(res => res.json())
-      .then((myJson) => {
-        let stringobj = JSON.stringify(myJson.objects);
-        let param = [];
-        for (let i = 0; i < stringobj.length; i++) {
-          let word = ''
-          if (stringobj[i] === '$') {
-            let n = i + 2;
-            if (stringobj[n - 1] == '{') {
-              while (stringobj[n] !== '}') {
-                word = word + stringobj[n];
-                n++
-              } param.push(word)
+    if (template != '') {
+      coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
+        .then(res => res.json())
+        .then((myJson) => {
+          let stringobj = JSON.stringify(myJson.objects);
+          let param = [];
+          for (let i = 0; i < stringobj.length; i++) {
+            let word = ''
+            if (stringobj[i] === '$') {
+              let n = i + 2;
+              if (stringobj[n - 1] == '{') {
+                while (stringobj[n] !== '}') {
+                  word = word + stringobj[n];
+                  n++
+                } param.push(word)
+              }
             }
           }
-        }
-        let paramList = Array.from(new Set(param));
-        if (paramList.length) {
-          //paramList가 ['key1','key2']인경우 [{name: key1, value : 'value'},{name: key2, value : 'value'}]로 만들어야 함 
-          let parameters = [];
-          paramList.forEach((key) => {
-            let newObj = { name: key, value: '' };
-            parameters.push(newObj)
-          })
-          templateInstance.spec.template.parameters = parameters;
-          this.setState({
-            paramList: paramList,
-            editParamList: false,
-            templateInstance: templateInstance
-          });
-        } else {
-          this.setState({
-            paramList: [],
-            editParamList: false
-          });
-        }
-      },
-        //컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 에러를 이 부분에서 처리
-        (error) => {
-          this.setState({
-            error
-          });
-        }
-      )
-      .catch(function (myJson) {
-        console.log(myJson);
-      });
+          let paramList = Array.from(new Set(param));
+          if (paramList.length) {
+            //paramList가 ['key1','key2']인경우 [{name: key1, value : 'value'},{name: key2, value : 'value'}]로 만들어야 함 
+            let parameters = [];
+            paramList.forEach((key) => {
+              let newObj = { name: key, value: '' };
+              parameters.push(newObj)
+            })
+            templateInstance.spec.template.parameters = parameters;
+            this.setState({
+              paramList: paramList,
+              editParamList: false,
+              templateInstance: templateInstance
+            });
+          } else {
+            this.setState({
+              paramList: [],
+              editParamList: false
+            });
+          }
+        },
+          //컴포넌트의 실제 버그에서 발생하는 예외사항들을 넘기지 않도록 에러를 이 부분에서 처리
+          (error) => {
+            this.setState({
+              error
+            });
+          }
+        )
+        .catch(function (myJson) {
+          console.log(myJson);
+        });
+    }
+
   }
   onTemplateChanged(event) {
     let templateInstance = { ...this.state.templateInstance };
