@@ -60,7 +60,7 @@ export const enum StatusEditorPair {
   Reason = ''
 }
 
-export const enum PortEditorPair {
+export const enum AdvancedPortEditorPair {
   Name,
   Port,
   Protocol,

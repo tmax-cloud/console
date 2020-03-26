@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { PortEditor } from '../utils/port-editor';
+import { AdvancedPortEditor } from '../utils/port-editor';
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -107,7 +107,7 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="service-name">Port</label>
-                        <PortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
+                        <AdvancedPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
                     </div>
                     <div className="form-group">
                         <label className="control-label" htmlFor="service-type">Type</label>
