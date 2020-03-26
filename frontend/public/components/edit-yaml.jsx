@@ -17,6 +17,7 @@ import { SafetyFirst } from './safety-first';
 import { coFetchJSON } from '../co-fetch';
 import { ResourceSidebar } from './sidebars/resource-sidebar';
 import { yamlTemplates } from '../models/yaml-templates';
+import { sha512 } from 'js-sha512';
 
 const { snippetManager } = ace.acequire('ace/snippets');
 snippetManager.register([...snippets.values()], 'yaml');
@@ -212,6 +213,13 @@ export const EditYAML = connect(stateToProps)(
         return;
       }
 
+      if (obj.kind === 'User') {
+        // 미리: sha512 로직 추가 
+        obj.userInfo.password = sha512(obj.userInfo.password);
+      }
+      
+      // console.log(obj.userInfo.password);
+      
       const model = this.getModel(obj);
       if (!model) {
         this.handleError(`The server doesn't have a resource type "kind: ${obj.kind}, apiVersion: ${obj.apiVersion}".`);
