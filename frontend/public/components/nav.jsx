@@ -483,12 +483,13 @@ export class Nav extends React.Component {
               {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
-            <NavSection text="Image" icon="pficon pficon-image">
+
+            <NavSection text="이미지" icon="pficon pficon-image">
               <ResourceNSLink resource="registries" name="레지스트리" onClick={this.close} />
               <ResourceNSLink resource="image" name="이미지" onClick={this.close} />
             </NavSection>
 
-            <NavSection text="Managements" icon="pficon pficon-services">
+            <NavSection text="매니지먼트" icon="pficon pficon-services">
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
