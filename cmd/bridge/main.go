@@ -91,6 +91,7 @@ func main() {
 	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
 	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
 	fRefreshEndpoint := fs.String("refresh-endpoint", "", "URL of the refresh API server.")
+	fMeteringEndpoint := fs.String("metering-endpoint", "", "URL of the metering API server.")
 	fOpenapiEndpoint := fs.String("openapi-endpoint", "", "URL of the openapi API server.")
 	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
 	// NOTE: 여기까지
@@ -237,6 +238,7 @@ func main() {
 	var loginEndpoint *url.URL
 	var logoutEndpoint *url.URL
 	var refreshEndpoint *url.URL
+	var meteringEndpoint *url.URL
 	var openapiEndpoint *url.URL
 	var prometheusEndpoint *url.URL
 	var k8sEndpoint *url.URL
@@ -256,6 +258,11 @@ func main() {
 		srv.RefreshProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        refreshEndpoint,
+		}
+		meteringEndpoint = validateFlagIsURL("metering-endpoint", *fMeteringEndpoint)
+		srv.MeteringProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        meteringEndpoint,
 		}
 		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
 		srv.PrometheusProxyConfig = &proxy.Config{
@@ -350,6 +357,14 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        refreshEndpoint,
+		}
+		meteringEndpoint = validateFlagIsURL("metering-endpoint", *fMeteringEndpoint)
+		srv.MeteringProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        meteringEndpoint,
 		}
 		openapiEndpoint = validateFlagIsURL("openapi-endpoint", *fOpenapiEndpoint)
 		srv.OpenapiProxyConfig = &proxy.Config{

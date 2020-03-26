@@ -42,6 +42,7 @@ const (
 	loginProxyEndpoint        = "/userlogin"
 	logoutProxyEndpoint       = "/userlogout"
 	refreshProxyEndpoint      = "/tokenrefresh"
+	meteringProxyEndpoint     = "/metering"
 	openapiProxyEndpoint      = "/openapi/"
 	// NOTE: login api 프록시를 위해 loginProxyEndpoint 추가 // 정동민
 )
@@ -100,6 +101,7 @@ type Server struct {
 	LoginProxyConfig      *proxy.Config
 	LogoutProxyConfig     *proxy.Config
 	RefreshProxyConfig    *proxy.Config
+	MeteringProxyConfig   *proxy.Config
 	OpenapiProxyConfig    *proxy.Config
 	// NOTE: login api 프록시를 위해 LoginProxyConfig 추가 // 정동민
 }
@@ -229,6 +231,14 @@ func (s *Server) HTTPHandler() http.Handler {
 		proxy.SingleJoiningSlash(s.BaseURL.Path, refreshProxyAPIPath),
 		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 			refreshProxy.ServeHTTP(w, r)
+		})),
+	)
+	meteringProxyAPIPath := meteringProxyEndpoint
+	meteringProxy := proxy.NewProxy(s.MeteringProxyConfig)
+	handle(meteringProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, meteringProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			meteringProxy.ServeHTTP(w, r)
 		})),
 	)
 	openapiProxyAPIPath := openapiProxyEndpoint
