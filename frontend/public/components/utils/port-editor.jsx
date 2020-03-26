@@ -120,10 +120,10 @@ class PortPairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" required placeholder={nameString.toLowerCase()} value={pair[PortEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
+          <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[PortEditorPair.Name]} onChange={this._onChangeName} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" required placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} disabled={readOnly} />
+          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
           <select value={pair[PortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">
