@@ -6,7 +6,6 @@ import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
-import '../style.scss';
 import { sha512 } from 'js-sha512';
 
 
@@ -67,8 +66,9 @@ class LoginComponent extends Component {
       
       coFetchJSON.post(AUTH_SERVER_URL, json)
         .then(data => {
-          if (data.accessToken) {
+          if (data.accessToken && data.refreshToken) {
             window.localStorage.setItem('accessToken', data.accessToken);
+            window.localStorage.setItem('refreshToken', data.refreshToken);
             this.props.history.push('/');  
             this.props.history.go(0);
           } else {
@@ -80,8 +80,7 @@ class LoginComponent extends Component {
           // window.location = `${url_}/status/all-namespaces`;
           
         })
-        .catch(error => {
-          // console.log(error);
+        .catch((error, res) => {
           this.setState({error: error.message});
         });
   //}

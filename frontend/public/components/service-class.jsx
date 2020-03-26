@@ -8,7 +8,9 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary
+  ResourceSummary,
+  ScrollToTopOnMount,
+  kindObj
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -101,21 +103,54 @@ const ServiceClassRow = () =>
     );
   };
 
-const DetailsForKind = kind =>
-  function DetailsForKind_({ obj }) {
-    return (
-      <React.Fragment>
-        <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
-          <ResourceSummary
-            resource={obj}
-            podSelector="spec.podSelector"
-            showNodeSelector={false}
-          />
+const Details = ({ obj: serviceclass }) => {
+  return (
+    <React.Fragment>
+      <ScrollToTopOnMount />
+
+      <div className="co-m-pane__body">
+        <SectionHeading text="Pod Overview" />
+        <div className="row">
+          <div className="col-sm-6">
+            <ResourceSummary resource={serviceclass} />
+          </div>
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>Bindable</dt>
+              <dd>{serviceclass.spec.bindable ? 'True' : 'False'}</dd>
+              <dt>External Name</dt>
+              <dd>{serviceclass.spec.externalName}</dd>
+              <dt>Service Broker</dt>
+              <dd>{serviceclass.spec.serviceBrokerName}</dd>
+              {/* {activeDeadlineSeconds && (
+                    <React.Fragment>
+                      <dt>Active Deadline</dt>
+                      <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                    </React.Fragment>
+                  )} */}
+            </dl>
+          </div>
         </div>
-      </React.Fragment>
-    );
-  };
+      </div>
+    </React.Fragment>
+  );
+};
+
+// const DetailsForKind = kind =>
+//   function DetailsForKind_({ obj }) {
+//     return (
+//       <React.Fragment>
+//         <div className="co-m-pane__body">
+//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
+//           <ResourceSummary
+//             resource={obj}
+//             podSelector="spec.podSelector"
+//             showNodeSelector={false}
+//           />
+//         </div>
+//       </React.Fragment>
+//     );
+//   };
 
 export const ServiceClassList = props => {
   const { kinds } = props;
@@ -147,7 +182,7 @@ export const ServiceClassesDetailsPage = props => (
     kind="ServiceClass"
     menuActions={menuActions}
     pages={[
-      navFactory.details(DetailsForKind(props.kind)),
+      navFactory.details(Details),
       navFactory.editYaml()
     ]}
   />

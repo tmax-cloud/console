@@ -473,8 +473,8 @@ export class Nav extends React.Component {
           </NavSection>
 
           <NavSection text="Auth" icon="fa fa-id-card-o">
-            {isAdmin && <ResourceNSLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />}
-            {isAdmin && <ResourceNSLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />}
+            {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />}
+            {isAdmin && <ResourceClusterLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />}
             <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
             <ResourceNSLink resource="rolebindingclaims" name="Role Binding Claims" onClick={this.close} startsWith={rolebindingsStartsWith} />
             <ResourceNSLink resource="roles" name="Roles" startsWith={rolesStartsWith} onClick={this.close} />
@@ -493,7 +493,7 @@ export class Nav extends React.Component {
           </NavSection> */}
 
           <UserNavSection closeMenu={this.close} />
-          <i style={{ fontSize: '10px', color: '#7878783d', cursor: 'pointer' }} className={`fa fa-${isAdmin ? 'star' : 'star-o'}`} onClick={this.props.changeRole} aria-hidden="true"></i>
+          {/* <i style={{ fontSize: '10px', color: '#7878783d', cursor: 'pointer' }} className={`fa fa-${isAdmin ? 'star' : 'star-o'}`} onClick={this.props.changeRole} aria-hidden="true"></i> */}
         </div>
       </div>
     </React.Fragment>;
