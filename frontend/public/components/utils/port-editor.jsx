@@ -118,7 +118,11 @@ class PortPairElement extends React.Component {
           <input type="text" className="form-control" placeholder={protocolString.toLowerCase()} value={pair[PortEditorPair.Protocol] || ''} onChange={this._onChangeProtocol} disabled={readOnly} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
-          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[PortEditorPair.Port] || ''} onChange={this._onChangePort} disabled={readOnly} />
+          <select value={pair[PortEditorPair.Port]} onChange={this._onChangePort} disabled={readOnly} className="form-control" id="protocol">
+            <option value='TCP'>TCP</option>
+            <option value='UDP'>UDP</option>
+            <option value='SCDP'>SCDP</option>
+          </select>
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
           <input type="text" className="form-control" placeholder={targetPortString.toLowerCase()} value={pair[PortEditorPair.TargetPort] || ''} onChange={this._onChangeTargetPort} disabled={readOnly} />
