@@ -97,6 +97,7 @@ func main() {
 	// NOTE: 여기까지
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
+	fHCConsoleVersion := fs.String("hc-console-version", "", "Version of HyperCloud Console.")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -177,6 +178,7 @@ func main() {
 		GoogleTagManagerID:   *fGoogleTagManagerID,
 		LoadTestFactor:       *fLoadTestFactor,
 		ReleaseModeFlag:      *fReleaseModeFlag,
+		HCConsoleVersion:     *fHCConsoleVersion,
 	}
 
 	if (*fKubectlClientID == "") != (*fKubectlClientSecret == "" && *fKubectlClientSecretFile == "") {
