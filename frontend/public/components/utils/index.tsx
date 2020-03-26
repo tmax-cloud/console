@@ -67,3 +67,29 @@ export const enum AdvancedPortEditorPair {
   TargetPort,
   Index,
 }
+
+export const enum BasicPortEditorPair {
+  Name,
+  Port,
+  Protocol,
+  Index,
+}
+
+export const enum VolumeEditorPair {
+  Name,
+  MountPath,
+  PVC,
+  ReadOnly,
+  Index,
+}
+
+export const enum ValueEditorPair {
+  Value,
+  Index,
+}
+
+export const enum KeyValueEditorPair {
+  Key,
+  Value,
+  Index,
+}
