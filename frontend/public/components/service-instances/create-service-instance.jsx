@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import * as _ from 'lodash-es';
-import * as React from 'react';
+import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Stepper from 'react-stepper-horizontal';
@@ -10,6 +10,7 @@ import { Firehose, StatusBox } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
+// import { element } from 'prop-types';
 
 const ServiceInstanceTypeAbstraction = {
   generic: 'generic',
@@ -48,19 +49,27 @@ const withServiceInstanceForm = SubForm =>
     constructor(props) {
       super(props);
       this.state = {
-        classList: [],
         steps: [
           {
             title: '서비스 클래스 선택',
+          },
+          {
+            title: '서비스 플랜 선택',
           },
           {
             title: '서비스 인스턴스 설정',
           },
         ],
         currentStep: 0,
+        classList: [],
+        selectedClassId: null,
+        planList: [],
+        selectedPlanId: null,
       };
       this.onClickNext = this.onClickNext.bind(this);
       this.onClickBack = this.onClickBack.bind(this);
+      this.onChangeClass = this.onChangeClass.bind(this);
+      this.onChangePlan = this.onChangePlan.bind(this);
     }
     getClassList() {
       // coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
@@ -76,10 +85,32 @@ const withServiceInstanceForm = SubForm =>
               longDescription: _.get(item, 'spec.externalMetadata.longDescription') || '',
               providerDisplayName: _.get(item, 'spec.externalMetadata.providerDisplayName') || '',
               ...item,
-              isActive: false,
             };
           });
           this.setState({ classList: classListData });
+        })
+        .catch(error => {
+          // this.state.templateList = [];
+          console.log('error', error);
+        });
+    }
+    getPlanList() {
+      // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
+      coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
+        .then(res => res.json())
+        .then(res => {
+          const planListData = res.items.map(item => {
+            return {
+              name: _.get(item, 'metadata.name'),
+              uid: _.get(item, 'metadata.uid'),
+              description: _.get(item, 'spec.description') || '',
+              bullets: _.get(item, 'spec.externalMetadata.bullets') || '',
+              amount: _.get(item, 'spec.externalMetadata.costs.amount') || '',
+              unit: _.get(item, 'spec.externalMetadata.costs.unit') || '$',
+              ...item,
+            };
+          });
+          this.setState({ planList: planListData });
         })
         .catch(error => {
           // this.state.templateList = [];
@@ -98,15 +129,26 @@ const withServiceInstanceForm = SubForm =>
         currentStep: currentStep + 1,
       });
     }
+    onChangeClass(id) {
+      this.setState({
+        selectedClassId: id,
+      });
+    }
+    onChangePlan(id) {
+      this.setState({
+        selectedPlanId: id,
+      });
+    }
     save(e) {
       e.preventDefault();
     }
     componentDidMount() {
       this.getClassList();
+      this.getPlanList();
     }
     render() {
-      const title = 'Create Service Instance';
-      const { steps, currentStep } = this.state;
+      const title = '서비스 인스턴스 생성';
+      const { steps, currentStep, selectedClassId, selectedPlanId } = this.state;
       return (
         <div className="co-m-pane__body">
           <Helmet>
@@ -116,13 +158,19 @@ const withServiceInstanceForm = SubForm =>
             <h1 className="co-m-pane__heading">{title}</h1>
             {/* <p className="co-m-pane__explanation">{this.props.explanation}</p> */}
             <Stepper steps={steps} activeStep={currentStep} />
+            <hr></hr>
             {/* stepper */}
-            {currentStep === 0 && <CardList classList={this.state.classList} />}
+            {currentStep === 0 && <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClassId={selectedClassId} />}
             {currentStep === 1 && (
+              <React.Fragment>
+                <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPalnId={selectedPlanId} />
+              </React.Fragment>
+            )}
+            {currentStep === 2 && (
               <React.Fragment>
                 <div className="form-group">
                   <label className="control-label" htmlFor="name">
-                    어플리케이션 이름
+                    서비스 인스턴스 이름
                   </label>
                   <div>
                     <input className="form-control" type="text" id="application-name" required />
@@ -135,23 +183,23 @@ const withServiceInstanceForm = SubForm =>
 
             {/* <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} > */}
             <div style={{ marginTop: '15px' }}>
-              {currentStep === 1 && (
+              {currentStep !== 0 && (
                 <button type="submit" className="btn btn-default" onClick={this.onClickBack}>
-                  Back
+                  이전
                 </button>
               )}
-              {currentStep === 0 && (
+              {currentStep !== 2 && (
                 <button className="btn btn-primary" onClick={this.onClickNext}>
-                  Next
+                  다음
                 </button>
               )}
-              {currentStep === 1 && (
+              {currentStep === 2 && (
                 <button type="submit" className="btn btn-primary" id="save-changes">
-                  Create
+                  생성
                 </button>
               )}
               <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
-                Cancel
+                취소
               </Link>
             </div>
             {/* </ButtonBar> */}
@@ -170,7 +218,7 @@ class BasicServiceInstanceForm extends React.Component {
       <React.Fragment>
         <div className="form-group">
           <label className="control-label" htmlFor="secret-type">
-            프로젝트
+            구현예정
           </label>
           <div>
             <select className="form-control" id="secret-type">
@@ -187,53 +235,6 @@ class BasicServiceInstanceForm extends React.Component {
 const serviceInstanceFormFactory = serviceInstanceType => {
   return serviceInstanceType === ServiceInstanceTypeAbstraction.form ? withServiceInstanceForm(BasicServiceInstanceForm) : withServiceInstanceForm(BasicServiceInstanceForm);
 };
-
-// class BasicAuthSubform extends React.Component {
-//   constructor (props) {
-//     super(props);
-//     this.state = {
-//       username: this.props.stringData.username || '',
-//       password: this.props.stringData.password || '',
-//     };
-//     this.changeData = this.changeData.bind(this);
-//   }
-//   changeData(event) {
-//     this.setState({
-//       [event.target.name]: event.target.value
-//     } as BasicAuthSubformState, () => this.props.onChange(this.state));
-//   }
-//   render() {
-//     return <React.Fragment>
-//       <div className="form-group">
-//         <label className="control-label" htmlFor="username">Username</label>
-//         <div>
-//           <input className="form-control"
-//             id="username"
-//             aria-describedby="username-help"
-//             type="text"
-//             name="username"
-//             onChange={this.changeData}
-//             value={this.state.username} />
-//           <p className="help-block" id="username-help">Optional username for Git authentication.</p>
-//         </div>
-//       </div>
-//       <div className="form-group">
-//         <label className="control-label" htmlFor="password">Password or Token</label>
-//         <div>
-//           <input className="form-control"
-//             id="password"
-//             aria-describedby="password-help"
-//             type="password"
-//             name="password"
-//             onChange={this.changeData}
-//             value={this.state.password}
-//             required />
-//           <p className="help-block" id="password-help">Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.</p>
-//         </div>
-//       </div>
-//     </React.Fragment>;
-//   }
-// }
 
 const ServiceInstanceLoadingWrapper = props => {
   const ServiceInstanceTypeAbstraction = determineServiceInstanceTypeAbstraction(_.get(props.obj.data, 'data'));
@@ -263,4 +264,47 @@ export const EditServiceInstance = ({ match: { params }, kind }) => (
   </Firehose>
 );
 
-/* eslint-enable no-undef */
+class ServicePlanList extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const { planList, onChangePlan } = this.props;
+    return (
+      <div className="row">
+        <div className="col-xs-2">
+          <strong>서비스 플랜</strong>
+        </div>
+        <div className="col-xs-10">
+          {planList.map(item => (
+            <ServicePlanItem item={item} key={item.uid} onChangePlan={onChangePlan} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
+
+const ServicePlanItem = ({ item, onChangePlan }) => {
+  const { name, description, bullets, amount, unit } = item;
+  const bulletList = bullets.map((bullet, index) => <li key={index}>bullet</li>);
+  const _onChangePlan = e => {
+    onChangePlan(e.target.value);
+  };
+  return (
+    <div>
+      <div style={{ display: 'inline-flex' }}>
+        <input type="radio" name="servicePlan" value={item.uid} onChange={_onChangePlan}></input>
+        <div>
+          <b>{name}</b>
+          <br></br>
+          <span>{description}</span>
+          {bullets.length > 0 && bulletList}
+          <span>{amount}</span>
+          <span> {unit}</span>
+        </div>
+      </div>
+      <hr></hr>
+    </div>
+  );
+};
