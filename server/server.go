@@ -41,6 +41,8 @@ const (
 	prometheusProxyEndpoint   = "/api/prometheus"
 	loginProxyEndpoint        = "/userlogin"
 	logoutProxyEndpoint       = "/userlogout"
+	refreshProxyEndpoint      = "/tokenrefresh"
+	meteringProxyEndpoint     = "/metering"
 	openapiProxyEndpoint      = "/openapi/"
 	// NOTE: login api 프록시를 위해 loginProxyEndpoint 추가 // 정동민
 )
@@ -68,6 +70,7 @@ type jsGlobals struct {
 	GoogleTagManagerID   string `json:"googleTagManagerID"`
 	LoadTestFactor       int    `json:"loadTestFactor"`
 	ReleaseModeFlag      bool   `json:"releaseModeFlag"`
+	HCConsoleVersion     string `json:"hcConsoleVersion"`
 }
 
 type Server struct {
@@ -88,6 +91,7 @@ type Server struct {
 	GoogleTagManagerID   string
 	LoadTestFactor       int
 	ReleaseModeFlag      bool
+	HCConsoleVersion     string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
 	KubectlAuther  *auth.Authenticator
@@ -98,6 +102,8 @@ type Server struct {
 	PrometheusProxyConfig *proxy.Config
 	LoginProxyConfig      *proxy.Config
 	LogoutProxyConfig     *proxy.Config
+	RefreshProxyConfig    *proxy.Config
+	MeteringProxyConfig   *proxy.Config
 	OpenapiProxyConfig    *proxy.Config
 	// NOTE: login api 프록시를 위해 LoginProxyConfig 추가 // 정동민
 }
@@ -221,6 +227,22 @@ func (s *Server) HTTPHandler() http.Handler {
 			logoutProxy.ServeHTTP(w, r)
 		})),
 	)
+	refreshProxyAPIPath := refreshProxyEndpoint
+	refreshProxy := proxy.NewProxy(s.RefreshProxyConfig)
+	handle(refreshProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, refreshProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			refreshProxy.ServeHTTP(w, r)
+		})),
+	)
+	meteringProxyAPIPath := meteringProxyEndpoint
+	meteringProxy := proxy.NewProxy(s.MeteringProxyConfig)
+	handle(meteringProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, meteringProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			meteringProxy.ServeHTTP(w, r)
+		})),
+	)
 	openapiProxyAPIPath := openapiProxyEndpoint
 	openapiProxy := proxy.NewProxy(s.OpenapiProxyConfig)
 	handle(openapiProxyAPIPath, http.StripPrefix(
@@ -321,6 +343,7 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		GoogleTagManagerID:   s.GoogleTagManagerID,
 		LoadTestFactor:       s.LoadTestFactor,
 		ReleaseModeFlag:      s.ReleaseModeFlag,
+		HCConsoleVersion:     s.HCConsoleVersion,
 	}
 
 	if s.prometheusProxyEnabled() {

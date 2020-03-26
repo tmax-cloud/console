@@ -90,11 +90,14 @@ func main() {
 	// NOTE: login endpoint 추가 // 정동민
 	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
 	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
+	fRefreshEndpoint := fs.String("refresh-endpoint", "", "URL of the refresh API server.")
+	fMeteringEndpoint := fs.String("metering-endpoint", "", "URL of the metering API server.")
 	fOpenapiEndpoint := fs.String("openapi-endpoint", "", "URL of the openapi API server.")
 	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
 	// NOTE: 여기까지
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
+	fHCConsoleVersion := fs.String("hc-console-version", "", "Version of HyperCloud Console.")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -175,6 +178,7 @@ func main() {
 		GoogleTagManagerID:   *fGoogleTagManagerID,
 		LoadTestFactor:       *fLoadTestFactor,
 		ReleaseModeFlag:      *fReleaseModeFlag,
+		HCConsoleVersion:     *fHCConsoleVersion,
 	}
 
 	if (*fKubectlClientID == "") != (*fKubectlClientSecret == "" && *fKubectlClientSecretFile == "") {
@@ -235,6 +239,8 @@ func main() {
 	// NOTE: loginEndpoint 추가 //정동민
 	var loginEndpoint *url.URL
 	var logoutEndpoint *url.URL
+	var refreshEndpoint *url.URL
+	var meteringEndpoint *url.URL
 	var openapiEndpoint *url.URL
 	var prometheusEndpoint *url.URL
 	var k8sEndpoint *url.URL
@@ -249,6 +255,16 @@ func main() {
 		srv.LogoutProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        logoutEndpoint,
+		}
+		refreshEndpoint = validateFlagIsURL("refresh-endpoint", *fRefreshEndpoint)
+		srv.RefreshProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        refreshEndpoint,
+		}
+		meteringEndpoint = validateFlagIsURL("metering-endpoint", *fMeteringEndpoint)
+		srv.MeteringProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        meteringEndpoint,
 		}
 		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
 		srv.PrometheusProxyConfig = &proxy.Config{
@@ -335,6 +351,22 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        logoutEndpoint,
+		}
+		refreshEndpoint = validateFlagIsURL("refresh-endpoint", *fRefreshEndpoint)
+		srv.RefreshProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        refreshEndpoint,
+		}
+		meteringEndpoint = validateFlagIsURL("metering-endpoint", *fMeteringEndpoint)
+		srv.MeteringProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        meteringEndpoint,
 		}
 		openapiEndpoint = validateFlagIsURL("openapi-endpoint", *fOpenapiEndpoint)
 		srv.OpenapiProxyConfig = &proxy.Config{

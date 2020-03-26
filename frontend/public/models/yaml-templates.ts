@@ -15,6 +15,29 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   metadata:
     name: example
 `)
+  .setIn([referenceForModel(k8sModels.ServiceInstanceModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ServiceInstance
+  metadata:
+    name: example-instance
+    namespace: hypercloud4-system
+  spec:
+    serviceClassName: example-template
+    servicePlanName: example-plan
+    parameters:
+      PARAM1: value1
+      PARAM2: value2
+`)
+  .setIn([referenceForModel(k8sModels.ServiceBindingModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ServiceBinding
+  metadata:
+    name: example-binding
+    namespace: hypercloud4-system
+  spec:
+    instanceRef:
+      name: example-instance
+`)
   .setIn([referenceForModel(k8sModels.UserModel), 'default'], `
   apiVersion: tmax.io/v1
   kind: User
@@ -420,16 +443,16 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: hello-openshift
+      app: hello-hypercloud
   replicas: 3
   template:
     metadata:
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.ClusterModel), 'default'], `
@@ -503,16 +526,16 @@ metadata:
   name: example
 spec:
   selector:
-    app: hello-openshift
+    app: hello-hypercloud
   replicas: 3
   template:
     metadata:
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.PersistentVolumeModel), 'default'], `
@@ -553,11 +576,11 @@ kind: Pod
 metadata:
   name: example
   labels:
-    app: hello-openshift
+    app: hello-hypercloud
 spec:
   containers:
-    - name: hello-openshift
-      image: openshift/hello-openshift
+    - name: hello-hypercloud
+      image: hypercloud/hello-hypercloud
       ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.IngressModel), 'default'], `
@@ -700,15 +723,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: hello-openshift
+      app: hello-hypercloud
   template:
     metadata:
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'], `
@@ -795,7 +818,7 @@ metadata:
 type: Opaque
 stringData:
   username: admin
-  password: opensesame
+  password: damin
 `).setIn([referenceForModel(k8sModels.ReplicaSetModel), 'default'], `
 apiVersion: apps/v1
 kind: ReplicaSet
@@ -805,16 +828,16 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: hello-openshift
+      app: hello-hypercloud
   template:
     metadata:
-      name: hello-openshift
+      name: hello-hypercloud
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.RouteModel), 'default'], `
@@ -837,16 +860,16 @@ metadata:
 spec:
   replicas: 2
   selector:
-    app: hello-openshift
+    app: hello-hypercloud
   template:
     metadata:
-      name: hello-openshift
+      name: hello-hypercloud
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.BuildConfigModel), 'docker-build'], `

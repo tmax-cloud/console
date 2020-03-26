@@ -8,7 +8,8 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary
+  ResourceSummary,
+  ScrollToTopOnMount
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -109,21 +110,52 @@ const ServiceBrokerRow = () =>
     );
   };
 
-const DetailsForKind = kind =>
-  function DetailsForKind_({ obj }) {
-    return (
-      <React.Fragment>
-        <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
-          <ResourceSummary
-            resource={obj}
-            podSelector="spec.podSelector"
-            showNodeSelector={false}
-          />
+const Details = ({ obj: servicebroker }) => {
+  return (
+    <React.Fragment>
+      <ScrollToTopOnMount />
+
+      <div className="co-m-pane__body">
+        <SectionHeading text="Pod Overview" />
+        <div className="row">
+          <div className="col-sm-6">
+            <ResourceSummary resource={servicebroker} />
+          </div>
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>Status</dt>
+              <dd>{ServiceBrokerPhase(servicebroker)}</dd>
+              <dt>Broker Url</dt>
+              <dd>{servicebroker.spec.url}</dd>
+              {/* {activeDeadlineSeconds && (
+                  <React.Fragment>
+                    <dt>Active Deadline</dt>
+                    <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                  </React.Fragment>
+                )} */}
+            </dl>
+          </div>
         </div>
-      </React.Fragment>
-    );
-  };
+      </div>
+    </React.Fragment>
+  );
+};
+
+// const DetailsForKind = kind =>
+//   function DetailsForKind_({ obj }) {
+//     return (
+//       <React.Fragment>
+//         <div className="co-m-pane__body">
+//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
+//           <ResourceSummary
+//             resource={obj}
+//             podSelector="spec.podSelector"
+//             showNodeSelector={false}
+//           />
+//         </div>
+//       </React.Fragment>
+//     );
+//   };
 
 export const ServiceBrokerList = props => {
   const { kinds } = props;
@@ -155,7 +187,8 @@ export const ServiceBrokersDetailsPage = props => (
     kind="ServiceBroker"
     menuActions={menuActions}
     pages={[
-      navFactory.details(DetailsForKind(props.kind)),
+      // navFactory.details(DetailsForKind(props.kind)),
+      navFactory.details(Details),
       navFactory.editYaml()
     ]}
   />
