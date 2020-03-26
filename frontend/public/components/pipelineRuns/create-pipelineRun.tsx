@@ -251,15 +251,25 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                     });
 
                 let pipelineRun = { ...this.state.pipelineRun };
-                let initResourceList = { name: resourceName, resourceRef: { name: resourceRefList[0].name } }
 
-                !pipelineRun.spec.resources.length && pipelineRun.spec.resources.push(initResourceList);
+
+
+                let initResourceList = {
+                    name: resourceName, resourceRef: {
+                        name: resourceRefList.filter(cur => {
+                            return (cur.type === resourceType)
+                        }
+                        )[0].name
+                    }
+                }
+
+                pipelineRun.spec.resources.length < resourceRefList.length && pipelineRun.spec.resources.push(initResourceList);
                 this.setState({ pipelineRun });
 
 
                 this.setState({
                     resourceRefList: resourceRefList
-                })
+                });
             }, err => {
                 this.setState({ error: err.message, inProgress: false })
                 this.setState({ resourceRefList: [] });
@@ -291,7 +301,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
 
         let paramDivs = paramList.map(cur => {
             return <Section label={cur.name} id={cur.name}>
-                <input className="form-control" type="text" placeholder="value" id={cur.name} onChange={this.onParamChanged} />
+                <input className="form-control" type="text" placeholder="value" id={cur.name} onChange={this.onParamChanged} required />
             </Section>
         });
 
