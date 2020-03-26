@@ -486,7 +486,7 @@ export class Nav extends React.Component {
 
             <NavSection text="이미지" icon="pficon pficon-image">
               <ResourceNSLink resource="registries" name="레지스트리" onClick={this.close} />
-              <ResourceNSLink resource="image" name="이미지" onClick={this.close} />
+              {/* <ResourceNSLink resource="image" name="이미지" onClick={this.close} /> */}
             </NavSection>
 
             <NavSection text="매니지먼트" icon="pficon pficon-services">
