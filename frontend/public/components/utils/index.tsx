@@ -57,6 +57,7 @@ export const enum NameValueEditorPair {
 
 export const enum StatusEditorPair {
   Status = '',
+  Reason = ''
 }
 
 export const enum PortEditorPair {

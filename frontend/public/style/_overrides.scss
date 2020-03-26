@@ -54,6 +54,10 @@
   .ace_content * {
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
 }
+
+  .ace_doc-tooltip sup {
+    color: red
+  }
 // override patternfly's extra thin font weight for headers
 h1,
 .h1,
@@ -339,4 +343,8 @@ tags-input .autocomplete .suggestion-item em {
   border-color: #FFFFFF !important;
   background-image: none !important;
   color: #FFFFFF !important;
+}
+ 
+.ReactVirtualized__Grid__innerScrollContainer > div {
+  position: static !important;
 }

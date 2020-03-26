@@ -42,7 +42,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             kind: "PipelineResource",
             metadata: {
                 name: '',
-                namespace: _.pick(props.obj, ['metadata', 'namespace'])
+                namespace: _.pick(props.obj, ['metadata', 'namespace']),
+                labels: {}
             },
             spec: {
                 type: 'git',
@@ -68,6 +69,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onUrlChanged = this.onUrlChanged.bind(this);
         this.onRevisionChanged = this.onRevisionChanged.bind(this);
+        this.onLabelChanged = this.onLabelChanged.bind(this);
         this.onTypeChanged = this.onTypeChanged.bind(this);
         this.save = this.save.bind(this);
     }
@@ -91,6 +93,27 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         secret.metadata.name = event.target.value;
         this.setState({ secret });
     }
+    onLabelChanged(event) {
+        let secret = { ...this.state.secret };
+        //console.log(event); 
+        secret.metadata.labels = {};
+        if (event.length !== 0) {
+            event.forEach(item => {
+                if (item.split('=')[1] === undefined) {
+                    document.getElementById('labelErrMsg').style.display = 'block';
+                    event.pop(item);
+                    return;
+                }
+                document.getElementById('labelErrMsg').style.display = 'none';
+                secret.metadata.labels[item.split('=')[0]] = item.split('=')[1];
+                // secret.metadata.lables.(item.split('=')[0]) = item.split('=')[1];
+            })
+        }
+        // console.log(secret.metadata.labels);
+        // secret.metadata.labels = event;
+        // console.log(secret);
+        this.setState({ secret });
+    }
     onTypeChanged(event) {
         this.setState({
             selectedPipelineResourceType: event.target.value,
@@ -107,7 +130,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         const newSecret = _.assign({}, this.state.secret);
         const ko = kindObj(kind);
         // console.log(_.assign({}, this.state.secret));
-        
+        // return;
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
@@ -144,7 +167,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                                 value={this.state.secret.metadata.name}
                                 id="template-instance-name"
                                 required />
-                            <p className="help-block" id="secret-name-help">Unique name of the new service Instance.</p>
+                            <p className="help-block" id="secret-name-help">Unique name of the new PipelineResource.</p>
                         </div>
                     </div>
                     <div className="form-group">
@@ -161,7 +184,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 { (this.state.selectedPipelineResourceType === 'git') && <div>
                 <div className="form-group col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                revision
+                                Revision
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 <input className="form-control" type="text" value={this.state.secret.spec.params[1].value} placeholder="master" onChange={this.onRevisionChanged}/>
@@ -169,7 +192,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                         <div className="form-group col-md-12 col-xs-12">
                         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                url
+                                URL
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 <input required className="form-control" type="text" value={this.state.secret.spec.params[0].value} placeholder="" onChange={this.onUrlChanged}/>
@@ -180,7 +203,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 { (this.state.selectedPipelineResourceType !== 'git') && <div>
                 <div className="form-group col-md-12 col-xs-12">
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                url
+                                URL
                             </div>
                             <div className="col-md-2 col-xs-2 pairs-list__name-field">
                                 <input required className="form-control" type="text" value={this.state.secret.spec.params[0].value} placeholder="value" onChange={this.onUrlChanged}/>
@@ -209,15 +232,17 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
           </div> 
                 </React.Fragment>*/}
 
-                {/* 미리: 레이블은 추후에 구현할 것임 
                 <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Label</label>
+                            <label className="control-label" htmlFor="username">Labels</label>
                             <div>
-                                <SelectorInput labelClassName="co-text-namespace" tags={[]} />
+                                <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
                             </div>
                         </div>
-                </React.Fragment> */}
+                </React.Fragment>
+                <div id="labelErrMsg" style = {{ display: 'none', color: 'red' }}>
+                    <p>Lables must be 'key=value' form.</p>
+                </div>
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                     <div style={{marginTop: '10px'}}>
                     <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
