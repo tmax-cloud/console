@@ -25,8 +25,7 @@ export class PortEditor extends React.Component {
   _change(e, i, type) {
     const { updateParentData, nameValueId } = this.props;
     const portPairs = _.cloneDeep(this.props.portPairs);
-
-    portPairs[i][type === PortEditorPair.Name ? PortEditorPair.Name : PortEditorPair.Value] = e.target.value;
+    portPairs[i][type] = e.target.value;
     updateParentData({ portPairs }, nameValueId);
   }
   render() {
