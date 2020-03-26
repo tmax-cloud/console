@@ -50,7 +50,8 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
             kind: 'PipelineRun',
             metadata: {
                 name: '',
-                namespace: ''
+                namespace: '',
+                labels: {}
             },
             spec: {
                 params: [],
@@ -83,6 +84,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         this.onResourceChanged = this.onResourceChanged.bind(this);
         this.onPipelineChange = this.onPipelineChange.bind(this);
         this.getPipelineResourceList = this.getPipelineResourceList.bind(this);
+        this.onLabelChanged = this.onLabelChanged.bind(this);
         this.save = this.save.bind(this);
     }
 
@@ -145,6 +147,24 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         })
         this.setState({ pipelineRun });
         console.log(this.state.pipelineRun);
+    }
+
+    onLabelChanged(event) {
+        let pipelineRun = { ...this.state.pipelineRun };
+        //console.log(event); 
+        pipelineRun.metadata.labels = {};
+        if (event.length !== 0) {
+            event.forEach(item => {
+                if (item.split('=')[1] === undefined) {
+                    document.getElementById('labelErrMsg').style.display = 'block';
+                    event.pop(item);
+                    return;
+                }
+                document.getElementById('labelErrMsg').style.display = 'none';
+                pipelineRun.metadata.labels[item.split('=')[0]] = item.split('=')[1];
+            })
+        }
+        this.setState({ pipelineRun });
     }
 
     getPipelineList() {
@@ -329,10 +349,13 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Label</label>
                             <div>
-                                <SelectorInput labelClassName="co-text-namespace" tags={[]} />
+                                <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
                             </div>
                         </div>
                     </React.Fragment>
+                    <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                        <p>Lables must be 'key=value' form.</p>
+                    </div>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
                         <Link to={formatNamespacedRouteForResource('pipelineruns')} className="btn btn-default" id="cancel">Cancel</Link>
