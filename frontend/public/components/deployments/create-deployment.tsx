@@ -227,14 +227,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         // command 데이터 가공 
         this.state.runCommands.forEach(arr => {
             let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].command.push(arr);
+            deployment.spec.template.spec.containers[0].command = deployment.spec.template.spec.containers[0].command.concat(arr);
             this.setState({ deployment });
         })
 
         // command args 데이터 가공 
         this.state.runCommandArguments.forEach(arr => {
             let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].args.push(arr);
+            deployment.spec.template.spec.containers[0].args = deployment.spec.template.spec.containers[0].args.concat(arr);
             this.setState({ deployment });
         })
 
@@ -303,7 +303,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         const ko = kindObj(kind);
 
         console.log(newDeployment, this.state);
-
         (this.props.isCreate
             ? k8sCreate(ko, newDeployment)
             : k8sUpdate(ko, newDeployment, metadata.namespace, newDeployment.metadata.name)
