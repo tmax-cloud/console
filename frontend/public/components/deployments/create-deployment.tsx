@@ -11,7 +11,8 @@ import { VolumeEditor } from '../utils/volume-editor';
 import { BasicPortEditor } from '../utils/basic-port-editor';
 import { KeyValueEditor } from '../utils/key-value-editor';
 import { ValueEditor } from '../utils/value-editor';
-
+import { coFetch } from '../../co-fetch';
+import * as k8sModels from '../../models';
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -72,11 +73,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             secretTypeAbstraction: this.props.secretTypeAbstraction,
             deployment: deployment,
             inProgress: false,
-            templateList: [],
-            paramList: [],
             editParamList: true,
-            selectedTemplate: '',
-            restartPolicyTypeList: ['Always', 'OnFailure', 'Never'],
+            selectedPVC: '',
             volumeOptions: [],
             volumes: [['', '', '', 'false']],
             pvcList: [],
@@ -87,7 +85,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             runCommandArguments: [['']],
             runCommands: [['']],
         };
-
+        this.getPVCList = this.getPVCList.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onNameFocusOut = this.onNameFocusOut.bind(this);
         this.onImageChanged = this.onImageChanged.bind(this);
@@ -103,6 +101,39 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this._updateLimits = this._updateLimits.bind(this);
         this._updatePorts = this._updatePorts.bind(this);
         this._updateVolumes = this._updateVolumes.bind(this);
+    }
+    getPVCList() {
+        const namespace = document.location.href.split('ns/')[1].split('/')[0];
+        coFetch('/api/kubernetes/api/' + k8sModels.PersistentVolumeClaimModel.apiVersion + '/namespaces/' + namespace + '/persistentvolumeclaims')
+            .then(res => res.json())
+            .then((myJson) => {
+                let pvcList = myJson.items.map(function (pvc) {
+                    return pvc.metadata.name
+                });
+                if (pvcList.length > 0) {
+                    this.setState({
+                        volumeOptions: pvcList,
+                        selectedPVC: pvcList[0],
+                    });
+                }
+                else {
+                    this.setState({
+                        volumeOptions: pvcList,
+                        selectedPVC: null,
+                    });
+                }
+            },
+                (error) => {
+                    this.setState({
+                        error
+                    });
+                }
+            )
+            .catch(function (myJson) {
+                this.state.volumeOptions = [];
+            });
+
+        console.log(this.state)
     }
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
@@ -219,14 +250,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
     componentDidMount() {
+        this.getPVCList();
     }
     render() {
+        const { volumeOptions } = this.state;
 
-        const { restartPolicyTypeList, volumeOptions } = this.state;
-        let options = restartPolicyTypeList.map(function (type_) {
-            return <option value={type_}>{type_}</option>;
+        let pvcList = volumeOptions.map(function (pvc) {
+            return <option value={pvc}>{pvc}</option>;
         });
-
         return <div className="co-m-pane__body">
             < Helmet >
                 <title>Create Deployment</title>
@@ -310,7 +341,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Run command arguments</label>
                             <div>
-                                <ValueEditor valueString="Run Command Arguments" values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments}/>
+                                <ValueEditor valueString="Run Command Arguments" values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -322,7 +353,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Environment variables</label>
                             <div>
-                                <KeyValueEditor keyValuePairs={this.state.env} updateParentData={this._updateEnv}/>
+                                <KeyValueEditor keyValuePairs={this.state.env} updateParentData={this._updateEnv} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -334,7 +365,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Port</label>
                             <div>
-                            <BasicPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts}/>
+                                <BasicPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -346,7 +377,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Volumes</label>
                             <div>
-                            <VolumeEditor options={volumeOptions} volumePairs={this.state.volumes} updateParentData={this._updateVolumes}/>
+                                <VolumeEditor options={pvcList} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -358,7 +389,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Resource(Request)</label>
                             <div>
-                            <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
+                                <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -370,7 +401,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Resource(Limits)</label>
                             <div>
-                            <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits}/>
+                                <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -383,7 +414,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             <label className="control-label" htmlFor="username">Restart Policy</label>
                             <div>
                                 <select onChange={this.onRestartPolicyChanged} className="form-control" id="template">
-                                    {options}
+                                    <option value="Always">Always</option>
+                                    <option value="OnFailure">OnFailure</option>
+                                    <option value="Never">Never</option>
                                 </select>
                             </div>
                         </div>
@@ -455,11 +488,8 @@ export type BaseEditSecretState_ = {
     deployment: K8sResourceKind,
     inProgress: boolean,
     error?: any,
-    templateList: Array<any>,
-    paramList: Array<any>,
     editParamList: boolean,
-    selectedTemplate: string,
-    restartPolicyTypeList: Array<any>,
+    selectedPVC: string,
     volumes: Array<any>,
     pvcList: Array<any>,
     ports: Array<any>,
