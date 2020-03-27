@@ -49,10 +49,16 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     spec: {
                         containers: [{
                             name: 'hello-hypercloud',
-                            image: 'hypercloud/hello-hypercloud'
+                            image: 'hypercloud/hello-hypercloud',
+                            env: [],
+                            resources: {
+                                limits: [],
+                                requests: []
+                            },
+                            command: [],
+                            args: [],
                         }],
                         restartPolicy: 'Always',
-                        env: []
                     }
                 }
             }
@@ -213,6 +219,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         const { kind, metadata } = this.state.deployment;
         this.setState({ inProgress: true });
 
+        // command 데이터 가공 
+        this.state.runCommands.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].command.push(arr);
+            this.setState({ deployment });
+        })
+
+        // command args 데이터 가공 
+        this.state.runCommandArguments.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].args.push(arr);
+            this.setState({ deployment });
+        })
+
         // env 데이터 가공
         this.state.env.forEach(arr => {
             let obj = {
@@ -220,7 +240,21 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 value: arr[1]
             };
             let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.env.push(obj);
+            deployment.spec.template.spec.containers[0].env.push(obj);
+            this.setState({ deployment });
+        })
+
+        // requests 데이터 가공
+        this.state.requests.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].resources.requests[arr[0]] = arr[1];
+            this.setState({ deployment });
+        })
+
+        // limits 데이터 가공 
+        this.state.limits.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].resources.limits[arr[0]] = arr[1];
             this.setState({ deployment });
         })
 
