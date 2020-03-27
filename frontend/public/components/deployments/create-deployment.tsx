@@ -74,7 +74,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             editParamList: true,
             selectedPVC: '',
             volumeOptions: [],
-            volumes: [['', '', '', 'false']],
+            volumes: [['', '', '', false]],
             pvcList: [],
             ports: [['', '', 'TCP']],
             env: [['', '']],
@@ -267,10 +267,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 name: arr[0],
                 mountPath: arr[1]
             };
+            if (arr[2] = '') {
+                arr[2] = this.state.volumeOptions[0];
+            }
             let volumes = {
                 name: arr[0],
-                claimName: arr[2],
-                readOnly: arr[3]
+                persistentVolumeClaim: {
+                    claimName: arr[2],
+                    readOnly: arr[3]
+                }
             };
             let deployment = { ...this.state.deployment };
             deployment.spec.template.spec.volumes.push(volumes);
@@ -280,8 +285,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         const newDeployment = _.assign({}, this.state.deployment);
         const ko = kindObj(kind);
 
-        console.log(this.state);
-        return;
+        console.log(newDeployment, this.state);
+
         (this.props.isCreate
             ? k8sCreate(ko, newDeployment)
             : k8sUpdate(ko, newDeployment, metadata.namespace, newDeployment.metadata.name)
