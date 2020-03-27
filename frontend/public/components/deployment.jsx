@@ -112,8 +112,8 @@ const Row = props => <WorkloadListRow {...props} kind="Deployment" actions={menu
 const DeploymentsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
 const DeploymentsPage = props => {
   const createItems = {
-    form: 'Deployment (폼 에디터)',
-    yaml: 'Deployment (YAML 에디터)'
+    form: 'Deployment (Form Editor)',
+    yaml: 'Deployment (YAML Editor)'
   };
 
   const createProps = {

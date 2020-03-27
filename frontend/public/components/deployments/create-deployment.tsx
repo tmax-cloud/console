@@ -6,55 +6,63 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-
+import { AsyncComponent } from '../utils/async';
+import { VolumeEditor } from '../utils/volume-editor';
+import { BasicPortEditor } from '../utils/basic-port-editor';
+import { KeyValueEditor } from '../utils/key-value-editor';
+import { ValueEditor } from '../utils/value-editor';
+import { coFetch } from '../../co-fetch';
+import * as k8sModels from '../../models';
 enum CreateType {
     generic = 'generic',
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 디플로이먼트 생성',
+    [CreateType.form]: 'Create Deployment using Form Editor',
 };
 
 const determineCreateType = (data) => {
     return CreateType.form;
 };
 
-const Section = ({ label, children, id }) => <div className="row">
-    <div className="col-xs-2">
-        <div>{label}</div>
-    </div>
-    <div className="col-xs-2" id={id}>
-        {children}
-    </div>
-</div>;
-
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
     constructor(props) {
         super(props);
-        const existingTemplateInstance = _.pick(props.obj, ['metadata', 'type']);
-        const deployment = _.defaultsDeep({}, props.fixed, existingTemplateInstance, {
+        const existingDeployment = _.pick(props.obj, ['metadata', 'type']);
+        const deployment = _.defaultsDeep({}, props.fixed, existingDeployment, {
             apiVersion: 'apps/v1',
             kind: "Deployment",
             metadata: {
                 name: '',
-                labels: { app: 'test' }
+                labels: {}
             },
             spec: {
                 replicas: 1,
                 selector: {
-                    matchLabels: { app: 'test' }
+                    matchLabels: { app: '' }
                 },
                 template: {
                     metadata: {
-                        labels: { app: 'test' }
+                        labels: { app: '' }
                     },
                     spec: {
+                        restartPolicy: 'Always',
+                        volumes: [],
                         containers: [{
                             name: 'hello-hypercloud',
-                            image: 'hypercloud/hello-hypercloud'
+                            image: 'hypercloud/hello-hypercloud',
+                            imagePullPolicy: '',
+                            env: [],
+                            volumeMounts: [],
+                            resources: {
+                                limits: {},
+                                requests: {}
+                            },
+                            command: [],
+                            args: [],
+                            ports: [],
                         }],
-                        restartPolicy: 'Always'
                     }
                 }
             }
@@ -64,23 +72,120 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             secretTypeAbstraction: this.props.secretTypeAbstraction,
             deployment: deployment,
             inProgress: false,
-            templateList: [],
-            paramList: [],
             editParamList: true,
-            selectedTemplate: ''
+            selectedPVC: '',
+            volumeOptions: [],
+            volumes: [['', '', '', false]],
+            pvcList: [],
+            ports: [['', '', 'TCP']],
+            env: [['', '']],
+            requests: [['', '']],
+            limits: [['', '']],
+            runCommandArguments: [['']],
+            runCommands: [['']],
         };
-
+        this.getPVCList = this.getPVCList.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
+        this.onNameFocusOut = this.onNameFocusOut.bind(this);
         this.onImageChanged = this.onImageChanged.bind(this);
         this.onImagePullPolicyChanged = this.onImagePullPolicyChanged.bind(this);
         this.onReplicasChanged = this.onReplicasChanged.bind(this);
         this.onLabelChanged = this.onLabelChanged.bind(this);
         this.save = this.save.bind(this);
+        this.onRestartPolicyChanged = this.onRestartPolicyChanged.bind(this);
+        this._updateRunCommands = this._updateRunCommands.bind(this);
+        this._updateRunCommandArguments = this._updateRunCommandArguments.bind(this);
+        this._updateEnv = this._updateEnv.bind(this);
+        this._updateRequests = this._updateRequests.bind(this);
+        this._updateLimits = this._updateLimits.bind(this);
+        this._updatePorts = this._updatePorts.bind(this);
+        this._updateVolumes = this._updateVolumes.bind(this);
+    }
+    getPVCList() {
+        const namespace = document.location.href.split('ns/')[1].split('/')[0];
+        coFetch('/api/kubernetes/api/' + k8sModels.PersistentVolumeClaimModel.apiVersion + '/namespaces/' + namespace + '/persistentvolumeclaims')
+            .then(res => res.json())
+            .then((myJson) => {
+                let pvcList = myJson.items.map(function (pvc) {
+                    return pvc.metadata.name
+                });
+                if (pvcList.length > 0) {
+                    this.setState({
+                        volumeOptions: pvcList,
+                        selectedPVC: pvcList[0],
+                    });
+                }
+                else {
+                    this.setState({
+                        volumeOptions: pvcList,
+                        selectedPVC: null,
+                    });
+                }
+            },
+                (error) => {
+                    this.setState({
+                        error
+                    });
+                }
+            )
+            .catch(function (myJson) {
+                this.state.volumeOptions = [];
+            });
+
+        console.log(this.state)
     }
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
         deployment.metadata.name = event.target.value;
-        deployment.metadata.labels.app = event.target.value;
+        // deployment.metadata.labels.app = event.target.value;
+        this.setState({ deployment });
+    }
+    onNameFocusOut(event) {
+        // name 변경 시 
+        let deployment = { ...this.state.deployment };
+        deployment.spec.selector.matchLabels.app = event.target.value;
+        deployment.spec.template.metadata.labels.app = event.target.value;
+        this.setState({ deployment });
+    }
+    _updateRunCommands(commands) {
+        this.setState({
+            runCommands: commands.values
+        });
+    }
+    _updateRunCommandArguments(args) {
+        this.setState({
+            runCommandArguments: args.values
+        });
+    }
+    _updateEnv(envs) {
+        this.setState({
+            env: envs.keyValuePairs
+        });
+    }
+    _updateRequests(reqs) {
+        this.setState({
+            requests: reqs.keyValuePairs
+        });
+    }
+    _updateLimits(lims) {
+        this.setState({
+            limits: lims.keyValuePairs
+        });
+    }
+    _updatePorts(port) {
+        this.setState({
+            ports: port.portPairs
+        });
+    }
+    _updateVolumes(volume) {
+        this.setState({
+            volumes: volume.volumePairs
+        });
+        console.log(this.state.volumes)
+    }
+    onRestartPolicyChanged(event) {
+        let deployment = { ...this.state.deployment };
+        deployment.spec.template.spec.restartPolicy = event.target.value;
         this.setState({ deployment });
     }
     onImageChanged(event) {
@@ -100,7 +205,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     onLabelChanged(event) {
         let deployment = { ...this.state.deployment };
-        deployment.metadata.labels = { app: '' };
+        deployment.metadata.labels = {};
         if (event.length !== 0) {
             event.forEach(item => {
                 if (item.split('=')[1] === undefined) {
@@ -109,30 +214,112 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     return;
                 }
                 document.getElementById('labelErrMsg').style.display = 'none';
-                deployment.spec.selector.matchLabels.push(item.split('=')[1]);
+                deployment.metadata.labels[item.split('=')[0]] = item.split('=')[1];
             })
         }
         this.setState({ deployment });
     }
-
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.deployment;
         this.setState({ inProgress: true });
 
+        // command 데이터 가공 
+        this.state.runCommands.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].command = deployment.spec.template.spec.containers[0].command.concat(arr);
+            this.setState({ deployment });
+        })
+
+        // command args 데이터 가공 
+        this.state.runCommandArguments.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].args = deployment.spec.template.spec.containers[0].args.concat(arr);
+            this.setState({ deployment });
+        })
+
+        // env 데이터 가공
+        this.state.env.forEach(arr => {
+            let obj = {
+                name: arr[0],
+                value: arr[1]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].env.push(obj);
+            this.setState({ deployment });
+        })
+
+        // requests 데이터 가공
+        this.state.requests.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].resources.requests[arr[0]] = arr[1];
+            this.setState({ deployment });
+        })
+
+        // limits 데이터 가공 
+        this.state.limits.forEach(arr => {
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].resources.limits[arr[0]] = arr[1];
+            this.setState({ deployment });
+        })
+
+        // ports 데이터 가공
+        this.state.ports.forEach(arr => {
+            let obj = {
+                name: arr[0],
+                containerPort: Number(arr[1]),
+                protocol: arr[2]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].ports.push(obj);
+            this.setState({ deployment });
+        })
+
         const newSecret = _.assign({}, this.state.deployment);
+
+        // volumes 데이터 가공
+        this.state.volumes.forEach(arr => {
+            let volumeMounts = {
+                name: arr[0],
+                mountPath: arr[1]
+            };
+            if (arr[2] === '') {
+                arr[2] = this.state.volumeOptions[0];
+            }
+            let volumes = {
+                name: arr[0],
+                persistentVolumeClaim: {
+                    claimName: arr[2],
+                    readOnly: arr[3]
+                }
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.volumes.push(volumes);
+            deployment.spec.template.spec.containers[0].volumeMounts.push(volumeMounts);
+            this.setState({ deployment });
+        })
+        const newDeployment = _.assign({}, this.state.deployment);
+
         const ko = kindObj(kind);
+
+        console.log(newDeployment, this.state);
         (this.props.isCreate
-            ? k8sCreate(ko, newSecret)
-            : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
+            ? k8sCreate(ko, newDeployment)
+            : k8sUpdate(ko, newDeployment, metadata.namespace, newDeployment.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
             history.push('/k8s/ns/' + metadata.namespace + '/deployments');
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
     componentDidMount() {
+        this.getPVCList();
     }
     render() {
+        const { volumeOptions } = this.state;
+
+        let pvcList = volumeOptions.map(function (pvc) {
+            return <option value={pvc}>{pvc}</option>;
+        });
         return <div className="co-m-pane__body">
             < Helmet >
                 <title>Create Deployment</title>
@@ -147,6 +334,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             <input className="form-control"
                                 type="text"
                                 onChange={this.onNameChanged}
+                                onBlur={this.onNameFocusOut}
                                 value={this.state.deployment.metadata.name}
                                 id="deplaoyment-name"
                                 required />
@@ -182,7 +370,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                                 required />
                         </div>
                     </div>
-
                 </fieldset>
                 <div className="form-group">
                     <React.Fragment>
@@ -198,9 +385,109 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     </div>
                 </div>
 
+                {/* Run command */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Run command</label>
+                            <div>
+                                <ValueEditor valueString="Run Command" values={this.state.runCommands} updateParentData={this._updateRunCommands} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Run command arguments */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Run command arguments</label>
+                            <div>
+                                <ValueEditor valueString="Run Command Arguments" values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Environment variables */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Environment variables</label>
+                            <div>
+                                <KeyValueEditor keyValuePairs={this.state.env} updateParentData={this._updateEnv} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Port */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Port</label>
+                            <div>
+                                <BasicPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Volumes */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Volumes</label>
+                            <div>
+                                <VolumeEditor options={pvcList} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Resource(Request) */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Resource(Request)</label>
+                            <div>
+                                <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Resource(Limits) */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Resource(Limits)</label>
+                            <div>
+                                <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
+                {/* Restart Policy */}
+                <div className="form-group">
+                    <React.Fragment>
+                        <div className="form-group">
+                            <label className="control-label" htmlFor="username">Restart Policy</label>
+                            <div>
+                                <select onChange={this.onRestartPolicyChanged} className="form-control" id="template">
+                                    <option value="Always">Always</option>
+                                    <option value="OnFailure">OnFailure</option>
+                                    <option value="Never">Never</option>
+                                </select>
+                            </div>
+                        </div>
+                    </React.Fragment>
+                </div>
+
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                     <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-                    <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
+                    <Link to={formatNamespacedRouteForResource('deployments')} className="btn btn-default" id="cancel">Cancel</Link>
                 </ButtonBar>
             </form>
         </div >;
@@ -263,10 +550,17 @@ export type BaseEditSecretState_ = {
     deployment: K8sResourceKind,
     inProgress: boolean,
     error?: any,
-    templateList: Array<any>,
-    paramList: Array<any>,
     editParamList: boolean,
-    selectedTemplate: string
+    selectedPVC: string,
+    volumes: Array<any>,
+    pvcList: Array<any>,
+    ports: Array<any>,
+    env: Array<any>,
+    requests: Array<any>,
+    limits: Array<any>,
+    runCommandArguments: Array<any>,
+    runCommands: Array<any>,
+    volumeOptions: Array<any>,
 };
 
 export type BaseEditSecretProps_ = {

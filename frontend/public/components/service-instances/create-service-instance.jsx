@@ -6,10 +6,12 @@ import { Link } from 'react-router-dom';
 import Stepper from 'react-stepper-horizontal';
 import { CardList } from '../card';
 
-import { Firehose, StatusBox } from '../utils';
+import { ButtonBar, Firehose, StatusBox, kindObj, history, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
+
+import { k8sCreate } from '../../module/k8s';
 // import { element } from 'prop-types';
 
 const ServiceInstanceTypeAbstraction = {
@@ -27,9 +29,6 @@ const ServiceInstanceTypeAbstraction = {
 //   tls = 'kubernetes.io/tls',
 // }
 
-// TODO: 프로젝트, 이미지 버전 list - selectbox / namespace 생성 - 이름, 설명
-// 어플리케이션 이름, Git 레파지토리 url, 메모리 한도, 네임스페이스 이름, DB 서비스 이름, ...등등
-
 // export type BasicAuthSubformState = {
 //   username: string,
 //   password: string,
@@ -43,12 +42,23 @@ const determineServiceInstanceTypeAbstraction = data => {
   return 'form';
 };
 
+const Section = ({ label, children }) => (
+  <div className="row">
+    <div className="col-xs-2">
+      <strong>{label}</strong>
+    </div>
+    <div className="col-xs-10">{children}</div>
+  </div>
+);
+
 // withServiceInstanceForm returns SubForm which is a Higher Order Component for all the types of secret forms.
 const withServiceInstanceForm = SubForm =>
   class ServiceInstanceFormComponent extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
+        inProgress: false,
+        error: null,
         steps: [
           {
             title: '서비스 클래스 선택',
@@ -61,19 +71,50 @@ const withServiceInstanceForm = SubForm =>
           },
         ],
         currentStep: 0,
+        serviceInstance: {
+          apiVersion: 'servicecatalog.k8s.io/v1beta1',
+          kind: 'ServiceInstance',
+          metadata: {
+            name: '',
+            namespace: props.namespace,
+            labels: {},
+          },
+          spec: {
+            serviceClassName: '',
+            servicePlanName: '',
+            parameters: {},
+          },
+        },
         classList: [],
-        selectedClassId: null,
+        selectedClass: null,
         planList: [],
-        selectedPlanId: null,
+        selectedPlan: null,
+        paramList: [],
       };
+      // stepper
       this.onClickNext = this.onClickNext.bind(this);
       this.onClickBack = this.onClickBack.bind(this);
+
+      // step1
+      this.getClassList = this.getClassList.bind(this);
+
       this.onChangeClass = this.onChangeClass.bind(this);
+
+      // step2 서비스 플랜 선택
       this.onChangePlan = this.onChangePlan.bind(this);
+      this.getPlanList = this.getPlanList.bind(this);
+
+      // step3
+      this.onNameChanged = this.onNameChanged.bind(this);
+      this.getParams = this.getParams.bind(this);
+      this.onParamValueChanged = this.onParamValueChanged.bind(this);
+      this.onLabelChanged = this.onLabelChanged.bind(this);
+
+      this.save = this.save.bind(this);
     }
     getClassList() {
-      // coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
-      coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/serviceclasses`)
+      coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
+        // coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/serviceclasses`)
         .then(res => res.json())
         .then(res => {
           const classListData = res.items.map(item => {
@@ -90,21 +131,20 @@ const withServiceInstanceForm = SubForm =>
           this.setState({ classList: classListData });
         })
         .catch(error => {
-          // this.state.templateList = [];
           console.log('error', error);
         });
     }
     getPlanList() {
-      // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
-      coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
+      coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/namespaces/${this.props.namespace}/serviceplans`)
+        // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
         .then(res => res.json())
         .then(res => {
-          const planListData = res.items.map(item => {
+          const planListData = _.filter(res.items, ['spec.serviceClassRef.name', this.state.selectedClass.name]).map(item => {
             return {
               name: _.get(item, 'metadata.name'),
               uid: _.get(item, 'metadata.uid'),
               description: _.get(item, 'spec.description') || '',
-              bullets: _.get(item, 'spec.externalMetadata.bullets') || '',
+              bullets: _.get(item, 'spec.externalMetadata.bullets') || [],
               amount: _.get(item, 'spec.externalMetadata.costs.amount') || '',
               unit: _.get(item, 'spec.externalMetadata.costs.unit') || '$',
               ...item,
@@ -113,88 +153,203 @@ const withServiceInstanceForm = SubForm =>
           this.setState({ planList: planListData });
         })
         .catch(error => {
-          // this.state.templateList = [];
           console.log('error', error);
         });
     }
-    onClickBack() {
+    getParams() {
+      const selectedClass = this.state.selectedClass;
+      if (!selectedClass) {
+        return;
+      }
+      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${this.props.namespace}/templates/${selectedClass.name}`)
+        .then(res => res.json())
+        .then(res => {
+          let stringobj = JSON.stringify(res.objects);
+          let param = [];
+          for (let i = 0; i < stringobj.length; i++) {
+            let word = '';
+            if (stringobj[i] === '$') {
+              let n = i + 2;
+              if (stringobj[n - 1] === '{') {
+                while (stringobj[n] !== '}') {
+                  word = word + stringobj[n];
+                  n++;
+                }
+                param.push(word);
+              }
+            }
+          }
+          let paramList = Array.from(new Set(param));
+          if (paramList.length) {
+            let parameters = [];
+            paramList.forEach(key => {
+              let newObj = { name: key, value: '' };
+              parameters.push(newObj);
+            });
+          }
+          this.setState({
+            paramList: paramList,
+          });
+        });
+    }
+    onClickBack(e) {
+      e.preventDefault();
       const { currentStep } = this.state;
       this.setState({
         currentStep: currentStep - 1,
       });
     }
-    onClickNext() {
-      const { currentStep } = this.state;
-      this.setState({
-        currentStep: currentStep + 1,
+    onClickNext(e) {
+      e.preventDefault();
+      this.setState(prevState => {
+        return {
+          currentStep: prevState.currentStep + 1,
+        };
       });
     }
-    onChangeClass(id) {
+    onChangeClass(selectedClass) {
+      this.setState(
+        () => {
+          return { selectedClass: _.cloneDeep(selectedClass) };
+        },
+        () => {
+          this.getPlanList();
+          this.getParams();
+        },
+      );
+    }
+    onChangePlan(selectedPlan) {
       this.setState({
-        selectedClassId: id,
+        selectedPlan: _.cloneDeep(selectedPlan),
       });
     }
-    onChangePlan(id) {
+    onNameChanged(e) {
+      const serviceInstance = _.cloneDeep(this.state.serviceInstance);
+      serviceInstance.metadata.name = e.target.value;
+      this.setState({ serviceInstance });
+    }
+    onParamValueChanged(e) {
+      let key = event.target.id;
+      const serviceInstance = _.cloneDeep(this.state.serviceInstance);
+      _.set(serviceInstance, `spec.parameters.${key}`, e.target.value);
       this.setState({
-        selectedPlanId: id,
+        serviceInstance: serviceInstance,
       });
+    }
+    onLabelChanged(event) {
+      const serviceInstance = _.cloneDeep(this.state.serviceInstance);
+      serviceInstance.metadata.labels = {};
+      if (event.length !== 0) {
+        event.forEach(item => {
+          if (item.split('=')[1] === undefined) {
+            document.getElementById('labelErrMsg').style.display = 'block';
+            event.pop(item);
+            return;
+          }
+          document.getElementById('labelErrMsg').style.display = 'none';
+          serviceInstance.metadata.labels[item.split('=')[0]] = item.split('=')[1];
+        });
+      }
+      this.setState({ serviceInstance });
     }
     save(e) {
       e.preventDefault();
+      const { kind } = this.state.serviceInstance;
+      this.setState({ inProgress: true });
+      const newServiceInstance = _.cloneDeep(this.state.serviceInstance);
+      newServiceInstance.spec.serviceClassName = this.state.selectedClass.name;
+      newServiceInstance.spec.servicePlanName = this.state.selectedPlan.name;
+      const ko = kindObj(kind);
+
+      k8sCreate(ko, newServiceInstance).then(
+        () => {
+          this.setState({ inProgress: false });
+          history.push(formatNamespacedRouteForResource('serviceinstances'));
+        },
+        err => this.setState({ error: err.message, inProgress: false }),
+      );
     }
     componentDidMount() {
       this.getClassList();
-      this.getPlanList();
+      // this.getPlanList();
+      // this.getParams();
     }
     render() {
       const title = '서비스 인스턴스 생성';
-      const { steps, currentStep, selectedClassId, selectedPlanId } = this.state;
+      const { steps, currentStep, selectedClass, selectedPlan, paramList } = this.state;
       return (
         <div className="co-m-pane__body">
           <Helmet>
             <title>{title}</title>
           </Helmet>
-          <form className="co-m-pane__body-group co-create-service-instance-form" onSubmit={this.save}>
+          {/* <form className="co-m-pane__body-group co-create-service-instance-form" onSubmit={() => this.save}> */}
+          <form className="co-m-pane__body-group co-create-service-instance-form">
             <h1 className="co-m-pane__heading">{title}</h1>
             {/* <p className="co-m-pane__explanation">{this.props.explanation}</p> */}
             <Stepper steps={steps} activeStep={currentStep} />
-            <hr></hr>
+            <div className="separator"></div>
             {/* stepper */}
-            {currentStep === 0 && <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClassId={selectedClassId} />}
+            {currentStep === 0 && <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />}
             {currentStep === 1 && (
               <React.Fragment>
-                <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPalnId={selectedPlanId} />
+                <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
               </React.Fragment>
             )}
             {currentStep === 2 && (
               <React.Fragment>
-                <div className="form-group">
-                  <label className="control-label" htmlFor="name">
-                    서비스 인스턴스 이름
-                  </label>
-                  <div>
-                    <input className="form-control" type="text" id="application-name" required />
+                <div className="row">
+                  <div className="col-xs-2">
+                    <strong>서비스 인스턴스</strong>
+                  </div>
+                  <div className="col-xs-10">
+                    <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                      서비스 인스턴스 이름
+                    </label>
+                    <input className="form-control" type="text" onChange={this.onNameChanged} id="application-name" required />
                     <p className="help-block" id="secret-name-help"></p>
                   </div>
                 </div>
-                <SubForm />
+                <div className="separator"></div>
+                <Section label="파라미터" key="params">
+                  {paramList.map((parameter, index) => (
+                    <React.Fragment key={index}>
+                      <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                        {parameter}
+                      </label>
+                      <input className="form-control" type="text" placeholder="value" id={parameter} onChange={this.onParamValueChanged} required />
+                    </React.Fragment>
+                  ))}
+                </Section>
+                <div className="separator"></div>
+                <div className="row">
+                  <div className="col-xs-2">
+                    <strong>레이블</strong>
+                  </div>
+                  <div className="col-xs-10">
+                    <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
+                    <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                      <p>Lables must be "key=value" form.</p>
+                    </div>
+                  </div>
+                </div>
+                {/* <SubForm /> */}
               </React.Fragment>
             )}
-
-            {/* <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} > */}
+          </form>
+          <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
             <div style={{ marginTop: '15px' }}>
               {currentStep !== 0 && (
-                <button type="submit" className="btn btn-default" onClick={this.onClickBack}>
+                <button type="button" className="btn btn-default" onClick={this.onClickBack}>
                   이전
                 </button>
               )}
               {currentStep !== 2 && (
-                <button className="btn btn-primary" onClick={this.onClickNext}>
+                <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
                   다음
                 </button>
               )}
               {currentStep === 2 && (
-                <button type="submit" className="btn btn-primary" id="save-changes">
+                <button type="submit" className="btn btn-primary" id="save-changes" onClick={this.save}>
                   생성
                 </button>
               )}
@@ -202,8 +357,7 @@ const withServiceInstanceForm = SubForm =>
                 취소
               </Link>
             </div>
-            {/* </ButtonBar> */}
-          </form>
+          </ButtonBar>
         </div>
       );
     }
@@ -264,38 +418,32 @@ export const EditServiceInstance = ({ match: { params }, kind }) => (
   </Firehose>
 );
 
-class ServicePlanList extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const { planList, onChangePlan } = this.props;
-    return (
-      <div className="row">
-        <div className="col-xs-2">
-          <strong>서비스 플랜</strong>
-        </div>
-        <div className="col-xs-10">
-          {planList.map(item => (
-            <ServicePlanItem item={item} key={item.uid} onChangePlan={onChangePlan} />
-          ))}
-        </div>
+const ServicePlanList = ({ planList, onChangePlan, selectedPlan }) => {
+  return (
+    <div className="row">
+      <div className="col-xs-2">
+        <strong>서비스 플랜</strong>
       </div>
-    );
-  }
-}
+      <div className="col-xs-10">
+        {planList.map(item => (
+          <ServicePlanItem item={item} key={item.uid} onChangePlan={onChangePlan} selectedPlan={selectedPlan} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
-const ServicePlanItem = ({ item, onChangePlan }) => {
+const ServicePlanItem = ({ item, onChangePlan, selectedPlan }) => {
   const { name, description, bullets, amount, unit } = item;
-  const bulletList = bullets.map((bullet, index) => <li key={index}>bullet</li>);
-  const _onChangePlan = e => {
-    onChangePlan(e.target.value);
+  const bulletList = bullets.map((bullet, index) => <li key={index}>{bullet}</li>);
+  const _onClickPlan = servicePlan => {
+    onChangePlan(servicePlan);
   };
   return (
     <div>
       <div style={{ display: 'inline-flex' }}>
-        <input type="radio" name="servicePlan" value={item.uid} onChange={_onChangePlan}></input>
-        <div>
+        <input type="radio" name="servicePlan" onChange={() => _onClickPlan(item)} checked={selectedPlan && selectedPlan.uid === item.uid}></input>
+        <div onClick={() => _onClickPlan(item)}>
           <b>{name}</b>
           <br></br>
           <span>{description}</span>
@@ -304,7 +452,7 @@ const ServicePlanItem = ({ item, onChangePlan }) => {
           <span> {unit}</span>
         </div>
       </div>
-      <hr></hr>
+      <div className="separator"></div>
     </div>
   );
 };

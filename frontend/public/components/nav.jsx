@@ -261,10 +261,10 @@ const NavSection = connect(navSectionStateToProps)(
             {!href ? (
               text
             ) : (
-              <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-                {text}
-              </Link>
-            )}
+                <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+                  {text}
+                </Link>
+              )}
           </div>
           {Children && (
             <ul className="navigation-container__list" style={{ maxHeight }}>
@@ -483,18 +483,19 @@ export class Nav extends React.Component {
               {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
-            <NavSection text="Image" icon="pficon pficon-image">
+
+            <NavSection text="이미지" icon="pficon pficon-image">
               <ResourceNSLink resource="registries" name="레지스트리" onClick={this.close} />
-              <ResourceNSLink resource="image" name="이미지" onClick={this.close} />
+              {/* <ResourceNSLink resource="image" name="이미지" onClick={this.close} /> */}
             </NavSection>
 
-            <NavSection text="Managements" icon="pficon pficon-services">
+            <NavSection text="매니지먼트" icon="pficon pficon-services">
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
               {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
-              <ResourceNSLink resource="metering" name="미터링" onClick={this.close} />
+              {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
               {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}

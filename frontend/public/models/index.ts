@@ -2,60 +2,74 @@
 import { K8sKind } from '../module/k8s';
 
 export const UserModel: K8sKind = {
-  kind: "User",
+  kind: 'User',
   namespaced: false,
-  label: "User",
-  plural: "users",
-  apiVersion: "v1",
-  abbr: "U",
-  apiGroup: "tmax.io",
-  labelPlural: "Users",
-  path: "users",
-  id: "user",
-  crd: false
-}
+  label: 'User',
+  plural: 'users',
+  apiVersion: 'v1',
+  abbr: 'U',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Users',
+  path: 'users',
+  id: 'user',
+  crd: false,
+};
 
 export const NamespaceClaimModel: K8sKind = {
-  kind: "NamespaceClaim",
+  kind: 'NamespaceClaim',
   namespaced: false,
-  label: "Namespace Claim",
-  plural: "namespaceclaims",
-  apiVersion: "v1",
-  abbr: "NC",
-  apiGroup: "tmax.io",
-  labelPlural: "Namespace Claims",
-  path: "namespaceclaims",
-  id: "namespaceclaim",
-  crd: false
-}
+  label: 'Namespace Claim',
+  plural: 'namespaceclaims',
+  apiVersion: 'v1',
+  abbr: 'NC',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Namespace Claims',
+  path: 'namespaceclaims',
+  id: 'namespaceclaim',
+  crd: false,
+};
 
 export const ResourceQuotaClaimModel: K8sKind = {
-  kind: "ResourceQuotaClaim",
+  kind: 'ResourceQuotaClaim',
   namespaced: true,
-  label: "Resource Quota Claim",
-  plural: "resourcequotaclaims",
-  apiVersion: "v1",
-  abbr: "RQC",
-  apiGroup: "tmax.io",
-  labelPlural: "Resource Quota Claims",
-  path: "resourcequotaclaims",
-  id: "resourcequotaclaim",
-  crd: false
-}
+  label: 'Resource Quota Claim',
+  plural: 'resourcequotaclaims',
+  apiVersion: 'v1',
+  abbr: 'RQC',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Resource Quota Claims',
+  path: 'resourcequotaclaims',
+  id: 'resourcequotaclaim',
+  crd: false,
+};
+
+export const PodSecurityPolicyModel: K8sKind = {
+  kind: 'PodSecurityPolicy',
+  namespaced: false,
+  label: 'Pod Security Policy',
+  plural: 'podsecuritypolicies',
+  apiVersion: 'v1beta1',
+  abbr: 'RQC',
+  apiGroup: 'policy',
+  labelPlural: 'Pod Security Policies',
+  path: 'podsecuritypolicies',
+  id: 'podsecuritypolicie',
+  crd: false,
+};
 
 export const RoleBindingClaimModel: K8sKind = {
-  kind: "RoleBindingClaim",
+  kind: 'RoleBindingClaim',
   namespaced: true,
-  label: "Role Binding Claim",
-  plural: "rolebindingclaims",
-  apiVersion: "v1",
-  abbr: "RBC",
-  apiGroup: "tmax.io",
-  labelPlural: "Role Binding Claims",
-  path: "rolebindingclaims",
-  id: "rolebindingclaim",
-  crd: false
-}
+  label: 'Role Binding Claim',
+  plural: 'rolebindingclaims',
+  apiVersion: 'v1',
+  abbr: 'RBC',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Role Binding Claims',
+  path: 'rolebindingclaims',
+  id: 'rolebindingclaim',
+  crd: false,
+};
 
 export const CatalogSourceModel: K8sKind = {
   kind: 'CatalogSource',
@@ -98,46 +112,46 @@ export const InstallPlanModel: K8sKind = {
 };
 
 export const TemplateModel: K8sKind = {
-  kind: "Template",
+  kind: 'Template',
   namespaced: true,
-  label: "Template",
-  plural: "templates",
-  apiVersion: "v1",
-  abbr: "T",
-  apiGroup: "tmax.io",
-  labelPlural: "Templates",
-  path: "templates",
-  id: "template",
-  crd: false
+  label: 'Template',
+  plural: 'templates',
+  apiVersion: 'v1',
+  abbr: 'T',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Templates',
+  path: 'templates',
+  id: 'template',
+  crd: false,
 };
 
 export const TemplateInstanceModel: K8sKind = {
-  kind: "TemplateInstance",
+  kind: 'TemplateInstance',
   namespaced: true,
-  label: "Template Instance",
-  plural: "templateinstances",
-  apiVersion: "v1",
-  abbr: "TI",
-  apiGroup: "tmax.io",
-  labelPlural: "Template Instances",
-  path: "templateinstances",
-  id: "templateinstance",
-  crd: false
-}
+  label: 'Template Instance',
+  plural: 'templateinstances',
+  apiVersion: 'v1',
+  abbr: 'TI',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Template Instances',
+  path: 'templateinstances',
+  id: 'templateinstance',
+  crd: false,
+};
 
 export const RegistryModel: K8sKind = {
-  kind: "Registry",
+  kind: 'Registry',
   namespaced: true,
-  label: "Registry",
-  plural: "registries",
-  apiVersion: "v1",
-  abbr: "R",
-  apiGroup: "tmax.io",
-  labelPlural: "Registrys",
-  path: "registries",
-  id: "registry",
-  crd: false
-}
+  label: 'Registry',
+  plural: 'registries',
+  apiVersion: 'v1',
+  abbr: 'R',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Registries',
+  path: 'registries',
+  id: 'registry',
+  crd: false,
+};
 
 export const SubscriptionModel: K8sKind = {
   kind: 'Subscription',
@@ -243,7 +257,7 @@ export const ServiceModel: K8sKind = {
   namespaced: true,
   kind: 'Service',
   id: 'service',
-  labelPlural: 'Services'
+  labelPlural: 'Services',
 };
 
 export const PodModel: K8sKind = {
@@ -255,7 +269,7 @@ export const PodModel: K8sKind = {
   namespaced: true,
   kind: 'Pod',
   id: 'pod',
-  labelPlural: 'Pods'
+  labelPlural: 'Pods',
 };
 
 export const ContainerModel: K8sKind = {
@@ -266,7 +280,7 @@ export const ContainerModel: K8sKind = {
   abbr: 'C',
   kind: 'Container',
   id: 'container',
-  labelPlural: 'Containers'
+  labelPlural: 'Containers',
 };
 
 export const DaemonSetModel: K8sKind = {
@@ -280,7 +294,7 @@ export const DaemonSetModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'DaemonSet',
   id: 'daemonset',
-  labelPlural: 'Daemon Sets'
+  labelPlural: 'Daemon Sets',
 };
 
 export const ReplicationControllerModel: K8sKind = {
@@ -293,7 +307,7 @@ export const ReplicationControllerModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'ReplicationController',
   id: 'replicationcontroller',
-  labelPlural: 'Replication Controllers'
+  labelPlural: 'Replication Controllers',
 };
 
 export const HorizontalPodAutoscalerModel: K8sKind = {
@@ -306,7 +320,7 @@ export const HorizontalPodAutoscalerModel: K8sKind = {
   namespaced: true,
   kind: 'HorizontalPodAutoscaler',
   id: 'horizontalpodautoscaler',
-  labelPlural: 'Horizontal Pod Autoscalers'
+  labelPlural: 'Horizontal Pod Autoscalers',
 };
 
 export const ServiceAccountModel: K8sKind = {
@@ -318,7 +332,7 @@ export const ServiceAccountModel: K8sKind = {
   namespaced: true,
   kind: 'ServiceAccount',
   id: 'serviceaccount',
-  labelPlural: 'Service Accounts'
+  labelPlural: 'Service Accounts',
 };
 
 export const ReplicaSetModel: K8sKind = {
@@ -332,7 +346,7 @@ export const ReplicaSetModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'ReplicaSet',
   id: 'replicaset',
-  labelPlural: 'Replica Sets'
+  labelPlural: 'Replica Sets',
 };
 
 export const DeploymentModel: K8sKind = {
@@ -346,7 +360,7 @@ export const DeploymentModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'Deployment',
   id: 'deployment',
-  labelPlural: 'Deployments'
+  labelPlural: 'Deployments',
 };
 
 export const DeploymentConfigModel: K8sKind = {
@@ -360,7 +374,7 @@ export const DeploymentConfigModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'DeploymentConfig',
   id: 'deploymentconfig',
-  labelPlural: 'Deployment Configs'
+  labelPlural: 'Deployment Configs',
 };
 
 export const BuildConfigModel: K8sKind = {
@@ -374,7 +388,7 @@ export const BuildConfigModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'BuildConfig',
   id: 'buildconfig',
-  labelPlural: 'Build Configs'
+  labelPlural: 'Build Configs',
 };
 
 export const BuildModel: K8sKind = {
@@ -388,7 +402,7 @@ export const BuildModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'Build',
   id: 'build',
-  labelPlural: 'Builds'
+  labelPlural: 'Builds',
 };
 
 export const ImageStreamModel: K8sKind = {
@@ -402,7 +416,7 @@ export const ImageStreamModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'ImageStream',
   id: 'imagestream',
-  labelPlural: 'Image Streams'
+  labelPlural: 'Image Streams',
 };
 
 export const ImageStreamTagModel: K8sKind = {
@@ -416,7 +430,7 @@ export const ImageStreamTagModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'ImageStreamTag',
   id: 'imagestreamtag',
-  labelPlural: 'Image Stream Tags'
+  labelPlural: 'Image Stream Tags',
 };
 
 export const JobModel: K8sKind = {
@@ -430,7 +444,7 @@ export const JobModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'Job',
   id: 'job',
-  labelPlural: 'Jobs'
+  labelPlural: 'Jobs',
 };
 
 export const NodeModel: K8sKind = {
@@ -441,7 +455,7 @@ export const NodeModel: K8sKind = {
   abbr: 'N',
   kind: 'Node',
   id: 'node',
-  labelPlural: 'Nodes'
+  labelPlural: 'Nodes',
 };
 
 export const EventModel: K8sKind = {
@@ -453,7 +467,7 @@ export const EventModel: K8sKind = {
   namespaced: true,
   kind: 'Event',
   id: 'event',
-  labelPlural: 'Events'
+  labelPlural: 'Events',
 };
 
 export const ComponentStatusModel: K8sKind = {
@@ -464,7 +478,7 @@ export const ComponentStatusModel: K8sKind = {
   plural: 'componentstatuses',
   abbr: 'CS',
   kind: 'ComponentStatus',
-  id: 'componentstatus'
+  id: 'componentstatus',
 };
 
 export const NamespaceModel: K8sKind = {
@@ -475,7 +489,7 @@ export const NamespaceModel: K8sKind = {
   abbr: 'NS',
   kind: 'Namespace',
   id: 'namespace',
-  labelPlural: 'Namespaces'
+  labelPlural: 'Namespaces',
 };
 
 export const ProjectModel: K8sKind = {
@@ -487,7 +501,7 @@ export const ProjectModel: K8sKind = {
   abbr: 'PR',
   kind: 'Project',
   id: 'project',
-  labelPlural: 'Projects'
+  labelPlural: 'Projects',
 };
 
 export const ProjectRequestModel: K8sKind = {
@@ -499,7 +513,7 @@ export const ProjectRequestModel: K8sKind = {
   abbr: '',
   kind: 'ProjectRequest',
   id: 'projectrequest',
-  labelPlural: 'Project Requests'
+  labelPlural: 'Project Requests',
 };
 
 export const IngressModel: K8sKind = {
@@ -512,7 +526,7 @@ export const IngressModel: K8sKind = {
   abbr: 'I',
   namespaced: true,
   kind: 'Ingress',
-  id: 'ingress'
+  id: 'ingress',
 };
 
 export const RouteModel: K8sKind = {
@@ -525,7 +539,7 @@ export const RouteModel: K8sKind = {
   abbr: 'RT',
   namespaced: true,
   kind: 'Route',
-  id: 'route'
+  id: 'route',
 };
 
 export const ConfigMapModel: K8sKind = {
@@ -537,7 +551,7 @@ export const ConfigMapModel: K8sKind = {
   namespaced: true,
   kind: 'ConfigMap',
   id: 'configmap',
-  labelPlural: 'Config Maps'
+  labelPlural: 'Config Maps',
 };
 
 export const SecretModel: K8sKind = {
@@ -549,7 +563,7 @@ export const SecretModel: K8sKind = {
   namespaced: true,
   kind: 'Secret',
   id: 'secret',
-  labelPlural: 'Secrets'
+  labelPlural: 'Secrets',
 };
 
 export const ClusterRoleBindingModel: K8sKind = {
@@ -561,7 +575,7 @@ export const ClusterRoleBindingModel: K8sKind = {
   abbr: 'CRB',
   kind: 'ClusterRoleBinding',
   id: 'clusterrolebinding',
-  labelPlural: 'Cluster Role Bindings'
+  labelPlural: 'Cluster Role Bindings',
 };
 
 export const ClusterRoleModel: K8sKind = {
@@ -573,7 +587,7 @@ export const ClusterRoleModel: K8sKind = {
   abbr: 'CR',
   kind: 'ClusterRole',
   id: 'clusterrole',
-  labelPlural: 'Cluster Roles'
+  labelPlural: 'Cluster Roles',
 };
 
 export const RoleBindingModel: K8sKind = {
@@ -586,7 +600,7 @@ export const RoleBindingModel: K8sKind = {
   namespaced: true,
   kind: 'RoleBinding',
   id: 'rolebinding',
-  labelPlural: 'Role Bindings'
+  labelPlural: 'Role Bindings',
 };
 
 export const RoleModel: K8sKind = {
@@ -599,7 +613,7 @@ export const RoleModel: K8sKind = {
   namespaced: true,
   kind: 'Role',
   id: 'role',
-  labelPlural: 'Roles'
+  labelPlural: 'Roles',
 };
 
 export const SelfSubjectAccessReviewModel: K8sKind = {
@@ -612,7 +626,7 @@ export const SelfSubjectAccessReviewModel: K8sKind = {
   namespaced: true,
   kind: 'SelfSubjectAccessReview',
   id: 'selfsubjectaccessreview',
-  labelPlural: 'Self Subject Access Reviews'
+  labelPlural: 'Self Subject Access Reviews',
 };
 
 export const TectonicVersionModel: K8sKind = {
@@ -625,7 +639,7 @@ export const TectonicVersionModel: K8sKind = {
   namespaced: true,
   kind: 'TectonicVersion',
   id: 'tectonicversion',
-  labelPlural: 'Tectonic Versions'
+  labelPlural: 'Tectonic Versions',
 };
 
 export const ChannelOperatorConfigModel: K8sKind = {
@@ -638,7 +652,7 @@ export const ChannelOperatorConfigModel: K8sKind = {
   namespaced: true,
   kind: 'ChannelOperatorConfig',
   id: 'channeloperatorconfig',
-  labelPlural: 'Channel Operator Configs'
+  labelPlural: 'Channel Operator Configs',
 };
 
 export const AppVersionModel: K8sKind = {
@@ -651,7 +665,7 @@ export const AppVersionModel: K8sKind = {
   namespaced: true,
   kind: 'AppVersion',
   id: 'appversion',
-  labelPlural: 'AppVersions'
+  labelPlural: 'AppVersions',
 };
 
 export const PersistentVolumeModel: K8sKind = {
@@ -662,7 +676,7 @@ export const PersistentVolumeModel: K8sKind = {
   abbr: 'PV',
   kind: 'PersistentVolume',
   id: 'persistentvolume',
-  labelPlural: 'Persistent Volumes'
+  labelPlural: 'Persistent Volumes',
 };
 
 export const PersistentVolumeClaimModel: K8sKind = {
@@ -674,72 +688,72 @@ export const PersistentVolumeClaimModel: K8sKind = {
   namespaced: true,
   kind: 'PersistentVolumeClaim',
   id: 'persistentvolumeclaim',
-  labelPlural: 'Persistent Volume Claims'
+  labelPlural: 'Persistent Volume Claims',
 };
 export const TaskModel: K8sKind = {
-  kind: "Task",
+  kind: 'Task',
   namespaced: true,
-  label: "Task",
-  plural: "tasks",
-  apiVersion: "v1alpha1",
-  abbr: "TASK",
-  apiGroup: "tekton.dev",
-  labelPlural: "Tasks",
-  path: "tasks",
-  id: "task",
-  crd: false
+  label: 'Task',
+  plural: 'tasks',
+  apiVersion: 'v1alpha1',
+  abbr: 'TASK',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Tasks',
+  path: 'tasks',
+  id: 'task',
+  crd: false,
 };
 export const TaskRunModel: K8sKind = {
-  kind: "TaskRun",
+  kind: 'TaskRun',
   namespaced: true,
-  label: "Task Run",
-  plural: "taskruns",
-  apiVersion: "v1alpha1",
-  abbr: "TR",
-  apiGroup: "tekton.dev",
-  labelPlural: "Task Runs",
-  path: "taskruns",
-  id: "taskrun",
-  crd: false
+  label: 'Task Run',
+  plural: 'taskruns',
+  apiVersion: 'v1alpha1',
+  abbr: 'TR',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Task Runs',
+  path: 'taskruns',
+  id: 'taskrun',
+  crd: false,
 };
 export const PipelineResourceModel: K8sKind = {
-  kind: "PipelineResource",
+  kind: 'PipelineResource',
   namespaced: true,
-  label: "Pipeline Resource",
-  plural: "pipelineresources",
-  apiVersion: "v1alpha1",
-  abbr: "PR",
-  apiGroup: "tekton.dev",
-  labelPlural: "Pipeline Resources",
-  path: "pipelineresources",
-  id: "pipelineresource",
-  crd: false
+  label: 'Pipeline Resource',
+  plural: 'pipelineresources',
+  apiVersion: 'v1alpha1',
+  abbr: 'PR',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Pipeline Resources',
+  path: 'pipelineresources',
+  id: 'pipelineresource',
+  crd: false,
 };
 export const PipelineModel: K8sKind = {
-  kind: "Pipeline",
+  kind: 'Pipeline',
   namespaced: true,
-  label: "Pipeline",
-  plural: "pipelines",
-  apiVersion: "v1alpha1",
-  abbr: "T",
-  apiGroup: "tekton.dev",
-  labelPlural: "Pipelines",
-  path: "pipelines",
-  id: "pipeline",
-  crd: false
+  label: 'Pipeline',
+  plural: 'pipelines',
+  apiVersion: 'v1alpha1',
+  abbr: 'T',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Pipelines',
+  path: 'pipelines',
+  id: 'pipeline',
+  crd: false,
 };
 export const PipelineRunModel: K8sKind = {
-  kind: "PipelineRun",
+  kind: 'PipelineRun',
   namespaced: true,
-  label: "Pipeline Run",
-  plural: "pipelineruns",
-  apiVersion: "v1alpha1",
-  abbr: "T",
-  apiGroup: "tekton.dev",
-  labelPlural: "Pipeline Runs",
-  path: "pipelineruns",
-  id: "pipelinerun",
-  crd: false
+  label: 'Pipeline Run',
+  plural: 'pipelineruns',
+  apiVersion: 'v1alpha1',
+  abbr: 'T',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Pipeline Runs',
+  path: 'pipelineruns',
+  id: 'pipelinerun',
+  crd: false,
 };
 export const PetsetModel: K8sKind = {
   apiVersion: 'v1',
@@ -750,7 +764,7 @@ export const PetsetModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'Petset',
   id: 'petset',
-  labelPlural: 'Petsets'
+  labelPlural: 'Petsets',
 };
 
 export const StatefulSetModel: K8sKind = {
@@ -764,7 +778,7 @@ export const StatefulSetModel: K8sKind = {
   propagationPolicy: 'Foreground',
   kind: 'StatefulSet',
   id: 'statefulset',
-  labelPlural: 'Stateful Sets'
+  labelPlural: 'Stateful Sets',
 };
 
 export const ResourceQuotaModel: K8sKind = {
@@ -776,7 +790,7 @@ export const ResourceQuotaModel: K8sKind = {
   namespaced: true,
   kind: 'ResourceQuota',
   id: 'resourcequota',
-  labelPlural: 'Resource Quotas'
+  labelPlural: 'Resource Quotas',
 };
 
 export const NetworkPolicyModel: K8sKind = {
@@ -789,7 +803,7 @@ export const NetworkPolicyModel: K8sKind = {
   abbr: 'NP',
   namespaced: true,
   kind: 'NetworkPolicy',
-  id: 'networkpolicy'
+  id: 'networkpolicy',
 };
 
 export const CustomResourceDefinitionModel: K8sKind = {
@@ -802,7 +816,7 @@ export const CustomResourceDefinitionModel: K8sKind = {
   plural: 'customresourcedefinitions',
   kind: 'CustomResourceDefinition',
   id: 'customresourcedefinition',
-  labelPlural: 'Custom Resource Definitions'
+  labelPlural: 'Custom Resource Definitions',
 };
 
 export const CronJobModel: K8sKind = {
@@ -829,50 +843,50 @@ export const StorageClassModel: K8sKind = {
   abbr: 'SC',
   namespaced: false,
   kind: 'StorageClass',
-  id: 'storageclass'
+  id: 'storageclass',
 };
 
 export const ServiceBrokerModel: K8sKind = {
-  kind: "ServiceBroker",
+  kind: 'ServiceBroker',
   namespaced: true,
-  label: "Service Broker",
-  plural: "servicebrokers",
-  apiVersion: "v1beta1",
-  abbr: "SB",
-  apiGroup: "servicecatalog.k8s.io",
-  labelPlural: "Service Brokers",
-  path: "servicebrokers",
-  id: "servicebroker",
-  crd: false
-}
+  label: 'Service Broker',
+  plural: 'servicebrokers',
+  apiVersion: 'v1beta1',
+  abbr: 'SB',
+  apiGroup: 'servicecatalog.k8s.io',
+  labelPlural: 'Service Brokers',
+  path: 'servicebrokers',
+  id: 'servicebroker',
+  crd: false,
+};
 
 export const ServiceClassModel: K8sKind = {
-  kind: "ServiceClass",
+  kind: 'ServiceClass',
   namespaced: true,
-  label: "Service Class",
-  plural: "serviceclasses",
-  apiVersion: "v1beta1",
-  abbr: "SC",
-  apiGroup: "servicecatalog.k8s.io",
-  labelPlural: "Service Classes",
-  path: "serviceclasses",
-  id: "serviceclass",
-  crd: false
-}
+  label: 'Service Class',
+  plural: 'serviceclasses',
+  apiVersion: 'v1beta1',
+  abbr: 'SC',
+  apiGroup: 'servicecatalog.k8s.io',
+  labelPlural: 'Service Classes',
+  path: 'serviceclasses',
+  id: 'serviceclass',
+  crd: false,
+};
 
 export const ServicePlanModel: K8sKind = {
-  kind: "ServicePlan",
+  kind: 'ServicePlan',
   namespaced: true,
-  label: "Service Plan",
-  plural: "serviceplans",
-  apiVersion: "v1beta1",
-  abbr: "SP",
-  apiGroup: "servicecatalog.k8s.io",
-  labelPlural: "Service Plans",
-  path: "serviceplans",
-  id: "serviceplan",
-  crd: false
-}
+  label: 'Service Plan',
+  plural: 'serviceplans',
+  apiVersion: 'v1beta1',
+  abbr: 'SP',
+  apiGroup: 'servicecatalog.k8s.io',
+  labelPlural: 'Service Plans',
+  path: 'serviceplans',
+  id: 'serviceplan',
+  crd: false,
+};
 
 export const ClusterServiceBrokerModel: K8sKind = {
   label: 'Cluster Service Broker',
@@ -884,7 +898,7 @@ export const ClusterServiceBrokerModel: K8sKind = {
   abbr: 'CSB',
   namespaced: false,
   kind: 'ClusterServiceBroker',
-  id: 'clusterservicebroker'
+  id: 'clusterservicebroker',
 };
 
 export const ClusterServiceClassModel: K8sKind = {
@@ -897,7 +911,7 @@ export const ClusterServiceClassModel: K8sKind = {
   abbr: 'CSC',
   namespaced: false,
   kind: 'ClusterServiceClass',
-  id: 'clusterserviceclass'
+  id: 'clusterserviceclass',
 };
 
 export const ClusterServicePlanModel: K8sKind = {
@@ -910,7 +924,7 @@ export const ClusterServicePlanModel: K8sKind = {
   abbr: 'CSP',
   namespaced: false,
   kind: 'ClusterServicePlan',
-  id: 'clusterserviceplan'
+  id: 'clusterserviceplan',
 };
 
 export const ServiceInstanceModel: K8sKind = {
@@ -923,7 +937,7 @@ export const ServiceInstanceModel: K8sKind = {
   abbr: 'SI',
   namespaced: true,
   kind: 'ServiceInstance',
-  id: 'serviceinstance'
+  id: 'serviceinstance',
 };
 
 export const ServiceBindingModel: K8sKind = {
@@ -936,5 +950,5 @@ export const ServiceBindingModel: K8sKind = {
   abbr: 'SB',
   namespaced: true,
   kind: 'ServiceBinding',
-  id: 'servicebinding'
+  id: 'servicebinding',
 };

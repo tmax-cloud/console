@@ -108,8 +108,8 @@ PipelineRunList.displayName = PipelineRunList;
 
 export const PipelineRunsPage = props => {
     const createItems = {
-        form: 'Pipeline Run (폼 에디터)',
-        yaml: 'Pipeline Run (YAML 에디터)'
+        form: 'Pipeline Run (Form Editor)',
+        yaml: 'Pipeline Run (YAML Editor)'
     };
 
     const createProps = {

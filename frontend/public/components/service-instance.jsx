@@ -99,8 +99,8 @@ ServiceInstanceList.displayName = ServiceInstanceList;
 
 export const ServiceInstancesPage = props => {
   const createItems = {
-    form: '인스턴스 (폼 에디터)',
-    yaml: '인스턴스 (YAML 에디터)',
+    form: 'Instance (Form Editor)',
+    yaml: 'Instance (YAML Editor)',
   };
   const createProps = {
     items: createItems,

@@ -14,7 +14,7 @@ enum CreateType {
   form = 'form',
 }
 const pageExplanation = {
-  [CreateType.form]: '폼 형식을 통한 템플릿 인스턴스 생성',
+  [CreateType.form]: 'Create Template Instance Run using Form Editor',
 };
 
 const determineCreateType = (data) => {
@@ -76,7 +76,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     const namespace = document.location.href.split('ns/')[1].split('/')[0];
     let templateInstance = { ...this.state.templateInstance };
     let template = this.state.selectedTemplate;
-    if (template != '') {
+    if (template) {
       coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
         .then(res => res.json())
         .then((myJson) => {
@@ -135,7 +135,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       selectedTemplate: event.target.value,
       editParamList: true,
       templateInstance: templateInstance
-    });
+    }, () => this.getParams());
   }
   onParamValueChanged(event) {
     console.log('onParamValueChanged불림')
@@ -173,11 +173,18 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         let templateList = myJson.items.map(function (template) {
           return template.metadata.name
         });
-        this.setState({
-          templateList: templateList,
-          selectedTemplate: templateList[0],
-          editParamList: true
-        });
+        if (templateList.length > 0) {
+          this.setState({
+            templateList: templateList,
+            selectedTemplate: templateList[0],
+          }, () => this.getParams());
+        }
+        else {
+          this.setState({
+            templateList: templateList,
+            selectedTemplate: null,
+          });
+        }
       },
         (error) => {
           this.setState({
@@ -191,17 +198,13 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   componentDidMount() {
     this.getTemplateList();
-    this.getParams();
   }
   render() {
     const { templateList, paramList } = this.state;
     let options = templateList.map(function (template) {
       return <option value={template}>{template}</option>;
     });
-    // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
-    if (this.state.editParamList) {
-      this.getParams();
-    }
+
     let paramDivs = paramList.map((parameter) => {
       return <Section label={parameter} id={parameter}>
         <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder="value" id={parameter} required />
@@ -210,14 +213,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
     return <div className="co-m-pane__body">
       < Helmet >
-        <title>템플릿 인스턴스 생성</title>
+        <title>Create Template Instance</title>
       </Helmet >
       <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">템플릿 인스턴스 생성</h1>
+        <h1 className="co-m-pane__heading">Create Template Instance</h1>
         <p className="co-m-pane__explanation">{this.props.explanation}</p>
         <fieldset disabled={!this.props.isCreate}>
           <div className="form-group">
-            <label className="control-label" htmlFor="secret-name">템플릿 인스턴스 이름</label>
+            <label className="control-label" htmlFor="secret-name">Name</label>
             <div>
               <input className="form-control"
                 type="text"
@@ -228,7 +231,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
           <div className="form-group">
-            <label className="control-label" htmlFor="secret-type" >템플릿</label>
+            <label className="control-label" htmlFor="secret-type" >Template</label>
             <div>
               <select onChange={this.onTemplateChanged} className="form-control" id="template">
                 {options}
