@@ -63,7 +63,7 @@ export class VolumeEditor extends React.Component {
   }
 }
 VolumeEditor.defaultProps = {
-  nameString: 'Name',
+  nameString: 'Volume Name',
   mountPathString: 'MountPath',
   pvcString: 'PVC',
   readOnlyString: 'ReadOnly',

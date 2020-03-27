@@ -61,7 +61,7 @@ export class BasicPortEditor extends React.Component {
   }
 }
 BasicPortEditor.defaultProps = {
-  nameString: 'Name',
+  nameString: 'Port Name',
   protocolString: 'Protocol',
   portString: 'Port',
   addString: 'Add More',
