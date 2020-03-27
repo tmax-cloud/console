@@ -29,8 +29,8 @@ const determineCreateType = (data) => {
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
     constructor(props) {
         super(props);
-        const existingTemplateInstance = _.pick(props.obj, ['metadata', 'type']);
-        const deployment = _.defaultsDeep({}, props.fixed, existingTemplateInstance, {
+        const existingDeployment = _.pick(props.obj, ['metadata', 'type']);
+        const deployment = _.defaultsDeep({}, props.fixed, existingDeployment, {
             apiVersion: 'apps/v1',
             kind: "Deployment",
             metadata: {
@@ -47,10 +47,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         labels: { app: '' }
                     },
                     spec: {
+                        restartPolicy: 'Always',
+                        volumes: [],
                         containers: [{
                             name: 'hello-hypercloud',
                             image: 'hypercloud/hello-hypercloud',
+                            imagePullPolicy: '',
                             env: [],
+                            volumeMounts: [],
                             resources: {
                                 limits: [],
                                 requests: []
@@ -59,7 +63,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             args: [],
                             ports: [],
                         }],
-                        restartPolicy: 'Always',
                     }
                 }
             }
