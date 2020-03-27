@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { AdvancedPortEditor } from '../utils/port-editor';
+import { AdvancedPortEditor } from '../utils/advanced-port-editor';
 enum CreateType {
     generic = 'generic',
     form = 'form',

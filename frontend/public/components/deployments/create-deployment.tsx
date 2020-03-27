@@ -7,6 +7,10 @@ import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { AsyncComponent } from '../utils/async';
+import { VolumeEditor } from '../utils/volume-editor';
+import { BasicPortEditor } from '../utils/basic-port-editor';
+import { KeyValueEditor } from '../utils/key-value-editor';
+import { ValueEditor } from '../utils/value-editor';
 
 enum CreateType {
     generic = 'generic',
@@ -58,6 +62,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             image: 'hypercloud/hello-hypercloud'
                         }],
                         restartPolicy: 'Always',
+                        env: []
                     }
                 }
             }
@@ -72,6 +77,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             editParamList: true,
             selectedTemplate: '',
             restartPolicyTypeList: ['Always', 'OnFailure', 'Never'],
+            volumeOptions: [],
+            volumes: [['', '', '', 'false']],
+            pvcList: [],
+            ports: [['', '', 'TCP']],
+            env: [['', '']],
+            requests: [['', '']],
+            limits: [['', '']],
+            runCommandArguments: [['']],
+            runCommands: [['']],
         };
 
         this.onNameChanged = this.onNameChanged.bind(this);
@@ -82,6 +96,13 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.onLabelChanged = this.onLabelChanged.bind(this);
         this.save = this.save.bind(this);
         this.onRestartPolicyChanged = this.onRestartPolicyChanged.bind(this);
+        this._updateRunCommands = this._updateRunCommands.bind(this);
+        this._updateRunCommandArguments = this._updateRunCommandArguments.bind(this);
+        this._updateEnv = this._updateEnv.bind(this);
+        this._updateRequests = this._updateRequests.bind(this);
+        this._updateLimits = this._updateLimits.bind(this);
+        this._updatePorts = this._updatePorts.bind(this);
+        this._updateVolumes = this._updateVolumes.bind(this);
     }
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
@@ -95,6 +116,42 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         deployment.spec.selector.matchLabels.app = event.target.value;
         deployment.spec.template.metadata.labels.app = event.target.value;
         this.setState({ deployment });
+    }
+    _updateRunCommands(commands) {
+        this.setState({
+            runCommands: commands.values
+        });
+    }
+    _updateRunCommandArguments(args) {
+        this.setState({
+            runCommandArguments: args.values
+        });
+    }
+    _updateEnv(envs) {
+        this.setState({
+            env: envs.keyValuePairs
+        });
+        console.log(this.state.env);
+    }
+    _updateRequests(reqs) {
+        this.setState({
+            requests: reqs.keyValuePairs
+        });
+    }
+    _updateLimits(lims) {
+        this.setState({
+            limits: lims.keyValuePairs
+        });
+    }
+    _updatePorts(port) {
+        this.setState({
+            ports: port.portPairs
+        });
+    }
+    _updateVolumes(volume) {
+        this.setState({
+            volumes: volume.volumePairs
+        });
     }
     onRestartPolicyChanged(event) {
         let deployment = { ...this.state.deployment };
@@ -138,6 +195,21 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
         const newSecret = _.assign({}, this.state.deployment);
         const ko = kindObj(kind);
+
+
+
+        // env 데이터 가공
+        this.state.env.forEach(arr => {
+            console.log(arr);
+            arr.forEach(data => {
+                console.log(data);
+            })
+        })
+
+
+
+        console.log(this.state);
+        return;
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
@@ -150,7 +222,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     render() {
 
-        const { restartPolicyTypeList } = this.state;
+        const { restartPolicyTypeList, volumeOptions } = this.state;
         let options = restartPolicyTypeList.map(function (type_) {
             return <option value={type_}>{type_}</option>;
         });
@@ -226,7 +298,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Run command</label>
                             <div>
-                                
+                                <ValueEditor valueString="Run Command" values={this.state.runCommands} updateParentData={this._updateRunCommands} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -238,7 +310,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Run command arguments</label>
                             <div>
-                                
+                                <ValueEditor valueString="Run Command Arguments" values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments}/>
                             </div>
                         </div>
                     </React.Fragment>
@@ -250,7 +322,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Environment variables</label>
                             <div>
-                            
+                                <KeyValueEditor keyValuePairs={this.state.env} updateParentData={this._updateEnv}/>
                             </div>
                         </div>
                     </React.Fragment>
@@ -262,7 +334,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Port</label>
                             <div>
-                                
+                            <BasicPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts}/>
                             </div>
                         </div>
                     </React.Fragment>
@@ -274,7 +346,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Volumes</label>
                             <div>
-                                
+                            <VolumeEditor options={volumeOptions} volumePairs={this.state.volumes} updateParentData={this._updateVolumes}/>
                             </div>
                         </div>
                     </React.Fragment>
@@ -286,7 +358,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Resource(Request)</label>
                             <div>
-                            
+                            <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -298,7 +370,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">Resource(Limits)</label>
                             <div>
-                            
+                            <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits}/>
                             </div>
                         </div>
                     </React.Fragment>
@@ -320,7 +392,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                     <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-                    <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
+                    <Link to={formatNamespacedRouteForResource('deployments')} className="btn btn-default" id="cancel">Cancel</Link>
                 </ButtonBar>
             </form>
         </div >;
@@ -388,6 +460,15 @@ export type BaseEditSecretState_ = {
     editParamList: boolean,
     selectedTemplate: string,
     restartPolicyTypeList: Array<any>,
+    volumes: Array<any>,
+    pvcList: Array<any>,
+    ports: Array<any>,
+    env: Array<any>,
+    requests: Array<any>,
+    limits: Array<any>,
+    runCommandArguments: Array<any>,
+    runCommands: Array<any>,
+    volumeOptions: Array<any>,
 };
 
 export type BaseEditSecretProps_ = {
