@@ -137,7 +137,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
         deployment.metadata.name = event.target.value;
-        deployment.metadata.labels.app = event.target.value;
+        // deployment.metadata.labels.app = event.target.value;
         this.setState({ deployment });
     }
     onNameFocusOut(event) {
@@ -205,7 +205,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     onLabelChanged(event) {
         let deployment = { ...this.state.deployment };
-        deployment.metadata.labels = { app: '' };
+        deployment.metadata.labels = {};
         if (event.length !== 0) {
             event.forEach(item => {
                 if (item.split('=')[1] === undefined) {
@@ -214,6 +214,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     return;
                 }
                 document.getElementById('labelErrMsg').style.display = 'none';
+                deployment.metadata.labels[item.split('=')[0]] = item.split('=')[1];
             })
         }
         this.setState({ deployment });
