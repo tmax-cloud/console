@@ -459,7 +459,7 @@ export class Nav extends React.Component {
           </NavSection>
 
           <NavSection text="Managements" icon="pficon pficon-services">
-            <ResourceNSLink resource="metering" name="미터링" onClick={this.close} />
+            {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
             <ResourceNSLink resource="registries" name="이미지" onClick={this.close} />
             {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />}
             {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />}
