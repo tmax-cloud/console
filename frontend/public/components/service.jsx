@@ -145,8 +145,8 @@ const ServicesList = props => <List {...props} Header={ServiceHeader} Row={Servi
 //const ServicesPage = props => <ListPage canCreate={true} ListComponent={ServicesList} {...props} />;
 const ServicesPage = props => {
   const createItems = {
-    form: '서비스 (폼 에디터)',
-    yaml: '서비스 (YAML 에디터)'
+    form: 'Service (Form Editor)',
+    yaml: 'Service (YAML Editor)'
   };
 
   const createProps = {

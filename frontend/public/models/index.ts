@@ -43,6 +43,20 @@ export const ResourceQuotaClaimModel: K8sKind = {
   crd: false,
 };
 
+export const PodSecurityPolicyModel: K8sKind = {
+  kind: 'PodSecurityPolicy',
+  namespaced: false,
+  label: 'Pod Security Policy',
+  plural: 'podsecuritypolicies',
+  apiVersion: 'v1beta1',
+  abbr: 'RQC',
+  apiGroup: 'policy',
+  labelPlural: 'Pod Security Policies',
+  path: 'podsecuritypolicies',
+  id: 'podsecuritypolicie',
+  crd: false,
+};
+
 export const RoleBindingClaimModel: K8sKind = {
   kind: 'RoleBindingClaim',
   namespaced: true,

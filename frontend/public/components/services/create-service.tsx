@@ -39,7 +39,6 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
             service: service,
             inProgress: false,
             selectorList: _.isEmpty(props.selectorList) ? [['', '']] : _.toPairs(props.selectorList),
-            portList: [['', '', '', '']],
             type: '',
             paramList: [],
             selectedTemplate: '',
@@ -68,16 +67,15 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.service;
-        let service = { ...this.state.service };
         this.setState({ inProgress: true });
+        const newSecret = _.assign({}, this.state.service);
+        console.log(newSecret, this.state)
         let portList = [];
         this.state.ports.forEach(port => {
             let obj = { name: port[0], port: Number(port[1]), protocol: port[2], targetPort: Number(port[3]) };
             portList.push(obj)
         });
-        service.spec.ports = portList;
-        this.setState({ service });
-        const newSecret = _.assign({}, this.state.service);
+        newSecret.spec.ports = portList;
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
@@ -202,7 +200,6 @@ export type BaseEditServiceState_ = {
     service: K8sResourceKind,
     inProgress: boolean,
     error?: any,
-    portList: Array<any>,
     selectorList: Array<any>,
     type: string
     paramList: Array<any>,

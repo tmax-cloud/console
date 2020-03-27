@@ -13,7 +13,7 @@ enum CreateType {
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 파이프라인 런 생성',
+    [CreateType.form]: 'Create Pipeline Run using Form Editor',
 };
 
 // const determineCreateType = (data) => {
