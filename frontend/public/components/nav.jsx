@@ -472,45 +472,49 @@ export class Nav extends React.Component {
 
             {/* CI/CD 전체 추가 */}
             <NavSection text="CI/CD" icon="pficon pficon-process-automation">
-              <ResourceNSLink resource="tasks" name="Tasks" onClick={this.close} />
-              <ResourceNSLink resource="taskruns" name="Task Runs" onClick={this.close} />
+              <ResourceNSLink resource="tasks" name="태스크" onClick={this.close} />
+              <ResourceNSLink resource="taskruns" name="태스크 런" onClick={this.close} />
               <ResourceNSLink resource="pipelines" name="파이프라인" onClick={this.close} />
-              <ResourceNSLink resource="pipelineruns" name="Pipeline Runs" onClick={this.close} />
-              <ResourceNSLink resource="pipelineresources" name="Pipeline Resources" onClick={this.close} />
+              <ResourceNSLink resource="pipelineruns" name="파이프라인 런" onClick={this.close} />
+              <ResourceNSLink resource="pipelineresources" name="파이프라인 리소스" onClick={this.close} />
             </NavSection>
 
-            <NavSection text="Securities" icon="fa fa-shield">
-              {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드보안정책" onClick={this.close} />}
+            <NavSection text="보안" icon="fa fa-shield">
+              {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
 
-            <NavSection text="Managements" icon="pficon pficon-services">
-              {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
-              <ResourceNSLink resource="registries" name="이미지" onClick={this.close} />
-              {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />}
-              {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />}
+            <NavSection text="이미지" icon="pficon pficon-image">
+              <ResourceNSLink resource="registries" name="레지스트리" onClick={this.close} />
+              {/* <ResourceNSLink resource="image" name="이미지" onClick={this.close} /> */}
+            </NavSection>
+
+            <NavSection text="매니지먼트" icon="pficon pficon-services">
+              {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
+              {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
               {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
-              <ResourceNSLink resource="resourcequotas" name="리소스 할당량" onClick={this.close} />
-              <ResourceNSLink resource="resourcequotaclaims" name="리소스 할당량 클레임" onClick={this.close} />
+              <ResourceNSLink resource="metering" name="미터링" onClick={this.close} />
+              <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
+              <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
               {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
-              <ResourceClusterLink resource="customresourcedefinitions" name="CRDs" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
-            </NavSection>
-
-            <NavSection text="Auth" icon="fa fa-id-card-o">
-              {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="Cluster Role Bindings" onClick={this.close} />}
-              {isAdmin && <ResourceClusterLink resource="clusterroles" name="Cluster Roles" onClick={this.close} />}
-              <ResourceNSLink resource="rolebindings" name="Role Bindings" onClick={this.close} startsWith={rolebindingsStartsWith} />
-              <ResourceNSLink resource="rolebindingclaims" name="Role Binding Claims" onClick={this.close} startsWith={rolebindingsStartsWith} />
-              <ResourceNSLink resource="roles" name="Roles" startsWith={rolesStartsWith} onClick={this.close} />
-              {isAdmin && <ResourceNSLink resource="users" name="사용자" onClick={this.close} />}
-              <ResourceNSLink resource="serviceaccounts" name="Service Accounts" onClick={this.close} />
+              <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
             </NavSection>
 
             <NavSection text="호스트" icon="pficon pficon-server">
               {/* <ResourceClusterLink resource="nodes" name="Nodes" onClick={this.close} /> */}
               <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} />
+            </NavSection>
+
+            <NavSection text="인증/인가" icon="fa fa-id-card-o">
+              {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
+              {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />}
+              <ResourceNSLink resource="roles" name="롤" startsWith={rolesStartsWith} onClick={this.close} />
+              <ResourceNSLink resource="rolebindings" name="롤 바인딩" onClick={this.close} startsWith={rolebindingsStartsWith} />
+              <ResourceNSLink resource="rolebindingclaims" name="롤 바인딩 클레임" onClick={this.close} startsWith={rolebindingsStartsWith} />
+              {isAdmin && <ResourceNSLink resource="users" name="사용자" onClick={this.close} />}
+              <ResourceNSLink resource="serviceaccounts" name="서비스 어카운트" onClick={this.close} />
             </NavSection>
 
             {/* <NavSection text="Administration" icon="fa fa-cog">
