@@ -257,7 +257,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         })
 
         // limits 데이터 가공 
-        this.state.limits.forEach(arr => { 
+        this.state.limits.forEach(arr => {
             let deployment = { ...this.state.deployment };
             deployment.spec.template.spec.containers[0].resources.limits[arr[0]] = arr[1];
             this.setState({ deployment });
@@ -283,7 +283,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 name: arr[0],
                 mountPath: arr[1]
             };
-            if (arr[2] = '') {
+            if (arr[2] === '') {
                 arr[2] = this.state.volumeOptions[0];
             }
             let volumes = {
