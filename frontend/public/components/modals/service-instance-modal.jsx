@@ -29,4 +29,4 @@ class ServiceClassModal extends PromiseComponent {
   }
 }
 
-export const serviceClassModal = createModalLauncher(props => <ServiceClassModal path="status" title="Service Class Detail" {...props} />);
+export const serviceClassModal = createModalLauncher(props => <ServiceClassModal title="Service Class Details" {...props} />);
