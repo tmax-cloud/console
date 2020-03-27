@@ -56,8 +56,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             env: [],
                             volumeMounts: [],
                             resources: {
-                                limits: [],
-                                requests: []
+                                limits: {},
+                                requests: {}
                             },
                             command: [],
                             args: [],
@@ -75,7 +75,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             editParamList: true,
             selectedPVC: '',
             volumeOptions: [],
-            volumes: [['', '', '', 'false']],
+            volumes: [['', '', '', false]],
             pvcList: [],
             ports: [['', '', 'TCP']],
             env: [['', '']],
@@ -137,7 +137,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
         deployment.metadata.name = event.target.value;
-        deployment.metadata.labels.app = event.target.value;
+        // deployment.metadata.labels.app = event.target.value;
         this.setState({ deployment });
     }
     onNameFocusOut(event) {
@@ -205,7 +205,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     onLabelChanged(event) {
         let deployment = { ...this.state.deployment };
-        deployment.metadata.labels = { app: '' };
+        deployment.metadata.labels = {};
         if (event.length !== 0) {
             event.forEach(item => {
                 if (item.split('=')[1] === undefined) {
@@ -214,6 +214,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     return;
                 }
                 document.getElementById('labelErrMsg').style.display = 'none';
+                deployment.metadata.labels[item.split('=')[0]] = item.split('=')[1];
             })
         }
         this.setState({ deployment });
@@ -226,14 +227,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         // command 데이터 가공 
         this.state.runCommands.forEach(arr => {
             let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].command.push(arr);
+            deployment.spec.template.spec.containers[0].command = deployment.spec.template.spec.containers[0].command.concat(arr);
             this.setState({ deployment });
         })
 
         // command args 데이터 가공 
         this.state.runCommandArguments.forEach(arr => {
             let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].args.push(arr);
+            deployment.spec.template.spec.containers[0].args = deployment.spec.template.spec.containers[0].args.concat(arr);
             this.setState({ deployment });
         })
 
@@ -282,10 +283,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 name: arr[0],
                 mountPath: arr[1]
             };
+            if (arr[2] === '') {
+                arr[2] = this.state.volumeOptions[0];
+            }
             let volumes = {
                 name: arr[0],
-                claimName: arr[2],
-                readOnly: arr[3]
+                persistentVolumeClaim: {
+                    claimName: arr[2],
+                    readOnly: arr[3]
+                }
             };
             let deployment = { ...this.state.deployment };
             deployment.spec.template.spec.volumes.push(volumes);
@@ -296,8 +302,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
         const ko = kindObj(kind);
 
-        console.log(this.state);
-        return;
+        console.log(newDeployment, this.state);
         (this.props.isCreate
             ? k8sCreate(ko, newDeployment)
             : k8sUpdate(ko, newDeployment, metadata.namespace, newDeployment.metadata.name)
