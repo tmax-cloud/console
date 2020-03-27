@@ -68,6 +68,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             },
                             command: [],
                             args: [],
+                            ports: [],
                         }],
                         restartPolicy: 'Always',
                     }
@@ -265,6 +266,18 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.state.limits.forEach(arr => {
             let deployment = { ...this.state.deployment };
             deployment.spec.template.spec.containers[0].resources.limits[arr[0]] = arr[1];
+            this.setState({ deployment });
+        })
+
+        // ports 데이터 가공
+        this.state.ports.forEach(arr => {
+            let obj = {
+                name: arr[0],
+                containerPort: Number(arr[1]),
+                protocol: arr[2]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].ports.push(obj);
             this.setState({ deployment });
         })
 
