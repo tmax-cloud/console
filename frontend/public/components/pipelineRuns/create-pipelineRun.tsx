@@ -54,6 +54,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                 labels: {}
             },
             spec: {
+                serviceAccountName: '',
                 params: [],
                 pipelineRef: {
                     name: ''
@@ -85,6 +86,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         this.onPipelineChange = this.onPipelineChange.bind(this);
         this.getPipelineResourceList = this.getPipelineResourceList.bind(this);
         this.onLabelChanged = this.onLabelChanged.bind(this);
+        this.onAccountChanged = this.onAccountChanged.bind(this);
         this.save = this.save.bind(this);
     }
 
@@ -167,19 +169,32 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         this.setState({ pipelineRun });
     }
 
+    onAccountChanged(event) {
+        let pipelineRun = { ...this.state.pipelineRun };
+        pipelineRun.spec.serviceAccountName = String(event.target.value);
+        this.setState({ pipelineRun });
+    }
+
     getPipelineList() {
         const ko = kindObj('Pipeline');
 
         k8sList(ko)
             .then(reponse => reponse)
             .then((data) => {
-                let pipelineList = data.map(cur => {
-                    return {
-                        name: cur.metadata.name,
-                        ns: cur.metadata.namespace
-                    }
-                })
+                let pipelineList = data
+                    .filter(cur => {
+                        return (document.location.href.indexOf('/all-namespaces/') === -1 && cur.metadata.namespace === document.location.href.split('ns/')[1].split('/')[0]);
+                    })
+                    .map(cur => {
+                        return {
+                            name: cur.metadata.name,
+                            ns: cur.metadata.namespace
+                        }
+                    })
                 let pipelineRun = { ...this.state.pipelineRun };
+                if (pipelineList.length === 0) {
+                    return;
+                }
                 pipelineRun.spec.pipelineRef.name = pipelineList[0].name;
                 this.setState({ pipelineRun });
 
@@ -242,7 +257,13 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         k8sList(ko)
             .then(reponse => reponse)
             .then((data) => {
+                if (data.length === 0) {
+                    return;
+                }
                 let resourceRefList = data
+                    .filter(cur => {
+                        return (document.location.href.indexOf('/all-namespaces/') === -1 && cur.metadata.namespace === document.location.href.split('ns/')[1].split('/')[0]);
+                    })
                     .map(cur => {
                         return {
                             name: cur.metadata.name,
@@ -250,12 +271,15 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                         }
                     });
 
+
+
                 let pipelineRun = { ...this.state.pipelineRun };
 
 
 
                 let initResourceList = {
-                    name: resourceName, resourceRef: {
+                    name: resourceName,
+                    resourceRef: {
                         name: resourceRefList.filter(cur => {
                             return (cur.type === resourceType)
                         }
@@ -353,6 +377,18 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                         <label className="control-label" htmlFor="secret-type" >Resources</label>
                         <div>
                             <ul>{resourceDivs}</ul>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label" htmlFor="secret-account">Service Account Name</label>
+                        <div>
+                            <input className="form-control"
+                                type="text"
+                                onChange={this.onAccountChanged}
+                                value={this.state.pipelineRun.spec.serviceAccountName}
+                                id="pipelinerun-account"
+                                required />
+
                         </div>
                     </div>
                     <React.Fragment>

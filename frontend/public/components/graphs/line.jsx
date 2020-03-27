@@ -49,7 +49,7 @@ export class Line_ extends BaseGraph {
       margin: {
         l: 30,
         b: 30,
-        r: 10,
+        r: 40,
         t: 0,
         pad: 0,
       },
