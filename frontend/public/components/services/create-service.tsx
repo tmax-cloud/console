@@ -64,7 +64,6 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
         this.setState({
             ports: ports.portPairs
         });
-        console.log(this.state)
     }
     save(e) {
         e.preventDefault();
@@ -80,9 +79,6 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
         this.setState({ service });
         const newSecret = _.assign({}, this.state.service);
         const ko = kindObj(kind);
-
-
-
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
             : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
@@ -122,10 +118,10 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                         <label className="control-label" htmlFor="service-type">Type</label>
                         <div>
                             <select className="form-control" id="service-type" onChange={this.onTypeChanged}>
-                                <option >ClusterIP</option>
-                                <option >ExternalName</option>
-                                <option >LoadBalancer</option>
-                                <option >NodePort</option>
+                                <option value="ClusterIP">ClusterIP</option>
+                                <option value="ExternalName">ExternalName</option>
+                                <option value="LoadBalancer">LoadBalancer</option>
+                                <option value="NodePort">NodePort</option>
                             </select>
                         </div>
                     </div>
