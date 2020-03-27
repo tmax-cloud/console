@@ -76,7 +76,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     const namespace = document.location.href.split('ns/')[1].split('/')[0];
     let templateInstance = { ...this.state.templateInstance };
     let template = this.state.selectedTemplate;
-    if (template != '') {
+    if (template) {
       coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
         .then(res => res.json())
         .then((myJson) => {
@@ -135,7 +135,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       selectedTemplate: event.target.value,
       editParamList: true,
       templateInstance: templateInstance
-    });
+    }, () => this.getParams());
   }
   onParamValueChanged(event) {
     console.log('onParamValueChanged불림')
@@ -173,11 +173,18 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         let templateList = myJson.items.map(function (template) {
           return template.metadata.name
         });
-        this.setState({
-          templateList: templateList,
-          selectedTemplate: templateList[0],
-          editParamList: true
-        });
+        if (templateList.length > 0) {
+          this.setState({
+            templateList: templateList,
+            selectedTemplate: templateList[0],
+          }, () => this.getParams());
+        }
+        else {
+          this.setState({
+            templateList: templateList,
+            selectedTemplate: null,
+          });
+        }
       },
         (error) => {
           this.setState({
@@ -191,17 +198,13 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   componentDidMount() {
     this.getTemplateList();
-    this.getParams();
   }
   render() {
     const { templateList, paramList } = this.state;
     let options = templateList.map(function (template) {
       return <option value={template}>{template}</option>;
     });
-    // onchange에  getPatrams()바인딩. 초기에도 불리도록 수정 
-    if (this.state.editParamList) {
-      this.getParams();
-    }
+
     let paramDivs = paramList.map((parameter) => {
       return <Section label={parameter} id={parameter}>
         <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder="value" id={parameter} required />

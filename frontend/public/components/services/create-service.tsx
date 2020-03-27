@@ -6,13 +6,13 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { PortEditor } from '../utils/port-editor';
+import { AdvancedPortEditor } from '../utils/advanced-port-editor';
 enum CreateType {
     generic = 'generic',
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: '폼 형식을 통한 서비스 생성',
+    [CreateType.form]: '',
 };
 
 const determineCreateType = (data) => {
@@ -25,32 +25,25 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
         const existingService = _.pick(props.obj, ['metadata', 'type']);
         const service = _.defaultsDeep({}, props.fixed, existingService, {
             apiVersion: 'v1',
-            data: {},
             kind: 'Service',
             metadata: {
                 name: '',
             },
             spec: {
-                ports: [{
-                    protocol: 'TCP',
-                    port: 80
-                }]
-
+                ports: []
             }
-
         });
 
         this.state = {
-            secretTypeAbstraction: this.props.secretTypeAbstraction,
-            secret: service,
+            serviceTypeAbstraction: this.props.serviceTypeAbstraction,
+            service: service,
             inProgress: false,
-            stringData: _.mapValues(_.get(props.obj, 'data'), window.atob),
             selectorList: _.isEmpty(props.selectorList) ? [['', '']] : _.toPairs(props.selectorList),
             portList: [['', '', '', '']],
             type: '',
             paramList: [],
             selectedTemplate: '',
-            ports: [['', '', '', '']]
+            ports: [['', '', 'TCP', '']]
         };
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onTypeChanged = this.onTypeChanged.bind(this);
@@ -58,15 +51,14 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
         this._updatePorts = this._updatePorts.bind(this);
     }
     onNameChanged(event) {
-        let secret = { ...this.state.secret };
-        secret.metadata.name = event.target.value;
-        this.setState({ secret });
+        let service = { ...this.state.service };
+        service.metadata.name = event.target.value;
+        this.setState({ service });
     }
     onTypeChanged(event) {
-        this.setState({
-            type: event.target.value
-        });
-        console.log(event.target.value);
+        let service = { ...this.state.service };
+        service.spec.type = event.target.value;
+        this.setState({ service });
     }
     _updatePorts(ports) {
         this.setState({
@@ -75,9 +67,17 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
     }
     save(e) {
         e.preventDefault();
-        const { kind, metadata } = this.state.secret;
+        const { kind, metadata } = this.state.service;
+        let service = { ...this.state.service };
         this.setState({ inProgress: true });
-        const newSecret = _.assign({}, this.state.secret, { stringData: this.state.stringData });
+        let portList = [];
+        this.state.ports.forEach(port => {
+            let obj = { name: port[0], port: Number(port[1]), protocol: port[2], targetPort: Number(port[3]) };
+            portList.push(obj)
+        });
+        service.spec.ports = portList;
+        this.setState({ service });
+        const newSecret = _.assign({}, this.state.service);
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
@@ -88,83 +88,40 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
             history.push(formatNamespacedRouteForResource('services'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
-
-    componentDidMount() {
-    }
-
     render() {
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>서비스 생성</title>
+                <title>Create Service</title>
             </Helmet >
-            <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">서비스 생성</h1>
+            <form className="co-m-pane__body-group co-create-service-form" onSubmit={this.save}>
+                <h1 className="co-m-pane__heading">Create Service</h1>
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Name</label>
+                        <label className="control-label" htmlFor="service-name">Name</label>
                         <div>
                             <input className="form-control"
                                 type="text"
                                 onChange={this.onNameChanged}
-                                value={this.state.secret.metadata.name}
-                                aria-describedby="secret-name-help"
-                                id="secret-name"
+                                value={this.state.service.metadata.name}
+                                aria-describedby="service-name-help"
+                                id="service-name"
                                 required />
-
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Port</label>
-                        {/* <PortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} /> */}
-                        <div className="col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                name
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                protocol
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                port
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                targetPort
-                            </div>
-                        </div>
-                        <div className="col-md-12 col-xs-12">
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="name" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <select className="form-control" id="protocol">
-                                    <option value='TCP'>TCP</option>
-                                    <option value='UDP'>UDP</option>
-                                    <option value='SCDP'>SCDP</option>
-                                </select>
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="port" required />
-                            </div>
-                            <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                                <input className="form-control" type="text" placeholder="targetPort" />
-                            </div>
-                        </div>
+                        <label className="control-label" htmlFor="service-name">Port</label>
+                        <AdvancedPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Selector</label>
+                        <label className="control-label" htmlFor="service-type">Type</label>
                         <div>
-                            <SelectorInput labelClassName="co-text-namespace" tags={[]} />
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >Type</label>
-                        <div>
-                            <select className="form-control" id="secret-type">
-                                <option >Cluster IP</option>
-                                <option >External Name</option>
-                                <option >Load Balancer</option>
-                                <option >Node Port</option>
+                            <select className="form-control" id="service-type" onChange={this.onTypeChanged}>
+                                <option value="ClusterIP">ClusterIP</option>
+                                <option value="ExternalName">ExternalName</option>
+                                <option value="LoadBalancer">LoadBalancer</option>
+                                <option value="NodePort">NodePort</option>
                             </select>
                         </div>
                     </div>
@@ -196,9 +153,9 @@ class SourceSecretForm extends React.Component<SourceSecretFormProps> {
         };
         this.onDataChanged = this.onDataChanged.bind(this);
     }
-    onDataChanged(secretsData) {
+    onDataChanged(servicesData) {
         this.setState({
-            stringData: { ...secretsData },
+            stringData: { ...servicesData },
         }, () => this.props.onChange(this.state));
     }
     render() {
@@ -207,30 +164,28 @@ class SourceSecretForm extends React.Component<SourceSecretFormProps> {
     }
 }
 
-const secretFormFactory = secretType => {
+const serviceFormFactory = serviceType => {
     return Requestform(SourceSecretForm);
 };
 
-
-
 const SecretLoadingWrapper = props => {
-    const secretTypeAbstraction = determineCreateType(_.get(props.obj.data, 'data'));
-    const ServiceFormComponent = secretFormFactory(secretTypeAbstraction);
+    const serviceTypeAbstraction = determineCreateType(_.get(props.obj.data, 'data'));
+    const ServiceFormComponent = serviceFormFactory(serviceTypeAbstraction);
     const fixed = _.reduce(props.fixedKeys, (acc, k) => ({ ...acc, k: _.get(props.obj.data, k) }), {});
     return <StatusBox {...props.obj}>
         <ServiceFormComponent {...props}
-            secretTypeAbstraction={secretTypeAbstraction}
+            serviceTypeAbstraction={serviceTypeAbstraction}
             obj={props.obj.data}
             fixed={fixed}
-            explanation={pageExplanation[secretTypeAbstraction]}
+            explanation={pageExplanation[serviceTypeAbstraction]}
         />
     </StatusBox>;
 };
 
 export const CreateService = ({ match: { params } }) => {
-    const ServiceFormComponent = secretFormFactory(params.type);
+    const ServiceFormComponent = serviceFormFactory(params.type);
     return <ServiceFormComponent fixed={{ metadata: { namespace: params.ns } }}
-        secretTypeAbstraction={params.type}
+        serviceTypeAbstraction={params.type}
         explanation={pageExplanation[params.type]}
         titleVerb="Create"
         isCreate={true}
@@ -243,10 +198,9 @@ export const EditSecret = ({ match: { params }, kind }) => <Firehose resources={
 
 
 export type BaseEditServiceState_ = {
-    secretTypeAbstraction?: CreateType,
-    secret: K8sResourceKind,
+    serviceTypeAbstraction?: CreateType,
+    service: K8sResourceKind,
     inProgress: boolean,
-    stringData: { [key: string]: string },
     error?: any,
     portList: Array<any>,
     selectorList: Array<any>,
@@ -262,7 +216,7 @@ export type BaseEditServiceProps_ = {
     kind?: string,
     isCreate: boolean,
     titleVerb: string,
-    secretTypeAbstraction?: CreateType,
+    serviceTypeAbstraction?: CreateType,
     saveButtonText?: string,
     explanation: string,
 };
