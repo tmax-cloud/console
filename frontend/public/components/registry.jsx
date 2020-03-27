@@ -8,6 +8,7 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
+  ScrollToTopOnMount,
   ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
@@ -30,6 +31,13 @@ const RegistryHeader = props => (
       {...props}
       className="col-xs-3 col-sm-3"
       sortField="metadata.namespace"
+    >
+      Namespace
+    </ColHead>
+    <ColHead
+      {...props}
+      className="col-xs-3 col-sm-3"
+      sortField="status.phase"
     >
       Namespace
     </ColHead>
@@ -73,27 +81,58 @@ const RegistryRow = () =>
             )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
+          {obj.status.phase}
+        </div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
         </div>
       </div>
     );
   };
 
-const DetailsForKind = kind =>
-  function DetailsForKind_({ obj }) {
-    return (
-      <React.Fragment>
-        <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
-          <ResourceSummary
-            resource={obj}
-            podSelector="spec.podSelector"
-            showNodeSelector={false}
-          />
+// const DetailsForKind = kind =>
+//   function DetailsForKind_({ obj }) {
+//     return (
+//       <React.Fragment>
+//         <div className="co-m-pane__body">
+//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
+//           <ResourceSummary
+//             resource={obj}
+//             podSelector="spec.podSelector"
+//             showNodeSelector={false}
+//           />
+//         </div>
+//       </React.Fragment>
+//     );
+//   };
+
+const Details = ({ obj: registry }) => {
+  return (
+    <React.Fragment>
+      <ScrollToTopOnMount />
+      <div className="co-m-pane__body">
+        <SectionHeading text="Pod Overview" />
+        <div className="row">
+          <div className="col-sm-6">
+            <ResourceSummary resource={registry} />
+          </div>
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>Status</dt>
+              <dd>{registry.status.phase}</dd>
+              {/* {activeDeadlineSeconds && (
+                <React.Fragment>
+                  <dt>Active Deadline</dt>
+                  <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                </React.Fragment>
+              )} */}
+            </dl>
+          </div>
         </div>
-      </React.Fragment>
-    );
-  };
+      </div>
+    </React.Fragment>
+  )
+}
 
 export const RegistryList = props => {
   const { kinds } = props;
@@ -133,7 +172,7 @@ export const RegistryDetailsPage = props => (
     kind="Registry"
     menuActions={menuActions}
     pages={[
-      navFactory.details(DetailsForKind(props.kind)),
+      navFactory.details(Details),
       navFactory.editYaml()
     ]}
   />

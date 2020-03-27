@@ -15,7 +15,7 @@ const baseData = {
 };
 
 export class Line_ extends BaseGraph {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     let queries = props.query;
@@ -35,9 +35,9 @@ export class Line_ extends BaseGraph {
       },
       xaxis: {
         zeroline: false,
-        tickformat:'%H:%M',
+        tickformat: '%H:%M',
         ticks: '',
-        showline: false,
+        showline: true,
         fixedrange: true,
       },
       legend: {
@@ -83,17 +83,47 @@ export class Line_ extends BaseGraph {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     super.componentDidMount();
     this.node.on('plotly_relayout', this.onPlotlyRelayout);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     super.componentWillUnmount();
     this.node.removeListener('plotly_relayout', this.onPlotlyRelayout);
   }
+  updateGraph2(data, target) {
+    let queries = this.props.query;
+    if (!_.isArray(queries)) {
+      queries = [{
+        query: queries,
+        name: this.props.title,
+      }];
+    }
+    if (data.length === 0) {
+      // eslint-disable-next-line no-console
+      // console.warn(`Graph error: No data from query for ${name || query}.`);
+      return;
+    }
 
-  updateGraph (data) {
+
+    data.forEach((cur, i) => {
+      restyle(this.node, {
+        x: [data.map(v => new Date(v.meteringTime))],
+        y: [data.map(v => v[target])],
+        // Use a lighter fill color on first line in graphs
+        fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
+        name,
+      }, [i]);
+    })
+      .catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
+  }
+
+
+  updateGraph(data) {
     let queries = this.props.query;
     if (!_.isArray(queries)) {
       queries = [{
@@ -104,17 +134,18 @@ export class Line_ extends BaseGraph {
     _.each(data, (result, i) => {
       const query = queries[i];
       const name = query && query.name;
-      if (result.data.result.length === 0) {
+      if (!result.cpu && result.data.result.length === 0) {
         // eslint-disable-next-line no-console
         console.warn(`Graph error: No data from query for ${name || query}.`);
         return;
       }
       const lineValues = result.data.result[0].values;
+
       restyle(this.node, {
         x: [lineValues.map(v => new Date(v[0] * 1000))],
         y: [lineValues.map(v => v[1])],
         // Use a lighter fill color on first line in graphs
-        fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)': undefined,
+        fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
         name,
       }, [i]).catch(e => {
         // eslint-disable-next-line no-console

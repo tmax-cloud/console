@@ -18,13 +18,14 @@ import { NAMESPACE_LOCAL_STORAGE_KEY, ALL_NAMESPACES_KEY } from '../const';
 import { FLAGS, featureReducerName, flagPending, setFlag, connectToFlags } from '../features';
 import { openshiftHelpBase } from './utils/documentation';
 import { createProjectMessageStateToProps } from '../ui/ui-reducers';
+// import { MeteringPage } from './metering-overview';
 
 const getModel = useProjects => useProjects ? ProjectModel : NamespaceModel;
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
 const getRequester = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/requester']);
 
 const deleteModal = (kind, ns) => {
-  let {label, weight} = Cog.factory.Delete(kind, ns);
+  let { label, weight } = Cog.factory.Delete(kind, ns);
   let callback = undefined;
   let tooltip;
 
@@ -33,14 +34,14 @@ const deleteModal = (kind, ns) => {
   } else if (ns.status.phase === 'Terminating') {
     tooltip = `${kind.label} is already terminating`;
   } else {
-    callback = () => deleteNamespaceModal({kind, resource: ns});
+    callback = () => deleteNamespaceModal({ kind, resource: ns });
   }
   if (tooltip) {
     label = <div className="dropdown__disabled">
       <Tooltip content={tooltip}>{label}</Tooltip>
     </div>;
   }
-  return {label, weight, callback};
+  return { label, weight, callback };
 };
 
 const nsMenuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, deleteModal];
@@ -51,7 +52,7 @@ const NamespaceHeader = props => <ListHeader>
   <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.labels">Labels</ColHead>
 </ListHeader>;
 
-const NamespaceRow = ({obj: ns}) => <ResourceRow obj={ns}>
+const NamespaceRow = ({ obj: ns }) => <ResourceRow obj={ns}>
   <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
     <ResourceCog actions={nsMenuActions} kind="Namespace" resource={ns} />
     <ResourceLink kind="Namespace" name={ns.metadata.name} title={ns.metadata.uid} />
@@ -76,7 +77,7 @@ const ProjectHeader = props => <ListHeader>
   <ColHead {...props} className="col-md-3 hidden-sm hidden-xs" sortField="metadata.labels">Labels</ColHead>
 </ListHeader>;
 
-const ProjectRow = ({obj: project}) => {
+const ProjectRow = ({ obj: project }) => {
   const displayName = getDisplayName(project);
   const requester = getRequester(project);
   return <ResourceRow obj={project}>
@@ -117,26 +118,26 @@ const ProjectsPage_ = props => {
 export const ProjectsPage = connectToFlags(FLAGS.CAN_CREATE_PROJECT)(ProjectsPage_);
 
 class PullSecret extends SafetyFirst {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.state = {isLoading: true, data: undefined};
+    this.state = { isLoading: true, data: undefined };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     super.componentDidMount();
     this.load(_.get(this.props, 'namespace.metadata.name'));
   }
 
-  load (namespaceName) {
+  load(namespaceName) {
     if (!namespaceName) {
       return;
     }
-    k8sGet(SecretModel, null, namespaceName, {queryParams: {fieldSelector: 'type=kubernetes.io/dockerconfigjson'}})
+    k8sGet(SecretModel, null, namespaceName, { queryParams: { fieldSelector: 'type=kubernetes.io/dockerconfigjson' } })
       .then((pullSecrets) => {
-        this.setState({isLoading: false, data: _.get(pullSecrets, 'items[0]')});
+        this.setState({ isLoading: false, data: _.get(pullSecrets, 'items[0]') });
       })
       .catch((error) => {
-        this.setState({isLoading: false, data: undefined});
+        this.setState({ isLoading: false, data: undefined });
 
         // A 404 just means that no pull secrets exist
         if (error.status !== 404) {
@@ -145,16 +146,16 @@ class PullSecret extends SafetyFirst {
       });
   }
 
-  render () {
+  render() {
     if (this.state.isLoading) {
       return <LoadingInline />;
     }
-    const modal = () => configureNamespacePullSecretModal({namespace: this.props.namespace, pullSecret: this.state.data});
+    const modal = () => configureNamespacePullSecretModal({ namespace: this.props.namespace, pullSecret: this.state.data });
     return <a className="co-m-modal-link" onClick={modal}>{_.get(this.state.data, 'metadata.name') || 'Not Configured'}</a>;
   }
 }
 
-const ResourceUsage = requirePrometheus(({ns}) => <div className="co-m-pane__body">
+const ResourceUsage = requirePrometheus(({ ns }) => <div className="co-m-pane__body">
   <SectionHeading text="Resource Usage" />
   <div className="row">
     <div className="col-sm-6 col-xs-12">
@@ -177,7 +178,7 @@ const ResourceUsage = requirePrometheus(({ns}) => <div className="co-m-pane__bod
   <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${ns.metadata.name}"})))`} humanize={humanizeMem} metric="pod_name" />
 </div>);
 
-const Details = ({obj: ns}) => {
+const Details = ({ obj: ns }) => {
   const displayName = getDisplayName(ns);
   const requester = getRequester(ns);
   return <div>
@@ -210,7 +211,9 @@ const Details = ({obj: ns}) => {
   </div>;
 };
 
-const RolesPage = ({obj: {metadata}}) => <RoleBindingsPage namespace={metadata.name} showTitle={false} />;
+const RolesPage = ({ obj: { metadata } }) => <RoleBindingsPage namespace={metadata.name} showTitle={false} />;
+
+const Metering = ({ obj: { metadata } }) => <MeteringPage namespace={metadata.name} showTitle={false} />;
 
 const autocompleteFilter = (text, item) => fuzzy(text, item);
 
@@ -228,8 +231,8 @@ class NamespaceDropdown_ extends React.Component {
   componentDidUpdate() {
     const { dispatch } = this.props;
     // if (namespace.loaded) {
-      // const projectsAvailable = !_.isEmpty(namespace.data);
-      setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, true);
+    // const projectsAvailable = !_.isEmpty(namespace.data);
+    setFlag(dispatch, FLAGS.PROJECTS_AVAILABLE, true);
     // }
   }
 
@@ -279,15 +282,43 @@ class NamespaceDropdown_ extends React.Component {
   }
 }
 
+const MeteringPage = requirePrometheus((props) => <div className="co-m-pane__body">
+  <SectionHeading text="Metering" />
+  <div className="row">
+    {/* <div className="col-sm-6 col-xs-12"> */}
+    <Line title="CPU Shares" query={[
+      {
+        name: 'Used',
+        query: 'cpu',
+      },
+    ]} />
+    <Line title="Memory" query={[
+      {
+        name: 'Used',
+        query: 'memory',
+      },
+    ]} />
+    <Line title="Storage" query={[
+      {
+        name: 'Used',
+        query: 'storage',
+      },
+    ]} />
+  </div>
+  {/* </div>
+  {/* <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${props.namespace}"})))`} humanize={humanizeMem} metric="pod_name" /> */}
+</div>);
+
+
 const NamespaceDropdown = connect(namespaceDropdownStateToProps)(NamespaceDropdown_);
 
-const NamespaceSelector_ = ({useProjects, inFlight}) => inFlight
+const NamespaceSelector_ = ({ useProjects, inFlight }) => inFlight
   ? <div className="co-namespace-selector" />
   : <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
     <NamespaceDropdown useProjects={useProjects} />
   </Firehose>;
 
-const namespaceSelectorStateToProps = ({k8s}) => ({
+const namespaceSelectorStateToProps = ({ k8s }) => ({
   inFlight: k8s.getIn(['RESOURCES', 'inFlight']),
   useProjects: k8s.hasIn(['RESOURCES', 'models', ProjectModel.kind]),
 });
@@ -297,7 +328,7 @@ export const NamespaceSelector = connect(namespaceSelectorStateToProps)(Namespac
 export const NamespacesDetailsPage = props => <DetailsPage
   {...props}
   menuActions={nsMenuActions}
-  pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage)]}
+  pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage), navFactory.metering(Metering)]}
 />;
 
 export const ProjectsDetailsPage = props => <DetailsPage

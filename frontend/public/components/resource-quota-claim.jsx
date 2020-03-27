@@ -123,6 +123,8 @@ const Details = ({ obj: resourcequotaclaim }) => {
             <dl className="co-m-pane__details">
               <dt>Status</dt>
               <dd>{resourcequotaclaim.status.status}</dd>
+              {resourcequotaclaim.status.status === 'Reject' && <dt>Reason</dt>}
+              {resourcequotaclaim.status.status === 'Reject' && <dd>{resourcequotaclaim.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>

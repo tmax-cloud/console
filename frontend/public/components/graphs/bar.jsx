@@ -12,7 +12,7 @@ const colors = {
 };
 
 export class Bar extends BaseGraph {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.data = [{
       y: [],
@@ -31,8 +31,8 @@ export class Bar extends BaseGraph {
 
     this.layout = {
       bargap: 0.05,
-      xaxis: {zeroline: false, showticklabels: false, showgrid: false},
-      yaxis: {zeroline: false, showticklabels: false, showgrid: false},
+      xaxis: { zeroline: false, showticklabels: false, showgrid: false },
+      yaxis: { zeroline: false, showticklabels: false, showgrid: false },
       margin: {
         l: 10,
         b: 18,
@@ -47,7 +47,7 @@ export class Bar extends BaseGraph {
     this.timeSpan = 0;
   }
 
-  annotate (texts, values) {
+  annotate(texts, values) {
     const annotations = [];
     _.each(texts, (text, i) => {
       annotations.push({
@@ -80,14 +80,14 @@ export class Bar extends BaseGraph {
     return annotations;
   }
 
-  updateGraph (data) {
+  updateGraph(data) {
     if (_.get(data, '[0].status') !== 'success') {
       return;
     }
     const newX = [];
     const newY = [];
     const metricName = this.props.metric;
-    _.each(data[0].data.result, ({metric, value}, i) => {
+    _.each(data[0].data.result, ({ metric, value }, i) => {
       newY.push(metric[metricName] || `(unknown #${i})`);
       newX.push(parseFloat(value[1], 10));
     });
