@@ -139,7 +139,7 @@ const withServiceInstanceForm = SubForm =>
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
         .then(res => res.json())
         .then(res => {
-          const planListData = res.items.map(item => {
+          const planListData = _.filter(res.items, ['spec.serviceClassRef.name', this.state.selectedClass.name]).map(item => {
             return {
               name: _.get(item, 'metadata.name'),
               uid: _.get(item, 'metadata.uid'),
@@ -213,6 +213,7 @@ const withServiceInstanceForm = SubForm =>
           return { selectedClass: _.cloneDeep(selectedClass) };
         },
         () => {
+          this.getPlanList();
           this.getParams();
         },
       );
@@ -270,7 +271,7 @@ const withServiceInstanceForm = SubForm =>
     }
     componentDidMount() {
       this.getClassList();
-      this.getPlanList();
+      // this.getPlanList();
       // this.getParams();
     }
     render() {
