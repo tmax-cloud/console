@@ -9,16 +9,15 @@ class ServiceClassCard extends Component {
     super(props);
     this.onClickCard = this.onClickCard.bind(this);
   }
-  onClickCard(uid) {
-    console.log('onClickCard');
-    this.props.onChangeClass(uid);
+  onClickCard(serviceClass) {
+    this.props.onChangeClass(serviceClass);
   }
   render() {
-    const { selectedClassId } = this.props;
+    const { selectedClass } = this.props;
     const { uid, name, imageUrl, description, providerDisplayName, isRecommended, isNew } = this.props.serviceClass;
-    const isActive = selectedClassId === uid;
+    const isActive = selectedClass && selectedClass.uid === uid;
     return (
-      <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" onClick={() => this.onClickCard(uid)} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+      <div className="col-xs-12 col-sm-6 col-md-4 col-lg-2" onClick={() => this.onClickCard(this.props.serviceClass)} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
         <div className={`card-pf card-pf-view card-pf-view-select card-pf-view-single-select ${isActive && 'active'}`} style={{ height: '184px', margin: '0 0 20px', padding: '0 20px 20px 20px', border: `${!isActive ? '1px solid #C5C5C8' : '1px solid #39a5dc'}`, borderRadius: '2px' }}>
           <div className="card-bookmark" style={{ marginLeft: '-10px' }}>
             <img
@@ -122,14 +121,13 @@ export class CardList extends Component {
   }
   render() {
     // const { classList, selectedClassId } = this.state;
-    const { classList, selectedClassId, onChangeClass } = this.props;
-    console.log('classList', classList);
+    const { classList, selectedClass, onChangeClass } = this.props;
     return (
       <div className="cards-pf" style={{ background: 'inherit' }}>
         <div className="container-fluid container-cards-pf" style={{ padding: '0px' }}>
           <div className="row row-cards-pf" style={{ padding: 0 }}>
             {classList.map(item => (
-              <ServiceClassCard serviceClass={item} key={item.uid} selectedClassId={selectedClassId} onChangeClass={onChangeClass} />
+              <ServiceClassCard serviceClass={item} key={item.uid} selectedClass={selectedClass} onChangeClass={onChangeClass} />
             ))}
           </div>
         </div>
