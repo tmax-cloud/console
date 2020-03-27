@@ -18,19 +18,16 @@ class ServiceClassCard extends Component {
     const { uid, name, imageUrl, description, providerDisplayName, recommend, isNew } = this.props.serviceClass;
     const isActive = selectedClass && selectedClass.uid === uid;
     return (
-      <div
-        className="col-xs-12 col-sm-6 col-md-4 col-lg-2"
-        onClick={() => this.onClickCard(this.props.serviceClass)}
-        style={{ paddingLeft: '10px', paddingRight: '10px' }}
-      >
+      <div className="col-xs-12 col-sm-6 col-md-4 col-lg-2" onClick={() => this.onClickCard(this.props.serviceClass)} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
         <div
-          className={`card-pf card-pf-view card-pf-view-select card-pf-view-single-select ${isActive && 'active'}`}
+          className="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
           style={{
             height: '184px',
             margin: '0 0 20px',
             padding: '0 20px 20px 20px',
-            border: `${!isActive ? '1px solid #C5C5C8' : '1px solid #39a5dc'}`,
+            border: '1px solid #C5C5C8',
             borderRadius: '2px',
+            background: `${isActive ? '#CAD7E5 100%' : 'inherit'}`,
           }}
         >
           <div className="card-bookmark" style={{ marginLeft: '-10px' }}>
