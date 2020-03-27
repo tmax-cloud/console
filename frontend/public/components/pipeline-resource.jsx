@@ -114,8 +114,8 @@ PipelineResourceList.displayName = PipelineResourceList;
 
 const PipelineResourcesPage = props => {
     const createItems = {
-        form: 'Pipeline Resource (폼 에디터)',
-        yaml: 'Pipeline Resource (YAML 에디터)'
+        form: 'Pipeline Resource (Form Editor)',
+        yaml: 'Pipeline Resource (YAML Editor)'
     };
 
     const createProps = {

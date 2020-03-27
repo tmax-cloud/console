@@ -102,7 +102,17 @@ export class OSUserMenu extends SafetyFirst<OSUserMenuProps, OSUserMenuState> {
 
   _getUserInfo() {
     // TODO 유저 정보 조회 서비스 연동 
-    this.setState({username: 'admin'});
+    if ((window as any).SERVER_FLAGS.releaseModeFlag && (window as any).localStorage.getItem('refreshToken') && (window as any).localStorage.getItem('accessToken')) {
+      const userRole = JSON.parse(atob((window as any).localStorage.getItem('accessToken').split('.')[1])).role;
+      if (userRole !== 'cluster-admin') {
+        this.setState({username: 'user'});
+      } else {
+        this.setState({username: 'admin'});
+      }
+    } else {
+      this.setState({username: 'admin'});
+    }
+
     // coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')
     //   .then((user) => {
     //     this.setState({ username: _.get(user, 'fullName') || user.metadata.name });

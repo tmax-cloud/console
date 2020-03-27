@@ -137,16 +137,26 @@ const IngressesDetailsPage = props => <DetailsPage
   pages={[navFactory.details(detailsPage(Details)), navFactory.editYaml()]}
 />;
 const IngressesList = props => <List {...props} Header={IngressListHeader} Row={IngressListRow} />;
-const IngressesPage = props => {
-  const createItems = {
-    form: '인그레스 (폼 에디터)',
-    yaml: '인그레스 (YAML 에디터)'
-  };
+const IngressesPage = props => (
+  <ListPage
+        {...props}
+        ListComponent={IngressesList}
+        canCreate={true}
+        kind="Ingress"
+    />
+)
 
-  const createProps = {
-    items: createItems,
-    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/ingresses/new${type !== 'yaml' ? '/' + type : ''}`
-  };
-  return <ListPage ListComponent={IngressesList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
-};
+// 미리: 인그레스 페이지는 폼 에디터 임시로 disable
+// {
+//   const createItems = {
+//     form: '인그레스 (폼 에디터)',
+//     yaml: '인그레스 (YAML 에디터)'
+//   };
+
+//   const createProps = {
+//     items: createItems,
+//     createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/ingresses/new${type !== 'yaml' ? '/' + type : ''}`
+//   };
+//   return <ListPage ListComponent={IngressesList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+// };
 export { IngressesList, IngressesPage, IngressesDetailsPage };
