@@ -61,6 +61,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                             },
                             command: [],
                             args: [],
+                            ports: [],
                         }],
                     }
                 }
@@ -136,7 +137,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
         deployment.metadata.name = event.target.value;
-        deployment.metadata.labels.app = event.target.value;
+        // deployment.metadata.labels.app = event.target.value;
         this.setState({ deployment });
     }
     onNameFocusOut(event) {
@@ -204,7 +205,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     onLabelChanged(event) {
         let deployment = { ...this.state.deployment };
-        deployment.metadata.labels = { app: '' };
+        deployment.metadata.labels = {};
         if (event.length !== 0) {
             event.forEach(item => {
                 if (item.split('=')[1] === undefined) {
@@ -213,6 +214,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     return;
                 }
                 document.getElementById('labelErrMsg').style.display = 'none';
+                deployment.metadata.labels[item.split('=')[0]] = item.split('=')[1];
             })
         }
         this.setState({ deployment });
@@ -261,6 +263,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             this.setState({ deployment });
         })
 
+        // ports 데이터 가공
+        this.state.ports.forEach(arr => {
+            let obj = {
+                name: arr[0],
+                containerPort: Number(arr[1]),
+                protocol: arr[2]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].ports.push(obj);
+            this.setState({ deployment });
+        })
+
+        const newSecret = _.assign({}, this.state.deployment);
+
         // volumes 데이터 가공
         this.state.volumes.forEach(arr => {
             let volumeMounts = {
@@ -283,6 +299,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             this.setState({ deployment });
         })
         const newDeployment = _.assign({}, this.state.deployment);
+
         const ko = kindObj(kind);
 
         console.log(newDeployment, this.state);

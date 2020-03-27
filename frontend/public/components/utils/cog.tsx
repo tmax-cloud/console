@@ -11,7 +11,7 @@ import { history, resourceObjPath } from './index';
 import { referenceForModel, K8sResourceKind, K8sResourceKindReference, K8sKind } from '../../module/k8s';
 import { connectToModel } from '../../kinds';
 
-const CogItems: React.SFC<CogItemsProps> = ({options, onClick}) => {
+const CogItems: React.SFC<CogItemsProps> = ({ options, onClick }) => {
   const visibleOptions = _.reject(options, o => _.get(o, 'hidden', false));
   const lis = _.map(visibleOptions, (o, i) => <li key={i}><a onClick={e => onClick(e, o)}>{o.label}</a></li>);
   return <ul className="dropdown-menu co-m-cog__dropdown">
@@ -42,7 +42,7 @@ const cogFactory: CogFactory = {
     label: 'Edit Pod Selector',
     callback: () => podSelectorModal({
       kind: kind,
-      resource:  obj,
+      resource: obj,
     }),
   }),
   ModifyAnnotations: (kind, obj) => ({
@@ -76,12 +76,13 @@ const cogFactory: CogFactory = {
 cogFactory.common = [cogFactory.ModifyLabels, cogFactory.ModifyAnnotations, cogFactory.Edit, cogFactory.Delete];
 
 export const ResourceCog = connectToModel((props: ResourceCogProps) => {
-  const {actions, kindObj, resource, isDisabled} = props;
+  const { actions, kindObj, resource, isDisabled } = props;
 
   if (!kindObj) {
     return null;
   }
   return <Cog
+    resource={resource}
     options={actions.map(a => a(kindObj, resource))}
     key={resource.metadata.uid}
     isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')}
@@ -108,20 +109,24 @@ export class Cog extends DropdownMixin {
   }
 
   render() {
-    const {options, isDisabled, id} = this.props;
-
-    return <div className={classNames('co-m-cog-wrapper', {'co-m-cog-wrapper--enabled': !isDisabled})} id={id}>
-      { isDisabled ?
+    const { options, isDisabled, id, resource } = this.props;
+    if (resource.kind === 'NamespaceClaim' || resource.kind === 'RoleBindingClaim' || resource.kind === 'ResourceQuotaClaim') {
+      if (resource.status.status === 'Success' && options[options.length - 1].label === 'Edit Status') {
+        options.pop();
+      }
+    } // claim 페이지에서 status에 따라 'Edit Status' 메뉴 활성화/비활성화 분기 로직
+    return <div className={classNames('co-m-cog-wrapper', { 'co-m-cog-wrapper--enabled': !isDisabled })} id={id}>
+      {isDisabled ?
         <Tooltip content="disabled">
-          <div ref={this.dropdownElement} className={classNames('co-m-cog', {'co-m-cog--disabled' : isDisabled})} >
-            <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', {'co-m-cog__icon--disabled' : isDisabled})} aria-hidden="true"></span>
+          <div ref={this.dropdownElement} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })} >
+            <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
             <span className="sr-only">Actions</span>
           </div>
         </Tooltip> :
-        <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', {'co-m-cog--disabled' : isDisabled})} >
-          <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', {'co-m-cog__icon--disabled' : isDisabled})} aria-hidden="true"></span>
+        <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })} >
+          <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
           <span className="sr-only">Actions</span>
-          { this.state.active && <CogItems options={options} onClick={this.onClick} /> }
+          {this.state.active && <CogItems options={options} onClick={this.onClick} />}
         </div>
       }
     </div>;
@@ -147,7 +152,7 @@ export type CogItemsProps = {
   onClick: (event: React.MouseEvent<{}>, option: CogOption) => void;
 };
 
-export type CogFactory = {[name: string]: CogAction} & {common?: CogAction[]};
+export type CogFactory = { [name: string]: CogAction } & { common?: CogAction[] };
 
 CogItems.displayName = 'CogItems';
 ResourceCog.displayName = 'ResourceCog';
