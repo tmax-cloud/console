@@ -110,11 +110,13 @@ export class Cog extends DropdownMixin {
 
   render() {
     const { options, isDisabled, id, resource } = this.props;
-    if (resource.kind === 'NamespaceClaim' || resource.kind === 'RoleBindingClaim' || resource.kind === 'ResourceQuotaClaim') {
-      if (resource.status.status === 'Success' && options[options.length - 1].label === 'Edit Status') {
-        options.pop();
-      }
-    } // claim 페이지에서 status에 따라 'Edit Status' 메뉴 활성화/비활성화 분기 로직
+    if (resource) {
+      if (resource.kind === 'NamespaceClaim' || resource.kind === 'RoleBindingClaim' || resource.kind === 'ResourceQuotaClaim') {
+        if (resource.status.status === 'Success' && options[options.length - 1].label === 'Edit Status') {
+          options.pop();
+        }
+      } // claim 페이지에서 status에 따라 'Edit Status' 메뉴 활성화/비활성화 분기 로직
+    }
     return <div className={classNames('co-m-cog-wrapper', { 'co-m-cog-wrapper--enabled': !isDisabled })} id={id}>
       {isDisabled ?
         <Tooltip content="disabled">
