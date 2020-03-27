@@ -162,7 +162,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.setState({
             env: envs.keyValuePairs
         });
-        console.log(this.state.env);
     }
     _updateRequests(reqs) {
         this.setState({
@@ -224,20 +223,19 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         const { kind, metadata } = this.state.deployment;
         this.setState({ inProgress: true });
 
-        const newSecret = _.assign({}, this.state.deployment);
-        const ko = kindObj(kind);
-
-
-
         // env 데이터 가공
         this.state.env.forEach(arr => {
-            console.log(arr);
-            arr.forEach(data => {
-                console.log(data);
-            })
+            let obj = {
+                name: arr[0],
+                value: arr[1]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.env.push(obj);
+            this.setState({ deployment });
         })
 
-
+        const newSecret = _.assign({}, this.state.deployment);
+        const ko = kindObj(kind);
 
         console.log(this.state);
         return;
