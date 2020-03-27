@@ -29,8 +29,8 @@ const determineCreateType = (data) => {
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
     constructor(props) {
         super(props);
-        const existingTemplateInstance = _.pick(props.obj, ['metadata', 'type']);
-        const deployment = _.defaultsDeep({}, props.fixed, existingTemplateInstance, {
+        const existingDeployment = _.pick(props.obj, ['metadata', 'type']);
+        const deployment = _.defaultsDeep({}, props.fixed, existingDeployment, {
             apiVersion: 'apps/v1',
             kind: "Deployment",
             metadata: {
@@ -47,18 +47,22 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         labels: { app: '' }
                     },
                     spec: {
+                        restartPolicy: 'Always',
+                        volumes: [],
                         containers: [{
                             name: 'hello-hypercloud',
                             image: 'hypercloud/hello-hypercloud',
+                            imagePullPolicy: '',
                             env: [],
+                            volumeMounts: [],
                             resources: {
                                 limits: [],
                                 requests: []
                             },
                             command: [],
                             args: [],
+                            ports: [],
                         }],
-                        restartPolicy: 'Always',
                     }
                 }
             }
@@ -258,6 +262,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             this.setState({ deployment });
         })
 
+        // ports 데이터 가공
+        this.state.ports.forEach(arr => {
+            let obj = {
+                name: arr[0],
+                containerPort: Number(arr[1]),
+                protocol: arr[2]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.containers[0].ports.push(obj);
+            this.setState({ deployment });
+        })
+
+        const newSecret = _.assign({}, this.state.deployment);
+
         // volumes 데이터 가공
         this.state.volumes.forEach(arr => {
             let volumeMounts = {
@@ -275,6 +293,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             this.setState({ deployment });
         })
         const newDeployment = _.assign({}, this.state.deployment);
+
         const ko = kindObj(kind);
 
         console.log(this.state);
