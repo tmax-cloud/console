@@ -12,7 +12,7 @@ const editYamlComponent = (props) => <AsyncComponent loader={() => import('../ed
 
 class PodsComponent extends React.PureComponent {
   render() {
-    const {metadata: {namespace}, spec: {selector}} = this.props.obj;
+    const { metadata: { namespace }, spec: { selector } } = this.props.obj;
     if (_.isEmpty(selector)) {
       return <EmptyBox label="Pods" />;
     }
@@ -64,16 +64,21 @@ export const navFactory = {
     href: 'environment',
     name: 'Environment',
     component: component,
+  }),
+  metering: (component) => ({
+    href: 'metering',
+    name: 'Metering',
+    component: component,
   })
 };
 
 /** @type {React.SFC<{pages: {href: string, name: string}[], basePath: string}>} */
-export const NavBar = ({pages, basePath}) => {
+export const NavBar = ({ pages, basePath }) => {
   const divider = <li className="co-m-vert-nav__menu-item co-m-vert-nav__menu-item--divider" key="_divider" />;
   basePath = basePath.replace(/\/$/, '');
 
-  return <ul className="co-m-vert-nav__menu">{_.flatten(_.map(pages, ({name, href}, i) => {
-    const klass = classNames('co-m-vert-nav__menu-item', {'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`)});
+  return <ul className="co-m-vert-nav__menu">{_.flatten(_.map(pages, ({ name, href }, i) => {
+    const klass = classNames('co-m-vert-nav__menu-item', { 'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`) });
     const tab = <li className={klass} key={name}><Link to={`${basePath}/${href}`}>{name}</Link></li>;
 
     // These tabs go before the divider
@@ -85,12 +90,12 @@ NavBar.displayName = 'NavBar';
 
 /** @augments {React.PureComponent<{className?: string, label?: string, pages: {href: string, name: string, component: React.ComponentType}[], match: any, resourceKeys?: string[]}>} */
 export class VertNav extends React.PureComponent {
-  render () {
+  render() {
     const props = this.props;
 
     const componentProps = _.pick(props, ['filters', 'selected', 'match']);
     componentProps.obj = props.obj.data;
-    const extraResources = _.reduce(props.resourceKeys, (acc, key) => ({...acc, [key]: props[key].data}), {});
+    const extraResources = _.reduce(props.resourceKeys, (acc, key) => ({ ...acc, [key]: props[key].data }), {});
 
     const routes = props.pages.map(p => {
       const path = `${props.match.url}/${p.href}`;
