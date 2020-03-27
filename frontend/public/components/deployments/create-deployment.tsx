@@ -25,17 +25,6 @@ const determineCreateType = (data) => {
     return CreateType.form;
 };
 
-const Section = ({ label, children, id }) => <div className="row">
-    <div className="col-xs-2">
-        <div>{label}</div>
-    </div>
-    <div className="col-xs-2" id={id}>
-        {children}
-    </div>
-</div>;
-
-const NameValueEditorComponent = (props) => <AsyncComponent loader={() => import('../utils/name-value-editor.jsx').then(c => c.NameValueEditor)} {...props} />;
-
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
     constructor(props) {
@@ -182,6 +171,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.setState({
             volumes: volume.volumePairs
         });
+        console.log(this.state.volumes)
     }
     onRestartPolicyChanged(event) {
         let deployment = { ...this.state.deployment };
@@ -234,14 +224,30 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             this.setState({ deployment });
         })
 
-        const newSecret = _.assign({}, this.state.deployment);
+        // volumes 데이터 가공
+        this.state.volumes.forEach(arr => {
+            let volumeMounts = {
+                name: arr[0],
+                mountPath: arr[1]
+            };
+            let volumes = {
+                name: arr[0],
+                claimName: arr[2],
+                readOnly: arr[3]
+            };
+            let deployment = { ...this.state.deployment };
+            deployment.spec.template.spec.volumes.push(volumes);
+            deployment.spec.template.spec.containers[0].volumeMounts.push(volumeMounts);
+            this.setState({ deployment });
+        })
+        const newDeployment = _.assign({}, this.state.deployment);
         const ko = kindObj(kind);
 
         console.log(this.state);
         return;
         (this.props.isCreate
-            ? k8sCreate(ko, newSecret)
-            : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)
+            ? k8sCreate(ko, newDeployment)
+            : k8sUpdate(ko, newDeployment, metadata.namespace, newDeployment.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
             history.push('/k8s/ns/' + metadata.namespace + '/deployments');
