@@ -61,6 +61,7 @@
     margin-right: 5px;
   }
   &__username {
+    width: 40px;
     font-weight: 300;
     // truncate very long usernames
     max-width: 200px;

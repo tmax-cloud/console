@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import * as newImg from '../imgs/ic_new.svg';
 import * as recommendImg from '../imgs/ic_recommend.svg';
 import * as defaultImg from '../imgs/img_catalog_default.svg';
+import { serviceClassModal } from './modals';
 
 class ServiceClassCard extends Component {
   constructor(props) {
@@ -14,33 +15,53 @@ class ServiceClassCard extends Component {
   }
   render() {
     const { selectedClass } = this.props;
-    const { uid, name, imageUrl, description, providerDisplayName, isRecommended, isNew } = this.props.serviceClass;
+    const { uid, name, imageUrl, description, providerDisplayName, recommend, isNew } = this.props.serviceClass;
     const isActive = selectedClass && selectedClass.uid === uid;
     return (
-      <div className="col-xs-12 col-sm-6 col-md-4 col-lg-2" onClick={() => this.onClickCard(this.props.serviceClass)} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-        <div className={`card-pf card-pf-view card-pf-view-select card-pf-view-single-select ${isActive && 'active'}`} style={{ height: '184px', margin: '0 0 20px', padding: '0 20px 20px 20px', border: `${!isActive ? '1px solid #C5C5C8' : '1px solid #39a5dc'}`, borderRadius: '2px' }}>
+      <div
+        className="col-xs-12 col-sm-6 col-md-4 col-lg-2"
+        onClick={() => this.onClickCard(this.props.serviceClass)}
+        style={{ paddingLeft: '10px', paddingRight: '10px' }}
+      >
+        <div
+          className={`card-pf card-pf-view card-pf-view-select card-pf-view-single-select ${isActive && 'active'}`}
+          style={{
+            height: '184px',
+            margin: '0 0 20px',
+            padding: '0 20px 20px 20px',
+            border: `${!isActive ? '1px solid #C5C5C8' : '1px solid #39a5dc'}`,
+            borderRadius: '2px',
+          }}
+        >
           <div className="card-bookmark" style={{ marginLeft: '-10px' }}>
             <img
               src={recommendImg}
               style={{
-                // display: isRecommended ? 'inline-block' : 'none',
-                display: 'inline-block',
+                display: recommend ? 'inline-block' : 'none',
                 marginRight: '10px',
               }}
             />
             <img
               src={newImg}
               style={{
-                visibility: 'visible',
-                // visibility: isNew ? 'visible' : 'hidden',
+                visibility: isNew ? 'visible' : 'hidden',
               }}
             />
-            <button className="pull-right" onClick={() => alert('상세정보 팝업 구현 예정')}>
+            <button
+              style={{ marginTop: '10px', width: '27px', height: '27px', border: '1px solid #677E9A', background: 'white' }}
+              type="button"
+              className="pull-right"
+              onClick={e => {
+                e.preventDefault();
+                console.log('click');
+                serviceClassModal({ detail: this.props.serviceClass });
+              }}
+            >
               <i className="fa fa-info" />
             </button>
           </div>
           <div className="card-pf-body" style={{ margin: '0', padding: '0' }}>
-            <div className="card-pf-items text-center" style={{ display: 'flex', marginTop: '10px' }}>
+            <div className="card-pf-items text-left" style={{ display: 'flex', marginTop: '10px' }}>
               <div className="card-logo" style={{ width: '70px', height: '70px', lineHeight: '70px' }}>
                 <img
                   style={{ verticalAlign: 'middle' }}
@@ -54,10 +75,10 @@ class ServiceClassCard extends Component {
                 />
               </div>
               <div className="card-pf-item" style={{ paddingLeft: '20px' }}>
-                <h2 className="card-pf-title text-center" style={{ fontSize: '13px', color: '#222222', fontWeight: 'bold' }}>
+                <h2 className="card-pf-title text-left" style={{ fontSize: '13px', color: '#222222', fontWeight: 'bold' }}>
                   {name}
                 </h2>
-                <span className="card-pf-item-text" style={{ color: '#222222', fontSize: '13px' }}>
+                <span className="card-pf-item-text text-left" style={{ color: '#222222', fontSize: '13px' }}>
                   {providerDisplayName}
                 </span>
               </div>

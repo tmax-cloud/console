@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import * as _ from 'lodash-es';
-import React, { Component } from 'react';
+import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Stepper from 'react-stepper-horizontal';
@@ -38,7 +38,7 @@ const ServiceInstanceTypeAbstraction = {
 //   [ServiceInstanceTypeAbstraction.form]: '클러스터 서비스 인스턴스 생성을 위한 폼 에디터.',
 // };
 
-const determineServiceInstanceTypeAbstraction = data => {
+const determineServiceInstanceTypeAbstraction = () => {
   return 'form';
 };
 
@@ -61,13 +61,13 @@ const withServiceInstanceForm = SubForm =>
         error: null,
         steps: [
           {
-            title: '서비스 클래스 선택',
+            title: 'Select Service Class',
           },
           {
-            title: '서비스 플랜 선택',
+            title: 'Select Service Plan',
           },
           {
-            title: '서비스 인스턴스 설정',
+            title: 'Service Instance Settings',
           },
         ],
         currentStep: 0,
@@ -113,7 +113,9 @@ const withServiceInstanceForm = SubForm =>
       this.save = this.save.bind(this);
     }
     getClassList() {
-      coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`)
+      coFetch(
+        `/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`,
+      )
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/serviceclasses`)
         .then(res => res.json())
         .then(res => {
@@ -125,6 +127,8 @@ const withServiceInstanceForm = SubForm =>
               imageUrl: _.get(item, 'spec.externalMetadata.imageUrl') || '',
               longDescription: _.get(item, 'spec.externalMetadata.longDescription') || '',
               providerDisplayName: _.get(item, 'spec.externalMetadata.providerDisplayName') || '',
+              recommend: _.get(item, 'spec.externalMetadata.recommend') || false,
+              isNew: _.get(item, 'spec.externalMetadata.isNew') || false,
               ...item,
             };
           });
@@ -135,7 +139,9 @@ const withServiceInstanceForm = SubForm =>
         });
     }
     getPlanList() {
-      coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/namespaces/${this.props.namespace}/serviceplans`)
+      coFetch(
+        `/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/namespaces/${this.props.namespace}/serviceplans`,
+      )
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
         .then(res => res.json())
         .then(res => {
@@ -161,7 +167,9 @@ const withServiceInstanceForm = SubForm =>
       if (!selectedClass) {
         return;
       }
-      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${this.props.namespace}/templates/${selectedClass.name}`)
+      coFetch(
+        `/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${this.props.namespace}/templates/${selectedClass.name}`,
+      )
         .then(res => res.json())
         .then(res => {
           let stringobj = JSON.stringify(res.objects);
@@ -275,7 +283,7 @@ const withServiceInstanceForm = SubForm =>
       // this.getParams();
     }
     render() {
-      const title = '서비스 인스턴스 생성';
+      const title = 'Create Service Instance';
       const { steps, currentStep, selectedClass, selectedPlan, paramList } = this.state;
       return (
         <div className="co-m-pane__body">
@@ -289,41 +297,58 @@ const withServiceInstanceForm = SubForm =>
             <Stepper steps={steps} activeStep={currentStep} />
             <div className="separator"></div>
             {/* stepper */}
-            {currentStep === 0 && <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />}
-            {currentStep === 1 && (
-              <React.Fragment>
+            {currentStep === 0 &&
+              (this.state.classList.length > 0 ? (
+                <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
+              ) : (
+                <div>No Service Class Found</div>
+              ))}
+            {currentStep === 1 &&
+              (this.state.classList.length > 0 ? (
                 <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
-              </React.Fragment>
-            )}
+              ) : (
+                <div>No Service Plan Found</div>
+              ))}
             {currentStep === 2 && (
               <React.Fragment>
                 <div className="row">
                   <div className="col-xs-2">
-                    <strong>서비스 인스턴스</strong>
+                    <strong>Service Instance</strong>
                   </div>
                   <div className="col-xs-10">
                     <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                      서비스 인스턴스 이름
+                      Service Instance Name
                     </label>
                     <input className="form-control" type="text" onChange={this.onNameChanged} id="application-name" required />
                     <p className="help-block" id="secret-name-help"></p>
                   </div>
                 </div>
-                <div className="separator"></div>
-                <Section label="파라미터" key="params">
-                  {paramList.map((parameter, index) => (
-                    <React.Fragment key={index}>
-                      <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                        {parameter}
-                      </label>
-                      <input className="form-control" type="text" placeholder="value" id={parameter} onChange={this.onParamValueChanged} required />
-                    </React.Fragment>
-                  ))}
-                </Section>
+                {paramList.length > 0 && (
+                  <React.Fragment>
+                    <div className="separator"></div>
+                    <Section label="Parameter" key="params">
+                      {paramList.map((parameter, index) => (
+                        <React.Fragment key={index}>
+                          <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                            {parameter}
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            placeholder="value"
+                            id={parameter}
+                            onChange={this.onParamValueChanged}
+                            required
+                          />
+                        </React.Fragment>
+                      ))}
+                    </Section>
+                  </React.Fragment>
+                )}
                 <div className="separator"></div>
                 <div className="row">
                   <div className="col-xs-2">
-                    <strong>레이블</strong>
+                    <strong>Label</strong>
                   </div>
                   <div className="col-xs-10">
                     <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
@@ -340,21 +365,21 @@ const withServiceInstanceForm = SubForm =>
             <div style={{ marginTop: '15px' }}>
               {currentStep !== 0 && (
                 <button type="button" className="btn btn-default" onClick={this.onClickBack}>
-                  이전
+                  Back
                 </button>
               )}
               {currentStep !== 2 && (
                 <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
-                  다음
+                  Next
                 </button>
               )}
               {currentStep === 2 && (
                 <button type="submit" className="btn btn-primary" id="save-changes" onClick={this.save}>
-                  생성
+                  Create
                 </button>
               )}
               <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
-                취소
+                Cancel
               </Link>
             </div>
           </ButtonBar>
@@ -387,7 +412,9 @@ class BasicServiceInstanceForm extends React.Component {
 }
 
 const serviceInstanceFormFactory = serviceInstanceType => {
-  return serviceInstanceType === ServiceInstanceTypeAbstraction.form ? withServiceInstanceForm(BasicServiceInstanceForm) : withServiceInstanceForm(BasicServiceInstanceForm);
+  return serviceInstanceType === ServiceInstanceTypeAbstraction.form
+    ? withServiceInstanceForm(BasicServiceInstanceForm)
+    : withServiceInstanceForm(BasicServiceInstanceForm);
 };
 
 const ServiceInstanceLoadingWrapper = props => {
@@ -422,7 +449,7 @@ const ServicePlanList = ({ planList, onChangePlan, selectedPlan }) => {
   return (
     <div className="row">
       <div className="col-xs-2">
-        <strong>서비스 플랜</strong>
+        <strong>Service Plan</strong>
       </div>
       <div className="col-xs-10">
         {planList.map(item => (

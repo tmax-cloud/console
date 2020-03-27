@@ -105,12 +105,12 @@ export class OSUserMenu extends SafetyFirst<OSUserMenuProps, OSUserMenuState> {
     if ((window as any).SERVER_FLAGS.releaseModeFlag && (window as any).localStorage.getItem('refreshToken') && (window as any).localStorage.getItem('accessToken')) {
       const userRole = JSON.parse(atob((window as any).localStorage.getItem('accessToken').split('.')[1])).role;
       if (userRole !== 'cluster-admin') {
-        this.setState({username: 'user'});
+        this.setState({username: '사용자'});
       } else {
-        this.setState({username: 'admin'});
+        this.setState({username: '관리자'});
       }
     } else {
-      this.setState({username: 'admin'});
+      this.setState({username: '사용자'});
     }
 
     // coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')

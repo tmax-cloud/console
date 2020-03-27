@@ -14,3 +14,4 @@ export * from './configure-update-strategy-modal';
 export * from './tags';
 export * from './token-info-modal';
 export * from './delete-modal';
+export * from './service-instance-modal';
