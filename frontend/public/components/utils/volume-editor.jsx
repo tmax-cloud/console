@@ -11,10 +11,13 @@ export class VolumeEditor extends React.Component {
     this._remove = this._remove.bind(this);
   }
   _append(event) {
-    const { updateParentData, volumePairs, nameValueId, allowSorting } = this.props;
-    let lastIndex = this.props.volumePairs.length - 1;
-    let lastData = this.props.volumePairs[lastIndex];
-    updateParentData({ volumePairs: allowSorting ? volumePairs.concat([['', '', '', '', volumePairs.length]]) : volumePairs.concat([['', '', '', '']]) }, nameValueId);
+    const { updateParentData, volumePairs, nameValueId, allowSorting, options } = this.props;
+    let listLength = this.props.volumePairs.length;
+    if (listLength < options.length) {
+      updateParentData({ volumePairs: allowSorting ? volumePairs.concat([['', '', '', '', volumePairs.length]]) : volumePairs.concat([['', '', '', '']]) }, nameValueId);
+    } else {
+      return
+    }
   }
 
   _remove(i) {
@@ -31,28 +34,28 @@ export class VolumeEditor extends React.Component {
     updateParentData({ volumePairs }, nameValueId);
   }
   render() {
-    const { nameString, protocolString, portString, targetPortString, addString, volumePairs, allowSorting, readOnly, nameValueId, options } = this.props;
+    const { nameString, mountPathString, pvcString, readOnlyString, addString, volumePairs, allowSorting, readOnly, nameValueId, options } = this.props;
     const portItems = volumePairs.map((pair, i) => {
       const key = _.get(pair, [VolumeEditorPair.Index], i);
-      return <VolumePairElement onChange={this._change} index={i} nameString={nameString} protocolString={protocolString} portString={portString} targetPortString={targetPortString} allowSorting={allowSorting} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} options={options}/>;
+      return <VolumePairElement onChange={this._change} index={i} nameString={nameString} mountPathString={mountPathString} pvcString={pvcString} readOnlyString={readOnlyString} allowSorting={allowSorting} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} options={options} />;
     });
     return (
       <React.Fragment>
         <div className="row">
           <div className="col-md-2 col-xs-2 text-secondary">{nameString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{portString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{protocolString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{targetPortString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{mountPathString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{pvcString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{readOnlyString.toUpperCase()}</div>
         </div>
         {portItems}
         <div className="row">
           <div className="col-md-12 col-xs-12">
-              <React.Fragment>
-                <span className="btn-link pairs-list__btn" onClick={this._append}>
-                  <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                  {addString}
-                </span>
-              </React.Fragment>
+            <React.Fragment>
+              <span className="btn-link pairs-list__btn" onClick={this._append}>
+                <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
+                {addString}
+              </span>
+            </React.Fragment>
           </div>
         </div>
       </React.Fragment>
@@ -61,9 +64,9 @@ export class VolumeEditor extends React.Component {
 }
 VolumeEditor.defaultProps = {
   nameString: 'Name',
-  protocolString: 'PVC',
-  portString: 'MountPath',
-  targetPortString: 'ReadOnly',
+  mountPathString: 'MountPath',
+  pvcString: 'PVC',
+  readOnlyString: 'ReadOnly',
   addString: 'Add More',
   allowSorting: false,
   nameValueId: 0
@@ -74,9 +77,9 @@ class VolumePairElement extends React.Component {
     super(props);
     this._onRemove = this._onRemove.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
-    this._onChangeProtocol = this._onChangeProtocol.bind(this);
-    this._onChangePort = this._onChangePort.bind(this);
-    this._onChangeTargetPort = this._onChangeTargetPort.bind(this);
+    this._onChangeMountPath = this._onChangeMountPath.bind(this);
+    this._onChangePVC = this._onChangePVC.bind(this);
+    this._onChangeReadOnly = this._onChangeReadOnly.bind(this);
   }
   _onRemove() {
     const { index, onRemove } = this.props;
@@ -86,21 +89,21 @@ class VolumePairElement extends React.Component {
     const { index, onChange } = this.props;
     onChange(e, index, VolumeEditorPair.Name);
   }
-  _onChangeProtocol(e) {
+  _onChangeMountPath(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, VolumeEditorPair.Protocol);
+    onChange(e, index, VolumeEditorPair.MountPath);
   }
-  _onChangePort(e) {
+  _onChangePVC(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, VolumeEditorPair.Port);
+    onChange(e, index, VolumeEditorPair.PVC);
   }
-  _onChangeTargetPort(e) {
+  _onChangeReadOnly(e) {
     const { index, onChange } = this.props;
-    onChange(e, index, VolumeEditorPair.TargetPort);
+    onChange(e, index, VolumeEditorPair.ReadOnly);
   }
 
   render() {
-    const { nameString, portString, targetPortString, allowSorting, pair, options } = this.props;
+    const { nameString, mountPathString, allowSorting, pair, options } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -114,22 +117,22 @@ class VolumePairElement extends React.Component {
           <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[VolumeEditorPair.Name]} onChange={this._onChangeName} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[VolumeEditorPair.Port] || ''} onChange={this._onChangePort} />
+          <input type="text" className="form-control" placeholder={mountPathString.toLowerCase()} value={pair[VolumeEditorPair.MountPath]} onChange={this._onChangeMountPath} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
-          <select value={pair[VolumeEditorPair.Protocol]} onChange={this._onChangeProtocol}  className="form-control" id="protocol">
+          <select value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} className="form-control">
             {options}
           </select>
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
-        <select value={pair[VolumeEditorPair.Protocol]} onChange={this._onChangeProtocol} className="form-control" id="protocol">
-            <option value='true'>True</option>
+          <select value={pair[VolumeEditorPair.ReadOnly]} onChange={this._onChangeReadOnly} className="form-control">
             <option value='false'>False</option>
+            <option value='true'>True</option>
           </select>
         </div>
-          <div className="col-md-1 col-xs-2">
-            <span className={classNames(allowSorting ? 'pairs-list__span-btns' : null)}>{allowSorting ? <React.Fragment>{deleteButton}</React.Fragment> : deleteButton}</span>
-          </div>
+        <div className="col-md-1 col-xs-2">
+          <span className={classNames(allowSorting ? 'pairs-list__span-btns' : null)}>{allowSorting ? <React.Fragment>{deleteButton}</React.Fragment> : deleteButton}</span>
+        </div>
       </div>
     );
   }
