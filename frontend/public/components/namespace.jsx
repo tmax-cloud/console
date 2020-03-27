@@ -304,6 +304,18 @@ const MeteringPage = requirePrometheus((props) => <div className="co-m-pane__bod
         query: 'storage',
       },
     ]} />
+    <Line title="Public IP" query={[
+      {
+        name: 'Used',
+        query: 'publicIp',
+      },
+    ]} />
+    <Line title="GPU" query={[
+      {
+        name: 'Used',
+        query: 'gpu',
+      },
+    ]} />
   </div>
   {/* </div>
   {/* <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${props.namespace}"})))`} humanize={humanizeMem} metric="pod_name" /> */}
