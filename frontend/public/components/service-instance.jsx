@@ -15,10 +15,10 @@ const ServiceInstanceHeader = props => (
       Namespace
     </ColHead>
     <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.serviceClassName">
-      Service Class
+      Cluster Service Class
     </ColHead>
     <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.servicePlanName">
-      Service Plan
+      Cluster Service Plan
     </ColHead>
     <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
       Created
@@ -35,8 +35,8 @@ const ServiceInstanceRow = () =>
           <ResourceLink kind="ServiceInstance" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.serviceClassName}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.servicePlanName}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.clusterServiceClassName}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.clusterServicePlanName}</div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
@@ -58,7 +58,7 @@ const ServiceInstanceRow = () =>
 //     );
 //   };
 
-const Details = ({ obj: serviceinstance }) => {
+const Details = ({ obj: clusterserviceinstance }) => {
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -67,14 +67,14 @@ const Details = ({ obj: serviceinstance }) => {
         <SectionHeading text="Pod Overview" />
         <div className="row">
           <div className="col-sm-6">
-            <ResourceSummary resource={serviceinstance} />
+            <ResourceSummary resource={clusterserviceinstance} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Service Class</dt>
-              <dd>{serviceinstance.spec.serviceClassName}</dd>
-              <dt>Service Plan</dt>
-              <dd>{serviceinstance.spec.servicePlanName}</dd>
+              <dt>Cluster Service Class</dt>
+              <dd>{clusterserviceinstance.spec.clusterServiceClassName}</dd>
+              <dt>Cluster Service Plan</dt>
+              <dd>{clusterserviceinstance.spec.clusterServicePlanName}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>
@@ -112,8 +112,8 @@ export const ServiceInstancesPage = props => {
       ListComponent={ServiceInstanceList}
       canCreate={true}
       createProps={createProps}
-      // FIXME
-      // canCreate={props.canCreate || _.get(kindObj(props.kind), 'crd')}
+    // FIXME
+    // canCreate={props.canCreate || _.get(kindObj(props.kind), 'crd')}
     />
   );
 };
