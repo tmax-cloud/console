@@ -513,7 +513,7 @@ export class Nav extends React.Component {
               <ResourceNSLink resource="roles" name="롤" startsWith={rolesStartsWith} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name="롤 바인딩" onClick={this.close} startsWith={rolebindingsStartsWith} />
               <ResourceNSLink resource="rolebindingclaims" name="롤 바인딩 클레임" onClick={this.close} startsWith={rolebindingsStartsWith} />
-              {isAdmin && <ResourceNSLink resource="users" name="사용자" onClick={this.close} />}
+              {isAdmin && <ResourceClusterLink resource="users" name="사용자" onClick={this.close} />}
               <ResourceNSLink resource="serviceaccounts" name="서비스 어카운트" onClick={this.close} />
             </NavSection>
 
