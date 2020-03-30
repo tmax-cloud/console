@@ -167,7 +167,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
 
   if (url === 'openapi/v2') {
     // url = `https://192.168.6.169:6443/openapi/v2`;
-    url = `${document.location.origin}/openapi/v2`;
+    url = `${document.location.origin}/api/kubernetes/openapi/v2`;
   }
   // if
   // Pass headers last to let callers to override Accept.
