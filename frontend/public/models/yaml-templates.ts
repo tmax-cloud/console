@@ -15,6 +15,14 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   metadata:
     name: example
 `)
+  .setIn([referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ClusterServiceBroker
+  metadata:
+    name: hyperbroker4
+  spec:
+          url: http://0.0.0.0:28677
+`)
   .setIn([referenceForModel(k8sModels.ServiceInstanceModel), 'default'], `
   apiVersion: servicecatalog.k8s.io/v1beta1
   kind: ServiceInstance
