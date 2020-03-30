@@ -24,26 +24,40 @@ const menuActions = [
 
 const RegistryHeader = props => (
   <ListHeader>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
       Name
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-3 col-sm-3"
+      className="col-xs-2 col-sm-2"
       sortField="metadata.namespace"
     >
       Namespace
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-3 col-sm-3"
-      sortField="status.phase"
+      className="col-sm-2 hidden-xs"
+      sortField="spec.image"
     >
-      Namespace
+      Image
     </ColHead>
     <ColHead
       {...props}
-      className="col-sm-3 hidden-xs"
+      className="col-sm-2 hidden-xs"
+      sortField="spec.persistentVolumeClaim.storageSize"
+    >
+      Capacity
+    </ColHead>
+    <ColHead
+      {...props}
+      className="col-xs-2 col-sm-2"
+      sortField="status.phase"
+    >
+      Status
+    </ColHead>
+    <ColHead
+      {...props}
+      className="col-sm-2 hidden-xs"
       sortField="metadata.creationTimestamp"
     >
       Created
@@ -56,7 +70,7 @@ const RegistryRow = () =>
   function RegistryRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
+        <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
             kind="Registry"
@@ -69,7 +83,7 @@ const RegistryRow = () =>
             title={obj.metadata.name}
           />
         </div>
-        <div className="col-xs-3 col-sm-3 co-break-word">
+        <div className="col-xs-2 col-sm-2 co-break-word">
           {obj.metadata.namespace ? (
             <ResourceLink
               kind="Namespace"
@@ -80,10 +94,16 @@ const RegistryRow = () =>
               'None'
             )}
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">
+        <div className="col-xs-2 col-sm-2 hidden-xs">
+          {obj.spec.image}
+        </div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">
+          {obj.spec.persistentVolumeClaim.storageSize}
+        </div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">
           {obj.status.phase}
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">
+        <div className="col-xs-2 col-sm-2 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
         </div>
       </div>
