@@ -55,24 +55,25 @@ class LoginComponent extends Component {
       return;
     }
 
-    const AUTH_SERVER_URL = `${document.location.origin}/userlogin`;
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/login`;
     
     //if (this.state.id !== undefined && this.state.pw !== undefined) {
       const json = {
         'id': this.state.id,
         'password': sha512(this.state.pw)
-        
       };
       
       coFetchJSON.post(AUTH_SERVER_URL, json)
         .then(data => {
+          // console.log(data);
           if (data.accessToken && data.refreshToken) {
             window.localStorage.setItem('accessToken', data.accessToken);
             window.localStorage.setItem('refreshToken', data.refreshToken);
             this.props.history.push('/');  
             this.props.history.go(0);
           } else {
-            this.setState({error: data.dto.error});
+            // 로그인 실패 
+            this.setState({error: data.msg});
             return;
           }
           
@@ -80,7 +81,8 @@ class LoginComponent extends Component {
           // window.location = `${url_}/status/all-namespaces`;
           
         })
-        .catch((error, res) => {
+        .catch((error) => {
+          console.log(error.message);
           this.setState({error: error.message});
         });
   //}

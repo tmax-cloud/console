@@ -52,7 +52,7 @@ const UserMenuWrapper = connectToFlags(FLAGS.AUTH_ENABLED, FLAGS.OPENSHIFT)((pro
     e.preventDefault();
     
     // TODO 로그아웃 api 연동
-    const AUTH_SERVER_URL = `${document.location.origin}/userlogout`;
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
     
     const json = {
       'accessToken': localStorage.getItem('accessToken')
@@ -248,7 +248,7 @@ export const Masthead = () => {
   let timerRef = null;
 
   const tokenRefresh = () => {
-    const AUTH_SERVER_URL = `${document.location.origin}/tokenrefresh`;
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     
       const json = {
         'accessToken': window.localStorage.getItem('accessToken'),
