@@ -80,8 +80,8 @@ const withServiceInstanceForm = SubForm =>
             labels: {},
           },
           spec: {
-            serviceClassName: '',
-            servicePlanName: '',
+            clusterServiceClassName: '',
+            clusterServicePlanName: '',
             parameters: {},
           },
         },
@@ -114,7 +114,7 @@ const withServiceInstanceForm = SubForm =>
     }
     getClassList() {
       coFetch(
-        `/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/namespaces/${this.props.namespace}/serviceclasses`,
+        `/api/kubernetes/apis/${k8sModels.ClusterServiceBrokerModel.apiGroup}/${k8sModels.ClusterServiceBrokerModel.apiVersion}/clusterserviceclasses`,
       )
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServiceInstanceModel.apiGroup}/${k8sModels.ServiceInstanceModel.apiVersion}/serviceclasses`)
         .then(res => res.json())
@@ -140,12 +140,12 @@ const withServiceInstanceForm = SubForm =>
     }
     getPlanList() {
       coFetch(
-        `/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/namespaces/${this.props.namespace}/serviceplans`,
+        `/api/kubernetes/apis/${k8sModels.ClusterServicePlanModel.apiGroup}/${k8sModels.ClusterServicePlanModel.apiVersion}/clusterserviceplans`,
       )
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
         .then(res => res.json())
         .then(res => {
-          const planListData = _.filter(res.items, ['spec.serviceClassRef.name', this.state.selectedClass.name]).map(item => {
+          const planListData = _.filter(res.items, ['spec.clusterServiceClassRef.name', this.state.selectedClass.name]).map(item => {
             return {
               name: _.get(item, 'metadata.name'),
               uid: _.get(item, 'metadata.uid'),
@@ -168,7 +168,7 @@ const withServiceInstanceForm = SubForm =>
         return;
       }
       coFetch(
-        `/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${this.props.namespace}/templates/${selectedClass.name}`,
+        `/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/default/templates/${selectedClass.name}`,
       )
         .then(res => res.json())
         .then(res => {
@@ -265,8 +265,8 @@ const withServiceInstanceForm = SubForm =>
       const { kind } = this.state.serviceInstance;
       this.setState({ inProgress: true });
       const newServiceInstance = _.cloneDeep(this.state.serviceInstance);
-      newServiceInstance.spec.serviceClassName = this.state.selectedClass.name;
-      newServiceInstance.spec.servicePlanName = this.state.selectedPlan.name;
+      newServiceInstance.spec.clusterServiceClassName = this.state.selectedClass.name;
+      newServiceInstance.spec.clusterServicePlanName = this.state.selectedPlan.name;
       const ko = kindObj(kind);
 
       k8sCreate(ko, newServiceInstance).then(
@@ -301,14 +301,14 @@ const withServiceInstanceForm = SubForm =>
               (this.state.classList.length > 0 ? (
                 <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
               ) : (
-                <div>No Service Class Found</div>
-              ))}
+                  <div>No Service Class Found</div>
+                ))}
             {currentStep === 1 &&
               (this.state.classList.length > 0 ? (
                 <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
               ) : (
-                <div>No Service Plan Found</div>
-              ))}
+                  <div>No Service Plan Found</div>
+                ))}
             {currentStep === 2 && (
               <React.Fragment>
                 <div className="row">
@@ -427,8 +427,8 @@ const ServiceInstanceLoadingWrapper = props => {
         {...props}
         ServiceInstanceTypeAbstraction={ServiceInstanceTypeAbstraction}
         obj={props.obj.data}
-        // fixed={fixed}
-        // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
+      // fixed={fixed}
+      // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
       />
     </StatusBox>
   );
