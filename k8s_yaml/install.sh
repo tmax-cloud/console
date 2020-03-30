@@ -2,12 +2,10 @@
 
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
-AUTH_PORT="28677"
-PROM_PORT="9090"
 file_initialzation="./1.initialization.yaml"
-file_hypercloud_ui_pod="./2.hypercloud-ui-pod.yaml"
-file_ui_pod_temp="./2.hypercloud-ui-pod-temp.yaml"
-file_hypercloud_ui_svc="./3.hypercloud-ui-svc.yaml"
+file_hypercloud_ui_svc_np="./2.hypercloud-ui-svc-np.yaml"
+file_hypercloud_ui_svc_lb="./2.hypercloud-ui-svc-lb.yaml"
+file_hypercloud_ui_deployment_pod="./3.hypercloud-ui-deployment-pod.yaml"
 
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
@@ -21,26 +19,29 @@ if [ ${CONSOLE_VERSION}=="" ]; then
 else
     echo "CONSOLE_VERSION=${CONSOLE_VERSION} " 
 fi 
-# auth ip addr 
-AUTH_IP=$(kubectl get svc -A | grep ${NAME_HC4} | awk '{print $5}')
-if [ -z $AUTH_IP ]; then 
-    echo "Do not exist AUTH in ${NAME_HC4} on k8s Cluster. Make sure hypercloud4-system is installed. "
+# hypercloud ip addr 
+HC4_IP=$(kubectl get svc -A | grep ${NAME_HC4} | awk '{print $5}')
+HC4_PORT=$(kubectl get svc -A | grep ${NAME_HC4} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+
+if [ -z $HC4_IP ]; then 
+    echo "Cannot find HC4_IP in ${NAME_HC4}. Is hypercloud4-system installed?"
     exit 1 
 fi 
 # prometheus ip addr 
 PROM_IP=$(kubectl get svc -A | grep ${NAME_PROM} | awk '{print $5}')
+PROM_PORT=$(kubectl get svc -A | grep ${NAME_PROM} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $PROM_IP ]; then 
-    echo "Do not exist PROMETHEUS_IP in ${NAME_PROM} on k8s Cluster. Make sure prometheus is installed. "
+    echo "Cannot find PROMETHEUS_IP in ${NAME_PROM}. Is prometheus installed?"
     exit 1 
 fi 
-# put AUTH, PROM, TAG into 2.hypercloud_ui_pod_temp.yaml
-cp $file_hypercloud_ui_pod $file_ui_pod_temp
-AUTH=$AUTH_IP":"$AUTH_PORT
+# put HC4, PROM, TAG into 3.hypercloud_ui_pod_temp.yaml
+cp $file_hypercloud_ui_deployment_pod $file_ui_pod_temp
+HC4=$HC4_IP":"$HC4_PORT
 PROM=$PROM_IP":"$PROM_PORT
-echo "Auth Addr = ${AUTH}"
+echo "Hypercloud Addr = ${HC4}"
 echo "Prometheus Addr = ${PROM}"
 echo "" 
-sed -i "s/@@AUTH@@/${AUTH}/g" ${file_ui_pod_temp}
+sed -i "s/@@HC4@@/${HC4}/g" ${file_ui_pod_temp}
 sed -i "s/@@PROM@@/${PROM}/g" ${file_ui_pod_temp}
 sed -i "s/@@TAG@@/${CONSOLE_VERSION}/g" ${file_ui_pod_temp}
 
@@ -48,7 +49,7 @@ sed -i "s/@@TAG@@/${CONSOLE_VERSION}/g" ${file_ui_pod_temp}
 echo "==============================================================="
 echo "STEP 2. Install console"
 echo "==============================================================="
-# create  namespace
+# Create Namespace
 if [ -z $(kubectl get ns | grep console-system | awk '{print $1}') ]; then 
     kubectl create -f ${file_initialzation}
 else
@@ -56,43 +57,50 @@ else
     kubectl get ns 
 fi 
 echo ""
-# create  secret to enable https comm between browser and console-server
+# Create Secret to enable https between browser and console-server
 if [ -z $(kubectl get secret -n console-system | grep console-https-secret | awk '{print $1}') ]; then 
     kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n console-system
 else
-    echo "secret exist" 
+    echo "secret exists" 
     kubectl get secret console-https-secret -n console-system
 fi 
 echo ""
-# create deployment
-if [ -z $(kubectl get deployment -n console-system | grep console | awk '{print $1}') ]; then 
-    kubectl create -f ${file_ui_pod_temp}
-else
-    echo "deployment exist" 
-    kubectl get deployment -n console-system
-fi 
-echo ""
 # Create Service 
-if [ -z $(kubectl get svc -n console-system | grep console | awk '{print $1}') ]; then 
-    kubectl create -f ${file_hypercloud_ui_svc}
+if [ -z $(kubectl get svc -n console-system | grep console-np | awk '{print $1}') ]; then 
+    kubectl create -f ${file_hypercloud_ui_svc_np}
 else
-    echo "service exist" 
+    echo "NodePort service exists" 
     kubectl get svc -n console-system 
 fi
 echo ""
+if [ -z $(kubectl get svc -n console-system | grep console-lb | awk '{print $1}') ]; then 
+    kubectl create -f ${file_hypercloud_ui_svc_lb}
+else
+    echo "LoadBalancer service exists" 
+    kubectl get svc -n console-system 
+fi
+echo ""
+# Create Deployment
+if [ -z $(kubectl get deployment -n console-system | grep console | awk '{print $1}') ]; then
+    kubectl create -f ${file_ui_pod_temp}
+else
+    echo "deployment exists" 
+    kubectl get deployment -n console-system
+fi 
+echo ""
 
 echo "==============================================================="
-echo "STEP 3. Console-pod is Running??"
+echo "STEP 3. Is Console-pod Running??"
 echo "==============================================================="
 count=0
-stop=40 
+stop=60 
 while :
 do 
     count=$(($count+1))
-    echo "wait for $count sec"
+    echo "Waiting for $count seconds..."
     RUNNING_FLAG=$(kubectl get po -n console-system | grep console | awk '{print $3}')
     if [ ${RUNNING_FLAG} == "Running" ]; then
-        echo "Consol is well deployed in console-system"
+        echo "Console has been successfully deployed to console-system."
         # rm -rf ${file_ui_pod_temp}
         break 
     fi
@@ -105,4 +113,4 @@ do
     kubectl get po -n console-system 
     sleep 1
 done 
-echo "Console installation complete"
+echo "Console installation completed."

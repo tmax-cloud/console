@@ -26,18 +26,15 @@ spec:
         - --listen=https://0.0.0.0:6443
         - --tls-cert-file=/var/https-cert/tls.crt
         - --tls-key-file=/var/https-cert/tls.key
-        - --login-endpoint=http://@@AUTH@@/login
-        - --logout-endpoint=http://@@AUTH@@/logout  
-        - --refresh-endpoint=http://@@AUTH@@/refresh
+        - --hypercloud-endpoint=http://@@HC4@@
         - --prometheus-endpoint=http://@@PROM@@/api
+        - --hc-console-version=@@TAG@@
         image: 192.168.6.110:5000/hypercloud-console:@@TAG@@
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - mountPath: /var/https-cert
           name: https-cert
           readOnly: true
-        - mountPath: /var/console
-          name: console-mnt
         name: console
         ports:
         - containerPort: 6443
@@ -61,7 +58,3 @@ spec:
         secret:
           defaultMode: 288
           secretName: console-https-secret
-      - name: console-mnt
-        hostPath: 
-          path: /root/hypercloud4.1-console/mnt/var
-     
