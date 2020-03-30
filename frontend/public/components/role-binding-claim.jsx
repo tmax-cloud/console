@@ -83,7 +83,7 @@ const RoleBindingClaimRow = () =>
             )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
-          {obj.status.status}
+          {obj.status ? obj.status.status : 'Awaiting'}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
@@ -122,7 +122,7 @@ const Details = ({ obj: rolebindingclaim }) => {
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
               <dt>Status</dt>
-              <dd>{rolebindingclaim.status.status}</dd>
+              <dd>{rolebindingclaim.status ? rolebindingclaim.status.status : 'Awating'}</dd>
               {rolebindingclaim.status.status === 'Reject' && <dt>Reason</dt>}
               {rolebindingclaim.status.status === 'Reject' && <dd>{rolebindingclaim.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (

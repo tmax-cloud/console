@@ -83,7 +83,7 @@ const NamespaceClaimRow = () =>
             )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
-          {obj.status.status}
+          {obj.status ? obj.status.status : 'Awaiting'}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
@@ -123,7 +123,7 @@ const Details = ({ obj: namespaceinstance }) => {
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
               <dt>Status</dt>
-              <dd>{namespaceinstance.status.status}</dd>
+              <dd>{namespaceinstance.status ? namespaceinstance.status.status : 'Awaiting'}</dd>
               {namespaceinstance.status.status === 'Reject' && <dt>Reason</dt>}
               {namespaceinstance.status.status === 'Reject' && <dd>{namespaceinstance.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (
