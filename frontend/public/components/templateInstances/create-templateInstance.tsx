@@ -138,7 +138,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }, () => this.getParams());
   }
   onParamValueChanged(event) {
-    console.log('onParamValueChanged불림')
     let key = event.target.id
     let templateInstance = { ...this.state.templateInstance };
     templateInstance.spec.template.parameters.forEach(obj => {
@@ -157,6 +156,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
 
     const newSecret = _.assign({}, this.state.templateInstance);
     const ko = kindObj(kind);
+    if (newSecret.spec.template.metadata.name === '') {
+      newSecret.spec.template.metadata.name = this.state.templateList[0];
+    }
     (this.props.isCreate
       ? k8sCreate(ko, newSecret)
       : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)

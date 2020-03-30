@@ -124,6 +124,8 @@ const Details = ({ obj: namespaceinstance }) => {
             <dl className="co-m-pane__details">
               <dt>Status</dt>
               <dd>{namespaceinstance.status.status}</dd>
+              {namespaceinstance.status.status === 'Reject' && <dt>Reason</dt>}
+              {namespaceinstance.status.status === 'Reject' && <dd>{namespaceinstance.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>

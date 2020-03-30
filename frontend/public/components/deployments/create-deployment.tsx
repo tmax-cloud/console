@@ -48,20 +48,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     },
                     spec: {
                         restartPolicy: 'Always',
-                        volumes: [],
+                        // volumes: [],
                         containers: [{
-                            name: 'hello-hypercloud',
-                            image: 'hypercloud/hello-hypercloud',
-                            imagePullPolicy: '',
-                            env: [],
-                            volumeMounts: [],
+                            name: '',
+                            image: '',
+                            imagePullPolicy: 'Always',
+                            // env: [],
+                            // volumeMounts: [],
                             resources: {
                                 limits: {},
                                 requests: {}
                             },
-                            command: [],
-                            args: [],
-                            ports: [],
+                            // command: [],
+                            // args: [],
+                            // ports: [],
                         }],
                     }
                 }
@@ -137,7 +137,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     onNameChanged(event) {
         let deployment = { ...this.state.deployment };
         deployment.metadata.name = event.target.value;
-        // deployment.metadata.labels.app = event.target.value;
+        deployment.spec.template.spec.containers[0].name = event.target.value;
         this.setState({ deployment });
     }
     onNameFocusOut(event) {
@@ -181,7 +181,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         this.setState({
             volumes: volume.volumePairs
         });
-        console.log(this.state.volumes)
     }
     onRestartPolicyChanged(event) {
         let deployment = { ...this.state.deployment };
@@ -223,82 +222,105 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         e.preventDefault();
         const { kind, metadata } = this.state.deployment;
         this.setState({ inProgress: true });
-
-        // command 데이터 가공 
-        this.state.runCommands.forEach(arr => {
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].command = deployment.spec.template.spec.containers[0].command.concat(arr);
-            this.setState({ deployment });
-        })
-
-        // command args 데이터 가공 
-        this.state.runCommandArguments.forEach(arr => {
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].args = deployment.spec.template.spec.containers[0].args.concat(arr);
-            this.setState({ deployment });
-        })
-
-        // env 데이터 가공
-        this.state.env.forEach(arr => {
-            let obj = {
-                name: arr[0],
-                value: arr[1]
-            };
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].env.push(obj);
-            this.setState({ deployment });
-        })
-
-        // requests 데이터 가공
-        this.state.requests.forEach(arr => {
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].resources.requests[arr[0]] = arr[1];
-            this.setState({ deployment });
-        })
-
-        // limits 데이터 가공 
-        this.state.limits.forEach(arr => {
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].resources.limits[arr[0]] = arr[1];
-            this.setState({ deployment });
-        })
-
-        // ports 데이터 가공
-        this.state.ports.forEach(arr => {
-            let obj = {
-                name: arr[0],
-                containerPort: Number(arr[1]),
-                protocol: arr[2]
-            };
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.containers[0].ports.push(obj);
-            this.setState({ deployment });
-        })
-
-        const newSecret = _.assign({}, this.state.deployment);
-
-        // volumes 데이터 가공
-        this.state.volumes.forEach(arr => {
-            let volumeMounts = {
-                name: arr[0],
-                mountPath: arr[1]
-            };
-            if (arr[2] === '') {
-                arr[2] = this.state.volumeOptions[0];
-            }
-            let volumes = {
-                name: arr[0],
-                persistentVolumeClaim: {
-                    claimName: arr[2],
-                    readOnly: arr[3]
-                }
-            };
-            let deployment = { ...this.state.deployment };
-            deployment.spec.template.spec.volumes.push(volumes);
-            deployment.spec.template.spec.containers[0].volumeMounts.push(volumeMounts);
-            this.setState({ deployment });
-        })
         const newDeployment = _.assign({}, this.state.deployment);
+        // command 데이터 가공 
+        let commandList = [];
+        this.state.runCommands.forEach(arr => {
+            if (arr !== "" && arr[0] !== "") {
+                commandList = commandList.concat(arr);
+            }
+        })
+        if (commandList.length !== 0) {
+            newDeployment.spec.template.spec.containers[0].command = commandList
+        }
+        // command args 데이터 가공 
+        let argList = [];
+        this.state.runCommandArguments.forEach(arr => {
+            if (arr !== "" && arr[0] !== "") {
+                argList = argList.concat(arr);
+            }
+        })
+        if (argList.length !== 0) {
+            newDeployment.spec.template.spec.containers[0].args = argList
+        }
+        // env 데이터 가공
+        let envList = [];
+        this.state.env.forEach(arr => {
+            if (arr[0] !== "" && arr[1] !== "") {
+                let obj = {
+                    name: arr[0],
+                    value: arr[1]
+                };
+                envList = envList.concat(obj);
+            }
+        })
+        if (envList.length !== 0) {
+            newDeployment.spec.template.spec.containers[0].env = envList;
+        }
+        // requests 데이터 가공
+        let requestObj = {};
+        this.state.requests.forEach(arr => {
+            if (arr[0] !== "" && arr[1] !== "") {
+                requestObj[arr[0]] = arr[1];
+            }
+        })
+        if (requestObj !== {}) {
+            newDeployment.spec.template.spec.containers[0].resources.requests = requestObj;
+        }
+        // limits 데이터 가공 
+        let limitObj = {};
+        this.state.requests.forEach(arr => {
+            if (arr[0] !== "" && arr[1] !== "") {
+                limitObj[arr[0]] = arr[1];
+            }
+        })
+        if (limitObj !== {}) {
+            newDeployment.spec.template.spec.containers[0].resources.limits = limitObj;
+        }
+        // ports 데이터 가공
+        let portList = [];
+        this.state.ports.forEach(arr => {
+            if (arr[0] !== "" && arr[1] !== "") {
+                let obj = {
+                    name: arr[0],
+                    containerPort: Number(arr[1]),
+                    protocol: arr[2]
+                };
+                portList = portList.concat(obj);
+            }
+        })
+        if (portList.length !== 0) {
+            newDeployment.spec.template.spec.containers[0].ports = portList;
+        }
+        // volumes 데이터 가공
+        let volumeMountList = []
+        let volumeList = [];
+        this.state.volumes.forEach(arr => {
+            if (arr[0] !== "" && arr[1] !== "") {
+                let volumeMount = {
+                    name: arr[0],
+                    mountPath: arr[1]
+                };
+                if (arr[2] === '') {
+                    arr[2] = this.state.volumeOptions[0];
+                }
+                let volume = {
+                    name: arr[0],
+                    persistentVolumeClaim: {
+                        claimName: arr[2],
+                        readOnly: arr[3]
+                    }
+                };
+                volumeList = volumeList.concat(volume);
+                volumeMountList = volumeMountList.concat(volumeMount);
+            }
+        })
+        if (volumeList.length !== 0) {
+            newDeployment.spec.template.spec.volumes = volumeList;
+        }
+        if (volumeMountList.length !== 0) {
+            newDeployment.spec.template.spec.containers[0].volumeMounts = volumeMountList;
+        }
 
         const ko = kindObj(kind);
 

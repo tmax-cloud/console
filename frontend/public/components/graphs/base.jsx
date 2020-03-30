@@ -31,7 +31,7 @@ export class BaseGraph extends SafetyFirst {
     }
   }
 
-  fetch () {
+  fetch() {
     const timeSpan = this.end - this.start || this.timeSpan;
     const end = this.end || Date.now();
     const start = this.start || (end - timeSpan);
@@ -41,6 +41,20 @@ export class BaseGraph extends SafetyFirst {
       queries = [{
         query: queries,
       }];
+    }
+
+    if (queries[0].query === 'cpu' || queries[0].query === 'memory' || queries[0].query === 'storage' || queries[0].query === 'publicIp' || queries[0].query === 'gpu') {
+      const url = `/metering?namespace=${document.location.href.split('namespaces/')[1].split('/')[0]}`;
+
+      this.layout.xaxis.tickformat = '%m/%d';
+      coFetchJSON(url)
+        .then(res => {
+          this.updateGraph2(res, queries[0].query);
+        })
+        .catch(function (myJson) {
+          console.log(myJson);
+        });
+      return;
     }
 
     const basePath = this.props.basePath || prometheusBasePath;
@@ -69,18 +83,18 @@ export class BaseGraph extends SafetyFirst {
       }, pollInterval));
   }
 
-  componentWillMount () {
+  componentWillMount() {
     this.fetch();
     window.addEventListener('resize', this.resize);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     super.componentWillUnmount();
     window.removeEventListener('resize', this.resize);
     clearInterval(this.interval);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     super.componentDidMount();
 
     if (!this.node) {
@@ -98,7 +112,7 @@ export class BaseGraph extends SafetyFirst {
     });
   }
 
-  prometheusURL () {
+  prometheusURL() {
     const base = this.props.urls && this.props.urls[MonitoringRoutes.Prometheus];
     if (!base) {
       return null;
@@ -120,11 +134,11 @@ export class BaseGraph extends SafetyFirst {
     return `${base}/graph?${params.toString()}`;
   }
 
-  render () {
+  render() {
     const url = this.prometheusURL();
     const graph = <div className="graph-wrapper" style={this.style}>
       <h5 className="graph-title">{this.props.title}</h5>
-      <div ref={this.setNode} style={{width: '100%'}} />
+      <div ref={this.setNode} style={{ width: '100%' }} />
     </div>;
 
     return url
