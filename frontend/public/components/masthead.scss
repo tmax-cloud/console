@@ -125,3 +125,21 @@
   background-image: none !important;
   color: #FFFFFF !important;
 }
+
+.extend-refresh-icon {
+  cursor: pointer;
+  margin-left: 7px;
+}
+
+.extend-refresh-border {
+  width: 1px; 
+  height: 18px;
+  background-color: rgb(255, 255, 255); 
+  margin: 6px 0px 6px 9px; 
+  border-width: 0px; 
+  border-style: solid; 
+  text-align: left; 
+  vertical-align: middle; 
+  overflow: hidden;
+  float: right;
+}
