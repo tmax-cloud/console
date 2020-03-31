@@ -899,6 +899,7 @@ export const ClusterServiceBrokerModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServiceBroker',
   id: 'clusterservicebroker',
+  crd: false
 };
 
 export const ClusterServiceClassModel: K8sKind = {
@@ -912,6 +913,7 @@ export const ClusterServiceClassModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServiceClass',
   id: 'clusterserviceclass',
+  crd: false
 };
 
 export const ClusterServicePlanModel: K8sKind = {
@@ -925,6 +927,7 @@ export const ClusterServicePlanModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServicePlan',
   id: 'clusterserviceplan',
+  crd: false
 };
 
 export const ServiceInstanceModel: K8sKind = {

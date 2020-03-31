@@ -23,13 +23,13 @@ const lastKind = new Set();
 export const kindObj = (kind) => {
   if (kindForReference(kind) === kind && !lastKind.has(kind)) {
     // eslint-disable-next-line no-console
-    console.warn(`Attempting to get Kubernetes object model using string kind: ${kind}, which is not guaranteed to be unique!`);
+    console.debug(`Attempting to get Kubernetes object model using string kind: ${kind}, which is not guaranteed to be unique!`);
     lastKind.add(kind);
   }
   const model = modelFor(kind);
   if (!model) {
     // eslint-disable-next-line no-console
-    console.warn('kindObj: no model for kind', kind);
+    console.debug('kindObj: no model for kind', kind);    // customresourcedefinition.jsx 페이지에서 에러 방지용으로 주석 처리
   }
   return model || {};
 };
