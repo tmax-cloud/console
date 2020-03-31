@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "rm -rf ./public/dist/ && ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=development --watch --progress",
     "build": "rm -rf ./public/dist && cross-env NODE_ENV=production ts-node -O {\"\"\"module\"\"\":\"\"\"commonjs\"\"\"} ./node_modules/webpack/bin/webpack.js --mode=production && cd .. && ./tag.sh",
-    "build-release": "rm -rf ./public/dist && cross-env NODE_ENV=production ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/webpack/bin/webpack.js --mode=production && cd .. && ./tag.sh",
+    "build-release": "rm -rf ./public/dist && cross-env NODE_ENV=production ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/webpack/bin/webpack.js --mode=production",
     "coverage": "jest --coverage .",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --color .",
     "test": "jest",
