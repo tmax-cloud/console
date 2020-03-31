@@ -432,9 +432,8 @@ export class Nav extends React.Component {
               <ResourceNSLink resource="horizontalpodautoscalers" name="HPA" onClick={this.close} />
               <ResourceNSLink resource="daemonsets" name="데몬 셋" onClick={this.close} />
               <ResourceNSLink resource="statefulsets" name="스테이트풀 셋" onClick={this.close} />
-              {/* VM 추가 */}
-              {/* <ResourceNSLink resource="virtualmachines" name="가상 머신" onClick={this.close} /> */}
-              {/* <ResourceNSLink resource="virtualmachineinstances" name="가상 머신 인스턴스" onClick={this.close} /> */}
+              <ResourceNSLink resource="virtualmachines" name="가상 머신" onClick={this.close} />
+              <ResourceNSLink resource="virtualmachineinstances" name="가상 머신 인스턴스" onClick={this.close} />
               <ResourceNSLink resource="configmaps" name="콘피그 맵" onClick={this.close} />
               <ResourceNSLink resource="secrets" name="시크릿" onClick={this.close} />
               <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} />
