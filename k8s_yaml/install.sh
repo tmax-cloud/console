@@ -3,9 +3,10 @@
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
 file_initialzation="./1.initialization.yaml"
-file_hypercloud_ui_svc_np="./2.hypercloud-ui-svc-np.yaml"
-file_hypercloud_ui_svc_lb="./2.hypercloud-ui-svc-lb.yaml"
-file_hypercloud_ui_deployment_pod="./3.hypercloud-ui-deployment-pod.yaml"
+file_svc_np="./2.svc-np.yaml"
+file_svc_lb="./2.svc-lb.yaml"
+file_deployment_pod="./3.deployment-pod.yaml"
+file_deployment_pod_temp="./3.deployment-pod-temp.yaml"
 
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
@@ -34,16 +35,16 @@ if [ -z $PROM_IP ]; then
     echo "Cannot find PROMETHEUS_IP in ${NAME_PROM}. Is prometheus installed?"
     exit 1 
 fi 
-# put HC4, PROM, TAG into 3.hypercloud_ui_pod_temp.yaml
-cp $file_hypercloud_ui_deployment_pod $file_ui_pod_temp
+# put HC4, PROM, TAG into 3.deployment-pod-temp.yaml
+cp $file_deployment_pod $file_deployment_pod_temp
 HC4=$HC4_IP":"$HC4_PORT
 PROM=$PROM_IP":"$PROM_PORT
 echo "Hypercloud Addr = ${HC4}"
 echo "Prometheus Addr = ${PROM}"
 echo "" 
-sed -i "s/@@HC4@@/${HC4}/g" ${file_ui_pod_temp}
-sed -i "s/@@PROM@@/${PROM}/g" ${file_ui_pod_temp}
-sed -i "s/@@TAG@@/${CONSOLE_VERSION}/g" ${file_ui_pod_temp}
+sed -i "s/@@HC4@@/${HC4}/g" ${file_deployment_pod_temp}
+sed -i "s/@@PROM@@/${PROM}/g" ${file_deployment_pod_temp}
+sed -i "s/@@TAG@@/${CONSOLE_VERSION}/g" ${file_deployment_pod_temp}
 
 
 echo "==============================================================="
@@ -67,14 +68,14 @@ fi
 echo ""
 # Create Service 
 if [ -z $(kubectl get svc -n console-system | grep console-np | awk '{print $1}') ]; then 
-    kubectl create -f ${file_hypercloud_ui_svc_np}
+    kubectl create -f ${file_svc_np}
 else
     echo "NodePort service exists" 
     kubectl get svc -n console-system 
 fi
 echo ""
 if [ -z $(kubectl get svc -n console-system | grep console-lb | awk '{print $1}') ]; then 
-    kubectl create -f ${file_hypercloud_ui_svc_lb}
+    kubectl create -f ${file_svc_lb}
 else
     echo "LoadBalancer service exists" 
     kubectl get svc -n console-system 
@@ -82,7 +83,7 @@ fi
 echo ""
 # Create Deployment
 if [ -z $(kubectl get deployment -n console-system | grep console | awk '{print $1}') ]; then
-    kubectl create -f ${file_ui_pod_temp}
+    kubectl create -f ${file_deployment_pod_temp}
 else
     echo "deployment exists" 
     kubectl get deployment -n console-system
@@ -101,7 +102,7 @@ do
     RUNNING_FLAG=$(kubectl get po -n console-system | grep console | awk '{print $3}')
     if [ ${RUNNING_FLAG} == "Running" ]; then
         echo "Console has been successfully deployed to console-system."
-        # rm -rf ${file_ui_pod_temp}
+        # rm -rf ${file_deployment_pod_temp}
         break 
     fi
     if [ $count -eq $stop ]; then 
