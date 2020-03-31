@@ -247,21 +247,30 @@ class NamespaceDropdown_ extends React.Component {
     const model = getModel(useProjects);
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
-    if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
-      canListNS = false;
-    }
+    // if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+    //   canListNS = false;
+    // } else {
+    //   canListNS = true;
+    // }
+    // canListNS = true;
+
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
-      activeNamespace = allNamespacesTitle;
-      dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
     }
     _.map(data, 'metadata.name').sort().forEach(name => {
       items[name] = name;
-      if (!activeNamespace || activeNamespace === 'default') {
-        activeNamespace = name;
-        dispatch(UIActions.setActiveNamespace(name));
-      }
     });
+
+
+    // if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+    //   activeNamespace = name;
+    //   dispatch(UIActions.setActiveNamespace(name));
+    // }
+
+    // if (!activeNamespace || activeNamespace === 'default') {
+    //   activeNamespace = name;
+    // dispatch(UIActions.setActiveNamespace(name));
+    // }
 
     // if (items.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
     //   activeNamespace = items[0].metadata.name;
@@ -301,36 +310,46 @@ const MeteringPage = requirePrometheus((props) => <div className="co-m-pane__bod
   <SectionHeading text="Metering" />
   <div className="row">
     {/* <div className="col-sm-6 col-xs-12"> */}
-    <Line title="CPU Shares" query={[
-      {
-        name: 'Used',
-        query: 'cpu',
-      },
-    ]} />
-    <Line title="Memory" query={[
-      {
-        name: 'Used',
-        query: 'memory',
-      },
-    ]} />
-    <Line title="Storage" query={[
-      {
-        name: 'Used',
-        query: 'storage',
-      },
-    ]} />
-    <Line title="Public IP" query={[
-      {
-        name: 'Used',
-        query: 'publicIp',
-      },
-    ]} />
-    <Line title="GPU" query={[
-      {
-        name: 'Used',
-        query: 'gpu',
-      },
-    ]} />
+    <div className="col-md-4">
+      <Line title="CPU Shares" query={[
+        {
+          name: 'Used',
+          query: 'cpu',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="Memory" query={[
+        {
+          name: 'Used',
+          query: 'memory',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="Storage" query={[
+        {
+          name: 'Used',
+          query: 'storage',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="Public IP" query={[
+        {
+          name: 'Used',
+          query: 'publicIp',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="GPU" query={[
+        {
+          name: 'Used',
+          query: 'gpu',
+        },
+      ]} />
+    </div>
   </div>
   {/* </div>
   {/* <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${props.namespace}"})))`} humanize={humanizeMem} metric="pod_name" /> */}
