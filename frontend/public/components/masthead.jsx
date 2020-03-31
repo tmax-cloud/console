@@ -292,6 +292,8 @@ export const Masthead = () => {
       {releaseModeFlag && <div className="co-masthead__expire">
         <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>시간 연장</button>
         <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({setExpireTimeFunc: setExpireTime})}></i>
+        <div className="extend-refresh-border">
+        </div>
       </div>}
       {releaseModeFlag && <div className="co-masthead__user">
         <UserMenuWrapper />
