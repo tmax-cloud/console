@@ -253,11 +253,13 @@ class NamespaceDropdown_ extends React.Component {
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
       activeNamespace = allNamespacesTitle;
+      dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
     }
     _.map(data, 'metadata.name').sort().forEach(name => {
       items[name] = name;
       if (!activeNamespace || activeNamespace === 'default') {
         activeNamespace = name;
+        dispatch(UIActions.setActiveNamespace(name));
       }
     });
 
