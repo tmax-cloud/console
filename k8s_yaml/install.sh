@@ -17,7 +17,7 @@ if [ -z $CONSOLE_VERSION ]; then
     echo -e "Enter the console version."
     read CONSOLE_VERSION
 fi
-echo "CONSOLE_VERSION=${CONSOLE_VERSION}"
+echo "CONSOLE_VERSION = ${CONSOLE_VERSION}"
 
 # get hypercloud ip addr 
 HC4_IP=$(kubectl get svc -A | grep ${NAME_HC4} | awk '{print $5}')
