@@ -68,7 +68,7 @@ ConfigureStatusModal.propTypes = {
 
 export const configureStatusModal = createModalLauncher(props => <ConfigureStatusModal
   path="status"
-  status={props.resource.status.status}
+  status={props.resource.status && props.resource.status.status}
   title="Edit Status"
   {...props}
 />);
