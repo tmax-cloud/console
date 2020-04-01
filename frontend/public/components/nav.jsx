@@ -479,7 +479,7 @@ export class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="보안" icon="fa fa-shield">
-              {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
+              {isAdmin && <ResourceClusterLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
 
