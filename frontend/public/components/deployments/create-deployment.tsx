@@ -376,8 +376,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <label className="control-label" htmlFor="secret-type" >Image pull policy</label>
                         <div>
                             <select onChange={this.onImagePullPolicyChanged} className="form-control" id="template">
-                                <option value='Always'>Always</option>
                                 <option value='IfNotPresent'>IfNotPresent</option>
+                                <option value='Always'>Always</option>
                                 <option value='Never'>Never</option>
                             </select>
                         </div>
