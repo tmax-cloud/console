@@ -639,6 +639,14 @@ roleRef:
   kind: ClusterRole
   name: view
   apiGroup: rbac.authorization.k8s.io
+`).setIn([referenceForModel(k8sModels.ClusterRoleModel), 'default'], `apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: example
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
 `).setIn([referenceForModel(k8sModels.RoleModel), 'default'], `apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
