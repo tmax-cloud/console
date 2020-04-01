@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
@@ -13,7 +13,7 @@ echo "STEP 1. ENV Setting"
 echo "==============================================================="
 # Enter docker image tag (console version) 
 
-if [ -z "${CONSOLE_VERSION}" ]; then
+if [ -z $CONSOLE_VERSION ]; then
     echo -e "Enter the console version."
     read CONSOLE_VERSION
 fi
