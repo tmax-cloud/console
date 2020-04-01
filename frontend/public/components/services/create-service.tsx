@@ -151,7 +151,6 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                         <div>
                             <select className="form-control" id="service-type" onChange={this.onTypeChanged}>
                                 <option value="ClusterIP">ClusterIP</option>
-                                <option value="ExternalName">ExternalName</option>
                                 <option value="LoadBalancer">LoadBalancer</option>
                                 <option value="NodePort">NodePort</option>
                             </select>
