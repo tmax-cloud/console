@@ -492,12 +492,12 @@ export class Nav extends React.Component {
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
+              <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
-              {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
+              {/* {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />} */}
               <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
             </NavSection>
 
