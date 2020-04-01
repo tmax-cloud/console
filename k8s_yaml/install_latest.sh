@@ -12,7 +12,7 @@ echo "==============================================================="
 echo "STEP 1. ENV Setting"
 echo "==============================================================="
 # Enter docker image ver (console version) 
-CONSOLE_VERSION=latest
+CONSOLE_VERSION="latest"
 
 # get hypercloud ip addr 
 HC4_IP=$(kubectl get svc -A | grep ${NAME_HC4} | awk '{print $5}')
