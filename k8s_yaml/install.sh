@@ -81,12 +81,13 @@ fi
 kubectl get svc -n console-system 
 echo ""
 # Create Deployment
-if [ -z $(kubectl get deployment -n console-system | grep console | awk '{print $1}') ]; then
-    kubectl create -f ${file_deployment_pod_temp}
-else
-    echo "deployment exists" 
-    kubectl get deployment -n console-system
-fi 
+kubectl create -f ${file_deployment_pod_temp}
+# if [ -z $(kubectl get deployment -n console-system | grep console | awk '{print $1}') ]; then
+#     kubectl create -f ${file_deployment_pod_temp}
+# else
+#     echo "deployment exists" 
+#     kubectl get deployment -n console-system
+# fi 
 echo ""
 
 echo "==============================================================="
