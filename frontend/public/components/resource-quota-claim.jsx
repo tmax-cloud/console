@@ -83,7 +83,7 @@ const ResourceQuotaClaimRow = () =>
             )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
-          {obj.status ? obj.status.status : 'Awaiting'}
+          {obj.status && obj.status.status}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
@@ -122,7 +122,7 @@ const Details = ({ obj: resourcequotaclaim }) => {
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
               <dt>Status</dt>
-              <dd>{resourcequotaclaim.status ? resourcequotaclaim.status.status : 'Awaiting'}</dd>
+              <dd>{resourcequotaclaim.status && resourcequotaclaim.status.status}</dd>
               {resourcequotaclaim.status.status === 'Reject' && <dt>Reason</dt>}
               {resourcequotaclaim.status.status === 'Reject' && <dd>{resourcequotaclaim.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (

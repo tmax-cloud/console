@@ -348,10 +348,10 @@ const ClusterRoleDropdown = props => <ListDropdown
 />;
 
 // 라디오 버튼 지우면서 필요 없어짐.
-// const bindingKinds = [
-//   { value: 'RoleBinding', title: 'Namespace Role Binding (RoleBinding)', desc: 'Grant the permissions to a user or set of users within the selected namespace.' },
-//   { value: 'ClusterRoleBinding', title: 'Cluster-wide Role Binding (ClusterRoleBinding)', desc: 'Grant the permissions to a user or set of users at the cluster level and in all namespaces.' },
-// ];
+const bindingKinds = [
+  { value: 'RoleBinding', title: 'Namespace Role Binding (RoleBinding)', desc: 'Grant the permissions to a user or set of users within the selected namespace.' },
+  { value: 'ClusterRoleBinding', title: 'Cluster-wide Role Binding (ClusterRoleBinding)', desc: 'Grant the permissions to a user or set of users at the cluster level and in all namespaces.' },
+];
 const subjectKinds = [
   { value: 'User', title: 'User' },
   { value: 'Group', title: 'Group' },
@@ -392,7 +392,6 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
         }],
       });
       this.state = { data, inProgress: false };
-      this.state.data.kind = 'RoleBinding';
 
       this.setKind = this.setKind.bind(this);
       this.setSubject = this.setSubject.bind(this);
@@ -473,7 +472,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
           <h1 className="co-m-pane__heading">{title}</h1>
           <p className="co-m-pane__explanation">Associate a user/group to the selected role to define the type of access and resources that are allowed.</p>
 
-          {/* {!_.get(fixed, 'kind') && <RadioGroup currentValue={kind} items={bindingKinds} onChange={this.setKind} />} */} {/* 라디오 버튼 없앰. 개발자도구 component로 보니까 state.data.kind값만 바꾸어주면 될듯. */}
+          {!_.get(fixed, 'kind') && <RadioGroup currentValue={kind} items={bindingKinds} onChange={this.setKind} />}
 
           <div className="separator"></div>
 
