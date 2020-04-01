@@ -7,6 +7,8 @@ import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { AdvancedPortEditor } from '../utils/advanced-port-editor';
+import { KeyValueEditor } from '../utils/key-value-editor';
+
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -30,7 +32,8 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                 name: '',
             },
             spec: {
-                ports: []
+                ports: [],
+                selector: {}
             }
         });
 
@@ -42,12 +45,15 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
             type: '',
             paramList: [],
             selectedTemplate: '',
-            ports: [['', '', 'TCP', '']]
+            ports: [['', '', 'TCP', '']],
+            selector: [['', '']]
         };
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onTypeChanged = this.onTypeChanged.bind(this);
         this.save = this.save.bind(this);
         this._updatePorts = this._updatePorts.bind(this);
+        this._updateSelector = this._updateSelector.bind(this);
+        this.onLabelChanged = this.onLabelChanged.bind(this);
     }
     onNameChanged(event) {
         let service = { ...this.state.service };
@@ -64,18 +70,46 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
             ports: ports.portPairs
         });
     }
+    _updateSelector(selectors) {
+        this.setState({
+            selector: selectors.keyValuePairs
+        });
+    }
+    onLabelChanged(event) {
+        let service = { ...this.state.service };
+        service.metadata.labels = {};
+        if (event.length !== 0) {
+            event.forEach(item => {
+                if (item.split('=')[1] === undefined) {
+                    document.getElementById('labelErrMsg').style.display = 'block';
+                    event.pop(item);
+                    return;
+                }
+                document.getElementById('labelErrMsg').style.display = 'none';
+                service.metadata.labels[item.split('=')[0]] = item.split('=')[1];
+            })
+        }
+        this.setState({ service });
+    }
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.service;
         this.setState({ inProgress: true });
         const newSecret = _.assign({}, this.state.service);
-        console.log(newSecret, this.state)
+        // portList가공
         let portList = [];
         this.state.ports.forEach(port => {
             let obj = { name: port[0], port: Number(port[1]), protocol: port[2], targetPort: Number(port[3]) };
             portList.push(obj)
         });
         newSecret.spec.ports = portList;
+        // selector가공
+        let obj = {};
+        this.state.selector.forEach(selector => {
+            let key = selector[0];
+            obj[key] = selector[1];
+        });
+        newSecret.spec.selector = obj;
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
@@ -123,14 +157,31 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                             </select>
                         </div>
                     </div>
-                    <React.Fragment>
-                        <div className="form-group">
-                            <label className="control-label" htmlFor="username">Label</label>
-                            <div>
-                                <SelectorInput labelClassName="co-text-namespace" tags={[]} />
+                    {/* Selector variables */}
+                    <div className="form-group">
+                        <React.Fragment>
+                            <div className="form-group">
+                                <label className="control-label" htmlFor="username">Selector</label>
+                                <div>
+                                    <KeyValueEditor keyValuePairs={this.state.selector} updateParentData={this._updateSelector} />
+                                </div>
                             </div>
+                        </React.Fragment>
+                    </div>
+
+                    <div className="form-group">
+                        <React.Fragment>
+                            <div className="form-group">
+                                <label className="control-label" htmlFor="username">Labels</label>
+                                <div>
+                                    <SelectorInput labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
+                                </div>
+                            </div>
+                        </React.Fragment>
+                        <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                            <p>Lables must be 'key=value' form.</p>
                         </div>
-                    </React.Fragment>
+                    </div>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
                         <Link to={formatNamespacedRouteForResource('services')} className="btn btn-default" id="cancel">Cancel</Link>
@@ -204,7 +255,8 @@ export type BaseEditServiceState_ = {
     type: string
     paramList: Array<any>,
     selectedTemplate: string,
-    ports: Array<any>
+    ports: Array<any>,
+    selector: Array<any>
 };
 
 export type BaseEditServiceProps_ = {
