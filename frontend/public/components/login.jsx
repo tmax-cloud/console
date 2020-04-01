@@ -1,9 +1,7 @@
 import React, { Component, setState } from 'react';
-import store from '../redux';
 //import { Link } from 'react-router-dom';
 // import { Redirect } from 'react-router-dom';
 //import { App } from './app';
-import { UIActions } from '../ui/ui-actions';
 import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
@@ -71,12 +69,6 @@ class LoginComponent extends Component {
         if (data.accessToken && data.refreshToken) {
           window.localStorage.setItem('accessToken', data.accessToken);
           window.localStorage.setItem('refreshToken', data.refreshToken);
-          if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role !== 'namespace-user') {
-            store.dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
-          }
-          // else {
-          //   store.dispatch(UIActions.setActiveNamespace(''));
-          // }
 
           this.props.history.push('/');
           this.props.history.go(0);

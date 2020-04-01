@@ -130,7 +130,7 @@ export const VirtualMachineInstancesPage = props => (
   <ListPage
     {...props}
     ListComponent={VirtualMachineInstanceList}
-    canCreate={true}
+    canCreate={false}
     kind="VirtualMachineInstance"
   />
 );

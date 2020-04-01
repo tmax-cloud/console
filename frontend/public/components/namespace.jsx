@@ -247,12 +247,6 @@ class NamespaceDropdown_ extends React.Component {
     const model = getModel(useProjects);
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
-    // if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
-    //   canListNS = false;
-    // } else {
-    //   canListNS = true;
-    // }
-    // canListNS = true;
 
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
@@ -261,11 +255,25 @@ class NamespaceDropdown_ extends React.Component {
       items[name] = name;
     });
 
+    if (data.length > 1) { // 객체는 iterable한 값이 아니어서 최상위 값을 고를 수가 없음 그래서 data를 다시 sorting해서 그 첫번째 값을 선택되는 namespace로 지정
+      data.sort(function (a, b) {
+        return a.metadata.name < b.metadata.name ? -1 : a.metadata.name > b.metadata.name ? 1 : 0;
+      });
+    }
 
-    // if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
-    //   activeNamespace = name;
-    //   dispatch(UIActions.setActiveNamespace(name));
-    // }
+
+    if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+      if (data.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
+        activeNamespace = data[0].metadata.name;
+      }
+      if (!localStorage.getItem('bridge/last-namespace-name')) {
+        dispatch(UIActions.setActiveNamespace(activeNamespace));
+      }
+    } else {
+      if (!localStorage.getItem('bridge/last-namespace-name')) {
+        dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+      }
+    }
 
     // if (!activeNamespace || activeNamespace === 'default') {
     //   activeNamespace = name;
