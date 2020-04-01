@@ -12,7 +12,6 @@ import {
   ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -29,16 +28,8 @@ const ClusterServiceBrokerHeader = props => (
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-4 col-sm-4"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
       className="col-sm-4 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
+      sortField="metadata.creationTimestamp" >
       Created
     </ColHead>
   </ListHeader>
@@ -58,20 +49,8 @@ const ClusterServiceBrokerRow = () =>
           <ResourceLink
             kind="ClusterServiceBroker"
             name={obj.metadata.name}
-            namespace={obj.metadata.namespace}
             title={obj.metadata.name}
           />
-        </div>
-        <div className="col-xs-4 col-sm-4 co-break-word">
-          {obj.metadata.namespace ? (
-            <ResourceLink
-              kind="Namespace"
-              name={obj.metadata.namespace}
-              title={obj.metadata.namespace}
-            />
-          ) : (
-              'None'
-            )}
         </div>
         <div className="col-xs-4 col-sm-4 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
@@ -80,21 +59,6 @@ const ClusterServiceBrokerRow = () =>
     );
   };
 
-// const DetailsForKind = kind =>
-//   function DetailsForKind_({ obj }) {
-//     return (
-//       <React.Fragment>
-//         <div className="co-m-pane__body">
-//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
-//           <ResourceSummary
-//             resource={obj}
-//             podSelector="spec.podSelector"
-//             showNodeSelector={false}
-//           />
-//         </div>
-//       </React.Fragment>
-//     );
-//   };
 
 const Details = ({ obj: ClusterServiceBroker }) => {
   return (
