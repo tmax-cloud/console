@@ -11,7 +11,7 @@ file_deployment_pod_temp="./3.deployment-pod-temp.yaml"
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
 echo "==============================================================="
-# Enter docker image ver (console version) 
+# Enter docker image tag (console version) 
 echo -e "Enter the console version."
 read version
 CONSOLE_VERSION=$version
@@ -94,16 +94,15 @@ do
     sleep 1
     count=$(($count+1))
     echo "Waiting for $count sec(s)..."
+    kubectl get po -n console-system
     RUNNING_FLAG=$(kubectl get po -n console-system | grep console | awk '{print $3}')
     if [ ${RUNNING_FLAG} == "Running" ]; then
         rm -rf ${file_deployment_pod_temp}
-        kubectl get po -n console-system
         echo "Console has been successfully deployed."
         break 
     fi
     if [ $count -eq $stop ]; then 
-        kubectl get po -n console-system 
-        echo "It seems something went wrong! Please check the log."
+        echo "It seems that something went wrong! Check the log."
         kubectl logs -n console-system $(kubectl get po -n console-system | grep console | awk '{print $1}') 
         break
     fi
