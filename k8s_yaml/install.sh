@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
