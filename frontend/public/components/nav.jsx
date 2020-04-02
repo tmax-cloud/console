@@ -499,8 +499,8 @@ export class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="인증/인가" icon="fa fa-id-card-o">
-              {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
-              {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />}
+              {/* {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
+              {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />} */}
               <ResourceNSLink resource="roles" name="롤" startsWith={rolesStartsWith} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name="롤 바인딩" onClick={this.close} startsWith={rolebindingsStartsWith} />
               <ResourceNSLink resource="rolebindingclaims" name="롤 바인딩 클레임" onClick={this.close} startsWith={rolebindingsStartsWith} />
