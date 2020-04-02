@@ -1,5 +1,5 @@
 import * as _ from 'lodash-es';
-import React, { useState } from 'react';
+import React, { useState, } from 'react';
 import { render } from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
@@ -16,7 +16,7 @@ import { analyticsSvc } from '../module/analytics';
 import { GlobalNotifications } from './global-notifications';
 import { Masthead } from './masthead';
 import { NamespaceSelector } from './namespace';
-import { Nav } from './nav';
+import Nav from './nav';
 import { SearchPage } from './search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
 import { history, AsyncComponent, Loading } from './utils';
@@ -27,6 +27,9 @@ import { referenceForModel } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
 import '../vendor.scss';
 import '../style.scss';
+
+import './utils/i18n';
+
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';

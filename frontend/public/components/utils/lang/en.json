@@ -1,0 +1,54 @@
+{
+  "additional": {
+    "pluralConsonant": "{{something}}s",
+    "pluralVowel": "{{something}}es",
+    "createButton": "Create {{something}}",
+    "filterPlaceHolder": "Filter {{something}} Sets by name..."
+  },
+  "string": {
+    "filterPlaceHolder": "Filter {{something}} Sets by name..."
+  },
+  "content": {
+    "home": "Home",
+    "status": "Status",
+    "search": "Search",
+    "event": "Event"
+  },
+  "resource": {
+    "servicecatalog": "Service Catalog",
+    "clusterservicebroker": "Cluster Service Broker",
+    "clusterserviceclass": "Cluster Service Class",
+    "clusterserviceplan": "Cluster Service Plan",
+    "serviceinstance": "Service Instance",
+    "servicebinding": "Service Binding",
+    "template": "Template",
+    "templateinstance": "Template Instance",
+    "workload": "WorkLoad",
+    "pod": "Pod",
+    "daemonset": "Daemon Set",
+    "deployment": "Deployment",
+    "statefulset": "Stateful Set",
+    "virtualmachineinstance": "Virtual Machine Instance",
+    "virtualmachine": "Virtual Machine",
+    "configmap": "Config Map",
+    "secret": "Secret",
+    "replicaset": "Replica Set",
+    "replicasetcontroller": "Replica Set Controller",
+    "hpa": "HPA",
+    "job": "Job",
+    "cronjob": "Cron Job"
+  },
+  "contents": {
+    "Pods": "Pods",
+    "Daemon Sets": "Daemon Sets",
+    "Create Button": "Create {{resource}}"
+  },
+  "vertNav": {
+    "Overview": "Overview",
+    "YAML": "YAML",
+    "Environment": "Environment",
+    "Logs": "Logs",
+    "Events": "Events",
+    "Terminal": "Terminal"
+  }
+}

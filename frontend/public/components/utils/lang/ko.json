@@ -1,0 +1,48 @@
+{
+  "additional": {
+    "pluralConsonant": "{{something}}",
+    "pluralVowel": "{{something}}",
+    "createButton": "{{something}} 생성"
+  },
+  "string": {
+    "filterPlaceHolder": "이름으로 {{something}}을 검색..."
+  },
+  "content": {
+    "status": "상태",
+    "search": "검색",
+    "event": "이벤트",
+    "home": "홈"
+  },
+  "resource": {
+    "servicecatalog": "서비스 카탈로그",
+    "clusterservicebroker": "클러스터 서비스 브로커",
+    "clusterserviceclass": "클러스터 서비스 클래스",
+    "clusterserviceplan": "클러스터 서비스 플랜",
+    "serviceinstance": "서비스 인스턴스",
+    "servicebinding": "서비스 바인딩",
+    "template": "템플릿",
+    "templateinstance": "템플릿 인스턴스",
+    "workload": "워크로드",
+    "pod": "파드",
+    "daemonset": "데몬셋",
+    "deployment": "디플로이먼트",
+    "statefulset": "스테이트 풀셋",
+    "virtualmachineinstance": "가상머신 객체",
+    "virtualmachine": "가상머신",
+    "configmap": "컨피그 맵",
+    "secret": "보안",
+    "replicaset": "레플리카 셋",
+    "replicasetcontroller": "레플리카 셋 컨트롤러",
+    "hpa": "HPA",
+    "job": "Job",
+    "cronjob": "Cron Job"
+  },
+  "vertNav": {
+    "Overview": "개요",
+    "YAML": "YAML",
+    "Environment": "환경 변수",
+    "Logs": "로그",
+    "Events": "이벤트",
+    "Terminal": "터미널"
+  }
+}
