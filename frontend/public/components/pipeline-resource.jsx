@@ -110,24 +110,22 @@ export const PipelineResourceList = props => {
 };
 PipelineResourceList.displayName = PipelineResourceList;
 
-export const PipelineResourcesPage = props => (
-    <ListPage
-        {...props}
-        ListComponent={PipelineResourceList}
-        canCreate={true}
-        kind="PipelineResource"
-    />
-);
-PipelineResourcesPage.displayName = 'PipelineResourcesPage';
+;
 
-// export const PipelineResourceDetailsPage = props => {
-//   const pages = [
-//     navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
+const PipelineResourcesPage = props => {
+    const createItems = {
+        form: 'Pipeline Resource (Form Editor)',
+        yaml: 'Pipeline Resource (YAML Editor)'
+    };
 
+    const createProps = {
+        items: createItems,
+        createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/pipelineresources/new${type !== 'yaml' ? '/' + type : ''}`
+    };
+    return <ListPage ListComponent={PipelineResourceList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
+PipelineResourcesPage.displayName = 'PipelineResourcesPage'
+export { PipelineResourcesPage };
 export const PipelineResourceDetailsPage = props => (
     <DetailsPage
         {...props}

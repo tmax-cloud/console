@@ -79,7 +79,6 @@ const templateInstancePhase = instance => {
 const TemplateInstanceRow = kind =>
   function TemplateInstanceRow({ obj }) {
     let phase = templateInstancePhase(obj);
-
     return (
       <div className="row co-resource-list__item">
         <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
@@ -107,7 +106,7 @@ const TemplateInstanceRow = kind =>
           }
         </div>
         <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs co-break-word">
-          {(obj.spec.template && obj.spec.template.parameters.length) || 'None'}
+          {(obj.spec && obj.spec.template && obj.spec.template.parameters.length) || 'None'}
         </div>
         <div className="col-lg-2 col-md-2 hidden-sm hidden-xs hidden-xs">
           {phase}
@@ -123,7 +122,6 @@ const Details = ({ obj: templateinstance }) => {
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
-
       <div className="co-m-pane__body">
         <SectionHeading text="Pod Overview" />
         <div className="row">
@@ -145,29 +143,21 @@ const Details = ({ obj: templateinstance }) => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export const TemplateInstanceList = props => {
+
   const { kinds } = props;
   const Row = TemplateInstanceRow(kinds[0]);
   Row.displayName = 'TemplateInstanceRow';
   return <List {...props} Header={TemplateInstanceHeader} Row={Row} />;
 };
 TemplateInstanceList.displayName = TemplateInstanceList;
-
-// export const TemplateInstancesPage = props => (
-//   <ListPage
-//     {...props}
-//     ListComponent={TemplateInstanceList}
-//     canCreate={true}
-//     kind="TemplateInstance"
-//   />
-// );
 const TemplateInstancesPage = props => {
   const createItems = {
-    form: '서비스 인스턴스 (폼 에디터)',
-    yaml: '서비스 인스턴스 (YAML 에디터)'
+    form: 'Service Instance (Form Editor)',
+    yaml: 'Service Instance (YAML Editor)'
   };
 
   const createProps = {

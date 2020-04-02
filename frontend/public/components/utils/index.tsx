@@ -52,5 +52,44 @@ export * from './scroll-to-top-on-mount';
 export const enum NameValueEditorPair {
   Name = 0,
   Value,
-  Index
+  Index,
+}
+
+export const enum StatusEditorPair {
+  Status = '',
+  Reason = ''
+}
+
+export const enum AdvancedPortEditorPair {
+  Name,
+  Port,
+  Protocol,
+  TargetPort,
+  Index,
+}
+
+export const enum BasicPortEditorPair {
+  Name,
+  Port,
+  Protocol,
+  Index,
+}
+
+export const enum VolumeEditorPair {
+  Name,
+  MountPath,
+  PVC,
+  ReadOnly,
+  Index,
+}
+
+export const enum ValueEditorPair {
+  Value,
+  Index,
+}
+
+export const enum KeyValueEditorPair {
+  Key,
+  Value,
+  Index,
 }

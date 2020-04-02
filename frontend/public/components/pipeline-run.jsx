@@ -105,14 +105,19 @@ export const PipelineRunList = props => {
 };
 PipelineRunList.displayName = PipelineRunList;
 
-export const PipelineRunsPage = props => (
-    <ListPage
-        {...props}
-        ListComponent={PipelineRunList}
-        canCreate={true}
-        kind="PipelineRun"
-    />
-);
+
+export const PipelineRunsPage = props => {
+    const createItems = {
+        form: 'Pipeline Run (Form Editor)',
+        yaml: 'Pipeline Run (YAML Editor)'
+    };
+
+    const createProps = {
+        items: createItems,
+        createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/pipelineruns/new${type !== 'yaml' ? '/' + type : ''}`
+    };
+    return <ListPage ListComponent={PipelineRunList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
 PipelineRunsPage.displayName = 'PipelineRunsPage';
 
 // export const TaskDetailsPage = props => {

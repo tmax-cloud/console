@@ -10,10 +10,91 @@ import * as k8sModels from '../models';
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
   .setIn(['DEFAULT', 'default'], `
-apiVersion: ''
-kind: ''
-metadata:
-  name: example
+  apiVersion: ''
+  kind: ''
+  metadata:
+    name: example
+`)
+  .setIn([referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ClusterServiceBroker
+  metadata:
+    name: hyperbroker4
+  spec:
+          url: http://0.0.0.0:28677
+`)
+  .setIn([referenceForModel(k8sModels.ServiceInstanceModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ServiceInstance
+  metadata:
+    name: example-instance
+    namespace: hypercloud4-system
+  spec:
+    serviceClassName: example-template
+    servicePlanName: example-plan
+    parameters:
+      PARAM1: value1
+      PARAM2: value2
+`)
+  .setIn([referenceForModel(k8sModels.ServiceBindingModel), 'default'], `
+  apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ServiceBinding
+  metadata:
+    name: example-binding
+    namespace: hypercloud4-system
+  spec:
+    instanceRef:
+      name: example-instance
+`)
+  .setIn([referenceForModel(k8sModels.UserModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: User
+  metadata: 
+    name: example-tmax.co.kr
+    labels: 
+      encrypted: f
+  userInfo:
+    name: example
+    password: "example"
+    email: example@tmax.co.kr
+    department: Cloud
+    position: developer
+    phone: 010-0000-0000
+    description: For Example
+  status: active
+`)
+  .setIn([referenceForModel(k8sModels.NamespaceClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: NamespaceClaim
+  metadata:
+    name: example
+  spec:
+    hard:
+      limits.cpu: "1" 
+`)
+  .setIn([referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: ResourceQuotaClaim
+  metadata:
+    name: example
+    namespace: example
+  spec:
+    hard:
+      limits.cpu: "2"
+`)
+  .setIn([referenceForModel(k8sModels.RoleBindingClaimModel), 'default'], `
+  apiVersion: tmax.io/v1
+  kind: RoleBindingClaim
+  metadata:
+    name: example
+    namespace: example
+  subjects:
+  - kind: User
+    name: example@tmax.co.kr
+  roleRef:
+    kind: ClusterRole
+    name: namespace-user
+    apiGroup: rbac.authorization.k8s.io
 `)
   .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
 apiVersion: tekton.dev/v1alpha1
@@ -370,16 +451,16 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: hello-openshift
+      app: hello-hypercloud
   replicas: 3
   template:
     metadata:
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.ClusterModel), 'default'], `
@@ -453,16 +534,16 @@ metadata:
   name: example
 spec:
   selector:
-    app: hello-openshift
+    app: hello-hypercloud
   replicas: 3
   template:
     metadata:
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.PersistentVolumeModel), 'default'], `
@@ -503,11 +584,11 @@ kind: Pod
 metadata:
   name: example
   labels:
-    app: hello-openshift
+    app: hello-hypercloud
 spec:
   containers:
-    - name: hello-openshift
-      image: openshift/hello-openshift
+    - name: hello-hypercloud
+      image: hypercloud/hello-hypercloud
       ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.IngressModel), 'default'], `
@@ -558,6 +639,14 @@ roleRef:
   kind: ClusterRole
   name: view
   apiGroup: rbac.authorization.k8s.io
+`).setIn([referenceForModel(k8sModels.ClusterRoleModel), 'default'], `apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: example
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
 `).setIn([referenceForModel(k8sModels.RoleModel), 'default'], `apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -650,15 +739,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: hello-openshift
+      app: hello-hypercloud
   template:
     metadata:
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'], `
@@ -745,7 +834,7 @@ metadata:
 type: Opaque
 stringData:
   username: admin
-  password: opensesame
+  password: damin
 `).setIn([referenceForModel(k8sModels.ReplicaSetModel), 'default'], `
 apiVersion: apps/v1
 kind: ReplicaSet
@@ -755,16 +844,16 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: hello-openshift
+      app: hello-hypercloud
   template:
     metadata:
-      name: hello-openshift
+      name: hello-hypercloud
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.RouteModel), 'default'], `
@@ -787,16 +876,16 @@ metadata:
 spec:
   replicas: 2
   selector:
-    app: hello-openshift
+    app: hello-hypercloud
   template:
     metadata:
-      name: hello-openshift
+      name: hello-hypercloud
       labels:
-        app: hello-openshift
+        app: hello-hypercloud
     spec:
       containers:
-      - name: hello-openshift
-        image: openshift/hello-openshift
+      - name: hello-hypercloud
+        image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
 `).setIn([referenceForModel(k8sModels.BuildConfigModel), 'docker-build'], `

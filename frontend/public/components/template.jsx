@@ -36,7 +36,7 @@ const TemplateHeader = props => (
     <ColHead
       {...props}
       className="col-xs-3 col-sm-3"
-      sortField="metadata.namespace"
+      sortField="objects.length"
     >
       Object Count
     </ColHead>

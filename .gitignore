@@ -13,4 +13,7 @@
 /frontend/yarn-error.log
 /frontend/node_modules
 /frontend/gui_test_screenshots
+/frontend/webpack.config.ts
+/swagger/autocomplete--swagger.json
 *.iml
+/hcConsoleVer.json

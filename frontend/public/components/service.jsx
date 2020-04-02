@@ -6,7 +6,7 @@ import { Cog, navFactory, LabelList, ResourceCog, SectionHeading, ResourceIcon, 
 
 const menuActions = [Cog.factory.ModifyPodSelector, ...Cog.factory.common];
 
-const ServiceIP = ({s}) => {
+const ServiceIP = ({ s }) => {
   const children = _.map(s.spec.ports, (portObj, i) => {
     const clusterIP = s.spec.clusterIP === 'None' ? 'None' : `${s.spec.clusterIP}:${portObj.port}`;
     return <div key={i}>{clusterIP}</div>;
@@ -16,25 +16,33 @@ const ServiceIP = ({s}) => {
 };
 
 const ServiceHeader = props => <ListHeader>
-  <ColHead {...props} className="col-lg-3 col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-  <ColHead {...props} className="col-lg-3 col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">Labels</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-3 hidden-sm hidden-xs" sortField="spec.selector">Pod Selector</ColHead>
+  <ColHead {...props} className="col-lg-1 col-md-1 col-sm-1 col-xs-1" sortField="metadata.name">Name</ColHead>
+  <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 col-xs-2" sortField="metadata.namespace">Namespace</ColHead>
+  <ColHead {...props} className="col-lg-1 col-md-1 col-sm-1 col-xs-1" sortField="spec.type">Type</ColHead>
+  <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 col-xs-2" sortField="status.loadBalancer.ingress[0]">External IP</ColHead>
+  <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 hidden-xs" sortField="metadata.labels">Labels</ColHead>
+  <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.selector">Pod Selector</ColHead>
   <ColHead {...props} className="col-lg-2 hidden-md hidden-sm hidden-xs" sortField="spec.clusterIP">Location</ColHead>
 </ListHeader>;
 
-const ServiceRow = ({obj: s}) => <ResourceRow obj={s}>
-  <div className="col-lg-3 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
+const ServiceRow = ({ obj: s }) => <ResourceRow obj={s}>
+  <div className="col-lg-1 col-md-1 col-sm-1 col-xs-1 co-resource-link-wrapper">
     <ResourceCog actions={menuActions} kind="Service" resource={s} />
     <ResourceLink kind="Service" name={s.metadata.name} namespace={s.metadata.namespace} title={s.metadata.uid} />
   </div>
-  <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-break-word">
+  <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 co-break-word">
     <ResourceLink kind="Namespace" name={s.metadata.namespace} title={s.metadata.namespace} />
   </div>
-  <div className="col-lg-3 col-md-3 col-sm-4 hidden-xs">
+  <div className="col-xs-1 col-sm-1 hidden-xs">
+    {s.spec.type}
+  </div>
+  <div className="col-xs-2 col-sm-2 hidden-xs">
+    {(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.join(', ')) || 'No External IP'}
+  </div>
+  <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">
     <LabelList kind="Service" labels={s.metadata.labels} />
   </div>
-  <div className="col-lg-2 col-md-3 hidden-sm hidden-xs">
+  <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
     <Selector selector={s.spec.selector} namespace={s.metadata.namespace} />
   </div>
   <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
@@ -42,7 +50,7 @@ const ServiceRow = ({obj: s}) => <ResourceRow obj={s}>
   </div>
 </ResourceRow>;
 
-const ServiceAddress = ({s}) => {
+const ServiceAddress = ({ s }) => {
   const ServiceIPsRow = (name, desc, ips, note = null) => <div className="co-ip-row">
     <div className="row">
       <div className="col-xs-6">
@@ -78,7 +86,7 @@ const ServiceAddress = ({s}) => {
   </div>;
 };
 
-const ServicePortMapping = ({ports}) => <div>
+const ServicePortMapping = ({ ports }) => <div>
   <div className="row co-ip-header">
     <div className="col-xs-3">Name</div>
     <div className="col-xs-3">Port</div>
@@ -109,11 +117,15 @@ const ServicePortMapping = ({ports}) => <div>
   </div>
 </div>;
 
-const Details = ({obj: s}) => <div className="co-m-pane__body">
+const Details = ({ obj: s }) => <div className="co-m-pane__body">
   <div className="row">
     <div className="col-sm-6">
       <SectionHeading text="Service Overview" />
       <ResourceSummary resource={s} showNodeSelector={false}>
+        <dt>Type</dt>
+        <dd>{s.spec.type}</dd>
+        <dt>External IP</dt>
+        <dd>{(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.join(', ')) || 'No External IP'}</dd>
         <dt>Session Affinity</dt>
         <dd>{s.spec.sessionAffinity || '-'}</dd>
       </ResourceSummary>
@@ -129,12 +141,16 @@ const Details = ({obj: s}) => <div className="co-m-pane__body">
         <dd className="service-ips">
           {s.spec.ports ? <ServicePortMapping ports={s.spec.ports} /> : '-'}
         </dd>
+        <dt>Service Port Mapping</dt>
+        <dd className="service-ips">
+          {s.spec.ports ? <ServicePortMapping ports={s.spec.ports} /> : '-'}
+        </dd>
       </dl>
     </div>
   </div>
 </div>;
 
-const {details, pods, editYaml} = navFactory;
+const { details, pods, editYaml } = navFactory;
 const ServicesDetailsPage = props => <DetailsPage
   {...props}
   menuActions={menuActions}
@@ -142,6 +158,18 @@ const ServicesDetailsPage = props => <DetailsPage
 />;
 
 const ServicesList = props => <List {...props} Header={ServiceHeader} Row={ServiceRow} />;
-const ServicesPage = props => <ListPage canCreate={true} ListComponent={ServicesList} {...props} />;
+//const ServicesPage = props => <ListPage canCreate={true} ListComponent={ServicesList} {...props} />;
+const ServicesPage = props => {
+  const createItems = {
+    form: 'Service (Form Editor)',
+    yaml: 'Service (YAML Editor)'
+  };
 
-export {ServicesList, ServicesPage, ServicesDetailsPage};
+  const createProps = {
+    items: createItems,
+    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/services/new${type !== 'yaml' ? '/' + type : ''}`
+  };
+  return <ListPage ListComponent={ServicesList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+};
+
+export { ServicesList, ServicesPage, ServicesDetailsPage };

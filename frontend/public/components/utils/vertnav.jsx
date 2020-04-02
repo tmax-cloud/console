@@ -66,6 +66,11 @@ export const navFactory = {
     href: 'environment',
     name: 'Environment',
     component: component,
+  }),
+  metering: (component) => ({
+    href: 'metering',
+    name: 'Metering',
+    component: component,
   })
 };
 
@@ -75,9 +80,14 @@ export const NavBar = ({ pages, basePath }) => {
   basePath = basePath.replace(/\/$/, '');
 
   return <ul className="co-m-vert-nav__menu">{_.flatten(_.map(pages, ({ name, href }, i) => {
+<<<<<<< HEAD
     const { t } = useTranslation('vertNav', { useSuspense: false });
     const klass = classNames('co-m-vert-nav__menu-item', { 'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`) });
     const tab = <li className={klass} key={name}><Link to={`${basePath}/${href}`}>{t(name)}</Link></li>;
+=======
+    const klass = classNames('co-m-vert-nav__menu-item', { 'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`) });
+    const tab = <li className={klass} key={name}><Link to={`${basePath}/${href}`}>{name}</Link></li>;
+>>>>>>> hc-dev
 
     // These tabs go before the divider
     const before = ['', 'edit', 'yaml'];

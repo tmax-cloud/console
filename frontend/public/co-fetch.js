@@ -106,6 +106,12 @@ const getCSRFToken = () =>
     .pop();
 
 export const coFetch = (url, options = {}, timeout = 20000) => {
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+    if (window.SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+      return;
+    }
+  }
+
   const allOptions = _.defaultsDeep({}, initDefaults, options);
   if (allOptions.method !== "GET") {
     allOptions.headers["X-CSRFToken"] = getCSRFToken();
@@ -118,15 +124,26 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
     delete allOptions.headers["X-CSRFToken"];
   }
 
-  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0) {
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
     if (!window.SERVER_FLAGS.releaseModeFlag) {
-      allOptions.headers.Authorization =
-      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgtV2ViSG9vayIsImlkIjoid3ltaW4tdG1heC5jby5rciIsImV4cCI6MTU4MzEyMTQ5M30.hjvrlaLDFuSjchJKarGKbuWOuafhsuCQgBDo-pqsZvg";
+      if (url.indexOf('nameSpace') < 0) {
+        allOptions.headers.Authorization =
+          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiY2x1c3Rlci1hZG1pbiIsInRva2VuSWQiOiJ3b29AdG1heC5jby5rciIsImlzcyI6IlRtYXgtUHJvQXV0aC1XZWJIb29rIiwiaWQiOiJhZG1pbkB0bWF4LmNvLmtyIiwiZXhwIjoxNzQzMzAxNDM1fQ.ls9Cj1BX4NPJ3XxxHwcrGDzveaaqsauMo5L4e5BfUnE";
+      } else {
+        allOptions.headers.Authorization =
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiY2x1c3Rlci1hZG1pbiIsInRva2VuSWQiOiJ3b29AdG1heC5jby5rciIsImlzcyI6IlRtYXgtUHJvQXV0aC1XZWJIb29rIiwiaWQiOiJhZG1pbkB0bWF4LmNvLmtyIiwiZXhwIjoxNzQzMzAxNDM1fQ.ls9Cj1BX4NPJ3XxxHwcrGDzveaaqsauMo5L4e5BfUnE";
+      }
+
     } else {
-      allOptions.headers.Authorization = "Bearer " + window.localStorage.getItem('accessToken');
+      if (url.indexOf('nameSpace') < 0) {
+        allOptions.headers.Authorization = "Bearer " + window.localStorage.getItem('accessToken');
+      } else {
+        allOptions.headers.Authorization = window.localStorage.getItem('accessToken'); {/* nameSpace 서비스에는 Bearer 제외하고 token 보내야함.*/ }
+      }
+
     }
   }
-  
+
   // Initiate both the fetch promise and a timeout promise
   return Promise.race([
     fetch(url, allOptions).then(response => validateStatus(response, url)),
@@ -143,6 +160,12 @@ export const coFetchUtils = {
 };
 
 export const coFetchJSON = (url, method = "GET", options = {}) => {
+  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+    if (window.SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+      return;
+    }
+  }
+
   const headers = { Accept: "application/json" };
   const { kind, name } = store.getState().UI.get("impersonate", {});
   if ((kind === "User" || kind === "Group") && name) {
@@ -155,7 +178,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
 
   if (url === 'openapi/v2') {
     // url = `https://192.168.6.169:6443/openapi/v2`;
-    url = `${document.location.origin}/openapi/v2`;
+    url = `${document.location.origin}/api/kubernetes/openapi/v2`;
   }
   // if
   // Pass headers last to let callers to override Accept.
@@ -166,7 +189,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
     if (url === 'openapi/v2' && response.ok) {
       return response;
     }
-    
+
     if (!response.ok) {
       return response.text().then(text => {
         analyticsSvc.error(`${text}: ${method} ${response.url}`);
@@ -177,11 +200,11 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
     if (response.headers.get("Content-Length") === "0") {
       return Promise.resolve({});
     }
-    
+
     if (url.indexOf('logout') > 0) {
       return response;
     }
-    
+
     return response.json();
   });
 };
@@ -189,21 +212,29 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
 const coFetchSendJSON = (url, method, json = null, options = {}) => {
   const allOptions;
 
-  if (url.indexOf('login') > 0 || url.indexOf('logout') > 0) {
+  if (url.indexOf('login') > 0 || url.indexOf('logout') > 0 || url.indexOf('tokenrefresh') > 0) {
     allOptions = {
       headers: {
-        Accept: "application/json"
+        Accept: 'application/json'
+      }
+    };
+  } else if ((!_.isEmpty(options)) && options.path === 'status') {
+    allOptions = {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/merge-patch+json;application/json-patch+json'
       }
     };
   } else {
     allOptions = {
       headers: {
-        Accept: "application/json",
-        "Content-Type": `application/${
-          method === "PATCH" ? "json-patch+json" : "json"
+        Accept: 'application/json',
+        'Content-Type': `application/${
+          method === 'PATCH' ? 'json-patch+json' : 'json'
           };charset=UTF-8`
       }
     };
+    console.log(allOptions);
   }
 
 

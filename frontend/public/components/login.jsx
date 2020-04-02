@@ -6,7 +6,6 @@ import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
-import '../style.scss';
 import { sha512 } from 'js-sha512';
 
 
@@ -24,28 +23,28 @@ class LoginComponent extends Component {
     if (props.history.action === 'POP') {
       history.go(1);
     }
-    
+
     if (document.referrer) {
       history.pushState(null, null, location.href);
-      window.onpopstate = function(event) {	
-      history.go(1);
+      window.onpopstate = function (event) {
+        history.go(1);
+      }
+      // if (localStorage.getItem('accessToken') === '') {
+      //   // 로그아웃 된 상태 
+      //   history.pushState(null, null, location.href);
+      //   // this.props.history.push('/login');  
+      //   window.onpopstate = function(event) {	
+      //   history.go(1);
+      // }
+
+      // if (props.history.action !== 'REPLACE') {
+      //   history.pushState(null, null, location.href);
+      //   window.onpopstate = function(event) {	
+      //   history.go(1);
+      //   } 
+      // }
     }
-    // if (localStorage.getItem('accessToken') === '') {
-    //   // 로그아웃 된 상태 
-    //   history.pushState(null, null, location.href);
-    //   // this.props.history.push('/login');  
-    //   window.onpopstate = function(event) {	
-    //   history.go(1);
-    // }
-    
-    // if (props.history.action !== 'REPLACE') {
-    //   history.pushState(null, null, location.href);
-    //   window.onpopstate = function(event) {	
-    //   history.go(1);
-    //   } 
-    // }
   }
-}
 
   componentWillUnmount() {
     // console.log('componentWillUnmount');
@@ -56,37 +55,40 @@ class LoginComponent extends Component {
       return;
     }
 
-    const AUTH_SERVER_URL = `${document.location.origin}/userlogin`;
-    
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/login`;
+
     //if (this.state.id !== undefined && this.state.pw !== undefined) {
-      const json = {
-        'id': this.state.id,
-        'password': sha512(this.state.pw)
-        
-      };
-      
-      coFetchJSON.post(AUTH_SERVER_URL, json)
-        .then(data => {
-          if (data.accessToken) {
-            window.localStorage.setItem('accessToken', data.accessToken);
-            this.props.history.push('/');  
-            this.props.history.go(0);
-          } else {
-            this.setState({error: data.dto.error});
-            return;
-          }
-          
-          // const url_ = window.location.href.split('/login')[0]
-          // window.location = `${url_}/status/all-namespaces`;
-          
-        })
-        .catch(error => {
-          // console.log(error);
-          this.setState({error: error.message});
-        });
-  //}
+    const json = {
+      'id': this.state.id,
+      'password': sha512(this.state.pw)
+    };
+
+    coFetchJSON.post(AUTH_SERVER_URL, json)
+      .then(data => {
+        // console.log(data);
+        if (data.accessToken && data.refreshToken) {
+          window.localStorage.setItem('accessToken', data.accessToken);
+          window.localStorage.setItem('refreshToken', data.refreshToken);
+
+          this.props.history.push('/');
+          this.props.history.go(0);
+        } else {
+          // 로그인 실패 
+          this.setState({ error: data.msg });
+          return;
+        }
+
+        // const url_ = window.location.href.split('/login')[0]
+        // window.location = `${url_}/status/all-namespaces`;
+
+      })
+      .catch((error) => {
+        console.log(error.message);
+        this.setState({ error: error.message });
+      });
+    //}
   };
-  
+
   render() {
     return (
       <div id="login">
@@ -117,11 +119,11 @@ class LoginComponent extends Component {
               <input type="hidden"></input>
               <div className="box_login">
                 <div className="inp_text">
-                  <input type="text" id="loginId" autoFocus="autofocus" placeholder="Email" value={this.state.id} onKeyPress={this.onClick} onChange={(e) => {this.setState({id: e.target.value})}}></input>
+                  <input type="text" id="loginId" autoFocus="autofocus" placeholder="Email" value={this.state.id} onKeyPress={this.onClick} onChange={(e) => { this.setState({ id: e.target.value }) }}></input>
                 </div>
                 <div className="box_login">
                   <div className="inp_text">
-                    <input type="password" id="inputPassword" placeholder="Password" value={this.state.pw} onKeyPress={this.onClick} onChange={(e) => {this.setState({pw: e.target.value})}}></input>
+                    <input type="password" id="inputPassword" placeholder="Password" value={this.state.pw} onKeyPress={this.onClick} onChange={(e) => { this.setState({ pw: e.target.value }) }}></input>
                   </div>
                 </div>
                 <div className="box_error">

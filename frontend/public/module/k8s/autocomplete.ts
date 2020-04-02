@@ -135,22 +135,152 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
   const valueFor = (property: string) => session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
     return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
   }, '');
-
+  
   const kind = valueFor('kind');
   const apiVersion = valueFor('apiVersion');
+
+  // webserver에 올린 swagger json file 불러오기
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener('load', () => {
+    const swagger: SwaggerAPISpec = JSON.parse(xhr.response);
+
+    if (kind.length && apiVersion.length && swagger) {
+      const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`${apiVersion.replace('/', '.')}.${kind}`));
+      const results = Object.keys(_.get(swagger.definitions, [`${defKey}Spec`, 'properties'], {})).map(prop => ({
+        name: prop,
+        score: 10000,
+        value: prop,
+        meta: kind,
+      }));
+      callback(null, results);
+    }
+
+    if (apiVersion.indexOf('tmax') !== -1) {
+    
+      // 미리: 현재 위치와 비교하여 추천 키워드를 변경하는 로직 
+      // var specIdx;
+      // session.getLines(0, session.getLength()).forEach((item, idx) => {
+      //   if (item.includes('spec')) {
+      //     specIdx = idx;
+      //   }
+      // });
+  
+      // if (pos.row < specIdx) {
+      //   getBeforeSpecPropertyCompletions(state, session, pos, prefix, callback);
+      //   return;
+      // } else {
+      //   getAfterSpecPropertyCompletions(state, session, pos, prefix, callback);
+      //   return;
+      // }
+  
+      const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1.${kind}`));
+      // console.log(defKey);
+      var results;
+      if (kind === 'Template') {
+        // 미리: 템플릿은 고민을 더 해봐야 함 
+        results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties'], {})).map(prop => ({
+          name: prop,
+          score: 1000,
+          value: prop,
+          meta: kind,
+          required: false,
+        }));
+      } else {
+        results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'properties'], {})).map(prop => ({
+        name: prop,
+        score: 1000,
+        value: prop,
+        meta: kind,
+        required: false,
+      }));
+      }
+      // 미리: 필수값 로직 
+      // _.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'required'], {}).map(item => {
+      //   results.map(prop => {
+      //     if (prop.name === item) {
+      //       prop.required = true;
+      //     }
+      //   })
+      // })
+  
+      callback(null, results);
+    }
+
+    if (apiVersion.indexOf('tekton') !== -1) {  
+      const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1alpha1.${kind}`));
+      // console.log(defKey);
+      const results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'properties'], {})).map(prop => ({
+        name: prop,
+        score: 1000,
+        value: prop,
+        meta: kind,
+        required: false,
+      }));
+      
+      callback(null, results);
+    }
+
+  });
+  xhr.open('GET', `${document.location.origin}/static/assets/autocomplete--swagger.json`);
+  xhr.send();
+  
+};
+
+/**
+ * Resource 내에서 Context 에 맞는 자동 완성 기능 제공을 위한 테스트
+ */
+
+export const getBeforeSpecPropertyCompletions = async(state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
+  const valueFor = (property: string) => session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
+    return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
+  }, '');
+  
+  const kind = valueFor('kind');
+
   const swagger: SwaggerAPISpec = JSON.parse(window.sessionStorage.getItem(`${(window as any).SERVER_FLAGS.consoleVersion}--swagger.json`));
 
-  if (kind.length && apiVersion.length && swagger) {
-    const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`${apiVersion.replace('/', '.')}.${kind}`));
-    const results = Object.keys(_.get(swagger.definitions, [`${defKey}Spec`, 'properties'], {})).map(prop => ({
-      name: prop,
-      score: 10000,
-      value: prop,
-      meta: kind,
-    }));
-    callback(null, results);
-  }
+  const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1.${kind}`));
+  
+  const arr = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties'], {})).filter(item => item !== 'spec').map(prop => ({
+    name: prop,
+    score: 1000,
+    value: prop,
+    meta: kind,
+  }))
+  
+  callback(null, arr);
 };
+
+export const getAfterSpecPropertyCompletions = async(state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
+  const valueFor = (property: string) => session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
+    return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
+  }, '');
+  
+  const kind = valueFor('kind');
+
+  const swagger: SwaggerAPISpec = JSON.parse(window.sessionStorage.getItem(`${(window as any).SERVER_FLAGS.consoleVersion}--swagger.json`));
+
+  const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1.${kind}`));
+  
+  const results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'properties'], {})).map(prop => ({
+    name: prop,
+    score: 1000,
+    value: prop,
+    meta: kind,
+    required: false,
+  }));
+  
+  _.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'required'], {}).map(item => {
+    results.map(prop => {
+      if (prop.name === item) {
+        prop.required = true;
+      }
+    })
+  })
+    
+  callback(null, results);
+};
+
 
 /**
  * Provides completion using either static values derived from k8s API spec, or by fetching cluster resources.
