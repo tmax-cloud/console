@@ -138,6 +138,7 @@ class App extends React.PureComponent {
     if (window.SERVER_FLAGS.releaseModeFlag && window.localStorage.getItem('refreshToken') && window.localStorage.getItem('accessToken')) {
       const userRole = JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role;
       console.log('userRole: ', userRole);
+      window.localStorage.setItem('role', userRole)
       if (userRole !== 'cluster-admin') {
         this.changeRole_();
       }
