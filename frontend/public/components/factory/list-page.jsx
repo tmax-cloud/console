@@ -12,9 +12,6 @@ import { ErrorPage404 } from '../error';
 import { makeReduxID, makeQuery } from '../utils/k8s-watcher';
 import { referenceForModel } from '../../module/k8s';
 
-// import i18n from '../utils/i18n';
-import { useTranslation } from 'react-i18next';
-
 export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => <div className="btn-group btn-group-sm" data-toggle="buttons">
   <label className={classNames('btn compaction-btn', expand ? 'btn-default' : 'btn-primary')}>
     <input type="radio" onClick={() => onExpandChange(false)} /> Compact
@@ -25,8 +22,7 @@ export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }
 </div>;
 
 /** @type {React.SFC<{label: string, onChange: React.ChangeEventHandler<any>, defaultValue: string}}>} */
-export const TextFilter = ({ id, label, onChange, defaultValue, style, className, autoFocus }) => {
-  // export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus }) => {
+export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus }) => {
   if (_.isUndefined(autoFocus)) {
     if (window.matchMedia('(min-width: 800px)').matches) {
       autoFocus = true;
@@ -35,15 +31,13 @@ export const TextFilter = ({ id, label, onChange, defaultValue, style, className
       autoFocus = false;
     }
   }
-  const { t } = useTranslation(['contents', 'lnb'], { useSuspense: false });
   return <input
     type="text"
     autoCapitalize="none"
     style={style}
     className={classNames('form-control text-filter', className)}
     tabIndex={0}
-    // placeholder={`Filter ${label}...`}
-    placeholder={t('string:filterPlaceHolder', { something: t(`resource:${id}`) })}
+    placeholder={`Filter ${label}...`}
     onChange={onChange}
     autoFocus={autoFocus}
     defaultValue={defaultValue}
@@ -154,8 +148,7 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
     }
 
     render() {
-      const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources, id } = this.props;
-      // const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources } = this.props;
+      const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources } = this.props;
 
       const DropdownFilters = dropdownFilters && dropdownFilters.map(({ type, items, title }) => {
         return <Dropdown key={title} items={items} title={title} onChange={v => this.applyFilter(type, v)} />;
@@ -192,8 +185,7 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
             {DropdownFilters && <div className="btn-group">
               {DropdownFilters}
             </div>}
-            <TextFilter id={id} label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} />
-            {/* <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} /> */}
+            <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} />
           </div>
         </div>
         <div className="co-m-pane__body">
@@ -243,7 +235,6 @@ FireMan_.propTypes = {
 
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
-  const { t } = useTranslation(['contents', 'lnb'], { useSuspense: false });
 
   const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
@@ -273,7 +264,7 @@ export const ListPage = props => {
     filterLabel={filterLabel || `${labelPlural} by name`}
     selectorFilterLabel="Filter by selector (app=nginx) ..."
     createProps={createProps}
-    title={t(title)}
+    title={title}
     showTitle={showTitle}
     canCreate={props.canCreate}
     canExpand={props.canExpand}
@@ -296,8 +287,7 @@ ListPage.displayName = 'ListPage';
 
 /** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, flatten?: Function, title?: string, showTitle?: boolean, dropdownFilters?: any[], filterLabel?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string}>} */
 export const MultiListPage = props => {
-  // const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake } = props;
-  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake, id } = props;
+  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake } = props;
   const resources = _.map(props.resources, (r) => ({
     ...r,
     isList: true,
@@ -306,7 +296,6 @@ export const MultiListPage = props => {
   }));
 
   const elems = <FireMan_
-    id={id}
     filterLabel={filterLabel}
     selectorFilterLabel="Filter by selector (app=nginx) ..."
     createProps={createProps}
@@ -319,8 +308,8 @@ export const MultiListPage = props => {
     autoFocus={fake ? false : props.autoFocus}
     dropdownFilters={props.dropdownFilters}
   >
-    <Firehose resources={resources} id={id}>
-      <ListPageWrapper_ id={id} ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
+    <Firehose resources={resources}>
+      <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
     </Firehose>
   </FireMan_>;
   return fake ? <Disabled>{elems}</Disabled> : elems;

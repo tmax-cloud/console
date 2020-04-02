@@ -20,8 +20,6 @@ import * as routingImg from '../imgs/routing.svg';
 import * as routingActiveImg from '../imgs/routing-active.svg';
 import { history, stripBasePath } from './utils';
 
-import { withTranslation } from 'react-i18next';
-
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
 
@@ -339,7 +337,7 @@ const UserNavSection = connectToFlags(
   );
 });
 
-class Nav extends React.Component {
+export class Nav extends React.Component {
   constructor(props) {
     super(props);
     this.scroller = React.createRef();
@@ -383,7 +381,6 @@ class Nav extends React.Component {
   render() {
     const { isOpen } = this.state;
     const { isAdmin } = this.props;
-    const { t } = this.props;
 
     return (
       <React.Fragment>
@@ -524,4 +521,3 @@ class Nav extends React.Component {
     );
   }
 }
-export default withTranslation('lnb')(Nav);

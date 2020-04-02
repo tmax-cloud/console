@@ -9,7 +9,6 @@ import { PodsPage } from '../pod';
 import { AsyncComponent } from '../utils/async';
 
 
-import { useTranslation } from 'react-i18next';
 const editYamlComponent = (props) => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
 
 class PodsComponent extends React.PureComponent {
@@ -80,9 +79,8 @@ export const NavBar = ({ pages, basePath }) => {
   basePath = basePath.replace(/\/$/, '');
 
   return <ul className="co-m-vert-nav__menu">{_.flatten(_.map(pages, ({ name, href }, i) => {
-    const { t } = useTranslation('vertNav', { useSuspense: false });
     const klass = classNames('co-m-vert-nav__menu-item', { 'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`) });
-    const tab = <li className={klass} key={name}><Link to={`${basePath}/${href}`}>{t(name)}</Link></li>;
+    const tab = <li className={klass} key={name}><Link to={`${basePath}/${href}`}>{name}</Link></li>;
 
     // These tabs go before the divider
     const before = ['', 'edit', 'yaml'];
