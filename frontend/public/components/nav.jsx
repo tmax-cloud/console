@@ -408,9 +408,9 @@ export class Nav extends React.Component {
             </NavSection>
             {/* Service Catalog 전체 추가 */}
             <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
-              <ResourceNSLink resource="clusterservicebrokers" name="클러스터 서비스 브로커 관리" onClick={this.close} />
-              <ResourceNSLink resource="clusterserviceclasses" name="클러스터 서비스 클래스" onClick={this.close} />
-              <ResourceNSLink resource="clusterserviceplans" name="클러스터 서비스 플랜" onClick={this.close} />
+              <ResourceClusterLink resource="clusterservicebrokers" name="클러스터 서비스 브로커 관리" onClick={this.close} />
+              <ResourceClusterLink resource="clusterserviceclasses" name="클러스터 서비스 클래스" onClick={this.close} />
+              <ResourceClusterLink resource="clusterserviceplans" name="클러스터 서비스 플랜" onClick={this.close} />
               <ResourceNSLink resource="serviceinstances" name="서비스 생성" onClick={this.close} />
               <ResourceNSLink resource="servicebindings" name="서비스 바인딩" onClick={this.close} />
               <ResourceNSLink resource="templates" name="템플릿" onClick={this.close} />
@@ -432,9 +432,8 @@ export class Nav extends React.Component {
               <ResourceNSLink resource="horizontalpodautoscalers" name="HPA" onClick={this.close} />
               <ResourceNSLink resource="daemonsets" name="데몬 셋" onClick={this.close} />
               <ResourceNSLink resource="statefulsets" name="스테이트풀 셋" onClick={this.close} />
-              {/* VM 추가 */}
-              {/* <ResourceNSLink resource="virtualmachines" name="가상 머신" onClick={this.close} /> */}
-              {/* <ResourceNSLink resource="virtualmachineinstances" name="가상 머신 인스턴스" onClick={this.close} /> */}
+              <ResourceNSLink resource="virtualmachines" name="가상 머신" onClick={this.close} />
+              <ResourceNSLink resource="virtualmachineinstances" name="가상 머신 인스턴스" onClick={this.close} />
               <ResourceNSLink resource="configmaps" name="콘피그 맵" onClick={this.close} />
               <ResourceNSLink resource="secrets" name="시크릿" onClick={this.close} />
               <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} />
@@ -480,7 +479,7 @@ export class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="보안" icon="fa fa-shield">
-              {isAdmin && <ResourceNSLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
+              {isAdmin && <ResourceClusterLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
 
@@ -493,12 +492,12 @@ export class Nav extends React.Component {
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              {isAdmin && <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />}
+              <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
-              {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />}
+              {/* {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />} */}
               <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
             </NavSection>
 

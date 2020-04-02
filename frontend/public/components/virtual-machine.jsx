@@ -22,7 +22,7 @@ const menuActions = [
   Cog.factory.Delete
 ];
 
-const ClusterServiceBrokerHeader = props => (
+const VirtualMachineHeader = props => (
   <ListHeader>
     <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
       Name
@@ -44,19 +44,19 @@ const ClusterServiceBrokerHeader = props => (
   </ListHeader>
 );
 
-const ClusterServiceBrokerRow = () =>
+const VirtualMachineRow = () =>
   // eslint-disable-next-line no-shadow
-  function ClusterServiceBrokerRow({ obj }) {
+  function VirtualMachineRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind="ClusterServiceBroker"
+            kind="VirtualMachine"
             resource={obj}
           />
           <ResourceLink
-            kind="ClusterServiceBroker"
+            kind="VirtualMachine"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
@@ -96,7 +96,7 @@ const ClusterServiceBrokerRow = () =>
 //     );
 //   };
 
-const Details = ({ obj: ClusterServiceBroker }) => {
+const Details = ({ obj: VirtualMachine }) => {
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -104,7 +104,7 @@ const Details = ({ obj: ClusterServiceBroker }) => {
         <SectionHeading text="Pod Overview" />
         <div className="row">
           <div className="col-sm-6">
-            <ResourceSummary resource={ClusterServiceBroker} />
+            <ResourceSummary resource={VirtualMachine} />
           </div>
           {/* {activeDeadlineSeconds && (
                 <React.Fragment>
@@ -115,26 +115,26 @@ const Details = ({ obj: ClusterServiceBroker }) => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
-
-export const ClusterServiceBrokerList = props => {
-  const { kinds } = props;
-  const Row = ClusterServiceBrokerRow(kinds[0]);
-  Row.displayName = 'ClusterServiceBrokerRow';
-  return <List {...props} Header={ClusterServiceBrokerHeader} Row={Row} />;
+  );
 };
-ClusterServiceBrokerList.displayName = ClusterServiceBrokerList;
 
-export const ClusterServiceBrokersPage = props => (
+export const VirtualMachineList = props => {
+  const { kinds } = props;
+  const Row = VirtualMachineRow(kinds[0]);
+  Row.displayName = 'VirtualMachineRow';
+  return <List {...props} Header={VirtualMachineHeader} Row={Row} />;
+};
+VirtualMachineList.displayName = VirtualMachineList;
+
+export const VirtualMachinesPage = props => (
   <ListPage
     {...props}
-    ListComponent={ClusterServiceBrokerList}
+    ListComponent={VirtualMachineList}
     canCreate={true}
-    kind="ClusterServiceBroker"
+    kind="VirtualMachine"
   />
 );
-ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
+VirtualMachinesPage.displayName = 'VirtualMachinesPage';
 
 // export const TemplatesDetailsPage = props => {
 //   const pages = [
@@ -144,16 +144,16 @@ ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
 
-export const ClusterServiceBrokersDetailsPage = props => (
+export const VirtualMachinesDetailsPage = props => (
   <DetailsPage
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ClusterServiceBroker Details',
+        name: 'VirtualMachine Details',
         path: props.match.url
       })
     }
-    kind="ClusterServiceBroker"
+    kind="VirtualMachine"
     menuActions={menuActions}
     pages={[
       navFactory.details(Details),
@@ -162,4 +162,4 @@ export const ClusterServiceBrokersDetailsPage = props => (
   />
 );
 
-ClusterServiceBrokersDetailsPage.displayName = 'ClusterServiceBrokersDetailsPage';
+VirtualMachinesDetailsPage.displayName = 'VirtualMachinesDetailsPage';

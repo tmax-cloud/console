@@ -237,7 +237,8 @@ class NamespaceDropdown_ extends React.Component {
   }
 
   render() {
-    const { activeNamespace, dispatch, canListNS, useProjects } = this.props;
+    // const { activeNamespace, dispatch, canListNS, useProjects } = this.props;
+    let { activeNamespace, dispatch, canListNS, useProjects } = this.props; // 상수였는데 user 계정에서의 namespace 변경을 위해 변수처리함.
     if (flagPending(canListNS)) {
       return null;
     }
@@ -246,11 +247,42 @@ class NamespaceDropdown_ extends React.Component {
     const model = getModel(useProjects);
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
+
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
     }
+    _.map(data, 'metadata.name').sort().forEach(name => {
+      items[name] = name;
+    });
 
-    _.map(data, 'metadata.name').sort().forEach(name => items[name] = name);
+    if (data.length > 1) { // 객체는 iterable한 값이 아니어서 최상위 값을 고를 수가 없음 그래서 data를 다시 sorting해서 그 첫번째 값을 선택되는 namespace로 지정
+      data.sort(function (a, b) {
+        return a.metadata.name < b.metadata.name ? -1 : a.metadata.name > b.metadata.name ? 1 : 0;
+      });
+    }
+
+
+    if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+      if (data.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
+        activeNamespace = data[0].metadata.name;
+      }
+      if (!localStorage.getItem('bridge/last-namespace-name')) {
+        dispatch(UIActions.setActiveNamespace(activeNamespace));
+      }
+    } else {
+      if (!localStorage.getItem('bridge/last-namespace-name')) {
+        dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+      }
+    }
+
+    // if (!activeNamespace || activeNamespace === 'default') {
+    //   activeNamespace = name;
+    // dispatch(UIActions.setActiveNamespace(name));
+    // }
+
+    // if (items.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
+    //   activeNamespace = items[0].metadata.name;
+    // }
 
     let title = activeNamespace;
     if (activeNamespace === ALL_NAMESPACES_KEY) {
@@ -286,36 +318,46 @@ const MeteringPage = requirePrometheus((props) => <div className="co-m-pane__bod
   <SectionHeading text="Metering" />
   <div className="row">
     {/* <div className="col-sm-6 col-xs-12"> */}
-    <Line title="CPU Shares" query={[
-      {
-        name: 'Used',
-        query: 'cpu',
-      },
-    ]} />
-    <Line title="Memory" query={[
-      {
-        name: 'Used',
-        query: 'memory',
-      },
-    ]} />
-    <Line title="Storage" query={[
-      {
-        name: 'Used',
-        query: 'storage',
-      },
-    ]} />
-    <Line title="Public IP" query={[
-      {
-        name: 'Used',
-        query: 'publicIp',
-      },
-    ]} />
-    <Line title="GPU" query={[
-      {
-        name: 'Used',
-        query: 'gpu',
-      },
-    ]} />
+    <div className="col-md-4">
+      <Line title="CPU Shares" query={[
+        {
+          name: 'Used',
+          query: 'cpu',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="Memory" query={[
+        {
+          name: 'Used',
+          query: 'memory',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="Storage" query={[
+        {
+          name: 'Used',
+          query: 'storage',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="Public IP" query={[
+        {
+          name: 'Used',
+          query: 'publicIp',
+        },
+      ]} />
+    </div>
+    <div className="col-md-4">
+      <Line title="GPU" query={[
+        {
+          name: 'Used',
+          query: 'gpu',
+        },
+      ]} />
+    </div>
   </div>
   {/* </div>
   {/* <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${props.namespace}"})))`} humanize={humanizeMem} metric="pod_name" /> */}

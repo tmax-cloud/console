@@ -112,7 +112,7 @@ export class Cog extends DropdownMixin {
     const { options, isDisabled, id, resource } = this.props;
     if (resource) {
       if (resource.kind === 'NamespaceClaim' || resource.kind === 'RoleBindingClaim' || resource.kind === 'ResourceQuotaClaim') {
-        if (resource.status.status === 'Success' && options[options.length - 1].label === 'Edit Status') {
+        if (resource.status && resource.status.status === 'Success' && options[options.length - 1].label === 'Edit Status') {
           options.pop();
         }
       } // claim 페이지에서 status에 따라 'Edit Status' 메뉴 활성화/비활성화 분기 로직

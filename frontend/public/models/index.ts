@@ -1,6 +1,34 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+export const VirtualMachineModel: K8sKind = {
+  kind: "VirtualMachine",
+  namespaced: true,
+  label: "Virtual Machine",
+  plural: "virtualmachines",
+  apiVersion: "v1alpha3",
+  abbr: "VM",
+  apiGroup: "kubevirt.io",
+  labelPlural: "Virtual Machines",
+  path: "virtualmachines",
+  id: "virtualmachine",
+  crd: false
+}
+
+export const VirtualMachineInstanceModel: K8sKind = {
+  kind: "VirtualMachineInstance",
+  namespaced: true,
+  label: "Virtual Machine Instance",
+  plural: "virtualmachineinstances",
+  apiVersion: "v1alpha3",
+  abbr: "VMI",
+  apiGroup: "kubevirt.io",
+  labelPlural: "Virtual Machine Instances",
+  path: "virtualmachineinstances",
+  id: "virtualmachineinstance",
+  crd: false
+}
+
 export const UserModel: K8sKind = {
   kind: 'User',
   namespaced: false,
@@ -899,6 +927,7 @@ export const ClusterServiceBrokerModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServiceBroker',
   id: 'clusterservicebroker',
+  crd: false
 };
 
 export const ClusterServiceClassModel: K8sKind = {
@@ -912,6 +941,7 @@ export const ClusterServiceClassModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServiceClass',
   id: 'clusterserviceclass',
+  crd: false
 };
 
 export const ClusterServicePlanModel: K8sKind = {
@@ -925,6 +955,7 @@ export const ClusterServicePlanModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServicePlan',
   id: 'clusterserviceplan',
+  crd: false
 };
 
 export const ServiceInstanceModel: K8sKind = {

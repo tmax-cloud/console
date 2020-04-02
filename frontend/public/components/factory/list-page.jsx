@@ -238,6 +238,7 @@ export const ListPage = props => {
   const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
+  console.log('kosdfasdf: ', ko);
   const { labelPlural, plural, namespaced, label } = ko;
   const title = props.title || labelPlural;
   let href = namespaced ? `/k8s/ns/${namespace || 'default'}/${plural}/new` : `/k8s/cluster/${plural}/new`;

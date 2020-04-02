@@ -72,3 +72,23 @@ ModalSubmitFooter.propTypes = {
   message: PropTypes.string,
   submitText: PropTypes.node.isRequired,
 };
+
+export const CustomModalSubmitFooter = ({message, errorMessage, inProgress, cancel, submitText, cancelText, submitDisabled}) => {
+  const onCancelClick = e => {
+    e.stopPropagation();
+    cancel(e);
+  };
+  return <ModalFooter inProgress={inProgress} message={message}>
+    <button type="submit" className="btn btn-primary" disabled={submitDisabled} id="confirm-action">{submitText}</button>
+    <button type="button" onClick={onCancelClick} className="btn btn-default">{cancelText}</button>
+  </ModalFooter>;
+};
+
+CustomModalSubmitFooter.propTypes = {
+  cancel: PropTypes.func.isRequired,
+  // errorMessage: PropTypes.string.isRequired,
+  inProgress: PropTypes.bool.isRequired,
+  message: PropTypes.string,
+  submitText: PropTypes.node.isRequired,
+  cancelText: PropTypes.node.isRequired
+};

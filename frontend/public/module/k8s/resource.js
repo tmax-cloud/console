@@ -89,23 +89,29 @@ export const k8sPatch2 = (kind, resource, data, opts) => coFetchJSON.patch(
 );
 
 export const k8sKill = (kind, resource, opts = {}, json = null) => coFetchJSON.delete(
-  resourceURL(kind, Object.assign({ns: resource.metadata.namespace, name: resource.metadata.name}, opts)), opts, json
+  resourceURL(kind, Object.assign({ ns: resource.metadata.namespace, name: resource.metadata.name }, opts)), opts, json
 );
 
-export const k8sList = (kind, params={}, raw=false, options = {}) => {
-  const query = _.map(_.omit(params, 'ns'), (v, k) => {
+export const k8sList = (kind, params = {}, raw = false, options = {}) => {
+  let listURL;
+  let query = _.map(_.omit(params, 'ns'), (v, k) => {
     if (k === 'labelSelector') {
       v = selectorToString(v);
     }
     return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
   }).join('&');
 
-  const listURL = resourceURL(kind, {ns: params.ns});
+  if (kind.kind === 'Namespace') {
+    listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
+  } else {
+    listURL = resourceURL(kind, { ns: params.ns });
+  }
+
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => raw ? result : result.items);
 };
 
 export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
-  return k8sList(kind, params, raw, {headers: {Accept: 'application/json;as=PartialObjectMetadataList;v=v1beta1;g=meta.k8s.io,application/json'}});
+  return k8sList(kind, params, raw, { headers: { Accept: 'application/json;as=PartialObjectMetadataList;v=v1beta1;g=meta.k8s.io,application/json' } });
 };
 
 export const k8sWatch = (kind, query = {}, wsOptions = {}) => {

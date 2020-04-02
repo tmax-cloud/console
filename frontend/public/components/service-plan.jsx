@@ -13,7 +13,6 @@ import {
   kindObj
 } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [

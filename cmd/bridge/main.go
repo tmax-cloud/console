@@ -87,12 +87,8 @@ func main() {
 	fGoogleTagManagerID := fs.String("google-tag-manager-id", "", "Google Tag Manager ID. External analytics are disabled if this is not set.")
 
 	fLoadTestFactor := fs.Int("load-test-factor", 0, "DEV ONLY. The factor used to multiply k8s API list responses for load testing purposes.")
-	// NOTE: login endpoint 추가 // 정동민
-	fLoginEndpoint := fs.String("login-endpoint", "", "URL of the login API server.")
-	fLogoutEndpoint := fs.String("logout-endpoint", "", "URL of the logout API server.")
-	fRefreshEndpoint := fs.String("refresh-endpoint", "", "URL of the refresh API server.")
-	fMeteringEndpoint := fs.String("metering-endpoint", "", "URL of the metering API server.")
-	fOpenapiEndpoint := fs.String("openapi-endpoint", "", "URL of the openapi API server.")
+	// NOTE: hypercloud endpoint 추가 // 정동민
+	fHypercloudEndpoint := fs.String("hypercloud-endpoint", "", "URL of the hypercloud API server.")
 	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
 	// NOTE: 여기까지
 
@@ -236,35 +232,16 @@ func main() {
 		log.Warning("cookies are not secure because base-address is not https!")
 	}
 
-	// NOTE: loginEndpoint 추가 //정동민
-	var loginEndpoint *url.URL
-	var logoutEndpoint *url.URL
-	var refreshEndpoint *url.URL
-	var meteringEndpoint *url.URL
-	var openapiEndpoint *url.URL
+	// NOTE: hypercloudEndpoint 추가 //정동민
+	var hypercloudEndpoint *url.URL
 	var prometheusEndpoint *url.URL
 	var k8sEndpoint *url.URL
 	switch *fK8sMode {
 	case "in-cluster":
-		loginEndpoint = validateFlagIsURL("login-endpoint", *fLoginEndpoint)
-		srv.LoginProxyConfig = &proxy.Config{
+		hypercloudEndpoint = validateFlagIsURL("hypercloud-endpoint", *fHypercloudEndpoint)
+		srv.HypercloudProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        loginEndpoint,
-		}
-		logoutEndpoint = validateFlagIsURL("logout-endpoint", *fLogoutEndpoint)
-		srv.LogoutProxyConfig = &proxy.Config{
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        logoutEndpoint,
-		}
-		refreshEndpoint = validateFlagIsURL("refresh-endpoint", *fRefreshEndpoint)
-		srv.RefreshProxyConfig = &proxy.Config{
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        refreshEndpoint,
-		}
-		meteringEndpoint = validateFlagIsURL("metering-endpoint", *fMeteringEndpoint)
-		srv.MeteringProxyConfig = &proxy.Config{
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        meteringEndpoint,
+			Endpoint:        hypercloudEndpoint,
 		}
 		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
 		srv.PrometheusProxyConfig = &proxy.Config{
@@ -302,15 +279,6 @@ func main() {
 
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 
-		// NOTE: openapiEndpoint 추가 // 정동민
-		openapiEndpoint = &url.URL{Scheme: "https", Host: host + ":" + port, Path: "/openapi/"}
-		srv.OpenapiProxyConfig = &proxy.Config{
-			TLSClientConfig: tlsConfig,
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        openapiEndpoint,
-		}
-		// NOTE: 여기까지
-
 		// NOTE: 아래 코드 주석처리
 		// // If running in an OpenShift cluster, set up a proxy to the prometheus-k8s serivce running in the openshift-monitoring namespace.
 		// if _, err := os.Stat(openshiftInClusterServiceCA); err == nil {
@@ -335,46 +303,14 @@ func main() {
 		// }
 
 	case "off-cluster":
-		// NOTE: loginEndpoint 추가 // 정동민
-		loginEndpoint = validateFlagIsURL("login-endpoint", *fLoginEndpoint)
-		srv.LoginProxyConfig = &proxy.Config{
+		// NOTE: hypercloudEndpoint 추가 // 정동민
+		hypercloudEndpoint = validateFlagIsURL("hypercloud-endpoint", *fHypercloudEndpoint)
+		srv.HypercloudProxyConfig = &proxy.Config{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        loginEndpoint,
-		}
-		logoutEndpoint = validateFlagIsURL("logout-endpoint", *fLogoutEndpoint)
-		srv.LogoutProxyConfig = &proxy.Config{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
-			},
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        logoutEndpoint,
-		}
-		refreshEndpoint = validateFlagIsURL("refresh-endpoint", *fRefreshEndpoint)
-		srv.RefreshProxyConfig = &proxy.Config{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
-			},
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        refreshEndpoint,
-		}
-		meteringEndpoint = validateFlagIsURL("metering-endpoint", *fMeteringEndpoint)
-		srv.MeteringProxyConfig = &proxy.Config{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
-			},
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        meteringEndpoint,
-		}
-		openapiEndpoint = validateFlagIsURL("openapi-endpoint", *fOpenapiEndpoint)
-		srv.OpenapiProxyConfig = &proxy.Config{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
-			},
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        openapiEndpoint,
+			Endpoint:        hypercloudEndpoint,
 		}
 		prometheusEndpoint = validateFlagIsURL("prometheus-endpoint", *fPrometheusEndpoint)
 		srv.PrometheusProxyConfig = &proxy.Config{

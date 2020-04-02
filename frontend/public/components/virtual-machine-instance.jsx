@@ -8,9 +8,8 @@ import {
   ResourceCog,
   SectionHeading,
   ResourceLink,
-  ResourceSummary,
   ScrollToTopOnMount,
-  kindObj
+  ResourceSummary
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
@@ -20,32 +19,24 @@ const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
   Cog.factory.Edit,
-  Cog.factory.Delete,
-  Cog.factory.EditStatus
+  Cog.factory.Delete
 ];
 
-const ResourceQuotaClaimHeader = props => (
+const VirtualMachineInstanceHeader = props => (
   <ListHeader>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
       Name
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-3 col-sm-3"
+      className="col-xs-4 col-sm-4"
       sortField="metadata.namespace"
     >
       Namespace
     </ColHead>
     <ColHead
       {...props}
-      className="col-xs-3 col-sm-3"
-      sortField="status.status"
-    >
-      Status
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-3 hidden-xs"
+      className="col-sm-4 hidden-xs"
       sortField="metadata.creationTimestamp"
     >
       Created
@@ -53,25 +44,25 @@ const ResourceQuotaClaimHeader = props => (
   </ListHeader>
 );
 
-const ResourceQuotaClaimRow = () =>
+const VirtualMachineInstanceRow = () =>
   // eslint-disable-next-line no-shadow
-  function ResourceQuotaClaimRow({ obj }) {
+  function VirtualMachineInstanceRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
+        <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
           <ResourceCog
             actions={menuActions}
-            kind="ResourceQuotaClaim"
+            kind="VirtualMachineInstance"
             resource={obj}
           />
           <ResourceLink
-            kind="ResourceQuotaClaim"
+            kind="VirtualMachineInstance"
             name={obj.metadata.name}
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
           />
         </div>
-        <div className="col-xs-3 col-sm-3 co-break-word">
+        <div className="col-xs-4 col-sm-4 co-break-word">
           {obj.metadata.namespace ? (
             <ResourceLink
               kind="Namespace"
@@ -82,10 +73,7 @@ const ResourceQuotaClaimRow = () =>
               'None'
             )}
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">
-          {obj.status && obj.status.status}
-        </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">
+        <div className="col-xs-4 col-sm-4 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
         </div>
       </div>
@@ -108,65 +96,64 @@ const ResourceQuotaClaimRow = () =>
 //     );
 //   };
 
-const Details = ({ obj: resourcequotaclaim }) => {
+const Details = ({ obj: VirtualMachineInstance }) => {
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
-
       <div className="co-m-pane__body">
         <SectionHeading text="Pod Overview" />
         <div className="row">
           <div className="col-sm-6">
-            <ResourceSummary resource={resourcequotaclaim} />
+            <ResourceSummary resource={VirtualMachineInstance} />
           </div>
-          <div className="col-sm-6">
-            <dl className="co-m-pane__details">
-              <dt>Status</dt>
-              <dd>{resourcequotaclaim.status && resourcequotaclaim.status.status}</dd>
-              {resourcequotaclaim.status.status === 'Reject' && <dt>Reason</dt>}
-              {resourcequotaclaim.status.status === 'Reject' && <dd>{resourcequotaclaim.status.reason}</dd>}
-              {/* {activeDeadlineSeconds && (
+          {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>
                   <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
                 </React.Fragment>
               )} */}
-            </dl>
-          </div>
         </div>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export const ResourceQuotaClaimList = props => {
+export const VirtualMachineInstanceList = props => {
   const { kinds } = props;
-  const Row = ResourceQuotaClaimRow(kinds[0]);
-  Row.displayName = 'ResourceQuotaClaimRow';
-  return <List {...props} Header={ResourceQuotaClaimHeader} Row={Row} />;
+  const Row = VirtualMachineInstanceRow(kinds[0]);
+  Row.displayName = 'VirtualMachineInstanceRow';
+  return <List {...props} Header={VirtualMachineInstanceHeader} Row={Row} />;
 };
-ResourceQuotaClaimList.displayName = ResourceQuotaClaimList;
+VirtualMachineInstanceList.displayName = VirtualMachineInstanceList;
 
-export const ResourceQuotaClaimsPage = props => (
+export const VirtualMachineInstancesPage = props => (
   <ListPage
     {...props}
-    ListComponent={ResourceQuotaClaimList}
-    canCreate={true}
-    kind="ResourceQuotaClaim"
+    ListComponent={VirtualMachineInstanceList}
+    canCreate={false}
+    kind="VirtualMachineInstance"
   />
 );
-ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
+VirtualMachineInstancesPage.displayName = 'VirtualMachineInstancesPage';
 
-export const ResourceQuotaClaimsDetailsPage = props => (
+// export const TemplatesDetailsPage = props => {
+//   const pages = [
+//     navFactory.details(DetailsForKind(props.kind)),
+//     navFactory.editYaml()
+//   ];
+//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
+// };
+
+export const VirtualMachineInstancesDetailsPage = props => (
   <DetailsPage
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Resource Quota Claim Details',
+        name: 'VirtualMachineInstance Details',
         path: props.match.url
       })
     }
-    kind="ResourceQuotaClaim"
+    kind="VirtualMachineInstance"
     menuActions={menuActions}
     pages={[
       navFactory.details(Details),
@@ -175,4 +162,4 @@ export const ResourceQuotaClaimsDetailsPage = props => (
   />
 );
 
-ResourceQuotaClaimsDetailsPage.displayName = 'ResourceQuotaClaimsDetailsPage';
+VirtualMachineInstancesDetailsPage.displayName = 'VirtualMachineInstancesDetailsPage';

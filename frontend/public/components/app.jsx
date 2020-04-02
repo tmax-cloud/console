@@ -138,6 +138,7 @@ class App extends React.PureComponent {
     if (window.SERVER_FLAGS.releaseModeFlag && window.localStorage.getItem('refreshToken') && window.localStorage.getItem('accessToken')) {
       const userRole = JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role;
       console.log('userRole: ', userRole);
+      window.localStorage.setItem('role', userRole)
       if (userRole !== 'cluster-admin') {
         this.changeRole_();
       }
@@ -196,7 +197,7 @@ class App extends React.PureComponent {
             // <LazyRoute path="/k8s/cluster/clusterroles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             // <LazyRoute path="/k8s/cluster/clusterroles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
           }
-          <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} />
+
           {
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
@@ -215,6 +216,8 @@ class App extends React.PureComponent {
 
           <LazyRoute path="/k8s/cluster/rolebindings/new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateRoleBinding)} kind="RoleBinding" />
           <LazyRoute path="/k8s/ns/:ns/rolebindings/new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateRoleBinding)} kind="RoleBinding" />
+          <LazyRoute path="/k8s/cluster/clusterrolebindings/new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateClusterRoleBinding)} kind="ClusterRoleBinding" />
+          <LazyRoute path="/k8s/ns/:ns/clusterrolebindings/new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateClusterRoleBinding)} kind="ClusterRoleBinding" />
           <LazyRoute path="/k8s/ns/:ns/rolebindings/:name/copy" exact kind="RoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
           <LazyRoute path="/k8s/ns/:ns/rolebindings/:name/edit" exact kind="RoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
           <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
@@ -229,6 +232,8 @@ class App extends React.PureComponent {
           <LazyRoute path="/k8s/ns/:ns/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => NamespaceFromURL(m.CreateYAML))} />
           <Route path="/k8s/ns/:ns/:plural/:name" component={ResourceDetailsPage} />
           <Route path="/k8s/ns/:ns/:plural" exact component={ResourceListPage} />
+
+          <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} /> {/* clusterles/new를 detail페이지로 인식해서 순서 이동*/}
 
           <Route path="/k8s/all-namespaces/:plural" exact component={ResourceListPage} />
           <Route path="/k8s/all-namespaces/:plural/:name" component={ResourceDetailsPage} />
