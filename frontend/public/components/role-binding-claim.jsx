@@ -123,8 +123,8 @@ const Details = ({ obj: rolebindingclaim }) => {
             <dl className="co-m-pane__details">
               <dt>Status</dt>
               <dd>{rolebindingclaim.status && rolebindingclaim.status.status}</dd>
-              {rolebindingclaim.status.status === 'Reject' && <dt>Reason</dt>}
-              {rolebindingclaim.status.status === 'Reject' && <dd>{rolebindingclaim.status.reason}</dd>}
+              {rolebindingclaim.status && rolebindingclaim.status.status === 'Reject' && <dt>Reason</dt>}
+              {rolebindingclaim.status && rolebindingclaim.status.status === 'Reject' && <dd>{rolebindingclaim.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>
