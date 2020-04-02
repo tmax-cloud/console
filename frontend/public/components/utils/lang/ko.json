@@ -7,11 +7,13 @@
   "string": {
     "filterPlaceHolder": "이름으로 {{something}}을 검색..."
   },
-  "resource": {
-    "home": "홈",
+  "content": {
     "status": "상태",
     "search": "검색",
     "event": "이벤트",
+    "home": "홈"
+  },
+  "resource": {
     "servicecatalog": "서비스 카탈로그",
     "clusterservicebroker": "클러스터 서비스 브로커",
     "clusterserviceclass": "클러스터 서비스 클래스",

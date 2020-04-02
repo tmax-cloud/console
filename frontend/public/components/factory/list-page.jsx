@@ -277,12 +277,7 @@ export const ListPage = props => {
     showTitle={showTitle}
     canCreate={props.canCreate}
     canExpand={props.canExpand}
-<<<<<<< HEAD
-    // createButtonText={createButtonText || `Create ${label}`}
-    createButtonText={t('additional:createButton', { something: t(`resource:${ko.id}`) })}
-=======
     createButtonText={createButtonText || `Create`}
->>>>>>> hc-dev
     textFilter={props.textFilter}
     resources={resources}
     autoFocus={props.autoFocus}

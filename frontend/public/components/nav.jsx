@@ -134,7 +134,6 @@ const navSectionStateToProps = (state, { required }) => {
   };
 };
 
-// const NavSection = connect(navSectionStateToProps)(
 class NavSection_ extends React.Component {
   constructor(props) {
     super(props);
@@ -166,29 +165,8 @@ class NavSection_ extends React.Component {
   getActiveChild() {
     const { activeNamespace, location, children } = this.props;
 
-<<<<<<< HEAD
     if (!children) {
       return stripBasePath(location).startsWith(this.props.activePath);
-=======
-      const resourcePath = location ? stripNS(location) : '';
-      if (Array.isArray(children)) {
-        return children
-          .filter(c => {
-            if (!c) {
-              return false;
-            }
-            if (c.props.startsWith) {
-              return c.type.startsWith(resourcePath, c.props.startsWith);
-            }
-            return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
-          })
-          .map(c => c.props.name)[0];
-      } else if (children.props.startsWith) {
-        // 하나만 있을 때 처리
-        return children.type.startsWith(resourcePath, children.props.startsWith) ? children.props.name : null;
-      }
-      return children.type.isActive && children.type.isActive(children.props, resourcePath, activeNamespace) ? children.props.name : null;
->>>>>>> hc-dev
     }
 
     const resourcePath = location ? stripNS(location) : '';
@@ -283,44 +261,14 @@ class NavSection_ extends React.Component {
           ? text
           : <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>{text}</Link>
         }
-<<<<<<< HEAD
       </div>
       {Children && <ul className="navigation-container__list" style={{ maxHeight }}>{Children}</ul>}
     </div>;
   }
 }
-// );
-withTranslation()(NavSection_);
 
 const NavSection = connect(navSectionStateToProps)(
   NavSection_
-=======
-        return React.cloneElement(c, { key: name, isActive: name === this.state.activeChild, activeNamespace });
-      });
-
-      return (
-        <div className={classNames(sectionClassName, klass)}>
-          <div id={id} className={secionTitleClassName} onClick={this.toggle}>
-            {icon && <i className={iconClassName} aria-hidden="true"></i>}
-            {img && <img src={isActive && activeImg ? activeImg : img} />}
-            {!href ? (
-              text
-            ) : (
-                <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-                  {text}
-                </Link>
-              )}
-          </div>
-          {Children && (
-            <ul className="navigation-container__list" style={{ maxHeight }}>
-              {Children}
-            </ul>
-          )}
-        </div>
-      );
-    }
-  },
->>>>>>> hc-dev
 );
 
 const Sep = () => <div className="navigation-container__section__separator" />;
@@ -437,36 +385,6 @@ class Nav extends React.Component {
     const { isAdmin } = this.props;
     const { t } = this.props;
 
-<<<<<<< HEAD
-
-    return <React.Fragment>
-      <button type="button" className="sidebar-toggle" aria-controls="sidebar" aria-expanded={isOpen} onClick={this.toggle}>
-        <span className="sr-only">Toggle navigation</span>
-        <span className="icon-bar" aria-hidden="true"></span>
-        <span className="icon-bar" aria-hidden="true"></span>
-        <span className="icon-bar" aria-hidden="true"></span>
-      </button>
-      <div id="sidebar" className={classNames({ 'open': isOpen })}>
-        {/* <ClusterPickerNavSection /> */}
-        <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-          <NavSection text={t('resource:home')} icon="pficon pficon-home">
-            <HrefLink href="/status" name={t('resource:status')} activePath="/status/" onClick={this.close} />
-            <HrefLink href="/search" name={t('resource:search')} onClick={this.close} startsWith={searchStartsWith} />
-            <ResourceNSLink resource="events" name={t('additional:pluralConsonant', { something: t('resource:event') })} onClick={this.close} />
-          </NavSection>
-          {/* Service Catalog 전체 추가 */}
-          <NavSection text={t('additional:pluralConsonant', { something: t('resource:servicecatalog') })} icon="pficon pficon-catalog">
-            <ResourceNSLink resource="clusterservicebrokers" name={t('additional:pluralConsonant', { something: t('resource:clusterservicebroker') })} onClick={this.close} />
-            <ResourceNSLink resource="clusterserviceclasses" name={t('additional:pluralVowel', { something: t('resource:clusterserviceclass') })} onClick={this.close} />
-            <ResourceNSLink resource="clusterserviceplans" name={t('additional:pluralConsonant', { something: t('resource:clusterserviceplan') })} onClick={this.close} />
-            <ResourceNSLink resource="serviceinstances" name={t('additional:pluralConsonant', { something: t('resource:serviceinstance') })} onClick={this.close} />
-            <ResourceNSLink resource="servicebindings" name={t('additional:pluralConsonant', { something: t('resource:servicebinding') })} onClick={this.close} />
-            <ResourceNSLink resource="templates" name={t('additional:pluralConsonant', { something: t('resource:template') })} onClick={this.close} />
-            <ResourceNSLink resource="templateinstances" name={t('additional:pluralConsonant', { something: t('resource:templateinstance') })} onClick={this.close} />
-          </NavSection>
-
-          {/* <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
-=======
     return (
       <React.Fragment>
         <button type="button" className="sidebar-toggle" aria-controls="sidebar" aria-expanded={isOpen} onClick={this.toggle}>
@@ -478,10 +396,10 @@ class Nav extends React.Component {
         <div id="sidebar" className={classNames({ open: isOpen })}>
           {/* <ClusterPickerNavSection /> */}
           <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-            <NavSection text="홈" icon="pficon pficon-home">
-              <HrefLink href="/status" name="상태" activePath="/status/" onClick={this.close} />
-              <HrefLink href="/search" name="통합 검색" onClick={this.close} startsWith={searchStartsWith} />
-              <ResourceNSLink resource="events" name="이벤트" onClick={this.close} />
+            <NavSection text={t('content:home')} icon="pficon pficon-home">
+              <HrefLink href="/status" name={t('content:status')} activePath="/status/" onClick={this.close} />
+              <HrefLink href="/search" name={t('content:search')} onClick={this.close} startsWith={searchStartsWith} />
+              <ResourceNSLink resource="events" name={t('content:event')} onClick={this.close} />
             </NavSection>
             {/* Service Catalog 전체 추가 */}
             <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
@@ -495,7 +413,6 @@ class Nav extends React.Component {
             </NavSection>
 
             {/* <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
->>>>>>> hc-dev
             <ResourceNSLink model={ClusterServiceVersionModel} resource={ClusterServiceVersionModel.plural} name="Cluster Service Versions" onClick={this.close} />
             <Sep />
             <ResourceNSLink model={CatalogSourceModel} resource={CatalogSourceModel.plural} name="Catalog Sources" onClick={this.close} />
@@ -503,46 +420,6 @@ class Nav extends React.Component {
             <ResourceNSLink model={InstallPlanModel} resource={InstallPlanModel.plural} name="Install Plans" onClick={this.close} />
           </NavSection> */}
 
-<<<<<<< HEAD
-          <NavSection text={t('additional:pluralConsonant', { something: t('resource:workload') })} icon="fa fa-briefcase">
-            <ResourceNSLink resource="pods" name={t('additional:pluralConsonant', { something: t('resource:pod') })} onClick={this.close} />
-            <ResourceNSLink resource="daemonsets" name={t('additional:pluralConsonant', { something: t('resource:daemonset') })} onClick={this.close} />
-            <ResourceNSLink resource="deployments" name={t('additional:pluralConsonant', { something: t('resource:deployment') })} onClick={this.close} />
-            <ResourceNSLink resource="statefulsets" name={t('additional:pluralConsonant', { something: t('resource:statefulset') })} onClick={this.close} />
-            {/* VM 추가 */}
-            <ResourceNSLink resource="virtualmachineinstances" name={t('additional:pluralConsonant', { something: t('resource:virtualmachineinstance') })} onClick={this.close} />
-            <ResourceNSLink resource="virtualmachines" name={t('additional:pluralConsonant', { something: t('resource:virtualmachine') })} onClick={this.close} />
-            <ResourceNSLink resource="configmaps" name={t('additional:pluralConsonant', { something: t('resource:configmap') })} onClick={this.close} />
-            <ResourceNSLink resource="secrets" name={t('additional:pluralConsonant', { something: t('resource:secret') })} onClick={this.close} />
-            <ResourceNSLink resource="replicasets" name={t('additional:pluralConsonant', { something: t('resource:replicaset') })} onClick={this.close} />
-            <ResourceNSLink resource="replicationcontrollers" name={t('additional:pluralConsonant', { something: t('resource:replicasetcontroller') })} onClick={this.close} />
-            <ResourceNSLink resource="horizontalpodautoscalers" name={t('additional:pluralConsonant', { something: t('resource:hpa') })} onClick={this.close} />
-            <ResourceNSLink resource="jobs" name={t('additional:pluralConsonant', { something: t('resource:job') })} onClick={this.close} />
-            <ResourceNSLink resource="cronjobs" name={t('additional:pluralConsonant', { something: t('resource:cronjob') })} onClick={this.close} />
-            {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-            {/* <Sep /> */}
-          </NavSection>
-
-          <NavSection text="네트워크" icon="pficon pficon-network">
-            {/* istio, virtual service 추가 */}
-            <ResourceNSLink resource="istiogateways" name="Istio Gateways" onClick={this.close} />
-            <ResourceNSLink resource="virtualservices" name="Virtual Services" onClick={this.close} />
-            <ResourceNSLink resource="ingresses" name="인그레스" onClick={this.close} />
-            <ResourceNSLink resource="services" name="서비스" onClick={this.close} />
-            {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-            {/* <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} /> */}
-          </NavSection>
-
-          <NavSection text="스토리지" icon="fa fa-database">
-            {isAdmin && <ResourceClusterLink resource="storageclasses" name="Storage Classes" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />}
-            {/* data volume 추가 */}
-            <ResourceNSLink resource="datavolumes" name="Data Volumes" onClick={this.close} />
-            <ResourceClusterLink resource="persistentvolumes" name="영구볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
-            <ResourceNSLink resource="persistentvolumeclaims" name="Persistent Volume Claims" onClick={this.close} />
-          </NavSection>
-
-          {/* <NavSection text="Builds" icon="pficon pficon-build">
-=======
             <NavSection text="워크로드" icon="fa fa-briefcase">
               <ResourceNSLink resource="pods" name="파드" onClick={this.close} />
               <ResourceNSLink resource="deployments" name="디플로이먼트" onClick={this.close} />
@@ -580,7 +457,6 @@ class Nav extends React.Component {
             </NavSection>
 
             {/* <NavSection text="Builds" icon="pficon pficon-build">
->>>>>>> hc-dev
             <ResourceNSLink resource="buildconfigs" name={BuildConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} />
             <ResourceNSLink resource="builds" name={BuildModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} />
             <ResourceNSLink resource="imagestreams" name={ImageStreamModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} startsWith={imagestreamsStartsWith} />

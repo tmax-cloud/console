@@ -8,11 +8,13 @@
   "string": {
     "filterPlaceHolder": "Filter {{something}} Sets by name..."
   },
-  "resource": {
+  "content": {
     "home": "Home",
     "status": "Status",
     "search": "Search",
-    "event": "Event",
+    "event": "Event"
+  },
+  "resource": {
     "servicecatalog": "Service Catalog",
     "clusterservicebroker": "Cluster Service Broker",
     "clusterserviceclass": "Cluster Service Class",
