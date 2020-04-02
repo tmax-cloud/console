@@ -403,7 +403,7 @@ export class Nav extends React.Component {
               <ResourceClusterLink resource="clusterservicebrokers" name="클러스터 서비스 브로커 관리" onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceclasses" name="클러스터 서비스 클래스" onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceplans" name="클러스터 서비스 플랜" onClick={this.close} />
-              <ResourceNSLink resource="serviceinstances" name="서비스 생성" onClick={this.close} />
+              <ResourceNSLink resource="serviceinstances" name="서비스 인스턴스" onClick={this.close} />
               <ResourceNSLink resource="servicebindings" name="서비스 바인딩" onClick={this.close} />
               <ResourceNSLink resource="templates" name="템플릿" onClick={this.close} />
               <ResourceNSLink resource="templateinstances" name="템플릿 인스턴스" onClick={this.close} />
