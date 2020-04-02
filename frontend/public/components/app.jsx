@@ -200,6 +200,7 @@ class App extends React.PureComponent {
             // <LazyRoute path="/k8s/cluster/clusterroles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
           }
 
+          <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} /> clusterles/new를 detail페이지로 인식해서 순서 이동
           {
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
@@ -235,7 +236,6 @@ class App extends React.PureComponent {
           <Route path="/k8s/ns/:ns/:plural/:name" component={ResourceDetailsPage} />
           <Route path="/k8s/ns/:ns/:plural" exact component={ResourceListPage} />
 
-          <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} /> {/* clusterles/new를 detail페이지로 인식해서 순서 이동*/}
 
           <Route path="/k8s/all-namespaces/:plural" exact component={ResourceListPage} />
           <Route path="/k8s/all-namespaces/:plural/:name" component={ResourceDetailsPage} />

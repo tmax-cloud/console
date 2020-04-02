@@ -113,7 +113,7 @@ export const ClusterServiceBrokersDetailsPage = props => (
     {...props}
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ClusterServiceBroker Details',
+        name: 'Cluster Service Broker Details',
         path: props.match.url
       })
     }
