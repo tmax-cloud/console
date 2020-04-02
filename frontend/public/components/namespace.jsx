@@ -237,7 +237,6 @@ class NamespaceDropdown_ extends React.Component {
   }
 
   render() {
-    // const { activeNamespace, dispatch, canListNS, useProjects } = this.props;
     let { activeNamespace, dispatch, canListNS, useProjects } = this.props; // 상수였는데 user 계정에서의 namespace 변경을 위해 변수처리함.
     if (flagPending(canListNS)) {
       return null;
@@ -261,7 +260,6 @@ class NamespaceDropdown_ extends React.Component {
       });
     }
 
-
     if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
       if (data.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
         activeNamespace = data[0].metadata.name;
@@ -274,15 +272,6 @@ class NamespaceDropdown_ extends React.Component {
         dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
       }
     }
-
-    // if (!activeNamespace || activeNamespace === 'default') {
-    //   activeNamespace = name;
-    // dispatch(UIActions.setActiveNamespace(name));
-    // }
-
-    // if (items.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
-    //   activeNamespace = items[0].metadata.name;
-    // }
 
     let title = activeNamespace;
     if (activeNamespace === ALL_NAMESPACES_KEY) {
