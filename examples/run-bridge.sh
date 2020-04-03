@@ -13,4 +13,4 @@
     --public-dir=./frontend/public/dist \
     --hypercloud-endpoint=http://192.168.6.211:28677 \
     --prometheus-endpoint=http://192.168.6.215:9090/api \
-    --release-mode=false \
+    --release-mode=true \
