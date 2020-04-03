@@ -259,19 +259,21 @@ class NamespaceDropdown_ extends React.Component {
         return a.metadata.name < b.metadata.name ? -1 : a.metadata.name > b.metadata.name ? 1 : 0;
       });
     }
-
-    if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
-      if (data.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
-        activeNamespace = data[0].metadata.name;
-      }
-      if (!localStorage.getItem('bridge/last-namespace-name')) {
-        dispatch(UIActions.setActiveNamespace(activeNamespace));
-      }
-    } else {
-      if (!localStorage.getItem('bridge/last-namespace-name')) {
-        dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+    if (window.localStorage.getItem('accessToken')) {
+      if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+        if (data.length > 0) { // default 값 말고 가장 첫번째로 오는 namespace로 변경
+          activeNamespace = data[0].metadata.name;
+        }
+        if (!localStorage.getItem('bridge/last-namespace-name')) {
+          dispatch(UIActions.setActiveNamespace(activeNamespace));
+        }
+      } else {
+        if (!localStorage.getItem('bridge/last-namespace-name')) {
+          dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+        }
       }
     }
+
 
     let title = activeNamespace;
     if (activeNamespace === ALL_NAMESPACES_KEY) {
