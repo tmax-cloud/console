@@ -286,6 +286,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                     containerPort: Number(arr[1]),
                     protocol: arr[2]
                 };
+                if (arr[2] === "") {
+                    obj.protocol = "TCP"
+                }
                 portList = portList.concat(obj);
             }
         })
@@ -311,6 +314,9 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         readOnly: arr[3]
                     }
                 };
+                if (arr[3] === "") {
+                    volume.persistentVolumeClaim.readOnly = false;
+                }
                 volumeList = volumeList.concat(volume);
                 volumeMountList = volumeMountList.concat(volumeMount);
             }
