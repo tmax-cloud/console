@@ -434,7 +434,6 @@ export class Nav extends React.Component {
               {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
               {/* <Sep /> */}
             </NavSection>
-
             <NavSection text="네트워크" icon="pficon pficon-network">
               {/* istio, virtual service 추가 */}
               <ResourceNSLink resource="ingresses" name="인그레스" onClick={this.close} />
@@ -448,7 +447,7 @@ export class Nav extends React.Component {
             <NavSection text="스토리지" icon="fa fa-database">
               {isAdmin && <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />}
               {/* data volume 추가 */}
-              {/* <ResourceNSLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} /> */}
+              <ResourceClusterLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} />
               <ResourceNSLink resource="persistentvolumeclaims" name="영구 볼륨 클레임" onClick={this.close} />
               <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
             </NavSection>

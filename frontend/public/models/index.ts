@@ -944,6 +944,20 @@ export const ClusterServiceClassModel: K8sKind = {
   crd: false
 };
 
+export const DataVolumeModel: K8sKind = {
+  kind: "DataVolume",
+  namespaced: true,
+  label: "Data Volume",
+  plural: "datavolumes",
+  apiVersion: "v1alpha1",
+  abbr: "DV",
+  apiGroup: "cdi.kubevirt.io",
+  labelPlural: "Data Volumes",
+  path: "datavolumes",
+  id: "datavolume",
+  crd: false
+}
+
 export const ClusterServicePlanModel: K8sKind = {
   label: 'Cluster Service Plan',
   labelPlural: 'Cluster Service Plans',
