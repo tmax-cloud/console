@@ -172,32 +172,14 @@ const withServiceInstanceForm = SubForm =>
       )
         .then(res => res.json())
         .then(res => {
-          let stringobj = JSON.stringify(res.objects);
-          let param = [];
-          for (let i = 0; i < stringobj.length; i++) {
-            let word = '';
-            if (stringobj[i] === '$') {
-              let n = i + 2;
-              if (stringobj[n - 1] === '{') {
-                while (stringobj[n] !== '}') {
-                  word = word + stringobj[n];
-                  n++;
-                }
-                param.push(word);
-              }
-            }
-          }
-          let paramList = Array.from(new Set(param));
+          let paramList = res.parameters.map(function (parm) {
+            return { name: parm.name, value: '' }
+          });
           if (paramList.length) {
-            let parameters = [];
-            paramList.forEach(key => {
-              let newObj = { name: key, value: '' };
-              parameters.push(newObj);
+            this.setState({
+              paramList: paramList,
             });
           }
-          this.setState({
-            paramList: paramList,
-          });
         });
     }
     onClickBack(e) {
@@ -330,13 +312,13 @@ const withServiceInstanceForm = SubForm =>
                       {paramList.map((parameter, index) => (
                         <React.Fragment key={index}>
                           <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                            {parameter}
+                            {parameter.name}
                           </label>
                           <input
                             className="form-control"
                             type="text"
                             placeholder="value"
-                            id={parameter}
+                            id={parameter.name}
                             onChange={this.onParamValueChanged}
                             required
                           />
