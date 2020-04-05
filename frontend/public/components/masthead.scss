@@ -103,7 +103,11 @@
 
 
 .co-masthead__expire {
-  margin-left: 0px;
+  display: none;
+  @media (min-width: $grid-float-breakpoint) {
+    display: block;
+    margin-left: 0px;
+  }
 }
 
 .btn-token-refresh {
