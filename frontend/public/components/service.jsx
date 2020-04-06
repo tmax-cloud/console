@@ -16,17 +16,17 @@ const ServiceIP = ({ s }) => {
 };
 
 const ServiceHeader = props => <ListHeader>
-  <ColHead {...props} className="col-lg-1 col-md-1 col-sm-1 col-xs-1" sortField="metadata.name">Name</ColHead>
+  <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 col-xs-2" sortField="metadata.name">Name</ColHead>
   <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 col-xs-2" sortField="metadata.namespace">Namespace</ColHead>
   <ColHead {...props} className="col-lg-1 col-md-1 col-sm-1 col-xs-1" sortField="spec.type">Type</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 col-xs-2" sortField="status.loadBalancer.ingress[0]">External IP</ColHead>
+  <ColHead {...props} className="col-lg-1 col-md-1 col-sm-1 col-xs-1" sortField="status.loadBalancer.ingress[0]">External IP</ColHead>
   <ColHead {...props} className="col-lg-2 col-md-2 col-sm-2 hidden-xs" sortField="metadata.labels">Labels</ColHead>
   <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.selector">Pod Selector</ColHead>
   <ColHead {...props} className="col-lg-2 hidden-md hidden-sm hidden-xs" sortField="spec.clusterIP">Location</ColHead>
 </ListHeader>;
 
 const ServiceRow = ({ obj: s }) => <ResourceRow obj={s}>
-  <div className="col-lg-1 col-md-1 col-sm-1 col-xs-1 co-resource-link-wrapper">
+  <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 co-resource-link-wrapper">
     <ResourceCog actions={menuActions} kind="Service" resource={s} />
     <ResourceLink kind="Service" name={s.metadata.name} namespace={s.metadata.namespace} title={s.metadata.uid} />
   </div>
@@ -36,8 +36,8 @@ const ServiceRow = ({ obj: s }) => <ResourceRow obj={s}>
   <div className="col-xs-1 col-sm-1 hidden-xs">
     {s.spec.type}
   </div>
-  <div className="col-xs-2 col-sm-2 hidden-xs">
-    {(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.join(', ')) || 'No External IP'}
+  <div className="col-xs-1 col-sm-1 hidden-xs">
+    {(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.map(cur => cur.ip).join(', ')) || 'No External IP'}
   </div>
   <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">
     <LabelList kind="Service" labels={s.metadata.labels} />
@@ -124,8 +124,8 @@ const Details = ({ obj: s }) => <div className="co-m-pane__body">
       <ResourceSummary resource={s} showNodeSelector={false}>
         <dt>Type</dt>
         <dd>{s.spec.type}</dd>
-        <dt>External IP</dt>
-        <dd>{(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.join(', ')) || 'No External IP'}</dd>
+        {/* <dt>External IP</dt>
+        <dd>{(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.join(', ')) || 'No External IP'}</dd> */}
         <dt>Session Affinity</dt>
         <dd>{s.spec.sessionAffinity || '-'}</dd>
       </ResourceSummary>
