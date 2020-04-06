@@ -339,6 +339,8 @@ const UserNavSection = connectToFlags(
   );
 });
 
+
+
 class Nav extends React.Component {
   constructor(props) {
     super(props);
@@ -524,5 +526,4 @@ class Nav extends React.Component {
     );
   }
 }
-
 export default withTranslation()(Nav);

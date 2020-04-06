@@ -14,13 +14,15 @@ i18n
         vertNav: ko.vertNav,
         additional: ko.additional,
         resource: ko.resource,
-        string: ko.string
+        string: ko.string,
+        content: ko.content
       },
       en: {
         vertNav: en.vertNav,
         additional: en.additional,
         resource: en.resource,
-        string: en.string
+        string: en.string,
+        content: en.content
       }
     },
 
