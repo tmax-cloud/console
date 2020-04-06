@@ -5,9 +5,11 @@
     "createButton": "{{something}} 생성"
   },
   "string": {
-    "filterPlaceHolder": "이름으로 {{something}}을 검색..."
+    "filterPlaceHolder": "이름으로 {{something}}을 검색...",
+    "desc": "안녕, 내 이름은 테스트"
   },
   "content": {
+    "name": "이름",
     "status": "상태",
     "search": "검색",
     "event": "이벤트",

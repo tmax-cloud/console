@@ -28,6 +28,7 @@ import k8sActions from '../module/k8s/k8s-actions';
 import '../vendor.scss';
 import '../style.scss';
 
+import './utils/i18n';
 
 
 // Edge lacks URLSearchParams

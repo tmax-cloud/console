@@ -20,6 +20,8 @@ import * as routingImg from '../imgs/routing.svg';
 import * as routingActiveImg from '../imgs/routing-active.svg';
 import { history, stripBasePath } from './utils';
 
+import { withTranslation } from 'react-i18next';
+
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
 
@@ -337,7 +339,7 @@ const UserNavSection = connectToFlags(
   );
 });
 
-export class Nav extends React.Component {
+class Nav extends React.Component {
   constructor(props) {
     super(props);
     this.scroller = React.createRef();
@@ -381,6 +383,7 @@ export class Nav extends React.Component {
   render() {
     const { isOpen } = this.state;
     const { isAdmin } = this.props;
+    const { t } = this.props;
 
     return (
       <React.Fragment>
@@ -393,7 +396,7 @@ export class Nav extends React.Component {
         <div id="sidebar" className={classNames({ open: isOpen })}>
           {/* <ClusterPickerNavSection /> */}
           <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-            <NavSection text="홈" icon="pficon pficon-home">
+            <NavSection text={t('content:home')} icon="pficon pficon-home">
               <HrefLink href="/status" name="상태" activePath="/status/" onClick={this.close} />
               <HrefLink href="/search" name="검색" onClick={this.close} startsWith={searchStartsWith} />
               <ResourceNSLink resource="events" name="이벤트" onClick={this.close} />
@@ -521,3 +524,5 @@ export class Nav extends React.Component {
     );
   }
 }
+
+export default withTranslation()(Nav);

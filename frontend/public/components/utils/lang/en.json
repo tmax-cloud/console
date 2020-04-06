@@ -6,9 +6,11 @@
     "filterPlaceHolder": "Filter {{something}} Sets by name..."
   },
   "string": {
-    "filterPlaceHolder": "Filter {{something}} Sets by name..."
+    "filterPlaceHolder": "Filter {{something}} Sets by name...",
+    "desc": "Hi, my name is test"
   },
   "content": {
+    "name": "Name",
     "home": "Home",
     "status": "Status",
     "search": "Search",
