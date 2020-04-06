@@ -77,11 +77,25 @@ export const PodSecurityPolicyModel: K8sKind = {
   label: 'Pod Security Policy',
   plural: 'podsecuritypolicies',
   apiVersion: 'v1beta1',
-  abbr: 'RQC',
+  abbr: 'PSP',
   apiGroup: 'policy',
   labelPlural: 'Pod Security Policies',
   path: 'podsecuritypolicies',
   id: 'podsecuritypolicie',
+  crd: false,
+};
+
+export const LimitRangeModel: K8sKind = {
+  kind: 'LimitRange',
+  namespaced: true,
+  label: 'Limit Range',
+  plural: 'limitranges',
+  apiVersion: 'v1',
+  abbr: 'LR',
+  apiGroup: 'app',
+  labelPlural: 'Limit Ranges',
+  path: 'limitranges',
+  id: 'limitrange',
   crd: false,
 };
 
