@@ -164,7 +164,8 @@ class App extends React.PureComponent {
     return <React.Fragment>
       <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
       <Masthead />
-      <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} />
+      {/* <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} /> */}
+      <Nav isAdmin={true} changeRole={this.changeRole} />
       <div id="content">
         <Route path={namespacedRoutes} component={NamespaceSelector} />
         <GlobalNotifications />
