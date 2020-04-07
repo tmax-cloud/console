@@ -48,25 +48,24 @@ var (
 )
 
 type jsGlobals struct {
-	ConsoleVersion       string `json:"consoleVersion"`
-	AuthDisabled         bool   `json:"authDisabled"`
-	KubectlClientID      string `json:"kubectlClientID"`
-	BasePath             string `json:"basePath"`
-	LoginURL             string `json:"loginURL"`
-	LoginSuccessURL      string `json:"loginSuccessURL"`
-	LoginErrorURL        string `json:"loginErrorURL"`
-	LogoutURL            string `json:"logoutURL"`
-	LogoutRedirect       string `json:"logoutRedirect"`
-	KubeAPIServerURL     string `json:"kubeAPIServerURL"`
-	PrometheusBaseURL    string `json:"prometheusBaseURL"`
-	DeveloperConsoleURL  string `json:"developerConsoleURL"`
-	Branding             string `json:"branding"`
-	DocumentationBaseURL string `json:"documentationBaseURL"`
-	ClusterName          string `json:"clusterName"`
-	GoogleTagManagerID   string `json:"googleTagManagerID"`
-	LoadTestFactor       int    `json:"loadTestFactor"`
-	ReleaseModeFlag      bool   `json:"releaseModeFlag"`
-	HCConsoleVersion     string `json:"hcConsoleVersion"`
+	ConsoleVersion string `json:"consoleVersion"`
+	// AuthDisabled         bool   `json:"authDisabled"`
+	// KubectlClientID      string `json:"kubectlClientID"`
+	BasePath string `json:"basePath"`
+	// LoginURL             string `json:"loginURL"`
+	// LoginSuccessURL      string `json:"loginSuccessURL"`
+	// LoginErrorURL        string `json:"loginErrorURL"`
+	// LogoutURL            string `json:"logoutURL"`
+	// LogoutRedirect       string `json:"logoutRedirect"`
+	KubeAPIServerURL  string `json:"kubeAPIServerURL"`
+	PrometheusBaseURL string `json:"prometheusBaseURL"`
+	// DeveloperConsoleURL  string `json:"developerConsoleURL"`
+	// Branding             string `json:"branding"`
+	// DocumentationBaseURL string `json:"documentationBaseURL"`
+	// ClusterName          string `json:"clusterName"`
+	// GoogleTagManagerID   string `json:"googleTagManagerID"`
+	// LoadTestFactor       int    `json:"loadTestFactor"`
+	ReleaseModeFlag bool `json:"releaseModeFlag"`
 }
 
 type Server struct {
@@ -87,7 +86,6 @@ type Server struct {
 	GoogleTagManagerID   string
 	LoadTestFactor       int
 	ReleaseModeFlag      bool
-	HCConsoleVersion     string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
 	KubectlAuther  *auth.Authenticator
@@ -286,24 +284,23 @@ func (s *Server) handleRenderKubeConfig(w http.ResponseWriter, r *http.Request) 
 
 func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 	jsg := &jsGlobals{
-		ConsoleVersion:       version.Version,
-		AuthDisabled:         s.authDisabled(),
-		KubectlClientID:      s.KubectlClientID,
-		BasePath:             s.BaseURL.Path,
-		LoginURL:             proxy.SingleJoiningSlash(s.BaseURL.String(), authLoginEndpoint),
-		LoginSuccessURL:      proxy.SingleJoiningSlash(s.BaseURL.String(), AuthLoginSuccessEndpoint),
-		LoginErrorURL:        proxy.SingleJoiningSlash(s.BaseURL.String(), AuthLoginErrorEndpoint),
-		LogoutURL:            proxy.SingleJoiningSlash(s.BaseURL.String(), authLogoutEndpoint),
-		LogoutRedirect:       s.LogoutRedirect.String(),
-		ClusterName:          s.ClusterName,
-		KubeAPIServerURL:     s.KubeAPIServerURL,
-		DeveloperConsoleURL:  s.DeveloperConsoleURL,
-		Branding:             s.Branding,
-		DocumentationBaseURL: s.DocumentationBaseURL.String(),
-		GoogleTagManagerID:   s.GoogleTagManagerID,
-		LoadTestFactor:       s.LoadTestFactor,
-		ReleaseModeFlag:      s.ReleaseModeFlag,
-		HCConsoleVersion:     s.HCConsoleVersion,
+		ConsoleVersion: version.Version,
+		// AuthDisabled:         s.authDisabled(),
+		// KubectlClientID:     s.KubectlClientID,
+		BasePath: s.BaseURL.Path,
+		// LoginURL:            proxy.SingleJoiningSlash(s.BaseURL.String(), authLoginEndpoint),
+		// LoginSuccessURL:     proxy.SingleJoiningSlash(s.BaseURL.String(), AuthLoginSuccessEndpoint),
+		// LoginErrorURL:       proxy.SingleJoiningSlash(s.BaseURL.String(), AuthLoginErrorEndpoint),
+		// LogoutURL:           proxy.SingleJoiningSlash(s.BaseURL.String(), authLogoutEndpoint),
+		// LogoutRedirect:      s.LogoutRedirect.String(),
+		// ClusterName:         s.ClusterName,
+		KubeAPIServerURL: s.KubeAPIServerURL,
+		// DeveloperConsoleURL: s.DeveloperConsoleURL,
+		// Branding:             s.Branding,
+		// DocumentationBaseURL: s.DocumentationBaseURL.String(),
+		// GoogleTagManagerID:   s.GoogleTagManagerID,
+		// LoadTestFactor:       s.LoadTestFactor,
+		ReleaseModeFlag: s.ReleaseModeFlag,
 	}
 
 	if s.prometheusProxyEnabled() {

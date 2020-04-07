@@ -439,7 +439,6 @@ class Nav extends React.Component {
               {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
               {/* <Sep /> */}
             </NavSection>
-
             <NavSection text="네트워크" icon="pficon pficon-network">
               {/* istio, virtual service 추가 */}
               <ResourceNSLink resource="ingresses" name="인그레스" onClick={this.close} />
@@ -451,9 +450,8 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="스토리지" icon="fa fa-database">
-              {isAdmin && <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />}
-              {/* data volume 추가 */}
-              {/* <ResourceNSLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} /> */}
+              <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />
+              <ResourceClusterLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} />
               <ResourceNSLink resource="persistentvolumeclaims" name="영구 볼륨 클레임" onClick={this.close} />
               <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
             </NavSection>
@@ -494,7 +492,7 @@ class Nav extends React.Component {
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
-              {/* {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />} */}
+              {!isAdmin && <ResourceNSLink resource="limitranges" name="한계 범위" onClick={this.close} />}
               <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
             </NavSection>
 

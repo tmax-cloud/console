@@ -80,33 +80,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
       coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
         .then(res => res.json())
         .then((myJson) => {
-          let stringobj = JSON.stringify(myJson.objects);
-          let param = [];
-          for (let i = 0; i < stringobj.length; i++) {
-            let word = ''
-            if (stringobj[i] === '$') {
-              let n = i + 2;
-              if (stringobj[n - 1] == '{') {
-                while (stringobj[n] !== '}') {
-                  word = word + stringobj[n];
-                  n++
-                } param.push(word)
-              }
-            }
-          }
-          let paramList = Array.from(new Set(param));
+          let paramList = myJson.parameters.map(function (parm) {
+            return { name: parm.name, value: '' }
+          });
           if (paramList.length) {
-            //paramList가 ['key1','key2']인경우 [{name: key1, value : 'value'},{name: key2, value : 'value'}]로 만들어야 함 
-            let parameters = [];
-            paramList.forEach((key) => {
-              let newObj = { name: key, value: '' };
-              parameters.push(newObj)
-            })
-            templateInstance.spec.template.parameters = parameters;
+            templateInstance.spec.template.parameters = paramList;
             this.setState({
               paramList: paramList,
               editParamList: false,
-              templateInstance: templateInstance
             });
           } else {
             this.setState({
@@ -208,7 +189,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      return <Section label={parameter} id={parameter}>
+      return <Section label={parameter.name} id={parameter.name}>
         <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder="value" id={parameter} required />
       </Section>
     });

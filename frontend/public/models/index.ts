@@ -77,11 +77,25 @@ export const PodSecurityPolicyModel: K8sKind = {
   label: 'Pod Security Policy',
   plural: 'podsecuritypolicies',
   apiVersion: 'v1beta1',
-  abbr: 'RQC',
+  abbr: 'PSP',
   apiGroup: 'policy',
   labelPlural: 'Pod Security Policies',
   path: 'podsecuritypolicies',
   id: 'podsecuritypolicie',
+  crd: false,
+};
+
+export const LimitRangeModel: K8sKind = {
+  kind: 'LimitRange',
+  namespaced: true,
+  label: 'Limit Range',
+  plural: 'limitranges',
+  apiVersion: 'v1',
+  abbr: 'LR',
+  apiGroup: 'app',
+  labelPlural: 'Limit Ranges',
+  path: 'limitranges',
+  id: 'limitrange',
   crd: false,
 };
 
@@ -943,6 +957,20 @@ export const ClusterServiceClassModel: K8sKind = {
   id: 'clusterserviceclass',
   crd: false
 };
+
+export const DataVolumeModel: K8sKind = {
+  kind: "DataVolume",
+  namespaced: true,
+  label: "Data Volume",
+  plural: "datavolumes",
+  apiVersion: "v1alpha1",
+  abbr: "DV",
+  apiGroup: "cdi.kubevirt.io",
+  labelPlural: "Data Volumes",
+  path: "datavolumes",
+  id: "datavolume",
+  crd: false
+}
 
 export const ClusterServicePlanModel: K8sKind = {
   label: 'Cluster Service Plan',

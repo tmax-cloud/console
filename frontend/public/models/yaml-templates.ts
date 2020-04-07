@@ -23,18 +23,34 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   spec:
           url: http://0.0.0.0:28677
 `)
+  .setIn([referenceForModel(k8sModels.DataVolumeModel), 'default'], `
+  apiVersion: cdi.kubevirt.io/v1alpha1
+  kind: DataVolume
+  metadata:
+    name: example
+  spec:
+    source:
+      registry:
+        url: example
+    pvc:
+      accessModes:
+        - example
+      resources:
+        requests:
+          storage: example  
+`)
   .setIn([referenceForModel(k8sModels.ServiceInstanceModel), 'default'], `
   apiVersion: servicecatalog.k8s.io/v1beta1
   kind: ServiceInstance
   metadata:
-    name: example-instance
-    namespace: hypercloud4-system
+    name: nginx-instance
+    namespace: hypercloud-system
   spec:
-    serviceClassName: example-template
-    servicePlanName: example-plan
+    clusterServiceClassName: nginx-template
+    clusterServicePlanName: example-plan1
     parameters:
-      PARAM1: value1
-      PARAM2: value2
+      NAME: nginx
+      IMAGE: nginx:1
 `)
   .setIn([referenceForModel(k8sModels.ServiceBindingModel), 'default'], `
   apiVersion: servicecatalog.k8s.io/v1beta1
@@ -218,25 +234,26 @@ spec:
           resourceRef:
             name: example-pipeline-resource-image
 `).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
+# Note: To use the optional key, remove the '#' at the front of the key.
 apiVersion: tmax.io/v1
 kind: Registry
-metadata: 
-  name: example
-  namespace: example
-  labels:
-    obj: registry
+metadata:
+  name: example # (required) [string] registry's name
+  namespace: def # (required) [string] registry's namespace
 spec:
-  image: example/registry:b004
-  description: example
-  loginId: example
-  loginPassword: example
+  image: example/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
+  #description: example # (optional) [string] a brief description of the registry.
+  loginId: example # (required) [string] username for registry login
+  loginPassword: example # (required) [string] password for registry login
   service:
-     nodeIP: example
-     type: example
+     #port: example # (optional) [integer] external port (default: 443)
+     #nodeIP: example # (optional) [string] if service type is NodePort, set NodeIP to assign to the registry
+     #nodePort: example # (optional) [integer] if service type is NodePort, you can set 30000~32767
+     type: example # (required) [ClusterIP, NodePort, LoadBalancer]
   persistentVolumeClaim:
-     accessModes: example
-     storageSize: example
-     storageClassName: example
+     accessModes: [example] # (required) [array] (ex: [ReadWriteOnce, ReadWriteMany])
+     storageSize: example # (required) [string] desired storage size (ex: 10Gi)
+     storageClassName: example # (required) [string] storage class name available (ex: csi-cephfs-sc)
 `).setIn([referenceForModel(k8sModels.TemplateModel), 'default'], `
 apiVersion: tmax.io/v1
 kind: Template

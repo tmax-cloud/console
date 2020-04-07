@@ -47,10 +47,7 @@ export enum FLAGS {
   PROJECTS_AVAILABLE = 'PROJECTS_AVAILABLE',
 }
 
-export const DEFAULTS_ = _.mapValues(FLAGS, flag => flag === FLAGS.AUTH_ENABLED
-  ? !(window as any).SERVER_FLAGS.authDisabled
-  : undefined
-);
+export const DEFAULTS_ = _.mapValues(FLAGS, flag => flag === FLAGS.AUTH_ENABLED ? false : undefined);
 
 export const CRDs = {
   [referenceForModel(ChannelOperatorConfigModel)]: FLAGS.CLUSTER_UPDATES,

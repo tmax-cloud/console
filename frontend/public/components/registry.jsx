@@ -101,7 +101,7 @@ const RegistryRow = () =>
           {obj.spec.persistentVolumeClaim.storageSize}
         </div>
         <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.status.phase}
+          {obj.status && obj.status.phase}
         </div>
         <div className="col-xs-2 col-sm-2 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
@@ -139,7 +139,7 @@ const Details = ({ obj: registry }) => {
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
               <dt>Status</dt>
-              <dd>{registry.status.phase}</dd>
+              <dd>{registry.status && registry.status.phase}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>
