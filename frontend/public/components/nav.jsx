@@ -486,7 +486,7 @@ export class Nav extends React.Component {
               {/* <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> */}
               <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} />
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
-              {<ResourceNSLink resource="limitrange" name="기본 리소스 제한" onClick={this.close} />}
+              {<ResourceNSLink resource="limitranges" name="기본 리소스 제한" onClick={this.close} />}
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
