@@ -484,8 +484,8 @@ export class Nav extends React.Component {
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
-              <ResourceClusterLink resource="customresourcedefinitions" name="사용자 리소스 정의" onClick={this.close} />
-              {/* <ResourceClusterLink resource="customresourcedefinitions" name="사용자 리소스 정의" onClick={this.close} required={FLAGS.CAN_LIST_CRD} /> */}
+              <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스 정의" onClick={this.close} />
+              {/* <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스 정의" onClick={this.close} required={FLAGS.CAN_LIST_CRD} /> */}
             </NavSection>
 
             <NavSection text="호스트" icon="pficon pficon-server">
