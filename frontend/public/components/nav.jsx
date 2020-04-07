@@ -169,16 +169,19 @@ class NavSection_ extends React.Component {
 
     const resourcePath = location ? stripNS(location) : '';
     if (Array.isArray(children)) {
-      return children.filter(c => {
-        if (!c) {
-          return false;
-        }
-        if (c.props.startsWith) {
-          return c.type.startsWith(resourcePath, c.props.startsWith);
-        }
-        return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
-      }).map(c => c.props.name)[0];
-    } else if (children.props.startsWith) { // 하나만 있을 때 처리
+      return children
+        .filter(c => {
+          if (!c) {
+            return false;
+          }
+          if (c.props.startsWith) {
+            return c.type.startsWith(resourcePath, c.props.startsWith);
+          }
+          return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
+        })
+        .map(c => c.props.name)[0];
+    } else if (children.props.startsWith) {
+      // 하나만 있을 때 처리
       return children.type.startsWith(resourcePath, children.props.startsWith) ? children.props.name : null;
     }
     return children.type.isActive && children.type.isActive(children.props, resourcePath, activeNamespace) ? children.props.name : null;
@@ -251,23 +254,30 @@ class NavSection_ extends React.Component {
       return React.cloneElement(c, { key: name, isActive: name === this.state.activeChild, activeNamespace });
     });
 
-    return <div className={classNames(sectionClassName, klass)}>
-      <div id={id} className={secionTitleClassName} onClick={this.toggle}>
-        {icon && <i className={iconClassName} aria-hidden="true"></i>}
-        {img && <img src={isActive && activeImg ? activeImg : img} />}
-        {!href
-          ? text
-          : <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>{text}</Link>
-        }
+    return (
+      <div className={classNames(sectionClassName, klass)}>
+        <div id={id} className={secionTitleClassName} onClick={this.toggle}>
+          {icon && <i className={iconClassName} aria-hidden="true"></i>}
+          {img && <img src={isActive && activeImg ? activeImg : img} />}
+          {!href ? (
+            text
+          ) : (
+            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+              {text}
+            </Link>
+          )}
+        </div>
+        {Children && (
+          <ul className="navigation-container__list" style={{ maxHeight }}>
+            {Children}
+          </ul>
+        )}
       </div>
-      {Children && <ul className="navigation-container__list" style={{ maxHeight }}>{Children}</ul>}
-    </div>;
+    );
   }
 }
 
-const NavSection = connect(navSectionStateToProps)(
-  NavSection_
-);
+const NavSection = connect(navSectionStateToProps)(NavSection_);
 
 const Sep = () => <div className="navigation-container__section__separator" />;
 
@@ -281,8 +291,6 @@ const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
-
-
 
   return (
     <div className="navigation-container__section navigation-container__section--cluster-picker">
@@ -305,9 +313,7 @@ const MonitoringNavSection_ = ({ urls, closeMenu }) => {
 };
 const MonitoringNavSection = connectToURLs(MonitoringRoutes.Prometheus, MonitoringRoutes.AlertManager, MonitoringRoutes.Grafana)(MonitoringNavSection_);
 
-const UserNavSection = connectToFlags(
-  FLAGS.AUTH_ENABLED,
-)(({ flags, closeMenu }) => {
+const UserNavSection = connectToFlags(FLAGS.AUTH_ENABLED)(({ flags, closeMenu }) => {
   if (!flags[FLAGS.AUTH_ENABLED] || flagPending(flags[FLAGS.OPENSHIFT])) {
     return null;
   }
@@ -480,7 +486,7 @@ export class Nav extends React.Component {
               {/* <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> */}
               <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} />
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
-              {<ResourceNSLink resource="limitrange" name="기본 리소스 제한" onClick={this.close} />}
+              {<ResourceNSLink resource="limitranges" name="기본 리소스 제한" onClick={this.close} />}
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
