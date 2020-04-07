@@ -252,11 +252,11 @@ const ClusterOverviewPage_ = props => {
         <title>{fake ? 'Overview' : title}</title>
       </Helmet>
       <NavTitle title={fake ? 'Overview' : title} style={{ alignItems: 'baseline', display: 'flex', justifyContent: 'space-between' }}>
-        <p className="hidden-lg">
+        {/* <p className="hidden-lg">
           <HashLink smooth to="#software-info">
             Software Info
           </HashLink>
-        </p>
+        </p> */}
       </NavTitle>
       <div className="cluster-overview-cell container-fluid">
         <AsyncComponent namespace={namespace} loader={permissionedLoader} openshiftFlag={openshiftFlag} fake={fake} />
