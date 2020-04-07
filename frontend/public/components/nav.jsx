@@ -171,16 +171,19 @@ class NavSection_ extends React.Component {
 
     const resourcePath = location ? stripNS(location) : '';
     if (Array.isArray(children)) {
-      return children.filter(c => {
-        if (!c) {
-          return false;
-        }
-        if (c.props.startsWith) {
-          return c.type.startsWith(resourcePath, c.props.startsWith);
-        }
-        return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
-      }).map(c => c.props.name)[0];
-    } else if (children.props.startsWith) { // 하나만 있을 때 처리
+      return children
+        .filter(c => {
+          if (!c) {
+            return false;
+          }
+          if (c.props.startsWith) {
+            return c.type.startsWith(resourcePath, c.props.startsWith);
+          }
+          return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
+        })
+        .map(c => c.props.name)[0];
+    } else if (children.props.startsWith) {
+      // 하나만 있을 때 처리
       return children.type.startsWith(resourcePath, children.props.startsWith) ? children.props.name : null;
     }
     return children.type.isActive && children.type.isActive(children.props, resourcePath, activeNamespace) ? children.props.name : null;
@@ -253,23 +256,30 @@ class NavSection_ extends React.Component {
       return React.cloneElement(c, { key: name, isActive: name === this.state.activeChild, activeNamespace });
     });
 
-    return <div className={classNames(sectionClassName, klass)}>
-      <div id={id} className={secionTitleClassName} onClick={this.toggle}>
-        {icon && <i className={iconClassName} aria-hidden="true"></i>}
-        {img && <img src={isActive && activeImg ? activeImg : img} />}
-        {!href
-          ? text
-          : <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>{text}</Link>
-        }
+    return (
+      <div className={classNames(sectionClassName, klass)}>
+        <div id={id} className={secionTitleClassName} onClick={this.toggle}>
+          {icon && <i className={iconClassName} aria-hidden="true"></i>}
+          {img && <img src={isActive && activeImg ? activeImg : img} />}
+          {!href ? (
+            text
+          ) : (
+            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+              {text}
+            </Link>
+          )}
+        </div>
+        {Children && (
+          <ul className="navigation-container__list" style={{ maxHeight }}>
+            {Children}
+          </ul>
+        )}
       </div>
-      {Children && <ul className="navigation-container__list" style={{ maxHeight }}>{Children}</ul>}
-    </div>;
+    );
   }
 }
 
-const NavSection = connect(navSectionStateToProps)(
-  NavSection_
-);
+const NavSection = connect(navSectionStateToProps)(NavSection_);
 
 const Sep = () => <div className="navigation-container__section__separator" />;
 
@@ -283,11 +293,6 @@ const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
-
-  const openshiftFlag = flags[FLAGS.OPENSHIFT];
-  if (flagPending(openshiftFlag) || openshiftFlag) {
-    return null;
-  }
 
   return (
     <div className="navigation-container__section navigation-container__section--cluster-picker">
@@ -310,10 +315,7 @@ const MonitoringNavSection_ = ({ urls, closeMenu }) => {
 };
 const MonitoringNavSection = connectToURLs(MonitoringRoutes.Prometheus, MonitoringRoutes.AlertManager, MonitoringRoutes.Grafana)(MonitoringNavSection_);
 
-const UserNavSection = connectToFlags(
-  FLAGS.AUTH_ENABLED,
-  FLAGS.OPENSHIFT,
-)(({ flags, closeMenu }) => {
+const UserNavSection = connectToFlags(FLAGS.AUTH_ENABLED)(({ flags, closeMenu }) => {
   if (!flags[FLAGS.AUTH_ENABLED] || flagPending(flags[FLAGS.OPENSHIFT])) {
     return null;
   }
@@ -327,10 +329,6 @@ const UserNavSection = connectToFlags(
     }
   };
 
-  if (flags[FLAGS.OPENSHIFT]) {
-    return <NavSection text="Logout" icon="pficon pficon-user" klass="visible-xs-block" onClick={logout} />;
-  }
-
   return (
     <NavSection text="User" icon="pficon pficon-user" klass="visible-xs-block">
       <HrefLink href="/settings/profile" name="My Account" onClick={closeMenu} key="myAccount" />
@@ -338,8 +336,6 @@ const UserNavSection = connectToFlags(
     </NavSection>
   );
 });
-
-
 
 class Nav extends React.Component {
   constructor(props) {
@@ -405,7 +401,7 @@ class Nav extends React.Component {
             </NavSection>
             {/* Service Catalog 전체 추가 */}
             <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
-              <ResourceClusterLink resource="clusterservicebrokers" name="클러스터 서비스 브로커 관리" onClick={this.close} />
+              <ResourceClusterLink resource="clusterservicebrokers" name="클러스터 서비스 브로커" onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceclasses" name="클러스터 서비스 클래스" onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceplans" name="클러스터 서비스 플랜" onClick={this.close} />
               <ResourceNSLink resource="serviceinstances" name="서비스 인스턴스" onClick={this.close} />
@@ -433,7 +429,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="virtualmachineinstances" name="가상 머신 인스턴스" onClick={this.close} />
               <ResourceNSLink resource="configmaps" name="콘피그 맵" onClick={this.close} />
               <ResourceNSLink resource="secrets" name="시크릿" onClick={this.close} />
-              <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} />
+              {/* <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} /> */}
               <ResourceNSLink resource="jobs" name="잡" onClick={this.close} />
               <ResourceNSLink resource="cronjobs" name="크론 잡" onClick={this.close} />
               {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
@@ -450,10 +446,13 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="스토리지" icon="fa fa-database">
-              <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />
+              {/* {isAdmin && <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />} */}
+              {<ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} />}
+              {/* data volume 추가 */}
               <ResourceClusterLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} />
               <ResourceNSLink resource="persistentvolumeclaims" name="영구 볼륨 클레임" onClick={this.close} />
-              <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
+              <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} />
+              {/* <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} /> */}
             </NavSection>
 
             {/* <NavSection text="Builds" icon="pficon pficon-build">
@@ -474,7 +473,7 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="보안" icon="fa fa-shield">
-              {isAdmin && <ResourceClusterLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
+              {<ResourceClusterLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
 
@@ -487,18 +486,21 @@ class Nav extends React.Component {
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />
+              {/* <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> */}
+              <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} />
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
+              {<ResourceNSLink resource="limitranges" name="기본 리소스 제한" onClick={this.close} />}
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
-              {!isAdmin && <ResourceNSLink resource="limitranges" name="한계 범위" onClick={this.close} />}
-              <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
+              <ResourceClusterLink resource="customresourcedefinitions" name="사용자 리소스 정의" onClick={this.close} />
+              {/* <ResourceClusterLink resource="customresourcedefinitions" name="사용자 리소스 정의" onClick={this.close} required={FLAGS.CAN_LIST_CRD} /> */}
             </NavSection>
 
             <NavSection text="호스트" icon="pficon pficon-server">
               {/* <ResourceClusterLink resource="nodes" name="Nodes" onClick={this.close} /> */}
-              <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} />
+              {/* <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} /> */}
+              <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} />
             </NavSection>
 
             <NavSection text="인증/인가" icon="fa fa-id-card-o">
@@ -507,7 +509,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="roles" name="롤" startsWith={rolesStartsWith} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name="롤 바인딩" onClick={this.close} startsWith={rolebindingsStartsWith} />
               <ResourceNSLink resource="rolebindingclaims" name="롤 바인딩 클레임" onClick={this.close} startsWith={rolebindingsStartsWith} />
-              {isAdmin && <ResourceClusterLink resource="users" name="사용자" onClick={this.close} />}
+              {<ResourceClusterLink resource="users" name="사용자" onClick={this.close} />}
               <ResourceNSLink resource="serviceaccounts" name="서비스 어카운트" onClick={this.close} />
             </NavSection>
 

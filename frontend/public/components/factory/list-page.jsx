@@ -12,14 +12,16 @@ import { ErrorPage404 } from '../error';
 import { makeReduxID, makeQuery } from '../utils/k8s-watcher';
 import { referenceForModel } from '../../module/k8s';
 
-export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => <div className="btn-group btn-group-sm" data-toggle="buttons">
-  <label className={classNames('btn compaction-btn', expand ? 'btn-default' : 'btn-primary')}>
-    <input type="radio" onClick={() => onExpandChange(false)} /> Compact
-  </label>
-  <label className={classNames('btn compaction-btn', expand ? 'btn-primary' : 'btn-default')}>
-    <input type="radio" onClick={() => onExpandChange(true)} /> Expand
-  </label>
-</div>;
+export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => (
+  <div className="btn-group btn-group-sm" data-toggle="buttons">
+    <label className={classNames('btn compaction-btn', expand ? 'btn-default' : 'btn-primary')}>
+      <input type="radio" onClick={() => onExpandChange(false)} /> Compact
+    </label>
+    <label className={classNames('btn compaction-btn', expand ? 'btn-primary' : 'btn-default')}>
+      <input type="radio" onClick={() => onExpandChange(true)} /> Expand
+    </label>
+  </div>
+);
 
 /** @type {React.SFC<{label: string, onChange: React.ChangeEventHandler<any>, defaultValue: string}}>} */
 export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus }) => {
@@ -31,18 +33,7 @@ export const TextFilter = ({ label, onChange, defaultValue, style, className, au
       autoFocus = false;
     }
   }
-  return <input
-    type="text"
-    autoCapitalize="none"
-    style={style}
-    className={classNames('form-control text-filter', className)}
-    tabIndex={0}
-    placeholder={`Filter ${label}...`}
-    onChange={onChange}
-    autoFocus={autoFocus}
-    defaultValue={defaultValue}
-    onKeyDown={e => e.key === 'Escape' && e.target.blur()}
-  />;
+  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={`Filter ${label}...`} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
 };
 
 TextFilter.displayName = 'TextFilter';
@@ -53,29 +44,23 @@ export class ListPageWrapper_ extends React.PureComponent {
     const { kinds, ListComponent, rowFilters, reduxIDs, flatten } = this.props;
     const data = flatten ? flatten(this.props.resources) : [];
 
-    const RowsOfRowFilters = rowFilters && _.map(rowFilters, ({ items, reducer, selected, type, numbers }, i) => {
-      const count = _.isFunction(numbers) ? numbers(data) : undefined;
-      return <CheckBoxes
-        key={i}
-        applyFilter={this.props.applyFilter}
-        items={_.isFunction(items) ? items(_.pick(this.props, kinds)) : items}
-        numbers={count || _.countBy(data, reducer)}
-        selected={selected}
-        type={type}
-        reduxIDs={reduxIDs}
-      />;
-    });
+    const RowsOfRowFilters =
+      rowFilters &&
+      _.map(rowFilters, ({ items, reducer, selected, type, numbers }, i) => {
+        const count = _.isFunction(numbers) ? numbers(data) : undefined;
+        return <CheckBoxes key={i} applyFilter={this.props.applyFilter} items={_.isFunction(items) ? items(_.pick(this.props, kinds)) : items} numbers={count || _.countBy(data, reducer)} selected={selected} type={type} reduxIDs={reduxIDs} />;
+      });
 
-    return <div>
-      <div className="row">
-        {RowsOfRowFilters}
-      </div>
-      <div className="row">
-        <div className="col-xs-12">
-          <ListComponent {...this.props} data={data} />
+    return (
+      <div>
+        <div className="row">{RowsOfRowFilters}</div>
+        <div className="row">
+          <div className="col-xs-12">
+            <ListComponent {...this.props} data={data} />
+          </div>
         </div>
       </div>
-    </div>;
+    );
   }
 }
 
@@ -150,54 +135,66 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
     render() {
       const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources } = this.props;
 
-      const DropdownFilters = dropdownFilters && dropdownFilters.map(({ type, items, title }) => {
-        return <Dropdown key={title} items={items} title={title} onChange={v => this.applyFilter(type, v)} />;
-      });
+      const DropdownFilters =
+        dropdownFilters &&
+        dropdownFilters.map(({ type, items, title }) => {
+          return <Dropdown key={title} items={items} title={title} onChange={v => this.applyFilter(type, v)} />;
+        });
 
       let createLink;
       if (canCreate) {
         if (createProps.to) {
-          createLink = <Link className="co-m-primary-action" {...createProps} tabIndex={-1}>
-            <button className="btn btn-primary" id="yaml-create" tabIndex={-1}>{createButtonText}</button>
-          </Link>;
+          createLink = (
+            <Link className="co-m-primary-action" {...createProps} tabIndex={-1}>
+              <button className="btn btn-primary" id="yaml-create" tabIndex={-1}>
+                {createButtonText}
+              </button>
+            </Link>
+          );
         } else if (createProps.items) {
-          createLink = <div className="co-m-primary-action">
-            <Dropdown buttonClassName="btn-primary" id="item-create" title={createButtonText} items={createProps.items} onChange={(name) => history.push(createProps.createLink(name))} />
-          </div>;
+          createLink = (
+            <div className="co-m-primary-action">
+              <Dropdown buttonClassName="btn-primary" id="item-create" title={createButtonText} items={createProps.items} onChange={name => history.push(createProps.createLink(name))} />
+            </div>
+          );
         } else {
-          createLink = <div className="co-m-primary-action">
-            <button className="btn btn-primary" id="yaml-create" tabIndex={-1} {...createProps}>{createButtonText}</button>
-          </div>;
+          createLink = (
+            <div className="co-m-primary-action">
+              <button className="btn btn-primary" id="yaml-create" tabIndex={-1} {...createProps}>
+                {createButtonText}
+              </button>
+            </div>
+          );
         }
       }
 
       const { title } = this.props;
-      return <React.Fragment>
-        {title && <NavTitle title={title} />}
-        <div className="co-m-pane__filter-bar">
-          {createLink && <div className="co-m-pane__filter-bar-group">
-            {createLink}
-          </div>}
-          {canExpand && <div className="co-m-pane__filter-bar-group">
-            <CompactExpandButtons expand={this.state.expand} onExpandChange={this.onExpandChange} />
-          </div>}
-          <div className={classNames('co-m-pane__filter-bar-group', DropdownFilters ? 'co-m-pane__filter-bar-group--filters' : 'co-m-pane__filter-bar-group--filter')}>
-            {DropdownFilters && <div className="btn-group">
-              {DropdownFilters}
-            </div>}
-            <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} />
+      return (
+        <React.Fragment>
+          {title && <NavTitle title={title} />}
+          <div className="co-m-pane__filter-bar">
+            {createLink && <div className="co-m-pane__filter-bar-group">{createLink}</div>}
+            {canExpand && (
+              <div className="co-m-pane__filter-bar-group">
+                <CompactExpandButtons expand={this.state.expand} onExpandChange={this.onExpandChange} />
+              </div>
+            )}
+            <div className={classNames('co-m-pane__filter-bar-group', DropdownFilters ? 'co-m-pane__filter-bar-group--filters' : 'co-m-pane__filter-bar-group--filter')}>
+              {DropdownFilters && <div className="btn-group">{DropdownFilters}</div>}
+              <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} />
+            </div>
           </div>
-        </div>
-        <div className="co-m-pane__body">
-          {inject(this.props.children, {
-            resources,
-            expand: this.state.expand,
-            reduxIDs: this.state.reduxIDs,
-          })}
-        </div>
-      </React.Fragment>;
+          <div className="co-m-pane__body">
+            {inject(this.props.children, {
+              resources,
+              expand: this.state.expand,
+              reduxIDs: this.state.reduxIDs,
+            })}
+          </div>
+        </React.Fragment>
+      );
     }
-  }
+  },
 );
 
 FireMan_.displayName = 'FireMan';
@@ -246,7 +243,9 @@ export const ListPage = props => {
     try {
       const ref = referenceForModel(ko);
       href = namespaced ? `/k8s/ns/${namespace || 'default'}/${ref}/new` : `/k8s/cluster/${ref}/new`;
-    } catch (unused) { /**/ }
+    } catch (unused) {
+      /**/
+    }
   }
 
   createProps = createProps || (createHandler ? { onClick: createHandler } : { to: href });
@@ -259,59 +258,50 @@ export const ListPage = props => {
     return <ErrorPage404 />;
   }
 
-  return <MultiListPage
-    id={ko.id}  // 임의로 추가
-    filterLabel={filterLabel || `${labelPlural} by name`}
-    selectorFilterLabel="Filter by selector (app=nginx) ..."
-    createProps={createProps}
-    title={title}
-    showTitle={showTitle}
-    canCreate={props.canCreate}
-    canExpand={props.canExpand}
-    createButtonText={createButtonText || `Create`}
-    textFilter={props.textFilter}
-    resources={resources}
-    autoFocus={props.autoFocus}
-    dropdownFilters={props.dropdownFilters}
-    ListComponent={props.ListComponent}
-    rowFilters={rowFilters}
-    label={labelPlural}
-    flatten={_resources => _.get(_resources, (name || kind), {}).data}
-    namespace={namespace}
-    fake={fake}
-  />;
+  return (
+    <MultiListPage
+      id={ko.id} // 임의로 추가
+      filterLabel={filterLabel || `${labelPlural} by name`}
+      selectorFilterLabel="Filter by selector (app=nginx) ..."
+      createProps={createProps}
+      title={title}
+      showTitle={showTitle}
+      canCreate={props.canCreate}
+      canExpand={props.canExpand}
+      createButtonText={createButtonText || `Create`}
+      textFilter={props.textFilter}
+      resources={resources}
+      autoFocus={props.autoFocus}
+      dropdownFilters={props.dropdownFilters}
+      ListComponent={props.ListComponent}
+      rowFilters={rowFilters}
+      label={labelPlural}
+      flatten={_resources => _.get(_resources, name || kind, {}).data}
+      namespace={namespace}
+      fake={fake}
+    />
+  );
 };
-
 
 ListPage.displayName = 'ListPage';
 
 /** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, flatten?: Function, title?: string, showTitle?: boolean, dropdownFilters?: any[], filterLabel?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string}>} */
 export const MultiListPage = props => {
   const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake } = props;
-  const resources = _.map(props.resources, (r) => ({
+  const resources = _.map(props.resources, r => ({
     ...r,
     isList: true,
     prop: r.prop || r.kind,
     namespace: r.namespaced ? namespace : r.namespace,
   }));
 
-  const elems = <FireMan_
-    filterLabel={filterLabel}
-    selectorFilterLabel="Filter by selector (app=nginx) ..."
-    createProps={createProps}
-    title={showTitle ? title : undefined}
-    canCreate={props.canCreate}
-    canExpand={props.canExpand}
-    createButtonText={createButtonText || 'Create'}
-    textFilter={props.textFilter}
-    resources={resources}
-    autoFocus={fake ? false : props.autoFocus}
-    dropdownFilters={props.dropdownFilters}
-  >
-    <Firehose resources={resources}>
-      <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
-    </Firehose>
-  </FireMan_>;
+  const elems = (
+    <FireMan_ filterLabel={filterLabel} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
+      <Firehose resources={resources}>
+        <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
+      </Firehose>
+    </FireMan_>
+  );
   return fake ? <Disabled>{elems}</Disabled> : elems;
 };
 

@@ -2,32 +2,32 @@
 import { K8sKind } from '../module/k8s';
 
 export const VirtualMachineModel: K8sKind = {
-  kind: "VirtualMachine",
+  kind: 'VirtualMachine',
   namespaced: true,
-  label: "Virtual Machine",
-  plural: "virtualmachines",
-  apiVersion: "v1alpha3",
-  abbr: "VM",
-  apiGroup: "kubevirt.io",
-  labelPlural: "Virtual Machines",
-  path: "virtualmachines",
-  id: "virtualmachine",
-  crd: false
-}
+  label: 'Virtual Machine',
+  plural: 'virtualmachines',
+  apiVersion: 'v1alpha3',
+  abbr: 'VM',
+  apiGroup: 'kubevirt.io',
+  labelPlural: 'Virtual Machines',
+  path: 'virtualmachines',
+  id: 'virtualmachine',
+  crd: false,
+};
 
 export const VirtualMachineInstanceModel: K8sKind = {
-  kind: "VirtualMachineInstance",
+  kind: 'VirtualMachineInstance',
   namespaced: true,
-  label: "Virtual Machine Instance",
-  plural: "virtualmachineinstances",
-  apiVersion: "v1alpha3",
-  abbr: "VMI",
-  apiGroup: "kubevirt.io",
-  labelPlural: "Virtual Machine Instances",
-  path: "virtualmachineinstances",
-  id: "virtualmachineinstance",
-  crd: false
-}
+  label: 'Virtual Machine Instance',
+  plural: 'virtualmachineinstances',
+  apiVersion: 'v1alpha3',
+  abbr: 'VMI',
+  apiGroup: 'kubevirt.io',
+  labelPlural: 'Virtual Machine Instances',
+  path: 'virtualmachineinstances',
+  id: 'virtualmachineinstance',
+  crd: false,
+};
 
 export const UserModel: K8sKind = {
   kind: 'User',
@@ -181,20 +181,6 @@ export const TemplateInstanceModel: K8sKind = {
   crd: false,
 };
 
-export const RegistryModel: K8sKind = {
-  kind: 'Registry',
-  namespaced: true,
-  label: 'Registry',
-  plural: 'registries',
-  apiVersion: 'v1',
-  abbr: 'R',
-  apiGroup: 'tmax.io',
-  labelPlural: 'Registries',
-  path: 'registries',
-  id: 'registry',
-  crd: false,
-};
-
 export const SubscriptionModel: K8sKind = {
   kind: 'Subscription',
   label: 'Subscription',
@@ -250,6 +236,20 @@ export const ServiceMonitorModel: K8sKind = {
   propagationPolicy: 'Foreground',
 };
 
+export const RegistryModel: K8sKind = {
+  kind: 'Registry',
+  namespaced: true,
+  label: 'Registry',
+  plural: 'registries',
+  apiVersion: 'v1',
+  abbr: 'R',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Registries',
+  path: 'registries',
+  id: 'registry',
+  crd: false,
+};
+
 export const AlertmanagerModel: K8sKind = {
   kind: 'Alertmanager',
   label: 'Alertmanager',
@@ -259,9 +259,9 @@ export const AlertmanagerModel: K8sKind = {
   path: 'alertmanagers',
   abbr: 'AM',
   namespaced: true,
-  crd: true,
   plural: 'alertmanagers',
   propagationPolicy: 'Foreground',
+  crd: false,
 };
 
 export const ClusterModel: K8sKind = {
@@ -846,6 +846,7 @@ export const NetworkPolicyModel: K8sKind = {
   namespaced: true,
   kind: 'NetworkPolicy',
   id: 'networkpolicy',
+  crd: false,
 };
 
 export const CustomResourceDefinitionModel: K8sKind = {
@@ -941,7 +942,7 @@ export const ClusterServiceBrokerModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServiceBroker',
   id: 'clusterservicebroker',
-  crd: false
+  crd: false,
 };
 
 export const ClusterServiceClassModel: K8sKind = {
@@ -955,22 +956,22 @@ export const ClusterServiceClassModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServiceClass',
   id: 'clusterserviceclass',
-  crd: false
+  crd: false,
 };
 
 export const DataVolumeModel: K8sKind = {
-  kind: "DataVolume",
+  kind: 'DataVolume',
   namespaced: true,
-  label: "Data Volume",
-  plural: "datavolumes",
-  apiVersion: "v1alpha1",
-  abbr: "DV",
-  apiGroup: "cdi.kubevirt.io",
-  labelPlural: "Data Volumes",
-  path: "datavolumes",
-  id: "datavolume",
-  crd: false
-}
+  label: 'Data Volume',
+  plural: 'datavolumes',
+  apiVersion: 'v1alpha1',
+  abbr: 'DV',
+  apiGroup: 'cdi.kubevirt.io',
+  labelPlural: 'Data Volumes',
+  path: 'datavolumes',
+  id: 'datavolume',
+  crd: false,
+};
 
 export const ClusterServicePlanModel: K8sKind = {
   label: 'Cluster Service Plan',
@@ -983,7 +984,7 @@ export const ClusterServicePlanModel: K8sKind = {
   namespaced: false,
   kind: 'ClusterServicePlan',
   id: 'clusterserviceplan',
-  crd: false
+  crd: false,
 };
 
 export const ServiceInstanceModel: K8sKind = {
