@@ -23,7 +23,16 @@
     "MEMORYUSAGE": "Memory Usage",
     "DISKUSAGE": "Disck Usage",
     "PODUSAGE": "POD Usage",
-    "KUBERNETES": "Kubernetes"
+    "KUBERNETES": "Kubernetes",
+    "NAME": "Name",
+    "NAMESPACE": "Namespace",
+    "CREATED": "Created",
+    "LABELS": "Labels",
+    "POD SELECTOR": "Pod Selector",
+    "ANNOTATIONS": "Annotations",
+    "CREATED AT": "Created at",
+    "EDIT LABELS": "Edit Labels",
+    "EDIT ANNOTATIONS": "Edit Annotations"
   },
   "RESOURCE": {
     "HOME": "Home",

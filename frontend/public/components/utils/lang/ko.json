@@ -23,7 +23,16 @@
     "MEMORYUSAGE": "메모리 사용량",
     "DISKUSAGE": "디스크 사용량",
     "PODUSAGE": "파드 사용량",
-    "KUBERNETES": "쿠버네티스"
+    "KUBERNETES": "쿠버네티스",
+    "NAME": "이름",
+    "NAMESPACE": "Namespace",
+    "CREATED": "생성 시간",
+    "LABELS": "레이블",
+    "POD SELECTOR": "파드 선택기",
+    "ANNOTATIONS": "애노테이션",
+    "CREATED AT": "생성 시간",
+    "EDIT LABELS": "레이블 편집",
+    "EDIT ANNOTATIONS": "주석 편집"
   },
   "RESOURCE": {
     "HOME": "홈",
