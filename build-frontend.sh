@@ -2,10 +2,10 @@
 
 set -e
 
-test -f ./frontend/node_modules/react-i18next/src/index.d.ts && mv ./frontend/node_modules/react-i18next/src/index.d.ts ./frontend/node_modules/react-i18next/src/index.ts
-
 pushd frontend
 yarn install
+test -f ./frontend/node_modules/react-i18next/src/index.d.ts && mv ./frontend/node_modules/react-i18next/src/index.d.ts ./frontend/node_modules/react-i18next/src/index.ts
+
 yarn run build
 
 # download latest swagger file
