@@ -18,6 +18,7 @@ import { formatNamespacedRouteForResource } from '../ui/ui-actions';
 import { FLAGS, connectToFlags, flagPending } from '../features';
 import { connectToURLs, MonitoringRoutes } from '../monitoring';
 
+import { useTranslation } from 'react-i18next';
 const fetchHealth = () =>
   coFetch(`${k8sBasePath}/healthz`)
     .then(response => response.text())
@@ -243,7 +244,8 @@ const ClusterOverviewPage_ = props => {
   const { OPENSHIFT: openshiftFlag, PROJECTS_AVAILABLE: projectsFlag } = props.flags;
   const fake = !flagPending(openshiftFlag) && !flagPending(projectsFlag) && openshiftFlag && !projectsFlag;
   const namespace = _.get(props, 'match.params.ns');
-  const title = namespace ? `Status of ${namespace}` : 'Cluster Status';
+  const { t } = useTranslation();
+  const title = namespace ? t('ADDITIONAL:STATUSOF', { something: namespace }) : t('resource:CLUSTERSTATUS');
 
   return (
     <React.Fragment>

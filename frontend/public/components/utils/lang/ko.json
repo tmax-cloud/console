@@ -1,13 +1,29 @@
 {
   "ADDITIONAL": {
-    "CREATEBUTTON": "{{something}} 생성",
-    "FILTERPLACEHOLDER": "이름으로 {{something}}을 검색..."
+    "CREATEBUTTON": "생성",
+    "FILTERPLACEHOLDER": "이름으로 {{something}}을 검색...",
+    "STATUSOF": "{{something}} 상태"
   },
   "STRING": {
     "DESC": "안녕, 내 이름은 테스트"
   },
   "CONTENT": {
-    "NAME": "이름"
+    "HEALTH": "상태",
+    "KUBERNETESAPI": "쿠버네티스 API",
+    "HYPERCLOUDCONSOLE": "하이퍼클라우드 콘솔",
+    "ALERTSFIRING": "Alerts Firing",
+    "CRASHLOOPINGPODS": "Crashlopping Pods",
+    "CONTROLPLANESTATUS": "Control Plane Status",
+    "APISERVERSUP": "API 서버 정상",
+    "CONTROLLERMANAGERSUP": "컨트롤러 관리자 정상",
+    "SCHEDULERSUP": "스케줄러 정상",
+    "APIREQUESTSUCCESSRATE": "API 요청 성공률",
+    "CAPACITYPLANNING": "Capacity Planning",
+    "CPUUSAGE": "CPU 사용량",
+    "MEMORYUSAGE": "메모리 사용량",
+    "DISKUSAGE": "디스크 사용량",
+    "PODUSAGE": "파드 사용량",
+    "KUBERNETES": "쿠버네티스"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -26,7 +42,7 @@
     "POD": "파드",
     "DEPLOYMENT": "디플로이먼트",
     "REPLICASET": "레플리카 셋",
-    "HPA": "HPA",
+    "HORIZONTALPODAUTOSCALER": "HPA",
     "DAEMONSET": "데몬셋",
     "STATEFULSET": "스테이트 풀셋",
     "VIRTUALMACHINE": "가상머신",
@@ -69,6 +85,7 @@
     "ROLEBINDING": "롤 바인딩",
     "ROLEBINDINGCLAIM": "롤 바인딩 클레임",
     "USER": "사용자",
-    "SERVICEACCOUNT": "서비스 어카운트"
+    "SERVICEACCOUNT": "서비스 어카운트",
+    "CLUSTERSTATUS": "클러스터 상태"
   }
 }

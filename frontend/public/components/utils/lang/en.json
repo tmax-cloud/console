@@ -1,13 +1,29 @@
 {
   "ADDITIONAL": {
-    "CREATEBUTTON": "Create {{something}}",
-    "FILTERPLACEHOLDER": "Filter {{something}} Sets by name..."
+    "CREATEBUTTON": "Create",
+    "FILTERPLACEHOLDER": "Filter {{something}} Sets by name...",
+    "STATUSOF": "Status of {{something}}"
   },
   "STRING": {
     "DESC": "Hi, my name is test"
   },
   "CONTENT": {
-    "NAME": "Name"
+    "HEALTH": "Health",
+    "KUBERNETESAPI": "Kubernetes API",
+    "HYPERCLOUDCONSOLE": "HyperCloud Console",
+    "ALERTSFIRING": "Alerts Firing",
+    "CRASHLOOPINGPODS": "Crashlopping Pods",
+    "CONTROLPLANESTATUS": "Control Plane Status",
+    "APISERVERSUP": "API Servers Up",
+    "CONTROLLERMANAGERSUP": "Controller Managers Up",
+    "SCHEDULERSUP": "Schedulers Up",
+    "APIREQUESTSUCCESSRATE": "API Request Success Rate",
+    "CAPACITYPLANNING": "Capacity Planning",
+    "CPUUSAGE": "CPU Usage",
+    "MEMORYUSAGE": "Memory Usage",
+    "DISKUSAGE": "Disck Usage",
+    "PODUSAGE": "POD Usage",
+    "KUBERNETES": "Kubernetes"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -69,6 +85,7 @@
     "ROLEBINDING": "Role Binding",
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
-    "SERVICEACCOUNT": "Service Account"
+    "SERVICEACCOUNT": "Service Account",
+    "CLUSTERSTATUS": "Cluster Status"
   }
 }
