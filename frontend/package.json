@@ -64,6 +64,7 @@
     "fuzzysearch": "1.0.x",
     "history": "4.x",
     "i18next": "^19.3.4",
+    "i18next-browser-languagedetector": "^4.0.2",
     "immutable": "3.x",
     "js-base64": "^2.4.5",
     "js-sha512": "^0.8.0",
