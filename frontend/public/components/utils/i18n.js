@@ -20,18 +20,16 @@ i18n
     detection: options,
     resources: {
       ko: {
-        vertNav: ko.vertNav,
-        additional: ko.additional,
-        resource: ko.resource,
-        string: ko.string,
-        content: ko.content,
+        ADDITIONAL: ko.ADDITIONAL,
+        RESOURCE: ko.RESOURCE,
+        STRING: ko.STRING,
+        CONTENT: ko.CONTENT,
       },
       en: {
-        vertNav: en.vertNav,
-        additional: en.additional,
-        resource: en.resource,
-        string: en.string,
-        content: en.content,
+        ADDITIONAL: en.ADDITIONAL,
+        RESOURCE: en.RESOURCE,
+        STRING: en.STRING,
+        CONTENT: en.CONTENT,
       },
     },
 

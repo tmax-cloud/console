@@ -394,7 +394,7 @@ class Nav extends React.Component {
         <div id="sidebar" className={classNames({ open: isOpen })}>
           {/* <ClusterPickerNavSection /> */}
           <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-            <NavSection text={t('resource:home')} icon="pficon pficon-home">
+            <NavSection text={t('RESOURCE:HOME')} icon="pficon pficon-home">
               <HrefLink href="/status" name="상태" activePath="/status/" onClick={this.close} />
               <HrefLink href="/search" name="검색" onClick={this.close} startsWith={searchStartsWith} />
               <ResourceNSLink resource="events" name="이벤트" onClick={this.close} />
