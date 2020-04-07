@@ -81,7 +81,16 @@
     "CRASHLOOPBACKOFF": "CrashLoopBackOff",
     "COMPLETED": "완료됨",
     "FAILED": "실패",
-    "UNKNOWN": "알 수 없음"
+    "UNKNOWN": "알 수 없음",
+    "CLUSTER-WIDE ROLES": "Cluster-wide Roles",
+    "NAMESPACE ROLES": "Namespace Roles",
+    "SYSTEM ROLES": "System Roles",
+    "ACTIONS": "액션",
+    "API GROUPS": "API 그룹",
+    "RESOURCES": "리소스",
+    "CLUSTER-WIDE ROLE BINDINGS": "Cluster-wide Role Bindings",
+    "NAMESPACE ROLE BINDINGS": "Namespace Role Bindings",
+    "SYSTEM ROLE BINDINGS": "System Role Bindings"
   },
   "RESOURCE": {
     "HOME": "홈",

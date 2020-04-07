@@ -81,7 +81,16 @@
     "CRASHLOOPBACKOFF": "CrashLoopBackOff",
     "COMPLETED": "Completed",
     "FAILED": "Failed",
-    "UNKNOWN": "Unknown"
+    "UNKNOWN": "Unknown",
+    "CLUSTER-WIDE ROLES": "Cluster-wide Roles",
+    "NAMESPACE ROLES": "Namespace Roles",
+    "SYSTEM ROLES": "System Roles",
+    "ACTIONS": "Actions",
+    "API GROUPS": "API Groups",
+    "RESOURCES": "Resources",
+    "CLUSTER-WIDE ROLE BINDINGS": "Cluster-wide Role Bindings",
+    "NAMESPACE ROLE BINDINGS": "Namespace Role Bindings",
+    "SYSTEM ROLE BINDINGS": "System Role Bindings"
   },
   "RESOURCE": {
     "HOME": "Home",
