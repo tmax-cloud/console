@@ -8,6 +8,7 @@ import * as PropTypes from 'prop-types';
 import k8sActions from '../../module/k8s/k8s-actions';
 import { CheckBoxes, storagePrefix } from '../row-filter';
 import { Dropdown, Firehose, kindObj, NavTitle, history, inject, Disabled } from '../utils';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 import { ErrorPage404 } from '../error';
 import { makeReduxID, makeQuery } from '../utils/k8s-watcher';
 import { referenceForModel } from '../../module/k8s';
@@ -226,18 +227,17 @@ FireMan_.propTypes = {
       isList: PropTypes.bool,
       namespaced: PropTypes.bool,
       filters: PropTypes.object,
-    })
+    }),
   ).isRequired,
 };
 
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
-
   const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
   const { labelPlural, plural, namespaced, label } = ko;
-  const title = props.title || labelPlural;
+  const title = ResourcePlural(kind);
   let href = namespaced ? `/k8s/ns/${namespace || 'default'}/${plural}/new` : `/k8s/cluster/${plural}/new`;
   if (ko.crd) {
     try {
