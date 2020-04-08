@@ -2,7 +2,8 @@
   "ADDITIONAL": {
     "CREATEBUTTON": "생성",
     "FILTERPLACEHOLDER": "이름으로 {{something}}을(를) 검색...",
-    "STATUSOF": "{{something}} 상태"
+    "STATUSOF": "{{something}} 상태",
+    "EMPTYBOX": "No {{something}} Found"
   },
   "STRING": {
     "STATUS_LIST_0": "이름이나 메시지로 이벤트 검색",
@@ -183,6 +184,7 @@
     "ERRORLOADINGEVENTS": "이벤트 로드 오류",
     "LOADINGEVENTS": "이벤트 로드 중...",
     "STREAMINGEVENTS": "이벤트 스트리밍 중...",
+    "NOTFOUND": "Not Found",
     "SELECTNAMESPACE": "네임스페이스 선택..."
   },
   "RESOURCE": {
