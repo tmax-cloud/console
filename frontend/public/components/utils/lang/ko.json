@@ -185,7 +185,8 @@
     "LOADINGEVENTS": "이벤트 로드 중...",
     "STREAMINGEVENTS": "이벤트 스트리밍 중...",
     "NOTFOUND": "Not Found",
-    "SELECTNAMESPACE": "네임스페이스 선택..."
+    "SELECTNAMESPACE": "네임스페이스 선택...",
+    "CREATE": "생성"
   },
   "RESOURCE": {
     "HOME": "홈",

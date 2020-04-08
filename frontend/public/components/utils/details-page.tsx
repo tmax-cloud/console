@@ -28,12 +28,12 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
     <dd><LabelList kind={referenceFor(resource)} labels={metadata.labels} /></dd>
     {showPodSelector && <dt>{t('CONTENT:PODSELECTOR')}</dt>}
     {showPodSelector && <dd><Selector selector={_.get(resource, podSelector)} namespace={_.get(resource, 'metadata.namespace')} /></dd>}
-    {showNodeSelector && <dt>Node Selector</dt>}
+    {showNodeSelector && <dt>{t('CONTENT:NODESELECTORS')}</dt>}
     {showNodeSelector && <dd><Selector kind="Node" selector={_.get(resource, 'spec.template.spec.nodeSelector')} /></dd>}
     {showAnnotations && <dt>{t('CONTENT:ANNOTATIONS')}</dt>}
     {showAnnotations && <dd><a className="co-m-modal-link" onClick={Cog.factory.ModifyAnnotations(kindObj(resource.kind), resource).callback}>{pluralize(_.size(metadata.annotations), 'Annotation')}</a></dd>}
     {children}
-    <dt>Created At</dt>
+    <dt>{t('CONTENT:CREATEDAT')}</dt>
     <dd><Timestamp timestamp={metadata.creationTimestamp} /></dd>
     {owners.length ? <dt>{pluralize(owners.length, 'Owner')}</dt> : null}
     {owners.length ? <dd>{owners}</dd> : null}

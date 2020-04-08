@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
-
+import { useTranslation } from 'react-i18next';
 import k8sActions from '../../module/k8s/k8s-actions';
 import { CheckBoxes, storagePrefix } from '../row-filter';
 import { Dropdown, Firehose, kindObj, NavTitle, history, inject, Disabled } from '../utils';
@@ -236,6 +236,7 @@ FireMan_.propTypes = {
 
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
+  const { t } = useTranslation();
   const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
@@ -271,7 +272,7 @@ export const ListPage = props => {
       showTitle={showTitle}
       canCreate={props.canCreate}
       canExpand={props.canExpand}
-      createButtonText={createButtonText || `Create`}
+      createButtonText={createButtonText || t('CONTENT:CREATE')}
       textFilter={props.textFilter}
       resources={resources}
       autoFocus={props.autoFocus}
