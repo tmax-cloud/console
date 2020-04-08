@@ -65,22 +65,22 @@ class LoginComponent extends Component {
 
     coFetchJSON.post(AUTH_SERVER_URL, json)
       .then(data => {
-        // console.log(data);
         if (data.accessToken && data.refreshToken) {
           window.localStorage.setItem('accessToken', data.accessToken);
           window.localStorage.setItem('refreshToken', data.refreshToken);
-
-          this.props.history.push('/');
-          this.props.history.go(0);
         } else {
           // 로그인 실패 
           this.setState({ error: data.msg });
           return;
         }
-
         // const url_ = window.location.href.split('/login')[0]
         // window.location = `${url_}/status/all-namespaces`;
-
+      })
+      .then(() => {
+        const userRole = JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role;
+        window.localStorage.setItem('role', userRole);
+        this.props.history.push('/');
+        this.props.history.go(0);
       })
       .catch((error) => {
         console.log(error.message);
