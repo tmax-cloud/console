@@ -90,7 +90,8 @@
     "RESOURCES": "리소스",
     "CLUSTER-WIDEROLEBINDINGS": "Cluster-wide Role Bindings",
     "NAMESPACEROLEBINDINGS": "Namespace Role Bindings",
-    "SYSTEMROLEBINDINGS": "System Role Bindings"
+    "SYSTEMROLEBINDINGS": "System Role Bindings",
+    "NODESELECTORS": "Node Selectors"
   },
   "RESOURCE": {
     "HOME": "홈",

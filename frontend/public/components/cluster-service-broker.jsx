@@ -13,6 +13,7 @@ import {
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { useTranslation } from 'react-i18next';
 
 const menuActions = [
   Cog.factory.ModifyLabels,
@@ -21,19 +22,22 @@ const menuActions = [
   Cog.factory.Delete
 ];
 
-const ClusterServiceBrokerHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-4 hidden-xs"
-      sortField="metadata.creationTimestamp" >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const ClusterServiceBrokerHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-4 hidden-xs"
+        sortField="metadata.creationTimestamp" >
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+}
 
 const ClusterServiceBrokerRow = () =>
   // eslint-disable-next-line no-shadow
