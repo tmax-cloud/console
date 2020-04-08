@@ -100,13 +100,15 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   .setIn(
     [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
     `
-  apiVersion: tmax.io/v1
-  kind: NamespaceClaim
-  metadata:
-    name: example
-  spec:
-    hard:
-      limits.cpu: "1" 
+    apiVersion: tmax.io/v1
+    kind: NamespaceClaim
+    metadata:
+      name: example-claim
+    resourceName: example-namespace
+    spec:
+      hard:
+        limits.cpu: "1"
+    
 `,
   )
   .setIn(
@@ -137,31 +139,35 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'],
     `
-  apiVersion: tmax.io/v1
-  kind: ResourceQuotaClaim
-  metadata:
-    name: example
-    namespace: example
-  spec:
-    hard:
-      limits.cpu: "2"
+    apiVersion: tmax.io/v1
+    kind: ResourceQuotaClaim
+    metadata:
+      name: example-resource-quota
+      namespace: example-namespace
+    resourceName: example-claim
+    spec:
+      hard:
+        limits.cpu: "2"
+    
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.RoleBindingClaimModel), 'default'],
     `
-  apiVersion: tmax.io/v1
-  kind: RoleBindingClaim
-  metadata:
-    name: example
-    namespace: example
-  subjects:
-  - kind: User
-    name: example@tmax.co.kr
-  roleRef:
-    kind: ClusterRole
-    name: namespace-user
-    apiGroup: rbac.authorization.k8s.io
+    apiVersion: tmax.io/v1
+    kind: RoleBindingClaim
+    metadata:
+      name: example-role-biniding
+      namespace: example-namespace
+    resourceName: example-claim
+    subjects:
+    - kind: User
+      name: example@tmax.co.kr
+    roleRef:
+      kind: ClusterRole
+      name: namespace-user
+      apiGroup: rbac.authorization.k8s.io
+    
 `,
   )
   .setIn(
