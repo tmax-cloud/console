@@ -94,7 +94,6 @@ export const ClusterServicePlansPage = props => (
     <ListPage
         {...props}
         ListComponent={ClusterServicePlanList}
-        canCreate={true}
         kind="ClusterServicePlan"
     />
 );

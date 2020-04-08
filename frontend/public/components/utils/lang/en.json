@@ -187,7 +187,8 @@
     "LOADINGEVENTS": "Loading events...",
     "STREAMINGEVENTS": "Streaming events...",
     "NOTFOUND": "Not Found",
-    "SELECTNAMESPACE": "Select namespace..."
+    "SELECTNAMESPACE": "Select namespace...",
+    "CREATE": "Create"
   },
   "RESOURCE": {
     "HOME": "Home",
