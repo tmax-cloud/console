@@ -245,7 +245,7 @@ const ClusterOverviewPage_ = props => {
   const fake = !flagPending(openshiftFlag) && !flagPending(projectsFlag) && openshiftFlag && !projectsFlag;
   const namespace = _.get(props, 'match.params.ns');
   const { t } = useTranslation();
-  const title = namespace ? t('ADDITIONAL:STATUSOF', { something: namespace }) : t('resource:CLUSTERSTATUS');
+  const title = namespace ? t('ADDITIONAL:STATUSOF', { something: namespace }) : t('RESOURCE:CLUSTERSTATUS');
 
   return (
     <React.Fragment>
