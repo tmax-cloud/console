@@ -94,7 +94,7 @@ export const ClusterServiceClassesPage = props => (
     <ListPage
         {...props}
         ListComponent={ClusterServiceClassList}
-        canCreate={true}
+        canCreate={false}
         kind="ClusterServiceClass"
     />
 );
