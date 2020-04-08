@@ -3,7 +3,8 @@
     "CREATEBUTTON": "생성",
     "FILTERPLACEHOLDER": "이름으로 {{something}}을(를) 검색...",
     "STATUSOF": "{{something}} 상태",
-    "EMPTYBOX": "No {{something}} Found"
+    "EMPTYBOX": "No {{something}} Found",
+    "OVERVIEWTITLE": "{{something}} 개요"
   },
   "STRING": {
     "STATUS_LIST_0": "이름이나 메시지로 이벤트 검색",

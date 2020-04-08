@@ -3,7 +3,9 @@
     "CREATEBUTTON": "Create",
     "FILTERPLACEHOLDER": "Filter {{something}} Sets by name...",
     "STATUSOF": "Status of {{something}}",
-    "EMPTYBOX": "No {{something}} Found"
+    "EMPTYBOX": "No {{something}} Found",
+    "OVERVIEWTITLE": "{{something}} Overview",
+    "BREADCRUMBSDETAILS": "{{something}} Details"
   },
   "STRING": {
     "STATUS_LIST_0": "Filter Events by name or message",
