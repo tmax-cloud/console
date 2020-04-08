@@ -22,7 +22,7 @@ const maxMessages = 500;
 const flushInterval = 500;
 
 // Predicate function to filter by event "category" (info, error, or all)
-const categoryFilter = (category, {reason}) => {
+const categoryFilter = (category, { reason }) => {
   if (category === 'all') {
     return true;
   }
@@ -31,59 +31,56 @@ const categoryFilter = (category, {reason}) => {
   return category === 'error' ? isError : !isError;
 };
 
-const kindFilter = (kind, {involvedObject}) => {
+const kindFilter = (kind, { involvedObject }) => {
   return kind === 'all' || involvedObject.kind === kind;
 };
 
-const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(class Inner extends React.PureComponent {
-  render () {
-    const {klass, status, tooltipMsg, obj, lastTimestamp, firstTimestamp, message, source, count, flags} = this.props;
+const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
+  class Inner extends React.PureComponent {
+    render() {
+      const { klass, status, tooltipMsg, obj, lastTimestamp, firstTimestamp, message, source, count, flags } = this.props;
 
-    return <div className={`${klass} slide-${status}`}>
-      <div className="co-sysevent__icon-box">
-        <i className="co-sysevent-icon" title={tooltipMsg} />
-        <div className="co-sysevent__icon-line"></div>
-      </div>
-      <div className="co-sysevent__box">
-        <div className="co-sysevent__header">
-          <div className="co-sysevent__subheader">
-            <ResourceLink
-              className="co-sysevent__resourcelink"
-              kind={obj.kind}
-              namespace={obj.namespace}
-              name={obj.name}
-              title={obj.uid}
-            />
-            <Timestamp timestamp={lastTimestamp} />
+      return (
+        <div className={`${klass} slide-${status}`}>
+          <div className="co-sysevent__icon-box">
+            <i className="co-sysevent-icon" title={tooltipMsg} />
+            <div className="co-sysevent__icon-line"></div>
           </div>
-          <div className="co-sysevent__details">
-            <small className="co-sysevent__source">
-              Generated from <span>{source.component}</span>
-              {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE]
-                ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link>
-                : <React.Fragment>{source.host}</React.Fragment>}
-              </span>}
-            </small>
-            {count > 1 && <small className="co-sysevent__count text-secondary">
-              {count} times in the last <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
-            </small>}
+          <div className="co-sysevent__box">
+            <div className="co-sysevent__header">
+              <div className="co-sysevent__subheader">
+                <ResourceLink className="co-sysevent__resourcelink" kind={obj.kind} namespace={obj.namespace} name={obj.name} title={obj.uid} />
+                <Timestamp timestamp={lastTimestamp} />
+              </div>
+              <div className="co-sysevent__details">
+                <small className="co-sysevent__source">
+                  Generated from <span>{source.component}</span>
+                  {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <React.Fragment>{source.host}</React.Fragment>}</span>}
+                </small>
+                {count > 1 && (
+                  <small className="co-sysevent__count text-secondary">
+                    {count} times in the last <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
+                  </small>
+                )}
+              </div>
+            </div>
+
+            <div className="co-sysevent__message" title={_.trim(message)}>
+              {message}
+            </div>
           </div>
         </div>
-
-        <div className="co-sysevent__message" title={_.trim(message)}>
-          {message}
-        </div>
-      </div>
-    </div>;
-  }
-});
+      );
+    }
+  },
+);
 
 // Keep track of seen events so we only animate new ones.
 const seen = new Set();
-const timeout = {enter: 150};
+const timeout = { enter: 150 };
 
 class SysEvent extends React.Component {
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate(nextProps) {
     if (this.props.lastTimestamp !== nextProps.lastTimestamp) {
       // Timestamps can be modified because events can be combined.
       return true;
@@ -94,14 +91,14 @@ class SysEvent extends React.Component {
     return true;
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // TODO (kans): this is not correct, but don't memory leak :-/
     seen.delete(this.props.metadata.uid);
   }
 
-  render () {
-    const { index, style, reason, message, source, metadata, firstTimestamp, lastTimestamp, count, involvedObject: obj} = this.props;
-    const klass = classNames('co-sysevent', {'co-sysevent--error': categoryFilter('error', this.props)});
+  render() {
+    const { index, style, reason, message, source, metadata, firstTimestamp, lastTimestamp, count, involvedObject: obj } = this.props;
+    const klass = classNames('co-sysevent', { 'co-sysevent--error': categoryFilter('error', this.props) });
     const tooltipMsg = `${reason} (${obj.kind.toLowerCase()})`;
 
     let shouldAnimate;
@@ -112,18 +109,20 @@ class SysEvent extends React.Component {
       shouldAnimate = true;
     }
 
-    return <div style={style}>
-      <CSSTransition mountOnEnter={true} appear={shouldAnimate} in exit={false} timeout={timeout} classNames="slide">
-        {status => <Inner klass={klass} status={status} tooltipMsg={tooltipMsg} obj={obj} firstTimestamp={firstTimestamp} lastTimestamp={lastTimestamp} count={count} message={message} source={source} width={style.width} />}
-      </CSSTransition>
-    </div>;
+    return (
+      <div style={style}>
+        <CSSTransition mountOnEnter={true} appear={shouldAnimate} in exit={false} timeout={timeout} classNames="slide">
+          {status => <Inner klass={klass} status={status} tooltipMsg={tooltipMsg} obj={obj} firstTimestamp={firstTimestamp} lastTimestamp={lastTimestamp} count={count} message={message} source={source} width={style.width} />}
+        </CSSTransition>
+      </div>
+    );
   }
 }
 
-const categories = {all: 'All Categories', info: 'Info', error: 'Error'};
+const categories = { all: 'All Categories', info: 'Info', error: 'Error' };
 
 class EventsStreamPage_ extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       category: 'all',
@@ -132,40 +131,44 @@ class EventsStreamPage_ extends React.Component {
     };
   }
 
-  render () {
+  render() {
     const { category, kind, textFilter } = this.state;
-    const { flags, showTitle=true, autoFocus=true } = this.props;
+    const { flags, showTitle = true, autoFocus = true } = this.props;
     if (flagPending(flags.OPENSHIFT) || flagPending(flags.PROJECTS_AVAILABLE)) {
       return null;
     }
     const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
 
-    return <React.Fragment>
-      { showGettingStarted && showTitle && <OpenShiftGettingStarted /> }
-      <div className={classNames({'co-disabled': showGettingStarted })}>
-        { showTitle && <Helmet>
-          <title>Events</title>
-        </Helmet> }
-        { showTitle && <NavTitle title="Events" /> }
-        <div className="co-m-pane__filter-bar">
-          <div className="co-m-pane__filter-bar-group">
-            <ResourceListDropdown title="All Types" className="btn-group" onChange={v => this.setState({kind: v})} showAll selected={kind} />
-            <Dropdown title="All Categories" className="btn-group" items={categories} onChange={v => this.setState({category: v})} />
+    return (
+      <React.Fragment>
+        {showGettingStarted && showTitle && <OpenShiftGettingStarted />}
+        <div className={classNames({ 'co-disabled': showGettingStarted })}>
+          {showTitle && (
+            <Helmet>
+              <title>Events</title>
+            </Helmet>
+          )}
+          {showTitle && <NavTitle title="Events" />}
+          <div className="co-m-pane__filter-bar">
+            <div className="co-m-pane__filter-bar-group">
+              <ResourceListDropdown title="All Types" className="btn-group" onChange={v => this.setState({ kind: v })} showAll selected={kind} />
+              <Dropdown title="All Categories" className="btn-group" items={categories} onChange={v => this.setState({ category: v })} />
+            </div>
+            <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
+              <TextFilter label="Events by name or message" onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={autoFocus} />
+            </div>
           </div>
-          <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-            <TextFilter label="Events by name or message" onChange={e => this.setState({textFilter: e.target.value || ''})} autoFocus={autoFocus} />
-          </div>
+          <EventStream {...this.props} category={category} kind={kind} textFilter={textFilter} fake={showGettingStarted} />
         </div>
-        <EventStream {...this.props} category={category} kind={kind} textFilter={textFilter} fake={showGettingStarted} />
-      </div>
-    </React.Fragment>;
+      </React.Fragment>
+    );
   }
 }
 
 export const EventStreamPage = connectToFlags(FLAGS.OPENSHIFT, FLAGS.PROJECTS_AVAILABLE)(EventsStreamPage_);
 
 class EventStream extends SafetyFirst {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.messages = {};
     this.state = {
@@ -177,13 +180,13 @@ class EventStream extends SafetyFirst {
       oldestTimestamp: new Date(),
     };
     this.toggleStream = this.toggleStream_.bind(this);
-    this.rowRenderer = function rowRenderer ({index, style, key}) {
+    this.rowRenderer = function rowRenderer({ index, style, key }) {
       const event = this.state.filteredEvents[index];
       return <SysEvent {...event} key={key} style={style} index={index} />;
     }.bind(this);
   }
 
-  wsInit (ns) {
+  wsInit(ns) {
     const params = {
       ns,
       fieldSelector: this.props.fieldSelector,
@@ -198,7 +201,7 @@ class EventStream extends SafetyFirst {
       bufferMax: maxMessages,
     })
       .onbulkmessage(events => {
-        events.forEach(({object, type}) => {
+        events.forEach(({ object, type }) => {
           const uid = object.metadata.uid;
 
           switch (type) {
@@ -223,34 +226,34 @@ class EventStream extends SafetyFirst {
       })
       .onopen(() => {
         this.messages = {};
-        this.setState({error: false, loading: false, sortedMessages: [], filteredEvents: []});
+        this.setState({ error: false, loading: false, sortedMessages: [], filteredEvents: [] });
       })
       .onclose(evt => {
         if (evt && evt.wasClean === false) {
-          this.setState({error: evt.reason || 'Connection did not close cleanly.'});
+          this.setState({ error: evt.reason || 'Connection did not close cleanly.' });
         }
         this.messages = {};
-        this.setState({sortedMessages: [], filteredEvents: []});
+        this.setState({ sortedMessages: [], filteredEvents: [] });
       })
       .onerror(() => {
         this.messages = {};
-        this.setState({error: true, sortedMessages: [], filteredEvents: []});
+        this.setState({ error: true, sortedMessages: [], filteredEvents: [] });
       });
   }
 
-  componentDidMount () {
+  componentDidMount() {
     super.componentDidMount();
     if (!this.props.fake) {
       this.wsInit(this.props.namespace);
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     super.componentWillUnmount();
     this.ws && this.ws.destroy();
   }
 
-  static filterEvents (messages, {kind, category, filter, textFilter}) {
+  static filterEvents(messages, { kind, category, filter, textFilter }) {
     // Don't use `fuzzy` because it results in some surprising matches in long event messages.
     // Instead perform an exact substring match on each word in the text filter.
     const words = _.uniq(_.toLower(textFilter).match(/\S+/g)).sort((a, b) => {
@@ -258,7 +261,7 @@ class EventStream extends SafetyFirst {
       return b.length - a.length;
     });
 
-    const textMatches = (obj) => {
+    const textMatches = obj => {
       if (_.isEmpty(words)) {
         return true;
       }
@@ -267,7 +270,7 @@ class EventStream extends SafetyFirst {
       return _.every(words, word => name.indexOf(word) !== -1 || message.indexOf(word) !== -1);
     };
 
-    const f = (obj) => {
+    const f = obj => {
       if (category && !categoryFilter(category, obj)) {
         return false;
       }
@@ -286,13 +289,10 @@ class EventStream extends SafetyFirst {
     return _.filter(messages, f);
   }
 
-  static getDerivedStateFromProps (nextProps, prevState) {
-    const {filter, kind, category, textFilter, loading} = prevState;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { filter, kind, category, textFilter, loading } = prevState;
 
-    if (_.isEqual(filter, nextProps.filter)
-      && kind === nextProps.kind
-      && category === nextProps.category
-      && textFilter === nextProps.textFilter) {
+    if (_.isEqual(filter, nextProps.filter) && kind === nextProps.kind && category === nextProps.category && textFilter === nextProps.textFilter) {
       return {};
     }
 
@@ -309,7 +309,7 @@ class EventStream extends SafetyFirst {
     };
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     // If the namespace has changed, created a new WebSocket with the new namespace
     if (prevProps.namespace !== this.props.namespace) {
       this.ws && this.ws.destroy();
@@ -320,7 +320,7 @@ class EventStream extends SafetyFirst {
   // Messages can come in extremely fast when the buffer flushes.
   // Instead of calling setState() on every single message, let onmessage()
   // update an instance variable, and throttle the actual UI update (see constructor)
-  flushMessages () {
+  flushMessages() {
     // In addition to sorting by timestamp, secondarily sort by name so that the order is consistent when events have
     // the same timestamp
     const sorted = _.orderBy(this.messages, ['lastTimestamp', 'name'], ['desc', 'asc']);
@@ -336,8 +336,8 @@ class EventStream extends SafetyFirst {
     this.messages = _.keyBy(sorted, 'metadata.uid');
   }
 
-  toggleStream_ () {
-    this.setState({active: !this.state.active}, () => {
+  toggleStream_() {
+    this.setState({ active: !this.state.active }, () => {
       if (this.state.active) {
         this.ws && this.ws.unpause();
       } else {
@@ -346,21 +346,20 @@ class EventStream extends SafetyFirst {
     });
   }
 
-  render () {
+  render() {
     const { fake, resourceEventStream } = this.props;
-    const {active, error, loading, filteredEvents, sortedMessages} = this.state;
+    const { active, error, loading, filteredEvents, sortedMessages } = this.state;
     const count = filteredEvents.length;
     const allCount = sortedMessages.length;
     const noEvents = allCount === 0 && this.ws && this.ws.bufferSize() === 0;
     const noMatches = allCount > 0 && count === 0;
     let sysEventStatus, statusBtnTxt;
+    const { t } = this.props;
 
     if (noEvents || fake || (noMatches && resourceEventStream)) {
       sysEventStatus = (
         <Box className="co-sysevent-stream__status-box-empty">
-          <div className="text-center cos-status-box__detail">
-          No Events in the past hour
-          </div>
+          <div className="text-center cos-status-box__detail">No Events in the past hour</div>
         </Box>
       );
     }
@@ -369,7 +368,8 @@ class EventStream extends SafetyFirst {
         <Box className="co-sysevent-stream__status-box-empty">
           <div className="cos-status-box__title">No Matching Events</div>
           <div className="text-center cos-status-box__detail">
-            {allCount}{allCount >= maxMessages && '+'} events exist, but none match the current filter
+            {allCount}
+            {allCount >= maxMessages && '+'} events exist, but none match the current filter
           </div>
         </Box>
       );
@@ -379,67 +379,68 @@ class EventStream extends SafetyFirst {
       statusBtnTxt = <span className="co-sysevent-stream__connection-error">Error connecting to event stream{_.isString(error) && `: ${error}`}</span>;
       sysEventStatus = (
         <Box>
-          <div className="cos-status-box__title cos-error-title">Error Loading Events</div>
+          <div className="cos-status-box__title cos-error-title">{t('CONTENT:ERRORLOADINGEVENTS')}</div>
           <div className="cos-status-box__detail text-center">An error occurred during event retrieval. Attempting to reconnect...</div>
         </Box>
       );
     } else if (loading) {
-      statusBtnTxt = <span>Loading events...</span>;
+      statusBtnTxt = <span>{t('CONTENT:LOADINGEVENTS')}</span>;
       sysEventStatus = <Loading />;
     } else if (active) {
-      statusBtnTxt = <span>Streaming events...</span>;
+      statusBtnTxt = <span>{t('CONTENT:STREAMINGEVENTS')}</span>;
     } else {
       statusBtnTxt = <span>Event stream is paused.</span>;
     }
 
     const klass = classNames('co-sysevent-stream__timeline', {
-      'co-sysevent-stream__timeline--empty': !allCount || !count
+      'co-sysevent-stream__timeline--empty': !allCount || !count,
     });
     const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
 
-    return <div className="co-m-pane__body">
-      <div className="co-sysevent-stream">
-        <div className="co-sysevent-stream__status">
-          <div className="co-sysevent-stream__timeline__btn-text">
-            { statusBtnTxt }
+    return (
+      <div className="co-m-pane__body">
+        <div className="co-sysevent-stream">
+          <div className="co-sysevent-stream__status">
+            <div className="co-sysevent-stream__timeline__btn-text">{statusBtnTxt}</div>
+            <div className="co-sysevent-stream__totals text-secondary">{messageCount}</div>
           </div>
-          <div className="co-sysevent-stream__totals text-secondary">
-            { messageCount }
-          </div>
-        </div>
 
-        <div className={klass}>
-          <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
-          <div className="co-sysevent-stream__timeline__end-message">
-          There are no events before <Timestamp timestamp={this.state.oldestTimestamp} />
+          <div className={klass}>
+            <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
+            <div className="co-sysevent-stream__timeline__end-message">
+              There are no events before <Timestamp timestamp={this.state.oldestTimestamp} />
+            </div>
           </div>
-        </div>
-        { count > 0 &&
+          {count > 0 && (
             <WindowScroller>
-              {({height, isScrolling, registerChild, onChildScroll, scrollTop}) =>
+              {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
                 <AutoSizer disableHeight>
-                  {({width}) => <div ref={registerChild}>
-                    <VirtualList
-                      autoHeight
-                      data={filteredEvents}
-                      height={height}
-                      isScrolling={isScrolling}
-                      onScroll={onChildScroll}
-                      rowRenderer={this.rowRenderer}
-                      scrollTop={scrollTop}
-                      width={width}
-                      rowCount={count}
-                      tabIndex={null}
-                      /* Width goes up to 675 and then goes down to 416 when the mobile/desktop breakpoint kicks in. It keeps increasing from there. You have to pick a number that won't overlap both ranges multiple times unless you want to write a ton of media queries. */
-                      rowHeight={width < 416 ? 140 : 110}
-                    />
-                  </div>}
-                </AutoSizer> }
+                  {({ width }) => (
+                    <div ref={registerChild}>
+                      <VirtualList
+                        autoHeight
+                        data={filteredEvents}
+                        height={height}
+                        isScrolling={isScrolling}
+                        onScroll={onChildScroll}
+                        rowRenderer={this.rowRenderer}
+                        scrollTop={scrollTop}
+                        width={width}
+                        rowCount={count}
+                        tabIndex={null}
+                        /* Width goes up to 675 and then goes down to 416 when the mobile/desktop breakpoint kicks in. It keeps increasing from there. You have to pick a number that won't overlap both ranges multiple times unless you want to write a ton of media queries. */
+                        rowHeight={width < 416 ? 140 : 110}
+                      />
+                    </div>
+                  )}
+                </AutoSizer>
+              )}
             </WindowScroller>
-        }
-        { sysEventStatus }
+          )}
+          {sysEventStatus}
+        </div>
       </div>
-    </div>;
+    );
   }
 }
 
@@ -459,5 +460,9 @@ EventStream.propTypes = {
   showTitle: PropTypes.bool,
 };
 
-
-export const ResourceEventStream = ({obj: {kind, metadata: {name, namespace}}}) => <EventStream filter={{name, kind}} namespace={namespace} resourceEventStream />;
+export const ResourceEventStream = ({
+  obj: {
+    kind,
+    metadata: { name, namespace },
+  },
+}) => <EventStream filter={{ name, kind }} namespace={namespace} resourceEventStream />;

@@ -24,6 +24,8 @@
     "DISKUSAGE": "Disck Usage",
     "PODUSAGE": "POD Usage",
     "KUBERNETES": "Kubernetes",
+    "SOFTWAREINFO": "Software Info",
+    "VIEWALL": "View All",
     "NAME": "Name",
     "NAMESPACE": "Namespace",
     "CREATED": "Created",
@@ -176,7 +178,11 @@
     "BOUND": "Bound",
     "LOST": "Lost",
     "STORAGECLASS": "Storage Class",
-    "REQUESTED": "Requested"
+    "REQUESTED": "Requested",
+    "ERRORLOADINGEVENTS": "Error Loading Events",
+    "LOADINGEVENTS": "Loading events...",
+    "STREAMINGEVENTS": "Streaming events...",
+    "SELECTNAMESPACE": "Select namespace..."
   },
   "RESOURCE": {
     "HOME": "Home",

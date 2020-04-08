@@ -23,7 +23,9 @@
     "MEMORYUSAGE": "메모리 사용량",
     "DISKUSAGE": "디스크 사용량",
     "PODUSAGE": "파드 사용량",
+    "SOFTWAREINFO": "소프트웨어 정보",
     "KUBERNETES": "쿠버네티스",
+    "VIEWALL": "전체 보기",
     "NAME": "이름",
     "NAMESPACE": "네임스페이스",
     "CREATED": "생성 시간",
@@ -176,7 +178,11 @@
     "BOUND": "바인딩됨",
     "LOST": "실패",
     "STORAGECLASS": "스토리지 클래스",
-    "REQUESTED": "요청됨"
+    "REQUESTED": "요청됨",
+    "ERRORLOADINGEVENTS": "이벤트 로드 오류",
+    "LOADINGEVENTS": "이벤트 로드 중...",
+    "STREAMINGEVENTS": "이벤트 스프리밍 중...",
+    "SELECTNAMESPACE": "네임스페이스 선택..."
   },
   "RESOURCE": {
     "HOME": "홈",
