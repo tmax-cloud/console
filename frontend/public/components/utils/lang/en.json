@@ -5,7 +5,8 @@
     "STATUSOF": "Status of {{something}}"
   },
   "STRING": {
-    "DESC": "Hi, my name is test"
+    "STATUS_LIST_0": "Filter Events by name or message",
+    "ROLE_DETAIL_0": "Filter Rules by action or resource"
   },
   "CONTENT": {
     "HEALTH": "Health",

@@ -1,11 +1,12 @@
 {
   "ADDITIONAL": {
     "CREATEBUTTON": "생성",
-    "FILTERPLACEHOLDER": "이름으로 {{something}}을 검색...",
+    "FILTERPLACEHOLDER": "이름으로 {{something}}을(를) 검색...",
     "STATUSOF": "{{something}} 상태"
   },
   "STRING": {
-    "DESC": "안녕, 내 이름은 테스트"
+    "STATUS_LIST_0": "이름이나 메시지로 이벤트 검색",
+    "ROLE_DETAIL_0": "액션이나 리소스로 규칙 검색"
   },
   "CONTENT": {
     "HEALTH": "상태",
@@ -181,7 +182,7 @@
     "REQUESTED": "요청됨",
     "ERRORLOADINGEVENTS": "이벤트 로드 오류",
     "LOADINGEVENTS": "이벤트 로드 중...",
-    "STREAMINGEVENTS": "이벤트 스프리밍 중...",
+    "STREAMINGEVENTS": "이벤트 스트리밍 중...",
     "SELECTNAMESPACE": "네임스페이스 선택..."
   },
   "RESOURCE": {

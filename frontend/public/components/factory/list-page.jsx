@@ -12,6 +12,7 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 import { ErrorPage404 } from '../error';
 import { makeReduxID, makeQuery } from '../utils/k8s-watcher';
 import { referenceForModel } from '../../module/k8s';
+import { useTranslation } from 'react-i18next';
 
 export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => (
   <div className="btn-group btn-group-sm" data-toggle="buttons">
@@ -25,7 +26,8 @@ export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }
 );
 
 /** @type {React.SFC<{label: string, onChange: React.ChangeEventHandler<any>, defaultValue: string}}>} */
-export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus }) => {
+export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus, id }) => {
+  const { t } = useTranslation();
   if (_.isUndefined(autoFocus)) {
     if (window.matchMedia('(min-width: 800px)').matches) {
       autoFocus = true;
@@ -34,7 +36,8 @@ export const TextFilter = ({ label, onChange, defaultValue, style, className, au
       autoFocus = false;
     }
   }
-  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={`Filter ${label}...`} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
+  // return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={`Filter ${label}...`} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
+  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={((id === 'event' || id === 'rule') && label) || t('ADDITIONAL:FILTERPLACEHOLDER', { something: id })} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
 };
 
 TextFilter.displayName = 'TextFilter';
@@ -134,7 +137,7 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
     }
 
     render() {
-      const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources } = this.props;
+      const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources, id } = this.props;
 
       const DropdownFilters =
         dropdownFilters &&
@@ -182,7 +185,7 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
             )}
             <div className={classNames('co-m-pane__filter-bar-group', DropdownFilters ? 'co-m-pane__filter-bar-group--filters' : 'co-m-pane__filter-bar-group--filter')}>
               {DropdownFilters && <div className="btn-group">{DropdownFilters}</div>}
-              <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} />
+              <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} id={id} />
             </div>
           </div>
           <div className="co-m-pane__body">
@@ -260,7 +263,7 @@ export const ListPage = props => {
 
   return (
     <MultiListPage
-      id={ko.id} // 임의로 추가
+      id={ResourcePlural(kind)} // 임의로 추가
       filterLabel={filterLabel || `${labelPlural} by name`}
       selectorFilterLabel="Filter by selector (app=nginx) ..."
       createProps={createProps}
@@ -287,7 +290,7 @@ ListPage.displayName = 'ListPage';
 
 /** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, flatten?: Function, title?: string, showTitle?: boolean, dropdownFilters?: any[], filterLabel?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string}>} */
 export const MultiListPage = props => {
-  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake } = props;
+  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake, id } = props;
   const resources = _.map(props.resources, r => ({
     ...r,
     isList: true,
@@ -296,7 +299,7 @@ export const MultiListPage = props => {
   }));
 
   const elems = (
-    <FireMan_ filterLabel={filterLabel} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
+    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
       <Firehose resources={resources}>
         <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
       </Firehose>

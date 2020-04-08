@@ -139,6 +139,7 @@ class EventsStreamPage_ extends React.Component {
     }
     const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
 
+    const { t } = this.props;
     return (
       <React.Fragment>
         {showGettingStarted && showTitle && <OpenShiftGettingStarted />}
@@ -155,7 +156,7 @@ class EventsStreamPage_ extends React.Component {
               <Dropdown title="All Categories" className="btn-group" items={categories} onChange={v => this.setState({ category: v })} />
             </div>
             <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-              <TextFilter label="Events by name or message" onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={autoFocus} />
+              <TextFilter id="event" label={t('STRING:STATUS_LIST_0')} onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={autoFocus} />
             </div>
           </div>
           <EventStream {...this.props} category={category} kind={kind} textFilter={textFilter} fake={showGettingStarted} />
