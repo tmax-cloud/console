@@ -2,65 +2,37 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import {
-  Cog,
-  navFactory,
-  ResourceCog,
-  SectionHeading,
-  ResourceLink,
-  ResourceSummary,
-  ScrollToTopOnMount,
-  kindObj
-} from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
-import {
-  referenceFor,
-  kindForReference,
-} from '../module/k8s';
+import { referenceFor, kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete
-];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const TemplateInstanceHeader = props => (
-  <ListHeader>
-    <ColHead
-      {...props}
-      className="col-lg-2 col-md-3 col-sm-4 col-xs-6"
-      sortField="metadata.name"
-    >
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-lg-2 col-md-3 col-sm-4 col-xs-6"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 hidden-xs">
-      Parameter Count
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-lg-2 col-md-2 hidden-sm hidden-xs"
-      sortField="templateInstancePhase"
-    >
-      Status
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-lg-3 hidden-md hidden-sm hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const TemplateInstanceHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 hidden-xs">
+        {t('CONTENT:PARAMETERCOUNT')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="templateInstancePhase">
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-3 hidden-md hidden-sm hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 // template-instance status 값
 const templateInstancePhase = instance => {
@@ -73,7 +45,6 @@ const templateInstancePhase = instance => {
     });
     return phase;
   }
-
 };
 
 const TemplateInstanceRow = kind =>
@@ -82,55 +53,31 @@ const TemplateInstanceRow = kind =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
-          <ResourceCog
-            actions={menuActions}
-            kind="TemplateInstance"
-            resource={obj}
-          />
-          <ResourceLink
-            kind="TemplateInstance"
-            name={obj.metadata.name}
-            namespace={obj.metadata.namespace}
-            title={obj.metadata.name}
-          />
+          <ResourceCog actions={menuActions} kind="TemplateInstance" resource={obj} />
+          <ResourceLink kind="TemplateInstance" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-break-word">
-          {obj.metadata.namespace ? (
-            <ResourceLink
-              kind="Namespace"
-              name={obj.metadata.namespace}
-              title={obj.metadata.namespace}
-            />
-          ) :
-            'None'
-          }
-        </div>
-        <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs co-break-word">
-          {(obj.spec && obj.spec.template && obj.spec.template.parameters.length) || 'None'}
-        </div>
-        <div className="col-lg-2 col-md-2 hidden-sm hidden-xs hidden-xs">
-          {phase}
-        </div>
-        <div className="col-lg-3 hidden-md hidden-sm hidden-xs hidden-xs">
-          {fromNow(obj.metadata.creationTimestamp)}
-        </div>
+        <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
+        <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs co-break-word">{(obj.spec && obj.spec.template && obj.spec.template.parameters.length) || 'None'}</div>
+        <div className="col-lg-2 col-md-2 hidden-sm hidden-xs hidden-xs">{phase}</div>
+        <div className="col-lg-3 hidden-md hidden-sm hidden-xs hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
 
 const Details = ({ obj: templateinstance }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Template Instance') })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={templateinstance} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Status</dt>
+              <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{templateInstancePhase(templateinstance)}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
@@ -147,7 +94,6 @@ const Details = ({ obj: templateinstance }) => {
 };
 
 export const TemplateInstanceList = props => {
-
   const { kinds } = props;
   const Row = TemplateInstanceRow(kinds[0]);
   Row.displayName = 'TemplateInstanceRow';
@@ -157,12 +103,12 @@ TemplateInstanceList.displayName = TemplateInstanceList;
 const TemplateInstancesPage = props => {
   const createItems = {
     form: 'Service Instance (Form Editor)',
-    yaml: 'Service Instance (YAML Editor)'
+    yaml: 'Service Instance (YAML Editor)',
   };
 
   const createProps = {
     items: createItems,
-    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/templateinstances/new${type !== 'yaml' ? '/' + type : ''}`
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/templateinstances/new${type !== 'yaml' ? '/' + type : ''}`,
   };
   return <ListPage ListComponent={TemplateInstanceList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
 };
@@ -176,15 +122,12 @@ export const TemplateInstancesDetailsPage = props => (
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
         name: 'Template Instances Details',
-        path: props.match.url
+        path: props.match.url,
       })
     }
     kind="TemplateInstance"
     menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
+    pages={[navFactory.details(Details), navFactory.editYaml()]}
   />
 );
 

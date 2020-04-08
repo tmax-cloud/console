@@ -58,7 +58,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       <dd>
         <Timestamp timestamp={metadata.creationTimestamp} />
       </dd>
-      {owners.length ? <dt>{pluralize(owners.length, 'Owner')}</dt> : null}
+      {owners.length ? <dt>{t('CONTENT:OWNER')}</dt> : null}
       {owners.length ? <dd>{owners}</dd> : null}
     </dl>
   );
