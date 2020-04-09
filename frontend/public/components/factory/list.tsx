@@ -16,7 +16,7 @@ import { routeStatus } from '../routes';
 import { secretTypeFilterReducer } from '../secret';
 import { bindingType, roleType } from '../RBAC';
 import { LabelList, ResourceCog, ResourceLink, resourcePath, Selector, StatusBox, containerLinuxUpdateOperator, EmptyBox } from '../utils';
-
+import { useTranslation } from 'react-i18next';
 const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
 
 // TODO: Having list filters here is undocumented, stringly-typed, and non-obvious. We can change that
@@ -30,7 +30,7 @@ const listFilters = {
   'role-binding-kind': (filter, binding) => filter.selected.has(bindingType(binding)),
 
   // Filter role bindings by text match
-  'role-binding': (str, {metadata, roleRef, subject}) => {
+  'role-binding': (str, { metadata, roleRef, subject }) => {
     const isMatch = val => fuzzyCaseInsensitive(str, val);
     return [metadata.name, roleRef.name, subject.kind, subject.name].some(isMatch);
   },
@@ -147,7 +147,7 @@ const sorts = {
   jobType: job => getJobTypeAndCompletions(job).type,
   nodeReadiness: node => {
     let readiness = _.get(node, 'status.conditions');
-    readiness = _.find(readiness, {type: 'Ready'});
+    readiness = _.find(readiness, { type: 'Ready' });
     return _.get(readiness, 'status');
   },
   nodeUpdateStatus: node => _.get(containerLinuxUpdateOperator.getUpdateStatus(node), 'text'),
@@ -170,7 +170,7 @@ export class ColHead extends React.Component<ColHeadProps> {
   };
 
   componentWillMount() {
-    const {applySort, children, sortField, sortFunc} = this.props;
+    const { applySort, children, sortField, sortFunc } = this.props;
 
     const sp = new URLSearchParams(window.location.search);
     if (sp.get('sortBy') === children) {
@@ -178,10 +178,10 @@ export class ColHead extends React.Component<ColHeadProps> {
     }
   }
 
-  render () {
+  render() {
     // currentSortField/Func == info for currently sorted ColHead.
     // sortField/Func == this ColHead's field/func
-    const {applySort, children, currentSortField, currentSortFunc, currentSortOrder, sortField, sortFunc} = this.props;
+    const { applySort, children, currentSortField, currentSortFunc, currentSortOrder, sortField, sortFunc } = this.props;
     const className = classNames(this.props.className, 'text-nowrap');
     if (!sortField && !sortFunc) {
       return <div className={className}>{children}</div>;
@@ -197,17 +197,19 @@ export class ColHead extends React.Component<ColHeadProps> {
   }
 }
 
-export const ListHeader: React.SFC = ({children}) => <div className="row co-m-table-grid__head">{children}</div>;
+export const ListHeader: React.SFC = ({ children }) => <div className="row co-m-table-grid__head">{children}</div>;
 ListHeader.displayName = 'ListHeader';
 
-export const WorkloadListHeader = props => <ListHeader>
-  <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-  <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 hidden-xs" sortField="metadata.labels">Labels</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="numReplicas">Status</ColHead>
-  <ColHead {...props} className="col-lg-3 hidden-md hidden-sm hidden-xs" sortField="spec.selector">Pod Selector</ColHead>
-</ListHeader>;
-
+export const WorkloadListHeader = props => {
+  const { t } = useTranslation();
+  return (<ListHeader>
+    <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.name" >{t('CONTENT:NAME')}</ColHead>
+    <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">{t('CONTENT:NAMESPACE')}</ColHead>
+    <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 hidden-xs" sortField="metadata.labels">{t('CONTENT:LABELS')}</ColHead>
+    <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="numReplicas">{t('RESOURCE:STATUS')}</ColHead>
+    <ColHead {...props} className="col-lg-3 hidden-md hidden-sm hidden-xs" sortField="spec.selector">{t('CONTENT:PODSELECTOR')}</ColHead>
+  </ListHeader>)
+}
 export const Rows: React.SFC<RowsProps> = (props) => {
   const { fake, label } = props;
   const measurementCache = new CellMeasurerCache({
@@ -216,8 +218,8 @@ export const Rows: React.SFC<RowsProps> = (props) => {
     keyMapper: rowIndex => `${_.get(props.data[rowIndex], 'metadata.uid', rowIndex)}-${props.expand ? 'expanded' : 'collapsed'}`,
   });
 
-  const rowRenderer = ({index, style, key, parent}) => {
-    const {data, expand, Row, kindObj} = props;
+  const rowRenderer = ({ index, style, key, parent }) => {
+    const { data, expand, Row, kindObj } = props;
     const obj = data[index];
 
     return <CellMeasurer
@@ -233,12 +235,12 @@ export const Rows: React.SFC<RowsProps> = (props) => {
   };
 
   return <div className="co-m-table-grid__body">
-    { fake
+    {fake
       ? <EmptyBox label={label} />
       : <WindowScroller>
-        {({height, isScrolling, registerChild, onChildScroll, scrollTop}) =>
+        {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) =>
           <AutoSizer disableHeight>
-            {({width}) => <div ref={registerChild}>
+            {({ width }) => <div ref={registerChild}>
               <VirtualList
                 autoHeight
                 data={props.data}
@@ -267,7 +269,7 @@ Rows.propTypes = {
   Row: PropTypes.func.isRequired,
 };
 
-const stateToProps = ({UI}, {data = [], filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}]}) => {
+const stateToProps = ({ UI }, { data = [], filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}] }) => {
   const allFilters = staticFilters ? Object.assign({}, filters, ...staticFilters) : filters;
   let newData = getFilteredRows(allFilters, data);
 
@@ -290,10 +292,10 @@ const stateToProps = ({UI}, {data = [], filters = {}, loaded = false, reduxID = 
     newData = _.orderBy(newData, [sortBy, 'metadata.name'], [currentSortOrder, 'asc']);
   }
 
-  return {currentSortField, currentSortFunc, currentSortOrder, data: newData, listId};
+  return { currentSortField, currentSortFunc, currentSortOrder, data: newData, listId };
 };
 
-export const List = connect(stateToProps, {sortList: UIActions.sortList})(
+export const List = connect(stateToProps, { sortList: UIActions.sortList })(
   class ListInner extends React.Component<ListInnerProps> {
     static propTypes = {
       data: PropTypes.array,
@@ -314,7 +316,7 @@ export const List = connect(stateToProps, {sortList: UIActions.sortList})(
     };
 
     render() {
-      const {currentSortField, currentSortFunc, currentSortOrder, expand, Header, label, listId, Row, sortList, fake} = this.props;
+      const { currentSortField, currentSortFunc, currentSortOrder, expand, Header, label, listId, Row, sortList, fake } = this.props;
       const componentProps: any = _.pick(this.props, ['data', 'filters', 'selected', 'match', 'kindObj']);
 
       const children = <React.Fragment>
@@ -330,7 +332,7 @@ export const List = connect(stateToProps, {sortList: UIActions.sortList})(
       </React.Fragment>;
 
       return <div className="co-m-table-grid co-m-table-grid--bordered">
-        { fake ? children : <StatusBox {...this.props}>{children}</StatusBox> }
+        {fake ? children : <StatusBox {...this.props}>{children}</StatusBox>}
       </div>;
     }
   });
@@ -356,12 +358,12 @@ export class ResourceRow extends React.Component<ResourceRowProps> {
     return false;
   }
 
-  render () {
+  render() {
     return <div className="row co-resource-list__item" style={this.props.style}>{this.props.children}</div>;
   }
 }
 
-export const WorkloadListRow: React.SFC<WorkloadListRowProps> = ({kind, actions, obj: o}) => <ResourceRow obj={o}>
+export const WorkloadListRow: React.SFC<WorkloadListRowProps> = ({ kind, actions, obj: o }) => <ResourceRow obj={o}>
   <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
     <ResourceCog actions={actions} kind={kind} resource={o} />
     <ResourceLink kind={kind} name={o.metadata.name} namespace={o.metadata.namespace} title={o.metadata.uid} />
@@ -401,7 +403,7 @@ export type ListInnerProps = {
   EmptyMsg?: React.ComponentType<{}>;
   expand?: boolean;
   fieldSelector?: string;
-  filters?: {[name: string]: any};
+  filters?: { [name: string]: any };
   loaded?: boolean;
   loadError?: string | Object;
   namespace?: string;

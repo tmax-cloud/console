@@ -55,7 +55,6 @@ class Details extends React.Component {
     const ruleObj = this.props.obj;
     const { creationTimestamp, name, namespace } = ruleObj.metadata;
     const { ruleFilter } = this.state;
-    const kind = this.props.obj.kind;
 
 
     let rules = ruleObj.rules;
@@ -67,12 +66,12 @@ class Details extends React.Component {
 
     return <div>
       <div className="co-m-pane__body">
-        <SectionHeading text={kind === 'ClusterRole' ? 'Cluster Role Overview' : 'Role Overview'} />
+        <SectionHeading text={'Role Overview'} />
         {/* <SectionHeading text="Role Overview" /> */}
         <div className="row">
           <div className="col-xs-6">
             <dl className="co-m-pane__details">
-              <dt>{kind === 'ClusterRole' ? 'Cluster Role Name' : 'Role Name'}</dt>
+              <dt>Role Name</dt>
               {/* <dt>Role Name</dt> */}
               <dd>{name}</dd>
               {namespace && <div>
@@ -136,26 +135,25 @@ const BindingsListComponent = props => <BindingsList {...props} Header={BindingH
 export const BindingsForRolePage = (props) => {
   const { match: { params: { name, ns } }, obj: { kind } } = props;
 
-  let resources = kind === 'ClusterRole' ? [{ kind: 'ClusterRoleBinding', namespaced: true }] : [{ kind: 'RoleBinding', namespaced: true }];
+  let resources = [{ kind: 'RoleBinding', namespaced: true }];
   if (!ns) {
     resources.push({ kind: 'ClusterRoleBinding', namespaced: false, optional: true });
   }
   return <MultiListPage
     canCreate={true}
-    createProps={kind === 'ClusterRole' ? { to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/clusterrolebindings/new?rolekind=${kind}&rolename=${name}` } : { to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}` }}
+    createProps={{ to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}` }}
     ListComponent={BindingsListComponent}
     staticFilters={[{ 'role-binding-roleRef': name }]}
     resources={resources}
-    textFilter={kind === 'ClusterRole' ? 'cluster-role-binding' : 'role-binding'}
-    filterLabel={kind === 'ClusterRole' ? 'Cluster Role Bindings by role or subject' : 'Role Bindings by role or subject'}
+    textFilter="role-binding"
+    filterLabel="Role Bindings by role or subject"
     namespace={ns}
     flatten={bindingsFlatten} />;
 };
 
 export const RolesDetailsPage = props => <DetailsPage
   {...props}
-  // pages={[navFactory.details(Details), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]}
-  pages={[navFactory.details(Details), navFactory.editYaml(), props.kind === 'ClusterRole' ? { href: 'cluster-binding', name: props.kind === 'ClusterRole' ? 'Cluster Role Bindings' : 'Role Bindings', component: BindingsForRolePage } : { href: 'bindings', name: props.kind === 'ClusterRole' ? 'Cluster Role Bindings' : 'Role Bindings', component: BindingsForRolePage }]}
+  pages={[navFactory.details(Details), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]}
   menuActions={menuActions} />;
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;

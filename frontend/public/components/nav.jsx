@@ -20,6 +20,8 @@ import * as routingImg from '../imgs/routing.svg';
 import * as routingActiveImg from '../imgs/routing-active.svg';
 import { history, stripBasePath } from './utils';
 
+import { withTranslation } from 'react-i18next';
+
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
 
@@ -132,150 +134,152 @@ const navSectionStateToProps = (state, { required }) => {
   };
 };
 
-const NavSection = connect(navSectionStateToProps)(
-  class NavSection extends React.Component {
-    constructor(props) {
-      super(props);
-      this.toggle = e => this.toggle_(e);
-      this.open = () => this.open_();
-      this.state = { isOpen: false, activeChild: null };
+class NavSection_ extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggle = e => this.toggle_(e);
+    this.open = () => this.open_();
+    this.state = { isOpen: false, activeChild: null };
 
-      const activeChild = this.getActiveChild();
-      if (activeChild) {
-        this.state.activeChild = activeChild;
-        this.state.isOpen = true;
-      }
+    const activeChild = this.getActiveChild();
+    if (activeChild) {
+      this.state.activeChild = activeChild;
+      this.state.isOpen = true;
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { isOpen } = this.state;
+
+    if (isOpen !== nextProps.isOpen) {
+      return true;
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-      const { isOpen } = this.state;
-
-      if (isOpen !== nextProps.isOpen) {
-        return true;
-      }
-
-      if (!isOpen && !nextState.isOpen) {
-        return false;
-      }
-
-      return nextProps.location !== this.props.location || nextProps.flags !== this.props.flags;
+    if (!isOpen && !nextState.isOpen) {
+      return false;
     }
 
-    getActiveChild() {
-      const { activeNamespace, location, children } = this.props;
+    return nextProps.location !== this.props.location || nextProps.flags !== this.props.flags;
+  }
 
-      if (!children) {
-        return stripBasePath(location).startsWith(this.props.activePath);
-      }
+  getActiveChild() {
+    const { activeNamespace, location, children } = this.props;
 
-      const resourcePath = location ? stripNS(location) : '';
-      if (Array.isArray(children)) {
-        return children
-          .filter(c => {
-            if (!c) {
-              return false;
-            }
-            if (c.props.startsWith) {
-              return c.type.startsWith(resourcePath, c.props.startsWith);
-            }
-            return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
-          })
-          .map(c => c.props.name)[0];
-      } else if (children.props.startsWith) {
-        // 하나만 있을 때 처리
-        return children.type.startsWith(resourcePath, children.props.startsWith) ? children.props.name : null;
-      }
-      return children.type.isActive && children.type.isActive(children.props, resourcePath, activeNamespace) ? children.props.name : null;
+    if (!children) {
+      return stripBasePath(location).startsWith(this.props.activePath);
     }
 
-    componentDidUpdate(prevProps, prevState) {
-      if (prevProps.location === this.props.location) {
-        return;
-      }
+    const resourcePath = location ? stripNS(location) : '';
+    if (Array.isArray(children)) {
+      return children
+        .filter(c => {
+          if (!c) {
+            return false;
+          }
+          if (c.props.startsWith) {
+            return c.type.startsWith(resourcePath, c.props.startsWith);
+          }
+          return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
+        })
+        .map(c => c.props.name)[0];
+    } else if (children.props.startsWith) {
+      // 하나만 있을 때 처리
+      return children.type.startsWith(resourcePath, children.props.startsWith) ? children.props.name : null;
+    }
+    return children.type.isActive && children.type.isActive(children.props, resourcePath, activeNamespace) ? children.props.name : null;
+  }
 
-      const activeChild = this.getActiveChild();
-      const state = { activeChild };
-      if (activeChild && !prevState.activeChild) {
-        state.isOpen = true;
-      }
-      this.setState(state);
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location === this.props.location) {
+      return;
     }
 
-    open_() {
-      this.setState({ isOpen: true });
+    const activeChild = this.getActiveChild();
+    const state = { activeChild };
+    if (activeChild && !prevState.activeChild) {
+      state.isOpen = true;
+    }
+    this.setState(state);
+  }
+
+  open_() {
+    this.setState({ isOpen: true });
+  }
+
+  toggle_(e) {
+    const { href, onClick } = this.props;
+
+    if (href) {
+      e && e.stopPropagation();
+      history.push(href);
     }
 
-    toggle_(e) {
-      const { href, onClick } = this.props;
-
-      if (href) {
-        e && e.stopPropagation();
-        history.push(href);
-      }
-
-      if (onClick) {
-        onClick();
-      }
-
-      this.setState({ isOpen: !this.state.isOpen });
+    if (onClick) {
+      onClick();
     }
 
-    render() {
-      if (!this.props.canRender) {
+    this.setState({ isOpen: !this.state.isOpen });
+  }
+
+  render() {
+    if (!this.props.canRender) {
+      return null;
+    }
+
+    const { t } = this.props;
+
+    const { id, icon, img, text, children, activeNamespace, flags, href = null, activeImg, klass } = this.props;
+    const isActive = !!this.state.activeChild;
+    // WARNING:
+    // we transition on max-height because you can't transition to height 'inherit'
+    // however, the transition animiation is calculated on the actual max-height, so it must be roughly equal to the actual height
+    // we could use scaleY, but that literally scales along the Y axis, ie shrinks
+    // we could use flexbox or the equivalent to get an actual height, but this is the easiest solution :-/
+
+    const maxHeight = !this.state.isOpen ? 0 : 29 * _.get(this.props.children, 'length', 1);
+
+    const iconClassName = icon && `${icon} navigation-container__section__title__icon ${isActive ? 'navigation-container__section__title__icon--active' : ''}`;
+    const secionTitleClassName = `navigation-container__section__title ${isActive ? 'navigation-container__section__title--active' : ''}`;
+    const sectionClassName = isActive && href ? 'navigation-container__section navigation-container__section--active' : 'navigation-container__section';
+
+    const Children = React.Children.map(children, c => {
+      if (!c) {
         return null;
       }
+      const { name, required, disallowed } = c.props;
+      if (required && (flagPending(flags.get(required)) || !flags.get(required))) {
+        return null;
+      }
+      if (disallowed && (flagPending(flags.get(disallowed)) || flags.get(disallowed))) {
+        return null;
+      }
+      return React.cloneElement(c, { key: name, isActive: name === this.state.activeChild, activeNamespace });
+    });
 
-      const { id, icon, img, text, children, activeNamespace, flags, href = null, activeImg, klass } = this.props;
-      const isActive = !!this.state.activeChild;
-      // WARNING:
-      // we transition on max-height because you can't transition to height 'inherit'
-      // however, the transition animiation is calculated on the actual max-height, so it must be roughly equal to the actual height
-      // we could use scaleY, but that literally scales along the Y axis, ie shrinks
-      // we could use flexbox or the equivalent to get an actual height, but this is the easiest solution :-/
-
-      const maxHeight = !this.state.isOpen ? 0 : 29 * _.get(this.props.children, 'length', 1);
-
-      const iconClassName = icon && `${icon} navigation-container__section__title__icon ${isActive ? 'navigation-container__section__title__icon--active' : ''}`;
-      const secionTitleClassName = `navigation-container__section__title ${isActive ? 'navigation-container__section__title--active' : ''}`;
-      const sectionClassName = isActive && href ? 'navigation-container__section navigation-container__section--active' : 'navigation-container__section';
-
-      const Children = React.Children.map(children, c => {
-        if (!c) {
-          return null;
-        }
-        const { name, required, disallowed } = c.props;
-        if (required && (flagPending(flags.get(required)) || !flags.get(required))) {
-          return null;
-        }
-        if (disallowed && (flagPending(flags.get(disallowed)) || flags.get(disallowed))) {
-          return null;
-        }
-        return React.cloneElement(c, { key: name, isActive: name === this.state.activeChild, activeNamespace });
-      });
-
-      return (
-        <div className={classNames(sectionClassName, klass)}>
-          <div id={id} className={secionTitleClassName} onClick={this.toggle}>
-            {icon && <i className={iconClassName} aria-hidden="true"></i>}
-            {img && <img src={isActive && activeImg ? activeImg : img} />}
-            {!href ? (
-              text
-            ) : (
-                <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-                  {text}
-                </Link>
-              )}
-          </div>
-          {Children && (
-            <ul className="navigation-container__list" style={{ maxHeight }}>
-              {Children}
-            </ul>
+    return (
+      <div className={classNames(sectionClassName, klass)}>
+        <div id={id} className={secionTitleClassName} onClick={this.toggle}>
+          {icon && <i className={iconClassName} aria-hidden="true"></i>}
+          {img && <img src={isActive && activeImg ? activeImg : img} />}
+          {!href ? (
+            text
+          ) : (
+            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+              {text}
+            </Link>
           )}
         </div>
-      );
-    }
-  },
-);
+        {Children && (
+          <ul className="navigation-container__list" style={{ maxHeight }}>
+            {Children}
+          </ul>
+        )}
+      </div>
+    );
+  }
+}
+
+const NavSection = connect(navSectionStateToProps)(NavSection_);
 
 const Sep = () => <div className="navigation-container__section__separator" />;
 
@@ -289,11 +293,6 @@ const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 const ClusterPickerNavSection = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   // Hide the cluster picker on OpenShift clusters. Make sure flag detection is
   // complete before showing the picker.
-
-  const openshiftFlag = flags[FLAGS.OPENSHIFT];
-  if (flagPending(openshiftFlag) || openshiftFlag) {
-    return null;
-  }
 
   return (
     <div className="navigation-container__section navigation-container__section--cluster-picker">
@@ -316,10 +315,7 @@ const MonitoringNavSection_ = ({ urls, closeMenu }) => {
 };
 const MonitoringNavSection = connectToURLs(MonitoringRoutes.Prometheus, MonitoringRoutes.AlertManager, MonitoringRoutes.Grafana)(MonitoringNavSection_);
 
-const UserNavSection = connectToFlags(
-  FLAGS.AUTH_ENABLED,
-  FLAGS.OPENSHIFT,
-)(({ flags, closeMenu }) => {
+const UserNavSection = connectToFlags(FLAGS.AUTH_ENABLED)(({ flags, closeMenu }) => {
   if (!flags[FLAGS.AUTH_ENABLED] || flagPending(flags[FLAGS.OPENSHIFT])) {
     return null;
   }
@@ -333,10 +329,6 @@ const UserNavSection = connectToFlags(
     }
   };
 
-  if (flags[FLAGS.OPENSHIFT]) {
-    return <NavSection text="Logout" icon="pficon pficon-user" klass="visible-xs-block" onClick={logout} />;
-  }
-
   return (
     <NavSection text="User" icon="pficon pficon-user" klass="visible-xs-block">
       <HrefLink href="/settings/profile" name="My Account" onClick={closeMenu} key="myAccount" />
@@ -345,7 +337,7 @@ const UserNavSection = connectToFlags(
   );
 });
 
-export class Nav extends React.Component {
+class Nav extends React.Component {
   constructor(props) {
     super(props);
     this.scroller = React.createRef();
@@ -389,6 +381,7 @@ export class Nav extends React.Component {
   render() {
     const { isOpen } = this.state;
     const { isAdmin } = this.props;
+    const { t } = this.props;
 
     return (
       <React.Fragment>
@@ -401,17 +394,17 @@ export class Nav extends React.Component {
         <div id="sidebar" className={classNames({ open: isOpen })}>
           {/* <ClusterPickerNavSection /> */}
           <div ref={this.scroller} onWheel={this.preventScroll} className="navigation-container">
-            <NavSection text="홈" icon="pficon pficon-home">
+            <NavSection text={t('RESOURCE:HOME')} icon="pficon pficon-home">
               <HrefLink href="/status" name="상태" activePath="/status/" onClick={this.close} />
-              <HrefLink href="/search" name="통합 검색" onClick={this.close} startsWith={searchStartsWith} />
+              <HrefLink href="/search" name="검색" onClick={this.close} startsWith={searchStartsWith} />
               <ResourceNSLink resource="events" name="이벤트" onClick={this.close} />
             </NavSection>
             {/* Service Catalog 전체 추가 */}
             <NavSection text="서비스 카탈로그" icon="pficon pficon-catalog">
-              <ResourceClusterLink resource="clusterservicebrokers" name="클러스터 서비스 브로커 관리" onClick={this.close} />
+              <ResourceClusterLink resource="clusterservicebrokers" name="클러스터 서비스 브로커" onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceclasses" name="클러스터 서비스 클래스" onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceplans" name="클러스터 서비스 플랜" onClick={this.close} />
-              <ResourceNSLink resource="serviceinstances" name="서비스 생성" onClick={this.close} />
+              <ResourceNSLink resource="serviceinstances" name="서비스 인스턴스" onClick={this.close} />
               <ResourceNSLink resource="servicebindings" name="서비스 바인딩" onClick={this.close} />
               <ResourceNSLink resource="templates" name="템플릿" onClick={this.close} />
               <ResourceNSLink resource="templateinstances" name="템플릿 인스턴스" onClick={this.close} />
@@ -436,13 +429,12 @@ export class Nav extends React.Component {
               <ResourceNSLink resource="virtualmachineinstances" name="가상 머신 인스턴스" onClick={this.close} />
               <ResourceNSLink resource="configmaps" name="콘피그 맵" onClick={this.close} />
               <ResourceNSLink resource="secrets" name="시크릿" onClick={this.close} />
-              <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} />
+              {/* <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} /> */}
               <ResourceNSLink resource="jobs" name="잡" onClick={this.close} />
               <ResourceNSLink resource="cronjobs" name="크론 잡" onClick={this.close} />
               {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
               {/* <Sep /> */}
             </NavSection>
-
             <NavSection text="네트워크" icon="pficon pficon-network">
               {/* istio, virtual service 추가 */}
               <ResourceNSLink resource="ingresses" name="인그레스" onClick={this.close} />
@@ -454,11 +446,13 @@ export class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="스토리지" icon="fa fa-database">
-              {isAdmin && <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />}
+              {/* {isAdmin && <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />} */}
+              {<ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} />}
               {/* data volume 추가 */}
-              {/* <ResourceNSLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} /> */}
+              <ResourceClusterLink resource="datavolumes" name="데이터 볼륨" onClick={this.close} />
               <ResourceNSLink resource="persistentvolumeclaims" name="영구 볼륨 클레임" onClick={this.close} />
-              <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} />
+              <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} />
+              {/* <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} /> */}
             </NavSection>
 
             {/* <NavSection text="Builds" icon="pficon pficon-build">
@@ -479,7 +473,7 @@ export class Nav extends React.Component {
             </NavSection>
 
             <NavSection text="보안" icon="fa fa-shield">
-              {isAdmin && <ResourceClusterLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
+              {<ResourceClusterLink resource="podsecuritypolicies" name="파드 보안 정책" onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name="네트워크 정책" onClick={this.close} />
             </NavSection>
 
@@ -492,27 +486,30 @@ export class Nav extends React.Component {
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} />
+              {/* <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> */}
+              <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} />
               <ResourceClusterLink resource="namespaceclaims" name="네임스페이스 클레임" onClick={this.close} />
+              {<ResourceNSLink resource="limitranges" name="기본 리소스 제한" onClick={this.close} />}
               {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name="리소스 쿼타" onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name="리소스 쿼타 클레임" onClick={this.close} />
-              {/* {!isAdmin && <ResourceNSLink resource="limitrange" name="Limit Range" onClick={this.close} />} */}
-              <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스" onClick={this.close} required={FLAGS.CAN_LIST_CRD} />
+              <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스 정의" onClick={this.close} />
+              {/* <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스 정의" onClick={this.close} required={FLAGS.CAN_LIST_CRD} /> */}
             </NavSection>
 
             <NavSection text="호스트" icon="pficon pficon-server">
               {/* <ResourceClusterLink resource="nodes" name="Nodes" onClick={this.close} /> */}
-              <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} />
+              {/* <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} /> */}
+              <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} />
             </NavSection>
 
             <NavSection text="인증/인가" icon="fa fa-id-card-o">
-              {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
-              {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />}
+              {/* {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
+              {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />} */}
               <ResourceNSLink resource="roles" name="롤" startsWith={rolesStartsWith} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name="롤 바인딩" onClick={this.close} startsWith={rolebindingsStartsWith} />
               <ResourceNSLink resource="rolebindingclaims" name="롤 바인딩 클레임" onClick={this.close} startsWith={rolebindingsStartsWith} />
-              {isAdmin && <ResourceClusterLink resource="users" name="사용자" onClick={this.close} />}
+              {<ResourceClusterLink resource="users" name="사용자" onClick={this.close} />}
               <ResourceNSLink resource="serviceaccounts" name="서비스 어카운트" onClick={this.close} />
             </NavSection>
 
@@ -529,3 +526,4 @@ export class Nav extends React.Component {
     );
   }
 }
+export default withTranslation()(Nav);

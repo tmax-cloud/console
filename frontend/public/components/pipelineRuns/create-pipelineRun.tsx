@@ -19,8 +19,14 @@ const pageExplanation = {
 // const determineCreateType = (data) => {
 //     return CreateType.form;
 // };
+const FirstSection = ({ label, children, id }) => <div className="form-group">
+    <label className="control-label" htmlFor="secret-type" >{label}</label>
+    <div>
+        {children}
+    </div>
+</div>
 
-const Section = ({ label, children, id }) => <div className="row">
+const SecondSection = ({ label, children, id }) => <div className="row">
     <div className="col-xs-2">
         <div>{label}</div>
     </div>
@@ -92,8 +98,14 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
 
     componentDidMount() {
         this.getPipelineList();
-
     }
+
+    // refreshPipelineRun() {
+    //     let pipelineRun = { ...this.state.pipelineRun };
+    //     pipelineRun.spec.params = [];
+    //     pipelineRun.spec.resources = [];
+    //     this.setState({ pipelineRun });
+    // }
 
     onNameChanged(event) {
         let pipelineRun = { ...this.state.pipelineRun };
@@ -102,6 +114,8 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
     }
 
     onPipelineChange(event) {
+        // this.refreshPipelineRun();
+
         this.setState({
             selectedPipeLine: event.target.value
         },
@@ -111,6 +125,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         );
         let pipelineRun = { ...this.state.pipelineRun };
         pipelineRun.spec.pipelineRef.name = event.target.value;
+
         this.setState({ pipelineRun });
     }
 
@@ -243,7 +258,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                     paramList: paramList,
                     selectedParam: paramList[0].name
                 }, resourceList.forEach(cur => {
-                    this.getPipelineResourceList(cur.name, cur.type);
+                    !pipelineRun.spec.resources.length && this.getPipelineResourceList(cur.name, cur.type);
                 }))
             }, err => {
                 this.setState({ error: err.message, inProgress: false })
@@ -270,13 +285,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                             type: cur.spec.type
                         }
                     });
-
-
-
                 let pipelineRun = { ...this.state.pipelineRun };
-
-
-
                 let initResourceList = {
                     name: resourceName,
                     resourceRef: {
@@ -324,17 +333,21 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         });
 
         let paramDivs = paramList.map(cur => {
-            return <Section label={cur.name} id={cur.name}>
-                <input className="form-control" type="text" placeholder="value" id={cur.name} onChange={this.onParamChanged} required />
-            </Section>
+            return <ul>
+                <SecondSection label={cur.name} id={cur.name}>
+                    <input className="form-control" type="text" placeholder="value" id={cur.name} onChange={this.onParamChanged} required />
+                </SecondSection>
+            </ul>
         });
 
         let resourceDivs = resourceList.map(cur => {
-            return <Section label={cur.name} id={cur.name}>
-                <select className="form-control" id={cur.name} onChange={this.onResourceChanged}>
-                    <RefList list={resourceRefList} type={cur.type} />
-                </select>
-            </Section>
+            return <ul>
+                <SecondSection label={cur.name} id={cur.name}>
+                    <select className="form-control" id={cur.name} onChange={this.onResourceChanged}>
+                        <RefList list={resourceRefList} type={cur.type} />
+                    </select>
+                </SecondSection>
+            </ul>
         });
 
         return <div className="co-m-pane__body">
@@ -346,41 +359,22 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Name</label>
-                        <div>
-                            <input className="form-control"
-                                type="text"
-                                onChange={this.onNameChanged}
-                                value={this.state.pipelineRun.metadata.name}
-                                aria-describedby="secret-name-help"
-                                id="pipelinerun-name"
-                                required />
-
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >Pipeline</label>
-                        <div>
-                            <select onChange={this.onPipelineChange} className="form-control" id="pipeline">
-                                {options}
-                            </select>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >Params</label>
-                        <div>
-                            <ul>{paramDivs}</ul>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >Resources</label>
-                        <div>
-                            <ul>{resourceDivs}</ul>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="control-label" htmlFor="secret-account">Service Account Name</label>
+                    <FirstSection label="Name" children={<div>
+                        <input className="form-control"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.pipelineRun.metadata.name}
+                            aria-describedby="secret-name-help"
+                            id="pipelinerun-name"
+                            required />
+                    </div>} id="pipelinerun-name" />
+                    <FirstSection label="Pipeline" children={
+                        <select onChange={this.onPipelineChange} className="form-control" id="pipeline">
+                            {options}
+                        </select>} id="pipeline" />
+                    <FirstSection label="Params" children={paramDivs} id="param" />
+                    <FirstSection label="Resources" children={resourceDivs} id="resource" />
+                    <FirstSection label="Service Account Name" children={<div className="form-group">
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -390,15 +384,12 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                                 required />
 
                         </div>
-                    </div>
-                    <React.Fragment>
-                        <div className="form-group">
-                            <label className="control-label" htmlFor="username">Label</label>
-                            <div>
-                                <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
-                            </div>
+                    </div>} id="account" />
+                    <FirstSection label="Label" children={<div className="form-group">
+                        <div>
+                            <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
                         </div>
-                    </React.Fragment>
+                    </div>} id="label" />
                     <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
                         <p>Lables must be 'key=value' form.</p>
                     </div>

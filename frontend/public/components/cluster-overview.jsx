@@ -18,6 +18,7 @@ import { formatNamespacedRouteForResource } from '../ui/ui-actions';
 import { FLAGS, connectToFlags, flagPending } from '../features';
 import { connectToURLs, MonitoringRoutes } from '../monitoring';
 
+import { useTranslation } from 'react-i18next';
 const fetchHealth = () =>
   coFetch(`${k8sBasePath}/healthz`)
     .then(response => response.text())
@@ -47,26 +48,27 @@ const Graphs = requirePrometheus(
     const schedulerJob = isOpenShift ? 'kube-controllers' : 'kube-scheduler';
     const alertManagerURL = urls[MonitoringRoutes.AlertManager];
     const alertsURL = alertManagerURL && `${alertManagerURL}/#/alerts`;
+    const { t } = useTranslation();
     return (
       <React.Fragment>
         <div className="group">
           <div className="group__title">
-            <h2 className="h3">Health</h2>
+            <h2 className="h3">{t('CONTENT:HEALTH')}</h2>
             {/* {!isOpenShift && <DashboardLink id="qa_dashboard_k8s_health" to="/grafana/dashboard/db/kubernetes-cluster-health?orgId=1" />} */}
           </div>
           <div className="container-fluid group__body">
             <div className="row">
               <div className="col-md-3 col-sm-6">
-                <Status title="Kubernetes API" fetch={fetchHealth} />
+                <Status title={t('CONTENT:KUBERNETESAPI')} fetch={fetchHealth} />
               </div>
               <div className="col-md-3 col-sm-6">
-                <Status title="HyperCloud Console" fetch={fetchConsoleHealth} />
+                <Status title={t('CONTENT:HYPERCLOUDCONSOLE')} fetch={fetchConsoleHealth} />
               </div>
               <div className="col-md-3 col-sm-6">
-                <Status title="Alerts Firing" name="Alerts" query={`sum(ALERTS{alertstate="firing", alertname!="DeadMansSwitch" ${namespace ? `, namespace="${namespace}"` : ''}})`} href={alertsURL} target="_blank" rel="noopener" />
+                <Status title={t('CONTENT:ALERTSFIRING')} name="Alerts" query={`sum(ALERTS{alertstate="firing", alertname!="DeadMansSwitch" ${namespace ? `, namespace="${namespace}"` : ''}})`} href={alertsURL} target="_blank" rel="noopener" />
               </div>
               <div className="col-md-3 col-sm-6">
-                <Status title="Crashlooping Pods" name="Pods" query={`count(increase(kube_pod_container_status_restarts_total${namespace ? `{namespace="${namespace}"}` : ''}[1h]) > 5 )`} href={`/k8s/${namespace ? `ns/${namespace}` : 'all-namespaces'}/pods?rowFilter-pod-status=CrashLoopBackOff`} />
+                <Status title={t('CONTENT:CRASHLOOPINGPODS')} name="Pods" query={`count(increase(kube_pod_container_status_restarts_total${namespace ? `{namespace="${namespace}"}` : ''}[1h]) > 5 )`} href={`/k8s/${namespace ? `ns/${namespace}` : 'all-namespaces'}/pods?rowFilter-pod-status=CrashLoopBackOff`} />
               </div>
             </div>
           </div>
@@ -75,22 +77,22 @@ const Graphs = requirePrometheus(
         {!namespace && (
           <div className="group">
             <div className="group__title">
-              <h2 className="h3">Control Plane Status</h2>
+              <h2 className="h3">{t('CONTENT:CONTROLPLANESTATUS')}</h2>
               {/* {!isOpenShift && <DashboardLink to="/grafana/dashboard/db/kubernetes-control-plane-status?orgId=1" />} */}
             </div>
             <div className="container-fluid group__body group__graphs">
               <div className="row">
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="API Servers Up" query={'(sum(up{job="apiserver"} == 1) / count(up{job="apiserver"})) * 100'} invert={true} thresholds={{ warn: 15, error: 50 }} />
+                  <Gauge title={t('CONTENT:APISERVERSUP')} query={'(sum(up{job="apiserver"} == 1) / count(up{job="apiserver"})) * 100'} invert={true} thresholds={{ warn: 15, error: 50 }} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="Controller Managers Up" query={`(sum(up{job="${controllerManagerJob}"} == 1) / count(up{job="${controllerManagerJob}"})) * 100`} invert={true} thresholds={{ warn: 15, error: 50 }} />
+                  <Gauge title={t('CONTENT:CONTROLLERMANAGERSUP')} query={`(sum(up{job="${controllerManagerJob}"} == 1) / count(up{job="${controllerManagerJob}"})) * 100`} invert={true} thresholds={{ warn: 15, error: 50 }} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="Schedulers Up" query={`(sum(up{job="${schedulerJob}"} == 1) / count(up{job="${schedulerJob}"})) * 100`} invert={true} thresholds={{ warn: 15, error: 50 }} />
+                  <Gauge title={t('CONTENT:SCHEDULERSUP')} query={`(sum(up{job="${schedulerJob}"} == 1) / count(up{job="${schedulerJob}"})) * 100`} invert={true} thresholds={{ warn: 15, error: 50 }} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="API Request Success Rate" query={'sum(rate(apiserver_request_count{code=~"2.."}[5m])) / sum(rate(apiserver_request_count[5m])) * 100'} invert={true} thresholds={{ warn: 15, error: 30 }} />
+                  <Gauge title={t('CONTENT:APIREQUESTSUCCESSRATE')} query={'sum(rate(apiserver_request_count{code=~"2.."}[5m])) / sum(rate(apiserver_request_count[5m])) * 100'} invert={true} thresholds={{ warn: 15, error: 30 }} />
                 </div>
               </div>
             </div>
@@ -100,22 +102,22 @@ const Graphs = requirePrometheus(
         {!namespace && (
           <div className="group">
             <div className="group__title">
-              <h2 className="h3">Capacity Planning</h2>
+              <h2 className="h3">{t('CONTENT:CAPACITYPLANNING')}</h2>
               {/* {!isOpenShift && <DashboardLink to="/grafana/dashboard/db/kubernetes-capacity-planning?orgId=1" />} */}
             </div>
             <div className="container-fluid group__body group__graphs">
               <div className="row">
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="CPU Usage" query={'100 - (sum(rate(node_cpu{job="node-exporter",mode="idle"}[2m])) / count(node_cpu{job="node-exporter", mode="idle"})) * 100'} />
+                  <Gauge title={t('CONTENT:CPUUSAGE')} query={'100 - (sum(rate(node_cpu{job="node-exporter",mode="idle"}[2m])) / count(node_cpu{job="node-exporter", mode="idle"})) * 100'} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="Memory Usage" query={'((sum(node_memory_MemTotal) - sum(node_memory_MemFree) - sum(node_memory_Buffers) - sum(node_memory_Cached)) / sum(node_memory_MemTotal)) * 100'} />
+                  <Gauge title={t('CONTENT:MEMORYUSAGE')} query={'((sum(node_memory_MemTotal) - sum(node_memory_MemFree) - sum(node_memory_Buffers) - sum(node_memory_Cached)) / sum(node_memory_MemTotal)) * 100'} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="Disk Usage" query={'(sum(node_filesystem_size{device!="rootfs"}) - sum(node_filesystem_free{device!="rootfs"})) / sum(node_filesystem_size{device!="rootfs"}) * 100'} />
+                  <Gauge title={t('CONTENT:DISKUSAGE')} query={'(sum(node_filesystem_size{device!="rootfs"}) - sum(node_filesystem_free{device!="rootfs"})) / sum(node_filesystem_size{device!="rootfs"}) * 100'} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title="Pod Usage" query={'100 - (sum(kube_node_status_capacity_pods) - sum(kube_pod_info)) / sum(kube_node_status_capacity_pods) * 100'} />
+                  <Gauge title={t('CONTENT:PODUSAGE')} query={'100 - (sum(kube_node_status_capacity_pods) - sum(kube_pod_info)) / sum(kube_node_status_capacity_pods) * 100'} />
                 </div>
               </div>
             </div>
@@ -156,27 +158,28 @@ const GraphsPage = ({ fake, limited, namespace, openshiftFlag }) => {
     return null;
   }
   const graphs = limited ? <LimitedGraphs namespace={namespace} openshiftFlag={openshiftFlag} /> : <Graphs namespace={namespace} />;
+  const { t } = useTranslation();
   const body = (
     <div className="row">
       <div className="col-lg-8 col-md-12">
         {!fake && graphs}
         <div className={classNames('group', { 'co-disabled': fake })}>
           <div className="group__title">
-            <h2 className="h3">Events</h2>
-            <a href={formatNamespacedRouteForResource('events', namespace)}>View All</a>
+            <h2 className="h3">{t('CONTENT:EVENTS')}</h2>
+            <a href={formatNamespacedRouteForResource('events', namespace)}>{t('CONTENT:VIEWALL')}</a>
           </div>
           <div className="group__body group__body--filter-bar">
-            <EventStreamPage namespace={namespace} showTitle={false} autoFocus={false} fake={fake} />
+            <EventStreamPage namespace={namespace} showTitle={false} autoFocus={false} fake={fake} t={t} />
           </div>
         </div>
       </div>
       <div className="col-lg-4 col-md-12">
         <div className="group" id="software-info">
           <div className="group__title">
-            <h2 className="h3">Software Info</h2>
+            <h2 className="h3">{t('CONTENT:SOFTWAREINFO')}</h2>
           </div>
           <div className="container-fluid group__body">
-            <SoftwareDetails />
+            <SoftwareDetails t={t} />
           </div>
         </div>
         {/* <div className="group">
@@ -243,7 +246,8 @@ const ClusterOverviewPage_ = props => {
   const { OPENSHIFT: openshiftFlag, PROJECTS_AVAILABLE: projectsFlag } = props.flags;
   const fake = !flagPending(openshiftFlag) && !flagPending(projectsFlag) && openshiftFlag && !projectsFlag;
   const namespace = _.get(props, 'match.params.ns');
-  const title = namespace ? `Status of ${namespace}` : 'Cluster Status';
+  const { t } = useTranslation();
+  const title = namespace ? t('ADDITIONAL:STATUSOF', { something: namespace }) : t('RESOURCE:CLUSTERSTATUS');
 
   return (
     <React.Fragment>
@@ -252,11 +256,11 @@ const ClusterOverviewPage_ = props => {
         <title>{fake ? 'Overview' : title}</title>
       </Helmet>
       <NavTitle title={fake ? 'Overview' : title} style={{ alignItems: 'baseline', display: 'flex', justifyContent: 'space-between' }}>
-        <p className="hidden-lg">
+        {/* <p className="hidden-lg">
           <HashLink smooth to="#software-info">
             Software Info
           </HashLink>
-        </p>
+        </p> */}
       </NavTitle>
       <div className="cluster-overview-cell container-fluid">
         <AsyncComponent namespace={namespace} loader={permissionedLoader} openshiftFlag={openshiftFlag} fake={fake} />

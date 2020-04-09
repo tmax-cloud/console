@@ -8,13 +8,25 @@ import { referenceForCRD } from '../module/k8s';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const CRDHeader = props => <ListHeader>
-  <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-6" sortField="spec.names.kind">Name</ColHead>
-  <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 col-xs-6" sortField="spec.group">Group</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-2 col-sm-4 hidden-xs" sortField="spec.version">Version</ColHead>
-  <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.scope">Namespaced</ColHead>
-  <ColHead {...props} className="col-lg-1 hidden-md hidden-sm hidden-xs">Established</ColHead>
-</ListHeader>;
+const CRDHeader = props => (
+  <ListHeader>
+    <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-6" sortField="spec.names.kind">
+      Name
+    </ColHead>
+    <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 col-xs-6" sortField="spec.group">
+      Group
+    </ColHead>
+    <ColHead {...props} className="col-lg-2 col-md-2 col-sm-4 hidden-xs" sortField="spec.version">
+      Version
+    </ColHead>
+    <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.scope">
+      Namespaced
+    </ColHead>
+    <ColHead {...props} className="col-lg-1 hidden-md hidden-sm hidden-xs">
+      Established
+    </ColHead>
+  </ListHeader>
+);
 
 const isEstablished = conditions => {
   const condition = _.find(conditions, c => c.type === 'Established');
@@ -25,28 +37,33 @@ const namespaced = crd => crd.spec.scope === 'Namespaced';
 
 const CRDRow = ({ obj: crd }) => {
   let ko = kindObj(crd.spec.names.kind);
+  let path;
+  // default-resource 쓸건지, 따로 만든 페이지 쓸건지
+  if (!_.isEmpty(ko)) {
+    path = crd.spec && crd.spec.scope === 'Cluster' ? `/k8s/cluster/${crd.spec.names.plural}` : `/k8s/all-namespaces/${crd.spec.names.plural}`;
+  } else {
+    path = crd.spec && crd.spec.scope === 'Cluster' ? `/k8s/cluster/${referenceForCRD(crd)}` : `/k8s/all-namespaces/${referenceForCRD(crd)}`;
+  }
   return (
     <div className="row co-resource-list__item">
       <div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 co-resource-link-wrapper">
         <ResourceCog actions={menuActions} kind="CustomResourceDefinition" resource={crd} />
         <ResourceIcon kind="CustomResourceDefinition" />
-        <Link to={!_.isEmpty(ko) ? `/k8s/all-namespaces/${crd.spec.names.plural}` : `/k8s/all-namespaces/customresourcedefinitions/${referenceForCRD(crd)}`}>{_.get(crd, 'spec.names.kind', crd.metadata.name)}</Link>
+        <Link to={path}>{_.get(crd, 'spec.names.kind', crd.metadata.name)}</Link>
       </div>
-      <div className="col-lg-3 col-md-4 col-sm-4 col-xs-6 co-break-word">
-        {crd.spec.group}
-      </div>
-      <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">
-        {crd.spec.version}
-      </div>
-      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
-        {namespaced(crd) ? 'Yes' : 'No'}
-      </div>
+      <div className="col-lg-3 col-md-4 col-sm-4 col-xs-6 co-break-word">{crd.spec.group}</div>
+      <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">{crd.spec.version}</div>
+      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{namespaced(crd) ? 'Yes' : 'No'}</div>
       <div className="col-lg-1 hidden-md hidden-sm hidden-xs">
-        {
-          isEstablished(crd.status.conditions)
-            ? <span className="node-ready"><i className="fa fa-check-circle"></i></span>
-            : <span className="node-not-ready"><i className="fa fa-minus-circle"></i></span>
-        }
+        {isEstablished(crd.status.conditions) ? (
+          <span className="node-ready">
+            <i className="fa fa-check-circle"></i>
+          </span>
+        ) : (
+          <span className="node-not-ready">
+            <i className="fa fa-minus-circle"></i>
+          </span>
+        )}
       </div>
     </div>
   );

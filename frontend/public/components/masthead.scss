@@ -43,8 +43,8 @@
     height: 56px;
   }
   &__user {
-    display: none;
-    width: 70px;
+    // display: none;
+    // width: 70px;
     @media (min-width: $grid-float-breakpoint) {
       display: block;
       margin-left: 10px;
@@ -103,7 +103,11 @@
 
 
 .co-masthead__expire {
-  margin-left: 0px;
+  display: none;
+  @media (min-width: $grid-float-breakpoint) {
+    display: block;
+    margin-left: 0px;
+  }
 }
 
 .btn-token-refresh {
@@ -135,7 +139,7 @@
   width: 1px; 
   height: 18px;
   background-color: rgb(255, 255, 255); 
-  margin: 6px 0px 6px 9px; 
+  margin: 6px 9px 6px 9px; 
   border-width: 0px; 
   border-style: solid; 
   text-align: left; 

@@ -344,7 +344,8 @@ tags-input .autocomplete .suggestion-item em {
   background-image: none !important;
   color: #FFFFFF !important;
 }
- 
-.ReactVirtualized__Grid__innerScrollContainer > div {
-  position: static !important;
-}
+// event 검색창에서 특정 문자 입력시 상단공백 생겨 추가한 부분 
+// -> 적용시 하단공백생기고 유실데이터 발생되어 주석처리  
+// .ReactVirtualized__Grid__innerScrollContainer > div {
+//   position: static !important;
+// }

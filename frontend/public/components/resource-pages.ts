@@ -4,10 +4,11 @@ import { Map as ImmutableMap } from 'immutable';
 
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
-import { ClusterRoleBindingModel, VirtualMachineInstanceModel, VirtualMachineModel, ClusterServiceBrokerModel, ClusterServiceClassModel, ClusterServicePlanModel, PodSecurityPolicyModel, ServiceBindingModel, NamespaceClaimModel, ResourceQuotaClaimModel, RoleBindingClaimModel, UserModel, ServiceBrokerModel, ServiceClassModel, ServicePlanModel, TaskModel, TaskRunModel, PipelineResourceModel, PipelineModel, PipelineRunModel, RegistryModel, TemplateModel, TemplateInstanceModel, ClusterModel, ConfigMapModel, DaemonSetModel, DeploymentModel, DeploymentConfigModel, BuildConfigModel, BuildModel, ImageStreamModel, JobModel, CronJobModel, ProjectModel, NamespaceModel, NetworkPolicyModel, NodeModel, PodModel, ReplicaSetModel, ReplicationControllerModel, SecretModel, ServiceAccountModel, ServiceModel, IngressModel, RouteModel, RoleModel, RoleBindingModel, PrometheusModel, ServiceMonitorModel, AlertmanagerModel, StatefulSetModel, ResourceQuotaModel, HorizontalPodAutoscalerModel, PersistentVolumeModel, PersistentVolumeClaimModel, StorageClassModel, CustomResourceDefinitionModel, ClusterServiceVersionModel, SubscriptionModel, InstallPlanModel, ImageStreamTagModel, ClusterRoleModel, ContainerModel, CatalogSourceModel, ServiceInstanceModel } from '../models';
+import { LimitRangeModel, DataVolumeModel, VirtualMachineInstanceModel, VirtualMachineModel, ClusterServiceBrokerModel, ClusterServiceClassModel, ClusterServicePlanModel, PodSecurityPolicyModel, ServiceBindingModel, NamespaceClaimModel, ResourceQuotaClaimModel, RoleBindingClaimModel, UserModel, ServiceBrokerModel, ServiceClassModel, ServicePlanModel, TaskModel, TaskRunModel, PipelineResourceModel, PipelineModel, PipelineRunModel, RegistryModel, TemplateModel, TemplateInstanceModel, ClusterModel, ConfigMapModel, DaemonSetModel, DeploymentModel, DeploymentConfigModel, BuildConfigModel, BuildModel, ImageStreamModel, JobModel, CronJobModel, ProjectModel, NamespaceModel, NetworkPolicyModel, NodeModel, PodModel, ReplicaSetModel, ReplicationControllerModel, SecretModel, ServiceAccountModel, ServiceModel, IngressModel, RouteModel, RoleModel, RoleBindingModel, PrometheusModel, ServiceMonitorModel, AlertmanagerModel, StatefulSetModel, ResourceQuotaModel, HorizontalPodAutoscalerModel, PersistentVolumeModel, PersistentVolumeClaimModel, StorageClassModel, CustomResourceDefinitionModel, ClusterServiceVersionModel, SubscriptionModel, InstallPlanModel, ImageStreamTagModel, ClusterRoleModel, ContainerModel, CatalogSourceModel, ServiceInstanceModel } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
-
+  .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesDetailsPage))
+  .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesDetailsPage))
   .set(referenceForModel(VirtualMachineModel), () => import('./virtual-machine' /* webpackChunkName: "task" */).then(m => m.VirtualMachinesDetailsPage))
   .set(referenceForModel(VirtualMachineInstanceModel), () => import('./virtual-machine-instance' /* webpackChunkName: "task" */).then(m => m.VirtualMachineInstancesDetailsPage))
   .set(referenceForModel(ServiceBrokerModel), () => import('./cluster-service-broker' /* webpackChunkName: "task" */).then(m => m.ClusterServiceBrokersDetailsPage))
@@ -69,6 +70,8 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesPage))
+  .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesPage))
   .set(referenceForModel(VirtualMachineModel), () => import('./virtual-machine' /* webpackChunkName: "task" */).then(m => m.VirtualMachinesPage))
   .set(referenceForModel(VirtualMachineInstanceModel), () => import('./virtual-machine-instance' /* webpackChunkName: "task" */).then(m => m.VirtualMachineInstancesPage))
   .set(referenceForModel(ClusterServiceBrokerModel), () => import('./cluster-service-broker' /* webpackChunkName: "task" */).then(m => m.ClusterServiceBrokersPage))
@@ -115,7 +118,6 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(ClusterRoleModel), () => import('./RBAC/cluster-role' /* webpackChunkName: "role" */).then(m => m.ClusterRolesPage))
   .set(referenceForModel(RoleModel), () => import('./RBAC/role' /* webpackChunkName: "role" */).then(m => m.RolesPage))
   .set(referenceForModel(RoleBindingModel), () => import('./RBAC/bindings' /* webpackChunkName: "bindings" */).then(m => m.RoleBindingsPage))
-  .set(referenceForModel(ClusterRoleBindingModel), () => import('./RBAC/cluster-binding' /* webpackChunkName: "bindings" */).then(m => m.ClusterRoleBindingsPage))
   .set(referenceForModel(PrometheusModel), () => import('./prometheus' /* webpackChunkName: "prometheus" */).then(m => m.PrometheusInstancesPage))
   .set(referenceForModel(ServiceMonitorModel), () => import('./service-monitor' /* webpackChunkName: "service-monitor" */).then(m => m.ServiceMonitorsPage))
   .set(referenceForModel(AlertmanagerModel), () => import('./alert-manager' /* webpackChunkName: "alert-manager" */).then(m => m.AlertManagersPage))

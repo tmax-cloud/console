@@ -9,34 +9,64 @@ import * as k8sModels from '../models';
  * Sample YAML manifests for some of the statically-defined Kubernetes models.
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
-  .setIn(['DEFAULT', 'default'], `
+  .setIn(
+    ['DEFAULT', 'default'],
+    `
   apiVersion: ''
   kind: ''
   metadata:
     name: example
-`)
-  .setIn([referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'],
+    `
   apiVersion: servicecatalog.k8s.io/v1beta1
   kind: ClusterServiceBroker
   metadata:
     name: hyperbroker4
   spec:
           url: http://0.0.0.0:28677
-`)
-  .setIn([referenceForModel(k8sModels.ServiceInstanceModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'default'],
+    `
+  apiVersion: cdi.kubevirt.io/v1alpha1
+  kind: DataVolume
+  metadata:
+    name: example
+  spec:
+    source:
+      registry:
+        url: example
+    pvc:
+      accessModes:
+        - example
+      resources:
+        requests:
+          storage: example  
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceInstanceModel), 'default'],
+    `
   apiVersion: servicecatalog.k8s.io/v1beta1
   kind: ServiceInstance
   metadata:
-    name: example-instance
-    namespace: hypercloud4-system
+    name: nginx-instance
+    namespace: hypercloud-system
   spec:
-    serviceClassName: example-template
-    servicePlanName: example-plan
+    clusterServiceClassName: nginx-template
+    clusterServicePlanName: example-plan1
     parameters:
-      PARAM1: value1
-      PARAM2: value2
-`)
-  .setIn([referenceForModel(k8sModels.ServiceBindingModel), 'default'], `
+      NAME: nginx
+      IMAGE: nginx:1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceBindingModel), 'default'],
+    `
   apiVersion: servicecatalog.k8s.io/v1beta1
   kind: ServiceBinding
   metadata:
@@ -45,8 +75,11 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   spec:
     instanceRef:
       name: example-instance
-`)
-  .setIn([referenceForModel(k8sModels.UserModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.UserModel), 'default'],
+    `
   apiVersion: tmax.io/v1
   kind: User
   metadata: 
@@ -62,41 +95,84 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     phone: 010-0000-0000
     description: For Example
   status: active
-`)
-  .setIn([referenceForModel(k8sModels.NamespaceClaimModel), 'default'], `
-  apiVersion: tmax.io/v1
-  kind: NamespaceClaim
-  metadata:
-    name: example
-  spec:
-    hard:
-      limits.cpu: "1" 
-`)
-  .setIn([referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'], `
-  apiVersion: tmax.io/v1
-  kind: ResourceQuotaClaim
-  metadata:
-    name: example
-    namespace: example
-  spec:
-    hard:
-      limits.cpu: "2"
-`)
-  .setIn([referenceForModel(k8sModels.RoleBindingClaimModel), 'default'], `
-  apiVersion: tmax.io/v1
-  kind: RoleBindingClaim
-  metadata:
-    name: example
-    namespace: example
-  subjects:
-  - kind: User
-    name: example@tmax.co.kr
-  roleRef:
-    kind: ClusterRole
-    name: namespace-user
-    apiGroup: rbac.authorization.k8s.io
-`)
-  .setIn([referenceForModel(k8sModels.TaskModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
+    `
+    apiVersion: tmax.io/v1
+    kind: NamespaceClaim
+    metadata:
+      name: example-claim
+    resourceName: example-namespace
+    spec:
+      hard:
+        limits.cpu: "1"
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.LimitRangeModel), 'default'],
+    `
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: example-limit-range
+spec:
+  limits:
+  - max:
+      cpu: "800m"
+      memory: "1Gi"
+    min:
+      cpu: "100m"
+      memory: "99Mi"
+    default:
+      cpu: "700m"
+      memory: "900Mi"
+    defaultRequest:
+      cpu: "110m"
+      memory: "111Mi"
+    type: Container
+
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'],
+    `
+    apiVersion: tmax.io/v1
+    kind: ResourceQuotaClaim
+    metadata:
+      name: example-resource-quota
+      namespace: example-namespace
+    resourceName: example-claim
+    spec:
+      hard:
+        limits.cpu: "2"
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleBindingClaimModel), 'default'],
+    `
+    apiVersion: tmax.io/v1
+    kind: RoleBindingClaim
+    metadata:
+      name: example-role-biniding
+      namespace: example-namespace
+    resourceName: example-claim
+    subjects:
+    - kind: User
+      name: example@tmax.co.kr
+    roleRef:
+      kind: ClusterRole
+      name: namespace-user
+      apiGroup: rbac.authorization.k8s.io
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskModel), 'default'],
+    `
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
@@ -127,8 +203,11 @@ spec:
           args:
             - -c
             - "echo helloworld"
-`)
-  .setIn([referenceForModel(k8sModels.TaskRunModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskRunModel), 'default'],
+    `
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
@@ -151,7 +230,11 @@ spec:
             - name: output-image
               resourceRef:
                 name: example-pipeline-resource-image
-`).setIn([referenceForModel(k8sModels.PipelineResourceModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'default'],
+    `
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
@@ -164,7 +247,11 @@ spec:
           value: master
         - name: url
           value: https://github.com/sample/git/url
-`).setIn([referenceForModel(k8sModels.PipelineModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'default'],
+    `
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
@@ -200,7 +287,11 @@ spec:
                   resource: sample-image
                   from:
                     - task1
-`).setIn([referenceForModel(k8sModels.PipelineRunModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineRunModel), 'default'],
+    `
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
 metadata:
@@ -217,27 +308,36 @@ spec:
         - name: sample-image
           resourceRef:
             name: example-pipeline-resource-image
-`).setIn([referenceForModel(k8sModels.RegistryModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RegistryModel), 'default'],
+    `
+# Note: To use the optional key, remove the '#' at the front of the key.
 apiVersion: tmax.io/v1
 kind: Registry
-metadata: 
-  name: example
-  namespace: example
-  labels:
-    obj: registry
+metadata:
+  name: example # (required) [string] registry's name
+  namespace: def # (required) [string] registry's namespace
 spec:
-  image: example/registry:b004
-  description: example
-  loginId: example
-  loginPassword: example
+  image: example/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
+  #description: example # (optional) [string] a brief description of the registry.
+  loginId: example # (required) [string] username for registry login
+  loginPassword: example # (required) [string] password for registry login
   service:
-     nodeIP: example
-     type: example
+     #port: example # (optional) [integer] external port (default: 443)
+     #nodeIP: example # (optional) [string] if service type is NodePort, set NodeIP to assign to the registry
+     #nodePort: example # (optional) [integer] if service type is NodePort, you can set 30000~32767
+     type: example # (required) [ClusterIP, NodePort, LoadBalancer]
   persistentVolumeClaim:
-     accessModes: example
-     storageSize: example
-     storageClassName: example
-`).setIn([referenceForModel(k8sModels.TemplateModel), 'default'], `
+     accessModes: [example] # (required) [array] (ex: [ReadWriteOnce, ReadWriteMany])
+     storageSize: example # (required) [string] desired storage size (ex: 10Gi)
+     storageClassName: example # (required) [string] storage class name available (ex: csi-cephfs-sc)
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateModel), 'default'],
+    `
 apiVersion: tmax.io/v1
 kind: Template
 metadata:
@@ -266,7 +366,11 @@ objects:
           - name: example
             containerPort: 80
 
-`).setIn([referenceForModel(k8sModels.TemplateInstanceModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateInstanceModel), 'default'],
+    `
 apiVersion: tmax.io/v1
 kind: TemplateInstance
 metadata:
@@ -288,7 +392,11 @@ spec:
       required: true
       value: example/image:version
 
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'default'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -309,7 +417,11 @@ spec:
     ports:
     - protocol: TCP
       port: 6379
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'deny-other-namespaces'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'deny-other-namespaces'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -320,7 +432,11 @@ spec:
   ingress:
   - from:
     - podSelector: {}
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'db-or-api-allow-app'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'db-or-api-allow-app'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -335,7 +451,11 @@ spec:
       - podSelector:
           matchLabels:
             app: mail
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'api-allow-http-and-https'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'api-allow-http-and-https'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -355,7 +475,11 @@ spec:
       port: 80
     - protocol: TCP
       port: 443
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'default-deny-all'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'default-deny-all'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -363,7 +487,11 @@ metadata:
   namespace: target-ns
 spec:
   podSelector:
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'web-allow-external'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'web-allow-external'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -375,7 +503,11 @@ spec:
       app: web
   ingress:
   - {}
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'web-db-allow-all-ns'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'web-db-allow-all-ns'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -388,7 +520,11 @@ spec:
   ingress:
     - from:
       - namespaceSelector: {}
-`).setIn([referenceForModel(k8sModels.NetworkPolicyModel), 'web-allow-production'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NetworkPolicyModel), 'web-allow-production'],
+    `
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -403,7 +539,11 @@ spec:
       - namespaceSelector:
         matchLabels:
         env: production
-`).setIn([referenceForModel(k8sModels.BuildConfigModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.BuildConfigModel), 'default'],
+    `
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
@@ -430,7 +570,11 @@ spec:
   - type: ImageChange
     imageChange: {}
   - type: ConfigChange
-`).setIn([referenceForModel(k8sModels.ChargebackReportModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ChargebackReportModel), 'default'],
+    `
 apiVersion: chargeback.coreos.com/v1alpha1
 kind: Report
 metadata:
@@ -442,8 +586,11 @@ spec:
   reportingStart: '2018-01-01T00:00:00Z'
   reportingEnd: '2018-12-30T23:59:59Z'
   runImmediately: true
-`)
-  .setIn([referenceForModel(k8sModels.DeploymentModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'default'],
+    `
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -463,7 +610,11 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
-`).setIn([referenceForModel(k8sModels.ClusterModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterModel), 'default'],
+    `
 apiVersion: multicluster.coreos.com/v1
 kind: Cluster
 metadata:
@@ -472,7 +623,11 @@ metadata:
     'multicluster.coreos.com/console-url': 'http://localhost:9000'
     'multicluster.coreos.com/directory': true
 spec: {}
-`).setIn([referenceForModel(k8sModels.ConfigMapModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'default'],
+    `
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -485,7 +640,11 @@ data:
     property.1=value-1
     property.2=value-2
     property.3=value-3
-`).setIn([referenceForModel(k8sModels.CronJobModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'default'],
+    `
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -504,7 +663,11 @@ spec:
             - -c
             - date; echo Hello from the Kubernetes cluster
           restartPolicy: OnFailure
-`).setIn([referenceForModel(k8sModels.CustomResourceDefinitionModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CustomResourceDefinitionModel), 'default'],
+    `
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -527,7 +690,11 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - ct
-`).setIn([referenceForModel(k8sModels.DeploymentConfigModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentConfigModel), 'default'],
+    `
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
@@ -546,7 +713,11 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
-`).setIn([referenceForModel(k8sModels.PersistentVolumeModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'default'],
+    `
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -561,7 +732,11 @@ spec:
   nfs:
     path: /tmp
     server: 172.17.0.2
-`).setIn([referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'default'],
+    `
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
@@ -578,7 +753,11 @@ spec:
     resource:
       name: cpu
       targetAverageUtilization: 50
-`).setIn([referenceForModel(k8sModels.PodModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodModel), 'default'],
+    `
 apiVersion: v1
 kind: Pod
 metadata:
@@ -591,7 +770,11 @@ spec:
       image: hypercloud/hello-hypercloud
       ports:
         - containerPort: 8080
-`).setIn([referenceForModel(k8sModels.IngressModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.IngressModel), 'default'],
+    `
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -605,7 +788,11 @@ spec:
         backend:
           serviceName: test
           servicePort: 80
-`).setIn([referenceForModel(k8sModels.JobModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'default'],
+    `
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -621,12 +808,20 @@ spec:
         image: perl
         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
       restartPolicy: Never
-`).setIn([referenceForModel(k8sModels.ImageStreamModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ImageStreamModel), 'default'],
+    `
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
   name: example
-`).setIn([referenceForModel(k8sModels.RoleBindingModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleBindingModel), 'default'],
+    `
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -639,7 +834,11 @@ roleRef:
   kind: ClusterRole
   name: view
   apiGroup: rbac.authorization.k8s.io
-`).setIn([referenceForModel(k8sModels.ClusterRoleModel), 'default'], `apiVersion: rbac.authorization.k8s.io/v1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterRoleModel), 'default'],
+    `apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: example
@@ -647,7 +846,11 @@ rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
-`).setIn([referenceForModel(k8sModels.RoleModel), 'default'], `apiVersion: rbac.authorization.k8s.io/v1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleModel), 'default'],
+    `apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: example
@@ -655,7 +858,11 @@ rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
-`).setIn([referenceForModel(k8sModels.RoleModel), 'read-pods-within-ns'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleModel), 'read-pods-within-ns'],
+    `
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -665,7 +872,11 @@ rules:
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "list", "watch"]
-`).setIn([referenceForModel(k8sModels.RoleModel), 'read-write-deployment-in-ext-and-apps-apis'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleModel), 'read-write-deployment-in-ext-and-apps-apis'],
+    `
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -675,8 +886,11 @@ rules:
 - apiGroups: ["extensions", "apps"]
   resources: ["deployments"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-`)
-  .setIn([referenceForModel(k8sModels.RoleModel), 'read-pods-and-read-write-jobs'], `apiVersion: rbac.authorization.k8s.io/v1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleModel), 'read-pods-and-read-write-jobs'],
+    `apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: read-pods-and-read-write-jobs
@@ -688,8 +902,11 @@ rules:
 - apiGroups: ["batch", "extensions"]
   resources: ["jobs"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-`)
-  .setIn([referenceForModel(k8sModels.RoleModel), 'read-configmap-within-ns'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RoleModel), 'read-configmap-within-ns'],
+    `
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -700,7 +917,11 @@ rules:
   resources: ["configmaps"]
   resourceNames: ["my-config"]
   verbs: ["get"]
-`).setIn([referenceForModel(k8sModels.ClusterRoleModel), 'read-nodes'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterRoleModel), 'read-nodes'],
+    `
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -710,7 +931,11 @@ rules:
 - apiGroups: [""]
   resources: ["nodes"]
   verbs: ["get", "list", "watch"]
-`).setIn([referenceForModel(k8sModels.ClusterRoleModel), 'get-and-post-to-non-resource-endpoints'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterRoleModel), 'get-and-post-to-non-resource-endpoints'],
+    `
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -719,7 +944,11 @@ metadata:
 rules:
 - nonResourceURLs: ["/healthz", "/healthz/*"] # '*' in a nonResourceURL is a suffix glob match
   verbs: ["get", "post"]
-`).setIn([referenceForModel(k8sModels.ServiceModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'default'],
+    `
 apiVersion: v1
 kind: Service
 metadata:
@@ -731,7 +960,11 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 9376
-`).setIn([referenceForModel(k8sModels.DaemonSetModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'default'],
+    `
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -750,7 +983,11 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
-`).setIn([referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'],
+    `
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -767,7 +1004,11 @@ spec:
       release: "stable"
     matchExpressions:
       - {key: environment, operator: In, values: [dev]}
-`).setIn([referenceForModel(k8sModels.ResourceQuotaModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'default'],
+    `
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -779,7 +1020,11 @@ spec:
     requests.memory: 1Gi
     limits.cpu: "2"
     limits.memory: 2Gi
-`).setIn([referenceForModel(k8sModels.StatefulSetModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'default'],
+    `
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -814,19 +1059,31 @@ spec:
       resources:
         requests:
           storage: 1Gi
-`).setIn([referenceForModel(k8sModels.StorageClassModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'default'],
+    `
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: example
 provisioner: my-provisioner
 reclaimPolicy: Delete
-`).setIn([referenceForModel(k8sModels.ServiceAccountModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceAccountModel), 'default'],
+    `
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: example
-`).setIn([referenceForModel(k8sModels.SecretModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'default'],
+    `
 apiVersion: v1
 kind: Secret
 metadata:
@@ -835,7 +1092,11 @@ type: Opaque
 stringData:
   username: admin
   password: damin
-`).setIn([referenceForModel(k8sModels.ReplicaSetModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'default'],
+    `
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
@@ -856,7 +1117,11 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
-`).setIn([referenceForModel(k8sModels.RouteModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RouteModel), 'default'],
+    `
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -868,7 +1133,11 @@ spec:
     name: example
   port:
     targetPort: 80
-`).setIn([referenceForModel(k8sModels.ReplicationControllerModel), 'default'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicationControllerModel), 'default'],
+    `
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -888,7 +1157,11 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
-`).setIn([referenceForModel(k8sModels.BuildConfigModel), 'docker-build'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.BuildConfigModel), 'docker-build'],
+    `
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
@@ -928,7 +1201,11 @@ spec:
     - exec
     - rake
     - test
-`).setIn([referenceForModel(k8sModels.BuildConfigModel), 's2i-build'], `apiVersion: build.openshift.io/v1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.BuildConfigModel), 's2i-build'],
+    `apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   name: s2i-build
@@ -955,7 +1232,11 @@ spec:
   - type: ImageChange
     imageChange: {}
   - type: ConfigChange
-`).setIn([referenceForModel(k8sModels.BuildConfigModel), 'pipeline-build'], `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.BuildConfigModel), 'pipeline-build'],
+    `
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
@@ -975,4 +1256,5 @@ spec:
     type: JenkinsPipeline
   triggers:
   - type: ConfigChange
-`);
+`,
+  );

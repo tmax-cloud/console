@@ -8,6 +8,7 @@ import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
 import { AsyncComponent } from '../utils/async';
 
+
 const editYamlComponent = (props) => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
 
 class PodsComponent extends React.PureComponent {
