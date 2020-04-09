@@ -13,7 +13,7 @@ import {
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
-
+import { useTranslation } from 'react-i18next';
 const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
@@ -21,27 +21,24 @@ const menuActions = [
   Cog.factory.Delete
 ];
 
-const UserHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-3 col-sm-3"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-3 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const UserHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+
+      <ColHead
+        {...props}
+        className="col-sm-3 hidden-xs"
+        sortField="metadata.creationTimestamp"
+      >
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+};
 
 const UserRow = () =>
   // eslint-disable-next-line no-shadow
@@ -60,17 +57,6 @@ const UserRow = () =>
             namespace={obj.metadata.namespace}
             title={obj.metadata.name}
           />
-        </div>
-        <div className="col-xs-3 col-sm-3 co-break-word">
-          {obj.metadata.namespace ? (
-            <ResourceLink
-              kind="Namespace"
-              name={obj.metadata.namespace}
-              title={obj.metadata.namespace}
-            />
-          ) : (
-              'None'
-            )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
           {fromNow(obj.metadata.creationTimestamp)}
