@@ -12,6 +12,7 @@ import { SafetyFirst } from './safety-first';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
 import './utils/i18n';
 import i18n from './utils/i18n';
+import { useTranslation } from 'react-i18next';
 
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
@@ -26,10 +27,19 @@ const UserMenu = ({ username, actions }) => {
   if (_.isEmpty(actions)) {
     return title;
   }
-
   return <ActionsMenu actions={actions} title={title} noButton={true} />;
 };
-
+const LanguageMenu = ({ lang, actions }) => {
+  const title = (
+    <React.Fragment>
+      <span className="co-masthead__username">{lang}</span>
+    </React.Fragment>
+  );
+  if (_.isEmpty(actions)) {
+    return title;
+  }
+  return <ActionsMenu actions={actions} title={lang} noButton={true} />;
+};
 const UserMenuWrapper = connectToFlags(
   FLAGS.AUTH_ENABLED,
   FLAGS.OPENSHIFT,
@@ -76,29 +86,10 @@ const UserMenuWrapper = connectToFlags(
         console.log(error);
       });
   };
-  const enChange = e => {
-    e.preventDefault();
-    i18n.changeLanguage('en');
-    window.localStorage.setItem('i18nextLng', 'en');
-  };
-  const koChange = e => {
-    e.preventDefault();
-    i18n.changeLanguage('ko');
-    window.localStorage.setItem('i18nextLng', 'ko');
-  };
   actions.push({
     label: 'Logout',
     callback: logout,
   });
-  actions.push({
-    label: 'EN-US',
-    callback: enChange,
-  });
-  actions.push({
-    label: 'KO',
-    callback: koChange,
-  });
-
   // if (props.flags[FLAGS.OPENSHIFT]) {
   return <OSUserMenu actions={actions} />;
   // }
@@ -110,6 +101,32 @@ const UserMenuWrapper = connectToFlags(
 
   return authSvc.userID() ? <UserMenu actions={actions} username={authSvc.name()} /> : null;
 });
+
+const LanguageWrapper = (props => {
+  const { t } = useTranslation();
+  const lang = t('CONTENT:LANGUAGE');
+  const actions = [];
+  const enChange = e => {
+    e.preventDefault();
+    i18n.changeLanguage('en');
+    window.localStorage.setItem('i18nextLng', 'English');
+  };
+  const koChange = e => {
+    e.preventDefault();
+    i18n.changeLanguage('ko');
+    window.localStorage.setItem('i18nextLng', 'Korean');
+  };
+  actions.push({
+    label: 'EN-US',
+    callback: enChange,
+  });
+  actions.push({
+    label: 'KO',
+    callback: koChange,
+  });
+  return <LanguageMenu lang={lang} actions={actions} />;
+});
+
 
 export class OSUserMenu extends SafetyFirst {
   constructor(props) {
@@ -136,11 +153,6 @@ export class OSUserMenu extends SafetyFirst {
     } else {
       this.setState({ username: '사용자' });
     }
-
-    // coFetchJSON('api/kubernetes/apis/user.openshift.io/v1/users/~')
-    //   .then((user) => {
-    //     this.setState({ username: _.get(user, 'fullName') || user.metadata.name });
-    //   }).catch(() => this.setState({ username: null }));
   }
 
   render() {
@@ -331,6 +343,9 @@ export const Masthead = () => {
           <div className="extend-refresh-border"></div>
         </div>
       )}
+      <div className="co-masthead__lang">
+        <LanguageWrapper />
+      </div>
       {releaseModeFlag && (
         <div className="co-masthead__user">
           <UserMenuWrapper />

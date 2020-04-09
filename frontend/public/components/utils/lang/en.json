@@ -201,6 +201,7 @@
     "PODVOLUMES": "Pod Volumes",
     "UPDATING": "Updating",
     "NOCONDITIONSFOUND": "No Conditions Found",
+    "LANGUAGE": "Language",
     "DATA": "Data"
   },
   "RESOURCE": {
