@@ -199,7 +199,8 @@
     "UTILIZEDBY": "사용자",
     "PODVOLUMES": "파드 볼륨",
     "UPDATING": "업데이트 중",
-    "NOCONDITIONSFOUND": "조건 없음"
+    "NOCONDITIONSFOUND": "조건 없음",
+    "LANGUAGE": "언어"
   },
   "RESOURCE": {
     "HOME": "홈",

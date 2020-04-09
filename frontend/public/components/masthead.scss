@@ -42,6 +42,17 @@
     width: 199px;
     height: 56px;
   }
+  &__lang {
+    @media (min-width: $grid-float-breakpoint) {
+      display: block;
+      margin-right: -10px;
+    }
+    .dropdown__not-btn,
+    .dropdown__not-btn__title {
+      align-items: baseline;
+      display: flex;
+    }
+  }
   &__user {
     // display: none;
     // width: 70px;

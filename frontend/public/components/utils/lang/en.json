@@ -200,7 +200,8 @@
     "UTILIZEDBY": "Utilized By",
     "PODVOLUMES": "Pod Volumes",
     "UPDATING": "Updating",
-    "NOCONDITIONSFOUND": "No Conditions Found"
+    "NOCONDITIONSFOUND": "No Conditions Found",
+    "LANGUAGE": "Language"
   },
   "RESOURCE": {
     "HOME": "Home",
