@@ -1,9 +1,22 @@
 {
+  "PLURAL": {
+    "POD": "{{count}} 파드",
+    "POD_plural": "{{count}} 파드",
+    "SECOND": "{{count}} 초",
+    "SECOND_plural": "{{count}} 초",
+    "ANNOTATION": "{{count}} 주석",
+    "ANNOTATION_plural": "{{count}} 주석"
+  },
   "ADDITIONAL": {
     "CREATEBUTTON": "{{something}} 생성",
     "STATUSOF": "{{something}} 상태",
     "EMPTYBOX": "No {{something}} Found",
-    "OVERVIEWTITLE": "{{something}} 개요"
+    "OVERVIEWTITLE": "{{something}} 개요",
+    "DEPLOYMENT_DETAIL_TOOLTIP_0": "Total number of non-terminated pods targeted by this {{something}} that have the desired template spec.",
+    "DEPLOYMENT_DETAIL_TOOLTIP_1": "Total number of non-terminated pods targeted by this {{something}} (their labels match the selector).",
+    "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of unavailable pods targeted by this {{something}}.",
+    "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
   },
   "STRING": {
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",

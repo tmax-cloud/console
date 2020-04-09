@@ -1,10 +1,24 @@
 {
+  "PLURAL": {
+    "POD": "{{count}} pod",
+    "POD_plural": "{{count}} pods",
+    "SECOND": "{{count}} second",
+    "SECOND_plural": "{{count}} seconds",
+    "ANNOTATION": "{{count}} Annotation",
+    "ANNOTATION_plural": "{{count}} Annotations"
+  },
   "ADDITIONAL": {
     "CREATEBUTTON": "Create {{something}}",
     "STATUSOF": "Status of {{something}}",
     "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} Overview",
-    "BREADCRUMBSDETAILS": "{{something}} Details"
+    "BREADCRUMBSDETAILS": "{{something}} Details",
+    "DEPLOYMENT_DETAIL_TOOLTIP_0": "Total number of non-terminated pods targeted by this {{something}} that have the desired template spec.",
+    "DEPLOYMENT_DETAIL_TOOLTIP_1": "Total number of non-terminated pods targeted by this {{something}} (their labels match the selector).",
+    "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of available pods (ready for at least minReadySeconds) targeted by this {{something}}..",
+    "DEPLOYMENT_DETAIL_TOOLTIP_3": "Total number of unavailable pods targeted by this {{something}}.",
+    "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
   },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",

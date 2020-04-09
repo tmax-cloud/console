@@ -34,21 +34,24 @@ const ContainerRow = ({ container }) => {
   );
 };
 
-export const ContainerTable = ({ containers }) => (
-  <div className="co-m-table-grid co-m-table-grid--bordered">
-    <div className="row co-m-table-grid__head">
-      <div className="col-xs-6 col-sm-4 col-md-3">Name</div>
-      <div className="col-xs-6 col-sm-4 col-md-3">Image</div>
-      <div className="col-sm-4 col-md-3 hidden-xs">Resource Limits</div>
-      <div className="col-md-3 hidden-xs hidden-sm">Ports</div>
+export const ContainerTable = ({ containers }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-m-table-grid co-m-table-grid--bordered">
+      <div className="row co-m-table-grid__head">
+        <div className="col-xs-6 col-sm-4 col-md-3">{t('CONTENT:NAME')}</div>
+        <div className="col-xs-6 col-sm-4 col-md-3">{t('CONTENT:IMAGE')}</div>
+        <div className="col-sm-4 col-md-3 hidden-xs">{t('CONTENT:RESOURCELIMITS')}</div>
+        <div className="col-md-3 hidden-xs hidden-sm">{t('CONTENT:PORTS')}</div>
+      </div>
+      <div className="co-m-table-grid__body">
+        {_.map(containers, (c, i) => (
+          <ContainerRow key={i} container={c} />
+        ))}
+      </div>
     </div>
-    <div className="co-m-table-grid__body">
-      {_.map(containers, (c, i) => (
-        <ContainerRow key={i} container={c} />
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 const DeploymentDetails = ({ obj: deployment }) => {
   const isRecreate = deployment.spec.strategy.type === 'Recreate';
@@ -59,7 +62,7 @@ const DeploymentDetails = ({ obj: deployment }) => {
     <React.Fragment>
       <div className="co-m-pane__body">
         <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
-        <DeploymentPodCounts resource={deployment} resourceKind={DeploymentModel} />
+        <DeploymentPodCounts resource={deployment} resourceKind={DeploymentModel} t={t} />
         <div className="co-m-pane__body-group">
           <div className="row">
             <div className="col-sm-6">
@@ -86,19 +89,21 @@ const DeploymentDetails = ({ obj: deployment }) => {
                 {isRecreate || <dt>{t('CONTENT:MAXUNAVAILABLE')}</dt>}
                 {isRecreate || (
                   <dd>
-                    {deployment.spec.strategy.rollingUpdate.maxUnavailable || 1} of {pluralize(deployment.spec.replicas, 'pod')}
+                    {t('ADDITIONAL:DEPLOYMENT_DETAIL_TOOLTIP_4', { something1: deployment.spec.strategy.rollingUpdate.maxUnavailable, something2: t('PLURAL:POD', { count: deployment.spec.replicas }) })}
+                    {/* {deployment.spec.strategy.rollingUpdate.maxUnavailable || 1} of {t('PLURAL:POD', { count: deployment.spec.replicas })} */}
                   </dd>
                 )}
                 {isRecreate || <dt>{t('CONTENT:MAXSURGE')}</dt>}
                 {isRecreate || (
                   <dd>
-                    {deployment.spec.strategy.rollingUpdate.maxSurge || 1} greater than {pluralize(deployment.spec.replicas, 'pod')}
+                    {t('ADDITIONAL:DEPLOYMENT_DETAIL_TOOLTIP_5', { something1: deployment.spec.strategy.rollingUpdate.maxSurge, something2: t('PLURAL:POD', { count: deployment.spec.replicas }) })}
+                    {/* {deployment.spec.strategy.rollingUpdate.maxSurge || 1} greater than {t('PLURAL:POD', { count: deployment.spec.replicas })} */}
                   </dd>
                 )}
                 {progressDeadlineSeconds && <dt>{t('CONTENT:PROGRESSDEADLINE')}</dt>}
                 {progressDeadlineSeconds && <dd>{/* Convert to ms for formatDuration */ formatDuration(progressDeadlineSeconds * 1000)}</dd>}
                 <dt>{t('CONTENT:MINREADYSECONDS')}</dt>
-                <dd>{deployment.spec.minReadySeconds ? pluralize(deployment.spec.minReadySeconds, 'second') : 'Not Configured'}</dd>
+                <dd>{deployment.spec.minReadySeconds ? t('PLURAL:SECOND', { count: deployment.spec.minReadySeconds }) : t('CONTENT:NOTCONFIGURED')}</dd>
               </dl>
             </div>
           </div>
@@ -125,15 +130,17 @@ const DeploymentsDetailsPage = props => <DetailsPage {...props} menuActions={men
 const Row = props => <WorkloadListRow {...props} kind="Deployment" actions={menuActions} />;
 const DeploymentsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
 const DeploymentsPage = props => {
+  const { t } = useTranslation();
+
   const createItems = {
-    form: 'Deployment (Form Editor)',
-    yaml: 'Deployment (YAML Editor)',
+    form: t('CONTENT:DEPLOYMENTFORMEDITOR'),
+    yaml: t('CONTENT:DEPLOYMENTYAMLEDITOR'),
   };
 
   const createProps = {
     items: createItems,
     createLink: type => `/k8s/ns/${props.namespace || 'default'}/deployments/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  return <ListPage ListComponent={DeploymentsList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+  return <ListPage ListComponent={DeploymentsList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
 };
 export { DeploymentsList, DeploymentsPage, DeploymentsDetailsPage };
