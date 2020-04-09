@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import {
   Cog,
@@ -23,41 +23,44 @@ const menuActions = [
   Cog.factory.Delete
 ];
 
-const ServiceBindingHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.instanceRef.name"
-    >
-      Service Instance
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.secretName"
-    >
-      Secret
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-4 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const ServiceBindingHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-xs-2 col-sm-2"
+        sortField="metadata.namespace"
+      >
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.instanceRef.name"
+      >
+        {t('RESOURCE:SERVICEINSTANCE')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.secretName"
+      >
+        {t('RESOURCE:SECRET')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-4 hidden-xs"
+        sortField="metadata.creationTimestamp"
+      >
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+};
 
 const ServiceBindingRow = () =>
   // eslint-disable-next-line no-shadow
@@ -118,6 +121,7 @@ const ServiceBindingRow = () =>
 //   };
 
 const Details = ({ obj: servicebinding }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -130,9 +134,9 @@ const Details = ({ obj: servicebinding }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Service Instance</dt>
+              <dt>{t('RESOURCE:SERVICEINSTANCE')}</dt>
               <dd>{servicebinding.spec.instanceRef.name}</dd>
-              <dt>Secret</dt>
+              <dt>{t('RESOURCE:SECRET')}</dt>
               <dd>{servicebinding.spec.secretName}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
