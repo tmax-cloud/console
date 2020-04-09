@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "rm -rf ./public/dist/ && ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=development --watch --progress",
-    "exclude-ts": "test -f (./node_modules/react-i18next/src/index.d.ts && mv ./node_modules/react-i18next/src/index.d.ts ./node_modules/react-i18next/src/index.ts)",
-    "exclude-ts-linux": "test -f '(./node_modules/react-i18next/src/index.d.ts && mv ./node_modules/react-i18next/src/index.d.ts ./node_modules/react-i18next/src/index.ts)'",
+    "exclude-ts": "rm -f ./node_modules/react-i18next/src/index.d.ts",
+    "exclude-ts-linux": "rm -f ./node_modules/react-i18next/src/index.d.ts",
     "build": "rm -rf ./public/dist && cross-env NODE_ENV=production ts-node -O {\"\"\"module\"\"\":\"\"\"commonjs\"\"\"} ./node_modules/webpack/bin/webpack.js --mode=production",
     "build-linux": "rm -rf ./public/dist && cross-env NODE_ENV=production ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/webpack/bin/webpack.js --mode=production",
     "coverage": "jest --coverage .",
