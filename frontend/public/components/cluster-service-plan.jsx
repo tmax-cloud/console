@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import {
     Cog,
@@ -21,19 +21,22 @@ const menuActions = [
     Cog.factory.Delete
 ];
 
-const ClusterServicePlanHeader = props => (
-    <ListHeader>
-        <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
-            Name
-    </ColHead>
-        <ColHead
-            {...props}
-            className="col-sm-4 hidden-xs"
-            sortField="metadata.creationTimestamp" >
-            Created
-    </ColHead>
-    </ListHeader>
-);
+const ClusterServicePlanHeader = props => {
+    const { t } = useTranslation();
+    return (
+        <ListHeader>
+            <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+                {t('CONTENT:NAME')}
+            </ColHead>
+            <ColHead
+                {...props}
+                className="col-sm-4 hidden-xs"
+                sortField="metadata.creationTimestamp" >
+                {t('CONTENT:CREATED')}
+            </ColHead>
+        </ListHeader>
+    )
+};
 
 const ClusterServicePlanRow = () =>
     // eslint-disable-next-line no-shadow
