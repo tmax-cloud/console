@@ -49,7 +49,7 @@ const ConfigMapDetails = ({ obj: configMap }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ConfigMap') })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ConfigMap', t) })} />
         <ResourceSummary resource={configMap} showPodSelector={false} showNodeSelector={false} />
       </div>
       <div className="co-m-pane__body">

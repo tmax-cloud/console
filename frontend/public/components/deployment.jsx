@@ -58,7 +58,7 @@ const DeploymentDetails = ({ obj: deployment }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment') })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
         <DeploymentPodCounts resource={deployment} resourceKind={DeploymentModel} />
         <div className="co-m-pane__body-group">
           <div className="row">

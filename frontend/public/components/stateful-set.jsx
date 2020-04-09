@@ -17,7 +17,7 @@ const Details = ({ obj: ss }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('StatefulSet') })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('StatefulSet', t) })} />
         <ResourceSummary resource={ss} showNodeSelector={false} />
       </div>
     </React.Fragment>
