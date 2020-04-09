@@ -1,17 +1,16 @@
 {
   "ADDITIONAL": {
     "CREATEBUTTON": "Create",
-    "FILTERPLACEHOLDER": "Filter {{something}} Sets by name...",
     "STATUSOF": "Status of {{something}}",
     "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} Overview",
     "BREADCRUMBSDETAILS": "{{something}} Details"
   },
-  "STRING": {
-    "STATUS_LIST_0": "Filter Events by name or message",
-    "ROLE_DETAIL_0": "Filter Rules by action or resource"
-  },
+  "STRING": {},
   "CONTENT": {
+    "FILTERLABELHOLDER": "Filter by name",
+    "FILTERLABELHOLDEREVENT": "Filter by name or message",
+    "FILTERLABELHOLDERRULE": "Filter Rules by action or resource",
     "HEALTH": "Health",
     "KUBERNETESAPI": "Kubernetes API",
     "HYPERCLOUDCONSOLE": "HyperCloud Console",
@@ -202,7 +201,10 @@
     "UPDATING": "Updating",
     "NOCONDITIONSFOUND": "No Conditions Found",
     "LANGUAGE": "Language",
-    "DATA": "Data"
+    "DATA": "Data",
+    "SOURCESECRET": "Source Secret",
+    "WEBHOOKSECRET": "Webhook Secret",
+    "SECRETFROMYAML": "Secret from YAML"
   },
   "RESOURCE": {
     "HOME": "Home",
