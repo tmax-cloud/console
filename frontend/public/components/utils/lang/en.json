@@ -3,7 +3,9 @@
     "CREATEBUTTON": "Create",
     "FILTERPLACEHOLDER": "Filter {{something}} Sets by name...",
     "STATUSOF": "Status of {{something}}",
-    "EMPTYBOX": "No {{something}} Found"
+    "EMPTYBOX": "No {{something}} Found",
+    "OVERVIEWTITLE": "{{something}} Overview",
+    "BREADCRUMBSDETAILS": "{{something}} Details"
   },
   "STRING": {
     "STATUS_LIST_0": "Filter Events by name or message",
@@ -101,7 +103,7 @@
     "SERVICEINSTANCE": "Service Instance",
     "SECRET": "Secret",
     "OBJECTCOUNT": "Object Count",
-    "PARAMETER COUNT": "Parameter Count",
+    "PARAMETERCOUNT": "Parameter Count",
     "PODLABELS": "Pod Labels",
     "NODE": "Node",
     "READINESS": "Readiness",
@@ -187,7 +189,18 @@
     "NOTFOUND": "Not Found",
     "SELECTNAMESPACE": "Select namespace...",
     "CREATE": "Create",
-    "PATH": "Path"
+    "PATH": "Path",
+    "STATUS": "Status",
+    "ID": "ID",
+    "STATE": "State",
+    "RESTARTS": "Restarts",
+    "STARTED": "Started",
+    "FINISHED": "Finished",
+    "PERMISSIONS": "Permissions",
+    "UTILIZEDBY": "Utilized By",
+    "PODVOLUMES": "Pod Volumes",
+    "UPDATING": "Updating",
+    "NOCONDITIONSFOUND": "No Conditions Found"
   },
   "RESOURCE": {
     "HOME": "Home",

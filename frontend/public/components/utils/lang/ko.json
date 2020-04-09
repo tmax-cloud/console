@@ -3,7 +3,8 @@
     "CREATEBUTTON": "생성",
     "FILTERPLACEHOLDER": "이름으로 {{something}}을(를) 검색...",
     "STATUSOF": "{{something}} 상태",
-    "EMPTYBOX": "No {{something}} Found"
+    "EMPTYBOX": "No {{something}} Found",
+    "OVERVIEWTITLE": "{{something}} 개요"
   },
   "STRING": {
     "STATUS_LIST_0": "이름이나 메시지로 이벤트 검색",
@@ -187,7 +188,18 @@
     "NOTFOUND": "Not Found",
     "SELECTNAMESPACE": "네임스페이스 선택...",
     "CREATE": "생성",
-    "PATH": "경로"
+    "PATH": "경로",
+    "STATUS": "상태",
+    "ID": "아이디",
+    "STATE": "상태",
+    "RESTARTS": "재시작",
+    "STARTED": "시작",
+    "FINISHED": "종료",
+    "PERMISSIONS": "권한",
+    "UTILIZEDBY": "사용자",
+    "PODVOLUMES": "파드 볼륨",
+    "UPDATING": "업데이트 중",
+    "NOCONDITIONSFOUND": "조건 없음"
   },
   "RESOURCE": {
     "HOME": "홈",

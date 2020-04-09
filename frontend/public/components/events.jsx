@@ -139,7 +139,6 @@ class EventsStreamPage_ extends React.Component {
     }
     const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
 
-    const { t } = this.props;
     return (
       <React.Fragment>
         {showGettingStarted && showTitle && <OpenShiftGettingStarted />}
@@ -156,7 +155,7 @@ class EventsStreamPage_ extends React.Component {
               <Dropdown title="All Categories" className="btn-group" items={categories} onChange={v => this.setState({ category: v })} />
             </div>
             <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-              <TextFilter id="event" label={t('STRING:STATUS_LIST_0')} onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={autoFocus} />
+              <TextFilter id="event" label="Filter Events by name or message" onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={autoFocus} />
             </div>
           </div>
           <EventStream {...this.props} category={category} kind={kind} textFilter={textFilter} fake={showGettingStarted} />
@@ -385,10 +384,10 @@ class EventStream extends SafetyFirst {
         </Box>
       );
     } else if (loading) {
-      statusBtnTxt = <span>{t('CONTENT:LOADINGEVENTS')}</span>;
+      statusBtnTxt = <span>Loading events...</span>;
       sysEventStatus = <Loading />;
     } else if (active) {
-      statusBtnTxt = <span>{t('CONTENT:STREAMINGEVENTS')}</span>;
+      statusBtnTxt = <span>Streaming events...</span>;
     } else {
       statusBtnTxt = <span>Event stream is paused.</span>;
     }
