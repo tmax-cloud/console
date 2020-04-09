@@ -186,7 +186,8 @@
     "STREAMINGEVENTS": "Streaming events...",
     "NOTFOUND": "Not Found",
     "SELECTNAMESPACE": "Select namespace...",
-    "CREATE": "Create"
+    "CREATE": "Create",
+    "PATH": "Path"
   },
   "RESOURCE": {
     "HOME": "Home",

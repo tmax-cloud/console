@@ -33,7 +33,7 @@
     "CREATED": "생성 시간",
     "LABELS": "레이블",
     "PODSELECTOR": "파드 선택기",
-    "ANNOTATIONS": "애노테이션",
+    "ANNOTATIONS": "주석",
     "CREATEDAT": "생성 시간",
     "EDITLABELS": "레이블 편집",
     "EDITANNOTATIONS": "주석 편집",
@@ -95,7 +95,7 @@
     "CLUSTER-WIDEROLEBINDINGS": "Cluster-wide Role Bindings",
     "NAMESPACEROLEBINDINGS": "Namespace Role Bindings",
     "SYSTEMROLEBINDINGS": "System Role Bindings",
-    "NODESELECTORS": "Node Selectors",
+    "NODESELECTORS": "노드 선택기",
     "CLUSTERSERVICECLASS": "클러스터 서비스 클래스",
     "CLUSTERSERVICEPLAN": "클러스터 서비스 플랜",
     "SERVICEINSTANCE": "서비스 인스턴스",
@@ -186,7 +186,8 @@
     "STREAMINGEVENTS": "이벤트 스트리밍 중...",
     "NOTFOUND": "Not Found",
     "SELECTNAMESPACE": "네임스페이스 선택...",
-    "CREATE": "생성"
+    "CREATE": "생성",
+    "PATH": "경로"
   },
   "RESOURCE": {
     "HOME": "홈",
