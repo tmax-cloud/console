@@ -3,7 +3,8 @@
 set -e
 
 pushd frontend
-yarn install-linux
+yarn install
+yarn run install-linux
 yarn run build-linux
 
 # download latest swagger file
