@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
-
+import { useTranslation } from 'react-i18next';
 import { getQN, k8sCreate, k8sPatch } from '../../module/k8s';
 import { getActiveNamespace, formatNamespacedRouteForResource, UIActions } from '../../ui/ui-actions';
 import { ColHead, List, ListHeader, MultiListPage, ResourceRow } from '../factory';
@@ -79,13 +79,16 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
   return actions;
 };
 
-const Header = props => <ListHeader>
-  <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-4 hidden-xs" sortField="roleRef.name">Role Ref</ColHead>
-  <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortField="subject.kind">Subject Kind</ColHead>
-  <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortField="subject.name">Subject Name</ColHead>
-  <ColHead {...props} className="col-md-2 col-sm-4 col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-</ListHeader>;
+const Header = props => {
+  const { t } = useTranslation();
+  return <ListHeader>
+    <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">{t('CONTENT:NAME')}</ColHead>
+    <ColHead {...props} className="col-md-3 col-sm-4 hidden-xs" sortField="roleRef.name">{t('CONTENT:ROLEREF')}</ColHead>
+    <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortField="subject.kind">{t('CONTENT:SUBJECTKIND')}</ColHead>
+    <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortField="subject.name">{t('CONTENT:SUBJECTNAME')}</ColHead>
+    <ColHead {...props} className="col-md-2 col-sm-4 col-xs-6" sortField="metadata.namespace">{t('CONTENT:NAMESPACE')}</ColHead>
+  </ListHeader>;
+}
 
 export const BindingName = connect(null, { startImpersonate: UIActions.startImpersonate })(
   ({ binding, startImpersonate }) => <React.Fragment>

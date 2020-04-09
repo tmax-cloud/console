@@ -243,7 +243,10 @@
     "SERVICEFORMEDITOR": "Service (From Editor)",
     "SERVICEYAMLEDITOR": "Service (Yaml Editor)",
     "DEPLOYMENTFORMEDITOR": "Deployment (From Editor)",
-    "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)"
+    "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)",
+    "ROLEREF": "Role Ref",
+    "SUBJECTKIND": "Subject Kind",
+    "SUBJECTNAME": "Subject Name"
   },
   "RESOURCE": {
     "HOME": "Home",
