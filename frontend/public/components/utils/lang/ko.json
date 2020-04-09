@@ -1,6 +1,6 @@
 {
   "ADDITIONAL": {
-    "CREATEBUTTON": "생성",
+    "CREATEBUTTON": "{{something}} 생성",
     "STATUSOF": "{{something}} 상태",
     "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} 개요"
@@ -203,7 +203,9 @@
     "DATA": "데이터",
     "SOURCESECRET": "원본 시크릿",
     "WEBHOOKSECRET": "웹후크 시크릿",
-    "SECRETFROMYAML": "Secret from YAML"
+    "SECRETFROMYAML": "Secret from YAML",
+    "HIDEVALUES": "Hide Values",
+    "REVEALVALUES": "Reveal Values"
   },
   "RESOURCE": {
     "HOME": "홈",

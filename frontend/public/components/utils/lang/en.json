@@ -1,6 +1,6 @@
 {
   "ADDITIONAL": {
-    "CREATEBUTTON": "Create",
+    "CREATEBUTTON": "Create {{something}}",
     "STATUSOF": "Status of {{something}}",
     "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} Overview",
@@ -204,7 +204,9 @@
     "DATA": "Data",
     "SOURCESECRET": "Source Secret",
     "WEBHOOKSECRET": "Webhook Secret",
-    "SECRETFROMYAML": "Secret from YAML"
+    "SECRETFROMYAML": "Secret from YAML",
+    "HIDEVALUES": "Hide Values",
+    "REVEALVALUES": "Reveal Values"
   },
   "RESOURCE": {
     "HOME": "Home",
