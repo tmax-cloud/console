@@ -189,6 +189,7 @@
     "NOTFOUND": "Not Found",
     "SELECTNAMESPACE": "Select namespace...",
     "CREATE": "Create",
+    "PATH": "Path",
     "STATUS": "Status",
     "ID": "ID",
     "STATE": "State",
