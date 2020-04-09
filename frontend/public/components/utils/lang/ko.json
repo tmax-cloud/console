@@ -5,12 +5,26 @@
     "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} 개요"
   },
-  "STRING": {},
+  "STRING": {
+    "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
+    "SERVICE_DETAIL_0": "클러스터 외부에서 액세스 가능",
+    "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
+    "SERVICE_DETAIL_2": "서비스를 지원하는 리소스의 위치",
+    "SERVICE_DETAIL_3": "클러스터 내에서만 액세스 가능",
+    "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소"
+  },
   "CONTENT": {
+    "PORT": "포트",
+    "PROTOCOL": "프로토콜",
+    "CLUSTERIP": "클러스터 IP",
+    "EXTERNALSERVICENAME": "외부 서비스 이름",
+    "NODEPORT": "노드 포트",
+    "EXTERNALLOADBALANCERIP": "외부 로드밸런서 IP",
     "FILTERLABELHOLDER": "이름으로 검색",
     "FILTERLABELHOLDEREVENT": "이름이나 메시지로검색",
     "FILTERLABELHOLDERRULE": "액션이나 리소스로 검색",
     "HEALTH": "상태",
+    "NOTFIGURED": "Not Figured",
     "KUBERNETESAPI": "쿠버네티스 API",
     "HYPERCLOUDCONSOLE": "하이퍼클라우드 콘솔",
     "ALERTSFIRING": "Alerts Firing",
@@ -206,7 +220,15 @@
     "SECRETFROMYAML": "Secret from YAML",
     "HIDEVALUES": "Hide Values",
     "REVEALVALUES": "Reveal Values",
-    "SECONDS": "초"
+    "INPROGRESS": "Inprogress",
+    "SECONDS": "초",
+    "HOST": "호스트",
+    "SERVICE": "서비스",
+    "SERVICEHOST": "서비스 호스트",
+    "SERVICEFORMEDITOR": "Service (From Editor)",
+    "SERVICEYAMLEDITOR": "Service (Yaml Editor)",
+    "DEPLOYMENTFORMEDITOR": "Deployment (From Editor)",
+    "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)"
   },
   "RESOURCE": {
     "HOME": "홈",

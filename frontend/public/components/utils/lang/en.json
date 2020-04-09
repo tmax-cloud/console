@@ -6,11 +6,25 @@
     "OVERVIEWTITLE": "{{something}} Overview",
     "BREADCRUMBSDETAILS": "{{something}} Details"
   },
-  "STRING": {},
+  "STRING": {
+    "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
+    "SERVICE_DETAIL_0": "Accessible outside the cluster",
+    "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
+    "SERVICE_DETAIL_2": "Location of the resource that backs the service",
+    "SERVICE_DETAIL_3": "Accessible within the cluster only",
+    "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service"
+  },
   "CONTENT": {
+    "PORT": "Port",
+    "PROTOCOL": "Protocol",
+    "CLUSTERIP": "Cluster IP",
+    "EXTERNALSERVICENAME": "External Service Name",
+    "NODEPORT": "Node Port",
+    "EXTERNALLOADBALANCERIP": "External LoadBalancer IP",
     "FILTERLABELHOLDER": "Filter by name",
     "FILTERLABELHOLDEREVENT": "Filter by name or message",
     "FILTERLABELHOLDERRULE": "Filter Rules by action or resource",
+    "NOTFIGURED": "Not Figured",
     "HEALTH": "Health",
     "KUBERNETESAPI": "Kubernetes API",
     "HYPERCLOUDCONSOLE": "HyperCloud Console",
@@ -208,7 +222,14 @@
     "HIDEVALUES": "Hide Values",
     "REVEALVALUES": "Reveal Values",
     "INPROGRESS": "Inprogress",
-    "SECONDS": "seconds"
+    "SECONDS": "seconds",
+    "HOST": "Host",
+    "SERVICE": "Service",
+    "SERVICEHOST": "Service Host",
+    "SERVICEFORMEDITOR": "Service (From Editor)",
+    "SERVICEYAMLEDITOR": "Service (Yaml Editor)",
+    "DEPLOYMENTFORMEDITOR": "Deployment (From Editor)",
+    "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)"
   },
   "RESOURCE": {
     "HOME": "Home",
