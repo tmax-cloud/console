@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 ./bin/bridge \
-    --listen=https://192.168.8.25:9000 \
-    --base-address=https://192.168.8.25:9000 \
+    --listen=https://192.168.8.33:9000 \
+    --base-address=https://192.168.8.33:9000 \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
     --k8s-mode=off-cluster \
