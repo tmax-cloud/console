@@ -200,7 +200,8 @@
     "PODVOLUMES": "파드 볼륨",
     "UPDATING": "업데이트 중",
     "NOCONDITIONSFOUND": "조건 없음",
-    "LANGUAGE": "언어"
+    "LANGUAGE": "언어",
+    "DATA": "데이터"
   },
   "RESOURCE": {
     "HOME": "홈",

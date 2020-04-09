@@ -17,7 +17,7 @@ git pull
 git tag ${TAG}
 git push origin --tags
 
-./script-release/build-release.sh
+./script-linux/build-linux.sh
 
 docker build -t 192.168.6.110:5000/hypercloud-console:${TAG} .
 docker tag 192.168.6.110:5000/hypercloud-console:${TAG} 192.168.6.110:5000/hypercloud-console:latest
