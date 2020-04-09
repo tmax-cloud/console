@@ -3,28 +3,31 @@ import * as React from 'react';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
-
+import { useTranslation } from 'react-i18next';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const ServiceInstanceHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
-      Namespace
-    </ColHead>
-    <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.serviceClassName">
-      Cluster Service Class
-    </ColHead>
-    <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.servicePlanName">
-      Cluster Service Plan
-    </ColHead>
-    <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const ServiceInstanceHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.serviceClassName">
+        {t('RESOURCE:CLUSTERSERVICECLASS')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.servicePlanName">
+        {t('RESOURCE:CLUSTERSERVICEPLAN')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+};
 
 const ServiceInstanceRow = () =>
   function ServiceInstanceRow({ obj }) {
@@ -59,6 +62,7 @@ const ServiceInstanceRow = () =>
 //   };
 
 const Details = ({ obj: clusterserviceinstance }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -71,9 +75,9 @@ const Details = ({ obj: clusterserviceinstance }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Cluster Service Class</dt>
+              <dt>{t('RESOURCE:CLUSTERSERVICECLASS')}</dt>
               <dd>{clusterserviceinstance.spec.clusterServiceClassName}</dd>
-              <dt>Cluster Service Plan</dt>
+              <dt>{t('RESOURCE:CLUSTERSERVICEPLAN')}</dt>
               <dd>{clusterserviceinstance.spec.clusterServicePlanName}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>

@@ -125,7 +125,7 @@
     "DEFAULTCLASS": "기본 클래스",
     "OVERVIEW": "개요",
     "OWNER": "소유자",
-    "NODESELECTOR": "노드 셀렉터",
+    "NODESELECTOR": "노드 선택기",
     "RESTARTPOLICY": "재시작 정책",
     "PODIP": "파드 IP",
     "VALUE": "값",
@@ -206,7 +206,10 @@
     "SECRETFROMYAML": "Secret from YAML",
     "HIDEVALUES": "Hide Values",
     "REVEALVALUES": "Reveal Values",
-    "SECONDS": "초"
+    "SECONDS": "초",
+    "ROLEREF": "Role Ref",
+    "SUBJECTKIND": "대상 종류",
+    "SUBJECTNAME": "대상 이름"
   },
   "RESOURCE": {
     "HOME": "홈",

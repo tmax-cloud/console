@@ -208,7 +208,10 @@
     "HIDEVALUES": "Hide Values",
     "REVEALVALUES": "Reveal Values",
     "INPROGRESS": "Inprogress",
-    "SECONDS": "seconds"
+    "SECONDS": "seconds",
+    "ROLEREF": "Role Ref",
+    "SUBJECTKIND": "Subject Kind",
+    "SUBJECTNAME": "Subject Name"
   },
   "RESOURCE": {
     "HOME": "Home",
