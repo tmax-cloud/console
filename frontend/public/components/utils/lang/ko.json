@@ -205,7 +205,8 @@
     "WEBHOOKSECRET": "웹후크 시크릿",
     "SECRETFROMYAML": "Secret from YAML",
     "HIDEVALUES": "Hide Values",
-    "REVEALVALUES": "Reveal Values"
+    "REVEALVALUES": "Reveal Values",
+    "SECONDS": "초"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -231,8 +232,8 @@
     "VIRTUALMACHINEINSTANCE": "가상머신 인스턴스",
     "CONFIGMAP": "컨피그 맵",
     "SECRET": "시크릿",
-    "JOB": "Job",
-    "CRONJOB": "Cron Job",
+    "JOB": "잡",
+    "CRONJOB": "크론 잡",
     "REPLICASETCONTROLLER": "레플리카 셋 컨트롤러",
     "NETWORK": "네트워크",
     "INGRESS": "인그레스",

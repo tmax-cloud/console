@@ -206,7 +206,9 @@
     "WEBHOOKSECRET": "Webhook Secret",
     "SECRETFROMYAML": "Secret from YAML",
     "HIDEVALUES": "Hide Values",
-    "REVEALVALUES": "Reveal Values"
+    "REVEALVALUES": "Reveal Values",
+    "INPROGRESS": "Inprogress",
+    "SECONDS": "seconds"
   },
   "RESOURCE": {
     "HOME": "Home",
