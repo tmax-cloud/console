@@ -1,7 +1,8 @@
 import * as _ from 'lodash-es';
+import { useTranslation } from 'react-i18next';
 
 // Behaves like moment.js's fromNow
-export const fromNow = (dateTime, now=undefined, options = { omitSuffix: false }) => {
+export const fromNow = (dateTime, now = undefined, options = { omitSuffix: false }) => {
   if (!now) {
     now = new Date();
   }
@@ -13,45 +14,45 @@ export const fromNow = (dateTime, now=undefined, options = { omitSuffix: false }
 
   if (daysAgo > 548) {
     const count = Math.round(daysAgo / 365);
-    return (options.omitSuffix) ? `${count} years`:`${count} years ago`;
+    return options.omitSuffix ? `${count} years` : `${count} years ago`;
   }
   if (daysAgo > 320) {
-    return (options.omitSuffix) ? 'year':'a year ago';
+    return options.omitSuffix ? 'year' : 'a year ago';
   }
   if (daysAgo > 45) {
     const count = Math.round(daysAgo / 30);
-    return (options.omitSuffix) ? `${count} months`:`${count} months ago`;
+    return options.omitSuffix ? `${count} months` : `${count} months ago`;
   }
   if (daysAgo > 26) {
-    return (options.omitSuffix) ? 'month':'a month ago';
+    return options.omitSuffix ? 'month' : 'a month ago';
   }
   if (hoursAgo > 36) {
     const count = Math.round(daysAgo);
-    return (options.omitSuffix) ? `${count} days`:`${count} days ago`;
+    return options.omitSuffix ? `${count} days` : `${count} days ago`;
   }
   if (hoursAgo > 22) {
-    return (options.omitSuffix) ? 'day':'a day ago';
+    return options.omitSuffix ? 'day' : 'a day ago';
   }
   if (minutesAgo > 90) {
     const count = Math.round(hoursAgo);
-    return (options.omitSuffix) ? `${count} hours`:`${count} hours ago`;
+    return options.omitSuffix ? `${count} hours` : `${count} hours ago`;
   }
   if (minutesAgo > 45) {
-    return (options.omitSuffix) ? 'hour':'an hour ago';
+    return options.omitSuffix ? 'hour' : 'an hour ago';
   }
   if (secondsAgo > 90) {
     const count = Math.round(minutesAgo);
-    return (options.omitSuffix) ? `${count} minutes`:`${count} minutes ago`;
+    return options.omitSuffix ? `${count} minutes` : `${count} minutes ago`;
   }
   if (secondsAgo > 45) {
-    return (options.omitSuffix) ? 'minute':'a minute ago';
+    return options.omitSuffix ? 'minute' : 'a minute ago';
   }
   if (secondsAgo > 15) {
-    return (options.omitSuffix) ? 'few seconds':'less than a minute ago';
+    return options.omitSuffix ? 'few seconds' : 'less than a minute ago';
   }
 
   if (secondsAgo >= 0) {
-    return (options.omitSuffix) ? 'few seconds':'a few seconds ago';
+    return options.omitSuffix ? 'few seconds' : 'a few seconds ago';
   }
 
   if (secondsAgo > -45) {
@@ -94,7 +95,7 @@ export const formatDuration = (ms: number) => {
   if (!_.isFinite(ms) || ms < 0) {
     return '';
   }
-
+  const { t } = useTranslation();
   const totalSeconds = Math.round(ms / 1000);
   const secondsInHour = 60 * 60;
   const secondsInMinute = 60;
@@ -105,12 +106,12 @@ export const formatDuration = (ms: number) => {
 
   let formatted = '';
   if (hours) {
-    formatted += `${hours}h `;
+    formatted += `${hours}${t('CONTENT:H')} `;
   }
   if (hours || minutes) {
-    formatted += `${minutes}m `;
+    formatted += `${minutes}${t('CONTENT:M')} `;
   }
-  formatted += `${seconds}s`;
+  formatted += `${seconds}${t('CONTENT:S')}`;
 
   return formatted;
 };

@@ -10,7 +10,7 @@ import { SecretModel } from '../models';
 import { SecretsPage } from './secret';
 import { saveAs } from 'file-saver';
 import { errorModal } from './modals';
-
+import { useTranslation } from 'react-i18next';
 const KubeConfigify = (kind, sa) => ({
   label: 'Download kubeconfig file',
   weight: 200,
@@ -18,7 +18,7 @@ const KubeConfigify = (kind, sa) => ({
     const name = _.get(sa, 'secrets[0].name');
     const namespace = sa.metadata.namespace;
 
-    k8sGet(SecretModel, name, namespace).then(({data}) => {
+    k8sGet(SecretModel, name, namespace).then(({ data }) => {
       const server = window.SERVER_FLAGS.kubeAPIServerURL;
       const clusterName = window.SERVER_FLAGS.clusterName;
 
@@ -57,21 +57,24 @@ const KubeConfigify = (kind, sa) => ({
       saveAs(blob, `kube-config-sa-${name}-${clusterName}`);
     }).catch(err => {
       const error = err.message;
-      errorModal({error});
+      errorModal({ error });
     });
   },
 });
 const menuActions = [KubeConfigify, Cog.factory.Delete];
 
-const Header = props => <ListHeader>
-  <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-  <ColHead {...props} className="col-sm-2 hidden-xs" sortField="secrets">Secrets</ColHead>
-  <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">Age</ColHead>
-</ListHeader>;
+const Header = props => {
+  const { t } = useTranslation();
+  return <ListHeader>
+    <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.name">{t('CONTENT:NAME')}</ColHead>
+    <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.namespace">{t('CONTENT:NAMESPACE')}</ColHead>
+    <ColHead {...props} className="col-sm-2 hidden-xs" sortField="secrets">{t('CONTENT:SECRET')}</ColHead>
+    <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">{t('CONTENT:AGE')}</ColHead>
+  </ListHeader>
+};
 
-const ServiceAccountRow = ({obj: serviceaccount}) => {
-  const {metadata: {name, namespace, uid, creationTimestamp}, secrets} = serviceaccount;
+const ServiceAccountRow = ({ obj: serviceaccount }) => {
+  const { metadata: { name, namespace, uid, creationTimestamp }, secrets } = serviceaccount;
 
   return (
     <ResourceRow obj={serviceaccount}>
@@ -92,9 +95,10 @@ const ServiceAccountRow = ({obj: serviceaccount}) => {
   );
 };
 
-const Details = ({obj: serviceaccount}) => {
-  const {metadata: {namespace}, secrets} = serviceaccount;
-  const filters = {selector: {field: 'metadata.name', values: new Set(_.map(secrets, 'name'))}};
+const Details = ({ obj: serviceaccount }) => {
+  const { t } = useTranslation();
+  const { metadata: { namespace }, secrets } = serviceaccount;
+  const filters = { selector: { field: 'metadata.name', values: new Set(_.map(secrets, 'name')) } };
 
   return (
     <React.Fragment>
@@ -102,7 +106,7 @@ const Details = ({obj: serviceaccount}) => {
         <SectionHeading text="Service Account Overview" />
         <ResourceSummary resource={serviceaccount} showPodSelector={false} showNodeSelector={false} />
       </div>
-      <SectionHeading text="Secrets" style={{marginLeft: '30px', marginTop: '30px', marginBottom: '-20px'}} />
+      <SectionHeading text={t('CONTENT:SECRET')} style={{ marginLeft: '30px', marginTop: '30px', marginBottom: '-20px' }} />
       <SecretsPage kind="Secret" canCreate={false} namespace={namespace} filters={filters} autoFocus={false} showTitle={false} />
     </React.Fragment>
   );
@@ -115,4 +119,4 @@ const ServiceAccountsDetailsPage = props => <DetailsPage
 />;
 const ServiceAccountsList = props => <List {...props} Header={Header} Row={ServiceAccountRow} />;
 const ServiceAccountsPage = props => <ListPage ListComponent={ServiceAccountsList} {...props} canCreate={true} />;
-export {ServiceAccountsList, ServiceAccountsPage, ServiceAccountsDetailsPage};
+export { ServiceAccountsList, ServiceAccountsPage, ServiceAccountsDetailsPage };
