@@ -27,6 +27,8 @@
     "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소"
   },
   "CONTENT": {
+    "FORMEDITOR": "폼 에디터",
+    "YAMLEDITOR": "Yaml 에디터",
     "ACCESSMODES": "접근 모드",
     "H": "시",
     "M": "분",
