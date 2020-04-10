@@ -29,6 +29,7 @@
     "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service"
   },
   "CONTENT": {
+    "PRIVILEGED": "Privileged",
     "FORMEDITOR": "Form Editor",
     "YAMLEDITOR": "Yaml Editor",
     "ACCESSMODES": "Access Modes",
