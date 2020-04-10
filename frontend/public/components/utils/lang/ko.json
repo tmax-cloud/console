@@ -251,7 +251,21 @@
     "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)",
     "ROLEREF": "Role Ref",
     "SUBJECTKIND": "대상 종류",
-    "SUBJECTNAME": "대상 이름"
+    "SUBJECTNAME": "대상 이름",
+    "OSUPDATE": "OS 업데이트",
+    "READY": "준비됨",
+    "NOTREADY": "준비 안됨",
+    "STATUS:ALL": "상태: 모두",
+    "STATUS:READY": "상태: 준비됨",
+    "STATUS:NOTREADY": "상태: 준비안됨",
+    "UNSCHEDULABLE": "예약 불가 ",
+    "CURRENTVERSION": "현재 버전",
+    "CHANNEL": "채널",
+    "UPDATESTATUS": "업데이트 버전",
+    "GROUP": "그룹",
+    "VERSION": "버전",
+    "NAMESPACED": "Namespaced",
+    "ESTABLISHED": "생성"
   },
   "RESOURCE": {
     "HOME": "홈",

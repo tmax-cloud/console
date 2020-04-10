@@ -253,7 +253,21 @@
     "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)",
     "ROLEREF": "Role Ref",
     "SUBJECTKIND": "Subject Kind",
-    "SUBJECTNAME": "Subject Name"
+    "SUBJECTNAME": "Subject Name",
+    "OSUPDATE": "OS Update",
+    "READY": "Ready",
+    "NOTREADY": "Not Ready",
+    "STATUS:ALL": "Status: All",
+    "STATUS:READY": "Status: Ready",
+    "STATUS:NOTREADY": "Status: Not Ready",
+    "UNSCHEDULABLE": "Unschedulable",
+    "CURRENTVERSION": "Current Version",
+    "CHANNEL": "Channel",
+    "UPDATESTATUS": "Update Status",
+    "GROUP": "Group",
+    "VERSION": "Version",
+    "NAMESPACED": "Namespaced",
+    "ESTABLISHED": "Established"
   },
   "RESOURCE": {
     "HOME": "Home",
