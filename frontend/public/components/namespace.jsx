@@ -18,9 +18,11 @@ import { NAMESPACE_LOCAL_STORAGE_KEY, ALL_NAMESPACES_KEY } from '../const';
 import { FLAGS, featureReducerName, flagPending, setFlag, connectToFlags } from '../features';
 import { openshiftHelpBase } from './utils/documentation';
 import { createProjectMessageStateToProps } from '../ui/ui-reducers';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 // import { MeteringPage } from './metering-overview';
 
-const getModel = useProjects => useProjects ? ProjectModel : NamespaceModel;
+const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
 const getRequester = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/requester']);
 
@@ -37,75 +39,100 @@ const deleteModal = (kind, ns) => {
     callback = () => deleteNamespaceModal({ kind, resource: ns });
   }
   if (tooltip) {
-    label = <div className="dropdown__disabled">
-      <Tooltip content={tooltip}>{label}</Tooltip>
-    </div>;
+    label = (
+      <div className="dropdown__disabled">
+        <Tooltip content={tooltip}>{label}</Tooltip>
+      </div>
+    );
   }
   return { label, weight, callback };
 };
 
 const nsMenuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, deleteModal];
 
-const NamespaceHeader = props => <ListHeader>
-  <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-sm-4 col-xs-6" sortField="status.phase">Status</ColHead>
-  <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.labels">Labels</ColHead>
-</ListHeader>;
+const NamespaceHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 col-xs-6" sortField="status.phase">
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.labels">
+        {t('CONTENT:LABELS')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
-const NamespaceRow = ({ obj: ns }) => <ResourceRow obj={ns}>
-  <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
-    <ResourceCog actions={nsMenuActions} kind="Namespace" resource={ns} />
-    <ResourceLink kind="Namespace" name={ns.metadata.name} title={ns.metadata.uid} />
-  </div>
-  <div className="col-sm-4 col-xs-6 co-break-word">
-    {ns.status.phase}
-  </div>
-  <div className="col-sm-4 hidden-xs">
-    <LabelList kind="Namespace" labels={ns.metadata.labels} />
-  </div>
-</ResourceRow>;
+const NamespaceRow = ({ obj: ns }) => (
+  <ResourceRow obj={ns}>
+    <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
+      <ResourceCog actions={nsMenuActions} kind="Namespace" resource={ns} />
+      <ResourceLink kind="Namespace" name={ns.metadata.name} title={ns.metadata.uid} />
+    </div>
+    <div className="col-sm-4 col-xs-6 co-break-word">{ns.status.phase}</div>
+    <div className="col-sm-4 hidden-xs">
+      <LabelList kind="Namespace" labels={ns.metadata.labels} />
+    </div>
+  </ResourceRow>
+);
 
 export const NamespacesList = props => <List {...props} Header={NamespaceHeader} Row={NamespaceRow} />;
 export const NamespacesPage = props => <ListPage {...props} ListComponent={NamespacesList} canCreate={true} createHandler={createNamespaceModal} />;
 
 const projectMenuActions = [Cog.factory.Edit, deleteModal];
 
-const ProjectHeader = props => <ListHeader>
-  <ColHead {...props} className="col-md-3 col-sm-6 col-xs-8" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-3 col-xs-4" sortField="status.phase">Status</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-3 hidden-xs" sortField="metadata.annotations.['openshift.io/requester']">Requester</ColHead>
-  <ColHead {...props} className="col-md-3 hidden-sm hidden-xs" sortField="metadata.labels">Labels</ColHead>
-</ListHeader>;
+const ProjectHeader = props => (
+  <ListHeader>
+    <ColHead {...props} className="col-md-3 col-sm-6 col-xs-8" sortField="metadata.name">
+      Name
+    </ColHead>
+    <ColHead {...props} className="col-md-3 col-sm-3 col-xs-4" sortField="status.phase">
+      Status
+    </ColHead>
+    <ColHead {...props} className="col-md-3 col-sm-3 hidden-xs" sortField="metadata.annotations.['openshift.io/requester']">
+      Requester
+    </ColHead>
+    <ColHead {...props} className="col-md-3 hidden-sm hidden-xs" sortField="metadata.labels">
+      Labels
+    </ColHead>
+  </ListHeader>
+);
 
 const ProjectRow = ({ obj: project }) => {
   const displayName = getDisplayName(project);
   const requester = getRequester(project);
-  return <ResourceRow obj={project}>
-    <div className="col-md-3 col-sm-6 col-xs-8 co-resource-link-wrapper">
-      <ResourceCog actions={projectMenuActions} kind="Project" resource={project} />
-      <ResourceLink kind="Project" name={project.metadata.name} title={displayName || project.metadata.uid} />
-    </div>
-    <div className="col-md-3 col-sm-3 col-xs-4">
-      {project.status.phase}
-    </div>
-    <div className="col-md-3 col-sm-3 hidden-xs">
-      {requester || <span className="text-muted">No requester</span>}
-    </div>
-    <div className="col-md-3 hidden-sm hidden-xs">
-      <LabelList kind="Project" labels={project.metadata.labels} />
-    </div>
-  </ResourceRow>;
+  return (
+    <ResourceRow obj={project}>
+      <div className="col-md-3 col-sm-6 col-xs-8 co-resource-link-wrapper">
+        <ResourceCog actions={projectMenuActions} kind="Project" resource={project} />
+        <ResourceLink kind="Project" name={project.metadata.name} title={displayName || project.metadata.uid} />
+      </div>
+      <div className="col-md-3 col-sm-3 col-xs-4">{project.status.phase}</div>
+      <div className="col-md-3 col-sm-3 hidden-xs">{requester || <span className="text-muted">No requester</span>}</div>
+      <div className="col-md-3 hidden-sm hidden-xs">
+        <LabelList kind="Project" labels={project.metadata.labels} />
+      </div>
+    </ResourceRow>
+  );
 };
 
 const ProjectList_ = props => {
-  const ProjectEmptyMessageDetail = <React.Fragment>
-    <p className="co-pre-line">
-      {props.createProjectMessage || 'Create a project for your application.'}
-    </p>
-    <p>
-      To learn more, visit the OpenShift <a href={openshiftHelpBase} target="_blank" rel="noopener noreferrer">documentation</a>.
-    </p>
-  </React.Fragment>;
+  const ProjectEmptyMessageDetail = (
+    <React.Fragment>
+      <p className="co-pre-line">{props.createProjectMessage || 'Create a project for your application.'}</p>
+      <p>
+        To learn more, visit the OpenShift{' '}
+        <a href={openshiftHelpBase} target="_blank" rel="noopener noreferrer">
+          documentation
+        </a>
+        .
+      </p>
+    </React.Fragment>
+  );
   const ProjectEmptyMessage = () => <MsgBox title="Welcome to OpenShift" detail={ProjectEmptyMessageDetail} />;
   return <List {...props} Header={ProjectHeader} Row={ProjectRow} EmptyMsg={ProjectEmptyMessage} />;
 };
@@ -133,10 +160,10 @@ class PullSecret extends SafetyFirst {
       return;
     }
     k8sGet(SecretModel, null, namespaceName, { queryParams: { fieldSelector: 'type=kubernetes.io/dockerconfigjson' } })
-      .then((pullSecrets) => {
+      .then(pullSecrets => {
         this.setState({ isLoading: false, data: _.get(pullSecrets, 'items[0]') });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ isLoading: false, data: undefined });
 
         // A 404 just means that no pull secrets exist
@@ -151,64 +178,84 @@ class PullSecret extends SafetyFirst {
       return <LoadingInline />;
     }
     const modal = () => configureNamespacePullSecretModal({ namespace: this.props.namespace, pullSecret: this.state.data });
-    return <a className="co-m-modal-link" onClick={modal}>{_.get(this.state.data, 'metadata.name') || 'Not Configured'}</a>;
+    return (
+      <a className="co-m-modal-link" onClick={modal}>
+        {_.get(this.state.data, 'metadata.name') || 'Not Configured'}
+      </a>
+    );
   }
 }
 
-const ResourceUsage = requirePrometheus(({ ns }) => <div className="co-m-pane__body">
-  <SectionHeading text="Resource Usage" />
-  <div className="row">
-    <div className="col-sm-6 col-xs-12">
-      <Line title="CPU Shares" query={[
-        {
-          name: 'Used',
-          query: `namespace:container_spec_cpu_shares:sum{namespace='${ns.metadata.name}'}`,
-        },
-      ]} />
+const ResourceUsage = requirePrometheus(({ ns }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-m-pane__body">
+      <SectionHeading text={t('CONTENT:RESOURCEUSAGE')} />
+      <div className="row">
+        <div className="col-sm-6 col-xs-12">
+          <Line
+            title={t('CONTENT:CPUSHARE')}
+            query={[
+              {
+                name: 'Used',
+                query: `namespace:container_spec_cpu_shares:sum{namespace='${ns.metadata.name}'}`,
+              },
+            ]}
+          />
+        </div>
+        <div className="col-sm-6 col-xs-12">
+          <Line
+            title={t('CONTENT:RAM')}
+            query={[
+              {
+                name: 'Used',
+                query: `namespace:container_memory_usage_bytes:sum{namespace='${ns.metadata.name}'}`,
+              },
+            ]}
+          />
+        </div>
+      </div>
+      <Bar title={t('CONTENT:MEMORYUSAGEBYPOD(TOP 10)')} query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${ns.metadata.name}"})))`} humanize={humanizeMem} metric="pod_name" />
     </div>
-    <div className="col-sm-6 col-xs-12">
-      <Line title="RAM" query={[
-        {
-          name: 'Used',
-          query: `namespace:container_memory_usage_bytes:sum{namespace='${ns.metadata.name}'}`,
-        },
-      ]} />
-    </div>
-  </div>
-  <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${ns.metadata.name}"})))`} humanize={humanizeMem} metric="pod_name" />
-</div>);
+  );
+});
 
 const Details = ({ obj: ns }) => {
   const displayName = getDisplayName(ns);
   const requester = getRequester(ns);
-  return <div>
-    <div className="co-m-pane__body">
-      <SectionHeading text={`${ns.kind} Overview`} />
-      <div className="row">
-        <div className="col-sm-6 col-xs-12">
-          <ResourceSummary resource={ns} showPodSelector={false} showNodeSelector={false}>
-            {displayName && <dt>Display Name</dt>}
-            {displayName && <dd>{displayName}</dd>}
-            {requester && <dt>Requester</dt>}
-            {requester && <dd>{requester}</dd>}
-          </ResourceSummary>
-        </div>
-        <div className="col-sm-6 col-xs-12">
-          <dl className="co-m-pane__details">
-            <dt>Status</dt>
-            <dd>{ns.status.phase}</dd>
-            <dt>Default Pull Secret</dt>
-            <dd><PullSecret namespace={ns} /></dd>
-            <dt>Network Policies</dt>
-            <dd>
-              <Link to={`/k8s/ns/${ns.metadata.name}/networkpolicies`}>Network Policies</Link>
-            </dd>
-          </dl>
+  const { t } = useTranslation();
+  return (
+    <div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
+        <div className="row">
+          <div className="col-sm-6 col-xs-12">
+            <ResourceSummary resource={ns} showPodSelector={false} showNodeSelector={false}>
+              {displayName && <dt>{t('CONTENT:DISPLAYNAME')}</dt>}
+              {displayName && <dd>{displayName}</dd>}
+              {requester && <dt>{t('CONTENT:REQUESTER')}</dt>}
+              {requester && <dd>{requester}</dd>}
+            </ResourceSummary>
+          </div>
+          <div className="col-sm-6 col-xs-12">
+            <dl className="co-m-pane__details">
+              <dt>{t('CONTENT:STATUS')}</dt>
+              <dd>{ns.status.phase}</dd>
+              <dt>{t('CONTENT:DEFAULTPULLSECRET')}</dt>
+              <dd>
+                <PullSecret namespace={ns} />
+              </dd>
+              <dt>{t('CONTENT:NETWORKPOLICIES')}</dt>
+              <dd>
+                <Link to={`/k8s/ns/${ns.metadata.name}/networkpolicies`}>{t('CONTENT:NETWORKPOLICIES')}</Link>
+              </dd>
+            </dl>
+          </div>
         </div>
       </div>
+      <ResourceUsage ns={ns} />
     </div>
-    <ResourceUsage ns={ns} />
-  </div>;
+  );
 };
 
 const RolesPage = ({ obj: { metadata } }) => <RoleBindingsPage namespace={metadata.name} showTitle={false} />;
@@ -227,7 +274,6 @@ const namespaceDropdownStateToProps = state => {
 };
 
 class NamespaceDropdown_ extends React.Component {
-
   componentDidUpdate() {
     const { dispatch } = this.props;
     // if (namespace.loaded) {
@@ -250,26 +296,34 @@ class NamespaceDropdown_ extends React.Component {
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
     }
-    _.map(data, 'metadata.name').sort().forEach(name => {
-      items[name] = name;
-    });
+    _.map(data, 'metadata.name')
+      .sort()
+      .forEach(name => {
+        items[name] = name;
+      });
 
-    if (data.length > 1) { // 객체는 iterable한 값이 아니어서 최상위 값을 고를 수가 없음 그래서 data를 다시 sorting해서 그 첫번째 값을 선택되는 namespace로 지정
+    if (data.length > 1) {
+      // 객체는 iterable한 값이 아니어서 최상위 값을 고를 수가 없음 그래서 data를 다시 sorting해서 그 첫번째 값을 선택되는 namespace로 지정
       data.sort(function (a, b) {
         return a.metadata.name < b.metadata.name ? -1 : a.metadata.name > b.metadata.name ? 1 : 0;
       });
     }
 
     if (window.localStorage.getItem('accessToken')) {
-      if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') { // user 계정일 경우
-        if (data.length > 0) { // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
+      if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+        // user 계정일 경우
+        if (data.length > 0) {
+          // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
           activeNamespace = data[0].metadata.name;
         }
-        if (!localStorage.getItem('bridge/last-namespace-name')) { // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
+        if (!localStorage.getItem('bridge/last-namespace-name')) {
+          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
           dispatch(UIActions.setActiveNamespace(activeNamespace));
         }
-      } else { // admin 계정 일 경우
-        if (!localStorage.getItem('bridge/last-namespace-name')) { // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
+      } else {
+        // admin 계정 일 경우
+        if (!localStorage.getItem('bridge/last-namespace-name')) {
+          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
           dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
         }
       }
@@ -285,83 +339,92 @@ class NamespaceDropdown_ extends React.Component {
 
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
 
-    return <div className="co-namespace-selector">
-      {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && <Dropdown
-        className="co-namespace-selector__dropdown"
-        menuClassName="co-namespace-selector__menu"
-        noButton
-        canFavorite
-        items={items}
-        titlePrefix={model.label}
-        title={title}
-        onChange={onChange}
-        selectedKey={activeNamespace || ALL_NAMESPACES_KEY}
-        autocompleteFilter={autocompleteFilter}
-        autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`}
-        defaultBookmarks={defaultBookmarks}
-        storageKey={NAMESPACE_LOCAL_STORAGE_KEY}
-        shortCut="n" />}
-    </div>;
+    return (
+      <div className="co-namespace-selector">
+        {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
+          <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
+        )}
+      </div>
+    );
   }
 }
 
-const MeteringPage = requirePrometheus((props) => <div className="co-m-pane__body">
-  <SectionHeading text="Metering" />
-  <div className="row">
-    {/* <div className="col-sm-6 col-xs-12"> */}
-    <div className="col-md-4">
-      <Line title="CPU Shares" query={[
-        {
-          name: 'Used',
-          query: 'cpu',
-        },
-      ]} />
+const MeteringPage = requirePrometheus(props => (
+  <div className="co-m-pane__body">
+    <SectionHeading text="Metering" />
+    <div className="row">
+      {/* <div className="col-sm-6 col-xs-12"> */}
+      <div className="col-md-4">
+        <Line
+          title="CPU Shares"
+          query={[
+            {
+              name: 'Used',
+              query: 'cpu',
+            },
+          ]}
+        />
+      </div>
+      <div className="col-md-4">
+        <Line
+          title="Memory"
+          query={[
+            {
+              name: 'Used',
+              query: 'memory',
+            },
+          ]}
+        />
+      </div>
+      <div className="col-md-4">
+        <Line
+          title="Storage"
+          query={[
+            {
+              name: 'Used',
+              query: 'storage',
+            },
+          ]}
+        />
+      </div>
+      <div className="col-md-4">
+        <Line
+          title="Public IP"
+          query={[
+            {
+              name: 'Used',
+              query: 'publicIp',
+            },
+          ]}
+        />
+      </div>
+      <div className="col-md-4">
+        <Line
+          title="GPU"
+          query={[
+            {
+              name: 'Used',
+              query: 'gpu',
+            },
+          ]}
+        />
+      </div>
     </div>
-    <div className="col-md-4">
-      <Line title="Memory" query={[
-        {
-          name: 'Used',
-          query: 'memory',
-        },
-      ]} />
-    </div>
-    <div className="col-md-4">
-      <Line title="Storage" query={[
-        {
-          name: 'Used',
-          query: 'storage',
-        },
-      ]} />
-    </div>
-    <div className="col-md-4">
-      <Line title="Public IP" query={[
-        {
-          name: 'Used',
-          query: 'publicIp',
-        },
-      ]} />
-    </div>
-    <div className="col-md-4">
-      <Line title="GPU" query={[
-        {
-          name: 'Used',
-          query: 'gpu',
-        },
-      ]} />
-    </div>
-  </div>
-  {/* </div>
+    {/* </div>
   {/* <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${props.namespace}"})))`} humanize={humanizeMem} metric="pod_name" /> */}
-</div>);
-
+  </div>
+));
 
 const NamespaceDropdown = connect(namespaceDropdownStateToProps)(NamespaceDropdown_);
 
-const NamespaceSelector_ = ({ useProjects, inFlight }) => inFlight
-  ? <div className="co-namespace-selector" />
-  : <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
-    <NamespaceDropdown useProjects={useProjects} />
-  </Firehose>;
+const NamespaceSelector_ = ({ useProjects, inFlight }) =>
+  inFlight ? (
+    <div className="co-namespace-selector" />
+  ) : (
+    <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
+      <NamespaceDropdown useProjects={useProjects} />
+    </Firehose>
+  );
 
 const namespaceSelectorStateToProps = ({ k8s }) => ({
   inFlight: k8s.getIn(['RESOURCES', 'inFlight']),
@@ -370,14 +433,6 @@ const namespaceSelectorStateToProps = ({ k8s }) => ({
 
 export const NamespaceSelector = connect(namespaceSelectorStateToProps)(NamespaceSelector_);
 
-export const NamespacesDetailsPage = props => <DetailsPage
-  {...props}
-  menuActions={nsMenuActions}
-  pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage), navFactory.metering(Metering)]}
-/>;
+export const NamespacesDetailsPage = props => <DetailsPage {...props} menuActions={nsMenuActions} pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage), navFactory.metering(Metering)]} />;
 
-export const ProjectsDetailsPage = props => <DetailsPage
-  {...props}
-  menuActions={projectMenuActions}
-  pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage)]}
-/>;
+export const ProjectsDetailsPage = props => <DetailsPage {...props} menuActions={projectMenuActions} pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage)]} />;

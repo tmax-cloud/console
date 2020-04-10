@@ -92,7 +92,6 @@ export const LimitRangeModel: K8sKind = {
   plural: 'limitranges',
   apiVersion: 'v1',
   abbr: 'LR',
-  apiGroup: 'app',
   labelPlural: 'Limit Ranges',
   path: 'limitranges',
   id: 'limitrange',

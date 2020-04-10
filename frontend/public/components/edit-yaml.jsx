@@ -21,7 +21,7 @@ import { sha512 } from 'js-sha512';
 
 const { snippetManager } = ace.acequire('ace/snippets');
 snippetManager.register([...snippets.values()], 'yaml');
-ace.acequire('ace/ext/language_tools').addCompleter({getCompletions});
+ace.acequire('ace/ext/language_tools').addCompleter({ getCompletions });
 
 let id = 0;
 
@@ -33,7 +33,7 @@ const generateObjToLoad = (kind, templateName, namespace = 'default') => {
   return sampleObj;
 };
 
-const stateToProps = ({k8s}) => ({
+const stateToProps = ({ k8s }) => ({
   models: k8s.getIn(['RESOURCES', 'models']),
 });
 
@@ -57,7 +57,7 @@ export const EditYAML = connect(stateToProps)(
       this.id = `edit-yaml-${++id}`;
       this.ace = null;
       this.doc = null;
-      this.resize_ = () => this.setState({height: this.height});
+      this.resize_ = () => this.setState({ height: this.height });
       // k8s uses strings for resource versions
       this.displayedVersion = '0';
       // Default cancel action is browser back navigation
@@ -87,7 +87,7 @@ export const EditYAML = connect(stateToProps)(
     }
 
     handleError(error) {
-      this.setState({error, success: null}, () => {
+      this.setState({ error, success: null }, () => {
         if (!this.ace) {
           return;
         }
@@ -125,7 +125,7 @@ export const EditYAML = connect(stateToProps)(
     componentWillReceiveProps(nextProps) {
       const newVersion = _.get(nextProps.obj, 'metadata.resourceVersion');
       const stale = this.displayedVersion !== newVersion;
-      this.setState({stale: stale });
+      this.setState({ stale: stale });
       if (nextProps.sampleObj) {
         this.loadYaml(!_.isEqual(this.state.sampleObj, nextProps.sampleObj), nextProps.sampleObj);
       } else {
@@ -133,10 +133,8 @@ export const EditYAML = connect(stateToProps)(
       }
     }
 
-    get height () {
-      return Math.floor(
-        document.body.getBoundingClientRect().bottom - this.editor.getBoundingClientRect().top
-      );
+    get height() {
+      return Math.floor(document.body.getBoundingClientRect().bottom - this.editor.getBoundingClientRect().top);
     }
 
     reload() {
@@ -148,7 +146,7 @@ export const EditYAML = connect(stateToProps)(
       });
     }
 
-    loadYaml(reload=false, obj=this.props.obj) {
+    loadYaml(reload = false, obj = this.props.obj) {
       if (_.isEmpty(obj)) {
         return;
       }
@@ -182,7 +180,7 @@ export const EditYAML = connect(stateToProps)(
       this.ace.setOption('scrollPastEnd', 0.1);
       this.ace.setOption('tabSize', 2);
       this.ace.setOption('showPrintMargin', false);
-      this.ace.setOptions({enableBasicAutocompletion: true, enableLiveAutocompletion: !window.navigator.webdriver, enableSnippets: true});
+      this.ace.setOptions({ enableBasicAutocompletion: true, enableLiveAutocompletion: !window.navigator.webdriver, enableSnippets: true });
 
       // Allow undo after saving but not after first loading the document
       if (!this.state.initialized) {
@@ -190,7 +188,7 @@ export const EditYAML = connect(stateToProps)(
       }
       this.ace.focus();
       this.displayedVersion = _.get(obj, 'metadata.resourceVersion');
-      this.setState({initialized: true, stale: false});
+      this.setState({ initialized: true, stale: false });
       this.resize_();
     }
 
@@ -214,12 +212,12 @@ export const EditYAML = connect(stateToProps)(
       }
 
       if (obj.kind === 'User') {
-        // 미리: sha512 로직 추가 
+        // 미리: sha512 로직 추가
         obj.userInfo.password = sha512(obj.userInfo.password);
       }
-      
+
       // console.log(obj.userInfo.password);
-      
+
       const model = this.getModel(obj);
       if (!model) {
         this.handleError(`The server doesn't have a resource type "kind: ${obj.kind}, apiVersion: ${obj.apiVersion}".`);
@@ -250,7 +248,7 @@ export const EditYAML = connect(stateToProps)(
         }
       }
 
-      this.setState({success: null, error: null}, () => {
+      this.setState({ success: null, error: null }, () => {
         let action = k8sUpdate;
         let redirect = false;
         if (this.props.create) {
@@ -266,14 +264,14 @@ export const EditYAML = connect(stateToProps)(
               return;
             }
             const success = `${newName} has been updated to version ${o.metadata.resourceVersion}`;
-            this.setState({success, error: null});
+            this.setState({ success, error: null });
             this.loadYaml(true, o);
           })
           .catch(e => this.handleError(e.message));
       });
     }
 
-    download (data = this.doc.getValue()) {
+    download(data = this.doc.getValue()) {
       const blob = new Blob([data], { type: 'text/yaml;charset=utf-8' });
       let filename = 'k8s-object.yaml';
       try {
@@ -289,16 +287,16 @@ export const EditYAML = connect(stateToProps)(
 
     loadSampleYaml_(templateName = 'default', kind = referenceForModel(this.props.model)) {
       const sampleObj = generateObjToLoad(kind, templateName, this.props.obj.metadata.namespace);
-      this.setState({sampleObj});
+      this.setState({ sampleObj });
       this.loadYaml(true, sampleObj);
     }
 
-    downloadSampleYaml_ (templateName = 'default', kind = referenceForModel(this.props.model)) {
+    downloadSampleYaml_(templateName = 'default', kind = referenceForModel(this.props.model)) {
       const data = safeDump(generateObjToLoad(kind, templateName, this.props.obj.metadata.namespace));
       this.download(data);
     }
 
-    render () {
+    render() {
       if (_.isEmpty(this.props.obj)) {
         return <Loading />;
       }
@@ -308,40 +306,72 @@ export const EditYAML = connect(stateToProps)(
         The current solution uses divs that are relative -> absolute -> flexbox pinning the button row with margin-top: auto
       */
 
-      const {error, success, stale} = this.state;
-      const {create, obj, showHeader = false} = this.props;
+      const { error, success, stale } = this.state;
+      const { create, obj, showHeader = false } = this.props;
       const kind = obj.kind;
       const model = this.getModel(obj);
 
-      return <div>
-        {showHeader && <div className="yaml-editor-header">
-          {`${create ? 'Create' : 'Edit'} ${_.get(model, 'label', kind)}`}
-        </div>}
-        <div className="co-p-has-sidebar">
-          <div className="co-p-has-sidebar__body">
-            <div className="yaml-editor" ref={r => this.editor = r} style={{height: this.state.height}}>
-              <div className="absolute-zero">
-                <div className="full-width-and-height yaml-editor--flexbox">
-                  <div id={this.id} key={this.id} className="yaml-editor--acebox" />
-                  <div className="yaml-editor--buttons">
-                    {error && <p className="alert alert-danger"><span className="pficon pficon-error-circle-o"></span>{error}</p>}
-                    {success && <p className="alert alert-success"><span className="pficon pficon-ok"></span>{success}</p>}
-                    {stale && <p className="alert alert-info">
-                      <span className="pficon pficon-info"></span>This object has been updated. Click reload to see the new version.
-                    </p>}
-                    {create && <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>Create</button>}
-                    {!create && <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>Save Changes</button>}
-                    {!create && <button type="submit" className="btn btn-default" id="reload-object" onClick={() => this.reload()}>Reload</button>}
-                    <button className="btn btn-default" id="cancel" onClick={() => this.onCancel()}>Cancel</button>
-                    <button type="submit" className="btn btn-default pull-right hidden-sm hidden-xs" onClick={() => this.download()}><i className="fa fa-download"></i>&nbsp;Download</button>
+      return (
+        <div>
+          {showHeader && <div className="yaml-editor-header">{`${create ? 'Create' : 'Edit'} ${_.get(model, 'label', kind)}`}</div>}
+          <div className="co-p-has-sidebar">
+            <div className="co-p-has-sidebar__body">
+              <div className="yaml-editor" ref={r => (this.editor = r)} style={{ height: this.state.height }}>
+                <div className="absolute-zero">
+                  <div className="full-width-and-height yaml-editor--flexbox">
+                    <div id={this.id} key={this.id} className="yaml-editor--acebox" />
+                    <div className="yaml-editor--buttons">
+                      {error && (
+                        <p className="alert alert-danger">
+                          <span className="pficon pficon-error-circle-o"></span>
+                          {error}
+                        </p>
+                      )}
+                      {success && (
+                        <p className="alert alert-success">
+                          <span className="pficon pficon-ok"></span>
+                          {success}
+                        </p>
+                      )}
+                      {stale && (
+                        <p className="alert alert-info">
+                          <span className="pficon pficon-info"></span>This object has been updated. Click reload to see the new version.
+                        </p>
+                      )}
+                      {create && (
+                        <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>
+                          Create
+                        </button>
+                      )}
+                      {(!create && (obj.kind === 'NamespaceClaim' || obj.kind === 'ResourceQuotaClaim' || obj.kind === 'RoleBindingClaim') && obj.status && obj.status.status !== 'Awaiting' && (
+                        <button type="submit" className="btn btn-primary" id="save-changes" disabled={true} onClick={() => this.save()}>
+                          Save Changes
+                        </button>
+                      )) || (
+                        <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>
+                          Save Changes
+                        </button>
+                      )}
+                      {!create && (
+                        <button type="submit" className="btn btn-default" id="reload-object" onClick={() => this.reload()}>
+                          Reload
+                        </button>
+                      )}
+                      <button className="btn btn-default" id="cancel" onClick={() => this.onCancel()}>
+                        Cancel
+                      </button>
+                      <button type="submit" className="btn btn-default pull-right hidden-sm hidden-xs" onClick={() => this.download()}>
+                        <i className="fa fa-download"></i>&nbsp;Download
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <ResourceSidebar isCreateMode={create} kindObj={model} height={this.state.height} loadSampleYaml={this.loadSampleYaml_} downloadSampleYaml={this.downloadSampleYaml_} />
           </div>
-          <ResourceSidebar isCreateMode={create} kindObj={model} height={this.state.height} loadSampleYaml={this.loadSampleYaml_} downloadSampleYaml={this.downloadSampleYaml_} />
         </div>
-      </div>;
+      );
     }
-  }
+  },
 );

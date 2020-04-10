@@ -9,11 +9,11 @@ import { Cog, navFactory, LabelList, ResourceCog, SectionHeading, ResourceLink, 
 import { Line, requirePrometheus } from './graphs';
 import { NodeModel } from '../models';
 import { CamelCaseWrap } from './utils/camel-case-wrap';
-
+import { useTranslation } from 'react-i18next';
 const MarkAsUnschedulable = (kind, obj) => ({
   label: 'Mark as Unschedulable',
   hidden: _.get(obj, 'spec.unschedulable'),
-  callback: () => configureUnschedulableModal({resource: obj}),
+  callback: () => configureUnschedulableModal({ resource: obj }),
 });
 
 const MarkAsSchedulable = (kind, obj) => ({
@@ -24,9 +24,9 @@ const MarkAsSchedulable = (kind, obj) => ({
 
 const menuActions = [MarkAsSchedulable, MarkAsUnschedulable, Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit];
 
-const NodeCog = ({node}) => <ResourceCog actions={menuActions} kind="Node" resource={node} />;
+const NodeCog = ({ node }) => <ResourceCog actions={menuActions} kind="Node" resource={node} />;
 
-const NodeIPList = ({ips, expand = false}) => <div>
+const NodeIPList = ({ ips, expand = false }) => <div>
   {_.sortBy(ips, ['type']).map((ip, i) => <div key={i} className="co-node-ip">
     {(expand || ip.type === 'InternalIP') && <p>
       <span className="co-ip-type">{ip.type.replace(/([a-z])([A-Z])/g, '$1 $2')}: </span>
@@ -36,31 +36,38 @@ const NodeIPList = ({ips, expand = false}) => <div>
 </div>;
 
 const Header = props => {
+  const { t } = useTranslation();
   if (!props.data) {
     return null;
   }
   return <ListHeader>
-    <ColHead {...props} className="col-xs-4" sortField="metadata.name">Node Name</ColHead>
-    <ColHead {...props} className="col-sm-2 col-xs-4" sortFunc="nodeReadiness">Status</ColHead>
-    <ColHead {...props} className="col-sm-3 col-xs-4" sortFunc="nodeUpdateStatus">OS Update</ColHead>
-    <ColHead {...props} className="col-sm-3 hidden-xs" sortField="status.addresses">Node Addresses</ColHead>
+    <ColHead {...props} className="col-xs-4" sortField="metadata.name">{t('CONTENT:NODENAME')}</ColHead>
+    <ColHead {...props} className="col-sm-2 col-xs-4" sortFunc="nodeReadiness">{t('CONTENT:STATUS')}</ColHead>
+    <ColHead {...props} className="col-sm-3 col-xs-4" sortFunc="nodeUpdateStatus">{t('CONTENT:OSUPDATE')}</ColHead>
+    <ColHead {...props} className="col-sm-3 hidden-xs" sortField="status.addresses">{t('CONTENT:NODEADDRESSES')}</ColHead>
   </ListHeader>;
 };
 
-const HeaderSearch = props => <ListHeader>
-  <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-5" sortField="metadata.name">Node Name</ColHead>
-  <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortFunc="nodeReadiness">Status</ColHead>
-  <ColHead {...props} className="col-sm-5 col-xs-7" sortField="metadata.labels">Node Labels</ColHead>
-  <ColHead {...props} className="col-md-2 col-sm-3 hidden-xs" sortField="status.addresses">Node Addresses</ColHead>
-</ListHeader>;
+const HeaderSearch = props => {
+  const { t } = useTranslation();
+  return <ListHeader>
+    <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-5" sortField="metadata.name">{t('CONTENT:NODENAME')}</ColHead>
+    <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortFunc="nodeReadiness">{t('CONTENT:STATUS')}</ColHead>
+    <ColHead {...props} className="col-sm-5 col-xs-7" sortField="metadata.labels">{t('CONTENT:NODELABELS')}</ColHead>
+    <ColHead {...props} className="col-md-2 col-sm-3 hidden-xs" sortField="status.addresses">{t('CONTENT:NODEADDRESSES')}</ColHead>
+  </ListHeader>
+};
 
-const NodeStatus = ({node}) => isNodeReady(node) ? <span className="node-ready"><i className="fa fa-check"></i> Ready</span> : <span className="node-not-ready"><i className="fa fa-minus-circle"></i> Not Ready</span>;
-
-const NodeCLUpdateStatus = ({node}) => {
+const NodeStatus = ({ node }) => {
+  const { t } = useTranslation();
+  return isNodeReady(node) ? <span className="node-ready"><i className="fa fa-check"></i>{t('CONTENT:READY')}</span>
+    : <span className="node-not-ready"><i className="fa fa-minus-circle"></i>{t('CONTENT:NOTREADY')}</span>;
+}
+const NodeCLUpdateStatus = ({ node }) => {
   const updateStatus = containerLinuxUpdateOperator.getUpdateStatus(node);
   const newVersion = containerLinuxUpdateOperator.getNewVersion(node);
   const lastCheckedDate = containerLinuxUpdateOperator.getLastCheckedTime(node);
-
+  const { t } = useTranslation();
   return <div>
     {updateStatus ? <span>{updateStatus.className && <span><i className={updateStatus.className}></i>&nbsp;&nbsp;</span>}{updateStatus.text}</span> : null}
     {!_.isEmpty(newVersion) && !containerLinuxUpdateOperator.isSoftwareUpToDate(node) &&
@@ -74,14 +81,14 @@ const NodeCLUpdateStatus = ({node}) => {
   </div>;
 };
 
-const NodeCLStatusRow = ({node}) => {
+const NodeCLStatusRow = ({ node }) => {
   const updateStatus = containerLinuxUpdateOperator.getUpdateStatus(node);
   return updateStatus ? <span>{updateStatus.className && <span><i className={updateStatus.className}></i>&nbsp;&nbsp;</span>}{updateStatus.text}</span> : null;
 };
 
-const NodeRow = ({obj: node, expand}) => {
+const NodeRow = ({ obj: node, expand }) => {
   const isOperatorInstalled = containerLinuxUpdateOperator.isOperatorInstalled(node);
-
+  const { t } = useTranslation();
   return <ResourceRow obj={node}>
     <div className="col-xs-4 co-resource-link-wrapper">
       <NodeCog node={node} />
@@ -89,7 +96,7 @@ const NodeRow = ({obj: node, expand}) => {
     </div>
     <div className="col-sm-2 col-xs-4"><NodeStatus node={node} /></div>
     <div className="col-sm-3 col-xs-4">
-      {isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">Not configured</span>}
+      {isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED')}</span>}
     </div>
     <div className="col-sm-3 hidden-xs"><NodeIPList ips={node.status.addresses} expand={expand} /></div>
     {expand && <div className="col-xs-12">
@@ -98,7 +105,7 @@ const NodeRow = ({obj: node, expand}) => {
   </ResourceRow>;
 };
 
-const NodeRowSearch = ({obj: node}) => <div className="row co-resource-list__item">
+const NodeRowSearch = ({ obj: node }) => <div className="row co-resource-list__item">
   <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">
     <NodeCog node={node} />
     <ResourceLink kind="Node" name={node.metadata.name} title={node.metadata.uid} />
@@ -129,8 +136,8 @@ const dropdownFilters = [{
 }];
 export const NodesPage = props => <ListPage {...props} ListComponent={NodesList} dropdownFilters={dropdownFilters} canExpand={true} />;
 
-const NodeGraphs = requirePrometheus(({node}) => {
-  const nodeIp = _.find<{type: string, address: string}>(node.status.addresses, {type: 'InternalIP'});
+const NodeGraphs = requirePrometheus(({ node }) => {
+  const nodeIp = _.find<{ type: string, address: string }>(node.status.addresses, { type: 'InternalIP' });
   const ipQuery = nodeIp && `{instance=~'.*${nodeIp.address}.*'}`;
   const memoryLimit = units.dehumanize(node.status.allocatable.memory, 'binaryBytesWithoutB').value;
   const integerLimit = input => parseInt(input, 10);
@@ -161,7 +168,8 @@ const NodeGraphs = requirePrometheus(({node}) => {
   </React.Fragment>;
 });
 
-const Details = ({obj: node}) => {
+const Details = ({ obj: node }) => {
+  const { t } = useTranslation();
   return <React.Fragment>
     <div className="co-m-pane__body">
       <SectionHeading text="Node Overview" />
@@ -169,65 +177,65 @@ const Details = ({obj: node}) => {
       <div className="row">
         <div className="col-md-6 col-xs-12">
           <dl className="co-m-pane__details">
-            <dt>Node Name</dt>
+            <dt>{t('CONTENT:NODENAME')}</dt>
             <dd>{node.metadata.name || '-'}</dd>
-            <dt>External ID</dt>
+            <dt>{t('CONTENT:EXTERNALID')}</dt>
             <dd>{_.get(node, 'spec.externalID', '-')}</dd>
-            <dt>Node Addresses</dt>
+            <dt>{t('CONTENT:NODEADDRESSES')}</dt>
             <dd><NodeIPList ips={_.get(node, 'status.addresses')} expand={true} /></dd>
-            <dt>Node Labels</dt>
+            <dt>{t('CONTENT:NODELABELS')}</dt>
             <dd><LabelList kind="Node" labels={node.metadata.labels} /></dd>
-            <dt>Annotations</dt>
+            <dt>{t('CONTENT:ANNOTATIONS')}</dt>
             <dd><a className="co-m-modal-link" onClick={Cog.factory.ModifyAnnotations(NodeModel, node).callback}>{pluralize(_.size(node.metadata.annotations), 'Annotation')}</a></dd>
-            <dt>Provider ID</dt>
+            <dt>{t('CONTENT:PROVIDERID')}</dt>
             <dd>{cloudProviderNames([cloudProviderID(node)])}</dd>
-            {_.has(node, 'spec.unschedulable') && <dt>Unschedulable</dt>}
+            {_.has(node, 'spec.unschedulable') && <dt>{t('CONTENT:UNSCHEDULABLE')}</dt>}
             {_.has(node, 'spec.unschedulable') && <dd className="text-capitalize">{_.get(node, 'spec.unschedulable', '-').toString()}
             </dd>}
-            <dt>Created</dt>
+            <dt>{t('CONTENT:CREATED')}</dt>
             <dd><Timestamp timestamp={node.metadata.creationTimestamp} /></dd>
           </dl>
         </div>
         <div className="col-md-6 col-xs-12">
           <dl className="co-m-pane__details">
-            <dt>Operating System</dt>
+            <dt>{t('CONTENT:OPERATINGSYSTEM')}</dt>
             <dd className="text-capitalize">{_.get(node, 'status.nodeInfo.operatingSystem', '-')}</dd>
-            <dt>Architecture</dt>
+            <dt>{t('CONTENT:ARCHITECTURE')}</dt>
             <dd className="text-uppercase">{_.get(node, 'status.nodeInfo.architecture', '-')}</dd>
-            <dt>Kernel Version</dt>
+            <dt>{t('CONTENT:KERNELVERSION')}</dt>
             <dd>{_.get(node, 'status.nodeInfo.kernelVersion', '-')}</dd>
-            <dt>Boot ID</dt>
+            <dt>{t('CONTENT:BOOTID')}</dt>
             <dd>{_.get(node, 'status.nodeInfo.bootID', '-')}</dd>
-            <dt>Container Runtime</dt>
+            <dt>{t('CONTENT:CONTAINERRUNTIME')}</dt>
             <dd>{_.get(node, 'status.nodeInfo.containerRuntimeVersion', '-')}</dd>
-            <dt>Kubelet Version</dt>
+            <dt>{t('CONTENT:KUBELETVERSION')}</dt>
             <dd>{_.get(node, 'status.nodeInfo.kubeletVersion', '-')}</dd>
-            <dt>Kube-Proxy Version</dt>
+            <dt>{t('CONTENT:KUBE-PROXYVERSION')}</dt>
             <dd>{_.get(node, 'status.nodeInfo.kubeProxyVersion', '-')}</dd>
           </dl>
         </div>
       </div>
     </div>
 
-    { containerLinuxUpdateOperator.isOperatorInstalled(node) && <div className="co-m-pane__body">
+    {containerLinuxUpdateOperator.isOperatorInstalled(node) && <div className="co-m-pane__body">
       <SectionHeading text="Container Linux" />
       <div className="row">
         <div className="col-md-6 col-xs-12">
           <dl className="co-m-pane__details">
-            <dt>Current Version</dt>
+            <dt>{t('CONTENT:CURRENTVERSION')}</dt>
             <dd>{containerLinuxUpdateOperator.getVersion(node)}</dd>
-            <dt>Channel</dt>
+            <dt>{t('CONTENT:CHANNEL')}</dt>
             <dd className="text-capitalize">{containerLinuxUpdateOperator.getChannel(node)}</dd>
           </dl>
         </div>
         <div className="col-md-6 col-xs-12">
           <dl className="co-m-pane__details">
-            <dt>Update Status</dt>
+            <dt>{t('CONTENT:UPDATESTATUS')}</dt>
             <dd><NodeCLUpdateStatus node={node} /></dd>
           </dl>
         </div>
       </div>
-    </div> }
+    </div>}
 
     <div className="co-m-pane__body">
       <SectionHeading text="Node Conditions" />
@@ -235,11 +243,11 @@ const Details = ({obj: node}) => {
         <table className="table">
           <thead>
             <tr>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Reason</th>
-              <th>Updated</th>
-              <th>Changed</th>
+              <th>{t('CONTENT:TYPE')}</th>
+              <th>{t('CONTENT:STATUS')}</th>
+              <th>{t('CONTENT:REASON')}</th>
+              <th>{t('CONTENT:UPDATED')}</th>
+              <th>{t('CONTENT:CHANGED')}</th>
             </tr>
           </thead>
           <tbody>
@@ -261,8 +269,8 @@ const Details = ({obj: node}) => {
         <table className="table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Size</th>
+              <th>{t('CONTENT:NAME')}</th>
+              <th>{t('CONTENT:SIZE')}</th>
             </tr>
           </thead>
           <tbody>
@@ -277,12 +285,12 @@ const Details = ({obj: node}) => {
   </React.Fragment>;
 };
 
-const {details, editYaml, events, pods} = navFactory;
+const { details, editYaml, events, pods } = navFactory;
 
 const pages = [
   details(Details),
   editYaml(),
-  pods(({obj}) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />),
+  pods(({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />),
   events(ResourceEventStream),
 ];
 export const NodesDetailsPage = props => <DetailsPage

@@ -13,18 +13,18 @@ const NamespaceClaimHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
 
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="status.status">
         {t('CONTENT:STATUS')}
       </ColHead>
-      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
-  )
+  );
 };
 
 const NamespaceClaimRow = () =>
@@ -32,12 +32,12 @@ const NamespaceClaimRow = () =>
   function NamespaceClaimRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
+        <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
           <ResourceCog actions={menuActions} kind="NamespaceClaim" resource={obj} />
           <ResourceLink kind="NamespaceClaim" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.status && obj.status.status}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };

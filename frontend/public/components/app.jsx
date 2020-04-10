@@ -25,6 +25,7 @@ import { UIActions, getActiveNamespace } from '../ui/ui-actions';
 import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
 import { referenceForModel } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
+import { Loading } from './utils';
 import '../vendor.scss';
 import '../style.scss';
 
@@ -123,14 +124,23 @@ class App extends React.PureComponent {
 
     this.state = {
       isAdmin: true,
+      isLoading: false,
     };
     this.changeRole = () => this.changeRole_();
+    this.setLoading = () => this.setLoading_();
   }
   changeRole_() {
     this.setState({
       isAdmin: !this.state.isAdmin,
     });
   }
+
+  setLoading_() {
+    this.setState({
+      isLoading: !this.state.isLoading,
+    });
+  }
+
   componentDidMount() {
     if (window.SERVER_FLAGS.releaseModeFlag && window.localStorage.getItem('refreshToken') && window.localStorage.getItem('accessToken')) {
       if (window.localStorage.getItem('role') !== 'cluster-admin') {
@@ -150,17 +160,21 @@ class App extends React.PureComponent {
     const { pathname } = props.location;
     store.dispatch(UIActions.setCurrentLocation(pathname));
     analyticsSvc.route(pathname);
+
   }
+
+  
 
   render() {
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
-        <Masthead />
+        <Masthead setLoading={this.setLoading} />
         <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />
+          { this.state.isLoading && <Loading className='loading-box' />}
           <Switch>
             <Route path={['/all-namespaces', '/ns/:ns']} component={RedirectComponent} />
             <LazyRoute path="/status/all-namespaces" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
