@@ -14,6 +14,7 @@ import './utils/i18n';
 import i18n from './utils/i18n';
 import { useTranslation } from 'react-i18next';
 
+
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
 
@@ -64,6 +65,7 @@ const UserMenuWrapper = connectToFlags(
   // });
   // }
   const logout = e => {
+    props.setLoading();
     e.preventDefault();
 
     // TODO 로그아웃 api 연동
@@ -76,6 +78,7 @@ const UserMenuWrapper = connectToFlags(
     coFetchJSON
       .post(AUTH_SERVER_URL, json)
       .then(data => {
+        props.setLoading();
         localStorage.clear();
         localStorage.setItem('logouted', 'true');
 
@@ -83,6 +86,7 @@ const UserMenuWrapper = connectToFlags(
         window.location.href = `${document.location.origin}`;
       })
       .catch(error => {
+        props.setLoading();
         console.log(error);
       });
   };
@@ -284,7 +288,7 @@ export class ExpTimer extends Component {
   }
 }
 
-export const Masthead = () => {
+export const Masthead = (props) => {
   let timerRef = null;
   const [tokenTime, setTokenTime] = useState(60);
 
@@ -348,7 +352,7 @@ export const Masthead = () => {
       </div>
       {releaseModeFlag && (
         <div className="co-masthead__user">
-          <UserMenuWrapper />
+          <UserMenuWrapper setLoading={props.setLoading} />
         </div>
       )}
     </header>
