@@ -2,43 +2,22 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import {
-  Cog,
-  navFactory,
-  ResourceCog,
-  SectionHeading,
-  ResourceLink,
-  ScrollToTopOnMount,
-  ResourceSummary
-} from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTopOnMount, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete
-];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const VirtualMachineHeader = props => (
   <ListHeader>
     <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
       Name
     </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-4 col-sm-4"
-      sortField="metadata.namespace"
-    >
+    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
       Namespace
     </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-4 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
+    <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
       Created
     </ColHead>
   </ListHeader>
@@ -50,32 +29,11 @@ const VirtualMachineRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          <ResourceCog
-            actions={menuActions}
-            kind="VirtualMachine"
-            resource={obj}
-          />
-          <ResourceLink
-            kind="VirtualMachine"
-            name={obj.metadata.name}
-            namespace={obj.metadata.namespace}
-            title={obj.metadata.name}
-          />
+          <ResourceCog actions={menuActions} kind="VirtualMachine" resource={obj} />
+          <ResourceLink kind="VirtualMachine" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-4 col-sm-4 co-break-word">
-          {obj.metadata.namespace ? (
-            <ResourceLink
-              kind="Namespace"
-              name={obj.metadata.namespace}
-              title={obj.metadata.namespace}
-            />
-          ) : (
-              'None'
-            )}
-        </div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">
-          {fromNow(obj.metadata.creationTimestamp)}
-        </div>
+        <div className="col-xs-4 col-sm-4 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -126,14 +84,7 @@ export const VirtualMachineList = props => {
 };
 VirtualMachineList.displayName = VirtualMachineList;
 
-export const VirtualMachinesPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={VirtualMachineList}
-    canCreate={true}
-    kind="VirtualMachine"
-  />
-);
+export const VirtualMachinesPage = props => <ListPage {...props} ListComponent={VirtualMachineList} canCreate={true} kind="VirtualMachine" />;
 VirtualMachinesPage.displayName = 'VirtualMachinesPage';
 
 // export const TemplatesDetailsPage = props => {
@@ -150,15 +101,12 @@ export const VirtualMachinesDetailsPage = props => (
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
         name: 'VirtualMachine Details',
-        path: props.match.url
+        path: props.match.url,
       })
     }
     kind="VirtualMachine"
     menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
+    pages={[navFactory.details(Details), navFactory.editYaml()]}
   />
 );
 

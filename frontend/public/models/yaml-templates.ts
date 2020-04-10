@@ -18,6 +18,235 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     name: example
 `,
   )
+  //   .setIn(
+  //     [referenceForModel(k8sModels.VirtualMachineModel), 'default'],
+  //     `
+  //     apiVersion: kubevirt.io/v1alpha3
+  //     kind: VirtualMachine
+  //     metadata:
+  //       name: windows-vm
+  //     spec:
+  //       running: true
+  //       template:
+  //         spec:
+  //           hostname: guestos-name
+  //           affinity:
+  //             nodeAffinity:
+  //               requiredDuringSchedulingIgnoredDuringExecution:
+  //                 nodeSelectorTerms:
+  //                 - matchExpressions:
+  //                   - key: kubernetes.io/hostname
+  //                     operator: In
+  //                     values:
+  //                     - k8s-3-3
+  //           domain:
+  //             machine:
+  //               type: q35
+  //             devices:
+  //               disks:
+  //               - disk:
+  //                   bus: virtio
+  //                 name: rootdisk
+  //               - cdrom:
+  //                   bus: sata
+  //                   readonly: true
+  //                 name: cloudinitdisk
+  //               - disk:
+  //                   bus: virtio
+  //                 name: additionaldisk
+  //               interfaces:
+  //               - name: default
+  //                 model: virtio
+  //                 bridge: {}
+  //                 macAddress: de:ad:00:00:be:aa
+  //             gpus:
+  //               - deviceName: nvidia.com/GP102GL_Tesla_P40
+  //                  name: gpu1
+  //             cpu:
+  //               cores: 2
+  //             memory:
+  //               guest: 2Gi
+  //             resources:
+  //               overcommitGuestOverhead: false
+  //               requests:
+  //                 cpu: 1500m
+  //                 memory: 2Gi
+  //               limits:
+  //                 cpu: 2500m
+  //                 memory: 3Gi
+  //           terminationGracePeriodSeconds: 0
+  //           networks:
+  //           - name: default
+  //             pod: {}
+  //           volumes:
+  //           - containerDisk:
+  //               image: 172.21.7.20:5000/ubuntu:18.04
+  //             name: rootdisk
+  //           - name: cloudinitdisk
+  //             cloudInitConfigDrive:
+  //               userData: |
+  //                 #ps1_sysnative
+  //                 NET USER tmax "Qwer12345" /ADD
+  //                 NET LOCALGROUP "Administrators" "tmax" /add
+  //           - name: additionaldisk
+  //             persistentVolumeClaim:
+  //               claimName: empty-pvc
+  // `,
+  //   )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'read-virtualmachine-window'],
+    `
+    apiVersion: kubevirt.io/v1alpha3
+    kind: VirtualMachine
+    metadata:
+      name: windows-vm
+    spec:
+      running: true
+      template:
+        spec:
+          hostname: guestos-name
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                    - k8s-3-3
+          domain:
+            machine:
+              type: q35
+            devices:
+              disks:
+              - disk:
+                  bus: virtio
+                name: rootdisk
+              - cdrom:
+                  bus: sata
+                  readonly: true
+                name: cloudinitdisk
+              - disk:
+                  bus: virtio
+                name: additionaldisk
+              interfaces:
+              - name: default
+                model: virtio
+                bridge: {}
+                macAddress: de:ad:00:00:be:aa
+            gpus:
+              - deviceName: nvidia.com/GP102GL_Tesla_P40
+                name: gpu1
+            cpu:
+              cores: 2
+            memory:
+              guest: 2Gi
+            resources:
+              overcommitGuestOverhead: false
+              requests:
+                cpu: 1500m
+                memory: 2Gi
+              limits:
+                cpu: 2500m
+                memory: 3Gi
+          terminationGracePeriodSeconds: 0
+          networks:
+          - name: default
+            pod: {}
+          volumes:
+          - containerDisk:
+              image: 172.21.7.20:5000/ubuntu:18.04
+            name: rootdisk
+          - name: cloudinitdisk
+            cloudInitConfigDrive:
+              userData: |
+                #ps1_sysnative
+                NET USER tmax "Qwer12345" /ADD
+                NET LOCALGROUP "Administrators" "tmax" /add
+          - name: additionaldisk
+            persistentVolumeClaim:
+              claimName: empty-pvc
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'read-virtualmachine-linux'],
+    `
+    apiVersion: kubevirt.io/v1alpha3
+    kind: VirtualMachine
+    metadata:
+        name: linux
+    spec:
+      running: true
+      template:
+        spec:
+          hostname: guestos-name
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                    - k8s-3-3
+          domain:
+            machine:
+              type: q35
+            devices:
+              disks:
+              - disk:
+                  bus: virtio
+                name: rootdisk
+              - cdrom:
+                  bus: sata
+                  readonly: true
+                name: cloudinitdisk
+              - disk:
+                  bus: virtio
+                name: additionaldisk
+              interfaces:
+              - name: default
+                model: virtio
+                bridge: {}
+                macAddress: de:ad:00:00:be:aa
+            cpu:
+              cores: 2
+            memory:
+              guest: 2Gi
+            resources:
+              overcommitGuestOverhead: false
+              requests:
+                cpu: 1500m
+                memory: 2Gi
+              limits:
+                cpu: 1500m
+                memory: 2Gi
+          terminationGracePeriodSeconds: 0
+          networks:
+          - name: default
+            pod: {}
+          volumes:
+          - containerDisk:
+              image: 172.21.7.20:5000/ubuntu:18.04
+            name: rootdisk
+          - name: cloudinitdisk
+            cloudInitConfigDrive:
+              userData: |
+                #cloud-config
+                disable_root: false
+                ssh_pwauth: true
+                lock_passwd: false
+                users:
+                  - name: tmax
+                    sudo: ALL=(ALL) NOPASSWD:ALL
+                    passwd: $6$bLLmCtnk51$21/Fq0vSHCwDODP2hXA.wo/0k91QIw/lUy6qWPOX1vx5z0CF9Acj9vGLFlQVbjSzmh.1r7wWd0kQS9RMm51HE.
+                    shell: /bin/bash
+                    lock_passwd: false
+          - name: additionaldisk
+            persistentVolumeClaim:
+              claimName: empty-pvc
+`,
+  )
   .setIn(
     [referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'],
     `
