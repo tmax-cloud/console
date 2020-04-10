@@ -102,8 +102,8 @@ export const TemplateInstanceList = props => {
 TemplateInstanceList.displayName = TemplateInstanceList;
 const TemplateInstancesPage = props => {
   const createItems = {
-    form: 'Service Instance (Form Editor)',
-    yaml: 'Service Instance (YAML Editor)',
+    form: 'Form Editor',
+    yaml: 'YAML Editor',
   };
 
   const createProps = {

@@ -72,13 +72,13 @@ const DeploymentDetails = ({ obj: deployment }) => {
                   {deployment.status.availableReplicas === deployment.status.updatedReplicas ? (
                     <span>{t('CONTENT:ACTIVE')}</span>
                   ) : (
-                    <div>
-                      <span className="co-icon-space-r">
-                        <LoadingInline />
-                      </span>{' '}
-                      {t('CONTENT:UPDATING')}
-                    </div>
-                  )}
+                      <div>
+                        <span className="co-icon-space-r">
+                          <LoadingInline />
+                        </span>{' '}
+                        {t('CONTENT:UPDATING')}
+                      </div>
+                    )}
                 </dd>
               </ResourceSummary>
             </div>
@@ -133,8 +133,8 @@ const DeploymentsPage = props => {
   const { t } = useTranslation();
 
   const createItems = {
-    form: t('CONTENT:DEPLOYMENTFORMEDITOR'),
-    yaml: t('CONTENT:DEPLOYMENTYAMLEDITOR'),
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
   };
 
   const createProps = {

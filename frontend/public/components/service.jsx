@@ -208,8 +208,8 @@ const ServicesList = props => <List {...props} Header={ServiceHeader} Row={Servi
 const ServicesPage = props => {
   const { t } = useTranslation();
   const createItems = {
-    form: t('CONTENT:SERVICEFORMEDITOR'),
-    yaml: t('CONTENT:SERVICEYAMLEDITOR'),
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
   };
 
   const createProps = {

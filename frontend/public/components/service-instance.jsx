@@ -68,7 +68,7 @@ const Details = ({ obj: clusterserviceinstance }) => {
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('clusterserviceinstance', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={clusterserviceinstance} />
@@ -103,8 +103,8 @@ ServiceInstanceList.displayName = ServiceInstanceList;
 
 export const ServiceInstancesPage = props => {
   const createItems = {
-    form: 'Instance (Form Editor)',
-    yaml: 'Instance (YAML Editor)',
+    form: 'Form Editor',
+    yaml: 'YAML Editor',
   };
   const createProps = {
     items: createItems,
