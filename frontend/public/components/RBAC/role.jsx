@@ -8,6 +8,8 @@ import { Cog, SectionHeading, MsgBox, navFactory, ResourceCog, ResourceLink, Tim
 import { BindingName, BindingsList, RulesList } from './index';
 import { flatten as bindingsFlatten } from './bindings';
 import { flagPending, connectToFlags, FLAGS } from '../../features';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 
 export const isSystemRole = role => _.startsWith(role.metadata.name, 'system:');
 
@@ -29,16 +31,19 @@ const menuActions = [
   Cog.factory.Delete,
 ];
 
-const Header = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-6" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-6" sortField="metadata.namespace">
-      Namespace
-    </ColHead>
-  </ListHeader>
-);
+const Header = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-6" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const Row = ({ obj: role }) => (
   <div className="row co-resource-list__item">
@@ -62,6 +67,7 @@ class Details extends React.Component {
     const { creationTimestamp, name, namespace } = ruleObj.metadata;
     const { ruleFilter } = this.state;
 
+    const { t } = useTranslation();
     let rules = ruleObj.rules;
     if (ruleFilter) {
       const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
@@ -77,12 +83,12 @@ class Details extends React.Component {
           <div className="row">
             <div className="col-xs-6">
               <dl className="co-m-pane__details">
-                <dt>Role Name</dt>
+                <dt>{t('CONTENT:ROLENAME')}</dt>
                 {/* <dt>Role Name</dt> */}
                 <dd>{name}</dd>
                 {namespace && (
                   <div>
-                    <dt>Namespace</dt>
+                    <dt>{t('CONTENT:NAMESPACE')}</dt>
                     <dd>
                       <ResourceLink kind="Namespace" name={namespace} />
                     </dd>
@@ -92,7 +98,7 @@ class Details extends React.Component {
             </div>
             <div className="col-xs-6">
               <dl className="co-m-pane__details">
-                <dt>Created At</dt>
+                <dt>{t('CONTENT:CREATEDAT')}</dt>
                 <dd>
                   <Timestamp timestamp={creationTimestamp} />
                 </dd>
@@ -101,7 +107,7 @@ class Details extends React.Component {
           </div>
         </div>
         <div className="co-m-pane__body">
-          <SectionHeading text="Rules" />
+          <SectionHeading text={t('CONTENT:RULES')} />
           <div className="co-m-pane__filter-bar co-m-pane__filter-bar--alt">
             {/* This page is temporarily disabled until we update the safe resources list.
           <div className="co-m-pane__filter-bar-group">
@@ -121,22 +127,25 @@ class Details extends React.Component {
   }
 }
 
-const BindingHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-4" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-2" sortField="subject.kind">
-      Subject Kind
-    </ColHead>
-    <ColHead {...props} className="col-xs-4" sortField="subject.name">
-      Subject Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-2" sortField="metadata.namespace">
-      Namespace
-    </ColHead>
-  </ListHeader>
-);
+const BindingHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-4" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2" sortField="subject.kind">
+        {t('CONTENT:SUBJECTKIND')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-4" sortField="subject.name">
+        {t('CONTENT:SUBJECTNAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const BindingRow = ({ obj: binding }) => (
   <ResourceRow obj={binding}>
@@ -189,6 +198,7 @@ export const RolesPage = connectToFlags(
   FLAGS.PROJECTS_AVAILBLE,
 )(({ namespace, showTitle, flags }) => {
   const projectsAvailable = !flagPending(flags.PROJECTS_AVAILBLE) && flags.PROJECTS_AVAILBLE;
+  const { t } = useTranslation();
   return (
     <MultiListPage
       ListComponent={RolesList}
@@ -198,6 +208,7 @@ export const RolesPage = connectToFlags(
       createProps={{ to: `/k8s/ns/${namespace || 'default'}/roles/new` }}
       filterLabel="Roles by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Role', t) })}
       resources={[
         { kind: 'Role', namespaced: true, optional: !projectsAvailable },
         { kind: 'ClusterRole', namespaced: false, optional: true },
@@ -214,7 +225,7 @@ export const RolesPage = connectToFlags(
           ],
         },
       ]}
-      title="Roles"
+      title={t('RESOURCE:ROLE')}
     />
   );
 });
