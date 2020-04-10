@@ -6,22 +6,27 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTop
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const VirtualMachineHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
-      Namespace
-    </ColHead>
-    <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const VirtualMachineHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const VirtualMachineRow = () =>
   // eslint-disable-next-line no-shadow
@@ -55,11 +60,12 @@ const VirtualMachineRow = () =>
 //   };
 
 const Details = ({ obj: VirtualMachine }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('VirtualMachine', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={VirtualMachine} />
