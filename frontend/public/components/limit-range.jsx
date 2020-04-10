@@ -13,11 +13,11 @@ const LimitRangeHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-6 col-sm-6" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
 
-      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-sm-6 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -29,11 +29,11 @@ const LimitRangeRow = () =>
   function LimitRangeRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
+        <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
           <ResourceCog actions={menuActions} kind="LimitRange" resource={obj} />
           <ResourceLink kind="LimitRange" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
