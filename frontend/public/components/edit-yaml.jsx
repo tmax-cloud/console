@@ -347,11 +347,12 @@ export const EditYAML = connect(stateToProps)(
                         <button type="submit" className="btn btn-primary" id="save-changes" disabled={true} onClick={() => this.save()}>
                           Save Changes
                         </button>
-                      )) || (
-                        <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>
-                          Save Changes
-                        </button>
-                      )}
+                      )) ||
+                        (!create && (
+                          <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>
+                            Save Changes
+                          </button>
+                        ))}
                       {!create && (
                         <button type="submit" className="btn btn-default" id="reload-object" onClick={() => this.reload()}>
                           Reload
