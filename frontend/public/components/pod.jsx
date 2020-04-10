@@ -247,7 +247,7 @@ const Details = ({ obj: pod }) => {
               <dd>{getRestartPolicyLabel(pod)}</dd>
               {activeDeadlineSeconds && (
                 <React.Fragment>
-                  <dt>Active Deadline</dt>
+                  <dt>{t('CONTENT:ACTIVEDEADLINE')}</dt>
                   {/* Convert to ms for formatDuration */}
                   <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
                 </React.Fragment>
@@ -304,30 +304,33 @@ const PodExecLoader = ({ obj }) => (
 );
 
 /** @type {React.SFC<any>} */
-export const PodsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Pod Details',
-        path: props.match.url,
-      })
-    }
-    menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml(),
-      navFactory.envEditor(environmentComponent),
-      navFactory.logs(PodLogs),
-      navFactory.events(ResourceEventStream),
-      {
-        href: 'terminal',
-        name: 'Terminal',
-        component: PodExecLoader,
-      },
-    ]}
-  />
-);
+export const PodsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Pod Details',
+          path: props.match.url,
+        })
+      }
+      menuActions={menuActions}
+      pages={[
+        navFactory.details(t('CONTENT:OVERVIEW'), Details),
+        navFactory.editYaml(t('CONTENT:YAML')),
+        navFactory.envEditor(t('CONTENT:ENVIRONMENT'), environmentComponent),
+        navFactory.logs(t('CONTENT:LOGS'), PodLogs),
+        navFactory.events(t('CONTENT:EVENTS'), ResourceEventStream),
+        {
+          href: 'terminal',
+          name: t('CONTENT:TERMINAL'),
+          component: PodExecLoader,
+        },
+      ]}
+    />
+  );
+};
 PodsDetailsPage.displayName = 'PodsDetailsPage';
 
 export const PodList = props => <List {...props} Header={PodHeader} Row={PodRow} />;

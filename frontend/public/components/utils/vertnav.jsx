@@ -8,12 +8,14 @@ import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
 import { AsyncComponent } from '../utils/async';
 
-
-const editYamlComponent = (props) => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
+const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
 
 class PodsComponent extends React.PureComponent {
   render() {
-    const { metadata: { namespace }, spec: { selector } } = this.props.obj;
+    const {
+      metadata: { namespace },
+      spec: { selector },
+    } = this.props.obj;
     if (_.isEmpty(selector)) {
       return <EmptyBox label="Pods" />;
     }
@@ -26,51 +28,51 @@ class PodsComponent extends React.PureComponent {
 }
 
 export const navFactory = {
-  details: component => ({
+  details: (name, component) => ({
     href: '',
-    name: 'Overview',
+    name: name || 'Overview',
     component,
   }),
   events: component => ({
     href: 'events',
-    name: 'Events',
+    name: name || 'Events',
     component,
   }),
-  logs: component => ({
+  logs: (name, component) => ({
     href: 'logs',
-    name: 'Logs',
+    name: name || 'Logs',
     component,
   }),
-  editYaml: (component = editYamlComponent) => ({
+  editYaml: (name, component = editYamlComponent) => ({
     href: 'yaml',
-    name: 'YAML',
+    name: name || 'YAML',
     component: component,
   }),
-  pods: component => ({
+  pods: (name, component) => ({
     href: 'pods',
-    name: 'Pods',
+    name: name || 'Pods',
     component: component || PodsComponent,
   }),
-  roles: component => ({
+  roles: (name, component) => ({
     href: 'roles',
-    name: 'Role Bindings',
+    name: name || 'Role Bindings',
     component,
   }),
-  builds: component => ({
+  builds: (name, component) => ({
     href: 'builds',
-    name: 'Builds',
+    name: name || 'Builds',
     component,
   }),
-  envEditor: (component) => ({
+  envEditor: (name, component) => ({
     href: 'environment',
-    name: 'Environment',
+    name: name || 'Environment',
     component: component,
   }),
-  metering: (component) => ({
+  metering: (name, component) => ({
     href: 'metering',
-    name: 'Metering',
+    name: name || 'Metering',
     component: component,
-  })
+  }),
 };
 
 /** @type {React.SFC<{pages: {href: string, name: string}[], basePath: string}>} */
@@ -78,14 +80,24 @@ export const NavBar = ({ pages, basePath }) => {
   const divider = <li className="co-m-vert-nav__menu-item co-m-vert-nav__menu-item--divider" key="_divider" />;
   basePath = basePath.replace(/\/$/, '');
 
-  return <ul className="co-m-vert-nav__menu">{_.flatten(_.map(pages, ({ name, href }, i) => {
-    const klass = classNames('co-m-vert-nav__menu-item', { 'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`) });
-    const tab = <li className={klass} key={name}><Link to={`${basePath}/${href}`}>{name}</Link></li>;
+  return (
+    <ul className="co-m-vert-nav__menu">
+      {_.flatten(
+        _.map(pages, ({ name, href }, i) => {
+          const klass = classNames('co-m-vert-nav__menu-item', { 'co-m-vert-nav-item--active': location.pathname.replace(basePath, '/').endsWith(`/${href}`) });
+          const tab = (
+            <li className={klass} key={name}>
+              <Link to={`${basePath}/${href}`}>{name}</Link>
+            </li>
+          );
 
-    // These tabs go before the divider
-    const before = ['', 'edit', 'yaml'];
-    return (!before.includes(href) && i !== 0 && before.includes(pages[i - 1].href)) ? [divider, tab] : [tab];
-  }))}</ul>;
+          // These tabs go before the divider
+          const before = ['', 'edit', 'yaml'];
+          return !before.includes(href) && i !== 0 && before.includes(pages[i - 1].href) ? [divider, tab] : [tab];
+        }),
+      )}
+    </ul>
+  );
 };
 NavBar.displayName = 'NavBar';
 
@@ -106,23 +118,27 @@ export class VertNav extends React.PureComponent {
       return <Route path={path} exact key={p.name} render={render} />;
     });
 
-    return <div className={props.className}>
-      <div className="co-m-vert-nav">
-        {!props.hideNav && <NavBar pages={props.pages} basePath={props.match.url} />}
-        <StatusBox {...props.obj} EmptyMsg={props.EmptyMsg} label={props.label}>
-          <Switch> {routes} </Switch>
-        </StatusBox>
+    return (
+      <div className={props.className}>
+        <div className="co-m-vert-nav">
+          {!props.hideNav && <NavBar pages={props.pages} basePath={props.match.url} />}
+          <StatusBox {...props.obj} EmptyMsg={props.EmptyMsg} label={props.label}>
+            <Switch> {routes} </Switch>
+          </StatusBox>
+        </div>
       </div>
-    </div>;
+    );
   }
 }
 
 VertNav.propTypes = {
-  pages: PropTypes.arrayOf(PropTypes.shape({
-    href: PropTypes.string,
-    name: PropTypes.string,
-    component: PropTypes.func,
-  })),
+  pages: PropTypes.arrayOf(
+    PropTypes.shape({
+      href: PropTypes.string,
+      name: PropTypes.string,
+      component: PropTypes.func,
+    }),
+  ),
   className: PropTypes.string,
   hideNav: PropTypes.bool,
   match: PropTypes.shape({
