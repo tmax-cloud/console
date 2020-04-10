@@ -131,7 +131,7 @@ export const HorizontalPodAutoscalersDetails: React.SFC<HorizontalPodAutoscalers
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('HorizontalPodAutoscaler') })} />
+        <SectionHeading text="HPAs Overview" />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={hpa} showPodSelector={false} showNodeSelector={false} />
@@ -222,7 +222,7 @@ const HorizontalPodAutoscalersRow: React.SFC<HorizontalPodAutoscalersRowProps> =
 const HorizontalPodAutoscalersList: React.SFC = props => <List {...props} Header={HorizontalPodAutoscalersHeader} Row={HorizontalPodAutoscalersRow} />;
 HorizontalPodAutoscalersList.displayName = 'HorizontalPodAutoscalersList';
 
-export const HorizontalPodAutoscalersPage: React.SFC<HorizontalPodAutoscalersPageProps> = props => <ListPage {...props} kind={HorizontalPodAutoscalersReference} ListComponent={HorizontalPodAutoscalersList} canCreate={true} filterLabel="HPAs by name" />;
+export const HorizontalPodAutoscalersPage: React.SFC<HorizontalPodAutoscalersPageProps> = props => <ListPage {...props} kind={HorizontalPodAutoscalersReference} title="HPAs" createButtonText="Create HPA" ListComponent={HorizontalPodAutoscalersList} canCreate={true} filterLabel="HPAs by name" />;
 HorizontalPodAutoscalersPage.displayName = 'HorizontalPodAutoscalersListPage';
 
 /* eslint-disable no-undef */

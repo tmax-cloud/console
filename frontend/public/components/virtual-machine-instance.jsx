@@ -2,47 +2,31 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import {
-  Cog,
-  navFactory,
-  ResourceCog,
-  SectionHeading,
-  ResourceLink,
-  ScrollToTopOnMount,
-  ResourceSummary
-} from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTopOnMount, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete
-];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const VirtualMachineInstanceHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-4 col-sm-4"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-4 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const VirtualMachineInstanceHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const VirtualMachineInstanceRow = () =>
   // eslint-disable-next-line no-shadow
@@ -50,32 +34,11 @@ const VirtualMachineInstanceRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          <ResourceCog
-            actions={menuActions}
-            kind="VirtualMachineInstance"
-            resource={obj}
-          />
-          <ResourceLink
-            kind="VirtualMachineInstance"
-            name={obj.metadata.name}
-            namespace={obj.metadata.namespace}
-            title={obj.metadata.name}
-          />
+          <ResourceCog actions={menuActions} kind="VirtualMachineInstance" resource={obj} />
+          <ResourceLink kind="VirtualMachineInstance" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-4 col-sm-4 co-break-word">
-          {obj.metadata.namespace ? (
-            <ResourceLink
-              kind="Namespace"
-              name={obj.metadata.namespace}
-              title={obj.metadata.namespace}
-            />
-          ) : (
-              'None'
-            )}
-        </div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">
-          {fromNow(obj.metadata.creationTimestamp)}
-        </div>
+        <div className="col-xs-4 col-sm-4 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -97,11 +60,12 @@ const VirtualMachineInstanceRow = () =>
 //   };
 
 const Details = ({ obj: VirtualMachineInstance }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={VirtualMachineInstance} />
@@ -115,8 +79,8 @@ const Details = ({ obj: VirtualMachineInstance }) => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export const VirtualMachineInstanceList = props => {
   const { kinds } = props;
@@ -126,14 +90,7 @@ export const VirtualMachineInstanceList = props => {
 };
 VirtualMachineInstanceList.displayName = VirtualMachineInstanceList;
 
-export const VirtualMachineInstancesPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={VirtualMachineInstanceList}
-    canCreate={false}
-    kind="VirtualMachineInstance"
-  />
-);
+export const VirtualMachineInstancesPage = props => <ListPage {...props} ListComponent={VirtualMachineInstanceList} canCreate={false} kind="VirtualMachineInstance" />;
 VirtualMachineInstancesPage.displayName = 'VirtualMachineInstancesPage';
 
 // export const TemplatesDetailsPage = props => {
@@ -150,15 +107,12 @@ export const VirtualMachineInstancesDetailsPage = props => (
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
         name: 'VirtualMachineInstance Details',
-        path: props.match.url
+        path: props.match.url,
       })
     }
     kind="VirtualMachineInstance"
     menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
+    pages={[navFactory.details(Details), navFactory.editYaml()]}
   />
 );
 

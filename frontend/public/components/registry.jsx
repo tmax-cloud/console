@@ -2,68 +2,40 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import {
-  Cog,
-  navFactory,
-  ResourceCog,
-  SectionHeading,
-  ResourceLink,
-  ScrollToTopOnMount,
-  ResourceSummary
-} from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTopOnMount, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete
-];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const RegistryHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.image"
-    >
-      Image
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.persistentVolumeClaim.storageSize"
-    >
-      Capacity
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="status.phase"
-    >
-      Status
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const RegistryHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.image">
+        {t('CONTENT:IMAGE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.persistentVolumeClaim.storageSize">
+        {t('CONTENT:CAPACITY')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="status.phase">
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const RegistryRow = () =>
   // eslint-disable-next-line no-shadow
@@ -71,41 +43,14 @@ const RegistryRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
-          <ResourceCog
-            actions={menuActions}
-            kind="Registry"
-            resource={obj}
-          />
-          <ResourceLink
-            kind="Registry"
-            name={obj.metadata.name}
-            namespace={obj.metadata.namespace}
-            title={obj.metadata.name}
-          />
+          <ResourceCog actions={menuActions} kind="Registry" resource={obj} />
+          <ResourceLink kind="Registry" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-2 col-sm-2 co-break-word">
-          {obj.metadata.namespace ? (
-            <ResourceLink
-              kind="Namespace"
-              name={obj.metadata.namespace}
-              title={obj.metadata.namespace}
-            />
-          ) : (
-              'None'
-            )}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.spec.image}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.spec.persistentVolumeClaim.storageSize}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.status && obj.status.phase}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {fromNow(obj.metadata.creationTimestamp)}
-        </div>
+        <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.image}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.persistentVolumeClaim.storageSize}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.status && obj.status.phase}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -127,18 +72,19 @@ const RegistryRow = () =>
 //   };
 
 const Details = ({ obj: registry }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Registry', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={registry} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Status</dt>
+              <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{registry.status && registry.status.phase}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
@@ -151,8 +97,8 @@ const Details = ({ obj: registry }) => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export const RegistryList = props => {
   const { kinds } = props;
@@ -162,14 +108,7 @@ export const RegistryList = props => {
 };
 RegistryList.displayName = RegistryList;
 
-export const RegistryPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={RegistryList}
-    canCreate={true}
-    kind="Registry"
-  />
-);
+export const RegistryPage = props => <ListPage {...props} ListComponent={RegistryList} canCreate={true} kind="Registry" />;
 RegistryPage.displayName = 'RegistryPage';
 
 // export const TemplatesDetailsPage = props => {
@@ -186,15 +125,12 @@ export const RegistryDetailsPage = props => (
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
         name: 'Registry Details',
-        path: props.match.url
+        path: props.match.url,
       })
     }
     kind="Registry"
     menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
+    pages={[navFactory.details(Details), navFactory.editYaml()]}
   />
 );
 

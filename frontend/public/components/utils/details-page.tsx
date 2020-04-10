@@ -39,7 +39,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
           <Selector selector={_.get(resource, podSelector)} namespace={_.get(resource, 'metadata.namespace')} />
         </dd>
       )}
-      {showNodeSelector && <dt>Node Selector</dt>}
+      {showNodeSelector && <dt>{t('CONTENT:NODESELECTOR')}</dt>}
       {showNodeSelector && (
         <dd>
           <Selector kind="Node" selector={_.get(resource, 'spec.template.spec.nodeSelector')} />
@@ -49,7 +49,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       {showAnnotations && (
         <dd>
           <a className="co-m-modal-link" onClick={Cog.factory.ModifyAnnotations(kindObj(resource.kind), resource).callback}>
-            {pluralize(_.size(metadata.annotations), 'Annotation')}
+            {t('PLURAL:ANNOTATION', { count: _.size(metadata.annotations) })}
           </a>
         </dd>
       )}

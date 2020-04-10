@@ -3,9 +3,11 @@ import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage, ResourceRow } from './factory';
 import { SecretData } from './configmap-and-secret-data';
-import { Cog, SectionHeading, ResourceCog, ResourceLink, ResourceSummary, detailsPage, navFactory, resourceObjPath } from './utils';
+import { Cog, SectionHeading, ResourceCog, ResourceLink, ResourceSummary, detailsPage, navFactory, resourceObjPath, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
 import { SecretType } from './secrets/create-secret';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
 export const WebHookSecretKey = 'WebHookSecretKey';
 
@@ -34,42 +36,63 @@ const menuActions = [
   Cog.factory.Delete,
 ];
 
-const SecretHeader = props => <ListHeader>
-  <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-4 hidden-xs" sortField="type">Type</ColHead>
-  <ColHead {...props} className="col-md-1 hidden-sm hidden-xs" sortFunc="dataSize">Size</ColHead>
-  <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortField="metadata.creationTimestamp">Created</ColHead>
-</ListHeader>;
+const SecretHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-md-3 col-sm-4 hidden-xs" sortField="type">
+        {t('CONTENT:TYPE')}
+      </ColHead>
+      <ColHead {...props} className="col-md-1 hidden-sm hidden-xs" sortFunc="dataSize">
+        {t('CONTENT:SIZE')}
+      </ColHead>
+      <ColHead {...props} className="col-md-2 hidden-sm hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
-const SecretRow = ({obj: secret}) => {
+const SecretRow = ({ obj: secret }) => {
   const data = _.size(secret.data);
   const age = fromNow(secret.metadata.creationTimestamp);
 
-  return <ResourceRow obj={secret}>
-    <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
-      <ResourceCog actions={menuActions} kind="Secret" resource={secret} />
-      <ResourceLink kind="Secret" name={secret.metadata.name} namespace={secret.metadata.namespace} title={secret.metadata.uid} />
-    </div>
-    <div className="col-md-3 col-sm-4 col-xs-6 co-break-word">
-      <ResourceLink kind="Namespace" name={secret.metadata.namespace} title={secret.metadata.namespace} />
-    </div>
-    <div className="col-md-3 col-sm-4 hidden-xs co-break-word">{secret.type}</div>
-    <div className="col-md-1 hidden-sm hidden-xs">{data}</div>
-    <div className="col-md-2 hidden-sm hidden-xs">{age}</div>
-  </ResourceRow>;
+  return (
+    <ResourceRow obj={secret}>
+      <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
+        <ResourceCog actions={menuActions} kind="Secret" resource={secret} />
+        <ResourceLink kind="Secret" name={secret.metadata.name} namespace={secret.metadata.namespace} title={secret.metadata.uid} />
+      </div>
+      <div className="col-md-3 col-sm-4 col-xs-6 co-break-word">
+        <ResourceLink kind="Namespace" name={secret.metadata.namespace} title={secret.metadata.namespace} />
+      </div>
+      <div className="col-md-3 col-sm-4 hidden-xs co-break-word">{secret.type}</div>
+      <div className="col-md-1 hidden-sm hidden-xs">{data}</div>
+      <div className="col-md-2 hidden-sm hidden-xs">{age}</div>
+    </ResourceRow>
+  );
 };
 
-const SecretDetails = ({obj: secret}) => {
-  return <React.Fragment>
-    <div className="co-m-pane__body">
-      <SectionHeading text="Secret Overview" />
-      <ResourceSummary resource={secret} showPodSelector={false} showNodeSelector={false} />
-    </div>
-    <div className="co-m-pane__body">
-      <SecretData data={secret.data} type={secret.type} />
-    </div>
-  </React.Fragment>;
+const SecretDetails = ({ obj: secret }) => {
+  const { t } = useTranslation();
+
+  return (
+    <React.Fragment>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Secret', t) })} />
+        <ResourceSummary resource={secret} showPodSelector={false} showNodeSelector={false} />
+      </div>
+      <div className="co-m-pane__body">
+        <SecretData data={secret.data} type={secret.type} t={t} title={t('CONTENT:DATA')} />
+      </div>
+    </React.Fragment>
+  );
 };
 
 const SecretsList = props => <List {...props} Header={SecretHeader} Row={SecretRow} />;
@@ -80,14 +103,6 @@ const SOURCE_FILTER_VALUE = 'Source';
 const TLS_FILTER_VALUE = 'TLS';
 const SA_TOKEN_FILTER_VALUE = 'Service Account Token';
 const OPAQUE_FILTER_VALUE = 'Opaque';
-
-const secretTypeFilterValues = [
-  IMAGE_FILTER_VALUE,
-  SOURCE_FILTER_VALUE,
-  TLS_FILTER_VALUE,
-  SA_TOKEN_FILTER_VALUE,
-  OPAQUE_FILTER_VALUE
-];
 
 export const secretTypeFilterReducer = secret => {
   switch (secret.type) {
@@ -112,34 +127,35 @@ export const secretTypeFilterReducer = secret => {
   }
 };
 
-const filters = [{
-  type: 'secret-type',
-  selected: secretTypeFilterValues,
-  reducer: secretTypeFilterReducer,
-  items: secretTypeFilterValues.map(filterValue => ({ id: filterValue, title: filterValue })),
-}];
-
 const SecretsPage = props => {
+  const { t } = useTranslation();
   const createItems = {
     // image: 'Create Image Pull Secret',
     // generic: 'Create Key/Value Secret',
-    source: 'Source Secret',
-    webhook: 'Webhook Secret',
-    yaml: 'Secret from YAML',
+    source: t('CONTENT:SOURCESECRET'),
+    webhook: t('CONTENT:WEBHOOKSECRET'),
+    yaml: t('CONTENT:SECRETFROMYAML'),
   };
+
+  const secretTypeFilterValues = [t('CONTENT:IMAGE'), t('CONTENT:SOURCE'), t('CONTENT:TLS'), t('CONTENT:SERVICEACCOUNTTOKEN'), t('CONTENT:OPAQUE')];
+
+  const filters = [
+    {
+      type: 'secret-type',
+      selected: secretTypeFilterValues,
+      reducer: secretTypeFilterReducer,
+      items: secretTypeFilterValues.map(filterValue => ({ id: filterValue, title: filterValue })),
+    },
+  ];
 
   const createProps = {
     items: createItems,
-    createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/secrets/new/${type !== 'yaml' ? type : ''}`
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/secrets/new/${type !== 'yaml' ? type : ''}`,
   };
 
-  return <ListPage ListComponent={SecretsList} canCreate={true} rowFilters={filters} createButtonText="Create" createProps={createProps} {...props} />;
+  return <ListPage ListComponent={SecretsList} canCreate={true} rowFilters={filters} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
 };
 
-const SecretsDetailsPage = props => <DetailsPage
-  {...props}
-  menuActions={menuActions}
-  pages={[navFactory.details(detailsPage(SecretDetails)), navFactory.editYaml()]}
-/>;
+const SecretsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(SecretDetails)), navFactory.editYaml()]} />;
 
-export {SecretsList, SecretsPage, SecretsDetailsPage};
+export { SecretsList, SecretsPage, SecretsDetailsPage };

@@ -58,7 +58,7 @@ const Details = ({ obj: daemonset }) => {
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('DaemonSet') })} />
+      <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('DaemonSet', t) })} />
       <div className="row">
         <div className="col-lg-6">
           <ResourceSummary resource={daemonset} />

@@ -7,7 +7,7 @@ import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
 import { sha512 } from 'js-sha512';
-
+import { Loading } from './utils';
 
 class LoginComponent extends Component {
   // useState 대신 useRef 써도 됨
@@ -15,6 +15,7 @@ class LoginComponent extends Component {
     id: '',
     pw: '',
     error: '',
+    loading: false
   };
 
   constructor(props) {
@@ -54,7 +55,7 @@ class LoginComponent extends Component {
     if (e.type === 'keypress' && e.key !== 'Enter') {
       return;
     }
-
+    this.setState({ loading: true });
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/login`;
 
     //if (this.state.id !== undefined && this.state.pw !== undefined) {
@@ -62,9 +63,10 @@ class LoginComponent extends Component {
       'id': this.state.id,
       'password': sha512(this.state.pw)
     };
-
+        
     coFetchJSON.post(AUTH_SERVER_URL, json)
       .then(data => {
+        this.setState({ loading: false });
         if (data.accessToken && data.refreshToken) {
           window.localStorage.setItem('accessToken', data.accessToken);
           window.localStorage.setItem('refreshToken', data.refreshToken);
@@ -85,6 +87,7 @@ class LoginComponent extends Component {
       .catch((error) => {
         console.log(error.message);
         this.setState({ error: error.message });
+        this.setState({ loading: false });
       });
     //}
   };
@@ -113,6 +116,7 @@ class LoginComponent extends Component {
               <img src={productHyperCloudLogo} />
             </div>
           </div>
+          { this.state.loading && <Loading />}
           <div className="inner_login">
             <form>
               <input type="hidden"></input>

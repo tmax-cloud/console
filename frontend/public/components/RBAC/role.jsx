@@ -8,12 +8,14 @@ import { Cog, SectionHeading, MsgBox, navFactory, ResourceCog, ResourceLink, Tim
 import { BindingName, BindingsList, RulesList } from './index';
 import { flatten as bindingsFlatten } from './bindings';
 import { flagPending, connectToFlags, FLAGS } from '../../features';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 
 export const isSystemRole = role => _.startsWith(role.metadata.name, 'system:');
 
 // const addHref = (name, ns) => ns ? `/k8s/ns/${ns}/roles/${name}/add-rule` : `/k8s/cluster/clusterroles/${name}/add-rule`;
 
-export const roleKind = role => role.metadata.namespace ? 'Role' : 'ClusterRole';
+export const roleKind = role => (role.metadata.namespace ? 'Role' : 'ClusterRole');
 
 const menuActions = [
   // This page is temporarily disabled until we update the safe resources list.
@@ -29,20 +31,29 @@ const menuActions = [
   Cog.factory.Delete,
 ];
 
-const Header = props => <ListHeader>
-  <ColHead {...props} className="col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-</ListHeader>;
+const Header = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-6" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
-const Row = ({ obj: role }) => <div className="row co-resource-list__item">
-  <div className="col-xs-6 co-resource-link-wrapper">
-    <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
-    <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
+const Row = ({ obj: role }) => (
+  <div className="row co-resource-list__item">
+    <div className="col-xs-6 co-resource-link-wrapper">
+      <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
+      <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
+    </div>
+    <div className="col-xs-6 co-break-word">{role.metadata.namespace ? <ResourceLink kind="Namespace" name={role.metadata.namespace} /> : 'all'}</div>
   </div>
-  <div className="col-xs-6 co-break-word">
-    {role.metadata.namespace ? <ResourceLink kind="Namespace" name={role.metadata.namespace} /> : 'all'}
-  </div>
-</div>;
+);
 
 class Details extends React.Component {
   constructor(props) {
@@ -56,7 +67,7 @@ class Details extends React.Component {
     const { creationTimestamp, name, namespace } = ruleObj.metadata;
     const { ruleFilter } = this.state;
 
-
+    const { t } = useTranslation();
     let rules = ruleObj.rules;
     if (ruleFilter) {
       const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
@@ -64,97 +75,107 @@ class Details extends React.Component {
       rules = rules.filter(rule => searchKeys.some(k => _.some(rule[k], v => fuzzyCaseInsensitive(ruleFilter, v))));
     }
 
-    return <div>
-      <div className="co-m-pane__body">
-        <SectionHeading text={'Role Overview'} />
-        {/* <SectionHeading text="Role Overview" /> */}
-        <div className="row">
-          <div className="col-xs-6">
-            <dl className="co-m-pane__details">
-              <dt>Role Name</dt>
-              {/* <dt>Role Name</dt> */}
-              <dd>{name}</dd>
-              {namespace && <div>
-                <dt>Namespace</dt>
-                <dd><ResourceLink kind="Namespace" name={namespace} /></dd>
-              </div>}
-            </dl>
-          </div>
-          <div className="col-xs-6">
-            <dl className="co-m-pane__details">
-              <dt>Created At</dt>
-              <dd><Timestamp timestamp={creationTimestamp} /></dd>
-            </dl>
+    return (
+      <div>
+        <div className="co-m-pane__body">
+          <SectionHeading text={'Role Overview'} />
+          {/* <SectionHeading text="Role Overview" /> */}
+          <div className="row">
+            <div className="col-xs-6">
+              <dl className="co-m-pane__details">
+                <dt>{t('CONTENT:ROLENAME')}</dt>
+                {/* <dt>Role Name</dt> */}
+                <dd>{name}</dd>
+                {namespace && (
+                  <div>
+                    <dt>{t('CONTENT:NAMESPACE')}</dt>
+                    <dd>
+                      <ResourceLink kind="Namespace" name={namespace} />
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+            <div className="col-xs-6">
+              <dl className="co-m-pane__details">
+                <dt>{t('CONTENT:CREATEDAT')}</dt>
+                <dd>
+                  <Timestamp timestamp={creationTimestamp} />
+                </dd>
+              </dl>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="co-m-pane__body">
-        <SectionHeading text="Rules" />
-        <div className="co-m-pane__filter-bar co-m-pane__filter-bar--alt">
-          {/* This page is temporarily disabled until we update the safe resources list.
+        <div className="co-m-pane__body">
+          <SectionHeading text={t('CONTENT:RULES')} />
+          <div className="co-m-pane__filter-bar co-m-pane__filter-bar--alt">
+            {/* This page is temporarily disabled until we update the safe resources list.
           <div className="co-m-pane__filter-bar-group">
             <Link to={addHref(name, namespace)} className="co-m-primary-action">
               <button className="btn btn-primary">Add Rule</button>
             </Link>
           </div>
           */}
-          <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-            <TextFilter label="Rules by action or resource" onChange={this.changeFilter} />
+            <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
+              <TextFilter id="rule" label="Rules by action or resource" onChange={this.changeFilter} />
+            </div>
           </div>
+          <RulesList rules={rules} name={name} namespace={namespace} />
         </div>
-        <RulesList rules={rules} name={name} namespace={namespace} />
       </div>
-    </div>;
+    );
   }
 }
 
-const BindingHeader = props => <ListHeader>
-  <ColHead {...props} className="col-xs-4" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-xs-2" sortField="subject.kind">Subject Kind</ColHead>
-  <ColHead {...props} className="col-xs-4" sortField="subject.name">Subject Name</ColHead>
-  <ColHead {...props} className="col-xs-2" sortField="metadata.namespace">Namespace</ColHead>
-</ListHeader>;
+const BindingHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-4" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2" sortField="subject.kind">
+        {t('CONTENT:SUBJECTKIND')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-4" sortField="subject.name">
+        {t('CONTENT:SUBJECTNAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
-const BindingRow = ({ obj: binding }) => <ResourceRow obj={binding}>
-  <div className="col-xs-4">
-    <BindingName binding={binding} />
-  </div>
-  <div className="col-xs-2">
-    {binding.subject.kind}
-  </div>
-  <div className="col-xs-4">
-    {binding.subject.name}
-  </div>
-  <div className="col-xs-2">
-    {binding.namespace || 'all'}
-  </div>
-</ResourceRow>;
+const BindingRow = ({ obj: binding }) => (
+  <ResourceRow obj={binding}>
+    <div className="col-xs-4">
+      <BindingName binding={binding} />
+    </div>
+    <div className="col-xs-2">{binding.subject.kind}</div>
+    <div className="col-xs-4">{binding.subject.name}</div>
+    <div className="col-xs-2">{binding.namespace || 'all'}</div>
+  </ResourceRow>
+);
 
 const BindingsListComponent = props => <BindingsList {...props} Header={BindingHeader} Row={BindingRow} />;
 
-export const BindingsForRolePage = (props) => {
-  const { match: { params: { name, ns } }, obj: { kind } } = props;
+export const BindingsForRolePage = props => {
+  const {
+    match: {
+      params: { name, ns },
+    },
+    obj: { kind },
+  } = props;
 
   let resources = [{ kind: 'RoleBinding', namespaced: true }];
   if (!ns) {
     resources.push({ kind: 'ClusterRoleBinding', namespaced: false, optional: true });
   }
-  return <MultiListPage
-    canCreate={true}
-    createProps={{ to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}` }}
-    ListComponent={BindingsListComponent}
-    staticFilters={[{ 'role-binding-roleRef': name }]}
-    resources={resources}
-    textFilter="role-binding"
-    filterLabel="Role Bindings by role or subject"
-    namespace={ns}
-    flatten={bindingsFlatten} />;
+  return <MultiListPage canCreate={true} createProps={{ to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}` }} ListComponent={BindingsListComponent} staticFilters={[{ 'role-binding-roleRef': name }]} resources={resources} textFilter="role-binding" filterLabel="Role Bindings by role or subject" namespace={ns} flatten={bindingsFlatten} />;
 };
 
-export const RolesDetailsPage = props => <DetailsPage
-  {...props}
-  pages={[navFactory.details(Details), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]}
-  menuActions={menuActions} />;
+export const RolesDetailsPage = props => <DetailsPage {...props} pages={[navFactory.details(Details), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]} menuActions={menuActions} />;
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
 
@@ -172,30 +193,39 @@ export const roleType = role => {
   return role.metadata.namespace ? 'namespace' : 'cluster';
 };
 
-export const RolesPage = connectToFlags(FLAGS.PROJECTS_AVAILBLE, FLAGS.PROJECTS_AVAILBLE)(({ namespace, showTitle, flags }) => {
+export const RolesPage = connectToFlags(
+  FLAGS.PROJECTS_AVAILBLE,
+  FLAGS.PROJECTS_AVAILBLE,
+)(({ namespace, showTitle, flags }) => {
   const projectsAvailable = !flagPending(flags.PROJECTS_AVAILBLE) && flags.PROJECTS_AVAILBLE;
-  return <MultiListPage
-    ListComponent={RolesList}
-    canCreate={true}
-    showTitle={showTitle}
-    namespace={namespace}
-    createProps={{ to: `/k8s/ns/${namespace || 'default'}/roles/new` }}
-    filterLabel="Roles by name"
-    flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
-    resources={[
-      { kind: 'Role', namespaced: true, optional: !projectsAvailable },
-      { kind: 'ClusterRole', namespaced: false, optional: true },
-    ]}
-    rowFilters={[{
-      type: 'role-kind',
-      selected: ['cluster', 'namespace'],
-      reducer: roleType,
-      items: [
-        { id: 'cluster', title: 'Cluster-wide Roles' },
-        { id: 'namespace', title: 'Namespace Roles' },
-        { id: 'system', title: 'System Roles' },
-      ],
-    }]}
-    title="Roles"
-  />;
+  const { t } = useTranslation();
+  return (
+    <MultiListPage
+      ListComponent={RolesList}
+      canCreate={true}
+      showTitle={showTitle}
+      namespace={namespace}
+      createProps={{ to: `/k8s/ns/${namespace || 'default'}/roles/new` }}
+      filterLabel="Roles by name"
+      flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Role', t) })}
+      resources={[
+        { kind: 'Role', namespaced: true, optional: !projectsAvailable },
+        { kind: 'ClusterRole', namespaced: false, optional: true },
+      ]}
+      rowFilters={[
+        {
+          type: 'role-kind',
+          selected: ['cluster', 'namespace'],
+          reducer: roleType,
+          items: [
+            { id: 'cluster', title: 'Cluster-wide Roles' },
+            { id: 'namespace', title: 'Namespace Roles' },
+            { id: 'system', title: 'System Roles' },
+          ],
+        },
+      ]}
+      title={t('RESOURCE:ROLE')}
+    />
+  );
 });

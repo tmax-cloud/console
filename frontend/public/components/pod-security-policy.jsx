@@ -2,77 +2,43 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import {
-  Cog,
-  navFactory,
-  ResourceCog,
-  SectionHeading,
-  ResourceLink,
-  ResourceSummary,
-  ScrollToTopOnMount,
-  kindObj
-} from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete,
-  Cog.factory.EditStatus
-];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 
-const PodSecurityPolicyHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="spec.privileged"
-    >
-      Privileged
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="spec.seLinux.rule"
-    >
-      SeLinux
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="spec.runAsUser.rule"
-    >
-      runAsUser
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="spec.fsGroup.rule"
-    >
-      FsGroup
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-1 col-sm-1"
-      sortField="spec.supplementalGroups.rule"
-    >
-      supplementalGroup
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-1 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const PodSecurityPolicyHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.privileged">
+        {t('CONTENT:PRIVILEGED')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.seLinux.rule">
+        {t('CONTENT:SELINUX')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.runAsUser.rule">
+        {t('CONTENT:RUNASUSER')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.fsGroup.rule">
+        {t('CONTENT:FSGROUP')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-1 col-sm-1" sortField="spec.supplementalGroups.rule">
+        {t('CONTENT:SUPPLEMENTALGROUP')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const PodSecurityPolicyRow = () =>
   // eslint-disable-next-line no-shadow
@@ -80,39 +46,16 @@ const PodSecurityPolicyRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
-          <ResourceCog
-            actions={menuActions}
-            kind="PodSecurityPolicy"
-            resource={obj}
-          />
-          <ResourceLink
-            kind="PodSecurityPolicy"
-            name={obj.metadata.name}
-            namespace={obj.metadata.namespace}
-            title={obj.metadata.name}
-          />
+          <ResourceCog actions={menuActions} kind="PodSecurityPolicy" resource={obj} />
+          <ResourceLink kind="PodSecurityPolicy" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.spec.privileged ? 'True' : 'False'}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.spec.seLinux.rule}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.spec.runAsUser.rule}
-        </div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">
-          {obj.spec.fsGroup.rule}
-        </div>
-        <div className="col-xs-1 col-sm-1 hidden-xs">
-          {obj.spec.supplementalGroups.rule}
-        </div>
-        <div className="col-xs-1 col-sm-1 hidden-xs">
-          {obj.spec.privileged}
-        </div>
-        <div className="col-xs-1 col-sm-1 hidden-xs">
-          {fromNow(obj.metadata.creationTimestamp)}
-        </div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.privileged ? 'True' : 'False'}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.seLinux.rule}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.runAsUser.rule}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.fsGroup.rule}</div>
+        <div className="col-xs-1 col-sm-1 hidden-xs">{obj.spec.supplementalGroups.rule}</div>
+        <div className="col-xs-1 col-sm-1 hidden-xs">{obj.spec.privileged}</div>
+        <div className="col-xs-1 col-sm-1 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -133,29 +76,29 @@ const PodSecurityPolicyRow = () =>
 //     );
 //   };
 
-
 const Details = ({ obj: podsecuritypolicy }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('PodSecurityPolicy', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={podsecuritypolicy} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Privileged</dt>
+              <dt>{t('CONTENT:PRIVILEGED')}</dt>
               <dd>{podsecuritypolicy.spec.privileged ? 'True' : 'False'}</dd>
-              <dt>seLinux</dt>
+              <dt>{t('CONTENT:SELINUX')}</dt>
               <dd>{podsecuritypolicy.spec.seLinux.rule}</dd>
-              <dt>Run As User</dt>
+              <dt>{t('CONTENT:RUNASUSER')}</dt>
               <dd>{podsecuritypolicy.spec.runAsUser.rule}</dd>
-              <dt>fsGroup</dt>
+              <dt>{t('CONTENT:FSGROUP')}</dt>
               <dd>{podsecuritypolicy.spec.fsGroup.rule}</dd>
-              <dt>Supplemental Group</dt>
+              <dt>{t('CONTENT:SUPPLEMENTALGROUP')}</dt>
               <dd>{podsecuritypolicy.spec.supplementalGroups.rule}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
@@ -179,14 +122,7 @@ export const PodSecurityPolicyList = props => {
 };
 PodSecurityPolicyList.displayName = PodSecurityPolicyList;
 
-export const PodSecurityPoliciesPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={PodSecurityPolicyList}
-    canCreate={true}
-    kind="PodSecurityPolicy"
-  />
-);
+export const PodSecurityPoliciesPage = props => <ListPage {...props} ListComponent={PodSecurityPolicyList} canCreate={true} kind="PodSecurityPolicy" />;
 PodSecurityPoliciesPage.displayName = 'PodSecurityPoliesPage';
 
 export const PodSecurityPoliciesDetailsPage = props => (
@@ -195,15 +131,12 @@ export const PodSecurityPoliciesDetailsPage = props => (
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
         name: 'Namespace Claim Details',
-        path: props.match.url
+        path: props.match.url,
       })
     }
     kind="PodSecurityPolicy"
     menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
+    pages={[navFactory.details(Details), navFactory.editYaml()]}
   />
 );
 

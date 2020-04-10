@@ -1,12 +1,12 @@
 import { kindObj } from '../../utils';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
-export const ResourcePlural = kind => {
+export const ResourcePlural = (kind, t) => {
   const ko = kindObj(kind);
   const { labelPlural } = ko;
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
-  let result = window.localStorage.getItem('i18nextLng') === 'en' ? labelPlural : t(`RESOURCE:${kind.toUpperCase()}`);
+  let result = window.localStorage.getItem('i18nextLng') === 'English' ? labelPlural : t(`RESOURCE:${kind.toUpperCase()}`);
 
   return result;
 };

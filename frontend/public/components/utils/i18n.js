@@ -15,17 +15,19 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)
   .init({
-    lng: 'ko',
+    lng: 'en',
     debug: true,
     detection: options,
     resources: {
       ko: {
+        PLURAL: ko.PLURAL,
         ADDITIONAL: ko.ADDITIONAL,
         RESOURCE: ko.RESOURCE,
         STRING: ko.STRING,
         CONTENT: ko.CONTENT,
       },
       en: {
+        PLURAL: en.PLURAL,
         ADDITIONAL: en.ADDITIONAL,
         RESOURCE: en.RESOURCE,
         STRING: en.STRING,

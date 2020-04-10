@@ -27,7 +27,6 @@ export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }
 
 /** @type {React.SFC<{label: string, onChange: React.ChangeEventHandler<any>, defaultValue: string}}>} */
 export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus, id }) => {
-  const { t } = useTranslation();
   if (_.isUndefined(autoFocus)) {
     if (window.matchMedia('(min-width: 800px)').matches) {
       autoFocus = true;
@@ -36,8 +35,9 @@ export const TextFilter = ({ label, onChange, defaultValue, style, className, au
       autoFocus = false;
     }
   }
+  const { t } = useTranslation();
   // return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={`Filter ${label}...`} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
-  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={((id === 'event' || id === 'rule') && label) || t('ADDITIONAL:FILTERPLACEHOLDER', { something: id })} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
+  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={(id === 'event' && t('CONTENT:FILTERLABELHOLDEREVENT')) || (id === 'rule' && t('CONTENT:FILTERLABELHOLDERRULE')) || t('CONTENT:FILTERLABELHOLDER')} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
 };
 
 TextFilter.displayName = 'TextFilter';
@@ -237,11 +237,10 @@ FireMan_.propTypes = {
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
   const { t } = useTranslation();
-  const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
+  const { title, createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
   const { labelPlural, plural, namespaced, label } = ko;
-  const title = ResourcePlural(kind);
   let href = namespaced ? `/k8s/ns/${namespace || 'default'}/${plural}/new` : `/k8s/cluster/${plural}/new`;
   if (ko.crd) {
     try {
@@ -264,15 +263,15 @@ export const ListPage = props => {
 
   return (
     <MultiListPage
-      id={ResourcePlural(kind)} // 임의로 추가
+      id={ResourcePlural(kind, t)} // 임의로 추가
       filterLabel={filterLabel || `${labelPlural} by name`}
       selectorFilterLabel="Filter by selector (app=nginx) ..."
       createProps={createProps}
-      title={title}
+      title={title || ResourcePlural(kind, t)}
       showTitle={showTitle}
       canCreate={props.canCreate}
       canExpand={props.canExpand}
-      createButtonText={createButtonText || t('CONTENT:CREATE')}
+      createButtonText={createButtonText || t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${kind.toUpperCase()}`) })}
       textFilter={props.textFilter}
       resources={resources}
       autoFocus={props.autoFocus}

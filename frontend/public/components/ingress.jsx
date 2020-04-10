@@ -4,11 +4,13 @@ import * as React from 'react';
 import { ColHead, DetailsPage, List, ListHeader, ListPage, ResourceRow } from './factory';
 import { Cog, SectionHeading, LabelList, ResourceCog, ResourceIcon, detailsPage, EmptyBox, navFactory, ResourceLink, ResourceSummary } from './utils';
 
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = Cog.factory.common;
 
 export const ingressValidHosts = ingress => _.map(_.get(ingress, 'spec.rules', []), 'host').filter(_.isString);
 
-const getHosts = (ingress) => {
+const getHosts = ingress => {
   const hosts = ingressValidHosts(ingress);
 
   if (hosts.length) {
@@ -18,67 +20,92 @@ const getHosts = (ingress) => {
   return <div className="text-muted">No hosts</div>;
 };
 
-const getTLSCert = (ingress) => {
+const getTLSCert = ingress => {
+  const { t } = useTranslation();
   if (!_.has(ingress.spec, 'tls')) {
-    return <div><span>Not configured</span></div>;
+    return (
+      <div>
+        <span>{t('CONTENT:NOTFIGURED')}</span>
+      </div>
+    );
   }
 
   const certs = _.map(ingress.spec.tls, 'secretName');
 
-  return <div>
-    <ResourceIcon kind="Secret" className="co-m-resource-icon--align-left" />
-    <span>{certs.join(', ')}</span>
-  </div>;
+  return (
+    <div>
+      <ResourceIcon kind="Secret" className="co-m-resource-icon--align-left" />
+      <span>{certs.join(', ')}</span>
+    </div>
+  );
 };
 
-const IngressListHeader = props => <ListHeader>
-  <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">Name</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">Namespace</ColHead>
-  <ColHead {...props} className="col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">Labels</ColHead>
-  <ColHead {...props} className="col-md-3 hidden-sm hidden-xs" sortFunc="ingressValidHosts">Hosts</ColHead>
-</ListHeader>;
+const IngressListHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">
+        {t('CONTENT:LABELS')}
+      </ColHead>
+      <ColHead {...props} className="col-md-3 hidden-sm hidden-xs" sortFunc="ingressValidHosts">
+        {t('CONTENT:HOSTS')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
-const IngressListRow = ({ obj: ingress }) => <ResourceRow obj={ingress}>
-  <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
-    <ResourceCog actions={menuActions} kind="Ingress" resource={ingress} />
-    <ResourceLink kind="Ingress" name={ingress.metadata.name}
-      namespace={ingress.metadata.namespace} title={ingress.metadata.uid} />
-  </div>
-  <div className="col-md-3 col-sm-4 col-xs-6 co-break-word">
-    <ResourceLink kind="Namespace" name={ingress.metadata.namespace} title={ingress.metadata.namespace} />
-  </div>
-  <div className="col-md-3 col-sm-4 hidden-xs">
-    <LabelList kind="Ingress" labels={ingress.metadata.labels} />
-  </div>
-  <div className="col-md-3 hidden-sm hidden-xs">{getHosts(ingress)}</div>
-</ResourceRow>;
+const IngressListRow = ({ obj: ingress }) => (
+  <ResourceRow obj={ingress}>
+    <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
+      <ResourceCog actions={menuActions} kind="Ingress" resource={ingress} />
+      <ResourceLink kind="Ingress" name={ingress.metadata.name} namespace={ingress.metadata.namespace} title={ingress.metadata.uid} />
+    </div>
+    <div className="col-md-3 col-sm-4 col-xs-6 co-break-word">
+      <ResourceLink kind="Namespace" name={ingress.metadata.namespace} title={ingress.metadata.namespace} />
+    </div>
+    <div className="col-md-3 col-sm-4 hidden-xs">
+      <LabelList kind="Ingress" labels={ingress.metadata.labels} />
+    </div>
+    <div className="col-md-3 hidden-sm hidden-xs">{getHosts(ingress)}</div>
+  </ResourceRow>
+);
 
-const RulesHeader = () => <div className="row co-m-table-grid__head">
-  <div className="col-xs-3">Host</div>
-  <div className="col-xs-3">Path</div>
-  <div className="col-xs-3">Service</div>
-  <div className="col-xs-2">Service Port</div>
-</div>;
+const RulesHeader = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="row co-m-table-grid__head">
+      <div className="col-xs-3">{t('CONTENT:HOST')}</div>
+      <div className="col-xs-3">{t('CONTENT:PATH')}</div>
+      <div className="col-xs-3">{t('CONTENT:SERVICE')}</div>
+      <div className="col-xs-2">{t('CONTENT:SERVICEHOST')}</div>
+    </div>
+  );
+};
 
 const RulesRow = ({ rule, namespace }) => {
-
-  return <div className="row co-resource-list__item">
-    <div className="col-xs-3 co-break-word">
-      <div>{rule.host}</div>
+  return (
+    <div className="row co-resource-list__item">
+      <div className="col-xs-3 co-break-word">
+        <div>{rule.host}</div>
+      </div>
+      <div className="col-xs-3 co-break-word">
+        <div>{rule.path}</div>
+      </div>
+      <div className="col-xs-3">{rule.serviceName ? <ResourceLink kind="Service" name={rule.serviceName} namespace={namespace} /> : '-'}</div>
+      <div className="col-xs-2">
+        <div>{rule.servicePort || '-'}</div>
+      </div>
     </div>
-    <div className="col-xs-3 co-break-word">
-      <div>{rule.path}</div>
-    </div>
-    <div className="col-xs-3">
-      {rule.serviceName ? <ResourceLink kind="Service" name={rule.serviceName} namespace={namespace} /> : '-'}
-    </div>
-    <div className="col-xs-2">
-      <div>{rule.servicePort || '-'}</div>
-    </div>
-  </div>;
+  );
 };
 
-const RulesRows = (props) => {
+const RulesRows = props => {
   const rules = [];
 
   if (_.has(props.spec, 'rules')) {
@@ -113,38 +140,32 @@ const RulesRows = (props) => {
   return <EmptyBox label="Rules" />;
 };
 
-const Details = ({ obj: ingress }) => <React.Fragment>
-  <div className="co-m-pane__body">
-    <SectionHeading text="Ingress Overview" />
-    <ResourceSummary resource={ingress} showPodSelector={false} showNodeSelector={false}>
-      <dt>TLS Certificate</dt>
-      <dd>{getTLSCert(ingress)}</dd>
-    </ResourceSummary>
-  </div>
-  <div className="co-m-pane__body">
-    <SectionHeading text="Ingress Rules" />
-    <p className="co-m-pane__explanation">These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.</p>
-    <div className="co-m-table-grid co-m-table-grid--bordered">
-      <RulesHeader />
-      <RulesRows spec={ingress.spec} namespace={ingress.metadata.namespace} />
-    </div>
-  </div>
-</React.Fragment>;
+const Details = ({ obj: ingress }) => {
+  const { t } = useTranslation();
+  return (
+    <React.Fragment>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Ingress', t) })} />
+        <ResourceSummary resource={ingress} showPodSelector={false} showNodeSelector={false}>
+          <dt>{t('CONTENT:TLSCERTIFICATE')}</dt>
+          <dd>{getTLSCert(ingress)}</dd>
+        </ResourceSummary>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('CONTENT:INGRESSRULES')} />
+        <p className="co-m-pane__explanation">{t('STRING:INGRESS_DETAIL_0')}</p>
+        <div className="co-m-table-grid co-m-table-grid--bordered">
+          <RulesHeader />
+          <RulesRows spec={ingress.spec} namespace={ingress.metadata.namespace} />
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
 
-const IngressesDetailsPage = props => <DetailsPage
-  {...props}
-  menuActions={menuActions}
-  pages={[navFactory.details(detailsPage(Details)), navFactory.editYaml()]}
-/>;
+const IngressesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(Details)), navFactory.editYaml()]} />;
 const IngressesList = props => <List {...props} Header={IngressListHeader} Row={IngressListRow} />;
-const IngressesPage = props => (
-  <ListPage
-        {...props}
-        ListComponent={IngressesList}
-        canCreate={true}
-        kind="Ingress"
-    />
-)
+const IngressesPage = props => <ListPage {...props} ListComponent={IngressesList} canCreate={true} kind="Ingress" />;
 
 // 미리: 인그레스 페이지는 폼 에디터 임시로 disable
 // {

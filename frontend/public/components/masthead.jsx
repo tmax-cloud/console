@@ -12,7 +12,7 @@ import { SafetyFirst } from './safety-first';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
 import './utils/i18n';
 import i18n from './utils/i18n';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
@@ -64,6 +64,7 @@ const UserMenuWrapper = connectToFlags(
   // });
   // }
   const logout = e => {
+    props.setLoading();
     e.preventDefault();
 
     // TODO 로그아웃 api 연동
@@ -76,6 +77,7 @@ const UserMenuWrapper = connectToFlags(
     coFetchJSON
       .post(AUTH_SERVER_URL, json)
       .then(data => {
+        props.setLoading();
         localStorage.clear();
         localStorage.setItem('logouted', 'true');
 
@@ -83,6 +85,7 @@ const UserMenuWrapper = connectToFlags(
         window.location.href = `${document.location.origin}`;
       })
       .catch(error => {
+        props.setLoading();
         console.log(error);
       });
   };
@@ -102,7 +105,7 @@ const UserMenuWrapper = connectToFlags(
   return authSvc.userID() ? <UserMenu actions={actions} username={authSvc.name()} /> : null;
 });
 
-const LanguageWrapper = (props => {
+const LanguageWrapper = props => {
   const { t } = useTranslation();
   const lang = t('CONTENT:LANGUAGE');
   const actions = [];
@@ -125,10 +128,9 @@ const LanguageWrapper = (props => {
     callback: koChange,
   });
   return <LanguageMenu lang={lang} actions={actions} />;
-});
+};
 
-
-export class OSUserMenu extends SafetyFirst {
+class OSUserMenu extends SafetyFirst {
   constructor(props) {
     super(props);
     this.state = {
@@ -146,12 +148,12 @@ export class OSUserMenu extends SafetyFirst {
     if (window.SERVER_FLAGS.releaseModeFlag && window.localStorage.getItem('refreshToken') && window.localStorage.getItem('accessToken')) {
       const userRole = JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role;
       if (userRole !== 'cluster-admin') {
-        this.setState({ username: '사용자' });
+        this.setState({ username: 'User' });
       } else {
-        this.setState({ username: '관리자' });
+        this.setState({ username: 'Admin' });
       }
     } else {
-      this.setState({ username: '사용자' });
+      this.setState({ username: 'User' });
     }
   }
 
@@ -160,6 +162,7 @@ export class OSUserMenu extends SafetyFirst {
     return username ? <UserMenu actions={this.props.actions} username={username} /> : null;
   }
 }
+export default withTranslation()(OSUserMenu);
 
 const ContextSwitcher = () => {
   const items = {
@@ -284,10 +287,10 @@ export class ExpTimer extends Component {
   }
 }
 
-export const Masthead = () => {
+export const Masthead = props => {
   let timerRef = null;
   const [tokenTime, setTokenTime] = useState(60);
-
+  const { t } = useTranslation();
   const setExpireTime = time => {
     setTokenTime(time);
   };
@@ -337,7 +340,7 @@ export const Masthead = () => {
       {releaseModeFlag && (
         <div className="co-masthead__expire">
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
-            시간 연장
+            {t('CONTENT:EXTEND')}
           </button>
           <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>
           <div className="extend-refresh-border"></div>
@@ -348,7 +351,7 @@ export const Masthead = () => {
       </div>
       {releaseModeFlag && (
         <div className="co-masthead__user">
-          <UserMenuWrapper />
+          <UserMenuWrapper setLoading={props.setLoading} />
         </div>
       )}
     </header>

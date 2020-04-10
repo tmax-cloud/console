@@ -5,28 +5,31 @@ import { Link } from 'react-router-dom';
 import { ColHead, List, ListHeader, ListPage } from './factory';
 import { Cog, ResourceCog, ResourceIcon, kindObj } from './utils';
 import { referenceForCRD } from '../module/k8s';
-
+import { useTranslation } from 'react-i18next';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const CRDHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-6" sortField="spec.names.kind">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 col-xs-6" sortField="spec.group">
-      Group
-    </ColHead>
-    <ColHead {...props} className="col-lg-2 col-md-2 col-sm-4 hidden-xs" sortField="spec.version">
-      Version
-    </ColHead>
-    <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.scope">
-      Namespaced
-    </ColHead>
-    <ColHead {...props} className="col-lg-1 hidden-md hidden-sm hidden-xs">
-      Established
-    </ColHead>
-  </ListHeader>
-);
+const CRDHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-6" sortField="spec.names.kind">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 col-xs-6" sortField="spec.group">
+        {t('CONTENT:GROUP')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-2 col-sm-4 hidden-xs" sortField="spec.version">
+        {t('CONTENT:VERSION')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.scope">
+        {t('CONTENT:NAMESPACED')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-1 hidden-md hidden-sm hidden-xs">
+        {t('CONTENT:ESTABLISHED')}
+      </ColHead>
+    </ListHeader>
+  )
+};
 
 const isEstablished = conditions => {
   const condition = _.find(conditions, c => c.type === 'Established');
@@ -60,10 +63,10 @@ const CRDRow = ({ obj: crd }) => {
             <i className="fa fa-check-circle"></i>
           </span>
         ) : (
-          <span className="node-not-ready">
-            <i className="fa fa-minus-circle"></i>
-          </span>
-        )}
+            <span className="node-not-ready">
+              <i className="fa fa-minus-circle"></i>
+            </span>
+          )}
       </div>
     </div>
   );

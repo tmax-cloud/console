@@ -92,7 +92,6 @@ export const LimitRangeModel: K8sKind = {
   plural: 'limitranges',
   apiVersion: 'v1',
   abbr: 'LR',
-  apiGroup: 'app',
   labelPlural: 'Limit Ranges',
   path: 'limitranges',
   id: 'limitrange',
@@ -362,7 +361,7 @@ export const HorizontalPodAutoscalerModel: K8sKind = {
   namespaced: true,
   kind: 'HorizontalPodAutoscaler',
   id: 'horizontalpodautoscaler',
-  labelPlural: 'Horizontal Pod Autoscalers',
+  labelPlural: 'HPA',
 };
 
 export const ServiceAccountModel: K8sKind = {

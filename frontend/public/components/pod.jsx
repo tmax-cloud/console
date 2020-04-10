@@ -228,7 +228,7 @@ const Details = ({ obj: pod }) => {
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Pod') })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Pod', t) })} />
         <PodGraphs pod={pod} />
         <div className="row">
           <div className="col-sm-6">

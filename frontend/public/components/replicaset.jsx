@@ -16,7 +16,7 @@ const Details = ({ obj: replicaSet }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Replicaset') })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Replicaset', t) })} />
         <div className="row">
           <div className="col-md-6">
             <ResourceSummary resource={replicaSet} />
