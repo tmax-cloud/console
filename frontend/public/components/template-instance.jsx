@@ -101,6 +101,7 @@ export const TemplateInstanceList = props => {
 };
 TemplateInstanceList.displayName = TemplateInstanceList;
 const TemplateInstancesPage = props => {
+  const { t } = useTranslation();
   const createItems = {
     form: 'Form Editor',
     yaml: 'YAML Editor',
@@ -110,7 +111,7 @@ const TemplateInstancesPage = props => {
     items: createItems,
     createLink: type => `/k8s/ns/${props.namespace || 'default'}/templateinstances/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  return <ListPage ListComponent={TemplateInstanceList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+  return <ListPage ListComponent={TemplateInstanceList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
 };
 export { TemplateInstancesPage };
 
