@@ -16,8 +16,7 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_1": "Total number of non-terminated pods targeted by this {{something}} (their labels match the selector).",
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of unavailable pods targeted by this {{something}}.",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
-    "INGRESSRULEEMPTY": "All traffic is allowed to Pods in {{something}}."
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
   },
   "STRING": {
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
@@ -25,18 +24,9 @@
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
     "SERVICE_DETAIL_2": "서비스를 지원하는 리소스의 위치",
     "SERVICE_DETAIL_3": "클러스터 내에서만 액세스 가능",
-    "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소",
-    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
+    "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소"
   },
   "CONTENT": {
-    "DISPLAYNAME": "이름 표시",
-    "REQUESTER": "요청자",
-    "NETWORKPOLICIESDOCUMENTATION": "Network Policies Documentation",
-    "PRIVILEGED": "Privileged",
-    "SELINUX": "Security Enhancemente Linux",
-    "RUNASUSER": "Run as User",
-    "FSGROUP": "파일스토리지 그룹",
-    "SUPPLEMENTALGROUP": "Supplemental Group",
     "FORMEDITOR": "폼 에디터",
     "YAMLEDITOR": "Yaml 에디터",
     "ACCESSMODES": "접근 모드",
@@ -254,10 +244,6 @@
     "HOST": "호스트",
     "SERVICE": "서비스",
     "SERVICEHOST": "서비스 호스트",
-    "SERVICEFORMEDITOR": "Service (From Editor)",
-    "SERVICEYAMLEDITOR": "Service (Yaml Editor)",
-    "DEPLOYMENTFORMEDITOR": "Deployment (From Editor)",
-    "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)",
     "ROLEREF": "Role Ref",
     "SUBJECTKIND": "대상 종류",
     "SUBJECTNAME": "대상 이름",
@@ -274,7 +260,8 @@
     "GROUP": "그룹",
     "VERSION": "버전",
     "NAMESPACED": "Namespaced",
-    "ESTABLISHED": "생성"
+    "ESTABLISHED": "생성",
+    "Age": "age"
   },
   "RESOURCE": {
     "HOME": "홈",

@@ -18,8 +18,7 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of available pods (ready for at least minReadySeconds) targeted by this {{something}}..",
     "DEPLOYMENT_DETAIL_TOOLTIP_3": "Total number of unavailable pods targeted by this {{something}}.",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
-    "INGRESSRULEEMPTY": "All traffic is allowed to Pods in {{something}}."
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
   },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
@@ -27,18 +26,9 @@
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
     "SERVICE_DETAIL_2": "Location of the resource that backs the service",
     "SERVICE_DETAIL_3": "Accessible within the cluster only",
-    "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service",
-    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
+    "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service"
   },
   "CONTENT": {
-    "DISPLAYNAME": "Display Name",
-    "REQUESTER": "Requester",
-    "NETWORKPOLICIESDOCUMENTATION": "Network Policies Documentation",
-    "PRIVILEGED": "Privileged",
-    "SELINUX": "Security Enhancemente Linux",
-    "RUNASUSER": "Run as User",
-    "FSGROUP": "Filestorage Group",
-    "SUPPLEMENTALGROUP": "Supplemental Group",
     "FORMEDITOR": "Form Editor",
     "YAMLEDITOR": "Yaml Editor",
     "ACCESSMODES": "Access Modes",
@@ -256,10 +246,6 @@
     "HOST": "Host",
     "SERVICE": "Service",
     "SERVICEHOST": "Service Host",
-    "SERVICEFORMEDITOR": "Service (From Editor)",
-    "SERVICEYAMLEDITOR": "Service (Yaml Editor)",
-    "DEPLOYMENTFORMEDITOR": "Deployment (From Editor)",
-    "DEPLOYMENTYAMLEDITOR": "Deployment (Yaml Editor)",
     "ROLEREF": "Role Ref",
     "SUBJECTKIND": "Subject Kind",
     "SUBJECTNAME": "Subject Name",
@@ -276,7 +262,8 @@
     "GROUP": "Group",
     "VERSION": "Version",
     "NAMESPACED": "Namespaced",
-    "ESTABLISHED": "Established"
+    "ESTABLISHED": "Established",
+    "Age": "age"
   },
   "RESOURCE": {
     "HOME": "Home",

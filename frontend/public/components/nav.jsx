@@ -265,10 +265,10 @@ class NavSection_ extends React.Component {
           {!href ? (
             text
           ) : (
-            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-              {text}
-            </Link>
-          )}
+              <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+                {text}
+              </Link>
+            )}
         </div>
         {Children && (
           <ul className="navigation-container__list" style={{ maxHeight }}>
@@ -487,7 +487,6 @@ class Nav extends React.Component {
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              {/* <ResourceClusterLink resource="namespaces" name="네임스페이스" onClick={this.close} required={FLAGS.CAN_LIST_NS} /> */}
               <ResourceClusterLink resource="namespaces" name={ResourcePlural('Namespace', t)} onClick={this.close} />
               <ResourceClusterLink resource="namespaceclaims" name={ResourcePlural('NamespaceClaim', t)} onClick={this.close} />
               {<ResourceNSLink resource="limitranges" name={ResourcePlural('LimitRange', t)} onClick={this.close} />}
