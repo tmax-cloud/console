@@ -2,67 +2,40 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import {
-  Cog,
-  navFactory,
-  ResourceCog,
-  SectionHeading,
-  ResourceLink,
-  ScrollToTopOnMount,
-  ResourceSummary
-} from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTopOnMount, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete
-];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const ClusterServiceBrokerHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-6 col-sm-6" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead
-        {...props}
-        className="col-sm-4 hidden-xs"
-        sortField="metadata.creationTimestamp" >
+      <ColHead {...props} className="col-sm-6 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
-  )
-}
+  );
+};
 
 const ClusterServiceBrokerRow = () =>
   // eslint-disable-next-line no-shadow
   function ClusterServiceBrokerRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          <ResourceCog
-            actions={menuActions}
-            kind="ClusterServiceBroker"
-            resource={obj}
-          />
-          <ResourceLink
-            kind="ClusterServiceBroker"
-            name={obj.metadata.name}
-            title={obj.metadata.name}
-          />
+        <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
+          <ResourceCog actions={menuActions} kind="ClusterServiceBroker" resource={obj} />
+          <ResourceLink kind="ClusterServiceBroker" name={obj.metadata.name} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">
-          {fromNow(obj.metadata.creationTimestamp)}
-        </div>
+        <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
-
 
 const Details = ({ obj: ClusterServiceBroker }) => {
   return (
@@ -83,8 +56,8 @@ const Details = ({ obj: ClusterServiceBroker }) => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export const ClusterServiceBrokerList = props => {
   const { kinds } = props;
@@ -94,14 +67,7 @@ export const ClusterServiceBrokerList = props => {
 };
 ClusterServiceBrokerList.displayName = ClusterServiceBrokerList;
 
-export const ClusterServiceBrokersPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={ClusterServiceBrokerList}
-    canCreate={true}
-    kind="ClusterServiceBroker"
-  />
-);
+export const ClusterServiceBrokersPage = props => <ListPage {...props} ListComponent={ClusterServiceBrokerList} canCreate={true} kind="ClusterServiceBroker" />;
 ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
 
 // export const TemplatesDetailsPage = props => {
@@ -118,15 +84,12 @@ export const ClusterServiceBrokersDetailsPage = props => (
     breadcrumbsFor={obj =>
       breadcrumbsForOwnerRefs(obj).concat({
         name: 'Cluster Service Broker Details',
-        path: props.match.url
+        path: props.match.url,
       })
     }
     kind="ClusterServiceBroker"
     menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
+    pages={[navFactory.details(Details), navFactory.editYaml()]}
   />
 );
 
