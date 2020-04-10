@@ -49,7 +49,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       {showAnnotations && (
         <dd>
           <a className="co-m-modal-link" onClick={Cog.factory.ModifyAnnotations(kindObj(resource.kind), resource).callback}>
-            {pluralize(_.size(metadata.annotations), 'Annotation')}
+            {t('PLURAL:ANNOTATION', { count: _.size(metadata.annotations) })}
           </a>
         </dd>
       )}

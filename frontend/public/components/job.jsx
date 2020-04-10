@@ -72,7 +72,7 @@ const Details = ({ obj: job }) => {
     <div className="co-m-pane__body">
       <div className="row">
         <div className="col-md-6">
-          <SectionHeading text="Job Overview" />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Job', t) })} />
           <ResourceSummary resource={job} showNodeSelector={false}>
             <dt>{t('CONTENT:DESIREDCOMPLETIONS')}</dt>
             <dd>{job.spec.completions || '-'}</dd>
@@ -83,7 +83,7 @@ const Details = ({ obj: job }) => {
           </ResourceSummary>
         </div>
         <div className="col-md-6">
-          <SectionHeading text="Job Status" />
+          <SectionHeading text={t('CONTENT:JOBSTATUS')} />
           <dl className="co-m-pane__details">
             <dt>{t('CONTENT:STATUS')}</dt>
             <dd>{job.status.conditions ? job.status.conditions[0].type : t('CONTENT:INPROGRESS')}</dd>
