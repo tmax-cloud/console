@@ -23,7 +23,7 @@ const PipelineRunHeader = props => {
         {t('CONTENT:NAMESPACE')}
       </ColHead>
       <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
-        CREATED
+        {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
   );
@@ -76,7 +76,7 @@ export const PipelineRunsPage = props => {
     items: createItems,
     createLink: type => `/k8s/ns/${props.namespace || 'default'}/pipelineruns/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  return <ListPage ListComponent={PipelineRunList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+  return <ListPage ListComponent={PipelineRunList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
 };
 PipelineRunsPage.displayName = 'PipelineRunsPage';
 

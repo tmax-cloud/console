@@ -8,20 +8,25 @@ import { kindForReference, referenceForModel } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { PipelineResourceModel } from '../models';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
-const PipelineResourceHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
-      Namespace
-    </ColHead>
-    <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const PipelineResourceHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  );
+};
 
 const PipelineResourceRow = () =>
   // eslint-disable-next-line no-shadow
@@ -40,10 +45,11 @@ const PipelineResourceRow = () =>
 
 const DetailsForKind = kind =>
   function DetailsForKind_({ obj }) {
+    const { t } = useTranslation();
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('PipelineResource', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
@@ -59,16 +65,18 @@ export const PipelineResourceList = props => {
 PipelineResourceList.displayName = PipelineResourceList;
 
 const PipelineResourcesPage = props => {
+  const { t } = useTranslation();
+
   const createItems = {
-    form: 'Pipeline Resource (Form Editor)',
-    yaml: 'Pipeline Resource (YAML Editor)',
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
   };
 
   const createProps = {
     items: createItems,
     createLink: type => `/k8s/ns/${props.namespace || 'default'}/pipelineresources/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  return <ListPage ListComponent={PipelineResourceList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
+  return <ListPage ListComponent={PipelineResourceList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
 };
 PipelineResourcesPage.displayName = 'PipelineResourcesPage';
 export { PipelineResourcesPage };
