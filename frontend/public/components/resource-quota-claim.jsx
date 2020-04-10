@@ -4,27 +4,30 @@ import * as React from 'react';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference } from '../module/k8s';
+import { useTranslation } from 'react-i18next';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 
-const ResourceQuotaClaimHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.namespace">
-      Namespace
-    </ColHead>
-    <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
-      Status
-    </ColHead>
-    <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const ResourceQuotaClaimHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+};
 
 const ResourceQuotaClaimRow = () =>
   // eslint-disable-next-line no-shadow
@@ -59,6 +62,7 @@ const ResourceQuotaClaimRow = () =>
 //   };
 
 const Details = ({ obj: resourcequotaclaim }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -71,9 +75,9 @@ const Details = ({ obj: resourcequotaclaim }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Status</dt>
+              <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{resourcequotaclaim.status && resourcequotaclaim.status.status}</dd>
-              {resourcequotaclaim.status && resourcequotaclaim.status.reason && <dt>Reason</dt>}
+              {resourcequotaclaim.status && resourcequotaclaim.status.reason && <dt>{t('CONTENT:REASON')}</dt>}
               {resourcequotaclaim.status && resourcequotaclaim.status.reason && <dd>{resourcequotaclaim.status.reason}</dd>}
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
