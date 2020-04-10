@@ -237,11 +237,10 @@ FireMan_.propTypes = {
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
   const { t } = useTranslation();
-  const { createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
+  const { title, createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
   const { labelPlural, plural, namespaced, label } = ko;
-  const title = ResourcePlural(kind, t);
   let href = namespaced ? `/k8s/ns/${namespace || 'default'}/${plural}/new` : `/k8s/cluster/${plural}/new`;
   if (ko.crd) {
     try {
@@ -268,7 +267,7 @@ export const ListPage = props => {
       filterLabel={filterLabel || `${labelPlural} by name`}
       selectorFilterLabel="Filter by selector (app=nginx) ..."
       createProps={createProps}
-      title={title}
+      title={title || ResourcePlural(kind, t)}
       showTitle={showTitle}
       canCreate={props.canCreate}
       canExpand={props.canExpand}

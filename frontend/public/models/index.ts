@@ -361,7 +361,7 @@ export const HorizontalPodAutoscalerModel: K8sKind = {
   namespaced: true,
   kind: 'HorizontalPodAutoscaler',
   id: 'horizontalpodautoscaler',
-  labelPlural: 'Horizontal Pod Autoscalers',
+  labelPlural: 'HPA',
 };
 
 export const ServiceAccountModel: K8sKind = {

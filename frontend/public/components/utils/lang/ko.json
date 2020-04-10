@@ -261,7 +261,10 @@
     "VERSION": "버전",
     "NAMESPACED": "Namespaced",
     "ESTABLISHED": "생성",
-    "Age": "age"
+    "Age": "age",
+    "ADMINISTRATOR": "관리자",
+    "EXTEND": "시간 연장",
+    "USER": "사용자"
   },
   "RESOURCE": {
     "HOME": "홈",

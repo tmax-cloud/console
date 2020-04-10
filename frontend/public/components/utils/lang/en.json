@@ -263,7 +263,10 @@
     "VERSION": "Version",
     "NAMESPACED": "Namespaced",
     "ESTABLISHED": "Established",
-    "Age": "age"
+    "Age": "age",
+    "ADMINISTRATOR": "Administrator",
+    "EXTEND": "Extend",
+    "USER": "User"
   },
   "RESOURCE": {
     "HOME": "Home",

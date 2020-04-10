@@ -265,10 +265,10 @@ class NavSection_ extends React.Component {
           {!href ? (
             text
           ) : (
-              <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-                {text}
-              </Link>
-            )}
+            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+              {text}
+            </Link>
+          )}
         </div>
         {Children && (
           <ul className="navigation-container__list" style={{ maxHeight }}>
@@ -423,7 +423,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="pods" name={ResourcePlural('Pod', t)} onClick={this.close} />
               <ResourceNSLink resource="deployments" name={ResourcePlural('Deployment', t)} onClick={this.close} />
               <ResourceNSLink resource="replicasets" name={ResourcePlural('ReplicaSet', t)} onClick={this.close} />
-              <ResourceNSLink resource="horizontalpodautoscalers" name={ResourcePlural('HorizontalPodAutoscaler', t)} onClick={this.close} />
+              <ResourceNSLink resource="horizontalpodautoscalers" name="HPA" onClick={this.close} />
               <ResourceNSLink resource="daemonsets" name={ResourcePlural('DaemonSet', t)} onClick={this.close} />
               <ResourceNSLink resource="statefulsets" name={ResourcePlural('StatefulSet', t)} onClick={this.close} />
               <ResourceNSLink resource="virtualmachines" name={ResourcePlural('VirtualMachine', t)} onClick={this.close} />
