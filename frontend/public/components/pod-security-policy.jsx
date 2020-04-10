@@ -25,7 +25,7 @@ const PodSecurityPolicyHeader = props => {
         {t('CONTENT:SELINUX')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.runAsUser.rule">
-        {t('CONTENT:LUNASUSER')}
+        {t('CONTENT:RUNASUSER')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.fsGroup.rule">
         {t('CONTENT:FSGROUP')}
@@ -83,7 +83,7 @@ const Details = ({ obj: podsecuritypolicy }) => {
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('PodSecurityPolicy', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={podsecuritypolicy} />
