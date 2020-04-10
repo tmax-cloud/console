@@ -29,6 +29,10 @@
     "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service"
   },
   "CONTENT": {
+    "ACCESSMODES": "Access Modes",
+    "H": "h",
+    "M": "m",
+    "S": "s",
     "PORT": "Port",
     "PROTOCOL": "Protocol",
     "CLUSTERIP": "Cluster IP",

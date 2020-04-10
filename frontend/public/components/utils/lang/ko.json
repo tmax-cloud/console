@@ -27,6 +27,10 @@
     "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소"
   },
   "CONTENT": {
+    "ACCESSMODES": "접근 모드",
+    "H": "시",
+    "M": "분",
+    "S": "초",
     "PORT": "포트",
     "PROTOCOL": "프로토콜",
     "CLUSTERIP": "클러스터 IP",
