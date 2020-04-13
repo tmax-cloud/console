@@ -181,23 +181,26 @@ const ContainerTable = ({ heading, containers, pod, t }) => (
   </div>
 );
 
-const PodGraphs = requirePrometheus(({ pod }) => (
-  <React.Fragment>
-    <div className="row">
-      <div className="col-md-4">
-        <Line title="RAM" query={`pod_name:container_memory_usage_bytes:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
+const PodGraphs = requirePrometheus(({ pod }) => {
+  const { t } = useTranslation();
+  return (
+    <React.Fragment>
+      <div className="row">
+        <div className="col-md-4">
+          <Line title={t('CONTENT:RAM')} query={`pod_name:container_memory_usage_bytes:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
+        </div>
+        <div className="col-md-4">
+          <Line title={t('CONTENT:CPUSHARES')} query={`pod_name:container_cpu_usage:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'} * 1000`} />
+        </div>
+        <div className="col-md-4">
+          <Line title={t('CONTENT:FILESYSTEM')} query={`pod_name:container_fs_usage_bytes:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
+        </div>
       </div>
-      <div className="col-md-4">
-        <Line title="CPU Shares" query={`pod_name:container_cpu_usage:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'} * 1000`} />
-      </div>
-      <div className="col-md-4">
-        <Line title="Filesystem (bytes)" query={`pod_name:container_fs_usage_bytes:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
-      </div>
-    </div>
 
-    <br />
-  </React.Fragment>
-));
+      <br />
+    </React.Fragment>
+  );
+});
 
 const Details = ({ obj: pod }) => {
   const limits = {
@@ -289,7 +292,10 @@ const Details = ({ obj: pod }) => {
 };
 
 const envPath = ['spec', 'containers'];
-const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.containers} envPath={envPath} readOnly={true} />;
+const environmentComponent = props => {
+  const { t } = useTranslation();
+  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.containers} envPath={envPath} readOnly={true} t={t} />;
+};
 
 const PodExecLoader = ({ obj }) => (
   <div className="co-m-pane__body">
@@ -336,31 +342,49 @@ PodsDetailsPage.displayName = 'PodsDetailsPage';
 export const PodList = props => <List {...props} Header={PodHeader} Row={PodRow} />;
 PodList.displayName = 'PodList';
 
-const filters = [
-  {
-    type: 'pod-status',
-    selected: ['Running', 'Pending', 'Terminating', 'CrashLoopBackOff'],
-    reducer: podPhaseFilterReducer,
-    items: [
-      { id: 'Running', title: 'Running' },
-      { id: 'Pending', title: 'Pending' },
-      { id: 'Terminating', title: 'Terminating' },
-      { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
-      // Use title "Completed" to match what appears in the status column for the pod.
-      // The pod phase is "Succeeded," but the container state is "Completed."
-      { id: 'Succeeded', title: 'Completed' },
-      { id: 'Failed', title: 'Failed' },
-      { id: 'Unknown', title: 'Unknown ' },
-    ],
-  },
-];
+// const filters = [
+//   {
+//     type: 'pod-status',
+//     selected: ['Running', 'Pending', 'Terminating', 'CrashLoopBackOff'],
+//     reducer: podPhaseFilterReducer,
+//     items: [
+//       { id: 'Running', title: 'Running' },
+//       { id: 'Pending', title: 'Pending' },
+//       { id: 'Terminating', title: 'Terminating' },
+//       { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
+//       // Use title "Completed" to match what appears in the status column for the pod.
+//       // The pod phase is "Succeeded," but the container state is "Completed."
+//       { id: 'Succeeded', title: 'Completed' },
+//       { id: 'Failed', title: 'Failed' },
+//       { id: 'Unknown', title: 'Unknown ' },
+//     ],
+//   },
+// ];
 
-export class PodsPage extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !_.isEqual(nextProps, this.props);
-  }
-  render() {
-    const { canCreate = true } = this.props;
-    return <ListPage {...this.props} canCreate={canCreate} kind="Pod" ListComponent={PodList} rowFilters={filters} />;
-  }
-}
+export const PodsPage = props => {
+  // shouldComponentUpdate(nextProps) {
+  //   return !_.isEqual(nextProps, this.props);
+  // }
+  const { t } = useTranslation();
+  const filters = [
+    {
+      type: 'pod-status',
+      selected: ['Running', 'Pending', 'Terminating', 'CrashLoopBackOff'],
+      reducer: podPhaseFilterReducer,
+      items: [
+        { id: 'Running', title: t('CONTENT:RUNNING') },
+        { id: 'Pending', title: t('CONTENT:PENDING') },
+        { id: 'Terminating', title: t('CONTENT:TERMINATING') },
+        { id: 'CrashLoopBackOff', title: t('CONTENT:CRASHLOOPBACKOFF') },
+        // Use title "Completed" to match what appears in the status column for the pod.
+        // The pod phase is "Succeeded," but the container state is "Completed."
+        { id: 'Succeeded', title: t('CONTENT:COMPLETED') },
+        { id: 'Failed', title: t('CONTENT:FAILED') },
+        { id: 'Unknown', title: t('CONTENT:UNKNOWN') },
+      ],
+    },
+  ];
+  const { canCreate = true } = props;
+
+  return <ListPage {...props} canCreate={canCreate} kind="Pod" ListComponent={PodList} rowFilters={filters} />;
+};

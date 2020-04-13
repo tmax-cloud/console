@@ -99,7 +99,7 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
     //   return <Redirect to="/login" />;
     // }
 
-    if (!window.localStorage.getItem('accessToken')) {
+    if (!window.sessionStorage.getItem('accessToken')) {
       return <Redirect to="/login" />;
     }
   }
@@ -122,12 +122,26 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    // 임시 로직
+    if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
+      window.localStorage.removeItem('accessToken');
+      window.localStorage.removeItem('refreshToken');
+      window.localStorage.removeItem('logouted');
+      window.localStorage.removeItem('role');
+    }
+
     this.state = {
       isAdmin: true,
       isLoading: false,
     };
     this.changeRole = () => this.changeRole_();
     this.setLoading = () => this.setLoading_();
+
+    window.addEventListener('storage', function (evt) {
+      if (evt.key === 'forceLogout') {
+        window.sessionStorage.clear();
+      }
+    }, false);
   }
   changeRole_() {
     this.setState({
@@ -142,8 +156,8 @@ class App extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (window.SERVER_FLAGS.releaseModeFlag && window.localStorage.getItem('refreshToken') && window.localStorage.getItem('accessToken')) {
-      if (window.localStorage.getItem('role') !== 'cluster-admin') {
+    if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
+      if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
         this.changeRole_();
       }
     }

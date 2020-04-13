@@ -131,7 +131,7 @@ export const HorizontalPodAutoscalersDetails: React.SFC<HorizontalPodAutoscalers
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text="HPAs Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', 'HPAs')} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={hpa} showPodSelector={false} showNodeSelector={false} />
@@ -169,8 +169,12 @@ export const HorizontalPodAutoscalersDetails: React.SFC<HorizontalPodAutoscalers
   );
 };
 
-const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editYaml(), navFactory.events(ResourceEventStream)];
-export const HorizontalPodAutoscalersDetailsPage: React.SFC<HorizontalPodAutoscalersDetailsPageProps> = props => <DetailsPage {...props} kind={HorizontalPodAutoscalersReference} menuActions={menuActions} pages={pages} />;
+// const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))];
+export const HorizontalPodAutoscalersDetailsPage: React.SFC<HorizontalPodAutoscalersDetailsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))];
+  return <DetailsPage {...props} kind={HorizontalPodAutoscalersReference} menuActions={menuActions} pages={pages} />;
+};
 HorizontalPodAutoscalersDetailsPage.displayName = 'HorizontalPodAutoscalersDetailsPage';
 
 const HorizontalPodAutoscalersHeader = props => {
@@ -222,7 +226,10 @@ const HorizontalPodAutoscalersRow: React.SFC<HorizontalPodAutoscalersRowProps> =
 const HorizontalPodAutoscalersList: React.SFC = props => <List {...props} Header={HorizontalPodAutoscalersHeader} Row={HorizontalPodAutoscalersRow} />;
 HorizontalPodAutoscalersList.displayName = 'HorizontalPodAutoscalersList';
 
-export const HorizontalPodAutoscalersPage: React.SFC<HorizontalPodAutoscalersPageProps> = props => <ListPage {...props} kind={HorizontalPodAutoscalersReference} title="HPAs" createButtonText="Create HPA" ListComponent={HorizontalPodAutoscalersList} canCreate={true} filterLabel="HPAs by name" />;
+export const HorizontalPodAutoscalersPage: React.SFC<HorizontalPodAutoscalersPageProps> = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} kind={HorizontalPodAutoscalersReference} title="HPAs" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: 'HPA' })} ListComponent={HorizontalPodAutoscalersList} canCreate={true} filterLabel="HPAs by name" />;
+};
 HorizontalPodAutoscalersPage.displayName = 'HorizontalPodAutoscalersListPage';
 
 /* eslint-disable no-undef */

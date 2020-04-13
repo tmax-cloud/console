@@ -30,8 +30,9 @@
     "": ""
   },
   "CONTENT": {
+    "DOWNLOAD": "Download",
     "CANCEL": "Cancel",
-    "EDIT": "edit",
+    "EDIT": "Edit",
     "FORMEDITOR": "Form Editor",
     "YAMLEDITOR": "Yaml Editor",
     "ACCESSMODES": "Access Modes",
