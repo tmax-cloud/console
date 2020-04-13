@@ -118,9 +118,34 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
 
 const LazyRoute = props => <Route {...props} component={componentProps => <AsyncComponent loader={props.loader} kind={props.kind} {...componentProps} />} />;
 
+function searchParam(key) {
+  return new URLSearchParams(location.search).get(key);
+};
+
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isAdmin: true,
+      isLoading: false,
+    };
+
+    if (window.SERVER_FLAGS.HDCModeFlag && !window.sessionStorage.getItem('accessToken')) {
+      // HDC Mode
+      if (searchParam('at')) {
+        window.sessionStorage.setItem('accessToken', searchParam('at'));
+        window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
+        const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+        window.sessionStorage.setItem('role', userRole);
+        this.props.history.push('/');
+        this.props.history.go(0);
+      } else {
+        // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
+        window.location.href = 'http://192.168.8.36/tmax-cloud/#!/home';
+        return;
+      }
+    }
 
     // 임시 로직
     if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
@@ -130,10 +155,6 @@ class App extends React.PureComponent {
       window.localStorage.removeItem('role');
     }
 
-    this.state = {
-      isAdmin: true,
-      isLoading: false,
-    };
     this.changeRole = () => this.changeRole_();
     this.setLoading = () => this.setLoading_();
 

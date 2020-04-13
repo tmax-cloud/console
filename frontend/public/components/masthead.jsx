@@ -146,14 +146,16 @@ class OSUserMenu extends SafetyFirst {
   _getUserInfo() {
     // TODO 유저 정보 조회 서비스 연동
     if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
-      const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-      if (userRole !== 'cluster-admin') {
-        this.setState({ username: 'User' });
-      } else {
-        this.setState({ username: 'Admin' });
-      }
+      // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+      // if (userRole !== 'cluster-admin') {
+      //   this.setState({ username: 'User' });
+      // } else {
+      //   this.setState({ username: 'Admin' });
+      // }
+      const userName = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).id;
+        this.setState({ username: userName });
     } else {
-      this.setState({ username: 'User' });
+      this.setState({ username: 'admin@tmax.co.kr' });
     }
   }
 
@@ -349,11 +351,11 @@ export const Masthead = props => {
       <div className="co-masthead__lang">
         <LanguageWrapper />
       </div>
-      {releaseModeFlag && (
+      {/* {releaseModeFlag && ( */}
         <div className="co-masthead__user">
           <UserMenuWrapper setLoading={props.setLoading} />
         </div>
-      )}
+      {/* )} */}
     </header>
   );
 };
