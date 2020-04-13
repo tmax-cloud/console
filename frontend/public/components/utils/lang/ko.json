@@ -16,7 +16,8 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_1": "Total number of non-terminated pods targeted by this {{something}} (their labels match the selector).",
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of unavailable pods targeted by this {{something}}.",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
+    "LOGSTALE": "The logs for this {{something}} may be stale."
   },
   "STRING": {
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
@@ -24,9 +25,11 @@
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
     "SERVICE_DETAIL_2": "서비스를 지원하는 리소스의 위치",
     "SERVICE_DETAIL_3": "클러스터 내에서만 액세스 가능",
-    "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소"
+    "SERVICE_DETAIL_4": "서비스 트래픽을 허용하는 IP 주소",
+    "LOG_TAB_0": "An error occured while retrieving the requested logs."
   },
   "CONTENT": {
+    "ROLEBINDINGS": "롤 바인딩",
     "FORMEDITOR": "폼 에디터",
     "YAMLEDITOR": "Yaml 에디터",
     "ACCESSMODES": "접근 모드",
@@ -264,7 +267,13 @@
     "Age": "age",
     "ADMINISTRATOR": "관리자",
     "EXTEND": "시간 연장",
-    "USER": "사용자"
+    "USER": "사용자",
+    "LOGSTREAMENDED": "Log stream ended.",
+    "LOADINGLOG": "Loading log...",
+    "LOGSTREAMPAUSED": "Log stream paused.",
+    "LOGSTREAMING": "Log streaming...",
+    "RETRY": "재시도",
+    "REFRESH": "새로고침"
   },
   "RESOURCE": {
     "HOME": "홈",

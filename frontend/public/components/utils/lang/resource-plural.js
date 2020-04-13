@@ -6,7 +6,7 @@ export const ResourcePlural = (kind, t) => {
   const { labelPlural } = ko;
   // const { t } = useTranslation();
 
-  let result = window.localStorage.getItem('i18nextLng') === 'English' ? labelPlural : t(`RESOURCE:${kind.toUpperCase()}`);
+  let result = window.localStorage.getItem('i18nextLng') === 'en' ? labelPlural : t(`RESOURCE:${kind.toUpperCase()}`);
 
   return result;
 };

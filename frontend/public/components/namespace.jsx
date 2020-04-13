@@ -309,8 +309,8 @@ class NamespaceDropdown_ extends React.Component {
       });
     }
 
-    if (window.localStorage.getItem('accessToken')) {
-      if (JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+    if (window.sessionStorage.getItem('accessToken')) {
+      if (JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
         // user 계정일 경우
         if (data.length > 0) {
           // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.

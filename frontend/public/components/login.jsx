@@ -30,7 +30,7 @@ class LoginComponent extends Component {
       window.onpopstate = function (event) {
         history.go(1);
       }
-      // if (localStorage.getItem('accessToken') === '') {
+      // if (sessionStorage.getItem('accessToken') === '') {
       //   // 로그아웃 된 상태 
       //   history.pushState(null, null, location.href);
       //   // this.props.history.push('/login');  
@@ -68,8 +68,14 @@ class LoginComponent extends Component {
       .then(data => {
         this.setState({ loading: false });
         if (data.accessToken && data.refreshToken) {
-          window.localStorage.setItem('accessToken', data.accessToken);
-          window.localStorage.setItem('refreshToken', data.refreshToken);
+          window.sessionStorage.setItem('accessToken', data.accessToken);
+          window.sessionStorage.setItem('refreshToken', data.refreshToken);
+          if (window.localStorage.getItem('forceLogout') === 'true') {
+            window.localStorage.setItem('forceLogout', false);
+          } else {
+            window.localStorage.setItem('forceLogout', true);
+          }
+          
         } else {
           // 로그인 실패 
           this.setState({ error: data.msg });
@@ -79,10 +85,13 @@ class LoginComponent extends Component {
         // window.location = `${url_}/status/all-namespaces`;
       })
       .then(() => {
-        const userRole = JSON.parse(atob(window.localStorage.getItem('accessToken').split('.')[1])).role;
-        window.localStorage.setItem('role', userRole);
-        this.props.history.push('/');
-        this.props.history.go(0);
+        // 미리: split 버그 수정 
+        if (window.sessionStorage.getItem('accessToken')) {
+          const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+          window.sessionStorage.setItem('role', userRole);
+          this.props.history.push('/');
+          this.props.history.go(0);
+        }
       })
       .catch((error) => {
         console.log(error.message);

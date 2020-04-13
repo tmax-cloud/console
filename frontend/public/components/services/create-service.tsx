@@ -106,10 +106,14 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
         // selector가공
         let obj = {};
         this.state.selector.forEach(selector => {
-            let key = selector[0];
-            obj[key] = selector[1];
+            if (selector[0] !== "" && selector[1] !== "") {
+                let key = selector[0];
+                obj[key] = selector[1];
+            }
         });
-        newSecret.spec.selector = obj;
+        if (obj !== {}) {
+            newSecret.spec.selector = obj;
+        }
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newSecret)
