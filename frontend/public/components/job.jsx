@@ -109,7 +109,10 @@ const Details = ({ obj: job }) => {
 };
 
 const { details, pods, editYaml, events } = navFactory;
-const JobsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editYaml(), pods(), events(ResourceEventStream)]} />;
+const JobsDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[details(Details, t('CONTENT:OVERVIEW')), editYaml(), pods(t('CONTENT:PODS')), events(ResourceEventStream, t('CONTENT:EVENTS'))]} />;
+};
 const JobsList = props => <List {...props} Header={JobHeader} Row={JobRow} />;
 const JobsPage = props => <ListPage ListComponent={JobsList} canCreate={true} {...props} />;
 export { JobsList, JobsPage, JobsDetailsPage };
