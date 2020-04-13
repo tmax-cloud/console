@@ -379,7 +379,7 @@ class EventStream extends SafetyFirst {
       statusBtnTxt = <span className="co-sysevent-stream__connection-error">Error connecting to event stream{_.isString(error) && `: ${error}`}</span>;
       sysEventStatus = (
         <Box>
-          <div className="cos-status-box__title cos-error-title">{t('CONTENT:ERRORLOADINGEVENTS')}</div>
+          <div className="cos-status-box__title cos-error-title">Error Loading Events</div>
           <div className="cos-status-box__detail text-center">An error occurred during event retrieval. Attempting to reconnect...</div>
         </Box>
       );
