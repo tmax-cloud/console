@@ -55,77 +55,81 @@ const Row = ({ obj: role }) => (
   </div>
 );
 
-class Details extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.changeFilter = e => this.setState({ ruleFilter: e.target.value });
+// class Details extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {};
+//     this.changeFilter = e => this.setState({ ruleFilter: e.target.value });
+//   }
+const Details = props => {
+  // render() {
+  const ruleObj = props.obj;
+  const { creationTimestamp, name, namespace } = ruleObj.metadata;
+  const [ruleFilter, setruleFilter] = React.useState('');
+  const { t } = useTranslation();
+
+  let rules = ruleObj.rules;
+
+  const changeFilter = e => {
+    setruleFilter(e.target.value);
+  };
+
+  if (ruleFilter) {
+    const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
+    const searchKeys = ['nonResourceURLs', 'resources', 'verbs'];
+    rules = rules.filter(rule => searchKeys.some(k => _.some(rule[k], v => fuzzyCaseInsensitive(ruleFilter, v))));
   }
-
-  render() {
-    const ruleObj = this.props.obj;
-    const { creationTimestamp, name, namespace } = ruleObj.metadata;
-    const { ruleFilter } = this.state;
-
-    const { t } = useTranslation();
-    let rules = ruleObj.rules;
-    if (ruleFilter) {
-      const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
-      const searchKeys = ['nonResourceURLs', 'resources', 'verbs'];
-      rules = rules.filter(rule => searchKeys.some(k => _.some(rule[k], v => fuzzyCaseInsensitive(ruleFilter, v))));
-    }
-
-    return (
-      <div>
-        <div className="co-m-pane__body">
-          <SectionHeading text={'Role Overview'} />
-          {/* <SectionHeading text="Role Overview" /> */}
-          <div className="row">
-            <div className="col-xs-6">
-              <dl className="co-m-pane__details">
-                <dt>{t('CONTENT:ROLENAME')}</dt>
-                {/* <dt>Role Name</dt> */}
-                <dd>{name}</dd>
-                {namespace && (
-                  <div>
-                    <dt>{t('CONTENT:NAMESPACE')}</dt>
-                    <dd>
-                      <ResourceLink kind="Namespace" name={namespace} />
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-            <div className="col-xs-6">
-              <dl className="co-m-pane__details">
-                <dt>{t('CONTENT:CREATEDAT')}</dt>
-                <dd>
-                  <Timestamp timestamp={creationTimestamp} />
-                </dd>
-              </dl>
-            </div>
+  return (
+    <div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={'Role Overview'} />
+        {/* <SectionHeading text="Role Overview" /> */}
+        <div className="row">
+          <div className="col-xs-6">
+            <dl className="co-m-pane__details">
+              <dt>{t('CONTENT:ROLENAME')}</dt>
+              {/* <dt>Role Name</dt> */}
+              <dd>{name}</dd>
+              {namespace && (
+                <div>
+                  <dt>{t('CONTENT:NAMESPACE')}</dt>
+                  <dd>
+                    <ResourceLink kind="Namespace" name={namespace} />
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+          <div className="col-xs-6">
+            <dl className="co-m-pane__details">
+              <dt>{t('CONTENT:CREATEDAT')}</dt>
+              <dd>
+                <Timestamp timestamp={creationTimestamp} />
+              </dd>
+            </dl>
           </div>
         </div>
-        <div className="co-m-pane__body">
-          <SectionHeading text={t('CONTENT:RULES')} />
-          <div className="co-m-pane__filter-bar co-m-pane__filter-bar--alt">
-            {/* This page is temporarily disabled until we update the safe resources list.
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('CONTENT:RULES')} />
+        <div className="co-m-pane__filter-bar co-m-pane__filter-bar--alt">
+          {/* This page is temporarily disabled until we update the safe resources list.
           <div className="co-m-pane__filter-bar-group">
             <Link to={addHref(name, namespace)} className="co-m-primary-action">
               <button className="btn btn-primary">Add Rule</button>
             </Link>
           </div>
           */}
-            <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-              <TextFilter id="rule" label="Rules by action or resource" onChange={this.changeFilter} />
-            </div>
+          <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
+            <TextFilter id="rule" label="Rules by action or resource" onChange={changeFilter} />
           </div>
-          <RulesList rules={rules} name={name} namespace={namespace} />
         </div>
+        <RulesList rules={rules} name={name} namespace={namespace} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+  // }
+};
 
 const BindingHeader = props => {
   const { t } = useTranslation();
@@ -175,7 +179,10 @@ export const BindingsForRolePage = props => {
   return <MultiListPage canCreate={true} createProps={{ to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/new?rolekind=${kind}&rolename=${name}` }} ListComponent={BindingsListComponent} staticFilters={[{ 'role-binding-roleRef': name }]} resources={resources} textFilter="role-binding" filterLabel="Role Bindings by role or subject" namespace={ns} flatten={bindingsFlatten} />;
 };
 
-export const RolesDetailsPage = props => <DetailsPage {...props} pages={[navFactory.details(Details), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]} menuActions={menuActions} />;
+export const RolesDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), { href: 'bindings', name: t('CONTENT:ROLEBINDINGS'), component: BindingsForRolePage }]} menuActions={menuActions} />;
+};
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
 
