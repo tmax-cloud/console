@@ -112,12 +112,12 @@ const LanguageWrapper = props => {
   const enChange = e => {
     e.preventDefault();
     i18n.changeLanguage('en');
-    window.localStorage.setItem('i18nextLng', 'English');
+    window.localStorage.setItem('i18nextLng', 'en');
   };
   const koChange = e => {
     e.preventDefault();
     i18n.changeLanguage('ko');
-    window.localStorage.setItem('i18nextLng', 'Korean');
+    window.localStorage.setItem('i18nextLng', 'ko');
   };
   actions.push({
     label: 'EN-US',

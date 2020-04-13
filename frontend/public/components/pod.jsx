@@ -62,9 +62,9 @@ export const PodRow = ({ obj: pod }) => {
       <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
         <LabelList kind="Pod" labels={pod.metadata.labels} />
       </div>
-      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
+      {/* <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
         <NodeLink name={pod.spec.nodeName} />
-      </div>
+      </div> */}
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{status}</div>
       <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
         <Readiness pod={pod} />
@@ -88,9 +88,9 @@ const PodHeader = props => {
       <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">
         {t('CONTENT:PODLABELS')}
       </ColHead>
-      <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.nodeName">
+      {/* <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.nodeName">
         {t('CONTENT:NODE')}
-      </ColHead>
+      </ColHead> */}
       <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="podPhase">
         {t('CONTENT:STATUS')}
       </ColHead>
@@ -247,17 +247,17 @@ const Details = ({ obj: pod }) => {
               <dd>{getRestartPolicyLabel(pod)}</dd>
               {activeDeadlineSeconds && (
                 <React.Fragment>
-                  <dt>Active Deadline</dt>
+                  <dt>{t('CONTENT:ACTIVEDEADLINE')}</dt>
                   {/* Convert to ms for formatDuration */}
                   <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
                 </React.Fragment>
               )}
               <dt>{t('CONTENT:PODIP')}</dt>
               <dd>{pod.status.podIP || '-'}</dd>
-              <dt>{t('CONTENT:NODE')}</dt>
+              {/* <dt>{t('CONTENT:NODE')}</dt>
               <dd>
                 <NodeLink name={pod.spec.nodeName} />
-              </dd>
+              </dd> */}
             </dl>
           </div>
         </div>
@@ -304,30 +304,33 @@ const PodExecLoader = ({ obj }) => (
 );
 
 /** @type {React.SFC<any>} */
-export const PodsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Pod Details',
-        path: props.match.url,
-      })
-    }
-    menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml(),
-      navFactory.envEditor(environmentComponent),
-      navFactory.logs(PodLogs),
-      navFactory.events(ResourceEventStream),
-      {
-        href: 'terminal',
-        name: 'Terminal',
-        component: PodExecLoader,
-      },
-    ]}
-  />
-);
+export const PodsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Pod Details',
+          path: props.match.url,
+        })
+      }
+      menuActions={menuActions}
+      pages={[
+        navFactory.details(Details, t('CONTENT:OVERVIEW')),
+        navFactory.editYaml(t('CONTENT:YAML')),
+        navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT')),
+        navFactory.logs(PodLogs, t('CONTENT:LOGS')),
+        navFactory.events(ResourceEventStream, t('CONTENT:EVENTS')),
+        {
+          href: 'terminal',
+          name: t('CONTENT:TERMINAL'),
+          component: PodExecLoader,
+        },
+      ]}
+    />
+  );
+};
 PodsDetailsPage.displayName = 'PodsDetailsPage';
 
 export const PodList = props => <List {...props} Header={PodHeader} Row={PodRow} />;
