@@ -136,8 +136,8 @@ class App extends React.PureComponent {
       if (searchParam('at')) {
         window.sessionStorage.setItem('accessToken', searchParam('at'));
         window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
-        const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-        window.sessionStorage.setItem('role', userRole);
+        // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+        // window.sessionStorage.setItem('role', userRole);
         this.props.history.push('/');
         this.props.history.go(0);
       } else {
