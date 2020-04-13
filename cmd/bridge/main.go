@@ -94,6 +94,8 @@ func main() {
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
 
+	fHDCModeFlag := fs.Bool("hdc-mode", false, "When true, login through tmaxcloud portal is required.")
+
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -173,6 +175,7 @@ func main() {
 		GoogleTagManagerID:   *fGoogleTagManagerID,
 		LoadTestFactor:       *fLoadTestFactor,
 		ReleaseModeFlag:      *fReleaseModeFlag,
+		HDCModeFlag:      *fHDCModeFlag,
 	}
 
 	if (*fKubectlClientID == "") != (*fKubectlClientSecret == "" && *fKubectlClientSecretFile == "") {
