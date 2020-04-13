@@ -8,13 +8,11 @@ import { SampleYaml } from './resource-sidebar';
 const samples = [
   {
     header: 'VirtualMachine for Window',
-    details: '블라블라',
     templateName: 'read-virtualmachine-window',
     kind: referenceForModel(VirtualMachineModel),
   },
   {
     header: 'VirtualMachine for Linux',
-    details: '블라블라',
     templateName: 'read-virtualmachine-linux',
     kind: referenceForModel(VirtualMachineModel),
   },
