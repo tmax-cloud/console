@@ -211,6 +211,7 @@
     "DEADLINE": "마감시간",
     "PARALLELISM": "병렬성",
     "DESIREDCOMPLETIONS": "의도한 완료",
+    "PODS": "파드",
     "LASTSCHEDULETIME": "마지막 스케줄 시간",
     "TLSCERTIFICATE": "TLS 인증서",
     "SERVICEPORT": "서비스 포트",

@@ -48,7 +48,7 @@ export const navFactory = {
     name: name || 'YAML',
     component: component,
   }),
-  pods: (component, name) => ({
+  pods: (name, component) => ({
     href: 'pods',
     name: name || 'Pods',
     component: component || PodsComponent,
