@@ -15,7 +15,7 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)
   .init({
-    lng: window.localStorage.getItem('i18nextLng') || 'ko',
+    lng: window.localStorage.getItem('i18nextLng') || 'en',
     debug: true,
     detection: options,
     resources: {
