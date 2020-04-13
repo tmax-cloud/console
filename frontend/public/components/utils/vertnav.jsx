@@ -3,12 +3,15 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import { Route, Switch, Link } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
 import { AsyncComponent } from '../utils/async';
 
-const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
+const editYamlComponent = props => {
+  const { t } = useTranslation();
+  return <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} t={t} />
+};
 
 class PodsComponent extends React.PureComponent {
   render() {
