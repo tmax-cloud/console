@@ -34,22 +34,27 @@ const Details = ({ obj: replicaSet }) => {
 };
 
 const envPath = ['spec', 'template', 'spec', 'containers'];
-const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} />;
-
-const { details, editYaml, pods, envEditor, events } = navFactory;
-const ReplicaSetsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ReplicaSet Details',
-        path: props.match.url,
-      })
-    }
-    menuActions={replicaSetMenuActions}
-    pages={[details(Details), editYaml(), pods(), envEditor(environmentComponent), events(ResourceEventStream)]}
-  />
-);
+const environmentComponent = props => {
+  const { t } = useTranslation();
+  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} t={t} />;
+};
+// const { details, editYaml, pods, envEditor, events } = navFactory;
+const ReplicaSetsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'ReplicaSet Details',
+          path: props.match.url,
+        })
+      }
+      menuActions={replicaSetMenuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(t('CONTENT:YAML')), navFactory.pods(t('CONTENT:PODS')), navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT')), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))]}
+    />
+  );
+};
 
 const Row = props => <WorkloadListRow {...props} kind="ReplicaSet" actions={replicaSetMenuActions} />;
 const ReplicaSetsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
