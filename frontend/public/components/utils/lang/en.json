@@ -28,9 +28,11 @@
     "SERVICE_DETAIL_2": "Location of the resource that backs the service",
     "SERVICE_DETAIL_3": "Accessible within the cluster only",
     "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service",
-    "LOG_TAB_0": "An error occured while retrieving the requested logs."
+    "LOG_TAB_0": "An error occured while retrieving the requested logs.",
+    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
   },
   "CONTENT": {
+    "NETWORKPOLICIESDOCUMENTATION": "Network Poilicies Documentation",
     "ROLEBINDINGS": "Role Bindings",
     "RETRY": "Retry",
     "FORMEDITOR": "Form Editor",
@@ -145,7 +147,6 @@
     "NODE": "Node",
     "READINESS": "Readiness",
     "SCALETARGET": "Scale Target",
-    "MINTPODS": "Min Pods",
     "MAXPODS": "Max Pods",
     "IMAGE": "Image",
     "SOURCE": "Source",
