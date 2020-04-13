@@ -26,9 +26,12 @@
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
     "SERVICE_DETAIL_2": "Location of the resource that backs the service",
     "SERVICE_DETAIL_3": "Accessible within the cluster only",
-    "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service"
+    "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service",
+    "": ""
   },
   "CONTENT": {
+    "CANCEL": "Cancel",
+    "EDIT": "edit",
     "FORMEDITOR": "Form Editor",
     "YAMLEDITOR": "Yaml Editor",
     "ACCESSMODES": "Access Modes",
