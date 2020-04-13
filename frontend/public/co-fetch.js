@@ -107,7 +107,7 @@ const getCSRFToken = () =>
 
 export const coFetch = (url, options = {}, timeout = 20000) => {
   if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
-    if (window.SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+    if (window.SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
       return;
     }
   }
@@ -136,9 +136,9 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
 
     } else {
       if (url.indexOf('nameSpace') < 0) {
-        allOptions.headers.Authorization = "Bearer " + window.localStorage.getItem('accessToken');
+        allOptions.headers.Authorization = "Bearer " + window.sessionStorage.getItem('accessToken');
       } else {
-        allOptions.headers.Authorization = window.localStorage.getItem('accessToken'); {/* nameSpace 서비스에는 Bearer 제외하고 token 보내야함.*/ }
+        allOptions.headers.Authorization = window.sessionStorage.getItem('accessToken'); {/* nameSpace 서비스에는 Bearer 제외하고 token 보내야함.*/ }
       }
 
     }
@@ -161,7 +161,7 @@ export const coFetchUtils = {
 
 export const coFetchJSON = (url, method = "GET", options = {}) => {
   if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
-    if (window.SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+    if (window.SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
       return;
     }
   }

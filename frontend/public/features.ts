@@ -76,7 +76,7 @@ const handleError = (res, flag, dispatch, cb) => {
 
 const calicoDaemonSetPath = `${k8sBasePath}/apis/apps/v1/daemonsets?fieldSelector=metadata.name%3Dkube-calico`;
 const detectCalicoFlags = dispatch => {
-  if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+  if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
     return;
   }
   
@@ -149,7 +149,7 @@ export let featureActions = [
     spec: { resourceAttributes }
   };
   const fn = (dispatch) => {
-    if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.localStorage.getItem('accessToken') || !window.localStorage.getItem('refreshToken'))) {
+    if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
       return;
     }
     return k8sCreate(SelfSubjectAccessReviewModel, req)
