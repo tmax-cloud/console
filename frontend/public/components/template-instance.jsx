@@ -70,7 +70,7 @@ const Details = ({ obj: templateinstance }) => {
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Template Instance', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('TemplateInstance', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={templateinstance} />
