@@ -3,7 +3,7 @@ import * as React from 'react';
 import { safeLoad, safeDump } from 'js-yaml';
 import { saveAs } from 'file-saver';
 import { connect } from 'react-redux';
-
+import { ResourcePlural } from './utils/lang/resource-plural';
 import * as ace from 'brace';
 import 'brace/ext/searchbox';
 import 'brace/mode/yaml';
@@ -313,7 +313,7 @@ export const EditYAML = connect(stateToProps)(
 
       return (
         <div>
-          {showHeader && <div className="yaml-editor-header">{`${create ? 'Create' : 'Edit'} ${_.get(model, 'label', kind)}`}</div>}
+          {showHeader && <div className="yaml-editor-header">{`${create ? t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(kind, t) }) : t('CONTENT:EDIT', { something: ResourcePlural(kind, t) })}`}</div>}
           <div className="co-p-has-sidebar">
             <div className="co-p-has-sidebar__body">
               <div className="yaml-editor" ref={r => (this.editor = r)} style={{ height: this.state.height }}>
