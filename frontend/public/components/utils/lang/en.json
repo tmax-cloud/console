@@ -18,8 +18,7 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of available pods (ready for at least minReadySeconds) targeted by this {{something}}..",
     "DEPLOYMENT_DETAIL_TOOLTIP_3": "Total number of unavailable pods targeted by this {{something}}.",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
-    "LOGSTALE": "The logs for this {{something}} may be stale."
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
   },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
@@ -35,6 +34,10 @@
     "NETWORKPOLICIESDOCUMENTATION": "Network Poilicies Documentation",
     "ROLEBINDINGS": "Role Bindings",
     "RETRY": "Retry",
+    "": "",
+    "DOWNLOAD": "Download",
+    "CANCEL": "Cancel",
+    "EDIT": "Edit",
     "FORMEDITOR": "Form Editor",
     "YAMLEDITOR": "Yaml Editor",
     "ACCESSMODES": "Access Modes",
@@ -271,12 +274,7 @@
     "Age": "age",
     "ADMINISTRATOR": "Administrator",
     "EXTEND": "Extend",
-    "USER": "User",
-    "LOGSTREAMENDED": "Log stream ended.",
-    "LOADINGLOG": "Loading log...",
-    "LOGSTREAMPAUSED": "Log stream paused.",
-    "LOGSTREAMING": "Log streaming...",
-    "REFRESH": "Refresh"
+    "USER": "User"
   },
   "RESOURCE": {
     "HOME": "Home",

@@ -33,6 +33,9 @@
   },
   "CONTENT": {
     "NETWORKPOLICIESDOCUMENTATION": "네트워크 정책 문서",
+    "DOWNLOAD": "다운로드",
+    "CANCEL": "취소",
+    "EDIT": "수정",
     "ROLEBINDINGS": "롤 바인딩",
     "FORMEDITOR": "폼 에디터",
     "YAMLEDITOR": "Yaml 에디터",
