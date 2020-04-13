@@ -28,22 +28,22 @@ class PodsComponent extends React.PureComponent {
 }
 
 export const navFactory = {
-  details: (name, component) => ({
+  details: (component, name = '') => ({
     href: '',
     name: name || 'Overview',
     component,
   }),
-  events: component => ({
+  events: (component, name = '') => ({
     href: 'events',
     name: name || 'Events',
     component,
   }),
-  logs: (name, component) => ({
+  logs: (component, name) => ({
     href: 'logs',
     name: name || 'Logs',
     component,
   }),
-  editYaml: (name, component = editYamlComponent) => ({
+  editYaml: (name = '', component = editYamlComponent) => ({
     href: 'yaml',
     name: name || 'YAML',
     component: component,
@@ -63,12 +63,12 @@ export const navFactory = {
     name: name || 'Builds',
     component,
   }),
-  envEditor: (name, component) => ({
+  envEditor: (component, name) => ({
     href: 'environment',
     name: name || 'Environment',
     component: component,
   }),
-  metering: (name, component) => ({
+  metering: (component, name) => ({
     href: 'metering',
     name: name || 'Metering',
     component: component,

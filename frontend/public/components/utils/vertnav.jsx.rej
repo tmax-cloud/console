@@ -1,0 +1,41 @@
+diff a/frontend/public/components/utils/vertnav.jsx b/frontend/public/components/utils/vertnav.jsx	(rejected hunks)
+@@ -118,23 +118,27 @@
+       return <Route path={path} exact key={p.name} render={render} />;
+     });
+ 
+-    return <div className={props.className}>
+-      <div className="co-m-vert-nav">
+-        {!props.hideNav && <NavBar pages={props.pages} basePath={props.match.url} />}
+-        <StatusBox {...props.obj} EmptyMsg={props.EmptyMsg} label={props.label}>
+-          <Switch> {routes} </Switch>
+-        </StatusBox>
++    return (
++      <div className={props.className}>
++        <div className="co-m-vert-nav">
++          {!props.hideNav && <NavBar pages={props.pages} basePath={props.match.url} />}
++          <StatusBox {...props.obj} EmptyMsg={props.EmptyMsg} label={props.label}>
++            <Switch> {routes} </Switch>
++          </StatusBox>
++        </div>
+       </div>
+-    </div>;
++    );
+   }
+ }
+ 
+ VertNav.propTypes = {
+-  pages: PropTypes.arrayOf(PropTypes.shape({
+-    href: PropTypes.string,
+-    name: PropTypes.string,
+-    component: PropTypes.func,
+-  })),
++  pages: PropTypes.arrayOf(
++    PropTypes.shape({
++      href: PropTypes.string,
++      name: PropTypes.string,
++      component: PropTypes.func,
++    }),
++  ),
+   className: PropTypes.string,
+   hideNav: PropTypes.bool,
+   match: PropTypes.shape({

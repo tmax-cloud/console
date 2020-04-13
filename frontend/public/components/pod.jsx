@@ -44,11 +44,11 @@ export const PodRow = ({ obj: pod }) => {
   const status = validStatuses.has(phase) ? (
     <CamelCaseWrap value={phase} />
   ) : (
-      <span className="co-error co-icon-and-text">
-        <i className="fa fa-times-circle co-icon-and-text__icon" aria-hidden="true" />
-        <CamelCaseWrap value={phase} />
-      </span>
-    );
+    <span className="co-error co-icon-and-text">
+      <i className="fa fa-times-circle co-icon-and-text__icon" aria-hidden="true" />
+      <CamelCaseWrap value={phase} />
+    </span>
+  );
 
   return (
     <ResourceRow obj={pod}>
@@ -317,11 +317,11 @@ export const PodsDetailsPage = props => {
       }
       menuActions={menuActions}
       pages={[
-        navFactory.details(t('CONTENT:OVERVIEW'), Details),
+        navFactory.details(Details, t('CONTENT:OVERVIEW')),
         navFactory.editYaml(t('CONTENT:YAML')),
-        navFactory.envEditor(t('CONTENT:ENVIRONMENT'), environmentComponent),
-        navFactory.logs(t('CONTENT:LOGS'), PodLogs),
-        navFactory.events(t('CONTENT:EVENTS'), ResourceEventStream),
+        navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT')),
+        navFactory.logs(PodLogs, t('CONTENT:LOGS')),
+        navFactory.events(ResourceEventStream, t('CONTENT:EVENTS')),
         {
           href: 'terminal',
           name: t('CONTENT:TERMINAL'),
