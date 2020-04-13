@@ -336,31 +336,49 @@ PodsDetailsPage.displayName = 'PodsDetailsPage';
 export const PodList = props => <List {...props} Header={PodHeader} Row={PodRow} />;
 PodList.displayName = 'PodList';
 
-const filters = [
-  {
-    type: 'pod-status',
-    selected: ['Running', 'Pending', 'Terminating', 'CrashLoopBackOff'],
-    reducer: podPhaseFilterReducer,
-    items: [
-      { id: 'Running', title: 'Running' },
-      { id: 'Pending', title: 'Pending' },
-      { id: 'Terminating', title: 'Terminating' },
-      { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
-      // Use title "Completed" to match what appears in the status column for the pod.
-      // The pod phase is "Succeeded," but the container state is "Completed."
-      { id: 'Succeeded', title: 'Completed' },
-      { id: 'Failed', title: 'Failed' },
-      { id: 'Unknown', title: 'Unknown ' },
-    ],
-  },
-];
+// const filters = [
+//   {
+//     type: 'pod-status',
+//     selected: ['Running', 'Pending', 'Terminating', 'CrashLoopBackOff'],
+//     reducer: podPhaseFilterReducer,
+//     items: [
+//       { id: 'Running', title: 'Running' },
+//       { id: 'Pending', title: 'Pending' },
+//       { id: 'Terminating', title: 'Terminating' },
+//       { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
+//       // Use title "Completed" to match what appears in the status column for the pod.
+//       // The pod phase is "Succeeded," but the container state is "Completed."
+//       { id: 'Succeeded', title: 'Completed' },
+//       { id: 'Failed', title: 'Failed' },
+//       { id: 'Unknown', title: 'Unknown ' },
+//     ],
+//   },
+// ];
 
-export class PodsPage extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !_.isEqual(nextProps, this.props);
-  }
-  render() {
-    const { canCreate = true } = this.props;
-    return <ListPage {...this.props} canCreate={canCreate} kind="Pod" ListComponent={PodList} rowFilters={filters} />;
-  }
-}
+export const PodsPage = props => {
+  // shouldComponentUpdate(nextProps) {
+  //   return !_.isEqual(nextProps, this.props);
+  // }
+  const { t } = useTranslation();
+  const filters = [
+    {
+      type: 'pod-status',
+      selected: ['Running', 'Pending', 'Terminating', 'CrashLoopBackOff'],
+      reducer: podPhaseFilterReducer,
+      items: [
+        { id: 'Running', title: t('CONTENT:RUNNING') },
+        { id: 'Pending', title: t('CONTENT:PENDING') },
+        { id: 'Terminating', title: t('CONTENT:TERMINATING') },
+        { id: 'CrashLoopBackOff', title: t('CONTENT:CRASHLOOPBACKOFF') },
+        // Use title "Completed" to match what appears in the status column for the pod.
+        // The pod phase is "Succeeded," but the container state is "Completed."
+        { id: 'Succeeded', title: t('CONTENT:COMPLETED') },
+        { id: 'Failed', title: t('CONTENT:FAILED') },
+        { id: 'Unknown', title: t('CONTENT:UNKNOWN') },
+      ],
+    },
+  ];
+  const { canCreate = true } = props;
+
+  return <ListPage {...props} canCreate={canCreate} kind="Pod" ListComponent={PodList} rowFilters={filters} />;
+};
