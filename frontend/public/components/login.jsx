@@ -9,6 +9,10 @@ import { coFetchJSON } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
 
+function searchParam(key) {
+  return new URLSearchParams(location.search).get(key);
+};
+
 class LoginComponent extends Component {
   // useState 대신 useRef 써도 됨
   state = {
@@ -20,6 +24,16 @@ class LoginComponent extends Component {
 
   constructor(props) {
     super(props);
+
+    if (searchParam('at')) {
+      window.sessionStorage.setItem('accessToken', searchParam('at'));
+      window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
+      // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+      // window.sessionStorage.setItem('role', userRole);
+
+      this.props.history.push('/');
+      this.props.history.go(0);
+    }
 
     if (props.history.action === 'POP') {
       history.go(1);
@@ -45,8 +59,11 @@ class LoginComponent extends Component {
       //   } 
       // }
     }
+
+
   }
 
+  
   componentWillUnmount() {
     // console.log('componentWillUnmount');
   };
@@ -75,7 +92,8 @@ class LoginComponent extends Component {
           } else {
             window.localStorage.setItem('forceLogout', true);
           }
-          
+          this.props.history.push('/');
+          this.props.history.go(0);
         } else {
           // 로그인 실패 
           this.setState({ error: data.msg });
@@ -84,15 +102,15 @@ class LoginComponent extends Component {
         // const url_ = window.location.href.split('/login')[0]
         // window.location = `${url_}/status/all-namespaces`;
       })
-      .then(() => {
-        // 미리: split 버그 수정 
-        if (window.sessionStorage.getItem('accessToken')) {
-          const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-          window.sessionStorage.setItem('role', userRole);
-          this.props.history.push('/');
-          this.props.history.go(0);
-        }
-      })
+      // .then(() => {
+      //   // 미리: split 버그 수정 
+      //   if (window.sessionStorage.getItem('accessToken')) {
+      //     const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+      //     window.sessionStorage.setItem('role', userRole);
+      //     this.props.history.push('/');
+      //     this.props.history.go(0);
+      //   }
+      // })
       .catch((error) => {
         console.log(error.message);
         this.setState({ error: error.message });
