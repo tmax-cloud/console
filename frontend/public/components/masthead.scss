@@ -43,8 +43,9 @@
     height: 56px;
   }
   &__lang {
+    display: none;
     @media (min-width: $grid-float-breakpoint) {
-      display: block;
+      display: none;
       margin-right: -10px;
     }
     .dropdown__not-btn,
@@ -72,14 +73,19 @@
     margin-right: 5px;
   }
   &__username {
-    width: 40px;
+    // width: 40px;
     font-weight: 300;
     // truncate very long usernames
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: none;
     @media(min-width: $screen-md-min) {
       max-width: 300px;
+    }
+    @media (min-width: $grid-float-breakpoint) {
+      display: block;
+      margin-left: 0px;
     }
   }
 }

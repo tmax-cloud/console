@@ -66,6 +66,7 @@ type jsGlobals struct {
 	// GoogleTagManagerID   string `json:"googleTagManagerID"`
 	// LoadTestFactor       int    `json:"loadTestFactor"`
 	ReleaseModeFlag bool `json:"releaseModeFlag"`
+	HDCModeFlag bool `json:"HDCModeFlag"`
 }
 
 type Server struct {
@@ -86,6 +87,7 @@ type Server struct {
 	GoogleTagManagerID   string
 	LoadTestFactor       int
 	ReleaseModeFlag      bool
+	HDCModeFlag			 bool
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
 	KubectlAuther  *auth.Authenticator
@@ -301,6 +303,7 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		// GoogleTagManagerID:   s.GoogleTagManagerID,
 		// LoadTestFactor:       s.LoadTestFactor,
 		ReleaseModeFlag: s.ReleaseModeFlag,
+		HDCModeFlag: s.HDCModeFlag,
 	}
 
 	if s.prometheusProxyEnabled() {

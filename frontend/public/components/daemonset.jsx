@@ -79,10 +79,13 @@ const Details = ({ obj: daemonset }) => {
 const envPath = ['spec', 'template', 'spec', 'containers'];
 const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} />;
 
-const { details, pods, editYaml, envEditor } = navFactory;
-
 const DaemonSets = props => <List {...props} Header={DaemonSetHeader} Row={DaemonSetRow} />;
 const DaemonSetsPage = props => <ListPage canCreate={true} ListComponent={DaemonSets} {...props} />;
-const DaemonSetsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(Details)), editYaml(), pods(), envEditor(environmentComponent)]} />;
+
+const DaemonSetsDetailsPage = props => {
+  const { t } = useTranslation();
+  const pages = [navFactory.details(detailsPage(Details), t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(), navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT'))];
+  return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
+};
 
 export { DaemonSets, DaemonSetsPage, DaemonSetsDetailsPage };
