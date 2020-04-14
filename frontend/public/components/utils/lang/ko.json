@@ -66,6 +66,8 @@
     "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다."
   },
   "CONTENT": {
+    "SELECTOR": "선택기",
+    "LOADBALANCER": "로드밸런서",
     "AUTHTYPE": "인증 유형",
     "BASICAUTH": "기본 인증",
     "SSHKEY": "SSH 키",

@@ -66,6 +66,8 @@
     "SECRET_CREATE_0": "Value of the secret will be supplied when invoking the webhook."
   },
   "CONTENT": {
+    "SELECTOR": "Selector",
+    "LOADBALANCER": "LoadBalancer",
     "AUTHTYPE": "Authentication Type",
     "BASICAUTH": "Basic Authentication",
     "SSHKEY": "SSH Key",
