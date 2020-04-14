@@ -46,7 +46,7 @@ const ReplicaSetsDetailsPage = props => {
       {...props}
       breadcrumbsFor={obj =>
         breadcrumbsForOwnerRefs(obj).concat({
-          name: 'ReplicaSet Details',
+          name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
           path: props.match.url,
         })
       }

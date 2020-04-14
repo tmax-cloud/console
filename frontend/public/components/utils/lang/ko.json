@@ -352,7 +352,8 @@
     "EXPAND": "확장",
     "DETAILS": "상세정보",
     "DELETE": "삭제",
-    "COUNT": "Count"
+    "COUNT": "Count",
+    "PODS": "파드"
   },
   "RESOURCE": {
     "HOME": "홈",
