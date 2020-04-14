@@ -349,19 +349,17 @@ class EventStream extends SafetyFirst {
   }
 
   render() {
-    const { fake, resourceEventStream } = this.props;
+    const { fake, resourceEventStream, t } = this.props;
     const { active, error, loading, filteredEvents, sortedMessages } = this.state;
     const count = filteredEvents.length;
     const allCount = sortedMessages.length;
     const noEvents = allCount === 0 && this.ws && this.ws.bufferSize() === 0;
     const noMatches = allCount > 0 && count === 0;
     let sysEventStatus, statusBtnTxt;
-    const { t } = this.props;
-
     if (noEvents || fake || (noMatches && resourceEventStream)) {
       sysEventStatus = (
         <Box className="co-sysevent-stream__status-box-empty">
-          <div className="text-center cos-status-box__detail">No Events in the past hour</div>
+          <div className="text-center cos-status-box__detail">{t('STRING:EVENT_0')}</div>
         </Box>
       );
     }
@@ -467,4 +465,7 @@ export const ResourceEventStream = ({
     kind,
     metadata: { name, namespace },
   },
-}) => <EventStream filter={{ name, kind }} namespace={namespace} resourceEventStream />;
+}) => {
+  const { t } = useTranslation();
+  return <EventStream filter={{ name, kind }} t={t} namespace={namespace} resourceEventStream />
+};
