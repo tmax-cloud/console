@@ -316,8 +316,9 @@
     "LOADINGLOG": "Loading log...",
     "LOGSTREAMPAUSED": "Log stream paused.",
     "LOGSTREAMING": "Log streaming...",
-    "CONNECTINGTO": "연결",
-    "EXPAND": "Expand"
+    "CONNECTINGTO": "Connecting to",
+    "EXPAND": "Expand",
+    "DETAILS": "Details"
   },
   "RESOURCE": {
     "HOME": "Home",

@@ -8,7 +8,6 @@ import { Terminal } from './terminal';
 import { WSFactory } from '../module/ws-factory';
 import { resourceURL } from '../module/k8s';
 import { PodModel } from '../models';
-import { useTranslation } from 'react-i18next';
 
 const nameWithIcon = name => (
   <span>
@@ -161,7 +160,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
 
     render() {
       const { containers, activeContainer, open, error } = this.state;
-      const { t } = useTranslation();
+      const { t } = this.props;
       let contents = <LoadingBox />;
       if (error) {
         contents = <div className="text-center cos-error-title">{error}</div>;

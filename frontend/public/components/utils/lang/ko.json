@@ -317,8 +317,9 @@
     "ROLES": "롤",
     "PUBLICIP": "공용 IP",
     "STORAGE": "스토리지",
-    "CONNECTINGTO": "Connecting to",
-    "EXPAND": "확장"
+    "CONNECTINGTO": "연결",
+    "EXPAND": "확장",
+    "DETAILS": "상세정보"
   },
   "RESOURCE": {
     "HOME": "홈",
