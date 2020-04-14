@@ -67,7 +67,10 @@ export const TaskList = props => {
 };
 TaskList.displayName = TaskList;
 
-export const TasksPage = props => <ListPage {...props} ListComponent={TaskList} canCreate={true} kind="Task" />;
+export const TasksPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={TaskList} canCreate={true} kind="Task" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 TasksPage.displayName = 'TasksPage';
 
 export const TaskDetailsPage = props => {

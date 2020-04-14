@@ -102,7 +102,10 @@ export const ResourceQuotaClaimList = props => {
 };
 ResourceQuotaClaimList.displayName = ResourceQuotaClaimList;
 
-export const ResourceQuotaClaimsPage = props => <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" />;
+export const ResourceQuotaClaimsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 
 export const ResourceQuotaClaimsDetailsPage = props => {

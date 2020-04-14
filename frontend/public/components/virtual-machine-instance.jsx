@@ -90,7 +90,10 @@ export const VirtualMachineInstanceList = props => {
 };
 VirtualMachineInstanceList.displayName = VirtualMachineInstanceList;
 
-export const VirtualMachineInstancesPage = props => <ListPage {...props} ListComponent={VirtualMachineInstanceList} canCreate={false} kind="VirtualMachineInstance" />;
+export const VirtualMachineInstancesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={VirtualMachineInstanceList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="VirtualMachineInstance" />;
+};
 VirtualMachineInstancesPage.displayName = 'VirtualMachineInstancesPage';
 
 // export const TemplatesDetailsPage = props => {

@@ -71,7 +71,10 @@ const StorageClassDetails: React.SFC<StorageClassDetailsProps> = ({ obj }) => {
 export const StorageClassList: React.SFC = props => <List {...props} Header={StorageClassHeader} Row={StorageClassRow} />;
 StorageClassList.displayName = 'StorageClassList';
 
-export const StorageClassPage: React.SFC<StorageClassPageProps> = props => <ListPage {...props} title="Storage Classes" kind={StorageClassReference} ListComponent={StorageClassList} canCreate={true} filterLabel={props.filterLabel} />;
+export const StorageClassPage: React.SFC<StorageClassPageProps> = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} title="Storage Classes" kind={StorageClassReference} ListComponent={StorageClassList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StorageClass', t) })} filterLabel={props.filterLabel} />;
+};
 StorageClassPage.displayName = 'StorageClassListPage';
 
 export const StorageClassDetailsPage: React.SFC<StorageClassDetailsPageProps> = props => {

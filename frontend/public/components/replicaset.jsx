@@ -58,6 +58,9 @@ const ReplicaSetsDetailsPage = props => {
 
 const Row = props => <WorkloadListRow {...props} kind="ReplicaSet" actions={replicaSetMenuActions} />;
 const ReplicaSetsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
-const ReplicaSetsPage = props => <ListPage canCreate={true} ListComponent={ReplicaSetsList} {...props} />;
+const ReplicaSetsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage canCreate={true} ListComponent={ReplicaSetsList} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 
 export { ReplicaSetsList, ReplicaSetsPage, ReplicaSetsDetailsPage };

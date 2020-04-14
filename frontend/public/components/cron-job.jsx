@@ -86,7 +86,10 @@ const Details = ({ obj: cronjob }) => {
 };
 
 export const CronJobsList = props => <List {...props} Header={Header} Row={Row} />;
-export const CronJobsPage = props => <ListPage {...props} ListComponent={CronJobsList} kind={kind} canCreate={true} />;
+export const CronJobsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={CronJobsList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 
 export const CronJobsDetailsPage = props => {
   const { t } = useTranslation();

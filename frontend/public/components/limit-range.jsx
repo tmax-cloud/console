@@ -60,7 +60,10 @@ export const LimitRangeList = props => {
 };
 LimitRangeList.displayName = LimitRangeList;
 
-export const LimitRangesPage = props => <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" />;
+export const LimitRangesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 LimitRangesPage.displayName = 'LimitRangesPage';
 
 export const LimitRangesDetailsPage = props => {

@@ -43,7 +43,10 @@ const Row = ({ obj: np }) => (
 );
 
 const NetworkPoliciesList = props => <List {...props} Header={Header} Row={Row} />;
-export const NetworkPoliciesPage = props => <ListPage {...props} ListComponent={NetworkPoliciesList} kind={kind} canCreate={true} />;
+export const NetworkPoliciesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={NetworkPoliciesList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 
 const IngressHeader = () => {
   const { t } = useTranslation();
