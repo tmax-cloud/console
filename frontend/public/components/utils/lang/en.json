@@ -79,7 +79,9 @@
     "LABLE-EDIT_0": "Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels.",
     "ENVIRONMENT-TAB_0": "Define environment variables as key-value pairs to store configuration settings. You can enter text or add values from a ConfigMap or Secret. Drag and drop environment variables to change the order in which they are run. A variable can reference any other variables that come before it in the list, for example ",
     "ENVIRONMENT-TAB_1": "FULLDOMAIN = $(SUBDOMAIN).example.com.",
-    "ENVIRONMENT-TAB_2": "The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite."
+    "ENVIRONMENT-TAB_2": "The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite.",
+    "ENVIRONMENT-TAB_3": "Select a resource",
+    "ENVIRONMENT-TAB_4": "Select a key"
   },
   "CONTENT": {
     "COMPACT": "Compact",
@@ -373,7 +375,8 @@
     "DETAILS": "Details",
     "DELETE": "Delete",
     "COUNT": "Count",
-    "RULES": "Rules"
+    "RULES": "Rules",
+    "EDITUPDATESTRATEGY": "Edit Update Strategy"
   },
   "RESOURCE": {
     "HOME": "Home",

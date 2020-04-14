@@ -14,10 +14,13 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const { ModifyCount, EditEnvironment, common } = Cog.factory;
 
-const UpdateStrategy = (kind, deployment) => ({
-  label: 'Edit Update Strategy',
-  callback: () => configureUpdateStrategyModal({ deployment }),
-});
+const UpdateStrategy = (kind, deployment) => {
+  const { t } = useTranslation();
+  return {
+    label: t('CONTENT:EDITUPDATESTRATEGY'),
+    callback: () => configureUpdateStrategyModal({ deployment }),
+  };
+};
 
 const menuActions = [ModifyCount, UpdateStrategy, EditEnvironment, ...common];
 
