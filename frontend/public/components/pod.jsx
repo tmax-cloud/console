@@ -297,7 +297,7 @@ const Details = ({ obj: pod }) => {
 const envPath = ['spec', 'containers'];
 const environmentComponent = props => {
   const { t } = useTranslation();
-  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.containers} envPath={envPath} readOnly={true} />;
+  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.containers} envPath={envPath} readOnly={true} t={t} />;
 };
 
 const PodExecLoader = ({ obj }) => {
