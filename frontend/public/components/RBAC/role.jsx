@@ -226,9 +226,9 @@ export const RolesPage = connectToFlags(
           selected: ['cluster', 'namespace'],
           reducer: roleType,
           items: [
-            { id: 'cluster', title: 'Cluster-wide Roles' },
-            { id: 'namespace', title: 'Namespace Roles' },
-            { id: 'system', title: 'System Roles' },
+            { id: 'cluster', title: t('CONTENT:CLUSTER-WIDEROLES') },
+            { id: 'namespace', title: t('CONTENT:NAMESPACEROLES') },
+            { id: 'system', title: t('CONTENT:SYSTEMROLEBINDINGS') },
           ],
         },
       ]}
