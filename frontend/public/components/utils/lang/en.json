@@ -152,6 +152,7 @@
     "PASSWORD": "Password",
     "RESOURCEUSAGE": "Resource Usage",
     "CPUSHARES": "CPU Shares",
+    "CPU": "CPU",
     "RAM": "RAM",
     "MEMORYUSAGEBYPOD(TOP10)": "Memory Usage by Pod (Top 10)",
     "NODENAME": "Node Name",

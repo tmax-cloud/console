@@ -152,6 +152,7 @@
     "RESOURCEUSAGE": "리소스 사용량",
     "CPUSHARES": "CPU 점유율",
     "RAM": "RAM",
+    "CPU": "CPU",
     "MEMORYUSAGEBYPOD(TOP10)": "파드 별 메모리 사용량 (상위 10)",
     "NODENAME": "노드 이름",
     "EXTERNALID": "외부 ID",
