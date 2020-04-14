@@ -79,15 +79,15 @@ const Details = props => {
     const searchKeys = ['nonResourceURLs', 'resources', 'verbs'];
     rules = rules.filter(rule => searchKeys.some(k => _.some(rule[k], v => fuzzyCaseInsensitive(ruleFilter, v))));
   }
+  const { t } = useTranslation();
   return (
     <div>
       <div className="co-m-pane__body">
-        <SectionHeading text={'Role Overview'} />
-        {/* <SectionHeading text="Role Overview" /> */}
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ROLE', t) })} />
         <div className="row">
           <div className="col-xs-6">
             <dl className="co-m-pane__details">
-              <dt>{t('CONTENT:ROLENAME')}</dt>
+              <dt>{t('CONTENT:NAME')}</dt>
               {/* <dt>Role Name</dt> */}
               <dd>{name}</dd>
               {namespace && (
