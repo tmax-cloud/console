@@ -28,8 +28,13 @@ const envPath = ['spec', 'template', 'spec', 'containers'];
 const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} />;
 
 export const StatefulSetsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
-export const StatefulSetsPage = props => <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={true} />;
+export const StatefulSetsPage = props => {
+  return <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={true} />;
+};
 
-const pages = [navFactory.details(Details), navFactory.editYaml(), navFactory.pods(), navFactory.envEditor(environmentComponent), navFactory.events(ResourceEventStream)];
+export const StatefulSetsDetailsPage = props => {
+  const { t } = useTranslation();
 
-export const StatefulSetsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
+  const pages = [navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(t('CONTENT:PODS')), navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT')), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))];
+  return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
+};

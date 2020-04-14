@@ -297,27 +297,31 @@ const environmentComponent = props => {
   return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.containers} envPath={envPath} readOnly={true} t={t} />;
 };
 
-const PodExecLoader = ({ obj }) => (
-  <div className="co-m-pane__body">
-    <div className="row">
-      <div className="col-xs-12">
-        <div className="panel-body">
-          <AsyncComponent loader={() => import('./pod-exec').then(c => c.PodExec)} obj={obj} />
+const PodExecLoader = ({ obj }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-m-pane__body">
+      <div className="row">
+        <div className="col-xs-12">
+          <div className="panel-body">
+            <AsyncComponent loader={() => import('./pod-exec').then(c => c.PodExec)} obj={obj} t={t} />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 /** @type {React.SFC<any>} */
 export const PodsDetailsPage = props => {
   const { t } = useTranslation();
+  // const Log = PodLogs({ ..._.cloneDeep(props), t });
   return (
     <DetailsPage
       {...props}
       breadcrumbsFor={obj =>
         breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Pod Details',
+          name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
           path: props.match.url,
         })
       }
@@ -334,6 +338,7 @@ export const PodsDetailsPage = props => {
           component: PodExecLoader,
         },
       ]}
+      t={t}
     />
   );
 };

@@ -62,6 +62,9 @@ const ConfigMapDetails = ({ obj: configMap }) => {
 
 const ConfigMaps = props => <List {...props} Header={ConfigMapHeader} Row={ConfigMapRow} />;
 const ConfigMapsPage = props => <ListPage ListComponent={ConfigMaps} canCreate={true} {...props} />;
-const ConfigMapsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(ConfigMapDetails), navFactory.editYaml()]} />;
+const ConfigMapsDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(ConfigMapDetails, t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;
+};
 
 export { ConfigMaps, ConfigMapsPage, ConfigMapsDetailsPage };

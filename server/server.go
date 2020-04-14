@@ -67,6 +67,7 @@ type jsGlobals struct {
 	// LoadTestFactor       int    `json:"loadTestFactor"`
 	ReleaseModeFlag bool `json:"releaseModeFlag"`
 	HDCModeFlag bool `json:"HDCModeFlag"`
+	TmaxCloudPortalURL string `json:tmaxCloudPortalURL`
 }
 
 type Server struct {
@@ -88,6 +89,7 @@ type Server struct {
 	LoadTestFactor       int
 	ReleaseModeFlag      bool
 	HDCModeFlag			 bool
+	TmaxCloudPortalURL   string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
 	KubectlAuther  *auth.Authenticator
@@ -304,6 +306,7 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		// LoadTestFactor:       s.LoadTestFactor,
 		ReleaseModeFlag: s.ReleaseModeFlag,
 		HDCModeFlag: s.HDCModeFlag,
+		TmaxCloudPortalURL: s.TmaxCloudPortalURL,
 	}
 
 	if s.prometheusProxyEnabled() {

@@ -84,7 +84,7 @@ const DaemonSetsPage = props => <ListPage canCreate={true} ListComponent={Daemon
 
 const DaemonSetsDetailsPage = props => {
   const { t } = useTranslation();
-  const pages = [navFactory.details(detailsPage(Details), t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(), navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT'))];
+  const pages = [navFactory.details(detailsPage(Details), t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(t('CONTENT:PODS')), navFactory.envEditor(environmentComponent, t('CONTENT:ENVIRONMENT'))];
   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 };
 

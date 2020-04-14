@@ -125,19 +125,22 @@ PodSecurityPolicyList.displayName = PodSecurityPolicyList;
 export const PodSecurityPoliciesPage = props => <ListPage {...props} ListComponent={PodSecurityPolicyList} canCreate={true} kind="PodSecurityPolicy" />;
 PodSecurityPoliciesPage.displayName = 'PodSecurityPoliesPage';
 
-export const PodSecurityPoliciesDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Namespace Claim Details',
-        path: props.match.url,
-      })
-    }
-    kind="PodSecurityPolicy"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const PodSecurityPoliciesDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Namespace Claim Details',
+          path: props.match.url,
+        })
+      }
+      kind="PodSecurityPolicy"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 PodSecurityPoliciesDetailsPage.displayName = 'PodSecurityPoliciesDetailsPage';

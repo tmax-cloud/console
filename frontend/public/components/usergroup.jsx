@@ -7,10 +7,9 @@ import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
-import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
-const LimitRangeHeader = props => {
+const UsergroupHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -25,14 +24,14 @@ const LimitRangeHeader = props => {
   );
 };
 
-const LimitRangeRow = () =>
+const UsergroupRow = () =>
   // eslint-disable-next-line no-shadow
-  function LimitRangeRow({ obj }) {
+  function UsergroupRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          <ResourceCog actions={menuActions} kind="LimitRange" resource={obj} />
-          <ResourceLink kind="LimitRange" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          <ResourceCog actions={menuActions} kind="Usergroup" resource={obj} />
+          <ResourceLink kind="Usergroup" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -41,44 +40,40 @@ const LimitRangeRow = () =>
 
 const DetailsForKind = kind =>
   function DetailsForKind_({ obj }) {
-    const { t } = useTranslation();
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('LimitRange', t) })} />
+          <SectionHeading text={`${kindForReference(kind)} Overview`} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const LimitRangeList = props => {
+export const UsergroupList = props => {
   const { kinds } = props;
-  const Row = LimitRangeRow(kinds[0]);
-  Row.displayName = 'LimitRangeRow';
-  return <List {...props} Header={LimitRangeHeader} Row={Row} />;
+  const Row = UsergroupRow(kinds[0]);
+  Row.displayName = 'UsergroupRow';
+  return <List {...props} Header={UsergroupHeader} Row={Row} />;
 };
-LimitRangeList.displayName = LimitRangeList;
+UsergroupList.displayName = UsergroupList;
 
-export const LimitRangesPage = props => <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" />;
-LimitRangesPage.displayName = 'LimitRangesPage';
+export const UsergroupsPage = props => <ListPage {...props} ListComponent={UsergroupList} canCreate={true} kind="Usergroup" />;
+UsergroupsPage.displayName = 'UsergroupsPage';
 
-export const LimitRangesDetailsPage = props => {
-  const { t } = useTranslation();
-  return (
-    <DetailsPage
-      {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'LimitRange Details',
-          path: props.match.url,
-        })
-      }
-      kind="LimitRange"
-      menuActions={menuActions}
-      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
-    />
-  );
-};
+export const UsergroupsDetailsPage = props => (
+  <DetailsPage
+    {...props}
+    breadcrumbsFor={obj =>
+      breadcrumbsForOwnerRefs(obj).concat({
+        name: 'Usergroup Details',
+        path: props.match.url,
+      })
+    }
+    kind="Usergroup"
+    menuActions={menuActions}
+    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
+  />
+);
 
-LimitRangesDetailsPage.displayName = 'LimitRangesDetailsPage';
+UsergroupsDetailsPage.displayName = 'UsergroupsDetailsPage';

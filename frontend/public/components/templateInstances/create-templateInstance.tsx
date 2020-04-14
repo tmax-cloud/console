@@ -1,14 +1,13 @@
 /* eslint-disable no-undef */
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
-
+import { useTranslation } from 'react-i18next';
 enum CreateType {
   generic = 'generic',
   form = 'form',
@@ -33,7 +32,6 @@ const Section = ({ label, children, id }) => <div className="row">
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
   constructor(props) {
-    console.log(props)
     super(props);
     const existingTemplateInstance = _.pick(props.obj, ['metadata', 'type']);
     const templateInstance = _.defaultsDeep({}, props.fixed, existingTemplateInstance, {
@@ -195,9 +193,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     return <div className="co-m-pane__body">
-      < Helmet >
-        <title>Create Template Instance</title>
-      </Helmet >
       <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
         <h1 className="co-m-pane__heading">Create Template Instance</h1>
         <p className="co-m-pane__explanation">{this.props.explanation}</p>
@@ -222,7 +217,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
         </fieldset>
-        <label className="control-label" htmlFor="secret-name">Parameters </label>
+        <label className="control-label" htmlFor="secret-name">Parameters</label>
         <div>
           {paramDivs}
         </div>
@@ -259,20 +254,6 @@ const secretFormFactory = secretType => {
   return secretType === CreateType.form ? Requestform(SourceSecretForm) : Requestform(SourceSecretForm);
 };
 
-const SecretLoadingWrapper = props => {
-  const secretTypeAbstraction = determineCreateType(_.get(props.obj.data, 'data'));
-  const SecretFormComponent = secretFormFactory(secretTypeAbstraction);
-  const fixed = _.reduce(props.fixedKeys, (acc, k) => ({ ...acc, k: _.get(props.obj.data, k) }), {});
-  return <StatusBox {...props.obj}>
-    <SecretFormComponent {...props}
-      secretTypeAbstraction={secretTypeAbstraction}
-      obj={props.obj.data}
-      fixed={fixed}
-      explanation={pageExplanation[secretTypeAbstraction]}
-    />
-  </StatusBox>;
-};
-
 export const CreateTemplateInstance = ({ match: { params } }) => {
   const SecretFormComponent = secretFormFactory(params.type);
   return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
@@ -282,11 +263,6 @@ export const CreateTemplateInstance = ({ match: { params } }) => {
     isCreate={true}
   />;
 };
-
-export const EditSecret = ({ match: { params }, kind }) => <Firehose resources={[{ kind: kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-  <SecretLoadingWrapper fixedKeys={['kind', 'metadata']} titleVerb="Edit" saveButtonText="Save Changes" />
-</Firehose>;
-
 
 export type BaseEditSecretState_ = {
   secretTypeAbstraction?: CreateType,

@@ -3,12 +3,15 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import { Route, Switch, Link } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
 import { AsyncComponent } from '../utils/async';
 
-const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
+const editYamlComponent = props => {
+  const { t } = useTranslation();
+  return <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} t={t} />;
+};
 
 class PodsComponent extends React.PureComponent {
   render() {
@@ -17,7 +20,7 @@ class PodsComponent extends React.PureComponent {
       spec: { selector },
     } = this.props.obj;
     if (_.isEmpty(selector)) {
-      return <EmptyBox label="Pods" />;
+      return <EmptyBox label="Pod" />;
     }
 
     // Hide the create button to avoid confusion when showing pods for an object.
@@ -48,7 +51,7 @@ export const navFactory = {
     name: name || 'YAML',
     component: component,
   }),
-  pods: (component, name) => ({
+  pods: (name, component) => ({
     href: 'pods',
     name: name || 'Pods',
     component: component || PodsComponent,
@@ -68,7 +71,7 @@ export const navFactory = {
     name: name || 'Environment',
     component: component,
   }),
-  metering: (component, name) => ({
+  metering: (name, component) => ({
     href: 'metering',
     name: name || 'Metering',
     component: component,

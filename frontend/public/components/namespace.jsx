@@ -194,7 +194,7 @@ const ResourceUsage = requirePrometheus(({ ns }) => {
       <div className="row">
         <div className="col-sm-6 col-xs-12">
           <Line
-            title={t('CONTENT:CPUSHARE')}
+            title={t('CONTENT:CPUSHARES')}
             query={[
               {
                 name: 'Used',
@@ -215,7 +215,7 @@ const ResourceUsage = requirePrometheus(({ ns }) => {
           />
         </div>
       </div>
-      <Bar title={t('CONTENT:MEMORYUSAGEBYPOD(TOP 10)')} query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${ns.metadata.name}"})))`} humanize={humanizeMem} metric="pod_name" />
+      <Bar title={t('CONTENT:MEMORYUSAGEBYPOD(TOP10)')} query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${ns.metadata.name}"})))`} humanize={humanizeMem} metric="pod_name" />
     </div>
   );
 });
@@ -227,7 +227,7 @@ const Details = ({ obj: ns }) => {
   return (
     <div>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('NAMESPACE', t) })} />
         <div className="row">
           <div className="col-sm-6 col-xs-12">
             <ResourceSummary resource={ns} showPodSelector={false} showNodeSelector={false}>
@@ -310,23 +310,23 @@ class NamespaceDropdown_ extends React.Component {
     }
 
     if (window.sessionStorage.getItem('accessToken')) {
-      if (JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
-        // user 계정일 경우
-        if (data.length > 0) {
-          // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
-          activeNamespace = data[0].metadata.name;
-        }
-        if (!localStorage.getItem('bridge/last-namespace-name')) {
-          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
-          dispatch(UIActions.setActiveNamespace(activeNamespace));
-        }
-      } else {
-        // admin 계정 일 경우
-        if (!localStorage.getItem('bridge/last-namespace-name')) {
-          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
-          dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
-        }
+      // if (JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
+      //   // user 계정일 경우
+      //   if (data.length > 0) {
+      //     // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
+      //     activeNamespace = data[0].metadata.name;
+      //   }
+      //   if (!localStorage.getItem('bridge/last-namespace-name')) {
+      //     // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
+      //     dispatch(UIActions.setActiveNamespace(activeNamespace));
+      //   }
+      // } else {
+      // admin 계정 일 경우
+      if (!localStorage.getItem('bridge/last-namespace-name')) {
+        // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
+        dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
       }
+      // }
     }
 
     let title = activeNamespace;
@@ -349,71 +349,74 @@ class NamespaceDropdown_ extends React.Component {
   }
 }
 
-const MeteringPage = requirePrometheus(props => (
-  <div className="co-m-pane__body">
-    <SectionHeading text="Metering" />
-    <div className="row">
-      {/* <div className="col-sm-6 col-xs-12"> */}
-      <div className="col-md-4">
-        <Line
-          title="CPU Shares"
-          query={[
-            {
-              name: 'Used',
-              query: 'cpu',
-            },
-          ]}
-        />
+const MeteringPage = requirePrometheus(props => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-m-pane__body">
+      <SectionHeading text={t('CONTENT:METERING')} />
+      <div className="row">
+        {/* <div className="col-sm-6 col-xs-12"> */}
+        <div className="col-md-4">
+          <Line
+            title={t('CONTENT:CPUSHARES')}
+            query={[
+              {
+                name: 'Used',
+                query: 'cpu',
+              },
+            ]}
+          />
+        </div>
+        <div className="col-md-4">
+          <Line
+            title={t('CONTENT:MEMORY')}
+            query={[
+              {
+                name: 'Used',
+                query: 'memory',
+              },
+            ]}
+          />
+        </div>
+        <div className="col-md-4">
+          <Line
+            title={t('CONTENT:STORAGE')}
+            query={[
+              {
+                name: 'Used',
+                query: 'storage',
+              },
+            ]}
+          />
+        </div>
+        <div className="col-md-4">
+          <Line
+            title={t('CONTENT:PUBLICIP')}
+            query={[
+              {
+                name: 'Used',
+                query: 'publicIp',
+              },
+            ]}
+          />
+        </div>
+        <div className="col-md-4">
+          <Line
+            title={t('CONTENT:GPU')}
+            query={[
+              {
+                name: 'Used',
+                query: 'gpu',
+              },
+            ]}
+          />
+        </div>
       </div>
-      <div className="col-md-4">
-        <Line
-          title="Memory"
-          query={[
-            {
-              name: 'Used',
-              query: 'memory',
-            },
-          ]}
-        />
-      </div>
-      <div className="col-md-4">
-        <Line
-          title="Storage"
-          query={[
-            {
-              name: 'Used',
-              query: 'storage',
-            },
-          ]}
-        />
-      </div>
-      <div className="col-md-4">
-        <Line
-          title="Public IP"
-          query={[
-            {
-              name: 'Used',
-              query: 'publicIp',
-            },
-          ]}
-        />
-      </div>
-      <div className="col-md-4">
-        <Line
-          title="GPU"
-          query={[
-            {
-              name: 'Used',
-              query: 'gpu',
-            },
-          ]}
-        />
-      </div>
-    </div>
-    {/* </div>
+      {/* </div>
   {/* <Bar title="Memory Usage by Pod (Top 10)" query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${props.namespace}"})))`} humanize={humanizeMem} metric="pod_name" /> */}
-  </div>
-));
+    </div>
+  );
+});
 
 const NamespaceDropdown = connect(namespaceDropdownStateToProps)(NamespaceDropdown_);
 
@@ -433,6 +436,9 @@ const namespaceSelectorStateToProps = ({ k8s }) => ({
 
 export const NamespaceSelector = connect(namespaceSelectorStateToProps)(NamespaceSelector_);
 
-export const NamespacesDetailsPage = props => <DetailsPage {...props} menuActions={nsMenuActions} pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage), navFactory.metering(Metering)]} />;
+export const NamespacesDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={nsMenuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.roles(t('CONTENT:ROLES'), RolesPage), navFactory.metering(t('CONTENT:METERING'), Metering)]} />;
+};
 
 export const ProjectsDetailsPage = props => <DetailsPage {...props} menuActions={projectMenuActions} pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.roles(RolesPage)]} />;

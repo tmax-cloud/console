@@ -120,32 +120,34 @@ const LazyRoute = props => <Route {...props} component={componentProps => <Async
 
 function searchParam(key) {
   return new URLSearchParams(location.search).get(key);
-};
+}
 
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    if (window.SERVER_FLAGS.HDCModeFlag && !window.sessionStorage.getItem('accessToken')) {
+      // HDC Mode
+      if (searchParam('at')) {
+        window.sessionStorage.setItem('accessToken', searchParam('at'));
+        window.sessionStorage.setItem('refreshToken', searchParam('rt'));
+        // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+        // window.sessionStorage.setItem('role', userRole);
+        this.props.history.push('/');
+        this.props.history.go(0);
+      } else {
+        // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
+        window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+        return;
+      }
+    }
 
     this.state = {
       isAdmin: true,
       isLoading: false,
     };
 
-    if (window.SERVER_FLAGS.HDCModeFlag && !window.sessionStorage.getItem('accessToken')) {
-      // HDC Mode
-      if (searchParam('at')) {
-        window.sessionStorage.setItem('accessToken', searchParam('at'));
-        window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
-        const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-        window.sessionStorage.setItem('role', userRole);
-        this.props.history.push('/');
-        this.props.history.go(0);
-      } else {
-        // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-        window.location.href = 'http://192.168.8.36/tmax-cloud/#!/home';
-        return;
-      }
-    }
+    
 
     // 임시 로직
     if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
@@ -155,20 +157,24 @@ class App extends React.PureComponent {
       window.localStorage.removeItem('role');
     }
 
-    this.changeRole = () => this.changeRole_();
+    // this.changeRole = () => this.changeRole_();
     this.setLoading = () => this.setLoading_();
 
-    window.addEventListener('storage', function (evt) {
-      if (evt.key === 'forceLogout') {
-        window.sessionStorage.clear();
-      }
-    }, false);
+    window.addEventListener(
+      'storage',
+      function (evt) {
+        if (evt.key === 'forceLogout') {
+          window.sessionStorage.clear();
+        }
+      },
+      false,
+    );
   }
-  changeRole_() {
-    this.setState({
-      isAdmin: !this.state.isAdmin,
-    });
-  }
+  // changeRole_() {
+  //   this.setState({
+  //     isAdmin: !this.state.isAdmin,
+  //   });
+  // }
 
   setLoading_() {
     this.setState({
@@ -176,13 +182,13 @@ class App extends React.PureComponent {
     });
   }
 
-  componentDidMount() {
-    if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
-      if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
-        this.changeRole_();
-      }
-    }
-  }
+  // componentDidMount() {
+  //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
+  //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
+  //     this.changeRole_();
+  //     }
+  //   }
+  // }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
@@ -195,21 +201,18 @@ class App extends React.PureComponent {
     const { pathname } = props.location;
     store.dispatch(UIActions.setCurrentLocation(pathname));
     analyticsSvc.route(pathname);
-
   }
-
-  
 
   render() {
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <Masthead setLoading={this.setLoading} />
-        <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} />
+        <Nav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />
-          { this.state.isLoading && <Loading className='loading-box' />}
+          {this.state.isLoading && <Loading className="loading-box" />}
           <Switch>
             <Route path={['/all-namespaces', '/ns/:ns']} component={RedirectComponent} />
             <LazyRoute path="/status/all-namespaces" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
