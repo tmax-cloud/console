@@ -69,6 +69,7 @@
     "LABLE-EDIT_0": "Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels."
   },
   "CONTENT": {
+    "COMPACT": "Compact",
     "SELECTOR": "선택기",
     "LOADBALANCER": "로드밸런서",
     "AUTHTYPE": "인증 유형",

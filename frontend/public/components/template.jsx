@@ -68,7 +68,10 @@ export const TemplateList = props => {
 };
 TemplateList.displayName = TemplateList;
 
-export const TemplatesPage = props => <ListPage {...props} ListComponent={TemplateList} canCreate={true} kind="Template" />;
+export const TemplatesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={TemplateList} canCreate={true} kind="Template" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 TemplatesPage.displayName = 'TemplatesPage';
 
 export const TemplatesDetailsPage = props => (
