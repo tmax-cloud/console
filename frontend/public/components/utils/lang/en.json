@@ -353,7 +353,8 @@
     "EXPAND": "Expand",
     "DETAILS": "Details",
     "DELETE": "Delete",
-    "COUNT": "Count"
+    "COUNT": "Count",
+    "RULES": "Rules"
   },
   "RESOURCE": {
     "HOME": "Home",

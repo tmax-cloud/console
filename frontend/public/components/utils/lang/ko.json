@@ -354,7 +354,8 @@
     "DETAILS": "상세정보",
     "DELETE": "삭제",
     "COUNT": "Count",
-    "PODS": "파드"
+    "PODS": "파드",
+    "RULES": "룰"
   },
   "RESOURCE": {
     "HOME": "홈",
