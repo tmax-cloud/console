@@ -74,10 +74,9 @@ StorageClassList.displayName = 'StorageClassList';
 export const StorageClassPage: React.SFC<StorageClassPageProps> = props => <ListPage {...props} title="Storage Classes" kind={StorageClassReference} ListComponent={StorageClassList} canCreate={true} filterLabel={props.filterLabel} />;
 StorageClassPage.displayName = 'StorageClassListPage';
 
-const pages = [navFactory.details(detailsPage(StorageClassDetails)), navFactory.editYaml()];
-
 export const StorageClassDetailsPage: React.SFC<StorageClassDetailsPageProps> = props => {
-  return <DetailsPage {...props} kind={StorageClassReference} menuActions={menuActions} pages={pages} />;
+  const { t } = useTranslation();
+  return <DetailsPage {...props} kind={StorageClassReference} menuActions={menuActions} pages={[navFactory.details(detailsPage(StorageClassDetails), t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;
 };
 StorageClassDetailsPage.displayName = 'StorageClassDetailsPage';
 

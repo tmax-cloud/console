@@ -10,7 +10,7 @@ import { AsyncComponent } from '../utils/async';
 
 const editYamlComponent = props => {
   const { t } = useTranslation();
-  return <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} t={t} />
+  return <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} t={t} />;
 };
 
 class PodsComponent extends React.PureComponent {
@@ -20,7 +20,7 @@ class PodsComponent extends React.PureComponent {
       spec: { selector },
     } = this.props.obj;
     if (_.isEmpty(selector)) {
-      return <EmptyBox label="Pods" />;
+      return <EmptyBox label="Pod" />;
     }
 
     // Hide the create button to avoid confusion when showing pods for an object.
@@ -71,7 +71,7 @@ export const navFactory = {
     name: name || 'Environment',
     component: component,
   }),
-  metering: (component, name) => ({
+  metering: (name, component) => ({
     href: 'metering',
     name: name || 'Metering',
     component: component,

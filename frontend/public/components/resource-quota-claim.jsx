@@ -6,6 +6,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { fromNow } from './utils/datetime';
 import { useTranslation } from 'react-i18next';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 
@@ -26,7 +27,7 @@ const ResourceQuotaClaimHeader = props => {
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
-  )
+  );
 };
 
 const ResourceQuotaClaimRow = () =>
@@ -68,7 +69,7 @@ const Details = ({ obj: resourcequotaclaim }) => {
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ResourceQuotaClaim', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={resourcequotaclaim} />
@@ -104,19 +105,22 @@ ResourceQuotaClaimList.displayName = ResourceQuotaClaimList;
 export const ResourceQuotaClaimsPage = props => <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" />;
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 
-export const ResourceQuotaClaimsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Resource Quota Claim Details',
-        path: props.match.url,
-      })
-    }
-    kind="ResourceQuotaClaim"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const ResourceQuotaClaimsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Resource Quota Claim Details',
+          path: props.match.url,
+        })
+      }
+      kind="ResourceQuotaClaim"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 ResourceQuotaClaimsDetailsPage.displayName = 'ResourceQuotaClaimsDetailsPage';

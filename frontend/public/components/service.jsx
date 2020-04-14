@@ -201,7 +201,10 @@ const Details = ({ obj: s }) => {
 };
 
 const { details, pods, editYaml } = navFactory;
-const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editYaml(), pods()]} />;
+const ServicesDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[details(Details, t('CONTENT:OVERVIEW')), editYaml(), pods(t('CONTENT:PODS'))]} />;
+};
 
 const ServicesList = props => <List {...props} Header={ServiceHeader} Row={ServiceRow} />;
 //const ServicesPage = props => <ListPage canCreate={true} ListComponent={ServicesList} {...props} />;

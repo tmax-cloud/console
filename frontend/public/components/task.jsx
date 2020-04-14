@@ -70,18 +70,21 @@ TaskList.displayName = TaskList;
 export const TasksPage = props => <ListPage {...props} ListComponent={TaskList} canCreate={true} kind="Task" />;
 TasksPage.displayName = 'TasksPage';
 
-export const TaskDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Task Details',
-        path: props.match.url,
-      })
-    }
-    menuActions={menuActions}
-    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
-  />
-);
+export const TaskDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Task Details',
+          path: props.match.url,
+        })
+      }
+      menuActions={menuActions}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 TaskDetailsPage.displayName = 'TaskDetailsPage';

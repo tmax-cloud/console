@@ -88,6 +88,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(ClusterServiceClassModel), () => import('./cluster-service-class' /* webpackChunkName: "task" */).then(m => m.ClusterServiceClassesDetailsPage))
   .set(referenceForModel(ClusterServicePlanModel), () => import('./cluster-service-plan' /* webpackChunkName: "task" */).then(m => m.ClusterServicePlansDetailsPage))
   // .set(referenceForModel(ServiceBrokerModel), () => import('./service-broker' /* webpackChunkName: "task" */).then(m => m.ServiceBrokersDetailsPage))
+  .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "task" */).then(m => m.PodSecurityPoliciesDetailsPage))
   .set(referenceForModel(ServiceBindingModel), () => import('./service-binding' /* webpackChunkName: "task" */).then(m => m.ServiceBindingsDetailsPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "task" */).then(m => m.ServiceInstancesDetailsPage))
   .set(referenceForModel(TaskModel), () => import('./task' /* webpackChunkName: "task" */).then(m => m.TaskDetailsPage))

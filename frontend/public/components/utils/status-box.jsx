@@ -5,6 +5,7 @@ import * as classNames from 'classnames';
 import * as restrictedSignImg from '../../imgs/restricted-sign.svg';
 import { TimeoutError } from '../../co-fetch';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 
 export const Box = ({ children, className }) => <div className={classNames('cos-status-box', className)}>{children}</div>;
 
@@ -45,7 +46,7 @@ export const EmptyBox = ({ label }) => {
   const { t } = useTranslation();
   return (
     <Box>
-      <div className="text-center">{label ? t('ADDITIONAL:EMPTYBOX', { something: label }) : t('Content:NOTFOUND')}</div>
+      <div className="text-center">{label ? t('ADDITIONAL:EMPTYBOX', { something: ResourcePlural(label, t) }) : t('Content:NOTFOUND')}</div>
     </Box>
   );
 };
@@ -86,7 +87,7 @@ const Data = props => {
 
 export const StatusBox = props => {
   const { label, loadError, loaded } = props;
-
+  const { t } = useTranslation();
   if (loadError) {
     const status = _.get(loadError, 'response.status');
     if (status === 404) {
@@ -103,7 +104,7 @@ export const StatusBox = props => {
     if (loaded && loadError instanceof TimeoutError) {
       return (
         <Data {...props}>
-          <div className="co-m-timeout-error text-muted">Timed out fetching new data. The data below is stale.</div>
+          <div className="co-m-timeout-error text-muted">{t('STRING:STATUSBOX_0')}</div>
           {props.children}
         </Data>
       );

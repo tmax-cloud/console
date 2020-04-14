@@ -94,7 +94,9 @@ func main() {
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
 
+	// NOTE: HDC 모델 TmaxCloud Portal 연동 추가 // 조미리 
 	fHDCModeFlag := fs.Bool("hdc-mode", false, "When true, login through tmaxcloud portal is required.")
+	fTmaxCloudPortalURL := fs.String("tmaxcloud-portal", "", "URL of the TmaxCloud Portal.")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -175,7 +177,8 @@ func main() {
 		GoogleTagManagerID:   *fGoogleTagManagerID,
 		LoadTestFactor:       *fLoadTestFactor,
 		ReleaseModeFlag:      *fReleaseModeFlag,
-		HDCModeFlag:      *fHDCModeFlag,
+		HDCModeFlag:          *fHDCModeFlag,
+		TmaxCloudPortalURL:   *fTmaxCloudPortalURL,
 	}
 
 	if (*fKubectlClientID == "") != (*fKubectlClientSecret == "" && *fKubectlClientSecretFile == "") {

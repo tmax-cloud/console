@@ -67,19 +67,22 @@ DataVolumeList.displayName = DataVolumeList;
 export const DataVolumesPage = props => <ListPage {...props} ListComponent={DataVolumeList} canCreate={true} kind="DataVolume" />;
 DataVolumesPage.displayName = 'DataVolumesPage';
 
-export const DataVolumesDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Data Volume Details',
-        path: props.match.url,
-      })
-    }
-    kind="DataVolume"
-    menuActions={menuActions}
-    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
-  />
-);
+export const DataVolumesDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Data Volume Details',
+          path: props.match.url,
+        })
+      }
+      kind="DataVolume"
+      menuActions={menuActions}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 DataVolumesDetailsPage.displayName = 'DataVolumesDetailsPage';

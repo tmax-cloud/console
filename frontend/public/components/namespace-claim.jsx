@@ -6,6 +6,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 
@@ -65,7 +66,7 @@ const Details = ({ obj: namespaceinstance }) => {
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text="Namespace Claim Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('NAMESPACECLAIM', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={namespaceinstance} />
@@ -101,19 +102,22 @@ NamespaceClaimList.displayName = NamespaceClaimList;
 export const NamespaceClaimsPage = props => <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" />;
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 
-export const NamespaceClaimsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Namespace Claim Details',
-        path: props.match.url,
-      })
-    }
-    kind="NamespaceClaim"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const NamespaceClaimsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Namespace Claim Details',
+          path: props.match.url,
+        })
+      }
+      kind="NamespaceClaim"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 NamespaceClaimsDetailsPage.displayName = 'NamespaceClaimsDetailsPage';
