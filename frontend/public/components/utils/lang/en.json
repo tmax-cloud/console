@@ -18,7 +18,8 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "Total number of available pods (ready for at least minReadySeconds) targeted by this {{something}}..",
     "DEPLOYMENT_DETAIL_TOOLTIP_3": "Total number of unavailable pods targeted by this {{something}}.",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}"
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
+    "LOG_TAB_0": "The logs for this {{something1}} may be stale."
   },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
@@ -310,7 +311,11 @@
     "METERING": "Metering",
     "ROLES": "Roles",
     "PUBLICIP": "Public IP",
-    "STORAGE": "Storage"
+    "STORAGE": "Storage",
+    "LOGSTREAMENDED": "Log stream ended.",
+    "LOADINGLOG": "Loading log...",
+    "LOGSTREAMPAUSED": "Log stream paused.",
+    "LOGSTREAMING": "Log streaming..."
   },
   "RESOURCE": {
     "HOME": "Home",
