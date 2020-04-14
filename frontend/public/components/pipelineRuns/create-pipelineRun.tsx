@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { k8sCreate, k8sList, k8sGet, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 // import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 
@@ -15,10 +17,6 @@ enum CreateType {
 const pageExplanation = {
     [CreateType.form]: 'Create Pipeline Run using Form Editor',
 };
-
-// const determineCreateType = (data) => {
-//     return CreateType.form;
-// };
 const FirstSection = ({ label, children, id }) => <div className="form-group">
     <label className="control-label" htmlFor="secret-type" >{label}</label>
     <div>
@@ -327,7 +325,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
 
     render() {
         const { pipelineList, paramList, resourceList, resourceRefList } = this.state;
-
+        const { t } = this.props;
         let options = pipelineList.map(cur => {
             return <option value={cur.name}>{cur.name}</option>;
         });
@@ -355,11 +353,11 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                 <title>Create Pipeline Run</title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">Create Pinpeline Run</h1>
-                <p className="co-m-pane__explanation">{this.props.explanation}</p>
+                <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.pipelineRun.kind, t) })}</h1>
+                {/* <p className="co-m-pane__explanation">{this.props.explanation}</p> */}
 
                 <fieldset disabled={!this.props.isCreate}>
-                    <FirstSection label="Name" children={<div>
+                    <FirstSection label={t('CONTENT:NAME')} children={<div>
                         <input className="form-control"
                             type="text"
                             onChange={this.onNameChanged}
@@ -368,13 +366,13 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                             id="pipelinerun-name"
                             required />
                     </div>} id="pipelinerun-name" />
-                    <FirstSection label="Pipeline" children={
+                    <FirstSection label={t('RESOURCE:PIPELINE')} children={
                         <select onChange={this.onPipelineChange} className="form-control" id="pipeline">
                             {options}
                         </select>} id="pipeline" />
-                    <FirstSection label="Params" children={paramDivs} id="param" />
-                    <FirstSection label="Resources" children={resourceDivs} id="resource" />
-                    <FirstSection label="Service Account Name" children={<div className="form-group">
+                    <FirstSection label={t('CONTENT:PARAMETERS')} children={paramDivs} id="param" />
+                    <FirstSection label={t('CONTENT:RESOURCES')} children={resourceDivs} id="resource" />
+                    <FirstSection label={t('CONTENT:SERVICEACCOUNTNAME')} children={<div className="form-group">
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -385,17 +383,17 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
 
                         </div>
                     </div>} id="account" />
-                    <FirstSection label="Label" children={<div className="form-group">
+                    <FirstSection label={t('CONTENT:LABELS')} children={<div className="form-group">
                         <div>
                             <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
                         </div>
                     </div>} id="label" />
                     <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-                        <p>Lables must be 'key=value' form.</p>
+                        <p>{t('VALIDATION:LABEL_FORM')}</p>
                     </div>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
-                        <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-                        <Link to={formatNamespacedRouteForResource('pipelineruns')} className="btn btn-default" id="cancel">Cancel</Link>
+                        <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
+                        <Link to={formatNamespacedRouteForResource('pipelineruns')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
@@ -406,7 +404,9 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
 
 export const CreatePipelineRun = ({ match: { params } }) => {
     // const PipelineRunFormComponent = PipelineRunFormFactory(params.type);
+    const { t } = useTranslation();
     return <PipelineRunFormComponent
+        t={t}
         fixed={{ metadata: { namespace: params.ns } }}
         pipelineRunTypeAbstraction={params.type}
         explanation={pageExplanation[params.type]}
@@ -470,6 +470,7 @@ export type PipelineRunProps_ = {
     pipelineRunTypeAbstraction?: CreateType,
     saveButtonText?: string,
     explanation: string,
+    t: any
 };
 
 
