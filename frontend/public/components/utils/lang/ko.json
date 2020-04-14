@@ -316,7 +316,9 @@
     "METERING": "미터링",
     "ROLES": "롤",
     "PUBLICIP": "공용 IP",
-    "STORAGE": "스토리지"
+    "STORAGE": "스토리지",
+    "CONNECTINGTO": "Connecting to",
+    "EXPAND": "확장"
   },
   "RESOURCE": {
     "HOME": "홈",
