@@ -227,7 +227,7 @@ const Details = ({ obj: ns }) => {
   return (
     <div>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('NAMESPACE', t) })} />
         <div className="row">
           <div className="col-sm-6 col-xs-12">
             <ResourceSummary resource={ns} showPodSelector={false} showNodeSelector={false}>

@@ -7,6 +7,7 @@ import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const LimitRangeHeader = props => {
@@ -40,10 +41,11 @@ const LimitRangeRow = () =>
 
 const DetailsForKind = kind =>
   function DetailsForKind_({ obj }) {
+    const { t } = useTranslation();
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('LimitRange', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
@@ -61,19 +63,22 @@ LimitRangeList.displayName = LimitRangeList;
 export const LimitRangesPage = props => <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" />;
 LimitRangesPage.displayName = 'LimitRangesPage';
 
-export const LimitRangesDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'LimitRange Details',
-        path: props.match.url,
-      })
-    }
-    kind="LimitRange"
-    menuActions={menuActions}
-    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
-  />
-);
+export const LimitRangesDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'LimitRange Details',
+          path: props.match.url,
+        })
+      }
+      kind="LimitRange"
+      menuActions={menuActions}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 LimitRangesDetailsPage.displayName = 'LimitRangesDetailsPage';
