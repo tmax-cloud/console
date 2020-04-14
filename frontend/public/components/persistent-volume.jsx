@@ -53,7 +53,10 @@ const Details = ({ obj }) => {
 };
 
 export const PersistentVolumesList = props => <List {...props} Header={Header} Row={Row} />;
-export const PersistentVolumesPage = props => <ListPage {...props} ListComponent={PersistentVolumesList} kind={kind} canCreate={true} />;
+export const PersistentVolumesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={PersistentVolumesList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 export const PersistentVolumesDetailsPage = props => {
   const { t } = useTranslation();
   return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;

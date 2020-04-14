@@ -6,6 +6,7 @@ import { ColHead, List, ListHeader, ListPage } from './factory';
 import { Cog, ResourceCog, ResourceIcon, kindObj } from './utils';
 import { referenceForCRD } from '../module/k8s';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const CRDHeader = props => {
@@ -28,7 +29,7 @@ const CRDHeader = props => {
         {t('CONTENT:ESTABLISHED')}
       </ColHead>
     </ListHeader>
-  )
+  );
 };
 
 const isEstablished = conditions => {
@@ -63,14 +64,17 @@ const CRDRow = ({ obj: crd }) => {
             <i className="fa fa-check-circle"></i>
           </span>
         ) : (
-            <span className="node-not-ready">
-              <i className="fa fa-minus-circle"></i>
-            </span>
-          )}
+          <span className="node-not-ready">
+            <i className="fa fa-minus-circle"></i>
+          </span>
+        )}
       </div>
     </div>
   );
 };
 
 export const CustomResourceDefinitionsList = props => <List {...props} Header={CRDHeader} Row={CRDRow} />;
-export const CustomResourceDefinitionsPage = props => <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} filterLabel="CRDs by name" />;
+export const CustomResourceDefinitionsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} filterLabel="CRDs by name" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};

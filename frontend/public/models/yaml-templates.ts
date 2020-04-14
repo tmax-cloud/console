@@ -251,6 +251,22 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.UsergroupModel), 'default'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Usergroup
+    metadata: 
+      name: example
+    userInfo:
+      name: example
+      department: Cloud
+      position: developer
+      description: For Example
+    status: active
+    
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'],
     `
   apiVersion: servicecatalog.k8s.io/v1beta1

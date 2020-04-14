@@ -151,7 +151,7 @@ export const PersistentVolumeClaimsPage = props => {
       })),
     },
   ];
-  return <ListPage {...props} ListComponent={PersistentVolumeClaimsList} kind={kind} canCreate={true} rowFilters={filters} />;
+  return <ListPage {...props} ListComponent={PersistentVolumeClaimsList} kind={kind} canCreate={true} rowFilters={filters} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('PersistentVolumeClaim', t) })} />;
 };
 export const PersistentVolumeClaimsDetailsPage = props => {
   const { t } = useTranslation();

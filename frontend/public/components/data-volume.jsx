@@ -64,7 +64,10 @@ export const DataVolumeList = props => {
 };
 DataVolumeList.displayName = DataVolumeList;
 
-export const DataVolumesPage = props => <ListPage {...props} ListComponent={DataVolumeList} canCreate={true} kind="DataVolume" />;
+export const DataVolumesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={DataVolumeList} canCreate={true} kind="DataVolume" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 DataVolumesPage.displayName = 'DataVolumesPage';
 
 export const DataVolumesDetailsPage = props => {

@@ -64,7 +64,10 @@ export const PipelineList = props => {
 };
 PipelineList.displayName = PipelineList;
 
-export const PipelinesPage = props => <ListPage {...props} ListComponent={PipelineList} canCreate={true} kind="Pipeline" />;
+export const PipelinesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={PipelineList} canCreate={true} kind="Pipeline" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 PipelinesPage.displayName = 'PipelinesPage';
 
 // export const TaskDetailsPage = props => {

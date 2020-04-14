@@ -122,7 +122,10 @@ export const PodSecurityPolicyList = props => {
 };
 PodSecurityPolicyList.displayName = PodSecurityPolicyList;
 
-export const PodSecurityPoliciesPage = props => <ListPage {...props} ListComponent={PodSecurityPolicyList} canCreate={true} kind="PodSecurityPolicy" />;
+export const PodSecurityPoliciesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={PodSecurityPolicyList} canCreate={true} kind="PodSecurityPolicy" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 PodSecurityPoliciesPage.displayName = 'PodSecurityPoliesPage';
 
 export const PodSecurityPoliciesDetailsPage = props => {

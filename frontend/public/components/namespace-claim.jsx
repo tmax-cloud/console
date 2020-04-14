@@ -99,7 +99,10 @@ export const NamespaceClaimList = props => {
 };
 NamespaceClaimList.displayName = NamespaceClaimList;
 
-export const NamespaceClaimsPage = props => <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" />;
+export const NamespaceClaimsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 
 export const NamespaceClaimsDetailsPage = props => {

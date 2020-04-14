@@ -108,7 +108,10 @@ export const RegistryList = props => {
 };
 RegistryList.displayName = RegistryList;
 
-export const RegistryPage = props => <ListPage {...props} ListComponent={RegistryList} canCreate={true} kind="Registry" />;
+export const RegistryPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={RegistryList} canCreate={true} kind="Registry" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 RegistryPage.displayName = 'RegistryPage';
 
 // export const TemplatesDetailsPage = props => {

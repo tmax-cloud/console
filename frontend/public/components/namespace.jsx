@@ -81,7 +81,10 @@ const NamespaceRow = ({ obj: ns }) => (
 );
 
 export const NamespacesList = props => <List {...props} Header={NamespaceHeader} Row={NamespaceRow} />;
-export const NamespacesPage = props => <ListPage {...props} ListComponent={NamespacesList} canCreate={true} createHandler={createNamespaceModal} />;
+export const NamespacesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={NamespacesList} canCreate={true} createHandler={createNamespaceModal} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 
 const projectMenuActions = [Cog.factory.Edit, deleteModal];
 

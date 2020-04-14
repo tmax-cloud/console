@@ -168,7 +168,10 @@ const IngressesDetailsPage = props => {
   return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(Details), t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;
 };
 const IngressesList = props => <List {...props} Header={IngressListHeader} Row={IngressListRow} />;
-const IngressesPage = props => <ListPage {...props} ListComponent={IngressesList} canCreate={true} kind="Ingress" />;
+const IngressesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={IngressesList} canCreate={true} kind="Ingress" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 
 // 미리: 인그레스 페이지는 폼 에디터 임시로 disable
 // {

@@ -25,11 +25,15 @@ const Details = ({ obj: ss }) => {
 };
 
 const envPath = ['spec', 'template', 'spec', 'containers'];
-const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} />;
+const environmentComponent = props => {
+  const { t } = useTranslation();
+  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} t={t} />;
+};
 
 export const StatefulSetsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
 export const StatefulSetsPage = props => {
-  return <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={true} />;
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StatefulSet', t) })} />;
 };
 
 export const StatefulSetsDetailsPage = props => {
