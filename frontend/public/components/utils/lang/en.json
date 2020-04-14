@@ -329,7 +329,10 @@
     "LOGSTREAMENDED": "Log stream ended.",
     "LOADINGLOG": "Loading log...",
     "LOGSTREAMPAUSED": "Log stream paused.",
-    "LOGSTREAMING": "Log streaming..."
+    "LOGSTREAMING": "Log streaming...",
+    "CONNECTINGTO": "Connecting to",
+    "EXPAND": "Expand",
+    "DETAILS": "Details"
   },
   "RESOURCE": {
     "HOME": "Home",

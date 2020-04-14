@@ -126,11 +126,6 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isAdmin: true,
-      isLoading: false,
-    };
-
     if (window.SERVER_FLAGS.HDCModeFlag && !window.sessionStorage.getItem('accessToken')) {
       // HDC Mode
       if (searchParam('at')) {
@@ -142,10 +137,17 @@ class App extends React.PureComponent {
         this.props.history.go(0);
       } else {
         // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-        window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '/#!/sign-in';
+        window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
         return;
       }
     }
+
+    this.state = {
+      isAdmin: true,
+      isLoading: false,
+    };
+
+    
 
     // 임시 로직
     if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
