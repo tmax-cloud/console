@@ -28,6 +28,7 @@ import k8sActions from '../module/k8s/k8s-actions';
 import { Loading } from './utils';
 import '../vendor.scss';
 import '../style.scss';
+import { useTranslation } from 'react-i18next';
 
 import './utils/i18n';
 
@@ -116,8 +117,10 @@ const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
   return <NamespaceRedirect />;
 });
 
-const LazyRoute = props => <Route {...props} component={componentProps => <AsyncComponent loader={props.loader} kind={props.kind} {...componentProps} />} />;
-
+const LazyRoute = props => {
+  const { t } = useTranslation();
+  return <Route {...props} component={componentProps => <AsyncComponent loader={props.loader} t={t} kind={props.kind} {...componentProps} />} />
+};
 function searchParam(key) {
   return new URLSearchParams(location.search).get(key);
 }
@@ -147,7 +150,7 @@ class App extends React.PureComponent {
       isLoading: false,
     };
 
-    
+
 
     // 임시 로직
     if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
