@@ -354,11 +354,11 @@ export const ReplicationControllerModel: K8sKind = {
 export const UsergroupModel: K8sKind = {
   kind: 'Usergroup',
   namespaced: true,
+  apiGroup: 'tmax.io',
   label: 'Usergroup',
   plural: 'usergroups',
-  apiVersion: 'apiextensions.k8s.io/v1beta1',
+  apiVersion: 'v1',
   abbr: 'UG',
-  apiGroup: 'tmax.io',
   labelPlural: 'UserGroups',
   path: 'usergroups',
   id: 'usergroup',
