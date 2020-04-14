@@ -343,6 +343,7 @@
     "ROLEBINDING": "Role Binding",
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
+    "USERGROUP": "User Group",
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status"
   }
