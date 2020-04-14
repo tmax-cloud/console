@@ -1,6 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import {
   Cog,
@@ -125,9 +126,8 @@ const Details = ({ obj: servicebinding }) => {
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
-
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('SERVICEBINDING', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={servicebinding} />
@@ -160,32 +160,33 @@ export const ServiceBindingList = props => {
 };
 ServiceBindingList.displayName = ServiceBindingList;
 
-export const ServiceBindingsPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={ServiceBindingList}
-    canCreate={true}
-    kind="ServiceBinding"
-  />
-);
+export const ServiceBindingsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <ListPage
+      {...props}
+      ListComponent={ServiceBindingList}
+      canCreate={true}
+      kind="ServiceBinding"
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })}
+    />
+  )
+};
 ServiceBindingsPage.displayName = 'ServiceBindingsPage';
 
-export const ServiceBindingsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ServiceBinding Details',
-        path: props.match.url
-      })
-    }
-    kind="ServiceBinding"
-    menuActions={menuActions}
-    pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
-    ]}
-  />
-);
+export const ServiceBindingsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind="ServiceBinding"
+      menuActions={menuActions}
+      pages={[
+        navFactory.details(Details, t('CONTENT:OVERVIEW')),
+        navFactory.editYaml()
+      ]}
+    />
+  )
+};
 
 ServiceBindingsDetailsPage.displayName = 'ServiceBindingsDetailsPage';

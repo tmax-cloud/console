@@ -68,7 +68,10 @@ export const ClusterServiceBrokerList = props => {
 };
 ClusterServiceBrokerList.displayName = ClusterServiceBrokerList;
 
-export const ClusterServiceBrokersPage = props => <ListPage {...props} ListComponent={ClusterServiceBrokerList} canCreate={true} kind="ClusterServiceBroker" />;
+export const ClusterServiceBrokersPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={ClusterServiceBrokerList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="ClusterServiceBroker" />
+};
 ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
 
 // export const TemplatesDetailsPage = props => {
