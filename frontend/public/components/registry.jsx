@@ -127,12 +127,12 @@ export const RegistryDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Registry Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Registry Details',
+      //     path: props.match.url,
+      //   })
+      // }
       kind="Registry"
       menuActions={menuActions}
       pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}

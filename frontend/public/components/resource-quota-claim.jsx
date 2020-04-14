@@ -113,12 +113,12 @@ export const ResourceQuotaClaimsDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Resource Quota Claim Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Resource Quota Claim Details',
+      //     path: props.match.url,
+      //   })
+      // }
       kind="ResourceQuotaClaim"
       menuActions={menuActions}
       pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}

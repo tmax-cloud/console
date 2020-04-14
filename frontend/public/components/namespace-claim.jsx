@@ -110,12 +110,12 @@ export const NamespaceClaimsDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Namespace Claim Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Namespace Claim Details',
+      //     path: props.match.url,
+      //   })
+      // }
       kind="NamespaceClaim"
       menuActions={menuActions}
       pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
