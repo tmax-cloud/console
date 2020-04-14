@@ -153,4 +153,8 @@ export const PersistentVolumeClaimsPage = props => {
   ];
   return <ListPage {...props} ListComponent={PersistentVolumeClaimsList} kind={kind} canCreate={true} rowFilters={filters} />;
 };
-export const PersistentVolumeClaimsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.events(ResourceEventStream)]} />;
+export const PersistentVolumeClaimsDetailsPage = props => {
+  const { t } = useTranslation();
+
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:ENVIRONMENT'))]} />;
+};

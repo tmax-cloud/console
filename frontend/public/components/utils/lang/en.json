@@ -28,6 +28,7 @@
     "SERVICE_DETAIL_3": "Accessible within the cluster only",
     "SERVICE_DETAIL_4": "IP Address(es) accepting traffic for service",
     "LOG_TAB_0": "An error occured while retrieving the requested logs.",
+    "STATUSBOX_0": "Timed out fetching new data. The data below is stale.",
     "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
   },
   "CONTENT": {
@@ -97,7 +98,7 @@
     "RESOURCEUSAGE": "Resource Usage",
     "CPUSHARES": "CPU Shares",
     "RAM": "RAM",
-    "MEMORYUSAGEBYPOD(TOP 10)": "Memory Usage by Pod (Top 10)",
+    "MEMORYUSAGEBYPOD(TOP10)": "Memory Usage by Pod (Top 10)",
     "NODENAME": "Node Name",
     "EXTERNALID": "External ID",
     "NODEADDRESSES": "Node Addresses",
@@ -275,7 +276,19 @@
     "Age": "age",
     "ADMINISTRATOR": "Administrator",
     "EXTEND": "Extend",
-    "USER": "User"
+    "USER": "User",
+    "PROVISIONAL": "Provisional",
+    "LABELSELECTOR": "Label Selector",
+    "RUNASUSER": "Runt as User",
+    "SECURITYENHANCEDLINUX": "Security-Enhanced Linux",
+    "PRIVILEGED": "Privileged",
+    "FILESTORAGEGROUP": "File Storage Group",
+    "SUPPLEMENTAL GROUP": "Supplemental Group",
+    "NAMESPACESELECTOR": "Namespace Selector",
+    "METERING": "Metering",
+    "ROLES": "Roles",
+    "PUBLICIP": "Public IP",
+    "STORAGE": "Storage"
   },
   "RESOURCE": {
     "HOME": "Home",

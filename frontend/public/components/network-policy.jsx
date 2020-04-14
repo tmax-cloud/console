@@ -60,6 +60,7 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
   const podSelectors = [];
   const nsSelectors = [];
   let i = 0;
+  const { t } = useTranslation();
 
   const style = { margin: '5px 0' };
   _.each(ingress.from, ({ namespaceSelector, podSelector: ps }) => {
@@ -81,7 +82,7 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
     <div className="row co-resource-list__item">
       <div className="col-xs-4">
         <div>
-          <span className="text-muted">Pod Selector:</span>
+          <span className="text-muted">{t('CONTENT:PODSELECTOR')}:</span>
         </div>
         <div style={style}>
           <Selector selector={podSelector} namespace={namespace} />
@@ -91,13 +92,13 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
         <div>
           {!podSelectors.length ? null : (
             <div>
-              <span className="text-muted">Pod Selector:</span>
+              <span className="text-muted">{t('CONTENT:PODSELECTOR')}:</span>
               {podSelectors}
             </div>
           )}
           {!nsSelectors.length ? null : (
             <div style={{ paddingTop: podSelectors.length ? 10 : 0 }}>
-              <span className="text-muted">NS Selector:</span>
+              <span className="text-muted">{t('CONTENT:NAMESPACESELECTOR')}:</span>
               {nsSelectors}
             </div>
           )}
@@ -151,4 +152,7 @@ const Details_ = ({ flags, obj: np }) => {
 
 const Details = connectToFlags(FLAGS.OPENSHIFT)(Details_);
 
-export const NetworkPoliciesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editYaml()]} />;
+export const NetworkPoliciesDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;
+};

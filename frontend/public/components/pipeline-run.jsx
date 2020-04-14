@@ -88,18 +88,21 @@ PipelineRunsPage.displayName = 'PipelineRunsPage';
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
 
-export const PipelineRunDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Task Details',
-        path: props.match.url,
-      })
-    }
-    menuActions={menuActions}
-    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
-  />
-);
+export const PipelineRunDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'Task Details',
+          path: props.match.url,
+        })
+      }
+      menuActions={menuActions}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 PipelineRunDetailsPage.displayName = 'PipelineRunDetailsPage';

@@ -19,6 +19,7 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something2}}의 {{something1}}",
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}}는 {{something2}} 보다 큼",
     "LOGSTALE": "The logs for this {{something}} may be stale.",
+    "STATUSBOX_0": "새로운 데이터를 가져 오는 시간이 초과되었습니다. 아래 데이터는 오래되었습니다.",
     "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
   },
   "STRING": {
@@ -280,7 +281,19 @@
     "LOGSTREAMPAUSED": "로그 스트림이 일시 정지 되었습니다.",
     "LOGSTREAMING": "스트림 로그...",
     "RETRY": "재시도",
-    "REFRESH": "새로고침"
+    "REFRESH": "새로고침",
+    "PROVISIONAL": "Provisional",
+    "LABELSELECTOR": "레이블 선택기",
+    "RUNASUSER": "Run as User",
+    "SECURITYENHANCEDLINUX": "Security-Enhanced Linux",
+    "PRIVILEGED": "특권",
+    "FILESTORAGEGROUP": "파일스토리지 그룹",
+    "SUPPLEMENTAL GROUP": "Supplemental Group",
+    "NAMESPACESELECTOR": "네임스페이스 선택기",
+    "METERING": "미터링",
+    "ROLES": "롤",
+    "PUBLICIP": "공용 IP",
+    "STORAGE": "스토리지"
   },
   "RESOURCE": {
     "HOME": "홈",

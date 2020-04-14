@@ -80,18 +80,21 @@ const PipelineResourcesPage = props => {
 };
 PipelineResourcesPage.displayName = 'PipelineResourcesPage';
 export { PipelineResourcesPage };
-export const PipelineResourceDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'PipelineResource Details',
-        path: props.match.url,
-      })
-    }
-    menuActions={menuActions}
-    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
-  />
-);
+export const PipelineResourceDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'PipelineResource Details',
+          path: props.match.url,
+        })
+      }
+      menuActions={menuActions}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 PipelineResourceDetailsPage.displayName = 'PipelineResourceDetailsPage';

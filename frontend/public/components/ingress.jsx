@@ -137,7 +137,7 @@ const RulesRows = props => {
     return <div className="co-m-table-grid__body"> {rows} </div>;
   }
 
-  return <EmptyBox label="Rules" />;
+  return <EmptyBox label="Rule" />;
 };
 
 const Details = ({ obj: ingress }) => {
@@ -163,7 +163,10 @@ const Details = ({ obj: ingress }) => {
   );
 };
 
-const IngressesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(Details)), navFactory.editYaml()]} />;
+const IngressesDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(Details), t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;
+};
 const IngressesList = props => <List {...props} Header={IngressListHeader} Row={IngressListRow} />;
 const IngressesPage = props => <ListPage {...props} ListComponent={IngressesList} canCreate={true} kind="Ingress" />;
 
