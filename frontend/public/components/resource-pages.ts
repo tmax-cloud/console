@@ -80,7 +80,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesDetailsPage))
   .set(referenceForModel(VirtualMachineModel), () => import('./virtual-machine' /* webpackChunkName: "task" */).then(m => m.VirtualMachinesDetailsPage))
   .set(referenceForModel(VirtualMachineInstanceModel), () => import('./virtual-machine-instance' /* webpackChunkName: "task" */).then(m => m.VirtualMachineInstancesDetailsPage))
-  .set(referenceForModel(ServiceBrokerModel), () => import('./cluster-service-broker' /* webpackChunkName: "task" */).then(m => m.ClusterServiceBrokersDetailsPage))
+  .set(referenceForModel(ClusterServiceBrokerModel), () => import('./cluster-service-broker' /* webpackChunkName: "task" */).then(m => m.ClusterServiceBrokersDetailsPage))
   .set(referenceForModel(NamespaceClaimModel), () => import('./namespace-claim' /* webpackChunkName: "task" */).then(m => m.NamespaceClaimsDetailsPage))
   .set(referenceForModel(ResourceQuotaClaimModel), () => import('./resource-quota-claim' /* webpackChunkName: "task" */).then(m => m.ResourceQuotaClaimsDetailsPage))
   .set(referenceForModel(RoleBindingClaimModel), () => import('./role-binding-claim' /* webpackChunkName: "task" */).then(m => m.RoleBindingClaimsDetailsPage))
