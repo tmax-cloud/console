@@ -62,9 +62,17 @@
     "ROLE-CREATE_8": "핵심 API 그룹에서 노드 읽기 허용",
     "ROLE-CREATE_9": "This 'ClusterRole' is allowed to read the resource 'nodes'  in the core group (because a Node is cluster-scoped, this must be bound with a 'ClusterRoleBinding' to be effective).",
     "ROLE-CREATE_10": "'GET/POST' requests to non-resource endpoint and all subpaths",
-    "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective)."
+    "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective).",
+    "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다."
   },
   "CONTENT": {
+    "AUTHTYPE": "인증 유형",
+    "BASICAUTH": "기본 인증",
+    "SSHKEY": "SSH 키",
+    "GENERATE": "생성",
+    "WEBHOOKSECRETKEY": "웹훅 시크릿 키",
+    "REVISION": "Revision",
+    "URL": "Url",
     "PARAMETERS": "Parmeters",
     "SERVICEACCOUNTNAME": "Service Account Name",
     "FORROLEBINDING": "(RoleBinding의 경우)",
