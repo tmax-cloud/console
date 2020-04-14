@@ -62,9 +62,15 @@
     "ROLE-CREATE_8": "Allow reading Nodes in the core API groups",
     "ROLE-CREATE_9": "This 'ClusterRole' is allowed to read the resource 'nodes'  in the core group (because a Node is cluster-scoped, this must be bound with a 'ClusterRoleBinding' to be effective).",
     "ROLE-CREATE_10": "'GET/POST' requests to non-resource endpoint and all subpaths",
-    "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective)."
+    "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective).",
+    "SECRET_CREATE_0": "Value of the secret will be supplied when invoking the webhook."
   },
   "CONTENT": {
+    "AUTHTYPE": "Authentication Type",
+    "BASICAUTH": "Basic Authentication",
+    "SSHKEY": "SSH Key",
+    "GENERATE": "Generate",
+    "WEBHOOKSECRETKEY": "Webhook Secret Key",
     "REVISION": "Revision",
     "URL": "Url",
     "PARAMETERS": "Parmeters",
