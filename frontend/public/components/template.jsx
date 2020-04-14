@@ -77,12 +77,12 @@ TemplatesPage.displayName = 'TemplatesPage';
 export const TemplatesDetailsPage = props => (
   <DetailsPage
     {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Templates Details',
-        path: props.match.url,
-      })
-    }
+    // breadcrumbsFor={obj =>
+    //   breadcrumbsForOwnerRefs(obj).concat({
+    //     name: 'Templates Details',
+    //     path: props.match.url,
+    //   })
+    // }
     kind="Template"
     menuActions={menuActions}
     pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}

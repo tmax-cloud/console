@@ -109,12 +109,12 @@ export const VirtualMachinesDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
+      //     path: props.match.url,
+      //   })
+      // }
       kind="VirtualMachine"
       menuActions={menuActions}
       pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
