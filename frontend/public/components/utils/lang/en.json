@@ -210,6 +210,7 @@
     "ACTIVEPODS": "Active Pods",
     "FAILEDPODS": "Failed Pods",
     "DEADLINE": "Deadline",
+    "PODS": "Pods",
     "PARALLELISM": "Parallelism",
     "DESIREDCOMPLETIONS": "Desired Completions",
     "LASTSCHEDULETIME": "Last Schedule Time",
@@ -336,6 +337,7 @@
     "ROLEBINDING": "Role Binding",
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
+    "USERGROUP": "User Group",
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status"
   }

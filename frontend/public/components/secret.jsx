@@ -156,6 +156,9 @@ const SecretsPage = props => {
   return <ListPage ListComponent={SecretsList} canCreate={true} rowFilters={filters} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
 };
 
-const SecretsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(SecretDetails)), navFactory.editYaml()]} />;
+const SecretsDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(SecretDetails), t('CONTENT:OVERVIEW')), navFactory.editYaml()]} />;
+};
 
 export { SecretsList, SecretsPage, SecretsDetailsPage };

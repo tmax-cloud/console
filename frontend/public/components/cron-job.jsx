@@ -88,4 +88,7 @@ const Details = ({ obj: cronjob }) => {
 export const CronJobsList = props => <List {...props} Header={Header} Row={Row} />;
 export const CronJobsPage = props => <ListPage {...props} ListComponent={CronJobsList} kind={kind} canCreate={true} />;
 
-export const CronJobsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editYaml(), navFactory.events(ResourceEventStream)]} />;
+export const CronJobsDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))]} />;
+};

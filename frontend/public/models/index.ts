@@ -351,6 +351,20 @@ export const ReplicationControllerModel: K8sKind = {
   labelPlural: 'Replication Controllers',
 };
 
+export const UsergroupModel: K8sKind = {
+  kind: 'Usergroup',
+  namespaced: true,
+  label: 'Usergroup',
+  plural: 'usergroups',
+  apiVersion: 'apiextensions.k8s.io/v1beta1',
+  abbr: 'UG',
+  apiGroup: 'tmax.io',
+  labelPlural: 'UserGroups',
+  path: 'usergroups',
+  id: 'usergroup',
+  crd: false,
+};
+
 export const HorizontalPodAutoscalerModel: K8sKind = {
   label: 'Horizontal Pod Autoscaler',
   path: 'horizontalpodautoscalers',

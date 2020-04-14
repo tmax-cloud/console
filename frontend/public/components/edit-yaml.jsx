@@ -3,7 +3,7 @@ import * as React from 'react';
 import { safeLoad, safeDump } from 'js-yaml';
 import { saveAs } from 'file-saver';
 import { connect } from 'react-redux';
-
+import { ResourcePlural } from './utils/lang/resource-plural';
 import * as ace from 'brace';
 import 'brace/ext/searchbox';
 import 'brace/mode/yaml';
@@ -307,13 +307,13 @@ export const EditYAML = connect(stateToProps)(
       */
 
       const { error, success, stale } = this.state;
-      const { create, obj, showHeader = false } = this.props;
+      const { create, obj, showHeader = false, t } = this.props;
       const kind = obj.kind;
       const model = this.getModel(obj);
 
       return (
         <div>
-          {showHeader && <div className="yaml-editor-header">{`${create ? 'Create' : 'Edit'} ${_.get(model, 'label', kind)}`}</div>}
+          {showHeader && <div className="yaml-editor-header">{`${create ? t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(kind, t) }) : t('CONTENT:EDIT', { something: ResourcePlural(kind, t) })}`}</div>}
           <div className="co-p-has-sidebar">
             <div className="co-p-has-sidebar__body">
               <div className="yaml-editor" ref={r => (this.editor = r)} style={{ height: this.state.height }}>
@@ -340,29 +340,29 @@ export const EditYAML = connect(stateToProps)(
                       )}
                       {create && (
                         <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>
-                          Create
+                          {t('CONTENT:CREATE')}
                         </button>
                       )}
                       {(!create && (obj.kind === 'NamespaceClaim' || obj.kind === 'ResourceQuotaClaim' || obj.kind === 'RoleBindingClaim') && obj.status && obj.status.status !== 'Awaiting' && (
                         <button type="submit" className="btn btn-primary" id="save-changes" disabled={true} onClick={() => this.save()}>
-                          Save Changes
+                          {t('CONTENT:SAVECHANGES')}
                         </button>
                       )) ||
                         (!create && (
                           <button type="submit" className="btn btn-primary" id="save-changes" onClick={() => this.save()}>
-                            Save Changes
+                            {t('CONTENT:SAVECHANGES')}
                           </button>
                         ))}
                       {!create && (
                         <button type="submit" className="btn btn-default" id="reload-object" onClick={() => this.reload()}>
-                          Reload
+                          {t('CONTENT:RELOAD')}
                         </button>
                       )}
                       <button className="btn btn-default" id="cancel" onClick={() => this.onCancel()}>
-                        Cancel
+                        {t('CONTENT:CANCEL')}
                       </button>
                       <button type="submit" className="btn btn-default pull-right hidden-sm hidden-xs" onClick={() => this.download()}>
-                        <i className="fa fa-download"></i>&nbsp;Download
+                        <i className="fa fa-download"></i>&nbsp;{t('CONTENT:DOWNLOAD')}
                       </button>
                     </div>
                   </div>

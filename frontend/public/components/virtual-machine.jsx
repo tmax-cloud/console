@@ -101,19 +101,22 @@ VirtualMachinesPage.displayName = 'VirtualMachinesPage';
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
 
-export const VirtualMachinesDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'VirtualMachine Details',
-        path: props.match.url,
-      })
-    }
-    kind="VirtualMachine"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const VirtualMachinesDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: 'VirtualMachine Details',
+          path: props.match.url,
+        })
+      }
+      kind="VirtualMachine"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  );
+};
 
 VirtualMachinesDetailsPage.displayName = 'VirtualMachinesDetailsPage';

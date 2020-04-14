@@ -120,7 +120,7 @@ const LazyRoute = props => <Route {...props} component={componentProps => <Async
 
 function searchParam(key) {
   return new URLSearchParams(location.search).get(key);
-};
+}
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -135,7 +135,7 @@ class App extends React.PureComponent {
       // HDC Mode
       if (searchParam('at')) {
         window.sessionStorage.setItem('accessToken', searchParam('at'));
-        window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
+        window.sessionStorage.setItem('refreshToken', searchParam('rt'));
         // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
         // window.sessionStorage.setItem('role', userRole);
         this.props.history.push('/');
@@ -155,20 +155,24 @@ class App extends React.PureComponent {
       window.localStorage.removeItem('role');
     }
 
-    this.changeRole = () => this.changeRole_();
+    // this.changeRole = () => this.changeRole_();
     this.setLoading = () => this.setLoading_();
 
-    window.addEventListener('storage', function (evt) {
-      if (evt.key === 'forceLogout') {
-        window.sessionStorage.clear();
-      }
-    }, false);
+    window.addEventListener(
+      'storage',
+      function (evt) {
+        if (evt.key === 'forceLogout') {
+          window.sessionStorage.clear();
+        }
+      },
+      false,
+    );
   }
-  changeRole_() {
-    this.setState({
-      isAdmin: !this.state.isAdmin,
-    });
-  }
+  // changeRole_() {
+  //   this.setState({
+  //     isAdmin: !this.state.isAdmin,
+  //   });
+  // }
 
   setLoading_() {
     this.setState({
@@ -179,7 +183,7 @@ class App extends React.PureComponent {
   // componentDidMount() {
   //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
   //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
-  //       this.changeRole_();
+  //     this.changeRole_();
   //     }
   //   }
   // }
@@ -195,10 +199,7 @@ class App extends React.PureComponent {
     const { pathname } = props.location;
     store.dispatch(UIActions.setCurrentLocation(pathname));
     analyticsSvc.route(pathname);
-
   }
-
-  
 
   render() {
     return (
@@ -209,7 +210,7 @@ class App extends React.PureComponent {
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />
-          { this.state.isLoading && <Loading className='loading-box' />}
+          {this.state.isLoading && <Loading className="loading-box" />}
           <Switch>
             <Route path={['/all-namespaces', '/ns/:ns']} component={RedirectComponent} />
             <LazyRoute path="/status/all-namespaces" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
