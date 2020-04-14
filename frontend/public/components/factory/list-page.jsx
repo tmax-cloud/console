@@ -270,7 +270,7 @@ export const ListPage = props => {
       showTitle={showTitle}
       canCreate={props.canCreate}
       canExpand={props.canExpand}
-      createButtonText={createButtonText || t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${kind.toUpperCase()}`) })}
+      createButtonText={createButtonText || t('ADDITIONAL:CREATEBUTTON', { something: t(`CONTENT:${label}`) })}
       textFilter={props.textFilter}
       resources={resources}
       autoFocus={props.autoFocus}
