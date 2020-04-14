@@ -366,30 +366,30 @@ class EventStream extends SafetyFirst {
     if (noMatches && !resourceEventStream) {
       sysEventStatus = (
         <Box className="co-sysevent-stream__status-box-empty">
-          <div className="cos-status-box__title">No Matching Events</div>
+          <div className="cos-status-box__title">{t('STRING:EVENT_1')}</div>
           <div className="text-center cos-status-box__detail">
             {allCount}
-            {allCount >= maxMessages && '+'} events exist, but none match the current filter
+            {allCount >= maxMessages && '+'} {t('STRING:EVENT_2')}
           </div>
         </Box>
       );
     }
 
     if (error) {
-      statusBtnTxt = <span className="co-sysevent-stream__connection-error">Error connecting to event stream{_.isString(error) && `: ${error}`}</span>;
+      statusBtnTxt = <span className="co-sysevent-stream__connection-error">{t('STRING:EVENT_3')}{_.isString(error) && `: ${error}`}</span>;
       sysEventStatus = (
         <Box>
-          <div className="cos-status-box__title cos-error-title">Error Loading Events</div>
-          <div className="cos-status-box__detail text-center">An error occurred during event retrieval. Attempting to reconnect...</div>
+          <div className="cos-status-box__title cos-error-title">{t('STRING:EVENT_4')}</div>
+          <div className="cos-status-box__detail text-center">{t('STRING:EVENT_5')}</div>
         </Box>
       );
     } else if (loading) {
-      statusBtnTxt = <span>Loading events...</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_6')}</span>;
       sysEventStatus = <Loading />;
     } else if (active) {
-      statusBtnTxt = <span>Streaming events...</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_7')}</span>;
     } else {
-      statusBtnTxt = <span>Event stream is paused.</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_8')}</span>;
     }
 
     const klass = classNames('co-sysevent-stream__timeline', {
@@ -408,7 +408,7 @@ class EventStream extends SafetyFirst {
           <div className={klass}>
             <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
             <div className="co-sysevent-stream__timeline__end-message">
-              There are no events before <Timestamp timestamp={this.state.oldestTimestamp} />
+              {t('STRING:EVENT_9')}<Timestamp timestamp={this.state.oldestTimestamp} />
             </div>
           </div>
           {count > 0 && (
