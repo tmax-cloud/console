@@ -80,14 +80,6 @@ export const PipelineRunsPage = props => {
 };
 PipelineRunsPage.displayName = 'PipelineRunsPage';
 
-// export const TaskDetailsPage = props => {
-//   const pages = [
-//     navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
-
 export const PipelineRunDetailsPage = props => {
   const { t } = useTranslation();
   return (
