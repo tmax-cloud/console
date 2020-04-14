@@ -391,7 +391,7 @@ spec:
     resourceName: example-claim
     subjects:
     - kind: User
-      name: example@tmax.co.kr
+      name: example-tmax.co.kr
     roleRef:
       kind: ClusterRole
       name: namespace-user

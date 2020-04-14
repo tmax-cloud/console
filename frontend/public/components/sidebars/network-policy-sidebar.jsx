@@ -11,70 +11,75 @@ import * as webAllowProductionImg from '../../imgs/network-policy-samples/7-web-
 import { NetworkPolicyModel } from '../../models';
 import { referenceForModel } from '../../module/k8s';
 import { SampleYaml } from './resource-sidebar';
+import { useTranslation } from 'react-i18next';
 
-const samples = [
-  {
-    highlightText: 'Limit',
-    header: 'access to the current namespace',
-    img: denyOtherNamespacesImg,
-    details: 'Deny traffic from other namespaces while allowing all traffic from the namespaces the Pod is living in.',
-    templateName: 'deny-other-namespaces',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-  {
-    highlightText: 'Limit',
-    header: 'traffic to an application within the same namespace',
-    img: limitCertainAppImg,
-    details: 'Allow inbound traffic from only certain Pods. One typical use case is to restrict the connections to a database only to the specific applications.',
-    templateName: 'db-or-api-allow-app',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-  {
-    highlightText: 'Allow',
-    header: 'http and https ingress within the same namespace',
-    img: allowIngressImg,
-    details: 'Define ingress rules for specific port numbers of an application. The rule applies to all port numbers if not specified.',
-    templateName: 'api-allow-http-and-https',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-  {
-    highlightText: 'Deny',
-    header: 'all non-whitelisted traffic in the current namespace',
-    img: defaultDenyAllImg,
-    details: 'A fundamental policy by blocking all cross-pod traffics expect whitelisted ones through the other Network Policies being deployed.',
-    templateName: 'default-deny-all',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-  {
-    highlightText: 'Allow',
-    header: 'traffic from external clients',
-    img: webAllowExternalImg,
-    details: 'Allow external service from public Internet directly or through a Load Balancer to access the pod.',
-    templateName: 'web-allow-external',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-  {
-    highlightText: 'Allow',
-    header: 'traffic to an application from all namespaces',
-    img: webDbAllowAllNsImg,
-    details: 'One typical use case is for a common database which is used by deployments in different namespaces.',
-    templateName: 'web-db-allow-all-ns',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-  {
-    highlightText: 'Allow',
-    header: 'traffic from all pods in a particular namespace',
-    img: webAllowProductionImg,
-    details: 'Typical use case should be "only allow deployments in production namespaces to access the database" or "allow monitoring tools (in another namespace) to scrape metrics from current namespace."',
-    templateName: 'web-allow-production',
-    kind: referenceForModel(NetworkPolicyModel),
-  },
-];
 
-export const NetworkPolicySidebar = ({loadSampleYaml, downloadSampleYaml}) => <ol className="co-resource-sidebar-list">
-  {_.map(samples, (sample) => <SampleYaml
-    key={sample.templateName}
-    sample={sample}
-    loadSampleYaml={loadSampleYaml}
-    downloadSampleYaml={downloadSampleYaml} />)}
-</ol>;
+export const NetworkPolicySidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
+  const { t } = useTranslation();
+  const samples = [
+    {
+      highlightText: t('CONTENT:LIMIT'),
+      header: t('STRING:NETWORKPOLICY-CREATE_0'),
+      img: denyOtherNamespacesImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_1'),
+      templateName: 'deny-other-namespaces',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+    {
+      highlightText: t('CONTENT:LIMIT'),
+      header: t('STRING:NETWORKPOLICY-CREATE_2'),
+      img: limitCertainAppImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_3'),
+      templateName: 'db-or-api-allow-app',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+    {
+      highlightText: t('CONTENT:ALLOW'),
+      header: t('STRING:NETWORKPOLICY-CREATE_4'),
+      img: allowIngressImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_5'),
+      templateName: 'api-allow-http-and-https',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+    {
+      highlightText: t('CONTENT:DENY'),
+      header: t('STRING:NETWORKPOLICY-CREATE_6'),
+      img: defaultDenyAllImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_7'),
+      templateName: 'default-deny-all',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+    {
+      highlightText: t('CONTENT:ALLOW'),
+      header: t('STRING:NETWORKPOLICY-CREATE_8'),
+      img: webAllowExternalImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_9'),
+      templateName: 'web-allow-external',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+    {
+      highlightText: t('CONTENT:ALLOW'),
+      header: t('STRING:NETWORKPOLICY-CREATE_10'),
+      img: webDbAllowAllNsImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_11'),
+      templateName: 'web-db-allow-all-ns',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+    {
+      highlightText: t('CONTENT:ALLOW'),
+      header: t('STRING:NETWORKPOLICY-CREATE_12'),
+      img: webAllowProductionImg,
+      details: t('STRING:NETWORKPOLICY-CREATE_13'),
+      templateName: 'web-allow-production',
+      kind: referenceForModel(NetworkPolicyModel),
+    },
+  ];
+
+  return <ol className="co-resource-sidebar-list">
+    {_.map(samples, (sample) => <SampleYaml
+      key={sample.templateName}
+      sample={sample}
+      loadSampleYaml={loadSampleYaml}
+      downloadSampleYaml={downloadSampleYaml} />)}
+  </ol>
+};

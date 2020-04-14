@@ -8,6 +8,7 @@ import { modelFor, resourceURL } from '../../module/k8s';
 import { SafetyFirst } from '../safety-first';
 import { WSFactory } from '../../module/ws-factory';
 import { LineBuffer } from './line-buffer';
+import { useTranslation } from 'react-i18next';
 
 export const STREAM_EOF = 'eof';
 export const STREAM_LOADING = 'loading';
@@ -20,32 +21,72 @@ export const LOG_SOURCE_TERMINATED = 'terminated';
 export const LOG_SOURCE_WAITING = 'waiting';
 
 // Messages to display for corresponding log status
-const streamStatusMessages = {
-  [STREAM_EOF]: 'Log stream ended.',
-  [STREAM_LOADING]: 'Loading log...',
-  [STREAM_PAUSED]: 'Log stream paused.',
-  [STREAM_ACTIVE]: 'Log streaming...'
-};
+// const streamStatusMessages = {
+//   [STREAM_EOF]: 'Log stream ended.',
+//   [STREAM_LOADING]: 'Loading log...',
+//   [STREAM_PAUSED]: 'Log stream paused.',
+//   [STREAM_ACTIVE]: 'Log streaming...',
+// };
 
 // Component for log stream controls
-const LogControls = ({dropdown, onDownload, status, toggleStreaming}) => {
-  return <div className="co-toolbar">
-    <div className="co-toolbar__group co-toolbar__group--left">
-      <div className="co-toolbar__item">
-        { status === STREAM_LOADING && <React.Fragment><LoadingInline />&nbsp;</React.Fragment> }
-        { [STREAM_ACTIVE, STREAM_PAUSED].includes(status) && <TogglePlay active={status === STREAM_ACTIVE} onClick={toggleStreaming} />}
-        {streamStatusMessages[status]}
+const LogControls = ({ dropdown, onDownload, status, toggleStreaming }) => {
+  const { t } = useTranslation();
+  const streamStatusMessages = {
+    [STREAM_EOF]: t('CONTENT:LOGSTEAMENDED'),
+    [STREAM_LOADING]: t('CONTENT:LOADINGLOG'),
+    [STREAM_PAUSED]: t('CONTENT:LOGSTREAMPAUSED'),
+    [STREAM_ACTIVE]: t('CONTENT:LOGSTREAMING'),
+  };
+  return (
+    <div className="co-toolbar">
+      <div className="co-toolbar__group co-toolbar__group--left">
+        <div className="co-toolbar__item">
+          {status === STREAM_LOADING && (
+            <React.Fragment>
+              <LoadingInline />
+              &nbsp;
+            </React.Fragment>
+          )}
+          {[STREAM_ACTIVE, STREAM_PAUSED].includes(status) && <TogglePlay active={status === STREAM_ACTIVE} onClick={toggleStreaming} />}
+          {streamStatusMessages[status]}
+        </div>
+        {dropdown && <div className="co-toolbar__item">{dropdown}</div>}
       </div>
-      {dropdown && <div className="co-toolbar__item">{dropdown}</div>}
-    </div>
-    <div className="co-toolbar__group co-toolbar__group--right">
-      <div className="co-toolbar__item">
-        <button className="btn btn-default" onClick={onDownload}>
-          <i className="fa fa-download" aria-hidden="true"></i>&nbsp;Download
-        </button>
+      <div className="co-toolbar__group co-toolbar__group--right">
+        <div className="co-toolbar__item">
+          <button className="btn btn-default" onClick={onDownload}>
+            <i className="fa fa-download" aria-hidden="true"></i>&nbsp;{t('CONTENT:DOWNLOAD')}
+          </button>
+        </div>
       </div>
     </div>
-  </div>;
+  );
+};
+
+const LogError = ({ restartStream }) => {
+  const { t } = useTranslation();
+  return (
+    <p className="alert alert-danger">
+      <span className="pficon pficon-error-circle-o" aria-hidden="true"></span>
+      {t('STRING:LOG_TAB_0')}
+      <button className="btn btn-link" onClick={restartStream}>
+        {t('CONTENT:RETRY')}
+      </button>
+    </p>
+  );
+};
+
+const LogStale = ({ restartStream, kind }) => {
+  const { t } = useTranslation();
+  return (
+    <p className="alert alert-info">
+      <span className="pficon pficon-info" aria-hidden="true"></span>
+      {t('ADDITIONAL:LOG_TAB_0', { something: kind })}
+      <button className="btn btn-link" onClick={restartStream}>
+        {t('CONTENT:REFRESH')}
+      </button>
+    </p>
+  );
 };
 
 // Resource agnostic log component
@@ -67,7 +108,7 @@ export class ResourceLog extends SafetyFirst {
       linesBehind: 0,
       resourceStatus: LOG_SOURCE_WAITING,
       stale: false,
-      status: STREAM_LOADING
+      status: STREAM_LOADING,
     };
   }
 
@@ -105,9 +146,9 @@ export class ResourceLog extends SafetyFirst {
   }
 
   // Download currently displayed log content
-  _download () {
-    const {resourceName, containerName} = this.props;
-    const blob = this._buffer.getBlob({type: 'text/plain;charset=utf-8'});
+  _download() {
+    const { resourceName, containerName } = this.props;
+    const blob = this._buffer.getBlob({ type: 'text/plain;charset=utf-8' });
     let filename = resourceName;
     if (containerName) {
       filename = `${filename}-${containerName}`;
@@ -116,48 +157,51 @@ export class ResourceLog extends SafetyFirst {
   }
 
   // Handler for websocket onclose event
-  _onClose(){
+  _onClose() {
     this.setState({ status: STREAM_EOF });
   }
 
   // Handler for websocket onerror event
-  _onError(){
+  _onError() {
     this.setState({
-      error: true
+      error: true,
     });
   }
 
   // Handler for websocket onmessage event
-  _onMessage(msg){
+  _onMessage(msg) {
     const { linesBehind, status } = this.state;
-    if (msg){
+    if (msg) {
       const text = Base64.decode(msg);
       const linesAdded = this._buffer.ingest(text);
       this.setState({
         linesBehind: status === STREAM_PAUSED ? linesBehind + linesAdded : linesBehind,
-        lines: this._buffer.getLines()
+        lines: this._buffer.getLines(),
       });
     }
   }
 
   // Handler for websocket onopen event
-  _onOpen(){
+  _onOpen() {
     this._buffer.clear();
     this._updateStatus(STREAM_ACTIVE);
   }
 
   // Destroy and reinitialize websocket connection
   _restartStream() {
-    this.setState({
-      error: false,
-      lines: [],
-      linesBehind: 0,
-      stale: false,
-      status: STREAM_LOADING
-    }, () => {
-      this._wsDestroy();
-      this._wsInit(this.props);
-    });
+    this.setState(
+      {
+        error: false,
+        lines: [],
+        linesBehind: 0,
+        stale: false,
+        status: STREAM_LOADING,
+      },
+      () => {
+        this._wsDestroy();
+        this._wsInit(this.props);
+      },
+    );
   }
 
   // Toggle streaming/paused status
@@ -168,8 +212,8 @@ export class ResourceLog extends SafetyFirst {
 
   // Updates log status
   _updateStatus(newStatus) {
-    const {status} = this.state;
-    let newState = {status: newStatus};
+    const { status } = this.state;
+    let newState = { status: newStatus };
 
     // Reset linesBehind when transitioning out of paused state
     if (status !== STREAM_ACTIVE && newStatus === STREAM_ACTIVE) {
@@ -184,7 +228,7 @@ export class ResourceLog extends SafetyFirst {
   }
 
   // Initialize websocket connection and wire up handlers
-  _wsInit ({kind, namespace, resourceName, containerName, bufferSize}) {
+  _wsInit({ kind, namespace, resourceName, containerName, bufferSize }) {
     if ([LOG_SOURCE_RUNNING, LOG_SOURCE_TERMINATED, LOG_SOURCE_RESTARTING].includes(this.state.resourceStatus)) {
       const urlOpts = {
         ns: namespace,
@@ -193,62 +237,57 @@ export class ResourceLog extends SafetyFirst {
         queryParams: {
           container: containerName || '',
           follow: 'true',
-          tailLines: bufferSize
-        }
+          tailLines: bufferSize,
+        },
       };
       const watchURL = resourceURL(modelFor(kind), urlOpts);
       const wsOpts = {
         host: 'auto',
         path: watchURL,
-        subprotocols: ['base64.binary.k8s.io']
+        subprotocols: ['base64.binary.k8s.io'],
       };
 
-      this.ws = new WSFactory(watchURL, wsOpts)
-        .onclose(this._onClose)
-        .onerror(this._onError)
-        .onmessage(this._onMessage)
-        .onopen(this._onOpen);
+      this.ws = new WSFactory(watchURL, wsOpts).onclose(this._onClose).onerror(this._onError).onmessage(this._onMessage).onopen(this._onOpen);
     }
   }
 
   render() {
-    const {dropdown, kind, bufferSize} = this.props;
-    const {error, lines, linesBehind, stale, status} = this.state;
+    const { dropdown, kind, bufferSize } = this.props;
+    const { error, lines, linesBehind, stale, status } = this.state;
     const bufferFull = lines.length === bufferSize;
 
     // TODO create alert component or use pf-react alerts here.
-    return <React.Fragment>
-      {error && <p className="alert alert-danger">
-        <span className="pficon pficon-error-circle-o" aria-hidden="true"></span>
-        An error occured while retrieving the requested logs.
-        <button className="btn btn-link" onClick={this._restartStream} >
-          Retry
-        </button>
-      </p>}
-      {stale && <p className="alert alert-info">
-        <span className="pficon pficon-info" aria-hidden="true"></span>
-        The logs for this {kind} may be stale.
-        <button className="btn btn-link" onClick={this._restartStream} >
-          Refresh
-        </button>
-      </p>}
-      <LogControls
-        dropdown={dropdown}
-        status={status}
-        toggleStreaming={this._toggleStreaming}
-        onDownload={this._download} />
-      <LogWindow
-        lines={lines}
-        linesBehind={linesBehind}
-        bufferFull={bufferFull}
-        status={status}
-        updateStatus={this._updateStatus} />
-    </React.Fragment>;
+    return (
+      <React.Fragment>
+        {error && (
+          // <p className="alert alert-danger">
+          //   <span className="pficon pficon-error-circle-o" aria-hidden="true"></span>
+          //   An error occured while retrieving the requested logs.
+          //   <button className="btn btn-link" onClick={this._restartStream}>
+          //     Retry
+          //   </button>
+          // </p>
+          <LogError restartStream={this._restartStream} />
+        )}
+        {stale && (
+          // <p className="alert alert-info">
+          //   <span className="pficon pficon-info" aria-hidden="true"></span>
+          //   The logs for this {kind} may be stale.
+          //   <button className="btn btn-link" onClick={this._restartStream}>
+          //     Refresh
+          //   </button>
+          // </p>
+          <LogStale restartStream={(this._restartStream, kind)} />
+        )}
+        <LogControls dropdown={dropdown} status={status} toggleStreaming={this._toggleStreaming} onDownload={this._download} />
+        <LogWindow lines={lines} linesBehind={linesBehind} bufferFull={bufferFull} status={status} updateStatus={this._updateStatus} />
+      </React.Fragment>
+    );
   }
 }
 
 ResourceLog.defaultProps = {
-  bufferSize: 1000
+  bufferSize: 1000,
 };
 
 ResourceLog.propTypes = {
