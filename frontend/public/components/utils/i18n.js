@@ -23,6 +23,7 @@ i18n
       ko: {
         PLURAL: ko.PLURAL,
         ADDITIONAL: ko.ADDITIONAL,
+        VALIDATION: ko.VALIDATION,
         RESOURCE: ko.RESOURCE,
         STRING: ko.STRING,
         CONTENT: ko.CONTENT,
@@ -30,6 +31,7 @@ i18n
       en: {
         PLURAL: en.PLURAL,
         ADDITIONAL: en.ADDITIONAL,
+        VALIDATION: ko.VALIDATION,
         RESOURCE: en.RESOURCE,
         STRING: en.STRING,
         CONTENT: en.CONTENT,

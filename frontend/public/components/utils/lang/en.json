@@ -21,6 +21,9 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
     "LOG_TAB_0": "The logs for this {{something1}} may be stale."
   },
+  "VALIDATION": {
+    "LABEL_FORM": "Lables must be 'key=value' form."
+  },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
     "SERVICE_DETAIL_0": "Accessible outside the cluster",
@@ -59,6 +62,8 @@
     "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective)."
   },
   "CONTENT": {
+    "PARAMETERS": "Parmeters",
+    "SERVICEACCOUNTNAME": "Service Account Name",
     "FORROLEBINDING": "(for RoleBinding)",
     "FORCLUSTERROLEBINDING": "(for ClusterRoleBinding)",
     "DENY": "Deny",

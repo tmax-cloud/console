@@ -22,6 +22,9 @@
     "STATUSBOX_0": "새로운 데이터를 가져 오는 시간이 초과되었습니다. 아래 데이터는 오래되었습니다.",
     "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
   },
+  "VALIDATION": {
+    "LABEL_FORM": "Lables must be 'key=value' form."
+  },
   "STRING": {
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
     "SERVICE_DETAIL_0": "클러스터 외부에서 액세스 가능",
@@ -59,6 +62,8 @@
     "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective)."
   },
   "CONTENT": {
+    "PARAMETERS": "Parmeters",
+    "SERVICEACCOUNTNAME": "Service Account Name",
     "FORROLEBINDING": "(RoleBinding의 경우)",
     "FORCLUSTERROLEBINDING": "(ClusterRoleBinding의 경우)",
     "DENY": "거부",
