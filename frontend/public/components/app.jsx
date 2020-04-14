@@ -126,11 +126,6 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isAdmin: true,
-      isLoading: false,
-    };
-
     if (window.SERVER_FLAGS.HDCModeFlag && !window.sessionStorage.getItem('accessToken')) {
       // HDC Mode
       if (searchParam('at')) {
@@ -146,6 +141,13 @@ class App extends React.PureComponent {
         return;
       }
     }
+
+    this.state = {
+      isAdmin: true,
+      isLoading: false,
+    };
+
+    
 
     // 임시 로직
     if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
