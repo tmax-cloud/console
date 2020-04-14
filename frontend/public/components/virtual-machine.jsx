@@ -108,7 +108,7 @@ export const VirtualMachinesDetailsPage = props => {
       {...props}
       breadcrumbsFor={obj =>
         breadcrumbsForOwnerRefs(obj).concat({
-          name: 'VirtualMachine Details',
+          name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
           path: props.match.url,
         })
       }
