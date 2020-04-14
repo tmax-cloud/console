@@ -23,7 +23,9 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}}는 {{something2}} 보다 큼",
     "LOGSTALE": "The logs for this {{something}} may be stale.",
     "STATUSBOX_0": "새로운 데이터를 가져 오는 시간이 초과되었습니다. 아래 데이터는 오래되었습니다.",
-    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
+    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in",
+    "SAVE": "{{something}} 저장",
+    "FOR": "{{something1}} for {{something2}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form."
@@ -73,7 +75,8 @@
     "EVENT_6": "Loading events...",
     "EVENT_7": "Streaming events...",
     "EVENT_8": "Event stream is paused.",
-    "EVENT_9": "There are no events before"
+    "EVENT_9": "There are no events before",
+    "LABLE-EDIT_0": "Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels."
   },
   "CONTENT": {
     "GENERATEDFROM": "Generated from",
