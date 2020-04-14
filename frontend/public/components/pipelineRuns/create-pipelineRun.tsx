@@ -333,7 +333,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         let paramDivs = paramList.map(cur => {
             return <ul>
                 <SecondSection label={cur.name} id={cur.name}>
-                    <input className="form-control" type="text" placeholder="value" id={cur.name} onChange={this.onParamChanged} required />
+                    <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={cur.name} onChange={this.onParamChanged} required />
                 </SecondSection>
             </ul>
         });

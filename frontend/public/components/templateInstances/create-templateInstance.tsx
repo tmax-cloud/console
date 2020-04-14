@@ -229,8 +229,6 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     </div >;
   }
 };
-
-
 class SourceSecretForm extends React.Component<SourceSecretFormProps> {
   constructor(props) {
     super(props);
