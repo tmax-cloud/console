@@ -9,6 +9,9 @@
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "{{something}} 생성",
+    "DELETE": "{{something}} 삭제",
+    "VIEW": "{{something}} 보기",
+    "EDIT": "{{something}} 수정",
     "STATUSOF": "{{something}} 상태",
     "EMPTYBOX": "{{something}} 찾을 수 없음",
     "OVERVIEWTITLE": "{{something}} 개요",
@@ -319,7 +322,9 @@
     "STORAGE": "스토리지",
     "CONNECTINGTO": "연결",
     "EXPAND": "확장",
-    "DETAILS": "상세정보"
+    "DETAILS": "상세정보",
+    "DELETE": "삭제",
+    "COUNT": "Count"
   },
   "RESOURCE": {
     "HOME": "홈",
