@@ -142,7 +142,7 @@ class App extends React.PureComponent {
         this.props.history.go(0);
       } else {
         // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-        window.location.href = 'http://192.168.8.36/tmax-cloud/#!/home';
+        window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '/#!/sign-in';
         return;
       }
     }
@@ -206,7 +206,7 @@ class App extends React.PureComponent {
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <Masthead setLoading={this.setLoading} />
-        <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} />
+        <Nav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />
