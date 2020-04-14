@@ -142,7 +142,7 @@ class App extends React.PureComponent {
         this.props.history.go(0);
       } else {
         // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-        window.location.href = 'http://192.168.8.36/tmax-cloud/#!/home';
+        window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '/#!/sign-in';
         return;
       }
     }
@@ -176,13 +176,13 @@ class App extends React.PureComponent {
     });
   }
 
-  componentDidMount() {
-    if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
-      if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
-        this.changeRole_();
-      }
-    }
-  }
+  // componentDidMount() {
+  //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
+  //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
+  //       this.changeRole_();
+  //     }
+  //   }
+  // }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
@@ -205,7 +205,7 @@ class App extends React.PureComponent {
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <Masthead setLoading={this.setLoading} />
-        <Nav isAdmin={this.state.isAdmin} changeRole={this.changeRole} />
+        <Nav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />
