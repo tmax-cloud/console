@@ -63,9 +63,21 @@
     "ROLE-CREATE_9": "This 'ClusterRole' is allowed to read the resource 'nodes'  in the core group (because a Node is cluster-scoped, this must be bound with a 'ClusterRoleBinding' to be effective).",
     "ROLE-CREATE_10": "'GET/POST' requests to non-resource endpoint and all subpaths",
     "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective).",
-    "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다."
+    "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다.",
+    "EVENT_0": "No Events in the past hour",
+    "EVENT_1": "No Matching Events",
+    "EVENT_2": "events exist, but none match the current filter",
+    "EVENT_3": "Error connecting to event stream",
+    "EVENT_4": "Error Loading Events",
+    "EVENT_5": "An error occurred during event retrieval. Attempting to reconnect...",
+    "EVENT_6": "Loading events...",
+    "EVENT_7": "Streaming events...",
+    "EVENT_8": "Event stream is paused.",
+    "EVENT_9": "There are no events before"
   },
   "CONTENT": {
+    "GENERATEDFROM": "Generated from",
+    "TIMESINTHELAST": "times in the last",
     "SELECTOR": "선택기",
     "LOADBALANCER": "로드밸런서",
     "AUTHTYPE": "인증 유형",

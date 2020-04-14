@@ -17,6 +17,8 @@ import { WSFactory } from '../module/ws-factory';
 import { ResourceListDropdown } from './resource-dropdown';
 import { connectToFlags, FLAGS, flagPending } from '../features';
 import { OpenShiftGettingStarted } from './start-guide';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 
 const maxMessages = 500;
 const flushInterval = 500;
