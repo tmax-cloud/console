@@ -103,8 +103,8 @@ TemplateInstanceList.displayName = TemplateInstanceList;
 const TemplateInstancesPage = props => {
   const { t } = useTranslation();
   const createItems = {
-    form: 'Form Editor',
-    yaml: 'YAML Editor',
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
   };
 
   const createProps = {
