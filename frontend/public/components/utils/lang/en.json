@@ -9,6 +9,9 @@
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "Create {{something}}",
+    "DELETE": "Delete {{something}}",
+    "VIEW": "View {{something}}",
+    "EDIT": "Edit {{something}}",
     "STATUSOF": "Status of {{something}}",
     "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} Overview",
@@ -339,7 +342,9 @@
     "LOGSTREAMING": "Log streaming...",
     "CONNECTINGTO": "Connecting to",
     "EXPAND": "Expand",
-    "DETAILS": "Details"
+    "DETAILS": "Details",
+    "DELETE": "Delete",
+    "COUNT": "Count"
   },
   "RESOURCE": {
     "HOME": "Home",
