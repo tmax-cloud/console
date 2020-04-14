@@ -23,7 +23,9 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}}는 {{something2}} 보다 큼",
     "LOGSTALE": "The logs for this {{something}} may be stale.",
     "STATUSBOX_0": "새로운 데이터를 가져 오는 시간이 초과되었습니다. 아래 데이터는 오래되었습니다.",
-    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
+    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in",
+    "SAVE": "{{something}} 저장",
+    "FOR": "{{something1}} for {{something2}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form."
@@ -63,7 +65,8 @@
     "ROLE-CREATE_9": "This 'ClusterRole' is allowed to read the resource 'nodes'  in the core group (because a Node is cluster-scoped, this must be bound with a 'ClusterRoleBinding' to be effective).",
     "ROLE-CREATE_10": "'GET/POST' requests to non-resource endpoint and all subpaths",
     "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective).",
-    "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다."
+    "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다.",
+    "LABLE-EDIT_0": "Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels."
   },
   "CONTENT": {
     "AUTHTYPE": "인증 유형",
