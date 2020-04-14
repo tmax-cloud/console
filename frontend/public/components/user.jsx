@@ -7,6 +7,8 @@ import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
+
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const UserHeader = props => {
@@ -40,10 +42,11 @@ const UserRow = () =>
 
 const DetailsForKind = kind =>
   function DetailsForKind_({ obj }) {
+    const { t } = useTranslation();
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={`${kindForReference(kind)} Overview`} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('USER', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
@@ -58,22 +61,22 @@ export const UserList = props => {
 };
 UserList.displayName = UserList;
 
-export const UsersPage = props => <ListPage {...props} ListComponent={UserList} canCreate={true} kind="User" />;
+export const UsersPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
+};
 UsersPage.displayName = 'UsersPage';
 
-export const UsersDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'User Details',
-        path: props.match.url,
-      })
-    }
-    kind="User"
-    menuActions={menuActions}
-    pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
-  />
-);
+export const UsersDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind="User"
+      menuActions={menuActions}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  )
+};
 
 UsersDetailsPage.displayName = 'UsersDetailsPage';

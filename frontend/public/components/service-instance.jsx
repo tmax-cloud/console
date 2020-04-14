@@ -4,6 +4,7 @@ import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const ServiceInstanceHeader = props => {
@@ -44,31 +45,13 @@ const ServiceInstanceRow = () =>
       </div>
     );
   };
-
-// const DetailsForKind = kind =>
-//   function DetailsForKind_({ obj }) {
-//     return (
-//       <React.Fragment>
-//         <div className="co-m-pane__body">
-//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
-//           <ResourceSummary
-//             resource={obj}
-//             podSelector="spec.podSelector"
-//             showNodeSelector={false}
-//           />
-//         </div>
-//       </React.Fragment>
-//     );
-//   };
-
 const Details = ({ obj: clusterserviceinstance }) => {
   const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
-
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('clusterserviceinstance', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('SERVICEINSTANCE', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={clusterserviceinstance} />
@@ -102,9 +85,10 @@ export const ServiceInstanceList = props => {
 ServiceInstanceList.displayName = ServiceInstanceList;
 
 export const ServiceInstancesPage = props => {
+  const { t } = useTranslation();
   const createItems = {
-    form: 'Form Editor',
-    yaml: 'YAML Editor',
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
   };
   const createProps = {
     items: createItems,
@@ -116,15 +100,15 @@ export const ServiceInstancesPage = props => {
       ListComponent={ServiceInstanceList}
       canCreate={true}
       createProps={createProps}
-    // FIXME
-    // canCreate={props.canCreate || _.get(kindObj(props.kind), 'crd')}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })}
     />
   );
 };
 ServiceInstancesPage.displayName = 'ServiceInstancesPage';
 
 export const ServiceInstancesDetailsPage = props => {
-  const pages = [navFactory.details(Details), navFactory.editYaml()];
+  const { t } = useTranslation();
+  const pages = [navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()];
   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 };
 

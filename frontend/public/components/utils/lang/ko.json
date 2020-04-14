@@ -69,6 +69,8 @@
     "LABLE-EDIT_0": "Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels."
   },
   "CONTENT": {
+    "SELECTOR": "선택기",
+    "LOADBALANCER": "로드밸런서",
     "AUTHTYPE": "인증 유형",
     "BASICAUTH": "기본 인증",
     "SSHKEY": "SSH 키",
@@ -153,6 +155,7 @@
     "RESOURCEUSAGE": "리소스 사용량",
     "CPUSHARES": "CPU 점유율",
     "RAM": "RAM",
+    "CPU": "CPU",
     "MEMORYUSAGEBYPOD(TOP10)": "파드 별 메모리 사용량 (상위 10)",
     "NODENAME": "노드 이름",
     "EXTERNALID": "외부 ID",
@@ -354,7 +357,8 @@
     "DETAILS": "상세정보",
     "DELETE": "삭제",
     "COUNT": "Count",
-    "PODS": "파드"
+    "PODS": "파드",
+    "RULES": "룰"
   },
   "RESOURCE": {
     "HOME": "홈",

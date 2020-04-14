@@ -11,6 +11,8 @@ import { SecretsPage } from './secret';
 import { saveAs } from 'file-saver';
 import { errorModal } from './modals';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
+
 const KubeConfigify = (kind, sa) => ({
   label: 'Download kubeconfig file',
   weight: 200,
@@ -103,7 +105,7 @@ const Details = ({ obj: serviceaccount }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text="Service Account Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('SERVICEACCOUNT', t) })} />
         <ResourceSummary resource={serviceaccount} showPodSelector={false} showNodeSelector={false} />
       </div>
       <SectionHeading text={t('CONTENT:SECRET')} style={{ marginLeft: '30px', marginTop: '30px', marginBottom: '-20px' }} />
@@ -112,11 +114,17 @@ const Details = ({ obj: serviceaccount }) => {
   );
 };
 
-const ServiceAccountsDetailsPage = props => <DetailsPage
-  {...props}
-  menuActions={menuActions}
-  pages={[navFactory.details(Details), navFactory.editYaml()]}
-/>;
+const ServiceAccountsDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage
+    {...props}
+    menuActions={menuActions}
+    pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+  />
+};
 const ServiceAccountsList = props => <List {...props} Header={Header} Row={ServiceAccountRow} />;
-const ServiceAccountsPage = props => <ListPage ListComponent={ServiceAccountsList} {...props} canCreate={true} />;
+const ServiceAccountsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage ListComponent={ServiceAccountsList} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} />
+};
 export { ServiceAccountsList, ServiceAccountsPage, ServiceAccountsDetailsPage };

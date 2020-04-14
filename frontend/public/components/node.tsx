@@ -10,6 +10,8 @@ import { Line, requirePrometheus } from './graphs';
 import { NodeModel } from '../models';
 import { CamelCaseWrap } from './utils/camel-case-wrap';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
+
 const MarkAsUnschedulable = (kind, obj) => ({
   label: 'Mark as Unschedulable',
   hidden: _.get(obj, 'spec.unschedulable'),
@@ -141,26 +143,26 @@ const NodeGraphs = requirePrometheus(({ node }) => {
   const ipQuery = nodeIp && `{instance=~'.*${nodeIp.address}.*'}`;
   const memoryLimit = units.dehumanize(node.status.allocatable.memory, 'binaryBytesWithoutB').value;
   const integerLimit = input => parseInt(input, 10);
-
+  const { t } = useTranslation();
   return <React.Fragment>
     <div className="row">
       <div className="col-md-4">
-        <Line title="RAM" query={ipQuery && `node_memory_Active${ipQuery}`} units="binaryBytes" limit={memoryLimit} />
+        <Line title={t('CONTENT:RAM')} query={ipQuery && `node_memory_Active${ipQuery}`} units="binaryBytes" limit={memoryLimit} />
       </div>
       <div className="col-md-4">
-        <Line title="CPU" query={ipQuery && `instance:node_cpu:rate:sum${ipQuery}`} units="numeric" limit={integerLimit(node.status.allocatable.cpu)} />
+        <Line title={t('CONTENT:CPU')} query={ipQuery && `instance:node_cpu:rate:sum${ipQuery}`} units="numeric" limit={integerLimit(node.status.allocatable.cpu)} />
       </div>
       <div className="col-md-4">
-        <Line title="Number of Pods" query={ipQuery && `kubelet_running_pod_count${ipQuery}`} units="numeric" limit={integerLimit(node.status.allocatable.pods)} />
+        <Line title={t('CONTENT:NUMBEROFPODS')} query={ipQuery && `kubelet_running_pod_count${ipQuery}`} units="numeric" limit={integerLimit(node.status.allocatable.pods)} />
       </div>
       <div className="col-md-4">
-        <Line title="Network In" query={ipQuery && `instance:node_network_receive_bytes:rate:sum${ipQuery}`} units="decimalBytes" />
+        <Line title={t('CONTENT:NETWORKIN')} query={ipQuery && `instance:node_network_receive_bytes:rate:sum${ipQuery}`} units="decimalBytes" />
       </div>
       <div className="col-md-4">
-        <Line title="Network Out" query={ipQuery && `instance:node_network_transmit_bytes:rate:sum${ipQuery}`} units="decimalBytes" />
+        <Line title={t('CONTENT:NETWORKOUT')} query={ipQuery && `instance:node_network_transmit_bytes:rate:sum${ipQuery}`} units="decimalBytes" />
       </div>
       <div className="col-md-4">
-        <Line title="Filesystem" query={ipQuery && `instance:node_filesystem_usage:sum${ipQuery}`} units="decimalBytes" />
+        <Line title={t('CONTENT:FILESYSTEM')} query={ipQuery && `instance:node_filesystem_usage:sum${ipQuery}`} units="decimalBytes" />
       </div>
     </div>
 
@@ -172,7 +174,7 @@ const Details = ({ obj: node }) => {
   const { t } = useTranslation();
   return <React.Fragment>
     <div className="co-m-pane__body">
-      <SectionHeading text="Node Overview" />
+      <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('NODE', t) })} />
       <NodeGraphs node={node} />
       <div className="row">
         <div className="col-md-6 col-xs-12">
@@ -238,7 +240,7 @@ const Details = ({ obj: node }) => {
     </div>}
 
     <div className="co-m-pane__body">
-      <SectionHeading text="Node Conditions" />
+      <SectionHeading text={t('CONTENT:NODECONDITIONS')} />
       <div className="co-table-container">
         <table className="table">
           <thead>
@@ -264,7 +266,7 @@ const Details = ({ obj: node }) => {
     </div>
 
     <div className="co-m-pane__body">
-      <SectionHeading text="Images" />
+      <SectionHeading text={t('CONTENT:IMAGES')} />
       <div className="co-table-container">
         <table className="table">
           <thead>
@@ -287,14 +289,17 @@ const Details = ({ obj: node }) => {
 
 const { details, editYaml, events, pods } = navFactory;
 
-const pages = [
-  details(Details),
-  editYaml(),
-  pods(({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />),
-  events(ResourceEventStream),
-];
-export const NodesDetailsPage = props => <DetailsPage
-  {...props}
-  menuActions={menuActions}
-  pages={pages}
-/>;
+export const NodesDetailsPage = props => {
+  const { t } = useTranslation();
+  const pages = [
+    details(Details, t('CONTENT:OVERVIEW')),
+    editYaml(),
+    pods(t('CONTENT:PODS'), ({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />),
+    events(ResourceEventStream, t('CONTENT:EVENTS')),
+  ];
+  return <DetailsPage
+    {...props}
+    menuActions={menuActions}
+    pages={pages}
+  />
+};

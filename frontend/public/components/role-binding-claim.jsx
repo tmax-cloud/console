@@ -6,6 +6,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 
 const RoleBindingClaimHeader = props => {
@@ -51,7 +52,7 @@ const Details = ({ obj: rolebindingclaim }) => {
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ROLEBINDINGCLAIM', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={rolebindingclaim} />
@@ -84,22 +85,22 @@ export const RoleBindingClaimList = props => {
 };
 RoleBindingClaimList.displayName = RoleBindingClaimList;
 
-export const RoleBindingClaimsPage = props => <ListPage {...props} ListComponent={RoleBindingClaimList} canCreate={true} kind="RoleBindingClaim" />;
+export const RoleBindingClaimsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={RoleBindingClaimList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="RoleBindingClaim" />
+};
 RoleBindingClaimsPage.displayName = 'RoleBindingClaimsPage';
 
-export const RoleBindingClaimsDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Role Binding Claim Details',
-        path: props.match.url,
-      })
-    }
-    kind="RoleBindingClaim"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const RoleBindingClaimsDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind="RoleBindingClaim"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  )
+};
 
 RoleBindingClaimsDetailsPage.displayName = 'RoleBindingClaimsDetailsPage';
