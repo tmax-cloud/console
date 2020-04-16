@@ -4,7 +4,7 @@ import * as React from 'react';
 import { k8sPatch, referenceForModel } from '../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
 import { PromiseComponent, ResourceIcon, SelectorInput } from '../utils';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 const LABELS_PATH = '/metadata/labels';
 const TEMPLATE_SELECTOR_PATH = '/spec/template/metadata/labels';
@@ -62,8 +62,8 @@ class BaseLabelsModal extends PromiseComponent {
           <div className="row co-m-form-row">
             <div className="col-sm-12">
               <label htmlFor="tags-input" className="control-label">
-                {/* {t('ADDITIONAL:FOR', { something1: _.capitalize(description) || 'Labels', something2: <ResourceIcon kind={kind.crd ? referenceForModel(kind) : kind.kind} /> })} */}
-                {_.capitalize(description) || 'Labels'} for <ResourceIcon kind={kind.crd ? referenceForModel(kind) : kind.kind} /> {resource.metadata.name}
+                {t('ADDITIONAL:FOR', { something1: t('CONTENT:LABELS'), something2: resource.metadata.name })}
+                {/* {_.capitalize(description) || t('CONTENT:LABELS')} for <ResourceIcon kind={kind.crd ? referenceForModel(kind) : kind.kind} /> {resource.metadata.name} */}
               </label>
               <SelectorInput onChange={labels => this.setState({ labels })} tags={this.state.labels} labelClassName={labelClassName || `co-text-${kind.id}`} autoFocus />
             </div>

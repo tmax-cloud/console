@@ -107,7 +107,7 @@ class ConfigureUpdateStrategyModal extends PromiseComponent {
                         <div className="input-group">
                           <input disabled={this.state.strategyType !== 'RollingUpdate'} placeholder="25%" size="5" type="text" className="form-control" id="input-max-surge" defaultValue={maxSurge} />
                           <span className="input-group-addon">
-                            <Tooltip content="Current desired pod count">greater than {pluralize(this.deployment.spec.replicas, 'pod')}</Tooltip>
+                            <Tooltip content={t('STRING:EDIT-UPDATESTRATEGY-MODAL_1')}>greater than {pluralize(this.deployment.spec.replicas, 'pod')}</Tooltip>
                           </span>
                         </div>
                       </div>

@@ -45,7 +45,7 @@ class DeleteModal extends PromiseComponent {
       <form onSubmit={this._submit} name="form">
         <ModalTitle>{t('ADDITIONAL:DELETE', { something: t(`RESOURCE:${kind.kind.toUpperCase()}`) })}</ModalTitle>
         <ModalBody>
-          {_.has(resource.metadata, 'namespace') ? t('ADDITIONAL:DELETE-MODAL_0', { something: resource.metadata.name }) : t('ADDITIONAL:DELETE-MODAL_1', { something1: resource.metadata.name, something2: resource.metadata.namespace })}
+          {_.has(resource.metadata, 'namespace') ? t('ADDITIONAL:DELETE-MODAL_1', { something1: resource.metadata.name, something2: resource.metadata.namespace }) : t('ADDITIONAL:DELETE-MODAL_0', { something: resource.metadata.name })}
           {_.has(kind, 'propagationPolicy') && (
             <div className="co-delete-modal-checkbox">
               <label className="co-delete-modal-checkbox-label">
