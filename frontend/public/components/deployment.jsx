@@ -18,7 +18,7 @@ const UpdateStrategy = (kind, deployment) => {
   const { t } = useTranslation();
   return {
     label: t('CONTENT:EDITUPDATESTRATEGY'),
-    callback: () => configureUpdateStrategyModal({ deployment }),
+    callback: () => configureUpdateStrategyModal({ deployment, t }),
   };
 };
 

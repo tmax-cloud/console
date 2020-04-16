@@ -28,10 +28,14 @@
     "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in",
     "SAVE": "{{something}} 저장",
     "FOR": "{{something1}} for {{something2}}",
+    "DELETE-MODAL_0": "{{something}}을(를) 삭제하시겠습니까?",
+    "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?",
+    "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
     "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
   },
   "VALIDATION": {
-    "LABEL_FORM": "Lables must be 'key=value' form."
+    "LABEL_FORM": "Lables must be 'key=value' form.",
+    "DUPLICATE-KEY": "Duplicate keys found."
   },
   "STRING": {
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
@@ -84,9 +88,16 @@
     "ENVIRONMENT-TAB_1": "FULLDOMAIN = $(SUBDOMAIN).example.com.",
     "ENVIRONMENT-TAB_2": "The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite.",
     "ENVIRONMENT-TAB_3": "리소스를 선택하십시오.",
-    "ENVIRONMENT-TAB_4": "키를 선택하십시오."
+    "ENVIRONMENT-TAB_4": "키를 선택하십시오.",
+    "DELETE-MODAL_0": "해당 리소스의 종속 오브젝트를 삭제하십시오.",
+    "EDIT-UPDATESTRATEGY-MODAL_0": "새 리비전을 만들 때 파드를 어떻게 교체해야합니까?",
+    "EDIT-UPDATESTRATEGY-MODAL_1": "현재 원하는 파드 수",
+    "EDIT-UPDATESTRATEGY-MODAL_2": "아래 설정을 기반으로 새 리비전에서 자연스럽게 롤 아웃합니다. ",
+    "EDIT-UPDATESTRATEGY-MODAL_3": "업데이트 시작 시 총 파드 비율 (선택 사항)",
+    "EDIT-UPDATESTRATEGY-MODAL_4": "새 파드를 만들기 전에 기존 파드를 모두 종료하십시오."
   },
   "CONTENT": {
+    "ADDMORE": "Add More",
     "COMPACT": "Compact",
     "GENERATEDFROM": "Generated from",
     "TIMESINTHELAST": "times in the last",
@@ -136,14 +147,14 @@
     "NOTFIGURED": "Not Figured",
     "KUBERNETESAPI": "쿠버네티스 API",
     "HYPERCLOUDCONSOLE": "하이퍼클라우드 콘솔",
-    "ALERTSFIRING": "Alerts Firing",
+    "ALERTSFIRING": "경고 발생",
     "CRASHLOOPINGPODS": "Crashlopping Pods",
-    "CONTROLPLANESTATUS": "Control Plane Status",
+    "CONTROLPLANESTATUS": "컨트롤 플레인 상태 ",
     "APISERVERSUP": "API 서버 정상",
     "CONTROLLERMANAGERSUP": "컨트롤러 관리자 정상",
     "SCHEDULERSUP": "스케줄러 정상",
     "APIREQUESTSUCCESSRATE": "API 요청 성공률",
-    "CAPACITYPLANNING": "Capacity Planning",
+    "CAPACITYPLANNING": "용량 계획 ",
     "CPUUSAGE": "CPU 사용량",
     "MEMORYUSAGE": "메모리 사용량",
     "DISKUSAGE": "디스크 사용량",
@@ -380,7 +391,14 @@
     "COUNT": "Count",
     "PODS": "파드",
     "RULES": "룰",
-    "EDITUPDATESTRATEGY": "업데이트 전략 수정"
+    "EDITUPDATESTRATEGY": "업데이트 전략 수정",
+    "KEY": "키",
+    "CONFIRM": "확인",
+    "SAVEDESIREDCOUNT": "의도한 수 저장",
+    "(DEFAULT)": "(기본)",
+    "ROLLINGUUPDATE": "롤링 업데이트",
+    "RECREATE": "재시작",
+    "STRATEGY": "전략"
   },
   "RESOURCE": {
     "HOME": "홈",

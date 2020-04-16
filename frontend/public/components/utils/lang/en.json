@@ -27,10 +27,14 @@
     "LOG_TAB_0": "The logs for this {{something1}} may be stale.",
     "SAVE": "Save {{something}}",
     "FOR": "{{something1}} for {{something2}}",
+    "DELETE-MODAL_0": "Are you sure you want to delete {{something}}?",
+    "DELETE-MODAL_1": "Are you sure you want to delete {{something1}} in namespace {{something2}}?",
+    "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
     "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
   },
   "VALIDATION": {
-    "LABEL_FORM": "Lables must be 'key=value' form."
+    "LABEL_FORM": "Lables must be 'key=value' form.",
+    "DUPLICATE-KEY": "Duplicate keys found."
   },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
@@ -84,9 +88,16 @@
     "ENVIRONMENT-TAB_1": "FULLDOMAIN = $(SUBDOMAIN).example.com.",
     "ENVIRONMENT-TAB_2": "The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite.",
     "ENVIRONMENT-TAB_3": "Select a resource",
-    "ENVIRONMENT-TAB_4": "Select a key"
+    "ENVIRONMENT-TAB_4": "Select a key",
+    "DELETE-MODAL_0": "Delete dependent objects of this resource",
+    "EDIT-UPDATESTRATEGY-MODAL_0": "How should the pods be replaced when a new revision is created?",
+    "EDIT-UPDATESTRATEGY-MODAL_1": "Current desired pod count",
+    "EDIT-UPDATESTRATEGY-MODAL_2": "Execute a smooth roll out of the new revision, based on the settings below",
+    "EDIT-UPDATESTRATEGY-MODAL_3": "Number or percentage of total pods at the start of the update (optional)",
+    "EDIT-UPDATESTRATEGY-MODAL_4": "Shut down all existing pods before creating new ones"
   },
   "CONTENT": {
+    "ADDMORE": "Add More",
     "COMPACT": "Compact",
     "GENERATEDFROM": "Generated from",
     "TIMESINTHELAST": "times in the last",
@@ -379,7 +390,14 @@
     "DELETE": "Delete",
     "COUNT": "Count",
     "RULES": "Rules",
-    "EDITUPDATESTRATEGY": "Edit Update Strategy"
+    "EDITUPDATESTRATEGY": "Edit Update Strategy",
+    "KEY": "Key",
+    "CONFIRM": "Confirm",
+    "SAVEDESIREDCOUNT": "Save Desired Count",
+    "(DEFAULT)": "(default)",
+    "ROLLINGUUPDATE": "Rolling Update",
+    "RECREATE": "Recreate",
+    "STRATEGY": "Strategy"
   },
   "RESOURCE": {
     "HOME": "Home",

@@ -64,12 +64,12 @@ UsergroupsPage.displayName = 'UsergroupsPage';
 export const UsergroupsDetailsPage = props => (
   <DetailsPage
     {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Usergroup Details',
-        path: props.match.url,
-      })
-    }
+    // breadcrumbsFor={obj =>
+    //   breadcrumbsForOwnerRefs(obj).concat({
+    //     name: 'Usergroup Details',
+    //     path: props.match.url,
+    //   })
+    // }
     kind="Usergroup"
     menuActions={menuActions}
     pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}
