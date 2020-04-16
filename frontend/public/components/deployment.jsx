@@ -14,10 +14,13 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const { ModifyCount, EditEnvironment, common } = Cog.factory;
 
-const UpdateStrategy = (kind, deployment) => ({
-  label: 'Edit Update Strategy',
-  callback: () => configureUpdateStrategyModal({ deployment }),
-});
+const UpdateStrategy = (kind, deployment) => {
+  const { t } = useTranslation();
+  return {
+    label: t('CONTENT:EDITUPDATESTRATEGY'),
+    callback: () => configureUpdateStrategyModal({ deployment }),
+  };
+};
 
 const menuActions = [ModifyCount, UpdateStrategy, EditEnvironment, ...common];
 
@@ -72,13 +75,13 @@ const DeploymentDetails = ({ obj: deployment }) => {
                   {deployment.status.availableReplicas === deployment.status.updatedReplicas ? (
                     <span>{t('CONTENT:ACTIVE')}</span>
                   ) : (
-                      <div>
-                        <span className="co-icon-space-r">
-                          <LoadingInline />
-                        </span>{' '}
-                        {t('CONTENT:UPDATING')}
-                      </div>
-                    )}
+                    <div>
+                      <span className="co-icon-space-r">
+                        <LoadingInline />
+                      </span>{' '}
+                      {t('CONTENT:UPDATING')}
+                    </div>
+                  )}
                 </dd>
               </ResourceSummary>
             </div>
@@ -122,10 +125,16 @@ const DeploymentDetails = ({ obj: deployment }) => {
 };
 
 const envPath = ['spec', 'template', 'spec', 'containers'];
-const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} />;
+const environmentComponent = props => {
+  const { t } = useTranslation();
+  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} t={t} />;
+};
 
 const { details, editYaml, pods, envEditor, events } = navFactory;
-const DeploymentsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(DeploymentDetails), editYaml(), pods(), envEditor(environmentComponent), events(ResourceEventStream)]} />;
+const DeploymentsDetailsPage = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} menuActions={menuActions} pages={[details(DeploymentDetails, t('CONTENT:OVERVIEW')), editYaml(), pods(t('CONTENT:PODS')), envEditor(environmentComponent, t('CONTENT:ENVIRONMENT')), events(ResourceEventStream, t('CONTENT:EVENTS'))]} />;
+};
 
 const Row = props => <WorkloadListRow {...props} kind="Deployment" actions={menuActions} />;
 const DeploymentsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;

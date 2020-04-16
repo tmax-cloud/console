@@ -5,10 +5,15 @@
     "SECOND": "{{count}} 초",
     "SECOND_plural": "{{count}} 초",
     "ANNOTATION": "{{count}} 주석",
-    "ANNOTATION_plural": "{{count}} 주석"
+    "ANNOTATION_plural": "{{count}} 주석",
+    "EVENT": "Showing {{count}} event",
+    "EVENT_plural": "Showing {{count}} events"
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "{{something}} 생성",
+    "DELETE": "{{something}} 삭제",
+    "VIEW": "{{something}} 보기",
+    "EDIT": "{{something}} 수정",
     "STATUSOF": "{{something}} 상태",
     "EMPTYBOX": "{{something}} 찾을 수 없음",
     "OVERVIEWTITLE": "{{something}} 개요",
@@ -20,7 +25,13 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}}는 {{something2}} 보다 큼",
     "LOGSTALE": "The logs for this {{something}} may be stale.",
     "STATUSBOX_0": "새로운 데이터를 가져 오는 시간이 초과되었습니다. 아래 데이터는 오래되었습니다.",
-    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in"
+    "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in",
+    "SAVE": "{{something}} 저장",
+    "FOR": "{{something1}} for {{something2}}",
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
+  },
+  "VALIDATION": {
+    "LABEL_FORM": "Lables must be 'key=value' form."
   },
   "STRING": {
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
@@ -56,9 +67,40 @@
     "ROLE-CREATE_8": "핵심 API 그룹에서 노드 읽기 허용",
     "ROLE-CREATE_9": "This 'ClusterRole' is allowed to read the resource 'nodes'  in the core group (because a Node is cluster-scoped, this must be bound with a 'ClusterRoleBinding' to be effective).",
     "ROLE-CREATE_10": "'GET/POST' requests to non-resource endpoint and all subpaths",
-    "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective)."
+    "ROLE-CREATE_11": "This 'ClusterRole' is allowed to 'GET' and 'POST' requests to the non-resource endpoint '/healthz' and all subpaths (must be in the 'ClusterRole' bound with a 'ClusterRoleBinding' to be effective).",
+    "SECRET_CREATE_0": "웹훅을 호출시 시크릿 값이 제공됩니다.",
+    "EVENT_0": "지난 1 시간 동안 이벤트가 없습니다. ",
+    "EVENT_1": "일치하는 이벤트가 없습니다. ",
+    "EVENT_2": "events exist, but none match the current filter",
+    "EVENT_3": "Error connecting to event stream",
+    "EVENT_4": "이벤트 로드 오류",
+    "EVENT_5": "이벤트 검색 중 오류가 발생했습니다. 다시 연결하는 중 …",
+    "EVENT_6": "이벤트 로드 중…",
+    "EVENT_7": "이벤트 스트리밍 중…",
+    "EVENT_8": "이벤트 스트림이 일시 정지되었습니다.",
+    "EVENT_9": "There are no events before",
+    "LABLE-EDIT_0": "Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels.",
+    "ENVIRONMENT-TAB_0": "Define environment variables as key-value pairs to store configuration settings. You can enter text or add values from a ConfigMap or Secret. Drag and drop environment variables to change the order in which they are run. A variable can reference any other variables that come before it in the list, for example ",
+    "ENVIRONMENT-TAB_1": "FULLDOMAIN = $(SUBDOMAIN).example.com.",
+    "ENVIRONMENT-TAB_2": "The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite.",
+    "ENVIRONMENT-TAB_3": "리소스를 선택하십시오.",
+    "ENVIRONMENT-TAB_4": "키를 선택하십시오."
   },
   "CONTENT": {
+    "COMPACT": "Compact",
+    "GENERATEDFROM": "Generated from",
+    "TIMESINTHELAST": "times in the last",
+    "SELECTOR": "선택기",
+    "LOADBALANCER": "로드밸런서",
+    "AUTHTYPE": "인증 유형",
+    "BASICAUTH": "기본 인증",
+    "SSHKEY": "SSH 키",
+    "GENERATE": "생성",
+    "WEBHOOKSECRETKEY": "웹훅 시크릿 키",
+    "REVISION": "Revision",
+    "URL": "Url",
+    "PARAMETERS": "Parmeters",
+    "SERVICEACCOUNTNAME": "Service Account Name",
     "FORROLEBINDING": "(RoleBinding의 경우)",
     "FORCLUSTERROLEBINDING": "(ClusterRoleBinding의 경우)",
     "DENY": "거부",
@@ -134,6 +176,7 @@
     "RESOURCEUSAGE": "리소스 사용량",
     "CPUSHARES": "CPU 점유율",
     "RAM": "RAM",
+    "CPU": "CPU",
     "MEMORYUSAGEBYPOD(TOP10)": "파드 별 메모리 사용량 (상위 10)",
     "NODENAME": "노드 이름",
     "EXTERNALID": "외부 ID",
@@ -332,7 +375,12 @@
     "STORAGE": "스토리지",
     "CONNECTINGTO": "연결",
     "EXPAND": "확장",
-    "DETAILS": "상세정보"
+    "DETAILS": "상세정보",
+    "DELETE": "삭제",
+    "COUNT": "Count",
+    "PODS": "파드",
+    "RULES": "룰",
+    "EDITUPDATESTRATEGY": "업데이트 전략 수정"
   },
   "RESOURCE": {
     "HOME": "홈",

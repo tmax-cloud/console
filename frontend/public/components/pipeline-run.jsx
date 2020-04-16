@@ -80,25 +80,17 @@ export const PipelineRunsPage = props => {
 };
 PipelineRunsPage.displayName = 'PipelineRunsPage';
 
-// export const TaskDetailsPage = props => {
-//   const pages = [
-//     navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
-
 export const PipelineRunDetailsPage = props => {
   const { t } = useTranslation();
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Task Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Task Details',
+      //     path: props.match.url,
+      //   })
+      // }
       menuActions={menuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
     />

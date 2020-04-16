@@ -46,7 +46,10 @@ const Details = ({ obj: rq }) => {
 };
 
 export const ResourceQuotasList = props => <List {...props} Header={Header} Row={Row} />;
-export const ResourceQuotasPage = props => <ListPage {...props} ListComponent={ResourceQuotasList} kind={kind} canCreate={true} />;
+export const ResourceQuotasPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={ResourceQuotasList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 
 export const ResourceQuotasDetailsPage = props => {
   const { t } = useTranslation();

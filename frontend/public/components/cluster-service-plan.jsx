@@ -5,7 +5,8 @@ import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTopOnMount, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
-
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const ClusterServicePlanHeader = props => {
@@ -37,11 +38,12 @@ const ClusterServicePlanRow = () =>
   };
 
 const Details = ({ obj: ClusterServicePlan }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('CLUSTERSERVICEPLAN', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={ClusterServicePlan} />
@@ -77,19 +79,16 @@ ClusterServicePlansPage.displayName = 'ClusterServicePlansPage';
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
 
-export const ClusterServicePlansDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ClusterServicePlan Details',
-        path: props.match.url,
-      })
-    }
-    kind="ClusterServicePlan"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const ClusterServicePlansDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind="ClusterServicePlan"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  )
+};
 
 ClusterServicePlansDetailsPage.displayName = 'ClusterServicePlansDetailsPage';

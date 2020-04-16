@@ -117,19 +117,22 @@ export { TemplateInstancesPage };
 
 TemplateInstancesPage.displayName = 'TemplateInstancesPage';
 
-export const TemplateInstancesDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Template Instances Details',
-        path: props.match.url,
-      })
-    }
-    kind="TemplateInstance"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const TemplateInstancesDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      breadcrumbsFor={obj =>
+        breadcrumbsForOwnerRefs(obj).concat({
+          name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
+          path: props.match.url,
+        })
+      }
+      kind="TemplateInstance"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details), navFactory.editYaml()]}
+    />
+  );
+};
 
 TemplateInstancesDetailsPage.displayName = 'TemplateInstancesDetailsPage';

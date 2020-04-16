@@ -68,18 +68,21 @@ export const TemplateList = props => {
 };
 TemplateList.displayName = TemplateList;
 
-export const TemplatesPage = props => <ListPage {...props} ListComponent={TemplateList} canCreate={true} kind="Template" />;
+export const TemplatesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={TemplateList} canCreate={true} kind="Template" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 TemplatesPage.displayName = 'TemplatesPage';
 
 export const TemplatesDetailsPage = props => (
   <DetailsPage
     {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Templates Details',
-        path: props.match.url,
-      })
-    }
+    // breadcrumbsFor={obj =>
+    //   breadcrumbsForOwnerRefs(obj).concat({
+    //     name: 'Templates Details',
+    //     path: props.match.url,
+    //   })
+    // }
     kind="Template"
     menuActions={menuActions}
     pages={[navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()]}

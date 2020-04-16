@@ -157,29 +157,32 @@ const Volume = ({ pod, volume }) => {
   );
 };
 
-const ContainerTable = ({ heading, containers, pod, t }) => (
-  <div className="co-m-pane__body">
-    <SectionHeading text={heading} />
-    <div className="row">
-      <div className="co-m-table-grid co-m-table-grid--bordered">
-        <div className="row co-m-table-grid__head">
-          <div className="col-sm-2 col-xs-4">{t('CONTENT:NAME')}</div>
-          <div className="col-md-2 col-sm-3 hidden-xs">{t('CONTENT:ID')}</div>
-          <div className="col-md-2 col-sm-3 col-xs-8">{t('CONTENT:IMAGE')}</div>
-          <div className="col-md-1 col-sm-2 hidden-xs">{t('CONTENT:STATE')}</div>
-          <div className="col-md-1 col-sm-2 hidden-xs">{t('CONTENT:RESTARTS')}</div>
-          <div className="col-md-2 hidden-sm hidden-xs">{t('CONTENT:STARTED')}</div>
-          <div className="col-md-2 hidden-sm hidden-xs">{t('CONTENT:FINISHED')}</div>
-        </div>
-        <div className="co-m-table-grid__body">
-          {containers.map((c, i) => (
-            <ContainerRow key={i} pod={pod} container={c} />
-          ))}
+const ContainerTable = ({ heading, containers, pod }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-m-pane__body">
+      <SectionHeading text={heading} />
+      <div className="row">
+        <div className="co-m-table-grid co-m-table-grid--bordered">
+          <div className="row co-m-table-grid__head">
+            <div className="col-sm-2 col-xs-4">{t('CONTENT:NAME')}</div>
+            <div className="col-md-2 col-sm-3 hidden-xs">{t('CONTENT:ID')}</div>
+            <div className="col-md-2 col-sm-3 col-xs-8">{t('CONTENT:IMAGE')}</div>
+            <div className="col-md-1 col-sm-2 hidden-xs">{t('CONTENT:STATE')}</div>
+            <div className="col-md-1 col-sm-2 hidden-xs">{t('CONTENT:RESTARTS')}</div>
+            <div className="col-md-2 hidden-sm hidden-xs">{t('CONTENT:STARTED')}</div>
+            <div className="col-md-2 hidden-sm hidden-xs">{t('CONTENT:FINISHED')}</div>
+          </div>
+          <div className="co-m-table-grid__body">
+            {containers.map((c, i) => (
+              <ContainerRow key={i} pod={pod} container={c} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const PodGraphs = requirePrometheus(({ pod }) => {
   const { t } = useTranslation();
@@ -267,7 +270,7 @@ const Details = ({ obj: pod }) => {
       </div>
 
       {pod.spec.initContainers && <ContainerTable key="initContainerTable" heading="Init Containers" containers={pod.spec.initContainers} pod={pod} />}
-      <ContainerTable key="containerTable" heading={t('CONTENT:CONTAINERS')} containers={pod.spec.containers} pod={pod} t={t} />
+      <ContainerTable key="containerTable" heading={t('CONTENT:CONTAINERS')} containers={pod.spec.containers} pod={pod} />
 
       <div className="co-m-pane__body">
         <SectionHeading text={t('CONTENT:PODVOLUMES')} />
@@ -391,5 +394,5 @@ export const PodsPage = props => {
   ];
   const { canCreate = true } = props;
 
-  return <ListPage {...props} canCreate={canCreate} kind="Pod" ListComponent={PodList} rowFilters={filters} />;
+  return <ListPage {...props} canCreate={canCreate} kind="Pod" ListComponent={PodList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Pod', t) })} rowFilters={filters} />;
 };

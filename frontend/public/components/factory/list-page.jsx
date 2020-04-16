@@ -12,18 +12,20 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 import { ErrorPage404 } from '../error';
 import { makeReduxID, makeQuery } from '../utils/k8s-watcher';
 import { referenceForModel } from '../../module/k8s';
-import { useTranslation } from 'react-i18next';
 
-export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => (
-  <div className="btn-group btn-group-sm" data-toggle="buttons">
-    <label className={classNames('btn compaction-btn', expand ? 'btn-default' : 'btn-primary')}>
-      <input type="radio" onClick={() => onExpandChange(false)} /> Compact
-    </label>
-    <label className={classNames('btn compaction-btn', expand ? 'btn-primary' : 'btn-default')}>
-      <input type="radio" onClick={() => onExpandChange(true)} /> Expand
-    </label>
-  </div>
-);
+export const CompactExpandButtons = ({ expand = false, onExpandChange = _.noop }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="btn-group btn-group-sm" data-toggle="buttons">
+      <label className={classNames('btn compaction-btn', expand ? 'btn-default' : 'btn-primary')}>
+        <input type="radio" onClick={() => onExpandChange(false)} /> {t('CONTENT:COMPACT')}
+      </label>
+      <label className={classNames('btn compaction-btn', expand ? 'btn-primary' : 'btn-default')}>
+        <input type="radio" onClick={() => onExpandChange(true)} /> {t('CONTENT:EXPAND')}
+      </label>
+    </div>
+  );
+};
 
 /** @type {React.SFC<{label: string, onChange: React.ChangeEventHandler<any>, defaultValue: string}}>} */
 export const TextFilter = ({ label, onChange, defaultValue, style, className, autoFocus, id }) => {
@@ -271,7 +273,7 @@ export const ListPage = props => {
       showTitle={showTitle}
       canCreate={props.canCreate}
       canExpand={props.canExpand}
-      createButtonText={createButtonText || t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${kind.toUpperCase()}`) })}
+      createButtonText={createButtonText || t('ADDITIONAL:CREATEBUTTON', { something: t(`CONTENT:${label}`) })}
       textFilter={props.textFilter}
       resources={resources}
       autoFocus={props.autoFocus}

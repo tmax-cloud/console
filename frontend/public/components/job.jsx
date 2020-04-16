@@ -114,5 +114,8 @@ const JobsDetailsPage = props => {
   return <DetailsPage {...props} menuActions={menuActions} pages={[details(Details, t('CONTENT:OVERVIEW')), editYaml(), pods(t('CONTENT:PODS')), events(ResourceEventStream, t('CONTENT:EVENTS'))]} />;
 };
 const JobsList = props => <List {...props} Header={JobHeader} Row={JobRow} />;
-const JobsPage = props => <ListPage ListComponent={JobsList} canCreate={true} {...props} />;
+const JobsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage ListComponent={JobsList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} {...props} />;
+};
 export { JobsList, JobsPage, JobsDetailsPage };

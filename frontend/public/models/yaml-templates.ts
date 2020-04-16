@@ -18,81 +18,82 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     name: example
 `,
   )
-  //   .setIn(
-  //     [referenceForModel(k8sModels.VirtualMachineModel), 'default'],
-  //     `
-  //     apiVersion: kubevirt.io/v1alpha3
-  //     kind: VirtualMachine
-  //     metadata:
-  //       name: windows-vm
-  //     spec:
-  //       running: true
-  //       template:
-  //         spec:
-  //           hostname: guestos-name
-  //           affinity:
-  //             nodeAffinity:
-  //               requiredDuringSchedulingIgnoredDuringExecution:
-  //                 nodeSelectorTerms:
-  //                 - matchExpressions:
-  //                   - key: kubernetes.io/hostname
-  //                     operator: In
-  //                     values:
-  //                     - k8s-3-3
-  //           domain:
-  //             machine:
-  //               type: q35
-  //             devices:
-  //               disks:
-  //               - disk:
-  //                   bus: virtio
-  //                 name: rootdisk
-  //               - cdrom:
-  //                   bus: sata
-  //                   readonly: true
-  //                 name: cloudinitdisk
-  //               - disk:
-  //                   bus: virtio
-  //                 name: additionaldisk
-  //               interfaces:
-  //               - name: default
-  //                 model: virtio
-  //                 bridge: {}
-  //                 macAddress: de:ad:00:00:be:aa
-  //             gpus:
-  //               - deviceName: nvidia.com/GP102GL_Tesla_P40
-  //                  name: gpu1
-  //             cpu:
-  //               cores: 2
-  //             memory:
-  //               guest: 2Gi
-  //             resources:
-  //               overcommitGuestOverhead: false
-  //               requests:
-  //                 cpu: 1500m
-  //                 memory: 2Gi
-  //               limits:
-  //                 cpu: 2500m
-  //                 memory: 3Gi
-  //           terminationGracePeriodSeconds: 0
-  //           networks:
-  //           - name: default
-  //             pod: {}
-  //           volumes:
-  //           - containerDisk:
-  //               image: 172.21.7.20:5000/ubuntu:18.04
-  //             name: rootdisk
-  //           - name: cloudinitdisk
-  //             cloudInitConfigDrive:
-  //               userData: |
-  //                 #ps1_sysnative
-  //                 NET USER tmax "Qwer12345" /ADD
-  //                 NET LOCALGROUP "Administrators" "tmax" /add
-  //           - name: additionaldisk
-  //             persistentVolumeClaim:
-  //               claimName: empty-pvc
-  // `,
-  //   )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'default'],
+    `
+      apiVersion: kubevirt.io/v1alpha3
+      kind: VirtualMachine
+      metadata:
+        name: windows-vm
+        namespace: default
+      spec:
+        running: true
+        template:
+          spec:
+            hostname: guestos-name
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                      - k8s-3-3
+            domain:
+              machine:
+                type: q35
+              devices:
+                disks:
+                - disk:
+                    bus: virtio
+                  name: rootdisk
+                - cdrom:
+                    bus: sata
+                    readonly: true
+                  name: cloudinitdisk
+                - disk:
+                    bus: virtio
+                  name: additionaldisk
+                interfaces:
+                - name: default
+                  model: virtio
+                  bridge: {}
+                  macAddress: de:ad:00:00:be:aa
+              gpus:
+                - deviceName: nvidia.com/GP102GL_Tesla_P40
+                  name: gpu1
+              cpu:
+                cores: 2
+              memory:
+                guest: 2Gi
+              resources:
+                overcommitGuestOverhead: false
+                requests:
+                  cpu: 1500m
+                  memory: 2Gi
+                limits:
+                  cpu: 2500m
+                  memory: 3Gi
+            terminationGracePeriodSeconds: 0
+            networks:
+            - name: default
+              pod: {}
+            volumes:
+            - containerDisk:
+                image: 172.21.7.20:5000/ubuntu:18.04
+              name: rootdisk
+            - name: cloudinitdisk
+              cloudInitConfigDrive:
+                userData: |
+                  #ps1_sysnative
+                  NET USER tmax "Qwer12345" /ADD
+                  NET LOCALGROUP "Administrators" "tmax" /add
+            - name: additionaldisk
+              persistentVolumeClaim:
+                claimName: empty-pvc
+  `,
+  )
   .setIn(
     [referenceForModel(k8sModels.VirtualMachineModel), 'read-virtualmachine-window'],
     `
@@ -100,6 +101,7 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     kind: VirtualMachine
     metadata:
       name: windows-vm
+      namespace: default
     spec:
       running: true
       template:
@@ -175,6 +177,7 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     kind: VirtualMachine
     metadata:
         name: linux
+        namespace: default
     spec:
       running: true
       template:
@@ -245,6 +248,22 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
           - name: additionaldisk
             persistentVolumeClaim:
               claimName: empty-pvc
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.UsergroupModel), 'default'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Usergroup
+    metadata: 
+      name: example
+    userInfo:
+      name: example
+      department: Cloud
+      position: developer
+      description: For Example
+    status: active
+    
 `,
   )
   .setIn(

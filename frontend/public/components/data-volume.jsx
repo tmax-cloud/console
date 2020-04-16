@@ -64,7 +64,10 @@ export const DataVolumeList = props => {
 };
 DataVolumeList.displayName = DataVolumeList;
 
-export const DataVolumesPage = props => <ListPage {...props} ListComponent={DataVolumeList} canCreate={true} kind="DataVolume" />;
+export const DataVolumesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={DataVolumeList} canCreate={true} kind="DataVolume" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 DataVolumesPage.displayName = 'DataVolumesPage';
 
 export const DataVolumesDetailsPage = props => {
@@ -72,12 +75,12 @@ export const DataVolumesDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Data Volume Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Data Volume Details',
+      //     path: props.match.url,
+      //   })
+      // }
       kind="DataVolume"
       menuActions={menuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}

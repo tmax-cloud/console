@@ -61,15 +61,15 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
     subjects.length === 1
       ? Cog.factory.Delete
       : (kind, binding) => ({
-          label: `Delete ${kind.label} Subject...`,
-          callback: () =>
-            confirmModal({
-              title: `Delete ${kind.label} Subject`,
-              message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
-              btnText: 'Delete Subject',
-              executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
-            }),
-        }),
+        label: `Delete ${kind.label} Subject...`,
+        callback: () =>
+          confirmModal({
+            title: `Delete ${kind.label} Subject`,
+            message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
+            btnText: 'Delete Subject',
+            executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
+          }),
+      }),
   ];
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
@@ -174,11 +174,11 @@ export const RoleBindingsPage = ({ namespace, showTitle = true, fake }) => {
           reducer: bindingType,
           items: ({ ClusterRoleBinding: data }) => {
             const items = [
-              { id: 'namespace', title: 'Namespace Role Bindings' },
-              { id: 'system', title: 'System Role Bindings' },
+              { id: 'namespace', title: t('CONTENT:NAMESPACEROLEBINDINGS') },
+              { id: 'system', title: t('CONTENT:SYSTEMROLEBINDINGS') },
             ];
             if (data && data.loaded && !data.loadError) {
-              items.unshift({ id: 'cluster', title: 'Cluster-wide Role Bindings' });
+              items.unshift({ id: 'cluster', title: t('CONTENT:CLUSTER-WIDEROLEBINDINGS') });
             }
             return items;
           },

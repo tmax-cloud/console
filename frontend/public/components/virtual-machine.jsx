@@ -90,7 +90,10 @@ export const VirtualMachineList = props => {
 };
 VirtualMachineList.displayName = VirtualMachineList;
 
-export const VirtualMachinesPage = props => <ListPage {...props} ListComponent={VirtualMachineList} canCreate={true} kind="VirtualMachine" />;
+export const VirtualMachinesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={VirtualMachineList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} kind="VirtualMachine" />;
+};
 VirtualMachinesPage.displayName = 'VirtualMachinesPage';
 
 // export const TemplatesDetailsPage = props => {
@@ -106,12 +109,12 @@ export const VirtualMachinesDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'VirtualMachine Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: t(`RESOURCE:${obj.kind.toUpperCase()}`) + ' ' + t('CONTENT:DETAILS'),
+      //     path: props.match.url,
+      //   })
+      // }
       kind="VirtualMachine"
       menuActions={menuActions}
       pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}

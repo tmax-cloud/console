@@ -8,6 +8,7 @@ import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 enum CreateType {
   generic = 'generic',
   form = 'form',
@@ -182,23 +183,23 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
   }
   render() {
     const { templateList, paramList } = this.state;
+    const { t } = this.props;
     let options = templateList.map(function (template) {
       return <option value={template}>{template}</option>;
     });
 
     let paramDivs = paramList.map((parameter) => {
       return <Section label={parameter.name} id={parameter.name}>
-        <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder="value" id={parameter} required />
+        <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter} required />
       </Section>
     });
 
     return <div className="co-m-pane__body">
       <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">Create Template Instance</h1>
-        <p className="co-m-pane__explanation">{this.props.explanation}</p>
+        <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.templateInstance.kind, t) })}</h1>
         <fieldset disabled={!this.props.isCreate}>
           <div className="form-group">
-            <label className="control-label" htmlFor="secret-name">Name</label>
+            <label className="control-label" htmlFor="secret-name">{t('CONTENT:NAME')}</label>
             <div>
               <input className="form-control"
                 type="text"
@@ -209,7 +210,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
           <div className="form-group">
-            <label className="control-label" htmlFor="secret-type" >Template</label>
+            <label className="control-label" htmlFor="secret-type" >{t('RESOURCE:TEMPLATE')}</label>
             <div>
               <select onChange={this.onTemplateChanged} className="form-control" id="template">
                 {options}
@@ -217,20 +218,18 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
             </div>
           </div>
         </fieldset>
-        <label className="control-label" htmlFor="secret-name">Parameters</label>
+        <label className="control-label" htmlFor="secret-name">{t('CONTENT:PARAMETERS')}</label>
         <div>
           {paramDivs}
         </div>
         <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
-          <button type="submit" className="btn btn-primary" id="save-changes">{this.props.saveButtonText || 'Create'}</button>
-          <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">Cancel</Link>
+          <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
+          <Link to={formatNamespacedRouteForResource('templateinstances')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
         </ButtonBar>
       </form>
     </div >;
   }
 };
-
-
 class SourceSecretForm extends React.Component<SourceSecretFormProps> {
   constructor(props) {
     super(props);
@@ -256,7 +255,9 @@ const secretFormFactory = secretType => {
 
 export const CreateTemplateInstance = ({ match: { params } }) => {
   const SecretFormComponent = secretFormFactory(params.type);
+  const { t } = useTranslation()
   return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
+    t={t}
     secretTypeAbstraction={params.type}
     explanation={pageExplanation[params.type]}
     titleVerb="Create"
@@ -284,6 +285,7 @@ export type BaseEditSecretProps_ = {
   secretTypeAbstraction?: CreateType,
   saveButtonText?: string,
   explanation: string,
+  t: any
 };
 
 export type SourceSecretFormProps = {

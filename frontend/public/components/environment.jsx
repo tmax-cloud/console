@@ -247,7 +247,8 @@ export const EnvironmentPage = connect(stateToProps)(
         <div className="co-m-pane__body">
           {!readOnly && (
             <p className="co-m-pane__explanation">
-              Define environment variables as key-value pairs to store configuration settings. You can enter text or add values from a ConfigMap or Secret. Drag and drop environment variables to change the order in which they are run. A variable can reference any other variables that come before it in the list, for example <code>FULLDOMAIN = $(SUBDOMAIN).example.com</code>.
+              {t('STRING:ENVIRONMENT-TAB_0')}
+              <code>{t('STRING:ENVIRONMENT-TAB_1')}</code>.
             </p>
           )}
           {containerVars}
@@ -261,7 +262,8 @@ export const EnvironmentPage = connect(stateToProps)(
               )}
               {stale && (
                 <p className="alert alert-info">
-                  <span className="pficon pficon-info" aria-hidden="true"></span>The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite.
+                  <span className="pficon pficon-info" aria-hidden="true"></span>
+                  {t('STRING:ENVIRONMENT-TAB_2')}
                 </p>
               )}
               {success && (
@@ -272,12 +274,12 @@ export const EnvironmentPage = connect(stateToProps)(
               )}
               {!readOnly && (
                 <button disabled={inProgress} type="submit" className="btn btn-primary" onClick={this.saveChanges}>
-                  Save Changes
+                  {t('CONTENT:SAVECHANGES')}
                 </button>
               )}
               {!readOnly && (
                 <button disabled={inProgress} type="button" className="btn btn-default" onClick={this.reload}>
-                  Reload
+                  {t('CONTENT:RELOAD')}
                 </button>
               )}
             </div>

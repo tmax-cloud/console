@@ -77,10 +77,16 @@ const Details = ({ obj: daemonset }) => {
 };
 
 const envPath = ['spec', 'template', 'spec', 'containers'];
-const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} />;
+const environmentComponent = props => {
+  const { t } = useTranslation();
+  return <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec.containers} envPath={envPath} readOnly={false} t={t} />;
+};
 
 const DaemonSets = props => <List {...props} Header={DaemonSetHeader} Row={DaemonSetRow} />;
-const DaemonSetsPage = props => <ListPage canCreate={true} ListComponent={DaemonSets} {...props} />;
+const DaemonSetsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} ListComponent={DaemonSets} {...props} />;
+};
 
 const DaemonSetsDetailsPage = props => {
   const { t } = useTranslation();

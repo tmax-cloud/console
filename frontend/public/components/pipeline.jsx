@@ -64,7 +64,10 @@ export const PipelineList = props => {
 };
 PipelineList.displayName = PipelineList;
 
-export const PipelinesPage = props => <ListPage {...props} ListComponent={PipelineList} canCreate={true} kind="Pipeline" />;
+export const PipelinesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={PipelineList} canCreate={true} kind="Pipeline" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 PipelinesPage.displayName = 'PipelinesPage';
 
 // export const TaskDetailsPage = props => {
@@ -80,12 +83,12 @@ export const PipelineDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Pipeline Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Pipeline Details',
+      //     path: props.match.url,
+      //   })
+      // }
       menuActions={menuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
     />

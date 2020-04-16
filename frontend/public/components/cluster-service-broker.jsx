@@ -6,7 +6,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTop
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
-
+import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const ClusterServiceBrokerHeader = props => {
@@ -38,11 +38,12 @@ const ClusterServiceBrokerRow = () =>
   };
 
 const Details = ({ obj: ClusterServiceBroker }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('CLUSTERSERVICEBROKER', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={ClusterServiceBroker} />
@@ -67,7 +68,10 @@ export const ClusterServiceBrokerList = props => {
 };
 ClusterServiceBrokerList.displayName = ClusterServiceBrokerList;
 
-export const ClusterServiceBrokersPage = props => <ListPage {...props} ListComponent={ClusterServiceBrokerList} canCreate={true} kind="ClusterServiceBroker" />;
+export const ClusterServiceBrokersPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={ClusterServiceBrokerList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="ClusterServiceBroker" />
+};
 ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
 
 // export const TemplatesDetailsPage = props => {
@@ -78,19 +82,16 @@ ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
 
-export const ClusterServiceBrokersDetailsPage = props => (
-  <DetailsPage
-    {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'Cluster Service Broker Details',
-        path: props.match.url,
-      })
-    }
-    kind="ClusterServiceBroker"
-    menuActions={menuActions}
-    pages={[navFactory.details(Details), navFactory.editYaml()]}
-  />
-);
+export const ClusterServiceBrokersDetailsPage = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind="ClusterServiceBroker"
+      menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+    />
+  )
+};
 
 ClusterServiceBrokersDetailsPage.displayName = 'ClusterServiceBrokersDetailsPage';

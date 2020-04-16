@@ -10,66 +10,100 @@ import { DropdownMixin } from './dropdown';
 import { history, resourceObjPath } from './index';
 import { referenceForModel, K8sResourceKind, K8sResourceKindReference, K8sKind } from '../../module/k8s';
 import { connectToModel } from '../../kinds';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 
 const CogItems: React.SFC<CogItemsProps> = ({ options, onClick }) => {
   const visibleOptions = _.reject(options, o => _.get(o, 'hidden', false));
-  const lis = _.map(visibleOptions, (o, i) => <li key={i}><a onClick={e => onClick(e, o)}>{o.label}</a></li>);
-  return <ul className="dropdown-menu co-m-cog__dropdown">
-    {lis}
-  </ul>;
+  const lis = _.map(visibleOptions, (o, i) => (
+    <li key={i}>
+      <a onClick={e => onClick(e, o)}>{o.label}</a>
+    </li>
+  ));
+  return <ul className="dropdown-menu co-m-cog__dropdown">{lis}</ul>;
 };
 
 const cogFactory: CogFactory = {
-  Delete: (kind, obj) => ({
-    label: `Delete ${kind.label}`,
-    callback: () => deleteModal({
-      kind: kind,
-      resource: obj,
-    }),
-  }),
-  Edit: (kind, obj) => ({
-    label: `Edit ${kind.label}`,
-    href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/yaml`,
-  }),
-  ModifyLabels: (kind, obj) => ({
-    label: 'Edit Labels',
-    callback: () => labelsModal({
-      kind: kind,
-      resource: obj,
-    }),
-  }),
-  ModifyPodSelector: (kind, obj) => ({
-    label: 'Edit Pod Selector',
-    callback: () => podSelectorModal({
-      kind: kind,
-      resource: obj,
-    }),
-  }),
-  ModifyAnnotations: (kind, obj) => ({
-    label: 'Edit Annotations',
-    callback: () => annotationsModal({
-      kind: kind,
-      resource: obj,
-    }),
-  }),
-  ModifyCount: (kind, obj) => ({
-    label: 'Edit Count',
-    callback: () => configureReplicaCountModal({
-      resourceKind: kind,
-      resource: obj,
-    }),
-  }),
-  EditEnvironment: (kind, obj) => ({
-    label: `${kind.kind === 'Pod' ? 'View' : 'Edit'} Environment`,
-    href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/environment`,
-  }),
-  EditStatus: (kind, obj) => ({
-    label: 'Edit Status',
-    callback: () => configureStatusModal({
-      resourceKind: kind,
-      resource: obj,
-    }),
-  })
+  Delete: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:DELETE', { something: ResourcePlural(kind.kind, t) }),
+      callback: () =>
+        deleteModal({
+          kind: kind,
+          resource: obj,
+        }),
+    };
+  },
+  Edit: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: ResourcePlural(kind.kind, t) }),
+      href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/yaml`,
+    };
+  },
+  ModifyLabels: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('CONTENT:LABELS') }),
+      callback: () =>
+        labelsModal({
+          kind: kind,
+          resource: obj,
+        }),
+    };
+  },
+  ModifyPodSelector: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('CONTENT:PODSELECTOR') }),
+      callback: () =>
+        podSelectorModal({
+          kind: kind,
+          resource: obj,
+        }),
+    };
+  },
+  ModifyAnnotations: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('CONTENT:ANNOTATIONS') }),
+      callback: () =>
+        annotationsModal({
+          kind: kind,
+          resource: obj,
+        }),
+    };
+  },
+  ModifyCount: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('CONTENT:COUNT') }),
+      callback: () =>
+        configureReplicaCountModal({
+          resourceKind: kind,
+          resource: obj,
+        }),
+    };
+  },
+  EditEnvironment: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: kind.kind === 'Pod' ? t('ADDITIONAL:VIEW', { something: t('CONTENT:ENVIRONMENT') }) : t('ADDITIONAL:EDIT', { something: t('CONTENT:ENVIRONMENT') }),
+      href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/environment`,
+    };
+  },
+  EditStatus: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('CONTENT:STATUS') }),
+      callback: () =>
+        configureStatusModal({
+          resourceKind: kind,
+          resource: obj,
+        }),
+    };
+  },
 };
 
 // The common menu actions that most resource share
@@ -81,13 +115,7 @@ export const ResourceCog = connectToModel((props: ResourceCogProps) => {
   if (!kindObj) {
     return null;
   }
-  return <Cog
-    resource={resource}
-    options={actions.map(a => a(kindObj, resource))}
-    key={resource.metadata.uid}
-    isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')}
-    id={`cog-for-${resource.metadata.uid}`}
-  />;
+  return <Cog resource={resource} options={actions.map(a => a(kindObj, resource))} key={resource.metadata.uid} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} id={`cog-for-${resource.metadata.uid}`} />;
 });
 
 export class Cog extends DropdownMixin {
@@ -117,27 +145,31 @@ export class Cog extends DropdownMixin {
         }
       } // claim 페이지에서 status에 따라 'Edit Status' 메뉴 활성화/비활성화 분기 로직
     }
-    return <div className={classNames('co-m-cog-wrapper', { 'co-m-cog-wrapper--enabled': !isDisabled })} id={id}>
-      {isDisabled ?
-        <Tooltip content="disabled">
-          <div ref={this.dropdownElement} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })} >
+    return (
+      <div className={classNames('co-m-cog-wrapper', { 'co-m-cog-wrapper--enabled': !isDisabled })} id={id}>
+        {isDisabled ? (
+          <Tooltip content="disabled">
+            <div ref={this.dropdownElement} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })}>
+              <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
+              <span className="sr-only">Actions</span>
+            </div>
+          </Tooltip>
+        ) : (
+          <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })}>
             <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
             <span className="sr-only">Actions</span>
+            {this.state.active && <CogItems options={options} onClick={this.onClick} />}
           </div>
-        </Tooltip> :
-        <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })} >
-          <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
-          <span className="sr-only">Actions</span>
-          {this.state.active && <CogItems options={options} onClick={this.onClick} />}
-        </div>
-      }
-    </div>;
+        )}
+      </div>
+    );
   }
 }
 
 export type CogOption = {
   label: string;
-  href?: string, callback?: () => any;
+  href?: string;
+  callback?: () => any;
 };
 export type CogAction = (kind, obj: K8sResourceKind) => CogOption;
 

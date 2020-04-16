@@ -60,7 +60,10 @@ export const LimitRangeList = props => {
 };
 LimitRangeList.displayName = LimitRangeList;
 
-export const LimitRangesPage = props => <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" />;
+export const LimitRangesPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 LimitRangesPage.displayName = 'LimitRangesPage';
 
 export const LimitRangesDetailsPage = props => {
@@ -68,12 +71,12 @@ export const LimitRangesDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'LimitRange Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'LimitRange Details',
+      //     path: props.match.url,
+      //   })
+      // }
       kind="LimitRange"
       menuActions={menuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}

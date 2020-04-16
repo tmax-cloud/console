@@ -65,7 +65,10 @@ export const TaskRunList = props => {
 };
 TaskRunList.displayName = TaskRunList;
 
-export const TaskRunsPage = props => <ListPage {...props} ListComponent={TaskRunList} canCreate={true} kind="TaskRun" />;
+export const TaskRunsPage = props => {
+  const { t } = useTranslation();
+  return <ListPage {...props} ListComponent={TaskRunList} canCreate={true} kind="TaskRun" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+};
 TaskRunsPage.displayName = 'TaskRunsPage';
 
 // export const TaskDetailsPage = props => {
@@ -81,12 +84,12 @@ export const TaskRunDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      breadcrumbsFor={obj =>
-        breadcrumbsForOwnerRefs(obj).concat({
-          name: 'Task Details',
-          path: props.match.url,
-        })
-      }
+      // breadcrumbsFor={obj =>
+      //   breadcrumbsForOwnerRefs(obj).concat({
+      //     name: 'Task Details',
+      //     path: props.match.url,
+      //   })
+      // }
       menuActions={menuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
     />
