@@ -257,13 +257,13 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     kind: Usergroup
     metadata: 
       name: example
-    userInfo:
+    userGroupInfo:
       name: example
       department: Cloud
       position: developer
       description: For Example
     status: active
-    
+
 `,
   )
   .setIn(
