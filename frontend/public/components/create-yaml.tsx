@@ -42,7 +42,8 @@ export const CreateYAML = connectToPlural((props: CreateYAMLProps) => {
 });
 
 export const EditYAMLPage: React.SFC<EditYAMLPageProps> = (props) => {
-  const Wrapper = (wrapperProps) => <AsyncComponent {...wrapperProps} obj={wrapperProps.obj.data} loader={() => import('./edit-yaml').then(c => c.EditYAML)} create={false} showHeader={true} />;
+  const { t } = useTranslation();
+  const Wrapper = (wrapperProps) => <AsyncComponent {...wrapperProps} obj={wrapperProps.obj.data} loader={() => import('./edit-yaml').then(c => c.EditYAML)} t={t} create={false} showHeader={true} />;
   return <Firehose resources={[{ kind: props.kind, name: props.match.params.name, namespace: props.match.params.ns, isList: false, prop: 'obj' }]}>
     <Wrapper />
   </Firehose>;
