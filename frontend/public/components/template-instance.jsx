@@ -50,6 +50,7 @@ const templateInstancePhase = instance => {
 const TemplateInstanceRow = kind =>
   function TemplateInstanceRow({ obj }) {
     let phase = templateInstancePhase(obj);
+    let paramCount = obj.spec.template.parameters ? obj.spec.template.parameters.length : 0
     return (
       <div className="row co-resource-list__item">
         <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
@@ -57,7 +58,7 @@ const TemplateInstanceRow = kind =>
           <ResourceLink kind="TemplateInstance" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-        <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs co-break-word">{(obj.spec && obj.spec.template && obj.spec.template.parameters.length) || 'None'}</div>
+        <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs co-break-word">{paramCount}</div>
         <div className="col-lg-2 col-md-2 hidden-sm hidden-xs hidden-xs">{phase}</div>
         <div className="col-lg-3 hidden-md hidden-sm hidden-xs hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
