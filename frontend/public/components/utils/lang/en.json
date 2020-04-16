@@ -5,7 +5,9 @@
     "SECOND": "{{count}} second",
     "SECOND_plural": "{{count}} seconds",
     "ANNOTATION": "{{count}} Annotation",
-    "ANNOTATION_plural": "{{count}} Annotations"
+    "ANNOTATION_plural": "{{count}} Annotations",
+    "EVENT": "Showing {{count}} event",
+    "EVENT_plural": "Showing {{count}} events"
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "Create {{something}}",
@@ -24,7 +26,8 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
     "LOG_TAB_0": "The logs for this {{something1}} may be stale.",
     "SAVE": "Save {{something}}",
-    "FOR": "{{something1}} for {{something2}}"
+    "FOR": "{{something1}} for {{something2}}",
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form."

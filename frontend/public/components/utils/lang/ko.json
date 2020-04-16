@@ -5,7 +5,9 @@
     "SECOND": "{{count}} 초",
     "SECOND_plural": "{{count}} 초",
     "ANNOTATION": "{{count}} 주석",
-    "ANNOTATION_plural": "{{count}} 주석"
+    "ANNOTATION_plural": "{{count}} 주석",
+    "EVENT": "Showing {{count}} event",
+    "EVENT_plural": "Showing {{count}} events"
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "{{something}} 생성",
@@ -25,7 +27,8 @@
     "STATUSBOX_0": "새로운 데이터를 가져 오는 시간이 초과되었습니다. 아래 데이터는 오래되었습니다.",
     "NETWORKPOLICY-DETAIL_0": "Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in",
     "SAVE": "{{something}} 저장",
-    "FOR": "{{something1}} for {{something2}}"
+    "FOR": "{{something1}} for {{something2}}",
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form."
