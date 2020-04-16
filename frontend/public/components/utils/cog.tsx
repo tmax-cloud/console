@@ -32,6 +32,7 @@ const cogFactory: CogFactory = {
         deleteModal({
           kind: kind,
           resource: obj,
+          t: t,
         }),
     };
   },
@@ -72,6 +73,7 @@ const cogFactory: CogFactory = {
         annotationsModal({
           kind: kind,
           resource: obj,
+          t: t,
         }),
     };
   },

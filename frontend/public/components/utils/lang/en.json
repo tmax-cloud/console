@@ -24,10 +24,13 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
     "LOG_TAB_0": "The logs for this {{something1}} may be stale.",
     "SAVE": "Save {{something}}",
-    "FOR": "{{something1}} for {{something2}}"
+    "FOR": "{{something1}} for {{something2}}",
+    "DELETE-MODAL_0": "Are you sure you want to delete {{something}}?",
+    "DELETE-MODAL_1": "Are you sure you want to delete {{something1}} in namespace {{something2}}?"
   },
   "VALIDATION": {
-    "LABEL_FORM": "Lables must be 'key=value' form."
+    "LABEL_FORM": "Lables must be 'key=value' form.",
+    "DUPLICATE-KEY": "Duplicate keys found."
   },
   "STRING": {
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
@@ -81,9 +84,11 @@
     "ENVIRONMENT-TAB_1": "FULLDOMAIN = $(SUBDOMAIN).example.com.",
     "ENVIRONMENT-TAB_2": "The information on this page is no longer current. Click Reload to update and lose edits, or Save Changes to overwrite.",
     "ENVIRONMENT-TAB_3": "Select a resource",
-    "ENVIRONMENT-TAB_4": "Select a key"
+    "ENVIRONMENT-TAB_4": "Select a key",
+    "DELETE-MODAL_0": "Delete dependent objects of this resource"
   },
   "CONTENT": {
+    "ADDMORE": "Add More",
     "COMPACT": "Compact",
     "GENERATEDFROM": "Generated from",
     "TIMESINTHELAST": "times in the last",
@@ -376,7 +381,9 @@
     "DELETE": "Delete",
     "COUNT": "Count",
     "RULES": "Rules",
-    "EDITUPDATESTRATEGY": "Edit Update Strategy"
+    "EDITUPDATESTRATEGY": "Edit Update Strategy",
+    "KEY": "Key",
+    "CONFIRM": "Confirm"
   },
   "RESOURCE": {
     "HOME": "Home",
