@@ -43,7 +43,7 @@ class DeleteModal extends PromiseComponent {
     const { kind, resource, t } = this.props;
     return (
       <form onSubmit={this._submit} name="form">
-        <ModalTitle>{t('ADDITIONAL:DELETE', { something: t(`RESOURCE:${kind.label.toUpperCase()}`) })}</ModalTitle>
+        <ModalTitle>{t('ADDITIONAL:DELETE', { something: t(`RESOURCE:${kind.kind.toUpperCase()}`) })}</ModalTitle>
         <ModalBody>
           {_.has(resource.metadata, 'namespace') ? t('ADDITIONAL:DELETE-MODAL_0', { something: resource.metadata.name }) : t('ADDITIONAL:DELETE-MODAL_1', { something1: resource.metadata.name, something2: resource.metadata.namespace })}
           {_.has(kind, 'propagationPolicy') && (

@@ -27,7 +27,8 @@
     "SAVE": "{{something}} 저장",
     "FOR": "{{something1}} for {{something2}}",
     "DELETE-MODAL_0": "{{something}}을(를) 삭제하시겠습니까?",
-    "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?"
+    "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?",
+    "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods."
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -86,7 +87,11 @@
     "ENVIRONMENT-TAB_3": "리소스를 선택하십시오.",
     "ENVIRONMENT-TAB_4": "키를 선택하십시오.",
     "DELETE-MODAL_0": "해당 리소스의 종속 오브젝트를 삭제하십시오.",
-    "CONFIRM": "확인"
+    "EDIT-UPDATESTRATEGY-MODAL_0": "새 리비전을 만들 때 파드를 어떻게 교체해야합니까?",
+    "EDIT-UPDATESTRATEGY-MODAL_1": "현재 원하는 파드 수",
+    "EDIT-UPDATESTRATEGY-MODAL_2": "아래 설정을 기반으로 새 리비전에서 자연스럽게 롤 아웃합니다. ",
+    "EDIT-UPDATESTRATEGY-MODAL_3": "업데이트 시작 시 총 파드 비율 (선택 사항)",
+    "EDIT-UPDATESTRATEGY-MODAL_4": "새 파드를 만들기 전에 기존 파드를 모두 종료하십시오."
   },
   "CONTENT": {
     "ADDMORE": "Add More",
@@ -384,7 +389,13 @@
     "PODS": "파드",
     "RULES": "룰",
     "EDITUPDATESTRATEGY": "업데이트 전략 수정",
-    "KEY": "키"
+    "KEY": "키",
+    "CONFIRM": "확인",
+    "SAVEDESIREDCOUNT": "의도한 수 저장",
+    "(DEFAULT)": "(기본)",
+    "ROLLINGUUPDATE": "롤링 업데이트",
+    "RECREATE": "재시작",
+    "STRATEGY": "전략"
   },
   "RESOURCE": {
     "HOME": "홈",

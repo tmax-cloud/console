@@ -85,6 +85,7 @@ const cogFactory: CogFactory = {
         configureReplicaCountModal({
           resourceKind: kind,
           resource: obj,
+          t: t,
         }),
     };
   },
