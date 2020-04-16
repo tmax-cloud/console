@@ -235,7 +235,7 @@
     "SERVICEINSTANCE": "서비스 인스턴스",
     "SECRET": "시크릿",
     "OBJECTCOUNT": "객체 수",
-    "PARAMETER COUNT": "파라미터 수",
+    "PARAMETERCOUNT": "파라미터 수",
     "PODLABELS": "파드 레이블",
     "NODE": "노드",
     "READINESS": "준비성",
