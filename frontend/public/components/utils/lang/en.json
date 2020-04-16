@@ -339,7 +339,6 @@
     "DATA": "Data",
     "SOURCESECRET": "Source Secret",
     "WEBHOOKSECRET": "Webhook Secret",
-    "SECRETFROMYAML": "Secret from YAML",
     "HIDEVALUES": "Hide Values",
     "REVEALVALUES": "Reveal Values",
     "INPROGRESS": "Inprogress",
