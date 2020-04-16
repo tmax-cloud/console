@@ -18,7 +18,6 @@ import { ResourceListDropdown } from './resource-dropdown';
 import { connectToFlags, FLAGS, flagPending } from '../features';
 import { OpenShiftGettingStarted } from './start-guide';
 import { useTranslation } from 'react-i18next';
-import { ResourcePlural } from '../utils/lang/resource-plural';
 
 const maxMessages = 500;
 const flushInterval = 500;
@@ -40,8 +39,7 @@ const kindFilter = (kind, { involvedObject }) => {
 const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
   class Inner extends React.PureComponent {
     render() {
-      const { klass, status, tooltipMsg, obj, lastTimestamp, firstTimestamp, message, source, count, flags } = this.props;
-
+      const { klass, status, tooltipMsg, obj, lastTimestamp, firstTimestamp, message, source, count, flags, t } = this.props;
       return (
         <div className={`${klass} slide-${status}`}>
           <div className="co-sysevent__icon-box">
@@ -56,12 +54,12 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
               </div>
               <div className="co-sysevent__details">
                 <small className="co-sysevent__source">
-                  Generated from <span>{source.component}</span>
+                  {t("CONTENT:GENERATEDFROM")} <span>{source.component}</span>
                   {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <React.Fragment>{source.host}</React.Fragment>}</span>}
                 </small>
                 {count > 1 && (
                   <small className="co-sysevent__count text-secondary">
-                    {count} times in the last <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
+                    {count} {t("CONTENT:TIMESINTHELAST")}  <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
                   </small>
                 )}
               </div>
@@ -99,7 +97,7 @@ class SysEvent extends React.Component {
   }
 
   render() {
-    const { index, style, reason, message, source, metadata, firstTimestamp, lastTimestamp, count, involvedObject: obj } = this.props;
+    const { index, style, reason, message, source, metadata, firstTimestamp, lastTimestamp, count, involvedObject: obj, t } = this.props;
     const klass = classNames('co-sysevent', { 'co-sysevent--error': categoryFilter('error', this.props) });
     const tooltipMsg = `${reason} (${obj.kind.toLowerCase()})`;
 
@@ -114,7 +112,7 @@ class SysEvent extends React.Component {
     return (
       <div style={style}>
         <CSSTransition mountOnEnter={true} appear={shouldAnimate} in exit={false} timeout={timeout} classNames="slide">
-          {status => <Inner klass={klass} status={status} tooltipMsg={tooltipMsg} obj={obj} firstTimestamp={firstTimestamp} lastTimestamp={lastTimestamp} count={count} message={message} source={source} width={style.width} />}
+          {status => <Inner klass={klass} status={status} tooltipMsg={tooltipMsg} obj={obj} firstTimestamp={firstTimestamp} lastTimestamp={lastTimestamp} count={count} message={message} source={source} width={style.width} t={t} />}
         </CSSTransition>
       </div>
     );
@@ -135,7 +133,7 @@ class EventsStreamPage_ extends React.Component {
 
   render() {
     const { category, kind, textFilter } = this.state;
-    const { flags, showTitle = true, autoFocus = true } = this.props;
+    const { flags, showTitle = true, autoFocus = true, t } = this.props;
     if (flagPending(flags.OPENSHIFT) || flagPending(flags.PROJECTS_AVAILABLE)) {
       return null;
     }
@@ -147,10 +145,10 @@ class EventsStreamPage_ extends React.Component {
         <div className={classNames({ 'co-disabled': showGettingStarted })}>
           {showTitle && (
             <Helmet>
-              <title>Events</title>
+              <title>{t('RESOURCE:EVENT')}</title>
             </Helmet>
           )}
-          {showTitle && <NavTitle title="Events" />}
+          {showTitle && <NavTitle title={t('RESOURCE:EVENT')} />}
           <div className="co-m-pane__filter-bar">
             <div className="co-m-pane__filter-bar-group">
               <ResourceListDropdown title="All Types" className="btn-group" onChange={v => this.setState({ kind: v })} showAll selected={kind} />
@@ -172,6 +170,7 @@ export const EventStreamPage = connectToFlags(FLAGS.OPENSHIFT, FLAGS.PROJECTS_AV
 class EventStream extends SafetyFirst {
   constructor(props) {
     super(props);
+    const { t } = this.props;
     this.messages = {};
     this.state = {
       active: true,
@@ -184,7 +183,7 @@ class EventStream extends SafetyFirst {
     this.toggleStream = this.toggleStream_.bind(this);
     this.rowRenderer = function rowRenderer({ index, style, key }) {
       const event = this.state.filteredEvents[index];
-      return <SysEvent {...event} key={key} style={style} index={index} />;
+      return <SysEvent {...event} key={key} style={style} index={index} t={t} />;
     }.bind(this);
   }
 
@@ -366,36 +365,38 @@ class EventStream extends SafetyFirst {
     if (noMatches && !resourceEventStream) {
       sysEventStatus = (
         <Box className="co-sysevent-stream__status-box-empty">
-          <div className="cos-status-box__title">No Matching Events</div>
+          <div className="cos-status-box__title">{t('STRING:EVENT_1')}</div>
           <div className="text-center cos-status-box__detail">
             {allCount}
-            {allCount >= maxMessages && '+'} events exist, but none match the current filter
+            {allCount >= maxMessages && '+'} {t('STRING:EVENT_2')}
           </div>
         </Box>
       );
     }
 
     if (error) {
-      statusBtnTxt = <span className="co-sysevent-stream__connection-error">Error connecting to event stream{_.isString(error) && `: ${error}`}</span>;
+      statusBtnTxt = <span className="co-sysevent-stream__connection-error">{t('STRING:EVENT_3')}{_.isString(error) && `: ${error}`}</span>;
       sysEventStatus = (
         <Box>
-          <div className="cos-status-box__title cos-error-title">Error Loading Events</div>
-          <div className="cos-status-box__detail text-center">An error occurred during event retrieval. Attempting to reconnect...</div>
+          <div className="cos-status-box__title cos-error-title">{t('STRING:EVENT_4')}</div>
+          <div className="cos-status-box__detail text-center">{t('STRING:EVENT_5')}</div>
         </Box>
       );
     } else if (loading) {
-      statusBtnTxt = <span>Loading events...</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_6')}</span>;
       sysEventStatus = <Loading />;
     } else if (active) {
-      statusBtnTxt = <span>Streaming events...</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_7')}</span>;
     } else {
-      statusBtnTxt = <span>Event stream is paused.</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_8')}</span>;
     }
 
     const klass = classNames('co-sysevent-stream__timeline', {
       'co-sysevent-stream__timeline--empty': !allCount || !count,
     });
-    const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
+    //  const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
+    const messageCount = count < maxMessages ?
+      t('PLURAL:EVENT', { count: count }) : t('ADDITIONAL:SHOWINGEVENTS', { something1: count, something2: allCount });
 
     return (
       <div className="co-m-pane__body">
@@ -408,7 +409,7 @@ class EventStream extends SafetyFirst {
           <div className={klass}>
             <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
             <div className="co-sysevent-stream__timeline__end-message">
-              There are no events before <Timestamp timestamp={this.state.oldestTimestamp} />
+              {t('STRING:EVENT_9')}<Timestamp timestamp={this.state.oldestTimestamp} />
             </div>
           </div>
           {count > 0 && (

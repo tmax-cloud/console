@@ -5,7 +5,9 @@
     "SECOND": "{{count}} second",
     "SECOND_plural": "{{count}} seconds",
     "ANNOTATION": "{{count}} Annotation",
-    "ANNOTATION_plural": "{{count}} Annotations"
+    "ANNOTATION_plural": "{{count}} Annotations",
+    "EVENT": "Showing {{count}} event",
+    "EVENT_plural": "Showing {{count}} events"
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "Create {{something}}",
@@ -27,7 +29,8 @@
     "FOR": "{{something1}} for {{something2}}",
     "DELETE-MODAL_0": "Are you sure you want to delete {{something}}?",
     "DELETE-MODAL_1": "Are you sure you want to delete {{something1}} in namespace {{something2}}?",
-    "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods."
+    "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
