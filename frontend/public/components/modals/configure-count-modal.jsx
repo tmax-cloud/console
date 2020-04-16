@@ -86,7 +86,7 @@ export const configureReplicaCountModal = props => {
       {
         defaultValue: 0,
         title: props.t('ADDITIONAL:EDIT', { something: props.t('CONTENT:COUNT') }),
-        message: props.t('ADDITIONAL:COUNT-MODAL_0', { something: ResourcePlural(props.resourceKind.label.toUpperCase(), props.t) }),
+        message: props.t('ADDITIONAL:COUNT-MODAL_0', { something: ResourcePlural(props.resourceKind.kind.toUpperCase(), props.t) }),
         path: '/spec/replicas',
         buttonText: props.t('CONTENT:SAVEDESIREDCOUNT'),
       },

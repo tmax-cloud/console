@@ -15,7 +15,6 @@
     "VIEW": "{{something}} 보기",
     "EDIT": "{{something}} 수정",
     "STATUSOF": "{{something}} 상태",
-    "EMPTYBOX": "{{something}} 찾을 수 없음",
     "OVERVIEWTITLE": "{{something}} 개요",
     "DEPLOYMENT_DETAIL_TOOLTIP_0": "해당 {{something}}이 의도한 템플릿 사양을 가진 종료되지 않은 총 파드 수",
     "DEPLOYMENT_DETAIL_TOOLTIP_1": "해당 {{something}} (셀렉터와 일치하는 레이블)이 대상으로 하는 종료되지 않은 총 파드 수",
@@ -37,6 +36,7 @@
     "DUPLICATE-KEY": "중복 키가 발견되었습니다."
   },
   "STRING": {
+    "EMPTYBOX": "표시할 정보가 없습니다.",
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
     "SERVICE_DETAIL_0": "클러스터 외부에서 액세스 가능",
     "SERVICE_DETAIL_1": "로드 밸런서의 인그레스 포인트 ",

@@ -15,7 +15,6 @@
     "VIEW": "View {{something}}",
     "EDIT": "Edit {{something}}",
     "STATUSOF": "Status of {{something}}",
-    "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} Overview",
     "BREADCRUMBSDETAILS": "{{something}} Details",
     "DEPLOYMENT_DETAIL_TOOLTIP_0": "Total number of non-terminated pods targeted by this {{something}} that have the desired template spec.",
@@ -37,6 +36,7 @@
     "DUPLICATE-KEY": "Duplicate keys found."
   },
   "STRING": {
+    "EMPTYBOX": "No data found",
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
     "SERVICE_DETAIL_0": "Accessible outside the cluster",
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
