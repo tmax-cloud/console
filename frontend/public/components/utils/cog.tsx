@@ -51,6 +51,7 @@ const cogFactory: CogFactory = {
         labelsModal({
           kind: kind,
           resource: obj,
+          t: t,
         }),
     };
   },
@@ -62,6 +63,7 @@ const cogFactory: CogFactory = {
         podSelectorModal({
           kind: kind,
           resource: obj,
+          t: t,
         }),
     };
   },
@@ -104,6 +106,7 @@ const cogFactory: CogFactory = {
         configureStatusModal({
           resourceKind: kind,
           resource: obj,
+          t: t,
         }),
     };
   },

@@ -12,17 +12,23 @@ import { CamelCaseWrap } from './utils/camel-case-wrap';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
-const MarkAsUnschedulable = (kind, obj) => ({
-  label: 'Mark as Unschedulable',
-  hidden: _.get(obj, 'spec.unschedulable'),
-  callback: () => configureUnschedulableModal({ resource: obj }),
-});
+const MarkAsUnschedulable = (kind, obj) => {
+  const { t } = useTranslation();
+  return {
+    label: t('CONTENT:MARKASUNSCHEDULABLE'),
+    hidden: _.get(obj, 'spec.unschedulable'),
+    callback: () => configureUnschedulableModal({ resource: obj, t: t }),
+  };
+};
 
-const MarkAsSchedulable = (kind, obj) => ({
-  label: 'Mark as Schedulable',
-  hidden: !_.get(obj, 'spec.unschedulable', false),
-  callback: () => makeNodeSchedulable(obj),
-});
+const MarkAsSchedulable = (kind, obj) => {
+  const { t } = useTranslation();
+  return {
+    label: t('CONTENT:MARKASSCHEDULABLE'),
+    hidden: !_.get(obj, 'spec.unschedulable', false),
+    callback: () => makeNodeSchedulable({ obj, t: t }),
+  };
+};
 
 const menuActions = [MarkAsSchedulable, MarkAsUnschedulable, Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit];
 

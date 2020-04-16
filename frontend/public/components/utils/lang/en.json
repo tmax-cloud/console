@@ -95,7 +95,8 @@
     "EDIT-UPDATESTRATEGY-MODAL_1": "Current desired pod count",
     "EDIT-UPDATESTRATEGY-MODAL_2": "Execute a smooth roll out of the new revision, based on the settings below",
     "EDIT-UPDATESTRATEGY-MODAL_3": "Number or percentage of total pods at the start of the update (optional)",
-    "EDIT-UPDATESTRATEGY-MODAL_4": "Shut down all existing pods before creating new ones"
+    "EDIT-UPDATESTRATEGY-MODAL_4": "Shut down all existing pods before creating new ones",
+    "UNSCHEDULABLENODESMODAL_0": "Unschedulable nodes won&#39;t accept new pods. This is useful for scheduling maintenance or preparing to decommission a node."
   },
   "CONTENT": {
     "ADDMORE": "Add More",
@@ -398,7 +399,10 @@
     "(DEFAULT)": "(default)",
     "ROLLINGUUPDATE": "Rolling Update",
     "RECREATE": "Recreate",
-    "STRATEGY": "Strategy"
+    "STRATEGY": "Strategy",
+    "MARKASUNSCHEDULABLE": "Mark as Unschedulable",
+    "MARKASSCHEDULABLE": "Mark as schedulable",
+    "MARKUNSCHEDULABLE": "Mark Unschedulable"
   },
   "RESOURCE": {
     "HOME": "Home",
