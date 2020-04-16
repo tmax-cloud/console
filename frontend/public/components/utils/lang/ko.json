@@ -29,7 +29,8 @@
     "DELETE-MODAL_0": "{{something}}을(를) 삭제하시겠습니까?",
     "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
-    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
+    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}."
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
@@ -377,7 +378,7 @@
     "SECURITYENHANCEDLINUX": "Security-Enhanced Linux",
     "PRIVILEGED": "특권",
     "FILESTORAGEGROUP": "파일스토리지 그룹",
-    "SUPPLEMENTAL GROUP": "Supplemental Group",
+    "SUPPLEMENTALGROUP": "Supplemental Group",
     "NAMESPACESELECTOR": "네임스페이스 선택기",
     "METERING": "미터링",
     "ROLES": "롤",

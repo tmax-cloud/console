@@ -9,7 +9,7 @@ import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const PodSecurityPolicyHeader = props => {
   const { t } = useTranslation();
@@ -92,11 +92,11 @@ const Details = ({ obj: podsecuritypolicy }) => {
             <dl className="co-m-pane__details">
               <dt>{t('CONTENT:PRIVILEGED')}</dt>
               <dd>{podsecuritypolicy.spec.privileged ? 'True' : 'False'}</dd>
-              <dt>{t('CONTENT:SELINUX')}</dt>
+              <dt>{t('CONTENT:SECURITYENHANCEDLINUX')}</dt>
               <dd>{podsecuritypolicy.spec.seLinux.rule}</dd>
               <dt>{t('CONTENT:RUNASUSER')}</dt>
               <dd>{podsecuritypolicy.spec.runAsUser.rule}</dd>
-              <dt>{t('CONTENT:FSGROUP')}</dt>
+              <dt>{t('CONTENT:FILESTORAGEGROUP')}</dt>
               <dd>{podsecuritypolicy.spec.fsGroup.rule}</dd>
               <dt>{t('CONTENT:SUPPLEMENTALGROUP')}</dt>
               <dd>{podsecuritypolicy.spec.supplementalGroups.rule}</dd>

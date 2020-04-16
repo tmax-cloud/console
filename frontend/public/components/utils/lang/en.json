@@ -29,7 +29,8 @@
     "DELETE-MODAL_0": "Are you sure you want to delete {{something}}?",
     "DELETE-MODAL_1": "Are you sure you want to delete {{something1}} in namespace {{something2}}?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
-    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
+    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}."
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -374,7 +375,7 @@
     "SECURITYENHANCEDLINUX": "Security-Enhanced Linux",
     "PRIVILEGED": "Privileged",
     "FILESTORAGEGROUP": "File Storage Group",
-    "SUPPLEMENTAL GROUP": "Supplemental Group",
+    "SUPPLEMENTALGROUP": "Supplemental Group",
     "NAMESPACESELECTOR": "Namespace Selector",
     "METERING": "Metering",
     "ROLES": "Roles",
