@@ -96,15 +96,16 @@ export const configureReplicaCountModal = props => {
 };
 
 export const configureJobParallelismModal = props => {
+  const { t } = props;
   return configureCountModal(
     _.defaults(
       {},
       {
         defaultValue: 1,
-        title: 'Edit Parallelism',
-        message: `${props.resourceKind.labelPlural} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.`,
+        title: t('ADDITIONAL:EDIT', { something: t('CONTENT:PARALLELISM') }),
+        message: t('ADDITIONAL:EDIT-PARALLELISM-MODAL_0', { something: ResourcePlural(props.resourceKind.kind, t) }),
         path: '/spec/parallelism',
-        buttonText: 'Save Desired Parallelism',
+        buttonText: t('ADDITIONAL:SAVE', { something: t('CONTENT:DESIREDPARALLELISM') }),
       },
       props,
     ),
