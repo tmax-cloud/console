@@ -106,9 +106,11 @@
     "SECRET-CREATE_3": "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.",
     "SECRET-CREATE_4": "Upload your private SSH key file.",
     "SECRET-CREATE_5": "Private SSH key file for Git authentication.",
-    "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook."
+    "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook.",
+    "UNSCHEDULABLENODESMODAL_0": "Unschedulable nodes won't accept new pods. This is useful for scheduling maintenance or preparing to decommission a node."
   },
   "CONTENT": {
+    "SAVE": "Save",
     "BROWSE": "Browse",
     "PWORTOKEN": "Password or Token",
     "SSHPRIVATEKEY": "SSH Private Key",
@@ -424,7 +426,11 @@
     "DISPLAYNAME": "Display Name",
     "DEFAULTNETWORKPOLICY": "Default Network Policy",
     "NORESTRICTIONS(DEFAULT)": "No restrictions (default)",
-    "DENYALLINBOUNDTRAFFIC": "Deny all inbound traffic"
+    "DENYALLINBOUNDTRAFFIC": "Deny all inbound traffic",
+    "CHANGESESSIONEXPIREDTIME": "Change Session Expired Time",
+    "SESSIONEXPIREDTIME": "Session Expired Time",
+    "MINUTE": "Minute",
+    "MINIMUM1,MAXIMUM60": "Minimum 1 minute, maximum 60 minutes"
   },
   "RESOURCE": {
     "HOME": "Home",

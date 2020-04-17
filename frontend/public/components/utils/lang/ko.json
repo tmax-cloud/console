@@ -109,6 +109,7 @@
     "UNSCHEDULABLENODESMODAL_0": "예약 불가능한 노드는 새 파드를 허용하지 않습니다. 이는 유지보수 스케줄을 설정하거나 노드 해제시 유용합니다. "
   },
   "CONTENT": {
+    "SAVE": "저장",
     "BROWSE": "Browse",
     "PWORTOKEN": "Password or Token",
     "SSHPRIVATEKEY": "SSH Private Key",
@@ -426,7 +427,11 @@
     "DISPLAYNAME": "이름 표시",
     "DEFAULTNETWORKPOLICY": "기본 네트워크 정책",
     "NORESTRICTIONS(DEFAULT)": "제한 없음 (기본)",
-    "DENYALLINBOUNDTRAFFIC": "모든 인바운드 트래픽 차단"
+    "DENYALLINBOUNDTRAFFIC": "모든 인바운드 트래픽 차단",
+    "CHANGESESSIONEXPIREDTIME": "세션 만료 시간 변경",
+    "SESSIONEXPIREDTIME": "세션 만료 시간",
+    "MINUTE": "분",
+    "MINIMUM1,MAXIMUM60": "최소 1분, 최대 60분"
   },
   "RESOURCE": {
     "HOME": "홈",
