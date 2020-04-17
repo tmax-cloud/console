@@ -466,6 +466,7 @@
     "ROLE": "Role",
     "CLUSTERROLE": "Cluster Role",
     "ROLEBINDING": "Role Binding",
+    "CLUSTERROLEBINDING": "Cluster Role Binding",
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
     "USERGROUP": "User Group",
