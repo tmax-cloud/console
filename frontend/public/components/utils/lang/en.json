@@ -31,7 +31,9 @@
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
     "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
     "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}.",
-    "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete."
+    "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.",
+    "DUPLICATE_1": "Duplicate {{something}}...",
+    "EDIT_1": "Edit {{something}} Subject..."
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -405,7 +407,10 @@
     "MARKASSCHEDULABLE": "Mark as schedulable",
     "MARKUNSCHEDULABLE": "Mark Unschedulable",
     "DESIREDPARALLELISM": "Desired Parallelism",
-    "ADDROLEBINDING": "Add Role Binding"
+    "ADDROLEBINDING": "Add Role Binding",
+    "DOWNLOADKUBECONFIGFILE": "Download kubeconfig file",
+    "ERROR": "Error",
+    "OK": "OK"
   },
   "RESOURCE": {
     "HOME": "Home",
