@@ -444,7 +444,8 @@
     "CHANGESESSIONEXPIREDTIME": "세션 만료 시간 변경",
     "SESSIONEXPIREDTIME": "세션 만료 시간",
     "MINUTE": "분",
-    "MINIMUM1,MAXIMUM60": "최소 1분, 최대 60분"
+    "MINIMUM1,MAXIMUM60": "최소 1분, 최대 60분",
+    "LOGOUT": "로그아웃"
   },
   "RESOURCE": {
     "HOME": "홈",

@@ -443,7 +443,8 @@
     "CHANGESESSIONEXPIREDTIME": "Change Session Expired Time",
     "SESSIONEXPIREDTIME": "Session Expired Time",
     "MINUTE": "Minute",
-    "MINIMUM1,MAXIMUM60": "Minimum 1 minute, maximum 60 minutes"
+    "MINIMUM1,MAXIMUM60": "Minimum 1 minute, maximum 60 minutes",
+    "LOGOUT": "Logout"
   },
   "RESOURCE": {
     "HOME": "Home",
