@@ -108,6 +108,10 @@
     "UNSCHEDULABLENODESMODAL_0": "예약 불가능한 노드는 새 파드를 허용하지 않습니다. 이는 유지보수 스케줄을 설정하거나 노드 해제시 유용합니다. "
   },
   "CONTENT": {
+    "TCP": "TCP",
+    "UDP": "UDP",
+    "SCDP": "SCDP",
+    "PORTNAME": "Port Name",
     "ONFAILURE": "OnFailure",
     "VOLUMES": "Volumes",
     "RESOURCE(REQUEST)": "Resource(Request)",

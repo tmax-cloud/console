@@ -108,6 +108,10 @@
     "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook."
   },
   "CONTENT": {
+    "TCP": "TCP",
+    "UDP": "UDP",
+    "SCDP": "SCDP",
+    "PORTNAME": "Port Name",
     "ONFAILURE": "OnFailure",
     "VOLUMES": "Volumes",
     "RESOURCE(REQUEST)": "Resource(Request)",
