@@ -49,7 +49,7 @@ const templateInstancePhase = instance => {
 const TemplateInstanceRow = kind =>
   function TemplateInstanceRow({ obj }) {
     let phase = templateInstancePhase(obj);
-    let paramCount = obj.spec.template.parameters ? obj.spec.template.parameters.length : 0
+    let paramCount = obj.spec.template.parameters ? obj.spec.template.parameters.length : 0;
     return (
       <div className="row co-resource-list__item">
         <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
@@ -63,6 +63,28 @@ const TemplateInstanceRow = kind =>
       </div>
     );
   };
+
+export const TemplateInstanceList = props => {
+  const { kinds } = props;
+  const Row = TemplateInstanceRow(kinds[0]);
+  Row.displayName = 'TemplateInstanceRow';
+  return <List {...props} Header={TemplateInstanceHeader} Row={Row} />;
+};
+TemplateInstanceList.displayName = TemplateInstanceList;
+const TemplateInstancesPage = props => {
+  const { t } = useTranslation();
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/templateinstances/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage ListComponent={TemplateInstanceList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
+};
+export { TemplateInstancesPage };
 
 const Details = ({ obj: templateinstance }) => {
   const { t } = useTranslation();
@@ -93,28 +115,6 @@ const Details = ({ obj: templateinstance }) => {
   );
 };
 
-export const TemplateInstanceList = props => {
-  const { kinds } = props;
-  const Row = TemplateInstanceRow(kinds[0]);
-  Row.displayName = 'TemplateInstanceRow';
-  return <List {...props} Header={TemplateInstanceHeader} Row={Row} />;
-};
-TemplateInstanceList.displayName = TemplateInstanceList;
-const TemplateInstancesPage = props => {
-  const { t } = useTranslation();
-  const createItems = {
-    form: t('CONTENT:FORMEDITOR'),
-    yaml: t('CONTENT:YAMLEDITOR'),
-  };
-
-  const createProps = {
-    items: createItems,
-    createLink: type => `/k8s/ns/${props.namespace || 'default'}/templateinstances/new${type !== 'yaml' ? '/' + type : ''}`,
-  };
-  return <ListPage ListComponent={TemplateInstanceList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} {...props} />;
-};
-export { TemplateInstancesPage };
-
 TemplateInstancesPage.displayName = 'TemplateInstancesPage';
 
 export const TemplateInstancesDetailsPage = props => {
@@ -130,7 +130,7 @@ export const TemplateInstancesDetailsPage = props => {
       }
       kind="TemplateInstance"
       menuActions={menuActions}
-      pages={[navFactory.details(Details), navFactory.editYaml()]}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
     />
   );
 };
