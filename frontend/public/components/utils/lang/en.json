@@ -110,6 +110,10 @@
     "UNSCHEDULABLENODESMODAL_0": "Unschedulable nodes won't accept new pods. This is useful for scheduling maintenance or preparing to decommission a node."
   },
   "CONTENT": {
+    "TCP": "TCP",
+    "UDP": "UDP",
+    "SCDP": "SCDP",
+    "PORTNAME": "Port Name",
     "SAVE": "Save",
     "ONFAILURE": "OnFailure",
     "VOLUMES": "Volumes",

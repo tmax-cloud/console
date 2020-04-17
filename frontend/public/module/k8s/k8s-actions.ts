@@ -20,14 +20,14 @@ const types = {
   updateListFromWS: 'updateListFromWS',
 };
 
-type Action = (type: string) => (id: string, k8sObjects: any) => {type: string, id: string, k8sObjects: any};
-const action_: Action = (type) => (id, k8sObjects) => ({type, id, k8sObjects});
+type Action = (type: string) => (id: string, k8sObjects: any) => { type: string, id: string, k8sObjects: any };
+const action_: Action = (type) => (id, k8sObjects) => ({ type, id, k8sObjects });
 
-const WS = {} as {[id: string]: WebSocket & any};
+const WS = {} as { [id: string]: WebSocket & any };
 const POLLs = {};
 const REF_COUNTS = {};
 
-const nop = () => {};
+const nop = () => { };
 const paginationLimit = 250;
 
 const actions = {
@@ -41,16 +41,16 @@ const actions = {
     if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
       return;
     }
-    dispatch({type: types.getResourcesInFlight});
+    dispatch({ type: types.getResourcesInFlight });
     getResources_()
-      .then(resources => dispatch({type: types.resources, resources}))
+      .then(resources => dispatch({ type: types.resources, resources }))
       // try again or something?
       // eslint-disable-next-line no-console
       .catch(err => console.error(err));
   },
 
   filterList: (id, name, value) => {
-    return {id, name, value, type: types.filterList};
+    return { id, name, value, type: types.filterList };
   },
 
   watchK8sObject: (id, name, namespace, query, k8sType) => (dispatch, getState) => {
@@ -58,7 +58,7 @@ const actions = {
       REF_COUNTS[id] += 1;
       return nop;
     }
-    dispatch({id, type: types.watchK8sObject});
+    dispatch({ id, type: types.watchK8sObject });
     REF_COUNTS[id] = 1;
 
     if (query.name) {
@@ -76,11 +76,14 @@ const actions = {
     POLLs[id] = setInterval(poller, 30 * 1000);
     poller();
 
-    const {subprotocols} = getState().UI.get('impersonate', {});
-
-    WS[id] = k8sWatch(k8sType, {...query, subprotocols}).onbulkmessage(events =>
-      events.forEach(e => dispatch(actions.modifyObject(id, e.object)))
-    );
+    const { subprotocols } = getState().UI.get('impersonate', {});
+    //k8sWatch의 리턴값이 없는경우 예외처리
+    let watchResult = k8sWatch(k8sType, { ...query, subprotocols });
+    if (watchResult) {
+      WS[id] = watchResult.onbulkmessage(events =>
+        events.forEach(e => dispatch(actions.modifyObject(id, e.object)))
+      );
+    }
   },
 
   stopK8sWatch: id => {
@@ -98,7 +101,7 @@ const actions = {
     clearInterval(poller);
     delete POLLs[id];
     delete REF_COUNTS[id];
-    return {type: types.stopK8sWatch, id};
+    return { type: types.stopK8sWatch, id };
   },
 
   watchK8sList: (id, query, k8skind) => (dispatch, getState) => {
@@ -108,7 +111,7 @@ const actions = {
       return nop;
     }
 
-    dispatch({type: types.watchK8sList, id, query});
+    dispatch({ type: types.watchK8sList, id, query });
     REF_COUNTS[id] = 1;
 
     /** @type {(continueToken: string) => Promise<string>} */
@@ -119,7 +122,7 @@ const actions = {
         return;
       }
 
-      const response = await k8sList(k8skind, {...query, limit: paginationLimit, ...(continueToken ? {continue: continueToken} : {})}, true);
+      const response = await k8sList(k8skind, { ...query, limit: paginationLimit, ...(continueToken ? { continue: continueToken } : {}) }, true);
 
       if (!REF_COUNTS[id]) {
         return;
@@ -163,8 +166,8 @@ const actions = {
           return;
         }
 
-        const {subprotocols} = getState().UI.get('impersonate', {});
-        WS[id] = k8sWatch(k8skind, {...query, resourceVersion}, {subprotocols, timeout: 60 * 1000});
+        const { subprotocols } = getState().UI.get('impersonate', {});
+        WS[id] = k8sWatch(k8skind, { ...query, resourceVersion }, { subprotocols, timeout: 60 * 1000 });
       } catch (e) {
         if (!REF_COUNTS[id]) {
           // eslint-disable-next-line no-console
@@ -181,41 +184,42 @@ const actions = {
         }
         return;
       }
+      if (WS[id]) {
+        WS[id]
+          .onclose(event => {
+            // Close Frame Status Codes: https://tools.ietf.org/html/rfc6455#section-7.4.1
+            if (event.code !== 1006) {
+              return;
+            }
+            // eslint-disable-next-line no-console
+            console.log('WS closed abnormally - starting polling loop over!');
+            const ws = WS[id];
+            const timedOut = true;
+            ws && ws.destroy(timedOut);
+          })
+          .ondestroy(timedOut => {
+            if (!timedOut) {
+              return;
+            }
+            // If the WS is unsucessful for timeout duration, assume it is less work
+            //  to update the entire list and then start the WS again
 
-      WS[id]
-        .onclose(event => {
-          // Close Frame Status Codes: https://tools.ietf.org/html/rfc6455#section-7.4.1
-          if (event.code !== 1006) {
-            return;
-          }
-          // eslint-disable-next-line no-console
-          console.log('WS closed abnormally - starting polling loop over!');
-          const ws = WS[id];
-          const timedOut = true;
-          ws && ws.destroy(timedOut);
-        })
-        .ondestroy(timedOut => {
-          if (!timedOut) {
-            return;
-          }
-          // If the WS is unsucessful for timeout duration, assume it is less work
-          //  to update the entire list and then start the WS again
+            // eslint-disable-next-line no-console
+            console.log(`${id} timed out - restarting polling`);
+            delete WS[id];
 
-          // eslint-disable-next-line no-console
-          console.log(`${id} timed out - restarting polling`);
-          delete WS[id];
+            if (POLLs[id]) {
+              return;
+            }
 
-          if (POLLs[id]) {
-            return;
-          }
-
-          POLLs[id] = setTimeout(pollAndWatch, 15 * 1000);
-        })
-        .onbulkmessage(events => dispatch(actions.updateListFromWS(id, events)));
+            POLLs[id] = setTimeout(pollAndWatch, 15 * 1000);
+          })
+          .onbulkmessage(events => dispatch(actions.updateListFromWS(id, events)));
+      }
     };
     pollAndWatch();
   },
-} as {[type: string]: Function};
+} as { [type: string]: Function };
 
-export {types};
+export { types };
 export default actions;

@@ -420,7 +420,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:RUNCOMMAND')}</label>
                             <div>
-                                <ValueEditor valueString="Run Command" values={this.state.runCommands} updateParentData={this._updateRunCommands} />
+                                <ValueEditor valueString="RunCommand" t={t} values={this.state.runCommands} updateParentData={this._updateRunCommands} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -432,7 +432,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:RUNCOMMANDARGS')}</label>
                             <div>
-                                <ValueEditor valueString="Run Command Arguments" values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
+                                <ValueEditor valueString="RunCommandArguments" t={t} values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -444,7 +444,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:ENVVARIABLES')}</label>
                             <div>
-                                <KeyValueEditor keyValuePairs={this.state.env} updateParentData={this._updateEnv} />
+                                <KeyValueEditor t={t} keyValuePairs={this.state.env} updateParentData={this._updateEnv} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -456,7 +456,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:PORT')}</label>
                             <div>
-                                <BasicPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
+                                <BasicPortEditor t={t} portPairs={this.state.ports} updateParentData={this._updatePorts} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -468,7 +468,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:VOLUMES')}</label>
                             <div>
-                                <VolumeEditor options={pvcList} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
+                                <VolumeEditor options={pvcList} t={t} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -480,7 +480,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:RESOURCE(REQUEST)')}</label>
                             <div>
-                                <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
+                                <KeyValueEditor keyValuePairs={this.state.requests} t={t} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -492,7 +492,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:RESOURCE(LIMITS)')}</label>
                             <div>
-                                <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
+                                <KeyValueEditor keyValuePairs={this.state.limits} t={t} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
                             </div>
                         </div>
                     </React.Fragment>
