@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, Firehose, history, kindObj, StatusBox, SelectorInput } from '../utils';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { AsyncComponent } from '../utils/async';
+import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from '../utils/lang/resource-plural';
 import { VolumeEditor } from '../utils/volume-editor';
 import { BasicPortEditor } from '../utils/basic-port-editor';
 import { KeyValueEditor } from '../utils/key-value-editor';
@@ -18,7 +19,7 @@ enum CreateType {
     form = 'form',
 }
 const pageExplanation = {
-    [CreateType.form]: 'Create Deployment using Form Editor',
+    [CreateType.form]: '',
 };
 
 const determineCreateType = (data) => {
@@ -344,20 +345,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     }
     render() {
         const { volumeOptions } = this.state;
-
+        const { t } = this.props
         let pvcList = volumeOptions.map(function (pvc) {
             return <option value={pvc}>{pvc}</option>;
         });
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>Create Deployment</title>
+                <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Deployment', t) })} </title>
             </Helmet >
             <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">Create Deployment</h1>
+                <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Deployment', t) })}</h1>
                 <p className="co-m-pane__explanation">{this.props.explanation}</p>
                 <fieldset disabled={!this.props.isCreate}>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Name</label>
+                        <label className="control-label" htmlFor="secret-name">{t('CONTENT:NAME')}</label>
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -369,7 +370,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Container Image</label>
+                        <label className="control-label" htmlFor="secret-name">{t('CONTENT:CONTAINERIMAGE')}</label>
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -379,17 +380,17 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-type" >Image pull policy</label>
+                        <label className="control-label" htmlFor="secret-type" >{t('CONTENT:IMAGEPULLPOLICY')}</label>
                         <div>
                             <select onChange={this.onImagePullPolicyChanged} className="form-control" id="template">
-                                <option value='IfNotPresent'>IfNotPresent</option>
-                                <option value='Always'>Always</option>
-                                <option value='Never'>Never</option>
+                                <option value='IfNotPresent'>{t('CONTENT:IFNOTPRESENT')}</option>
+                                <option value='Always'>{t('CONTENT:ALWAYS')}</option>
+                                <option value='Never'>{t('CONTENT:NEVER')}</option>
                             </select>
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="control-label" htmlFor="secret-name">Replicas</label>
+                        <label className="control-label" htmlFor="secret-name">{t('CONTENT:REPLICAS')}</label>
                         <div>
                             <input className="form-control"
                                 type="text"
@@ -402,14 +403,14 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Labels</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:LABELS')}</label>
                             <div>
                                 <SelectorInput labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
                             </div>
                         </div>
                     </React.Fragment>
                     <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-                        <p>Lables must be 'key=value' form.</p>
+                        <p>{t('VALIDATION:LABEL_FORM')}</p>
                     </div>
                 </div>
 
@@ -417,7 +418,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Run command</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:RUNCOMMAND')}</label>
                             <div>
                                 <ValueEditor valueString="Run Command" values={this.state.runCommands} updateParentData={this._updateRunCommands} />
                             </div>
@@ -429,7 +430,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Run command arguments</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:RUNCOMMANDARGS')}</label>
                             <div>
                                 <ValueEditor valueString="Run Command Arguments" values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
                             </div>
@@ -441,7 +442,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Environment variables</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:ENVVARIABLES')}</label>
                             <div>
                                 <KeyValueEditor keyValuePairs={this.state.env} updateParentData={this._updateEnv} />
                             </div>
@@ -453,7 +454,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Port</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:PORT')}</label>
                             <div>
                                 <BasicPortEditor portPairs={this.state.ports} updateParentData={this._updatePorts} />
                             </div>
@@ -465,7 +466,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Volumes</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:VOLUMES')}</label>
                             <div>
                                 <VolumeEditor options={pvcList} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
                             </div>
@@ -477,7 +478,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Resource(Request)</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:RESOURCE(REQUEST)')}</label>
                             <div>
                                 <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
                             </div>
@@ -489,7 +490,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Resource(Limits)</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:RESOURCE(LIMITS)')}</label>
                             <div>
                                 <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
                             </div>
@@ -501,12 +502,12 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                 <div className="form-group">
                     <React.Fragment>
                         <div className="form-group">
-                            <label className="control-label" htmlFor="username">Restart Policy</label>
+                            <label className="control-label" htmlFor="username">{t('CONTENT:RESTARTPOLICY')}</label>
                             <div>
                                 <select onChange={this.onRestartPolicyChanged} className="form-control" id="template">
-                                    <option value="Always">Always</option>
-                                    <option value="OnFailure">OnFailure</option>
-                                    <option value="Never">Never</option>
+                                    <option value="Always">{t('CONTENT:ALWAYS')}</option>
+                                    <option value="OnFailure">{t('CONTENT:ONFAILURE')}</option>
+                                    <option value="Never">{t('CONTENT:NEVER')}</option>
                                 </select>
                             </div>
                         </div>
@@ -559,12 +560,14 @@ const SecretLoadingWrapper = props => {
 };
 
 export const CreateDeployment = ({ match: { params } }) => {
+    const { t } = useTranslation();
     const SecretFormComponent = secretFormFactory(params.type);
     return <SecretFormComponent fixed={{ metadata: { namespace: params.ns } }}
         secretTypeAbstraction={params.type}
         explanation={pageExplanation[params.type]}
         titleVerb="Create"
         isCreate={true}
+        t={t}
     />;
 };
 
@@ -600,10 +603,12 @@ export type BaseEditSecretProps_ = {
     secretTypeAbstraction?: CreateType,
     saveButtonText?: string,
     explanation: string,
+    t: any
 };
 
 export type SourceSecretFormProps = {
-    onChange: Function;
+    onChange: Function,
+    t: any,
     stringData: {
         [key: string]: string
     },
