@@ -22,6 +22,7 @@ export class FileInput extends React.Component<FileInputProps, FileInputState> {
     reader.readAsText(file, 'UTF-8');
   }
   render() {
+    const { t } = this.props;
     return <div className="input-group">
       <input type="text"
         className="form-control"
@@ -30,7 +31,7 @@ export class FileInput extends React.Component<FileInputProps, FileInputState> {
         disabled />
       <span className="input-group-btn">
         <span className="btn btn-default co-btn-file">
-          Browse&hellip;
+          {t('CONTENT:BROWSE')}&hellip;
           <input type="file" onChange={this.onFileChange} className="form-control" />
         </span>
       </span>
@@ -40,11 +41,12 @@ export class FileInput extends React.Component<FileInputProps, FileInputState> {
 
 /* eslint-disable no-undef */
 export type FileInputState = {
-  inputFileData: string,
+  inputFileData: any,
   inputFileName: string,
 };
 
 export type FileInputProps = {
   onChange: Function,
+  t: any
 };
 /* eslint-enable no-undef */
