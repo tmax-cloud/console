@@ -70,7 +70,11 @@ export const NameValueEditor = DragDropContext(HTML5Backend)(
     }
 
     render() {
-      const { nameString, valueString, addString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets } = this.props;
+      let { nameString, valueString, addString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets } = this.props;
+
+      nameString = this.props.t ? this.props.t(`CONTENT:${nameString.toUpperCase()}`).toUpperCase() : nameString.toUpperCase();
+      valueString = this.props.t ? this.props.t(`CONTENT:${valueString.toUpperCase()}`).toUpperCase() : valueString.toUpperCase();
+      addString = this.props.t ? this.props.t(`CONTENT:${addString.toUpperCase()}`).toUpperCase() : addString.toUpperCase();
 
       const pairElems = nameValuePairs.map((pair, i) => {
         const key = _.get(pair, [NameValueEditorPair.Index], i);
@@ -79,8 +83,8 @@ export const NameValueEditor = DragDropContext(HTML5Backend)(
       return (
         <React.Fragment>
           <div className="row">
-            <div className="col-md-5 col-xs-5 text-secondary">{nameString.toUpperCase()}</div>
-            <div className="col-md-6 col-xs-5 text-secondary">{valueString.toUpperCase()}</div>
+            <div className="col-md-5 col-xs-5 text-secondary">{nameString}</div>
+            <div className="col-md-6 col-xs-5 text-secondary">{valueString}</div>
           </div>
           {pairElems}
           <div className="row">

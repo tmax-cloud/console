@@ -6,15 +6,14 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '.
 import { PromiseComponent, StatusEditorPair } from '../utils';
 import { AsyncComponent } from '../utils/async';
 
-const StautusEditorComponent = (props) => <AsyncComponent loader={() => import('../utils/status-editor.jsx').then(c => c.StatusSelector)} {...props} />;
-
+const StautusEditorComponent = props => <AsyncComponent loader={() => import('../utils/status-editor.jsx').then(c => c.StatusSelector)} {...props} />;
 
 class ConfigureStatusModal extends PromiseComponent {
   constructor(props) {
     super(props);
 
     this.status = {
-      status: props.status
+      status: props.status,
     };
 
     this._cancel = props.cancel.bind(this);
@@ -23,38 +22,42 @@ class ConfigureStatusModal extends PromiseComponent {
   }
   _updateStatus(status) {
     this.setState({
-      status: status.status
+      status: status.status,
     });
   }
 
   _submit(event) {
     event.preventDefault();
-    let data = (StatusEditorPair.Status === 'Reject') ? {
-      status: {
-        status: StatusEditorPair.Status,
-        reason: StatusEditorPair.Reason
-      }
-    } : { status: { status: StatusEditorPair.Status } };
+    let data =
+      StatusEditorPair.Status === 'Reject'
+        ? {
+            status: {
+              status: StatusEditorPair.Status,
+              reason: StatusEditorPair.Reason,
+            },
+          }
+        : { status: { status: StatusEditorPair.Status } };
 
     const op = {
-      path: this.props.path
+      path: this.props.path,
     };
 
     // const patch = { path: this.props.path, data };
     const promise = k8sPatch2(this.props.resourceKind, this.props.resource, data, op);
 
-
     this.handlePromise(promise).then(this.props.close);
   }
 
   render() {
-    return <form onSubmit={this._submit} name="form">
-      <ModalTitle>{this.props.title}</ModalTitle>
-      <ModalBody>
-        <StautusEditorComponent submit={this._submit} />
-      </ModalBody>
-      <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={this.props.btnText || 'Confirm'} cancel={this._cancel} />
-    </form>;
+    return (
+      <form onSubmit={this._submit} name="form">
+        <ModalTitle>{this.props.title}</ModalTitle>
+        <ModalBody>
+          <StautusEditorComponent submit={this._submit} />
+        </ModalBody>
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={this.props.btnText || 'Confirm'} cancel={this._cancel} />
+      </form>
+    );
   }
 }
 ConfigureStatusModal.propTypes = {
@@ -63,12 +66,7 @@ ConfigureStatusModal.propTypes = {
   close: PropTypes.func.isRequired,
   executeFn: PropTypes.func.isRequired,
   message: PropTypes.node,
-  title: PropTypes.node.isRequired
+  title: PropTypes.node.isRequired,
 };
 
-export const configureStatusModal = createModalLauncher(props => <ConfigureStatusModal
-  path="status"
-  status={props.resource.status && props.resource.status.status}
-  title="Edit Status"
-  {...props}
-/>);
+export const configureStatusModal = createModalLauncher(props => <ConfigureStatusModal path="status" status={props.resource.status && props.resource.status.status} title={props.t('ADDITIONAL:EDIT', { something: props.t('CONTENT:STATUS') })} btnText={props.t('CONTENT:CONFIRM')} {...props} />);

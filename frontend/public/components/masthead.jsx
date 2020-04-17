@@ -10,12 +10,11 @@ import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
 // import LoginComponent from './login';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
-import './utils/i18n';
-import i18n from './utils/i18n';
 import { useTranslation, withTranslation } from 'react-i18next';
 
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
 const UserMenu = ({ username, actions }) => {
   const title = (
@@ -47,6 +46,7 @@ const UserMenuWrapper = connectToFlags(
   // if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
   //   return null;
   // }
+  const { t } = useTranslation();
 
   const actions = [];
   // if (props.flags[FLAGS.AUTH_ENABLED]) {
@@ -80,6 +80,7 @@ const UserMenuWrapper = connectToFlags(
         props.setLoading();
         sessionStorage.clear();
         sessionStorage.setItem('logouted', 'true');
+        localStorage.removeItem('bridge/last-namespace-name');
 
         // const url_ = window.location.href.split('/')[2]
         window.location.href = `${document.location.origin}`;
@@ -90,7 +91,7 @@ const UserMenuWrapper = connectToFlags(
       });
   };
   actions.push({
-    label: 'Logout',
+    label: t('CONTENT:LOGOUT'),
     callback: logout,
   });
   // if (props.flags[FLAGS.OPENSHIFT]) {
@@ -153,7 +154,7 @@ class OSUserMenu extends SafetyFirst {
       //   this.setState({ username: 'Admin' });
       // }
       const userName = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).id;
-        this.setState({ username: userName });
+      this.setState({ username: userName });
     } else {
       this.setState({ username: 'admin@tmax.co.kr' });
     }
@@ -344,7 +345,7 @@ export const Masthead = props => {
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>
+          {!HDCModeFlag && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>}
           <div className="extend-refresh-border"></div>
         </div>
       )}
@@ -352,9 +353,9 @@ export const Masthead = props => {
         <LanguageWrapper />
       </div>
       {/* {releaseModeFlag && ( */}
-        <div className="co-masthead__user">
-          <UserMenuWrapper setLoading={props.setLoading} />
-        </div>
+      <div className="co-masthead__user">
+        <UserMenuWrapper setLoading={props.setLoading} />
+      </div>
       {/* )} */}
     </header>
   );

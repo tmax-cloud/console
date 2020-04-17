@@ -29,10 +29,13 @@ const editInYaml = obj => {
 const menuActions = [
   Cog.factory.ModifyLabels,
   Cog.factory.ModifyAnnotations,
-  (kind, obj) => ({
-    label: `Edit ${kind.label}`,
-    href: editInYaml(obj) ? `${resourceObjPath(obj, kind.kind)}/edit-yaml` : `${resourceObjPath(obj, kind.kind)}/edit`,
-  }),
+  (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('RESOURCE:SECRET') }),
+      href: editInYaml(obj) ? `${resourceObjPath(obj, kind.kind)}/edit-yaml` : `${resourceObjPath(obj, kind.kind)}/edit`,
+    };
+  },
   Cog.factory.Delete,
 ];
 
