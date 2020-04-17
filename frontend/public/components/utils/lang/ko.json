@@ -30,7 +30,9 @@
     "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
     "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
-    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}."
+    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}.",
+
+    "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete."
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
@@ -402,7 +404,9 @@
     "STRATEGY": "전략",
     "MARKASUNSCHEDULABLE": "예약 불가 표시",
     "MARKASSCHEDULABLE": "예약 표시",
-    "MARKUNSCHEDULABLE": "예약 불가 표시"
+    "MARKUNSCHEDULABLE": "예약 불가 표시",
+    "DESIREDPARALLELISM": "의도한 병렬성",
+    "ADDROLEBINDING": "롤 바인딩 추가"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -461,6 +465,7 @@
     "NODE": "노드",
     "AUTH": "인증/인가",
     "ROLE": "롤",
+    "CLUSTERROLE": "클러스터 롤",
     "ROLEBINDING": "롤 바인딩",
     "ROLEBINDINGCLAIM": "롤 바인딩 클레임",
     "USER": "사용자",

@@ -23,10 +23,13 @@ const menuActions = [
   //   label: 'Add Rule...',
   //   href: addHref(role.metadata.name, role.metadata.namespace),
   // }),
-  (kind, role) => ({
-    label: 'Add Role Binding...',
-    href: `/k8s/cluster/rolebindings/new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
-  }),
+  (kind, role) => {
+    const { t } = useTranslation();
+    return {
+      label: t('CONTENT:ADDROLEBINDING'),
+      href: `/k8s/cluster/rolebindings/new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
+    };
+  },
   Cog.factory.Edit,
   Cog.factory.Delete,
 ];

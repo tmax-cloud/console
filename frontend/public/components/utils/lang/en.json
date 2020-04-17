@@ -30,7 +30,8 @@
     "DELETE-MODAL_1": "Are you sure you want to delete {{something1}} in namespace {{something2}}?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
     "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
-    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}."
+    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}.",
+    "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete."
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -402,7 +403,9 @@
     "STRATEGY": "Strategy",
     "MARKASUNSCHEDULABLE": "Mark as Unschedulable",
     "MARKASSCHEDULABLE": "Mark as schedulable",
-    "MARKUNSCHEDULABLE": "Mark Unschedulable"
+    "MARKUNSCHEDULABLE": "Mark Unschedulable",
+    "DESIREDPARALLELISM": "Desired Parallelism",
+    "ADDROLEBINDING": "Add Role Binding"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -461,6 +464,7 @@
     "NODE": "Node",
     "AUTH": "Auth",
     "ROLE": "Role",
+    "CLUSTERROLE": "Cluster Role",
     "ROLEBINDING": "Role Binding",
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
