@@ -16,6 +16,7 @@ import { useTranslation, withTranslation } from 'react-i18next';
 
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
 const UserMenu = ({ username, actions }) => {
   const title = (
@@ -345,7 +346,9 @@ export const Masthead = props => {
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>
+          {!HDCModeFlag && (
+            <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>
+          )}
           <div className="extend-refresh-border"></div>
         </div>
       )}
