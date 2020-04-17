@@ -94,9 +94,18 @@
     "EDIT-UPDATESTRATEGY-MODAL_1": "Current desired pod count",
     "EDIT-UPDATESTRATEGY-MODAL_2": "Execute a smooth roll out of the new revision, based on the settings below",
     "EDIT-UPDATESTRATEGY-MODAL_3": "Number or percentage of total pods at the start of the update (optional)",
-    "EDIT-UPDATESTRATEGY-MODAL_4": "Shut down all existing pods before creating new ones"
+    "EDIT-UPDATESTRATEGY-MODAL_4": "Shut down all existing pods before creating new ones",
+    "SECRET-CREATE_0": "Source secrets allow you to authenticate against the SCM server.",
+    "SECRET-CREATE_1": "Webhook secrets allow you to authenticate a webhook trigger.",
+    "SECRET-CREATE_2": "Optional username for Git authentication.",
+    "SECRET-CREATE_3": "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.",
+    "SECRET-CREATE_4": "Upload your private SSH key file.",
+    "SECRET-CREATE_5": "Private SSH key file for Git authentication."
   },
   "CONTENT": {
+    "BROWSE": "Browse",
+    "PWORTOKEN": "Password or Token",
+    "SSHPRIVATEKEY": "SSH Private Key",
     "ADDMORE": "Add More",
     "COMPACT": "Compact",
     "GENERATEDFROM": "Generated from",
