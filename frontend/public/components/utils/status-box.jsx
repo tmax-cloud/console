@@ -46,7 +46,7 @@ export const EmptyBox = ({ label }) => {
   const { t } = useTranslation();
   return (
     <Box>
-      <div className="text-center">{label ? t('ADDITIONAL:EMPTYBOX', { something: ResourcePlural(label, t) }) : t('Content:NOTFOUND')}</div>
+      <div className="text-center">{label ? t('STRING:EMPTYBOX') : t('Content:NOTFOUND')}</div>
     </Box>
   );
 };

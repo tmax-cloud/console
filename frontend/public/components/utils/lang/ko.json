@@ -15,7 +15,6 @@
     "VIEW": "{{something}} 보기",
     "EDIT": "{{something}} 수정",
     "STATUSOF": "{{something}} 상태",
-    "EMPTYBOX": "{{something}} 찾을 수 없음",
     "OVERVIEWTITLE": "{{something}} 개요",
     "DEPLOYMENT_DETAIL_TOOLTIP_0": "해당 {{something}}이 의도한 템플릿 사양을 가진 종료되지 않은 총 파드 수",
     "DEPLOYMENT_DETAIL_TOOLTIP_1": "해당 {{something}} (셀렉터와 일치하는 레이블)이 대상으로 하는 종료되지 않은 총 파드 수",
@@ -30,13 +29,16 @@
     "DELETE-MODAL_0": "{{something}}을(를) 삭제하시겠습니까?",
     "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
-    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events"
+    "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
+    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}.",
+    "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete."
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
     "DUPLICATE-KEY": "중복 키가 발견되었습니다."
   },
   "STRING": {
+    "EMPTYBOX": "표시할 정보가 없습니다.",
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
     "SERVICE_DETAIL_0": "클러스터 외부에서 액세스 가능",
     "SERVICE_DETAIL_1": "로드 밸런서의 인그레스 포인트 ",
@@ -100,7 +102,8 @@
     "SECRET-CREATE_3": "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.",
     "SECRET-CREATE_4": "Upload your private SSH key file.",
     "SECRET-CREATE_5": "Private SSH key file for Git authentication.",
-    "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook."
+    "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook.",
+    "UNSCHEDULABLENODESMODAL_0": "예약 불가능한 노드는 새 파드를 허용하지 않습니다. 이는 유지보수 스케줄을 설정하거나 노드 해제시 유용합니다. "
   },
   "CONTENT": {
     "BROWSE": "Browse",
@@ -344,8 +347,9 @@
     "NOCONDITIONSFOUND": "조건 없음",
     "LANGUAGE": "언어",
     "DATA": "데이터",
-    "SOURCESECRET": "원본 시크릿",
-    "WEBHOOKSECRET": "웹후크 시크릿",
+    "SOURCESECRET": "폼 에디터 (원본)",
+    "WEBHOOKSECRET": "폼 에디터 (웹후크)",
+    "SECRETFROMYAML": "Yaml 에디터",
     "HIDEVALUES": "값 숨기기",
     "REVEALVALUES": "값 보기",
     "INPROGRESS": "Inprogress",
@@ -386,7 +390,7 @@
     "SECURITYENHANCEDLINUX": "Security-Enhanced Linux",
     "PRIVILEGED": "특권",
     "FILESTORAGEGROUP": "파일스토리지 그룹",
-    "SUPPLEMENTAL GROUP": "Supplemental Group",
+    "SUPPLEMENTALGROUP": "Supplemental Group",
     "NAMESPACESELECTOR": "네임스페이스 선택기",
     "METERING": "미터링",
     "ROLES": "롤",
@@ -406,7 +410,12 @@
     "(DEFAULT)": "(기본)",
     "ROLLINGUUPDATE": "롤링 업데이트",
     "RECREATE": "재시작",
-    "STRATEGY": "전략"
+    "STRATEGY": "전략",
+    "MARKASUNSCHEDULABLE": "예약 불가 표시",
+    "MARKASSCHEDULABLE": "예약 표시",
+    "MARKUNSCHEDULABLE": "예약 불가 표시",
+    "DESIREDPARALLELISM": "의도한 병렬성",
+    "ADDROLEBINDING": "롤 바인딩 추가"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -465,6 +474,7 @@
     "NODE": "노드",
     "AUTH": "인증/인가",
     "ROLE": "롤",
+    "CLUSTERROLE": "클러스터 롤",
     "ROLEBINDING": "롤 바인딩",
     "ROLEBINDINGCLAIM": "롤 바인딩 클레임",
     "USER": "사용자",

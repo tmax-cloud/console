@@ -80,6 +80,7 @@ const UserMenuWrapper = connectToFlags(
         props.setLoading();
         sessionStorage.clear();
         sessionStorage.setItem('logouted', 'true');
+        localStorage.removeItem('bridge/last-namespace-name');
 
         // const url_ = window.location.href.split('/')[2]
         window.location.href = `${document.location.origin}`;

@@ -80,4 +80,4 @@ export const labelsModal = createModalLauncher(props => {
   return <BaseLabelsModal path={LABELS_PATH} {...props} t={t} />;
 });
 
-export const podSelectorModal = createModalLauncher(props => <BaseLabelsModal path={['replicationcontrolleres', 'services'].includes(props.kind.plural) ? '/spec/selector' : '/spec/selector/matchLabels'} isPodSelector={true} description="Pod Selector" message={`Determines the set of pods targeted by this ${props.kind.label.toLowerCase()}.`} labelClassName="co-text-pod" {...props} />);
+export const podSelectorModal = createModalLauncher(props => <BaseLabelsModal path={['replicationcontrolleres', 'services'].includes(props.kind.plural) ? '/spec/selector' : '/spec/selector/matchLabels'} isPodSelector={true} description={props.t('CONTENT:PODSELECTOR')} message={props.t('ADDITIONAL:PODSELECTOR-MODAL_0', { something: props.t(`RESOURCE:${props.kind.kind.toUpperCase()}`) })} labelClassName="co-text-pod" {...props} />);

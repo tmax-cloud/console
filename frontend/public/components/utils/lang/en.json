@@ -100,7 +100,8 @@
     "SECRET-CREATE_2": "Optional username for Git authentication.",
     "SECRET-CREATE_3": "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.",
     "SECRET-CREATE_4": "Upload your private SSH key file.",
-    "SECRET-CREATE_5": "Private SSH key file for Git authentication."
+    "SECRET-CREATE_5": "Private SSH key file for Git authentication.",
+    "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook."
   },
   "CONTENT": {
     "BROWSE": "Browse",
