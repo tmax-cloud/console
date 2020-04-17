@@ -121,8 +121,6 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
 
   if (kind.kind !== 'Namespace') {
     path = resourceURL(kind, opts);
-  } else {
-    return
   }
 
   wsOptions = Object.assign({
@@ -152,7 +150,8 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   if (query.resourceVersion) {
     queryParams.resourceVersion = encodeURIComponent(query.resourceVersion);
   }
-
-  wsOptions.path = path;
-  return new WSFactory(path, wsOptions);
+  if (path) {
+    wsOptions.path = path;
+    return new WSFactory(path, wsOptions);
+  }
 };

@@ -78,9 +78,13 @@ const actions = {
 
     const { subprotocols } = getState().UI.get('impersonate', {});
 
-    WS[id] = k8sWatch(k8sType, { ...query, subprotocols }).onbulkmessage(events =>
-      events.forEach(e => dispatch(actions.modifyObject(id, e.object)))
-    );
+
+    let watchResult = k8sWatch(k8sType, { ...query, subprotocols });
+    if (watchResult) {
+      WS[id] = watchResult.onbulkmessage(events =>
+        events.forEach(e => dispatch(actions.modifyObject(id, e.object)))
+      );
+    }
   },
 
   stopK8sWatch: id => {
