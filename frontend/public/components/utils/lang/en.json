@@ -15,6 +15,7 @@
     "VIEW": "View {{something}}",
     "EDIT": "Edit {{something}}",
     "STATUSOF": "Status of {{something}}",
+    "EMPTYBOX": "No {{something}} Found",
     "OVERVIEWTITLE": "{{something}} Overview",
     "BREADCRUMBSDETAILS": "{{something}} Details",
     "DEPLOYMENT_DETAIL_TOOLTIP_0": "Total number of non-terminated pods targeted by this {{something}} that have the desired template spec.",
@@ -30,14 +31,16 @@
     "DELETE-MODAL_1": "Are you sure you want to delete {{something1}} in namespace {{something2}}?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
     "SHOWINGEVENTS": "Showing {{something1}} of {{something2}} events",
-    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}."
+    "PODSELECTOR-MODAL_0": "Determines the set of pods targeted by this {{something}}.",
+    "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.",
+    "DUPLICATE_1": "Duplicate {{something}}...",
+    "EDIT_1": "Edit {{something}} Subject..."
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
     "DUPLICATE-KEY": "Duplicate keys found."
   },
   "STRING": {
-    "EMPTYBOX": "No data found",
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
     "SERVICE_DETAIL_0": "Accessible outside the cluster",
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
@@ -96,9 +99,18 @@
     "EDIT-UPDATESTRATEGY-MODAL_2": "Execute a smooth roll out of the new revision, based on the settings below",
     "EDIT-UPDATESTRATEGY-MODAL_3": "Number or percentage of total pods at the start of the update (optional)",
     "EDIT-UPDATESTRATEGY-MODAL_4": "Shut down all existing pods before creating new ones",
-    "UNSCHEDULABLENODESMODAL_0": "Unschedulable nodes won&#39;t accept new pods. This is useful for scheduling maintenance or preparing to decommission a node."
+    "SECRET-CREATE_0": "Source secrets allow you to authenticate against the SCM server.",
+    "SECRET-CREATE_1": "Webhook secrets allow you to authenticate a webhook trigger.",
+    "SECRET-CREATE_2": "Optional username for Git authentication.",
+    "SECRET-CREATE_3": "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.",
+    "SECRET-CREATE_4": "Upload your private SSH key file.",
+    "SECRET-CREATE_5": "Private SSH key file for Git authentication.",
+    "SECRET-CREATE_6": "Value of the secret will be supplied when invoking the webhook."
   },
   "CONTENT": {
+    "BROWSE": "Browse",
+    "PWORTOKEN": "Password or Token",
+    "SSHPRIVATEKEY": "SSH Private Key",
     "ADDMORE": "Add More",
     "COMPACT": "Compact",
     "GENERATEDFROM": "Generated from",
@@ -339,9 +351,8 @@
     "NOCONDITIONSFOUND": "No Conditions Found",
     "LANGUAGE": "Language",
     "DATA": "Data",
-    "SOURCESECRET": "Form Editor (Source)",
-    "WEBHOOKSECRET": "Form Editor (Webhook)",
-    "SECRETFROMYAML": "Yaml Editor",
+    "SOURCESECRET": "Source Secret",
+    "WEBHOOKSECRET": "Webhook Secret",
     "HIDEVALUES": "Hide Values",
     "REVEALVALUES": "Reveal Values",
     "INPROGRESS": "Inprogress",
@@ -376,7 +387,7 @@
     "SECURITYENHANCEDLINUX": "Security-Enhanced Linux",
     "PRIVILEGED": "Privileged",
     "FILESTORAGEGROUP": "File Storage Group",
-    "SUPPLEMENTALGROUP": "Supplemental Group",
+    "SUPPLEMENTAL GROUP": "Supplemental Group",
     "NAMESPACESELECTOR": "Namespace Selector",
     "METERING": "Metering",
     "ROLES": "Roles",
@@ -402,7 +413,12 @@
     "STRATEGY": "Strategy",
     "MARKASUNSCHEDULABLE": "Mark as Unschedulable",
     "MARKASSCHEDULABLE": "Mark as schedulable",
-    "MARKUNSCHEDULABLE": "Mark Unschedulable"
+    "MARKUNSCHEDULABLE": "Mark Unschedulable",
+    "DESIREDPARALLELISM": "Desired Parallelism",
+    "ADDROLEBINDING": "Add Role Binding",
+    "DOWNLOADKUBECONFIGFILE": "Download kubeconfig file",
+    "ERROR": "Error",
+    "OK": "OK"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -462,6 +478,7 @@
     "AUTH": "Auth",
     "ROLE": "Role",
     "ROLEBINDING": "Role Binding",
+    "CLUSTERROLEBINDING": "Cluster Role Binding",
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
     "USERGROUP": "User Group",

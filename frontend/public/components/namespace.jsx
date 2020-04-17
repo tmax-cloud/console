@@ -276,6 +276,17 @@ const namespaceDropdownStateToProps = state => {
   return { activeNamespace, canListNS };
 };
 
+const NamespaceSelectorComponent = ({ activeNamespace, items, model, title, onChange }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-namespace-selector">
+      {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
+        <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={t(`RESOURCE:${model.kind.toUpperCase()}`)} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={t('CONTENT:SELECTNAMESPACE')} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
+      )}
+    </div>
+  );
+};
+
 class NamespaceDropdown_ extends React.Component {
   componentDidUpdate() {
     const { dispatch } = this.props;
@@ -343,11 +354,12 @@ class NamespaceDropdown_ extends React.Component {
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
 
     return (
-      <div className="co-namespace-selector">
-        {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
-          <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
-        )}
-      </div>
+      <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} />
+      // <div className="co-namespace-selector">
+      //   {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
+      //     <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
+      //   )}
+      // </div>
     );
   }
 }

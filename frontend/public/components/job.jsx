@@ -9,14 +9,18 @@ import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 import { ResourceEventStream } from './events';
 
-const ModifyJobParallelism = (kind, obj) => ({
-  label: 'Edit Parallelism',
-  callback: () =>
-    configureJobParallelismModal({
-      resourceKind: kind,
-      resource: obj,
-    }),
-});
+const ModifyJobParallelism = (kind, obj) => {
+  const { t } = useTranslation();
+  return {
+    label: t('ADDITIONAL:EDIT', { something: t('CONTENT:PARALLELISM') }),
+    callback: () =>
+      configureJobParallelismModal({
+        resourceKind: kind,
+        resource: obj,
+        t: t,
+      }),
+  };
+};
 const menuActions = [ModifyJobParallelism, ...Cog.factory.common];
 
 const JobHeader = props => {
