@@ -46,35 +46,36 @@ export const flatten = resources =>
     return ret;
   });
 
-const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
+const menuActions = ({ subjectIndex, subjects }, startImpersonate, t) => {
   const subject = subjects[subjectIndex];
 
   const actions = [
-    (kind, obj) => ({
-      label: `Duplicate ${kind.label}...`,
-      href: `${resourceObjPath(obj, kind.kind)}/copy?subjectIndex=${subjectIndex}`,
-    }),
-    (kind, obj) => ({
-      label: `Edit ${kind.label} Subject...`,
-      href: `${resourceObjPath(obj, kind.kind)}/edit?subjectIndex=${subjectIndex}`,
-    }),
+    // (kind, obj) => ({
+    //   label: `Duplicate ${kind.label}...`,
+    //   href: `${resourceObjPath(obj, kind.kind)}/copy?subjectIndex=${subjectIndex}`,
+    // }),
+    // (kind, obj) => ({
+    //   label: `Edit ${kind.label} Subject...`,
+    //   href: `${resourceObjPath(obj, kind.kind)}/edit?subjectIndex=${subjectIndex}`,
+    // }),
+    Cog.factory.Edit,
     subjects.length === 1
       ? Cog.factory.Delete
       : (kind, binding) => ({
-        label: `Delete ${kind.label} Subject...`,
-        callback: () =>
-          confirmModal({
-            title: `Delete ${kind.label} Subject`,
-            message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
-            btnText: 'Delete Subject',
-            executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
-          }),
-      }),
+          label: `Delete ${kind.label} Subject...`,
+          callback: () =>
+            confirmModal({
+              title: `Delete ${kind.label} Subject`,
+              message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
+              btnText: 'Delete Subject',
+              executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
+            }),
+        }),
   ];
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
     actions.unshift(() => ({
-      label: `Impersonate ${subject.kind} "${subject.name}"...`,
+      label: t('ADDITIONAL:IMPERSONATE_0', { something1: t(`RESOURCE:${subject.kind.toUpperCase()}`), something2: subject.name }),
       callback: () => startImpersonate(subject.kind, subject.name),
     }));
   }
@@ -105,12 +106,15 @@ const Header = props => {
   );
 };
 
-export const BindingName = connect(null, { startImpersonate: UIActions.startImpersonate })(({ binding, startImpersonate }) => (
-  <React.Fragment>
-    {binding.subjects && <ResourceCog actions={menuActions(binding, startImpersonate)} kind={bindingKind(binding)} resource={binding} />}
-    <ResourceLink kind={bindingKind(binding)} name={binding.metadata.name} namespace={binding.metadata.namespace} className="co-resource-link__resource-name" />
-  </React.Fragment>
-));
+export const BindingName = connect(null, { startImpersonate: UIActions.startImpersonate })(({ binding, startImpersonate }) => {
+  const { t } = useTranslation();
+  return (
+    <React.Fragment>
+      {binding.subjects && <ResourceCog actions={menuActions(binding, startImpersonate, t)} kind={bindingKind(binding)} resource={binding} />}
+      <ResourceLink kind={bindingKind(binding)} name={binding.metadata.name} namespace={binding.metadata.namespace} className="co-resource-link__resource-name" />
+    </React.Fragment>
+  );
+});
 
 export const RoleLink = ({ binding }) => {
   const kind = binding.roleRef.kind;
