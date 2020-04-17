@@ -39,7 +39,7 @@ export const resourceURL = (model, options) => {
     u += `/${options.path}`;
   }
   if (!_.isEmpty(options.queryParams)) {
-    q = _.map(options.queryParams, function(v, k) {
+    q = _.map(options.queryParams, function (v, k) {
       return `${k}=${v}`;
     });
     u += `?${q.join('&')}`;
@@ -56,7 +56,7 @@ export const watchURL = (kind, options) => {
   return resourceURL(kind, opts);
 };
 
-export const k8sGet = (kind, name, ns, opts) => coFetchJSON(resourceURL(kind, Object.assign({ns, name}, opts)));
+export const k8sGet = (kind, name, ns, opts) => coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
 
 export const k8sCreate = (kind, data, opts = {}) => {
   // Occassionally, a resource won't have a metadata property.
@@ -70,16 +70,16 @@ export const k8sCreate = (kind, data, opts = {}) => {
     data.metadata.name = data.metadata.name.toLowerCase();
   }
 
-  return coFetchJSON.post(resourceURL(kind, Object.assign({ns: data.metadata.namespace}, opts)), data);
+  return coFetchJSON.post(resourceURL(kind, Object.assign({ ns: data.metadata.namespace }, opts)), data);
 };
 
 export const k8sUpdate = (kind, data, ns, name) => coFetchJSON.put(
-  resourceURL(kind, {ns: ns || data.metadata.namespace, name: name || data.metadata.name}),
+  resourceURL(kind, { ns: ns || data.metadata.namespace, name: name || data.metadata.name }),
   data
 );
 
 export const k8sPatch = (kind, resource, data) => coFetchJSON.patch(
-  resourceURL(kind, {ns: resource.metadata.namespace, name: resource.metadata.name}),
+  resourceURL(kind, { ns: resource.metadata.namespace, name: resource.metadata.name }),
   data
 );
 export const k8sPatch2 = (kind, resource, data, opts) => coFetchJSON.patch(
@@ -115,8 +115,16 @@ export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
 };
 
 export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
-  const queryParams = {watch: true};
-  const opts = {queryParams};
+  const queryParams = { watch: true };
+  const opts = { queryParams };
+  let path;
+
+  if (kind.kind !== 'Namespace') {
+    path = resourceURL(kind, opts);
+  } else {
+    return
+  }
+
   wsOptions = Object.assign({
     host: 'auto',
     reconnect: true,
@@ -145,7 +153,6 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
     queryParams.resourceVersion = encodeURIComponent(query.resourceVersion);
   }
 
-  const path = resourceURL(kind, opts);
   wsOptions.path = path;
   return new WSFactory(path, wsOptions);
 };
