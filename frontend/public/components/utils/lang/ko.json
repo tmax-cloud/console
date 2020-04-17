@@ -14,6 +14,7 @@
     "DELETE": "{{something}} 삭제",
     "VIEW": "{{something}} 보기",
     "EDIT": "{{something}} 수정",
+    "CREATE": "{{something}} 생성",
     "STATUSOF": "{{something}} 상태",
     "OVERVIEWTITLE": "{{something}} 개요",
     "DEPLOYMENT_DETAIL_TOOLTIP_0": "해당 {{something}}이 의도한 템플릿 사양을 가진 종료되지 않은 총 파드 수",
@@ -420,7 +421,12 @@
     "ADDROLEBINDING": "롤 바인딩 추가",
     "DOWNLOADKUBECONFIGFILE": "Kube-Config 파일 다운로드",
     "ERROR": "오류",
-    "OK": "확인"
+    "OK": "확인",
+    "CREATENEWNAMESPACE": "새로운 네임스페이스 생성",
+    "DISPLAYNAME": "이름 표시",
+    "DEFAULTNETWORKPOLICY": "기본 네트워크 정책",
+    "NORESTRICTIONS(DEFAULT)": "제한 없음 (기본)",
+    "DENYALLINBOUNDTRAFFIC": "모든 인바운드 트래픽 차단"
   },
   "RESOURCE": {
     "HOME": "홈",

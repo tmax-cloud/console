@@ -13,6 +13,7 @@
     "CREATEBUTTON": "Create {{something}}",
     "DELETE": "Delete {{something}}",
     "VIEW": "View {{something}}",
+    "CREATE": "Create {{something}}",
     "EDIT": "Edit {{something}}",
     "STATUSOF": "Status of {{something}}",
     "EMPTYBOX": "No {{something}} Found",
@@ -418,7 +419,12 @@
     "ADDROLEBINDING": "Add Role Binding",
     "DOWNLOADKUBECONFIGFILE": "Download kubeconfig file",
     "ERROR": "Error",
-    "OK": "OK"
+    "OK": "OK",
+    "CREATENEWNAMESPACE": "Create New Namespace",
+    "DISPLAYNAME": "Display Name",
+    "DEFAULTNETWORKPOLICY": "Default Network Policy",
+    "NORESTRICTIONS(DEFAULT)": "No restrictions (default)",
+    "DENYALLINBOUNDTRAFFIC": "Deny all inbound traffic"
   },
   "RESOURCE": {
     "HOME": "Home",
