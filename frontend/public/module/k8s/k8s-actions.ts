@@ -77,8 +77,7 @@ const actions = {
     poller();
 
     const { subprotocols } = getState().UI.get('impersonate', {});
-
-
+    //k8sWatch의 리턴값이 없는경우 예외처리
     let watchResult = k8sWatch(k8sType, { ...query, subprotocols });
     if (watchResult) {
       WS[id] = watchResult.onbulkmessage(events =>

@@ -468,7 +468,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:VOLUMES')}</label>
                             <div>
-                                <VolumeEditor options={pvcList} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
+                                <VolumeEditor options={pvcList} t={t} volumePairs={this.state.volumes} updateParentData={this._updateVolumes} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -480,7 +480,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:RESOURCE(REQUEST)')}</label>
                             <div>
-                                <KeyValueEditor keyValuePairs={this.state.requests} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
+                                <KeyValueEditor keyValuePairs={this.state.requests} t={t} keyString="resource" valueString="quantity" updateParentData={this._updateRequests} />
                             </div>
                         </div>
                     </React.Fragment>
@@ -492,7 +492,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
                         <div className="form-group">
                             <label className="control-label" htmlFor="username">{t('CONTENT:RESOURCE(LIMITS)')}</label>
                             <div>
-                                <KeyValueEditor keyValuePairs={this.state.limits} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
+                                <KeyValueEditor keyValuePairs={this.state.limits} t={t} keyString="resource" valueString="quantity" updateParentData={this._updateLimits} />
                             </div>
                         </div>
                     </React.Fragment>
