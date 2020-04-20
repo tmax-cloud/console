@@ -172,7 +172,7 @@ export const HorizontalPodAutoscalersDetails: React.SFC<HorizontalPodAutoscalers
 // const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))];
 export const HorizontalPodAutoscalersDetailsPage: React.SFC<HorizontalPodAutoscalersDetailsPageProps> = props => {
   const { t } = useTranslation();
-  const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))];
+  const pages = [navFactory.details(HorizontalPodAutoscalersDetails, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))];
   return <DetailsPage {...props} kind={HorizontalPodAutoscalersReference} menuActions={menuActions} pages={pages} />;
 };
 HorizontalPodAutoscalersDetailsPage.displayName = 'HorizontalPodAutoscalersDetailsPage';

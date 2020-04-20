@@ -21,6 +21,7 @@ import { createProjectMessageStateToProps } from '../ui/ui-reducers';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 // import { MeteringPage } from './metering-overview';
+import { getAccessToken, getRefreshToken } from './utils/auth';
 
 const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
@@ -323,7 +324,7 @@ class NamespaceDropdown_ extends React.Component {
       });
     }
 
-    if (window.sessionStorage.getItem('accessToken')) {
+    if (getAccessToken()) {
       // if (JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
       //   // user 계정일 경우
       //   if (data.length > 0) {

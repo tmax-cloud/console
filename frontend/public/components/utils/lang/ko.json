@@ -467,6 +467,8 @@
     "HOURSAGO": "시간 전",
     "HOUR": "시간",
     "ANHOURAGO": "1시간 전",
+    "AMINUTEAGO": "1분 전",
+    "LESSTHANAMINUTEAGO": "1분 전",
     "MINUTES": "분",
     "MINUTESAGO": "분전",
     "FEWSECONDS": "몇 분 전",

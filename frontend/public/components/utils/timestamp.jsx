@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tooltip } from './tooltip';
 
-import {SafetyFirst} from '../safety-first';
+import { SafetyFirst } from '../safety-first';
 import * as dateTime from './datetime';
 
 const monthAbbrs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -27,14 +27,14 @@ const updateTimestamps = () => {
 
 /** @augments {React.Component<{timestamp: string, isUnix?: boolean}>} */
 export class Timestamp extends SafetyFirst {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.intervalCB = null;
-    this.reset(props.timestamp);
+    this.reset(props.timestamp, props.t);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     super.componentWillUnmount();
 
     intervalCBs.delete(this.intervalCB);
@@ -44,7 +44,7 @@ export class Timestamp extends SafetyFirst {
     }
   }
 
-  reset (timestamp) {
+  reset(timestamp, t) {
     const mdate = this.props.isUnix ? new Date(timestamp * 1000) : new Date(timestamp);
 
     if (this.intervalCB) {
@@ -52,15 +52,16 @@ export class Timestamp extends SafetyFirst {
     }
 
     intervalCBs.add(now => {
-      const nextTimestamp = this.getTimestamp(this.state.mdate, now);
+      const nextTimestamp = this.getTimestamp(this.state.mdate, now, t);
       if (nextTimestamp === this.state.timestamp) {
         return;
       }
-      this.setState({timestamp: nextTimestamp});
+      this.setState({ timestamp: nextTimestamp });
     });
 
     this.setState({
-      mdate, timestamp: this.getTimestamp(mdate, new Date()),
+      mdate,
+      timestamp: this.getTimestamp(mdate, new Date(), t),
     });
 
     if (intervalCBs.size && !interval) {
@@ -68,7 +69,7 @@ export class Timestamp extends SafetyFirst {
     }
   }
 
-  getTimestamp (mdate, now) {
+  getTimestamp(mdate, now, t) {
     if (!dateTime.isValid(mdate)) {
       intervalCBs.delete(this.intervalCB);
       return '-';
@@ -76,12 +77,12 @@ export class Timestamp extends SafetyFirst {
 
     const timeAgo = now - mdate;
     if (this.props.omitSuffix) {
-      return dateTime.fromNow(mdate, undefined, {omitSuffix: true});
+      return dateTime.fromNow(mdate, undefined, { omitSuffix: true }, t);
     }
-    if (timeAgo < 630000) { // 10.5 minutes
-      return dateTime.fromNow(mdate);
+    if (timeAgo < 630000) {
+      // 10.5 minutes
+      return dateTime.fromNow(mdate, undefined, {}, t);
     }
-
 
     let a = 'am';
     let hours = mdate.getHours();
@@ -103,21 +104,20 @@ export class Timestamp extends SafetyFirst {
   }
 
   // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps ({timestamp}) {
+  UNSAFE_componentWillReceiveProps({ timestamp }) {
     // sometimes the timestamp prop changes...
     // and we need to trigger a side effect
     if (timestamp && timestamp === this.props.timestamp) {
       return null;
     }
-    this.reset(timestamp);
+    this.reset(timestamp, this.props.t);
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return nextState.timestamp !== this.state.timestamp
-        || nextState.mdate !== this.state.mdate;
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.timestamp !== this.state.timestamp || nextState.mdate !== this.state.mdate;
   }
 
-  render () {
+  render() {
     const { mdate, timestamp } = this.state;
 
     if (!dateTime.isValid(mdate)) {
@@ -128,11 +128,19 @@ export class Timestamp extends SafetyFirst {
       return timestamp;
     }
 
-    return <div className="co-timestamp co-icon-and-text">
-      <i className="fa fa-globe co-icon-and-text__icon" aria-hidden="true" />
-      <Tooltip content={[<span className="co-nowrap" key="co-timestamp">{ mdate.toISOString() }</span>]}>
-        { timestamp }
-      </Tooltip>
-    </div>;
+    return (
+      <div className="co-timestamp co-icon-and-text">
+        <i className="fa fa-globe co-icon-and-text__icon" aria-hidden="true" />
+        <Tooltip
+          content={[
+            <span className="co-nowrap" key="co-timestamp">
+              {mdate.toISOString()}
+            </span>,
+          ]}
+        >
+          {timestamp}
+        </Tooltip>
+      </div>
+    );
   }
 }
