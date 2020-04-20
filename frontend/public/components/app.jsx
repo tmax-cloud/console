@@ -199,8 +199,28 @@ class App extends React.PureComponent {
           {this.state.isLoading && <Loading className="loading-box" />}
           <Switch>
             <Route path={['/all-namespaces', '/ns/:ns']} component={RedirectComponent} />
-            <LazyRoute path="/status/all-namespaces" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
-            <LazyRoute path="/status/ns/:ns" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
+            <LazyRoute
+              path="/status/all-namespaces"
+              exact
+              loader={() =>
+                import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => {
+                  return m.ClusterOverviewPage;
+                })
+              }
+            />
+            <LazyRoute
+              path="/status/ns/:ns"
+              exact
+              loader={() =>
+                import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => {
+                  if (!localStorage.getItem('bridge/last-namespace-name')) {
+                    return;
+                  } else {
+                    return m.ClusterOverviewPage;
+                  }
+                })
+              }
+            />
             <Route path="/status" exact component={NamespaceRedirect} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
