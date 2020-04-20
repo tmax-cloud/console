@@ -85,9 +85,7 @@ const withServiceInstanceForm = SubForm =>
       this.save = this.save.bind(this);
     }
     getClassList() {
-      coFetch(
-        `/api/kubernetes/apis/${k8sModels.ClusterServiceBrokerModel.apiGroup}/${k8sModels.ClusterServiceBrokerModel.apiVersion}/clusterserviceclasses`,
-      )
+      coFetch(`/api/kubernetes/apis/${k8sModels.ClusterServiceBrokerModel.apiGroup}/${k8sModels.ClusterServiceBrokerModel.apiVersion}/clusterserviceclasses`)
         .then(res => res.json())
         .then(res => {
           const classListData = res.items.map(item => {
@@ -111,9 +109,7 @@ const withServiceInstanceForm = SubForm =>
         });
     }
     getPlanList() {
-      coFetch(
-        `/api/kubernetes/apis/${k8sModels.ClusterServicePlanModel.apiGroup}/${k8sModels.ClusterServicePlanModel.apiVersion}/clusterserviceplans`,
-      )
+      coFetch(`/api/kubernetes/apis/${k8sModels.ClusterServicePlanModel.apiGroup}/${k8sModels.ClusterServicePlanModel.apiVersion}/clusterserviceplans`)
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
         .then(res => res.json())
         .then(res => {
@@ -139,13 +135,11 @@ const withServiceInstanceForm = SubForm =>
       if (!selectedClass) {
         return;
       }
-      coFetch(
-        `/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/default/templates/${selectedClass.name}`,
-      )
+      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/default/templates/${selectedClass.name}`)
         .then(res => res.json())
         .then(res => {
           let paramList = res.parameters.map(function (parm) {
-            return { name: parm.name, value: '' }
+            return { name: parm.name, value: '' };
           });
           if (paramList.length) {
             this.setState({
@@ -237,7 +231,7 @@ const withServiceInstanceForm = SubForm =>
       // this.getParams();
     }
     render() {
-      const { t } = this.props
+      const { t } = this.props;
       const title = t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('ServiceInstance', t) });
       const { steps, currentStep, selectedClass, selectedPlan, paramList } = this.state;
       const ServicePlanList = ({ planList, onChangePlan, selectedPlan }) => {
@@ -266,18 +260,8 @@ const withServiceInstanceForm = SubForm =>
             <Stepper steps={steps} activeStep={currentStep} />
             <div className="separator"></div>
             {/* stepper */}
-            {currentStep === 0 &&
-              (this.state.classList.length > 0 ? (
-                <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
-              ) : (
-                  <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>
-                ))}
-            {currentStep === 1 &&
-              (this.state.classList.length > 0 ? (
-                <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
-              ) : (
-                  <div>{t('STRING:SERVICEINSTANCE-CREATE_4')}</div>
-                ))}
+            {currentStep === 0 && (this.state.classList.length > 0 ? <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} /> : <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>)}
+            {currentStep === 1 && (this.state.classList.length > 0 ? <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} /> : <div>{t('STRING:SERVICEINSTANCE-CREATE_4')}</div>)}
             {currentStep === 2 && (
               <React.Fragment>
                 <div className="row">
@@ -295,20 +279,13 @@ const withServiceInstanceForm = SubForm =>
                 {paramList.length > 0 && (
                   <React.Fragment>
                     <div className="separator"></div>
-                    <Section label="Parameter" key="params">
+                    <Section label={t('CONTENT:PARAMETERS')} key="params">
                       {paramList.map((parameter, index) => (
                         <React.Fragment key={index}>
                           <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
                             {parameter.name}
                           </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            placeholder={t('CONTENT:VALUE')}
-                            id={parameter.name}
-                            onChange={this.onParamValueChanged}
-                            required
-                          />
+                          <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.name} onChange={this.onParamValueChanged} required />
                         </React.Fragment>
                       ))}
                     </Section>
@@ -381,15 +358,13 @@ class BasicServiceInstanceForm extends React.Component {
 }
 
 const serviceInstanceFormFactory = serviceInstanceType => {
-  return serviceInstanceType === ServiceInstanceTypeAbstraction.form
-    ? withServiceInstanceForm(BasicServiceInstanceForm)
-    : withServiceInstanceForm(BasicServiceInstanceForm);
+  return serviceInstanceType === ServiceInstanceTypeAbstraction.form ? withServiceInstanceForm(BasicServiceInstanceForm) : withServiceInstanceForm(BasicServiceInstanceForm);
 };
 
 const ServiceInstanceLoadingWrapper = props => {
   const ServiceInstanceTypeAbstraction = determineServiceInstanceTypeAbstraction(_.get(props.obj.data, 'data'));
   const ServiceInstanceFormComponent = serviceInstanceFormFactory(ServiceInstanceTypeAbstraction);
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   // const fixed = _.reduce(props.fixedKeys, (acc, k) => ({...acc, k: _.get(props.obj.data, k)}), {});
   return (
     <StatusBox {...props.obj}>
@@ -398,8 +373,8 @@ const ServiceInstanceLoadingWrapper = props => {
         {...props}
         ServiceInstanceTypeAbstraction={ServiceInstanceTypeAbstraction}
         obj={props.obj.data}
-      // fixed={fixed}
-      // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
+        // fixed={fixed}
+        // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
       />
     </StatusBox>
   );
@@ -417,7 +392,7 @@ export const CreateServiceInstance = ({ match: { params } }) => {
     {
       title: t('STRING:SERVICEINSTANCE-CREATE_2'),
     },
-  ]
+  ];
   const ServiceInstanceFormComponent = serviceInstanceFormFactory(params.type);
   return <ServiceInstanceFormComponent namespace={params.ns} t={t} steps={steps} />;
 };
@@ -427,8 +402,6 @@ export const EditServiceInstance = ({ match: { params }, kind }) => (
     <ServiceInstanceLoadingWrapper fixedKeys={['kind', 'metadata']} titleVerb="Edit" saveButtonText="Save Changes" />
   </Firehose>
 );
-
-
 
 const ServicePlanItem = ({ item, onChangePlan, selectedPlan }) => {
   const { name, description, bullets, amount, unit } = item;
