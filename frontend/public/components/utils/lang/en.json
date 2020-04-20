@@ -123,6 +123,7 @@
     "ROLEBINDING-CREATE_6": "Grant the permissions to a user or set of users at the cluster level and in all namespaces."
   },
   "CONTENT": {
+    "RESOURCENAME": "Resource Name",
     "SUBJECTNAMESPACE": "Subject Namespace",
     "SUBJECT": "Subject",
     "SERVICEPLAN": "Service Plan",

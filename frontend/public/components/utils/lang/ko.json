@@ -122,6 +122,7 @@
     "ROLEBINDING-CREATE_6": "클러스터 수준 및 모든 네임스페이스에서 사용자 또는 사용자 그룹에 권한을 부여합니다."
   },
   "CONTENT": {
+    "RESOURCENAME": "리소스 이름",
     "SUBJECTNAMESPACE": "Subject Namespace",
     "SUBJECT": "대상",
     "SERVICEPLAN": "서비스 플랜",
