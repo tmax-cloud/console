@@ -446,6 +446,20 @@ export const BuildConfigModel: K8sKind = {
   labelPlural: 'Build Configs',
 };
 
+export const ImageModel: K8sKind = {
+  label: 'Image',
+  apiVersion: 'v1',
+  path: 'images',
+  apiGroup: 'tmax.io',
+  plural: 'images',
+  abbr: 'I',
+  namespaced: true,
+  kind: 'Image',
+  id: 'image',
+  labelPlural: 'Images',
+  crd: false,
+};
+
 export const BuildModel: K8sKind = {
   label: 'Build',
   apiVersion: 'v1',

@@ -72,9 +72,11 @@ import {
   ContainerModel,
   CatalogSourceModel,
   ServiceInstanceModel,
+  ImageModel,
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesDetailsPage))
   .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsDetailsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesDetailsPage))
   .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesDetailsPage))
@@ -140,6 +142,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesPage))
   .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesPage))
   .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesPage))
