@@ -335,7 +335,8 @@ const NsDropdown_ = props => {
   }
   const kind = openshiftFlag ? 'Project' : 'Namespace';
   const resources = [{ kind }];
-  return <ListDropdown {...props} desc="Namespaces" resources={resources} selectedKeyKind={kind} placeholder="Select namespace" />;
+  const { t } = props
+  return <ListDropdown {...props} desc="Namespaces" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:ROLEBINDING-CREATE_2')} />;
 };
 const NsDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsDropdown_);
 
@@ -357,23 +358,12 @@ const NsRoleDropdown_ = props => {
   }
   const resourceForKind = kind => ({ kind, namespace: kind === 'Role' ? props.namespace : null });
   const resources = _.map(kinds, resourceForKind);
-
-  return <ListDropdown {...props} dataFilter={roleFilter} desc="Namespace Roles (Role)" resources={resources} placeholder="Select role name" />;
+  const { t } = props
+  return <ListDropdown {...props} dataFilter={roleFilter} desc="Namespace Roles (Role)" resources={resources} placeholder={t('STRING:ROLEBINDING-CREATE_1')} />;
 };
 const NsRoleDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsRoleDropdown_);
 
 const ClusterRoleDropdown = props => <ListDropdown {...props} dataFilter={role => !isSystemRole(role)} desc="Cluster-wide Roles (ClusterRole)" resources={[{ kind: 'ClusterRole' }]} placeholder="Select role name" />;
-
-// 라디오 버튼 지우면서 필요 없어짐.
-const bindingKinds = [
-  { value: 'RoleBinding', title: 'Namespace Role Binding (RoleBinding)', desc: 'Grant the permissions to a user or set of users within the selected namespace.' },
-  { value: 'ClusterRoleBinding', title: 'Cluster-wide Role Binding (ClusterRoleBinding)', desc: 'Grant the permissions to a user or set of users at the cluster level and in all namespaces.' },
-];
-const subjectKinds = [
-  { value: 'User', title: 'User' },
-  { value: 'Group', title: 'Group' },
-  { value: 'ServiceAccount', title: 'Service Account' },
-];
 
 const Section = ({ label, children }) => (
   <div className="row">
@@ -474,9 +464,22 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
     render() {
       const { kind, metadata, roleRef } = this.state.data;
       const subject = this.getSubject();
-      const { fixed, saveButtonText } = this.props;
+      const { fixed, saveButtonText, t, titleVerb } = this.props;
       const RoleDropdown = kind === 'RoleBinding' ? NsRoleDropdown : ClusterRoleDropdown;
-      const title = `${this.props.titleVerb} ${kindObj(kind).label}`;
+      // const title = `${this.props.titleVerb} ${kindObj(kind).label}`;
+      let title = titleVerb === 'Create' ? t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(`${kind}`, t) }) : t('ADDITIONAL:EDIT', { something: ResourcePlural(`${kind}`, t) })
+
+      const subjectKinds = [
+        { value: 'User', title: t('CONTENT:USER') },
+        { value: 'Group', title: t('CONTENT:GROUP') },
+        { value: 'ServiceAccount', title: t('RESOURCE:SERVICEACCOUNT') },
+      ];
+
+      const bindingKinds = [
+        { value: 'RoleBinding', title: t('STRING:ROLEBINDING-CREATE_3'), desc: t('STRING:ROLEBINDING-CREATE_4') },
+        { value: 'ClusterRoleBinding', title: t('STRING:ROLEBINDING-CREATE_5'), desc: t('STRING:ROLEBINDING-CREATE_6') },
+      ];
+
 
       return (
         <div className="rbac-edit-binding co-m-pane__body">
@@ -485,65 +488,65 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
           </Helmet>
           <form className="co-m-pane__body-group" onSubmit={this.save}>
             <h1 className="co-m-pane__heading">{title}</h1>
-            <p className="co-m-pane__explanation">Associate a user/group to the selected role to define the type of access and resources that are allowed.</p>
+            <p className="co-m-pane__explanation">{t('STRING:ROLEBINDING-CREATE_0')}</p>
 
             {!_.get(fixed, 'kind') && <RadioGroup currentValue={kind} items={bindingKinds} onChange={this.setKind} />}
 
             <div className="separator"></div>
 
-            <Section label="Role Binding">
+            <Section label={t('RESOURCE:ROLEBINDING')}>
               <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                Name
+                {t('CONTENT:NAME')}
               </label>
-              {_.get(fixed, 'metadata.name') ? <ResourceName kind={kind} name={metadata.name} /> : <input className="form-control" type="text" onChange={this.changeName} placeholder="Role binding name" value={metadata.name} required id="role-binding-name" />}
+              {_.get(fixed, 'metadata.name') ? <ResourceName kind={kind} name={metadata.name} /> : <input className="form-control" type="text" onChange={this.changeName} placeholder={t('CONTENT:NAME')} value={metadata.name} required id="role-binding-name" />}
               {kind === 'RoleBinding' && (
                 <div>
                   <div className="separator"></div>
                   <label htmlFor="ns-dropdown" className="rbac-edit-binding__input-label">
-                    Namespace
+                    {t('CONTENT:NAMESPACE')}
                   </label>
-                  <NsDropdown fixed={!!_.get(fixed, 'metadata.namespace')} selectedKey={metadata.namespace} onChange={this.changeNamespace} id="ns-dropdown" />
+                  <NsDropdown fixed={!!_.get(fixed, 'metadata.namespace')} selectedKey={metadata.namespace} t={t} onChange={this.changeNamespace} id="ns-dropdown" />
                 </div>
               )}
             </Section>
 
             <div className="separator"></div>
 
-            <Section label="Role">
+            <Section label={t('RESOURCE:ROLE')}>
               <label htmlFor="role-dropdown" className="rbac-edit-binding__input-label">
-                Role Name
+                {t('CONTENT:NAME')}
               </label>
-              <RoleDropdown fixed={!!_.get(fixed, 'roleRef.name')} namespace={metadata.namespace} onChange={this.changeRoleRef} selectedKey={_.get(fixed, 'roleRef.name') || roleRef.name} selectedKeyKind={_.get(fixed, 'roleRef.kind') || roleRef.kind} id="role-dropdown" />
+              <RoleDropdown fixed={!!_.get(fixed, 'roleRef.name')} namespace={metadata.namespace} t={t} onChange={this.changeRoleRef} selectedKey={_.get(fixed, 'roleRef.name') || roleRef.name} selectedKeyKind={_.get(fixed, 'roleRef.kind') || roleRef.kind} id="role-dropdown" />
             </Section>
 
             <div className="separator"></div>
 
-            <Section label="Subject">
+            <Section label={t('CONTENT:SUBJECT')}>
               <RadioGroup currentValue={subject.kind} items={subjectKinds} onChange={this.changeSubjectKind} />
               {subject.kind === 'ServiceAccount' && (
                 <div>
                   <div className="separator"></div>
                   <label htmlFor="subject-namespace" className="rbac-edit-binding__input-label">
-                    Subject Namespace
+                    {t('CONTENT:SUBJECTNAMESPACE')}
                   </label>
-                  <NsDropdown id="subject-namespace" selectedKey={subject.namespace} onChange={this.changeSubjectNamespace} />
+                  <NsDropdown id="subject-namespace" t={t} selectedKey={subject.namespace} onChange={this.changeSubjectNamespace} />
                 </div>
               )}
               <div className="separator"></div>
               <label htmlFor="subject-name" className="rbac-edit-binding__input-label">
-                Subject Name
+                {t('CONTENT:SUBJECTNAME')}
               </label>
-              <input className="form-control" type="text" onChange={this.changeSubjectName} placeholder="Subject name" value={subject.name} required id="subject-name" />
+              <input className="form-control" type="text" onChange={this.changeSubjectName} placeholder={t('CONTENT:NAME')} value={subject.name} required id="subject-name" />
             </Section>
 
             <div className="separator"></div>
 
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
               <button type="submit" className="btn btn-primary" id="save-changes">
-                {saveButtonText || 'Create Binding'}
+                {saveButtonText || t('CONTENT:CREATE')}
               </button>
               <Link to={formatNamespacedRouteForResource('rolebindings')} className="btn btn-default" id="cancel">
-                Cancel
+                {t('CONTENT:CANCEL')}
               </Link>
             </ButtonBar>
           </form>
@@ -558,12 +561,13 @@ export const CreateRoleBinding = ({ match: { params }, location }) => {
   const roleKind = searchParams.get('rolekind');
   const roleName = searchParams.get('rolename');
   const metadata = { namespace: getActiveNamespace() };
+  const { t } = useTranslation();
   const fixed = {
     kind: params.ns || roleKind === 'Role' ? 'RoleBinding' : undefined,
     metadata: { namespace: params.ns },
     roleRef: { kind: roleKind, name: roleName },
   };
-  return <BaseEditRoleBinding metadata={metadata} fixed={fixed} isCreate={true} titleVerb="Create" />;
+  return <BaseEditRoleBinding metadata={metadata} t={t} fixed={fixed} isCreate={true} titleVerb="Create" />;
 };
 
 const getSubjectIndex = () => {
@@ -573,10 +577,11 @@ const getSubjectIndex = () => {
 
 const BindingLoadingWrapper = props => {
   const fixed = {};
+  const { t } = useTranslation();
   _.each(props.fixedKeys, k => (fixed[k] = _.get(props.obj.data, k)));
   return (
     <StatusBox {...props.obj}>
-      <BaseEditRoleBinding {...props} obj={props.obj.data} fixed={fixed} />
+      <BaseEditRoleBinding {...props} t={t} obj={props.obj.data} fixed={fixed} />
     </StatusBox>
   );
 };
