@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 
 import { Timestamp } from './utils';
+import { fromNow } from './utils/datetime';
 import { CamelCaseWrap } from './utils/camel-case-wrap';
 import { useTranslation } from 'react-i18next';
 
@@ -13,9 +14,7 @@ export const Conditions: React.SFC<ConditionsProps> = ({ conditions }) => {
         <CamelCaseWrap value={condition.type} />
       </div>
       <div className="col-xs-4 col-sm-2 col-md-2">{condition.status}</div>
-      <div className="hidden-xs hidden-sm col-md-2">
-        <Timestamp timestamp={condition.lastUpdateTime || condition.lastTransitionTime} />
-      </div>
+      <div className="hidden-xs hidden-sm col-md-2">{fromNow(condition.lastUpdateTime || condition.lastTransitionTime)}</div>
       <div className="col-xs-4 col-sm-3 col-md-2">
         <CamelCaseWrap value={condition.reason} />
       </div>
