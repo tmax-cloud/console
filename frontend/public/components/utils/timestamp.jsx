@@ -110,7 +110,7 @@ export class Timestamp extends SafetyFirst {
     if (timestamp && timestamp === this.props.timestamp) {
       return null;
     }
-    this.reset(timestamp);
+    this.reset(timestamp, this.props.t);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
