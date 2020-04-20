@@ -73,24 +73,12 @@ export const k8sCreate = (kind, data, opts = {}) => {
   return coFetchJSON.post(resourceURL(kind, Object.assign({ ns: data.metadata.namespace }, opts)), data);
 };
 
-export const k8sUpdate = (kind, data, ns, name) => coFetchJSON.put(
-  resourceURL(kind, { ns: ns || data.metadata.namespace, name: name || data.metadata.name }),
-  data
-);
+export const k8sUpdate = (kind, data, ns, name) => coFetchJSON.put(resourceURL(kind, { ns: ns || data.metadata.namespace, name: name || data.metadata.name }), data);
 
-export const k8sPatch = (kind, resource, data) => coFetchJSON.patch(
-  resourceURL(kind, { ns: resource.metadata.namespace, name: resource.metadata.name }),
-  data
-);
-export const k8sPatch2 = (kind, resource, data, opts) => coFetchJSON.patch(
-  resourceURL(kind, { ns: resource.metadata.namespace, name: resource.metadata.name, path: opts.path }),
-  data,
-  opts
-);
+export const k8sPatch = (kind, resource, data) => coFetchJSON.patch(resourceURL(kind, { ns: resource.metadata.namespace, name: resource.metadata.name }), data);
+export const k8sPatch2 = (kind, resource, data, opts) => coFetchJSON.patch(resourceURL(kind, { ns: resource.metadata.namespace, name: resource.metadata.name, path: opts.path }), data, opts);
 
-export const k8sKill = (kind, resource, opts = {}, json = null) => coFetchJSON.delete(
-  resourceURL(kind, Object.assign({ ns: resource.metadata.namespace, name: resource.metadata.name }, opts)), opts, json
-);
+export const k8sKill = (kind, resource, opts = {}, json = null) => coFetchJSON.delete(resourceURL(kind, Object.assign({ ns: resource.metadata.namespace, name: resource.metadata.name }, opts)), opts, json);
 
 export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   let listURL;
@@ -107,7 +95,7 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
     listURL = resourceURL(kind, { ns: params.ns });
   }
 
-  return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => raw ? result : result.items);
+  return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
 };
 
 export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
@@ -117,19 +105,22 @@ export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
 export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   const queryParams = { watch: true };
   const opts = { queryParams };
-  let path;
+  // let path;
 
-  if (kind.kind !== 'Namespace') {
-    path = resourceURL(kind, opts);
-  }
+  // if (kind.kind !== 'Namespace') {
+  //   path = resourceURL(kind, opts);
+  // }
 
-  wsOptions = Object.assign({
-    host: 'auto',
-    reconnect: true,
-    jsonParse: true,
-    bufferFlushInterval: 500,
-    bufferMax: 1000,
-  }, wsOptions);
+  wsOptions = Object.assign(
+    {
+      host: 'auto',
+      reconnect: true,
+      jsonParse: true,
+      bufferFlushInterval: 500,
+      bufferMax: 1000,
+    },
+    wsOptions,
+  );
 
   const labelSelector = query.labelSelector || kind.labelSelector;
   if (labelSelector) {
@@ -150,9 +141,10 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   if (query.resourceVersion) {
     queryParams.resourceVersion = encodeURIComponent(query.resourceVersion);
   }
-  //path가 없는경우 return 값 없도록 예외처리 
-  if (path) {
-    wsOptions.path = path;
-    return new WSFactory(path, wsOptions);
-  }
+  //path가 없는경우 return 값 없도록 예외처리
+  // if (path) {
+  const path = resourceURL(kind, opts);
+  wsOptions.path = path;
+  return new WSFactory(path, wsOptions);
+  // }
 };
