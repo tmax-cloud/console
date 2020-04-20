@@ -45,7 +45,7 @@
   &__lang {
     display: none;
     @media (min-width: $grid-float-breakpoint) {
-      display: none;
+      display: block;
       margin-right: -10px;
     }
     .dropdown__not-btn,

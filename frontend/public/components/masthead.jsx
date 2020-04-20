@@ -12,7 +12,7 @@ import { SafetyFirst } from './safety-first';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { getAccessToken, getRefreshToken, setAccessToken, resetLoginState } from './utils/auth';
-
+import i18n from 'i18next';
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
@@ -154,7 +154,7 @@ class OSUserMenu extends SafetyFirst {
       //   this.setState({ username: 'Admin' });
       // }
       const userName = JSON.parse(atob(getAccessToken().split('.')[1])).id;
-        this.setState({ username: userName });
+      this.setState({ username: userName });
     } else {
       this.setState({ username: 'admin@tmax.co.kr' });
     }
@@ -264,11 +264,11 @@ export class ExpTimer extends Component {
   tick() {
     if (HDCModeFlag) {
       const curTime = new Date();
-        if (!getAccessToken()) {
-          resetLoginState();
-          window.location.href = `${document.location.origin}`;
-          return;
-        }
+      if (!getAccessToken()) {
+        resetLoginState();
+        window.location.href = `${document.location.origin}`;
+        return;
+      }
 
       const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
       const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
@@ -281,7 +281,7 @@ export class ExpTimer extends Component {
     } else {
       expTime -= 1;
     }
-    
+
     // Test 용으로 짝수 분에 튕기도록
     if (expTime === 0 || expTime < 0 /*|| Math.floor(expTime / 60 % 2) === 0*/) {
       resetLoginState();
