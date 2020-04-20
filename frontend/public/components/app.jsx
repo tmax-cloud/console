@@ -29,6 +29,8 @@ import { Loading } from './utils';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
+import { getAccessToken, resetLoginState } from './utils/auth';
+
 
 import './utils/i18n';
 
@@ -91,18 +93,10 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
-  if (window.SERVER_FLAGS.releaseModeFlag) {
-    // const [login, setLogin] = useState(0);
 
-    // if (login === 0) {
-    //   setLogin(login+1);
-    // } else {
-    //   return <Redirect to="/login" />;
-    // }
-
-    if (!window.sessionStorage.getItem('accessToken')) {
-      return <Redirect to="/login" />;
-    }
+  // Private 모델에서 세션에 토큰이 없는 경우 로그인 페이지로 리다이렉션
+  if (!window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
+    return <Redirect to="/login" />;
   }
 
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
@@ -129,20 +123,11 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    if (window.SERVER_FLAGS.HDCModeFlag && !window.sessionStorage.getItem('accessToken')) {
-      // HDC Mode
-      if (searchParam('at')) {
-        window.sessionStorage.setItem('accessToken', searchParam('at'));
-        window.sessionStorage.setItem('refreshToken', searchParam('rt'));
-        // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-        // window.sessionStorage.setItem('role', userRole);
-        this.props.history.push('/');
-        this.props.history.go(0);
-      } else {
-        // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-        window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
-        return;
-      }
+    // HDC 모델
+    if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
+      // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
+      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+      return;
     }
 
     this.state = {
@@ -153,7 +138,7 @@ class App extends React.PureComponent {
 
 
     // 임시 로직
-    if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') || window.localStorage.getItem('role')) {
+    if (window.localStorage.getItem('accessToken') || window.localStorage.getItem('refreshToken') || window.localStorage.getItem('logouted') ||  window.localStorage.getItem('role')) {
       window.localStorage.removeItem('accessToken');
       window.localStorage.removeItem('refreshToken');
       window.localStorage.removeItem('logouted');
@@ -167,7 +152,7 @@ class App extends React.PureComponent {
       'storage',
       function (evt) {
         if (evt.key === 'forceLogout') {
-          window.sessionStorage.clear();
+          resetLoginState();
         }
       },
       false,
