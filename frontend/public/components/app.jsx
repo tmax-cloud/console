@@ -199,8 +199,28 @@ class App extends React.PureComponent {
           {this.state.isLoading && <Loading className="loading-box" />}
           <Switch>
             <Route path={['/all-namespaces', '/ns/:ns']} component={RedirectComponent} />
-            <LazyRoute path="/status/all-namespaces" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
-            <LazyRoute path="/status/ns/:ns" exact loader={() => import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => m.ClusterOverviewPage)} />
+            <LazyRoute
+              path="/status/all-namespaces"
+              exact
+              loader={() =>
+                import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => {
+                  return m.ClusterOverviewPage;
+                })
+              }
+            />
+            <LazyRoute
+              path="/status/ns/:ns"
+              exact
+              loader={() =>
+                import('./cluster-overview' /* webpackChunkName: "cluster-overview" */).then(m => {
+                  if (!localStorage.getItem('bridge/last-namespace-name')) {
+                    return;
+                  } else {
+                    return m.ClusterOverviewPage;
+                  }
+                })
+              }
+            />
             <Route path="/status" exact component={NamespaceRedirect} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
@@ -210,9 +230,13 @@ class App extends React.PureComponent {
             {/* <Route path={`/k8s/ns/:ns/${ClusterServiceVersionModel.plural}/:appName/:plural/:name`} component={ResourceDetailsPage} /> */}
             <LazyRoute path="/k8s/all-namespaces/events" exact loader={() => import('./events').then(m => NamespaceFromURL(m.EventStreamPage))} />
             <LazyRoute path="/k8s/ns/:ns/events" exact loader={() => import('./events').then(m => NamespaceFromURL(m.EventStreamPage))} />
-            <Route path="/search/all-namespaces" exact component={NamespaceFromURL(SearchPage)} />
-            <Route path="/search/ns/:ns" exact component={NamespaceFromURL(SearchPage)} />
+            {/* search페이지 i18n적용을 위해 LazyRoute으로 변경  */}
+            {/* <Route path="/search/all-namespaces" exact component={NamespaceFromURL(SearchPage)} /> */}
+            {/* <Route path="/search/ns/:ns" exact component={NamespaceFromURL(SearchPage)} /> */}
             <Route path="/search" exact component={ActiveNamespaceRedirect} />
+            <LazyRoute path="/search/all-namespaces" exact loader={() => import('./search').then(m => NamespaceFromURL(m.SearchPage))} />
+            <LazyRoute path="/search/ns/:ns" exact loader={() => import('./search').then(m => NamespaceFromURL(m.SearchPage))} />
+
             <Route path="/k8s/ns/:ns/customresourcedefinitions/:plural" exact component={ResourceListPage} />
             <Route path="/k8s/ns/:ns/customresourcedefinitions/:plural/:name" component={ResourceDetailsPage} />
             <Route path="/k8s/all-namespaces/customresourcedefinitions/:plural" exact component={ResourceListPage} />

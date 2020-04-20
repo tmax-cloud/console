@@ -135,7 +135,7 @@ export const RegistryDetailsPage = props => {
       // }
       kind="Registry"
       menuActions={menuActions}
-      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.images(t('CONTENT:IMAGE'))]}
     />
   );
 };

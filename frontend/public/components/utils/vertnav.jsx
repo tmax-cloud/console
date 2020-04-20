@@ -6,6 +6,7 @@ import { Route, Switch, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
+import { ImagesPage } from '../image';
 import { AsyncComponent } from '../utils/async';
 
 const editYamlComponent = props => {
@@ -30,6 +31,23 @@ class PodsComponent extends React.PureComponent {
   }
 }
 
+class ImageComponent extends React.PureComponent {
+  render() {
+    const {
+      metadata: { namespace },
+      // spec: { selector },
+    } = this.props.obj;
+    // if (_.isEmpty(selector)) {
+    //   return <EmptyBox label="Pod" />;
+    // }
+
+    // Hide the create button to avoid confusion when showing pods for an object.
+    // Otherwise it might seem like you click "Create Pod" to add replicas instead
+    // of scaling the owner.
+    return <ImagesPage showTitle={false} namespace={namespace} canCreate={false} />;
+  }
+}
+
 export const navFactory = {
   details: (component, name = '') => ({
     href: '',
@@ -50,6 +68,11 @@ export const navFactory = {
     href: 'yaml',
     name: name || 'YAML',
     component: component,
+  }),
+  images: (name, component) => ({
+    href: 'images',
+    name: name || 'Images',
+    component: component || ImageComponent,
   }),
   pods: (name, component) => ({
     href: 'pods',

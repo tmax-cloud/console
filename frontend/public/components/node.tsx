@@ -97,12 +97,14 @@ const NodeStatus = ({ node }) => {
   return isNodeReady(node) ? (
     <span className="node-ready">
       <i className="fa fa-check"></i>
-      {t('CONTENT:READY')}
+      {/* {t('CONTENT:READY')} */}
+      Ready
     </span>
   ) : (
     <span className="node-not-ready">
       <i className="fa fa-minus-circle"></i>
-      {t('CONTENT:NOTREADY')}
+      {/* {t('CONTENT:NOTREADY')} */}
+      Not Ready
     </span>
   );
 };
@@ -167,7 +169,8 @@ const NodeRow = ({ obj: node, expand }) => {
       <div className="col-sm-2 col-xs-4">
         <NodeStatus node={node} />
       </div>
-      <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED')}</span>}</div>
+      {/* <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED')}</span>}</div> */}
+      <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">Not Configured</span>}</div>
       <div className="col-sm-3 hidden-xs">
         <NodeIPList ips={node.status.addresses} expand={expand} />
       </div>

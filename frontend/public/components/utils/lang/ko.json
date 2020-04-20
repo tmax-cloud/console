@@ -1,7 +1,7 @@
 {
   "PLURAL": {
-    "POD": "{{count}} 파드",
-    "POD_plural": "{{count}} 파드",
+    "POD": "{{count}} pod",
+    "POD_plural": "{{count}} pods",
     "SECOND": "{{count}} 초",
     "SECOND_plural": "{{count}} 초",
     "ANNOTATION": "{{count}} 주석",
@@ -22,10 +22,10 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "해당 {{something}}이 대상으로 할 수 있는 총 파드 수.",
     "DEPLOYMENT_DETAIL_TOOLTIP_3": "해당 $ {something}이 대상으로 할 수 없는 총 파드 수",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something2}}의 {{something1}}",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}}는 {{something2}} 보다 큼",
     "LOGSTALE": "The logs for this {{something}} may be stale.",
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
     "SAVE": "{{something}} 저장",
-    "FOR": "{{something2}}의 {{something1}}",
+    "FOR": "{{something1}} of {{something2}}",
     "DELETE-MODAL_0": "{{something}}을(를) 삭제하시겠습니까?",
     "DELETE-MODAL_1": "{{something2}}의 {{something1}}을(를) 삭제하시겠습니까?",
     "COUNT-MODAL_0": "{{something}} maintain the desired number of healthy pods.",
@@ -122,6 +122,7 @@
     "ROLEBINDING-CREATE_6": "클러스터 수준 및 모든 네임스페이스에서 사용자 또는 사용자 그룹에 권한을 부여합니다."
   },
   "CONTENT": {
+    "RESOURCENAME": "리소스 이름",
     "SUBJECTNAMESPACE": "Subject Namespace",
     "SUBJECT": "대상",
     "SERVICEPLAN": "서비스 플랜",
@@ -509,6 +510,7 @@
     "EVENT": "이벤트",
     "SERVICECATALOG": "서비스 카탈로그",
     "CLUSTERSERVICEBROKER": "클러스터 서비스 브로커",
+    "SERVICECLASS": "서비스 클래스",
     "CLUSTERSERVICECLASS": "클러스터 서비스 클래스",
     "CLUSTERSERVICEPLAN": "클러스터 서비스 플랜",
     "SERVICEINSTANCE": "서비스 인스턴스",

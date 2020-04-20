@@ -17,11 +17,14 @@ const ResourceQuotaClaimHeader = props => {
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.namespace">
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
         {t('CONTENT:NAMESPACE')}
       </ColHead>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="status.status">
         {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="resourceName">
+        {t('CONTENT:RESOURCENAME')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
@@ -39,8 +42,9 @@ const ResourceQuotaClaimRow = () =>
           <ResourceCog actions={menuActions} kind="ResourceQuotaClaim" resource={obj} />
           <ResourceLink kind="ResourceQuotaClaim" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-3 col-sm-3 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
+        <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.status && obj.status.status}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.resourceName}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
@@ -76,6 +80,8 @@ const Details = ({ obj: resourcequotaclaim }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
+              <dt>{t('CONTENT:RESOURCENAME')}</dt>
+              <dd>{resourcequotaclaim.resourceName}</dd>
               <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{resourcequotaclaim.status && resourcequotaclaim.status.status}</dd>
               {resourcequotaclaim.status && resourcequotaclaim.status.reason && <dt>{t('CONTENT:REASON')}</dt>}
