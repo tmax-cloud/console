@@ -8,7 +8,7 @@ import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
-import { setAccessToken, setRefreshToken, resetLoginState } from './utils/auth';
+import { setAccessToken, setRefreshToken, resetLoginState, getAccessToken } from './utils/auth';
 
 function searchParam(key) {
   return new URLSearchParams(location.search).get(key);
@@ -25,7 +25,12 @@ class LoginComponent extends Component {
 
   constructor(props) {
     super(props);
-
+    // HDC 모델
+    if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
+      // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
+      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+      return;
+    }
     // if (searchParam('at')) {
     //   window.sessionStorage.setItem('accessToken', searchParam('at'));
     //   window.sessionStorage.setItem('refreshToken', searchParam('rt'));   

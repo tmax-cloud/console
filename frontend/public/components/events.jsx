@@ -50,7 +50,8 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
             <div className="co-sysevent__header">
               <div className="co-sysevent__subheader">
                 <ResourceLink className="co-sysevent__resourcelink" kind={obj.kind} namespace={obj.namespace} name={obj.name} title={obj.uid} />
-                <Timestamp timestamp={lastTimestamp} t={t} />
+                <Timestamp timestamp={lastTimestamp} />
+                {/* <Timestamp timestamp={lastTimestamp} t={t} /> */}
               </div>
               <div className="co-sysevent__details">
                 <small className="co-sysevent__source">
@@ -59,7 +60,9 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
                 </small>
                 {count > 1 && (
                   <small className="co-sysevent__count text-secondary">
-                    {count} {t('CONTENT:TIMESINTHELAST')} <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} t={t} />
+                    {count} {t('CONTENT:TIMESINTHELAST')}
+                    <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
+                    {/* <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} t={t} /> */}
                   </small>
                 )}
               </div>
@@ -414,7 +417,8 @@ class EventStream extends SafetyFirst {
             <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
             <div className="co-sysevent-stream__timeline__end-message">
               {t('STRING:EVENT_9')}
-              <Timestamp timestamp={this.state.oldestTimestamp} t={t} />
+              <Timestamp timestamp={this.state.oldestTimestamp} />
+              {/* <Timestamp timestamp={this.state.oldestTimestamp} t={t} /> */}
             </div>
           </div>
           {count > 0 && (
