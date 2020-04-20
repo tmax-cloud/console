@@ -210,9 +210,13 @@ class App extends React.PureComponent {
             {/* <Route path={`/k8s/ns/:ns/${ClusterServiceVersionModel.plural}/:appName/:plural/:name`} component={ResourceDetailsPage} /> */}
             <LazyRoute path="/k8s/all-namespaces/events" exact loader={() => import('./events').then(m => NamespaceFromURL(m.EventStreamPage))} />
             <LazyRoute path="/k8s/ns/:ns/events" exact loader={() => import('./events').then(m => NamespaceFromURL(m.EventStreamPage))} />
-            <Route path="/search/all-namespaces" exact component={NamespaceFromURL(SearchPage)} />
-            <Route path="/search/ns/:ns" exact component={NamespaceFromURL(SearchPage)} />
+            {/* search페이지 i18n적용을 위해 LazyRoute으로 변경  */}
+            {/* <Route path="/search/all-namespaces" exact component={NamespaceFromURL(SearchPage)} /> */}
+            {/* <Route path="/search/ns/:ns" exact component={NamespaceFromURL(SearchPage)} /> */}
             <Route path="/search" exact component={ActiveNamespaceRedirect} />
+            <LazyRoute path="/search/all-namespaces" exact loader={() => import('./search').then(m => NamespaceFromURL(m.SearchPage))} />
+            <LazyRoute path="/search/ns/:ns" exact loader={() => import('./search').then(m => NamespaceFromURL(m.SearchPage))} />
+
             <Route path="/k8s/ns/:ns/customresourcedefinitions/:plural" exact component={ResourceListPage} />
             <Route path="/k8s/ns/:ns/customresourcedefinitions/:plural/:name" component={ResourceDetailsPage} />
             <Route path="/k8s/all-namespaces/customresourcedefinitions/:plural" exact component={ResourceListPage} />
