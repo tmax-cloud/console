@@ -2,6 +2,7 @@
 
 import { getResources as getResources_ } from './get-resources';
 import { k8sList, k8sWatch, k8sGet } from './resource';
+import { getAccessToken, getRefreshToken } from '../../components/utils/auth';
 
 const types = {
   resources: 'resources',
@@ -38,7 +39,7 @@ const actions = {
   [types.modifyObject]: action_(types.modifyObject),
 
   getResources: () => dispatch => {
-    if ((window as any).SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
+    if (!getAccessToken() || !getRefreshToken()) {
       return;
     }
     dispatch({type: types.getResourcesInFlight});
