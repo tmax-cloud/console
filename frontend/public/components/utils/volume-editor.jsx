@@ -34,18 +34,18 @@ export class VolumeEditor extends React.Component {
     updateParentData({ volumePairs }, nameValueId);
   }
   render() {
-    const { nameString, mountPathString, pvcString, readOnlyString, addString, volumePairs, allowSorting, readOnly, nameValueId, options } = this.props;
+    const { nameString, mountPathString, pvcString, readOnlyString, addString, volumePairs, allowSorting, readOnly, nameValueId, options, t } = this.props;
     const portItems = volumePairs.map((pair, i) => {
       const key = _.get(pair, [VolumeEditorPair.Index], i);
-      return <VolumePairElement onChange={this._change} index={i} nameString={nameString} mountPathString={mountPathString} pvcString={pvcString} readOnlyString={readOnlyString} allowSorting={allowSorting} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} options={options} />;
+      return <VolumePairElement onChange={this._change} index={i} t={t} nameString={nameString} mountPathString={mountPathString} pvcString={pvcString} readOnlyString={readOnlyString} allowSorting={allowSorting} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} options={options} />;
     });
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-md-2 col-xs-2 text-secondary">{nameString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{mountPathString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{pvcString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{readOnlyString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${nameString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${mountPathString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${pvcString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${readOnlyString.toUpperCase()}`)}</div>
         </div>
         {portItems}
         <div className="row">
@@ -63,11 +63,11 @@ export class VolumeEditor extends React.Component {
   }
 }
 VolumeEditor.defaultProps = {
-  nameString: 'Volume Name',
+  nameString: 'VolumeName',
   mountPathString: 'MountPath',
   pvcString: 'PVC',
   readOnlyString: 'ReadOnly',
-  addString: 'Add More',
+  addString: 'AddMore',
   allowSorting: false,
   nameValueId: 0
 };
@@ -103,7 +103,7 @@ class VolumePairElement extends React.Component {
   }
 
   render() {
-    const { nameString, mountPathString, allowSorting, pair, options } = this.props;
+    const { nameString, mountPathString, allowSorting, pair, options, t } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -114,10 +114,10 @@ class VolumePairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[VolumeEditorPair.Name]} onChange={this._onChangeName} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${nameString.toUpperCase()}`)} value={pair[VolumeEditorPair.Name]} onChange={this._onChangeName} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={mountPathString.toLowerCase()} value={pair[VolumeEditorPair.MountPath]} onChange={this._onChangeMountPath} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${mountPathString.toUpperCase()}`)} value={pair[VolumeEditorPair.MountPath]} onChange={this._onChangeMountPath} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
           <select value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} className="form-control">

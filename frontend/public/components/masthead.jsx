@@ -10,8 +10,6 @@ import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
 // import LoginComponent from './login';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
-import './utils/i18n';
-import i18n from './utils/i18n';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { getAccessToken, getRefreshToken, setAccessToken, resetLoginState } from './utils/auth';
 
@@ -49,6 +47,7 @@ const UserMenuWrapper = connectToFlags(
   // if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
   //   return null;
   // }
+  const { t } = useTranslation();
 
   const actions = [];
   // if (props.flags[FLAGS.AUTH_ENABLED]) {
@@ -92,7 +91,7 @@ const UserMenuWrapper = connectToFlags(
       });
   };
   actions.push({
-    label: 'Logout',
+    label: t('CONTENT:LOGOUT'),
     callback: logout,
   });
   // if (props.flags[FLAGS.OPENSHIFT]) {
@@ -361,9 +360,7 @@ export const Masthead = props => {
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          {!HDCModeFlag && (
-            <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>
-          )}
+          {!HDCModeFlag && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>}
           <div className="extend-refresh-border"></div>
         </div>
       )}
@@ -371,9 +368,9 @@ export const Masthead = props => {
         <LanguageWrapper />
       </div>
       {/* {releaseModeFlag && ( */}
-        <div className="co-masthead__user">
-          <UserMenuWrapper setLoading={props.setLoading} />
-        </div>
+      <div className="co-masthead__user">
+        <UserMenuWrapper setLoading={props.setLoading} />
+      </div>
       {/* )} */}
     </header>
   );

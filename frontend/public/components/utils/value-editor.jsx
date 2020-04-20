@@ -31,15 +31,15 @@ export class ValueEditor extends React.Component {
     updateParentData({ values }, nameValueId);
   }
   render() {
-    const { valueString, addString, values, allowSorting, readOnly, nameValueId } = this.props;
+    const { valueString, addString, values, allowSorting, readOnly, nameValueId, t } = this.props;
     const portItems = values.map((pair, i) => {
       const key = _.get(pair, [ValueEditorPair.Index], i);
-      return <ValuePairElement onChange={this._change} index={i} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-md-2 col-xs-2 text-secondary">{valueString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
         </div>
         {portItems}
         <div className="row">
@@ -48,7 +48,7 @@ export class ValueEditor extends React.Component {
               <React.Fragment>
                 <span className="btn-link pairs-list__btn" onClick={this._append}>
                   <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                  {addString}
+                  {t(`CONTENT:${addString.toUpperCase()}`)}
                 </span>
               </React.Fragment>
             )}
@@ -60,7 +60,7 @@ export class ValueEditor extends React.Component {
 }
 ValueEditor.defaultProps = {
   valueString: 'Value',
-  addString: 'Add More',
+  addString: 'AddMore',
   allowSorting: false,
   readOnly: false,
   nameValueId: 0
@@ -81,7 +81,7 @@ class ValuePairElement extends React.Component {
     onChange(e, index, ValueEditorPair.Value);
   }
   render() {
-    const { keyString, valueString, allowSorting, readOnly, pair } = this.props;
+    const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -92,7 +92,7 @@ class ValuePairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-8 col-xs-8 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={valueString.toLowerCase()} value={pair[ValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[ValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
         </div>
         {readOnly ? null : (
           <div className="col-md-1 col-xs-2">

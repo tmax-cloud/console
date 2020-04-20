@@ -31,16 +31,16 @@ export class KeyValueEditor extends React.Component {
     updateParentData({ keyValuePairs }, nameValueId);
   }
   render() {
-    const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, nameValueId } = this.props;
+    const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, nameValueId, t } = this.props;
     const portItems = keyValuePairs.map((pair, i) => {
       const key = _.get(pair, [KeyValueEditorPair.Index], i);
-      return <KeyValuePairElement onChange={this._change} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <KeyValuePairElement onChange={this._change} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-md-2 col-xs-2 text-secondary">{keyString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{valueString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${keyString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
         </div>
         {portItems}
         <div className="row">
@@ -62,7 +62,7 @@ export class KeyValueEditor extends React.Component {
 KeyValueEditor.defaultProps = {
   keyString: 'Key',
   valueString: 'Value',
-  addString: 'Add More',
+  addString: 'AddMore',
   allowSorting: false,
   readOnly: false,
   nameValueId: 0
@@ -88,7 +88,7 @@ class KeyValuePairElement extends React.Component {
     onChange(e, index, KeyValueEditorPair.Value);
   }
   render() {
-    const { keyString, valueString, allowSorting, readOnly, pair } = this.props;
+    const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -99,10 +99,10 @@ class KeyValuePairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={keyString.toLowerCase()} value={pair[KeyValueEditorPair.Key]} onChange={this._onChangeKey} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[KeyValueEditorPair.Key]} onChange={this._onChangeKey} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={valueString.toLowerCase()} value={pair[KeyValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[KeyValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
         </div>
         {readOnly ? null : (
           <div className="col-md-1 col-xs-2">
