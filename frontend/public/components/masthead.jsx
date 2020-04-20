@@ -11,6 +11,7 @@ import { SafetyFirst } from './safety-first';
 // import LoginComponent from './login';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
 import { useTranslation, withTranslation } from 'react-i18next';
+import { getAccessToken, getRefreshToken, setAccessToken, resetLoginState } from './utils/auth';
 
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
@@ -71,15 +72,14 @@ const UserMenuWrapper = connectToFlags(
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
 
     const json = {
-      accessToken: sessionStorage.getItem('accessToken'),
+      accessToken: getAccessToken(),
     };
 
     coFetchJSON
       .post(AUTH_SERVER_URL, json)
       .then(data => {
         props.setLoading();
-        sessionStorage.clear();
-        sessionStorage.setItem('logouted', 'true');
+        resetLoginState();
         localStorage.removeItem('bridge/last-namespace-name');
 
         // const url_ = window.location.href.split('/')[2]
@@ -146,15 +146,15 @@ class OSUserMenu extends SafetyFirst {
 
   _getUserInfo() {
     // TODO 유저 정보 조회 서비스 연동
-    if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
+    if (getAccessToken() && getRefreshToken()) {
       // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
       // if (userRole !== 'cluster-admin') {
       //   this.setState({ username: 'User' });
       // } else {
       //   this.setState({ username: 'Admin' });
       // }
-      const userName = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).id;
-      this.setState({ username: userName });
+      const userName = JSON.parse(atob(getAccessToken().split('.')[1])).id;
+        this.setState({ username: userName });
     } else {
       this.setState({ username: 'admin@tmax.co.kr' });
     }
@@ -210,14 +210,13 @@ export class ExpTimer extends Component {
   }
 
   componentDidMount() {
-    if (window.sessionStorage.getItem('accessToken')) {
+    if (getAccessToken()) {
       const curTime = new Date();
-      const tokenExpTime = new Date(JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).exp * 1000);
+      const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
 
       const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
       if (logoutTime < 0) {
-        sessionStorage.clear();
-        sessionStorage.setItem('logouted', 'true');
+        resetLoginState();
         window.location.href = `${document.location.origin}`;
       }
 
@@ -230,12 +229,11 @@ export class ExpTimer extends Component {
 
   tokRefresh() {
     const curTime = new Date();
-    const tokenExpTime = new Date(JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).exp * 1000);
+    const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
 
     const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
     if (logoutTime < 0) {
-      sessionStorage.clear();
-      sessionStorage.setItem('logouted', 'true');
+      resetLoginState();
       window.location.href = `${document.location.origin}`;
     }
 
@@ -244,9 +242,8 @@ export class ExpTimer extends Component {
 
   componentDidUpdate() {
     // console.log('ExpTimer componentDidUpdate');
-    if (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken')) {
-      sessionStorage.clear();
-      sessionStorage.setItem('logouted', 'true');
+    if (!getAccessToken() || !getRefreshToken()) {
+      resetLoginState();
       window.location.href = `${document.location.origin}`;
     }
   }
@@ -265,11 +262,29 @@ export class ExpTimer extends Component {
   }
 
   tick() {
-    expTime -= 1;
+    if (HDCModeFlag) {
+      const curTime = new Date();
+        if (!getAccessToken()) {
+          resetLoginState();
+          window.location.href = `${document.location.origin}`;
+          return;
+        }
+
+      const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+      const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
+      if (logoutTime < 0) {
+        resetLoginState();
+        window.location.href = `${document.location.origin}`;
+      }
+
+      expTime = logoutTime;
+    } else {
+      expTime -= 1;
+    }
+    
     // Test 용으로 짝수 분에 튕기도록
     if (expTime === 0 || expTime < 0 /*|| Math.floor(expTime / 60 % 2) === 0*/) {
-      sessionStorage.clear();
-      sessionStorage.setItem('logouted', 'true');
+      resetLoginState();
       window.location.href = `${document.location.origin}`;
     }
     // console.log(Math.floor(expTime / 60) + " Min " + Math.floor(expTime % 60) + " Sec");
@@ -301,8 +316,8 @@ export const Masthead = props => {
   const tokenRefresh = () => {
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     const json = {
-      accessToken: window.sessionStorage.getItem('accessToken'),
-      refreshToken: window.sessionStorage.getItem('refreshToken'),
+      accessToken: getAccessToken(),
+      refreshToken: getRefreshToken(),
       atExpireTime: Number(tokenTime), // Number
     };
 
@@ -311,7 +326,7 @@ export const Masthead = props => {
       .then(data => {
         // console.log(data);
         if (data.accessToken) {
-          window.sessionStorage.setItem('accessToken', data.accessToken);
+          setAccessToken(data.accessToken);
           timerRef.tokRefresh();
           return;
         } else {

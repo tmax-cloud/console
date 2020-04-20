@@ -4,6 +4,7 @@ import "whatwg-fetch";
 import { analyticsSvc } from "./module/analytics";
 import { authSvc } from "./module/auth";
 import store from "./redux";
+import { getAccessToken, getRefreshToken } from './components/utils/auth';
 
 const initDefaults = {
   headers: {},
@@ -107,7 +108,7 @@ const getCSRFToken = () =>
 
 export const coFetch = (url, options = {}, timeout = 20000) => {
   if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
-    if (window.SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
+    if (!getAccessToken() || !getRefreshToken()) {
       return;
     }
   }
@@ -136,9 +137,9 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
 
     } else {
       if (url.indexOf('nameSpace') < 0) {
-        allOptions.headers.Authorization = "Bearer " + window.sessionStorage.getItem('accessToken');
+        allOptions.headers.Authorization = "Bearer " + getAccessToken();
       } else {
-        allOptions.headers.Authorization = window.sessionStorage.getItem('accessToken'); {/* nameSpace 서비스에는 Bearer 제외하고 token 보내야함.*/ }
+        allOptions.headers.Authorization = getAccessToken(); {/* nameSpace 서비스에는 Bearer 제외하고 token 보내야함.*/ }
       }
 
     }
@@ -161,7 +162,7 @@ export const coFetchUtils = {
 
 export const coFetchJSON = (url, method = "GET", options = {}) => {
   if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
-    if (window.SERVER_FLAGS.releaseModeFlag && (!window.sessionStorage.getItem('accessToken') || !window.sessionStorage.getItem('refreshToken'))) {
+    if (!getAccessToken() || !getRefreshToken()) {
       return;
     }
   }
