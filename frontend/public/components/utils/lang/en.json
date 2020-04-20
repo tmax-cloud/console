@@ -508,6 +508,7 @@
     "EVENT": "Event",
     "SERVICECATALOG": "Service Catalog",
     "CLUSTERSERVICEBROKER": "Cluster Service Broker",
+    "SERVICECLASS": "Service Class",
     "CLUSTERSERVICECLASS": "Cluster Service Class",
     "CLUSTERSERVICEPLAN": "Cluster Service Plan",
     "SERVICEINSTANCE": "Service Instance",

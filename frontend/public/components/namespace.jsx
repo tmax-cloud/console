@@ -325,23 +325,23 @@ class NamespaceDropdown_ extends React.Component {
     }
 
     if (getAccessToken()) {
-      // if (JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role === 'namespace-user') {
-      //   // user 계정일 경우
-      //   if (data.length > 0) {
-      //     // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
-      //     activeNamespace = data[0].metadata.name;
-      //   }
-      //   if (!localStorage.getItem('bridge/last-namespace-name')) {
-      //     // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
-      //     dispatch(UIActions.setActiveNamespace(activeNamespace));
-      //   }
-      // } else {
-      // admin 계정 일 경우
-      if (!localStorage.getItem('bridge/last-namespace-name')) {
-        // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
-        dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+      if (!canListNS) {
+        // user 계정일 경우
+        if (data.length > 0) {
+          // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
+          activeNamespace = data[0].metadata.name;
+        }
+        if (!localStorage.getItem('bridge/last-namespace-name')) {
+          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
+          dispatch(UIActions.setActiveNamespace(activeNamespace));
+        }
+      } else {
+        // admin 계정 일 경우
+        if (!localStorage.getItem('bridge/last-namespace-name')) {
+          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
+          dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+        }
       }
-      // }
     }
 
     let title = activeNamespace;
@@ -354,14 +354,12 @@ class NamespaceDropdown_ extends React.Component {
 
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
 
-    return (
-      <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} />
-      // <div className="co-namespace-selector">
-      //   {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
-      //     <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
-      //   )}
-      // </div>
-    );
+    return !canListNS && title === 'default' ? null : <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} />;
+    // <div className="co-namespace-selector">
+    //   {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
+    //     <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
+    //   )}
+    // </div>
   }
 }
 

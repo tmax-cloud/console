@@ -62,8 +62,8 @@ class BaseLabelsModal extends PromiseComponent {
           <div className="row co-m-form-row">
             <div className="col-sm-12">
               <label htmlFor="tags-input" className="control-label">
-                {t('ADDITIONAL:FOR', { something1: t('CONTENT:LABELS'), something2: resource.metadata.name })}
-                {/* {_.capitalize(description) || t('CONTENT:LABELS')} for <ResourceIcon kind={kind.crd ? referenceForModel(kind) : kind.kind} /> {resource.metadata.name} */}
+                {/* {t('ADDITIONAL:FOR', { something1: t('CONTENT:LABELS'), something2: resource.metadata.name })} */}
+                {_.capitalize(description) || t('CONTENT:LABELS')} for <ResourceIcon kind={kind.crd ? referenceForModel(kind) : kind.kind} /> {resource.metadata.name}
               </label>
               <SelectorInput onChange={labels => this.setState({ labels })} tags={this.state.labels} labelClassName={labelClassName || `co-text-${kind.id}`} autoFocus />
             </div>
