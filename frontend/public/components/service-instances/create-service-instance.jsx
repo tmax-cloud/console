@@ -69,7 +69,6 @@ const withServiceInstanceForm = SubForm =>
 
       // step1
       this.getClassList = this.getClassList.bind(this);
-
       this.onChangeClass = this.onChangeClass.bind(this);
 
       // step2 서비스 플랜 선택
@@ -152,16 +151,32 @@ const withServiceInstanceForm = SubForm =>
       e.preventDefault();
       const { currentStep } = this.state;
       this.setState({
+        error: null,
         currentStep: currentStep - 1,
       });
     }
     onClickNext(e) {
       e.preventDefault();
       this.setState(prevState => {
-        return {
-          currentStep: prevState.currentStep + 1,
-        };
+        let resource = '';
+        //step별 validation추가 
+        //step1 에서 service class선택 안한 경우 
+        if (prevState.currentStep === 0 && prevState.selectedClass) {
+          return {
+            error: null,
+            currentStep: 1
+          };
+        } else if (prevState.currentStep === 1 && prevState.selectedPlan) {
+          return {
+            error: null,
+            currentStep: 2
+          };
+        }
+        else {
+          return prevState.error = prevState.currentStep === 0 ? 'Select Service Class' : 'Select Service Plan'
+        }
       });
+
     }
     onChangeClass(selectedClass) {
       this.setState(
@@ -211,19 +226,23 @@ const withServiceInstanceForm = SubForm =>
     save(e) {
       e.preventDefault();
       const { kind } = this.state.serviceInstance;
-      this.setState({ inProgress: true });
       const newServiceInstance = _.cloneDeep(this.state.serviceInstance);
       newServiceInstance.spec.clusterServiceClassName = this.state.selectedClass.name;
       newServiceInstance.spec.clusterServicePlanName = this.state.selectedPlan.name;
       const ko = kindObj(kind);
+      if (this.state.serviceInstance.metadata.name) {
+        this.setState({ inProgress: true });
+        k8sCreate(ko, newServiceInstance).then(
+          () => {
+            this.setState({ inProgress: false });
+            history.push(formatNamespacedRouteForResource('serviceinstances'));
+          },
+          err => this.setState({ error: err.message, inProgress: false }),
+        );
+      } else {
+        this.setState({ error: "Name is required." });
+      }
 
-      k8sCreate(ko, newServiceInstance).then(
-        () => {
-          this.setState({ inProgress: false });
-          history.push(formatNamespacedRouteForResource('serviceinstances'));
-        },
-        err => this.setState({ error: err.message, inProgress: false }),
-      );
     }
     componentDidMount() {
       this.getClassList();
@@ -233,7 +252,7 @@ const withServiceInstanceForm = SubForm =>
     render() {
       const { t } = this.props;
       const title = t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('ServiceInstance', t) });
-      const { steps, currentStep, selectedClass, selectedPlan, paramList } = this.state;
+      const { steps, currentStep, selectedClass, selectedPlan, paramList, errorMessage } = this.state;
       const ServicePlanList = ({ planList, onChangePlan, selectedPlan }) => {
         return (
           <div className="row">
@@ -319,7 +338,7 @@ const withServiceInstanceForm = SubForm =>
                   {t('CONTENT:NEXT')}
                 </button>
               )}
-              {currentStep === 2 && (
+              {currentStep === 2 && !errorMessage && (
                 <button type="submit" className="btn btn-primary" id="save-changes" onClick={this.save}>
                   {t('CONTENT:CREATE')}
                 </button>
@@ -373,8 +392,8 @@ const ServiceInstanceLoadingWrapper = props => {
         {...props}
         ServiceInstanceTypeAbstraction={ServiceInstanceTypeAbstraction}
         obj={props.obj.data}
-        // fixed={fixed}
-        // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
+      // fixed={fixed}
+      // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
       />
     </StatusBox>
   );
