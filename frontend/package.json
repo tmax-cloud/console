@@ -82,6 +82,7 @@
     "react-dom": "16.8.0",
     "react-helmet": "5.x",
     "react-i18next": "^11.3.4",
+    "react-markdown": "4.3.x",
     "react-lightweight-tooltip": "1.x",
     "react-modal": "3.x",
     "react-redux": "5.x",
