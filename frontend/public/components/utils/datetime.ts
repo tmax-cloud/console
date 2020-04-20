@@ -7,7 +7,7 @@ export const fromNow = (dateTime, now = undefined, options = { omitSuffix: false
     now = new Date();
   }
   if (!t) {
-    // t = useTranslation().t;
+    t = useTranslation().t;
   }
   dateTime = new Date(dateTime);
   const secondsAgo = (now.getTime() - dateTime.getTime()) / 1000;

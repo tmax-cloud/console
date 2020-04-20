@@ -151,7 +151,7 @@
     "ADDMORE": "추가",
     "COMPACT": "컴팩트",
     "GENERATEDFROM": "Generated from",
-    "TIMESINTHELAST": "times in the last",
+    "TIMESINTHELAST": "times in the last ",
     "SELECTOR": "선택기",
     "LOADBALANCER": "로드밸런서",
     "AUTHTYPE": "인증 유형",
@@ -500,7 +500,13 @@
     "AMONTHFROMNOW": "지금부터 한 달",
     "MONTHSFROMNOW": "지금부터 몇 달",
     "AYEARFROMNOW": "지금 부터 1년",
-    "YEARSFROMNOW": "지금 부터 몇년"
+    "YEARSFROMNOW": "지금 부터 몇년",
+    "ALLCATEGORIES": "전체 카테고리",
+    "ALLTYPES": "전체 타입",
+    "INFO": "정보",
+    "SELECTRESOURCE": "리소스 선택",
+    "NOSELECTOR": "선택기 없음",
+    "NOLABELS": "레이블 없음"
   },
   "RESOURCE": {
     "HOME": "홈",

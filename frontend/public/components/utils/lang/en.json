@@ -152,7 +152,7 @@
     "ADDMORE": "Add More",
     "COMPACT": "Compact",
     "GENERATEDFROM": "Generated from",
-    "TIMESINTHELAST": "times in the last",
+    "TIMESINTHELAST": "times in the last ",
     "SELECTOR": "Selector",
     "LOADBALANCER": "LoadBalancer",
     "AUTHTYPE": "Authentication Type",
@@ -499,7 +499,13 @@
     "AMONTHFROMNOW": "a month from now",
     "MONTHSFROMNOW": "months from now",
     "AYEARFROMNOW": "a year from now",
-    "YEARSFROMNOW": "years from now"
+    "YEARSFROMNOW": "years from now",
+    "ALLCATEGORIES": "All Categories",
+    "ALLTYPES": "All Types",
+    "INFO": "Info",
+    "SELECTRESOURCE": "Select Resource",
+    "NOSELECTOR": "No selector",
+    "NOLABELS": "No labels"
   },
   "RESOURCE": {
     "HOME": "Home",
