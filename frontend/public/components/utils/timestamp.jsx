@@ -104,13 +104,13 @@ export class Timestamp extends SafetyFirst {
   }
 
   // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps({ timestamp }) {
+  UNSAFE_componentWillReceiveProps({ timestamp, t }) {
     // sometimes the timestamp prop changes...
     // and we need to trigger a side effect
     if (timestamp && timestamp === this.props.timestamp) {
       return null;
     }
-    this.reset(timestamp, this.props.t);
+    this.reset(timestamp, t);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
