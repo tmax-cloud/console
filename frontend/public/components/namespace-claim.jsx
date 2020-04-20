@@ -21,7 +21,7 @@ const NamespaceClaimHeader = props => {
         {t('CONTENT:STATUS')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="resourceName">
-        Resource Name
+        {t('CONTENT:RESOURCENAME')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
@@ -76,7 +76,7 @@ const Details = ({ obj: namespaceinstance }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Resource Name</dt>
+              <dt>{t('CONTENT:RESOURCENAME')}</dt>
               <dd>{namespaceinstance.resourceName}</dd>
               <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{namespaceinstance.status && namespaceinstance.status.status}</dd>
