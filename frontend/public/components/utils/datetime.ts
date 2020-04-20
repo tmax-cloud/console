@@ -109,15 +109,12 @@ export const formatDuration = (ms: number) => {
 
   let formatted = '';
   if (hours) {
-    // formatted += `${hours}${t('CONTENT:H')} `;
-    formatted += `${hours}hours `;
+    formatted += `${hours}${t('CONTENT:H')} `;
   }
   if (hours || minutes) {
-    // formatted += `${minutes}${t('CONTENT:M')} `;
-    formatted += `${minutes}minutes `;
+    formatted += `${minutes}${t('CONTENT:M')} `;
   }
-  // formatted += `${seconds}${t('CONTENT:S')}`;
-  formatted += `${seconds}seconds`;
+  formatted += `${seconds}${t('CONTENT:S')}`;
 
   return formatted;
 };

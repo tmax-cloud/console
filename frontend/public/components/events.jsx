@@ -394,8 +394,7 @@ class EventStream extends SafetyFirst {
       statusBtnTxt = <span>{t('STRING:EVENT_6')}</span>;
       sysEventStatus = <Loading />;
     } else if (active) {
-      // statusBtnTxt = <span>{t('STRING:EVENT_7')}</span>;
-      statusBtnTxt = <span>Straming events...</span>;
+      statusBtnTxt = <span>{t('STRING:EVENT_7')}</span>;
     } else {
       statusBtnTxt = <span>{t('STRING:EVENT_8')}</span>;
     }

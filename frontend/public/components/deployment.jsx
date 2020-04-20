@@ -106,8 +106,7 @@ const DeploymentDetails = ({ obj: deployment }) => {
                 {progressDeadlineSeconds && <dt>{t('CONTENT:PROGRESSDEADLINE')}</dt>}
                 {progressDeadlineSeconds && <dd>{/* Convert to ms for formatDuration */ formatDuration(progressDeadlineSeconds * 1000)}</dd>}
                 <dt>{t('CONTENT:MINREADYSECONDS')}</dt>
-                {/* <dd>{deployment.spec.minReadySeconds ? t('PLURAL:SECOND', { count: deployment.spec.minReadySeconds }) : t('CONTENT:NOTCONFIGURED')}</dd> */}
-                <dd>{deployment.spec.minReadySeconds ? t('PLURAL:SECOND', { count: deployment.spec.minReadySeconds }) : 'Not Configured'}</dd>
+                <dd>{deployment.spec.minReadySeconds ? t('PLURAL:SECOND', { count: deployment.spec.minReadySeconds }) : t('CONTENT:NOTCONFIGURED')}</dd>
               </dl>
             </div>
           </div>
