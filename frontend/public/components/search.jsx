@@ -18,7 +18,7 @@ import { referenceForModel, kindForReference } from '../module/k8s';
 import { AsyncComponent } from './utils/async';
 import { DefaultPage } from './default-resource';
 
-const ResourceList = connectToModel(({kindObj, kindsInFlight, namespace, selector, fake}) => {
+const ResourceList = connectToModel(({ kindObj, kindsInFlight, namespace, selector, fake }) => {
   if (kindsInFlight) {
     return <LoadingBox />;
   }
@@ -50,7 +50,7 @@ class SearchPage_ extends React.PureComponent {
   }
 
   render() {
-    const {flags, location, namespace} = this.props;
+    const { flags, location, namespace, t } = this.props;
     let kind, q;
 
     if (flagPending(flags.OPENSHIFT) || flagPending(flags.PROJECTS_AVAILABLE)) {
@@ -73,12 +73,12 @@ class SearchPage_ extends React.PureComponent {
     const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
 
     return <React.Fragment>
-      { showGettingStarted && <OpenShiftGettingStarted /> }
-      <div className={classNames({'co-disabled': showGettingStarted})}>
+      {showGettingStarted && <OpenShiftGettingStarted />}
+      <div className={classNames({ 'co-disabled': showGettingStarted })}>
         <Helmet>
-          <title>Search</title>
+          <title>{t('RESOURCE:SEARCH')}</title>
         </Helmet>
-        <NavTitle detail={true} title="Search" >
+        <NavTitle detail={true} title={t('RESOURCE:SEARCH')} >
           <div className="co-search">
             <div className="input-group input-group-select">
               <div className="input-group-btn">

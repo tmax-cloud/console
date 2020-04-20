@@ -13,6 +13,7 @@ import { ExtendSessionModal_ } from './modals/extend-session-modal';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { getAccessToken, getRefreshToken, setAccessToken, resetLoginState } from './utils/auth';
 import i18n from 'i18next';
+
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
 const releaseModeFlag = window.SERVER_FLAGS.releaseModeFlag;
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
@@ -125,7 +126,7 @@ const LanguageWrapper = props => {
     callback: enChange,
   });
   actions.push({
-    label: 'KO',
+    label: '한국어',
     callback: koChange,
   });
   return <LanguageMenu lang={lang} actions={actions} />;
