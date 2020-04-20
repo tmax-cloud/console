@@ -125,7 +125,7 @@ const LanguageWrapper = props => {
     callback: enChange,
   });
   actions.push({
-    label: 'KO',
+    label: '한국어',
     callback: koChange,
   });
   return <LanguageMenu lang={lang} actions={actions} />;
