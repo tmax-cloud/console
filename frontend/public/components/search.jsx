@@ -42,7 +42,7 @@ const updateTags = tags => updateUrlParams('q', tags.map(encodeURIComponent).joi
 class SearchPage_ extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.setRef = ref => this.ref = ref;
+    this.setRef = ref => (this.ref = ref);
     this.onSelectorChange = k => {
       updateKind(k);
       this.ref && this.ref.focus();
@@ -72,25 +72,27 @@ class SearchPage_ extends React.PureComponent {
     const labelClassName = `co-text-${_.toLower(kindForReference(kind))}`;
     const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
 
-    return <React.Fragment>
-      {showGettingStarted && <OpenShiftGettingStarted />}
-      <div className={classNames({ 'co-disabled': showGettingStarted })}>
-        <Helmet>
-          <title>{t('RESOURCE:SEARCH')}</title>
-        </Helmet>
-        <NavTitle detail={true} title={t('RESOURCE:SEARCH')} >
-          <div className="co-search">
-            <div className="input-group input-group-select">
-              <div className="input-group-btn">
-                <ResourceListDropdown selected={kind} onChange={this.onSelectorChange} />
+    return (
+      <React.Fragment>
+        {showGettingStarted && <OpenShiftGettingStarted />}
+        <div className={classNames({ 'co-disabled': showGettingStarted })}>
+          <Helmet>
+            <title>{t('RESOURCE:SEARCH')}</title>
+          </Helmet>
+          <NavTitle detail={true} title={t('RESOURCE:SEARCH')}>
+            <div className="co-search">
+              <div className="input-group input-group-select">
+                <div className="input-group-btn">
+                  <ResourceListDropdown selected={kind} onChange={this.onSelectorChange} t={t} />
+                </div>
+                <SelectorInput labelClassName={labelClassName} tags={validTags} onChange={updateTags} ref={this.setRef} autoFocus={!showGettingStarted} />
               </div>
-              <SelectorInput labelClassName={labelClassName} tags={validTags} onChange={updateTags} ref={this.setRef} autoFocus={!showGettingStarted} />
             </div>
-          </div>
-        </NavTitle>
-        <ResourceList kind={kind} selector={selector} namespace={namespace} fake={showGettingStarted} />
-      </div>
-    </React.Fragment>;
+          </NavTitle>
+          <ResourceList kind={kind} selector={selector} namespace={namespace} fake={showGettingStarted} />
+        </div>
+      </React.Fragment>
+    );
   }
 }
 

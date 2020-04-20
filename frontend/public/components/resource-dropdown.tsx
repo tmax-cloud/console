@@ -39,23 +39,32 @@ const blacklistResources = ImmutableSet([
   'extensions/v1beta1.ReplicationControllerDummy',
 ]);
 
-const DropdownItem: React.SFC<DropdownItemProps> = ({model, showGroup}) => <React.Fragment>
-  <span className="co-resource-link">
-    <span className="co-resource-icon--fixed-width">
-      <ResourceIcon kind={model.kind} />
+const DropdownItem: React.SFC<DropdownItemProps> = ({ model, showGroup }) => (
+  <React.Fragment>
+    <span className="co-resource-link">
+      <span className="co-resource-icon--fixed-width">
+        <ResourceIcon kind={model.kind} />
+      </span>
+      <span className="co-resource-link__resource-name">
+        {model.kind}
+        {showGroup && (
+          <React.Fragment>
+            &nbsp;
+            <small className="text-muted">
+              &ndash; {model.apiGroup || 'core'}/{model.apiVersion}
+            </small>
+          </React.Fragment>
+        )}
+      </span>
     </span>
-    <span className="co-resource-link__resource-name">
-      {model.kind}
-      {showGroup && <React.Fragment>&nbsp;<small className="text-muted">&ndash; {model.apiGroup || 'core'}/{model.apiVersion}</small></React.Fragment>}
-    </span>
-  </span>
-</React.Fragment>;
+  </React.Fragment>
+);
 
 const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
-  const { selected, onChange, allModels, showAll, className, preferredVersions } = props;
+  const { selected, onChange, allModels, showAll, className, preferredVersions, t = undefined } = props;
 
   const resources = allModels
-    .filter(({apiGroup, apiVersion, kind, verbs}) => {
+    .filter(({ apiGroup, apiVersion, kind, verbs }) => {
       // Remove blacklisted items.
       if (blacklistGroups.has(apiGroup) || blacklistResources.has(`${apiGroup}/${apiVersion}.${kind}`)) {
         return false;
@@ -73,29 +82,32 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
       return !allModels.find(m => sameGroupKind(m) && preferred(m));
     })
     .toOrderedMap()
-    .sortBy(({kind, apiGroup}) => `${kind} ${apiGroup}`);
+    .sortBy(({ kind, apiGroup }) => `${kind} ${apiGroup}`);
 
   // Track duplicate names so we know when to show the group.
   const kinds = resources.groupBy(m => m.kind);
   const isDup = kind => kinds.get(kind).size > 1;
 
   // Create dropdown items for each resource.
-  const items = resources.map((model) => <DropdownItem key={referenceForModel(model)} model={model} showGroup={isDup(model.kind)} />) as OrderedMap<string, JSX.Element>;
+  const items = resources.map(model => <DropdownItem key={referenceForModel(model)} model={model} showGroup={isDup(model.kind)} />) as OrderedMap<string, JSX.Element>;
 
   // Add an "All" item to the top if `showAll`.
   const allItems = (showAll
-    ? OrderedMap({all: <React.Fragment>
-      <span className="co-resource-link">
-        <span className="co-resource-icon--fixed-width">
-          <ResourceIcon kind="All" />
-        </span>
-        <span className="co-resource-link__resource-name">All Types</span>
-      </span>
-      {/* <ResourceIcon kind="All" /> */}
-    </React.Fragment>}).concat(items)
+    ? OrderedMap({
+        all: (
+          <React.Fragment>
+            <span className="co-resource-link">
+              <span className="co-resource-icon--fixed-width">
+                <ResourceIcon kind="All" />
+              </span>
+              <span className="co-resource-link__resource-name">All Types</span>
+            </span>
+            {/* <ResourceIcon kind="All" /> */}
+          </React.Fragment>
+        ),
+      }).concat(items)
     : items
-    )
-    .toJS() as {[s: string]: JSX.Element};
+  ).toJS() as { [s: string]: JSX.Element };
 
   const selectedKey = allItems[selected] ? selected : kindForReference(selected);
   const autocompleteFilter = (text, item) => {
@@ -107,18 +119,10 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
     return fuzzy(_.toLower(text), _.toLower(model.kind));
   };
 
-  return <Dropdown
-    menuClassName="dropdown-menu--text-wrap"
-    className={classNames('co-type-selector', className)}
-    items={allItems}
-    title={allItems[selectedKey]}
-    onChange={onChange}
-    autocompleteFilter={autocompleteFilter}
-    autocompletePlaceholder="Select Resource"
-    selectedKey={selectedKey} />;
+  return <Dropdown menuClassName="dropdown-menu--text-wrap" className={classNames('co-type-selector', className)} items={allItems} title={allItems[selectedKey]} onChange={onChange} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={t ? t('CONTENT:SELECTRESOURCE') : 'Select Resource'} selectedKey={selectedKey} />;
 };
 
-const resourceListDropdownStateToProps = ({k8s}) => ({
+const resourceListDropdownStateToProps = ({ k8s }) => ({
   allModels: k8s.getIn(['RESOURCES', 'models']),
   preferredVersions: k8s.getIn(['RESOURCES', 'preferredVersions']),
 });
@@ -138,10 +142,11 @@ export type ResourceListDropdownProps = {
   selected: K8sResourceKindReference;
   onChange: Function;
   allModels: ImmutableMap<K8sResourceKindReference, K8sKind>;
-  preferredVersions: {groupVersion: string, version: string}[];
+  preferredVersions: { groupVersion: string; version: string }[];
   className?: string;
   id?: string;
   showAll?: boolean;
+  t?: any;
 };
 
 type DropdownItemProps = {

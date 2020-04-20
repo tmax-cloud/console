@@ -70,7 +70,7 @@ export const NameValueEditor = DragDropContext(HTML5Backend)(
     }
 
     render() {
-      let { nameString, valueString, addString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets } = this.props;
+      let { nameString, valueString, addString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets, t } = this.props;
 
       nameString = this.props.t ? this.props.t(`CONTENT:${nameString.toUpperCase()}`).toUpperCase() : nameString.toUpperCase();
       valueString = this.props.t ? this.props.t(`CONTENT:${valueString.toUpperCase()}`).toUpperCase() : valueString.toUpperCase();
@@ -100,7 +100,7 @@ export const NameValueEditor = DragDropContext(HTML5Backend)(
                       <span aria-hidden="true" className="pairs-list__action-divider">
                         |
                       </span>
-                      <AddValueButton appendConfigMapOrSecret={this._appendConfigMapOrSecret} />
+                      <AddValueButton appendConfigMapOrSecret={this._appendConfigMapOrSecret} t={t} />
                     </React.Fragment>
                   )}
                 </React.Fragment>
