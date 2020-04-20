@@ -4,6 +4,7 @@
  *
  */
 /* eslint-disable no-console */
+import { getAccessToken } from '../components/utils/auth';
 
 function createURL(host, path) {
   let url;
@@ -21,7 +22,7 @@ function createURL(host, path) {
   if (path) {
     //release모드가 아닌경우 -> 마스터 토큰사용
     let token = '';
-    token = window.SERVER_FLAGS.releaseModeFlag ? window.sessionStorage.getItem('accessToken') : masterToken;
+    token = window.SERVER_FLAGS.releaseModeFlag ? getAccessToken() : masterToken;
     if (path.indexOf('?') !== -1) {
       url += path + '&token=' + token;
     } else {

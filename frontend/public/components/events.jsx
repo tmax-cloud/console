@@ -51,15 +51,18 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
               <div className="co-sysevent__subheader">
                 <ResourceLink className="co-sysevent__resourcelink" kind={obj.kind} namespace={obj.namespace} name={obj.name} title={obj.uid} />
                 <Timestamp timestamp={lastTimestamp} />
+                {/* <Timestamp timestamp={lastTimestamp} t={t} /> */}
               </div>
               <div className="co-sysevent__details">
                 <small className="co-sysevent__source">
-                  {t("CONTENT:GENERATEDFROM")} <span>{source.component}</span>
+                  {t('CONTENT:GENERATEDFROM')} <span>{source.component}</span>
                   {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <React.Fragment>{source.host}</React.Fragment>}</span>}
                 </small>
                 {count > 1 && (
                   <small className="co-sysevent__count text-secondary">
-                    {count} {t("CONTENT:TIMESINTHELAST")}  <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
+                    {count} {t('CONTENT:TIMESINTHELAST')}
+                    <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} />
+                    {/* <Timestamp timestamp={firstTimestamp} simple={true} omitSuffix={true} t={t} /> */}
                   </small>
                 )}
               </div>
@@ -375,7 +378,12 @@ class EventStream extends SafetyFirst {
     }
 
     if (error) {
-      statusBtnTxt = <span className="co-sysevent-stream__connection-error">{t('STRING:EVENT_3')}{_.isString(error) && `: ${error}`}</span>;
+      statusBtnTxt = (
+        <span className="co-sysevent-stream__connection-error">
+          {t('STRING:EVENT_3')}
+          {_.isString(error) && `: ${error}`}
+        </span>
+      );
       sysEventStatus = (
         <Box>
           <div className="cos-status-box__title cos-error-title">{t('STRING:EVENT_4')}</div>
@@ -395,8 +403,7 @@ class EventStream extends SafetyFirst {
       'co-sysevent-stream__timeline--empty': !allCount || !count,
     });
     //  const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
-    const messageCount = count < maxMessages ?
-      t('PLURAL:EVENT', { count: count }) : t('ADDITIONAL:SHOWINGEVENTS', { something1: count, something2: allCount });
+    const messageCount = count < maxMessages ? t('PLURAL:EVENT', { count: count }) : t('ADDITIONAL:SHOWINGEVENTS', { something1: count, something2: allCount });
 
     return (
       <div className="co-m-pane__body">
@@ -409,7 +416,9 @@ class EventStream extends SafetyFirst {
           <div className={klass}>
             <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
             <div className="co-sysevent-stream__timeline__end-message">
-              {t('STRING:EVENT_9')}<Timestamp timestamp={this.state.oldestTimestamp} />
+              {t('STRING:EVENT_9')}
+              <Timestamp timestamp={this.state.oldestTimestamp} />
+              {/* <Timestamp timestamp={this.state.oldestTimestamp} t={t} /> */}
             </div>
           </div>
           {count > 0 && (
@@ -468,5 +477,5 @@ export const ResourceEventStream = ({
   },
 }) => {
   const { t } = useTranslation();
-  return <EventStream filter={{ name, kind }} t={t} namespace={namespace} resourceEventStream />
+  return <EventStream filter={{ name, kind }} t={t} namespace={namespace} resourceEventStream />;
 };

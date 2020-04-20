@@ -8,6 +8,7 @@ import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
+import { setAccessToken, setRefreshToken, resetLoginState, getAccessToken } from './utils/auth';
 
 function searchParam(key) {
   return new URLSearchParams(location.search).get(key);
@@ -24,16 +25,21 @@ class LoginComponent extends Component {
 
   constructor(props) {
     super(props);
-
-    if (searchParam('at')) {
-      window.sessionStorage.setItem('accessToken', searchParam('at'));
-      window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
-      // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-      // window.sessionStorage.setItem('role', userRole);
-
-      this.props.history.push('/');
-      this.props.history.go(0);
+    // HDC 모델
+    if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
+      // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
+      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+      return;
     }
+    // if (searchParam('at')) {
+    //   window.sessionStorage.setItem('accessToken', searchParam('at'));
+    //   window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
+    //   // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
+    //   // window.sessionStorage.setItem('role', userRole);
+
+    //   this.props.history.push('/');
+    //   this.props.history.go(0);
+    // }
 
     if (props.history.action === 'POP') {
       history.go(1);
@@ -85,8 +91,8 @@ class LoginComponent extends Component {
       .then(data => {
         this.setState({ loading: false });
         if (data.accessToken && data.refreshToken) {
-          window.sessionStorage.setItem('accessToken', data.accessToken);
-          window.sessionStorage.setItem('refreshToken', data.refreshToken);
+          setAccessToken(data.accessToken);
+          setRefreshToken(data.refreshToken);
           if (window.localStorage.getItem('forceLogout') === 'true') {
             window.localStorage.setItem('forceLogout', false);
           } else {
