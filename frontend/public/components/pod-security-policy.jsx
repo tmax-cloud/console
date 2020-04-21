@@ -22,13 +22,13 @@ const PodSecurityPolicyHeader = props => {
         {t('CONTENT:PRIVILEGED')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.seLinux.rule">
-        {t('CONTENT:SELINUX')}
+        {t('CONTENT:SECURITYENHANCEDLINUX')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.runAsUser.rule">
         {t('CONTENT:RUNASUSER')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.fsGroup.rule">
-        {t('CONTENT:FSGROUP')}
+        {t('CONTENT:FILESTORAGEGROUP')}
       </ColHead>
       <ColHead {...props} className="col-xs-1 col-sm-1" sortField="spec.supplementalGroups.rule">
         {t('CONTENT:SUPPLEMENTALGROUP')}
