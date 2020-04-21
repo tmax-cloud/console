@@ -103,7 +103,7 @@ const NameKeyDropdownPair = ({ name, key, configMaps, secrets, onChange, kind, n
           });
         }}
       />
-      <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder="Key" items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [keyRefString]: { name: name, key: val } })} />
+      <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder={t('CONTENT:KEY')} items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [keyRefString]: { name: name, key: val } })} />
     </React.Fragment>
   );
 };
