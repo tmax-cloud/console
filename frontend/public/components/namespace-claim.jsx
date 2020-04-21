@@ -106,7 +106,15 @@ NamespaceClaimList.displayName = NamespaceClaimList;
 
 export const NamespaceClaimsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/cluster/namespaceclaims/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createProps={createProps}{...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 
