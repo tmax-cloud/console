@@ -507,7 +507,10 @@
     "SELECTRESOURCE": "리소스 선택",
     "NOSELECTOR": "선택기 없음",
     "NOLABELS": "레이블 없음",
-    "CONFIGMAPORSECRET": "컨피그 맵 또는 시크릿"
+    "CONFIGMAPORSECRET": "컨피그 맵 또는 시크릿",
+    "TARGETPORT": "대상 포트",
+    "NOEXTERNALIP": "외부 IP 없음",
+    "NONE": "없음"
   },
   "RESOURCE": {
     "HOME": "홈",

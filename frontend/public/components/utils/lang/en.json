@@ -506,7 +506,10 @@
     "SELECTRESOURCE": "Select Resource",
     "NOSELECTOR": "No selector",
     "NOLABELS": "No labels",
-    "CONFIGMAPORSECRET": "Config Map Or Secret"
+    "CONFIGMAPORSECRET": "Config Map Or Secret",
+    "TARGETPORT": "Target Port",
+    "NOEXTERNALIP": "No External IP",
+    "NONE": "None"
   },
   "RESOURCE": {
     "HOME": "Home",
