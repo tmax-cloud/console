@@ -165,7 +165,7 @@ const Requestform = (SubForm) => class ServiceFormComponent extends React.Compon
                             <div className="form-group">
                                 <label className="control-label" htmlFor="username">{t('CONTENT:SELECTOR')}</label>
                                 <div>
-                                    <KeyValueEditor keyValuePairs={this.state.selector} updateParentData={this._updateSelector} />
+                                    <KeyValueEditor keyValuePairs={this.state.selector} t={t} updateParentData={this._updateSelector} />
                                 </div>
                             </div>
                         </React.Fragment>
