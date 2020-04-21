@@ -124,7 +124,7 @@ const Details_ = ({ flags, obj: np }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('NetworkPolicy', t) })} />
         <ResourceSummary resource={np} podSelector={'spec.podSelector'} showNodeSelector={false} />
       </div>
       <div className="co-m-pane__body">
