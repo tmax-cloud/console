@@ -128,6 +128,7 @@
     "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json."
   },
   "CONTENT": {
+    "RESOURCENAME": "리소스 이름",
     "SUBJECTNAMESPACE": "Subject Namespace",
     "SUBJECT": "대상",
     "SERVICEPLAN": "서비스 플랜",
