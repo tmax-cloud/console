@@ -25,6 +25,7 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_3": "Total number of unavailable pods targeted by this {{something}}.",
     "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something1}} of {{something2}}",
     "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something1}} greater than {{something2}}",
+    "LOGSTALE": "The logs for this {{something}} may be stale.",
     "LOG_TAB_0": "The logs for this {{something1}} may be stale.",
     "SAVE": "Save {{something}}",
     "FOR": "{{something1}} for {{something2}}",
@@ -38,7 +39,9 @@
     "EDIT_1": "Edit {{something}} Subject...",
     "IMPERSONATE_0": "Impersonate {{something1}} {{something2}}",
     "ERRORLOADING": "Error Loading {{something}}",
-    "NOFOUNDORDEFINED": "No {{something}} found or defined."
+    "NOFOUNDORDEFINED": "No {{something}} found or defined.",
+    "STRATEGY-MODAL_0": "of {{something}}",
+    "STRATEGY-MODAL_1": "greater than {{something}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",

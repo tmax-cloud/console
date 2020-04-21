@@ -21,9 +21,9 @@
     "DEPLOYMENT_DETAIL_TOOLTIP_1": "해당 {{something}} (셀렉터와 일치하는 레이블)이 대상으로 하는 종료되지 않은 총 파드 수",
     "DEPLOYMENT_DETAIL_TOOLTIP_2": "해당 {{something}}이 대상으로 할 수 있는 총 파드 수.",
     "DEPLOYMENT_DETAIL_TOOLTIP_3": "해당 $ {something}이 대상으로 할 수 없는 총 파드 수",
-    "DEPLOYMENT_DETAIL_TOOLTIP_4": "{{something2}}의 {{something1}}",
+    "DEPLOYMENT_DETAIL_TOOLTIP_4": "각 파드당 {{something1}} 이하",
+    "DEPLOYMENT_DETAIL_TOOLTIP_5": "각 파드당 {{something1}} 이상",
     "LOGSTALE": "해당 {{something}}의 로그가 오래되었을 수 있습니다.",
-    "DEPLOYMENT_DETAIL_TOOLTIP_5": "{{something2}} 보다 {{something1}}이 큼",
     "SAVE": "{{something}} 저장",
     "FOR": "{{something2}}의 {{something1}}",
     "DELETE-MODAL_0": "{{something}}을(를) 삭제하시겠습니까?",
@@ -36,7 +36,9 @@
     "EDIT_1": "Edit {{something}} Subject...",
     "IMPERSONATE_0": "위장 {{something1}} ({{something2}})...",
     "ERRORLOADING": "{{something}} 로드 오류",
-    "NOFOUNDORDEFINED": "No {{something}} found or defined."
+    "NOFOUNDORDEFINED": "No {{something}} found or defined.",
+    "STRATEGY-MODAL_0": "이하",
+    "STRATEGY-MODAL_1": "이상"
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
