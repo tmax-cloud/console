@@ -16,7 +16,7 @@ export class VolumeEditor extends React.Component {
     if (listLength < options.length) {
       updateParentData({ volumePairs: allowSorting ? volumePairs.concat([['', '', '', '', volumePairs.length]]) : volumePairs.concat([['', '', '', '']]) }, nameValueId);
     } else {
-      return
+      return;
     }
   }
 
@@ -53,7 +53,7 @@ export class VolumeEditor extends React.Component {
             <React.Fragment>
               <span className="btn-link pairs-list__btn" onClick={this._append}>
                 <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                {addString}
+                {t(`CONTENT:${addString.toUpperCase()}`)}
               </span>
             </React.Fragment>
           </div>
@@ -69,7 +69,7 @@ VolumeEditor.defaultProps = {
   readOnlyString: 'ReadOnly',
   addString: 'AddMore',
   allowSorting: false,
-  nameValueId: 0
+  nameValueId: 0,
 };
 
 class VolumePairElement extends React.Component {
@@ -126,8 +126,8 @@ class VolumePairElement extends React.Component {
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
           <select value={pair[VolumeEditorPair.ReadOnly]} onChange={this._onChangeReadOnly} className="form-control">
-            <option value='false'>False</option>
-            <option value='true'>True</option>
+            <option value="false">False</option>
+            <option value="true">True</option>
           </select>
         </div>
         <div className="col-md-1 col-xs-2">

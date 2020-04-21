@@ -31,13 +31,14 @@ const deleteModal = (kind, ns) => {
   let { label, weight } = Cog.factory.Delete(kind, ns);
   let callback = undefined;
   let tooltip;
+  const { t } = useTranslation();
 
   if (ns.metadata.name === 'default') {
     tooltip = `${kind.label} default cannot be deleted`;
   } else if (ns.status.phase === 'Terminating') {
     tooltip = `${kind.label} is already terminating`;
   } else {
-    callback = () => deleteNamespaceModal({ kind, resource: ns });
+    callback = () => deleteNamespaceModal({ kind, resource: ns, t });
   }
   if (tooltip) {
     label = (
