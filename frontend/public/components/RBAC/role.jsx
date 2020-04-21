@@ -191,7 +191,10 @@ export const RolesDetailsPage = props => {
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
 
-const EmptyMsg = () => <MsgBox title="No Roles Found" detail="Roles grant access to types of objects in the cluster. Roles are applied to a team or user via a Role Binding." />;
+const EmptyMsg = () => {
+  const { t } = useTranslation();
+  return <MsgBox title={t('STRING:EMPTYBOX')} detail={t('STRING:ROLE_0')} />;
+};
 
 const RolesList = props => <List {...props} EmptyMsg={EmptyMsg} Header={Header} Row={Row} />;
 
