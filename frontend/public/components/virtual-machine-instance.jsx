@@ -65,7 +65,7 @@ const Details = ({ obj: VirtualMachineInstance }) => {
     <React.Fragment>
       <ScrollToTopOnMount />
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('VirtualMachineInstance', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={VirtualMachineInstance} />
