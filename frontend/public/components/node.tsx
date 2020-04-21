@@ -202,19 +202,20 @@ const NodeRowSearch = ({ obj: node }) => (
 const NodesList = props => <List {...props} Header={Header} Row={NodeRow} />;
 export const NodesListSearch = props => <List {...props} Header={HeaderSearch} Row={NodeRowSearch} kind="node" />;
 
-const dropdownFilters = [
-  {
-    type: 'node-status',
-    items: {
-      all: 'Status: All',
-      ready: 'Status: Ready',
-      notReady: 'Status: Not Ready',
-    },
-    title: 'Ready Status',
-  },
-];
 export const NodesPage = props => {
   const { t } = useTranslation();
+
+  const dropdownFilters = [
+    {
+      type: 'node-status',
+      items: {
+        all: t(`CONTENT:STATUSALL`),
+        ready: t(`CONTENT:STATUSREADY`),
+        notReady: t(`CONTENT:STATUSNOTREADY`),
+      },
+      title: t(`CONTENT:READYSTATUS`),
+    },
+  ];
   return <ListPage {...props} ListComponent={NodesList} dropdownFilters={dropdownFilters} canExpand={true} />;
 };
 
