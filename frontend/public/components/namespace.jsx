@@ -181,10 +181,12 @@ class PullSecret extends SafetyFirst {
     if (this.state.isLoading) {
       return <LoadingInline />;
     }
-    const modal = () => configureNamespacePullSecretModal({ namespace: this.props.namespace, pullSecret: this.state.data });
+    const { t } = this.props;
+    const modal = () => configureNamespacePullSecretModal({ namespace: this.props.namespace, pullSecret: this.state.data, t: t });
+
     return (
       <a className="co-m-modal-link" onClick={modal}>
-        {_.get(this.state.data, 'metadata.name') || 'Not Configured'}
+        {_.get(this.state.data, 'metadata.name') || t('CONTENT:NOTCONFIGURED')}
       </a>
     );
   }
@@ -247,7 +249,7 @@ const Details = ({ obj: ns }) => {
               <dd>{ns.status.phase}</dd>
               <dt>{t('CONTENT:DEFAULTPULLSECRET')}</dt>
               <dd>
-                <PullSecret namespace={ns} />
+                <PullSecret namespace={ns} t={t} />
               </dd>
               <dt>{t('CONTENT:NETWORKPOLICIES')}</dt>
               <dd>

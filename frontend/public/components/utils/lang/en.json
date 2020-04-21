@@ -120,7 +120,13 @@
     "ROLEBINDING-CREATE_3": "Namespace Role Binding (RoleBinding)",
     "ROLEBINDING-CREATE_4": "Grant the permissions to a user or set of users within the selected namespace.",
     "ROLEBINDING-CREATE_5": "Cluster-wide Role Binding (ClusterRoleBinding)",
-    "ROLEBINDING-CREATE_6": "Grant the permissions to a user or set of users at the cluster level and in all namespaces."
+    "ROLEBINDING-CREATE_6": "Grant the permissions to a user or set of users at the cluster level and in all namespaces.",
+    "PULLSECRET-MODAL_0": "Specify default credentials to be used to authenticate and download containers within this namespace. These credentials will be the default unless a pod references a specific pull secret.",
+    "PULLSECRET-MODAL_1": "A default pull secret exists, but can&rsquo;t be parsed. Saving this will overwrite it.",
+    "PULLSECRET-MODAL_2": "Friendly name to help you manage this in the future",
+    "PULLSECRET-MODAL_3": "Optional, depending on registry provider",
+    "PULLSECRET-MODAL_4": "Properly configured Docker config file in JSON format. Will be base64 encoded after upload.",
+    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json."
   },
   "CONTENT": {
     "SUBJECTNAMESPACE": "Subject Namespace",
@@ -509,7 +515,13 @@
     "CONFIGMAPORSECRET": "Config Map Or Secret",
     "TARGETPORT": "Target Port",
     "NOEXTERNALIP": "No External IP",
-    "NONE": "None"
+    "NONE": "None",
+    "CAPACITY": "Capacity",
+    "DEFUALTPULLSECRET": "Default Pull Secret",
+    "ENTERUSERNAME/PASSWORD": "Enter Username/Password",
+    "UPLOADDOCKERCONFIG.JSON": "Upload Docker config.json",
+    "FILEUPLOAD": "File Upload",
+    "SAVESECRET": "Save Secret"
   },
   "RESOURCE": {
     "HOME": "Home",

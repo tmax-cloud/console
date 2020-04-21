@@ -8,7 +8,7 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '.
 import { PromiseComponent, ResourceIcon } from '../utils';
 import { CONST } from '../../const';
 
-const parseExisitingPullSecret = (pullSecret) => {
+const parseExisitingPullSecret = pullSecret => {
   let invalidData = false;
   let invalidJson = false;
   let username, email, password, address;
@@ -52,12 +52,12 @@ const parseExisitingPullSecret = (pullSecret) => {
     invalidData = true;
   }
 
-  return {username, password, email, address, invalidData, invalidJson };
+  return { username, password, email, address, invalidData, invalidJson };
 };
 
-const generateSecretData = (formData) => {
+const generateSecretData = formData => {
   const config = {
-    auths: {}
+    auths: {},
   };
 
   let authParts = [];
@@ -68,8 +68,8 @@ const generateSecretData = (formData) => {
   authParts.push(formData.password);
 
   config.auths[formData.address] = {
-    auth:  window.btoa(authParts.join(':')),
-    email: formData.email
+    auth: window.btoa(authParts.join(':')),
+    email: formData.email,
   };
 
   return window.btoa(JSON.stringify(config));
@@ -88,7 +88,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
     this.state = Object.assign(this.state, {
       method: 'form',
       fileData: null,
-      invalidJson: false
+      invalidJson: false,
     });
   }
 
@@ -121,7 +121,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
 
   _submit(event) {
     event.preventDefault();
-    const {namespace, pullSecret} = this.props;
+    const { namespace, pullSecret } = this.props;
 
     let promise;
     let secretData;
@@ -140,11 +140,13 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
     }
 
     if (pullSecret) {
-      const patch = [{
-        op: 'replace',
-        path: `/data/${CONST.PULL_SECRET_DATA}`,
-        value: secretData
-      }];
+      const patch = [
+        {
+          op: 'replace',
+          path: `/data/${CONST.PULL_SECRET_DATA}`,
+          value: secretData,
+        },
+      ];
       promise = k8sPatch(SecretModel, pullSecret, patch);
     } else {
       const data = {};
@@ -153,10 +155,10 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
       const secret = {
         metadata: {
           name: event.target.elements['namespace-pull-secret-name'].value,
-          namespace: namespace.metadata.name
+          namespace: namespace.metadata.name,
         },
         data: data,
-        type: CONST.PULL_SECRET_TYPE
+        type: CONST.PULL_SECRET_TYPE,
       };
       promise = k8sCreate(SecretModel, secret);
     }
@@ -165,135 +167,148 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
   }
 
   render() {
-    const {namespace, pullSecret} = this.props;
+    const { namespace, pullSecret, t } = this.props;
 
     const existingData = parseExisitingPullSecret(pullSecret);
 
-    return <form onSubmit={this._submit} name="form">
-      <ModalTitle>Default Pull Secret</ModalTitle>
-      <ModalBody>
-        <p>
-          Specify default credentials to be used to authenticate and download containers within this namespace. These credentials will be the default unless a pod references a specific pull secret.
-        </p>
+    return (
+      <form onSubmit={this._submit} name="form">
+        <ModalTitle>{t('CONTENT:DEFUALTPULLSECRET')}</ModalTitle>
+        <ModalBody>
+          <p>{t('STRING:PULLSECRET-MODAL_0')}</p>
 
-        {existingData.invalidData && <p className="alert alert-danger"><span className="pficon pficon-error-circle-o"></span>A default pull secret exists, but can&rsquo;t be parsed. Saving this will overwrite it.</p>}
+          {existingData.invalidData && (
+            <p className="alert alert-danger">
+              <span className="pficon pficon-error-circle-o"></span>
+              {t('STRING:PULLSECRET-MODAL_1')}
+            </p>
+          )}
 
-        <div className="row co-m-form-row">
-          <div className="col-xs-3">
-            <label>Namespace</label>
-          </div>
-          <div className="col-xs-9">
-            <ResourceIcon kind="Namespace" className="co-m-resource-icon--align-left" /> &nbsp;{namespace.metadata.name}
-          </div>
-        </div>
-
-        <div className="row co-m-form-row">
-          <div className="col-xs-3">
-            <label htmlFor="namespace-pull-secret-name">Secret Name</label>
-          </div>
-          { pullSecret ?
+          <div className="row co-m-form-row">
+            <div className="col-xs-3">
+              <label>{t('RESOURCE:NAMESPACE')}</label>
+            </div>
             <div className="col-xs-9">
-              <ResourceIcon kind="Secret" className="co-m-resource-icon--align-left" />
+              <ResourceIcon kind="Namespace" className="co-m-resource-icon--align-left" /> &nbsp;{namespace.metadata.name}
+            </div>
+          </div>
+
+          <div className="row co-m-form-row">
+            <div className="col-xs-3">
+              <label htmlFor="namespace-pull-secret-name">{t('CONTENT:SECRETNAME')}</label>
+            </div>
+            {pullSecret ? (
+              <div className="col-xs-9">
+                <ResourceIcon kind="Secret" className="co-m-resource-icon--align-left" />
                 &nbsp;{_.get(pullSecret, 'metadata.name')}
-            </div> : <div className="col-xs-9">
-              <input type="text" className="form-control" id="namespace-pull-secret-name" required />
-              <p className="help-block text-muted">Friendly name to help you manage this in the future</p>
-            </div>
-          }
-        </div>
+              </div>
+            ) : (
+              <div className="col-xs-9">
+                <input type="text" className="form-control" id="namespace-pull-secret-name" required />
+                <p className="help-block text-muted">{t('STRING:PULLSECRET-MODAL_2')}</p>
+              </div>
+            )}
+          </div>
 
-        <div className="row co-m-form-row form-group">
-          <div className="col-xs-3">
-            <label>Method</label>
-          </div>
-          <div className="col-xs-9">
-            <div className="radio">
-              <label className="control-label">
-                <input type="radio" id="namespace-pull-secret-method--form"
-                  checked={this.state.method === 'form'}
-                  onChange={this._onMethodChange} value="form" />
-                  Enter Username/Password
-              </label>
+          <div className="row co-m-form-row form-group">
+            <div className="col-xs-3">
+              <label>{t('CONTENT:METHOD')}</label>
             </div>
-            <div className="radio">
-              <label className="control-label">
-                <input type="radio"
-                  checked={this.state.method === 'upload'}
-                  onChange={this._onMethodChange}
-                  id="namespace-pull-secret-method--upload" value="upload" />
-                Upload Docker config.json
-              </label>
+            <div className="col-xs-9">
+              <div className="radio">
+                <label className="control-label">
+                  <input type="radio" id="namespace-pull-secret-method--form" checked={this.state.method === 'form'} onChange={this._onMethodChange} value="form" />
+                  {t('CONTENT:ENTERUSERNAME/PASSWORD')}
+                </label>
+              </div>
+              <div className="radio">
+                <label className="control-label">
+                  <input type="radio" checked={this.state.method === 'upload'} onChange={this._onMethodChange} id="namespace-pull-secret-method--upload" value="upload" />
+                  {t('CONTENT:UPLOADDOCKERCONFIG.JSON')}
+                </label>
+              </div>
             </div>
           </div>
-        </div>
 
-        { this.state.method === 'form' && <div>
-          <div className="row co-m-form-row">
-            <div className="col-xs-3">
-              <label htmlFor="namespace-pull-secret-address">Registry Address</label>
+          {this.state.method === 'form' && (
+            <div>
+              <div className="row co-m-form-row">
+                <div className="col-xs-3">
+                  <label htmlFor="namespace-pull-secret-address">{t('CONTENT:REGISTRYADDRESS')}</label>
+                </div>
+                <div className="col-xs-9">
+                  <input type="text" className="form-control" id="namespace-pull-secret-address" defaultValue={existingData.address} placeholder="quay.io" required />
+                </div>
+              </div>
+              <div className="row co-m-form-row">
+                <div className="col-xs-3">
+                  <label htmlFor="namespace-pull-secret-email">{t('CONTENT:EMAILADDRESS')}</label>
+                </div>
+                <div className="col-xs-9">
+                  <input type="email" className="form-control" defaultValue={existingData.email} id="namespace-pull-secret-email" />
+                  <p className="help-block text-muted">{t('STRING:PULLSECRET-MODAL_3')}</p>
+                </div>
+              </div>
+              <div className="row co-m-form-row">
+                <div className="col-xs-3">
+                  <label htmlFor="namespace-pull-secret-username">{t('CONTENT:USERNAME')}</label>
+                </div>
+                <div className="col-xs-9">
+                  <input type="text" defaultValue={existingData.username} className="form-control" id="namespace-pull-secret-username" required />
+                </div>
+              </div>
+              <div className="row co-m-form-row">
+                <div className="col-xs-3">
+                  <label htmlFor="namespace-pull-secret-password">{t('CONTENT:PASSWORD')}</label>
+                </div>
+                <div className="col-xs-9">
+                  <input type="text" defaultValue={existingData.password} className="form-control" id="namespace-pull-secret-password" required />
+                </div>
+              </div>
             </div>
-            <div className="col-xs-9">
-              <input type="text" className="form-control" id="namespace-pull-secret-address" defaultValue={existingData.address} placeholder="quay.io" required />
-            </div>
-          </div>
-          <div className="row co-m-form-row">
-            <div className="col-xs-3">
-              <label htmlFor="namespace-pull-secret-email">Email Address</label>
-            </div>
-            <div className="col-xs-9">
-              <input type="email" className="form-control" defaultValue={existingData.email} id="namespace-pull-secret-email" />
-              <p className="help-block text-muted">Optional, depending on registry provider</p>
-            </div>
-          </div>
-          <div className="row co-m-form-row">
-            <div className="col-xs-3">
-              <label htmlFor="namespace-pull-secret-username">Username</label>
-            </div>
-            <div className="col-xs-9">
-              <input type="text" defaultValue={existingData.username} className="form-control" id="namespace-pull-secret-username" required />
-            </div>
-          </div>
-          <div className="row co-m-form-row">
-            <div className="col-xs-3">
-              <label htmlFor="namespace-pull-secret-password">Password</label>
-            </div>
-            <div className="col-xs-9">
-              <input type="text" defaultValue={existingData.password} className="form-control" id="namespace-pull-secret-password" required />
-            </div>
-          </div>
-        </div> }
+          )}
 
-        { this.state.method === 'upload' && <div>
-          <div className="row co-m-form-row">
-            <div className="col-xs-3">
-              <label htmlFor="namespace-pull-secret-file">File Upload</label>
+          {this.state.method === 'upload' && (
+            <div>
+              <div className="row co-m-form-row">
+                <div className="col-xs-3">
+                  <label htmlFor="namespace-pull-secret-file">{t('CONTENT:FILEUPLOAD')}</label>
+                </div>
+                <div className="col-xs-9">
+                  <input type="file" id="namespace-pull-secret-file" onChange={this._onFileChange} />
+                  <p className="help-block etext-muted">{t('STRING:PULLSECRET-MODAL_4')}</p>
+                </div>
+              </div>
+              {this.state.invalidJson ||
+                (existingData.invalidJson && (
+                  <div className="row co-m-form-row">
+                    <div className="col-xs-9 col-sm-offset-3">
+                      <div className="alert alert-danger">
+                        <span className="pficon pficon-error-circle-o"></span>
+                        {t('STRING:PULLSECRET-MODAL_5')}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              {this.state.fileData && (
+                <div className="row co-m-form-row">
+                  <div className="col-xs-9 col-sm-offset-3">
+                    <pre className="co-pre-wrap">{this.state.fileData}</pre>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="col-xs-9">
-              <input type="file" id="namespace-pull-secret-file" onChange={this._onFileChange} />
-              <p className="help-block etext-muted">Properly configured Docker config file in JSON format. Will be base64 encoded after upload.</p>
-            </div>
-          </div>
-          { this.state.invalidJson || existingData.invalidJson && <div className="row co-m-form-row">
-            <div className="col-xs-9 col-sm-offset-3">
-              <div className="alert alert-danger"><span className="pficon pficon-error-circle-o"></span>Invalid format. Uploaded file is not properly formatted json.</div>
-            </div>
-          </div> }
-          { this.state.fileData &&<div className="row co-m-form-row">
-            <div className="col-xs-9 col-sm-offset-3">
-              <pre className="co-pre-wrap">{this.state.fileData}</pre>
-            </div>
-          </div> }
-        </div> }
-
-      </ModalBody>
-      <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Save Secret" cancel={this._cancel} />
-    </form>;
+          )}
+        </ModalBody>
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('CONTENT:SAVESECRET')} cancel={this._cancel} />
+      </form>
+    );
   }
 }
 
 ConfigureNamespacePullSecret.propTypes = {
   namespace: PropTypes.object.isRequired,
-  pullSecret: PropTypes.object
+  pullSecret: PropTypes.object,
 };
 
 export const configureNamespacePullSecretModal = createModalLauncher(ConfigureNamespacePullSecret);

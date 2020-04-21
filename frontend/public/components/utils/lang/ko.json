@@ -119,7 +119,13 @@
     "ROLEBINDING-CREATE_3": "네임스페이스 롤 바인딩 (롤 바인딩)",
     "ROLEBINDING-CREATE_4": "선택한 네임스페이스 내의 사용자 또는 사용자 그룹에 권한을 부여합니다.",
     "ROLEBINDING-CREATE_5": "클러스터 롤 바인딩 (클러스터 롤 바인딩)",
-    "ROLEBINDING-CREATE_6": "클러스터 수준 및 모든 네임스페이스에서 사용자 또는 사용자 그룹에 권한을 부여합니다."
+    "ROLEBINDING-CREATE_6": "클러스터 수준 및 모든 네임스페이스에서 사용자 또는 사용자 그룹에 권한을 부여합니다.",
+    "PULLSECRET-MODAL_0": "Specify default credentials to be used to authenticate and download containers within this namespace. These credentials will be the default unless a pod references a specific pull secret.",
+    "PULLSECRET-MODAL_1": "A default pull secret exists, but can&rsquo;t be parsed. Saving this will overwrite it.",
+    "PULLSECRET-MODAL_2": "Friendly name to help you manage this in the future",
+    "PULLSECRET-MODAL_3": "Optional, depending on registry provider",
+    "PULLSECRET-MODAL_4": "Properly configured Docker config file in JSON format. Will be base64 encoded after upload.",
+    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json."
   },
   "CONTENT": {
     "SUBJECTNAMESPACE": "Subject Namespace",
@@ -510,7 +516,13 @@
     "CONFIGMAPORSECRET": "컨피그 맵 또는 시크릿",
     "TARGETPORT": "대상 포트",
     "NOEXTERNALIP": "외부 IP 없음",
-    "NONE": "없음"
+    "NONE": "없음",
+    "CAPACITY": "용량",
+    "DEFUALTPULLSECRET": "기본 풀 시크릿",
+    "ENTERUSERNAME/PASSWORD": "Enter Username/Password",
+    "UPLOADDOCKERCONFIG.JSON": "업로드 도커 config.json",
+    "FILEUPLOAD": "파일 업로드",
+    "SAVESECRET": "시크릿 저장"
   },
   "RESOURCE": {
     "HOME": "홈",
