@@ -176,7 +176,7 @@ class NamespaceClaimFormComponent extends React.Component<NamespaceClaimProps_, 
                     </div>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-                        <Link to={formatNamespacedRouteForResource('NamespaceClaim')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+                        <Link to={formatNamespacedRouteForResource('namespaceclaims')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
