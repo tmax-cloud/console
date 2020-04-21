@@ -89,7 +89,8 @@ const Data = props => {
 };
 
 export const StatusBox = props => {
-  const { label, loadError, loaded, kinds } = props;
+  const { label, loadError, loaded, kinds, data } = props;
+  let kind = kinds ? kinds[0] : data.kind;
   const { t } = useTranslation();
   if (loadError) {
     const status = _.get(loadError, 'response.status');
@@ -113,7 +114,7 @@ export const StatusBox = props => {
       );
     }
 
-    return <LoadError message={loadError.message} label={label} kind={kinds[0]} className="loading-box loading-box__errored" />;
+    return <LoadError message={loadError.message} label={label} kind={kind} className="loading-box loading-box__errored" />;
   }
 
   if (!loaded) {
