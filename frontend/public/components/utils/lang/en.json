@@ -36,7 +36,9 @@
     "EDIT-PARALLELISM-MODAL_0": "{{something}} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.",
     "DUPLICATE_1": "Duplicate {{something}}...",
     "EDIT_1": "Edit {{something}} Subject...",
-    "IMPERSONATE_0": "Impersonate {{something1}} {{something2}}"
+    "IMPERSONATE_0": "Impersonate {{something1}} {{something2}}",
+    "ERRORLOADING": "Error Loading {{something}}",
+    "NOFOUNDORDEFINED": "No {{something}} found or defined."
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -121,12 +123,15 @@
     "ROLEBINDING-CREATE_4": "Grant the permissions to a user or set of users within the selected namespace.",
     "ROLEBINDING-CREATE_5": "Cluster-wide Role Binding (ClusterRoleBinding)",
     "ROLEBINDING-CREATE_6": "Grant the permissions to a user or set of users at the cluster level and in all namespaces.",
+    "ROLEBINDING-CREATE_7": "Please complete all fields",
     "PULLSECRET-MODAL_0": "Specify default credentials to be used to authenticate and download containers within this namespace. These credentials will be the default unless a pod references a specific pull secret.",
     "PULLSECRET-MODAL_1": "A default pull secret exists, but can&rsquo;t be parsed. Saving this will overwrite it.",
     "PULLSECRET-MODAL_2": "Friendly name to help you manage this in the future",
     "PULLSECRET-MODAL_3": "Optional, depending on registry provider",
     "PULLSECRET-MODAL_4": "Properly configured Docker config file in JSON format. Will be base64 encoded after upload.",
-    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json."
+    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json.",
+    "RULE_0": "Are you sure you want to delete  this Rule?",
+    "ROLEBINDING_0": "Roles grant access to types of objects in the cluster. Roles are applied to a group or user via a Role Binding."
   },
   "CONTENT": {
     "RESOURCENAME": "Resource Name",
@@ -522,7 +527,16 @@
     "ENTERUSERNAME/PASSWORD": "Enter Username/Password",
     "UPLOADDOCKERCONFIG.JSON": "Upload Docker config.json",
     "FILEUPLOAD": "File Upload",
-    "SAVESECRET": "Save Secret"
+    "SAVESECRET": "Save Secret",
+    "YES": "Yes",
+    "NO": "No",
+    "READYSTATUS": "Ready Status",
+    "ALL": "All",
+    "DELETERULE": "Delete Rule...",
+    "RULE": "Rule",
+    "NAMESPACEROLES(ROLE)": "Namespace Roles (Role)",
+    "TRYAGAIN": "try again.",
+    "CLUSTER-WIDEROLES(CLUSTERROLE)": "Cluster-wide Roles (ClusterRole)"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -589,6 +603,7 @@
     "USER": "User",
     "USERGROUP": "User Group",
     "SERVICEACCOUNT": "Service Account",
-    "CLUSTERSTATUS": "Cluster Status"
+    "CLUSTERSTATUS": "Cluster Status",
+    "GROUP": "User Group"
   }
 }

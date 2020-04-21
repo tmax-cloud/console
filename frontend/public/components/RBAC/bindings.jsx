@@ -124,21 +124,27 @@ export const RoleLink = ({ binding }) => {
   return <ResourceLink kind={kind} name={binding.roleRef.name} namespace={ns} />;
 };
 
-const Row = ({ obj: binding }) => (
-  <ResourceRow obj={binding}>
-    <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
-      <BindingName binding={binding} />
-    </div>
-    <OverflowYFade className="col-md-3 col-sm-4 hidden-xs">
-      <RoleLink binding={binding} />
-    </OverflowYFade>
-    <OverflowYFade className="col-md-2 hidden-sm hidden-xs">{binding.subject.kind}</OverflowYFade>
-    <OverflowYFade className="col-md-2 hidden-sm hidden-xs">{binding.subject.name}</OverflowYFade>
-    <OverflowYFade className="col-md-2 col-sm-4 col-xs-6 co-break-word">{binding.metadata.namespace ? <ResourceLink kind="Namespace" name={binding.metadata.namespace} /> : 'all'}</OverflowYFade>
-  </ResourceRow>
-);
+const Row = ({ obj: binding }) => {
+  const { t } = useTranslation();
+  return (
+    <ResourceRow obj={binding}>
+      <div className="col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
+        <BindingName binding={binding} />
+      </div>
+      <OverflowYFade className="col-md-3 col-sm-4 hidden-xs">
+        <RoleLink binding={binding} />
+      </OverflowYFade>
+      <OverflowYFade className="col-md-2 hidden-sm hidden-xs">{binding.subject.kind}</OverflowYFade>
+      <OverflowYFade className="col-md-2 hidden-sm hidden-xs">{binding.subject.name}</OverflowYFade>
+      <OverflowYFade className="col-md-2 col-sm-4 col-xs-6 co-break-word">{binding.metadata.namespace ? <ResourceLink kind="Namespace" name={binding.metadata.namespace} /> : t('CONTENT:ALL')}</OverflowYFade>
+    </ResourceRow>
+  );
+};
 
-const EmptyMsg = () => <MsgBox title="No Role Bindings Found" detail="Roles grant access to types of objects in the cluster. Roles are applied to a group or user via a Role Binding." />;
+const EmptyMsg = () => {
+  const { t } = useTranslation();
+  return <MsgBox title={t('STRING:EMPTYBOX')} detail={t('STRING:ROLEBINDING_0')} />;
+};
 
 export const BindingsList = props => <List {...props} EmptyMsg={EmptyMsg} Header={Header} Row={Row} />;
 
@@ -166,7 +172,7 @@ export const RoleBindingsPage = ({ namespace, showTitle = true, fake }) => {
       fake={fake}
       filterLabel="Role Bindings by role or subject"
       flatten={flatten}
-      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('RoleBINDING', t) })}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('RoleBinding', t) })}
       label="Role Bindings"
       ListComponent={BindingsList}
       namespace={namespace}
@@ -191,6 +197,7 @@ export const RoleBindingsPage = ({ namespace, showTitle = true, fake }) => {
       showTitle={showTitle}
       textFilter="role-binding"
       title={t('RESOURCE:ROLEBINDING')}
+      id="rolebinding"
     />
   );
 };
@@ -229,7 +236,7 @@ class ListDropdown_ extends React.Component {
 
     if (loadError) {
       this.setState({
-        title: <div className="cos-error-title">Error Loading {nextProps.desc}</div>,
+        title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
       });
       return;
     }
@@ -295,7 +302,8 @@ class ListDropdown_ extends React.Component {
         {Component}
         {loaded && _.isEmpty(items) && (
           <p className="alert alert-info">
-            <span className="pficon pficon-info" aria-hidden="true"></span>No {desc} found or defined.
+            <span className="pficon pficon-info" aria-hidden="true"></span>
+            {(this.props.t('ADDITIONAL:NOFOUNDORDEFINED'), { something: desc })}
           </p>
         )}
       </div>
@@ -335,8 +343,8 @@ const NsDropdown_ = props => {
   }
   const kind = openshiftFlag ? 'Project' : 'Namespace';
   const resources = [{ kind }];
-  const { t } = props
-  return <ListDropdown {...props} desc="Namespaces" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:ROLEBINDING-CREATE_2')} />;
+  const { t } = props;
+  return <ListDropdown {...props} desc="Namespace" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:ROLEBINDING-CREATE_2')} />;
 };
 const NsDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsDropdown_);
 
@@ -358,12 +366,15 @@ const NsRoleDropdown_ = props => {
   }
   const resourceForKind = kind => ({ kind, namespace: kind === 'Role' ? props.namespace : null });
   const resources = _.map(kinds, resourceForKind);
-  const { t } = props
-  return <ListDropdown {...props} dataFilter={roleFilter} desc="Namespace Roles (Role)" resources={resources} placeholder={t('STRING:ROLEBINDING-CREATE_1')} />;
+  const { t } = props;
+  return <ListDropdown {...props} dataFilter={roleFilter} desc={t('CONTENT:NAMESPACEROLES(ROLE)')} resources={resources} placeholder={t('STRING:ROLEBINDING-CREATE_1')} />;
 };
 const NsRoleDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsRoleDropdown_);
 
-const ClusterRoleDropdown = props => <ListDropdown {...props} dataFilter={role => !isSystemRole(role)} desc="Cluster-wide Roles (ClusterRole)" resources={[{ kind: 'ClusterRole' }]} placeholder="Select role name" />;
+const ClusterRoleDropdown = props => {
+  const { t } = useTranslation();
+  return <ListDropdown {...props} dataFilter={role => !isSystemRole(role)} desc={t('CONTENT:CLUSTER-WIDEROLES(CLUSTERROLE)')} resources={[{ kind: 'ClusterRole' }]} placeholder={t('STRING:ROLEBINDING-CREATE_1')} />;
+};
 
 const Section = ({ label, children }) => (
   <div className="row">
@@ -442,7 +453,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
       const subject = this.getSubject();
 
       if (!kind || !metadata.name || !roleRef.kind || !roleRef.name || !subject.kind || !subject.name || (kind === 'RoleBinding' && !metadata.namespace) || (subject.kind === 'ServiceAccount' && !subject.namespace)) {
-        this.setState({ error: 'Please complete all fields.' });
+        this.setState({ error: this.props.t('STRING:ROLEBINDING-CREATE_7') });
         return;
       }
 
@@ -467,7 +478,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
       const { fixed, saveButtonText, t, titleVerb } = this.props;
       const RoleDropdown = kind === 'RoleBinding' ? NsRoleDropdown : ClusterRoleDropdown;
       // const title = `${this.props.titleVerb} ${kindObj(kind).label}`;
-      let title = titleVerb === 'Create' ? t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(`${kind}`, t) }) : t('ADDITIONAL:EDIT', { something: ResourcePlural(`${kind}`, t) })
+      let title = titleVerb === 'Create' ? t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(`${kind}`, t) }) : t('ADDITIONAL:EDIT', { something: ResourcePlural(`${kind}`, t) });
 
       const subjectKinds = [
         { value: 'User', title: t('CONTENT:USER') },
@@ -479,7 +490,6 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
         { value: 'RoleBinding', title: t('STRING:ROLEBINDING-CREATE_3'), desc: t('STRING:ROLEBINDING-CREATE_4') },
         { value: 'ClusterRoleBinding', title: t('STRING:ROLEBINDING-CREATE_5'), desc: t('STRING:ROLEBINDING-CREATE_6') },
       ];
-
 
       return (
         <div className="rbac-edit-binding co-m-pane__body">

@@ -34,7 +34,9 @@
     "EDIT-PARALLELISM-MODAL_0": "{{something}}은 하나 이상의 파드를 생성하고, 지정된 수의 파드가 정상적으로 종료되도록 합니다. 지정된 완료 횟수에 도달하면 작업이 완료됩니다.",
     "DUPLICATE_1": "{{something}} 중복...",
     "EDIT_1": "Edit {{something}} Subject...",
-    "IMPERSONATE_0": "위장 {{something1}} ({{something2}})..."
+    "IMPERSONATE_0": "위장 {{something1}} ({{something2}})...",
+    "ERRORLOADING": "{{something}} 로드 오류",
+    "NOFOUNDORDEFINED": "No {{something}} found or defined."
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
@@ -120,16 +122,19 @@
     "ROLEBINDING-CREATE_4": "선택한 네임스페이스 내의 사용자 또는 사용자 그룹에 권한을 부여합니다.",
     "ROLEBINDING-CREATE_5": "클러스터 롤 바인딩 (클러스터 롤 바인딩)",
     "ROLEBINDING-CREATE_6": "클러스터 수준 및 모든 네임스페이스에서 사용자 또는 사용자 그룹에 권한을 부여합니다.",
+    "ROLEBINDING-CREATE_7": "Please complete all fields",
     "PULLSECRET-MODAL_0": "Specify default credentials to be used to authenticate and download containers within this namespace. These credentials will be the default unless a pod references a specific pull secret.",
     "PULLSECRET-MODAL_1": "A default pull secret exists, but can&rsquo;t be parsed. Saving this will overwrite it.",
     "PULLSECRET-MODAL_2": "Friendly name to help you manage this in the future",
     "PULLSECRET-MODAL_3": "Optional, depending on registry provider",
     "PULLSECRET-MODAL_4": "Properly configured Docker config file in JSON format. Will be base64 encoded after upload.",
-    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json."
+    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json.",
+    "RULE_0": "Are you sure you want to delete this Rule?",
+    "ROLEBINDING_0": "Roles grant access to types of objects in the cluster. Roles are applied to a group or user via a Role Binding."
   },
   "CONTENT": {
     "RESOURCENAME": "리소스 이름",
-    "SUBJECTNAMESPACE": "Subject Namespace",
+    "SUBJECTNAMESPACE": "대상 네임스페이스",
     "SUBJECT": "대상",
     "SERVICEPLAN": "서비스 플랜",
     "BACK": "이전",
@@ -409,9 +414,9 @@
     "OSUPDATE": "OS 업데이트",
     "READY": "준비됨",
     "NOTREADY": "준비 안됨",
-    "STATUS:ALL": "상태: 모두",
-    "STATUS:READY": "상태: 준비됨",
-    "STATUS:NOTREADY": "상태: 준비안됨",
+    "STATUSALL": "상태: 전체",
+    "STATUSREADY": "상태: 준비됨",
+    "STATUSNOTREADY": "상태: 준비안됨",
     "UNSCHEDULABLE": "예약 불가 ",
     "CURRENTVERSION": "현재 버전",
     "CHANNEL": "채널",
@@ -523,7 +528,16 @@
     "ENTERUSERNAME/PASSWORD": "Enter Username/Password",
     "UPLOADDOCKERCONFIG.JSON": "업로드 도커 config.json",
     "FILEUPLOAD": "파일 업로드",
-    "SAVESECRET": "시크릿 저장"
+    "SAVESECRET": "시크릿 저장",
+    "YES": "네",
+    "NO": "아니오",
+    "READYSTATUS": "준비 상태",
+    "ALL": "전체",
+    "DELETERULE": "룰 삭제...",
+    "RULE": "룰",
+    "NAMESPACEROLES(ROLE)": "네임스페이스 롤 (롤)",
+    "TRYAGAIN": "다시 시도하십시오.",
+    "CLUSTER-WIDEROLES(CLUSTERROLE)": "클로스터 롤 (클러스터 롤)"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -590,6 +604,7 @@
     "USER": "사용자",
     "USERGROUP": "사용자 그룹",
     "SERVICEACCOUNT": "서비스 어카운트",
-    "CLUSTERSTATUS": "클러스터 상태"
+    "CLUSTERSTATUS": "클러스터 상태",
+    "GROUP": "사용자 그룹"
   }
 }

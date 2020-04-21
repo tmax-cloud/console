@@ -48,15 +48,18 @@ const Header = props => {
   );
 };
 
-const Row = ({ obj: role }) => (
-  <div className="row co-resource-list__item">
-    <div className="col-xs-6 co-resource-link-wrapper">
-      <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
-      <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
+const Row = ({ obj: role }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="row co-resource-list__item">
+      <div className="col-xs-6 co-resource-link-wrapper">
+        <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
+        <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
+      </div>
+      <div className="col-xs-6 co-break-word">{role.metadata.namespace ? <ResourceLink kind="Namespace" name={role.metadata.namespace} /> : t('CONTENT:ALL')}</div>
     </div>
-    <div className="col-xs-6 co-break-word">{role.metadata.namespace ? <ResourceLink kind="Namespace" name={role.metadata.namespace} /> : 'all'}</div>
-  </div>
-);
+  );
+};
 
 // class Details extends React.Component {
 //   constructor(props) {
@@ -82,7 +85,6 @@ const Details = props => {
     const searchKeys = ['nonResourceURLs', 'resources', 'verbs'];
     rules = rules.filter(rule => searchKeys.some(k => _.some(rule[k], v => fuzzyCaseInsensitive(ruleFilter, v))));
   }
-  const { t } = useTranslation();
   return (
     <div>
       <div className="co-m-pane__body">

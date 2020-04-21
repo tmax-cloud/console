@@ -10,19 +10,22 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 export const Box = ({ children, className }) => <div className={classNames('cos-status-box', className)}>{children}</div>;
 
 /** @type {React.SFC<{className?: string, label: string, message?: string, canRetry?: boolean}>} */
-export const LoadError = ({ label, className, message, canRetry = true }) => (
-  <Box className={className}>
-    <div className="text-center cos-error-title">
-      Error Loading {label}
-      {_.isString(message) ? `: ${message}` : ''}
-    </div>
-    {canRetry && (
-      <div className="text-center">
-        Please <a onClick={window.location.reload.bind(window.location)}>try again</a>.
+export const LoadError = ({ label, className, message, kind, canRetry = true }) => {
+  const { t } = useTranslation();
+  return (
+    <Box className={className}>
+      <div className="text-center cos-error-title">
+        {t('ADDITIONAL:ERRORLOADING', { something: ResourcePlural(kind, t) })}
+        {_.isString(message) ? `: ${message}` : ''}
       </div>
-    )}
-  </Box>
-);
+      {canRetry && (
+        <div className="text-center">
+          <a onClick={window.location.reload.bind(window.location)}>{t('CONTENT:TRYAGAIN')}</a>.
+        </div>
+      )}
+    </Box>
+  );
+};
 
 export const Loading = ({ className }) => (
   <div className={classNames('co-m-loader co-an-fade-in-out', className)}>
@@ -46,7 +49,7 @@ export const EmptyBox = ({ label }) => {
   const { t } = useTranslation();
   return (
     <Box>
-      <div className="text-center">{label ? t('STRING:EMPTYBOX') : t('Content:NOTFOUND')}</div>
+      <div className="text-center">{label ? t('STRING:EMPTYBOX') : t('CONTENT:NOTFOUND')}</div>
     </Box>
   );
 };
@@ -86,7 +89,7 @@ const Data = props => {
 };
 
 export const StatusBox = props => {
-  const { label, loadError, loaded } = props;
+  const { label, loadError, loaded, kinds } = props;
   const { t } = useTranslation();
   if (loadError) {
     const status = _.get(loadError, 'response.status');
@@ -110,7 +113,7 @@ export const StatusBox = props => {
       );
     }
 
-    return <LoadError message={loadError.message} label={label} className="loading-box loading-box__errored" />;
+    return <LoadError message={loadError.message} label={label} kind={kinds[0]} className="loading-box loading-box__errored" />;
   }
 
   if (!loaded) {
