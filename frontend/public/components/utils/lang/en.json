@@ -505,7 +505,8 @@
     "INFO": "Info",
     "SELECTRESOURCE": "Select Resource",
     "NOSELECTOR": "No selector",
-    "NOLABELS": "No labels"
+    "NOLABELS": "No labels",
+    "CONFIGMAPORSECRET": "Config Map Or Secret"
   },
   "RESOURCE": {
     "HOME": "Home",

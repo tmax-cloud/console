@@ -74,7 +74,7 @@ export const NameValueEditor = DragDropContext(HTML5Backend)(
 
       nameString = this.props.t ? this.props.t(`CONTENT:${nameString.toUpperCase()}`).toUpperCase() : nameString.toUpperCase();
       valueString = this.props.t ? this.props.t(`CONTENT:${valueString.toUpperCase()}`).toUpperCase() : valueString.toUpperCase();
-      addString = this.props.t ? this.props.t(`CONTENT:${addString.toUpperCase()}`).toUpperCase() : addString.toUpperCase();
+      addString = this.props.t ? this.props.t(`CONTENT:${addString.replace(/ /gi, '').toUpperCase()}`).toUpperCase() : addString.toUpperCase();
 
       const pairElems = nameValuePairs.map((pair, i) => {
         const key = _.get(pair, [NameValueEditorPair.Index], i);

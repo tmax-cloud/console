@@ -49,7 +49,7 @@ export class KeyValueEditor extends React.Component {
               <React.Fragment>
                 <span className="btn-link pairs-list__btn" onClick={this._append}>
                   <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                  {t('CONTENT:ADDMORE')}
+                  {t(`CONTENT:${addString.replace(/ /gi, '').toUpperCase()}`)}
                 </span>
               </React.Fragment>
             )}
@@ -62,7 +62,7 @@ export class KeyValueEditor extends React.Component {
 KeyValueEditor.defaultProps = {
   keyString: 'Key',
   valueString: 'Value',
-  addString: 'AddMore',
+  addString: 'Add More',
   allowSorting: false,
   readOnly: false,
   nameValueId: 0,
