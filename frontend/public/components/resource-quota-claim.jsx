@@ -110,7 +110,15 @@ ResourceQuotaClaimList.displayName = ResourceQuotaClaimList;
 
 export const ResourceQuotaClaimsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/resourcequotaclaims/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" createProps={createProps}{...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 

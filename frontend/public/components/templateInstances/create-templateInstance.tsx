@@ -80,7 +80,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         .then(res => res.json())
         .then((myJson) => {
           let paramList = myJson.parameters.map(function (parm) {
-            return { name: parm.name, value: '' }
+            return { name: parm.name, defaultValue: parm.value }
           });
           if (paramList.length) {
             templateInstance.spec.template.parameters = paramList;
@@ -189,7 +189,8 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      return <Section label={parameter.name} id={parameter.name}>
+      let keyValue = parameter.defaultValue ? parameter.name + "( default:" + parameter.defaultValue + ")" : parameter.name;
+      return <Section label={keyValue} id={parameter.name}>
         <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter} required />
       </Section>
     });

@@ -138,7 +138,7 @@ const withServiceInstanceForm = SubForm =>
         .then(res => res.json())
         .then(res => {
           let paramList = res.parameters.map(function (parm) {
-            return { name: parm.name, value: '' };
+            return { name: parm.name, defaultValue: parm.value, value: '' };
           });
           if (paramList.length) {
             this.setState({
@@ -299,14 +299,21 @@ const withServiceInstanceForm = SubForm =>
                   <React.Fragment>
                     <div className="separator"></div>
                     <Section label={t('CONTENT:PARAMETERS')} key="params">
-                      {paramList.map((parameter, index) => (
-                        <React.Fragment key={index}>
-                          <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                            {parameter.name}
-                          </label>
+                      {paramList.map((parameter, index) => {
+                        let keyValue = parameter.defaultValue ? parameter.name + "( default:" + parameter.defaultValue + ")" : parameter.name;
+                        return <React.Fragment key={index}>
+                          <div>
+                            <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                              {keyValue}
+                            </label>
+                          </div>
+
                           <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.name} onChange={this.onParamValueChanged} required />
                         </React.Fragment>
-                      ))}
+                      }
+
+
+                      )}
                     </Section>
                   </React.Fragment>
                 )}
