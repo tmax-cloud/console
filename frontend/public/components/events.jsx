@@ -234,7 +234,7 @@ class EventStream extends SafetyFirst {
       })
       .onclose(evt => {
         if (evt && evt.wasClean === false) {
-          this.setState({ error: evt.reason || 'Connection did not close cleanly.' });
+          this.setState({ error: evt.reason || this.props.t('STRING:EVENT_10') });
         }
         this.messages = {};
         this.setState({ sortedMessages: [], filteredEvents: [] });
