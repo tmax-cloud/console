@@ -25,20 +25,23 @@ const Header = props => {
 };
 
 const kind = 'PersistentVolume';
-const Row = ({ obj }) => (
-  <div className="row co-resource-list__item">
-    <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
-      <ResourceCog actions={menuActions} kind={kind} resource={obj} />
-      <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+const Row = ({ obj }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="row co-resource-list__item">
+      <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
+        <ResourceCog actions={menuActions} kind={kind} resource={obj} />
+        <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+      </div>
+      <div className="col-sm-4 col-xs-6">
+        <LabelList kind={kind} labels={obj.metadata.labels} />
+      </div>
+      <div className="col-sm-4 hidden-xs">
+        <Timestamp timestamp={obj.metadata.creationTimestamp} t={t} />
+      </div>
     </div>
-    <div className="col-sm-4 col-xs-6">
-      <LabelList kind={kind} labels={obj.metadata.labels} />
-    </div>
-    <div className="col-sm-4 hidden-xs">
-      <Timestamp timestamp={obj.metadata.creationTimestamp} />
-    </div>
-  </div>
-);
+  );
+};
 
 const Details = ({ obj }) => {
   const { t } = useTranslation();

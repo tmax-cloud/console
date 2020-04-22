@@ -93,11 +93,11 @@ const Details = ({ obj: job }) => {
             <dd>{job.status.conditions ? job.status.conditions[0].type : t('CONTENT:INPROGRESS')}</dd>
             <dt>{t('CONTENT:STARTTIME')}</dt>
             <dd>
-              <Timestamp timestamp={job.status.startTime} />
+              <Timestamp timestamp={job.status.startTime} t={t} />
             </dd>
             <dt>{t('CONTENT:COMPLETIONTIME')}</dt>
             <dd>
-              <Timestamp timestamp={job.status.completionTime} />
+              <Timestamp timestamp={job.status.completionTime} t={t} />
             </dd>
             <dt>{t('CONTENT:SUCCEEDEDPODS')}</dt>
             <dd>{job.status.succeeded || 0}</dd>
