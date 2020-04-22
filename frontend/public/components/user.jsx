@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
 const UserHeader = props => {
   const { t } = useTranslation();
@@ -63,7 +64,9 @@ UserList.displayName = UserList;
 
 export const UsersPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
+  return HDCModeFlag ?
+    <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> :
+    <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
 };
 UsersPage.displayName = 'UsersPage';
 
