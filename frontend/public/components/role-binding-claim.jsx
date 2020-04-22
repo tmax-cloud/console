@@ -93,7 +93,15 @@ RoleBindingClaimList.displayName = RoleBindingClaimList;
 
 export const RoleBindingClaimsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={RoleBindingClaimList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="RoleBindingClaim" />
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/rolebindingclaims/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage {...props} ListComponent={RoleBindingClaimList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="RoleBindingClaim" createProps={createProps}{...props} />
 };
 RoleBindingClaimsPage.displayName = 'RoleBindingClaimsPage';
 
