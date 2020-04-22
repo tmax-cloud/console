@@ -403,7 +403,7 @@ class EventStream extends SafetyFirst {
       'co-sysevent-stream__timeline--empty': !allCount || !count,
     });
     //  const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
-    const messageCount = count < maxMessages ? t('PLURAL:EVENT', { count: count }) : t('ADDITIONAL:SHOWINGEVENTS', { something1: count, something2: allCount });
+    const messageCount = count < maxMessages ? t('PLURAL:EVENT', { count: count }) : t('ADDITIONAL:SHOWINGEVENTS', { something1: count, something2: t('PLURAL:EVENT', { count: allCount }) });
 
     return (
       <div className="co-m-pane__body">

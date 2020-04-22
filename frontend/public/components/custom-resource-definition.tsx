@@ -58,7 +58,8 @@ const CRDRow = ({ obj: crd }) => {
       </div>
       <div className="col-lg-3 col-md-4 col-sm-4 col-xs-6 co-break-word">{crd.spec.group}</div>
       <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">{crd.spec.version}</div>
-      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{namespaced(crd) ? t('CONTENT:YES') : t('CONTENT:NO')}</div>
+      {/* <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{namespaced(crd) ? t('CONTENT:YES') : t('CONTENT:NO')}</div> */}
+      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{namespaced(crd) ? 'YES' : 'NO'}</div>
       <div className="col-lg-1 hidden-md hidden-sm hidden-xs">
         {isEstablished(crd.status.conditions) ? (
           <span className="node-ready">

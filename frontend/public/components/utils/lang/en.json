@@ -161,7 +161,7 @@
     "ENVVARIABLES": "Environment variables",
     "CONTAINERIMAGE": "Container Image",
     "IMAGEPULLPOLICY": "Image pull policy",
-    "IFNOTPRESENT": "IfNotPresent",
+    "IFNOTPRESENT": "If Not Present",
     "ALWAYS": "Always",
     "NEVER": "Never",
     "REPLICAS": "Replicas",
@@ -550,7 +550,9 @@
     "READONLY": "Read Only",
     "RESOURCE": "Resource",
     "QUANTITY": "Quantity",
-    "ENTERNAME": "Enter Name"
+    "ENTERNAME": "Enter Name",
+    "TRUE": "True",
+    "False": "False"
   },
   "RESOURCE": {
     "HOME": "Home",

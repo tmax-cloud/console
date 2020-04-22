@@ -11,6 +11,7 @@ import { NodeModel } from '../models';
 import { CamelCaseWrap } from './utils/camel-case-wrap';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
+import { fromNow } from './utils/datetime';
 
 const MarkAsUnschedulable = (kind, obj) => {
   const { t } = useTranslation();
@@ -93,16 +94,18 @@ const HeaderSearch = props => {
 };
 
 const NodeStatus = ({ node }) => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   return isNodeReady(node) ? (
     <span className="node-ready">
       <i className="fa fa-check"></i>
-      {t('CONTENT:READY')}
+      {/* {t('CONTENT:READY')} */}
+      Ready
     </span>
   ) : (
     <span className="node-not-ready">
       <i className="fa fa-minus-circle"></i>
-      {t('CONTENT:NOTREADY')}
+      {/* {t('CONTENT:NOTREADY')} */}
+      Not Ready
     </span>
   );
 };
@@ -133,7 +136,8 @@ const NodeCLUpdateStatus = ({ node }) => {
       {lastCheckedDate && containerLinuxUpdateOperator.isSoftwareUpToDate(node) && (
         <div>
           <small className="">
-            Last checked on <div className="co-inline-block">{<Timestamp timestamp={lastCheckedDate} isUnix={true} />}</div>
+            {/* Last checked on <div className="co-inline-block">{<Timestamp timestamp={lastCheckedData} isUnix={true} />}</div> */}
+            Last checked on <div className="co-inline-block">{fromNow(lastCheckedDate)}</div>
           </small>
         </div>
       )}
@@ -287,7 +291,8 @@ const Details = ({ obj: node }) => {
               {_.has(node, 'spec.unschedulable') && <dd className="text-capitalize">{_.get(node, 'spec.unschedulable', '-').toString()}</dd>}
               <dt>{t('CONTENT:CREATED')}</dt>
               <dd>
-                <Timestamp timestamp={node.metadata.creationTimestamp} />
+                {fromNow(node.metadata.creationTimestamp)}
+                {/* <Timestamp timestamp={node.metadata.creationTimestamp} /> */}
               </dd>
             </dl>
           </div>
@@ -360,10 +365,12 @@ const Details = ({ obj: node }) => {
                     <CamelCaseWrap value={c.reason} />
                   </td>
                   <td>
-                    <Timestamp timestamp={c.lastHeartbeatTime} />
+                    {/* <Timestamp timestamp={c.lastHeartbeatTime} /> */}
+                    {fromNow(c.lastHeartbeatTime)}
                   </td>
                   <td>
-                    <Timestamp timestamp={c.lastTransitionTime} />
+                    {/* <Timestamp timestamp={c.lastTransitionTime} /> */}
+                    {fromNow(c.lastTransitionTime)}
                   </td>
                 </tr>
               ))}

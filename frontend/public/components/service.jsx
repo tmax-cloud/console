@@ -48,17 +48,17 @@ const ServiceHeader = props => {
 };
 
 const ServiceType = type => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   switch (type.toUpperCase()) {
-    case 'NODEPORT':
-      return t('CONTENT:NODEPORT');
-      break;
-    case 'CLUSTERIP':
-      return t('CONTENT:CLUSTERIP');
-      break;
-    case 'LOADBALANCER':
-      return t('CONTENT:LOADBALANCER');
-      break;
+    // case 'NODEPORT':
+    //   return t('CONTENT:NODEPORT');
+    //   break;
+    // case 'CLUSTERIP':
+    //   return t('CONTENT:CLUSTERIP');
+    //   break;
+    // case 'LOADBALANCER':
+    //   return t('CONTENT:LOADBALANCER');
+    //   break;
     default:
       return type;
   }
@@ -110,7 +110,8 @@ const ServiceAddress = ({ s }) => {
   const ServiceType = type => {
     switch (type) {
       case 'NodePort':
-        return ServiceIPsRow(t('CONTENT:NODEPORT'), t('STRING:SERVICE_DETAIL_0'), _.map(s.spec.ports, 'nodePort'), '(all nodes): ');
+        // return ServiceIPsRow(t('CONTENT:NODEPORT'), t('STRING:SERVICE_DETAIL_0'), _.map(s.spec.ports, 'nodePort'), '(all nodes): ');
+        return ServiceIPsRow(type, t('STRING:SERVICE_DETAIL_0'), _.map(s.spec.ports, 'nodePort'), '(all nodes): ');
       case 'LoadBalancer':
         return ServiceIPsRow(
           t('CONTENT:EXTERNALLOADBALANCERIP'),
@@ -120,7 +121,8 @@ const ServiceAddress = ({ s }) => {
       case 'ExternalName':
         return ServiceIPsRow(t('CONTENT:EXTERNALSERVICENAME'), t('STRING:SERVICE_DETAIL_2'), [s.spec.externalName]);
       default:
-        return ServiceIPsRow(t('CONTENT:CLUSTERIP'), t('STRING:SERVICE_DETAIL_3'), [s.spec.clusterIP]);
+        // return ServiceIPsRow(t('CONTENT:CLUSTERIP'), t('STRING:SERVICE_DETAIL_3'), [s.spec.clusterIP]);
+        return ServiceIPsRow(type, t('STRING:SERVICE_DETAIL_3'), [s.spec.clusterIP]);
     }
   };
 
