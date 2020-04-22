@@ -156,5 +156,5 @@ export const PersistentVolumeClaimsPage = props => {
 export const PersistentVolumeClaimsDetailsPage = props => {
   const { t } = useTranslation();
 
-  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:ENVIRONMENT'))]} />;
+  return <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.events(ResourceEventStream, t('CONTENT:EVENTS'))]} />;
 };

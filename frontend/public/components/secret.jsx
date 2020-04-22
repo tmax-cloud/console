@@ -139,15 +139,21 @@ const SecretsPage = props => {
     webhook: t('CONTENT:WEBHOOKSECRET'),
     yaml: t('CONTENT:SECRETFROMYAML'),
   };
-
-  const secretTypeFilterValues = [t('CONTENT:IMAGE'), t('CONTENT:SOURCE'), t('CONTENT:TLS'), t('CONTENT:SERVICEACCOUNTTOKEN'), t('CONTENT:OPAQUE')];
+  const secretTypeFilterValues = [
+    { id: IMAGE_FILTER_VALUE, title: t('CONTENT:IMAGE') },
+    { id: SOURCE_FILTER_VALUE, title: t('CONTENT:SOURCE') },
+    { id: TLS_FILTER_VALUE, title: t('CONTENT:TLS') },
+    { id: SA_TOKEN_FILTER_VALUE, title: t('CONTENT:SERVICEACCOUNTTOKEN') },
+    { id: OPAQUE_FILTER_VALUE, title: t('CONTENT:OPAQUE') },
+  ];
+  // const i18nFilterValues = [t('CONTENT:IMAGE'), t('CONTENT:SOURCE'), t('CONTENT:TLS'), t('CONTENT:SERVICEACCOUNTTOKEN'), t('CONTENT:OPAQUE')];
 
   const filters = [
     {
       type: 'secret-type',
       selected: secretTypeFilterValues,
       reducer: secretTypeFilterReducer,
-      items: secretTypeFilterValues.map(filterValue => ({ id: filterValue, title: filterValue })),
+      items: secretTypeFilterValues.map(filterValue => ({ id: filterValue.id, title: filterValue.title })),
     },
   ];
 

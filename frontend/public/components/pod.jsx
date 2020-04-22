@@ -88,9 +88,6 @@ const PodHeader = props => {
       <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">
         {t('CONTENT:PODLABELS')}
       </ColHead>
-      {/* <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.nodeName">
-        {t('CONTENT:NODE')}
-      </ColHead> */}
       <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="podPhase">
         {t('CONTENT:STATUS')}
       </ColHead>

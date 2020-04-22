@@ -48,15 +48,18 @@ const Header = props => {
   );
 };
 
-const Row = ({ obj: role }) => (
-  <div className="row co-resource-list__item">
-    <div className="col-xs-6 co-resource-link-wrapper">
-      <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
-      <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
+const Row = ({ obj: role }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="row co-resource-list__item">
+      <div className="col-xs-6 co-resource-link-wrapper">
+        <ResourceCog actions={menuActions} kind={roleKind(role)} resource={role} />
+        <ResourceLink kind={roleKind(role)} name={role.metadata.name} namespace={role.metadata.namespace} />
+      </div>
+      <div className="col-xs-6 co-break-word">{role.metadata.namespace ? <ResourceLink kind="Namespace" name={role.metadata.namespace} /> : t('CONTENT:ALL')}</div>
     </div>
-    <div className="col-xs-6 co-break-word">{role.metadata.namespace ? <ResourceLink kind="Namespace" name={role.metadata.namespace} /> : 'all'}</div>
-  </div>
-);
+  );
+};
 
 // class Details extends React.Component {
 //   constructor(props) {
@@ -82,7 +85,6 @@ const Details = props => {
     const searchKeys = ['nonResourceURLs', 'resources', 'verbs'];
     rules = rules.filter(rule => searchKeys.some(k => _.some(rule[k], v => fuzzyCaseInsensitive(ruleFilter, v))));
   }
-  const { t } = useTranslation();
   return (
     <div>
       <div className="co-m-pane__body">
@@ -189,7 +191,10 @@ export const RolesDetailsPage = props => {
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
 
-const EmptyMsg = () => <MsgBox title="No Roles Found" detail="Roles grant access to types of objects in the cluster. Roles are applied to a team or user via a Role Binding." />;
+const EmptyMsg = () => {
+  const { t } = useTranslation();
+  return <MsgBox title={t('STRING:EMPTYBOX')} detail={t('STRING:ROLE_0')} />;
+};
 
 const RolesList = props => <List {...props} EmptyMsg={EmptyMsg} Header={Header} Row={Row} />;
 

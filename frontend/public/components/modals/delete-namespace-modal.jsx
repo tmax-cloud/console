@@ -3,12 +3,12 @@ import * as PropTypes from 'prop-types';
 
 import { k8sKill } from '../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
-import { history, PromiseComponent} from '../utils';
+import { history, PromiseComponent } from '../utils';
 
 class DeleteNamespaceModal extends PromiseComponent {
   constructor(props) {
     super(props);
-    this.state = Object.assign(this.state, {isTypedNsMatching: false});
+    this.state = Object.assign(this.state, { isTypedNsMatching: false });
     this._submit = this._submit.bind(this);
     this._close = props.close.bind(this);
     this._cancel = props.cancel.bind(this);
@@ -28,15 +28,18 @@ class DeleteNamespaceModal extends PromiseComponent {
   }
 
   render() {
-    return <form onSubmit={this._submit} name="form">
-      <ModalTitle>Delete {this.props.kind.label}</ModalTitle>
-      <ModalBody>
-        <p>This action cannot be undone. It will destroy all pods, services and other objects in the deleted namespace.</p>
-        <p>Confirm deletion by typing <strong>{this.props.resource.metadata.name}</strong> below:</p>
-        <input type="text" className="form-control" onKeyUp={this._matchTypedNamespace} placeholder="Enter name" autoFocus={true} />
-      </ModalBody>
-      <ModalSubmitFooter submitText={`Delete ${this.props.kind.label}`} submitDisabled={!this.state.isTypedNsMatching} cancel={this._cancel} errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} />
-    </form>;
+    const { t } = this.props;
+    return (
+      <form onSubmit={this._submit} name="form">
+        <ModalTitle>{t('ADDITIONAL:DELETE', { something: t('RESOURCE:NAMESPACE') })}</ModalTitle>
+        <ModalBody>
+          <p>{t('STRING:NAMESPACE-MODAL_0')}</p>
+          <p>{t('ADDITIONAL:NAMESPACE-MODAL_0', { something: this.props.resource.metadata.name })}:</p>
+          <input type="text" className="form-control" onKeyUp={this._matchTypedNamespace} placeholder={t('CONTENT:ENTERNAME')} autoFocus={true} />
+        </ModalBody>
+        <ModalSubmitFooter submitText={t('ADDITIONAL:DELETE', { something: t('RESOURCE:NAMESPACE') })} submitDisabled={!this.state.isTypedNsMatching} cancel={this._cancel} errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} />
+      </form>
+    );
   }
 }
 

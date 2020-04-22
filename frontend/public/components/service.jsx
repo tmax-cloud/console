@@ -9,8 +9,9 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyPodSelector, ...Cog.factory.common];
 
 const ServiceIP = ({ s }) => {
+  const { t } = useTranslation();
   const children = _.map(s.spec.ports, (portObj, i) => {
-    const clusterIP = s.spec.clusterIP === 'None' ? 'None' : `${s.spec.clusterIP}:${portObj.port}`;
+    const clusterIP = s.spec.clusterIP === 'None' ? t('CONTENT:NONE') : `${s.spec.clusterIP}:${portObj.port}`;
     return <div key={i}>{clusterIP}</div>;
   });
 
@@ -46,28 +47,48 @@ const ServiceHeader = props => {
   );
 };
 
-const ServiceRow = ({ obj: s }) => (
-  <ResourceRow obj={s}>
-    <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 co-resource-link-wrapper">
-      <ResourceCog actions={menuActions} kind="Service" resource={s} />
-      <ResourceLink kind="Service" name={s.metadata.name} namespace={s.metadata.namespace} title={s.metadata.uid} />
-    </div>
-    <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 co-break-word">
-      <ResourceLink kind="Namespace" name={s.metadata.namespace} title={s.metadata.namespace} />
-    </div>
-    <div className="col-xs-1 col-sm-1 hidden-xs">{s.spec.type}</div>
-    <div className="col-xs-1 col-sm-1 hidden-xs">{(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.map(cur => cur.ip).join(', ')) || 'No External IP'}</div>
-    <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">
-      <LabelList kind="Service" labels={s.metadata.labels} />
-    </div>
-    <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
-      <Selector selector={s.spec.selector} namespace={s.metadata.namespace} />
-    </div>
-    <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
-      <ServiceIP s={s} />
-    </div>
-  </ResourceRow>
-);
+const ServiceType = type => {
+  // const { t } = useTranslation();
+  switch (type.toUpperCase()) {
+    // case 'NODEPORT':
+    //   return t('CONTENT:NODEPORT');
+    //   break;
+    // case 'CLUSTERIP':
+    //   return t('CONTENT:CLUSTERIP');
+    //   break;
+    // case 'LOADBALANCER':
+    //   return t('CONTENT:LOADBALANCER');
+    //   break;
+    default:
+      return type;
+  }
+};
+
+const ServiceRow = ({ obj: s }) => {
+  const { t } = useTranslation();
+  return (
+    <ResourceRow obj={s}>
+      <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 co-resource-link-wrapper">
+        <ResourceCog actions={menuActions} kind="Service" resource={s} />
+        <ResourceLink kind="Service" name={s.metadata.name} namespace={s.metadata.namespace} title={s.metadata.uid} />
+      </div>
+      <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 co-break-word">
+        <ResourceLink kind="Namespace" name={s.metadata.namespace} title={s.metadata.namespace} />
+      </div>
+      <div className="col-xs-1 col-sm-1 hidden-xs">{ServiceType(s.spec.type)}</div>
+      <div className="col-xs-1 col-sm-1 hidden-xs">{(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.map(cur => cur.ip).join(', ')) || t('CONTENT:NOEXTERNALIP')}</div>
+      <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">
+        <LabelList kind="Service" labels={s.metadata.labels} />
+      </div>
+      <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
+        <Selector selector={s.spec.selector} namespace={s.metadata.namespace} />
+      </div>
+      <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
+        <ServiceIP s={s} />
+      </div>
+    </ResourceRow>
+  );
+};
 
 const ServiceAddress = ({ s }) => {
   const { t } = useTranslation();
@@ -89,7 +110,8 @@ const ServiceAddress = ({ s }) => {
   const ServiceType = type => {
     switch (type) {
       case 'NodePort':
-        return ServiceIPsRow(t('CONTENT:NODEPORT'), t('STRING:SERVICE_DETAIL_0'), _.map(s.spec.ports, 'nodePort'), '(all nodes): ');
+        // return ServiceIPsRow(t('CONTENT:NODEPORT'), t('STRING:SERVICE_DETAIL_0'), _.map(s.spec.ports, 'nodePort'), '(all nodes): ');
+        return ServiceIPsRow(type, t('STRING:SERVICE_DETAIL_0'), _.map(s.spec.ports, 'nodePort'), '(all nodes): ');
       case 'LoadBalancer':
         return ServiceIPsRow(
           t('CONTENT:EXTERNALLOADBALANCERIP'),
@@ -99,7 +121,8 @@ const ServiceAddress = ({ s }) => {
       case 'ExternalName':
         return ServiceIPsRow(t('CONTENT:EXTERNALSERVICENAME'), t('STRING:SERVICE_DETAIL_2'), [s.spec.externalName]);
       default:
-        return ServiceIPsRow(t('CONTENT:CLUSTERIP'), t('STRING:SERVICE_DETAIL_3'), [s.spec.clusterIP]);
+        // return ServiceIPsRow(t('CONTENT:CLUSTERIP'), t('STRING:SERVICE_DETAIL_3'), [s.spec.clusterIP]);
+        return ServiceIPsRow(type, t('STRING:SERVICE_DETAIL_3'), [s.spec.clusterIP]);
     }
   };
 
@@ -175,7 +198,7 @@ const Details = ({ obj: s }) => {
           <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Service', t) })} />
           <ResourceSummary resource={s} showNodeSelector={false}>
             <dt>{t('CONTENT:TYPE')}</dt>
-            <dd>{s.spec.type}</dd>
+            <dd>{ServiceType(s.spec.type)}</dd>
             {/* <dt>External IP</dt>
         <dd>{(!_.isEmpty(s.status.loadBalancer) && s.status.loadBalancer.ingress.join(', ')) || 'No External IP'}</dd> */}
             <dt>{t('CONTENT:SESSIONAFFINITY')}</dt>

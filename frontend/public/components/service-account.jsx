@@ -90,7 +90,7 @@ const Header = props => {
         {t('CONTENT:SECRET')}
       </ColHead>
       <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
-        {t('CONTENT:AGE')}
+        {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
   );

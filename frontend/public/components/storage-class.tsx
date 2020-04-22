@@ -54,7 +54,7 @@ const StorageClassDetails: React.SFC<StorageClassDetailsProps> = ({ obj }) => {
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('STORAGE', t) })} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('StorageClass', t) })} />
         <ResourceSummary resource={obj} showNodeSelector={false} showPodSelector={false}>
           <dt>{t('CONTENT:PROVISIONAL')}</dt>
           <dd>{obj.provisioner || '-'}</dd>
@@ -73,7 +73,7 @@ StorageClassList.displayName = 'StorageClassList';
 
 export const StorageClassPage: React.SFC<StorageClassPageProps> = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} title="Storage Classes" kind={StorageClassReference} ListComponent={StorageClassList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StorageClass', t) })} filterLabel={props.filterLabel} />;
+  return <ListPage {...props} title={ResourcePlural('StorageClass', t)} kind={StorageClassReference} ListComponent={StorageClassList} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StorageClass', t) })} filterLabel={props.filterLabel} />;
 };
 StorageClassPage.displayName = 'StorageClassListPage';
 

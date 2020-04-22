@@ -15,11 +15,11 @@ export class AdvancedPortEditor extends React.Component {
     let lastIndex = this.props.portPairs.length - 1;
     let lastData = this.props.portPairs[lastIndex];
     if (lastData[0] !== '' && lastData[1] !== '') {
-      lastData[2] === '' ? lastData[2] = 'TCP' : lastData[2];
-      lastData[3] === '' ? lastData[3] = lastData[1] : lastData[3];
+      lastData[2] === '' ? (lastData[2] = 'TCP') : lastData[2];
+      lastData[3] === '' ? (lastData[3] = lastData[1]) : lastData[3];
       updateParentData({ portPairs: allowSorting ? portPairs.concat([['', '', 'TCP', '', portPairs.length]]) : portPairs.concat([['', '', '', '']]) }, nameValueId);
     } else {
-      return
+      return;
     }
   }
 
@@ -37,18 +37,18 @@ export class AdvancedPortEditor extends React.Component {
     updateParentData({ portPairs }, nameValueId);
   }
   render() {
-    const { nameString, protocolString, portString, targetPortString, addString, portPairs, allowSorting, readOnly, nameValueId } = this.props;
+    const { nameString, protocolString, portString, targetPortString, addString, portPairs, allowSorting, readOnly, nameValueId, t } = this.props;
     const portItems = portPairs.map((pair, i) => {
       const key = _.get(pair, [AdvancedPortEditorPair.Index], i);
-      return <PortPairElement onChange={this._change} index={i} nameString={nameString} protocolString={protocolString} portString={portString} targetPortString={targetPortString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <PortPairElement onChange={this._change} index={i} nameString={nameString} protocolString={protocolString} portString={portString} targetPortString={targetPortString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} t={t} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-md-2 col-xs-2 text-secondary">{nameString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{portString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{protocolString.toUpperCase()}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{targetPortString.toUpperCase()}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${nameString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${portString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${protocolString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${targetPortString.toUpperCase()}`)}</div>
         </div>
         {portItems}
         <div className="row">
@@ -57,7 +57,7 @@ export class AdvancedPortEditor extends React.Component {
               <React.Fragment>
                 <span className="btn-link pairs-list__btn" onClick={this._append}>
                   <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                  {addString}
+                  {t(`CONTENT:${addString.replace(/ /gi, '').toUpperCase()}`)}
                 </span>
               </React.Fragment>
             )}
@@ -75,7 +75,7 @@ AdvancedPortEditor.defaultProps = {
   addString: 'Add More',
   allowSorting: false,
   readOnly: false,
-  nameValueId: 0
+  nameValueId: 0,
 };
 
 class PortPairElement extends React.Component {
@@ -109,7 +109,7 @@ class PortPairElement extends React.Component {
   }
 
   render() {
-    const { nameString, portString, targetPortString, allowSorting, readOnly, pair } = this.props;
+    const { nameString, portString, targetPortString, allowSorting, readOnly, pair, t } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -120,20 +120,20 @@ class PortPairElement extends React.Component {
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[AdvancedPortEditorPair.Name]} onChange={this._onChangeName} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${nameString.toUpperCase()}`)} value={pair[AdvancedPortEditorPair.Name]} onChange={this._onChangeName} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={portString.toLowerCase()} value={pair[AdvancedPortEditorPair.Port] || ''} onChange={this._onChangePort} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${portString.toUpperCase()}`)} value={pair[AdvancedPortEditorPair.Port] || ''} onChange={this._onChangePort} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
           <select value={pair[AdvancedPortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">
-            <option value='TCP'>TCP</option>
-            <option value='UDP'>UDP</option>
-            <option value='SCDP'>SCDP</option>
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
+            <option value="SCDP">SCDP</option>
           </select>
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
-          <input type="text" className="form-control" placeholder={targetPortString.toLowerCase()} value={pair[AdvancedPortEditorPair.TargetPort] || ''} onChange={this._onChangeTargetPort} disabled={readOnly} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${targetPortString.toUpperCase()}`)} value={pair[AdvancedPortEditorPair.TargetPort] || ''} onChange={this._onChangeTargetPort} disabled={readOnly} />
         </div>
 
         {readOnly ? null : (

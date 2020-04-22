@@ -7,7 +7,7 @@ export const fromNow = (dateTime, now = undefined, options = { omitSuffix: false
     now = new Date();
   }
   if (!t) {
-    // t = useTranslation().t;
+    t = useTranslation().t;
   }
   dateTime = new Date(dateTime);
   const secondsAgo = (now.getTime() - dateTime.getTime()) / 1000;
@@ -109,15 +109,12 @@ export const formatDuration = (ms: number) => {
 
   let formatted = '';
   if (hours) {
-    // formatted += `${hours}${t('CONTENT:H')} `;
-    formatted += `${hours}hours `;
+    formatted += `${hours}${t('CONTENT:H')} `;
   }
   if (hours || minutes) {
-    // formatted += `${minutes}${t('CONTENT:M')} `;
-    formatted += `${minutes}minutes `;
+    formatted += `${minutes}${t('CONTENT:M')} `;
   }
-  // formatted += `${seconds}${t('CONTENT:S')}`;
-  formatted += `${seconds}seconds`;
+  formatted += `${seconds}${t('CONTENT:S')}`;
 
   return formatted;
 };

@@ -131,7 +131,7 @@ export const HorizontalPodAutoscalersDetails: React.SFC<HorizontalPodAutoscalers
   return (
     <React.Fragment>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', 'HPAs')} />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: 'HPAs' })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={hpa} showPodSelector={false} showNodeSelector={false} />

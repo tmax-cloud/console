@@ -31,13 +31,14 @@ const deleteModal = (kind, ns) => {
   let { label, weight } = Cog.factory.Delete(kind, ns);
   let callback = undefined;
   let tooltip;
+  const { t } = useTranslation();
 
   if (ns.metadata.name === 'default') {
     tooltip = `${kind.label} default cannot be deleted`;
   } else if (ns.status.phase === 'Terminating') {
     tooltip = `${kind.label} is already terminating`;
   } else {
-    callback = () => deleteNamespaceModal({ kind, resource: ns });
+    callback = () => deleteNamespaceModal({ kind, resource: ns, t });
   }
   if (tooltip) {
     label = (
@@ -181,10 +182,12 @@ class PullSecret extends SafetyFirst {
     if (this.state.isLoading) {
       return <LoadingInline />;
     }
-    const modal = () => configureNamespacePullSecretModal({ namespace: this.props.namespace, pullSecret: this.state.data });
+    const { t } = this.props;
+    const modal = () => configureNamespacePullSecretModal({ namespace: this.props.namespace, pullSecret: this.state.data, t: t });
+
     return (
       <a className="co-m-modal-link" onClick={modal}>
-        {_.get(this.state.data, 'metadata.name') || 'Not Configured'}
+        {_.get(this.state.data, 'metadata.name') || t('CONTENT:NOTCONFIGURED')}
       </a>
     );
   }
@@ -247,7 +250,7 @@ const Details = ({ obj: ns }) => {
               <dd>{ns.status.phase}</dd>
               <dt>{t('CONTENT:DEFAULTPULLSECRET')}</dt>
               <dd>
-                <PullSecret namespace={ns} />
+                <PullSecret namespace={ns} t={t} />
               </dd>
               <dt>{t('CONTENT:NETWORKPOLICIES')}</dt>
               <dd>

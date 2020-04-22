@@ -88,7 +88,7 @@ class ConfigureUpdateStrategyModal extends PromiseComponent {
                         <div className="input-group">
                           <input disabled={this.state.strategyType !== 'RollingUpdate'} placeholder="25%" size="5" type="text" className="form-control" id="input-max-unavailable" defaultValue={maxUnavailable} />
                           <span className="input-group-addon">
-                            <Tooltip content={t('STRING:EDIT-UPDATESTRATEGY-MODAL_1')}>of {pluralize(this.deployment.spec.replicas, 'pod')}</Tooltip>
+                            <Tooltip content={t('STRING:EDIT-UPDATESTRATEGY-MODAL_1')}> {t('ADDITIONAL:STRATEGY-MODAL_0', { something: t('PLURAL:POD', { count: this.deployment.spec.replicas }) })}</Tooltip>
                           </span>
                         </div>
                       </div>
@@ -107,7 +107,7 @@ class ConfigureUpdateStrategyModal extends PromiseComponent {
                         <div className="input-group">
                           <input disabled={this.state.strategyType !== 'RollingUpdate'} placeholder="25%" size="5" type="text" className="form-control" id="input-max-surge" defaultValue={maxSurge} />
                           <span className="input-group-addon">
-                            <Tooltip content={t('STRING:EDIT-UPDATESTRATEGY-MODAL_1')}>greater than {pluralize(this.deployment.spec.replicas, 'pod')}</Tooltip>
+                            <Tooltip content={t('STRING:EDIT-UPDATESTRATEGY-MODAL_1')}>{t('ADDITIONAL:STRATEGY-MODAL_1', { something: t('PLURAL:POD', { count: this.deployment.spec.replicas }) })}</Tooltip>
                           </span>
                         </div>
                       </div>

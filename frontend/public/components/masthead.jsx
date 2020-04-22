@@ -115,11 +115,13 @@ const LanguageWrapper = props => {
     e.preventDefault();
     i18n.changeLanguage('en');
     window.localStorage.setItem('i18nextLng', 'en');
+    window.location.reload();
   };
   const koChange = e => {
     e.preventDefault();
     i18n.changeLanguage('ko');
     window.localStorage.setItem('i18nextLng', 'ko');
+    window.location.reload();
   };
   actions.push({
     label: 'EN-US',

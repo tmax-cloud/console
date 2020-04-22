@@ -11,6 +11,7 @@ import { NodeModel } from '../models';
 import { CamelCaseWrap } from './utils/camel-case-wrap';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
+import { fromNow } from './utils/datetime';
 
 const MarkAsUnschedulable = (kind, obj) => {
   const { t } = useTranslation();
@@ -93,7 +94,7 @@ const HeaderSearch = props => {
 };
 
 const NodeStatus = ({ node }) => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   return isNodeReady(node) ? (
     <span className="node-ready">
       <i className="fa fa-check"></i>
@@ -135,7 +136,8 @@ const NodeCLUpdateStatus = ({ node }) => {
       {lastCheckedDate && containerLinuxUpdateOperator.isSoftwareUpToDate(node) && (
         <div>
           <small className="">
-            Last checked on <div className="co-inline-block">{<Timestamp timestamp={lastCheckedDate} isUnix={true} />}</div>
+            {/* Last checked on <div className="co-inline-block">{<Timestamp timestamp={lastCheckedData} isUnix={true} />}</div> */}
+            Last checked on <div className="co-inline-block">{fromNow(lastCheckedDate)}</div>
           </small>
         </div>
       )}
@@ -169,8 +171,7 @@ const NodeRow = ({ obj: node, expand }) => {
       <div className="col-sm-2 col-xs-4">
         <NodeStatus node={node} />
       </div>
-      {/* <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED')}</span>}</div> */}
-      <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">Not Configured</span>}</div>
+      <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED')}</span>}</div>
       <div className="col-sm-3 hidden-xs">
         <NodeIPList ips={node.status.addresses} expand={expand} />
       </div>
@@ -205,19 +206,20 @@ const NodeRowSearch = ({ obj: node }) => (
 const NodesList = props => <List {...props} Header={Header} Row={NodeRow} />;
 export const NodesListSearch = props => <List {...props} Header={HeaderSearch} Row={NodeRowSearch} kind="node" />;
 
-const dropdownFilters = [
-  {
-    type: 'node-status',
-    items: {
-      all: 'Status: All',
-      ready: 'Status: Ready',
-      notReady: 'Status: Not Ready',
-    },
-    title: 'Ready Status',
-  },
-];
 export const NodesPage = props => {
   const { t } = useTranslation();
+
+  const dropdownFilters = [
+    {
+      type: 'node-status',
+      items: {
+        all: t(`CONTENT:STATUSALL`),
+        ready: t(`CONTENT:STATUSREADY`),
+        notReady: t(`CONTENT:STATUSNOTREADY`),
+      },
+      title: t(`CONTENT:READYSTATUS`),
+    },
+  ];
   return <ListPage {...props} ListComponent={NodesList} dropdownFilters={dropdownFilters} canExpand={true} />;
 };
 
@@ -289,7 +291,8 @@ const Details = ({ obj: node }) => {
               {_.has(node, 'spec.unschedulable') && <dd className="text-capitalize">{_.get(node, 'spec.unschedulable', '-').toString()}</dd>}
               <dt>{t('CONTENT:CREATED')}</dt>
               <dd>
-                <Timestamp timestamp={node.metadata.creationTimestamp} />
+                {fromNow(node.metadata.creationTimestamp)}
+                {/* <Timestamp timestamp={node.metadata.creationTimestamp} /> */}
               </dd>
             </dl>
           </div>
@@ -362,10 +365,12 @@ const Details = ({ obj: node }) => {
                     <CamelCaseWrap value={c.reason} />
                   </td>
                   <td>
-                    <Timestamp timestamp={c.lastHeartbeatTime} />
+                    {/* <Timestamp timestamp={c.lastHeartbeatTime} /> */}
+                    {fromNow(c.lastHeartbeatTime)}
                   </td>
                   <td>
-                    <Timestamp timestamp={c.lastTransitionTime} />
+                    {/* <Timestamp timestamp={c.lastTransitionTime} /> */}
+                    {fromNow(c.lastTransitionTime)}
                   </td>
                 </tr>
               ))}

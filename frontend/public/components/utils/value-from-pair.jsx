@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import * as _ from 'lodash-es';
 import * as fuzzy from 'fuzzysearch';
 import { useTranslation } from 'react-i18next';
+import { ResourcePlural } from './lang/resource-plural';
 
 import { Dropdown, ResourceName } from './';
 
@@ -33,16 +34,17 @@ const getSpacer = (configMap, secret) => {
 };
 
 const getHeaders = (configMap, secret) => {
+  const { t } = useTranslation();
   if (_.isEmpty(configMap) && _.isEmpty(secret)) {
     return {};
   } else if (_.isEmpty(configMap)) {
-    return { [secret]: 'Secrets' };
+    return { [secret]: ResourcePlural('Secret', t) };
   } else if (_.isEmpty(secret)) {
-    return { [configMap]: 'Config Maps' };
+    return { [configMap]: ResourcePlural('ConfigMap', t) };
   }
   return {
-    [configMap]: 'Config Maps',
-    [secret]: 'Secrets',
+    [configMap]: ResourcePlural('ConfigMap', t),
+    [secret]: ResourcePlural('Secret', t),
   };
 };
 
@@ -101,7 +103,7 @@ const NameKeyDropdownPair = ({ name, key, configMaps, secrets, onChange, kind, n
           });
         }}
       />
-      <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder="Key" items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [keyRefString]: { name: name, key: val } })} />
+      <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder={t('CONTENT:KEY')} items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [keyRefString]: { name: name, key: val } })} />
     </React.Fragment>
   );
 };
@@ -119,7 +121,7 @@ const FieldRef = ({ data: { fieldPath } }) => (
 
 const ConfigMapSecretKeyRef = ({ data: { name, key }, configMaps, secrets, onChange, disabled, kind }) => {
   const { t } = useTranslation();
-  const placeholderString = 'Config Map or Secret';
+  const placeholderString = t('CONTENT:CONFIGMAPORSECRET');
   const nameTitle = _.isEmpty(name) ? <span className="text-muted">{t('STRING:ENVIRONMENT-TAB_3')}</span> : <ResourceName kind={kind} name={name} />;
 
   if (disabled) {

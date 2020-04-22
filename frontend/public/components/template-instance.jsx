@@ -42,7 +42,22 @@ const templateInstancePhase = instance => {
         phase = cur.status;
       }
     });
-    return phase;
+    switch (phase) {
+      // case 'Running':
+      //   return '실행 중';
+      //   break;
+      // case 'Pending':
+      //   return '대기 중';
+      //   break;
+      // case 'Terminating':
+      //   return '종료 중';
+      //   break;
+      // case 'Completed':
+      //   return '완료됨';
+      //   break;
+      default:
+        return phase;
+    }
   }
 };
 

@@ -32,8 +32,8 @@ export const ServiceClassDetail = ({ detail }) => {
       <hr />
       <div>
         {/* <p style={{ margin: '10px 0 0 0', fontSize: '13px', color: '#6A6A6A', textAlign: 'initial' }}>{markdownDescription}</p> */}
-        <ReactMarkdown source={markdownDescription} />
-        <a style={{ margin: '10px 0 0 0', fontSize: '13px', color: '#6A6A6A', textAlign: 'initial' }} href={urlDescription} target="_blank">{urlDescription}</a>
+        {/* <ReactMarkdown source={markdownDescription} /> */}
+        <iframe style={{ width: '100%', height: '50%' }} src={urlDescription} target="_blank">{urlDescription}</iframe >
       </div>
     </div>
   );
