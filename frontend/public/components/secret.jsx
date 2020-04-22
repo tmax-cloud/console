@@ -151,7 +151,7 @@ const SecretsPage = props => {
   const filters = [
     {
       type: 'secret-type',
-      selected: secretTypeFilterValues,
+      selected: [IMAGE_FILTER_VALUE, SOURCE_FILTER_VALUE, TLS_FILTER_VALUE, SA_TOKEN_FILTER_VALUE, OPAQUE_FILTER_VALUE],
       reducer: secretTypeFilterReducer,
       items: secretTypeFilterValues.map(filterValue => ({ id: filterValue.id, title: filterValue.title })),
     },

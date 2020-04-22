@@ -8,7 +8,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
+const menuActions = [Cog.factory.ModifyPodSelector, Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const Header = props => {
   const { t } = useTranslation();
@@ -28,19 +28,22 @@ const Header = props => {
 };
 
 const kind = 'NetworkPolicy';
-const Row = ({ obj: np }) => (
-  <div className="row co-resource-list__item">
-    <div className="col-xs-4 co-resource-link-wrapper">
-      <ResourceCog actions={menuActions} kind={kind} resource={np} />
-      <ResourceLink kind={kind} name={np.metadata.name} namespace={np.metadata.namespace} title={np.metadata.name} />
-    </div>
-    <div className="col-xs-3 co-break-word">
-      <ResourceLink kind={'Namespace'} name={np.metadata.namespace} title={np.metadata.namespace} />
-    </div>
+const Row = ({ obj: np }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="row co-resource-list__item">
+      <div className="col-xs-4 co-resource-link-wrapper">
+        <ResourceCog actions={menuActions} kind={kind} resource={np} />
+        <ResourceLink kind={kind} name={np.metadata.name} namespace={np.metadata.namespace} title={np.metadata.name} />
+      </div>
+      <div className="col-xs-3 co-break-word">
+        <ResourceLink kind={'Namespace'} name={np.metadata.namespace} title={np.metadata.namespace} />
+      </div>
 
-    <div className="col-xs-5 co-break-word">{_.isEmpty(np.spec.podSelector) ? <Link to={`/search/ns/${np.metadata.namespace}?kind=Pod`}>{`All pods within ${np.metadata.namespace}`}</Link> : <Selector selector={np.spec.podSelector} namespace={np.metadata.namespace} />}</div>
-  </div>
-);
+      <div className="col-xs-5 co-break-word">{_.isEmpty(np.spec.podSelector) ? <Link to={`/search/ns/${np.metadata.namespace}?kind=Pod`}>{t('ADDITIONAL:PODSELECTOR-EMPTY_0', { something: np.metadata.namespace })}</Link> : <Selector selector={np.spec.podSelector} namespace={np.metadata.namespace} />}</div>
+    </div>
+  );
+};
 
 const NetworkPoliciesList = props => <List {...props} Header={Header} Row={Row} />;
 export const NetworkPoliciesPage = props => {

@@ -42,7 +42,8 @@
     "NOFOUNDORDEFINED": "No {{something}} found or defined.",
     "STRATEGY-MODAL_0": "of {{something}}",
     "STRATEGY-MODAL_1": "greater than {{something}}",
-    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below "
+    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below ",
+    "PODSELECTOR-EMPTY_0": "All pods within {{something}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -138,7 +139,9 @@
     "RULE_0": "Are you sure you want to delete  this Rule?",
     "ROLEBINDING_0": "Roles grant access to types of objects in the cluster. Roles are applied to a group or user via a Role Binding.",
     "NAMESPACE-MODAL_0": "This action cannot be undone. It will destroy all pods, services and other objects in the deleted namespace.",
-    "ROLE_0": "Roles grant access to types of objects in the cluster. Roles are applied to a team or user via a Role Binding."
+    "ROLE_0": "Roles grant access to types of objects in the cluster. Roles are applied to a team or user via a Role Binding.",
+    "RESTRICTED_0": "Restricted Access",
+    "RESTRICTED_1": "You don't have access to this section due to cluster policy."
   },
   "CONTENT": {
     "RESOURCENAME": "Resource Name",
