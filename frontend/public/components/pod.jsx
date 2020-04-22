@@ -261,10 +261,12 @@ const Details = ({ obj: pod }) => {
               )}
               <dt>{t('CONTENT:PODIP')}</dt>
               <dd>{pod.status.podIP || '-'}</dd>
-              {/* <dt>{t('CONTENT:NODE')}</dt>
-              <dd>
-                <NodeLink name={pod.spec.nodeName} />
-              </dd> */}
+              {!HDCModeFlag &&
+                <div><dt>{t('CONTENT:NODE')}</dt>
+                  <dd>
+                    <NodeLink name={pod.spec.nodeName} />
+                  </dd></div>
+              }
             </dl>
           </div>
         </div>
