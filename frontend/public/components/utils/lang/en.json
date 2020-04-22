@@ -42,7 +42,8 @@
     "NOFOUNDORDEFINED": "No {{something}} found or defined.",
     "STRATEGY-MODAL_0": "of {{something}}",
     "STRATEGY-MODAL_1": "greater than {{something}}",
-    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below "
+    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below ",
+    "PODSELECTOR-EMPTY_0": "All pods within {{something}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",

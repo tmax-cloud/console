@@ -39,7 +39,8 @@
     "NOFOUNDORDEFINED": "No {{something}} found or defined.",
     "STRATEGY-MODAL_0": "이하",
     "STRATEGY-MODAL_1": "이상",
-    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below"
+    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below",
+    "PODSELECTOR-EMPTY_0": "All pods within {{something}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
