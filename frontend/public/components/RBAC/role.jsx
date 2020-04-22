@@ -109,7 +109,7 @@ const Details = props => {
             <dl className="co-m-pane__details">
               <dt>{t('CONTENT:CREATEDAT')}</dt>
               <dd>
-                <Timestamp timestamp={creationTimestamp} />
+                <Timestamp timestamp={creationTimestamp} t={t} />
               </dd>
             </dl>
           </div>

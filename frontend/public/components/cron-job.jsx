@@ -65,7 +65,7 @@ const Details = ({ obj: cronjob }) => {
             <dd>{cronjob.spec.startingDeadlineSeconds || '-'}</dd>
             <dt>{t('CONTENT:LASTSCHEDULETIME')}</dt>
             <dd>
-              <Timestamp timestamp={cronjob.status.lastScheduleTime} />
+              <Timestamp timestamp={cronjob.status.lastScheduleTime} t={t} />
             </dd>
           </ResourceSummary>
         </div>

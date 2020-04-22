@@ -110,6 +110,7 @@ export const ContainerRow = ({ pod, container }) => {
   const cstate = getContainerState(cstatus);
   const startedAt = _.get(cstate, 'startedAt');
   const finishedAt = _.get(cstate, 'finishedAt');
+  const { t } = useTranslation();
 
   return (
     <div className="row">
@@ -121,10 +122,10 @@ export const ContainerRow = ({ pod, container }) => {
       <div className="col-md-1 col-sm-2 hidden-xs text-nowrap">{_.get(cstate, 'label', '-')}</div>
       <div className="col-md-1 col-sm-2 hidden-xs">{_.get(cstatus, 'restartCount', '0')}</div>
       <div className="col-md-2 hidden-sm hidden-xs">
-        <Timestamp timestamp={startedAt} />
+        <Timestamp timestamp={startedAt} t={t} />
       </div>
       <div className="col-md-2 hidden-sm hidden-xs">
-        <Timestamp timestamp={finishedAt} />
+        <Timestamp timestamp={finishedAt} t={t} />
       </div>
     </div>
   );
