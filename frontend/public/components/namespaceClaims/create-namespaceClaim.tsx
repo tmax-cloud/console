@@ -44,7 +44,7 @@ class NamespaceClaimFormComponent extends React.Component<NamespaceClaimProps_, 
         });
 
         this.state = {
-            namespcaeClaimTypeAbstraction: this.props.namespcaeClaimTypeAbstraction,
+            namespaceClaimTypeAbstraction: this.props.namespaceClaimTypeAbstraction,
             namespaceclaim: namespaceclaim,
             inProgress: false,
             type: 'form',
@@ -190,14 +190,14 @@ export const CreateNamespaceClaim = ({ match: { params } }) => {
     return <NamespaceClaimFormComponent
         t={t}
         fixed={{ metadata: { namespace: params.ns } }}
-        namespcaeClaimTypeAbstraction={params.type}
+        namespaceClaimTypeAbstraction={params.type}
         explanation={pageExplanation[params.type]}
         titleVerb="Create"
         isCreate={true}
     />;
 };
 export type NamespaceClaimState_ = {
-    namespcaeClaimTypeAbstraction?: CreateType,
+    namespaceClaimTypeAbstraction?: CreateType,
     namespaceclaim: K8sResourceKind,
     inProgress: boolean,
     error?: any,
@@ -211,7 +211,7 @@ export type NamespaceClaimProps_ = {
     kind?: string,
     isCreate: boolean,
     titleVerb: string,
-    namespcaeClaimTypeAbstraction?: CreateType,
+    namespaceClaimTypeAbstraction?: CreateType,
     saveButtonText?: string,
     explanation: string,
     t: any
