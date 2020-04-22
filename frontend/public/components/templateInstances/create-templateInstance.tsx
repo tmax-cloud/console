@@ -80,7 +80,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
         .then(res => res.json())
         .then((myJson) => {
           let paramList = myJson.parameters.map(function (parm) {
-            return { name: parm.name, defaultValue: parm.value }
+            return { name: parm.name, defaultValue: parm.value, value: '' }
           });
           if (paramList.length) {
             templateInstance.spec.template.parameters = paramList;
