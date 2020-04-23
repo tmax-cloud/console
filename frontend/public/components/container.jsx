@@ -6,7 +6,7 @@ import * as k8sProbe from '../module/k8s/probe';
 import { SectionHeading, Firehose, Overflow, MsgBox, NavTitle, Timestamp, VertNav, ResourceLink, ScrollToTopOnMount } from './utils';
 
 const formatComputeResources = resources => _.map(resources, (v, k) => `${k}: ${v}`).join(', ');
-
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 const getResourceRequestsValue = container => {
   const requests = _.get(container, 'resources.requests');
   return formatComputeResources(requests);
@@ -238,8 +238,8 @@ const Details = props => {
                   <code>{container.command.join(' ')}</code>
                 </pre>
               ) : (
-                <span>-</span>
-              )}
+                  <span>-</span>
+                )}
             </dd>
             <dt>Args</dt>
             <dd>
@@ -248,8 +248,8 @@ const Details = props => {
                   <code>{container.args.join(' ')}</code>
                 </pre>
               ) : (
-                <span>-</span>
-              )}
+                  <span>-</span>
+                )}
             </dd>
             <dt>Pull Policy</dt>
             <dd>{getPullPolicyLabel(container)}</dd>
@@ -259,10 +259,10 @@ const Details = props => {
         <div className="col-lg-4">
           <SectionHeading text="Network" />
           <dl className="co-m-pane__details">
-            <dt>Node</dt>
-            <dd>
-              <ResourceLink kind="Node" name={pod.spec.nodeName} title={pod.spec.nodeName} />
-            </dd>
+            {!HDCModeFlag && <div><dt>Node</dt>
+              <dd>
+                <ResourceLink kind="Node" name={pod.spec.nodeName} title={pod.spec.nodeName} />
+              </dd></div>}
             <dt>Pod IP</dt>
             <dd>{pod.status.podIP || '-'}</dd>
           </dl>
