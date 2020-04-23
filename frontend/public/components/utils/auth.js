@@ -68,8 +68,25 @@ export const setCookie = function(name, value, exp) {
     if (!exp) {
         exp = getTokenValidTime();
     }
-    exp.setHours(exp.getHours()+9)
-    document.cookie = name + '=' + value + ';expires=' + exp.toUTCString() + ';path=/';
+    exp.setHours(exp.getHours()+9);
+
+    if (window.productLink.console.indexOf('console') !== -1) {
+        let arr = window.SERVER_FLAGS.TmaxCloudPortalURL.split('/#')[0].split('.');
+    if (arr[arr.length-2].indexOf('://') !== -1) {
+        rr[arr.length-2] = arr[arr.length-2].split('://')[1];
+    }
+
+    let domain = arr[arr.length-2] + '.' + arr[arr.length-1];
+
+    // console.log('Domain: ' + domain);
+
+    document.cookie = name + '=' + value + ';expires=' + exp.toUTCString() + ';path=/' + ';domain=' + domain;
+    } else {
+        document.cookie = name + '=' + value + ';expires=' + exp.toUTCString() + ';path=/';
+    }
+
+
+    
 };
 
 export const deleteCookie = function(name) {
