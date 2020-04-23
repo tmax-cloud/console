@@ -25,7 +25,7 @@ const updateTimestamps = () => {
   }
 };
 
-/** @augments {React.Component<{timestamp: string, isUnix?: boolean}>} */
+/** @augments {React.Component<{timestamp: string, isUnix?: boolean, t?: any}>} */
 export class Timestamp extends SafetyFirst {
   constructor(props) {
     super(props);

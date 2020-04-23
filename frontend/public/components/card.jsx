@@ -45,7 +45,7 @@ class ServiceClassCard extends Component {
               }}
             />
             <button
-              style={{ marginTop: '10px', width: '27px', height: '27px', border: '1px solid #677E9A', background: 'white' }}
+              style={{ marginTop: '10px', width: '27px', height: '27px', border: '1px solid #677E9A', background: 'white', borderRadius: '2px' }}
               type="button"
               className="pull-right"
               onClick={e => {

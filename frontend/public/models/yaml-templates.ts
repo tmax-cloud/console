@@ -909,7 +909,7 @@ spec:
             args:
             - /bin/sh
             - -c
-            - date; echo Hello from the Kubernetes cluster
+            - date; echo 'Hello from the Kubernetes cluster'
           restartPolicy: OnFailure
 `,
   )

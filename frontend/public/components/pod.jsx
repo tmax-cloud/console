@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 const menuActions = [Cog.factory.EditEnvironment, ...Cog.factory.common];
 const validReadinessStates = new Set(['ContainersNotReady', 'Ready', 'PodCompleted']);
 const validStatuses = new Set(['ContainerCreating', 'Running', 'Completed']);
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
 /** @type {React.SFC.<{pod: string}>} */
 export const Readiness = ({ pod }) => {
@@ -44,11 +45,11 @@ export const PodRow = ({ obj: pod }) => {
   const status = validStatuses.has(phase) ? (
     <CamelCaseWrap value={phase} />
   ) : (
-    <span className="co-error co-icon-and-text">
-      <i className="fa fa-times-circle co-icon-and-text__icon" aria-hidden="true" />
-      <CamelCaseWrap value={phase} />
-    </span>
-  );
+      <span className="co-error co-icon-and-text">
+        <i className="fa fa-times-circle co-icon-and-text__icon" aria-hidden="true" />
+        <CamelCaseWrap value={phase} />
+      </span>
+    );
 
   return (
     <ResourceRow obj={pod}>
@@ -62,9 +63,9 @@ export const PodRow = ({ obj: pod }) => {
       <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
         <LabelList kind="Pod" labels={pod.metadata.labels} />
       </div>
-      {/* <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
+      {!HDCModeFlag && <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
         <NodeLink name={pod.spec.nodeName} />
-      </div> */}
+      </div>}
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{status}</div>
       <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
         <Readiness pod={pod} />
@@ -88,6 +89,9 @@ const PodHeader = props => {
       <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">
         {t('CONTENT:PODLABELS')}
       </ColHead>
+      {!HDCModeFlag && <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.nodeName">
+        {t('RESOURCE:NODE')}
+      </ColHead>}
       <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="podPhase">
         {t('CONTENT:STATUS')}
       </ColHead>
@@ -110,6 +114,7 @@ export const ContainerRow = ({ pod, container }) => {
   const cstate = getContainerState(cstatus);
   const startedAt = _.get(cstate, 'startedAt');
   const finishedAt = _.get(cstate, 'finishedAt');
+  const { t } = useTranslation();
 
   return (
     <div className="row">
@@ -121,10 +126,10 @@ export const ContainerRow = ({ pod, container }) => {
       <div className="col-md-1 col-sm-2 hidden-xs text-nowrap">{_.get(cstate, 'label', '-')}</div>
       <div className="col-md-1 col-sm-2 hidden-xs">{_.get(cstatus, 'restartCount', '0')}</div>
       <div className="col-md-2 hidden-sm hidden-xs">
-        <Timestamp timestamp={startedAt} />
+        <Timestamp timestamp={startedAt} t={t} />
       </div>
       <div className="col-md-2 hidden-sm hidden-xs">
-        <Timestamp timestamp={finishedAt} />
+        <Timestamp timestamp={finishedAt} t={t} />
       </div>
     </div>
   );
@@ -257,10 +262,12 @@ const Details = ({ obj: pod }) => {
               )}
               <dt>{t('CONTENT:PODIP')}</dt>
               <dd>{pod.status.podIP || '-'}</dd>
-              {/* <dt>{t('CONTENT:NODE')}</dt>
-              <dd>
-                <NodeLink name={pod.spec.nodeName} />
-              </dd> */}
+              {!HDCModeFlag &&
+                <div><dt>{t('CONTENT:NODE')}</dt>
+                  <dd>
+                    <NodeLink name={pod.spec.nodeName} />
+                  </dd></div>
+              }
             </dl>
           </div>
         </div>

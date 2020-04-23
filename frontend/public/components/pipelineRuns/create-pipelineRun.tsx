@@ -228,18 +228,19 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
         k8sGet(ko, this.state.selectedPipeLine, this.state.selectedPipeLineNs)
             .then(reponse => reponse)
             .then((details) => {
-                let paramList = details.spec.params.map(cur => {
+                //params, resource가 없는경우 
+                let paramList = details.spec.params ? details.spec.params.map(cur => {
                     return {
                         name: cur.name,
                         type: cur.type
                     }
-                });
-                let resourceList = details.spec.resources.map(cur => {
+                }) : [];
+                let resourceList = details.spec.resources ? details.spec.resources.map(cur => {
                     return {
                         name: cur.name,
                         type: cur.type
                     }
-                })
+                }) : [];
 
                 let pipelineRun = { ...this.state.pipelineRun };
                 let initParamList = details.spec.params.map(cur => {
@@ -330,15 +331,15 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
             return <option value={cur.name}>{cur.name}</option>;
         });
 
-        let paramDivs = paramList.map(cur => {
+        let paramDivs = paramList.length ? paramList.map(cur => {
             return <ul>
                 <SecondSection label={cur.name} id={cur.name}>
                     <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={cur.name} onChange={this.onParamChanged} required />
                 </SecondSection>
             </ul>
-        });
+        }) : false;
 
-        let resourceDivs = resourceList.map(cur => {
+        let resourceDivs = resourceList.length ? resourceList.map(cur => {
             return <ul>
                 <SecondSection label={cur.name} id={cur.name}>
                     <select className="form-control" id={cur.name} onChange={this.onResourceChanged}>
@@ -346,7 +347,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                     </select>
                 </SecondSection>
             </ul>
-        });
+        }) : false;
 
         return <div className="co-m-pane__body">
             < Helmet >
@@ -370,8 +371,8 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                         <select onChange={this.onPipelineChange} className="form-control" id="pipeline">
                             {options}
                         </select>} id="pipeline" />
-                    <FirstSection label={t('CONTENT:PARAMETERS')} children={paramDivs} id="param" />
-                    <FirstSection label={t('CONTENT:RESOURCES')} children={resourceDivs} id="resource" />
+                    {paramDivs && <FirstSection label={t('CONTENT:PARAMETERS')} children={paramDivs} id="param" />}
+                    {resourceDivs && <FirstSection label={t('CONTENT:RESOURCES')} children={resourceDivs} id="resource" />}
                     <FirstSection label={t('CONTENT:SERVICEACCOUNTNAME')} children={<div className="form-group">
                         <div>
                             <input className="form-control"
@@ -380,7 +381,9 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                                 value={this.state.pipelineRun.spec.serviceAccountName}
                                 id="pipelinerun-account"
                                 required />
-
+                            <div style={{ fontSize: '12px', color: '#696969' }}>
+                                <p>{t('STRING:PIPELINERUN-CREATE_0')}</p>
+                            </div>
                         </div>
                     </div>} id="account" />
                     <FirstSection label={t('CONTENT:LABELS')} children={<div className="form-group">

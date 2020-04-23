@@ -63,18 +63,21 @@ export const MsgBox = ({ title, detail, className = '' }) => (
 );
 MsgBox.displayName = 'MsgBox';
 
-export const AccessDenied = ({ message }) => (
-  <Box className="text-center">
-    <img className="cos-status-box__access-denied-icon" src={restrictedSignImg} />
-    <MsgBox title="Restricted Access" detail="You don't have access to this section due to cluster policy." />
-    {_.isString(message) && (
-      <div className="alert alert-danger text-left">
-        <span className="pficon pficon-error-circle-o"></span>
-        {message}
-      </div>
-    )}
-  </Box>
-);
+export const AccessDenied = ({ message }) => {
+  const { t } = useTranslation();
+  return (
+    <Box className="text-center">
+      <img className="cos-status-box__access-denied-icon" src={restrictedSignImg} />
+      <MsgBox title={t('STRING:RESTRICTED_0')} detail={t('STRING:RESTRICTED_1')} />
+      {_.isString(message) && (
+        <div className="alert alert-danger text-left">
+          <span className="pficon pficon-error-circle-o"></span>
+          {message}
+        </div>
+      )}
+    </Box>
+  );
+};
 AccessDenied.displayName = 'AccessDenied';
 
 const Data = props => {

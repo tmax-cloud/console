@@ -291,8 +291,8 @@ const Details = ({ obj: node }) => {
               {_.has(node, 'spec.unschedulable') && <dd className="text-capitalize">{_.get(node, 'spec.unschedulable', '-').toString()}</dd>}
               <dt>{t('CONTENT:CREATED')}</dt>
               <dd>
-                {fromNow(node.metadata.creationTimestamp)}
-                {/* <Timestamp timestamp={node.metadata.creationTimestamp} /> */}
+                {/* {fromNow(node.metadata.creationTimestamp)} */}
+                <Timestamp timestamp={node.metadata.creationTimestamp} t={t} />
               </dd>
             </dl>
           </div>
@@ -365,12 +365,12 @@ const Details = ({ obj: node }) => {
                     <CamelCaseWrap value={c.reason} />
                   </td>
                   <td>
-                    {/* <Timestamp timestamp={c.lastHeartbeatTime} /> */}
-                    {fromNow(c.lastHeartbeatTime)}
+                    {<Timestamp timestamp={c.lastHeartbeatTime} t={t} />}
+                    {/* {fromNow(c.lastHeartbeatTime)} */}
                   </td>
                   <td>
-                    {/* <Timestamp timestamp={c.lastTransitionTime} /> */}
-                    {fromNow(c.lastTransitionTime)}
+                    {<Timestamp timestamp={c.lastTransitionTime} t={t} />}
+                    {/* {fromNow(c.lastTransitionTime)} */}
                   </td>
                 </tr>
               ))}

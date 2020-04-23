@@ -148,7 +148,7 @@ export const HorizontalPodAutoscalersDetails: React.SFC<HorizontalPodAutoscalers
               <dd>{hpa.spec.maxReplicas}</dd>
               <dt>{t('CONTENT:LASTSCALETIME')}</dt>
               <dd>
-                <Timestamp timestamp={hpa.status.lastScaleTime} />
+                <Timestamp timestamp={hpa.status.lastScaleTime} t={t} />
               </dd>
               <dt>{t('CONTENT:CURRENTPODS')}</dt>
               <dd>{hpa.status.currentReplicas}</dd>

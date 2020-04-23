@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 const maxMessages = 500;
 const flushInterval = 500;
-
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 // Predicate function to filter by event "category" (info, error, or all)
 const categoryFilter = (category, { reason }) => {
   if (category === 'all') {
@@ -54,10 +54,10 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
                 <Timestamp timestamp={lastTimestamp} t={t} />
               </div>
               <div className="co-sysevent__details">
-                <small className="co-sysevent__source">
+                {!HDCModeFlag && <small className="co-sysevent__source">
                   {t('CONTENT:GENERATEDFROM')} <span>{source.component}</span>
                   {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <React.Fragment>{source.host}</React.Fragment>}</span>}
-                </small>
+                </small>}
                 {count > 1 && (
                   <small className="co-sysevent__count text-secondary">
                     {count} {t('CONTENT:TIMESINTHELAST')}
