@@ -20,6 +20,7 @@ const menuActions = [Cog.factory.EditEnvironment, ...Cog.factory.common];
 const validReadinessStates = new Set(['ContainersNotReady', 'Ready', 'PodCompleted']);
 const validStatuses = new Set(['ContainerCreating', 'Running', 'Completed']);
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
+
 /** @type {React.SFC.<{pod: string}>} */
 export const Readiness = ({ pod }) => {
   const readiness = podReadiness(pod);
