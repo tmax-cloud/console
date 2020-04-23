@@ -70,18 +70,17 @@ export const setCookie = function(name, value, exp) {
     }
     exp.setHours(exp.getHours()+9);
 
-    if (window.productLink.console.indexOf('console') !== -1) {
+    if (window.SERVER_FLAGS.TmaxCloudPortalURL.indexOf('tmaxcloud') !== -1) {
+        // release
         let arr = window.SERVER_FLAGS.TmaxCloudPortalURL.split('/#')[0].split('.');
-    if (arr[arr.length-2].indexOf('://') !== -1) {
-        rr[arr.length-2] = arr[arr.length-2].split('://')[1];
-    }
+        if (arr[arr.length-2].indexOf('://') !== -1) {
+            arr[arr.length-2] = arr[arr.length-2].split('://')[1];
+        }
 
-    let domain = arr[arr.length-2] + '.' + arr[arr.length-1];
-
-    // console.log('Domain: ' + domain);
-
-    document.cookie = name + '=' + value + ';expires=' + exp.toUTCString() + ';path=/' + ';domain=' + domain;
+        let domain = arr[arr.length-2] + '.' + arr[arr.length-1];
+        document.cookie = name + '=' + value + ';expires=' + exp.toUTCString() + ';path=/' + ';domain=' + domain;
     } else {
+        // development
         document.cookie = name + '=' + value + ';expires=' + exp.toUTCString() + ';path=/';
     }
 
@@ -90,7 +89,21 @@ export const setCookie = function(name, value, exp) {
 };
 
 export const deleteCookie = function(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+    
+
+    if (window.SERVER_FLAGS.TmaxCloudPortalURL.indexOf('tmaxcloud') !== -1) {
+        // release
+        let arr = window.SERVER_FLAGS.TmaxCloudPortalURL.split('/#')[0].split('.');
+        if (arr[arr.length-2].indexOf('://') !== -1) {
+            arr[arr.length-2] = arr[arr.length-2].split('://')[1];
+        }
+
+        let domain = arr[arr.length-2] + '.' + arr[arr.length-1];
+        document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;path=/;domain='+domain;
+    } else {
+        // development
+        document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;path=/';
+    }
 }
 
 // 로그아웃 시 사용
