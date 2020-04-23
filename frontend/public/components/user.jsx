@@ -33,7 +33,7 @@ const UserRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          <ResourceCog actions={menuActions} kind="User" resource={obj} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="User" resource={obj} />}
           <ResourceLink kind="User" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
@@ -72,12 +72,15 @@ UsersPage.displayName = 'UsersPage';
 
 export const UsersDetailsPage = props => {
   const { t } = useTranslation();
+  let menu = HDCModeFlag ? [] : menuActions;
+  let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] :
+    [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]
   return (
     <DetailsPage
       {...props}
       kind="User"
-      menuActions={menuActions}
-      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      menuActions={menu}
+      pages={page}
     />
   )
 };
