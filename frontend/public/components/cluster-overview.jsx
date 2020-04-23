@@ -54,9 +54,11 @@ const Graphs = requirePrometheus(
         <div className="group">
           <div className="group__title">
             <h2 className="h3">{t('CONTENT:HEALTH')}</h2>
+            <div style={{ fontSize: '12px' }}>{t('STRING:STATUS_0')}</div>
             {/* {!isOpenShift && <DashboardLink id="qa_dashboard_k8s_health" to="/grafana/dashboard/db/kubernetes-cluster-health?orgId=1" />} */}
           </div>
           <div className="container-fluid group__body">
+
             <div className="row">
               <div className="col-md-3 col-sm-6">
                 <Status title={t('CONTENT:KUBERNETESAPI')} fetch={fetchHealth} />
@@ -68,7 +70,7 @@ const Graphs = requirePrometheus(
                 <Status title={t('CONTENT:ALERTSFIRING')} name="Alerts" query={`sum(ALERTS{alertstate="firing", alertname!="DeadMansSwitch" ${namespace ? `, namespace="${namespace}"` : ''}})`} href={alertsURL} target="_blank" rel="noopener" />
               </div>
               <div className="col-md-3 col-sm-6">
-                <Status title={t('CONTENT:CRASHLOOPINGPODS')} name="Pods" query={`count(increase(kube_pod_container_status_restarts_total${namespace ? `{namespace="${namespace}"}` : ''}[1h]) > 5 )`} href={`/k8s/${namespace ? `ns/${namespace}` : 'all-namespaces'}/pods?rowFilter-pod-status=CrashLoopBackOff`} />
+                <Status title={t('CONTENT:CRASHLOOPINGPODS')} name="Pods" query={`count(increase(kube_pod_container_status_restarts_total${namespace ? `{namespace="${namespace}"}` : ''}[5m]) > 5 )`} href={`/k8s/${namespace ? `ns/${namespace}` : 'all-namespaces'}/pods?rowFilter-pod-status=CrashLoopBackOff`} />
               </div>
             </div>
           </div>
