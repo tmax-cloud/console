@@ -381,7 +381,9 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                                 value={this.state.pipelineRun.spec.serviceAccountName}
                                 id="pipelinerun-account"
                                 required />
-
+                            <div style={{ fontSize: '12px', color: '#696969' }}>
+                                <p>{t('STRING:PIPELINERUN-CREATE_0')}</p>
+                            </div>
                         </div>
                     </div>} id="account" />
                     <FirstSection label={t('CONTENT:LABELS')} children={<div className="form-group">
