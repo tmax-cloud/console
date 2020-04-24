@@ -1,18 +1,45 @@
 #!/usr/bin/env bash
+
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
+
 file_initialization="./1.initialization.yaml"
 file_initialization_temp="./1.initialization-temp.yaml"
-file_svc_lb="./2.svc-lb.yaml"
-file_svc_lb_temp="./2.svc-lb-temp.yaml"
-file_svc_np="./2.svc-np.yaml"
-file_svc_np_temp="./2.svc-np-temp.yaml"
-file_deployment_pod="./3.deployment-pod.yaml"
-file_deployment_pod_temp="./3.deployment-pod-temp.yaml"
+file_svc_lb="./3.svc-lb.yaml"
+file_svc_lb_temp="./3.svc-lb-temp.yaml"
+file_svc_np="./3.svc-np.yaml"
+file_svc_np_temp="./3.svc-np-temp.yaml"
+file_deployment_pod="./4.deployment-pod.yaml"
+file_deployment_pod_temp="./4.deployment-pod-temp.yaml"
 
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
 echo "==============================================================="
+
+if [ -z $RE_INITIALIZE ]; then
+    RE_INITIALIZE=true
+fi
+echo "RE_INITIALIZE = ${RE_INITIALIZE}"
+
+if [ -z $RE_CREATE_SECRET ]; then
+    RE_CREATE_SECRET=true
+fi
+echo "RE_CREATE_SECRET = ${RE_CREATE_SECRET}"
+
+if [ -z $RE_CREATE_LB_SERVICE ]; then
+    RE_CREATE_LB_SERVICE=true
+fi
+echo "RE_CREATE_LB_SERVICE = ${RE_CREATE_LB_SERVICE}"
+
+if [ -z $RE_CREATE_NP_SERVICE ]; then
+    RE_CREATE_NP_SERVICE=true
+fi
+echo "RE_CREATE_NP_SERVICE = ${RE_CREATE_NP_SERVICE}"
+
+if [ -z $RE_CREATE_DEPLOYMENT_POD ]; then
+    RE_CREATE_DEPLOYMENT_POD=true
+fi
+echo "RE_CREATE_DEPLOYMENT_POD = ${RE_CREATE_DEPLOYMENT_POD}"
 
 # name of the namespace
 if [ -z $NAME_NS ]; then
@@ -90,22 +117,30 @@ fi
 
 echo ""
 echo "$file_initialization_temp"
+echo "---------------------------------------------------------------"
 cat $file_initialization_temp
+echo "---------------------------------------------------------------"
 echo ""
 
 echo ""
 echo "$file_svc_lb_temp"
+echo "---------------------------------------------------------------"
 cat $file_svc_lb_temp
+echo "---------------------------------------------------------------"
 echo ""
 
 echo ""
 echo "$file_svc_np_temp"
+echo "---------------------------------------------------------------"
 cat $file_svc_np_temp
+echo "---------------------------------------------------------------"
 echo ""
 
 echo ""
 echo "$file_deployment_pod_temp"
+echo "---------------------------------------------------------------"
 cat $file_deployment_pod_temp
+echo "---------------------------------------------------------------"
 echo ""
 
 echo "==============================================================="
@@ -113,8 +148,10 @@ echo "STEP 2. Install console"
 echo "==============================================================="
 
 # Create Namespace
-kubectl delete -f ${file_initialization_temp}
-kubectl create -f ${file_initialization_temp}
+if [ $RE_INITIALIZE = true ]; then
+    kubectl delete -f ${file_initialization_temp}
+    kubectl create -f ${file_initialization_temp}
+fi
 # if [ -z $(kubectl get ns | grep ${NAME_NS} | awk '{print $1}') ]; then 
 #     kubectl create -f ${file_initialization_temp}
 # else
@@ -124,7 +161,10 @@ kubectl create -f ${file_initialization_temp}
 echo ""
 
 # Create Secret to enable https between browser and console-server
-kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+if [ $RE_CREATE_SECRET = true ]; then
+    kubectl delete secret console-https-secret -n ${NAME_NS}
+    kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+fi
 # if [ -z $(kubectl get secret -n ${NAME_NS} | grep console-https-secret | awk '{print $1}') ]; then 
 #     kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
 # else
@@ -134,9 +174,14 @@ kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.
 echo ""
 
 # Create Service 
-kubectl create -f ${file_svc_lb_temp}
-kubectl create -f ${file_svc_np_temp}
-
+if [ $RE_CREATE_LB_SERVICE = true ]; then
+    kubectl delete -f ${file_svc_lb_temp}
+    kubectl create -f ${file_svc_lb_temp}
+fi
+if [ $RE_CREATE_NP_SERVICE = true ]; then
+    kubectl delete -f ${file_svc_np_temp}
+    kubectl create -f ${file_svc_np_temp}
+fi
 # if [ -z $(kubectl get svc -n ${NAME_NS} | grep console-lb | awk '{print $1}') ]; then 
 #     kubectl create -f ${file_svc_lb_temp}
 # else
@@ -152,7 +197,10 @@ kubectl create -f ${file_svc_np_temp}
 echo ""
 
 # Create Deployment
-kubectl create -f ${file_deployment_pod_temp}
+if [ $RE_CREATE_DEPLOYMENT_POD = true ]; then
+    kubectl delete -f ${file_deployment_pod_temp}
+    kubectl create -f ${file_deployment_pod_temp}
+fi
 # if [ -z $(kubectl get deployment -n ${NAME_NS} | grep console | awk '{print $1}') ]; then
 #     kubectl create -f ${file_deployment_pod_temp}
 # else
