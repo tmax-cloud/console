@@ -67,6 +67,8 @@ func securityHeadersMiddleware(hdlr http.Handler) http.HandlerFunc {
 		// Less information leakage about what domains we link to
 		// w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
 		w.Header().Set("Referrer-Policy", "no-referrer-when-downgrade")
+		w.Header().Set("Referrer-Policy", "no-referrer-when-downgrade")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		hdlr.ServeHTTP(w, r)
 	}
 }
