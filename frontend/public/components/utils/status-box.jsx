@@ -57,8 +57,8 @@ EmptyBox.displayName = 'EmptyBox';
 
 export const MsgBox = ({ title, detail, className = '' }) => (
   <Box className={className}>
-    {title && <div className="cos-status-box__title">{title}</div>}
-    {detail && <div className="text-center cos-status-box__detail">{detail}</div>}
+    {title && <div className="text-center" style={{ fontSize: '30px' }}>{title}</div>}
+    {detail && <div className="text-center" style={{ fontSize: '30px' }}>{detail}</div>}
   </Box>
 );
 MsgBox.displayName = 'MsgBox';
