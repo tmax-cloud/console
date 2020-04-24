@@ -65,14 +65,24 @@ MsgBox.displayName = 'MsgBox';
 
 export const AccessDenied = ({ message }) => {
   const { t } = useTranslation();
+  let errorOpened = true;
+  const onClickErrorDetail = () => {
+    errorOpened = errorOpened ? true : false
+  };
   return (
     <Box className="text-center">
       <img className="cos-status-box__access-denied-icon" src={restrictedSignImg} />
       <MsgBox title={t('STRING:RESTRICTED_0')} detail={t('STRING:RESTRICTED_1')} />
       {_.isString(message) && (
-        <div className="alert alert-danger text-left">
-          <span className="pficon pficon-error-circle-o"></span>
-          {message}
+        <div>
+          <p className="alert-danger text-center" onClick={onClickErrorDetail} style={{ fontSize: '18px' }}>
+            {t('STRING:RESTRICTED_2')}
+            {/* <span src={icon}></span> */}
+          </p>
+          {errorOpened && <div className="alert alert-danger text-center">
+            {message}
+          </div>}
+
         </div>
       )}
     </Box>
