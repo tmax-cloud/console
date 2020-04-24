@@ -29,7 +29,7 @@ const ClusterServiceClassRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          <ResourceCog actions={menuActions} kind="ClusterServiceClass" resource={obj} />
+          {/* <ResourceCog actions={menuActions} kind="ClusterServiceClass" resource={obj} /> */}
           <ResourceLink kind="ClusterServiceClass" name={obj.metadata.name} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
@@ -85,8 +85,8 @@ export const ClusterServiceClassesDetailsPage = props => {
     <DetailsPage
       {...props}
       kind="ClusterServiceClass"
-      menuActions={menuActions}
-      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      // menuActions={menuActions}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW'))]}
     />
   )
 };
