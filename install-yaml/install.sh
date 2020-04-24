@@ -28,6 +28,13 @@ if [ -z "${PORTAL_URL+set}" ]; then
 fi
 echo "PORTAL_URL = ${PORTAL_URL}"
 
+# node port
+if [ -z "${NODE_PORT}" ]; then
+    echo -e "Enter the node port number."
+    read NODE_PORT
+fi
+echo "NODE_PORT = ${NODE_PORT}"
+
 # docker image tag (console version)
 if [ -z $CONSOLE_VERSION ]; then
     echo -e "Enter the console version."
@@ -71,7 +78,7 @@ sed -i "s/@@HC4@@/${HC4}/g" ${file_deployment_pod_temp}
 sed -i "s/@@PROM@@/${PROM}/g" ${file_deployment_pod_temp}
 sed -i "s/@@VER@@/${CONSOLE_VERSION}/g" ${file_deployment_pod_temp}
 
-if [ -z $PORTAL_URL ]; then
+if [ -z "$PORTAL_URL" ]; then
     sed -i '/--hdc-mode=/d' ${file_deployment_pod_temp}
     sed -i '/--tmaxcloud-portal=/d' ${file_deployment_pod_temp}
 else
