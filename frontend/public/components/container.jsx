@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-
+import { ResourcePlural } from './utils/lang/resource-plural';
 import { getContainerState, getContainerStatus, getPullPolicyLabel } from '../module/k8s/docker';
 import * as k8sProbe from '../module/k8s/probe';
 import { SectionHeading, Firehose, Overflow, MsgBox, NavTitle, Timestamp, VertNav, ResourceLink, ScrollToTopOnMount } from './utils';
-
+import { useTranslation } from 'react-i18next';
 const formatComputeResources = resources => _.map(resources, (v, k) => `${k}: ${v}`).join(', ');
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 const getResourceRequestsValue = container => {
@@ -56,16 +56,16 @@ const Probe = ({ probe, podIP }) => {
 };
 
 const Ports = ({ ports }) => {
+  const { t } = useTranslation();
   if (!ports || !ports.length) {
-    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No ports have been exposed" detail="Ports allow for traffic to enter this container" />;
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title={t('STRING:CONTAINER-DETAIL_0')} detail={t('STRING:CONTAINER-DETAIL_1')} />;
   }
-
   return (
     <table className="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Container</th>
+          <th>{t('CONTENT:NAME')}</th>
+          <th>{t('RESOURCE:CONTAINER')}</th>
         </tr>
       </thead>
       <tbody>
@@ -81,17 +81,17 @@ const Ports = ({ ports }) => {
 };
 
 const Volumes = ({ volumes }) => {
+  const { t } = useTranslation();
   if (!volumes || !volumes.length) {
-    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No volumes have been mounted" detail="Volumes allow data to be shared as files with the pod" />;
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title={t('STRING:CONTAINER-DETAIL_2')} detail={t('STRING:CONTAINER-DETAIL_3')} />;
   }
-
   return (
     <table className="table">
       <thead>
         <tr>
-          <th>Access</th>
-          <th>Location</th>
-          <th>Mount Path</th>
+          <th>{t('CONTENT:ACCESS')}</th>
+          <th>{t('CONTENT:LOCATION')}</th>
+          <th>{t('CONTENT:MOUNTPATH')}</th>
         </tr>
       </thead>
       <tbody>
@@ -110,8 +110,9 @@ const Volumes = ({ volumes }) => {
 };
 
 const Env = ({ env }) => {
+  const { t } = useTranslation();
   if (!env || !env.length) {
-    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No variables have been set" detail="An easy way to pass configuration values" />;
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title={t('STRING:CONTAINER-DETAIL_4')} detail={t('STRING:CONTAINER-DETAIL_5')} />;
   }
 
   const value = e => {
@@ -132,8 +133,8 @@ const Env = ({ env }) => {
     <table className="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Value</th>
+          <th>{t('CONTENT:NAME')}</th>
+          <th>{t('CONTENT:VALUE')}</th>
         </tr>
       </thead>
       <tbody>
@@ -164,6 +165,7 @@ const getImageNameAndTag = image => {
 
 const Details = props => {
   const pod = props.obj;
+  const { t } = useTranslation();
   const container = _.find(pod.spec.containers, { name: props.match.params.name }) || _.find(pod.spec.initContainers, { name: props.match.params.name });
   if (!container) {
     return null;
@@ -179,41 +181,41 @@ const Details = props => {
 
       <div className="row">
         <div className="col-lg-4">
-          <SectionHeading text="Container Overview" />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Container', t) })} />
           <dl className="co-m-pane__details">
-            <dt>State</dt>
+            <dt>{t('CONTENT:STATE')}</dt>
             <dd>{state.label}</dd>
-            <dt>ID</dt>
+            <dt>{t('CONTENT:ID')}</dt>
             <dd>
               <Overflow value={status.containerID} />
             </dd>
-            <dt>Restarts</dt>
+            <dt>{t('CONTENT:RESTARTS')}</dt>
             <dd>{status.restartCount}</dd>
-            <dt>Resource Requests</dt>
+            <dt>{t('CONTENT:RESOURCEREQUESTS')}</dt>
             <dd>{getResourceRequestsValue(container) || '-'}</dd>
-            <dt>Resource Limits</dt>
+            <dt>{t('CONTENT:RESOURCERELIMITS')}</dt>
             <dd>{getResourceLimitsValue(container) || '-'}</dd>
-            <dt>Lifecycle Hooks</dt>
+            <dt>{t('CONTENT:LIFECYCLEHOOKS')}</dt>
             <dd>
               <Lifecycle lifecycle={container.lifecycle} />
             </dd>
-            <dt>Readiness Probe</dt>
+            <dt>{t('CONTENT:READINESSPROBE')}</dt>
             <dd>
               <Probe probe={container.readinessProbe} podIP={pod.status.podIP || '-'} />
             </dd>
-            <dt>Liveness Probe</dt>
+            <dt>{t('CONTENT:LIVENESSPROBE')}</dt>
             <dd>
               <Probe probe={container.livenessProbe} podIP={pod.status.podIP || '-'} />
             </dd>
-            <dt>Started</dt>
+            <dt>{t('CONTENT:STARTED')}</dt>
             <dd>
               <Timestamp timestamp={state.startedAt} />
             </dd>
-            <dt>Finished</dt>
+            <dt>{t('CONTENT:FINISHED')}</dt>
             <dd>
               <Timestamp timestamp={state.finishedAt} />
             </dd>
-            <dt>Pod</dt>
+            <dt>{t('RESOURCE:POD')}</dt>
             <dd>
               <ResourceLink kind="Pod" name={props.match.params.podName} namespace={props.match.params.ns} />
             </dd>
@@ -221,17 +223,17 @@ const Details = props => {
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Image Details" />
+          <SectionHeading text={t('CONTENT:IMAGEDETAILS')} />
           <dl className="co-m-pane__details">
-            <dt>Image</dt>
+            <dt>{t('CONTENT:IMAGE')}</dt>
             <dd>
               <Overflow value={imageName || '-'} />
             </dd>
-            <dt>Image Version/Tag</dt>
+            <dt>{t('CONTENT:IMAGEVERSIONTAG')}</dt>
             <dd>
               <Overflow value={imageTag || '-'} />
             </dd>
-            <dt>Command</dt>
+            <dt>{t('CONTENT:COMMAND')}</dt>
             <dd>
               {container.command ? (
                 <pre>
@@ -241,7 +243,7 @@ const Details = props => {
                   <span>-</span>
                 )}
             </dd>
-            <dt>Args</dt>
+            <dt>{t('CONTENT:ARGS')}</dt>
             <dd>
               {container.args ? (
                 <pre>
@@ -251,19 +253,19 @@ const Details = props => {
                   <span>-</span>
                 )}
             </dd>
-            <dt>Pull Policy</dt>
+            <dt>{t('CONTENT:PULLPOLICY')}</dt>
             <dd>{getPullPolicyLabel(container)}</dd>
           </dl>
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Network" />
+          <SectionHeading text={t('RESOURCE:NETWORK')} />
           <dl className="co-m-pane__details">
-            {!HDCModeFlag && <div><dt>Node</dt>
+            {!HDCModeFlag && <div><dt>{t('RESOURCE:NODE')}</dt>
               <dd>
                 <ResourceLink kind="Node" name={pod.spec.nodeName} title={pod.spec.nodeName} />
               </dd></div>}
-            <dt>Pod IP</dt>
+            <dt>{t('CONTENT:PODIP')}</dt>
             <dd>{pod.status.podIP || '-'}</dd>
           </dl>
         </div>
@@ -273,21 +275,21 @@ const Details = props => {
 
       <div className="row">
         <div className="col-lg-4">
-          <SectionHeading text="Ports" />
+          <SectionHeading text={t('CONTENT:PORTS')} />
           <div className="co-table-container">
             <Ports ports={container.ports} />
           </div>
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Mounted Volumes" />
+          <SectionHeading text={t('CONTENT:MOUNTEDVOLUMES')} />
           <div className="co-table-container">
             <Volumes volumes={container.volumeMounts} />
           </div>
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Environment Variables" />
+          <SectionHeading text={t('CONTENT:ENVVARIABLES')} />
           <div className="co-table-container">
             <Env env={container.env} />
           </div>
