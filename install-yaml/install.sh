@@ -69,21 +69,21 @@ cp $file_svc_lb $file_svc_lb_temp
 cp $file_svc_np $file_svc_np_temp
 cp $file_deployment_pod $file_deployment_pod_temp
 
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_initialization_temp}
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_svc_lb_temp}
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_svc_np_temp}
+sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_initialization_temp}
+sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_svc_lb_temp}
+sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_svc_np_temp}
 
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_deployment_pod_temp}
-sed -i "s/@@HC4@@/${HC4}/g" ${file_deployment_pod_temp}
-sed -i "s/@@PROM@@/${PROM}/g" ${file_deployment_pod_temp}
-sed -i "s/@@VER@@/${CONSOLE_VERSION}/g" ${file_deployment_pod_temp}
+sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_deployment_pod_temp}
+sed -i "s|@@HC4@@|${HC4}|g" ${file_deployment_pod_temp}
+sed -i "s|@@PROM@@|${PROM}|g" ${file_deployment_pod_temp}
+sed -i "s|@@VER@@|${CONSOLE_VERSION}|g" ${file_deployment_pod_temp}
 
 if [ -z "$PORTAL_URL" ]; then
-    sed -i '/--hdc-mode=/d' ${file_deployment_pod_temp}
-    sed -i '/--tmaxcloud-portal=/d' ${file_deployment_pod_temp}
+    sed -i '|--hdc-mode=|d' ${file_deployment_pod_temp}
+    sed -i '|--tmaxcloud-portal=|d' ${file_deployment_pod_temp}
 else
-    sed -i "s/@@HDC_FLAG@@/true/g" ${file_deployment_pod_temp}
-    sed -i "s/@@PORTAL@@/${PORTAL_URL}/g" ${file_deployment_pod_temp}
+    sed -i "s|@@HDC_FLAG@@|true|g" ${file_deployment_pod_temp}
+    sed -i "s|@@PORTAL@@|${PORTAL_URL}|g" ${file_deployment_pod_temp}
 fi
 
 echo "==============================================================="
@@ -102,7 +102,6 @@ kubectl create -f ${file_initialization_temp}
 echo ""
 
 # Create Secret to enable https between browser and console-server
-kubectl delete secret console-https-secret -n ${NAME_NS}
 kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
 # if [ -z $(kubectl get secret -n ${NAME_NS} | grep console-https-secret | awk '{print $1}') ]; then 
 #     kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
@@ -113,9 +112,6 @@ kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.
 echo ""
 
 # Create Service 
-kubectl delete -f ${file_svc_lb_temp}
-kubectl delete -f ${file_svc_np_temp}
-
 kubectl create -f ${file_svc_lb_temp}
 kubectl create -f ${file_svc_np_temp}
 
@@ -130,11 +126,10 @@ kubectl create -f ${file_svc_np_temp}
 # else
 #     echo "NodePort service exists" 
 # fi
-kubectl get svc -n ${NAME_NS} 
+# kubectl get svc -n ${NAME_NS} 
 echo ""
 
 # Create Deployment
-kubectl delete -f ${file_deployment_pod_temp}
 kubectl create -f ${file_deployment_pod_temp}
 # if [ -z $(kubectl get deployment -n ${NAME_NS} | grep console | awk '{print $1}') ]; then
 #     kubectl create -f ${file_deployment_pod_temp}
