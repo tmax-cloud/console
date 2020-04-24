@@ -27,7 +27,7 @@ spec:
         - --tls-key-file=/var/https-cert/tls.key
         - --hypercloud-endpoint=http://@@HC4@@
         - --prometheus-endpoint=http://@@PROM@@/api
-        - --hdc-mode=true
+        - --hdc-mode=@@HDC_FLAG@@
         - --tmaxcloud-portal=@@PORTAL@@
         image: 192.168.6.110:5000/hypercloud-console:@@VER@@
         imagePullPolicy: IfNotPresent

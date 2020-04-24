@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
-file_initialzation="./1.initialization.yaml"
-file_initialzation_temp="./1.initialization-temp.yaml"
+file_initialization="./1.initialization.yaml"
+file_initialization_temp="./1.initialization-temp.yaml"
 file_svc_lb="./2.svc-lb.yaml"
 file_svc_lb_temp="./2.svc-lb-temp.yaml"
 file_svc_np="./2.svc-np.yaml"
@@ -43,7 +43,7 @@ if [ -z $HC4_IP ]; then
     echo "Cannot find HC4_IP in ${NAME_HC4}. Is hypercloud4-system installed?"
     exit 1 
 fi 
-HC4=$HC4_IP":"$HC4_PORT
+HC4=${HC4_IP}:${HC4_PORT}
 echo "Hypercloud Addr = ${HC4}"
 
 # get prometheus ip addr 
@@ -53,16 +53,16 @@ if [ -z $PROM_IP ]; then
     echo "Cannot find PROMETHEUS_IP in ${NAME_PROM}. Is prometheus installed?"
     exit 1 
 fi 
-PROM=$PROM_IP":"$PROM_PORT
+PROM=${PROM_IP}:${PROM_PORT}
 echo "Prometheus Addr = ${PROM}"
 
 # inject ENV into yaml
-cp $file_initialzation $file_initialzation_temp
+cp $file_initialization $file_initialization_temp
 cp $file_svc_lb $file_svc_lb_temp
 cp $file_svc_np $file_svc_np_temp
 cp $file_deployment_pod $file_deployment_pod_temp
 
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_initialzation_temp}
+sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_initialization_temp}
 sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_svc_lb_temp}
 sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_svc_np_temp}
 
@@ -75,6 +75,7 @@ if [ -z $PORTAL_URL ]; then
     sed -i '/--hdc-mode=/d' ${file_deployment_pod_temp}
     sed -i '/--tmaxcloud-portal=/d' ${file_deployment_pod_temp}
 else
+    sed -i "s/@@HDC_FLAG@@/true/g" ${file_deployment_pod_temp}
     sed -i "s/@@PORTAL@@/${PORTAL_URL}/g" ${file_deployment_pod_temp}
 fi
 
@@ -83,39 +84,50 @@ echo "STEP 2. Install console"
 echo "==============================================================="
 
 # Create Namespace
-if [ -z $(kubectl get ns | grep ${NAME_NS} | awk '{print $1}') ]; then 
-    kubectl create -f ${file_initialzation_temp}
-else
-    echo "namespace exist"
-    kubectl get ns 
-fi 
+kubectl delete -f ${file_initialization_temp}
+kubectl create -f ${file_initialization_temp}
+# if [ -z $(kubectl get ns | grep ${NAME_NS} | awk '{print $1}') ]; then 
+#     kubectl create -f ${file_initialization_temp}
+# else
+#     echo "namespace exist"
+#     kubectl get ns 
+# fi 
 echo ""
 
 # Create Secret to enable https between browser and console-server
-if [ -z $(kubectl get secret -n ${NAME_NS} | grep console-https-secret | awk '{print $1}') ]; then 
-    kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
-else
-    echo "secret exists" 
-    kubectl get secret console-https-secret -n ${NAME_NS}
-fi 
+kubectl delete secret console-https-secret -n ${NAME_NS}
+kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+# if [ -z $(kubectl get secret -n ${NAME_NS} | grep console-https-secret | awk '{print $1}') ]; then 
+#     kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+# else
+#     echo "secret exists" 
+#     kubectl get secret console-https-secret -n ${NAME_NS}
+# fi 
 echo ""
 
 # Create Service 
-if [ -z $(kubectl get svc -n ${NAME_NS} | grep console-lb | awk '{print $1}') ]; then 
-    kubectl create -f ${file_svc_lb_temp}
-else
-    echo "LoadBalancer service exists" 
-fi
-echo ""
-if [ -z $(kubectl get svc -n ${NAME_NS} | grep console-np | awk '{print $1}') ]; then 
-    kubectl create -f ${file_svc_np_temp}
-else
-    echo "NodePort service exists" 
-fi
+kubectl delete -f ${file_svc_lb_temp}
+kubectl delete -f ${file_svc_np_temp}
+
+kubectl create -f ${file_svc_lb_temp}
+kubectl create -f ${file_svc_np_temp}
+
+# if [ -z $(kubectl get svc -n ${NAME_NS} | grep console-lb | awk '{print $1}') ]; then 
+#     kubectl create -f ${file_svc_lb_temp}
+# else
+#     echo "LoadBalancer service exists" 
+# fi
+# echo ""
+# if [ -z $(kubectl get svc -n ${NAME_NS} | grep console-np | awk '{print $1}') ]; then 
+#     kubectl create -f ${file_svc_np_temp}
+# else
+#     echo "NodePort service exists" 
+# fi
 kubectl get svc -n ${NAME_NS} 
 echo ""
 
 # Create Deployment
+kubectl delete -f ${file_deployment_pod_temp}
 kubectl create -f ${file_deployment_pod_temp}
 # if [ -z $(kubectl get deployment -n ${NAME_NS} | grep console | awk '{print $1}') ]; then
 #     kubectl create -f ${file_deployment_pod_temp}
@@ -138,11 +150,11 @@ do
     kubectl get po -n ${NAME_NS}
     RUNNING_FLAG=$(kubectl get po -n ${NAME_NS} | grep console | awk '{print $3}')
     if [ ${RUNNING_FLAG} == "Running" ]; then
-        rm -rf ${file_initialzation_temp}
+        echo "Console has been successfully deployed."
+        rm -rf ${file_initialization_temp}
         rm -rf ${file_svc_lb_temp}
         rm -rf ${file_svc_np_temp}
         rm -rf ${file_deployment_pod_temp}
-        echo "Console has been successfully deployed."
         break 
     fi
     if [ $count -eq $stop ]; then 
