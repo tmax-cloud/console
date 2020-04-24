@@ -142,6 +142,7 @@
     "ROLE_0": "Roles grant access to types of objects in the cluster. Roles are applied to a team or user via a Role Binding.",
     "RESTRICTED_0": "Restricted Access",
     "RESTRICTED_1": "You don't have access to this section due to cluster policy.",
+    "RESTRICTED_2": "View Details",
     "PIPELINERUN-CREATE_0": "Service Account is not automatically created",
     "STATUS_0": "It may be different from the actual data.",
     "CONTAINER-DETAIL_0": "No ports have been exposed",
