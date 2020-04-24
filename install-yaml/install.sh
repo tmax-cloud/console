@@ -69,22 +69,27 @@ cp $file_svc_lb $file_svc_lb_temp
 cp $file_svc_np $file_svc_np_temp
 cp $file_deployment_pod $file_deployment_pod_temp
 
-sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_initialization_temp}
-sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_svc_lb_temp}
-sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_svc_np_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_initialization_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_svc_lb_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_svc_np_temp}
 
-sed -i "s|@@NAME_NS@@|${NAME_NS}|g" ${file_deployment_pod_temp}
-sed -i "s|@@HC4@@|${HC4}|g" ${file_deployment_pod_temp}
-sed -i "s|@@PROM@@|${PROM}|g" ${file_deployment_pod_temp}
-sed -i "s|@@VER@@|${CONSOLE_VERSION}|g" ${file_deployment_pod_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_deployment_pod_temp}
+sed -i "s%@@HC4@@%${HC4}%g" ${file_deployment_pod_temp}
+sed -i "s%@@PROM@@%${PROM}%g" ${file_deployment_pod_temp}
+sed -i "s%@@VER@@%${CONSOLE_VERSION}%g" ${file_deployment_pod_temp}
 
 if [ -z "$PORTAL_URL" ]; then
-    sed -i '|--hdc-mode=|d' ${file_deployment_pod_temp}
-    sed -i '|--tmaxcloud-portal=|d' ${file_deployment_pod_temp}
+    sed -i '%--hdc-mode=%d' ${file_deployment_pod_temp}
+    sed -i '%--tmaxcloud-portal=%d' ${file_deployment_pod_temp}
 else
-    sed -i "s|@@HDC_FLAG@@|true|g" ${file_deployment_pod_temp}
-    sed -i "s|@@PORTAL@@|${PORTAL_URL}|g" ${file_deployment_pod_temp}
+    sed -i "s%@@HDC_FLAG@@%true%g" ${file_deployment_pod_temp}
+    sed -i "s%@@PORTAL@@%${PORTAL_URL}%g" ${file_deployment_pod_temp}
 fi
+
+cat $file_initialization_temp
+cat $file_svc_lb_temp
+cat $file_svc_np_temp
+cat $file_deployment_pod_temp
 
 echo "==============================================================="
 echo "STEP 2. Install console"
