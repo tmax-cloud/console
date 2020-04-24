@@ -232,7 +232,8 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                 let paramList = details.spec.params ? details.spec.params.map(cur => {
                     return {
                         name: cur.name,
-                        type: cur.type
+                        type: cur.type,
+                        value: ''
                     }
                 }) : [];
                 let resourceList = details.spec.resources ? details.spec.resources.map(cur => {
@@ -243,22 +244,21 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
                 }) : [];
 
                 let pipelineRun = { ...this.state.pipelineRun };
-                let initParamList = details.spec.params.map(cur => {
-                    return {
-                        name: cur.name,
-                        value: ''
-                    }
-                });
-                !pipelineRun.spec.params.length && pipelineRun.spec.params.push(...initParamList);
-                this.setState({ pipelineRun });
-
+                // let initParamList = details.spec.params.map(cur => {
+                //     return {
+                //         name: cur.name,
+                //         value: ''
+                //     }
+                // });
+                !pipelineRun.spec.params.length && pipelineRun.spec.params.push(...paramList);
                 this.setState({
+                    pipelineRun: pipelineRun,
                     resourceList: resourceList,
-                    paramList: paramList,
-                    selectedParam: paramList[0].name
+                    paramList: paramList
                 }, resourceList.forEach(cur => {
                     !pipelineRun.spec.resources.length && this.getPipelineResourceList(cur.name, cur.type);
                 }))
+                paramList.length ? this.setState({ selectedParam: paramList[0].name }) : null;
             }, err => {
                 this.setState({ error: err.message, inProgress: false })
                 this.setState({ paramList: [] });

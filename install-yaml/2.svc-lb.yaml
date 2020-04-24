@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: console-lb
-  namespace: console-system
+  namespace: @@NAME_NS@@
 spec:
   type: LoadBalancer
   ports:
