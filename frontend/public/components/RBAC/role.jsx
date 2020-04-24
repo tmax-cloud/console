@@ -236,7 +236,7 @@ export const RolesPage = connectToFlags(
           items: [
             { id: 'cluster', title: t('CONTENT:CLUSTER-WIDEROLES') },
             { id: 'namespace', title: t('CONTENT:NAMESPACEROLES') },
-            { id: 'system', title: t('CONTENT:SYSTEMROLEBINDINGS') },
+            { id: 'system', title: t('CONTENT:SYSTEMROLES') },
           ],
         },
       ]}
