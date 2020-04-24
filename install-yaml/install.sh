@@ -5,12 +5,12 @@ NAME_PROM="prometheus-k8s"
 
 file_initialization="./1.initialization.yaml"
 file_initialization_temp="./1.initialization-temp.yaml"
-file_svc_lb="./3.svc-lb.yaml"
-file_svc_lb_temp="./3.svc-lb-temp.yaml"
-file_svc_np="./3.svc-np.yaml"
-file_svc_np_temp="./3.svc-np-temp.yaml"
-file_deployment_pod="./4.deployment-pod.yaml"
-file_deployment_pod_temp="./4.deployment-pod-temp.yaml"
+file_svc_lb="./2.svc-lb.yaml"
+file_svc_lb_temp="./2.svc-lb-temp.yaml"
+file_svc_np="./2.svc-np.yaml"
+file_svc_np_temp="./2.svc-np-temp.yaml"
+file_deployment_pod="./3.deployment-pod.yaml"
+file_deployment_pod_temp="./3.deployment-pod-temp.yaml"
 
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
@@ -119,6 +119,7 @@ echo ""
 echo "$file_initialization_temp"
 echo "---------------------------------------------------------------"
 cat $file_initialization_temp
+echo ""
 echo "---------------------------------------------------------------"
 echo ""
 
@@ -126,6 +127,7 @@ echo ""
 echo "$file_svc_lb_temp"
 echo "---------------------------------------------------------------"
 cat $file_svc_lb_temp
+echo ""
 echo "---------------------------------------------------------------"
 echo ""
 
@@ -133,6 +135,7 @@ echo ""
 echo "$file_svc_np_temp"
 echo "---------------------------------------------------------------"
 cat $file_svc_np_temp
+echo ""
 echo "---------------------------------------------------------------"
 echo ""
 
@@ -140,6 +143,7 @@ echo ""
 echo "$file_deployment_pod_temp"
 echo "---------------------------------------------------------------"
 cat $file_deployment_pod_temp
+echo ""
 echo "---------------------------------------------------------------"
 echo ""
 
