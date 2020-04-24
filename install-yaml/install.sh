@@ -71,7 +71,9 @@ cp $file_deployment_pod $file_deployment_pod_temp
 
 sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_initialization_temp}
 sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_svc_lb_temp}
+
 sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_svc_np_temp}
+sed -i "s%@@NODE_PORT@@%${NODE_PORT}%g" ${file_svc_np_temp}
 
 sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_deployment_pod_temp}
 sed -i "s%@@HC4@@%${HC4}%g" ${file_deployment_pod_temp}
