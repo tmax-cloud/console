@@ -81,17 +81,32 @@ sed -i "s%@@PROM@@%${PROM}%g" ${file_deployment_pod_temp}
 sed -i "s%@@VER@@%${CONSOLE_VERSION}%g" ${file_deployment_pod_temp}
 
 if [ -z "$PORTAL_URL" ]; then
-    sed -i '%--hdc-mode=%d' ${file_deployment_pod_temp}
-    sed -i '%--tmaxcloud-portal=%d' ${file_deployment_pod_temp}
+    sed -i '/--hdc-mode=/d' ${file_deployment_pod_temp}
+    sed -i '/--tmaxcloud-portal=/d' ${file_deployment_pod_temp}
 else
     sed -i "s%@@HDC_FLAG@@%true%g" ${file_deployment_pod_temp}
     sed -i "s%@@PORTAL@@%${PORTAL_URL}%g" ${file_deployment_pod_temp}
 fi
 
+echo ""
+echo "$file_initialization_temp"
 cat $file_initialization_temp
+echo ""
+
+echo ""
+echo "$file_svc_lb_temp"
 cat $file_svc_lb_temp
+echo ""
+
+echo ""
+echo "$file_svc_np_temp"
 cat $file_svc_np_temp
+echo ""
+
+echo ""
+echo "$file_deployment_pod_temp"
 cat $file_deployment_pod_temp
+echo ""
 
 echo "==============================================================="
 echo "STEP 2. Install console"
