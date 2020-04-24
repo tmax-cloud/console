@@ -146,6 +146,7 @@
     "STATUS_0": "It may be different from the actual data."
   },
   "CONTENT": {
+    "ALERTS": "Alerts",
     "RESOURCENAME": "Resource Name",
     "SUBJECTNAMESPACE": "Subject Namespace",
     "SUBJECT": "Subject",
