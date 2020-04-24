@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import * as restrictedSignImg from '../../imgs/restricted-sign.svg';
+import * as restrictedSignImg from '../../imgs/img_403error.svg';
 import { TimeoutError } from '../../co-fetch';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
