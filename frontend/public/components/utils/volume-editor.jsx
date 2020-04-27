@@ -35,7 +35,7 @@ export class VolumeEditor extends React.Component {
   }
   render() {
     const { nameString, mountPathString, pvcString, readOnlyString, addString, volumePairs, allowSorting, readOnly, nameValueId, options, t } = this.props;
-    const portItems = volumePairs.map((pair, i) => {
+    const volumeItems = volumePairs.map((pair, i) => {
       const key = _.get(pair, [VolumeEditorPair.Index], i);
       return <VolumePairElement onChange={this._change} index={i} t={t} nameString={nameString} mountPathString={mountPathString} pvcString={pvcString} readOnlyString={readOnlyString} allowSorting={allowSorting} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} options={options} />;
     });
@@ -47,7 +47,7 @@ export class VolumeEditor extends React.Component {
           <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${pvcString.toUpperCase()}`)}</div>
           <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${readOnlyString.toUpperCase()}`)}</div>
         </div>
-        {portItems}
+        {volumeItems}
         <div className="row">
           <div className="col-md-12 col-xs-12">
             <React.Fragment>

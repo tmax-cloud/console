@@ -93,3 +93,10 @@ export const enum KeyValueEditorPair {
   Value,
   Index,
 }
+
+export const enum IngressEditorPair {
+  PathName,
+  ServiceName,
+  ServicePort,
+  Index,
+}
