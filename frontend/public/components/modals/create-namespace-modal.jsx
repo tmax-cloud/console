@@ -83,7 +83,7 @@ class CreateNamespaceModal extends PromiseComponent {
       <form onSubmit={this._submit.bind(this)} name="form" className="co-p-new-user-modal">
         <ModalTitle>{t('CONTENT:CREATENEWNAMESPACE')}</ModalTitle>
         <ModalBody>
-          <div className="form-group">
+          <div className="form-group" style={{ width: '600px' }}>
             <label htmlFor="input-name" className="control-label">
               {t('CONTENT:NAME')}
             </label>

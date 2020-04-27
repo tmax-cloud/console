@@ -10,7 +10,7 @@ const ExpiredTimeComponent = (submit, updateState, requestTime, inProgress, canc
     <form onSubmit={submit} name="form">
       <ModalTitle>{t('CONTENT:CHANGESESSIONEXPIREDTIME')}</ModalTitle>
       <ModalBody>
-        <div className="form-group">
+        <div className="form-group" style={{ width: '350px' }}>
           <label className="control-label" htmlFor="extend-time">
             {t('CONTENT:SESSIONEXPIREDTIME')}
           </label>
