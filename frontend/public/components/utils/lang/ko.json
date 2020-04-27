@@ -151,6 +151,8 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
+    "PATHNAME": "Path Name",
+    "SERVICENAME": "Service Name",
     "ACCESS": "Access",
     "MOUNTEDVOLUMES": "Mounted Volumes",
     "PULLPOLICY": "풀 폴리시",
