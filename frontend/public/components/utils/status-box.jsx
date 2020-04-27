@@ -68,8 +68,6 @@ export const AccessDenied = ({ message }) => {
   const [errorDetail, setErrorDetail] = React.useState({ show: false, icon: 'fa-angle-down' });
   const onClickErrorDetail = () => {
     errorDetail.show ? setErrorDetail({ ...errorDetail, show: false, icon: 'fa-angle-down' }) : setErrorDetail({ ...errorDetail, show: true, icon: 'fa-angle-up' })
-    // errorDetail.show ? setErrorDetail(false) : setErrorDetail(true);
-    // icon = errorDetail.show === '' ? 'fa-angle-up' : 'fa-angle-down';
   };
   return (
     <Box className="text-center">
