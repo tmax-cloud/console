@@ -166,6 +166,10 @@ class App extends React.PureComponent {
     });
   }
 
+  componentWillUnmount() {
+    localStorage.removeItem('bridge/last-namespace-name');
+  }
+
   // componentDidMount() {
   //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
   //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
