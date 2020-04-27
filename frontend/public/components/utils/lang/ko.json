@@ -6,8 +6,8 @@
     "SECOND_plural": "{{count}} 초",
     "ANNOTATION": "{{count}} 주석",
     "ANNOTATION_plural": "{{count}} 주석",
-    "EVENT": "Showing {{count}} event",
-    "EVENT_plural": "Showing {{count}} events"
+    "EVENT": "{{count}} 이벤트 표시",
+    "EVENT_plural": "{{count}} 이벤트 표시"
   },
   "ADDITIONAL": {
     "CREATEBUTTON": "{{something}} 생성",
@@ -36,11 +36,11 @@
     "EDIT_1": "Edit {{something}} Subject...",
     "IMPERSONATE_0": "위장 {{something1}} ({{something2}})...",
     "ERRORLOADING": "{{something}} 로드 오류",
-    "NOFOUNDORDEFINED": "No {{something}} found or defined.",
+    "NOFOUNDORDEFINED": "{{something}}가 존재하지 않거나 설정되지 않았습니다. ",
     "STRATEGY-MODAL_0": "이하",
     "STRATEGY-MODAL_1": "이상",
-    "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below",
-    "PODSELECTOR-EMPTY_0": "All pods within {{something}}"
+    "NAMESPACE-MODAL_0": "아래 {{something}}를 입력하여 삭제를 확인하십시오.",
+    "PODSELECTOR-EMPTY_0": "{{something}}내의 모든 파드"
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
@@ -127,14 +127,14 @@
     "ROLEBINDING-CREATE_4": "선택한 네임스페이스 내의 사용자 또는 사용자 그룹에 권한을 부여합니다.",
     "ROLEBINDING-CREATE_5": "클러스터 롤 바인딩 (클러스터 롤 바인딩)",
     "ROLEBINDING-CREATE_6": "클러스터 수준 및 모든 네임스페이스에서 사용자 또는 사용자 그룹에 권한을 부여합니다.",
-    "ROLEBINDING-CREATE_7": "Please complete all fields",
+    "ROLEBINDING-CREATE_7": "모든 필드를 작성하십시오.",
     "PULLSECRET-MODAL_0": "해당 네임스페이스에서 컨테이너를 인증하고 다운로드하는 데 사용할 기본 인증 정보를 지정하십시오. 파드가 특정 풀 시크릿을 참조하지 않는 한, 해당 인증 정보가 기본값이 됩니다. ",
-    "PULLSECRET-MODAL_1": "A default pull secret exists, but can&rsquo;t be parsed. Saving this will overwrite it.",
+    "PULLSECRET-MODAL_1": "기본 풀 시크릿이 존재하지만, 구문 분석 할 수 없습니다. 저장하면 덮어쓰여집니다. ",
     "PULLSECRET-MODAL_2": "추후 관리에 도움이 되는 친숙한 이름",
     "PULLSECRET-MODAL_3": "레지스트리 프로바이더에 따른 선택 사항",
     "PULLSECRET-MODAL_4": "도커 설정 파일을 JSON 형식으로 올바르게 구성했습니다. 업로드 후 base64로 인코딩됩니다.",
-    "PULLSECRET-MODAL_5": "Invalid format. Uploaded file is not properly formatted json.",
-    "RULE_0": "Are you sure you want to delete this Rule?",
+    "PULLSECRET-MODAL_5": "유효하지 않은 형식. 업로드 된 파일은 유효한 JASON 형식이 아닙니다.",
+    "RULE_0": "정말로 이 규칙을 삭제하시겠습니까?",
     "ROLEBINDING_0": "롤은 클러스터 객체 유형에 대한 접근 권한을 부여합니다. 롤은 롤 바인딩을 통해 팀이나 사용자에게 적용됩니다.",
     "NAMESPACE-MODAL_0": "이 액션은 취소 할 수 없습니다. 삭제된 네임스페이스의 모든 파드, 서비스 및 기타 객체를 삭제합니다.",
     "ROLE_0": "롤은 클러스터 객체 유형에 대한 접근 권한을 부여합니다. 롤은 롤 바인딩을 통해 팀이나 사용자에게 적용됩니다.",
@@ -151,7 +151,7 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
-    "ACCESS": "Access",
+    "ACCESS": "접근",
     "MOUNTEDVOLUMES": "Mounted Volumes",
     "PULLPOLICY": "풀 폴리시",
     "ARGS": "Args",
@@ -183,7 +183,7 @@
     "ENVVARIABLES": "환경 변수",
     "CONTAINERIMAGE": "컨테이너 이미지",
     "IMAGEPULLPOLICY": "이미지 풀 폴리시",
-    "IFNOTPRESENT": "If Not Present",
+    "IFNOTPRESENT": "존재하지 않으면",
     "ALWAYS": "항상",
     "NEVER": "절대 안 함",
     "REPLICAS": "레플리카",
@@ -192,7 +192,7 @@
     "SSHPRIVATEKEY": "SSH 개인키 ",
     "ADDMORE": "추가",
     "COMPACT": "컴팩트",
-    "GENERATEDFROM": "Generated from",
+    "GENERATEDFROM": "생성",
     "TIMESINTHELAST": "times in the last ",
     "SELECTOR": "선택기",
     "LOADBALANCER": "로드밸런서",
