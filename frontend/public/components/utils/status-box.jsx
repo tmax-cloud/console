@@ -65,9 +65,11 @@ MsgBox.displayName = 'MsgBox';
 
 export const AccessDenied = ({ message }) => {
   const { t } = useTranslation();
-  let errorOpened = true;
+  const [errorDetail, setErrorDetail] = React.useState({ show: false, icon: 'fa-angle-down' });
   const onClickErrorDetail = () => {
-    errorOpened = errorOpened ? true : false
+    errorDetail.show ? setErrorDetail({ ...errorDetail, show: false, icon: 'fa-angle-down' }) : setErrorDetail({ ...errorDetail, show: true, icon: 'fa-angle-up' })
+    // errorDetail.show ? setErrorDetail(false) : setErrorDetail(true);
+    // icon = errorDetail.show === '' ? 'fa-angle-up' : 'fa-angle-down';
   };
   return (
     <Box className="text-center">
@@ -75,11 +77,11 @@ export const AccessDenied = ({ message }) => {
       <MsgBox title={t('STRING:RESTRICTED_0')} detail={t('STRING:RESTRICTED_1')} />
       {_.isString(message) && (
         <div>
-          <p className="alert-danger text-center" onClick={onClickErrorDetail} style={{ fontSize: '18px' }}>
+          <p className="alert-danger text-center" style={{ fontSize: '18px' }} >
             {t('STRING:RESTRICTED_2')}
-            {/* <span src={icon}></span> */}
+            <span className={`fa ${errorDetail.icon} fa-fw`} aria-hidden="true" value={errorDetail} onClick={onClickErrorDetail}></span>
           </p>
-          {errorOpened && <div className="alert alert-danger text-center">
+          {errorDetail.show && <div className="alert alert-danger text-center">
             {message}
           </div>}
 
