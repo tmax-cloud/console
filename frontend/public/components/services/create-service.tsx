@@ -54,7 +54,8 @@ const Requestform = SubForm =>
       this.onTypeChanged = this.onTypeChanged.bind(this);
       this.save = this.save.bind(this);
       this._updatePorts = this._updatePorts.bind(this);
-      this._updateSelector = this._updateSelector.bind(this);
+      this._onChangeSelectorKey = this._onChangeSelectorKey.bind(this);
+      this._onChangeSelectorValue = this._onChangeSelectorValue.bind(this);
       this.onLabelChanged = this.onLabelChanged.bind(this);
     }
     onNameChanged(event) {
@@ -72,10 +73,15 @@ const Requestform = SubForm =>
         ports: ports.portPairs,
       });
     }
-    _updateSelector(selectors) {
-      this.setState({
-        selector: selectors.keyValuePairs,
-      });
+    _onChangeSelectorKey(event) {
+      let service = { ...this.state.service };
+      service.spec.selector['key'] = event.target.value;
+      this.setState({ service });
+    }
+    _onChangeSelectorValue(event) {
+      let service = { ...this.state.service };
+      service.spec.selector['value'] = event.target.value;
+      this.setState({ service });
     }
     onLabelChanged(event) {
       let service = { ...this.state.service };
@@ -95,7 +101,7 @@ const Requestform = SubForm =>
     }
     save(e) {
       e.preventDefault();
-      const { kind, metadata } = this.state.service;
+      const { kind, metadata, spec } = this.state.service;
       this.setState({ inProgress: true });
       const newSecret = _.assign({}, this.state.service);
       // portList가공
@@ -107,12 +113,10 @@ const Requestform = SubForm =>
       newSecret.spec.ports = portList;
       // selector가공
       let obj = {};
-      this.state.selector.forEach(selector => {
-        if (selector[0] !== '' && selector[1] !== '') {
-          let key = selector[0];
-          obj[key] = selector[1];
-        }
-      });
+      if (spec.selector['key'] !== '' && spec.selector['value'] !== '') {
+        let key = spec.selector['key'];
+        obj[key] = spec.selector['value'];
+      }
       if (obj !== {}) {
         newSecret.spec.selector = obj;
       }
@@ -137,7 +141,7 @@ const Requestform = SubForm =>
             <fieldset disabled={!this.props.isCreate}>
               <div className="form-group">
                 <label className="control-label" htmlFor="service-name">
-                  {t('CONTENT:NAME')}{' '}
+                  {t('CONTENT:NAME')}
                 </label>
                 <div>
                   <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.service.metadata.name} aria-describedby="service-name-help" id="service-name" required />
@@ -161,18 +165,21 @@ const Requestform = SubForm =>
                   </select>
                 </div>
               </div>
-              {/* Selector variables */}
+              {/* Selector variables 
+                서비스 생성시 서비스에 속할 pod 집합을 정의함에 있어서 이종 그룹을 하나로 묶을 수 없음. 
+                하나의 pod selector에 다중 레이블은 지원하지만 다중 pod selector를 지원하는 경우 없음.(IMS 223753)  */}
               <div className="form-group">
-                <React.Fragment>
-                  <div className="form-group">
-                    <label className="control-label" htmlFor="username">
-                      {t('CONTENT:SELECTOR')}
-                    </label>
-                    <div>
-                      <KeyValueEditor keyValuePairs={this.state.selector} updateParentData={this._updateSelector} t={t} />
-                    </div>
+                <label className="control-label" htmlFor="username">
+                  {t('CONTENT:SELECTOR')}
+                </label>
+                <div className="form-group col-md-12 col-xs-12" style={{ marginLeft: '-30px' }}>
+                  <div className="col-md-2 col-xs-2 ">
+                    <input type="text" className="form-control" placeholder={t(`CONTENT:KEY`)} value={this.state.service.spec.selector['key']} onChange={this._onChangeSelectorKey} />
                   </div>
-                </React.Fragment>
+                  <div className="col-md-2 col-xs-2 ">
+                    <input type="text" className="form-control" placeholder={t(`CONTENT:VALUE`)} value={this.state.service.spec.selector['value']} onChange={this._onChangeSelectorValue} />
+                  </div>
+                </div>
               </div>
 
               <div className="form-group">
@@ -199,8 +206,8 @@ const Requestform = SubForm =>
                 </Link>
               </ButtonBar>
             </fieldset>
-          </form>
-        </div>
+          </form >
+        </div >
       );
     }
   };
