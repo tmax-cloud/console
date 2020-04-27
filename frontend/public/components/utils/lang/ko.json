@@ -350,7 +350,7 @@
     "HOSTS": "호스트",
     "EXTERNALIP": "외부 IP",
     "LOCATION": "위치",
-    "PROVISIONER": "제공자",
+    "PROVISIONER": "프로비저너",
     "RECLAIMPOLICY": "반환 정책",
     "DEFAULTCLASS": "기본 클래스",
     "OVERVIEW": "개요",

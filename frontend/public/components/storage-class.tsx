@@ -23,7 +23,7 @@ const StorageClassHeader = props => {
         {t('CONTENT:NAME')}
       </ColHead>
       <ColHead {...props} className="col-sm-4 col-xs-6" sortField="provisioner">
-        {t('CONTENT:PROVISIONAL')}
+        {t('CONTENT:PROVISIONER')}
       </ColHead>
       <ColHead {...props} className="col-sm-2 hidden-xs" sortField="reclaimPolicy">
         {t('CONTENT:RECLAIMPOLICY')}
@@ -56,7 +56,7 @@ const StorageClassDetails: React.SFC<StorageClassDetailsProps> = ({ obj }) => {
       <div className="co-m-pane__body">
         <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('StorageClass', t) })} />
         <ResourceSummary resource={obj} showNodeSelector={false} showPodSelector={false}>
-          <dt>{t('CONTENT:PROVISIONAL')}</dt>
+          <dt>{t('CONTENT:PROVISIONER')}</dt>
           <dd>{obj.provisioner || '-'}</dd>
           <dt>{t('CONTENT:RECLAIMPOLICY')}</dt>
           <dd>{obj.reclaimPolicy || '-'}</dd>
