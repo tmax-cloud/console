@@ -31,6 +31,11 @@ class LoginComponent extends Component {
       window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
       return;
     }
+
+    if (window.SERVER_FLAGS.HDCModeFlag) {
+      window.location.href = `${document.location.origin}`;
+      return;
+    }
     // if (searchParam('at')) {
     //   window.sessionStorage.setItem('accessToken', searchParam('at'));
     //   window.sessionStorage.setItem('refreshToken', searchParam('rt'));   
