@@ -194,7 +194,7 @@
     "SSHPRIVATEKEY": "SSH 개인키 ",
     "ADDMORE": "추가",
     "COMPACT": "컴팩트",
-    "GENERATEDFROM": "생성",
+    "GENERATEDFROM": "Generated from",
     "TIMESINTHELAST": "times in the last ",
     "SELECTOR": "선택기",
     "LOADBALANCER": "LoadBalancer",
