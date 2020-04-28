@@ -38,9 +38,9 @@ export class IngressEditor extends React.Component {
         return (
             <React.Fragment>
                 <div className="row">
-                    <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${pathNameString.toUpperCase()}`)}</div>
-                    <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${serviceNameString.toUpperCase()}`)}</div>
-                    <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${servicePortString.toUpperCase()}`)}</div>
+                    <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${pathNameString.toUpperCase()}`)}</div>
+                    <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${serviceNameString.toUpperCase()}`)}</div>
+                    <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${servicePortString.toUpperCase()}`)}</div>
                 </div>
                 {portItems}
                 <div className="row">
@@ -103,7 +103,7 @@ class IngressPairElement extends React.Component {
         );
 
         return (
-            <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
+            <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)} style={{ backgroundColor: '#D0A9F5' }}>
                 <div className="col-md-2 col-xs-2 pairs-list__name-field">
                     <input type="text" className="form-control" placeholder={t(`CONTENT:${pathNameString.toUpperCase()}`)} value={pair[IngressEditorPair.Name]} onChange={this._onChangeName} />
                 </div>

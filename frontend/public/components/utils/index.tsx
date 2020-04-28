@@ -100,3 +100,9 @@ export const enum IngressEditorPair {
   ServicePort,
   Index,
 }
+
+export const enum IngressHostEditorPair {
+  HostName,
+  Path,
+  Index,
+}
