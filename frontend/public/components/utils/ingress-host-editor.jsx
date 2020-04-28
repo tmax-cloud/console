@@ -31,10 +31,10 @@ export class IngressHostEditor extends React.Component {
         updateParentData({ values }, nameValueId);
     }
     render() {
-        const { valueString, addString, values, allowSorting, readOnly, nameValueId, t } = this.props;
+        const { valueString, addString, values, allowSorting, readOnly, nameValueId, t, serviceList } = this.props;
         const portItems = values.map((pair, i) => {
             const key = _.get(pair, [IngressHostEditorPair.Index], i);
-            return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+            return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} serviceList={serviceList} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
         return (
             <React.Fragment>
@@ -81,14 +81,13 @@ class ValuePairElement extends React.Component {
         onChange(e, index, IngressHostEditorPair.Value);
     }
     render() {
-        const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
+        const { keyString, valueString, allowSorting, readOnly, pair, t, serviceList } = this.props;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
-        const serviceNameList = [['']];
         const servicePortList = [['']];
         const paths = [['', '', '']];
         return (
@@ -98,7 +97,7 @@ class ValuePairElement extends React.Component {
                         <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} />
                     </div>
                     <div>
-                        <IngressEditor serviceNameOptions={serviceNameList} servicePortOptions={servicePortList} t={t} pathPairs={paths} updateParentData={this._updatePaths} />
+                        <IngressEditor serviceList={serviceList} servicePortOptions={servicePortList} t={t} pathPairs={paths} updateParentData={this._updatePaths} />
                     </div>
                 </div>
                 {readOnly ? null : (

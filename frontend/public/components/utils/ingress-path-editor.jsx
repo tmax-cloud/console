@@ -30,10 +30,10 @@ export class IngressEditor extends React.Component {
         updateParentData({ pathPairs }, nameValueId);
     }
     render() {
-        const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t } = this.props;
+        const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t, serviceList } = this.props;
         const portItems = pathPairs.map((pair, i) => {
             const key = _.get(pair, [IngressEditorPair.Index], i);
-            return <IngressPairElement onChange={this._change} index={i} t={t} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+            return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
         return (
             <React.Fragment>
@@ -94,7 +94,7 @@ class IngressPairElement extends React.Component {
         onChange(e, index, IngressEditorPair.Port);
     }
     render() {
-        const { pathNameString, allowSorting, readOnly, pair, t, serviceNameOptions, servicePortOptions } = this.props;
+        const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList } = this.props;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -109,7 +109,7 @@ class IngressPairElement extends React.Component {
                 </div>
                 <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
                     <select className="form-control">
-                        {serviceNameOptions}
+                        {serviceList}
                     </select>
                 </div>
                 <div className="col-md-2 col-xs-2 pairs-list__port-field">
