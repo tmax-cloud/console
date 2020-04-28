@@ -9,7 +9,7 @@ import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { IngressEditor } from '../utils/ingress-editor';
+import { IngressHostEditor } from '../utils/ingress-host-editor';
 
 enum CreateType {
     generic = 'generic',
@@ -107,9 +107,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     render() {
         const { serviceNameOptions, servicePortOptions } = this.state;
         const { t } = this.props;
-        let serviceNameList = serviceNameOptions.map(function (pvc) {
-            return <option value={pvc}>{pvc}</option>;
-        });
+        let serviceNameList = [['']];
         let servicePortList = servicePortOptions.map(function (pvc) {
             return <option value={pvc}>{pvc}</option>;
         });
@@ -131,28 +129,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                             required />
                     } id="name" />
 
-                    {/* Resource Name */}
-                    <FirstSection label={t('CONTENT:HOSTNAME')} children={
-                        <input className="form-control"
-                            type="text"
-                            onChange={this.onResourceNameChanged}
-                            value={this.state.ingress['resourceName']}
-                            required />
-                    } id="resourceName" />
-
-                    {/* Resource Quota */}
-                    <div className="form-group">
-                        <React.Fragment>
-                            <div className="form-group">
-                                <label className="control-label" htmlFor="username">
-                                    {t('CONTENT:PORT')}
-                                </label>
-                                <div>
-                                    <IngressEditor serviceNameOptions={serviceNameList} servicePortOptions={servicePortList} t={t} pathPairs={this.state.paths} updateParentData={this._updatePaths} />
-                                </div>
-                            </div>
-                        </React.Fragment>
-                    </div>
+                    <IngressHostEditor values={serviceNameList} t={t} pathPairs={this.state.paths} updateParentData={this._updatePaths} />
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
                         <Link to={formatNamespacedRouteForResource('resourcequotaclaims')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
