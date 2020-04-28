@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { KeyValueEditor } from '../utils/key-value-editor';
-import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
+import { k8sCreate, k8sList, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
@@ -50,7 +50,6 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                             }
                         ]
                     }
-
                 }]
 
             }
@@ -61,14 +60,15 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
             ingress: ingress,
             inProgress: false,
             type: 'form',
+            hosts: [['']],
             paths: [['', '', '']],
             serviceNameList: [],
             servicePortList: [],
             serviceNameOptions: [],
             servicePortOptions: []
         };
-        this.onResourceNameChanged = this.onResourceNameChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
+        this.getServiceList = this.getServiceList.bind(this);
         this.save = this.save.bind(this);
     }
     _updatePaths(path) {
@@ -76,17 +76,39 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
             paths: path.pathPairs,
         });
     }
-    onResourceNameChanged(event) {
-        let ingress = { ...this.state.ingress };
-        ingress['resourceName'] = String(event.target.value);
-        this.setState({ ingress });
+
+    componentDidMount() {
+        this.getServiceList();
     }
 
+    // 선택된 ns에 있는 Service 리스트 호출 -> service별 name,port[]으로 service List생성
+    getServiceList() {
+        const ko = kindObj('Service');
+        const ns = location.pathname.split('/')[3];
+        k8sList(ko, { ns: ns })
+            .then((data) => {
+                let serviceList = data.map(cur => {
+                    return {
+                        name: cur.metadata.name,
+                        port: cur.spec.ports
+                    }
+                })
+                if (serviceList.length === 0) {
+                    return;
+                }
+                this.setState({
+                    serviceNameList: serviceList
+                });
+            }, err => {
+                this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+            });
+    }
     onNameChanged(event) {
         let ingress = { ...this.state.ingress };
         ingress.metadata.name = String(event.target.value);
         this.setState({ ingress });
     }
+
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.ingress;
@@ -105,9 +127,11 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     }
 
     render() {
-        const { serviceNameOptions, servicePortOptions } = this.state;
+        const { serviceNameOptions, servicePortOptions, serviceNameList } = this.state;
         const { t } = this.props;
-        let serviceNameList = [['']];
+        let serviceList = serviceNameList.map(service => {
+            return <option value={service.port}>{service.name}</option>;
+        });
         let servicePortList = servicePortOptions.map(function (pvc) {
             return <option value={pvc}>{pvc}</option>;
         });
@@ -129,7 +153,10 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                             required />
                     } id="name" />
 
-                    <IngressHostEditor values={serviceNameList} t={t} pathPairs={this.state.paths} updateParentData={this._updatePaths} />
+                    {/* Host */}
+                    <IngressHostEditor values={this.state.hosts} serviceList={serviceList} t={t} pathPairs={this.state.paths} updateParentData={this._updatePaths} />
+
+                    {/* Button */}
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
                         <Link to={formatNamespacedRouteForResource('resourcequotaclaims')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
@@ -160,6 +187,7 @@ export type IngressState_ = {
     error?: any,
     type: string,
     paths: Array<any>,
+    hosts: Array<any>,
     serviceNameList: Array<any>,
     servicePortList: Array<any>,
     serviceNameOptions: Array<any>;
