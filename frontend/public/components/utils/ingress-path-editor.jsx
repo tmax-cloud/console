@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { IngressEditorPair } from './index';
-
+import { k8sGet } from '../../module/k8s';
+import { kindObj } from '../utils';
 export class IngressEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -80,6 +81,7 @@ class IngressPairElement extends React.Component {
         this._onChangeName = this._onChangeName.bind(this);
         this._onChangeServiceName = this._onChangeServiceName.bind(this);
         this._onChangeServicePort = this._onChangeServicePort.bind(this);
+        this._getServicePortList = this._getServicePortList.bind(this);
     }
     _onRemove() {
         const { index, onRemove } = this.props;
@@ -90,29 +92,43 @@ class IngressPairElement extends React.Component {
         onChange(e, index, IngressEditorPair.PathName);
     }
     _onChangeServiceName(e) {
-        const { index, onChange } = this.props;
+        const { index, onChange, serviceList } = this.props;
         onChange(e, index, IngressEditorPair.ServiceName);
-        // //service port 
-        // let serviceIndex = this.props.serviceList.indexOf(e.target.value);
-        // console.log(this.props.serviceList[serviceIndex].port)
-        // this.setState({ servicePortList: this.props.serviceList[serviceIndex].port });
-
+        // service port get
+        this._getServicePortList(e.target.value);
     }
     _onChangeServicePort(e) {
         const { index, onChange } = this.props;
         onChange(e, index, IngressEditorPair.ServicePort);
     }
+    _getServicePortList(serviceName) {
+        const ko = kindObj('Service');
+        const ns = location.pathname.split('/')[3];
+        k8sGet(ko, serviceName, ns)
+            .then((data) => {
+                console.log(data)
+                let portList = data.spec.ports;
+                this.setState({
+                    servicePortList: portList
+                })
+            }, err => {
+                this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+            });
+    }
     render() {
         const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList, pathPairs } = this.props;
+        const { servicePortList } = this.state;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
-
+        let servicePortList = servicePortList.map(port => {
+            return <option value={port.port}>{port.name}</option>;
+        });
         return (
-            <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)} style={{ backgroundColor: '#D0A9F5' }}>
+            <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)} style={{ backgroundColor: '#D0A9F5', border: '1px solid' }}>
                 <div className="col-md-2 col-xs-2 pairs-list__name-field">
                     <input type="text" className="form-control" placeholder={t(`CONTENT:${pathNameString.toUpperCase()}`)} value={pair[IngressEditorPair.Name]} onChange={this._onChangeName} />
                 </div>
@@ -123,7 +139,7 @@ class IngressPairElement extends React.Component {
                 </div>
                 <div className="col-md-2 col-xs-2 pairs-list__port-field">
                     <select className="form-control" value={pair[IngressEditorPair.ServicePort]} onChange={this._onChangeServicePort} >
-                        {servicePortOptions}
+                        {servicePortList}
                     </select>
                 </div>
                 {readOnly ? null : (

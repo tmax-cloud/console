@@ -83,7 +83,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
         this.getServiceList();
     }
 
-    // 선택된 ns에 있는 Service 리스트 호출 -> service별 name,port[]으로 service List생성
+    // 선택된 ns에 있는 Service 리스트 호출 -> serviceName으로 service List생성
     getServiceList() {
         const ko = kindObj('Service');
         const ns = location.pathname.split('/')[3];
@@ -136,9 +136,6 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
         const { t } = this.props;
         let serviceList = serviceNameList.map(service => {
             return <option value={service.name}>{service.name}</option>;
-        });
-        let servicePortList = servicePortOptions.map(function (pvc) {
-            return <option value={pvc}>{pvc}</option>;
         });
         return <div className="co-m-pane__body">
             < Helmet >
