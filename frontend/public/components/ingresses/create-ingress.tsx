@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { IngressHostEditor } from '../utils/ingress-host-editor';
+import { Ptor } from 'protractor';
 
 enum CreateType {
     generic = 'generic',
@@ -60,7 +61,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
             ingress: ingress,
             inProgress: false,
             type: 'form',
-            hosts: [['']],
+            hosts: [['', '']],
             paths: [['', '', '']],
             serviceNameList: [],
             servicePortList: [],
@@ -69,11 +70,12 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
         };
         this.onNameChanged = this.onNameChanged.bind(this);
         this.getServiceList = this.getServiceList.bind(this);
+        this._updateHosts = this._updateHosts.bind(this);
         this.save = this.save.bind(this);
     }
-    _updatePaths(path) {
+    _updateHosts(host) {
         this.setState({
-            paths: path.pathPairs,
+            hosts: host.values
         });
     }
 
@@ -88,9 +90,12 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
         k8sList(ko, { ns: ns })
             .then((data) => {
                 let serviceList = data.map(cur => {
+                    let portList = cur.spec.ports.map(port => {
+                        return port.name
+                    })
                     return {
                         name: cur.metadata.name,
-                        port: cur.spec.ports
+                        port: portList
                     }
                 })
                 if (serviceList.length === 0) {
@@ -127,10 +132,10 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     }
 
     render() {
-        const { serviceNameOptions, servicePortOptions, serviceNameList } = this.state;
+        const { hosts, servicePortOptions, serviceNameList } = this.state;
         const { t } = this.props;
         let serviceList = serviceNameList.map(service => {
-            return <option value={service.port}>{service.name}</option>;
+            return <option value={service.name}>{service.name}</option>;
         });
         let servicePortList = servicePortOptions.map(function (pvc) {
             return <option value={pvc}>{pvc}</option>;
@@ -154,7 +159,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                     } id="name" />
 
                     {/* Host */}
-                    <IngressHostEditor values={this.state.hosts} serviceList={serviceList} t={t} pathPairs={this.state.paths} updateParentData={this._updatePaths} />
+                    <IngressHostEditor values={hosts} serviceList={serviceList} t={t} updateParentData={this._updateHosts} />
 
                     {/* Button */}
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
