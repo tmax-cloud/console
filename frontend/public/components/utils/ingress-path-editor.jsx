@@ -63,7 +63,7 @@ export class IngressEditor extends React.Component {
     }
 }
 IngressEditor.defaultProps = {
-    pathNameString: 'PathName',
+    pathNameString: 'Path',
     serviceNameString: 'ServiceName',
     servicePortString: 'ServicePort',
     addString: 'AddMore',

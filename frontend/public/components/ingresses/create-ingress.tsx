@@ -123,8 +123,6 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
         const { kind, metadata } = this.state.ingress;
         this.setState({ inProgress: true });
         const newIngress = _.assign({}, this.state.ingress);
-
-
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newIngress)
@@ -137,6 +135,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
 
     render() {
         const { hosts, servicePortOptions, serviceNameList, servicePortList } = this.state;
+        console.log(hosts)
         const { t } = this.props;
         let serviceList = serviceNameList.map(service => {
             return <option value={service.name}>{service.name}</option>;

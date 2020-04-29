@@ -14,7 +14,7 @@ export class IngressHostEditor extends React.Component {
         const { updateParentData, values, nameValueId, allowSorting } = this.props;
         let lastIndex = this.props.values.length - 1;
         let lastData = this.props.values[lastIndex];
-        updateParentData({ values: allowSorting ? values.concat([['', '', values.length]]) : values.concat([['', '']]) }, nameValueId);
+        lastData[0] !== "" && updateParentData({ values: allowSorting ? values.concat([['', '', values.length]]) : values.concat([['', '']]) }, nameValueId);
     }
 
     _remove(i) {
@@ -27,7 +27,7 @@ export class IngressHostEditor extends React.Component {
     _change(e, i, type) {
         const { updateParentData, nameValueId } = this.props;
         const values = _.cloneDeep(this.props.values);
-        values[i][type] = e.target.value;
+        values[i][type] = e.pathPairs ? e.pathPairs : e.target.value;
         updateParentData({ values }, nameValueId);
     }
     render() {
@@ -79,12 +79,15 @@ class ValuePairElement extends React.Component {
     }
     _onChangeValue(e) {
         const { index, onChange } = this.props;
-        onChange(e, index, IngressHostEditorPair.Value);
+        onChange(e, index, IngressHostEditorPair.HostName);
     }
     _updatePaths(path) {
         this.setState({
             paths: path.pathPairs,
         });
+
+        const { index, onChange } = this.props;
+        onChange(path, index, IngressHostEditorPair.Path);
     }
     render() {
         const { keyString, valueString, allowSorting, readOnly, pair, t, serviceList, servicePortList } = this.props;
@@ -95,7 +98,6 @@ class ValuePairElement extends React.Component {
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
-
         return (
             <div>
                 <div className={classNames('row', 'pairs-list__row', 'col-md-10', 'col-xs-10')} ref={node => (this.node = node)}>
