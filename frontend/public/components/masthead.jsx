@@ -363,7 +363,7 @@ export const Masthead = props => {
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          {!HDCModeFlag && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime })}></i>}
+          {!HDCModeFlag && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>}
           <div className="extend-refresh-border"></div>
         </div>
       )}
