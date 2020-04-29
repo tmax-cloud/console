@@ -121,8 +121,23 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.ingress;
-        this.setState({ inProgress: true });
+        const { hosts } = this.state;
         const newIngress = _.assign({}, this.state.ingress);
+        this.setState({ inProgress: true });
+        //hosts data 가공
+        let hostData = hosts.map(host => {
+            let hostName = host[0];
+            let paths = host[1];
+            let pathData = paths.map(path => {
+                return {
+                    path: path[0], backend: { serviceName: path[1], servicePort: path[2] }
+                }
+            });
+            paths = { paths: pathData }
+            return { host: hostName, http: paths }
+        });
+        newIngress.spec.rules = hostData
+
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newIngress)
@@ -135,7 +150,6 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
 
     render() {
         const { hosts, servicePortOptions, serviceNameList, servicePortList } = this.state;
-        console.log(hosts)
         const { t } = this.props;
         let serviceList = serviceNameList.map(service => {
             return <option value={service.name}>{service.name}</option>;

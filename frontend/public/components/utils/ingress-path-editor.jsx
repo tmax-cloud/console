@@ -27,7 +27,7 @@ export class IngressEditor extends React.Component {
     _change(e, i, type) {
         const { updateParentData, nameValueId } = this.props;
         const pathPairs = _.cloneDeep(this.props.pathPairs);
-        pathPairs[i][type] = e.target.value;
+        pathPairs[i][type] = type === 2 ? Number(e.target.value) : e.target.value;
         updateParentData({ pathPairs }, nameValueId);
     }
     render() {

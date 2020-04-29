@@ -85,7 +85,6 @@ class ValuePairElement extends React.Component {
         this.setState({
             paths: path.pathPairs,
         });
-
         const { index, onChange } = this.props;
         onChange(path, index, IngressHostEditorPair.Path);
     }
@@ -105,7 +104,7 @@ class ValuePairElement extends React.Component {
                         <div className="col-md-2 col-xs-2 control-label"> {t(`CONTENT:HOSTNAME`)}</div>
                     </div>
                     <div className="col-md-12 col-xs-12 pairs-list__protocol-field">
-                        <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} />
+                        <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} required />
                     </div>
                     <div>
                         <IngressEditor serviceList={serviceList} servicePortList={servicePortList} servicePortOptions={servicePortList} pair={pair} t={t} pathPairs={paths} updateParentData={this._updatePaths} />
