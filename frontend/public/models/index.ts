@@ -1,6 +1,48 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+// export const ClusterModel: K8sKind = {
+//   kind: 'VirtualMachine',
+//   namespaced: true,
+//   label: 'Virtual Machine',
+//   plural: 'virtualmachines',
+//   apiVersion: 'v1alpha3',
+//   abbr: 'VM',
+//   apiGroup: 'kubevirt.io',
+//   labelPlural: 'Virtual Machines',
+//   path: 'virtualmachines',
+//   id: 'virtualmachine',
+//   crd: false,
+// };
+
+export const AWSClusterModel: K8sKind = {
+  kind: 'AWSCluster',
+  namespaced: true,
+  label: 'AWS Cluster',
+  plural: 'awsclusters',
+  apiVersion: 'v1alpha3',
+  abbr: 'AC',
+  apiGroup: 'infrastructure.cluster.x-k8s.io',
+  labelPlural: 'AWS Clusters',
+  path: 'awsclusters',
+  id: 'awscluster',
+  crd: false,
+};
+
+export const AWSMachineTemplateModel: K8sKind = {
+  kind: 'AWSMachineTemplate',
+  namespaced: true,
+  label: 'AWS Machine Template',
+  plural: 'awsmachinetemplates',
+  apiVersion: 'v1alpha3',
+  abbr: 'AMT',
+  apiGroup: 'infrastructure.cluster.x-k8s.io',
+  labelPlural: 'AWS Machine Templates',
+  path: 'awsmachinetemplates',
+  id: 'awsmachinetemplate',
+  crd: false,
+};
+
 export const VirtualMachineModel: K8sKind = {
   kind: 'VirtualMachine',
   namespaced: true,
