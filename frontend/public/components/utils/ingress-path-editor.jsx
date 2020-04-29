@@ -20,7 +20,7 @@ export class IngressEditor extends React.Component {
         const { updateParentData, nameValueId } = this.props;
         const pathPairs = _.cloneDeep(this.props.pathPairs);
         pathPairs.splice(i, 1);
-        updateParentData({ pathPairs: pathPairs.length ? pathPairs : [['', '']] }, nameValueId);
+        updateParentData({ pathPairs: pathPairs.length ? pathPairs : [['', '', '']] }, nameValueId);
     }
 
     _change(e, i, type) {
@@ -31,7 +31,7 @@ export class IngressEditor extends React.Component {
     }
     render() {
         const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t, serviceList } = this.props;
-        const portItems = pathPairs.map((pair, i) => {
+        const pathItems = pathPairs.map((pair, i) => {
             const key = _.get(pair, [IngressEditorPair.Index], i);
             return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
@@ -39,10 +39,10 @@ export class IngressEditor extends React.Component {
             <React.Fragment>
                 <div className="row">
                     <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${pathNameString.toUpperCase()}`)}</div>
-                    <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${serviceNameString.toUpperCase()}`)}</div>
+                    <div className="col-md-3 col-xs-3 control-label">{t(`CONTENT:${serviceNameString.toUpperCase()}`)}</div>
                     <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${servicePortString.toUpperCase()}`)}</div>
                 </div>
-                {portItems}
+                {pathItems}
                 <div className="row">
                     <div className="col-md-12 col-xs-12">
                         {readOnly ? null : (
@@ -72,10 +72,14 @@ IngressEditor.defaultProps = {
 class IngressPairElement extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            servicePortList: [],
+            serviceList: this.props.serviceList
+        };
         this._onRemove = this._onRemove.bind(this);
         this._onChangeName = this._onChangeName.bind(this);
-        this._onChangeProtocol = this._onChangeProtocol.bind(this);
-        this._onChangePort = this._onChangePort.bind(this);
+        this._onChangeServiceName = this._onChangeServiceName.bind(this);
+        this._onChangeServicePort = this._onChangeServicePort.bind(this);
     }
     _onRemove() {
         const { index, onRemove } = this.props;
@@ -83,18 +87,23 @@ class IngressPairElement extends React.Component {
     }
     _onChangeName(e) {
         const { index, onChange } = this.props;
-        onChange(e, index, IngressEditorPair.Name);
+        onChange(e, index, IngressEditorPair.PathName);
     }
-    _onChangeProtocol(e) {
+    _onChangeServiceName(e) {
         const { index, onChange } = this.props;
-        onChange(e, index, IngressEditorPair.Protocol);
+        onChange(e, index, IngressEditorPair.ServiceName);
+        // //service port 
+        // let serviceIndex = this.props.serviceList.indexOf(e.target.value);
+        // console.log(this.props.serviceList[serviceIndex].port)
+        // this.setState({ servicePortList: this.props.serviceList[serviceIndex].port });
+
     }
-    _onChangePort(e) {
+    _onChangeServicePort(e) {
         const { index, onChange } = this.props;
-        onChange(e, index, IngressEditorPair.Port);
+        onChange(e, index, IngressEditorPair.ServicePort);
     }
     render() {
-        const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList } = this.props;
+        const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList, pathPairs } = this.props;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -107,13 +116,13 @@ class IngressPairElement extends React.Component {
                 <div className="col-md-2 col-xs-2 pairs-list__name-field">
                     <input type="text" className="form-control" placeholder={t(`CONTENT:${pathNameString.toUpperCase()}`)} value={pair[IngressEditorPair.Name]} onChange={this._onChangeName} />
                 </div>
-                <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-                    <select className="form-control">
+                <div className="col-md-3 col-xs-3 pairs-list__protocol-field">
+                    <select className="form-control" value={pair[IngressEditorPair.ServiceName]} onChange={this._onChangeServiceName} >
                         {serviceList}
                     </select>
                 </div>
                 <div className="col-md-2 col-xs-2 pairs-list__port-field">
-                    <select className="form-control">
+                    <select className="form-control" value={pair[IngressEditorPair.ServicePort]} onChange={this._onChangeServicePort} >
                         {servicePortOptions}
                     </select>
                 </div>
