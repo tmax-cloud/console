@@ -156,7 +156,10 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                     } id="name" />
 
                     {/* Host */}
-                    <IngressHostEditor values={hosts} serviceList={serviceList} t={t} updateParentData={this._updateHosts} />
+                    <FirstSection label={t('CONTENT:HOST')} children={
+                        <IngressHostEditor values={hosts} serviceList={serviceList} t={t} updateParentData={this._updateHosts} />
+                    } id="host" />
+
 
                     {/* Button */}
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >

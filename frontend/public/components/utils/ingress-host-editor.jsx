@@ -37,10 +37,7 @@ export class IngressHostEditor extends React.Component {
             return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} serviceList={serviceList} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
         return (
-            <React.Fragment>
-                <div className="row">
-                    <div className="col-md-2 col-xs-2 control-label"> {t(`CONTENT:HOSTNAME`)}</div>
-                </div>
+            <React.Fragment style={{ backgroundColor: '#CEECF5', border: '1px solid' }}>
                 {portItems}
                 <div className="row">
                     <div className="col-md-12 col-xs-12">
@@ -102,7 +99,10 @@ class ValuePairElement extends React.Component {
 
         return (
             <div>
-                <div className={classNames('row', 'pairs-list__row', 'col-md-10', 'col-xs-10')} style={{ backgroundColor: '#CEECF5', border: '1px solid' }} ref={node => (this.node = node)}>
+                <div className={classNames('row', 'pairs-list__row', 'col-md-10', 'col-xs-10')} ref={node => (this.node = node)}>
+                    <div className="row">
+                        <div className="col-md-2 col-xs-2 control-label"> {t(`CONTENT:HOSTNAME`)}</div>
+                    </div>
                     <div className="col-md-12 col-xs-12 pairs-list__protocol-field">
                         <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} />
                     </div>
