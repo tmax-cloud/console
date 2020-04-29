@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const UserHeader = props => {
+const ServiceDNSRecordHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -27,14 +27,14 @@ const UserHeader = props => {
   );
 };
 
-const UserRow = () =>
+const ServiceDNSRecordRow = () =>
   // eslint-disable-next-line no-shadow
-  function UserRow({ obj }) {
+  function ServiceDNSRecordRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="User" resource={obj} />}
-          <ResourceLink kind="User" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="ServiceDNSRecord" resource={obj} />}
+          <ResourceLink kind="ServiceDNSRecord" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -47,32 +47,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('User', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ServiceDNSRecord', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const UserList = props => {
+export const ServiceDNSRecordList = props => {
   const { kinds } = props;
-  const Row = UserRow(kinds[0]);
-  Row.displayName = 'UserRow';
-  return <List {...props} Header={UserHeader} Row={Row} />;
+  const Row = ServiceDNSRecordRow(kinds[0]);
+  Row.displayName = 'ServiceDNSRecordRow';
+  return <List {...props} Header={ServiceDNSRecordHeader} Row={Row} />;
 };
-UserList.displayName = UserList;
+ServiceDNSRecordList.displayName = ServiceDNSRecordList;
 
-export const UsersPage = props => {
+export const ServiceDNSRecordsPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> : <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={ServiceDNSRecordList} canCreate={false} kind="ServiceDNSRecord" /> : <ListPage {...props} ListComponent={ServiceDNSRecordList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="ServiceDNSRecord" />;
 };
-UsersPage.displayName = 'UsersPage';
+ServiceDNSRecordsPage.displayName = 'ServiceDNSRecordsPage';
 
-export const UsersDetailsPage = props => {
+export const ServiceDNSRecordsDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="User" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="ServiceDNSRecord" menuActions={menu} pages={page} />;
 };
 
-UsersDetailsPage.displayName = 'UsersDetailsPage';
+ServiceDNSRecordsDetailsPage.displayName = 'ServiceDNSRecordsDetailsPage';

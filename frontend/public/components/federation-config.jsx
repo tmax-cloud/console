@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const UserHeader = props => {
+const FederatedConfigMapHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -27,14 +27,14 @@ const UserHeader = props => {
   );
 };
 
-const UserRow = () =>
+const FederatedConfigMapRow = () =>
   // eslint-disable-next-line no-shadow
-  function UserRow({ obj }) {
+  function FederatedConfigMapRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="User" resource={obj} />}
-          <ResourceLink kind="User" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="FederatedConfigMap" resource={obj} />}
+          <ResourceLink kind="FederatedConfigMap" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -47,32 +47,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('User', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('FederatedConfigMap', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const UserList = props => {
+export const FederatedConfigMapList = props => {
   const { kinds } = props;
-  const Row = UserRow(kinds[0]);
-  Row.displayName = 'UserRow';
-  return <List {...props} Header={UserHeader} Row={Row} />;
+  const Row = FederatedConfigMapRow(kinds[0]);
+  Row.displayName = 'FederatedConfigMapRow';
+  return <List {...props} Header={FederatedConfigMapHeader} Row={Row} />;
 };
-UserList.displayName = UserList;
+FederatedConfigMapList.displayName = FederatedConfigMapList;
 
-export const UsersPage = props => {
+export const FederatedConfigMapsPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> : <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={FederatedConfigMapList} canCreate={false} kind="FederatedConfigMap" /> : <ListPage {...props} ListComponent={FederatedConfigMapList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="FederatedConfigMap" />;
 };
-UsersPage.displayName = 'UsersPage';
+FederatedConfigMapsPage.displayName = 'FederatedConfigMapsPage';
 
-export const UsersDetailsPage = props => {
+export const FederatedConfigMapsDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="User" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="FederatedConfigMap" menuActions={menu} pages={page} />;
 };
 
-UsersDetailsPage.displayName = 'UsersDetailsPage';
+FederatedConfigMapsDetailsPage.displayName = 'FederatedConfigMapsDetailsPage';

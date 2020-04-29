@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const UserHeader = props => {
+const Metal3MachineTemplateHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -27,14 +27,14 @@ const UserHeader = props => {
   );
 };
 
-const UserRow = () =>
+const Metal3MachineTemplateRow = () =>
   // eslint-disable-next-line no-shadow
-  function UserRow({ obj }) {
+  function Metal3MachineTemplateRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="User" resource={obj} />}
-          <ResourceLink kind="User" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="Metal3MachineTemplate" resource={obj} />}
+          <ResourceLink kind="Metal3MachineTemplate" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -47,32 +47,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('User', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Metal3MachineTemplate', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const UserList = props => {
+export const Metal3MachineTemplateList = props => {
   const { kinds } = props;
-  const Row = UserRow(kinds[0]);
-  Row.displayName = 'UserRow';
-  return <List {...props} Header={UserHeader} Row={Row} />;
+  const Row = Metal3MachineTemplateRow(kinds[0]);
+  Row.displayName = 'Metal3MachineTemplateRow';
+  return <List {...props} Header={Metal3MachineTemplateHeader} Row={Row} />;
 };
-UserList.displayName = UserList;
+Metal3MachineTemplateList.displayName = Metal3MachineTemplateList;
 
-export const UsersPage = props => {
+export const Metal3MachineTemplatesPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> : <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={Metal3MachineTemplateList} canCreate={false} kind="Metal3MachineTemplate" /> : <ListPage {...props} ListComponent={Metal3MachineTemplateList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="Metal3MachineTemplate" />;
 };
-UsersPage.displayName = 'UsersPage';
+Metal3MachineTemplatesPage.displayName = 'Metal3MachineTemplatesPage';
 
-export const UsersDetailsPage = props => {
+export const Metal3MachineTemplatesDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="User" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="Metal3MachineTemplate" menuActions={menu} pages={page} />;
 };
 
-UsersDetailsPage.displayName = 'UsersDetailsPage';
+Metal3MachineTemplatesDetailsPage.displayName = 'Metal3MachineTemplatesDetailsPage';

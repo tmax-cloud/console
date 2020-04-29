@@ -1,19 +1,215 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
-// export const ClusterModel: K8sKind = {
-//   kind: 'VirtualMachine',
+export const KubeFedClusterModel: K8sKind = {
+  kind: 'KubeFedCluster',
+  namespaced: true,
+  label: 'Federation Cluster',
+  plural: 'federationclusters',
+  apiVersion: 'v1beta1',
+  abbr: 'FC',
+  apiGroup: 'core.kubefed.io',
+  labelPlural: 'Federation Clusters',
+  path: 'federationclusters',
+  id: 'federationcluster',
+  crd: false,
+};
+
+export const FederatedConfigMapModel: K8sKind = {
+  kind: 'FederatedConfigMap',
+  namespaced: true,
+  label: 'Federation Config',
+  plural: 'federationconfigs',
+  apiVersion: 'v1beta1',
+  abbr: 'FC',
+  apiGroup: 'types.kubefed.io',
+  labelPlural: 'Federation Configs',
+  path: 'federationconfigs',
+  id: 'federationconfig',
+  crd: false,
+};
+
+export const FederatedTypeConfigModel: K8sKind = {
+  kind: 'FederatedTypeConfig',
+  namespaced: true,
+  label: 'Federated Type Config',
+  plural: 'federatedtypeconfigs',
+  apiVersion: 'v1beta1',
+  abbr: 'FTC',
+  apiGroup: 'core.kubefed.io',
+  labelPlural: 'Federation Type Configs',
+  path: 'federatedtypeconfigs',
+  id: 'federatedtypeconfig',
+  crd: false,
+};
+
+export const DNSEndpointModel: K8sKind = {
+  kind: 'DNSEndpoint',
+  namespaced: true,
+  label: 'DNS Endpoint',
+  plural: 'dnsendpoints',
+  apiVersion: 'v1alpha1',
+  abbr: 'DE',
+  apiGroup: 'multiclusterdns.kubefed.io',
+  labelPlural: 'DNS Endpoints',
+  path: 'dnsendpoints',
+  id: 'dnsendpoint',
+  crd: false,
+};
+
+export const DomainModel: K8sKind = {
+  kind: 'Domain',
+  namespaced: true,
+  label: 'Domain',
+  plural: 'domains',
+  apiVersion: 'v1alpha1',
+  abbr: 'D',
+  apiGroup: ' multiclusterdns.kubefed.io',
+  labelPlural: 'Domains',
+  path: 'domains',
+  id: 'domain',
+  crd: false,
+};
+
+export const IngressDNSRecordModel: K8sKind = {
+  kind: 'IngressDNSRecord',
+  namespaced: true,
+  label: 'Ingress DNS Record',
+  plural: 'ingressdnsrecords',
+  apiVersion: 'v1alpha1',
+  abbr: 'IDR',
+  apiGroup: 'multiclusterdns.kubefed.io',
+  labelPlural: 'Ingress DNS Records',
+  path: 'ingressdnsrecords',
+  id: 'ingressdnsrecord',
+  crd: false,
+};
+
+export const ServiceDNSRecordModel: K8sKind = {
+  kind: 'ServiceDNSRecord',
+  namespaced: true,
+  label: 'Service DNS Record',
+  plural: 'servicednsrecords',
+  apiVersion: 'v1alpha1',
+  abbr: 'SDR',
+  apiGroup: 'multiclusterdns.kubefed.io',
+  labelPlural: 'Service DNS Records',
+  path: 'servicednsrecords',
+  id: 'servicednsrecord',
+  crd: false,
+};
+
+export const ClusterModel: K8sKind = {
+  kind: 'Cluster',
+  namespaced: true,
+  label: 'Cluster',
+  plural: 'clusters',
+  apiVersion: 'v1alpha3',
+  abbr: 'C',
+  apiGroup: 'cluster.x-k8s.io',
+  labelPlural: 'Clusters',
+  path: 'clusters',
+  id: 'cluster',
+  crd: false,
+};
+
+export const MachineDeploymentModel: K8sKind = {
+  kind: 'MachineDeployment',
+  namespaced: true,
+  label: 'Machine Deployment',
+  plural: 'machinedeployments',
+  apiVersion: 'v1alpha3',
+  abbr: 'MD',
+  apiGroup: 'cluster.x-k8s.io',
+  labelPlural: 'Machine Deployments',
+  path: 'machinedeployments',
+  id: 'machinedeployment',
+  crd: false,
+};
+
+// export const MachineHealthCheckModel: K8sKind = {
+//   kind: 'MachineHealthCheck',
 //   namespaced: true,
-//   label: 'Virtual Machine',
-//   plural: 'virtualmachines',
-//   apiVersion: 'v1alpha3',
-//   abbr: 'VM',
-//   apiGroup: 'kubevirt.io',
-//   labelPlural: 'Virtual Machines',
-//   path: 'virtualmachines',
-//   id: 'virtualmachine',
+//   label: 'Machine Health Check',
+//   plural: 'machinehealthchecks',
+//   apiVersion: '',
+//   abbr: 'MHC',
+//   apiGroup: '',
+//   labelPlural: 'Machine Health Checks',
+//   path: 'machinehealthchecks',
+//   id: 'machinehealthcheck',
 //   crd: false,
 // };
+
+export const MachineModel: K8sKind = {
+  kind: 'Machine',
+  namespaced: true,
+  label: 'Machine',
+  plural: 'machines',
+  apiVersion: 'v1alpha3',
+  abbr: 'M',
+  apiGroup: 'cluster.x-k8s.io',
+  labelPlural: 'Machines',
+  path: 'machines',
+  id: 'machine',
+  crd: false,
+};
+
+export const MachineSetModel: K8sKind = {
+  kind: 'MachineSet',
+  namespaced: true,
+  label: 'Machine Set',
+  plural: 'machinesets',
+  apiVersion: 'v1alpha3',
+  abbr: 'MS',
+  apiGroup: 'cluster.x-k8s.io',
+  labelPlural: 'Machine Sets',
+  path: 'machinesets',
+  id: 'machineset',
+  crd: false,
+};
+
+export const Metal3ClusterModel: K8sKind = {
+  kind: 'Metal3Cluster',
+  namespaced: true,
+  label: 'Baremetal Cluster',
+  plural: 'baremetalclusters',
+  apiVersion: 'v1alpha3',
+  abbr: 'BC',
+  apiGroup: 'infrastructure.cluster.x-k8s.io',
+  labelPlural: 'Baremetal Clusters',
+  path: 'baremetalclusters',
+  id: 'baremetalcluster',
+  crd: false,
+};
+
+export const Metal3MachineModel: K8sKind = {
+  kind: 'Metal3Machine',
+  namespaced: true,
+  label: 'Baremetal Machine',
+  plural: 'baremetalmachines',
+  apiVersion: 'v1alpha3',
+  abbr: 'BM',
+  apiGroup: 'infrastructure.cluster.x-k8s.io',
+  labelPlural: 'Baremetal Machine',
+  path: 'metal3machbaremetalmachinesines',
+  id: 'baremetalmachine',
+  crd: false,
+};
+
+export const Metal3MachineTemplateModel: K8sKind = {
+  kind: 'Metal3MachineTemplate',
+  namespaced: true,
+  label: 'Baremetal Machine Template',
+  plural: 'baremetalmachinetemplates',
+  apiVersion: 'v1alpha3',
+  abbr: 'BMT',
+  apiGroup: 'infrastructure.cluster.x-k8s.io',
+  labelPlural: 'Baremetal Machine Templates',
+  path: 'baremetalmachinetemplates',
+  id: 'baremetalmachinetemplate',
+  crd: false,
+};
 
 export const AWSClusterModel: K8sKind = {
   kind: 'AWSCluster',
@@ -26,6 +222,20 @@ export const AWSClusterModel: K8sKind = {
   labelPlural: 'AWS Clusters',
   path: 'awsclusters',
   id: 'awscluster',
+  crd: false,
+};
+
+export const AWSMachineModel: K8sKind = {
+  kind: 'AWSMachine',
+  namespaced: true,
+  label: 'AWS Machine',
+  plural: 'awsmachines',
+  apiVersion: 'v1alpha3',
+  abbr: 'AM',
+  apiGroup: 'infrastructure.cluster.x-k8s.io',
+  labelPlural: 'AWS Machines',
+  path: 'awsmachines',
+  id: 'awsmachine',
   crd: false,
 };
 
@@ -305,18 +515,18 @@ export const AlertmanagerModel: K8sKind = {
   crd: false,
 };
 
-export const ClusterModel: K8sKind = {
-  kind: 'Cluster',
-  label: 'Cluster',
-  labelPlural: 'Clusters',
-  apiGroup: 'multicluster.coreos.com',
-  path: 'clusters',
-  apiVersion: 'v1',
-  crd: true,
-  plural: 'clusters',
-  abbr: 'C',
-  namespaced: false,
-};
+// export const ClusterModel: K8sKind = {
+//   kind: 'Cluster',
+//   label: 'Cluster',
+//   labelPlural: 'Clusters',
+//   apiGroup: 'multicluster.coreos.com',
+//   path: 'clusters',
+//   apiVersion: 'v1',
+//   crd: true,
+//   plural: 'clusters',
+//   abbr: 'C',
+//   namespaced: false,
+// };
 
 export const ChargebackReportModel: K8sKind = {
   kind: 'Report',

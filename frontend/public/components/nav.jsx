@@ -402,53 +402,53 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text={t('RESOURCE:FEDERATION')} icon="pficon pficon-catalog">
-              <ResourceClusterLink resource="federationclusters" name={t('RESOURCE:FEDERATIONCLUSTER')} onClick={this.close} />
-              <ResourceClusterLink resource="federationconfigs" name={t('RESOURCE:FEDERATIONCONFIG')} onClick={this.close} />
+              <ResourceClusterLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="federationconfigs" name={t('RESOURCE:FEDERATEDCONFIGMAP')} onClick={this.close} />
               <ResourceClusterLink resource="federatedtypeconfigs" name={t('RESOURCE:FEDERATEDTYPECONFIG')} onClick={this.close} />
-              <ResourceClusterLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCES')} onClick={this.close} />
+              <ResourceClusterLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:FEDERATEDWORKLOAD')} icon="fa fa-briefcase">
-              <ResourceClusterLink resource="replicaschedulingpreferences" name={t('RESOURCE:REPLICASCHEDULINGPREFERENCES')} onClick={this.close} />
+              <ResourceClusterLink resource="replicaschedulingpreferences" name={t('RESOURCE:REPLICASCHEDULINGPREFERENCE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:MULTICLUSTERNETWORK')} icon="pficon-network">
-              <ResourceClusterLink resource="dnsendpoints" name={t('RESOURCE:DNSENDPOINTS')} onClick={this.close} />
-              <ResourceClusterLink resource="domains" name={t('RESOURCE:DOMAINS')} onClick={this.close} />
-              <ResourceClusterLink resource="ingressdnsrecords" name={t('RESOURCE:INGRESSDNSRECORDS')} onClick={this.close} />
-              <ResourceClusterLink resource="servicednsrecords" name={t('RESOURCE:SERVICEDNSRECORDS')} onClick={this.close} />
+              <ResourceClusterLink resource="dnsendpoints" name={t('RESOURCE:DNSENDPOINT')} onClick={this.close} />
+              <ResourceClusterLink resource="domains" name={t('RESOURCE:DOMAIN')} onClick={this.close} />
+              <ResourceClusterLink resource="ingressdnsrecords" name={t('RESOURCE:INGRESSDNSRECORD')} onClick={this.close} />
+              <ResourceClusterLink resource="servicednsrecords" name={t('RESOURCE:SERVICEDNSRECORD')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:CLUSTERMANAGEMENT')} icon="fa fa-database">
-              <ResourceClusterLink resource="clusters" name={t('RESOURCE:CLUSTERS')} onClick={this.close} />
-              <ResourceClusterLink resource="machinedeployments" name={t('RESOURCE:MACHINEDEPLOYMENTS')} onClick={this.close} />
-              <ResourceClusterLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECKS')} onClick={this.close} />
-              <ResourceClusterLink resource="machines" name={t('RESOURCE:MACHINES')} onClick={this.close} />
-              <ResourceClusterLink resource="machinesets" name={t('RESOURCE:MACHINESETS')} onClick={this.close} />
+              <ResourceClusterLink resource="clusters" name={t('RESOURCE:CLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="machinedeployments" name={t('RESOURCE:MACHINEDEPLOYMENT')} onClick={this.close} />
+              <ResourceClusterLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECK')} onClick={this.close} />
+              <ResourceClusterLink resource="machines" name={t('RESOURCE:MACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="machinesets" name={t('RESOURCE:MACHINESET')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:BAREMETALMANAGEMENT')} icon="pficon pficon-build">
-              <ResourceClusterLink resource="baremetalclusters" name={t('RESOURCE:BAREMETALCLUSTERS')} onClick={this.close} />
-              <ResourceClusterLink resource="baremetalmachines" name={t('RESOURCE:BAREMETALMACHINES')} onClick={this.close} />
-              <ResourceClusterLink resource="baremetalmachinetemplates" name={t('RESOURCE:BAREMETALMACHINETEMPLATES')} onClick={this.close} />
+              <ResourceClusterLink resource="baremetalclusters" name={t('RESOURCE:METAL3CLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="baremetalmachines" name={t('RESOURCE:METAL3MACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="baremetalmachinetemplates" name={t('RESOURCE:METAL3MACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:AWSMANAGEMENT')} icon="fa fa-shield">
-              <ResourceClusterLink resource="awsclusters" name={t('RESOURCE:AWSCLUSTERS')} onClick={this.close} />
-              <ResourceClusterLink resource="awsmachines" name={t('RESOURCE:AWSMACHINES')} onClick={this.close} />
-              <ResourceClusterLink resource="awsmachinetemplates" name={t('RESOURCE:AWSMACHINETEMPLATES')} onClick={this.close} />
+              <ResourceClusterLink resource="awsclusters" name={t('RESOURCE:AWSCLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="awsmachines" name={t('RESOURCE:AWSMACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="awsmachinetemplates" name={t('RESOURCE:AWSMACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:AZUREMANAGEMENT')} icon="pficon pficon-process-automation">
-              <ResourceClusterLink resource="azureclusters" name={t('RESOURCE:AZURECLUSTERS')} onClick={this.close} />
-              <ResourceClusterLink resource="azuremachines" name={t('RESOURCE:AZUREMACHINES')} onClick={this.close} />
-              <ResourceClusterLink resource="azuremachinetemplates" name={t('RESOURCE:AZUREMACHINETEMPLATES')} onClick={this.close} />
+              <ResourceClusterLink resource="azureclusters" name={t('RESOURCE:AZURECLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="azuremachines" name={t('RESOURCE:AZUREMACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="azuremachinetemplates" name={t('RESOURCE:AZUREMACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:GCPMANAGEMENT')} icon="pficon pficon-image">
-              <ResourceClusterLink resource="gcpclusters" name={t('RESOURCE:GCPCLUSTERS')} onClick={this.close} />
-              <ResourceClusterLink resource="gcpmachines" name={t('RESOURCE:GCPMACHINES')} onClick={this.close} />
-              <ResourceClusterLink resource="gcpmachinetemplates" name={t('RESOURCE:GCPMACHINETEMPLATES')} onClick={this.close} />
+              <ResourceClusterLink resource="gcpclusters" name={t('RESOURCE:GCPCLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="gcpmachines" name={t('RESOURCE:GCPMACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="gcpmachinetemplates" name={t('RESOURCE:GCPMACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
 
             {/* Service Catalog 전체 추가 */}
