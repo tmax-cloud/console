@@ -14,7 +14,7 @@ export class IngressHostEditor extends React.Component {
         const { updateParentData, values, nameValueId, allowSorting } = this.props;
         let lastIndex = this.props.values.length - 1;
         let lastData = this.props.values[lastIndex];
-        updateParentData({ values: allowSorting ? portPairs.concat([['', values.length]]) : values.concat([['']]) }, nameValueId);
+        updateParentData({ values: allowSorting ? values.concat([['', '', values.length]]) : values.concat([['', '']]) }, nameValueId);
     }
 
     _remove(i) {
@@ -37,10 +37,7 @@ export class IngressHostEditor extends React.Component {
             return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} serviceList={serviceList} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
         return (
-            <React.Fragment>
-                <div className="row">
-                    <div className="col-md-2 col-xs-2 control-label"> {t(`CONTENT:HOSTNAME`)}</div>
-                </div>
+            <React.Fragment style={{ backgroundColor: '#CEECF5', border: '1px solid' }}>
                 {portItems}
                 <div className="row">
                     <div className="col-md-12 col-xs-12">
@@ -69,8 +66,12 @@ IngressHostEditor.defaultProps = {
 class ValuePairElement extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            paths: [['', '', '']]
+        }
         this._onRemove = this._onRemove.bind(this);
         this._onChangeValue = this._onChangeValue.bind(this);
+        this._updatePaths = this._updatePaths.bind(this);
     }
     _onRemove() {
         const { index, onRemove } = this.props;
@@ -80,8 +81,14 @@ class ValuePairElement extends React.Component {
         const { index, onChange } = this.props;
         onChange(e, index, IngressHostEditorPair.Value);
     }
+    _updatePaths(path) {
+        this.setState({
+            paths: path.pathPairs,
+        });
+    }
     render() {
         const { keyString, valueString, allowSorting, readOnly, pair, t, serviceList } = this.props;
+        const { paths } = this.state;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -89,15 +96,18 @@ class ValuePairElement extends React.Component {
             </React.Fragment>
         );
         const servicePortList = [['']];
-        const paths = [['', '', '']];
+
         return (
             <div>
-                <div className={classNames('row', 'pairs-list__row', 'col-md-10', 'col-xs-10')} style={{ backgroundColor: '#CEECF5', borderWidth: '2px' }} ref={node => (this.node = node)}>
+                <div className={classNames('row', 'pairs-list__row', 'col-md-10', 'col-xs-10')} ref={node => (this.node = node)}>
+                    <div className="row">
+                        <div className="col-md-2 col-xs-2 control-label"> {t(`CONTENT:HOSTNAME`)}</div>
+                    </div>
                     <div className="col-md-12 col-xs-12 pairs-list__protocol-field">
                         <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} />
                     </div>
                     <div>
-                        <IngressEditor serviceList={serviceList} servicePortOptions={servicePortList} t={t} pathPairs={paths} updateParentData={this._updatePaths} />
+                        <IngressEditor serviceList={serviceList} servicePortOptions={servicePortList} pair={pair} t={t} pathPairs={paths} updateParentData={this._updatePaths} />
                     </div>
                 </div>
                 {readOnly ? null : (

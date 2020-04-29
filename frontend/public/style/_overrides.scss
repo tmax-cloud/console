@@ -46,14 +46,13 @@
     font-weight: 900;
     src: url(fonts/NotoSansCJKkr-Black.otf) format('opentype');
   } 
-  
   * {
     font-family: 'Noto Sans CJK KR', sans-serif; // !important;
   }
 
   .ace_content * {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
-}
+    font-family:  'Ubuntu Mono', 'source-code-pro', monospace !important;
+  }
 
   .ace_doc-tooltip sup {
     color: red
