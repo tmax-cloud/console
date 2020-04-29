@@ -658,7 +658,7 @@
     "REPLICASCHEDULINGPREFERENCE": "Replica Scheduling Preference",
     "MULTICLUSTERNETWORK": "Multi Cluster Network",
     "DNSENDPOINT": "DNS Endpoint",
-    "DOMAINS": "Domain",
+    "DOMAIN": "Domain",
     "INGRESSDNSRECORD": "Ingress DNS Record",
     "SERVICEDNSRECORD": "Service DNS Record",
     "CLUSTERMANAGEMENT": "Cluster Management",
