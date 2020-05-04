@@ -1,6 +1,33 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+export const FederatedNamespaceModel: K8sKind = {
+  kind: 'FederatedNamespace',
+  namespaced: true,
+  label: 'Federated Resources',
+  plural: 'federatedresources',
+  apiVersion: 'v1beta1',
+  abbr: 'FN',
+  apiGroup: 'types.kubefed.io',
+  labelPlural: 'Federated Resources',
+  path: 'federatednamespaces',
+  id: 'federatedresource',
+  crd: false,
+};
+export const FederatedDeploymentModel: K8sKind = {
+  kind: 'FederatedDeployment',
+  namespaced: true,
+  label: 'Federated Resources',
+  plural: 'federatedresources',
+  apiVersion: 'v1beta1',
+  abbr: 'FD',
+  apiGroup: 'types.kubefed.io',
+  labelPlural: 'Federated Resourcess',
+  path: 'federateddeployments',
+  id: 'federatedresource',
+  crd: false,
+};
+
 export const KubeFedClusterModel: K8sKind = {
   kind: 'KubeFedCluster',
   namespaced: true,
