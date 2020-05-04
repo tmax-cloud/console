@@ -31,10 +31,10 @@ export class IngressEditor extends React.Component {
         updateParentData({ pathPairs }, nameValueId);
     }
     render() {
-        const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t, serviceList } = this.props;
+        const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t, serviceList, servicePortList } = this.props;
         const pathItems = pathPairs.map((pair, i) => {
             const key = _.get(pair, [IngressEditorPair.Index], i);
-            return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+            return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} servicePortList={servicePortList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
         return (
             <React.Fragment>
@@ -63,7 +63,7 @@ export class IngressEditor extends React.Component {
     }
 }
 IngressEditor.defaultProps = {
-    pathNameString: 'PathName',
+    pathNameString: 'Path',
     serviceNameString: 'ServiceName',
     servicePortString: 'ServicePort',
     addString: 'AddMore',
@@ -117,8 +117,9 @@ class IngressPairElement extends React.Component {
                 this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
             });
     }
+
     render() {
-        const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList, pathPairs } = this.props;
+        const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList, pathPairs, servicePortList } = this.props;
         const { servicePortList } = this.state;
         const deleteButton = (
             <React.Fragment>
@@ -126,9 +127,11 @@ class IngressPairElement extends React.Component {
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
-        let servicePortList = servicePortList.map(port => {
+        servicePortList = !servicePortList.length ? this.props.servicePortList : this.state.servicePortList;
+        let portList = servicePortList.map(port => {
             return <option value={port.port}>{port.name}</option>;
         });
+
         return (
             <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
                 <div className="col-md-2 col-xs-2 pairs-list__name-field">
@@ -141,7 +144,7 @@ class IngressPairElement extends React.Component {
                 </div>
                 <div className="col-md-2 col-xs-2 pairs-list__port-field">
                     <select className="form-control" value={pair[IngressEditorPair.ServicePort]} onChange={this._onChangeServicePort} >
-                        {servicePortList}
+                        {portList}
                     </select>
                 </div>
                 {readOnly ? null : (
