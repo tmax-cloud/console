@@ -10,7 +10,7 @@ export const KubeFedClusterModel: K8sKind = {
   abbr: 'FC',
   apiGroup: 'core.kubefed.io',
   labelPlural: 'Federation Clusters',
-  path: 'federationclusters',
+  path: 'kubefedclusters',
   id: 'federationcluster',
   crd: false,
 };
@@ -24,7 +24,7 @@ export const FederatedConfigMapModel: K8sKind = {
   abbr: 'FC',
   apiGroup: 'types.kubefed.io',
   labelPlural: 'Federation Configs',
-  path: 'federationconfigs',
+  path: 'federatedconfigmaps',
   id: 'federationconfig',
   crd: false,
 };
@@ -178,7 +178,7 @@ export const Metal3ClusterModel: K8sKind = {
   abbr: 'BC',
   apiGroup: 'infrastructure.cluster.x-k8s.io',
   labelPlural: 'Baremetal Clusters',
-  path: 'baremetalclusters',
+  path: 'metal3clusters',
   id: 'baremetalcluster',
   crd: false,
 };
@@ -192,7 +192,7 @@ export const Metal3MachineModel: K8sKind = {
   abbr: 'BM',
   apiGroup: 'infrastructure.cluster.x-k8s.io',
   labelPlural: 'Baremetal Machine',
-  path: 'metal3machbaremetalmachinesines',
+  path: 'metal3machines',
   id: 'baremetalmachine',
   crd: false,
 };
@@ -206,7 +206,7 @@ export const Metal3MachineTemplateModel: K8sKind = {
   abbr: 'BMT',
   apiGroup: 'infrastructure.cluster.x-k8s.io',
   labelPlural: 'Baremetal Machine Templates',
-  path: 'baremetalmachinetemplates',
+  path: 'metal3machinetemplates',
   id: 'baremetalmachinetemplate',
   crd: false,
 };
