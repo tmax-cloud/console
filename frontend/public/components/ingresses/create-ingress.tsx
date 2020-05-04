@@ -121,18 +121,27 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.ingress;
-        const { hosts } = this.state;
+        const { hosts, serviceNameList, servicePortList } = this.state;
         const newIngress = _.assign({}, this.state.ingress);
         this.setState({ inProgress: true });
         //hosts data 가공
         let hostData = hosts.map(host => {
             let hostName = host[0];
             let paths = host[1];
-            let pathData = paths.map(path => {
-                return {
-                    path: path[0], backend: { serviceName: path[1], servicePort: path[2] }
-                }
-            });
+            let pathData = {}
+            //path가 필수값이 아니기 때문에 입력 안하는경우 paths가 ""으로 들어옴 
+            if (typeof paths !== 'string') {
+                pathData = paths.map(path => {
+                    let serviceName = path[1] === '' ? serviceNameList[0].name : path[1];
+                    let servicePort = path[2] === '' ? servicePortList[0].value : path[2]
+                    return {
+                        path: path[0], backend: { serviceName: serviceName, servicePort: servicePort }
+                    }
+                });
+            } else {
+                pathData = [{ path: '', backend: { serviceName: serviceNameList[0].name, servicePort: servicePortList[0].value } }]
+            }
+
             paths = { paths: pathData }
             return { host: hostName, http: paths }
         });
@@ -144,7 +153,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
             : k8sUpdate(ko, newIngress, metadata.namespace, newIngress.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push(formatNamespacedRouteForResource('resourcequotaclaims'));
+            history.push(formatNamespacedRouteForResource('ingresses'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
@@ -181,7 +190,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                     {/* Button */}
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-                        <Link to={formatNamespacedRouteForResource('resourcequotaclaims')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+                        <Link to={formatNamespacedRouteForResource('ingresses')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
