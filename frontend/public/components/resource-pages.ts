@@ -5,6 +5,8 @@ import { Map as ImmutableMap } from 'immutable';
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import {
+  FederatedNamespaceModel,
+  FederatedDeploymentModel,
   KubeFedClusterModel,
   FederatedConfigMapModel,
   FederatedTypeConfigModel,
@@ -92,6 +94,8 @@ import {
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
+  .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
   .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsDetailsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsDetailsPage))
@@ -133,7 +137,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(RegistryModel), () => import('./registry' /* webpackChunkName: "template" */).then(m => m.RegistryDetailsPage))
   .set(referenceForModel(TemplateInstanceModel), () => import('./template-instance' /* webpackChunkName: "template" */).then(m => m.TemplateInstancesDetailsPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesDetailsPage))
-  .set(referenceForModel(ClusterModel), () => import('./cluster' /* webpackChunkName: "clusters" */).then(m => m.ClustersPage))
+  .set(referenceForModel(ClusterModel), () => import('./cluster' /* webpackChunkName: "clusters" */).then(m => m.ClustersDetailsPage))
   .set(referenceForModel(ConfigMapModel), () => import('./configmap' /* webpackChunkName: "configmap" */).then(m => m.ConfigMapsDetailsPage))
   .set(referenceForModel(ContainerModel), () => import('./container' /* webpackChunkName: "container" */).then(m => m.ContainersDetailsPage))
   .set(referenceForModel(DaemonSetModel), () => import('./daemonset' /* webpackChunkName: "daemonset" */).then(m => m.DaemonSetsDetailsPage))
@@ -174,6 +178,8 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
+  .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersPage))
   .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsPage))

@@ -288,6 +288,7 @@ const Sep = () => <div className="navigation-container__section__separator" />;
 const searchStartsWith = ['search'];
 const rolesStartsWith = ['roles', 'clusterroles'];
 const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
+const federatedresourceStartsWith = ['federatednamespaces', 'federateddeployments'];
 const imagestreamsStartsWith = ['imagestreams', 'imagestreamtags'];
 const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 
@@ -556,7 +557,8 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:AUTH')} icon="fa fa-id-card-o">
               {/* {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
               {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />} */}
-              <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} startsWith={rolesStartsWith} onClick={this.close} />
+              {/* <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} startsWith={rolesStartsWith} onClick={this.close} /> */}
+              <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name={ResourcePlural('RoleBinding', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
               {/* <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} /> */}
               {<ResourceClusterLink resource="users" name={ResourcePlural('User', t)} onClick={this.close} />}
