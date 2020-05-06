@@ -64,7 +64,7 @@ DNSEndpointList.displayName = DNSEndpointList;
 
 export const DNSEndpointsPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={DNSEndpointList} canCreate={false} kind="DNSEndpoint" /> : <ListPage {...props} ListComponent={DNSEndpointList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="DNSEndpoint" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={DNSEndpointList} canCreate={false} kind="DNSEndpoint" /> : <ListPage {...props} ListComponent={DNSEndpointList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="DNSEndpoint" />;
 };
 DNSEndpointsPage.displayName = 'DNSEndpointsPage';
 
