@@ -654,6 +654,8 @@
     "FEDERATEDCONFIGMAP": "Federation Config",
     "FEDERATEDTYPECONFIG": "Federated Type Config",
     "FEDERATEDRESOURCE": "Federated Resources",
+    "FEDERATEDNAMESPACE": "Federated Namespace",
+    "FEDERATEDDEPLOYMENT": "Federated Deployment",
     "FEDERATEDWORKLOAD": "Federated Workload",
     "REPLICASCHEDULINGPREFERENCE": "Replica Scheduling Preference",
     "MULTICLUSTERNETWORK": "Multi Cluster Network",

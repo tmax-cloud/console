@@ -64,23 +64,29 @@ FederatedResourceList.displayName = FederatedResourceList;
 
 export const FederatedResourcesPage = props => {
   const { t } = useTranslation();
+
+  const {
+    match: {
+      params: { ns },
+    },
+  } = props;
+
+  let resources = [
+    { kind: 'FederatedNamespace', namespaced: true },
+    { kind: 'FederatedDeployment', namespaced: true, optional: true },
+  ];
   return HDCModeFlag ? (
     <ListPage {...props} ListComponent={FederatedResourceList} canCreate={false} kind={props.kind} />
   ) : (
+    // <ListPage {...props} ListComponent={FederatedResourceList} canCreate={true} kind={props.kind} title="Federated Resource" />
     <MultiListPage
       ListComponent={FederatedResourceList}
       canCreate={true}
-      // showTitle={show?space}
       createProps={{ to: `/k8s/ns/${props.namespace || 'default'}/federatedresources/new` }}
-      // filterLabel="Roles by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
-      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })}
-      resources={[
-        // { kind: 'FederatedNamespace', namespaced: true, optional: !projectsAvailable },
-        // { kind: 'FederatedDeployment', namespaced: false, optional: true },
-        { kind: 'FederatedNamespace', namespaced: true, optional: true },
-        { kind: 'FederatedDeployment', namespaced: false, optional: true },
-      ]}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: t('RESOURCE:FEDERATEDRESOURCE') })}
+      resources={resources}
+      namespace={ns}
       // rowFilters={[
       //   {
       //     type: 'role-kind',
