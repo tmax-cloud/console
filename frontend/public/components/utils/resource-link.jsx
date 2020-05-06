@@ -61,7 +61,8 @@ export const ResourceLink = connectToModel(({ className, kind, name, namespace, 
   if (kindsInFlight) {
     return null;
   }
-  const path = resourcePath(kind, name, namespace);
+
+  const path = resourcePath(kind, name, namespace) + `?resourcetype=${kind}`;
   const value = displayName ? displayName : name;
 
   return (
