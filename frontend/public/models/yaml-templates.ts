@@ -80,19 +80,23 @@ spec:
 `,
   )
   .setIn(
-    [referenceForModel(k8sModels.DomainModel), 'default'],
+    [referenceForModel(k8sModels.ReplicaSchedulingPreferenceModel), 'default'],
     `
-    apiVersion: multiclusterdns.kubefed.io/v1alpha1
-    kind: Domain
+    apiVersion: scheduling.kubefed.io/v1alpha1
+    kind: ReplicaSchedulingPreference
     metadata:
-      # Corresponds to <federation> in the resource records.
-      name: test-domain
-      # The namespace running kubefed-controller-manager.
-      namespace: kube-federation-system
-    # The domain/subdomain that is setup in your externl-dns provider.
-    domain: example.com
-    
-    
+      name: test-deployment
+      namespace: test-namespace
+    spec:
+      targetKind: FederatedDeployment
+      totalReplicas: 10
+      rebalance: true
+      clusters:
+        cluster1:
+          weight: 2
+        cluster2:
+          weight: 3
+
 `,
   )
   .setIn(

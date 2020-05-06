@@ -70,6 +70,20 @@ export const FederatedTypeConfigModel: K8sKind = {
   crd: false,
 };
 
+export const ReplicaSchedulingPreferenceModel: K8sKind = {
+  kind: 'ReplicaSchedulingPreference',
+  namespaced: true,
+  label: 'Replica Scheduling Preference',
+  plural: 'replicaschedulingpreferences',
+  apiVersion: 'v1alpha1',
+  abbr: 'RSP',
+  apiGroup: 'scheduling.kubefed.io',
+  labelPlural: 'Replica Scheduling Preferences',
+  path: 'replicaschedulingpreferences',
+  id: 'replicaschedulingpreference',
+  crd: false,
+};
+
 export const DNSEndpointModel: K8sKind = {
   kind: 'DNSEndpoint',
   namespaced: true,

@@ -10,6 +10,7 @@ import {
   KubeFedClusterModel,
   FederatedConfigMapModel,
   FederatedTypeConfigModel,
+  ReplicaSchedulingPreferenceModel,
   DNSEndpointModel,
   DomainModel,
   IngressDNSRecordModel,
@@ -94,6 +95,7 @@ import {
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesDetailsPage))
   .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
   .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
@@ -178,6 +180,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesPage))
   .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
   .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersPage))
