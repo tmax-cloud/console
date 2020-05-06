@@ -13,7 +13,8 @@ export const makeReduxID = (k8sKind = {}, query) => {
     qs = `---${JSON.stringify(query)}`;
   }
 
-  return `${k8sKind.plural}${qs}`;
+  // return `${k8sKind.plural}${qs}`;
+  return `${k8sKind.path}${qs}`; // path랑 plural이랑 구분 함에 따라 로직 수정 (ex-FederatedNamespace, FederatedDeployment)
 };
 
 /** @type {(namespace: string, labelSelector?: any, fieldSelector?: any, name?: string) => {[key: string]: string}} */
@@ -42,8 +43,8 @@ export const makeQuery = (namespace, labelSelector, fieldSelector, name, limit) 
   return query;
 };
 
-const processReduxId = ({k8s}, props) => {
-  const {reduxID, isList, filters} = props;
+const processReduxId = ({ k8s }, props) => {
+  const { reduxID, isList, filters } = props;
 
   if (!reduxID) {
     return {};
@@ -94,11 +95,11 @@ const worstError = errors => {
 
 // A wrapper Component that takes data out of redux for a list or object at some reduxID ...
 // passing it to children
-const ConnectToState = connect(({k8s}, {reduxes}) => {
+const ConnectToState = connect(({ k8s }, { reduxes }) => {
   const resources = {};
 
   reduxes.forEach(redux => {
-    resources[redux.prop] = processReduxId({k8s}, redux);
+    resources[redux.prop] = processReduxId({ k8s }, redux);
   });
 
   const required = _.filter(resources, r => !r.optional);
@@ -112,53 +113,49 @@ const ConnectToState = connect(({k8s}, {reduxes}) => {
     reduxIDs: _.map(reduxes, 'reduxID'),
     resources,
   });
-})(props => <div className={props.className}>
-  {inject(props.children, _.omit(props, ['children', 'className', 'reduxes']))}
-</div>);
+})(props => <div className={props.className}>{inject(props.children, _.omit(props, ['children', 'className', 'reduxes']))}</div>);
 
-const stateToProps = ({k8s}, {resources}) => ({
-  k8sModels: resources.reduce((models, {kind}) => models.set(kind, k8s.getIn(['RESOURCES', 'models', kind])), ImmutableMap()),
+const stateToProps = ({ k8s }, { resources }) => ({
+  k8sModels: resources.reduce((models, { kind }) => models.set(kind, k8s.getIn(['RESOURCES', 'models', kind])), ImmutableMap()),
   inFlight: k8s.getIn(['RESOURCES', 'inFlight']),
 });
 
-export const Firehose = connect(
-  stateToProps, {
-    stopK8sWatch: actions.stopK8sWatch,
-    watchK8sObject: actions.watchK8sObject,
-    watchK8sList: actions.watchK8sList,
-  })(
+export const Firehose = connect(stateToProps, {
+  stopK8sWatch: actions.stopK8sWatch,
+  watchK8sObject: actions.watchK8sObject,
+  watchK8sList: actions.watchK8sList,
+})(
   /** @augments {React.Component<{k8sModels?: Map<string, K8sKind}>} */
   class Firehose extends React.Component {
-    componentWillMount (props=this.props) {
+    componentWillMount(props = this.props) {
       const { watchK8sList, watchK8sObject, resources, k8sModels, inFlight } = props;
 
-      if (inFlight) {
-        this.firehoses = [];
-      } else {
-        this.firehoses = resources.map(resource => {
+      // if (inFlight) {
+      //   this.firehoses = [];
+      // } else {
+      this.firehoses = resources
+        .map(resource => {
           const query = makeQuery(resource.namespace, resource.selector, resource.fieldSelector, resource.name);
           const k8sKind = k8sModels.get(resource.kind);
           const id = makeReduxID(k8sKind, query);
-          return _.extend({}, resource, {query, id, k8sKind});
-        }).filter(f => {
+          return _.extend({}, resource, { query, id, k8sKind });
+        })
+        .filter(f => {
           if (_.isEmpty(f.k8sKind)) {
             // eslint-disable-next-line no-console
             console.warn(`No model registered for ${f.kind}`);
           }
           return !_.isEmpty(f.k8sKind);
         });
-      }
+      // }
 
-      this.firehoses.forEach(({ id, query, k8sKind, isList, name, namespace }) => isList
-        ? watchK8sList(id, query, k8sKind)
-        : watchK8sObject(id, name, namespace, query, k8sKind)
-      );
+      this.firehoses.forEach(({ id, query, k8sKind, isList, name, namespace }) => (isList ? watchK8sList(id, query, k8sKind) : watchK8sObject(id, name, namespace, query, k8sKind)));
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
       const { stopK8sWatch } = this.props;
 
-      this.firehoses.forEach(({id}) => stopK8sWatch(id));
+      this.firehoses.forEach(({ id }) => stopK8sWatch(id));
       this.firehoses = [];
     }
 
@@ -181,16 +178,13 @@ export const Firehose = connect(
       return true;
     }
 
-    render () {
-      const reduxes = this.firehoses.map(({id, prop, isList, filters, optional}) => ({reduxID: id, prop, isList, filters, optional}));
-      const children = inject(this.props.children, _.omit(this.props, [
-        'children',
-        'className',
-      ]));
+    render() {
+      const reduxes = this.firehoses.map(({ id, prop, isList, filters, optional }) => ({ reduxID: id, prop, isList, filters, optional }));
+      const children = inject(this.props.children, _.omit(this.props, ['children', 'className']));
 
       return this.props.inFlight ? null : <ConnectToState reduxes={reduxes}> {children} </ConnectToState>;
     }
-  }
+  },
 );
 Firehose.WrappedComponent.contextTypes = {
   router: PropTypes.object,
@@ -203,14 +197,16 @@ Firehose.contextTypes = {
 Firehose.propTypes = {
   children: PropTypes.node,
   expand: PropTypes.bool,
-  resources: PropTypes.arrayOf(PropTypes.shape({
-    kind: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    name: PropTypes.string,
-    namespace: PropTypes.string,
-    selector: PropTypes.object,
-    fieldSelector: PropTypes.string,
-    className: PropTypes.string,
-    isList: PropTypes.bool,
-    optional: PropTypes.bool,
-  })).isRequired,
+  resources: PropTypes.arrayOf(
+    PropTypes.shape({
+      kind: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+      name: PropTypes.string,
+      namespace: PropTypes.string,
+      selector: PropTypes.object,
+      fieldSelector: PropTypes.string,
+      className: PropTypes.string,
+      isList: PropTypes.bool,
+      optional: PropTypes.bool,
+    }),
+  ).isRequired,
 };
