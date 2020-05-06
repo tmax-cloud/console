@@ -91,7 +91,7 @@ export const DomainModel: K8sKind = {
   plural: 'domains',
   apiVersion: 'v1alpha1',
   abbr: 'D',
-  apiGroup: ' multiclusterdns.kubefed.io',
+  apiGroup: 'multiclusterdns.kubefed.io',
   labelPlural: 'Domains',
   path: 'domains',
   id: 'domain',
