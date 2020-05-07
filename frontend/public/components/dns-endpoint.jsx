@@ -16,11 +16,13 @@ const DNSEndpointHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-6 col-sm-6" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-
-      <ColHead {...props} className="col-sm-6 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-4" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -32,11 +34,12 @@ const DNSEndpointRow = () =>
   function DNSEndpointRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
+        <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
           {!HDCModeFlag && <ResourceCog actions={menuActions} kind="DNSEndpoint" resource={obj} />}
           <ResourceLink kind="DNSEndpoint" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -64,7 +67,7 @@ DNSEndpointList.displayName = DNSEndpointList;
 
 export const DNSEndpointsPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={DNSEndpointList} canCreate={false} kind="DNSEndpoint" /> : <ListPage {...props} ListComponent={DNSEndpointList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="DNSEndpoint" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={DNSEndpointList} canCreate={false} kind="DNSEndpoint" /> : <ListPage {...props} ListComponent={DNSEndpointList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="DNSEndpoint" />;
 };
 DNSEndpointsPage.displayName = 'DNSEndpointsPage';
 

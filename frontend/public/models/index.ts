@@ -1,6 +1,33 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+export const FederatedNamespaceModel: K8sKind = {
+  kind: 'FederatedNamespace',
+  namespaced: true,
+  label: 'Federated Resources',
+  plural: 'federatedresources',
+  apiVersion: 'v1beta1',
+  abbr: 'FN',
+  apiGroup: 'types.kubefed.io',
+  labelPlural: 'Federated Resources',
+  path: 'federatednamespaces',
+  id: 'federatedresource',
+  crd: false,
+};
+export const FederatedDeploymentModel: K8sKind = {
+  kind: 'FederatedDeployment',
+  namespaced: true,
+  label: 'Federated Resources',
+  plural: 'federatedresources',
+  apiVersion: 'v1beta1',
+  abbr: 'FD',
+  apiGroup: 'types.kubefed.io',
+  labelPlural: 'Federated Resourcess',
+  path: 'federateddeployments',
+  id: 'federatedresource',
+  crd: false,
+};
+
 export const KubeFedClusterModel: K8sKind = {
   kind: 'KubeFedCluster',
   namespaced: true,
@@ -10,7 +37,7 @@ export const KubeFedClusterModel: K8sKind = {
   abbr: 'FC',
   apiGroup: 'core.kubefed.io',
   labelPlural: 'Federation Clusters',
-  path: 'federationclusters',
+  path: 'kubefedclusters',
   id: 'federationcluster',
   crd: false,
 };
@@ -24,7 +51,7 @@ export const FederatedConfigMapModel: K8sKind = {
   abbr: 'FC',
   apiGroup: 'types.kubefed.io',
   labelPlural: 'Federation Configs',
-  path: 'federationconfigs',
+  path: 'federatedconfigmaps',
   id: 'federationconfig',
   crd: false,
 };
@@ -40,6 +67,20 @@ export const FederatedTypeConfigModel: K8sKind = {
   labelPlural: 'Federation Type Configs',
   path: 'federatedtypeconfigs',
   id: 'federatedtypeconfig',
+  crd: false,
+};
+
+export const ReplicaSchedulingPreferenceModel: K8sKind = {
+  kind: 'ReplicaSchedulingPreference',
+  namespaced: true,
+  label: 'Replica Scheduling Preference',
+  plural: 'replicaschedulingpreferences',
+  apiVersion: 'v1alpha1',
+  abbr: 'RSP',
+  apiGroup: 'scheduling.kubefed.io',
+  labelPlural: 'Replica Scheduling Preferences',
+  path: 'replicaschedulingpreferences',
+  id: 'replicaschedulingpreference',
   crd: false,
 };
 
@@ -64,7 +105,7 @@ export const DomainModel: K8sKind = {
   plural: 'domains',
   apiVersion: 'v1alpha1',
   abbr: 'D',
-  apiGroup: ' multiclusterdns.kubefed.io',
+  apiGroup: 'multiclusterdns.kubefed.io',
   labelPlural: 'Domains',
   path: 'domains',
   id: 'domain',
@@ -178,7 +219,7 @@ export const Metal3ClusterModel: K8sKind = {
   abbr: 'BC',
   apiGroup: 'infrastructure.cluster.x-k8s.io',
   labelPlural: 'Baremetal Clusters',
-  path: 'baremetalclusters',
+  path: 'metal3clusters',
   id: 'baremetalcluster',
   crd: false,
 };
@@ -192,7 +233,7 @@ export const Metal3MachineModel: K8sKind = {
   abbr: 'BM',
   apiGroup: 'infrastructure.cluster.x-k8s.io',
   labelPlural: 'Baremetal Machine',
-  path: 'metal3machbaremetalmachinesines',
+  path: 'metal3machines',
   id: 'baremetalmachine',
   crd: false,
 };
@@ -206,7 +247,7 @@ export const Metal3MachineTemplateModel: K8sKind = {
   abbr: 'BMT',
   apiGroup: 'infrastructure.cluster.x-k8s.io',
   labelPlural: 'Baremetal Machine Templates',
-  path: 'baremetalmachinetemplates',
+  path: 'metal3machinetemplates',
   id: 'baremetalmachinetemplate',
   crd: false,
 };

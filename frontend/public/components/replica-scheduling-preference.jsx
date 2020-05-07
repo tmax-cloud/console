@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const FederatedTypeConfigHeader = props => {
+const ReplicaSchedulingPreferenceHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -29,14 +29,14 @@ const FederatedTypeConfigHeader = props => {
   );
 };
 
-const FederatedTypeConfigRow = () =>
+const ReplicaSchedulingPreferenceRow = () =>
   // eslint-disable-next-line no-shadow
-  function FederatedTypeConfigRow({ obj }) {
+  function ReplicaSchedulingPreferenceRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="FederatedTypeConfig" resource={obj} />}
-          <ResourceLink kind="FederatedTypeConfig" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="ReplicaSchedulingPreference" resource={obj} />}
+          <ResourceLink kind="ReplicaSchedulingPreference" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
@@ -50,32 +50,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('FederatedTypeConfig', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('ReplicaSchedulingPreference', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const FederatedTypeConfigList = props => {
+export const ReplicaSchedulingPreferenceList = props => {
   const { kinds } = props;
-  const Row = FederatedTypeConfigRow(kinds[0]);
-  Row.displayName = 'FederatedTypeConfigRow';
-  return <List {...props} Header={FederatedTypeConfigHeader} Row={Row} />;
+  const Row = ReplicaSchedulingPreferenceRow(kinds[0]);
+  Row.displayName = 'ReplicaSchedulingPreferenceRow';
+  return <List {...props} Header={ReplicaSchedulingPreferenceHeader} Row={Row} />;
 };
-FederatedTypeConfigList.displayName = FederatedTypeConfigList;
+ReplicaSchedulingPreferenceList.displayName = ReplicaSchedulingPreferenceList;
 
-export const FederatedTypeConfigsPage = props => {
+export const ReplicaSchedulingPreferencesPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={FederatedTypeConfigList} canCreate={false} kind="FederatedTypeConfig" /> : <ListPage {...props} ListComponent={FederatedTypeConfigList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="FederatedTypeConfig" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={ReplicaSchedulingPreferenceList} canCreate={false} kind="ReplicaSchedulingPreference" /> : <ListPage {...props} ListComponent={ReplicaSchedulingPreferenceList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="ReplicaSchedulingPreference" />;
 };
-FederatedTypeConfigsPage.displayName = 'FederatedTypeConfigsPage';
+ReplicaSchedulingPreferencesPage.displayName = 'ReplicaSchedulingPreferencesPage';
 
-export const FederatedTypeConfigsDetailsPage = props => {
+export const ReplicaSchedulingPreferencesDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="FederatedTypeConfig" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="ReplicaSchedulingPreference" menuActions={menu} pages={page} />;
 };
 
-FederatedTypeConfigsDetailsPage.displayName = 'FederatedTypeConfigsDetailsPage';
+ReplicaSchedulingPreferencesDetailsPage.displayName = 'ReplicaSchedulingPreferencesDetailsPage';

@@ -288,6 +288,7 @@ const Sep = () => <div className="navigation-container__section__separator" />;
 const searchStartsWith = ['search'];
 const rolesStartsWith = ['roles', 'clusterroles'];
 const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
+const federatedresourceStartsWith = ['federatednamespaces', 'federateddeployments'];
 const imagestreamsStartsWith = ['imagestreams', 'imagestreamtags'];
 const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 
@@ -402,21 +403,21 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text={t('RESOURCE:FEDERATION')} icon="pficon pficon-catalog">
-              <ResourceClusterLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
-              <ResourceClusterLink resource="federationconfigs" name={t('RESOURCE:FEDERATEDCONFIGMAP')} onClick={this.close} />
-              <ResourceClusterLink resource="federatedtypeconfigs" name={t('RESOURCE:FEDERATEDTYPECONFIG')} onClick={this.close} />
-              <ResourceClusterLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
+              <ResourceNSLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
+              <ResourceNSLink resource="federationconfigs" name={t('RESOURCE:FEDERATEDCONFIGMAP')} onClick={this.close} />
+              <ResourceNSLink resource="federatedtypeconfigs" name={t('RESOURCE:FEDERATEDTYPECONFIG')} onClick={this.close} />
+              <ResourceNSLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:FEDERATEDWORKLOAD')} icon="fa fa-briefcase">
-              <ResourceClusterLink resource="replicaschedulingpreferences" name={t('RESOURCE:REPLICASCHEDULINGPREFERENCE')} onClick={this.close} />
+              <ResourceNSLink resource="replicaschedulingpreferences" name={t('RESOURCE:REPLICASCHEDULINGPREFERENCE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:MULTICLUSTERNETWORK')} icon="pficon-network">
-              <ResourceClusterLink resource="dnsendpoints" name={t('RESOURCE:DNSENDPOINT')} onClick={this.close} />
-              <ResourceClusterLink resource="domains" name={t('RESOURCE:DOMAIN')} onClick={this.close} />
-              <ResourceClusterLink resource="ingressdnsrecords" name={t('RESOURCE:INGRESSDNSRECORD')} onClick={this.close} />
-              <ResourceClusterLink resource="servicednsrecords" name={t('RESOURCE:SERVICEDNSRECORD')} onClick={this.close} />
+              <ResourceNSLink resource="dnsendpoints" name={t('RESOURCE:DNSENDPOINT')} onClick={this.close} />
+              <ResourceNSLink resource="domains" name={t('RESOURCE:DOMAIN')} onClick={this.close} />
+              <ResourceNSLink resource="ingressdnsrecords" name={t('RESOURCE:INGRESSDNSRECORD')} onClick={this.close} />
+              <ResourceNSLink resource="servicednsrecords" name={t('RESOURCE:SERVICEDNSRECORD')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:CLUSTERMANAGEMENT')} icon="fa fa-database">
@@ -556,7 +557,8 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:AUTH')} icon="fa fa-id-card-o">
               {/* {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
               {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />} */}
-              <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} startsWith={rolesStartsWith} onClick={this.close} />
+              {/* <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} startsWith={rolesStartsWith} onClick={this.close} /> */}
+              <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name={ResourcePlural('RoleBinding', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
               {/* <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} /> */}
               {<ResourceClusterLink resource="users" name={ResourcePlural('User', t)} onClick={this.close} />}
