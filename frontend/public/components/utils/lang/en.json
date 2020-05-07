@@ -645,6 +645,7 @@
     "ROLEBINDINGCLAIM": "Role Binding Claim",
     "USER": "User",
     "USERGROUP": "User Group",
+    "USERSECURITYPOLICY": "User Security Policy",
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
     "GROUP": "User Group"
