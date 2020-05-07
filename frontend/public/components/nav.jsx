@@ -265,10 +265,10 @@ class NavSection_ extends React.Component {
           {!href ? (
             text
           ) : (
-            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-              {text}
-            </Link>
-          )}
+              <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+                {text}
+              </Link>
+            )}
         </div>
         {Children && (
           <ul className="navigation-container__list" style={{ maxHeight }}>
@@ -511,6 +511,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
               {<ResourceClusterLink resource="users" name={ResourcePlural('User', t)} onClick={this.close} />}
               {<ResourceClusterLink resource="usergroups" name={ResourcePlural('Usergroup', t)} onClick={this.close} />}
+              {<ResourceClusterLink resource="usersecuritypolicies" name={ResourcePlural('UserSecurityPolicy', t)} onClick={this.close} />}
               <ResourceNSLink resource="serviceaccounts" name={ResourcePlural('ServiceAccount', t)} onClick={this.close} />
             </NavSection>
 
