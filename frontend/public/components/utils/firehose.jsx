@@ -130,24 +130,24 @@ export const Firehose = connect(stateToProps, {
     componentWillMount(props = this.props) {
       const { watchK8sList, watchK8sObject, resources, k8sModels, inFlight } = props;
 
-      // if (inFlight) {
-      //   this.firehoses = [];
-      // } else {
-      this.firehoses = resources
-        .map(resource => {
-          const query = makeQuery(resource.namespace, resource.selector, resource.fieldSelector, resource.name);
-          const k8sKind = k8sModels.get(resource.kind);
-          const id = makeReduxID(k8sKind, query);
-          return _.extend({}, resource, { query, id, k8sKind });
-        })
-        .filter(f => {
-          if (_.isEmpty(f.k8sKind)) {
-            // eslint-disable-next-line no-console
-            console.warn(`No model registered for ${f.kind}`);
-          }
-          return !_.isEmpty(f.k8sKind);
-        });
-      // }
+      if (inFlight) {
+        this.firehoses = [];
+      } else {
+        this.firehoses = resources
+          .map(resource => {
+            const query = makeQuery(resource.namespace, resource.selector, resource.fieldSelector, resource.name);
+            const k8sKind = k8sModels.get(resource.kind);
+            const id = makeReduxID(k8sKind, query);
+            return _.extend({}, resource, { query, id, k8sKind });
+          })
+          .filter(f => {
+            if (_.isEmpty(f.k8sKind)) {
+              // eslint-disable-next-line no-console
+              console.warn(`No model registered for ${f.kind}`);
+            }
+            return !_.isEmpty(f.k8sKind);
+          });
+      }
 
       this.firehoses.forEach(({ id, query, k8sKind, isList, name, namespace }) => (isList ? watchK8sList(id, query, k8sKind) : watchK8sObject(id, name, namespace, query, k8sKind)));
     }
