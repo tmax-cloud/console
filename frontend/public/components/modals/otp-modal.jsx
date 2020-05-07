@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { coFetch } from '../../co-fetch';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
-
+import { coFetchJSON } from '../../co-fetch';
+import { setAccessToken, setRefreshToken } from '../utils/auth';
 class OtpModal extends Component {
     constructor(props) {
         super(props);
         console.log(props);
         this.state = {
-            authNumber: 0,
+            authNumber: null,
+            data: this.props.data
         };
 
-        // this._cancel = props.cancel.bind(this);
+        this._cancel = props.cancel.bind(this);
         this._updateState = this._updateState.bind(this);
         this._submit = this._submit.bind(this);
-        //     this._updateTokenTime = props.setExpireTimeFunc.bind(this);
     }
 
     _updateState(event) {
@@ -23,19 +23,39 @@ class OtpModal extends Component {
 
     _submit(event) {
         event.preventDefault();
-        //  TODO, 인증번호, ID, PW로 서비스 호출 
-        if (this.state.requestTime < 1 || this.state.requestTime > 60 || isNaN(this.state.requestTime)) {
+        // 인증번호, ID, PW로 서비스 호출 
+        const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/login`;
+        // 입력된 인증번호가 6자리가 아닌경우 return
+        if (this.state.authNumber.length !== 6) {
             document.getElementById('error-request').style.visibility = 'visible';
-            return;
+            return
         }
-        this._updateTokenTime(this.state.requestTime);
-        this.props.close();
+        let data = Object.assign(this.props.data, { otp: this.state.authNumber });
+        coFetchJSON.post(AUTH_SERVER_URL, data)
+            .then(response => {
+                if (response.accessToken && response.refreshToken) {
+                    setAccessToken(response.accessToken);
+                    setRefreshToken(response.refreshToken);
+                    if (window.localStorage.getItem('forceLogout') === 'true') {
+                        window.localStorage.setItem('forceLogout', false);
+                    } else {
+                        window.localStorage.setItem('forceLogout', true);
+                    }
+                    history.pushState(null, null, '/status')
+                    history.go(0);
+                } else {
+                    document.getElementById('error-request').style.visibility = 'visible';
+                    return;
+                }
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
     }
-
     render() {
         const { t } = this.props;
         return (
-            <form onSubmit={this._submit} name="form">
+            <form onSubmit={this._submit} name="form" >
                 <ModalTitle>인증번호 입력</ModalTitle>
                 <ModalBody>
                     <div className="form-group" style={{ width: '400px' }}>
@@ -55,7 +75,7 @@ class OtpModal extends Component {
                         </div>
                     </div>
                 </ModalBody>
-                <ModalSubmitFooter inProgress={this.state.inProgress} submitText='save' />
+                <ModalSubmitFooter inProgress={this.state.inProgress} submitText='확인' cancel={this._cancel} />
             </form>
         );
     }

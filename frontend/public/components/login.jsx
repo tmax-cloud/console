@@ -105,7 +105,7 @@ class LoginComponent extends Component {
 
         } else {
           //otp인증을 해야하는 경우 
-          data.otpEnable ? OtpModal_() :
+          data.otpEnable ? OtpModal_({ data: json }) :
             // 로그인 실패 
             this.setState({ error: data.msg });
           return;
