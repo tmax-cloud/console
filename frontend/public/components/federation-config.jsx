@@ -35,8 +35,8 @@ const FederatedConfigMapRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="KubeFedCluster" resource={obj} />}
-          <ResourceLink kind="KubeFedCluster" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="FederatedConfigMap" resource={obj} />}
+          <ResourceLink kind="FederatedConfigMap" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
