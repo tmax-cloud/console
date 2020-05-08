@@ -101,7 +101,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
   .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsDetailsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsDetailsPage))
-  .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsPage))
+  .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsDetailsPage))
   .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsDetailsPage))
   .set(referenceForModel(IngressDNSRecordModel), () => import('./ingress-dns-record' /* webpackChunkName: "task" */).then(m => m.IngressDNSRecordsDetailsPage))
   .set(referenceForModel(ServiceDNSRecordModel), () => import('./service-dns-record' /* webpackChunkName: "task" */).then(m => m.ServiceDNSRecordsDetailsPage))
