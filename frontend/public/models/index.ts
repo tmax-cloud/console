@@ -70,6 +70,19 @@ export const FederatedTypeConfigModel: K8sKind = {
   crd: false,
 };
 
+export const FederatedResourceModel: K8sKind = {
+  label: 'Federated Resource',
+  apiGroup: 'apiextensions.k8s.io',
+  apiVersion: 'v1beta1',
+  path: 'customresourcedefinitions',
+  abbr: 'CRD',
+  namespaced: false,
+  plural: 'federatedresources',
+  kind: 'CustomResourceDefinition',
+  id: 'customresourcedefinition',
+  labelPlural: 'Federated Resources',
+};
+
 export const ReplicaSchedulingPreferenceModel: K8sKind = {
   kind: 'ReplicaSchedulingPreference',
   namespaced: true,
