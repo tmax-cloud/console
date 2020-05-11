@@ -37,37 +37,6 @@ spec:
 `,
   )
   .setIn(
-    [referenceForModel(k8sModels.FederatedDeploymentModel), 'federated-deployment'],
-    `apiVersion: types.kubefed.io/v1beta1
-kind: FederatedDeployment
-metadata:
-  name: test-deployment
-  namespace: test-namespace
-spec:
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      replicas: 3
-      selector:
-        matchLabels:
-          app: nginx
-      template:
-        metadata:
-          labels:
-            app: nginx
-        spec:
-          containers:
-          - image: nginx
-            name: nginx
-  placement:
-    clusters:
-    - name: cluster2
-    - name: cluster1
-`,
-  )
-  .setIn(
     ['DEFAULT', 'default'],
     `
     apiVersion: types.kubefed.io/v1beta1
