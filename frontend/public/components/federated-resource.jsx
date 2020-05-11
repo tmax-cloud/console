@@ -122,7 +122,6 @@ export const FederatedResourcesPage = props => {
     <MultiListPage
       ListComponent={FederatedResourceList}
       canCreate={false}
-      canFilter={false}
       createProps={{ to: `/k8s/ns/${props.namespace || 'default'}/federatedresources/new` }}
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: t('RESOURCE:FEDERATEDRESOURCE') })}

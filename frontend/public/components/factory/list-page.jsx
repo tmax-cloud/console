@@ -139,7 +139,7 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
     }
 
     render() {
-      const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources, id, canFilter } = this.props;
+      const { createButtonText, dropdownFilters, textFilter, filterLabel, canExpand, canCreate, createProps, autoFocus, resources, id } = this.props;
 
       const DropdownFilters =
         dropdownFilters &&
@@ -185,12 +185,10 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
                 <CompactExpandButtons expand={this.state.expand} onExpandChange={this.onExpandChange} />
               </div>
             )}
-            {canFilter && (
-              <div className={classNames('co-m-pane__filter-bar-group', DropdownFilters ? 'co-m-pane__filter-bar-group--filters' : 'co-m-pane__filter-bar-group--filter')}>
-                {DropdownFilters && <div className="btn-group">{DropdownFilters}</div>}
-                <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} id={id} />
-              </div>
-            )}
+            <div className={classNames('co-m-pane__filter-bar-group', DropdownFilters ? 'co-m-pane__filter-bar-group--filters' : 'co-m-pane__filter-bar-group--filter')}>
+              {DropdownFilters && <div className="btn-group">{DropdownFilters}</div>}
+              <TextFilter label={filterLabel} onChange={e => this.applyFilter(textFilter, e.target.value)} defaultValue={this.defaultValue} tabIndex={1} autoFocus={autoFocus} id={id} />
+            </div>
           </div>
           <div className="co-m-pane__body">
             {inject(this.props.children, {
@@ -213,7 +211,6 @@ FireMan_.defaultProps = {
 
 FireMan_.propTypes = {
   canCreate: PropTypes.bool,
-  canFilter: PropTypes.bool,
   canExpand: PropTypes.bool,
   createProps: PropTypes.object,
   createButtonText: PropTypes.string,
@@ -276,7 +273,6 @@ export const ListPage = props => {
       showTitle={showTitle}
       canCreate={props.canCreate}
       canExpand={props.canExpand}
-      canFilter={props.canFilter}
       createButtonText={createButtonText || t('ADDITIONAL:CREATEBUTTON', { something: t(`CONTENT:${label}`) })}
       textFilter={props.textFilter}
       resources={resources}
