@@ -10,6 +10,15 @@ import * as k8sModels from '../models';
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
   .setIn(
+    ['DEFAULT', 'default'],
+    `
+apiVersion: ''
+kind: ''
+metadata:
+  name: example
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.FederatedResourceModel), 'default'],
     `
 apiVersion: apiextensions.k8s.io/v1beta1
@@ -34,31 +43,6 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - ct
-`,
-  )
-  .setIn(
-    ['DEFAULT', 'default'],
-    `
-    apiVersion: types.kubefed.io/v1beta1
-    kind: FederatedConfigMap
-    metadata:
-      name: test-configmap
-      namespace: test-namespace
-    spec:
-      template:
-        data:
-          A: ala ma kota
-      placement:
-        clusters:
-        - name: cluster2
-        - name: cluster1
-      overrides:
-      - clusterName: cluster2
-        clusterOverrides:
-        - path: /data
-          value:
-            foo: bar
-    
 `,
   )
   .setIn(
