@@ -96,7 +96,9 @@ class ResourceClusterLink extends NavLink {
   }
 
   get to() {
-    return `/k8s/cluster/${this.props.resource}`;
+    // console.log(this.props);
+
+    return this.props.name === 'Federated Resources' ? `/k8s/cluster/${this.props.resource}?group=types.kubefed.io` : `/k8s/cluster/${this.props.resource}`;
   }
 }
 
@@ -288,7 +290,7 @@ const Sep = () => <div className="navigation-container__section__separator" />;
 const searchStartsWith = ['search'];
 const rolesStartsWith = ['roles', 'clusterroles'];
 const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
-const federatedresourceStartsWith = ['federatednamespaces', 'federateddeployments'];
+// const federatedresourceStartsWith = ['federatednamespaces', 'federateddeployments'];
 const imagestreamsStartsWith = ['imagestreams', 'imagestreamtags'];
 const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 
@@ -406,7 +408,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
               <ResourceNSLink resource="federationconfigs" name={t('RESOURCE:KUBEFEDCONFIG')} onClick={this.close} />
               <ResourceNSLink resource="federatedtypeconfigs" name={t('RESOURCE:FEDERATEDTYPECONFIG')} onClick={this.close} />
-              <ResourceNSLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
+              <ResourceClusterLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:FEDERATEDWORKLOAD')} icon="fa fa-briefcase">
