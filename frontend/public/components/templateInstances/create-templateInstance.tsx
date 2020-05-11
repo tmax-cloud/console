@@ -76,11 +76,11 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let templateInstance = { ...this.state.templateInstance };
     let template = this.state.selectedTemplate;
     if (template) {
-      coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
+      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${namespace}/templates/${template}`)
         .then(res => res.json())
         .then((myJson) => {
           let paramList = myJson.parameters.map(function (parm) {
-            return { name: parm.name, defaultValue: parm.value, value: '' }
+            return { name: parm.name, defaultValue: parm.value, value: '', description: parm.description, required: parm.required, displayName: parm.displayName }
           });
           if (paramList.length) {
             templateInstance.spec.template.parameters = paramList;
@@ -121,7 +121,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let key = event.target.id
     let templateInstance = { ...this.state.templateInstance };
     templateInstance.spec.template.parameters.forEach(obj => {
-      if (obj.name === key) {
+      if (obj.displayName === key) {
         obj.value = event.target.value;
       }
     });
@@ -189,10 +189,15 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      let keyValue = parameter.defaultValue ? parameter.name + "( default:" + parameter.defaultValue + ")" : parameter.name;
-      return <Section label={keyValue} id={parameter.name}>
-        <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter} required />
-      </Section>
+      let keyValue = parameter.defaultValue ? parameter.displayName + "( default:" + parameter.defaultValue + ")" : parameter.displayName;
+      let defaultValue = parameter.defaultValue ? parameter.defaultValue : ''
+      let isRequired = parameter.required ? true : false;
+      return <div>
+        <Section label={keyValue} id={parameter.name}>
+          <input onChange={this.onParamValueChanged} className="form-control" type="text" defaultValue={defaultValue} placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
+        </Section>
+        <p className="co-m-pane__explanation">{parameter.description}</p>
+      </div>
     });
 
     return <div className="co-m-pane__body">
