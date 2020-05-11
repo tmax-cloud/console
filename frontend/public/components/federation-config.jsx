@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const FederatedConfigMapHeader = props => {
+const KubeFedConfigHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -29,14 +29,14 @@ const FederatedConfigMapHeader = props => {
   );
 };
 
-const FederatedConfigMapRow = () =>
+const KubeFedConfigRow = () =>
   // eslint-disable-next-line no-shadow
-  function FederatedConfigMapRow({ obj }) {
+  function KubeFedConfigRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="FederatedConfigMap" resource={obj} />}
-          <ResourceLink kind="FederatedConfigMap" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="KubeFedConfig" resource={obj} />}
+          <ResourceLink kind="KubeFedConfig" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
@@ -50,32 +50,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('FederatedConfigMap', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('KubeFedConfig', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const FederatedConfigMapList = props => {
+export const KubeFedConfigList = props => {
   const { kinds } = props;
-  const Row = FederatedConfigMapRow(kinds[0]);
-  Row.displayName = 'FederatedConfigMapRow';
-  return <List {...props} Header={FederatedConfigMapHeader} Row={Row} />;
+  const Row = KubeFedConfigRow(kinds[0]);
+  Row.displayName = 'KubeFedConfigRow';
+  return <List {...props} Header={KubeFedConfigHeader} Row={Row} />;
 };
-FederatedConfigMapList.displayName = FederatedConfigMapList;
+KubeFedConfigList.displayName = KubeFedConfigList;
 
-export const FederatedConfigMapsPage = props => {
+export const KubeFedConfigsPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={FederatedConfigMapList} canCreate={false} kind="FederatedConfigMap" /> : <ListPage {...props} ListComponent={FederatedConfigMapList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="FederatedConfigMap" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={KubeFedConfigList} canCreate={false} kind="KubeFedConfig" /> : <ListPage {...props} ListComponent={KubeFedConfigList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="KubeFedConfig" />;
 };
-FederatedConfigMapsPage.displayName = 'FederatedConfigMapsPage';
+KubeFedConfigsPage.displayName = 'KubeFedConfigsPage';
 
-export const FederatedConfigMapsDetailsPage = props => {
+export const KubeFedConfigsDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="FederatedConfigMap" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="KubeFedConfig" menuActions={menu} pages={page} />;
 };
 
-FederatedConfigMapsDetailsPage.displayName = 'FederatedConfigMapsDetailsPage';
+KubeFedConfigsDetailsPage.displayName = 'KubeFedConfigsDetailsPage';

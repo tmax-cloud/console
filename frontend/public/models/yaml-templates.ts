@@ -10,73 +10,39 @@ import * as k8sModels from '../models';
  */
 export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string, string>>()
   .setIn(
-    [referenceForModel(k8sModels.FederatedNamespaceModel), 'federated-namespace'],
-    `apiVersion: types.kubefed.io/v1beta1
-kind: FederatedNamespace
-metadata:
-  name: test-namespace
-  namespace: test-namespace
-spec:
-  placement:
-    clusters:
-    - name: cluster2
-    - name: cluster1
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.FederatedDeploymentModel), 'federated-deployment'],
-    `apiVersion: types.kubefed.io/v1beta1
-kind: FederatedDeployment
-metadata:
-  name: test-deployment
-  namespace: test-namespace
-spec:
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      replicas: 3
-      selector:
-        matchLabels:
-          app: nginx
-      template:
-        metadata:
-          labels:
-            app: nginx
-        spec:
-          containers:
-          - image: nginx
-            name: nginx
-  placement:
-    clusters:
-    - name: cluster2
-    - name: cluster1
-`,
-  )
-  .setIn(
     ['DEFAULT', 'default'],
     `
-    apiVersion: types.kubefed.io/v1beta1
-    kind: FederatedConfigMap
-    metadata:
-      name: test-configmap
-      namespace: test-namespace
-    spec:
-      template:
-        data:
-          A: ala ma kota
-      placement:
-        clusters:
-        - name: cluster2
-        - name: cluster1
-      overrides:
-      - clusterName: cluster2
-        clusterOverrides:
-        - path: /data
-          value:
-            foo: bar
-    
+apiVersion: ''
+kind: ''
+metadata:
+  name: example
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedResourceModel), 'default'],
+    `
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: crontabs.stable.example.com
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: stable.example.com
+  # version name to use for REST API: /apis/<group>/<version>
+  version: v1
+  # either Namespaced or Cluster
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: crontabs
+    # singular name to be used as an alias on the CLI and for display
+    singular: crontab
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: CronTab
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - ct
 `,
   )
   .setIn(

@@ -292,7 +292,7 @@ ListPage.displayName = 'ListPage';
 
 /** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, flatten?: Function, title?: string, showTitle?: boolean, dropdownFilters?: any[], filterLabel?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string}>} */
 export const MultiListPage = props => {
-  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake, id } = props;
+  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title = props.label, namespace, fake, id, query } = props;
   const resources = _.map(props.resources, r => ({
     ...r,
     isList: true,
@@ -301,7 +301,7 @@ export const MultiListPage = props => {
   }));
 
   const elems = (
-    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
+    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? props.label : undefined} query={query} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
       <Firehose resources={resources}>
         <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
       </Firehose>

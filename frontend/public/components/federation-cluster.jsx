@@ -1,5 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
@@ -11,6 +12,12 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
+
+let getHyperLink = link => {
+  // return <Link to={link}> {link}</Link>;
+  console.log(link);
+  return <a href={link}>{link}</a>;
+};
 
 const KubeFedClusterHeader = props => {
   const { t } = useTranslation();
@@ -42,7 +49,7 @@ const KubeFedClusterRow = () =>
           <ResourceLink kind="KubeFedCluster" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.portalurl}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{getHyperLink(obj.metadata.annotations.portalurl)}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );

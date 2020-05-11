@@ -1,9 +1,11 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { ColHead, DetailsPage, List, ListHeader, MultiListPage, ListPage } from './factory';
-import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, kindObj, ResourceIcon, ResourceLink, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
+import { referenceForCRD } from '../module/k8s';
 import { kindForReference } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
@@ -19,27 +21,65 @@ const FederatedResourceHeader = props => {
       <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-4" sortField="metadata.namespace">
-        {t('CONTENT:NAMESPACE')}
+      <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 col-xs-6" sortField="spec.group">
+        {t('CONTENT:GROUP')}
       </ColHead>
-      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
-        {t('CONTENT:CREATED')}
+      <ColHead {...props} className="col-lg-2 col-md-2 col-sm-4 hidden-xs" sortField="spec.version">
+        {t('CONTENT:VERSION')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.scope">
+        {t('CONTENT:NAMESPACED')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-1 hidden-md hidden-sm hidden-xs">
+        {t('CONTENT:ESTABLISHED')}
       </ColHead>
     </ListHeader>
   );
 };
 
+const isEstablished = conditions => {
+  const condition = _.find(conditions, c => c.type === 'Established');
+  return condition && condition.status === 'True';
+};
+const namespaced = crd => crd.spec.scope === 'Namespaced';
+
 const FederatedResourceRow = () =>
   // eslint-disable-next-line no-shadow
   function FederatedResourceRow({ obj }) {
+    let ko = kindObj(obj.spec.names.kind);
+    let path;
+    // default-resource 쓸건지, 따로 만든 페이지 쓸건지
+    if (!_.isEmpty(ko)) {
+      path = obj.spec && obj.spec.scope === 'Cluster' ? `/k8s/cluster/${obj.spec.names.plural}` : `/k8s/all-namespaces/${obj.spec.names.plural}`;
+    } else {
+      path = obj.spec && obj.spec.scope === 'Cluster' ? `/k8s/cluster/${referenceForCRD(obj)}` : `/k8s/all-namespaces/${referenceForCRD(obj)}`;
+    }
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind={obj.kind} resource={obj} />}
-          <ResourceLink kind={obj.kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          <ResourceCog actions={menuActions} kind="CustomResourceDefinition" resource={obj} />
+          <ResourceIcon kind="CustomResourceDefinition" />
+          <Link to={path}>{_.get(obj, 'spec.names.kind', obj.metadata.name)}</Link>
+          {/* {!HDCModeFlag && <ResourceCog actions={menuActions} kind={obj.kind} resource={obj} />}
+          <ResourceLink kind={obj.kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} /> */}
         </div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-lg-3 col-md-4 col-sm-4 col-xs-6 co-break-word">{obj.spec.group}</div>
+        <div className="col-lg-2 col-md-2 col-sm-4 hidden-xs">{obj.spec.version}</div>
+        {/* <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{namespaced(obj) ? t('CONTENT:YES') : t('CONTENT:NO')}</div> */}
+        <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{namespaced(obj) ? 'YES' : 'NO'}</div>
+        <div className="col-lg-1 hidden-md hidden-sm hidden-xs">
+          {isEstablished(obj.status.conditions) ? (
+            <span className="node-ready">
+              <i className="fa fa-check-circle"></i>
+            </span>
+          ) : (
+            <span className="node-not-ready">
+              <i className="fa fa-minus-circle"></i>
+            </span>
+          )}
+        </div>
+        {/* <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div> */}
       </div>
     );
   };
@@ -74,17 +114,14 @@ export const FederatedResourcesPage = props => {
     },
   } = props;
 
-  let resources = [
-    { kind: 'FederatedNamespace', namespaced: true },
-    { kind: 'FederatedDeployment', namespaced: true, optional: true },
-  ];
+  let resources = [{ kind: 'CustomResourceDefinition', namespaced: false, group: 'types.kubefed.io' }];
   return HDCModeFlag ? (
     <ListPage {...props} ListComponent={FederatedResourceList} canCreate={false} kind={props.kind} />
   ) : (
     // <ListPage {...props} ListComponent={FederatedResourceList} canCreate={true} kind={props.kind} title="Federated Resource" />
     <MultiListPage
       ListComponent={FederatedResourceList}
-      canCreate={true}
+      canCreate={false}
       createProps={{ to: `/k8s/ns/${props.namespace || 'default'}/federatedresources/new` }}
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: t('RESOURCE:FEDERATEDRESOURCE') })}

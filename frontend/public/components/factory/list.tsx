@@ -21,7 +21,8 @@ const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
 
 // TODO: Having list filters here is undocumented, stringly-typed, and non-obvious. We can change that
 const listFilters = {
-  'name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
+  name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
+  group: (filter, obj) => fuzzyCaseInsensitive(filter, obj.spec.group),
 
   // Filter role by role kind
   'role-kind': (filter, role) => filter.selected.has(roleType(role)),
@@ -38,7 +39,7 @@ const listFilters = {
   // Filter role bindings by roleRef name
   'role-binding-roleRef': (roleRef, binding) => binding.roleRef.name === roleRef,
 
-  'selector': (selector, obj) => {
+  selector: (selector, obj) => {
     if (!selector || !selector.values || !selector.values.size) {
       return true;
     }
@@ -190,10 +191,14 @@ export class ColHead extends React.Component<ColHeadProps> {
     const isSorted = sortField === currentSortField && sortFunc === currentSortFunc;
     const newSortOrder = isSorted && currentSortOrder === 'asc' ? 'desc' : 'asc';
     const onClick = () => applySort(sortField, sortFunc, newSortOrder, children);
-    return <div className={className}>
-      <a className={isSorted ? undefined : 'co-m-table-grid__sort-link--unsorted'} onClick={onClick}>{children}</a>
-      {isSorted && <i className={`co-m-table-grid__sort-arrow fa fa-long-arrow-${currentSortOrder === 'asc' ? 'up' : 'down'}`}></i>}
-    </div>;
+    return (
+      <div className={className}>
+        <a className={isSorted ? undefined : 'co-m-table-grid__sort-link--unsorted'} onClick={onClick}>
+          {children}
+        </a>
+        {isSorted && <i className={`co-m-table-grid__sort-arrow fa fa-long-arrow-${currentSortOrder === 'asc' ? 'up' : 'down'}`}></i>}
+      </div>
+    );
   }
 }
 
@@ -202,15 +207,27 @@ ListHeader.displayName = 'ListHeader';
 
 export const WorkloadListHeader = props => {
   const { t } = useTranslation();
-  return (<ListHeader>
-    <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.name" >{t('CONTENT:NAME')}</ColHead>
-    <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">{t('CONTENT:NAMESPACE')}</ColHead>
-    <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 hidden-xs" sortField="metadata.labels">{t('CONTENT:LABELS')}</ColHead>
-    <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="numReplicas">{t('RESOURCE:STATUS')}</ColHead>
-    <ColHead {...props} className="col-lg-3 hidden-md hidden-sm hidden-xs" sortField="spec.selector">{t('CONTENT:PODSELECTOR')}</ColHead>
-  </ListHeader>)
-}
-export const Rows: React.SFC<RowsProps> = (props) => {
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 col-xs-6" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-3 col-md-4 col-sm-4 hidden-xs" sortField="metadata.labels">
+        {t('CONTENT:LABELS')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="numReplicas">
+        {t('RESOURCE:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-lg-3 hidden-md hidden-sm hidden-xs" sortField="spec.selector">
+        {t('CONTENT:PODSELECTOR')}
+      </ColHead>
+    </ListHeader>
+  );
+};
+export const Rows: React.SFC<RowsProps> = props => {
   const { fake, label } = props;
   const measurementCache = new CellMeasurerCache({
     fixedWidth: true,
@@ -222,45 +239,34 @@ export const Rows: React.SFC<RowsProps> = (props) => {
     const { data, expand, Row, kindObj } = props;
     const obj = data[index];
 
-    return <CellMeasurer
-      cache={measurementCache}
-      columnIndex={0}
-      key={key}
-      rowIndex={index}
-      parent={parent}>
-      <div style={style}>
-        <Row key={_.get(obj, 'metadata.uid', index)} obj={obj} expand={expand} kindObj={kindObj} index={index} />
-      </div>
-    </CellMeasurer>;
+    return (
+      <CellMeasurer cache={measurementCache} columnIndex={0} key={key} rowIndex={index} parent={parent}>
+        <div style={style}>
+          <Row key={_.get(obj, 'metadata.uid', index)} obj={obj} expand={expand} kindObj={kindObj} index={index} />
+        </div>
+      </CellMeasurer>
+    );
   };
 
-  return <div className="co-m-table-grid__body">
-    {fake
-      ? <EmptyBox label={label} />
-      : <WindowScroller>
-        {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) =>
-          <AutoSizer disableHeight>
-            {({ width }) => <div ref={registerChild}>
-              <VirtualList
-                autoHeight
-                data={props.data}
-                expand={props.expand}
-                height={height}
-                deferredMeasurementCache={measurementCache}
-                rowHeight={measurementCache.rowHeight}
-                isScrolling={isScrolling}
-                onScroll={onChildScroll}
-                rowRenderer={rowRenderer}
-                rowCount={props.data.length}
-                scrollTop={scrollTop}
-                width={width}
-                tabIndex={null}
-              />
-            </div>}
-          </AutoSizer>}
-      </WindowScroller>
-    }
-  </div>;
+  return (
+    <div className="co-m-table-grid__body">
+      {fake ? (
+        <EmptyBox label={label} />
+      ) : (
+        <WindowScroller>
+          {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
+            <AutoSizer disableHeight>
+              {({ width }) => (
+                <div ref={registerChild}>
+                  <VirtualList autoHeight data={props.data} expand={props.expand} height={height} deferredMeasurementCache={measurementCache} rowHeight={measurementCache.rowHeight} isScrolling={isScrolling} onScroll={onChildScroll} rowRenderer={rowRenderer} rowCount={props.data.length} scrollTop={scrollTop} width={width} tabIndex={null} />
+                </div>
+              )}
+            </AutoSizer>
+          )}
+        </WindowScroller>
+      )}
+    </div>
+  );
 };
 
 Rows.propTypes = {
@@ -319,23 +325,17 @@ export const List = connect(stateToProps, { sortList: UIActions.sortList })(
       const { currentSortField, currentSortFunc, currentSortOrder, expand, Header, label, listId, Row, sortList, fake } = this.props;
       const componentProps: any = _.pick(this.props, ['data', 'filters', 'selected', 'match', 'kindObj']);
 
-      const children = <React.Fragment>
-        <Header
-          key="header"
-          applySort={_.partial(sortList, listId)}
-          currentSortField={currentSortField}
-          currentSortFunc={currentSortFunc}
-          currentSortOrder={currentSortOrder}
-          {...componentProps}
-        />
-        <Rows key="rows" expand={expand} Row={Row} fake={fake} label={label} {...componentProps} />
-      </React.Fragment>;
+      const children = (
+        <React.Fragment>
+          <Header key="header" applySort={_.partial(sortList, listId)} currentSortField={currentSortField} currentSortFunc={currentSortFunc} currentSortOrder={currentSortOrder} {...componentProps} />
+          <Rows key="rows" expand={expand} Row={Row} fake={fake} label={label} {...componentProps} />
+        </React.Fragment>
+      );
 
-      return <div className="co-m-table-grid co-m-table-grid--bordered">
-        {fake ? children : <StatusBox {...this.props}>{children}</StatusBox>}
-      </div>;
+      return <div className="co-m-table-grid co-m-table-grid--bordered">{fake ? children : <StatusBox {...this.props}>{children}</StatusBox>}</div>;
     }
-  });
+  },
+);
 
 export class ResourceRow extends React.Component<ResourceRowProps> {
   shouldComponentUpdate(nextProps) {
@@ -359,30 +359,36 @@ export class ResourceRow extends React.Component<ResourceRowProps> {
   }
 
   render() {
-    return <div className="row co-resource-list__item" style={this.props.style}>{this.props.children}</div>;
+    return (
+      <div className="row co-resource-list__item" style={this.props.style}>
+        {this.props.children}
+      </div>
+    );
   }
 }
 
-export const WorkloadListRow: React.SFC<WorkloadListRowProps> = ({ kind, actions, obj: o }) => <ResourceRow obj={o}>
-  <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
-    <ResourceCog actions={actions} kind={kind} resource={o} />
-    <ResourceLink kind={kind} name={o.metadata.name} namespace={o.metadata.namespace} title={o.metadata.uid} />
-  </div>
-  <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-break-word">
-    <ResourceLink kind="Namespace" name={o.metadata.namespace} title={o.metadata.namespace} />
-  </div>
-  <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs">
-    <LabelList kind={kind} labels={o.metadata.labels} />
-  </div>
-  <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
-    <Link to={`${resourcePath(kind, o.metadata.name, o.metadata.namespace)}/pods`} title="pods">
-      {o.status.replicas || 0} of {o.spec.replicas} pods
-    </Link>
-  </div>
-  <div className="col-lg-3 hidden-md hidden-sm hidden-xs">
-    <Selector selector={o.spec.selector} namespace={o.metadata.namespace} />
-  </div>
-</ResourceRow>;
+export const WorkloadListRow: React.SFC<WorkloadListRowProps> = ({ kind, actions, obj: o }) => (
+  <ResourceRow obj={o}>
+    <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-resource-link-wrapper">
+      <ResourceCog actions={actions} kind={kind} resource={o} />
+      <ResourceLink kind={kind} name={o.metadata.name} namespace={o.metadata.namespace} title={o.metadata.uid} />
+    </div>
+    <div className="col-lg-2 col-md-3 col-sm-4 col-xs-6 co-break-word">
+      <ResourceLink kind="Namespace" name={o.metadata.namespace} title={o.metadata.namespace} />
+    </div>
+    <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs">
+      <LabelList kind={kind} labels={o.metadata.labels} />
+    </div>
+    <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
+      <Link to={`${resourcePath(kind, o.metadata.name, o.metadata.namespace)}/pods`} title="pods">
+        {o.status.replicas || 0} of {o.spec.replicas} pods
+      </Link>
+    </div>
+    <div className="col-lg-3 hidden-md hidden-sm hidden-xs">
+      <Selector selector={o.spec.selector} namespace={o.metadata.namespace} />
+    </div>
+  </ResourceRow>
+);
 
 export type ColHeadProps = {
   applySort?: Function;

@@ -5,10 +5,8 @@ import { Map as ImmutableMap } from 'immutable';
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import {
-  FederatedNamespaceModel,
-  FederatedDeploymentModel,
   KubeFedClusterModel,
-  FederatedConfigMapModel,
+  KubeFedConfigModel,
   FederatedTypeConfigModel,
   ReplicaSchedulingPreferenceModel,
   DNSEndpointModel,
@@ -96,12 +94,10 @@ import {
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesDetailsPage))
-  .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
-  .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
-  .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsDetailsPage))
+  .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsDetailsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsDetailsPage))
-  .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsPage))
+  .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsDetailsPage))
   .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsDetailsPage))
   .set(referenceForModel(IngressDNSRecordModel), () => import('./ingress-dns-record' /* webpackChunkName: "task" */).then(m => m.IngressDNSRecordsDetailsPage))
   .set(referenceForModel(ServiceDNSRecordModel), () => import('./service-dns-record' /* webpackChunkName: "task" */).then(m => m.ServiceDNSRecordsDetailsPage))
@@ -181,10 +177,8 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesPage))
-  .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
-  .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersPage))
-  .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsPage))
+  .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsPage))
   .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsPage))
   .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsPage))

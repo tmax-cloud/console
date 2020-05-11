@@ -1,33 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
-export const FederatedNamespaceModel: K8sKind = {
-  kind: 'FederatedNamespace',
-  namespaced: true,
-  label: 'Federated Resources',
-  plural: 'federatedresources',
-  apiVersion: 'v1beta1',
-  abbr: 'FN',
-  apiGroup: 'types.kubefed.io',
-  labelPlural: 'Federated Resources',
-  path: 'federatednamespaces',
-  id: 'federatedresource',
-  crd: false,
-};
-export const FederatedDeploymentModel: K8sKind = {
-  kind: 'FederatedDeployment',
-  namespaced: true,
-  label: 'Federated Resources',
-  plural: 'federatedresources',
-  apiVersion: 'v1beta1',
-  abbr: 'FD',
-  apiGroup: 'types.kubefed.io',
-  labelPlural: 'Federated Resourcess',
-  path: 'federateddeployments',
-  id: 'federatedresource',
-  crd: false,
-};
-
 export const KubeFedClusterModel: K8sKind = {
   kind: 'KubeFedCluster',
   namespaced: true,
@@ -42,16 +15,16 @@ export const KubeFedClusterModel: K8sKind = {
   crd: false,
 };
 
-export const FederatedConfigMapModel: K8sKind = {
-  kind: 'FederatedConfigMap',
+export const KubeFedConfigModel: K8sKind = {
+  kind: 'KubeFedConfig',
   namespaced: true,
   label: 'Federation Config',
   plural: 'federationconfigs',
   apiVersion: 'v1beta1',
   abbr: 'FC',
-  apiGroup: 'types.kubefed.io',
+  apiGroup: 'core.kubefed.io',
   labelPlural: 'Federation Configs',
-  path: 'federatedconfigmaps',
+  path: 'kubefedconfigs',
   id: 'federationconfig',
   crd: false,
 };
@@ -68,6 +41,19 @@ export const FederatedTypeConfigModel: K8sKind = {
   path: 'federatedtypeconfigs',
   id: 'federatedtypeconfig',
   crd: false,
+};
+
+export const FederatedResourceModel: K8sKind = {
+  label: 'Federated Resource',
+  apiGroup: 'apiextensions.k8s.io',
+  apiVersion: 'v1beta1',
+  path: 'customresourcedefinitions',
+  abbr: 'CRD',
+  namespaced: false,
+  plural: 'federatedresources',
+  kind: 'CustomResourceDefinition',
+  id: 'customresourcedefinition',
+  labelPlural: 'Federated Resources',
 };
 
 export const ReplicaSchedulingPreferenceModel: K8sKind = {

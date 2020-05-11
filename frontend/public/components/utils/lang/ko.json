@@ -651,7 +651,7 @@
 
     "FEDERATION": "Federation",
     "KUBEFEDCLUSTER": "Federation Cluster",
-    "FEDERATEDCONFIGMAP": "Federation Config",
+    "KUBEFEDCONFIG": "Federation Config",
     "FEDERATEDTYPECONFIG": "Federated Type Config",
     "FEDERATEDRESOURCE": "Federated Resources",
     "FEDERATEDNAMESPACE": "Federated Namespace",
