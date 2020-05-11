@@ -42,16 +42,16 @@ export const KubeFedClusterModel: K8sKind = {
   crd: false,
 };
 
-export const FederatedConfigMapModel: K8sKind = {
-  kind: 'FederatedConfigMap',
+export const KubeFedConfigModel: K8sKind = {
+  kind: 'KubeFedConfig',
   namespaced: true,
   label: 'Federation Config',
   plural: 'federationconfigs',
   apiVersion: 'v1beta1',
   abbr: 'FC',
-  apiGroup: 'types.kubefed.io',
+  apiGroup: 'core.kubefed.io',
   labelPlural: 'Federation Configs',
-  path: 'federatedconfigmaps',
+  path: 'kubefedconfigs',
   id: 'federationconfig',
   crd: false,
 };

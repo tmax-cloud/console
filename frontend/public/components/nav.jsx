@@ -404,7 +404,7 @@ class Nav extends React.Component {
 
             <NavSection text={t('RESOURCE:FEDERATION')} icon="pficon pficon-catalog">
               <ResourceNSLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
-              <ResourceNSLink resource="federationconfigs" name={t('RESOURCE:FEDERATEDCONFIGMAP')} onClick={this.close} />
+              <ResourceNSLink resource="federationconfigs" name={t('RESOURCE:KUBEFEDCONFIG')} onClick={this.close} />
               <ResourceNSLink resource="federatedtypeconfigs" name={t('RESOURCE:FEDERATEDTYPECONFIG')} onClick={this.close} />
               <ResourceNSLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
             </NavSection>

@@ -8,7 +8,7 @@ import {
   FederatedNamespaceModel,
   FederatedDeploymentModel,
   KubeFedClusterModel,
-  FederatedConfigMapModel,
+  KubeFedConfigModel,
   FederatedTypeConfigModel,
   ReplicaSchedulingPreferenceModel,
   DNSEndpointModel,
@@ -99,7 +99,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
   .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesDetailsPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
-  .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsDetailsPage))
+  .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsDetailsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsDetailsPage))
   .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsDetailsPage))
   .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsDetailsPage))
@@ -184,7 +184,7 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(FederatedNamespaceModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
   .set(referenceForModel(FederatedDeploymentModel), () => import('./federated-resource' /* webpackChunkName: "task" */).then(m => m.FederatedResourcesPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersPage))
-  .set(referenceForModel(FederatedConfigMapModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.FederatedConfigMapsPage))
+  .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsPage))
   .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsPage))
   .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsPage))
   .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsPage))
