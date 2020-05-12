@@ -475,7 +475,7 @@
     "NAMESPACESELECTOR": "Namespace Selector",
     "METERING": "Metering",
     "ROLES": "Roles",
-    "PUBLICIP": "Public IP",
+    "LOADBALANCERIP": "LoadBalancer IP",
     "STORAGE": "Storage",
     "LOGSTREAMENDED": "Log stream ended.",
     "LOADINGLOG": "Loading log...",

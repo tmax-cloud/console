@@ -408,7 +408,7 @@ const MeteringPage = requirePrometheus(props => {
         </div>
         <div className="col-md-4">
           <Line
-            title={t('CONTENT:PUBLICIP')}
+            title={t('CONTENT:LOADBALANCERIP')}
             query={[
               {
                 name: 'Used',

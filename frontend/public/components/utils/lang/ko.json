@@ -477,7 +477,7 @@
     "NAMESPACESELECTOR": "네임스페이스 선택기",
     "METERING": "미터링",
     "ROLES": "롤",
-    "PUBLICIP": "공용 IP",
+    "LOADBALANCERIP": "로드밸런서 IP",
     "STORAGE": "스토리지",
     "CONNECTINGTO": "연결",
     "EXPAND": "확장",
