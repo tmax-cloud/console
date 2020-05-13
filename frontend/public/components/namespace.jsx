@@ -371,6 +371,14 @@ const MeteringPage = requirePrometheus(props => {
   return (
     <div className="co-m-pane__body">
       <SectionHeading text={t('CONTENT:METERING')} />
+      <div>
+        <select name="timeUnit">
+          <option value="hour">시</option>
+          <option value="day">일</option>
+          <option value="month">월</option>
+          <option value="year">년</option>
+        </select>
+      </div>
       <div className="row">
         {/* <div className="col-sm-6 col-xs-12"> */}
         <div className="col-md-4">
