@@ -36,9 +36,9 @@ body,
   @media (max-width: $grid-float-breakpoint-max) {
     left: -($sidebar-width);
     &.open {
-      box-shadow: 2px 0 3px rgba(0,0,0,.3);
+      box-shadow: 2px 0 3px rgba(0, 0, 0, 0.3);
       left: 0;
-      transition: left .1s ease-in-out;
+      transition: left 0.1s ease-in-out;
     }
   }
   @media (min-width: $grid-float-breakpoint) {
@@ -92,7 +92,7 @@ body,
 
 .co-p-has-sidebar {
   position: relative;
-  @media(min-width: $screen-md-min) {
+  @media (min-width: $screen-md-min) {
     display: flex;
     height: 100%;
   }
@@ -102,16 +102,16 @@ body,
   }
 
   &__sidebar {
-    @media(min-width: $screen-md-min) {
+    @media (min-width: $screen-md-min) {
       flex: 1 0 300px;
       overflow-y: auto;
     }
 
     &--bordered {
-      @media(max-width: $screen-sm-max) {
+      @media (max-width: $screen-sm-max) {
         border-top: 1px solid #ccc;
       }
-      @media(min-width: $screen-md-min) {
+      @media (min-width: $screen-md-min) {
         border-left: 1px solid #ccc;
       }
     }
@@ -130,7 +130,7 @@ body,
   &__sidebar--hidden {
     position: absolute;
     right: 13px;
-    top: 8px;
+    top: -35px;
     z-index: 1;
   }
 }
