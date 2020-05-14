@@ -1,5 +1,5 @@
 import * as _ from 'lodash-es';
-import * as React from 'react';
+import * as React  from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from './utils/tooltip';
 import { Link } from 'react-router-dom';
@@ -267,7 +267,22 @@ const Details = ({ obj: ns }) => {
 
 const RolesPage = ({ obj: { metadata } }) => <RoleBindingsPage namespace={metadata.name} showTitle={false} />;
 
-const Metering = ({ obj: { metadata } }) => <MeteringPage namespace={metadata.name} showTitle={false} />;
+const Metering = ({ obj: { metadata } }) => {
+  const { t } = useTranslation();
+  const [timeUnit, setTimeUnit] = React.useState('hour',''); 
+  return <div className="co-m-pane__body">
+    <SectionHeading text={t('CONTENT:METERING')} />
+      <div>
+        <select name="timeUnit" onChange={e=> setTimeUnit(e.target.value)}>
+          <option value="hour">{t('CONTENT:HOUR')}</option>
+          <option value="day">{t('CONTENT:DAY')}</option>
+          <option value="month">{t('CONTENT:MONTH')}</option>
+          <option value="year">{t('CONTENT:YEAR')}</option>
+        </select>
+      </div>
+    <MeteringPage namespace={metadata.name} showTitle={false} timeUnit={timeUnit} />
+    </div>
+}
 
 const autocompleteFilter = (text, item) => fuzzy(text, item);
 
@@ -367,25 +382,12 @@ class NamespaceDropdown_ extends React.Component {
 }
 
 const MeteringPage = requirePrometheus(props => {
-  let selectedTimeUnit='hour';
+  let timeUnit= props.timeUnit;
   console.log('meteringprops:',props);
- const onRestartPolicyChanged = (event) => {
-     selectedTimeUnit = event.target.value;
-  }
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('CONTENT:METERING')} />
-      <div>
-        <select name="timeUnit" onChange={onRestartPolicyChanged}>
-          <option value="hour">{t('CONTENT:HOUR')}</option>
-          <option value="day">{t('CONTENT:DAY')}</option>
-          <option value="month">{t('CONTENT:MONTH')}</option>
-          <option value="year">{t('CONTENT:YEAR')}</option>
-        </select>
-      </div>
       <div className="row">
-        {/* <div className="col-sm-6 col-xs-12"> */}
         <div className="col-md-4">
           <Line
             title={t('CONTENT:CPUSHARES')}
@@ -393,7 +395,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'cpu',
-                timeUnit : selectedTimeUnit
+                timeUnit : timeUnit
               },
             ]}
           />
@@ -405,7 +407,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'memory',
-                timeUnit : selectedTimeUnit
+                timeUnit : timeUnit
               },
             ]}
           />
@@ -417,7 +419,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'storage',
-                timeUnit : selectedTimeUnit
+                timeUnit : timeUnit
               },
             ]}
           />
@@ -429,7 +431,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'publicIp',
-                timeUnit : selectedTimeUnit
+                timeUnit : timeUnit
               },
             ]}
           />
@@ -441,7 +443,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'gpu',
-                timeUnit : selectedTimeUnit
+                timeUnit : timeUnit
               },
             ]}
           />
