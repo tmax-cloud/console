@@ -1039,6 +1039,49 @@ spec:
         - containerPort: 8080
 `,
   )
+  // TODO
+  .setIn(
+    [referenceForModel(k8sModels.PodModel), 'pod-sample'],
+    `
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example
+  labels:
+    app: hello-hypercloud
+  namespace: default
+spec:
+  containers:
+    - name: hello-hypercloud
+      image: hypercloud/hello-hypercloud
+      ports:
+        - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodModel), 'pod-sample2'],
+    `
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example2
+  labels:
+    app: hello-hypercloud
+spec:
+  containers:
+  - name: hello-hypercloud
+    image: hypercloud/hello-hypercloud
+    resources:  
+      requests:
+        cpu: 0.1
+        memory: 200M
+      limits:
+        cpu: 0.5
+        memory: 1G
+    ports:
+    - containerPort: 8080
+`,
+  )
   .setIn(
     [referenceForModel(k8sModels.IngressModel), 'default'],
     `
@@ -1074,6 +1117,95 @@ spec:
       - name: pi
         image: perl
         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample'],
+    `
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  template:
+    metadata:
+      name: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+      restartPolicy: Never
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample2'],
+    `
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  selector: {}
+  template:
+    metadata:
+      name: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(100)
+        - name: pi2
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(200)
+      restartPolicy: Never
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample3'],
+    `
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+completions: 3
+parallelism: 3
+selector: {}
+  template:
+    metadata:
+      name: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(100)
+        - name: pi2
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(200)
       restartPolicy: Never
 `,
   )
@@ -1253,6 +1385,58 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample'],
+    `
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: example
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: hello-hypercloud
+  template:
+    metadata:
+      labels:
+        app: hello-hypercloud
+    spec:
+      containers:
+        - name: hello-hypercloud
+          image: hypercloud/hello-hypercloud
+          ports:
+            - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample2'],
+    `
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: resource-example
+  namespace: demo-ns
+spec:
+  selector:
+    matchLabels:
+      name: sample-fluentd
+  template:
+    metadata:
+      labels:
+        name: sample-fluentd
+    spec:
+      containers:
+      - name: hello-fluentd
+        image: gcr.io/google-containers/fluentd-elasticsearch:1.20
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'],
     `
 apiVersion: v1
@@ -1329,6 +1513,47 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample'],
+    `
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  serviceName: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: nginx
+          image: 'gcr.io/google_containers/nginx-slim:0.8'
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: www
+              mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+    - metadata:
+        name: www
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 1Gi
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.StorageClassModel), 'default'],
     `
 apiVersion: storage.k8s.io/v1
@@ -1384,6 +1609,32 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: hello-hypercloud
+      template:
+        metadata:
+          name: hello-hypercloud
+          labels:
+            app: hello-hypercloud
+        spec:
+          containers:
+            - name: hello-hypercloud
+              image: hypercloud/hello-hypercloud
+              ports:
+                - containerPort: 8080
 `,
   )
   .setIn(
