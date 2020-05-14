@@ -367,12 +367,17 @@ class NamespaceDropdown_ extends React.Component {
 }
 
 const MeteringPage = requirePrometheus(props => {
+  let selectedTimeUnit='hour';
+  console.log('meteringprops:',props)
+ const onRestartPolicyChanged = (event) => {
+     selectedTimeUnit = event.target.value;
+  }
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
       <SectionHeading text={t('CONTENT:METERING')} />
       <div>
-        <select name="timeUnit">
+        <select name="timeUnit" onChange={onRestartPolicyChanged}>
           <option value="hour">시</option>
           <option value="day">일</option>
           <option value="month">월</option>
@@ -388,6 +393,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'cpu',
+                timeUnit : selectedTimeUnit
               },
             ]}
           />
@@ -399,6 +405,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'memory',
+                timeUnit : selectedTimeUnit
               },
             ]}
           />
@@ -410,6 +417,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'storage',
+                timeUnit : selectedTimeUnit
               },
             ]}
           />
@@ -421,6 +429,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'publicIp',
+                timeUnit : selectedTimeUnit
               },
             ]}
           />
@@ -432,6 +441,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'gpu',
+                timeUnit : selectedTimeUnit
               },
             ]}
           />
