@@ -186,6 +186,10 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
+    "HOUR":"시간",
+    "DAY":"일",
+    "MONTH":"달",
+    "YEAR":"년",
     "PATHNAME": "Path Name",
     "SERVICENAME": "Service Name",
     "ACCESS": "Access",
