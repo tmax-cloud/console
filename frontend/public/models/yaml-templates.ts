@@ -1184,9 +1184,9 @@ metadata:
   name: example
   namespace: demo-ns
 spec:
-completions: 3
-parallelism: 3
-selector: {}
+  completions: 3
+  parallelism: 3
+  selector: {}
   template:
     metadata:
       name: pi
