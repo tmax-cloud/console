@@ -1725,6 +1725,33 @@ stringData:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'secret-sample'],
+    `
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example
+  namespace: demo-ns
+type: Opaque
+stringData:
+  username: admin
+  password: damin
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'secret-sample2'],
+    `
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: aHlwZXJjbG91ZA==
+  password: aHlwZXJjbG91ZDQ=
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ReplicaSetModel), 'default'],
     `
 apiVersion: apps/v1
