@@ -973,6 +973,38 @@ data:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'configmap-sample'],
+    `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example
+  namespace: demo-ns
+data:
+  example.property.1: hello
+  example.property.2: world
+  example.property.file: |-
+    property.1=value-1
+    property.2=value-2
+    property.3=value-3
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'configmap-sample2'],
+    `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-hypercloud
+  namespace: default
+data:
+  DB_URL: localhost
+  DB_USER: hypercloud
+  DB_PASS: hypercloud
+  DEBUG_INFO: debug
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.CronJobModel), 'default'],
     `
 apiVersion: batch/v1beta1
@@ -1083,6 +1115,49 @@ spec:
     resource:
       name: cpu
       targetAverageUtilization: 50
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'hpa-sample'],
+    `
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: sample-cpu-scaling
+      namespace: default
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: sample-name
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            targetAverageUtilization: 50
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'hpa-sample2'],
+    `
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: sample-mem-scaling
+      namespace: default
+    spec:
+      scaleTargetRef:
+        kind: Deployment
+        name: sample-name
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: memory
+            targetAverageValue: 1G
 `,
   )
   .setIn(
