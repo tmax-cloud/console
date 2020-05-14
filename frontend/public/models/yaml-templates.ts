@@ -1028,6 +1028,30 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  schedule: '@daily'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.CustomResourceDefinitionModel), 'default'],
     `
 apiVersion: apiextensions.k8s.io/v1beta1
