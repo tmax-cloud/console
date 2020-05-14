@@ -368,7 +368,7 @@ class NamespaceDropdown_ extends React.Component {
 
 const MeteringPage = requirePrometheus(props => {
   let selectedTimeUnit='hour';
-  console.log('meteringprops:',props)
+  console.log('meteringprops:',props);
  const onRestartPolicyChanged = (event) => {
      selectedTimeUnit = event.target.value;
   }
@@ -378,10 +378,10 @@ const MeteringPage = requirePrometheus(props => {
       <SectionHeading text={t('CONTENT:METERING')} />
       <div>
         <select name="timeUnit" onChange={onRestartPolicyChanged}>
-          <option value="hour">시</option>
-          <option value="day">일</option>
-          <option value="month">월</option>
-          <option value="year">년</option>
+          <option value="hour">{t('CONTENT:HOUR')}</option>
+          <option value="day">{t('CONTENT:DAY')}</option>
+          <option value="month">{t('CONTENT:MONTH')}</option>
+          <option value="year">{t('CONTENT:YEAR')}</option>
         </select>
       </div>
       <div className="row">
