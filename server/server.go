@@ -3,17 +3,22 @@ package server
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
 	"io"
+	"io/ioutil"
+	"log"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"path"
 	"strconv"
+	"strings"
 
 	"github.com/coreos/dex/api"
 	"github.com/coreos/dex/connector"
@@ -65,8 +70,8 @@ type jsGlobals struct {
 	// ClusterName          string `json:"clusterName"`
 	// GoogleTagManagerID   string `json:"googleTagManagerID"`
 	// LoadTestFactor       int    `json:"loadTestFactor"`
-	ReleaseModeFlag bool `json:"releaseModeFlag"`
-	HDCModeFlag bool `json:"HDCModeFlag"`
+	ReleaseModeFlag    bool   `json:"releaseModeFlag"`
+	HDCModeFlag        bool   `json:"HDCModeFlag"`
 	TmaxCloudPortalURL string `json:tmaxCloudPortalURL`
 }
 
@@ -87,8 +92,9 @@ type Server struct {
 	Branding             string
 	GoogleTagManagerID   string
 	LoadTestFactor       int
+	MasterToken          string
 	ReleaseModeFlag      bool
-	HDCModeFlag			 bool
+	HDCModeFlag          bool
 	TmaxCloudPortalURL   string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
@@ -102,10 +108,29 @@ type Server struct {
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
+type UserSecurityPolicy struct {
+	OtpEnable string `json:"otpEnable"`
+	Otp       int    `json:"otp"`
+	IPRange   string `json:"ipRange"`
+}
+
+type TokenData struct {
+	TokenId string `json:"tokenId"`
+	Iss     string `json:"iss"`
+	Id      string `json:"id"`
+	Exp     int    `json:"exp"`
+}
+
+type AuthData struct {
+	Id           string `json:"id"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+}
+
 func (s *Server) authDisabled() bool {
 	// return s.Auther == nil
 	return true
-	// NOTE: authDisabled true로 테스트 // 정동민
+	// NOTE: OpenShift auth 사용하지 않음 // 정동민
 }
 
 func (s *Server) prometheusProxyEnabled() bool {
@@ -156,12 +181,144 @@ func (s *Server) HTTPHandler() http.Handler {
 		return authMiddlewareWithUser(s.Auther, hf)
 	}
 
+	// NOTE: 여기 유심히 봐야 할 듯
 	if s.authDisabled() {
 		authHandler = func(hf http.HandlerFunc) http.Handler {
 			return hf
 		}
 		authHandlerWithUser = func(hf func(*auth.User, http.ResponseWriter, *http.Request)) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+				var token string
+				var tokenPayload string
+				var id string
+				var bodyId string
+				var bodyToken string
+				var requestBodyString string
+				var bodyReadFlag bool
+
+				headerTokens := r.Header["Authorization"]
+				fmt.Printf("headerTokens: %v\n", headerTokens)
+				fmt.Printf("headerTokens length: %v\n", len(headerTokens))
+
+				queryTokens, _ := r.URL.Query()["token"]
+				fmt.Printf("queryTokens: %v\n", queryTokens)
+				fmt.Printf("queryTokens length: %v\n", len(queryTokens))
+
+				// body에 id나 token이 있는지 검사
+				fmt.Println("Path: " + string(r.URL.Path))
+				if strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "logout") || strings.Contains(string(r.URL.Path), "refresh") {
+
+					body, err := ioutil.ReadAll(r.Body)
+					if err != nil {
+						panic(err)
+					}
+					requestBodyString = string(body) // 사본 생성
+					fmt.Println("body: " + requestBodyString)
+
+					var authData AuthData
+					err = json.Unmarshal(body, &authData)
+					if err != nil {
+						panic(err)
+					}
+
+					bodyId = authData.Id
+					bodyToken = authData.AccessToken
+					bodyReadFlag = true
+
+					fmt.Println("bodyId: " + bodyId)
+					fmt.Println("bodyToken: " + bodyToken)
+				}
+
+				if len(bodyId) == 0 {
+					if len(bodyToken) > 0 {
+						token = string(bodyToken)
+						fmt.Println("body token: " + token)
+					} else if len(headerTokens) > 0 {
+						headerTokenSplit := strings.Split(string(headerTokens[0]), "Bearer ")
+						if len(headerTokenSplit) > 1 {
+							token = headerTokenSplit[1]
+						} else {
+							token = headerTokenSplit[0]
+						}
+						fmt.Println("header token: " + token)
+					} else if len(queryTokens) > 0 {
+						token = string(queryTokens[0])
+						fmt.Println("query token: " + token)
+					}
+
+					tokenPayload = strings.Split(token, ".")[1]
+					tokenPayloadParsed, _ := base64.StdEncoding.DecodeString(tokenPayload + "==")
+					tokenPayloadParsedString := string(tokenPayloadParsed)
+
+					var tokenPayloadParsedJson TokenData
+					json.Unmarshal([]byte(tokenPayloadParsedString), &tokenPayloadParsedJson)
+					id = tokenPayloadParsedJson.Id
+				} else {
+					id = bodyId
+				}
+
+				fmt.Println("id: " + id)
+
+				transCfg := &http.Transport{
+					TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
+				}
+				path := "/apis/tmax.io/v1/usersecuritypolicies/" + id
+				urltocall := proxy.SingleJoiningSlash(s.K8sProxyConfig.Endpoint.String(), path)
+				req, err := http.NewRequest("GET", urltocall, nil)
+				if err != nil {
+					panic(err)
+				}
+
+				req.Header.Add("Authorization", "Bearer "+s.MasterToken)
+				client := &http.Client{Transport: transCfg}
+
+				resp, err := client.Do(req)
+				if err != nil {
+					panic(err)
+				}
+				defer resp.Body.Close()
+
+				respBody, _ := ioutil.ReadAll(resp.Body)
+				resp.Body.Close()
+				fmt.Printf("%s\n", respBody)
+
+				userSecurity := UserSecurityPolicy{}
+				err = json.Unmarshal(respBody, &userSecurity)
+				if err != nil {
+					panic(err)
+				}
+				fmt.Println(userSecurity)
+
+				var clientAddr string
+				forwarded := r.Header.Get("X-FORWARDED-FOR")
+				if forwarded != "" {
+					clientAddr = forwarded
+				} else {
+					clientAddr = r.RemoteAddr
+				}
+				fmt.Printf("client: %v\n", clientAddr)
+
+				ipAddr := strings.Split(clientAddr, ":")[0]
+				ipRange := userSecurity.IPRange
+
+				_, subnet, err := net.ParseCIDR(ipRange)
+				if err != nil {
+					log.Fatal(err)
+				}
+				result := subnet.Contains(net.ParseIP(ipAddr))
+
+				fmt.Printf("IP Addr: %v\n", ipAddr)
+				fmt.Printf("IP Range: %v\n", ipRange)
+				fmt.Printf("IP Auth Result: %v\n", result)
+
+				if result == false {
+					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Invalid IP: %v. Allowed IP: %v", ipAddr, ipRange)})
+					return
+				}
+				if bodyReadFlag {
+					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString)) // body 복원
+				}
 				hf(s.StaticUser, w, r)
 			})
 		}
@@ -304,8 +461,8 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		// DocumentationBaseURL: s.DocumentationBaseURL.String(),
 		// GoogleTagManagerID:   s.GoogleTagManagerID,
 		// LoadTestFactor:       s.LoadTestFactor,
-		ReleaseModeFlag: s.ReleaseModeFlag,
-		HDCModeFlag: s.HDCModeFlag,
+		ReleaseModeFlag:    s.ReleaseModeFlag,
+		HDCModeFlag:        s.HDCModeFlag,
 		TmaxCloudPortalURL: s.TmaxCloudPortalURL,
 	}
 
