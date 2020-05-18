@@ -12,6 +12,8 @@ import { HPASidebar } from './hpa-sidebar';
 import { ConfigMapSidebar } from './config-map-sidebar';
 import { SecretSidebar } from './secret-sidebar';
 import { CronJobSidebar } from './cron-job-sidebar';
+import { ServiceSidebar } from './service-sidebar';
+import { IngressSidebar } from './ingress-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
@@ -27,6 +29,8 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Secret', SecretSidebar)
   .set('Job', JobSidebar)
   .set('CronJob', CronJobSidebar)
+  .set('Ingress', IngressSidebar)
+  .set('Service', ServiceSidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('Role', RoleSidebar)
   .set('ClusterRole', RoleSidebar)
