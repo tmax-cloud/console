@@ -31,6 +31,7 @@ import { PipelineResourceSidebar } from './pipeline-resource-sidebar';
 import { RegistrySidebar } from './registry-sidebar';
 import { TaskSidebar } from './task-sidebar';
 import { TaskRunSidebar } from './task-run-sidebar';
+// import { PodSecurityPolicySidebar } from './pod-security-policy-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
@@ -62,6 +63,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Pipeline', PipelineSidebar)
   .set('PipelineRun', PipelineRunSidebar)
   .set('PipelineResource', PipelineResourceSidebar)
+  // .set('PodSecurityPolicy', PodSecurityPolicySidebar)
   .set('Registry', RegistrySidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('BuildConfig', BuildConfigSidebar)
