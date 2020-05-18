@@ -137,7 +137,7 @@ export const KubeadmControlPlaneModel: K8sKind = {
   labelPlural: 'Kubeadm Control Planes',
   path: 'kubeadmcontrolplanes',
   id: 'kubeadmcontrolplane',
-  crd: true,
+  crd: false,
 };
 
 export const KubeadmConfigTemplateModel: K8sKind = {
