@@ -28,6 +28,7 @@ import { ServiceAccountSidebar } from './service-account-sidebar';
 import { PipelineSidebar } from './pipeline-sidebar';
 import { PipelineRunSidebar } from './pipeline-run-sidebar';
 import { PipelineResourceSidebar } from './pipeline-resource-sidebar';
+import { RegistrySidebar } from './registry-sidebar';
 // import { TaskSidebar } from './task-sidebar';
 // import { TaskRunSidebar } from './task-run-sidebar';
 
@@ -61,6 +62,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Pipeline', PipelineSidebar)
   .set('PipelineRun', PipelineRunSidebar)
   .set('PipelineResource', PipelineResourceSidebar)
+  .set('Registry', RegistrySidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)

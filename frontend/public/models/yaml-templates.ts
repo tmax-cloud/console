@@ -958,6 +958,27 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.RegistryModel), 'registry-sample'],
+    `
+apiVersion: tmax.io/v1
+kind: Registry
+metadata:
+  name: example
+  namespace: default
+spec:
+  image: 'example/registry:b004'
+  loginId: example
+  loginPassword: example
+  service:
+    type: example
+  persistentVolumeClaim:
+    accessModes:
+      - example
+    storageSize: example
+    storageClassName: example  
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
     `
 apiVersion: tmax.io/v1
