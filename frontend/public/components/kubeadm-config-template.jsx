@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const KubeadmConfigHeader = props => {
+const KubeadmConfigTemplateHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -27,14 +27,14 @@ const KubeadmConfigHeader = props => {
   );
 };
 
-const KubeadmConfigRow = () =>
+const KubeadmConfigTemplateRow = () =>
   // eslint-disable-next-line no-shadow
-  function KubeadmConfigRow({ obj }) {
+  function KubeadmConfigTemplateRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="KubeadmConfig" resource={obj} />}
-          <ResourceLink kind="KubeadmConfig" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="KubeadmConfigTemplate" resource={obj} />}
+          <ResourceLink kind="KubeadmConfigTemplate" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -47,32 +47,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('KubeadmConfig', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('KubeadmConfigTemplate', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const KubeadmConfigList = props => {
+export const KubeadmConfigTemplateList = props => {
   const { kinds } = props;
-  const Row = KubeadmConfigRow(kinds[0]);
-  Row.displayName = 'KubeadmConfigRow';
-  return <List {...props} Header={KubeadmConfigHeader} Row={Row} />;
+  const Row = KubeadmConfigTemplateRow(kinds[0]);
+  Row.displayName = 'KubeadmConfigTemplateRow';
+  return <List {...props} Header={KubeadmConfigTemplateHeader} Row={Row} />;
 };
-KubeadmConfigList.displayName = KubeadmConfigList;
+KubeadmConfigTemplateList.displayName = KubeadmConfigTemplateList;
 
-export const KubeadmConfigsPage = props => {
+export const KubeadmConfigTemplatesPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={KubeadmConfigList} canCreate={false} kind="KubeadmConfig" /> : <ListPage {...props} ListComponent={KubeadmConfigList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: t('RESOURCE:KUBEADMCONFIGTEMPLATE') })} canCreate={true} kind="KubeadmConfig" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={KubeadmConfigTemplateList} canCreate={false} kind="KubeadmConfigTemplate" /> : <ListPage {...props} ListComponent={KubeadmConfigTemplateList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: t('RESOURCE:KUBEADMCONFIGTEMPLATE') })} canCreate={true} kind="KubeadmConfigTemplate" />;
 };
-KubeadmConfigsPage.displayName = 'KubeadmConfigsPage';
+KubeadmConfigTemplatesPage.displayName = 'KubeadmConfigTemplatesPage';
 
-export const KubeadmConfigsDetailsPage = props => {
+export const KubeadmConfigTemplatesDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="KubeadmConfig" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="KubeadmConfigTemplate" menuActions={menu} pages={page} />;
 };
 
-KubeadmConfigsDetailsPage.displayName = 'KubeadmConfigsDetailsPage';
+KubeadmConfigTemplatesDetailsPage.displayName = 'KubeadmConfigTemplatesDetailsPage';

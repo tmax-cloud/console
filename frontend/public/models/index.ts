@@ -133,24 +133,24 @@ export const KubeadmControlPlaneModel: K8sKind = {
   plural: 'kubeadmcontrolplanes',
   apiVersion: 'v1alpha3',
   abbr: 'KCP',
-  apiGroup: 'cluster.x-k8s.io',
+  apiGroup: 'controlplane.cluster.x-k8s.io',
   labelPlural: 'Kubeadm Control Planes',
   path: 'kubeadmcontrolplanes',
   id: 'kubeadmcontrolplane',
-  crd: false,
+  crd: true,
 };
 
-export const KubeadmConfigModel: K8sKind = {
-  kind: 'KubeadmConfig',
+export const KubeadmConfigTemplateModel: K8sKind = {
+  kind: 'KubeadmConfigTemplate',
   namespaced: true,
   label: 'Kubeadm Config Template',
   plural: 'kubeadmconfigtemplates',
-  apiVersion: 'v1alpha3',
+  apiVersion: 'v1alpha2',
   abbr: 'KCT',
-  apiGroup: 'cluster.x-k8s.io',
+  apiGroup: 'bootstrap.cluster.x-k8s.io',
   labelPlural: 'Kubeadm Config Template',
-  path: 'kubeadmconfigs',
-  id: 'kubeadmconfig',
+  path: 'kubeadmconfigtemplates',
+  id: 'kubeadmconfigtemplate',
   crd: false,
 };
 
