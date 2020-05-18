@@ -264,6 +264,21 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
       description: For Example
     status: active
 
+`,)
+.setIn(
+  [referenceForModel(k8sModels.UsergroupModel), 'usergroup-sample'],
+  `
+apiVersion: tmax.io/v1
+kind: Usergroup
+metadata:
+  name: example
+userGroupInfo:
+  name: example
+  department: Cloud
+  position: developer
+  description: For Example
+status: active
+
 `,
   )
   .setIn(

@@ -1,5 +1,9 @@
+import { ClusterServiceBrokerSidebar } from './cluster-service-broker-sidebar';
+import { ServiceInstanceSidebar } from './service-instance-sidebar';
+import { ServiceBindingSidebar } from './service-binding-sidebar';
+import { TemplateSidebar } from './template-sidebar';
+import { TemplateInstanceSidebar } from './template-instance-sidebar';
 import { NetworkPolicySidebar } from './network-policy-sidebar';
-import { RoleSidebar } from './role-sidebar';
 import { BuildConfigSidebar } from './build-config-sidebar';
 import { VirtualMachineSidebar } from './virtual-machine-sidebars';
 import { PodSidebar } from './pod-sidebar';
@@ -12,13 +16,9 @@ import { HPASidebar } from './hpa-sidebar';
 import { ConfigMapSidebar } from './config-map-sidebar';
 import { SecretSidebar } from './secret-sidebar';
 import { CronJobSidebar } from './cron-job-sidebar';
-
-import { ClusterServiceBrokerSidebar } from './cluster-service-broker-sidebar';
-import { ServiceInstanceSidebar } from './service-instance-sidebar';
-import { ServiceBindingSidebar } from './service-binding-sidebar';
-import { TemplateSidebar } from './template-sidebar';
-import { TemplateInstanceSidebar } from './template-instance-sidebar';
-
+import { RoleSidebar } from './role-sidebar';
+import { UserGroupSidebar } from './user-group-sidebar';
+import { ServiceAccountSidebar } from './service-account-sidebar';
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
 export const resourceSidebars = new Map<string, React.ComponentType<any>>()
@@ -39,6 +39,8 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
     .set('Job', JobSidebar)
     .set('CronJob', CronJobSidebar)
     .set('NetworkPolicy', NetworkPolicySidebar)
+    .set('BuildConfig', BuildConfigSidebar)
     .set('Role', RoleSidebar)
     .set('ClusterRole', RoleSidebar)
-    .set('BuildConfig', BuildConfigSidebar);
+    .set('Usergroup', UserGroupSidebar)
+    .set('ServiceAccount', ServiceAccountSidebar);
