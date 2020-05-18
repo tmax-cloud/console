@@ -2482,6 +2482,20 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.CustomResourceDefinitionModel), 'customresourcedefinition-sample'],
+    `
+apiVersion: "stable.example.com/v1" 
+kind: CronTab 
+metadata:
+  name: my-new-cron-object 
+  finalizers: 
+  - finalizer.stable.example.com
+spec: 
+  cronSpec: "* * * * /5"
+  image: my-awesome-cron-image
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.DeploymentConfigModel), 'default'],
     `
 apiVersion: apps.openshift.io/v1
