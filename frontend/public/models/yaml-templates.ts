@@ -19,6 +19,24 @@ metadata:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.KubeadmConfigModel), 'default'],
+    `
+    apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+    kind: KubeadmConfigTemplate
+    metadata:
+      name: capi-quickstart-md-0
+      namespace: default
+    spec:
+      template:
+        spec:
+          joinConfiguration:
+            nodeRegistration:
+              kubeletExtraArgs:
+                cloud-provider: aws
+              name: '{{ ds.meta_data.local_hostname }}'    
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.FederatedResourceModel), 'default'],
     `
 apiVersion: apiextensions.k8s.io/v1beta1
