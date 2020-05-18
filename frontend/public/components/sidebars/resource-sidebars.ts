@@ -20,6 +20,10 @@ import { ServiceInstanceSidebar } from './service-instance-sidebar';
 import { ServiceBindingSidebar } from './service-binding-sidebar';
 import { TemplateSidebar } from './template-sidebar';
 import { TemplateInstanceSidebar } from './template-instance-sidebar';
+// import { StorageClassSidebar } from './storage-class-sidebar';
+// import { DataVolumeSidebar } from './data-volume-sidebar';
+// import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar';
+// import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
@@ -42,6 +46,10 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('CronJob', CronJobSidebar)
   .set('Ingress', IngressSidebar)
   .set('Service', ServiceSidebar)
+  // .set('StorageClass', StorageClassSidebar)
+  // .set('DataVolume', DataVolumeSidebar)
+  // .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
+  // .set('PersistentVolume', PersistentVolumeSidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('Role', RoleSidebar)
   .set('ClusterRole', RoleSidebar)
