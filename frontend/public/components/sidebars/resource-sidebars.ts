@@ -25,6 +25,9 @@ import { IngressSidebar } from './ingress-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
 import { ServiceAccountSidebar } from './service-account-sidebar';
+import { PipelineSidebar } from './pipeline-sidebar';
+import { PipelineRunSidebar } from './pipeline-run-sidebar';
+import { PipelineResourceSidebar } from './pipeline-resource-sidebar';
 // import { TaskSidebar } from './task-sidebar';
 // import { TaskRunSidebar } from './task-run-sidebar';
 
@@ -55,6 +58,9 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   // .set('PersistentVolume', PersistentVolumeSidebar)
   // .set('Task', TaskSidebar)
   // .set('TaskRun', TaskRunSidebar)
+  .set('Pipeline', PipelineSidebar)
+  .set('PipelineRun', PipelineRunSidebar)
+  .set('PipelineResource', PipelineResourceSidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)

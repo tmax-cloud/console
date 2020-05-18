@@ -420,10 +420,11 @@ spec:
       description: For Example
     status: active
 
-`,)
-.setIn(
-  [referenceForModel(k8sModels.UsergroupModel), 'usergroup-sample'],
-  `
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.UsergroupModel), 'usergroup-sample'],
+    `
 apiVersion: tmax.io/v1
 kind: Usergroup
 metadata:
@@ -775,6 +776,23 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git
+      namespace: teespaceb2c
+    spec:
+      type: git
+      params:
+        - name: revision
+          value: master
+        - name: url
+          value: 'https://github.com/sample/git/url'
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PipelineModel), 'default'],
     `
 apiVersion: tekton.dev/v1alpha1
@@ -815,6 +833,45 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
+    `
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+      - name: source-repo
+        type: git
+      - name: sample-image
+        type: image
+  tasks:
+    - name: task1
+      taskRef:
+        name: example-task1
+      params:
+        - name: example-string
+          value: sample-string1
+      resources:
+        inputs:
+          - name: example-pipeline-resource-git
+            resource: source-repo
+        outputs:
+          - name: example-pipeline-resource-image
+            resource: sample-image
+    - name: task2
+      taskRef:
+        name: example-task2
+      resources:
+        inputs:
+          - name: example-input-image
+            resource: sample-image
+            from:
+              - task1
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PipelineRunModel), 'default'],
     `
 apiVersion: tekton.dev/v1alpha1
@@ -833,6 +890,27 @@ spec:
         - name: sample-image
           resourceRef:
             name: example-pipeline-resource-image
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineRunModel), 'pipelinerun-sample'],
+    `
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: example-pipeline-run
+  namespace: default
+spec:
+  serviceAccountName: example-san
+  pipelineRef:
+    name: example-pipeline
+  resources:
+    - name: source-repo
+      resourceRef:
+        name: example-pipeline-resource-git
+    - name: sample-image
+      resourceRef:
+        name: example-pipeline-resource-image
 `,
   )
   .setIn(
