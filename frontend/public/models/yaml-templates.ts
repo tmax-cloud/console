@@ -663,6 +663,50 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample'],
+    `
+apiVersion: "v1"
+kind: "LimitRange"
+metadata:
+  name: "core-resource-limits" 
+spec:
+  limits:
+    - type: "Pod or Container"
+      max:
+        cpu: "2" 
+        memory: "1Gi" 
+      min:
+        cpu: "200m" 
+        memory: "6Mi" 
+      default:
+        cpu: "300m" 
+        memory: "200Mi" 
+      defaultRequest:
+        cpu: "200m" 
+        memory: "100Mi" 
+      maxLimitRequestRatio:
+        cpu: "10"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample2'],
+    `
+apiVersion: "v1"
+kind: "LimitRange"
+metadata:
+  name: "tmax-resource-limits"
+spec:
+  limits:
+    - type: tmax.io/Image
+      max:
+        storage: 1Gi 
+    - type: tmax.io/ImageStream
+      max:
+        tmax.io/image-tags: 20 
+        tmax.io/images: 30
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1
