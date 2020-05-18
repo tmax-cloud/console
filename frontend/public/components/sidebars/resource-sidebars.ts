@@ -16,6 +16,8 @@ import { HPASidebar } from './hpa-sidebar';
 import { ConfigMapSidebar } from './config-map-sidebar';
 import { SecretSidebar } from './secret-sidebar';
 import { CronJobSidebar } from './cron-job-sidebar';
+import { ServiceSidebar } from './service-sidebar';
+import { IngressSidebar } from './ingress-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
 import { ServiceAccountSidebar } from './service-account-sidebar';
@@ -38,9 +40,11 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
     .set('Secret', SecretSidebar)
     .set('Job', JobSidebar)
     .set('CronJob', CronJobSidebar)
+    .set('Ingress', IngressSidebar)
+    .set('Service', ServiceSidebar)
     .set('NetworkPolicy', NetworkPolicySidebar)
     .set('BuildConfig', BuildConfigSidebar)
     .set('Role', RoleSidebar)
     .set('ClusterRole', RoleSidebar)
-    .set('Usergroup', UserGroupSidebar)
+    .set('Usergroup', UserGroupSidebar);
     // .set('ServiceAccount', ServiceAccountSidebar);

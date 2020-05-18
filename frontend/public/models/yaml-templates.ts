@@ -95,6 +95,162 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   `,
   )
   .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'virtualmachine-sample'],
+    `
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: windows-vm
+  namespace: demo-ns
+spec:
+  running: true
+  template:
+    spec:
+      hostname: guestos-name
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k8s-3-3
+      domain:
+        machine:
+          type: q35
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: rootdisk
+            - cdrom:
+                bus: sata
+                readonly: true
+              name: cloudinitdisk
+            - disk:
+                bus: virtio
+              name: additionaldisk
+          interfaces:
+            - name: default
+              model: virtio
+              bridge: {}
+              macAddress: 'de:aa:00:00:be:aa'
+        gpus:
+          - deviceName: nvidia.com/GP102GL_Tesla_P40
+            name: gpu1
+        cpu:
+          cores: 2
+        memory:
+          guest: 2Gi
+        resources:
+          overcommitGuestOverhead: false
+          requests:
+            cpu: 1500m
+            memory: 2Gi
+          limits:
+            cpu: 2500m
+            memory: 3Gi
+      terminationGracePeriodSeconds: 0
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - containerDisk:
+            image: '{registry_endpoint}/win7:latest'
+          name: rootdisk
+        - name: cloudinitdisk
+          cloudInitConfigDrive:
+            userData: |
+              #ps1_sysnative
+              NET USER tmax "Password12345" /ADD
+              NET LOCALGROUP "Administrators" "tmax" /add
+        - name: additionaldisk
+          persistentVolumeClaim:
+            claimName: empty-pvc
+  `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'virtualmachine-sample2'],
+    `
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: linux
+  namespace: demo-ns
+spec:
+  running: true
+  template:
+    spec:
+      hostname: guestos-name
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k8s-3-3
+      domain:
+        machine:
+          type: q35
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: rootdisk
+            - cdrom:
+                bus: sata
+                readonly: true
+              name: cloudinitdisk
+            - disk:
+                bus: virtio
+              name: additionaldisk
+          interfaces:
+            - name: default
+              model: virtio
+              bridge: {}
+              macAddress: 'de:ad:00:00:be:aa'
+        cpu:
+          cores: 2
+        memory:
+          guest: 2Gi
+        resources:
+          overcommitGuestOverhead: false
+          requests:
+            cpu: 1500m
+            memory: 2Gi
+          limits:
+            cpu: 1500m
+            memory: 2Gi
+      terminationGracePeriodSeconds: 0
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - containerDisk:
+            image: '{registry_endpoint}/ubuntu:18.04'
+          name: rootdisk
+        - name: cloudinitdisk
+          cloudInitConfigDrive:
+            userData: |
+              #cloud-config
+              disable_root: false
+              ssh_pwauth: true
+              lock_passwd: false
+              users:
+                - name: tmax
+                  sudo: ALL=(ALL) NOPASSWD:ALL
+                  passwd: $6$bLLmCtnk51$21/Fq0vSHCwDODP2hXA.wo/0k91QIw/lUy6qWPOX1vx5z0CF9Acj9vGLFlQVbjSzmh.1r7wWd0kQS9RMm51HE.
+                  shell: /bin/bash
+                  lock_passwd: false
+        - name: additionaldisk
+          persistentVolumeClaim:
+            claimName: empty-pvc
+  `,
+  )
+  .setIn(
     [referenceForModel(k8sModels.VirtualMachineModel), 'read-virtualmachine-window'],
     `
     apiVersion: kubevirt.io/v1alpha3
@@ -2308,6 +2464,38 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.IngressModel), 'ingress-sample'],
+    `
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example
+  namespace: sample1-name
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /testpath
+            backend:
+              serviceName: test
+              servicePort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.IngressModel), 'ingress-sample2'],
+    `
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+spec:
+  backend:
+    serviceName: testsvc
+    servicePort: 80
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.JobModel), 'default'],
     `
 apiVersion: batch/v1
@@ -2566,6 +2754,63 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 9376
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'service-sample'],
+    `
+apiVersion: v1
+kind: Service
+metadata:
+  name: example
+  namespace: sample1-name
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'service-sample2'],
+    `
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9376
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 9377
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'service-sample3'],
+    `
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9376
+  externalIPs:
+        - 80.11.12.10
 `,
   )
   .setIn(
