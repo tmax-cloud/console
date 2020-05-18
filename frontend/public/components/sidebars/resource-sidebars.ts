@@ -25,6 +25,8 @@ import { IngressSidebar } from './ingress-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
 import { ServiceAccountSidebar } from './service-account-sidebar';
+// import { TaskSidebar } from './task-sidebar';
+// import { TaskRunSidebar } from './task-run-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
@@ -51,6 +53,8 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   // .set('DataVolume', DataVolumeSidebar)
   // .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
   // .set('PersistentVolume', PersistentVolumeSidebar)
+  // .set('Task', TaskSidebar)
+  // .set('TaskRun', TaskRunSidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)
