@@ -18,7 +18,6 @@ export const TaskRunSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
       (3) inputs 태스크에서 실행될 컨테이너 이미지가 참조하는 파이프라인 리소스의 상세 명세
       (4) outputs 태스크 실행 완료 후 생성될 결과물의 상세 명세
       (5) params 태스크에서 실행될 컨테이너 이미지가 참조하는 파라미터의 상세 명세`,
-      // TODO: yaml 추가하기
       templateName: 'taskrun-sample',
       kind: referenceForModel(TaskRunModel),
     },

@@ -18,7 +18,6 @@ export const TaskSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
       (3) outputs 태스크 실행 완료 후 생성될 결과물의 상세 명세
       (4) params 실행할 컨테이너 이미지에 정의된 커맨드 인자(args)에서 참조하는 파라미터의 상세 명세
       (5) steps 실행할 컨테이너 이미지의 상세 명세`,
-      // TODO: yaml 추가하기
       templateName: 'task-sample',
       kind: referenceForModel(TaskModel),
     },
