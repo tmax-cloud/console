@@ -732,6 +732,41 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.TaskModel), 'task-sample'],
+    `
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: example-task
+  namespace: default
+spec:
+  inputs:
+    resources:
+      - name: git-source
+        type: git
+    params:
+      - name: example-string
+        type: string
+        description: a sample string
+        default: default-string-value
+  outputs:
+    resources:
+      - name: output-image
+        type: image
+  steps:
+    - name: sample-job
+      image: 'sample-image-name:latest'
+      env:
+        - name: SAMPLE_ENV
+          value: hello/world/
+      command:
+        - /bin/sh
+      args:
+        - '-c'
+        - echo helloworld
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.TaskRunModel), 'default'],
     `
 apiVersion: tekton.dev/v1beta1
@@ -756,6 +791,33 @@ spec:
             - name: output-image
               resourceRef:
                 name: example-pipeline-resource-image
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: example-taskrun
+  namespace: default
+spec:
+  serviceAccountName: example-san
+  taskRef:
+    name: example-task
+  inputs:
+    resources:
+      - name: git-source
+        resourceRef:
+          name: example-pipeline-resource-git
+    params:
+      - name: example-string
+        value: input-string
+  outputs:
+    resources:
+      - name: output-image
+        resourceRef:
+          name: example-pipeline-resource-image
 `,
   )
   .setIn(

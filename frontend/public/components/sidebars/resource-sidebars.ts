@@ -29,8 +29,8 @@ import { PipelineSidebar } from './pipeline-sidebar';
 import { PipelineRunSidebar } from './pipeline-run-sidebar';
 import { PipelineResourceSidebar } from './pipeline-resource-sidebar';
 import { RegistrySidebar } from './registry-sidebar';
-// import { TaskSidebar } from './task-sidebar';
-// import { TaskRunSidebar } from './task-run-sidebar';
+import { TaskSidebar } from './task-sidebar';
+import { TaskRunSidebar } from './task-run-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
@@ -57,8 +57,8 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   // .set('DataVolume', DataVolumeSidebar)
   // .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
   // .set('PersistentVolume', PersistentVolumeSidebar)
-  // .set('Task', TaskSidebar)
-  // .set('TaskRun', TaskRunSidebar)
+  .set('Task', TaskSidebar)
+  .set('TaskRun', TaskRunSidebar)
   .set('Pipeline', PipelineSidebar)
   .set('PipelineRun', PipelineRunSidebar)
   .set('PipelineResource', PipelineResourceSidebar)
