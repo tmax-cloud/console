@@ -5,7 +5,7 @@ import React, { Component, setState } from 'react';
 import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
-import { coFetchJSON } from '../co-fetch';
+import { coFetchJSON, coFetchUtils } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
 import { setAccessToken, setRefreshToken, resetLoginState, getAccessToken } from './utils/auth';
@@ -91,6 +91,7 @@ class LoginComponent extends Component {
     };
     coFetchJSON.post(AUTH_SERVER_URL, json)
       .then(data => {
+        const curTime = new Date();
         this.setState({ loading: false });
         if (data.accessToken && data.refreshToken) {
           setAccessToken(data.accessToken);
@@ -105,8 +106,8 @@ class LoginComponent extends Component {
 
         } else {
           //otp인증을 해야하는 경우 
-          data.otpEnable ? OtpModal_({ data: json }) :
-            // 로그인 실패 
+          data.otpEnable ? OtpModal_({ data: json, initialTime: curTime }) :
+          // 로그인 실패 
             this.setState({ error: data.msg });
           return;
         }
