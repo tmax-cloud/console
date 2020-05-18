@@ -64,7 +64,7 @@ MachineDeploymentList.displayName = MachineDeploymentList;
 
 export const MachineDeploymentsPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={MachineDeploymentList} canCreate={false} kind="MachineDeployment" /> : <ListPage {...props} ListComponent={MachineDeploymentList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="MachineDeployment" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={MachineDeploymentList} canCreate={false} kind="MachineDeployment" /> : <ListPage {...props} ListComponent={MachineDeploymentList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="MachineDeployment" />;
 };
 MachineDeploymentsPage.displayName = 'MachineDeploymentsPage';
 

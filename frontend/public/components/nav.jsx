@@ -423,11 +423,13 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text={t('RESOURCE:CLUSTERMANAGEMENT')} icon="fa fa-database">
-              <ResourceClusterLink resource="clusters" name={t('RESOURCE:CLUSTER')} onClick={this.close} />
-              <ResourceClusterLink resource="machinedeployments" name={t('RESOURCE:MACHINEDEPLOYMENT')} onClick={this.close} />
-              <ResourceClusterLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECK')} onClick={this.close} />
-              <ResourceClusterLink resource="machines" name={t('RESOURCE:MACHINE')} onClick={this.close} />
-              <ResourceClusterLink resource="machinesets" name={t('RESOURCE:MACHINESET')} onClick={this.close} />
+              <ResourceNSLink resource="clusters" name={t('RESOURCE:CLUSTER')} onClick={this.close} />
+              <ResourceNSLink resource="machinedeployments" name={t('RESOURCE:MACHINEDEPLOYMENT')} onClick={this.close} />
+              <ResourceNSLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECK')} onClick={this.close} />
+              <ResourceNSLink resource="machines" name={t('RESOURCE:MACHINE')} onClick={this.close} />
+              <ResourceNSLink resource="machinesets" name={t('RESOURCE:MACHINESET')} onClick={this.close} />
+              <ResourceNSLink resource="kubeadmcontrolplanes" name={t('RESOURCE:KUBEADMCONTROLPLANE')} onClick={this.close} />
+              <ResourceNSLink resource="kubeadmconfigtemplates" name={t('RESOURCE:KUBEADMCONFIGTEMPLATE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:BAREMETALMANAGEMENT')} icon="pficon pficon-build">

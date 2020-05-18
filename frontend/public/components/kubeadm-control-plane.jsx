@@ -12,7 +12,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-const MachineSetHeader = props => {
+const KubeadmControlPlaneHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
@@ -27,14 +27,14 @@ const MachineSetHeader = props => {
   );
 };
 
-const MachineSetRow = () =>
+const KubeadmControlPlaneRow = () =>
   // eslint-disable-next-line no-shadow
-  function MachineSetRow({ obj }) {
+  function KubeadmControlPlaneRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="MachineSet" resource={obj} />}
-          <ResourceLink kind="MachineSet" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="KubeadmControlPlane" resource={obj} />}
+          <ResourceLink kind="KubeadmControlPlane" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -47,32 +47,32 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('MachineSet', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('KubeadmControlPlane', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
     );
   };
 
-export const MachineSetList = props => {
+export const KubeadmControlPlaneList = props => {
   const { kinds } = props;
-  const Row = MachineSetRow(kinds[0]);
-  Row.displayName = 'MachineSetRow';
-  return <List {...props} Header={MachineSetHeader} Row={Row} />;
+  const Row = KubeadmControlPlaneRow(kinds[0]);
+  Row.displayName = 'KubeadmControlPlaneRow';
+  return <List {...props} Header={KubeadmControlPlaneHeader} Row={Row} />;
 };
-MachineSetList.displayName = MachineSetList;
+KubeadmControlPlaneList.displayName = KubeadmControlPlaneList;
 
-export const MachineSetsPage = props => {
+export const KubeadmControlPlanesPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={MachineSetList} canCreate={false} kind="MachineSet" /> : <ListPage {...props} ListComponent={MachineSetList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="MachineSet" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={KubeadmControlPlaneList} canCreate={false} kind="KubeadmControlPlane" /> : <ListPage {...props} ListComponent={KubeadmControlPlaneList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="KubeadmControlPlane" />;
 };
-MachineSetsPage.displayName = 'MachineSetsPage';
+KubeadmControlPlanesPage.displayName = 'KubeadmControlPlanesPage';
 
-export const MachineSetsDetailsPage = props => {
+export const KubeadmControlPlanesDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
   let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return <DetailsPage {...props} kind="MachineSet" menuActions={menu} pages={page} />;
+  return <DetailsPage {...props} kind="KubeadmControlPlane" menuActions={menu} pages={page} />;
 };
 
-MachineSetsDetailsPage.displayName = 'MachineSetsDetailsPage';
+KubeadmControlPlanesDetailsPage.displayName = 'KubeadmControlPlanesDetailsPage';

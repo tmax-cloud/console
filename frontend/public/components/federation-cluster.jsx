@@ -15,7 +15,7 @@ const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
 let getHyperLink = link => {
   // return <Link to={link}> {link}</Link>;
-  console.log(link);
+  link = 'https://' + link;
   return <a href={link}>{link}</a>;
 };
 

@@ -19,6 +19,60 @@ metadata:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.KubeadmConfigTemplateModel), 'default'],
+    `
+    apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+    kind: KubeadmConfigTemplate
+    metadata:
+      name: capi-quickstart-md-0
+      namespace: default
+    spec:
+      template:
+        spec:
+          joinConfiguration:
+            nodeRegistration:
+              kubeletExtraArgs:
+                cloud-provider: aws
+              name: '{{ ds.meta_data.local_hostname }}'    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.KubeadmControlPlaneModel), 'default'],
+    `
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: KubeadmControlPlane
+metadata:
+  name: capi-quickstart-control-plane
+  namespace: default
+spec:
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: AWSMachineTemplate
+    name: capi-quickstart-control-plane
+  kubeadmConfigSpec:
+    clusterConfiguration:
+      apiServer:
+        extraArgs:
+          cloud-provider: aws
+      controllerManager:
+        extraArgs:
+          cloud-provider: aws
+    initConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: aws
+        name: '{{ ds.meta_data.local_hostname }}'
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: aws
+        name: '{{ ds.meta_data.local_hostname }}'
+  replicas: 1
+  version: v1.17.3
+   
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.FederatedResourceModel), 'default'],
     `
 apiVersion: apiextensions.k8s.io/v1beta1
