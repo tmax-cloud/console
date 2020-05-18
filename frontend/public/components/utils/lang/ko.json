@@ -39,7 +39,7 @@
     "NOFOUNDORDEFINED": "{{something}}가 존재하지 않거나 설정되지 않았습니다. ",
     "STRATEGY-MODAL_0": "이하",
     "STRATEGY-MODAL_1": "이상",
-    "NAMESPACE-MODAL_0": "아래 {{something}}를 입력하여 삭제를 확인하십시오.",
+    "NAMESPACE-MODAL_0": "아래 {{something}}를 입력하여 삭제를 확인하십시오",
     "PODSELECTOR-EMPTY_0": "{{something}}내의 모든 파드"
   },
   "VALIDATION": {
