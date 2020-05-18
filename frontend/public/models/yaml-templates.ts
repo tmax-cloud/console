@@ -1907,6 +1907,69 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample'],
+    `
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample2'],
+    `
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql2
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+              claimName: mysql-pv-claim
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ClusterModel), 'default'],
     `
 apiVersion: multicluster.coreos.com/v1
@@ -1937,6 +2000,38 @@ data:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'configmap-sample'],
+    `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example
+  namespace: demo-ns
+data:
+  example.property.1: hello
+  example.property.2: world
+  example.property.file: |-
+    property.1=value-1
+    property.2=value-2
+    property.3=value-3
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'configmap-sample2'],
+    `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-hypercloud
+  namespace: default
+data:
+  DB_URL: localhost
+  DB_USER: hypercloud
+  DB_PASS: hypercloud
+  DEBUG_INFO: debug
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.CronJobModel), 'default'],
     `
 apiVersion: batch/v1beta1
@@ -1956,6 +2051,30 @@ spec:
             - /bin/sh
             - -c
             - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  schedule: '@daily'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo Hello from the Kubernetes cluster
           restartPolicy: OnFailure
 `,
   )
@@ -2047,6 +2166,49 @@ spec:
     resource:
       name: cpu
       targetAverageUtilization: 50
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'hpa-sample'],
+    `
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: sample-cpu-scaling
+      namespace: default
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: sample-name
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            targetAverageUtilization: 50
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'hpa-sample2'],
+    `
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: sample-mem-scaling
+      namespace: default
+    spec:
+      scaleTargetRef:
+        kind: Deployment
+        name: sample-name
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: memory
+            targetAverageValue: 1G
 `,
   )
   .setIn(
@@ -2214,9 +2376,9 @@ metadata:
   name: example
   namespace: demo-ns
 spec:
-completions: 3
-parallelism: 3
-selector: {}
+  completions: 3
+  parallelism: 3
+  selector: {}
   template:
     metadata:
       name: pi
@@ -2614,6 +2776,33 @@ type: Opaque
 stringData:
   username: admin
   password: damin
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'secret-sample'],
+    `
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example
+  namespace: demo-ns
+type: Opaque
+stringData:
+  username: admin
+  password: damin
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'secret-sample2'],
+    `
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: aHlwZXJjbG91ZA==
+  password: aHlwZXJjbG91ZDQ=
 `,
   )
   .setIn(
