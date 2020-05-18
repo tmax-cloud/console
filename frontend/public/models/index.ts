@@ -126,6 +126,34 @@ export const ServiceDNSRecordModel: K8sKind = {
   crd: false,
 };
 
+export const KubeadmControlPlaneModel: K8sKind = {
+  kind: 'KubeadmControlPlane',
+  namespaced: true,
+  label: 'Kubeadm Control Plane',
+  plural: 'kubeadmcontrolplanes',
+  apiVersion: 'v1alpha3',
+  abbr: 'KCP',
+  apiGroup: 'cluster.x-k8s.io',
+  labelPlural: 'Kubeadm Control Planes',
+  path: 'kubeadmcontrolplanes',
+  id: 'kubeadmcontrolplane',
+  crd: false,
+};
+
+export const KubeadmConfigModel: K8sKind = {
+  kind: 'KubeadmConfig',
+  namespaced: true,
+  label: 'Kubeadm Config Template',
+  plural: 'kubeadmconfigtemplates',
+  apiVersion: 'v1alpha3',
+  abbr: 'KCT',
+  apiGroup: 'cluster.x-k8s.io',
+  labelPlural: 'Kubeadm Config Template',
+  path: 'kubeadmconfigs',
+  id: 'kubeadmconfig',
+  crd: false,
+};
+
 export const ClusterModel: K8sKind = {
   kind: 'Cluster',
   namespaced: true,

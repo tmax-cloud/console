@@ -5,6 +5,8 @@ import { Map as ImmutableMap } from 'immutable';
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import {
+  KubeadmControlPlaneModel,
+  KubeadmConfigModel,
   KubeFedClusterModel,
   KubeFedConfigModel,
   FederatedTypeConfigModel,
@@ -93,6 +95,8 @@ import {
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(KubeadmControlPlaneModel), () => import('./kubeadm-control-plane' /* webpackChunkName: "task" */).then(m => m.KubeadmControlPlanesDetailsPage))
+  .set(referenceForModel(KubeadmConfigModel), () => import('./kubeadm-config-template' /* webpackChunkName: "task" */).then(m => m.KubeadmConfigsDetailsPage))
   .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesDetailsPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
   .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsDetailsPage))
@@ -176,6 +180,8 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(KubeadmControlPlaneModel), () => import('./kubeadm-control-plane' /* webpackChunkName: "task" */).then(m => m.KubeadmControlPlanesPage))
+  .set(referenceForModel(KubeadmConfigModel), () => import('./kubeadm-config-template' /* webpackChunkName: "task" */).then(m => m.KubeadmConfigsPage))
   .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesPage))
   .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersPage))
   .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsPage))
