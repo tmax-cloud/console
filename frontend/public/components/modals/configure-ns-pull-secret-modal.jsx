@@ -224,7 +224,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
               <div className="radio">
                 <label className="control-label">
                   <input type="radio" checked={this.state.method === 'upload'} onChange={this._onMethodChange} id="namespace-pull-secret-method--upload" value="upload" />
-                  {t('CONTENT:UPLOADDOCKERCONFIG.JSON')}
+                  {t('CONTENT:UPLOADDOCKERCONFIGJSON')}
                 </label>
               </div>
             </div>
