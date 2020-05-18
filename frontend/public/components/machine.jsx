@@ -64,7 +64,7 @@ MachineList.displayName = MachineList;
 
 export const MachinesPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={MachineList} canCreate={false} kind="Machine" /> : <ListPage {...props} ListComponent={MachineList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="Machine" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={MachineList} canCreate={false} kind="Machine" /> : <ListPage {...props} ListComponent={MachineList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="Machine" />;
 };
 MachinesPage.displayName = 'MachinesPage';
 

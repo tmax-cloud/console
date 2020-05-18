@@ -64,7 +64,7 @@ ClusterList.displayName = ClusterList;
 
 export const ClustersPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={ClusterList} canCreate={false} kind="Cluster" /> : <ListPage {...props} ListComponent={ClusterList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="Cluster" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={ClusterList} canCreate={false} kind="Cluster" /> : <ListPage {...props} ListComponent={ClusterList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="Cluster" />;
 };
 ClustersPage.displayName = 'ClustersPage';
 
