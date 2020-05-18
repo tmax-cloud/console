@@ -207,7 +207,13 @@ func (s *Server) HTTPHandler() http.Handler {
 
 				// body에 id나 token이 있는지 검사
 				fmt.Println("Path: " + string(r.URL.Path))
-				if strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "logout") || strings.Contains(string(r.URL.Path), "refresh") {
+
+				if strings.Contains(string(r.URL.Path), "logout") {
+					hf(s.StaticUser, w, r)
+					return
+				}
+
+				if strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "refresh") {
 
 					body, err := ioutil.ReadAll(r.Body)
 					if err != nil {
