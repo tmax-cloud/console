@@ -43,4 +43,4 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
     .set('Role', RoleSidebar)
     .set('ClusterRole', RoleSidebar)
     .set('Usergroup', UserGroupSidebar)
-    .set('ServiceAccount', ServiceAccountSidebar);
+    // .set('ServiceAccount', ServiceAccountSidebar);
