@@ -187,6 +187,7 @@
     "CONTAINER-DETAIL_5": "설정 값을 전달하는 쉬운 방법"
   },
   "CONTENT": {
+    "TRIALTIME": "구독 기간",
     "HOUR": "시간",
     "DAY": "일",
     "MONTH": "달",

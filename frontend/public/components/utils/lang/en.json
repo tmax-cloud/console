@@ -189,6 +189,7 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
+    "TRIALTIME": "Trial Time",
     "HOUR": "Hour",
     "DAY": "Day",
     "MONTH": "Month",
