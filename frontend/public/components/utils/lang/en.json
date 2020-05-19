@@ -655,6 +655,7 @@
     "USERSECURITYPOLICY": "User Security Policy",
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
-    "GROUP": "User Group"
+    "GROUP": "User Group",
+    "Condition": "Condition"
   }
 }

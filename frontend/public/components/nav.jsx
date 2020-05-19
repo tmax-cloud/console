@@ -472,6 +472,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="pipelines" name={ResourcePlural('Pipeline', t)} onClick={this.close} />
               <ResourceNSLink resource="pipelineruns" name={ResourcePlural('PipelineRun', t)} onClick={this.close} />
               <ResourceNSLink resource="pipelineresources" name={ResourcePlural('PipelineResource', t)} onClick={this.close} />
+              <ResourceNSLink resource="conditions" name={ResourcePlural('Condition', t)} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:SECURITY')} icon="fa fa-shield">
