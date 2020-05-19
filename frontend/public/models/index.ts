@@ -773,6 +773,19 @@ export const PersistentVolumeClaimModel: K8sKind = {
   id: 'persistentvolumeclaim',
   labelPlural: 'Persistent Volume Claims',
 };
+export const ConditionModel: K8sKind = {
+  kind: 'Condition',
+  namespaced: true,
+  label: 'Condition',
+  plural: 'conditions',
+  apiVersion: 'v1alpha1',
+  abbr: 'Cond',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Conditions',
+  path: 'conditions',
+  id: 'condition',
+  crd: false,
+};
 export const TaskModel: K8sKind = {
   kind: 'Task',
   namespaced: true,

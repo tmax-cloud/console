@@ -124,7 +124,7 @@ class App extends React.PureComponent {
     // HDC 모델
     if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
       // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '?redirect=console';
       return;
     }
 
