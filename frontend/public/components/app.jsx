@@ -128,6 +128,11 @@ class App extends React.PureComponent {
       return;
     }
 
+    window.addEventListener('beforeunload', ev => {
+      ev.preventDefault();
+      localStorage.removeItem('bridge/last-namespace-name');
+    }); // componentWillUnmount는 브라우저 탭을 닫았을 때 안불림. 이걸로 대체
+
     this.state = {
       isAdmin: true,
       isLoading: false,
