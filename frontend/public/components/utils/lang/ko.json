@@ -40,13 +40,14 @@
     "STRATEGY-MODAL_0": "이하",
     "STRATEGY-MODAL_1": "이상",
     "NAMESPACE-MODAL_0": "아래 {{something}}를 입력하여 삭제를 확인하십시오",
-    "PODSELECTOR-EMPTY_0": "{{something}}내의 모든 파드"
+    "PODSELECTOR-EMPTY_0": "{{something}}내의 모든 파드",
+    "GENERATEDFROM": "{{something}} 생성"
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
     "DUPLICATE-KEY": "중복 키가 발견되었습니다."
   },
-  "DATETIME":{
+  "DATETIME": {
     "YEARS": "years",
     "YEARSAGO": "years ago",
     "YEAR": "year",
@@ -186,10 +187,10 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
-    "HOUR":"시간",
-    "DAY":"일",
-    "MONTH":"달",
-    "YEAR":"년",
+    "HOUR": "시간",
+    "DAY": "일",
+    "MONTH": "달",
+    "YEAR": "년",
     "PATHNAME": "Path Name",
     "SERVICENAME": "Service Name",
     "ACCESS": "Access",
@@ -551,7 +552,7 @@
     "MINUTE": "분",
     "MINIMUM1,MAXIMUM60": "최소 1분, 최대 60분",
     "LOGOUT": "로그아웃",
-   
+
     "ALLCATEGORIES": "전체 카테고리",
     "ALLTYPES": "전체 타입",
     "INFO": "정보",
