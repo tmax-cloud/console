@@ -781,7 +781,7 @@ export const ConditionModel: K8sKind = {
   apiVersion: 'v1alpha1',
   abbr: 'Cond',
   apiGroup: 'tekton.dev',
-  labelPlural: 'Conditions',
+  labelPlural: 'Pipeline Conditions',
   path: 'conditions',
   id: 'condition',
   crd: false,
