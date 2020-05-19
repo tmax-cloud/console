@@ -656,6 +656,6 @@
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
     "GROUP": "User Group",
-    "Condition": "Condition"
+    "PIPELINECONDITION": "Pipeline Condition"
   }
 }
