@@ -42,7 +42,7 @@ export class StatusSelector extends Component {
   }
 
   render() {
-    return <div>
+    return <div style={{ width: '350px' }}>
       <Dropdown title="Success" className="btn-group" items={statuses} onChange={this.onStatusChange} />
       {this.state.status === 'Reject' && <Section label="Reason" id="reason">
         <p><textarea cols="30" rows="5" onChange={this.onReasonChange}></textarea></p>

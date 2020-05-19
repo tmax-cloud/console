@@ -23,6 +23,7 @@ import {
   ServiceClassModel,
   ServicePlanModel,
   TaskModel,
+  ClusterTaskModel,
   TaskRunModel,
   PipelineResourceModel,
   PipelineModel,
@@ -73,6 +74,7 @@ import {
   CatalogSourceModel,
   ServiceInstanceModel,
   ImageModel,
+  UserSecurityPolicyModel
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
@@ -139,9 +141,11 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(ClusterServiceVersionModel), () => import('./cloud-services/clusterserviceversion' /* webpackChunkName: "clusterserviceversion" */).then(m => m.ClusterServiceVersionsDetailsPage))
   .set(referenceForModel(CatalogSourceModel), () => import('./cloud-services/catalog-source' /* webpackChunkName: "catalog-source" */).then(m => m.CatalogSourceDetailsPage))
   .set(referenceForModel(SubscriptionModel), () => import('./cloud-services/subscription' /* webpackChunkName: "subscription" */).then(m => m.SubscriptionDetailsPage))
-  .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage));
+  .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage))
+  .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesDetailsPage));
 
-export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesPage))
   .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesPage))
   .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesPage))

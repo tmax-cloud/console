@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
+
 file_initialization="./1.initialization.yaml"
 file_initialization_temp="./1.initialization-temp.yaml"
 file_svc_lb="./2.svc-lb.yaml"
@@ -13,6 +15,31 @@ file_deployment_pod_temp="./3.deployment-pod-temp.yaml"
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
 echo "==============================================================="
+
+if [ -z $RE_INITIALIZE ]; then
+    RE_INITIALIZE=true
+fi
+echo "RE_INITIALIZE = ${RE_INITIALIZE}"
+
+if [ -z $RE_CREATE_SECRET ]; then
+    RE_CREATE_SECRET=true
+fi
+echo "RE_CREATE_SECRET = ${RE_CREATE_SECRET}"
+
+if [ -z $RE_CREATE_LB_SERVICE ]; then
+    RE_CREATE_LB_SERVICE=true
+fi
+echo "RE_CREATE_LB_SERVICE = ${RE_CREATE_LB_SERVICE}"
+
+if [ -z $RE_CREATE_NP_SERVICE ]; then
+    RE_CREATE_NP_SERVICE=true
+fi
+echo "RE_CREATE_NP_SERVICE = ${RE_CREATE_NP_SERVICE}"
+
+if [ -z $RE_CREATE_DEPLOYMENT_POD ]; then
+    RE_CREATE_DEPLOYMENT_POD=true
+fi
+echo "RE_CREATE_DEPLOYMENT_POD = ${RE_CREATE_DEPLOYMENT_POD}"
 
 # name of the namespace
 if [ -z $NAME_NS ]; then
@@ -27,6 +54,13 @@ if [ -z "${PORTAL_URL+set}" ]; then
     read PORTAL_URL
 fi
 echo "PORTAL_URL = ${PORTAL_URL}"
+
+# node port
+if [ -z "${NODE_PORT}" ]; then
+    echo -e "Enter the node port number."
+    read NODE_PORT
+fi
+echo "NODE_PORT = ${NODE_PORT}"
 
 # docker image tag (console version)
 if [ -z $CONSOLE_VERSION ]; then
@@ -62,30 +96,66 @@ cp $file_svc_lb $file_svc_lb_temp
 cp $file_svc_np $file_svc_np_temp
 cp $file_deployment_pod $file_deployment_pod_temp
 
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_initialization_temp}
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_svc_lb_temp}
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_svc_np_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_initialization_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_svc_lb_temp}
 
-sed -i "s/@@NAME_NS@@/${NAME_NS}/g" ${file_deployment_pod_temp}
-sed -i "s/@@HC4@@/${HC4}/g" ${file_deployment_pod_temp}
-sed -i "s/@@PROM@@/${PROM}/g" ${file_deployment_pod_temp}
-sed -i "s/@@VER@@/${CONSOLE_VERSION}/g" ${file_deployment_pod_temp}
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_svc_np_temp}
+sed -i "s%@@NODE_PORT@@%${NODE_PORT}%g" ${file_svc_np_temp}
 
-if [ -z $PORTAL_URL ]; then
+sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_deployment_pod_temp}
+sed -i "s%@@HC4@@%${HC4}%g" ${file_deployment_pod_temp}
+sed -i "s%@@PROM@@%${PROM}%g" ${file_deployment_pod_temp}
+sed -i "s%@@VER@@%${CONSOLE_VERSION}%g" ${file_deployment_pod_temp}
+
+if [ -z "$PORTAL_URL" ]; then
     sed -i '/--hdc-mode=/d' ${file_deployment_pod_temp}
     sed -i '/--tmaxcloud-portal=/d' ${file_deployment_pod_temp}
 else
-    sed -i "s/@@HDC_FLAG@@/true/g" ${file_deployment_pod_temp}
-    sed -i "s/@@PORTAL@@/${PORTAL_URL}/g" ${file_deployment_pod_temp}
+    sed -i "s%@@HDC_FLAG@@%true%g" ${file_deployment_pod_temp}
+    sed -i "s%@@PORTAL@@%${PORTAL_URL}%g" ${file_deployment_pod_temp}
 fi
+
+echo ""
+echo "$file_initialization_temp"
+echo "---------------------------------------------------------------"
+cat $file_initialization_temp
+echo ""
+echo "---------------------------------------------------------------"
+echo ""
+
+echo ""
+echo "$file_svc_lb_temp"
+echo "---------------------------------------------------------------"
+cat $file_svc_lb_temp
+echo ""
+echo "---------------------------------------------------------------"
+echo ""
+
+echo ""
+echo "$file_svc_np_temp"
+echo "---------------------------------------------------------------"
+cat $file_svc_np_temp
+echo ""
+echo "---------------------------------------------------------------"
+echo ""
+
+echo ""
+echo "$file_deployment_pod_temp"
+echo "---------------------------------------------------------------"
+cat $file_deployment_pod_temp
+echo ""
+echo "---------------------------------------------------------------"
+echo ""
 
 echo "==============================================================="
 echo "STEP 2. Install console"
 echo "==============================================================="
 
 # Create Namespace
-kubectl delete -f ${file_initialization_temp}
-kubectl create -f ${file_initialization_temp}
+if [ $RE_INITIALIZE = true ]; then
+    kubectl delete -f ${file_initialization_temp}
+    kubectl create -f ${file_initialization_temp}
+fi
 # if [ -z $(kubectl get ns | grep ${NAME_NS} | awk '{print $1}') ]; then 
 #     kubectl create -f ${file_initialization_temp}
 # else
@@ -95,8 +165,10 @@ kubectl create -f ${file_initialization_temp}
 echo ""
 
 # Create Secret to enable https between browser and console-server
-kubectl delete secret console-https-secret -n ${NAME_NS}
-kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+if [ $RE_CREATE_SECRET = true ]; then
+    kubectl delete secret console-https-secret -n ${NAME_NS}
+    kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+fi
 # if [ -z $(kubectl get secret -n ${NAME_NS} | grep console-https-secret | awk '{print $1}') ]; then 
 #     kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
 # else
@@ -106,12 +178,14 @@ kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.
 echo ""
 
 # Create Service 
-kubectl delete -f ${file_svc_lb_temp}
-kubectl delete -f ${file_svc_np_temp}
-
-kubectl create -f ${file_svc_lb_temp}
-kubectl create -f ${file_svc_np_temp}
-
+if [ $RE_CREATE_LB_SERVICE = true ]; then
+    kubectl delete -f ${file_svc_lb_temp}
+    kubectl create -f ${file_svc_lb_temp}
+fi
+if [ $RE_CREATE_NP_SERVICE = true ]; then
+    kubectl delete -f ${file_svc_np_temp}
+    kubectl create -f ${file_svc_np_temp}
+fi
 # if [ -z $(kubectl get svc -n ${NAME_NS} | grep console-lb | awk '{print $1}') ]; then 
 #     kubectl create -f ${file_svc_lb_temp}
 # else
@@ -123,12 +197,14 @@ kubectl create -f ${file_svc_np_temp}
 # else
 #     echo "NodePort service exists" 
 # fi
-kubectl get svc -n ${NAME_NS} 
+# kubectl get svc -n ${NAME_NS} 
 echo ""
 
 # Create Deployment
-kubectl delete -f ${file_deployment_pod_temp}
-kubectl create -f ${file_deployment_pod_temp}
+if [ $RE_CREATE_DEPLOYMENT_POD = true ]; then
+    kubectl delete -f ${file_deployment_pod_temp}
+    kubectl create -f ${file_deployment_pod_temp}
+fi
 # if [ -z $(kubectl get deployment -n ${NAME_NS} | grep console | awk '{print $1}') ]; then
 #     kubectl create -f ${file_deployment_pod_temp}
 # else

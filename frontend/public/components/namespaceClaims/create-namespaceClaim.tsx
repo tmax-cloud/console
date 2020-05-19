@@ -106,7 +106,7 @@ class NamespaceClaimFormComponent extends React.Component<NamespaceClaimProps_, 
         ).then(() => {
             this.setState({ inProgress: false });
             console.log(this.state)
-            history.push(formatNamespacedRouteForResource('namespaceclaims'));
+            history.push('/k8s/cluster/namespaceclaims');
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
@@ -176,7 +176,7 @@ class NamespaceClaimFormComponent extends React.Component<NamespaceClaimProps_, 
                     </div>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-                        <Link to={formatNamespacedRouteForResource('namespaceclaims')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+                        <Link to={'/k8s/cluster/namespaceclaims'} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>

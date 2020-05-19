@@ -561,26 +561,45 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.RegistryModel), 'default'],
     `
-# Note: To use the optional key, remove the '#' at the front of the key.
-apiVersion: tmax.io/v1
-kind: Registry
-metadata:
-  name: example # (required) [string] registry's name
-  namespace: def # (required) [string] registry's namespace
-spec:
-  image: example/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
-  #description: example # (optional) [string] a brief description of the registry.
-  loginId: example # (required) [string] username for registry login
-  loginPassword: example # (required) [string] password for registry login
-  service:
-     #port: example # (optional) [integer] external port (default: 443)
-     #nodeIP: example # (optional) [string] if service type is NodePort, set NodeIP to assign to the registry
-     #nodePort: example # (optional) [integer] if service type is NodePort, you can set 30000~32767
-     type: example # (required) [ClusterIP, NodePort, LoadBalancer]
-  persistentVolumeClaim:
-     accessModes: [example] # (required) [array] (ex: [ReadWriteOnce, ReadWriteMany])
-     storageSize: example # (required) [string] desired storage size (ex: 10Gi)
-     storageClassName: example # (required) [string] storage class name available (ex: csi-cephfs-sc)
+    # Note: To use the optional key, remove the '#' at the front of the key.
+
+    apiVersion: tmax.io/v1
+    kind: Registry
+    metadata:
+      name: example # (required) [string] registry's name
+      namespace: example # (required) [string] registry's namespace
+    spec:
+      image: example/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
+      #description: example # (optional) [string] a brief description of the registry.
+      loginId: example # (required) [string] username for registry login
+      loginPassword: example # (required) [string] password for registry login
+      #replicaSet:
+        #labels:
+          #mylabel1: v1
+          #mylabel2: v2
+        #selector:
+          #matchExpressions:
+          #- {key: mylabel2, operator: In, values: [v2]}
+          #matchLabels:
+            #mylabel1: v1
+        #nodeSelector:
+          #kubernetes.io/hostname: example
+        #tolerations:
+        #- effect: NoExecute
+          #key: node.kubernetes.io/not-ready
+          #tolerationSeconds: 10
+        #- effect: NoExecute
+          #key: node.kubernetes.io/unreachable
+          #tolerationSeconds: 10
+      service:
+         #port: example # (optional) [integer] external port (default: 443)
+         #nodeIP: example # (optional) [string] if service type is NodePort, set NodeIP to assign to the registry
+         #nodePort: example # (optional) [integer] if service type is NodePort, you can set 30000~32767
+         type: example # (required) [ClusterIP, NodePort, LoadBalancer]
+      persistentVolumeClaim:
+         accessModes: [example] # (required) [array] (ex: [ReadWriteOnce, ReadWriteMany])
+         storageSize: example # (required) [string] desired storage size (ex: 10Gi)
+         storageClassName: example # (required) [string] Filesystem storage class name available (ex: csi-cephfs-sc)
 `,
   )
   .setIn(

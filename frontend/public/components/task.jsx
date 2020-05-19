@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 
-import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
+import { ColHead, DetailsPage, List, ListHeader, ListPage,MultiListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
@@ -72,6 +72,42 @@ export const TasksPage = props => {
   return <ListPage {...props} ListComponent={TaskList} canCreate={true} kind="Task" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 TasksPage.displayName = 'TasksPage';
+
+// export const TasksPage = (({ namespace, showTitle }) => {
+//   const { t } = useTranslation();
+//   return (
+//     <MultiListPage
+//       ListComponent={TaskList}
+//       canCreate={true}
+//       showTitle={showTitle}
+//       namespace={namespace}
+//       createProps={{ to: `/k8s/ns/${namespace || 'default'}/tasks/new`}}
+//       filterLabel="Tasks by name"
+//       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
+//       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Task', t) })}
+//       resources={[
+//         { kind: 'Task', namespaced: true },
+//         { kind: 'ClusterTask', namespaced: false },
+//       ]}
+//       rowFilters={[
+//         {
+//           type: 'task-kind',
+//           selected: ['clusterTask', 'task'],
+//           reducer: namespace ? 'task' : 'clusterTask',
+//           items: [
+//             { id: 'clusterTask', title: t('RESOURCE:CLUSTERTASK') },
+//             { id: 'task', title: t('RESOURCE:TASK') },
+//           ],
+//         },
+//       ]}
+//       title={t('RESOURCE:TASK')}
+//     />
+//   );
+// });
+
+
+
+
 
 export const TaskDetailsPage = props => {
   const { t } = useTranslation();

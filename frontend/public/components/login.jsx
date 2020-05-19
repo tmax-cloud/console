@@ -5,15 +5,12 @@ import React, { Component, setState } from 'react';
 import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
-import { coFetchJSON } from '../co-fetch';
+import { coFetchJSON, coFetchUtils } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
 import { setAccessToken, setRefreshToken, resetLoginState, getAccessToken } from './utils/auth';
-
-function searchParam(key) {
-  return new URLSearchParams(location.search).get(key);
-};
-
+import { OtpModal_ } from './modals/otp-modal';
+import { useTranslation, withTranslation } from 'react-i18next';
 class LoginComponent extends Component {
   // useState 대신 useRef 써도 됨
   state = {
@@ -29,6 +26,11 @@ class LoginComponent extends Component {
     if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
       // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
       window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+      return;
+    }
+
+    if (window.SERVER_FLAGS.HDCModeFlag) {
+      window.location.href = `${document.location.origin}`;
       return;
     }
     // if (searchParam('at')) {
@@ -69,12 +71,13 @@ class LoginComponent extends Component {
 
   }
 
-  
+
   componentWillUnmount() {
     // console.log('componentWillUnmount');
   };
 
   onClick = (e) => {
+    // const { t } = useTranslation();
     if (e.type === 'keypress' && e.key !== 'Enter') {
       return;
     }
@@ -86,9 +89,9 @@ class LoginComponent extends Component {
       'id': this.state.id,
       'password': sha512(this.state.pw)
     };
-        
     coFetchJSON.post(AUTH_SERVER_URL, json)
       .then(data => {
+        const curTime = new Date();
         this.setState({ loading: false });
         if (data.accessToken && data.refreshToken) {
           setAccessToken(data.accessToken);
@@ -100,11 +103,15 @@ class LoginComponent extends Component {
           }
           this.props.history.push('/');
           this.props.history.go(0);
+
         } else {
+          //otp인증을 해야하는 경우 
+          data.otpEnable ? OtpModal_({ data: json, initialTime: curTime }) :
           // 로그인 실패 
-          this.setState({ error: data.msg });
+            this.setState({ error: data.msg });
           return;
         }
+
         // const url_ = window.location.href.split('/login')[0]
         // window.location = `${url_}/status/all-namespaces`;
       })
@@ -123,6 +130,8 @@ class LoginComponent extends Component {
         this.setState({ loading: false });
       });
     //}
+
+
   };
 
   render() {
@@ -149,7 +158,7 @@ class LoginComponent extends Component {
               <img src={productHyperCloudLogo} />
             </div>
           </div>
-          { this.state.loading && <Loading />}
+          {this.state.loading && <Loading />}
           <div className="inner_login">
             <form>
               <input type="hidden"></input>

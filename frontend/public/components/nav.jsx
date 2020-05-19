@@ -26,6 +26,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
 
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 const stripNS = href => {
   href = stripBasePath(href);
   return href
@@ -265,10 +266,10 @@ class NavSection_ extends React.Component {
           {!href ? (
             text
           ) : (
-            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-              {text}
-            </Link>
-          )}
+              <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+                {text}
+              </Link>
+            )}
         </div>
         {Children && (
           <ul className="navigation-container__list" style={{ maxHeight }}>
@@ -510,7 +511,8 @@ class Nav extends React.Component {
               <ResourceNSLink resource="rolebindings" name={ResourcePlural('RoleBinding', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
               <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
               {<ResourceClusterLink resource="users" name={ResourcePlural('User', t)} onClick={this.close} />}
-              {<ResourceClusterLink resource="usergroups" name={ResourcePlural('Usergroup', t)} onClick={this.close} />}
+              {!HDCModeFlag && <ResourceClusterLink resource="usergroups" name={ResourcePlural('Usergroup', t)} onClick={this.close} />}
+              {<ResourceClusterLink resource="usersecuritypolicies" name={ResourcePlural('Usersecuritypolicy', t)} onClick={this.close} />}
               <ResourceNSLink resource="serviceaccounts" name={ResourcePlural('ServiceAccount', t)} onClick={this.close} />
             </NavSection>
 

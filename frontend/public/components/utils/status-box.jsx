@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import * as restrictedSignImg from '../../imgs/restricted-sign.svg';
+import * as restrictedSignImg from '../../imgs/img_403error.svg';
 import { TimeoutError } from '../../co-fetch';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
@@ -57,22 +57,32 @@ EmptyBox.displayName = 'EmptyBox';
 
 export const MsgBox = ({ title, detail, className = '' }) => (
   <Box className={className}>
-    {title && <div className="cos-status-box__title">{title}</div>}
-    {detail && <div className="text-center cos-status-box__detail">{detail}</div>}
+    {title && <div className="text-center" style={{ fontSize: '30px' }}>{title}</div>}
+    {detail && <div className="text-center" style={{ fontSize: '30px' }}>{detail}</div>}
   </Box>
 );
 MsgBox.displayName = 'MsgBox';
 
 export const AccessDenied = ({ message }) => {
   const { t } = useTranslation();
+  const [errorDetail, setErrorDetail] = React.useState({ show: false, icon: 'fa-angle-down' });
+  const onClickErrorDetail = () => {
+    errorDetail.show ? setErrorDetail({ ...errorDetail, show: false, icon: 'fa-angle-down' }) : setErrorDetail({ ...errorDetail, show: true, icon: 'fa-angle-up' })
+  };
   return (
     <Box className="text-center">
       <img className="cos-status-box__access-denied-icon" src={restrictedSignImg} />
       <MsgBox title={t('STRING:RESTRICTED_0')} detail={t('STRING:RESTRICTED_1')} />
       {_.isString(message) && (
-        <div className="alert alert-danger text-left">
-          <span className="pficon pficon-error-circle-o"></span>
-          {message}
+        <div>
+          <p className="alert-danger text-center" style={{ fontSize: '18px' }} >
+            {t('STRING:RESTRICTED_2')}
+            <span className={`fa ${errorDetail.icon} fa-fw`} aria-hidden="true" value={errorDetail} onClick={onClickErrorDetail}></span>
+          </p>
+          {errorDetail.show && <div className="alert alert-danger text-center">
+            {message}
+          </div>}
+
         </div>
       )}
     </Box>

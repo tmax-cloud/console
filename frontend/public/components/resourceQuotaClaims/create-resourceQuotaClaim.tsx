@@ -44,7 +44,7 @@ class ResourceQuotaClaimFormComponent extends React.Component<ResourceQuotaClaim
         });
 
         this.state = {
-            namespcaeClaimTypeAbstraction: this.props.namespcaeClaimTypeAbstraction,
+            resourceQuotaClaimTypeAbstraction: this.props.resourceQuotaClaimTypeAbstraction,
             resourceQuotaClaim: resourceQuotaClaim,
             inProgress: false,
             type: 'form',
@@ -189,14 +189,14 @@ export const CreateResouceQuotaClaim = ({ match: { params } }) => {
     return <ResourceQuotaClaimFormComponent
         t={t}
         fixed={{ metadata: { namespace: params.ns } }}
-        namespcaeClaimTypeAbstraction={params.type}
+        resourceQuotaClaimTypeAbstraction={params.type}
         explanation={pageExplanation[params.type]}
         titleVerb="Create"
         isCreate={true}
     />;
 };
 export type ResourceQuotaClaimState_ = {
-    namespcaeClaimTypeAbstraction?: CreateType,
+    resourceQuotaClaimTypeAbstraction?: CreateType,
     resourceQuotaClaim: K8sResourceKind,
     inProgress: boolean,
     error?: any,
@@ -210,7 +210,7 @@ export type ResourceQuotaClaimProps_ = {
     kind?: string,
     isCreate: boolean,
     titleVerb: string,
-    namespcaeClaimTypeAbstraction?: CreateType,
+    resourceQuotaClaimTypeAbstraction?: CreateType,
     saveButtonText?: string,
     explanation: string,
     t: any

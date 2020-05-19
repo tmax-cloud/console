@@ -46,14 +46,13 @@
     font-weight: 900;
     src: url(fonts/NotoSansCJKkr-Black.otf) format('opentype');
   } 
-  
   * {
     font-family: 'Noto Sans CJK KR', sans-serif; // !important;
   }
 
   .ace_content * {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
-}
+    font-family:  'Ubuntu Mono', 'source-code-pro', monospace !important;
+  }
 
   .ace_doc-tooltip sup {
     color: red
@@ -123,9 +122,9 @@ tags-input .tags {
   @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
   @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
 }
-// .modal-dialog {
-//   width:fit-content;
-// }
+.modal-dialog {
+  width:fit-content;
+}
 .modal-body tags-input .tags {
   min-height: 200px;
 }

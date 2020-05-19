@@ -170,20 +170,15 @@ const IngressesDetailsPage = props => {
 const IngressesList = props => <List {...props} Header={IngressListHeader} Row={IngressListRow} />;
 const IngressesPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={IngressesList} canCreate={true} kind="Ingress" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/ingresses/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage {...props} ListComponent={IngressesList} canCreate={true} kind="Ingress" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps}{...props} />;
 };
-
-// 미리: 인그레스 페이지는 폼 에디터 임시로 disable
-// {
-//   const createItems = {
-//     form: '인그레스 (폼 에디터)',
-//     yaml: '인그레스 (YAML 에디터)'
-//   };
-
-//   const createProps = {
-//     items: createItems,
-//     createLink: (type) => `/k8s/ns/${props.namespace || 'default'}/ingresses/new${type !== 'yaml' ? '/' + type : ''}`
-//   };
-//   return <ListPage ListComponent={IngressesList} canCreate={true} createButtonText="Create" createProps={createProps} {...props} />;
-// };
 export { IngressesList, IngressesPage, IngressesDetailsPage };
