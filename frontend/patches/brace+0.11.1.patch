@@ -1,5 +1,5 @@
 diff --git a/node_modules/brace/index.js b/node_modules/brace/index.js
-index 5999cf6..48e82f8 100644
+index 5999cf6..c3baf98 100644
 --- a/node_modules/brace/index.js
 +++ b/node_modules/brace/index.js
 @@ -34,155 +34,155 @@
@@ -20084,7 +20084,7 @@ index 5999cf6..48e82f8 100644
                              walkTokens[0] = PLACEHOLDER_START;
                              for (var i = 1; i < walkTokens.length; i++) {
                                  walkTokens[i] = PLACEHOLDER_BODY;
-@@ -10811,5504 +10812,5505 @@ EditSession.$uid = 0;
+@@ -10811,5507 +10812,5508 @@ EditSession.$uid = 0;
                          }
                          tokens = tokens.concat(walkTokens);
                      }.bind(this),
@@ -30373,7 +30373,11 @@ index 5999cf6..48e82f8 100644
 +    var editorCss = ".ace_editor {\
  position: relative;\
  overflow: hidden;\
- font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;\
+-font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;\
++font: 12px/normal 'Ubuntu Mono', 'source-code-pro', monospace;\
+ direction: ltr;\
+ text-align: left;\
+ -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\
 @@ -16689,2836 +16691,2836 @@ left: -100000px !important;\
  }\
  ";
