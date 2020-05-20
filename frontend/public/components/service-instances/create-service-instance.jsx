@@ -327,18 +327,20 @@ const withServiceInstanceForm = SubForm =>
                 {paramList.length > 0 && (
                   <Section label={t('CONTENT:PARAMETERS')} key="params">
                     {paramList.map((parameter, index) => {
-                      let keyValue = parameter.defaultValue ? parameter.displayName + "( default:" + parameter.defaultValue + ")" : parameter.displayName;
-                      let defaultValue = parameter.defaultValue ? parameter.defaultValue : ''
+                      let defaultValue = parameter.defaultValue ? `default : ${parameter.defaultValue}` : ''
                       let isRequired = parameter.required ? true : false;
                       return <div>
-                        <React.Fragment key={index}>
-                          <div>
-                            <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                              {keyValue}
-                            </label>
+                        <div className="row">
+                          <div className="col-xs-2">
+                            <div>{parameter.displayName}</div>
                           </div>
-                          <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} defaultValue={defaultValue} id={parameter.name} onChange={this.onParamValueChanged} required={isRequired} />
-                        </React.Fragment>
+                          <div className="col-xs-3" id={parameter.name}>
+                            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
+                          </div>
+                          <div className="col-xs-5" id={parameter.name}>
+                            <p className="co-m-pane__explanation">{defaultValue}</p>
+                          </div>
+                        </div>
                         <p className="co-m-pane__explanation">{parameter.description}</p>
                       </div>
                     }

@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 
-import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
+import { ColHead, DetailsPage, List, ListHeader, ListPage, MultiListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
@@ -39,8 +39,7 @@ const TaskRow = () =>
           <ResourceCog actions={menuActions} kind="Task" resource={obj} />
           <ResourceLink kind="Task" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-4 col-sm-4 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-
+        <div className="col-xs-4 col-sm-4 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'All'}</div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
@@ -67,11 +66,47 @@ export const TaskList = props => {
 };
 TaskList.displayName = TaskList;
 
-export const TasksPage = props => {
+// export const TasksPage = props => {
+//   const { t } = useTranslation();
+//   return <ListPage {...props} ListComponent={TaskList} canCreate={true} kind="Task" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+// };
+// TasksPage.displayName = 'TasksPage';
+
+export const TasksPage = (({ namespace, showTitle }) => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={TaskList} canCreate={true} kind="Task" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
-};
-TasksPage.displayName = 'TasksPage';
+  return (
+    <MultiListPage
+      ListComponent={TaskList}
+      canCreate={true}
+      showTitle={showTitle}
+      namespace={namespace}
+      createProps={{ to: `/k8s/ns/${namespace || 'default'}/tasks/new` }}
+      filterLabel="Tasks by name"
+      flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Task', t) })}
+      resources={[
+        { kind: 'Task', namespaced: true },
+        { kind: 'ClusterTask', namespaced: false },
+      ]}
+      rowFilters={[
+        {
+          type: 'task-kind',
+          selected: ['clusterTask', 'task'],
+          reducer: namespace ? 'task' : 'clusterTask',
+          items: [
+            { id: 'clusterTask', title: 'Cluster-wide Tasks' },
+            { id: 'task', title: 'Namespace Tasks' },
+          ],
+        },
+      ]}
+      title={t('RESOURCE:TASK')}
+    />
+  );
+});
+
+
+
+
 
 export const TaskDetailsPage = props => {
   const { t } = useTranslation();

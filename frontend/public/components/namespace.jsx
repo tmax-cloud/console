@@ -272,7 +272,7 @@ const Metering = ({ obj: { metadata } }) => {
   const [timeUnit, setTimeUnit] = React.useState('hour',''); 
   return <div className="co-m-pane__body">
     <SectionHeading text={t('CONTENT:METERING')} />
-      <div>
+      <div style={{float:'right'}}>
         <select name="timeUnit" onChange={e=> setTimeUnit(e.target.value)}>
           <option value="hour">{t('CONTENT:HOUR')}</option>
           <option value="day">{t('CONTENT:DAY')}</option>

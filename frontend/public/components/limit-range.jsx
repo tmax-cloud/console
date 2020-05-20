@@ -36,7 +36,9 @@ const LimitRangeRow = () =>
           <ResourceCog actions={menuActions} kind="LimitRange" resource={obj} />
           <ResourceLink kind="LimitRange" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
+        <div className="col-md-4 col-xs-4 co-break-word">
+          <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
+        </div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
