@@ -189,6 +189,13 @@ func (s *Server) HTTPHandler() http.Handler {
 		authHandlerWithUser = func(hf func(*auth.User, http.ResponseWriter, *http.Request)) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
+				// logout 서비스에는 IP Range 검증이 필요하지 않음
+				if strings.Contains(string(r.URL.Path), "logout") {
+					hf(s.StaticUser, w, r)
+					return
+				}
+
+				// IP Range 검증을 위한 변수들 세팅
 				var token string
 				var tokenPayload string
 				var id string
@@ -196,33 +203,32 @@ func (s *Server) HTTPHandler() http.Handler {
 				var bodyToken string
 				var requestBodyString string
 				var bodyReadFlag bool
+				var authData AuthData
+				var tokenPayloadParsedJson TokenData
 
+				// Authorization Header 가져오기
 				headerTokens := r.Header["Authorization"]
 				fmt.Printf("headerTokens: %v\n", headerTokens)
 				fmt.Printf("headerTokens length: %v\n", len(headerTokens))
 
+				// Query에서 Token이 있다면 가져오기
 				queryTokens, _ := r.URL.Query()["token"]
 				fmt.Printf("queryTokens: %v\n", queryTokens)
 				fmt.Printf("queryTokens length: %v\n", len(queryTokens))
 
-				// body에 id나 token이 있는지 검사
 				fmt.Println("Path: " + string(r.URL.Path))
 
-				if strings.Contains(string(r.URL.Path), "logout") {
-					hf(s.StaticUser, w, r)
-					return
-				}
-
+				// login, refresh 서비스
 				if strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "refresh") {
 
+					// id나 token을 가져오기 위해 body를 parse
 					body, err := ioutil.ReadAll(r.Body)
 					if err != nil {
 						panic(err)
 					}
-					requestBodyString = string(body) // 사본 생성
+					requestBodyString = string(body) // body가 소모된 뒤 복구해주기 위한 사본 생성
 					fmt.Println("body: " + requestBodyString)
 
-					var authData AuthData
 					err = json.Unmarshal(body, &authData)
 					if err != nil {
 						panic(err)
@@ -236,6 +242,7 @@ func (s *Server) HTTPHandler() http.Handler {
 					fmt.Println("bodyToken: " + bodyToken)
 				}
 
+				// id를 얻어오기, 필요한 경우 token을 parse하기
 				if len(bodyId) == 0 {
 					if len(bodyToken) > 0 {
 						token = string(bodyToken)
@@ -257,15 +264,19 @@ func (s *Server) HTTPHandler() http.Handler {
 					tokenPayloadParsed, _ := base64.StdEncoding.DecodeString(tokenPayload + "==")
 					tokenPayloadParsedString := string(tokenPayloadParsed)
 
-					var tokenPayloadParsedJson TokenData
 					json.Unmarshal([]byte(tokenPayloadParsedString), &tokenPayloadParsedJson)
 					id = tokenPayloadParsedJson.Id
 				} else {
 					id = bodyId
 				}
 
-				fmt.Println("id: " + id)
+				if strings.Contains(string(r.URL.Path), "login") {
+					log.Println("id: " + id)
+				} else {
+					fmt.Println("id: " + id)
+				}
 
+				// user security policy를 가져오기 위한 서비스콜
 				transCfg := &http.Transport{
 					TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
 				}
@@ -287,44 +298,75 @@ func (s *Server) HTTPHandler() http.Handler {
 
 				respBody, _ := ioutil.ReadAll(resp.Body)
 				resp.Body.Close()
-				fmt.Printf("%s\n", respBody)
 
+				// body가 소모된 경우 복구
+				if bodyReadFlag {
+					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString))
+				}
+
+				if strings.Contains(string(r.URL.Path), "login") {
+					log.Printf("%s\n", respBody)
+				} else {
+					fmt.Printf("%s\n", respBody)
+				}
+
+				// user security parse
 				userSecurity := UserSecurityPolicy{}
 				err = json.Unmarshal(respBody, &userSecurity)
 				if err != nil {
 					panic(err)
 				}
-				fmt.Println(userSecurity)
 
-				var clientAddr string
-				forwarded := r.Header.Get("X-FORWARDED-FOR")
-				if forwarded != "" {
-					clientAddr = forwarded
-				} else {
-					clientAddr = r.RemoteAddr
+				// IP Range가 설정되어 있지 않은 경우에는 검증 거치지 않음
+				if len(userSecurity.IPRange) == 0 {
+					hf(s.StaticUser, w, r)
+					return
 				}
-				fmt.Printf("client: %v\n", clientAddr)
 
+				if strings.Contains(string(r.URL.Path), "login") {
+					log.Println(userSecurity)
+				} else {
+					fmt.Println(userSecurity)
+				}
+
+				// IP 정보를 가져와 parse
+				clientAddr, err := getIP(r)
+				if err != nil {
+					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Failed to get client IP.")})
+					return
+				}
+
+				if strings.Contains(string(r.URL.Path), "login") {
+					log.Printf("client: %v\n", clientAddr)
+				} else {
+					fmt.Printf("client: %v\n", clientAddr)
+				}
 				ipAddr := strings.Split(clientAddr, ":")[0]
 				ipRange := userSecurity.IPRange
 
 				_, subnet, err := net.ParseCIDR(ipRange)
 				if err != nil {
-					log.Fatal(err)
+					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Invalid CIDR: %v", ipRange)})
+					return
 				}
 				result := subnet.Contains(net.ParseIP(ipAddr))
 
-				fmt.Printf("IP Addr: %v\n", ipAddr)
-				fmt.Printf("IP Range: %v\n", ipRange)
-				fmt.Printf("IP Auth Result: %v\n", result)
+				if strings.Contains(string(r.URL.Path), "login") {
+					log.Printf("IP Addr: %v\n", ipAddr)
+					log.Printf("IP Range: %v\n", ipRange)
+					log.Printf("IP Auth Result: %v\n", result)
+				} else {
+					fmt.Printf("IP Addr: %v\n", ipAddr)
+					fmt.Printf("IP Range: %v\n", ipRange)
+					fmt.Printf("IP Auth Result: %v\n", result)
+				}
 
+				// IP Range 검증에서 실패한 경우
 				if result == false {
 					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Invalid IP: %v. Allowed IP: %v", ipAddr, ipRange)})
 					return
 				}
-				if bodyReadFlag {
-					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString)) // body 복원
-				}
+
 				hf(s.StaticUser, w, r)
 			})
 		}
@@ -413,6 +455,36 @@ func sendResponse(rw http.ResponseWriter, code int, resp interface{}) {
 	if err != nil {
 		plog.Errorf("Failed sending HTTP response body: %v", err)
 	}
+}
+
+func getIP(r *http.Request) (string, error) {
+	//Get IP from the X-REAL-IP header
+	ip := r.Header.Get("X-REAL-IP")
+	netIP := net.ParseIP(ip)
+	if netIP != nil {
+		return ip, nil
+	}
+
+	//Get IP from X-FORWARDED-FOR header
+	ips := r.Header.Get("X-FORWARDED-FOR")
+	splitIps := strings.Split(ips, ",")
+	for _, ip := range splitIps {
+		netIP := net.ParseIP(ip)
+		if netIP != nil {
+			return ip, nil
+		}
+	}
+
+	//Get IP from RemoteAddr
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return "", err
+	}
+	netIP = net.ParseIP(ip)
+	if netIP != nil {
+		return ip, nil
+	}
+	return "", fmt.Errorf("No valid ip found")
 }
 
 type apiError struct {
