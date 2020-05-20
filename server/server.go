@@ -292,13 +292,14 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				var tokenForUserSecurityPolicy string
-				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔둠. 이 경우 InClusterBearerToken 사용
+				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔두었음. 이 경우 InClusterBearerToken 사용
 				if s.MasterToken == "" {
-					bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
-					if err != nil {
-						log.Fatalf("failed to read bearer token: %v", err)
-					}
-					tokenForUserSecurityPolicy = string(bearerToken)
+					// bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
+					// if err != nil {
+					// 	log.Fatalf("failed to read bearer token: %v", err)
+					// }
+					// tokenForUserSecurityPolicy = string(bearerToken)
+					tokenForUserSecurityPolicy = s.StaticUser.Token
 				} else {
 					tokenForUserSecurityPolicy = s.MasterToken
 				}
