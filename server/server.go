@@ -303,6 +303,8 @@ func (s *Server) HTTPHandler() http.Handler {
 				} else {
 					tokenForUserSecurityPolicy = s.MasterToken
 				}
+				// 디버깅용 임시 로그
+				log.Printf("tokenForUserSecurityPolicy: %s", tokenForUserSecurityPolicy)
 				req.Header.Add("Authorization", "Bearer "+tokenForUserSecurityPolicy)
 
 				client := &http.Client{Transport: transCfg}
