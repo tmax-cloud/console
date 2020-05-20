@@ -117,7 +117,7 @@ let config: webpack.Configuration = {
     }),
     extractCSS,
   ],
-  devtool: "eval-source-map",  // 개발할 때 "inline-source-map"으로 사용하기
+  devtool: "source-map",  // 개발할 때 "inline-source-map"으로 사용하기
   stats: "minimal"
 };
 
