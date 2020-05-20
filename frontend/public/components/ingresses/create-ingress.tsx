@@ -90,18 +90,25 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     const ns = location.pathname.split('/')[3];
     k8sList(ko, { ns: ns }).then(
       data => {
-        let serviceNameList = data.map(cur => {
-          let portList = cur.spec.ports.map(port => {
-            return {
-              name: port.name,
-              value: port.port,
-            };
-          });
-          return {
-            name: cur.metadata.name,
-            portList: portList,
-          };
+        let serviceNameList = [];
+        data.forEach(cur => {
+          // service type이 External Name인경우는 제외
+          if (cur.spec.type !== 'ExternalName') {
+            let portList = cur.spec.ports.map(port => {
+              return {
+                name: port.name,
+                value: port.port,
+              };
+            });
+            serviceNameList.push(
+              {
+                name: cur.metadata.name,
+                portList: portList,
+              }
+            );
+          }
         });
+        console.log(serviceNameList)
         let initPortList = serviceNameList[0].portList;
         if (serviceNameList.length === 0) {
           return;
@@ -165,9 +172,9 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
   render() {
     const { hosts, servicePortOptions, serviceNameList, servicePortList } = this.state;
     const { t } = this.props;
-    let serviceList = serviceNameList.map(service => {
+    let serviceList = serviceNameList.length ? serviceNameList.map(service => {
       return <option value={service.name}>{service.name}</option>;
-    });
+    }) : [];
     return (
       <div className="co-m-pane__body">
         <Helmet>
