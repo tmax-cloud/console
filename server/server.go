@@ -11,7 +11,6 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -212,15 +211,9 @@ func (s *Server) HTTPHandler() http.Handler {
 
 				// Authorization Header 가져오기
 				headerTokens := r.Header["Authorization"]
-				fmt.Printf("headerTokens: %v\n", headerTokens)
-				fmt.Printf("headerTokens length: %v\n", len(headerTokens))
 
 				// Query에서 Token이 있다면 가져오기
 				queryTokens, _ := r.URL.Query()["token"]
-				fmt.Printf("queryTokens: %v\n", queryTokens)
-				fmt.Printf("queryTokens length: %v\n", len(queryTokens))
-
-				fmt.Println("Path: " + string(r.URL.Path))
 
 				// login, refresh 서비스
 				if strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "refresh") {
@@ -231,7 +224,6 @@ func (s *Server) HTTPHandler() http.Handler {
 						panic(err)
 					}
 					requestBodyString = string(body) // body가 소모된 뒤 복구해주기 위한 사본 생성
-					fmt.Println("body: " + requestBodyString)
 
 					err = json.Unmarshal(body, &authData)
 					if err != nil {
@@ -241,16 +233,12 @@ func (s *Server) HTTPHandler() http.Handler {
 					bodyId = authData.Id
 					bodyToken = authData.AccessToken
 					bodyReadFlag = true
-
-					fmt.Println("bodyId: " + bodyId)
-					fmt.Println("bodyToken: " + bodyToken)
 				}
 
 				// id를 얻어오기, 필요한 경우 token을 parse하기
 				if len(bodyId) == 0 {
 					if len(bodyToken) > 0 {
 						token = string(bodyToken)
-						fmt.Println("body token: " + token)
 					} else if len(headerTokens) > 0 {
 						headerTokenSplit := strings.Split(string(headerTokens[0]), "Bearer ")
 						if len(headerTokenSplit) > 1 {
@@ -258,10 +246,8 @@ func (s *Server) HTTPHandler() http.Handler {
 						} else {
 							token = headerTokenSplit[0]
 						}
-						fmt.Println("header token: " + token)
 					} else if len(queryTokens) > 0 {
 						token = string(queryTokens[0])
-						fmt.Println("query token: " + token)
 					}
 
 					tokenPayload = strings.Split(token, ".")[1]
@@ -275,9 +261,7 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				if strings.Contains(string(r.URL.Path), "login") {
-					log.Println("id: " + id)
-				} else {
-					fmt.Println("id: " + id)
+					plog.Println("id: " + id)
 				}
 
 				// user security policy를 가져오기 위한 서비스콜
@@ -294,17 +278,11 @@ func (s *Server) HTTPHandler() http.Handler {
 				var tokenForUserSecurityPolicy string
 				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔두었음. 이 경우 InClusterBearerToken 사용
 				if s.MasterToken == "" {
-					// bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
-					// if err != nil {
-					// 	log.Fatalf("failed to read bearer token: %v", err)
-					// }
-					// tokenForUserSecurityPolicy = string(bearerToken)
 					tokenForUserSecurityPolicy = s.StaticUser.Token
 				} else {
 					tokenForUserSecurityPolicy = s.MasterToken
 				}
-				// 디버깅용 임시 로그
-				log.Printf("tokenForUserSecurityPolicy: %s", tokenForUserSecurityPolicy)
+
 				req.Header.Add("Authorization", "Bearer "+tokenForUserSecurityPolicy)
 
 				client := &http.Client{Transport: transCfg}
@@ -324,9 +302,7 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				if strings.Contains(string(r.URL.Path), "login") {
-					log.Printf("%s\n", respBody)
-				} else {
-					fmt.Printf("%s\n", respBody)
+					plog.Printf("%s", respBody)
 				}
 
 				// user security parse
@@ -343,9 +319,7 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				if strings.Contains(string(r.URL.Path), "login") {
-					log.Println(userSecurity)
-				} else {
-					fmt.Println(userSecurity)
+					plog.Println(userSecurity)
 				}
 
 				// IP 정보를 가져와 parse
@@ -356,9 +330,7 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				if strings.Contains(string(r.URL.Path), "login") {
-					log.Printf("client: %v\n", clientAddr)
-				} else {
-					fmt.Printf("client: %v\n", clientAddr)
+					plog.Printf("client: %v", clientAddr)
 				}
 				ipAddr := strings.Split(clientAddr, ":")[0]
 				ipRange := userSecurity.IPRange
@@ -371,13 +343,9 @@ func (s *Server) HTTPHandler() http.Handler {
 				result := subnet.Contains(net.ParseIP(ipAddr))
 
 				if strings.Contains(string(r.URL.Path), "login") {
-					log.Printf("IP Addr: %v\n", ipAddr)
-					log.Printf("IP Range: %v\n", ipRange)
-					log.Printf("IP Auth Result: %v\n", result)
-				} else {
-					fmt.Printf("IP Addr: %v\n", ipAddr)
-					fmt.Printf("IP Range: %v\n", ipRange)
-					fmt.Printf("IP Auth Result: %v\n", result)
+					plog.Printf("IP Addr: %v", ipAddr)
+					plog.Printf("IP Range: %v", ipRange)
+					plog.Printf("IP Auth Result: %v", result)
 				}
 
 				// IP Range 검증에서 실패한 경우
