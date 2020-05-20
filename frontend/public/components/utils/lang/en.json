@@ -153,6 +153,7 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
+    "PORTALURL": "Portal URL",
     "PATHNAME": "Path Name",
     "SERVICENAME": "Service Name",
     "ACCESS": "Access",

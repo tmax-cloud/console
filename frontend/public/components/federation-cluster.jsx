@@ -30,7 +30,7 @@ const KubeFedClusterHeader = props => {
         {t('CONTENT:NAMESPACE')}
       </ColHead>
       <ColHead {...props} className="col-lg-3 col-md-3 col-sm-3 col-xs-3" sortField="metadata.namespace">
-        {'Portal URL'}
+        {t('CONTENT:PORTALURL')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}

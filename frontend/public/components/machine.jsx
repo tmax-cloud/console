@@ -16,13 +16,16 @@ const MachineHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-4" sortField="metadata.namespace">
+      <ColHead {...props} className="col-lg-3 col-md-3 col-sm-3 col-xs-3" sortField="metadata.namespace">
         {t('CONTENT:NAMESPACE')}
       </ColHead>
-      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-lg-3 col-md-3 col-sm-3 col-xs-3" sortField="status.phase">
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -34,12 +37,13 @@ const MachineRow = () =>
   function MachineRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
+        <div className="col-xs-3 col-sm-3 co-resource-link-wrapper">
           {!HDCModeFlag && <ResourceCog actions={menuActions} kind="Cluster" resource={obj} />}
           <ResourceLink kind="Machine" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
-        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status.phase}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };

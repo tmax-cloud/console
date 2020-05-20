@@ -34,12 +34,12 @@ const AWSClusterRow = () =>
   function AWSClusterRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
+        <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
           {!HDCModeFlag && <ResourceCog actions={menuActions} kind="AWSCluster" resource={obj} />}
           <ResourceLink kind="AWSCluster" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
-        <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.metadata.namespace}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
