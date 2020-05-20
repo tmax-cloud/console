@@ -425,7 +425,7 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:CLUSTERMANAGEMENT')} icon="fa fa-database">
               <ResourceNSLink resource="clusters" name={t('RESOURCE:CLUSTER')} onClick={this.close} />
               <ResourceNSLink resource="machinedeployments" name={t('RESOURCE:MACHINEDEPLOYMENT')} onClick={this.close} />
-              <ResourceNSLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECK')} onClick={this.close} />
+              {/* <ResourceNSLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECK')} onClick={this.close} /> */}
               <ResourceNSLink resource="machines" name={t('RESOURCE:MACHINE')} onClick={this.close} />
               <ResourceNSLink resource="machinesets" name={t('RESOURCE:MACHINESET')} onClick={this.close} />
               <ResourceNSLink resource="kubeadmcontrolplanes" name={t('RESOURCE:KUBEADMCONTROLPLANE')} onClick={this.close} />
@@ -439,9 +439,9 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text={t('RESOURCE:AWSMANAGEMENT')} icon="fa fa-shield">
-              <ResourceClusterLink resource="awsclusters" name={t('RESOURCE:AWSCLUSTER')} onClick={this.close} />
-              <ResourceClusterLink resource="awsmachines" name={t('RESOURCE:AWSMACHINE')} onClick={this.close} />
-              <ResourceClusterLink resource="awsmachinetemplates" name={t('RESOURCE:AWSMACHINETEMPLATE')} onClick={this.close} />
+              <ResourceNSLink resource="awsclusters" name={t('RESOURCE:AWSCLUSTER')} onClick={this.close} />
+              <ResourceNSLink resource="awsmachines" name={t('RESOURCE:AWSMACHINE')} onClick={this.close} />
+              <ResourceNSLink resource="awsmachinetemplates" name={t('RESOURCE:AWSMACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
 
             <NavSection text={t('RESOURCE:AZUREMANAGEMENT')} icon="pficon pficon-process-automation">

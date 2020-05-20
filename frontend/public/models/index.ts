@@ -1,6 +1,62 @@
 // eslint-disable-next-line no-unused-vars
 import { K8sKind } from '../module/k8s';
 
+export const FederatedNamespaceModel: K8sKind = {
+  kind: 'FederatedNamespace',
+  label: 'Federated Namespace',
+  apiGroup: 'types.kubefed.io',
+  apiVersion: 'v1beta1',
+  path: 'federatednamespaces',
+  abbr: 'FN',
+  namespaced: false,
+  plural: 'federatednamespaces',
+  id: 'federatednamespace',
+  labelPlural: 'Federated Namespaces',
+  crd: true,
+};
+
+export const FederatedDeploymentModel: K8sKind = {
+  kind: 'FederatedDeployment',
+  label: 'Federated Deployment',
+  apiGroup: 'types.kubefed.io',
+  apiVersion: 'v1beta1',
+  path: 'federateddeployments',
+  abbr: 'FD',
+  namespaced: false,
+  plural: 'federateddeployments',
+  id: 'federateddeployment',
+  labelPlural: 'Federated Deployments',
+  crd: true,
+};
+
+export const FederatedConfigMapModel: K8sKind = {
+  kind: 'FederatedConfigMap',
+  label: 'Federated ConfigMap',
+  apiGroup: 'types.kubefed.io',
+  apiVersion: 'v1beta1',
+  path: 'federatedconfigmaps',
+  abbr: 'FCM',
+  namespaced: false,
+  plural: 'federatedconfigmaps',
+  id: 'federatedconfigmap',
+  labelPlural: 'Federated ConfigMaps',
+  crd: true,
+};
+
+export const FederatedIngressModel: K8sKind = {
+  kind: 'FederatedIngress',
+  label: 'Federated Ingress',
+  apiGroup: 'types.kubefed.io',
+  apiVersion: 'v1beta1',
+  path: 'federatedingresses',
+  abbr: 'FN',
+  namespaced: false,
+  plural: 'federatedingresses',
+  id: 'federatedingresses',
+  labelPlural: 'Federated Ingresses',
+  crd: true,
+};
+
 export const KubeFedClusterModel: K8sKind = {
   kind: 'KubeFedCluster',
   namespaced: true,

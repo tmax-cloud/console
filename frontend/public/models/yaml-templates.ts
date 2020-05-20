@@ -19,6 +19,101 @@ metadata:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.FederatedNamespaceModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedNamespace
+    metadata:
+      name: test-namespace
+      namespace: test-namespace
+    spec:
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedDeploymentModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedDeployment
+    metadata:
+      name: test-deployment
+      namespace: test-namespace
+    spec:
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          replicas: 3
+          selector:
+            matchLabels:
+              app: nginx
+          template:
+            metadata:
+              labels:
+                app: nginx
+            spec:
+              containers:
+              - image: nginx
+                name: nginx
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedConfigMapModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedConfigMap
+    metadata:
+      name: test-configmap
+      namespace: test-namespace
+    spec:
+      template:
+        data:
+          A: ala ma kota
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+      overrides:
+      - clusterName: cluster2
+        clusterOverrides:
+        - path: /data
+          value:
+            foo: bar
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedIngressModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedIngress
+    metadata:
+      name: test-ingress
+      namespace: test-namespace
+    spec:
+      template:
+        spec:
+          rules:
+          - host: ingress.example.com
+            http:
+              paths:
+              - backend:
+                  serviceName: test-service
+                  servicePort: 80
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.KubeadmConfigTemplateModel), 'default'],
     `
     apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
@@ -1139,19 +1234,6 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.ClusterModel), 'default'],
-    `
-apiVersion: multicluster.coreos.com/v1
-kind: Cluster
-metadata:
-  name: example
-  annotations:
-    'multicluster.coreos.com/console-url': 'http://localhost:9000'
-    'multicluster.coreos.com/directory': true
-spec: {}
 `,
   )
   .setIn(
