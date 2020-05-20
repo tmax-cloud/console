@@ -110,7 +110,7 @@ class ValuePairElement extends React.Component {
           </div>
         </div>
         {readOnly ? null : (
-          <div className="col-md-1 col-xs-2">
+          <div className="col-md-1 col-xs-2" style={{ marginTop: '20px' }}>
             <span className={classNames(allowSorting ? 'pairs-list__span-btns' : null)}>{allowSorting ? <React.Fragment>{deleteButton}</React.Fragment> : deleteButton}</span>
           </div>
         )}

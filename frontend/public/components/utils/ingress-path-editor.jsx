@@ -36,28 +36,26 @@ export class IngressEditor extends React.Component {
       return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} servicePortList={servicePortList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={i} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
-      <React.Fragment>
-        <div style={{ marginLeft: '20px' }}>
-          <div className="row">
-            <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${pathNameString.toUpperCase()}`)}</div>
-            <div className="col-md-3 col-xs-3 control-label">{t(`CONTENT:${serviceNameString.toUpperCase()}`)}</div>
-            <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${servicePortString.toUpperCase()}`)}</div>
-          </div>
-          {pathItems}
-          <div className="row">
-            <div className="col-md-12 col-xs-12">
-              {readOnly ? null : (
-                <React.Fragment>
-                  <span className="btn-link pairs-list__btn" onClick={this._append}>
-                    <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                    {t(`CONTENT:${addString.toUpperCase()}`)}
-                  </span>
-                </React.Fragment>
-              )}
-            </div>
+      <div style={{ marginLeft: '20px', marginTop: '40px' }}>
+        <div className="row">
+          <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${pathNameString.toUpperCase()}`)}</div>
+          <div className="col-md-3 col-xs-3 control-label">{t(`CONTENT:${serviceNameString.toUpperCase()}`)}</div>
+          <div className="col-md-2 col-xs-2 control-label">{t(`CONTENT:${servicePortString.toUpperCase()}`)}</div>
+        </div>
+        {pathItems}
+        <div>
+          <div className="col-md-12 col-xs-12">
+            {readOnly ? null : (
+              <React.Fragment>
+                <span className="btn-link pairs-list__btn" onClick={this._append}>
+                  <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
+                  {t(`CONTENT:${addString.toUpperCase()}`)}
+                </span>
+              </React.Fragment>
+            )}
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
