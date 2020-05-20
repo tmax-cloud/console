@@ -43,7 +43,14 @@ class ConfigureStatusModal extends PromiseComponent {
     };
 
     // const patch = { path: this.props.path, data };
-    const promise = k8sPatch2(this.props.resourceKind, this.props.resource, data, op);
+    const promise = k8sPatch2(this.props.resourceKind, this.props.resource, data, op).then(
+      () => {
+        location.reload();
+      },
+      err => {
+        console.error(err);
+      },
+    );
 
     this.handlePromise(promise).then(this.props.close);
   }
