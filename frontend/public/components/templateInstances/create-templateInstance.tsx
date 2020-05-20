@@ -17,19 +17,6 @@ const pageExplanation = {
   [CreateType.form]: 'Create Template Instance Run using Form Editor',
 };
 
-const determineCreateType = (data) => {
-  return CreateType.form;
-};
-
-const Section = ({ label, children, id }) => <div className="row">
-  <div className="col-xs-2">
-    <div>{label}</div>
-  </div>
-  <div className="col-xs-2" id={id}>
-    {children}
-  </div>
-</div>;
-
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
   constructor(props) {
@@ -189,13 +176,20 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      let keyValue = parameter.defaultValue ? parameter.displayName + "( default:" + parameter.defaultValue + ")" : parameter.displayName;
-      let defaultValue = parameter.defaultValue ? parameter.defaultValue : ''
+      let defaultValue = parameter.defaultValue ? `default : ${parameter.defaultValue}` : ''
       let isRequired = parameter.required ? true : false;
       return <div>
-        <Section label={keyValue} id={parameter.name}>
-          <input onChange={this.onParamValueChanged} className="form-control" type="text" defaultValue={defaultValue} placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
-        </Section>
+        <div className="row">
+          <div className="col-xs-2">
+            <div>{parameter.displayName}</div>
+          </div>
+          <div className="col-xs-3" id={parameter.name}>
+            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
+          </div>
+          <div className="col-xs-5" id={parameter.name}>
+            <p className="co-m-pane__explanation">{defaultValue}</p>
+          </div>
+        </div>
         <p className="co-m-pane__explanation">{parameter.description}</p>
       </div>
     });
