@@ -182,7 +182,9 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
             <FirstSection label={t('CONTENT:NAME')} children={<input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.ingress.metadata.name} required />} id="name" />
 
             {/* Host */}
-            <FirstSection label={t('CONTENT:HOST')} children={<IngressHostEditor values={hosts} serviceList={serviceList} servicePortList={servicePortList} t={t} updateParentData={this._updateHosts} />} id="host" />
+            <FirstSection label={t('CONTENT:HOST')} id="host">
+              <IngressHostEditor values={hosts} serviceList={serviceList} servicePortList={servicePortList} t={t} updateParentData={this._updateHosts} />
+            </FirstSection>
 
             {/* Button */}
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>

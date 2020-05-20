@@ -37,7 +37,9 @@ export class IngressHostEditor extends React.Component {
       return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} serviceList={serviceList} servicePortList={servicePortList} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
-      <React.Fragment style={{ backgroundColor: '#CEECF5', border: '1px solid' }}>
+      // return (
+      <React.Fragment>
+        {/* <React.Fragment style={{ backgroundColor: '#CEECF5', border: '1px solid' }}> */}
         {portItems}
         <div className="row">
           <div className="col-md-12 col-xs-12">
@@ -66,9 +68,9 @@ IngressHostEditor.defaultProps = {
 class ValuePairElement extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      paths: [['', '', '']],
-    };
+    // this.state = {
+    //   paths: this.props.pair[IngressHostEditorPair.Path] || [['', '', '']],
+    // };
     this._onRemove = this._onRemove.bind(this);
     this._onChangeValue = this._onChangeValue.bind(this);
     this._updatePaths = this._updatePaths.bind(this);
@@ -82,15 +84,12 @@ class ValuePairElement extends React.Component {
     onChange(e, index, IngressHostEditorPair.HostName);
   }
   _updatePaths(path) {
-    this.setState({
-      paths: path.pathPairs,
-    });
     const { index, onChange } = this.props;
     onChange(path, index, IngressHostEditorPair.Path);
   }
   render() {
     const { keyString, valueString, allowSorting, readOnly, pair, t, serviceList, servicePortList } = this.props;
-    const { paths } = this.state;
+    // const { paths } = this.state;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -104,10 +103,10 @@ class ValuePairElement extends React.Component {
             <div className="col-md-2 col-xs-2 control-label"> {t(`CONTENT:HOSTNAME`)}</div>
           </div>
           <div className="col-md-12 col-xs-12 pairs-list__protocol-field">
-            <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} required />
+            <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} value={pair[IngressHostEditorPair.HostName]} required />
           </div>
           <div>
-            <IngressEditor serviceList={serviceList} servicePortList={servicePortList} servicePortOptions={servicePortList} pair={pair} t={t} pathPairs={paths} updateParentData={this._updatePaths} />
+            <IngressEditor serviceList={serviceList} servicePortList={servicePortList} servicePortOptions={servicePortList} pair={pair} t={t} pathPairs={pair[IngressHostEditorPair.Path] || [['', '', '']]} updateParentData={this._updatePaths} />
           </div>
         </div>
         {readOnly ? null : (

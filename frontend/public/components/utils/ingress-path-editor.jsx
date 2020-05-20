@@ -33,7 +33,7 @@ export class IngressEditor extends React.Component {
     const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t, serviceList, servicePortList } = this.props;
     const pathItems = pathPairs.map((pair, i) => {
       const key = _.get(pair, [IngressEditorPair.Index], i);
-      return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} servicePortList={servicePortList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} servicePortList={servicePortList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={i} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <React.Fragment>
@@ -107,7 +107,6 @@ class IngressPairElement extends React.Component {
     const ns = location.pathname.split('/')[3];
     k8sGet(ko, serviceName, ns).then(
       data => {
-        console.log(data);
         let portList = data.spec.ports;
         this.setState({
           servicePortList: portList,
@@ -129,14 +128,18 @@ class IngressPairElement extends React.Component {
       </React.Fragment>
     );
     servicePortList = !servicePortList.length ? this.props.servicePortList : this.state.servicePortList;
-    let portList = servicePortList.map(port => {
-      return <option value={port.port}>{port.name}</option>;
+    let portList = servicePortList.map((port, i) => {
+      return (
+        <option key={i} value={port.port}>
+          {port.name}
+        </option>
+      );
     });
 
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={t(`CONTENT:${pathNameString.toUpperCase()}`)} value={pair[IngressEditorPair.Name]} onChange={this._onChangeName} />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${pathNameString.toUpperCase()}`)} value={pair[IngressEditorPair.PathName]} onChange={this._onChangeName} />
         </div>
         <div className="col-md-3 col-xs-3 pairs-list__protocol-field">
           <select className="form-control" value={pair[IngressEditorPair.ServiceName]} onChange={this._onChangeServiceName}>
