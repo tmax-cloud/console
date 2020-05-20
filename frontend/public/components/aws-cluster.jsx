@@ -16,11 +16,13 @@ const AWSClusterHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-6 col-sm-6" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-
-      <ColHead {...props} className="col-sm-6 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-4" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -36,6 +38,7 @@ const AWSClusterRow = () =>
           {!HDCModeFlag && <ResourceCog actions={menuActions} kind="AWSCluster" resource={obj} />}
           <ResourceLink kind="AWSCluster" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
@@ -64,7 +67,7 @@ AWSClusterList.displayName = AWSClusterList;
 
 export const AWSClustersPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={AWSClusterList} canCreate={false} kind="AWSCluster" /> : <ListPage {...props} ListComponent={AWSClusterList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="AWSCluster" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={AWSClusterList} canCreate={false} kind="AWSCluster" /> : <ListPage {...props} ListComponent={AWSClusterList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="AWSCluster" />;
 };
 AWSClustersPage.displayName = 'AWSClustersPage';
 

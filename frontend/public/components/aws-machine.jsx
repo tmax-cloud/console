@@ -16,11 +16,13 @@ const AWSMachineHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-6 col-sm-6" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-
-      <ColHead {...props} className="col-sm-6 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-lg-4 col-md-4 col-sm-4 col-xs-4" sortField="metadata.namespace">
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -36,6 +38,7 @@ const AWSMachineRow = () =>
           {!HDCModeFlag && <ResourceCog actions={menuActions} kind="AWSMachine" resource={obj} />}
           <ResourceLink kind="AWSMachine" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
@@ -64,7 +67,7 @@ AWSMachineList.displayName = AWSMachineList;
 
 export const AWSMachinesPage = props => {
   const { t } = useTranslation();
-  return HDCModeFlag ? <ListPage {...props} ListComponent={AWSMachineList} canCreate={false} kind="AWSMachine" /> : <ListPage {...props} ListComponent={AWSMachineList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={false} kind="AWSMachine" />;
+  return HDCModeFlag ? <ListPage {...props} ListComponent={AWSMachineList} canCreate={false} kind="AWSMachine" /> : <ListPage {...props} ListComponent={AWSMachineList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="AWSMachine" />;
 };
 AWSMachinesPage.displayName = 'AWSMachinesPage';
 
