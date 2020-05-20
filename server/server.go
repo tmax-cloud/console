@@ -34,6 +34,10 @@ import (
 )
 
 const (
+	// NOTE: k8s bearer token 가져오기 위해 추가 // 정동민
+	k8sInClusterCA          = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+	k8sInClusterBearerToken = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
 	indexPageTemplateName     = "index.html"
 	tokenizerPageTemplateName = "tokener.html"
 
@@ -287,10 +291,19 @@ func (s *Server) HTTPHandler() http.Handler {
 					panic(err)
 				}
 
-				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔두었고, 이 경우에는 Authorization 헤더 추가 안함
-				if s.MasterToken != "" {
-					req.Header.Add("Authorization", "Bearer "+s.MasterToken)
+				var tokenForUserSecurityPolicy string
+				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔둠. 이 경우 InClusterBearerToken 사용
+				if s.MasterToken == "" {
+					bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
+					if err != nil {
+						log.Fatalf("failed to read bearer token: %v", err)
+					}
+					tokenForUserSecurityPolicy = string(bearerToken)
+				} else {
+					tokenForUserSecurityPolicy = s.MasterToken
 				}
+				req.Header.Add("Authorization", "Bearer "+tokenForUserSecurityPolicy)
+
 				client := &http.Client{Transport: transCfg}
 
 				resp, err := client.Do(req)
