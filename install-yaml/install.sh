@@ -85,7 +85,8 @@ PROM_IP=$(kubectl get svc -A | grep ${NAME_PROM} | awk '{print $4}')
 PROM_PORT=$(kubectl get svc -A | grep ${NAME_PROM} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $PROM_IP ]; then 
     echo "Cannot find PROMETHEUS_IP in ${NAME_PROM}. Is prometheus installed?"
-    exit 1 
+    PROM_IP="0.0.0.0:9090"
+    echo "PROMETHEUS_IP dummy value temporarily set to 0.0.0.0:9090."
 fi 
 PROM=${PROM_IP}:${PROM_PORT}
 echo "Prometheus Addr = ${PROM}"
