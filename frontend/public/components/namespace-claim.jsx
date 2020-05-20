@@ -4,12 +4,10 @@ import * as React from 'react';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
 import { fromNow } from './utils/datetime';
-import { k8sGet, k8sList } from '../module/k8s';
+import { k8sList } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
-import { NamespaceList } from './namespace';
-import { Timestamp } from './utils/timestamp';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 let namespaceList = [];
@@ -22,18 +20,12 @@ const NamespaceClaimHeader = props => {
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="resourceName">
         {t('CONTENT:RESOURCENAME')}
       </ColHead>
-      {/* <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
-        {t('CONTENT:NAME')}
-      </ColHead> */}
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
         {t('CONTENT:STATUS')}
       </ColHead>
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
         {t('CONTENT:TRIALTIME')}
       </ColHead>
-      {/* <ColHead {...props} className="col-sm-3 hidden-xs" sortField="resourceName">
-        {t('CONTENT:RESOURCENAME')}
-      </ColHead> */}
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
@@ -56,44 +48,22 @@ const NamespaceClaimRow = () =>
     let time = namespace && TrialTime(namespace);
     return (
       <div className="row co-resource-list__item">
-        {/* <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
-          <ResourceCog actions={menuActions} kind="NamespaceClaim" resource={obj} />
-          <ResourceLink kind="NamespaceClaim" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
-        </div> */}
         <div className="col-md-3 col-xs-3 co-resource-link-wrapper">
           <ResourceCog actions={menuActions} kind="NamespaceClaim" resource={obj} />
           <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div>
-        {/* <div className="col-xs-3 col-sm-3 hidden-xs">{obj.resourceName}</div> */}
         <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
-
-// const DetailsForKind = kind =>
-//   function DetailsForKind_({ obj }) {
-//     return (
-//       <React.Fragment>
-//         <div className="co-m-pane__body">
-//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
-//           <ResourceSummary
-//             resource={obj}
-//             podSelector="spec.podSelector"
-//             showNodeSelector={false}
-//           />
-//         </div>
-//       </React.Fragment>
-//     );
-//   };
 
 const Details = ({ obj: namespaceinstance }) => {
   const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
-
       <div className="co-m-pane__body">
         <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('NAMESPACECLAIM', t) })} />
         <div className="row">
@@ -141,13 +111,12 @@ export const NamespaceClaimsPage = props => {
     createLink: type => `/k8s/cluster/namespaceclaims/new${type !== 'yaml' ? '/' + type : ''}`,
   };
   React.useEffect(() => {
-    // window.setTimeout(
     k8sList(kindObj('Namespace'))
       .then(reponse => reponse)
       .then(
         data => {
           if (flag && !namespaceList.length) {
-            // 이유는 모르겠는데
+            // 이유는 모르겠는데 맨처음 페이지 진입시에는 then으로 바로 안들어오고 다음에 옴. flag값으로 분기 처리.
             location.reload();
           }
           namespaceList = data;
@@ -156,15 +125,7 @@ export const NamespaceClaimsPage = props => {
           console.error(err);
         },
       );
-    // .then(
-    //   () => {},
-    //   err => {
-    //     console.error(err);
-    //   },
-    // );
-    // );
   }, []);
-
   return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createProps={createProps} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
