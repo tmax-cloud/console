@@ -293,15 +293,18 @@ func (s *Server) HTTPHandler() http.Handler {
 
 				var tokenForUserSecurityPolicy string
 				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔둠. 이 경우 InClusterBearerToken 사용
-				if s.MasterToken == "" {
-					bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
-					if err != nil {
-						log.Fatalf("failed to read bearer token: %v", err)
-					}
-					tokenForUserSecurityPolicy = string(bearerToken)
-				} else {
-					tokenForUserSecurityPolicy = s.MasterToken
-				}
+				// if s.MasterToken == "" {
+				// 	bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
+				// 	if err != nil {
+				// 		log.Fatalf("failed to read bearer token: %v", err)
+				// 	}
+				// 	tokenForUserSecurityPolicy = string(bearerToken)
+				// } else {
+				// 	tokenForUserSecurityPolicy = s.MasterToken
+				// }
+
+				tokenForUserSecurityPolicy = "eyJhbGciOiJSUzI1NiIsImtpZCI6InBWR2FBakVhTUpGNEV5amZEQnhHR2JkR0gzSjl6cXBlbVA5bE1oNTdyMjAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJoeXBlcmNsb3VkNC1zeXN0ZW0iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiaHlwZXJjbG91ZDQtYWRtaW4tdG9rZW4tejh2czUiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiaHlwZXJjbG91ZDQtYWRtaW4iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI1NWE4NjAzYi1iMDM2LTQzOWEtYTk1Ni1lNmFhNTkzOTkxZDQiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6aHlwZXJjbG91ZDQtc3lzdGVtOmh5cGVyY2xvdWQ0LWFkbWluIn0.lbWMlgEypG1co4mnfghFx7w6ihqG3Li9ZjjIKVsFh4BnXt92SP9R99kdDAS8GnJHSuNWanfvT_vpRShq5qPBcRauRlFP-UBjdIPI_rnoK954w7kg7l4LHS65oFz8pExy3i6zIuXuvueADX-_xeLi6ngVGcbdnAqV6NhxQuWFuwo2RSmQjKjDxN5OoMvpvDnVFog04lOxbS-2uNySd0vX0jWWUKaUxX4IHsHPHyrGxXpsyHACg9BvFInv-Aaf6FXb1Be0AafE0HJO1mhTBW1CZOlihCpDSQxmOLxC4FrfxdjT8lv9MdP_CpoN6qaXRtnp8r7zf5bWmB9uVJAivLDq2A"
+
 				req.Header.Add("Authorization", "Bearer "+tokenForUserSecurityPolicy)
 
 				client := &http.Client{Transport: transCfg}
