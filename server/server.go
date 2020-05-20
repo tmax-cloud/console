@@ -287,7 +287,10 @@ func (s *Server) HTTPHandler() http.Handler {
 					panic(err)
 				}
 
-				req.Header.Add("Authorization", "Bearer "+s.MasterToken)
+				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔두었고, 이 경우에는 Authorization 헤더 추가 안함
+				if s.MasterToken != "" {
+					req.Header.Add("Authorization", "Bearer "+s.MasterToken)
+				}
 				client := &http.Client{Transport: transCfg}
 
 				resp, err := client.Do(req)
