@@ -112,7 +112,7 @@ export const resetLoginState = function() {
         deleteCookie('accessToken');
         deleteCookie('refreshToken');
         deleteCookie('id');
-        deleteCookie('remember');
+        // deleteCookie('remember');
     } else {
         sessionStorage.clear();
     }

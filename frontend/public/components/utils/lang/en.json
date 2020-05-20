@@ -189,6 +189,7 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
   },
   "CONTENT": {
+    "TRIALTIME": "Trial Time",
     "HOUR": "Hour",
     "DAY": "Day",
     "MONTH": "Month",
@@ -655,6 +656,7 @@
     "USERSECURITYPOLICY": "User Security Policy",
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
-    "GROUP": "User Group"
+    "GROUP": "User Group",
+    "PIPELINECONDITION": "Pipeline Condition"
   }
 }
