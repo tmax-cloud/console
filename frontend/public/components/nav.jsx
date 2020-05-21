@@ -420,6 +420,22 @@ class Nav extends React.Component {
             <ResourceNSLink model={InstallPlanModel} resource={InstallPlanModel.plural} name="Install Plans" onClick={this.close} />
           </NavSection> */}
 
+
+            {/* Service Mesh 전체 추가 */}
+            <NavSection text={t('RESOURCE:SERVICEMESH')} icon="pficon pficon-catalog">
+              <ResourceNSLink resource="virtualservices" name={ResourcePlural('VirtualService', t)} onClick={this.close} />
+              <ResourceNSLink resource="destinationrules" name={ResourcePlural('DestinationRule', t)} onClick={this.close} />
+              <ResourceNSLink resource="envoyfilters" name={ResourcePlural('EnvoyFilter', t)} onClick={this.close} />
+              <ResourceNSLink resource="gateways" name={ResourcePlural('Gateway', t)} onClick={this.close} />
+              <ResourceNSLink resource="sidecars" name={ResourcePlural('SideCar', t)} onClick={this.close} />
+              <ResourceNSLink resource="serviceentries" name={ResourcePlural('ServiceEntry', t)} onClick={this.close} />
+              <ResourceNSLink resource="requestauthentications" name={ResourcePlural('RequestAuthentication', t)} onClick={this.close} />
+              <ResourceNSLink resource="peerauthentications" name={ResourcePlural('PeerAuthentication', t)} onClick={this.close} />
+              <ResourceNSLink resource="policies" name={ResourcePlural('Policy', t)} onClick={this.close} />
+              <ResourceNSLink resource="authroizationpolicies" name={ResourcePlural('AuthroizationPolicy', t)} onClick={this.close} />
+            </NavSection>
+
+            {/* WORKLOAD  */}
             <NavSection text={t('RESOURCE:WORKLOAD')} icon="fa fa-briefcase">
               <ResourceNSLink resource="pods" name={ResourcePlural('Pod', t)} onClick={this.close} />
               <ResourceNSLink resource="deployments" name={ResourcePlural('Deployment', t)} onClick={this.close} />
