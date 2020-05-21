@@ -97,6 +97,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(ServiceBindingModel), () => import('./service-binding' /* webpackChunkName: "task" */).then(m => m.ServiceBindingsDetailsPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "task" */).then(m => m.ServiceInstancesDetailsPage))
   .set(referenceForModel(TaskModel), () => import('./task' /* webpackChunkName: "task" */).then(m => m.TaskDetailsPage))
+  .set(referenceForModel(ClusterTaskModel), () => import('./task' /* webpackChunkName: "role" */).then(m => m.ClusterTasksDetailsPage))
   .set(referenceForModel(TaskRunModel), () => import('./task-run' /* webpackChunkName: "task-run" */).then(m => m.TaskRunDetailsPage))
   .set(referenceForModel(PipelineResourceModel), () => import('./pipeline-resource' /* webpackChunkName: "pipeline-resource" */).then(m => m.PipelineResourceDetailsPage))
   .set(referenceForModel(PipelineModel), () => import('./pipeline' /* webpackChunkName: "pipeline" */).then(m => m.PipelineDetailsPage))

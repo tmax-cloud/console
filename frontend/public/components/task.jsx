@@ -10,6 +10,8 @@ import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
+export const taskKind = task => (task.metadata.namespace ? 'Task' : 'ClusterTask');
+
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const TaskHeader = props => {
@@ -22,7 +24,6 @@ const TaskHeader = props => {
       <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.namespace">
         {t('CONTENT:NAMESPACE')}
       </ColHead>
-
       <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
@@ -36,8 +37,8 @@ const TaskRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
-          <ResourceCog actions={menuActions} kind="Task" resource={obj} />
-          <ResourceLink kind="Task" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+          <ResourceCog actions={menuActions} kind={taskKind(obj)} resource={obj} />
+          <ResourceLink kind={taskKind(obj)} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-4 col-sm-4 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'All'}</div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
@@ -72,6 +73,10 @@ TaskList.displayName = TaskList;
 // };
 // TasksPage.displayName = 'TasksPage';
 
+export const taskType = task => {
+  return task.metadata.namespace ? 'namespace' : 'cluster';
+};
+
 export const TasksPage = (({ namespace, showTitle }) => {
   const { t } = useTranslation();
   return (
@@ -85,17 +90,17 @@ export const TasksPage = (({ namespace, showTitle }) => {
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Task', t) })}
       resources={[
-        { kind: 'Task', namespaced: true },
-        { kind: 'ClusterTask', namespaced: false },
+        { kind: 'Task', namespaced: true, optional: true },
+        { kind: 'ClusterTask', namespaced: false, optional: true },
       ]}
       rowFilters={[
         {
           type: 'task-kind',
-          selected: ['clusterTask', 'task'],
-          reducer: namespace ? 'task' : 'clusterTask',
+          selected: ['cluster', 'namespace'],
+          reducer: taskType,
           items: [
-            { id: 'clusterTask', title: 'Cluster-wide Tasks' },
-            { id: 'task', title: 'Namespace Tasks' },
+            { id: 'cluster', title: 'Cluster-wide Tasks' },
+            { id: 'namespace', title: 'Namespace Tasks' },
           ],
         },
       ]}
@@ -124,5 +129,5 @@ export const TaskDetailsPage = props => {
     />
   );
 };
-
+export const ClusterTasksDetailsPage = TaskDetailsPage;
 TaskDetailsPage.displayName = 'TaskDetailsPage';
