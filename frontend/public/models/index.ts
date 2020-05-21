@@ -376,7 +376,7 @@ export const VirtualMachineModel: K8sKind = {
   path: 'virtualmachines',
   id: 'virtualmachine',
   crd: false,
-};
+}
 
 export const VirtualMachineInstanceModel: K8sKind = {
   kind: 'VirtualMachineInstance',
@@ -403,6 +403,20 @@ export const UserModel: K8sKind = {
   labelPlural: 'Users',
   path: 'users',
   id: 'user',
+  crd: false,
+};
+
+export const UserSecurityPolicyModel: K8sKind = {
+  kind: 'Usersecuritypolicy',
+  namespaced: false,
+  label: 'User Security Policy',
+  plural: 'usersecuritypolicies',
+  apiGroup: 'tmax.io',
+  apiVersion: 'v1',
+  abbr: 'USP',
+  labelPlural: 'User Security Policies',
+  path: 'usersecuritypolicies',
+  id: 'usersecuritypolicy',
   crd: false,
 };
 
@@ -1122,17 +1136,43 @@ export const PersistentVolumeClaimModel: K8sKind = {
   id: 'persistentvolumeclaim',
   labelPlural: 'Persistent Volume Claims',
 };
+export const ConditionModel: K8sKind = {
+  kind: 'Condition',
+  namespaced: true,
+  label: 'Condition',
+  plural: 'conditions',
+  apiVersion: 'v1alpha1',
+  abbr: 'Cond',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Pipeline Conditions',
+  path: 'conditions',
+  id: 'condition',
+  crd: false,
+};
 export const TaskModel: K8sKind = {
   kind: 'Task',
   namespaced: true,
   label: 'Task',
   plural: 'tasks',
   apiVersion: 'v1alpha1',
-  abbr: 'TASK',
+  abbr: 'T',
   apiGroup: 'tekton.dev',
   labelPlural: 'Tasks',
   path: 'tasks',
   id: 'task',
+  crd: false,
+};
+export const ClusterTaskModel: K8sKind = {
+  kind: 'ClusterTask',
+  namespaced: false,
+  label: 'ClusterTask',
+  plural: 'clustertasks',
+  apiVersion: 'v1alpha1',
+  abbr: 'CT',
+  apiGroup: 'tekton.dev',
+  labelPlural: 'Cluster Tasks',
+  path: 'clustertasks',
+  id: 'clustertask',
   crd: false,
 };
 export const TaskRunModel: K8sKind = {
@@ -1167,7 +1207,7 @@ export const PipelineModel: K8sKind = {
   label: 'Pipeline',
   plural: 'pipelines',
   apiVersion: 'v1alpha1',
-  abbr: 'T',
+  abbr: 'P',
   apiGroup: 'tekton.dev',
   labelPlural: 'Pipelines',
   path: 'pipelines',
@@ -1180,7 +1220,7 @@ export const PipelineRunModel: K8sKind = {
   label: 'Pipeline Run',
   plural: 'pipelineruns',
   apiVersion: 'v1alpha1',
-  abbr: 'T',
+  abbr: 'PR',
   apiGroup: 'tekton.dev',
   labelPlural: 'Pipeline Runs',
   path: 'pipelineruns',

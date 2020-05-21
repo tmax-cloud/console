@@ -138,7 +138,7 @@ const withServiceInstanceForm = SubForm =>
         .then(res => res.json())
         .then(res => {
           let paramList = res.parameters.map(function (parm) {
-            return { name: parm.name, defaultValue: parm.value, value: '' };
+            return { name: parm.name, defaultValue: parm.value, value: '', description: parm.description, required: parm.required, displayName: parm.displayName }
           });
           if (paramList.length) {
             this.setState({
@@ -230,18 +230,18 @@ const withServiceInstanceForm = SubForm =>
       newServiceInstance.spec.clusterServiceClassName = this.state.selectedClass.name;
       newServiceInstance.spec.clusterServicePlanName = this.state.selectedPlan.name;
       const ko = kindObj(kind);
-      if (this.state.serviceInstance.metadata.name) {
-        this.setState({ inProgress: true });
-        k8sCreate(ko, newServiceInstance).then(
-          () => {
-            this.setState({ inProgress: false });
-            history.push(formatNamespacedRouteForResource('serviceinstances'));
-          },
-          err => this.setState({ error: err.message, inProgress: false }),
-        );
-      } else {
-        this.setState({ error: "Name is required." });
-      }
+      //     if (this.state.serviceInstance.metadata.name) {
+      this.setState({ inProgress: true });
+      k8sCreate(ko, newServiceInstance).then(
+        () => {
+          this.setState({ inProgress: false });
+          history.push(formatNamespacedRouteForResource('serviceinstances'));
+        },
+        err => this.setState({ error: err.message, inProgress: false }),
+      );
+      // } else {
+      //   this.setState({ error: "Name is required." });
+      // }
 
     }
     componentDidMount() {
@@ -273,16 +273,45 @@ const withServiceInstanceForm = SubForm =>
             <title>{title}</title>
           </Helmet>
           {/* <form className="co-m-pane__body-group co-create-service-instance-form" onSubmit={() => this.save}> */}
-          <form className="co-m-pane__body-group co-create-service-instance-form">
+          <div className="co-m-pane__body-group co-create-service-instance-form">
             <h1 className="co-m-pane__heading">{title}</h1>
             {/* <p className="co-m-pane__explanation">{this.props.explanation}</p> */}
             <Stepper steps={steps} activeStep={currentStep} />
             <div className="separator"></div>
             {/* stepper */}
-            {currentStep === 0 && (this.state.classList.length > 0 ? <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} /> : <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>)}
-            {currentStep === 1 && (this.state.classList.length > 0 ? <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} /> : <div>{t('STRING:SERVICEINSTANCE-CREATE_4')}</div>)}
+            {currentStep === 0 && (this.state.classList.length > 0 ? <div>
+              <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
+              <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+                <div style={{ marginTop: '15px' }}>
+                  <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
+                    {t('CONTENT:NEXT')}
+                  </button>
+                  <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
+                    {t('CONTENT:CANCEL')}
+                  </Link>
+                </div>
+              </ButtonBar>
+            </div>
+              : <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>)}
+            {currentStep === 1 && (this.state.classList.length > 0 ? <div>
+              <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
+              <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+                <div style={{ marginTop: '15px' }}>
+                  <button type="button" className="btn btn-default" onClick={this.onClickBack}>
+                    {t('CONTENT:BACK')}
+                  </button>
+                  <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
+                    {t('CONTENT:NEXT')}
+                  </button>
+                  <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
+                    {t('CONTENT:CANCEL')}
+                  </Link>
+                </div>
+              </ButtonBar>
+            </div>
+              : <div>{t('STRING:SERVICEINSTANCE-CREATE_4')}</div>)}
             {currentStep === 2 && (
-              <React.Fragment>
+              <form onSubmit={this.save}>
                 <div className="row">
                   <div className="col-xs-2">
                     <strong>{t('RESOURCE:SERVICEINSTANCE')}</strong>
@@ -296,26 +325,27 @@ const withServiceInstanceForm = SubForm =>
                   </div>
                 </div>
                 {paramList.length > 0 && (
-                  <React.Fragment>
-                    <div className="separator"></div>
-                    <Section label={t('CONTENT:PARAMETERS')} key="params">
-                      {paramList.map((parameter, index) => {
-                        let keyValue = parameter.defaultValue ? parameter.name + "( default:" + parameter.defaultValue + ")" : parameter.name;
-                        return <React.Fragment key={index}>
-                          <div>
-                            <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                              {keyValue}
-                            </label>
+                  <Section label={t('CONTENT:PARAMETERS')} key="params">
+                    {paramList.map((parameter, index) => {
+                      let defaultValue = parameter.defaultValue ? `default : ${parameter.defaultValue}` : ''
+                      let isRequired = parameter.required ? true : false;
+                      return <div>
+                        <div className="row">
+                          <div className="col-xs-2">
+                            <div>{parameter.displayName}</div>
                           </div>
-
-                          <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.name} onChange={this.onParamValueChanged} required />
-                        </React.Fragment>
-                      }
-
-
-                      )}
-                    </Section>
-                  </React.Fragment>
+                          <div className="col-xs-3" id={parameter.name}>
+                            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
+                          </div>
+                          <div className="col-xs-5" id={parameter.name}>
+                            <p className="co-m-pane__explanation">{defaultValue}</p>
+                          </div>
+                        </div>
+                        <p className="co-m-pane__explanation">{parameter.description}</p>
+                      </div>
+                    }
+                    )}
+                  </Section>
                 )}
                 <div className="separator"></div>
                 <div className="row">
@@ -329,11 +359,23 @@ const withServiceInstanceForm = SubForm =>
                     </div>
                   </div>
                 </div>
-                {/* <SubForm /> */}
-              </React.Fragment>
+                <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+                  <div style={{ marginTop: '15px' }}>
+                    <button type="button" className="btn btn-default" onClick={this.onClickBack}>
+                      {t('CONTENT:BACK')}
+                    </button>
+                    <button type="submit" className="btn btn-primary" id="save-changes">
+                      {t('CONTENT:CREATE')}
+                    </button>
+                    <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
+                      {t('CONTENT:CANCEL')}
+                    </Link>
+                  </div>
+                </ButtonBar>
+              </form>
             )}
-          </form>
-          <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+          </div>
+          {/* <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
             <div style={{ marginTop: '15px' }}>
               {currentStep !== 0 && (
                 <button type="button" className="btn btn-default" onClick={this.onClickBack}>
@@ -346,7 +388,7 @@ const withServiceInstanceForm = SubForm =>
                 </button>
               )}
               {currentStep === 2 && !errorMessage && (
-                <button type="submit" className="btn btn-primary" id="save-changes" onClick={this.save}>
+                <button type="submit" className="btn btn-primary" id="save-changes">
                   {t('CONTENT:CREATE')}
                 </button>
               )}
@@ -354,7 +396,7 @@ const withServiceInstanceForm = SubForm =>
                 {t('CONTENT:CANCEL')}
               </Link>
             </div>
-          </ButtonBar>
+          </ButtonBar> */}
         </div>
       );
     }

@@ -310,18 +310,31 @@ export class ExpTimer extends Component {
 
 export const Masthead = props => {
   let timerRef = null;
-  const [tokenTime, setTokenTime] = useState(60);
+  // const [tokenTime, setTokenTime] = useState(60);
   const { t } = useTranslation();
   const setExpireTime = time => {
-    setTokenTime(time);
+    // setTokenTime(time);
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
+    const json = {
+      atExpireTime: Number(time), // Number
+    };
+
+    coFetchJSON
+      .put(AUTH_SERVER_URL, json)
+      .then(data => {
+        // console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const tokenRefresh = () => {
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     const json = {
       accessToken: getAccessToken(),
-      refreshToken: getRefreshToken(),
-      atExpireTime: Number(tokenTime), // Number
+      refreshToken: getRefreshToken()
+      // atExpireTime: Number(tokenTime), // Number
     };
 
     coFetchJSON

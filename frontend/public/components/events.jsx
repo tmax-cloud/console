@@ -54,10 +54,13 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
                 <Timestamp timestamp={lastTimestamp} t={t} />
               </div>
               <div className="co-sysevent__details">
-                {!HDCModeFlag && <small className="co-sysevent__source">
-                  {t('CONTENT:GENERATEDFROM')} <span>{source.component}</span>
-                  {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <React.Fragment>{source.host}</React.Fragment>}</span>}
-                </small>}
+                {!HDCModeFlag && (
+                  <small className="co-sysevent__source">
+                    {/* {t('CONTENT:GENERATEDFROM')} <span>{source.component}</span> */}
+                    {t('ADDITIONAL:GENERATEDFROM', { something: source.component })}
+                    {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <React.Fragment>{source.host}</React.Fragment>}</span>}
+                  </small>
+                )}
                 {count > 1 && (
                   <small className="co-sysevent__count text-secondary">
                     {count} {t('CONTENT:TIMESINTHELAST')}
@@ -403,7 +406,7 @@ class EventStream extends SafetyFirst {
       'co-sysevent-stream__timeline--empty': !allCount || !count,
     });
     //  const messageCount = count < maxMessages ? `Showing ${pluralize(count, 'event')}` : `Showing ${count} of ${allCount}+ events`;
-    const messageCount = count < maxMessages ? t('PLURAL:EVENT', { count: count }) : t('ADDITIONAL:SHOWINGEVENTS', { something1: count, something2: t('PLURAL:EVENT', { count: allCount }) });
+    const messageCount = count < maxMessages ? t('PLURAL:EVENT', { count: count }) : t('PLURAL:EVENT', { count: allCount });
 
     return (
       <div className="co-m-pane__body">

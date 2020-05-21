@@ -1868,4 +1868,24 @@ spec:
   triggers:
   - type: ConfigChange
 `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ConditionModel), 'default'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: Condition
+    metadata:
+     name: sample-condition
+     namespace: default
+    spec:
+     params:
+       - name: "path"
+     resources:
+       - name: sample-resource
+         type: git
+         optional: true
+     check:
+       image: alpine
+       script: 'test ! -f $(resources.sample-resource.path)/$(params.path)'    
+`,
   );

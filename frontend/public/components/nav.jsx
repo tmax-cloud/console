@@ -26,6 +26,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
 
+const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 const stripNS = href => {
   href = stripBasePath(href);
   return href
@@ -526,8 +527,9 @@ class Nav extends React.Component {
               <ResourceNSLink resource="taskruns" name={ResourcePlural('TaskRun', t)} onClick={this.close} />
               <ResourceNSLink resource="pipelines" name={ResourcePlural('Pipeline', t)} onClick={this.close} />
               <ResourceNSLink resource="pipelineruns" name={ResourcePlural('PipelineRun', t)} onClick={this.close} />
-              <ResourceNSLink resource="pipelineresources" name={ResourcePlural('PipelineResource', t)} onClick={this.close} /> */}
-            {/* </NavSection> */}
+              <ResourceNSLink resource="pipelineresources" name={ResourcePlural('PipelineResource', t)} onClick={this.close} />
+              <ResourceNSLink resource="conditions" name={ResourcePlural('Condition', t)} onClick={this.close} />
+            </NavSection>
 
             {/* <NavSection text={t('RESOURCE:SECURITY')} icon="fa fa-shield"> */}
             {/* {<ResourceClusterLink resource="podsecuritypolicies" name={ResourcePlural('PodSecurityPolicy', t)} onClick={this.close} />}
@@ -567,6 +569,7 @@ class Nav extends React.Component {
               {/* <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} /> */}
               {<ResourceClusterLink resource="users" name={ResourcePlural('User', t)} onClick={this.close} />}
               {<ResourceClusterLink resource="usergroups" name={ResourcePlural('Usergroup', t)} onClick={this.close} />}
+              {<ResourceClusterLink resource="usersecuritypolicies" name={ResourcePlural('Usersecuritypolicy', t)} onClick={this.close} />}
               <ResourceNSLink resource="serviceaccounts" name={ResourcePlural('ServiceAccount', t)} onClick={this.close} />
             </NavSection>
 

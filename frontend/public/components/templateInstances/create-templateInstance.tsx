@@ -17,19 +17,6 @@ const pageExplanation = {
   [CreateType.form]: 'Create Template Instance Run using Form Editor',
 };
 
-const determineCreateType = (data) => {
-  return CreateType.form;
-};
-
-const Section = ({ label, children, id }) => <div className="row">
-  <div className="col-xs-2">
-    <div>{label}</div>
-  </div>
-  <div className="col-xs-2" id={id}>
-    {children}
-  </div>
-</div>;
-
 // Requestform returns SubForm which is a Higher Order Component for all the types of secret forms.
 const Requestform = (SubForm) => class SecretFormComponent extends React.Component<BaseEditSecretProps_, BaseEditSecretState_> {
   constructor(props) {
@@ -76,11 +63,11 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let templateInstance = { ...this.state.templateInstance };
     let template = this.state.selectedTemplate;
     if (template) {
-      coFetch('/api/kubernetes/apis/' + k8sModels.TemplateModel.apiGroup + '/' + k8sModels.TemplateModel.apiVersion + '/namespaces/' + namespace + '/templates/' + template)
+      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${namespace}/templates/${template}`)
         .then(res => res.json())
         .then((myJson) => {
           let paramList = myJson.parameters.map(function (parm) {
-            return { name: parm.name, defaultValue: parm.value, value: '' }
+            return { name: parm.name, defaultValue: parm.value, value: '', description: parm.description, required: parm.required, displayName: parm.displayName }
           });
           if (paramList.length) {
             templateInstance.spec.template.parameters = paramList;
@@ -121,7 +108,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let key = event.target.id
     let templateInstance = { ...this.state.templateInstance };
     templateInstance.spec.template.parameters.forEach(obj => {
-      if (obj.name === key) {
+      if (obj.displayName === key) {
         obj.value = event.target.value;
       }
     });
@@ -189,10 +176,22 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      let keyValue = parameter.defaultValue ? parameter.name + "( default:" + parameter.defaultValue + ")" : parameter.name;
-      return <Section label={keyValue} id={parameter.name}>
-        <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter} required />
-      </Section>
+      let defaultValue = parameter.defaultValue ? `default : ${parameter.defaultValue}` : ''
+      let isRequired = parameter.required ? true : false;
+      return <div>
+        <div className="row">
+          <div className="col-xs-2">
+            <div>{parameter.displayName}</div>
+          </div>
+          <div className="col-xs-3" id={parameter.name}>
+            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
+          </div>
+          <div className="col-xs-5" id={parameter.name}>
+            <p className="co-m-pane__explanation">{defaultValue}</p>
+          </div>
+        </div>
+        <p className="co-m-pane__explanation">{parameter.description}</p>
+      </div>
     });
 
     return <div className="co-m-pane__body">
