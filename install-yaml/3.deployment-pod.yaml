@@ -18,6 +18,7 @@ spec:
         hypercloud: ui
         app: console
     spec:
+      serviceAccountName: @@NAME_NS@@-admin
       containers:      
       - command:
         - /opt/bridge/bin/bridge

@@ -45,7 +45,7 @@ export class BaseGraph extends SafetyFirst {
     }
 
     if (queries[0].query === 'cpu' || queries[0].query === 'memory' || queries[0].query === 'storage' || queries[0].query === 'publicIp' || queries[0].query === 'gpu') {
-      const url = `/api/hypercloud/metering?namespace=${document.location.href.split('namespaces/')[1].split('/')[0]}&timeUnit=${timeUnit}`;
+      const url = `/api/hypercloud/metering?namespace=${document.location.href.split('namespaces/')[1].split('/')[0]}&timeUnit=${timeUnit}&limit=5`;
       this.layout.xaxis.tickformat = '%m/%d';
       coFetchJSON(url)
         .then(res => {
@@ -88,7 +88,7 @@ export class BaseGraph extends SafetyFirst {
     window.addEventListener('resize', this.resize);
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     console.log('componentDidupdate')
     this.fetch();
   }

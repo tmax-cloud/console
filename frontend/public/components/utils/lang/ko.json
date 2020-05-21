@@ -657,6 +657,6 @@
     "SERVICEACCOUNT": "서비스 어카운트",
     "CLUSTERSTATUS": "클러스터 상태",
     "GROUP": "사용자 그룹",
-    "CONDITION": "Pipeline Condition"
+    "CONDITION": "파이프라인 컨디션"
   }
 }
