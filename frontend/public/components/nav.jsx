@@ -405,6 +405,17 @@ class Nav extends React.Component {
               <ResourceNSLink resource="events" name={t('RESOURCE:EVENT')} onClick={this.close} />
             </NavSection>
 
+            {/* Service Catalog 전체 추가 */}
+            <NavSection text={t('RESOURCE:SERVICECATALOG')} icon="pficon pficon-catalog">
+              <ResourceClusterLink resource="clusterservicebrokers" name={ResourcePlural('ClusterServiceBroker', t)} onClick={this.close} />
+              <ResourceClusterLink resource="clusterserviceclasses" name={ResourcePlural('ClusterServiceClass', t)} onClick={this.close} />
+              <ResourceClusterLink resource="clusterserviceplans" name={ResourcePlural('ClusterServicePlan', t)} onClick={this.close} />
+              <ResourceNSLink resource="serviceinstances" name={ResourcePlural('ServiceInstance', t)} onClick={this.close} />
+              <ResourceNSLink resource="servicebindings" name={ResourcePlural('ServiceBinding', t)} onClick={this.close} />
+              <ResourceNSLink resource="templates" name={ResourcePlural('Template', t)} onClick={this.close} />
+              <ResourceNSLink resource="templateinstances" name={ResourcePlural('TemplateInstance', t)} onClick={this.close} />
+            </NavSection>
+
             <NavSection text={t('RESOURCE:FEDERATION')} icon="pficon pficon-catalog">
               <ResourceNSLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
               <ResourceNSLink resource="federationconfigs" name={t('RESOURCE:KUBEFEDCONFIG')} onClick={this.close} />
@@ -456,17 +467,6 @@ class Nav extends React.Component {
               <ResourceClusterLink resource="gcpmachines" name={t('RESOURCE:GCPMACHINE')} onClick={this.close} />
               <ResourceClusterLink resource="gcpmachinetemplates" name={t('RESOURCE:GCPMACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
-
-            {/* Service Catalog 전체 추가 */}
-            {/* <NavSection text={t('RESOURCE:SERVICECATALOG')} icon="pficon pficon-catalog">
-              <ResourceClusterLink resource="clusterservicebrokers" name={ResourcePlural('ClusterServiceBroker', t)} onClick={this.close} />
-              <ResourceClusterLink resource="clusterserviceclasses" name={ResourcePlural('ClusterServiceClass', t)} onClick={this.close} />
-              <ResourceClusterLink resource="clusterserviceplans" name={ResourcePlural('ClusterServicePlan', t)} onClick={this.close} />
-              <ResourceNSLink resource="serviceinstances" name={ResourcePlural('ServiceInstance', t)} onClick={this.close} />
-              <ResourceNSLink resource="servicebindings" name={ResourcePlural('ServiceBinding', t)} onClick={this.close} />
-              <ResourceNSLink resource="templates" name={ResourcePlural('Template', t)} onClick={this.close} />
-              <ResourceNSLink resource="templateinstances" name={ResourcePlural('TemplateInstance', t)} onClick={this.close} />
-            </NavSection> */}
 
             {/* <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
             <ResourceNSLink model={ClusterServiceVersionModel} resource={ClusterServiceVersionModel.plural} name="Cluster Service Versions" onClick={this.close} />
