@@ -659,6 +659,18 @@
     "SERVICEACCOUNT": "서비스 어카운트",
     "CLUSTERSTATUS": "클러스터 상태",
     "GROUP": "사용자 그룹",
-    "CONDITION": "Pipeline Condition"
+    "CONDITION": "파이프라인 컨디션",
+    "PIPELINECONDITION": "Pipeline Condition",
+    "SERVICEMESH": "Service Mesh",
+    "VIRTUALSERVICE": "Virtual Service",
+    "DESTINATIONRULE": "Destination Rule",
+    "ENVOYFILTER": "Envoy Filter",
+    "GATEWAY": "Gateway",
+    "SIDECAR": "Side Car",
+    "SERVICEENTRY": "ServiceEntry",
+    "REQUESTAUTHENTICATION": "Request Authentication",
+    "PEERAUTHENTICATION": "Peer Authentication",
+    "POLICY": "Policy",
+    "AUTHROIZATIONPOLICY": "AuthroizationPolicy"
   }
 }
