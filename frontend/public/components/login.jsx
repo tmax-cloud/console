@@ -76,22 +76,10 @@ class LoginComponent extends Component {
     // console.log('componentWillUnmount');
   };
 
-  onClick = (e) => {
-    // const { t } = useTranslation();
-    if (e.type === 'keypress' && e.key !== 'Enter') {
-      return;
-    }
-    this.setState({ loading: true });
-    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/login`;
-
-    //if (this.state.id !== undefined && this.state.pw !== undefined) {
-    const json = {
-      'id': this.state.id,
-      'password': sha512(this.state.pw)
-    };
-    coFetchJSON.post(AUTH_SERVER_URL, json)
+  _login(userInfo) {
+    const uri = `${document.location.origin}/api/hypercloud/login`;
+    coFetchJSON.post(uri, userInfo)
       .then(data => {
-        const curTime = new Date();
         this.setState({ loading: false });
         if (data.accessToken && data.refreshToken) {
           setAccessToken(data.accessToken);
@@ -105,12 +93,44 @@ class LoginComponent extends Component {
           this.props.history.go(0);
 
         } else {
-          //otp인증을 해야하는 경우 
-          data.otpEnable ? OtpModal_({ data: json, initialTime: curTime }) :
-          // 로그인 실패 
-            this.setState({ error: data.msg });
-          return;
         }
+      })
+  }
+  onClick = (e) => {
+    // const { t } = useTranslation();
+    if (e.type === 'keypress' && e.key !== 'Enter') {
+      return;
+    }
+    this.setState({ loading: true });
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/otp`;
+
+    //if (this.state.id !== undefined && this.state.pw !== undefined) {
+    const json = {
+      'id': this.state.id,
+      'password': sha512(this.state.pw)
+    };
+    coFetchJSON.post(AUTH_SERVER_URL, json)
+      .then(data => {
+        const curTime = new Date();
+        this.setState({ loading: false });
+        // if (data.accessToken && data.refreshToken) {
+        //   setAccessToken(data.accessToken);
+        //   setRefreshToken(data.refreshToken);
+        //   if (window.localStorage.getItem('forceLogout') === 'true') {
+        //     window.localStorage.setItem('forceLogout', false);
+        //   } else {
+        //     window.localStorage.setItem('forceLogout', true);
+        //   }
+        //   this.props.history.push('/');
+        //   this.props.history.go(0);
+
+        // } else {
+        //otp인증을 해야하는 경우 
+        data.otpEnable ? OtpModal_({ data: json, initialTime: curTime }) :
+          // 로그인서비스 콜
+          this._login(json);
+        return;
+        //}
 
         // const url_ = window.location.href.split('/login')[0]
         // window.location = `${url_}/status/all-namespaces`;

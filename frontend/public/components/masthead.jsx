@@ -314,6 +314,7 @@ export const Masthead = props => {
   const { t } = useTranslation();
   const setExpireTime = time => {
     // setTokenTime(time);
+    
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     const json = {
       atExpireTime: Number(time), // Number
@@ -323,6 +324,7 @@ export const Masthead = props => {
       .put(AUTH_SERVER_URL, json)
       .then(data => {
         // console.log(data);
+        tokenRefresh();
       })
       .catch(error => {
         console.log(error);

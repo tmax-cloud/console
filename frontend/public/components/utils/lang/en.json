@@ -86,6 +86,8 @@
     "YEARSFROMNOW": "years from now"
   },
   "STRING": {
+    "CREATE-DEPLOYMENT_0": "해당 값 정의 시, 도커 이미지의 기본 엔트리 포인트와 기본 cmd가 덮어 씌워집니다.",
+    "CREATE-DEPLOYMENT_1": "해당 값 정의 시, 도커 이미지의 기본 엔트리가 덮어 씌워집니다.",
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
     "SERVICE_DETAIL_0": "Accessible outside the cluster",
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
@@ -657,6 +659,17 @@
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
     "GROUP": "User Group",
-    "PIPELINECONDITION": "Pipeline Condition"
+    "PIPELINECONDITION": "Pipeline Condition",
+    "SERVICEMESH": "Service Mesh",
+    "VIRTUALSERVICE": "Virtual Service",
+    "DESTINATIONRULE": "Destination Rule",
+    "ENVOYFILTER": "Envoy Filter",
+    "GATEWAY": "Gateway",
+    "SIDECAR": "Sidecar",
+    "SERVICEENTRY": "ServiceEntry",
+    "REQUESTAUTHENTICATION": "Request Authentication",
+    "PEERAUTHENTICATION": "Peer Authentication",
+    "POLICY": "Policy",
+    "AUTHROIZATIONPOLICY": "AuthroizationPolicy"
   }
 }

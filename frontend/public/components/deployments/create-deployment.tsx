@@ -422,7 +422,7 @@ const Requestform = SubForm =>
                     {t('CONTENT:RUNCOMMAND')}
                   </label>
                   <div>
-                    <ValueEditor valueString="RunCommand" t={t} values={this.state.runCommands} updateParentData={this._updateRunCommands} />
+                    <ValueEditor desc={t('STRING:CREATE-DEPLOYMENT_0')} title="false" valueString="RunCommand" t={t} values={this.state.runCommands} updateParentData={this._updateRunCommands} />
                   </div>
                 </div>
               </React.Fragment>
@@ -436,7 +436,7 @@ const Requestform = SubForm =>
                     {t('CONTENT:RUNCOMMANDARGUMENTS')}
                   </label>
                   <div>
-                    <ValueEditor valueString="RunCommandArguments" t={t} values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
+                    <ValueEditor desc={t('STRING:CREATE-DEPLOYMENT_1')} title="false" valueString="RunCommandArguments" t={t} values={this.state.runCommandArguments} updateParentData={this._updateRunCommandArguments} />
                   </div>
                 </div>
               </React.Fragment>
