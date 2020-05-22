@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-
+import { ImagesPage } from './image';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ScrollToTopOnMount, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
@@ -121,21 +121,16 @@ RegistryPage.displayName = 'RegistryPage';
 //   ];
 //   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
 // };
-
+const { details, editYaml, images } = navFactory;
 export const RegistryDetailsPage = props => {
   const { t } = useTranslation();
+  const pages = [details(Details, t('CONTENT:OVERVIEW')), editYaml(), images(t('CONTENT:IMAGES'), ({ obj }) => <ImagesPage showTitle={false} selector={{ matchLabels: { registry: `${obj.metadata.name}` } }} />)];
   return (
     <DetailsPage
       {...props}
-      // breadcrumbsFor={obj =>
-      //   breadcrumbsForOwnerRefs(obj).concat({
-      //     name: 'Registry Details',
-      //     path: props.match.url,
-      //   })
-      // }
       kind="Registry"
       menuActions={menuActions}
-      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.images(t('CONTENT:IMAGE'))]}
+      pages={pages}
     />
   );
 };
