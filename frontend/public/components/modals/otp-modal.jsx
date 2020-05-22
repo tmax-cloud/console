@@ -23,32 +23,32 @@ class OtpModal extends Component {
     }
     componentDidMount() {
         const initialTime = this.props.initialTime;
-        const logoutTime = initialTime.setMinutes(initialTime.getMinutes() +30);
-        this.setState({logoutTime:logoutTime});
+        const logoutTime = initialTime.setMinutes(initialTime.getMinutes() + 30);
+        this.setState({ logoutTime: logoutTime });
         timerID = window.setInterval(() => this.tick(logoutTime), 1000);
-      }
+    }
 
-      componentWillUnmount() {
+    componentWillUnmount() {
         // 타이머 등록 해제
         window.clearInterval(timerID);
-      }
-    
-      numFormat(num) {
+    }
+
+    numFormat(num) {
         var val = Number(num).toString();
         if (num < 10 && val.length == 1) {
-          val = '0' + val;
+            val = '0' + val;
         }
         return val;
-      }
-    
-      tick(logoutTime) {
+    }
+
+    tick(logoutTime) {
         //남은시간 계산
         const curTime = new Date();
         const timeRemaining = (logoutTime - curTime.getTime()) / 1000;
         this.setState({ expMin: this.numFormat(Math.floor(timeRemaining / 60)) });
         this.setState({ expSec: this.numFormat(Math.floor(timeRemaining % 60)) });
-      }
-    
+    }
+
     _submit(event) {
         event.preventDefault();
         // 인증번호, ID, PW로 서비스 호출 
