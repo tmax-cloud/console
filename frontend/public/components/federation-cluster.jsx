@@ -13,11 +13,16 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
 
-let getHyperLink = link => {
-  // return <Link to={link}> {link}</Link>;
-  link = 'https://' + link;
-  return <a href={link}>{link}</a>;
-};
+// let getHyperLink = link => {
+//   // return <Link to={link}> {link}</Link>;
+//   link = 'https://' + link;
+//   return <a href={link}>{link}</a>;
+// };
+
+// const goPortalUrl = (e) => {
+//   console.log('target: ', e);
+//   // window.open('htttps://' + e.target);
+// };
 
 const KubeFedClusterHeader = props => {
   const { t } = useTranslation();
@@ -29,7 +34,7 @@ const KubeFedClusterHeader = props => {
       <ColHead {...props} className="col-lg-3 col-md-3 col-sm-3 col-xs-3" sortField="metadata.namespace">
         {t('CONTENT:NAMESPACE')}
       </ColHead>
-      <ColHead {...props} className="col-lg-3 col-md-3 col-sm-3 col-xs-3" sortField="metadata.namespace">
+      <ColHead {...props} className="col-lg-3 col-md-3 col-sm-3 col-xs-3" sortField="metadata.annotations.portalurl">
         {t('CONTENT:PORTALURL')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
@@ -49,7 +54,11 @@ const KubeFedClusterRow = () =>
           <ResourceLink kind="KubeFedCluster" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{getHyperLink(obj.metadata.annotations.portalurl)}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">
+          <span onClick={()=> window.open('https://' + obj.metadata.annotations.portalurl, '_blank')} value={obj.metadata.annotations.portalurl} style={{cursor:'pointer', color:'blue', textDecoration:'underline'}}>
+            {'https://' + String(obj.metadata.annotations.portalurl)}
+          </span>
+        </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
