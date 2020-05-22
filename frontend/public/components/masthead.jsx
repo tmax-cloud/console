@@ -81,7 +81,7 @@ const UserMenuWrapper = connectToFlags(
       .then(data => {
         props.setLoading();
         resetLoginState();
-        localStorage.removeItem('bridge/last-namespace-name');
+        // localStorage.removeItem('bridge/last-namespace-name');
 
         // const url_ = window.location.href.split('/')[2]
         window.location.href = `${document.location.origin}`;
@@ -314,7 +314,7 @@ export const Masthead = props => {
   const { t } = useTranslation();
   const setExpireTime = time => {
     // setTokenTime(time);
-    
+
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     const json = {
       atExpireTime: Number(time), // Number
@@ -335,7 +335,7 @@ export const Masthead = props => {
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     const json = {
       accessToken: getAccessToken(),
-      refreshToken: getRefreshToken()
+      refreshToken: getRefreshToken(),
       // atExpireTime: Number(tokenTime), // Number
     };
 
