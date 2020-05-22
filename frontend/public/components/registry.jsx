@@ -21,11 +21,8 @@ const RegistryHeader = props => {
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
         {t('CONTENT:NAMESPACE')}
       </ColHead>
-      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.image">
+      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="spec.image">
         {t('CONTENT:IMAGE')}
-      </ColHead>
-      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.persistentVolumeClaim.storageSize">
-        {t('CONTENT:CAPACITY')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="status.phase">
         {t('CONTENT:STATUS')}
@@ -47,8 +44,7 @@ const RegistryRow = () =>
           <ResourceLink kind="Registry" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.image}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.persistentVolumeClaim.storageSize}</div>
+        <div className="col-xs-4 col-sm-4 hidden-xs">{obj.spec.image}</div>
         <div className="col-xs-2 col-sm-2 hidden-xs">{obj.status && obj.status.phase}</div>
         <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
@@ -125,14 +121,7 @@ const { details, editYaml, images } = navFactory;
 export const RegistryDetailsPage = props => {
   const { t } = useTranslation();
   const pages = [details(Details, t('CONTENT:OVERVIEW')), editYaml(), images(t('CONTENT:IMAGES'), ({ obj }) => <ImagesPage showTitle={false} selector={{ matchLabels: { registry: `${obj.metadata.name}` } }} />)];
-  return (
-    <DetailsPage
-      {...props}
-      kind="Registry"
-      menuActions={menuActions}
-      pages={pages}
-    />
-  );
+  return <DetailsPage {...props} kind="Registry" menuActions={menuActions} pages={pages} />;
 };
 
 RegistryDetailsPage.displayName = 'RegistryDetailsPage';
