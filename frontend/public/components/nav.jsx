@@ -427,12 +427,11 @@ class Nav extends React.Component {
               <ResourceNSLink resource="destinationrules" name={ResourcePlural('DestinationRule', t)} onClick={this.close} />
               <ResourceNSLink resource="envoyfilters" name={ResourcePlural('EnvoyFilter', t)} onClick={this.close} />
               <ResourceNSLink resource="gateways" name={ResourcePlural('Gateway', t)} onClick={this.close} />
-              <ResourceNSLink resource="sidecars" name={ResourcePlural('SideCar', t)} onClick={this.close} />
+              <ResourceNSLink resource="sidecars" name={ResourcePlural('Sidecar', t)} onClick={this.close} />
               <ResourceNSLink resource="serviceentries" name={ResourcePlural('ServiceEntry', t)} onClick={this.close} />
               <ResourceNSLink resource="requestauthentications" name={ResourcePlural('RequestAuthentication', t)} onClick={this.close} />
               <ResourceNSLink resource="peerauthentications" name={ResourcePlural('PeerAuthentication', t)} onClick={this.close} />
-              <ResourceNSLink resource="policies" name={ResourcePlural('Policy', t)} onClick={this.close} />
-              <ResourceNSLink resource="authroizationpolicies" name={ResourcePlural('AuthroizationPolicy', t)} onClick={this.close} />
+              <ResourceNSLink resource="authorizationpolicies" name={ResourcePlural('AuthorizationPolicy', t)} onClick={this.close} />
             </NavSection> */}
 
             {/* WORKLOAD  */}

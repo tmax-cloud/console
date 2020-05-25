@@ -670,6 +670,6 @@
     "REQUESTAUTHENTICATION": "Request Authentication",
     "PEERAUTHENTICATION": "Peer Authentication",
     "POLICY": "Policy",
-    "AUTHROIZATIONPOLICY": "AuthroizationPolicy"
+    "AUTHROIZATIONPOLICY": "AuthorizationPolicy"
   }
 }
