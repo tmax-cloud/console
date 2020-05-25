@@ -1546,4 +1546,189 @@ spec:
        image: alpine
        script: 'test ! -f $(resources.sample-resource.path)/$(params.path)'    
 `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualServiceModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: VirtualService
+    metadata:
+      name: example-virtualservice
+    spec:
+      hosts:
+      - example.com
+      http:
+      - match:
+        - uri:
+            prefix: /reviews
+        route:
+        - destination:
+            host: reviews
+            subset: v2
+      - route:
+        - destination:
+            host: reviews
+            subset: v3
+      
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DestinationRuleModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: DestinationRule
+    metadata:
+      name: my-destination-rule
+    spec:
+      host: my-svc
+      trafficPolicy:
+        loadBalancer:
+          simple: RANDOM
+      subsets:
+      - name: v1
+        labels:
+          version: v1
+      - name: v2
+        labels:
+          version: v2
+        trafficPolicy:
+          loadBalancer:
+            simple: ROUND_ROBIN
+      - name: v3
+        labels:
+          version: v3      
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.EnvoyFilterModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: EnvoyFilter
+    metadata:
+      name: custom-protocol
+    spec:
+      workloadSelector:
+        labels:
+          app: hello
+      configPatches:
+      - applyTo: NETWORK_FILTER
+        match:
+          context: SIDECAR_OUTBOUND
+          listener:
+            portNumber: 9307
+            filterChain:
+              filter:
+                name: "envoy.tcp_proxy"
+        patch:
+          operation: INSERT_BEFORE
+          value:
+            name: "envoy.config.filter.network.custom_protocol"    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.GatewayModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: Gateway
+    metadata:
+      name: ext-host-gwy
+    spec:
+      selector:
+        app: my-gateway-controller
+      servers:
+      - port:
+          number: 443
+          name: https
+          protocol: HTTPS
+        hosts:
+        - ext-host.example.com
+        tls:
+          mode: SIMPLE
+          serverCertificate: /tmp/tls.crt
+          privateKey: /tmp/tls.key    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SidecarModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: Sidecar 
+    metadata: 
+      name: my-sidecar 
+    spec: 
+      workloadSelector: 
+        labels: 
+          app: hello
+      egress: 
+      - hosts: 
+        - "./*" 
+        - "istio-system/*"   
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceEntryModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3 
+    kind: ServiceEntry 
+    metadata: 
+      name: svc-entry 
+    spec: 
+      hosts: 
+      - ext-svc.example.com 
+      ports: 
+      - number: 443 
+        name: https 
+        protocol: HTTPS 
+      location: MESH_EXTERNAL 
+      resolution: DNS  
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RequestAuthenticationModel), 'default'],
+    `
+    apiVersion: security.istio.io/v1beta1
+    kind: RequestAuthentication
+    metadata:
+      name: jwt-example
+    spec:
+      selector:
+        matchLabels:
+          app: hello
+      jwtRules:
+      - issuer: "testing@secure.istio.io"
+        jwksUri: "https://raw.githubusercontent.com/istio/istio/release-1.6/security/tools/jwt/samples/jwks.json"   
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PeerAuthenticationModel), 'default'],
+    `
+    apiVersion: security.istio.io/v1beta1
+    kind: PeerAuthentication
+    metadata:
+      name: example-peer-policy
+    spec:
+      selector:
+        matchLabels:
+          app: hello
+      mtls:
+        mode: STRICT  
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.AuthorizationPolicyModel), 'default'],
+    `
+    apiVersion: security.istio.io/v1beta1
+    kind: AuthorizationPolicy
+    metadata:
+      name: allow-read
+    spec:
+      selector:
+        matchLabels:
+          app: hello
+      action: ALLOW
+      rules:
+      - to:
+        - operation:
+             methods: ["GET", "HEAD"]       
+`,
   );
