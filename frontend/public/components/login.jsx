@@ -8,7 +8,7 @@ import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
 import { coFetchJSON, coFetchUtils } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
-import { setAccessToken, setRefreshToken, resetLoginState, getAccessToken } from './utils/auth';
+import { setAccessToken, setRefreshToken, setId, resetLoginState, getAccessToken } from './utils/auth';
 import { OtpModal_ } from './modals/otp-modal';
 import { useTranslation, withTranslation } from 'react-i18next';
 class LoginComponent extends Component {
@@ -81,6 +81,7 @@ class LoginComponent extends Component {
       if (data.accessToken && data.refreshToken) {
         setAccessToken(data.accessToken);
         setRefreshToken(data.refreshToken);
+        setId(JSON.parse(atob(data.accessToken.split('.')[1])).id);
         if (window.localStorage.getItem('forceLogout') === 'true') {
           window.localStorage.setItem('forceLogout', false);
         } else {
