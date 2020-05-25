@@ -76,6 +76,7 @@ class LoginComponent extends Component {
   _login(userInfo) {
     const uri = `${document.location.origin}/api/hypercloud/login`;
     coFetchJSON.post(uri, userInfo).then(data => {
+      localStorage.removeItem('bridge/last-namespace-name');
       this.setState({ loading: false });
       if (data.accessToken && data.refreshToken) {
         setAccessToken(data.accessToken);
