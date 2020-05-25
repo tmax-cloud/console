@@ -45,8 +45,14 @@ class OtpModal extends Component {
         //남은시간 계산
         const curTime = new Date();
         const timeRemaining = (logoutTime - curTime.getTime()) / 1000;
-        this.setState({ expMin: this.numFormat(Math.floor(timeRemaining / 60)) });
-        this.setState({ expSec: this.numFormat(Math.floor(timeRemaining % 60)) });
+        //0초이하로 카운트 되지 않도록 수정 
+        let expMin = this.numFormat(Math.floor(timeRemaining / 60));
+        let expSec = this.numFormat(Math.floor(timeRemaining % 60));
+        if (expMin >= 0 && expSec >= 0) {
+            this.setState({ expMin, expSec });
+        } else {
+            document.getElementById('error-timeout').style.visibility = 'visible';
+        }
     }
 
     _submit(event) {
@@ -97,6 +103,11 @@ class OtpModal extends Component {
                         <div>
                             <input type="text" onChange={this._updateState} value={this.state.authNumber} id="input-authNumber" required />
                             <span>{expMin}</span>:<span>{expSec}</span>
+                        </div>
+                        <div>
+                            <p id="error-timeout" style={{ color: 'red', visibility: 'hidden' }}>
+                                인증번호 만료시간이 초과되었습니다.
+                            </p>
                         </div>
                         <div>
                             <p id="error-request" style={{ color: 'red', visibility: 'hidden' }}>

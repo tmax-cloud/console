@@ -128,10 +128,10 @@ class App extends React.PureComponent {
       return;
     }
 
-    window.addEventListener('beforeunload', ev => {
-      ev.preventDefault();
+    if (window.location.search === '?first') {
+      window.location.href = window.location.href.split('?')[0];
       localStorage.removeItem('bridge/last-namespace-name');
-    }); // componentWillUnmount는 브라우저 탭을 닫았을 때 안불림. 이걸로 대체
+    }
 
     this.state = {
       isAdmin: true,
@@ -171,17 +171,6 @@ class App extends React.PureComponent {
     });
   }
 
-  componentWillUnmount() {
-    localStorage.removeItem('bridge/last-namespace-name');
-  }
-
-  // componentDidMount() {
-  //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
-  //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
-  //     this.changeRole_();
-  //     }
-  //   }
-  // }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
