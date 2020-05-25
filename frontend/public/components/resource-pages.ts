@@ -80,7 +80,7 @@ import {
   DestinationRuleModel,
   EnvoyFilterModel,
   GatewayModel,
-  SideCarModel,
+  SidecarModel,
   ServiceEntryModel,
   RequestAuthenticationModel,
   PeerAuthenticationModel,
@@ -159,7 +159,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(DestinationRuleModel), () => import('./destination-rule' /* webpackChunkName: "task" */).then(m => m.DestinationRuleDetailsPage))
   .set(referenceForModel(EnvoyFilterModel), () => import('./envoy-filter' /* webpackChunkName: "task" */).then(m => m.EnvoyFilterDetailsPage))
   .set(referenceForModel(GatewayModel), () => import('./gateway' /* webpackChunkName: "task" */).then(m => m.GatewayDetailsPage))
-  .set(referenceForModel(SideCarModel), () => import('./sidecar' /* webpackChunkName: "task" */).then(m => m.SideCarDetailsPage))
+  .set(referenceForModel(SidecarModel), () => import('./sidecar' /* webpackChunkName: "task" */).then(m => m.SideCarDetailsPage))
   .set(referenceForModel(ServiceEntryModel), () => import('./service-entry' /* webpackChunkName: "task" */).then(m => m.ServiceEntryDetailsPage))
   .set(referenceForModel(RequestAuthenticationModel), () => import('./request-authentication' /* webpackChunkName: "task" */).then(m => m.RequestAuthenticationDetailsPage))
   .set(referenceForModel(PeerAuthenticationModel), () => import('./peer-authentication' /* webpackChunkName: "task" */).then(m => m.PeerAuthenticationDetailsPage))
@@ -170,7 +170,7 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(DestinationRuleModel), () => import('./destination-rule' /* webpackChunkName: "task" */).then(m => m.DestinationRulePage))
   .set(referenceForModel(EnvoyFilterModel), () => import('./envoy-filter' /* webpackChunkName: "task" */).then(m => m.EnvoyFilterPage))
   .set(referenceForModel(GatewayModel), () => import('./gateway' /* webpackChunkName: "task" */).then(m => m.GatewayPage))
-  .set(referenceForModel(SideCarModel), () => import('./sidecar' /* webpackChunkName: "task" */).then(m => m.SideCarPage))
+  .set(referenceForModel(SidecarModel), () => import('./sidecar' /* webpackChunkName: "task" */).then(m => m.SideCarPage))
   .set(referenceForModel(ServiceEntryModel), () => import('./service-entry' /* webpackChunkName: "task" */).then(m => m.ServiceEntryPage))
   .set(referenceForModel(RequestAuthenticationModel), () => import('./request-authentication' /* webpackChunkName: "task" */).then(m => m.RequestAuthenticationPage))
   .set(referenceForModel(PeerAuthenticationModel), () => import('./peer-authentication' /* webpackChunkName: "task" */).then(m => m.PeerAuthenticationPage))

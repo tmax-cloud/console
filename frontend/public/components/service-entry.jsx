@@ -19,12 +19,6 @@ const ServiceEntryHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
-                {t('CONTENT:HOST')}
-            </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
-                {t('CONTENT:GATEWAY')}
-            </ColHead>
             <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CREATED')}
             </ColHead>
@@ -41,8 +35,6 @@ const ServiceEntryRow = () =>
                     <ResourceCog actions={menuActions} kind="ServiceEntry" resource={obj} />
                     <ResourceLink kind="ServiceEntry" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
                 <div className="col-xs-1 col-sm-1 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>

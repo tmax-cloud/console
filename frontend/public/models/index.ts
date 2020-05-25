@@ -1127,7 +1127,7 @@ export const GatewayModel: K8sKind = {
   kind: 'Gateway',
   id: 'gateway',
 };
-export const SideCarModel: K8sKind = {
+export const SidecarModel: K8sKind = {
   label: 'Side Car',
   labelPlural: 'Side Cars',
   apiVersion: 'v1alpha3',

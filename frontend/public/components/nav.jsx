@@ -422,7 +422,7 @@ class Nav extends React.Component {
 
 
             {/* Service Mesh 전체 추가 */}
-            {/* <NavSection text={t('RESOURCE:SERVICEMESH')} icon="pficon pficon-catalog">
+            <NavSection text={t('RESOURCE:SERVICEMESH')} icon="pficon pficon-catalog">
               <ResourceNSLink resource="virtualservices" name={ResourcePlural('VirtualService', t)} onClick={this.close} />
               <ResourceNSLink resource="destinationrules" name={ResourcePlural('DestinationRule', t)} onClick={this.close} />
               <ResourceNSLink resource="envoyfilters" name={ResourcePlural('EnvoyFilter', t)} onClick={this.close} />
@@ -432,7 +432,7 @@ class Nav extends React.Component {
               <ResourceNSLink resource="requestauthentications" name={ResourcePlural('RequestAuthentication', t)} onClick={this.close} />
               <ResourceNSLink resource="peerauthentications" name={ResourcePlural('PeerAuthentication', t)} onClick={this.close} />
               <ResourceNSLink resource="authorizationpolicies" name={ResourcePlural('AuthorizationPolicy', t)} onClick={this.close} />
-            </NavSection> */}
+            </NavSection>
 
             {/* WORKLOAD  */}
             <NavSection text={t('RESOURCE:WORKLOAD')} icon="fa fa-briefcase">

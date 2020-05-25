@@ -19,10 +19,10 @@ const DestinationRuleHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.host">
                 {t('CONTENT:HOST')}
             </ColHead>
-            <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CREATED')}
             </ColHead>
         </ListHeader>
@@ -39,8 +39,8 @@ const DestinationRuleRow = () =>
                     <ResourceLink kind="DestinationRule" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-1 col-sm-1 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.host}</div>
+                <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );
     };
