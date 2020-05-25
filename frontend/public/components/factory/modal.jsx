@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 export const createModalLauncher = Component => (props = {}) => {
   const modalContainer = document.getElementById('modal-container');
-
   const result = new Promise(resolve => {
     const closeModal = e => {
       // Disable closing the modal with the escape key for "blocking" modals
@@ -30,7 +29,7 @@ export const createModalLauncher = Component => (props = {}) => {
     ReactDOM.render(
       <Provider store={store}>
         <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-          <Modal isOpen={true} contentLabel="Modal" onRequestClose={closeModal} className="modal-dialog modal-content" overlayClassName="co-overlay" shouldCloseOnOverlayClick={!props.blocking}>
+          <Modal isOpen={true} contentLabel="Modal" onRequestClose={closeModal} className="modal-dialog modal-content" overlayClassName="co-overlay" shouldCloseOnOverlayClick={false /*!props.blocking*/}>
             <Component {...props} cancel={closeModal} close={closeModal} />
           </Modal>
         </Router>

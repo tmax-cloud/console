@@ -39,7 +39,7 @@ const validateStatus = (response, url) => {
   if (url.indexOf('logout') > 0) {
     if (response.status === 200) {
       return response;
-    } 
+    }
   }
   if (response.ok) {
     return response;
@@ -107,7 +107,7 @@ const getCSRFToken = () =>
     .pop();
 
 export const coFetch = (url, options = {}, timeout = 20000) => {
-  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+  if (url.indexOf('otp') < 0 && url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
     if (!getAccessToken() || !getRefreshToken()) {
       return;
     }
@@ -125,7 +125,7 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
     delete allOptions.headers["X-CSRFToken"];
   }
 
-  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+  if (url.indexOf('otp') < 0 && url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
     if (!window.SERVER_FLAGS.releaseModeFlag) {
       if (url.indexOf('nameSpace') < 0) {
         allOptions.headers.Authorization =
@@ -161,7 +161,7 @@ export const coFetchUtils = {
 };
 
 export const coFetchJSON = (url, method = "GET", options = {}) => {
-  if (url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
+  if (url.indexOf('otp') < 0 && url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
     if (!getAccessToken() || !getRefreshToken()) {
       return;
     }
@@ -213,7 +213,7 @@ export const coFetchJSON = (url, method = "GET", options = {}) => {
 const coFetchSendJSON = (url, method, json = null, options = {}) => {
   const allOptions;
 
-  if (url.indexOf('login') > 0 || url.indexOf('logout') > 0 || url.indexOf('tokenrefresh') > 0) {
+  if (url.indexOf('otp') > 0 || url.indexOf('login') > 0 || url.indexOf('logout') > 0 || url.indexOf('tokenrefresh') > 0) {
     allOptions = {
       headers: {
         Accept: 'application/json'
