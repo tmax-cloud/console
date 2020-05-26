@@ -127,7 +127,7 @@ class LoginComponent extends Component {
         data.otpEnable
           ? OtpModal_({ data: json, initialTime: curTime })
           : // 로그인서비스 콜
-            this._login(json);
+          this._login(json);
         return;
         //}
 
@@ -186,7 +186,7 @@ class LoginComponent extends Component {
                     type="text"
                     id="loginId"
                     autoFocus="autofocus"
-                    placeholder="Email"
+                    placeholder="ID"
                     value={this.state.id}
                     onKeyPress={this.onClick}
                     onChange={e => {
