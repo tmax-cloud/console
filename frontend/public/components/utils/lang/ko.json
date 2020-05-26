@@ -10,6 +10,7 @@
     "EVENT_plural": "{{count}} 이벤트 표시"
   },
   "ADDITIONAL": {
+    "NAME": "{{something}} 이름",
     "CREATEBUTTON": "{{something}} 생성",
     "DELETE": "{{something}} 삭제",
     "VIEW": "{{something}} 보기",
