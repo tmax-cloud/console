@@ -591,7 +591,13 @@
     "ENTERNAME": "이름 입력",
     "TRUE": "참",
     "FALSE": "거짓",
-    "TRAFFIC": "Traffic"
+    "TRAFFIC": "Traffic",
+    "SERVERREQUESTVOLUME": "Server Request Volume",
+    "SERVERREQUESTDURATION": "Server Request Duration",
+    "REQUESTSIZE": "Request Size",
+    "RESPONSESIZE": "Response Size",
+    "TCPRECEIVED": "TCP Received",
+    "TCPSENT": "TCP Sent"
   },
   "RESOURCE": {
     "HOME": "홈",

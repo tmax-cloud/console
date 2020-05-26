@@ -1,42 +1,51 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import * as PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Gauge, prometheusBasePath, requirePrometheus } from './graphs';
-import { PromiseComponent, LoadingBox, AsyncComponent, ResourceIcon, SectionHeading } from './utils';
+import { Line, requirePrometheus } from './graphs';
+import { SectionHeading } from './utils';
 
-export const TrafficPage = () => {
+export const TrafficPage = ({ namespace: namespace, name: name }) => {
     const { t } = useTranslation();
-    const [timeUnit, setTimeUnit] = React.useState('hour', '');
+    const [reporter, setReporter] = React.useState('destination', '');
     return <div className="co-m-pane__body">
         <SectionHeading text={t('CONTENT:TRAFFIC')} />
-        <div style={{ float: 'left' }}>
-            <p text='Reported from' />
-            <select name="reporter" onChange={e => setTimeUnit(e.target.value)}>
+        <div>
+            <label style={{ marginRight: '10px' }}>Reported from</label>
+            <select name="reporter" onChange={e => setReporter(e.target.value)}>
                 <option value="destination">Destination</option>
                 <option value="source">Source</option>
             </select>
         </div>
-        <MeteringPage showTitle={false} timeUnit={timeUnit} />
+        <TrafficGraphs namespace={namespace} name={name} showTitle={false} reporter={reporter} />
     </div>
 }
-const MeteringPage = requirePrometheus(props => {
-    let timeUnit = props.timeUnit;
+const TrafficGraphs = requirePrometheus(({ reporter, namespace, name }) => {
+    const serviceName = `${name}.${namespace}.svc.cluster.local`;
     const { t } = useTranslation();
     return (
-        <div className="co-m-pane__body">
-            <div className="container-fluid group__body group__graphs">
-                <div className="row">
-                    <div className="col-md-3 col-sm-6">
-                        <Gauge title={t('CONTENT:APISERVERSUP')} query={'(sum(up{job="apiserver"} == 1) / count(up{job="apiserver"})) * 100'} invert={true} thresholds={{ warn: 15, error: 50 }} />
-                    </div>
-
-                    <div className="col-md-3 col-sm-6">
-                        <Gauge title={t('CONTENT:APIREQUESTSUCCESSRATE')} query={'sum(rate(apiserver_request_count{code=~"2.."}[5m])) / sum(rate(apiserver_request_count[5m])) * 100'} invert={true} thresholds={{ warn: 15, error: 30 }} />
-                    </div>
+        <React.Fragment>
+            <div className="row">
+                <div className="col-md-4">
+                    <Line title={t('CONTENT:SERVERREQUESTVOLUME')} query={serviceName && `round(sum(irate(istio_requests_total{reporter="${reporter}", destination_service=~"${serviceName}"}[5m])), 0.001)`} units="binaryBytes" />
+                </div>
+                <div className="col-md-4">
+                    <Line title={t('CONTENT:SERVERREQUESTDURATION')} query={serviceName && `histogram_quantile(0.50, sum(irate(istio_request_duration_milliseconds_bucket{reporter="${reporter}", destination_service=~"${serviceName}"}[1m])) by (le))`} units="binaryBytes" />
+                </div>
+                <div className="col-md-4">
+                    <Line title={t('CONTENT:REQUESTSIZE')} query={serviceName && `histogram_quantile(0.50, sum(irate(istio_request_bytes_bucket{reporter="${reporter}", destination_service=~"${serviceName}"}[1m])) by (destination_workload, destination_workload_namespace, le))`} units="binaryBytes" />
+                </div>
+                <div className="col-md-4">
+                    <Line title={t('CONTENT:RESPONSESIZE')} query={serviceName && `histogram_quantile(0.50, sum(irate(istio_response_bytes_bucket{reporter="${reporter}", destination_service=~"${serviceName}"}[1m])) by (destination_workload, destination_workload_namespace, le))`} units="binaryBytes" />
+                </div>
+                <div className="col-md-4">
+                    <Line title={t('CONTENT:TCPRECEIVED')} query={serviceName && `round(sum(irate(istio_tcp_received_bytes_total{reporter="${reporter}", destination_service=~"${serviceName}"}[1m])) by (destination_workload, destination_workload_namespace), 0.001)`} units="binaryBytes" />
+                </div>
+                <div className="col-md-4">
+                    <Line title={t('CONTENT:TCPSENT')} query={serviceName && `round(sum(irate(istio_tcp_sent_bytes_total{reporter="${reporter}", destination_service=~"${serviceName}"}[1m])) by (destination_workload, destination_workload_namespace), 0.001)`} units="binaryBytes" />
                 </div>
             </div>
-        </div>
+
+            <br />
+        </React.Fragment>
     );
 });
