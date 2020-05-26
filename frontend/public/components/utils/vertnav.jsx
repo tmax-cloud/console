@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
 import { ImagesPage } from '../image';
+import { TrafficPage } from '../traffic';
 import { AsyncComponent } from '../utils/async';
 
 const editYamlComponent = props => {
@@ -45,6 +46,14 @@ class ImageComponent extends React.PureComponent {
     // Otherwise it might seem like you click "Create Pod" to add replicas instead
     // of scaling the owner.
     return <ImagesPage showTitle={false} namespace={namespace} canCreate={false} />;
+  }
+}
+class TrafficComponent extends React.PureComponent {
+  render() {
+    const {
+      metadata: { namespace },
+    } = this.props.obj;
+    return <TrafficPage showTitle={false} namespace={namespace} canCreate={false} />;
   }
 }
 
@@ -92,12 +101,17 @@ export const navFactory = {
   envEditor: (component, name) => ({
     href: 'environment',
     name: name || 'Environment',
-    component: component,
+    component,
   }),
   metering: (name, component) => ({
     href: 'metering',
     name: name || 'Metering',
-    component: component,
+    component,
+  }),
+  traffic: (name, component) => ({
+    href: 'traffic',
+    name: name || 'traffic',
+    component: component || TrafficComponent,
   }),
 };
 

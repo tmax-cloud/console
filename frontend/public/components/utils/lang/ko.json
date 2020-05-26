@@ -589,7 +589,8 @@
     "QUANTITY": "수량",
     "ENTERNAME": "이름 입력",
     "TRUE": "참",
-    "FALSE": "거짓"
+    "FALSE": "거짓",
+    "TRAFFIC": "Traffic"
   },
   "RESOURCE": {
     "HOME": "홈",
