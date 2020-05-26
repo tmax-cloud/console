@@ -383,6 +383,7 @@
     "MINPODS": "최소 파드",
     "MAXPODS": "최대 파드",
     "IMAGE": "Image",
+    "IMAGE2": "이미지",
     "SOURCE": "Source",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
