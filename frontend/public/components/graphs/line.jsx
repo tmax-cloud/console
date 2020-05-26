@@ -143,7 +143,7 @@ export class Line_ extends BaseGraph {
 
       restyle(this.node, {
         x: [lineValues.map(v => new Date(v[0] * 1000))],
-        y: [lineValues.map(v => v[1])],
+        y: [lineValues.map(v => v[1] === "NaN" ? null : v[1])],
         // Use a lighter fill color on first line in graphs
         fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
         name,
