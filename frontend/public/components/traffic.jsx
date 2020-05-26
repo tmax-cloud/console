@@ -6,22 +6,21 @@ import { SectionHeading } from './utils';
 
 export const TrafficPage = ({ obj: service }) => {
     const { t } = useTranslation();
-    const [timeUnit, setTimeUnit] = React.useState('hour', '');
+    const [reporter, setReporter] = React.useState('destination', '');
     return <div className="co-m-pane__body">
         <SectionHeading text={t('CONTENT:TRAFFIC')} />
         <div>
             <label style={{ marginRight: '10px' }}>Reported from</label>
-            <select name="reporter" onChange={e => setTimeUnit(e.target.value)}>
+            <select name="reporter" onChange={e => setReporter(e.target.value)}>
                 <option value="destination">Destination</option>
                 <option value="source">Source</option>
             </select>
         </div>
-        <TrafficGraphs service={service} showTitle={false} timeUnit={timeUnit} />
+        <TrafficGraphs service={service} showTitle={false} reporter={reporter} />
     </div>
 }
-const TrafficGraphs = requirePrometheus(({ service }) => {
+const TrafficGraphs = requirePrometheus(({ reporter }) => {
     const serviceName = 'productpage.bookinfo.svc.cluster.local';
-    const reporter = "destination";
     const { t } = useTranslation();
     return (
         <React.Fragment>
