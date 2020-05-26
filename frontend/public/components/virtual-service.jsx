@@ -22,7 +22,7 @@ const VirtualServiceHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
                 {t('CONTENT:HOST')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.gateways">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
                 {t('CONTENT:GATEWAY')}
             </ColHead>
             <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
@@ -43,7 +43,7 @@ const VirtualServiceRow = () =>
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
                 <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );
