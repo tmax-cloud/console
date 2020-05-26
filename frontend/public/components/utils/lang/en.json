@@ -589,7 +589,8 @@
     "QUANTITY": "Quantity",
     "ENTERNAME": "Enter Name",
     "TRUE": "True",
-    "False": "False"
+    "False": "False",
+    "TRAFFIC": "Traffic"
   },
   "RESOURCE": {
     "HOME": "Home",
