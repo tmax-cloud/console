@@ -10,6 +10,7 @@
     "EVENT_plural": "Showing {{count}} events"
   },
   "ADDITIONAL": {
+    "NAME": "{{something}}",
     "CREATEBUTTON": "Create {{something}}",
     "DELETE": "Delete {{something}}",
     "VIEW": "View {{something}}",
