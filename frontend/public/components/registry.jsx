@@ -22,7 +22,7 @@ const RegistryHeader = props => {
         {t('CONTENT:NAMESPACE')}
       </ColHead>
       <ColHead {...props} className="col-sm-4 hidden-xs" sortField="spec.image">
-        {t('CONTENT:IMAGE')}
+        {t('CONTENT:IMAGE2')}
       </ColHead>
       <ColHead {...props} className="col-xs-2 col-sm-2" sortField="status.phase">
         {t('CONTENT:STATUS')}
