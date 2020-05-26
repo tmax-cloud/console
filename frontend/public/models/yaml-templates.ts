@@ -356,6 +356,7 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     spec:
       hard:
         limits.cpu: "1"
+        limits.memory: "1Gi"
     
 `,
   )
@@ -395,7 +396,8 @@ spec:
     resourceName: example-claim
     spec:
       hard:
-        limits.cpu: "2"
+        limits.cpu: "1"
+        limits.memory: "1Gi"
     
 `,
   )
