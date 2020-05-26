@@ -396,7 +396,7 @@ spec:
     resourceName: example-claim
     spec:
       hard:
-        limits.cpu: "1"
+        limits.cpu: ""
         limits.memory: "1Gi"
     
 `,
@@ -594,8 +594,10 @@ spec:
       #key: node.kubernetes.io/unreachable
       #tolerationSeconds: 10
   service:
-    ingress:
-      domainName: 192.168.6.110.nip.io
+    #ingress:
+      #domainName: 192.168.6.110.nip.io
+      #port: 443 # (optional) [integer] external port (default: 443)
+    loadBalancer:
       port: 443 # (optional) [integer] external port (default: 443)
   persistentVolumeClaim:
     create:
