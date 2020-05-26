@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Line, requirePrometheus } from './graphs';
 import { SectionHeading } from './utils';
 
-export const TrafficPage = ({ obj: service }) => {
+export const TrafficPage = ({ namespace: namespace, name: name }) => {
     const { t } = useTranslation();
     const [reporter, setReporter] = React.useState('destination', '');
     return <div className="co-m-pane__body">
@@ -16,11 +16,11 @@ export const TrafficPage = ({ obj: service }) => {
                 <option value="source">Source</option>
             </select>
         </div>
-        <TrafficGraphs service={service} showTitle={false} reporter={reporter} />
+        <TrafficGraphs namespace={namespace} name={name} showTitle={false} reporter={reporter} />
     </div>
 }
-const TrafficGraphs = requirePrometheus(({ reporter }) => {
-    const serviceName = 'productpage.bookinfo.svc.cluster.local';
+const TrafficGraphs = requirePrometheus(({ reporter, namespace, name }) => {
+    const serviceName = `${name}.${namespace}.svc.cluster.local`;
     const { t } = useTranslation();
     return (
         <React.Fragment>

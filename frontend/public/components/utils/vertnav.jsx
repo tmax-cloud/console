@@ -51,9 +51,9 @@ class ImageComponent extends React.PureComponent {
 class TrafficComponent extends React.PureComponent {
   render() {
     const {
-      metadata: { namespace },
+      metadata: { namespace, name },
     } = this.props.obj;
-    return <TrafficPage showTitle={false} namespace={namespace} canCreate={false} />;
+    return <TrafficPage showTitle={false} namespace={namespace} name={name} canCreate={false} />;
   }
 }
 
