@@ -318,6 +318,7 @@
     "DEFAULTPULLSECRET": "기본 풀 시크릿",
     "NETWORKPOLICIES": "네트워크 정책",
     "NOTCONFIGURED": "설정 없음",
+    "NOTCONFIGURED_EN": "Not Configured",
     "SECRETNAME": "시크릿 이름",
     "METHOD": "메소드",
     "REGISTRYADDRESS": "레지스트리 주소",
