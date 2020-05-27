@@ -43,7 +43,7 @@ export const ContainerTable = ({ containers }) => {
     <div className="co-m-table-grid co-m-table-grid--bordered">
       <div className="row co-m-table-grid__head">
         <div className="col-xs-6 col-sm-4 col-md-3">{t('CONTENT:NAME')}</div>
-        <div className="col-xs-6 col-sm-4 col-md-3">{t('CONTENT:IMAGE2')}</div>
+        <div className="col-xs-6 col-sm-4 col-md-3">{t('CONTENT:IMAGE')}</div>
         <div className="col-sm-4 col-md-3 hidden-xs">{t('CONTENT:RESOURCELIMITS')}</div>
         <div className="col-md-3 hidden-xs hidden-sm">{t('CONTENT:PORTS')}</div>
       </div>

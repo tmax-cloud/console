@@ -225,7 +225,7 @@ const Details = props => {
         <div className="col-lg-4">
           <SectionHeading text={t('CONTENT:IMAGEDETAILS')} />
           <dl className="co-m-pane__details">
-            <dt>{t('CONTENT:IMAGE2')}</dt>
+            <dt>{t('CONTENT:IMAGE')}</dt>
             <dd>
               <Overflow value={imageName || '-'} />
             </dd>

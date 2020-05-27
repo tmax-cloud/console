@@ -173,7 +173,7 @@ const ContainerTable = ({ heading, containers, pod }) => {
           <div className="row co-m-table-grid__head">
             <div className="col-sm-2 col-xs-4">{t('CONTENT:NAME')}</div>
             <div className="col-md-2 col-sm-3 hidden-xs">{t('CONTENT:ID')}</div>
-            <div className="col-md-2 col-sm-3 col-xs-8">{t('CONTENT:IMAGE2')}</div>
+            <div className="col-md-2 col-sm-3 col-xs-8">{t('CONTENT:IMAGE')}</div>
             <div className="col-md-1 col-sm-2 hidden-xs">{t('CONTENT:STATE')}</div>
             <div className="col-md-1 col-sm-2 hidden-xs">{t('CONTENT:RESTARTS')}</div>
             <div className="col-md-2 hidden-sm hidden-xs">{t('CONTENT:STARTED')}</div>
