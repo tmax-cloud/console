@@ -17,16 +17,19 @@ const NamespaceClaimHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="resourceName">
-        {t('CONTENT:RESOURCENAME')}
+      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.name">
+        {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
+      <ColHead {...props} className="col-xs-1 col-sm-1" sortField="status.status">
         {t('CONTENT:STATUS')}
       </ColHead>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
+      <ColHead {...props} className="col-xs-3 col-sm-3">
         {t('CONTENT:TRIALTIME')}
       </ColHead>
-      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="resourceName">
+        {t('ADDITIONAL:NAME', { something: t('RESOURCE:NAMESPACE') })}
+      </ColHead>
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -50,11 +53,14 @@ const NamespaceClaimRow = () =>
       <div className="row co-resource-list__item">
         <div className="col-md-3 col-xs-3 co-resource-link-wrapper">
           <ResourceCog actions={menuActions} kind="NamespaceClaim" resource={obj} />
+          <ResourceLink kind="NamespaceClaim" name={obj.metadata.name} title={obj.metadata.name} />
+        </div>
+        <div className="col-xs-1 col-sm-1 hidden-xs">{obj.status && obj.status.status}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div>
+        <div className="col-md-3 col-xs-3 co-resource-link-wrapper">
           <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };

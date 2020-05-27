@@ -25,7 +25,6 @@ import { UIActions, getActiveNamespace } from '../ui/ui-actions';
 import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
 import { referenceForModel } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
-import { Loading } from './utils';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
@@ -128,10 +127,10 @@ class App extends React.PureComponent {
       return;
     }
 
-    window.addEventListener('beforeunload', ev => {
-      ev.preventDefault();
+    if (window.location.search === '?first') {
+      window.location.href = window.location.href.split('?')[0];
       localStorage.removeItem('bridge/last-namespace-name');
-    }); // componentWillUnmount는 브라우저 탭을 닫았을 때 안불림. 이걸로 대체
+    }
 
     this.state = {
       isAdmin: true,
@@ -171,17 +170,6 @@ class App extends React.PureComponent {
     });
   }
 
-  componentWillUnmount() {
-    localStorage.removeItem('bridge/last-namespace-name');
-  }
-
-  // componentDidMount() {
-  //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
-  //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
-  //     this.changeRole_();
-  //     }
-  //   }
-  // }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
@@ -226,6 +214,17 @@ class App extends React.PureComponent {
                     return;
                   } else {
                     return m.ClusterOverviewPage;
+                  }
+                })
+              }
+            />
+            <LazyRoute
+              path="/status/ns/"
+              exact
+              loader={() =>
+                import('./utils' /* webpackChunkName: "cluster-overview" */).then(m => {
+                  if (!localStorage.getItem('bridge/last-namespace-name')) {
+                    return m.AccessDenied;
                   }
                 })
               }
@@ -297,6 +296,7 @@ class App extends React.PureComponent {
             <LazyRoute path="/settings/cluster" exact loader={() => import('./cluster-settings/cluster-settings').then(m => m.ClusterSettingsPage)} />
             <LazyRoute path="/error" exact loader={() => import('./error').then(m => m.ErrorPage)} />
             <Route path="/" exact component={DefaultPage} />
+            <LazyRoute loader={() => import('./utils').then(m => m.AccessDenied)} />
             <LazyRoute loader={() => import('./error').then(m => m.ErrorPage404)} />
           </Switch>
         </div>

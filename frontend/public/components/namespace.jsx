@@ -1,5 +1,5 @@
 import * as _ from 'lodash-es';
-import * as React  from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { Tooltip } from './utils/tooltip';
 import { Link } from 'react-router-dom';
@@ -269,20 +269,22 @@ const RolesPage = ({ obj: { metadata } }) => <RoleBindingsPage namespace={metada
 
 const Metering = ({ obj: { metadata } }) => {
   const { t } = useTranslation();
-  const [timeUnit, setTimeUnit] = React.useState('hour',''); 
-  return <div className="co-m-pane__body">
-    <SectionHeading text={t('CONTENT:METERING')} />
-      <div style={{float:'right'}}>
-        <select name="timeUnit" onChange={e=> setTimeUnit(e.target.value)}>
+  const [timeUnit, setTimeUnit] = React.useState('hour', '');
+  return (
+    <div className="co-m-pane__body">
+      <SectionHeading text={t('CONTENT:METERING')} />
+      <div style={{ float: 'right' }}>
+        <select name="timeUnit" onChange={e => setTimeUnit(e.target.value)}>
           <option value="hour">{t('CONTENT:HOUR')}</option>
           <option value="day">{t('CONTENT:DAY')}</option>
           <option value="month">{t('CONTENT:MONTH')}</option>
           <option value="year">{t('CONTENT:YEAR')}</option>
         </select>
       </div>
-    <MeteringPage namespace={metadata.name} showTitle={false} timeUnit={timeUnit} />
+      <MeteringPage namespace={metadata.name} showTitle={false} timeUnit={timeUnit} />
     </div>
-}
+  );
+};
 
 const autocompleteFilter = (text, item) => fuzzy(text, item);
 
@@ -348,6 +350,8 @@ class NamespaceDropdown_ extends React.Component {
         if (data.length > 0) {
           // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
           activeNamespace = data[0].metadata.name;
+        } else {
+          activeNamespace = 'default';
         }
         if (!localStorage.getItem('bridge/last-namespace-name')) {
           // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
@@ -382,8 +386,7 @@ class NamespaceDropdown_ extends React.Component {
 }
 
 const MeteringPage = requirePrometheus(props => {
-  let timeUnit= props.timeUnit;
-  console.log('meteringprops:',props);
+  let timeUnit = props.timeUnit;
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
@@ -395,7 +398,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'cpu',
-                timeUnit : timeUnit
+                timeUnit: timeUnit,
               },
             ]}
           />
@@ -407,7 +410,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'memory',
-                timeUnit : timeUnit
+                timeUnit: timeUnit,
               },
             ]}
           />
@@ -419,7 +422,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'storage',
-                timeUnit : timeUnit
+                timeUnit: timeUnit,
               },
             ]}
           />
@@ -431,7 +434,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'publicIp',
-                timeUnit : timeUnit
+                timeUnit: timeUnit,
               },
             ]}
           />
@@ -443,7 +446,7 @@ const MeteringPage = requirePrometheus(props => {
               {
                 name: 'Used',
                 query: 'gpu',
-                timeUnit : timeUnit
+                timeUnit: timeUnit,
               },
             ]}
           />

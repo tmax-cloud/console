@@ -82,17 +82,22 @@ export const k8sKill = (kind, resource, opts = {}, json = null) => coFetchJSON.d
 
 export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   let listURL;
-  let query = _.map(_.omit(params, 'ns'), (v, k) => {
-    if (k === 'labelSelector') {
-      v = selectorToString(v);
-    }
-    return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
-  }).join('&');
+  let query =
+    _.map(_.omit(params, 'ns'), (v, k) => {
+      if (k === 'labelSelector') {
+        v = selectorToString(v);
+      }
+      return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+    }).join('&') || '';
 
   if (kind.kind === 'Namespace') {
     listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
   } else {
     listURL = resourceURL(kind, { ns: params.ns });
+  }
+
+  if (kind.kind === 'NamespaceClaim') {
+    query = query.concat(`&labelSelector=owner=${window.sessionStorage.id}`);
   }
 
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));

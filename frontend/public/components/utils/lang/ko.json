@@ -10,6 +10,7 @@
     "EVENT_plural": "{{count}} 이벤트 표시"
   },
   "ADDITIONAL": {
+    "NAME": "{{something}} 이름",
     "CREATEBUTTON": "{{something}} 생성",
     "DELETE": "{{something}} 삭제",
     "VIEW": "{{something}} 보기",
@@ -83,6 +84,8 @@
     "YEARSFROMNOW": "years from now"
   },
   "STRING": {
+    "CREATE-DEPLOYMENT_0": "해당 값 정의 시, 도커 이미지의 기본 엔트리 포인트와 기본 cmd가 덮어 씌워집니다.",
+    "CREATE-DEPLOYMENT_1": "해당 값 정의 시, 도커 이미지의 기본 엔트리가 덮어 씌워집니다.",
     "EMPTYBOX": "표시할 정보가 없습니다.",
     "INGRESS_DETAIL_0": "라우팅 계층 (인그레스 컨트롤러)에서 해당 규칙을 처리하며, 규칙 수정에 따라 라우팅 계층도 업데이트됩니다. 인그레스 컨트롤러는 헤더 및 기타 메타 데이터가 전달되거나 조작되는 방법을 정의합니다.",
     "SERVICE_DETAIL_0": "클러스터 외부에서 액세스 가능",
@@ -381,6 +384,7 @@
     "MINPODS": "최소 파드",
     "MAXPODS": "최대 파드",
     "IMAGE": "Image",
+    "IMAGE2": "이미지",
     "SOURCE": "Source",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
@@ -587,7 +591,14 @@
     "QUANTITY": "수량",
     "ENTERNAME": "이름 입력",
     "TRUE": "참",
-    "FALSE": "거짓"
+    "FALSE": "거짓",
+    "TRAFFIC": "Traffic",
+    "SERVERREQUESTVOLUME": "Server Request Volume",
+    "SERVERREQUESTDURATION": "Server Request Duration",
+    "REQUESTSIZE": "Request Size",
+    "RESPONSESIZE": "Response Size",
+    "TCPRECEIVED": "TCP Received",
+    "TCPSENT": "TCP Sent"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -698,6 +709,18 @@
     "GCPCLUSTER": "GCP Cluster",
     "GCPMACHINE": "GCP Machine",
     "GCPMACHINETEMPLATE": "GCP Machine Template",
-    "CONDITION": "Pipeline Condition"
+    "CONDITION": "파이프라인 컨디션",
+    "PIPELINECONDITION": "Pipeline Condition",
+    "SERVICEMESH": "Service Mesh",
+    "VIRTUALSERVICE": "Virtual Service",
+    "DESTINATIONRULE": "Destination Rule",
+    "ENVOYFILTER": "Envoy Filter",
+    "GATEWAY": "Gateway",
+    "SIDECAR": "Sidecar",
+    "SERVICEENTRY": "ServiceEntry",
+    "REQUESTAUTHENTICATION": "Request Authentication",
+    "PEERAUTHENTICATION": "Peer Authentication",
+    "POLICY": "Policy",
+    "AUTHORIZATIONPOLICY": "Authorization Policy"
   }
 }

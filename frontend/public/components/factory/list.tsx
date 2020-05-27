@@ -15,6 +15,7 @@ import { ingressValidHosts } from '../ingress';
 import { routeStatus } from '../routes';
 import { secretTypeFilterReducer } from '../secret';
 import { bindingType, roleType } from '../RBAC';
+import { taskType } from '../task';
 import { LabelList, ResourceCog, ResourceLink, resourcePath, Selector, StatusBox, containerLinuxUpdateOperator, EmptyBox } from '../utils';
 import { useTranslation } from 'react-i18next';
 const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
@@ -23,6 +24,9 @@ const fuzzyCaseInsensitive = (a, b) => fuzzy(_.toLower(a), _.toLower(b));
 const listFilters = {
   name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
   group: (filter, obj) => fuzzyCaseInsensitive(filter, obj.spec.group),
+
+  // Filter role by task
+  'task-kind': (filter, task) => filter.selected.has(taskType(task)),
 
   // Filter role by role kind
   'role-kind': (filter, role) => filter.selected.has(roleType(role)),

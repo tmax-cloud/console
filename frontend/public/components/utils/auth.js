@@ -49,6 +49,17 @@ export const setRefreshToken = function(rt) {
     }
 }
 
+export const setId = function(id) {
+    if (!window.SERVER_FLAGS.releaseModeFlag) {
+        return false;
+    }
+
+    if (window.SERVER_FLAGS.HDCModeFlag) {
+        return setCookie('id', id);
+    } else {
+        return sessionStorage.setItem('id', id);
+    }
+}
 
 export const getCookie = function(name) {
     let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');

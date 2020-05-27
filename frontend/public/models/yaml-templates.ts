@@ -713,6 +713,7 @@ spec:
     spec:
       hard:
         limits.cpu: "1"
+        limits.memory: "1Gi"
     
 `,
   )
@@ -752,7 +753,8 @@ spec:
     resourceName: example-claim
     spec:
       hard:
-        limits.cpu: "2"
+        limits.cpu: ""
+        limits.memory: "1Gi"
     
 `,
   )
@@ -920,43 +922,47 @@ spec:
     `
     # Note: To use the optional key, remove the '#' at the front of the key.
 
-    apiVersion: tmax.io/v1
-    kind: Registry
-    metadata:
-      name: example # (required) [string] registry's name
-      namespace: example # (required) [string] registry's namespace
-    spec:
-      image: example/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
-      #description: example # (optional) [string] a brief description of the registry.
-      loginId: example # (required) [string] username for registry login
-      loginPassword: example # (required) [string] password for registry login
-      #replicaSet:
-        #labels:
-          #mylabel1: v1
-          #mylabel2: v2
-        #selector:
-          #matchExpressions:
-          #- {key: mylabel2, operator: In, values: [v2]}
-          #matchLabels:
-            #mylabel1: v1
-        #nodeSelector:
-          #kubernetes.io/hostname: example
-        #tolerations:
-        #- effect: NoExecute
-          #key: node.kubernetes.io/not-ready
-          #tolerationSeconds: 10
-        #- effect: NoExecute
-          #key: node.kubernetes.io/unreachable
-          #tolerationSeconds: 10
-      service:
-         #port: example # (optional) [integer] external port (default: 443)
-         #nodeIP: example # (optional) [string] if service type is NodePort, set NodeIP to assign to the registry
-         #nodePort: example # (optional) [integer] if service type is NodePort, you can set 30000~32767
-         type: example # (required) [ClusterIP, NodePort, LoadBalancer]
-      persistentVolumeClaim:
-         accessModes: [example] # (required) [array] (ex: [ReadWriteOnce, ReadWriteMany])
-         storageSize: example # (required) [string] desired storage size (ex: 10Gi)
-         storageClassName: example # (required) [string] Filesystem storage class name available (ex: csi-cephfs-sc)
+apiVersion: tmax.io/v1
+kind: Registry
+metadata:
+  name: example # (required) [string] registry's name
+  namespace: example # (required) [string] registry's namespace
+spec:
+  image: registryIP:5000/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
+  #description: example # (optional) [string] a brief description of the registry.
+  loginId: example # (required) [string] username for registry login
+  loginPassword: example # (required) [string] password for registry login
+  #replicaSet:
+    #labels:
+      #mylabel1: v1
+      #mylabel2: v2
+    #selector:
+      #matchExpressions:
+      #- {key: mylabel2, operator: In, values: [v2]}
+      #matchLabels:
+        #mylabel1: v1
+    #nodeSelector:
+      #kubernetes.io/hostname: example
+    #tolerations:
+    #- effect: NoExecute
+      #key: node.kubernetes.io/not-ready
+      #tolerationSeconds: 10
+    #- effect: NoExecute
+      #key: node.kubernetes.io/unreachable
+      #tolerationSeconds: 10
+  service:
+    #ingress:
+      #domainName: 192.168.6.110.nip.io
+      #port: 443 # (optional) [integer] external port (default: 443)
+    loadBalancer:
+      port: 443 # (optional) [integer] external port (default: 443)
+  persistentVolumeClaim:
+    create:
+      accessModes: [ReadWriteOnce] # (required) [array] (ex: [ReadWriteOnce, ReadWriteMany])
+      storageSize: 10Gi # (required) [string] desired storage size (ex: 10Gi)
+      storageClassName: example # (required) [string] Filesystem storage class name available (ex: csi-cephfs-sc)
+      volumeMode: Filesystem
+      deleteWithPvc: false
 `,
   )
   .setIn(
@@ -1887,5 +1893,190 @@ spec:
      check:
        image: alpine
        script: 'test ! -f $(resources.sample-resource.path)/$(params.path)'    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualServiceModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: VirtualService
+    metadata:
+      name: example-virtualservice
+    spec:
+      hosts:
+      - example.com
+      http:
+      - match:
+        - uri:
+            prefix: /reviews
+        route:
+        - destination:
+            host: reviews
+            subset: v2
+      - route:
+        - destination:
+            host: reviews
+            subset: v3
+      
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DestinationRuleModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: DestinationRule
+    metadata:
+      name: my-destination-rule
+    spec:
+      host: my-svc
+      trafficPolicy:
+        loadBalancer:
+          simple: RANDOM
+      subsets:
+      - name: v1
+        labels:
+          version: v1
+      - name: v2
+        labels:
+          version: v2
+        trafficPolicy:
+          loadBalancer:
+            simple: ROUND_ROBIN
+      - name: v3
+        labels:
+          version: v3      
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.EnvoyFilterModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: EnvoyFilter
+    metadata:
+      name: custom-protocol
+    spec:
+      workloadSelector:
+        labels:
+          app: hello
+      configPatches:
+      - applyTo: NETWORK_FILTER
+        match:
+          context: SIDECAR_OUTBOUND
+          listener:
+            portNumber: 9307
+            filterChain:
+              filter:
+                name: "envoy.tcp_proxy"
+        patch:
+          operation: INSERT_BEFORE
+          value:
+            name: "envoy.config.filter.network.custom_protocol"    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.GatewayModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: Gateway
+    metadata:
+      name: ext-host-gwy
+    spec:
+      selector:
+        app: my-gateway-controller
+      servers:
+      - port:
+          number: 443
+          name: https
+          protocol: HTTPS
+        hosts:
+        - ext-host.example.com
+        tls:
+          mode: SIMPLE
+          serverCertificate: /tmp/tls.crt
+          privateKey: /tmp/tls.key    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SidecarModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3
+    kind: Sidecar 
+    metadata: 
+      name: my-sidecar 
+    spec: 
+      workloadSelector: 
+        labels: 
+          app: hello
+      egress: 
+      - hosts: 
+        - "./*" 
+        - "istio-system/*"   
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceEntryModel), 'default'],
+    `
+    apiVersion: networking.istio.io/v1alpha3 
+    kind: ServiceEntry 
+    metadata: 
+      name: svc-entry 
+    spec: 
+      hosts: 
+      - ext-svc.example.com 
+      ports: 
+      - number: 443 
+        name: https 
+        protocol: HTTPS 
+      location: MESH_EXTERNAL 
+      resolution: DNS  
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RequestAuthenticationModel), 'default'],
+    `
+    apiVersion: security.istio.io/v1beta1
+    kind: RequestAuthentication
+    metadata:
+      name: jwt-example
+    spec:
+      selector:
+        matchLabels:
+          app: hello
+      jwtRules:
+      - issuer: "testing@secure.istio.io"
+        jwksUri: "https://raw.githubusercontent.com/istio/istio/release-1.6/security/tools/jwt/samples/jwks.json"   
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PeerAuthenticationModel), 'default'],
+    `
+    apiVersion: security.istio.io/v1beta1
+    kind: PeerAuthentication
+    metadata:
+      name: example-peer-policy
+    spec:
+      selector:
+        matchLabels:
+          app: hello
+      mtls:
+        mode: STRICT  
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.AuthorizationPolicyModel), 'default'],
+    `
+    apiVersion: security.istio.io/v1beta1
+    kind: AuthorizationPolicy
+    metadata:
+      name: allow-read
+    spec:
+      selector:
+        matchLabels:
+          app: hello
+      action: ALLOW
+      rules:
+      - to:
+        - operation:
+             methods: ["GET", "HEAD"]       
 `,
   );
