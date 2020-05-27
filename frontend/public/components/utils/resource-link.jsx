@@ -65,10 +65,11 @@ export const ResourceLink = connectToModel(({ className, kind, name, namespace, 
   let path = resourcePath(kind, name, namespace);
   const value = displayName ? displayName : name;
 
+  console.log(path, kind, name, namespace);
   return (
     <span className={classNames('co-resource-link', className)}>
       <ResourceIcon kind={kind} />
-      {linkTo ? (
+      {linkTo && path ? (
         <Link to={path} title={title} className="co-resource-link__resource-name">
           {value}
         </Link>

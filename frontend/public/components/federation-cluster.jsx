@@ -1,6 +1,5 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
@@ -12,17 +11,6 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 const HDCModeFlag = window.SERVER_FLAGS.HDCModeFlag;
-
-// let getHyperLink = link => {
-//   // return <Link to={link}> {link}</Link>;
-//   link = 'https://' + link;
-//   return <a href={link}>{link}</a>;
-// };
-
-// const goPortalUrl = (e) => {
-//   console.log('target: ', e);
-//   // window.open('htttps://' + e.target);
-// };
 
 const KubeFedClusterHeader = props => {
   const { t } = useTranslation();
@@ -55,7 +43,7 @@ const KubeFedClusterRow = () =>
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
-          <span onClick={()=> window.open('https://' + obj.metadata.annotations.portalurl, '_blank')} value={obj.metadata.annotations.portalurl} style={{cursor:'pointer', color:'blue', textDecoration:'underline'}}>
+          <span onClick={() => window.open('https://' + obj.metadata.annotations.portalurl, '_blank')} value={obj.metadata.annotations.portalurl} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
             {'https://' + String(obj.metadata.annotations.portalurl)}
           </span>
         </div>

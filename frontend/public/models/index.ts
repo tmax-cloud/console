@@ -376,7 +376,7 @@ export const VirtualMachineModel: K8sKind = {
   path: 'virtualmachines',
   id: 'virtualmachine',
   crd: false,
-}
+};
 
 export const VirtualMachineInstanceModel: K8sKind = {
   kind: 'VirtualMachineInstance',

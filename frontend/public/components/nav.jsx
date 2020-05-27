@@ -456,17 +456,17 @@ class Nav extends React.Component {
               <ResourceNSLink resource="awsmachinetemplates" name={t('RESOURCE:AWSMACHINETEMPLATE')} onClick={this.close} />
             </NavSection>
 
-            <NavSection text={t('RESOURCE:AZUREMANAGEMENT')} icon="pficon pficon-process-automation">
+            {/* <NavSection text={t('RESOURCE:AZUREMANAGEMENT')} icon="pficon pficon-process-automation">
               <ResourceClusterLink resource="azureclusters" name={t('RESOURCE:AZURECLUSTER')} onClick={this.close} />
               <ResourceClusterLink resource="azuremachines" name={t('RESOURCE:AZUREMACHINE')} onClick={this.close} />
               <ResourceClusterLink resource="azuremachinetemplates" name={t('RESOURCE:AZUREMACHINETEMPLATE')} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
-            <NavSection text={t('RESOURCE:GCPMANAGEMENT')} icon="pficon pficon-image">
+            {/* <NavSection text={t('RESOURCE:GCPMANAGEMENT')} icon="pficon pficon-image">
               <ResourceClusterLink resource="gcpclusters" name={t('RESOURCE:GCPCLUSTER')} onClick={this.close} />
               <ResourceClusterLink resource="gcpmachines" name={t('RESOURCE:GCPMACHINE')} onClick={this.close} />
               <ResourceClusterLink resource="gcpmachinetemplates" name={t('RESOURCE:GCPMACHINETEMPLATE')} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
             {/* <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
             <ResourceNSLink model={ClusterServiceVersionModel} resource={ClusterServiceVersionModel.plural} name="Cluster Service Versions" onClick={this.close} />
