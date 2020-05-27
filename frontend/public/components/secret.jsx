@@ -140,7 +140,7 @@ const SecretsPage = props => {
     yaml: t('CONTENT:SECRETFROMYAML'),
   };
   const secretTypeFilterValues = [
-    { id: IMAGE_FILTER_VALUE, title: t('CONTENT:IMAGE') },
+    { id: IMAGE_FILTER_VALUE, title: t('CONTENT:IMAGE_EN') },
     { id: SOURCE_FILTER_VALUE, title: t('CONTENT:SOURCE') },
     { id: TLS_FILTER_VALUE, title: t('CONTENT:TLS') },
     { id: SA_TOKEN_FILTER_VALUE, title: t('CONTENT:SERVICEACCOUNTTOKEN') },

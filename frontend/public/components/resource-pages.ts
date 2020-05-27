@@ -202,6 +202,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(RequestAuthenticationModel), () => import('./request-authentication' /* webpackChunkName: "task" */).then(m => m.RequestAuthenticationDetailsPage))
   .set(referenceForModel(PeerAuthenticationModel), () => import('./peer-authentication' /* webpackChunkName: "task" */).then(m => m.PeerAuthenticationDetailsPage))
   .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyDetailsPage));
+
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(KubeadmControlPlaneModel), () => import('./kubeadm-control-plane' /* webpackChunkName: "task" */).then(m => m.KubeadmControlPlanesPage))
   .set(referenceForModel(KubeadmConfigTemplateModel), () => import('./kubeadm-config-template' /* webpackChunkName: "task" */).then(m => m.KubeadmConfigTemplatesPage))

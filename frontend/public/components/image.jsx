@@ -22,7 +22,7 @@ const ImageHeader = props => {
         {t('CONTENT:NAMESPACE')}
       </ColHead>
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="spec.name">
-        {t('CONTENT:IMAGE2')}
+        {t('CONTENT:IMAGE')}
       </ColHead>
 
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
@@ -59,7 +59,7 @@ function Details({ obj }) {
         </div>
         <div className="col-sm-6">
           <dl className="co-m-pane__details">
-            <dt>{t('CONTENT:IMAGE2')}</dt>
+            <dt>{t('CONTENT:IMAGE')}</dt>
             <dd>{obj.spec.name}</dd>
           </dl>
         </div>

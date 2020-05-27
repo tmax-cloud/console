@@ -386,6 +386,7 @@
     "SCALETARGET": "Scale Target",
     "MAXPODS": "Max Pods",
     "IMAGE": "Image",
+    "IMAGE_EN": "Image",
     "SOURCE": "Source",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
