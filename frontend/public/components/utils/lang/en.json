@@ -320,6 +320,7 @@
     "DEFAULTPULLSECRET": "Default Pull Secret",
     "NETWORKPOLICIES": "Network Policies",
     "NOTCONFIGURED": "Not Configured",
+    "NOTCONFIGURED_EN": "Not Configured",
     "SECRETNAME": "Secret Name",
     "METHOD": "Method",
     "REGISTRYADDRESS": "Registry Address",
