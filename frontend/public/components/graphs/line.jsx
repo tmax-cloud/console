@@ -13,7 +13,6 @@ const baseData = {
   fill: 'tozeroy',
   type: 'scatter',
 };
-
 export class Line_ extends BaseGraph {
   constructor(props) {
     super(props);
@@ -102,10 +101,9 @@ export class Line_ extends BaseGraph {
     }
     if (data.length === 0) {
       // eslint-disable-next-line no-console
-      // console.warn(`Graph error: No data from query for ${name || query}.`);
+      console.warn(`Graph error: No data from query for ${name || query}.`);
       return;
     }
-
 
     data.forEach((cur, i) => {
       restyle(this.node, {
@@ -137,10 +135,37 @@ export class Line_ extends BaseGraph {
       if (!result.cpu && result.data.result.length === 0) {
         // eslint-disable-next-line no-console
         console.warn(`Graph error: No data from query for ${name || query}.`);
-        return;
+        this.node.layout = {
+          "xaxis": {
+            "visible": false
+          },
+          "yaxis": {
+            "visible": false
+          },
+          "annotations": [
+            {
+              "text": "No matching data found",
+              "xref": "paper",
+              "yref": "paper",
+              "showarrow": false,
+              "font": {
+                "size": 28
+              }
+            }
+          ]
+        };
+        console.log(this.layout)
+        restyle(this.node, {
+          x: [],
+          y: [],
+          name,
+        }, [i]).catch(e => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+        return
       }
       const lineValues = result.data.result[0].values;
-
       restyle(this.node, {
         x: [lineValues.map(v => new Date(v[0] * 1000))],
         y: [lineValues.map(v => v[1] === "NaN" ? null : v[1])],
