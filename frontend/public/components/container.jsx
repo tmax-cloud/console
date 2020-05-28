@@ -240,8 +240,8 @@ const Details = props => {
                   <code>{container.command.join(' ')}</code>
                 </pre>
               ) : (
-                  <span>-</span>
-                )}
+                <span>-</span>
+              )}
             </dd>
             <dt>{t('CONTENT:ARGS')}</dt>
             <dd>
@@ -250,8 +250,8 @@ const Details = props => {
                   <code>{container.args.join(' ')}</code>
                 </pre>
               ) : (
-                  <span>-</span>
-                )}
+                <span>-</span>
+              )}
             </dd>
             <dt>{t('CONTENT:PULLPOLICY')}</dt>
             <dd>{getPullPolicyLabel(container)}</dd>
@@ -261,10 +261,14 @@ const Details = props => {
         <div className="col-lg-4">
           <SectionHeading text={t('RESOURCE:NETWORK')} />
           <dl className="co-m-pane__details">
-            {!HDCModeFlag && <div><dt>{t('RESOURCE:NODE')}</dt>
-              <dd>
-                <ResourceLink kind="Node" name={pod.spec.nodeName} title={pod.spec.nodeName} />
-              </dd></div>}
+            {!HDCModeFlag && (
+              <div>
+                <dt>{t('RESOURCE:NODE')}</dt>
+                <dd>
+                  <ResourceLink kind="Node" name={pod.spec.nodeName} title={pod.spec.nodeName} />
+                </dd>
+              </div>
+            )}
             <dt>{t('CONTENT:PODIP')}</dt>
             <dd>{pod.status.podIP || '-'}</dd>
           </dl>

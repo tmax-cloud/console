@@ -10,6 +10,7 @@
     "EVENT_plural": "{{count}} 이벤트 표시"
   },
   "ADDITIONAL": {
+    "NAME": "{{something}} 이름",
     "CREATEBUTTON": "{{something}} 생성",
     "DELETE": "{{something}} 삭제",
     "VIEW": "{{something}} 보기",
@@ -316,6 +317,7 @@
     "DEFAULTPULLSECRET": "기본 풀 시크릿",
     "NETWORKPOLICIES": "네트워크 정책",
     "NOTCONFIGURED": "설정 없음",
+    "NOTCONFIGURED_EN": "Not Configured",
     "SECRETNAME": "시크릿 이름",
     "METHOD": "메소드",
     "REGISTRYADDRESS": "레지스트리 주소",
@@ -381,7 +383,8 @@
     "SCALETARGET": "대상 스케일",
     "MINPODS": "최소 파드",
     "MAXPODS": "최대 파드",
-    "IMAGE": "Image",
+    "IMAGE": "이미지",
+    "IMAGE_EN": "Image",
     "SOURCE": "Source",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
@@ -588,7 +591,14 @@
     "QUANTITY": "수량",
     "ENTERNAME": "이름 입력",
     "TRUE": "참",
-    "FALSE": "거짓"
+    "FALSE": "거짓",
+    "TRAFFIC": "Traffic",
+    "SERVERREQUESTVOLUME": "Server Request Volume",
+    "SERVERREQUESTDURATION": "Server Request Duration",
+    "REQUESTSIZE": "Request Size",
+    "RESPONSESIZE": "Response Size",
+    "TCPRECEIVED": "TCP Received",
+    "TCPSENT": "TCP Sent"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -661,16 +671,15 @@
     "GROUP": "사용자 그룹",
     "CONDITION": "파이프라인 컨디션",
     "PIPELINECONDITION": "Pipeline Condition",
-    "SERVICEMESH": "Service Mesh",
-    "VIRTUALSERVICE": "Virtual Service",
-    "DESTINATIONRULE": "Destination Rule",
-    "ENVOYFILTER": "Envoy Filter",
-    "GATEWAY": "Gateway",
-    "SIDECAR": "Side Car",
-    "SERVICEENTRY": "ServiceEntry",
-    "REQUESTAUTHENTICATION": "Request Authentication",
-    "PEERAUTHENTICATION": "Peer Authentication",
-    "POLICY": "Policy",
-    "AUTHROIZATIONPOLICY": "AuthroizationPolicy"
+    "SERVICEMESH": "서비스 메쉬",
+    "VIRTUALSERVICE": "가상 서비스",
+    "DESTINATIONRULE": "데스티네이션 룰",
+    "ENVOYFILTER": "엔보이 필터",
+    "GATEWAY": "게이트웨이",
+    "SIDECAR": "사이드카",
+    "SERVICEENTRY": "서비스 엔트리",
+    "REQUESTAUTHENTICATION": "요청 인증",
+    "PEERAUTHENTICATION": "종단 인증",
+    "AUTHORIZATIONPOLICY": "인가 정책"
   }
 }

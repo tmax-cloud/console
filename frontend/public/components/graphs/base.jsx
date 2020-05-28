@@ -59,7 +59,7 @@ export class BaseGraph extends SafetyFirst {
 
     const basePath = this.props.basePath || prometheusBasePath;
     const pollInterval = timeSpan / 120 || 15000;
-    const stepSize = pollInterval / 1000;
+    const stepSize = pollInterval / 2000;
     const promises = queries.map(q => {
       const url = this.timeSpan
         ? `${basePath}/api/v1/query_range?query=${encodeURIComponent(q.query)}&start=${start / 1000}&end=${end / 1000}&step=${stepSize}`
@@ -89,7 +89,6 @@ export class BaseGraph extends SafetyFirst {
   }
 
   componentDidUpdate() {
-    console.log('componentDidupdate')
     this.fetch();
   }
 

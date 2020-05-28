@@ -9,7 +9,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [...Cog.factory.common];
 
-const VirtualServiceHeader = props => {
+const ServiceEntryHeader = props => {
     const { t } = useTranslation();
     return (
         <ListHeader>
@@ -19,32 +19,24 @@ const VirtualServiceHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
-                {t('CONTENT:HOST')}
-            </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
-                {t('CONTENT:GATEWAY')}
-            </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CREATED')}
             </ColHead>
         </ListHeader>
     );
 };
 
-const VirtualServiceRow = () =>
+const ServiceEntryRow = () =>
     // eslint-disable-next-line no-shadow
-    function VirtualServiceRow({ obj }) {
+    function ServiceEntryRow({ obj }) {
         return (
             <div className="row co-resource-list__item">
                 <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
-                    <ResourceCog actions={menuActions} kind="VirtualService" resource={obj} />
-                    <ResourceLink kind="VirtualService" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+                    <ResourceCog actions={menuActions} kind="ServiceEntry" resource={obj} />
+                    <ResourceLink kind="ServiceEntry" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+                <div className="col-xs-1 col-sm-1 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );
     };
@@ -66,30 +58,30 @@ const Details = ({ obj: condition }) => {
     );
 };
 
-export const VirtualServiceList = props => {
+export const ServiceEntryList = props => {
     const { kinds } = props;
-    const Row = VirtualServiceRow(kinds[0]);
-    Row.displayName = 'VirtualServiceRow';
-    return <List {...props} Header={VirtualServiceHeader} Row={Row} />;
+    const Row = ServiceEntryRow(kinds[0]);
+    Row.displayName = 'ServiceEntryRow';
+    return <List {...props} Header={ServiceEntryHeader} Row={Row} />;
 };
-VirtualServiceList.displayName = VirtualServiceList;
+ServiceEntryList.displayName = ServiceEntryList;
 
-export const VirtualServicePage = props => {
+export const ServiceEntryPage = props => {
     const { t } = useTranslation();
-    return <ListPage {...props} ListComponent={VirtualServiceList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="VirtualService" />;
+    return <ListPage {...props} ListComponent={ServiceEntryList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="ServiceEntry" />;
 };
-VirtualServicePage.displayName = 'VirtualServicePage';
+ServiceEntryPage.displayName = 'ServiceEntryPage';
 
-export const VirtualServiceDetailsPage = props => {
+export const ServiceEntryDetailsPage = props => {
     const { t } = useTranslation();
     return (
         <DetailsPage
             {...props}
-            kind="VirtualService"
+            kind="ServiceEntry"
             menuActions={menuActions}
             pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
         />
     );
 };
 
-VirtualServiceDetailsPage.displayName = 'VirtualServiceDetailsPage';
+ServiceEntryDetailsPage.displayName = 'ServiceEntryDetailsPage';

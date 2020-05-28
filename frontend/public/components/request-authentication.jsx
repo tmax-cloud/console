@@ -9,7 +9,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [...Cog.factory.common];
 
-const VirtualServiceHeader = props => {
+const RequestAuthenticationHeader = props => {
     const { t } = useTranslation();
     return (
         <ListHeader>
@@ -19,32 +19,24 @@ const VirtualServiceHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
-                {t('CONTENT:HOST')}
-            </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
-                {t('CONTENT:GATEWAY')}
-            </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CREATED')}
             </ColHead>
         </ListHeader>
     );
 };
 
-const VirtualServiceRow = () =>
+const RequestAuthenticationRow = () =>
     // eslint-disable-next-line no-shadow
-    function VirtualServiceRow({ obj }) {
+    function RequestAuthenticationRow({ obj }) {
         return (
             <div className="row co-resource-list__item">
                 <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
-                    <ResourceCog actions={menuActions} kind="VirtualService" resource={obj} />
-                    <ResourceLink kind="VirtualService" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
+                    <ResourceCog actions={menuActions} kind="RequestAuthentication" resource={obj} />
+                    <ResourceLink kind="RequestAuthentication" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+                <div className="col-xs-1 col-sm-1 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );
     };
@@ -66,30 +58,30 @@ const Details = ({ obj: condition }) => {
     );
 };
 
-export const VirtualServiceList = props => {
+export const RequestAuthenticationList = props => {
     const { kinds } = props;
-    const Row = VirtualServiceRow(kinds[0]);
-    Row.displayName = 'VirtualServiceRow';
-    return <List {...props} Header={VirtualServiceHeader} Row={Row} />;
+    const Row = RequestAuthenticationRow(kinds[0]);
+    Row.displayName = 'RequestAuthenticationRow';
+    return <List {...props} Header={RequestAuthenticationHeader} Row={Row} />;
 };
-VirtualServiceList.displayName = VirtualServiceList;
+RequestAuthenticationList.displayName = RequestAuthenticationList;
 
-export const VirtualServicePage = props => {
+export const RequestAuthenticationPage = props => {
     const { t } = useTranslation();
-    return <ListPage {...props} ListComponent={VirtualServiceList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="VirtualService" />;
+    return <ListPage {...props} ListComponent={RequestAuthenticationList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="RequestAuthentication" />;
 };
-VirtualServicePage.displayName = 'VirtualServicePage';
+RequestAuthenticationPage.displayName = 'RequestAuthenticationPage';
 
-export const VirtualServiceDetailsPage = props => {
+export const RequestAuthenticationDetailsPage = props => {
     const { t } = useTranslation();
     return (
         <DetailsPage
             {...props}
-            kind="VirtualService"
+            kind="RequestAuthentication"
             menuActions={menuActions}
             pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
         />
     );
 };
 
-VirtualServiceDetailsPage.displayName = 'VirtualServiceDetailsPage';
+RequestAuthenticationDetailsPage.displayName = 'RequestAuthenticationDetailsPage';

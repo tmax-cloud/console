@@ -1127,7 +1127,7 @@ export const GatewayModel: K8sKind = {
   kind: 'Gateway',
   id: 'gateway',
 };
-export const SideCarModel: K8sKind = {
+export const SidecarModel: K8sKind = {
   label: 'Side Car',
   labelPlural: 'Side Cars',
   apiVersion: 'v1alpha3',
@@ -1136,7 +1136,7 @@ export const SideCarModel: K8sKind = {
   plural: 'sidecars',
   abbr: 'SC',
   namespaced: true,
-  kind: 'SideCar',
+  kind: 'Sidecar',
   id: 'sidecar',
 };
 export const ServiceEntryModel: K8sKind = {
@@ -1187,15 +1187,15 @@ export const PolicyModel: K8sKind = {
   kind: 'Policy',
   id: 'policy',
 };
-export const AuthroizationPolicyModel: K8sKind = {
-  label: 'Authroization Policy',
-  labelPlural: 'Authroization Policies',
+export const AuthorizationPolicyModel: K8sKind = {
+  label: 'Authorization Policy',
+  labelPlural: 'Authorization Policies',
   apiVersion: 'v1beta1',
-  path: 'authroizationpolicies',
+  path: 'authorizationpolicies',
   apiGroup: 'security.istio.io',
-  plural: 'authroizationpolicies',
+  plural: 'authorizationpolicies',
   abbr: 'AP',
   namespaced: true,
-  kind: 'AuthroizationPolicy',
-  id: 'authroizationpolicy',
+  kind: 'AuthorizationPolicy',
+  id: 'authorizationpolicy',
 };

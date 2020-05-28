@@ -10,6 +10,7 @@
     "EVENT_plural": "Showing {{count}} events"
   },
   "ADDITIONAL": {
+    "NAME": "{{something}}",
     "CREATEBUTTON": "Create {{something}}",
     "DELETE": "Delete {{something}}",
     "VIEW": "View {{something}}",
@@ -319,6 +320,7 @@
     "DEFAULTPULLSECRET": "Default Pull Secret",
     "NETWORKPOLICIES": "Network Policies",
     "NOTCONFIGURED": "Not Configured",
+    "NOTCONFIGURED_EN": "Not Configured",
     "SECRETNAME": "Secret Name",
     "METHOD": "Method",
     "REGISTRYADDRESS": "Registry Address",
@@ -384,6 +386,7 @@
     "SCALETARGET": "Scale Target",
     "MAXPODS": "Max Pods",
     "IMAGE": "Image",
+    "IMAGE_EN": "Image",
     "SOURCE": "Source",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
@@ -589,7 +592,14 @@
     "QUANTITY": "Quantity",
     "ENTERNAME": "Enter Name",
     "TRUE": "True",
-    "False": "False"
+    "False": "False",
+    "TRAFFIC": "Traffic",
+    "SERVERREQUESTVOLUME": "Server Request Volume",
+    "SERVERREQUESTDURATION": "Server Request Duration",
+    "REQUESTSIZE": "Request Size",
+    "RESPONSESIZE": "Response Size",
+    "TCPRECEIVED": "TCP Received",
+    "TCPSENT": "TCP Sent"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -669,7 +679,6 @@
     "SERVICEENTRY": "ServiceEntry",
     "REQUESTAUTHENTICATION": "Request Authentication",
     "PEERAUTHENTICATION": "Peer Authentication",
-    "POLICY": "Policy",
-    "AUTHROIZATIONPOLICY": "AuthroizationPolicy"
+    "AUTHROIZATIONPOLICY": "AuthorizationPolicy"
   }
 }

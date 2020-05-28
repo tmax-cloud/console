@@ -80,12 +80,11 @@ import {
   DestinationRuleModel,
   EnvoyFilterModel,
   GatewayModel,
-  SideCarModel,
+  SidecarModel,
   ServiceEntryModel,
   RequestAuthenticationModel,
   PeerAuthenticationModel,
-  PolicyModel,
-  AuthroizationPolicyModel
+  AuthorizationPolicyModel,
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
@@ -157,27 +156,25 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesDetailsPage))
   .set(referenceForModel(ConditionModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsDetailsPage))
   .set(referenceForModel(VirtualServiceModel), () => import('./virtual-service' /* webpackChunkName: "task" */).then(m => m.VirtualServiceDetailsPage))
-  .set(referenceForModel(DestinationRuleModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(EnvoyFilterModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(GatewayModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(SideCarModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(ServiceEntryModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(RequestAuthenticationModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(PeerAuthenticationModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(PolicyModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(AuthroizationPolicyModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
+  .set(referenceForModel(DestinationRuleModel), () => import('./destination-rule' /* webpackChunkName: "task" */).then(m => m.DestinationRuleDetailsPage))
+  .set(referenceForModel(EnvoyFilterModel), () => import('./envoy-filter' /* webpackChunkName: "task" */).then(m => m.EnvoyFilterDetailsPage))
+  .set(referenceForModel(GatewayModel), () => import('./gateway' /* webpackChunkName: "task" */).then(m => m.GatewayDetailsPage))
+  .set(referenceForModel(SidecarModel), () => import('./sidecar' /* webpackChunkName: "task" */).then(m => m.SideCarDetailsPage))
+  .set(referenceForModel(ServiceEntryModel), () => import('./service-entry' /* webpackChunkName: "task" */).then(m => m.ServiceEntryDetailsPage))
+  .set(referenceForModel(RequestAuthenticationModel), () => import('./request-authentication' /* webpackChunkName: "task" */).then(m => m.RequestAuthenticationDetailsPage))
+  .set(referenceForModel(PeerAuthenticationModel), () => import('./peer-authentication' /* webpackChunkName: "task" */).then(m => m.PeerAuthenticationDetailsPage))
+  .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(VirtualServiceModel), () => import('./virtual-service' /* webpackChunkName: "task" */).then(m => m.VirtualServicePage))
-  .set(referenceForModel(DestinationRuleModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(EnvoyFilterModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(GatewayModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(SideCarModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(ServiceEntryModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(RequestAuthenticationModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(PeerAuthenticationModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(PolicyModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
-  .set(referenceForModel(AuthroizationPolicyModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
+  .set(referenceForModel(DestinationRuleModel), () => import('./destination-rule' /* webpackChunkName: "task" */).then(m => m.DestinationRulePage))
+  .set(referenceForModel(EnvoyFilterModel), () => import('./envoy-filter' /* webpackChunkName: "task" */).then(m => m.EnvoyFilterPage))
+  .set(referenceForModel(GatewayModel), () => import('./gateway' /* webpackChunkName: "task" */).then(m => m.GatewayPage))
+  .set(referenceForModel(SidecarModel), () => import('./sidecar' /* webpackChunkName: "task" */).then(m => m.SideCarPage))
+  .set(referenceForModel(ServiceEntryModel), () => import('./service-entry' /* webpackChunkName: "task" */).then(m => m.ServiceEntryPage))
+  .set(referenceForModel(RequestAuthenticationModel), () => import('./request-authentication' /* webpackChunkName: "task" */).then(m => m.RequestAuthenticationPage))
+  .set(referenceForModel(PeerAuthenticationModel), () => import('./peer-authentication' /* webpackChunkName: "task" */).then(m => m.PeerAuthenticationPage))
+  .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyPage))
   .set(referenceForModel(ConditionModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
   .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesPage))
   .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesPage))
