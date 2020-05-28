@@ -671,16 +671,15 @@
     "GROUP": "사용자 그룹",
     "CONDITION": "파이프라인 컨디션",
     "PIPELINECONDITION": "Pipeline Condition",
-    "SERVICEMESH": "Service Mesh",
-    "VIRTUALSERVICE": "Virtual Service",
-    "DESTINATIONRULE": "Destination Rule",
-    "ENVOYFILTER": "Envoy Filter",
-    "GATEWAY": "Gateway",
-    "SIDECAR": "Sidecar",
-    "SERVICEENTRY": "ServiceEntry",
-    "REQUESTAUTHENTICATION": "Request Authentication",
-    "PEERAUTHENTICATION": "Peer Authentication",
-    "POLICY": "Policy",
-    "AUTHORIZATIONPOLICY": "Authorization Policy"
+    "SERVICEMESH": "서비스 메쉬",
+    "VIRTUALSERVICE": "가상 서비스",
+    "DESTINATIONRULE": "데스티네이션 룰",
+    "ENVOYFILTER": "엔보이 필터",
+    "GATEWAY": "게이트웨이",
+    "SIDECAR": "사이드카",
+    "SERVICEENTRY": "서비스 엔트리",
+    "REQUESTAUTHENTICATION": "요청 인증",
+    "PEERAUTHENTICATION": "종단 인증",
+    "AUTHORIZATIONPOLICY": "인가 정책"
   }
 }

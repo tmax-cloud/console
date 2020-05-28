@@ -679,7 +679,6 @@
     "SERVICEENTRY": "ServiceEntry",
     "REQUESTAUTHENTICATION": "Request Authentication",
     "PEERAUTHENTICATION": "Peer Authentication",
-    "POLICY": "Policy",
     "AUTHROIZATIONPOLICY": "AuthorizationPolicy"
   }
 }

@@ -89,7 +89,6 @@ export class BaseGraph extends SafetyFirst {
   }
 
   componentDidUpdate() {
-    console.log('componentDidupdate')
     this.fetch();
   }
 
