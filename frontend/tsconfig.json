@@ -5,13 +5,17 @@
     "moduleResolution": "node",
     "outDir": "./public/dist/build/",
     "target": "es5",
-    "lib": ["dom", "es2015"],
+    "lib": [
+      "dom",
+      "es2015"
+    ],
     "jsx": "react",
     "allowJs": true,
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "sourceMap": true,
     "noUnusedLocals": false,
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
