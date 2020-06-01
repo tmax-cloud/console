@@ -251,7 +251,7 @@
     "WEBHOOKSECRETKEY": "Webhook Secret Key",
     "REVISION": "Revision",
     "URL": "Url",
-    "PARAMETERS": "Parmeters",
+    "PARAMETERS": "Parameters",
     "SERVICEACCOUNTNAME": "Service Account Name",
     "FORROLEBINDING": "(for RoleBinding)",
     "FORCLUSTERROLEBINDING": "(for ClusterRoleBinding)",
