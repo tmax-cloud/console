@@ -3,6 +3,7 @@ import { coFetchJSON } from '../../co-fetch';
 import { k8sBasePath } from './k8s';
 import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
+import { getId } from '../../components/utils/auth';
 
 /** @type {(model: K8sKind) => string} */
 const getK8sAPIPath = model => {
@@ -97,7 +98,8 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   }
 
   if (kind.kind === 'NamespaceClaim') {
-    query = query.concat(`&labelSelector=owner=${window.sessionStorage.id}`);
+    const id = getId();
+    query = query.concat(`&labelSelector=owner=${id}`);
   }
 
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
