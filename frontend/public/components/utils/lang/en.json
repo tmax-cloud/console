@@ -669,7 +669,6 @@
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
     "GROUP": "User Group",
-    "PIPELINECONDITION": "Pipeline Condition",
     "SERVICEMESH": "Service Mesh",
     "VIRTUALSERVICE": "Virtual Service",
     "DESTINATIONRULE": "Destination Rule",
