@@ -1129,7 +1129,7 @@ export const GatewayModel: K8sKind = {
 };
 export const SidecarModel: K8sKind = {
   label: 'Side Car',
-  labelPlural: 'Side Cars',
+  labelPlural: 'SideCars',
   apiVersion: 'v1alpha3',
   path: 'sidecars',
   apiGroup: 'networking.istio.io',
