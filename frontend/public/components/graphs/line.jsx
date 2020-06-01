@@ -24,36 +24,55 @@ export class Line_ extends BaseGraph {
 
     this.data = queries.map(() => Object.assign({}, baseData));
     this.layout = {
-      dragmode: 'pan',
-      yaxis: {
-        rangemode: 'tozero',
-        zeroline: false,
-        ticks: '',
-        showline: false,
-        fixedrange: true,
+      "xaxis": {
+        "visible": false
       },
-      xaxis: {
-        zeroline: false,
-        tickformat: '%H:%M',
-        ticks: '',
-        showline: true,
-        fixedrange: true,
+      "yaxis": {
+        "visible": false
       },
-      legend: {
-        x: 0, y: 1,
-        bgcolor: 'rgba(255, 255, 255, 0.5)',
-        size: '12px',
-        orientation: 'h'
-      },
-      margin: {
-        l: 30,
-        b: 30,
-        r: 40,
-        t: 0,
-        pad: 0,
-      },
-      shapes: [],
-    };
+      "annotations": [
+        {
+          "text": "ServiceError",
+          "xref": "paper",
+          "yref": "paper",
+          "showarrow": false,
+          "font": {
+            "size": 28
+          }
+        }
+      ]
+    }
+    // this.layout = {
+    //   dragmode: 'pan',
+    //   yaxis: {
+    //     rangemode: 'tozero',
+    //     zeroline: false,
+    //     ticks: '',
+    //     showline: false,
+    //     fixedrange: true,
+    //   },
+    //   xaxis: {
+    //     zeroline: false,
+    //     tickformat: '%H:%M',
+    //     ticks: '',
+    //     showline: true,
+    //     fixedrange: true,
+    //   },
+    //   legend: {
+    //     x: 0, y: 1,
+    //     bgcolor: 'rgba(255, 255, 255, 0.5)',
+    //     size: '12px',
+    //     orientation: 'h'
+    //   },
+    //   margin: {
+    //     l: 30,
+    //     b: 30,
+    //     r: 40,
+    //     t: 0,
+    //     pad: 0,
+    //   },
+    //   shapes: [],
+    // };
     this.options = {
       displaylogo: false,
       displayModeBar: false,
@@ -61,6 +80,7 @@ export class Line_ extends BaseGraph {
     this.style = { width: '100%' };
     this.onPlotlyRelayout = e => {
       if (!e) {
+        console.log('error')
         return;
       }
       let start = this.start;
@@ -92,6 +112,7 @@ export class Line_ extends BaseGraph {
     this.node.removeListener('plotly_relayout', this.onPlotlyRelayout);
   }
   updateGraph2(data, target) {
+
     let queries = this.props.query;
     if (!_.isArray(queries)) {
       queries = [{
@@ -100,11 +121,84 @@ export class Line_ extends BaseGraph {
       }];
     }
     if (data.length === 0) {
-      // eslint-disable-next-line no-console
-      console.warn(`Graph error: No data from query for ${name || query}.`);
+      this.node.layout = {
+        "xaxis": {
+          "visible": false
+        },
+        "yaxis": {
+          "visible": false
+        },
+        "annotations": [
+          {
+            "text": "No matching data found",
+            "xref": "paper",
+            "yref": "paper",
+            "showarrow": false,
+            "font": {
+              "size": 28
+            }
+          }
+        ]
+      };
+      restyle(this.node, {
+        x: [],
+        y: [],
+        name,
+      }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
       return;
     }
-
+    this.node.layout = {
+      dragmode: 'pan',
+      yaxis: {
+        visible: true,
+        rangemode: 'tozero',
+        zeroline: false,
+        ticks: '',
+        showline: false,
+        fixedrange: true,
+        automargin: true
+      },
+      xaxis: {
+        visible: true,
+        zeroline: false,
+        showline: true,
+        tickmode: 'auto',
+        nticks: 5,
+        fixedrange: true, // true인경우 zoom불가
+        automargin: true
+      },
+      legend: {
+        x: 0, y: 1,
+        bgcolor: 'rgba(255, 255, 255, 0.5)',
+        size: '12px',
+        orientation: 'h'
+      },
+      margin: {
+        l: 30,
+        b: 30,
+        r: 40,
+        t: 0,
+        pad: 0,
+      },
+      shapes: [],
+    };
+    switch (this.props.query[0].timeUnit) {
+      case 'hour':
+        this.node.layout.xaxis.tickformat = '%H:%M';
+        break;
+      case 'day':
+        this.node.layout.xaxis.tickformat = '%m/%d';
+        break;
+      case 'month':
+        this.node.layout.xaxis.tickformat = '%B';
+        break;
+      case 'year':
+        this.node.layout.xaxis.tickformat = '%Y';
+        break;
+    }
     data.forEach((cur, i) => {
       restyle(this.node, {
         x: [data.map(v => new Date(v.meteringTime))],
@@ -154,7 +248,6 @@ export class Line_ extends BaseGraph {
             }
           ]
         };
-        console.log(this.layout)
         restyle(this.node, {
           x: [],
           y: [],
