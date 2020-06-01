@@ -10,7 +10,7 @@ import { k8sGet } from '../module/k8s';
 import { UIActions } from '../ui/ui-actions';
 import { ColHead, DetailsPage, List, ListHeader, ListPage, ResourceRow } from './factory';
 import { SafetyFirst } from './safety-first';
-import { Cog, Dropdown, Firehose, LabelList, LoadingInline, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, humanizeMem, MsgBox } from './utils';
+import { Cog, Dropdown, Firehose, LabelList, LoadingInline, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, humanizeMem, MsgBox, AccessDenied } from './utils';
 import { createNamespaceModal, createProjectModal, deleteNamespaceModal, configureNamespacePullSecretModal } from './modals';
 import { RoleBindingsPage } from './RBAC';
 import { Bar, Line, requirePrometheus } from './graphs';
@@ -323,13 +323,20 @@ class NamespaceDropdown_ extends React.Component {
       return null;
     }
 
-    const { loaded, data } = this.props.namespace;
+    const { loaded, data, loadError } = this.props.namespace;
     const model = getModel(useProjects);
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
 
+    if (loadError && loadError.response.status === 403) {
+      return null;
+    }
+
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
+      if (!localStorage.getItem('bridge/last-namespace-name')) {
+        activeNamespace = '#ALL_NS#';
+      }
     }
     _.map(data, 'metadata.name')
       .sort()
@@ -344,39 +351,30 @@ class NamespaceDropdown_ extends React.Component {
       });
     }
 
+    let title = activeNamespace;
     if (getAccessToken()) {
-      if (!canListNS) {
-        // user 계정일 경우
-        if (data.length > 0) {
-          // nameSpace 서비스로 오는 데이터가 1개 이상 있을 경우 가장 처음오는 데이터를 activeNamespace 변수에 저장.
-          activeNamespace = data[0].metadata.name;
-        } else {
-          activeNamespace = 'default';
-        }
-        if (!localStorage.getItem('bridge/last-namespace-name')) {
-          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 activeNamespace 선택되도록.
-          dispatch(UIActions.setActiveNamespace(activeNamespace));
-        }
-      } else {
-        // admin 계정 일 경우
-        if (!localStorage.getItem('bridge/last-namespace-name')) {
-          // 기존에 선택된 namespace가 없을 경우(Login 직후)에만 all-namespace 선택되도록.
-          dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
-        }
+      if (activeNamespace === ALL_NAMESPACES_KEY) {
+        title = allNamespacesTitle;
+      } else if (loaded && !_.has(items, title)) {
+        // If the currently active namespace is not found in the list of all namespaces, put it in anyway
+        items[title] = title;
       }
     }
 
-    let title = activeNamespace;
-    if (activeNamespace === ALL_NAMESPACES_KEY) {
-      title = allNamespacesTitle;
-    } else if (loaded && !_.has(items, title)) {
-      // If the currently active namespace is not found in the list of all namespaces, put it in anyway
-      items[title] = title;
+    if (!localStorage.getItem('bridge/last-namespace-name') && loaded) {
+      if (!canListNS) {
+        title = data[0].metadata.name;
+        dispatch(UIActions.setActiveNamespace(title));
+      } else {
+        title = allNamespacesTitle;
+        dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
+      }
     }
 
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
+    // return !canListNS && title === 'default' ? null : <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} selectedKey={title} />;
 
-    return !canListNS && title === 'default' ? null : <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} />;
+    return loaded && <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} selectedKey={title} />;
     // <div className="co-namespace-selector">
     //   {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
     //     <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />

@@ -218,17 +218,6 @@ class App extends React.PureComponent {
                 })
               }
             />
-            <LazyRoute
-              path="/status/ns/"
-              exact
-              loader={() =>
-                import('./utils' /* webpackChunkName: "cluster-overview" */).then(m => {
-                  if (!localStorage.getItem('bridge/last-namespace-name')) {
-                    return m.AccessDenied;
-                  }
-                })
-              }
-            />
             <Route path="/status" exact component={NamespaceRedirect} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
@@ -296,7 +285,6 @@ class App extends React.PureComponent {
             <LazyRoute path="/settings/cluster" exact loader={() => import('./cluster-settings/cluster-settings').then(m => m.ClusterSettingsPage)} />
             <LazyRoute path="/error" exact loader={() => import('./error').then(m => m.ErrorPage)} />
             <Route path="/" exact component={DefaultPage} />
-            <LazyRoute loader={() => import('./utils').then(m => m.AccessDenied)} />
             <LazyRoute loader={() => import('./error').then(m => m.ErrorPage404)} />
           </Switch>
         </div>
