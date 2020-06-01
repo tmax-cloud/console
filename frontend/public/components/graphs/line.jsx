@@ -112,20 +112,7 @@ export class Line_ extends BaseGraph {
     this.node.removeListener('plotly_relayout', this.onPlotlyRelayout);
   }
   updateGraph2(data, target) {
-    switch (this.props.query[0].timeUnit) {
-      case 'hour':
-        this.node.layout.xaxis.tickformat = '%H:%M';
-        break;
-      case 'day':
-        this.node.layout.xaxis.tickformat = '%m/%d';
-        break;
-      case 'month':
-        this.node.layout.xaxis.tickformat = '%B';
-        break;
-      case 'year':
-        this.node.layout.xaxis.tickformat = '%Y';
-        break;
-    }
+
     let queries = this.props.query;
     if (!_.isArray(queries)) {
       queries = [{
@@ -163,8 +150,6 @@ export class Line_ extends BaseGraph {
       });
       return;
     }
-
-
     this.node.layout = {
       dragmode: 'pan',
       yaxis: {
@@ -174,6 +159,7 @@ export class Line_ extends BaseGraph {
         ticks: '',
         showline: false,
         fixedrange: true,
+        automargin: true
       },
       xaxis: {
         visible: true,
@@ -182,6 +168,7 @@ export class Line_ extends BaseGraph {
         tickmode: 'auto',
         nticks: 5,
         fixedrange: true, // true인경우 zoom불가
+        automargin: true
       },
       legend: {
         x: 0, y: 1,
@@ -198,6 +185,20 @@ export class Line_ extends BaseGraph {
       },
       shapes: [],
     };
+    switch (this.props.query[0].timeUnit) {
+      case 'hour':
+        this.node.layout.xaxis.tickformat = '%H:%M';
+        break;
+      case 'day':
+        this.node.layout.xaxis.tickformat = '%m/%d';
+        break;
+      case 'month':
+        this.node.layout.xaxis.tickformat = '%B';
+        break;
+      case 'year':
+        this.node.layout.xaxis.tickformat = '%Y';
+        break;
+    }
     data.forEach((cur, i) => {
       restyle(this.node, {
         x: [data.map(v => new Date(v.meteringTime))],
