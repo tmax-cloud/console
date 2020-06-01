@@ -28,6 +28,7 @@ class LoginComponent extends Component {
       window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '?redirect=console';
       return;
     }
+    localStorage.removeItem('bridge/last-namespace-name');
 
     if (window.SERVER_FLAGS.HDCModeFlag) {
       window.location.href = `${document.location.origin}`;
@@ -76,7 +77,7 @@ class LoginComponent extends Component {
   _login(userInfo) {
     const uri = `${document.location.origin}/api/hypercloud/login`;
     coFetchJSON.post(uri, userInfo).then(data => {
-      localStorage.removeItem('bridge/last-namespace-name');
+      // localStorage.removeItem('bridge/last-namespace-name');
       this.setState({ loading: false });
       if (data.accessToken && data.refreshToken) {
         setAccessToken(data.accessToken);
@@ -127,7 +128,7 @@ class LoginComponent extends Component {
         data.otpEnable
           ? OtpModal_({ data: json, initialTime: curTime })
           : // 로그인서비스 콜
-          this._login(json);
+            this._login(json);
         return;
         //}
 
