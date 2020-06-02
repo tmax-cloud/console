@@ -678,6 +678,12 @@
     "SERVICEENTRY": "ServiceEntry",
     "REQUESTAUTHENTICATION": "Request Authentication",
     "PEERAUTHENTICATION": "Peer Authentication",
-    "AUTHROIZATIONPOLICY": "AuthorizationPolicy"
+    "AUTHROIZATIONPOLICY": "AuthorizationPolicy",
+    "AIOPS": "AI Ops",
+    "NOTEBOOK": "Notebook",
+    "EXPERIMENT": "Experiment",
+    "INFERENCESERVICE": "Inference Service",
+    "WORKFLOWTEMPLATE": "Workflow Template",
+    "WORKFLOW": "Workflow"
   }
 }

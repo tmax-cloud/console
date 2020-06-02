@@ -679,6 +679,12 @@
     "SERVICEENTRY": "서비스 엔트리",
     "REQUESTAUTHENTICATION": "요청 인증",
     "PEERAUTHENTICATION": "피어 인증",
-    "AUTHORIZATIONPOLICY": "인가 정책"
+    "AUTHORIZATIONPOLICY": "인가 정책",
+    "AIOPS": "AI Ops",
+    "NOTEBOOK": "Notebook",
+    "EXPERIMENT": "Experiment",
+    "INFERENCESERVICE": "Inference Service",
+    "WORKFLOWTEMPLATE": "Workflow Template",
+    "WORKFLOW": "Workflow"
   }
 }
