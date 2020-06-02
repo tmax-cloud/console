@@ -4,6 +4,7 @@ import { k8sBasePath } from './k8s';
 import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
 import { getId } from '../../components/utils/auth';
+import store from '../../redux';
 
 /** @type {(model: K8sKind) => string} */
 const getK8sAPIPath = model => {
@@ -97,10 +98,13 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
     listURL = resourceURL(kind, { ns: params.ns });
   }
 
-  if (kind.kind === 'NamespaceClaim') {
-    const id = getId();
-    query = query.concat(`&labelSelector=owner=${id}`);
-  }
+  // if (kind.kind === 'NamespaceClaim') {
+  //   if (!store.getState().FLAGS.get('CAN_LIST_NS')) {
+  //     // namespace list 조회 권한 여부
+  //     const id = getId();
+  //     query = query.concat(`&labelSelector=owner=${id}`);
+  //   }
+  // }
 
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
 };
