@@ -65,7 +65,8 @@ UserSecurityPolicyList.displayName = UserSecurityPolicyList;
 
 export const UserSecurityPoliciesPage = props => {
     const { t } = useTranslation();
-    return <ListPage {...props} ListComponent={UserSecurityPolicyList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="Usersecuritypolicy" />;
+    let canCreate = window.SERVER_FLAGS.HDCModeFlag ? false : true;
+    return <ListPage {...props} ListComponent={UserSecurityPolicyList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={canCreate} kind="Usersecuritypolicy" />;
 };
 UserSecurityPoliciesPage.displayName = 'UserSecurityPoliesPage';
 
