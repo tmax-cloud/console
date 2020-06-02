@@ -176,7 +176,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      let defaultValue = parameter.defaultValue ? `default : ${parameter.defaultValue}` : ''
+      let defaultValue = parameter.defaultValue ? `${parameter.defaultValue}` : ''
       let isRequired = parameter.required ? true : false;
       return <div>
         <div className="row">
