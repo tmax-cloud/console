@@ -1175,18 +1175,6 @@ export const PeerAuthenticationModel: K8sKind = {
   kind: 'PeerAuthentication',
   id: 'peerauthentication',
 };
-export const PolicyModel: K8sKind = {
-  label: 'Policy',
-  labelPlural: 'Policies',
-  apiVersion: 'v1alpha1',
-  path: 'policies',
-  apiGroup: 'security.istio.io',
-  plural: 'policies',
-  abbr: 'P',
-  namespaced: true,
-  kind: 'Policy',
-  id: 'policy',
-};
 export const AuthorizationPolicyModel: K8sKind = {
   label: 'Authorization Policy',
   labelPlural: 'Authorization Policies',
@@ -1198,4 +1186,64 @@ export const AuthorizationPolicyModel: K8sKind = {
   namespaced: true,
   kind: 'AuthorizationPolicy',
   id: 'authorizationpolicy',
+};
+export const NotebookModel: K8sKind = {
+  label: 'Notebook',
+  labelPlural: 'Notebook Server',
+  apiVersion: 'v1',
+  path: 'notebooks',
+  apiGroup: 'kubeflow.org',
+  plural: 'notebooks',
+  abbr: 'NB',
+  namespaced: true,
+  kind: 'Notebook',
+  id: 'notebook',
+};
+export const ExperimentModel: K8sKind = {
+  label: 'Experiment',
+  labelPlural: 'Katib',
+  apiVersion: 'v1alpha3',
+  path: 'experiments',
+  apiGroup: 'kubeflow.org',
+  plural: 'experiments',
+  abbr: 'EX',
+  namespaced: true,
+  kind: 'Experiment',
+  id: 'experiment',
+};
+export const InferenceServiceModel: K8sKind = {
+  label: 'Inference Service',
+  labelPlural: 'KFServing',
+  apiVersion: 'v1alpha2',
+  path: 'inferenceservices',
+  apiGroup: 'serving.kubeflow.org',
+  plural: 'inferenceservices',
+  abbr: 'IS',
+  namespaced: true,
+  kind: 'InferenceService',
+  id: 'inferenceservice',
+};
+export const WorkflowTemplateModel: K8sKind = {
+  label: 'WorkflowTemplate',
+  labelPlural: 'Workflow Templates',
+  apiVersion: 'v1alpha1',
+  path: 'workflowtemplates',
+  apiGroup: 'argoproj.io',
+  plural: 'workflowtemplates',
+  abbr: 'WFT',
+  namespaced: true,
+  kind: 'WorkflowTemplate',
+  id: 'workflowtemplate',
+};
+export const WorkflowModel: K8sKind = {
+  label: 'Workflow',
+  labelPlural: 'Workflows',
+  apiVersion: 'v1alpha1',
+  path: 'workflows',
+  apiGroup: 'argoproj.io',
+  plural: 'workflows',
+  abbr: 'WF',
+  namespaced: true,
+  kind: 'Workflow',
+  id: 'workflow',
 };
