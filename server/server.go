@@ -11,6 +11,7 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -112,9 +113,13 @@ type Server struct {
 }
 
 type UserSecurityPolicy struct {
+	Name      string `json:"name"`
 	OtpEnable string `json:"otpEnable"`
 	Otp       int    `json:"otp"`
 	IPRange   string `json:"ipRange"`
+	Code      int    `json:"code"`
+	Message   string `json:"message"`
+	Status    string `json:"status"`
 }
 
 type TokenData struct {
@@ -265,15 +270,8 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				// user security policy를 가져오기 위한 서비스콜
-				transCfg := &http.Transport{
-					TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
-				}
 				path := "/apis/tmax.io/v1/usersecuritypolicies/" + id
 				urltocall := proxy.SingleJoiningSlash(s.K8sProxyConfig.Endpoint.String(), path)
-				req, err := http.NewRequest("GET", urltocall, nil)
-				if err != nil {
-					panic(err)
-				}
 
 				var tokenForUserSecurityPolicy string
 				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔두었음. 이 경우 InClusterBearerToken 사용
@@ -283,43 +281,49 @@ func (s *Server) HTTPHandler() http.Handler {
 					tokenForUserSecurityPolicy = s.MasterToken
 				}
 
-				req.Header.Add("Authorization", "Bearer "+tokenForUserSecurityPolicy)
-
-				client := &http.Client{Transport: transCfg}
-
-				resp, err := client.Do(req)
-				if err != nil {
-					panic(err)
-				}
-				defer resp.Body.Close()
-
-				respBody, _ := ioutil.ReadAll(resp.Body)
-				resp.Body.Close()
-
 				// body가 소모된 경우 복구
 				if bodyReadFlag {
 					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString))
 				}
+
+				respBody := httpCall(urltocall, tokenForUserSecurityPolicy)
+				// 	log.Println(string(respBody))
 
 				if strings.Contains(string(r.URL.Path), "login") {
 					plog.Printf("%s", respBody)
 				}
 
 				// user security parse
-				userSecurity := UserSecurityPolicy{}
-				err = json.Unmarshal(respBody, &userSecurity)
+				var userSecurity UserSecurityPolicy
+				err := json.Unmarshal(respBody, &userSecurity)
 				if err != nil {
 					panic(err)
 				}
 
-				// IP Range가 설정되어 있지 않은 경우에는 검증 거치지 않음
-				if len(userSecurity.IPRange) == 0 {
+				// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
+				if strings.Contains(string(respBody), "page not found") {
+					plog.Println(string(respBody))
+					hf(s.StaticUser, w, r)
+					return
+				}
+				// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
+				if !strings.Contains(string(respBody), "ipRange") {
+					plog.Println("ipRange does not exist, Allow all Ip addr")
+					hf(s.StaticUser, w, r)
+					return
+				}
+				// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
+				if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
+					plog.Println("userSecurity does not exist, Allow all Ip addr ", userSecurity.Message)
 					hf(s.StaticUser, w, r)
 					return
 				}
 
-				if strings.Contains(string(r.URL.Path), "login") {
-					plog.Println(userSecurity)
+				// id는 존재하나, IP Range가 설정되어 있지 않은 경우에는 모든 IP 차단
+				if len(userSecurity.IPRange) == 0 {
+					plog.Println("IpRange key exist but ipRange value is empty. all IPs are blocked")
+					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("The IpRange for user named (%v) is not set. If not set, all IPs are blocked", userSecurity.Name)})
+					return
 				}
 
 				// IP 정보를 가져와 parse
@@ -353,7 +357,6 @@ func (s *Server) HTTPHandler() http.Handler {
 					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Invalid IP: %v. Allowed IP: %v", ipAddr, ipRange)})
 					return
 				}
-
 				hf(s.StaticUser, w, r)
 			})
 		}
@@ -841,4 +844,27 @@ func (s *Server) handleOpenShiftTokenDeletion(user *auth.User, w http.ResponseWr
 	w.WriteHeader(resp.StatusCode)
 	io.Copy(w, resp.Body)
 	resp.Body.Close()
+}
+
+func httpCall(url, token string) []byte {
+	transCfg := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
+	}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Add("Authorization", "Bearer "+token)
+	client := &http.Client{Transport: transCfg}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp.Body.Close()
+	return respBody
 }
