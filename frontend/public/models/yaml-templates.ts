@@ -396,7 +396,7 @@ spec:
     resourceName: example-claim
     spec:
       hard:
-        limits.cpu: ""
+        limits.cpu: "1"
         limits.memory: "1Gi"
     
 `,
