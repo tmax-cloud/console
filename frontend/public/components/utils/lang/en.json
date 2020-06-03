@@ -189,7 +189,9 @@
     "CONTAINER-DETAIL_2": "No volumes have been mounted",
     "CONTAINER-DETAIL_3": "Volumes allow data to be shared as files with the pod",
     "CONTAINER-DETAIL_4": "No variables have been set",
-    "CONTAINER-DETAIL_5": "An easy way to pass configuration values"
+    "CONTAINER-DETAIL_5": "An easy way to pass configuration values",
+    "LINE_0": "Service Error",
+    "LINE_1": "No Matching Data Found"
   },
   "CONTENT": {
     "TRIALTIME": "Trial Time",
@@ -599,7 +601,18 @@
     "REQUESTSIZE": "Request Size",
     "RESPONSESIZE": "Response Size",
     "TCPRECEIVED": "TCP Received",
-    "TCPSENT": "TCP Sent"
+    "TCPSENT": "TCP Sent",
+    "MEMORY": "Memory",
+    "GPU": "GPU",
+    "ALGORITHMNAME": "Algorithm name",
+    "CURRENTTRIAL": "Current Trial",
+    "MAXTRIALCOUNT": "Max Trial Count",
+    "CURRENTOPTIMAL": "Current Optimal",
+    "OBJECTIVE": "Objective",
+    "FRAMEWORK": "Framework",
+    "STORAGEURI": "Storage URI",
+    "PIPELINE": "Pipeline",
+    "ElAPSEDTIME": "elapsed time"
   },
   "RESOURCE": {
     "HOME": "Home",

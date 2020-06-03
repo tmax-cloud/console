@@ -187,7 +187,9 @@
     "CONTAINER-DETAIL_2": "마운트된 볼륨이 없습니다.",
     "CONTAINER-DETAIL_3": "볼륨을 사용하면 파드와 데이터를 파일로 공유 할 수 있습니다.",
     "CONTAINER-DETAIL_4": "설정된 변수가 없습니다.",
-    "CONTAINER-DETAIL_5": "설정 값을 전달하는 쉬운 방법"
+    "CONTAINER-DETAIL_5": "설정 값을 전달하는 쉬운 방법",
+    "LINE_0": "Service Error",
+    "LINE_1": "No Matching Data Found"
   },
   "CONTENT": {
     "TRIALTIME": "구독 기간",
@@ -598,7 +600,18 @@
     "REQUESTSIZE": "Request Size",
     "RESPONSESIZE": "Response Size",
     "TCPRECEIVED": "TCP Received",
-    "TCPSENT": "TCP Sent"
+    "TCPSENT": "TCP Sent",
+    "MEMORY": "Memory",
+    "GPU": "GPU",
+    "ALGORITHMNAME": "Algorithm name",
+    "CURRENTTRIAL": "Current Trial",
+    "MAXTRIALCOUNT": "Max Trial Count",
+    "CURRENTOPTIMAL": "Current Optimal",
+    "OBJECTIVE": "Objective",
+    "FRAMEWORK": "Framework",
+    "STORAGEURI": "Storage URI",
+    "PIPELINE": "Pipeline",
+    "ElAPSEDTIME": "elapsed time"
   },
   "RESOURCE": {
     "HOME": "홈",
