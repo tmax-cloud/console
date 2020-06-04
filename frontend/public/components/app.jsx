@@ -19,16 +19,17 @@ import { NamespaceSelector } from './namespace';
 import Nav from './nav';
 import { SearchPage } from './search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
-import { history, AsyncComponent, Loading } from './utils';
+import { history, AsyncComponent, Loading, kindObj } from './utils';
 import { namespacedPrefixes } from './utils/link';
 import { UIActions, getActiveNamespace } from '../ui/ui-actions';
 import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
-import { referenceForModel } from '../module/k8s';
+import { referenceForModel, k8sList } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
 import { getAccessToken, resetLoginState } from './utils/auth';
+import { NoNamespace } from './nonamespaces';
 
 import './utils/i18n';
 
@@ -219,6 +220,8 @@ class App extends React.PureComponent {
               }
             />
             <Route path="/status" exact component={NamespaceRedirect} />
+            {/* <Route path="/noNamespace" exact loader={() => import('./nonamespaces').then(m => m.NoNamespace)} /> */}
+            <Route path="/noNamespace" exact component={NoNamespace} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
             {/* <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} /> */}

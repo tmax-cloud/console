@@ -329,7 +329,7 @@ class NamespaceDropdown_ extends React.Component {
     const items = {};
 
     if (loadError && loadError.response.status === 403) {
-      return null;
+      window.location.href = '/noNamespace';
     }
 
     if (canListNS) {
