@@ -23,7 +23,7 @@ class OtpModal extends Component {
     }
     componentDidMount() {
         const initialTime = this.props.initialTime;
-        const logoutTime = initialTime.setMinutes(initialTime.getMinutes() + 30);
+        const logoutTime = initialTime.setMinutes(initialTime.getMinutes() + 10);
         this.setState({ logoutTime: logoutTime });
         timerID = window.setInterval(() => this.tick(logoutTime), 1000);
     }

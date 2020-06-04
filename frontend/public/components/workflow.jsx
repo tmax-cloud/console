@@ -19,10 +19,10 @@ const WorkflowHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="templateRef.name">
                 {t('CONTENT:PIPELINE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="status.status">
                 {t('CONTENT:STATUS')}
             </ColHead>
             <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
@@ -45,24 +45,24 @@ const WorkflowRow = () =>
                     <ResourceLink kind="Workflow" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.templateRef.name}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.status.status}</div>
                 <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
                 <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );
     };
 
-const Details = ({ obj: condition }) => {
+const Details = ({ obj: workflow }) => {
     const { t } = useTranslation();
     return (
         <React.Fragment>
             <ScrollToTopOnMount />
             <div className="co-m-pane__body">
-                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('UserSecurityPolicy', t) })} />
+                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Workflow', t) })} />
                 <div className="row">
                     <div className="col-sm-6">
-                        <ResourceSummary resource={condition} />
+                        <ResourceSummary resource={workflow} />
                     </div>
                 </div>
             </div>

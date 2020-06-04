@@ -19,19 +19,19 @@ const ExperimentHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
+            <ColHead {...props} className="col-xs-1 col-sm-1" sortField="spec.hosts">
                 {t('CONTENT:STATUS')}
             </ColHead>
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
                 {t('CONTENT:ALGORITHMNAME')}
             </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CURRENTTRIAL')}
             </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:MAXTRIALCOUNT')}
             </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-1 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CURRENTOPTIMAL')}
             </ColHead>
             <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
@@ -51,11 +51,11 @@ const ExperimentRow = () =>
                     <ResourceLink kind="Experiment" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
+                <div className="col-xs-1 col-sm-1 co-break-word">{obj.spec.hosts}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
+                <div className="col-xs-1 col-sm-1 co-break-word">{obj.spec.gateways}</div>
+                <div className="col-xs-1 col-sm-1 co-break-word">{obj.spec.gateways}</div>
+                <div className="col-xs-1 col-sm-1 co-break-word">{obj.spec.gateways}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
             </div>
         );

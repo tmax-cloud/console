@@ -491,13 +491,13 @@ class Nav extends React.Component {
             </NavSection>
 
             {/* AI Ops 전체 추가*/}
-            <NavSection text={t('RESOURCE:AIOPS')} icon="pficon pficon-process-automation">
+            {/* <NavSection text={t('RESOURCE:AIOPS')} icon="pficon pficon-process-automation">
               <ResourceNSLink resource="notebooks" name={ResourcePlural('Notebook', t)} onClick={this.close} />
               <ResourceNSLink resource="experiments" name={ResourcePlural('Experiment', t)} onClick={this.close} />
               <ResourceNSLink resource="inferenceservices" name={ResourcePlural('InferenceService', t)} onClick={this.close} />
               <ResourceNSLink resource="workflowtemplates" name={ResourcePlural('WorkflowTemplate', t)} onClick={this.close} />
               <ResourceNSLink resource="workflows" name={ResourcePlural('Workflow', t)} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
             <NavSection text={t('RESOURCE:SECURITY')} icon="fa fa-shield">
               {<ResourceClusterLink resource="podsecuritypolicies" name={ResourcePlural('PodSecurityPolicy', t)} onClick={this.close} />}
