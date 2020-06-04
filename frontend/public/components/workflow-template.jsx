@@ -45,16 +45,16 @@ const WorkflowTemplateRow = () =>
         );
     };
 
-const Details = ({ obj: condition }) => {
+const Details = ({ obj }) => {
     const { t } = useTranslation();
     return (
         <React.Fragment>
             <ScrollToTopOnMount />
             <div className="co-m-pane__body">
-                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('UserSecurityPolicy', t) })} />
+                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('workflowtemplate', t) })} />
                 <div className="row">
                     <div className="col-sm-6">
-                        <ResourceSummary resource={condition} />
+                        <ResourceSummary resource={obj} />
                     </div>
                 </div>
             </div>
