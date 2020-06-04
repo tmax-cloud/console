@@ -194,7 +194,7 @@ export class Line_ extends BaseGraph {
     _.each(data, (result, i) => {
       const query = queries[i];
       const name = query && query.name;
-      if (!result.cpu && result.data.result.length === 0) {
+      if (result.data.result.length === 0) {
         // eslint-disable-next-line no-console
         console.warn(`Graph error: No data from query for ${name || query}.`);
         this.node.layout = {
@@ -227,9 +227,43 @@ export class Line_ extends BaseGraph {
         return
       }
       const lineValues = result.data.result[0].values;
+      this.node.layout = {
+        dragmode: 'pan',
+        yaxis: {
+          visible: true,
+          rangemode: 'tozero',
+          zeroline: false,
+          ticks: '',
+          showline: false,
+          fixedrange: true,
+          automargin: true
+        },
+        xaxis: {
+          visible: true,
+          zeroline: false,
+          showline: true,
+          tickmode: 'auto',
+          fixedrange: true, // true인경우 zoom불가
+          automargin: true
+        },
+        legend: {
+          x: 0, y: 1,
+          bgcolor: 'rgba(255, 255, 255, 0.5)',
+          size: '12px',
+          orientation: 'h'
+        },
+        margin: {
+          l: 30,
+          b: 30,
+          r: 40,
+          t: 0,
+          pad: 0,
+        },
+        shapes: [],
+      };
       restyle(this.node, {
         x: [lineValues.map(v => new Date(v[0] * 1000))],
-        y: [lineValues.map(v => v[1] === "NaN" ? null : v[1])],
+        y: [lineValues.map(v => v[1] === "NaN" ? null : Number(v[1]))],
         // Use a lighter fill color on first line in graphs
         fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
         name,
@@ -237,6 +271,7 @@ export class Line_ extends BaseGraph {
         // eslint-disable-next-line no-console
         console.error(e);
       });
+      console.log(lineValues)
     });
   }
 }
