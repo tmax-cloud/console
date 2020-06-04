@@ -95,6 +95,162 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   `,
   )
   .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'virtualmachine-sample'],
+    `
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: windows-vm
+  namespace: demo-ns
+spec:
+  running: true
+  template:
+    spec:
+      hostname: guestos-name
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k8s-3-3
+      domain:
+        machine:
+          type: q35
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: rootdisk
+            - cdrom:
+                bus: sata
+                readonly: true
+              name: cloudinitdisk
+            - disk:
+                bus: virtio
+              name: additionaldisk
+          interfaces:
+            - name: default
+              model: virtio
+              bridge: {}
+              macAddress: 'de:aa:00:00:be:aa'
+        gpus:
+          - deviceName: nvidia.com/GP102GL_Tesla_P40
+            name: gpu1
+        cpu:
+          cores: 2
+        memory:
+          guest: 2Gi
+        resources:
+          overcommitGuestOverhead: false
+          requests:
+            cpu: 1500m
+            memory: 2Gi
+          limits:
+            cpu: 2500m
+            memory: 3Gi
+      terminationGracePeriodSeconds: 0
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - containerDisk:
+            image: '{registry_endpoint}/win7:latest'
+          name: rootdisk
+        - name: cloudinitdisk
+          cloudInitConfigDrive:
+            userData: |
+              #ps1_sysnative
+              NET USER tmax "Password12345" /ADD
+              NET LOCALGROUP "Administrators" "tmax" /add
+        - name: additionaldisk
+          persistentVolumeClaim:
+            claimName: empty-pvc
+  `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.VirtualMachineModel), 'virtualmachine-sample2'],
+    `
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: linux
+  namespace: demo-ns
+spec:
+  running: true
+  template:
+    spec:
+      hostname: guestos-name
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k8s-3-3
+      domain:
+        machine:
+          type: q35
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: rootdisk
+            - cdrom:
+                bus: sata
+                readonly: true
+              name: cloudinitdisk
+            - disk:
+                bus: virtio
+              name: additionaldisk
+          interfaces:
+            - name: default
+              model: virtio
+              bridge: {}
+              macAddress: 'de:ad:00:00:be:aa'
+        cpu:
+          cores: 2
+        memory:
+          guest: 2Gi
+        resources:
+          overcommitGuestOverhead: false
+          requests:
+            cpu: 1500m
+            memory: 2Gi
+          limits:
+            cpu: 1500m
+            memory: 2Gi
+      terminationGracePeriodSeconds: 0
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - containerDisk:
+            image: '{registry_endpoint}/ubuntu:18.04'
+          name: rootdisk
+        - name: cloudinitdisk
+          cloudInitConfigDrive:
+            userData: |
+              #cloud-config
+              disable_root: false
+              ssh_pwauth: true
+              lock_passwd: false
+              users:
+                - name: tmax
+                  sudo: ALL=(ALL) NOPASSWD:ALL
+                  passwd: $6$bLLmCtnk51$21/Fq0vSHCwDODP2hXA.wo/0k91QIw/lUy6qWPOX1vx5z0CF9Acj9vGLFlQVbjSzmh.1r7wWd0kQS9RMm51HE.
+                  shell: /bin/bash
+                  lock_passwd: false
+        - name: additionaldisk
+          persistentVolumeClaim:
+            claimName: empty-pvc
+  `,
+  )
+  .setIn(
     [referenceForModel(k8sModels.VirtualMachineModel), 'read-virtualmachine-window'],
     `
     apiVersion: kubevirt.io/v1alpha3
@@ -267,6 +423,22 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.UsergroupModel), 'usergroup-sample'],
+    `
+apiVersion: tmax.io/v1
+kind: Usergroup
+metadata:
+  name: example
+userGroupInfo:
+  name: example
+  department: Cloud
+  position: developer
+  description: For Example
+status: active
+
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ClusterServiceBrokerModel), 'default'],
     `
   apiVersion: servicecatalog.k8s.io/v1beta1
@@ -275,6 +447,17 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
     name: hyperbroker4
   spec:
           url: http://0.0.0.0:28677
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterServiceBrokerModel), 'clusterservicebrocker-sample'],
+    `
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ClusterServiceBroker
+metadata:
+  name: hyperbroker4
+spec:
+  url: 'http://0.0.0.0:28677'
 `,
   )
   .setIn(
@@ -313,6 +496,72 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample'],
+    `
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: nginx-instance
+  namespace: demo-ns
+spec:
+  clusterServiceClassName: nginx-template
+  clusterServicePlanName: example-plan1
+  parameters:
+    NAME: nginx
+    IMAGE: 'nginx:1'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample2'],
+    `
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: roh-test
+  namespace: demo-ns
+spec:
+  clusterServiceClassName: apache-cicd-template
+  clusterServiceClassRef:
+    name: apache-cicd-template
+  clusterServicePlanName: apache-plan1
+  clusterServicePlanRef:
+    name: apache-plan1
+  parameters:
+    APP_NAME: apache-sample-app-roh
+    GIT_REV: master
+    GIT_URL: 'https://github.com/microsoft/project-html-website'
+    IMAGE_URL: '192.168.6.110:5000/apache-sample:latest'
+    NAMESPACE: demo-ns
+    SERVICE_ACCOUNT_NAME: tutorial-service
+    SERVICE_TYPE: LoadBalancer
+    WAS_PORT: '8080'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample3'],
+    `
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: roh-test-mysql
+  namespace: demo-ns 
+spec:
+  clusterServiceClassName: mysql-template
+  clusterServiceClassRef:
+    name: mysql-template
+  clusterServicePlanName: mysql-plan1
+  clusterServicePlanRef:
+    name: mysql-plan1
+  parameters:
+    APP_NAME: mysql-sample-app-roh
+    DB_STORAGE: 10Gi
+    MYSQL_DATABASE: mysqldb
+    MYSQL_PASSWORD: mysqlpassword
+    MYSQL_USER: mysqluser
+    NAMESPACE: demo-ns
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ServiceBindingModel), 'default'],
     `
   apiVersion: servicecatalog.k8s.io/v1beta1
@@ -323,6 +572,35 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   spec:
     instanceRef:
       name: example-instance
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceBindingModel), 'servicebinding-sample'],
+    `
+    apiVersion: servicecatalog.k8s.io/v1beta1
+    kind: ServiceBinding
+    metadata:
+      name: example-binding
+      namespace: demo-ns
+    spec:
+      instanceRef:
+        name: example-instance
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceBindingModel), 'servicebinding-sample2'],
+    `
+    apiVersion: servicecatalog.k8s.io/v1beta1
+    kind: ServiceBinding
+    metadata:
+      name: sample-binding
+      namespace: demo-ns
+    spec:
+      instanceRef:
+        name: sample-instance
+      parameters:
+        securityLevel: confidential
+      secretName: sample-secret
 `,
   )
   .setIn(
@@ -386,6 +664,50 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample'],
+    `
+apiVersion: "v1"
+kind: "LimitRange"
+metadata:
+  name: "core-resource-limits" 
+spec:
+  limits:
+    - type: "Pod or Container"
+      max:
+        cpu: "2" 
+        memory: "1Gi" 
+      min:
+        cpu: "200m" 
+        memory: "6Mi" 
+      default:
+        cpu: "300m" 
+        memory: "200Mi" 
+      defaultRequest:
+        cpu: "200m" 
+        memory: "100Mi" 
+      maxLimitRequestRatio:
+        cpu: "10"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample2'],
+    `
+apiVersion: "v1"
+kind: "LimitRange"
+metadata:
+  name: "tmax-resource-limits"
+spec:
+  limits:
+    - type: tmax.io/Image
+      max:
+        storage: 1Gi 
+    - type: tmax.io/ImageStream
+      max:
+        tmax.io/image-tags: 20 
+        tmax.io/images: 30
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1
@@ -396,7 +718,7 @@ spec:
     resourceName: example-claim
     spec:
       hard:
-        limits.cpu: ""
+        limits.cpu: "1"
         limits.memory: "1Gi"
     
 `,
@@ -456,6 +778,41 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.TaskModel), 'task-sample'],
+    `
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: example-task
+  namespace: default
+spec:
+  inputs:
+    resources:
+      - name: git-source
+        type: git
+    params:
+      - name: example-string
+        type: string
+        description: a sample string
+        default: default-string-value
+  outputs:
+    resources:
+      - name: output-image
+        type: image
+  steps:
+    - name: sample-job
+      image: 'sample-image-name:latest'
+      env:
+        - name: SAMPLE_ENV
+          value: hello/world/
+      command:
+        - /bin/sh
+      args:
+        - '-c'
+        - echo helloworld
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.TaskRunModel), 'default'],
     `
 apiVersion: tekton.dev/v1beta1
@@ -483,6 +840,33 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: example-taskrun
+  namespace: default
+spec:
+  serviceAccountName: example-san
+  taskRef:
+    name: example-task
+  inputs:
+    resources:
+      - name: git-source
+        resourceRef:
+          name: example-pipeline-resource-git
+    params:
+      - name: example-string
+        value: input-string
+  outputs:
+    resources:
+      - name: output-image
+        resourceRef:
+          name: example-pipeline-resource-image
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PipelineResourceModel), 'default'],
     `
 apiVersion: tekton.dev/v1alpha1
@@ -497,6 +881,23 @@ spec:
           value: master
         - name: url
           value: https://github.com/sample/git/url
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git
+      namespace: teespaceb2c
+    spec:
+      type: git
+      params:
+        - name: revision
+          value: master
+        - name: url
+          value: 'https://github.com/sample/git/url'
 `,
   )
   .setIn(
@@ -540,6 +941,45 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
+    `
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+      - name: source-repo
+        type: git
+      - name: sample-image
+        type: image
+  tasks:
+    - name: task1
+      taskRef:
+        name: example-task1
+      params:
+        - name: example-string
+          value: sample-string1
+      resources:
+        inputs:
+          - name: example-pipeline-resource-git
+            resource: source-repo
+        outputs:
+          - name: example-pipeline-resource-image
+            resource: sample-image
+    - name: task2
+      taskRef:
+        name: example-task2
+      resources:
+        inputs:
+          - name: example-input-image
+            resource: sample-image
+            from:
+              - task1
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PipelineRunModel), 'default'],
     `
 apiVersion: tekton.dev/v1alpha1
@@ -558,6 +998,27 @@ spec:
         - name: sample-image
           resourceRef:
             name: example-pipeline-resource-image
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineRunModel), 'pipelinerun-sample'],
+    `
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: example-pipeline-run
+  namespace: default
+spec:
+  serviceAccountName: example-san
+  pipelineRef:
+    name: example-pipeline
+  resources:
+    - name: source-repo
+      resourceRef:
+        name: example-pipeline-resource-git
+    - name: sample-image
+      resourceRef:
+        name: example-pipeline-resource-image
 `,
   )
   .setIn(
@@ -609,6 +1070,27 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.RegistryModel), 'registry-sample'],
+    `
+apiVersion: tmax.io/v1
+kind: Registry
+metadata:
+  name: example
+  namespace: default
+spec:
+  image: 'example/registry:b004'
+  loginId: example
+  loginPassword: example
+  service:
+    type: example
+  persistentVolumeClaim:
+    accessModes:
+      - example
+    storageSize: example
+    storageClassName: example  
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
     `
 apiVersion: tmax.io/v1
@@ -642,6 +1124,832 @@ objects:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.TemplateModel), 'template-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Template
+    metadata:
+      name: example-template
+      namespace: demo-ns
+    objects:
+      - apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: example
+          labels:
+            app: example
+        spec:
+          selector:
+            matchLabels:
+              app: example
+          template:
+            metadata:
+              labels:
+                app: example
+            spec:
+              containers:
+                - name: example
+                  image: 'example/image:version'
+                  ports:
+                    - name: example
+                      containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateModel), 'template-sample2'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Template
+    metadata:
+      name: apache-cicd-template
+      namespace: default
+    imageUrl: https://upload.wikimedia.org/wikipedia/commons/4/45/Apache_HTTP_server_logo_%282016%29.png
+    provider: tmax
+    recommend: false
+    shortDescription: Apache CI/CD Template
+    longDescription: Apache CI/CD Template
+    tags:
+    - was
+    - apache
+    plans:
+    - bindable: false
+      description: apache
+      name: apache-plan1
+    parameters:
+    - name: APP_NAME
+      displayName: AppName
+      description: Application name
+      required: true
+    - name: NAMESPACE
+      displayName: Namespace
+      description: Application namespace
+      required: true
+    - name: GIT_URL
+      displayName: GitURL
+      description: Git Repo. URL
+      required: true
+    - name: GIT_REV
+      displayName: GitRev
+      description: Git Revision
+      required: true
+    - name: IMAGE_URL
+      displayName: ImageURL
+      description: Output Image URL
+      required: true
+    - name: SERVICE_ACCOUNT_NAME
+      displayName: serviceAccountName
+      description: Service Account Name
+      required: true
+    - name: WAS_PORT
+      displayName: wasPort
+      description: WAS Port
+      valueType: number
+      required: true
+    - name: SERVICE_TYPE
+      displayName: ServiceType
+      description: Service Type (ClsuterIP/NodePort/LoadBalancer)
+      required: true
+    - name: PACKAGE_SERVER_URL
+      displayName: PackageServerUrl
+      description: URL (including protocol, ip, port, and path) of private package server
+        (e.g., devpi, pypi, verdaccio, ...)
+      required: false
+    objects:
+    - apiVersion: v1
+      kind: Service
+      metadata:
+        name: \${APP_NAME}-service
+        namespace: \${NAMESPACE}
+        labels:
+          app: \${APP_NAME}
+      spec:
+        type: \${SERVICE_TYPE}
+        ports:
+        - port: \${WAS_PORT}
+        selector:
+          app: \${APP_NAME}
+          tier: was
+    - apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: \${APP_NAME}-deploy-cfg
+        namespace: \${NAMESPACE}
+      data:
+        deploy-spec.yaml: |
+          spec:
+            selector:
+              matchLabels:
+                app: \${APP_NAME}
+                tier: was
+            template:
+              metadata:
+                labels:
+                  app: \${APP_NAME}
+                  tier: was
+              spec:
+                containers:
+                - ports:
+                  - containerPort: \${WAS_PORT}
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineResource
+      metadata:
+        name: \${APP_NAME}-input-git
+        namespace: \${NAMESPACE}
+      spec:
+        type: git
+        params:
+        - name: revision
+          value: \${GIT_REV}
+        - name: url
+          value: \${GIT_URL}
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineResource
+      metadata:
+        name: \${APP_NAME}-output-image
+        namespace: \${NAMESPACE}
+      spec:
+        type: image
+        params:
+        - name: url
+          value: \${IMAGE_URL}
+    - apiVersion: tekton.dev/v1alpha1
+      kind: Pipeline
+      metadata:
+        name: \${APP_NAME}-pipeline
+        namespace: \${NAMESPACE}
+      spec:
+        resources:
+        - name: source-repo
+          type: git
+        - name: image
+          type: image
+        params:
+        - name: app-name
+          type: string
+          description: Application name
+        - name: replica
+          type: string
+          description: Number of replica
+          default: "1"
+        - name: port
+          type: string
+          description: Application port
+          default: "8080"
+        - name: deploy-cfg-name
+          description: Configmap name for description
+        tasks:
+        - name: build-source
+          taskRef:
+            name: s2i
+            kind: ClusterTask
+          params:
+          - name: BUILDER_IMAGE
+            value: \${DOCKER_REGISTRY_URL:PORT}/{IMAGE_NAME:TAG}
+          - name: PACKAGE_SERVER_URL
+            value: \${PACKAGE_SERVER_URL}
+          resources:
+            inputs:
+            - name: source
+              resource: source-repo
+            outputs:
+            - name: image
+              resource: image
+            - name: scan-and-sign-image
+              taskRef:
+                name: analyze-image-vulnerabilities
+                kind: ClusterTask
+              resources:
+                inputs:
+                - name: scanned-image
+                  resource: image
+                  from:
+                  - build-source
+              params:
+              - name: image-url
+                value: $(tasks.build-source.results.image-url)
+            - name: deploy
+              taskRef:
+                name: generate-and-deploy-using-kubectl
+                kind: ClusterTask
+              runAfter:
+              - scan-and-sign-image
+              resources:
+                inputs:
+                - name: image
+                  resource: image
+              params:
+              - name: app-name
+                value: $(params.app-name)
+              - name: replica
+                value: $(params.replica)
+              - name: port
+                value: $(params.port)
+              - name: image-url
+                value: $(tasks.build-source.results.image-url)
+              - name: deploy-cfg-name
+                value: $(params.deploy-cfg-name)
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        generateName: \${APP_NAME}-pipeline-run-
+        namespace: \${NAMESPACE}
+      spec:
+        serviceAccountName: \${SERVICE_ACCOUNT_NAME}
+        pipelineRef:
+          name: \${APP_NAME}-pipeline
+        resources:
+        - name: source-repo
+          resourceRef:
+            name: \${APP_NAME}-input-git
+        - name: image
+          resourceRef:
+            name: \${APP_NAME}-output-image
+        params:
+        - name: app-name
+          value: \${APP_NAME}
+        - name: deploy-cfg-name
+          value: \${APP_NAME}-deploy-cfg
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateModel), 'template-sample3'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Template
+    metadata:
+      name: mysql-template
+      namespace: default
+    shortDescription: MySQL Deployment
+    longDescription: MySQL Deployment
+    imageUrl: https://upload.wikimedia.org/wikipedia/en/6/62/MySQL.svg
+    provider: tmax
+    tags:
+    - db
+    - mysql
+    objects:
+    - apiVersion: v1
+      kind: Service
+      metadata:
+        name: \${APP_NAME}-service
+        namespace: \${NAMESPACE}
+        labels:
+          app: \${APP_NAME}
+      spec:
+        type: \${SERVICE_TYPE}
+        ports:
+        - port: 3306
+        selector:
+          app: \${APP_NAME}
+          tier: mysql
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: \${APP_NAME}-pvc
+        namespace: \${NAMESPACE}
+        labels:
+          app: \${APP_NAME}
+      spec:
+        storageClassName: csi-cephfs-sc
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: \${DB_STORAGE}
+    - apiVersion: v1
+      kind: Secret
+      metadata:
+        name: \${APP_NAME}-secret
+        namespace: \${NAMESPACE}
+      type: Opaque
+      stringData:
+        user: \${MYSQL_USER}
+        password: \${MYSQL_PASSWORD}
+        database: \${MYSQL_DATABASE}
+    - apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: \${APP_NAME}-mysql
+        namespace: \${NAMESPACE}
+        labels:
+          app: \${APP_NAME}
+      spec:
+        selector:
+          matchLabels:
+            app: \${APP_NAME}
+            tier: mysql
+        strategy:
+          type: Recreate
+        template:
+          metadata:
+            labels:
+              app: \${APP_NAME}
+              tier: mysql
+          spec:
+            containers:
+            - image: 192.168.6.110:5000/centos/mysql:5.7
+              name: mysql
+              env:
+              - name: MYSQL_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: \${APP_NAME}-secret
+                    key: user
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: \${APP_NAME}-secret
+                    key: password
+              - name: MYSQL_DATABASE
+                valueFrom:
+                  secretKeyRef:
+                    name: \${APP_NAME}-secret
+                    key: database
+              ports:
+              - containerPort: 3306
+                name: mysql
+              volumeMounts:
+              - name: mysql-persistent-storage
+                mountPath: /var/lib/mysql/data
+            volumes:
+            - name: mysql-persistent-storage
+              persistentVolumeClaim:
+                claimName: \${APP_NAME}-pvc
+    parameters:
+    - name: APP_NAME
+      displayName: AppName
+      description: Application name
+      required: true
+    - name: NAMESPACE
+      displayName: Namespace
+      required: true
+      description: Application namespace
+    - name: DB_STORAGE
+      displayName: DBStorage
+      description: Storage size for DB
+      required: true
+    - name: SERVICE_TYPE
+      displayName: ServiceType
+      description: Service Type (ClsuterIP/NodePort/LoadBalancer)
+      required: true
+    - name: MYSQL_USER
+      displayName: MysqlUser
+      description: MysqlUser
+      required: true
+    - name: MYSQL_PASSWORD
+      displayName: MysqlPassword
+      description: MysqlPassword
+      required: true
+    - name: MYSQL_DATABASE
+      displayName: MysqlDatabase
+      description: MysqlDatabase
+      required: true
+    plans:
+    - name: mysql-plan1
+      description: mysql
+      metadata:
+        bullets:
+        - 'Storage Capacity: 5Gi'
+        costs:
+          amount: 100
+          unit: $
+      free: false
+      bindable: true
+      plan_updateable: false
+      schemas:
+        service_instance:
+          create:
+            parameters:
+              NAMESPACE: default
+              DB_STORAGE: 5Gi
+              APP_NAME: mysql-deploy
+              MYSQL_USER: $USERID
+              MYSQL_PASSWORD: $PASSWORD
+              MYSQL_DATABASE: $DATABASENAME
+    - name: mysql-plan2
+      description: mysql
+      metadata:
+        bullets:
+        - 'Storage Capacity: 30Gi'
+        costs:
+          amount: 500
+          unit: $
+      free: false
+      bindable: true
+      plan_updateable: false
+      schemas:
+        service_instance:
+          create:
+            parameters:
+              NAMESPACE: default
+              DB_STORAGE: 30Gi
+              APP_NAME: mysql-deploy
+              MYSQL_USER: root1
+              MYSQL_PASSWORD: tmax@23
+              MYSQL_DATABASE: root1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateModel), 'template-sample4'],
+    `
+apiVersion: tmax.io/v1
+kind: Template
+metadata:
+  name: nodejs-mysql-template
+  namespace: default
+imageUrl: https://i.imgur.com/ImDhuQF.png
+provider: tmax
+recommend: false
+shortDescription: NodeJS & MySQL Template
+longDescription: NodeJS & MySQL Template
+tags:
+- was
+- nodejs
+- db
+- mysql
+plans:
+- bindable: false
+  description: nodejs-mysql
+  name: nodejs-mysql-plan1
+  schemas:
+    service_instance:
+      create:
+        parameters:
+          NAMESPACE: default
+          DB_STORAGE: 5Gi
+          APP_NAME: mysql-deploy
+          MYSQL_USER: root1
+          MYSQL_PASSWORD: tmax@23
+          MYSQL_DATABASE: root1
+parameters:
+- name: APP_NAME
+  displayName: PipelineName
+  description: Pipeline name
+  required: true
+- name: NAMESPACE
+  displayName: Namespace
+  description: Application namespace
+  required: true
+- name: DB_STORAGE
+  displayName: DBStorage
+  description: Storage size for DB
+  required: true
+- name: MYSQL_USER
+  displayName: MysqlUser
+  description: MysqlUser
+  required: true
+- name: MYSQL_PASSWORD
+  displayName: MysqlPassword
+  description: MysqlPassword
+  required: true
+- name: MYSQL_DATABASE
+  displayName: MysqlDatabase
+  description: MysqlDatabase
+  required: true
+- name: GIT_URL
+  displayName: GitURL
+  description: Git Repo. URL
+  required: true
+- name: GIT_REV
+  displayName: GitRev
+  description: GitRevision
+  required: true
+- name: IMAGE_URL
+  displayName: ImageURL
+  description: Output Image URL
+  required: true
+- name: REGISTRY_SECRET
+  displayName: RegistrySecret
+  description: Secret for accessing image registry
+  required: false
+  value: ''
+- name: REGISTRY_ID
+  displayName: RegistryId
+  description: ID for accessing image registry
+  required: false
+  value: ''
+- name: REGISTRY_PW
+  displayName: RegistryPw
+  description: PW for accessing image registry
+  required: false
+  value: ''
+- name: SERVICE_ACCOUNT_NAME
+  displayName: serviceAccountName
+  description: Service Account Name
+  required: true
+- name: WAS_PORT
+  displayName: wasPort
+  description: WAS Port
+  valueType: number
+  required: true
+- name: DB_SERVICE_TYPE
+  displayName: DbServiceType
+  description: DB Service Type (ClsuterIP/NodePort/LoadBalancer)
+  required: true
+- name: WAS_SERVICE_TYPE
+  displayName: WasServiceType
+  description: WAS Service Type (ClsuterIP/NodePort/LoadBalancer)
+  required: true
+- name: PACKAGE_SERVER_URL
+  displayName: PackageServerUrl
+  description: URL (including protocol, ip, port, and path) of private package server
+    (e.g., devpi, pypi, verdaccio, ...)
+  required: false
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: \${APP_NAME}-service
+    namespace: \${NAMESPACE}
+    labels:
+      app: \${APP_NAME}
+  spec:
+    type: \${WAS_SERVICE_TYPE}
+    ports:
+    - port: \${WAS_PORT}
+    selector:
+      app: \${APP_NAME}
+      tier: nodejs
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: \${APP_NAME}-db-service
+    namespace: \${NAMESPACE}
+    labels:
+      app: \${APP_NAME}
+  spec:
+    type: \${DB_SERVICE_TYPE}
+    ports:
+    - port: 3306
+    selector:
+      app: \${APP_NAME}
+      tier: mysql
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: \${APP_NAME}-db-pvc
+    namespace: \${NAMESPACE}
+    labels:
+      app: \${APP_NAME}
+  spec:
+    storageClassName: csi-cephfs-sc
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: \${DB_STORAGE}
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: \${APP_NAME}-secret
+    namespace: \${NAMESPACE}
+  type: Opaque
+  stringData:
+    user: \${MYSQL_USER}
+    password: \${MYSQL_PASSWORD}
+    database: \${MYSQL_DATABASE}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: \${APP_NAME}-mysql
+    namespace: \${NAMESPACE}
+    labels:
+      app: \${APP_NAME}
+  spec:
+    selector:
+      matchLabels:
+        app: \${APP_NAME}
+        tier: mysql
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: \${APP_NAME}
+          tier: mysql
+      spec:
+        initContainers:
+        - name: init-privilege-\${MYSQL_USER}
+          image: busybox
+          command:
+          - sh
+          - -c
+          - echo 'mysql $mysql_flags -e "grant all privileges on *.* to \${MYSQL_USER}@'\''%'\''; flush privileges;"' >> /opt/app-root/src/mysql-init/privilege.sh
+          volumeMounts:
+          - name: mysql-init-cfg
+            mountPath: /opt/app-root/src/mysql-init
+        containers:
+        - image: 192.168.6.110:5000/centos/mysql:5.7
+          name: mysql
+          env:
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: \${APP_NAME}-secret
+                key: user
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: \${APP_NAME}-secret
+                key: password
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: \${APP_NAME}-secret
+                key: database
+          ports:
+          - containerPort: 3306
+            name: mysql
+          volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql/data
+          - name: mysql-init-cfg
+            mountPath: /opt/app-root/src/mysql-init
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - MYSQL_PWD="$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE
+                -e 'SELECT 1'
+        volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: \${APP_NAME}-db-pvc
+        - name: mysql-init-cfg
+          emptyDir: {}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: \${APP_NAME}-deploy-cfg
+    namespace: \${NAMESPACE}
+  data:
+    deploy-spec.yaml: |
+      spec:
+        selector:
+          matchLabels:
+            app: \${APP_NAME}
+            tier: nodejs
+        template:
+          metadata:
+            labels:
+              app: \${APP_NAME}
+              tier: nodejs
+          spec:
+            imagePullSecrets:
+            - name: \${REGISTRY_SECRET}
+            containers:
+            - env:
+              - name: DB_HOST
+                value: \${APP_NAME}-db-service
+              - name: DB_PORT
+                value: "3306"
+              - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: \${APP_NAME}-secret
+                    key: user
+              - name: DB_PW
+                valueFrom:
+                  secretKeyRef:
+                    name: \${APP_NAME}-secret
+                    key: password
+              - name: DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: \${APP_NAME}-secret
+                    key: database
+              ports:
+              - containerPort: \${WAS_PORT}
+- apiVersion: tekton.dev/v1alpha1
+  kind: PipelineResource
+  metadata:
+    name:\${APP_NAME}-input-git
+    namespace:\${NAMESPACE}
+  spec:
+    type: git
+    params:
+    - name: revision
+      value: \${GIT_REV}
+    - name: url
+      value: \${GIT_URL}
+- apiVersion: tekton.dev/v1alpha1
+  kind: PipelineResource
+  metadata:
+    name: \${APP_NAME}-output-image
+    namespace: \${NAMESPACE}
+  spec:
+    type: image
+    params:
+    - name: url
+      value: \${IMAGE_URL}
+- apiVersion: tekton.dev/v1alpha1
+  kind: Pipeline
+  metadata:
+    name: \${APP_NAME}-pipeline
+    namespace: \${NAMESPACE}
+  spec:
+    resources:
+    - name: source-repo
+      type: git
+    - name: image
+      type: image
+    params:
+    - name: app-name
+      type: string
+      description: Application name
+    - name: replica
+      type: string
+      description: Number of replica
+      default: "1"
+    - name: port
+      type: string
+      description: Application port
+      default: "8080"
+    - name: deploy-cfg-name
+      description: Configmap name for description
+    tasks:
+    - name: build-source
+      taskRef:
+        name: s2i
+        kind: ClusterTask
+      params:
+      - name: BUILDER_IMAGE
+        value: 192.168.6.110:5000/s2i-nodejs:12
+      - name: PACKAGE_SERVER_URL
+        value: \${PACKAGE_SERVER_URL}
+      - name: REGISTRY_ID
+        value: \${REGISTRY_ID}
+      - name: REGISTRY_PW
+        value: \${REGISTRY_PW}
+      resources:
+        inputs:
+        - name: source
+          resource: source-repo
+        outputs:
+        - name: image
+          resource: image
+    - name: scan-and-sign-image
+      taskRef:
+        name: analyze-image-vulnerabilities
+        kind: ClusterTask
+      resources:
+        inputs:
+        - name: scanned-image
+          resource: image
+          from:
+          - build-source
+      params:
+      - name: image-url
+        value: $(tasks.build-source.results.image-url)
+    - name: deploy
+      taskRef:
+        name: generate-and-deploy-using-kubectl
+        kind: ClusterTask
+      runAfter:
+      - scan-and-sign-image
+      resources:
+        inputs:
+        - name: image
+          resource: image
+      params:
+      - name: app-name
+        value: $(params.app-name)
+      - name: replica
+        value: $(params.replica)
+      - name: port
+        value: $(params.port)
+      - name: image-url
+        value: $(tasks.build-source.results.image-url)
+      - name: deploy-cfg-name
+        value: $(params.deploy-cfg-name)
+- apiVersion: tekton.dev/v1alpha1
+  kind: PipelineRun
+  metadata:
+    generateName: \${APP_NAME}-run-
+    namespace: \${NAMESPACE}
+  spec:
+    serviceAccountName: \${SERVICE_ACCOUNT_NAME}
+    pipelineRef:
+      name: \${APP_NAME}-pipeline
+    resources:
+    - name: source-repo
+      resourceRef:
+        name: \${APP_NAME}-input-git
+    - name: image
+      resourceRef:
+        name: \${APP_NAME}-output-image
+    params:
+    - name: app-name
+      value: \${APP_NAME}
+    - name: replica
+      value: "1"
+    - name: deploy-cfg-name
+      value: \${APP_NAME}-deploy-cfg
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.TemplateInstanceModel), 'default'],
     `
 apiVersion: tmax.io/v1
@@ -665,6 +1973,101 @@ spec:
       required: true
       value: example/image:version
 
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Template
+    metadata:
+      name: example-template
+      namespace: demo-ns
+    objects:
+      - apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: example
+          labels:
+            app: example
+        spec:
+          selector:
+            matchLabels:
+              app: example
+          template:
+            metadata:
+              labels:
+                app: example
+            spec:
+              containers:
+                - name: example
+                  image: 'example/image:version'
+                  ports:
+                    - name: example
+                      containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample2'],
+    `
+    apiVersion: tmax.io/v1
+    kind: TemplateInstance
+    metadata:
+      name: apache-cicd-template-instance
+      namespace: default
+    spec:
+      template:
+        metadata:
+          name: apache-cicd-template
+        parameters:
+        - name: APP_NAME
+          value: apache-sample-app
+        - name: NAMESPACE
+          value: default
+        - name: SERVICE_ACCOUNT_NAME
+          value: tutorial-service
+        - name: GIT_URL
+          value: https://github.com/microsoft/project-html-website
+        - name: GIT_REV
+          value: master
+        - name: IMAGE_URL
+          value: 192.168.6.110:5000/apache-sample:latest
+        - name: WAS_PORT
+          value: '8080'
+        - name: SERVICE_TYPE
+          value: LoadBalancer
+        - name: PACKAGE_SERVER_URL
+          value: ''
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample3'],
+    `
+    apiVersion: tmax.io/v1
+    kind: TemplateInstance
+    metadata:
+      name: mysql-template-instance
+      namespace: default
+    spec:
+      template:
+        metadata:
+          name: mysql-template
+        parameters:
+        - name: APP_NAME
+          value: mysql-sample-app
+        - name: NAMESPACE
+          description: A Namespace Name
+          value: default
+        - name: DB_STORAGE
+          value: "20Gi"
+        - name: SERVICE_TYPE
+          value: ClusterIP
+        - name: MYSQL_USER
+          value: mysqluser
+        - name: MYSQL_PASSWORD
+          value: mysqlpassword
+        - name: MYSQL_DATABASE
+          value: mysqldb
 `,
   )
   .setIn(
@@ -886,6 +2289,69 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample'],
+    `
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample2'],
+    `
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql2
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+              claimName: mysql-pv-claim
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ClusterModel), 'default'],
     `
 apiVersion: multicluster.coreos.com/v1
@@ -916,6 +2382,38 @@ data:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'configmap-sample'],
+    `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example
+  namespace: demo-ns
+data:
+  example.property.1: hello
+  example.property.2: world
+  example.property.file: |-
+    property.1=value-1
+    property.2=value-2
+    property.3=value-3
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ConfigMapModel), 'configmap-sample2'],
+    `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-hypercloud
+  namespace: default
+data:
+  DB_URL: localhost
+  DB_USER: hypercloud
+  DB_PASS: hypercloud
+  DEBUG_INFO: debug
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.CronJobModel), 'default'],
     `
 apiVersion: batch/v1beta1
@@ -935,6 +2433,30 @@ spec:
             - /bin/sh
             - -c
             - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  schedule: '@daily'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo Hello from the Kubernetes cluster
           restartPolicy: OnFailure
 `,
   )
@@ -963,6 +2485,20 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - ct
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CustomResourceDefinitionModel), 'customresourcedefinition-sample'],
+    `
+apiVersion: "stable.example.com/v1" 
+kind: CronTab 
+metadata:
+  name: my-new-cron-object 
+  finalizers: 
+  - finalizer.stable.example.com
+spec: 
+  cronSpec: "* * * * /5"
+  image: my-awesome-cron-image
 `,
   )
   .setIn(
@@ -1029,6 +2565,49 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'hpa-sample'],
+    `
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: sample-cpu-scaling
+      namespace: default
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: sample-name
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            targetAverageUtilization: 50
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.HorizontalPodAutoscalerModel), 'hpa-sample2'],
+    `
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: sample-mem-scaling
+      namespace: default
+    spec:
+      scaleTargetRef:
+        kind: Deployment
+        name: sample-name
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: memory
+            targetAverageValue: 1G
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PodModel), 'default'],
     `
 apiVersion: v1
@@ -1043,6 +2622,52 @@ spec:
       image: hypercloud/hello-hypercloud
       ports:
         - containerPort: 8080
+`,
+  )
+  // TODO
+  //service binding
+  //template
+  //template instance
+  .setIn(
+    [referenceForModel(k8sModels.PodModel), 'pod-sample'],
+    `
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example
+  labels:
+    app: hello-hypercloud
+  namespace: default
+spec:
+  containers:
+    - name: hello-hypercloud
+      image: hypercloud/hello-hypercloud
+      ports:
+        - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodModel), 'pod-sample2'],
+    `
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example2
+  labels:
+    app: hello-hypercloud
+spec:
+  containers:
+  - name: hello-hypercloud
+    image: hypercloud/hello-hypercloud
+    resources:  
+      requests:
+        cpu: 0.1
+        memory: 200M
+      limits:
+        cpu: 0.5
+        memory: 1G
+    ports:
+    - containerPort: 8080
 `,
   )
   .setIn(
@@ -1064,6 +2689,38 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.IngressModel), 'ingress-sample'],
+    `
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example
+  namespace: sample1-name
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /testpath
+            backend:
+              serviceName: test
+              servicePort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.IngressModel), 'ingress-sample2'],
+    `
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+spec:
+  backend:
+    serviceName: testsvc
+    servicePort: 80
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.JobModel), 'default'],
     `
 apiVersion: batch/v1
@@ -1080,6 +2737,95 @@ spec:
       - name: pi
         image: perl
         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample'],
+    `
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  template:
+    metadata:
+      name: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+      restartPolicy: Never
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample2'],
+    `
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  selector: {}
+  template:
+    metadata:
+      name: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(100)
+        - name: pi2
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(200)
+      restartPolicy: Never
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample3'],
+    `
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  completions: 3
+  parallelism: 3
+  selector: {}
+  template:
+    metadata:
+      name: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(100)
+        - name: pi2
+          image: perl
+          command:
+            - perl
+            - '-Mbignum=bpi'
+            - '-wle'
+            - print bpi(200)
       restartPolicy: Never
 `,
   )
@@ -1236,6 +2982,63 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'service-sample'],
+    `
+apiVersion: v1
+kind: Service
+metadata:
+  name: example
+  namespace: sample1-name
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'service-sample2'],
+    `
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9376
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 9377
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceModel), 'service-sample3'],
+    `
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9376
+  externalIPs:
+        - 80.11.12.10
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'default'],
     `
 apiVersion: apps/v1
@@ -1256,6 +3059,58 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample'],
+    `
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: example
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: hello-hypercloud
+  template:
+    metadata:
+      labels:
+        app: hello-hypercloud
+    spec:
+      containers:
+        - name: hello-hypercloud
+          image: hypercloud/hello-hypercloud
+          ports:
+            - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample2'],
+    `
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: resource-example
+  namespace: demo-ns
+spec:
+  selector:
+    matchLabels:
+      name: sample-fluentd
+  template:
+    metadata:
+      labels:
+        name: sample-fluentd
+    spec:
+      containers:
+      - name: hello-fluentd
+        image: gcr.io/google-containers/fluentd-elasticsearch:1.20
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
 `,
   )
   .setIn(
@@ -1293,6 +3148,40 @@ spec:
     requests.memory: 1Gi
     limits.cpu: "2"
     limits.memory: 2Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample'],
+    `
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: example
+  namespace: default
+spec:
+  hard:
+    requests.cpu: '1'
+    requests.memory: 1Gi
+    limits.cpu: '2'
+    limits.memory: 2Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample2'],
+    `
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: example
+  namespace: default
+spec:
+  hard:
+    configmaps: '10'
+    persistentvolumeclaims: '4'
+    replicationcontrollers: '20'
+    secrets: '10'
+    services: '10'
+    services.loadbalancers: '2'
 `,
   )
   .setIn(
@@ -1335,6 +3224,47 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample'],
+    `
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example
+  namespace: demo-ns
+spec:
+  serviceName: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: nginx
+          image: 'gcr.io/google_containers/nginx-slim:0.8'
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: www
+              mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+    - metadata:
+        name: www
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 1Gi
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.StorageClassModel), 'default'],
     `
 apiVersion: storage.k8s.io/v1
@@ -1368,6 +3298,33 @@ stringData:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'secret-sample'],
+    `
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example
+  namespace: demo-ns
+type: Opaque
+stringData:
+  username: admin
+  password: damin
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.SecretModel), 'secret-sample2'],
+    `
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: aHlwZXJjbG91ZA==
+  password: aHlwZXJjbG91ZDQ=
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ReplicaSetModel), 'default'],
     `
 apiVersion: apps/v1
@@ -1390,6 +3347,32 @@ spec:
         image: hypercloud/hello-hypercloud
         ports:
         - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: hello-hypercloud
+      template:
+        metadata:
+          name: hello-hypercloud
+          labels:
+            app: hello-hypercloud
+        spec:
+          containers:
+            - name: hello-hypercloud
+              image: hypercloud/hello-hypercloud
+              ports:
+                - containerPort: 8080
 `,
   )
   .setIn(
@@ -1734,5 +3717,25 @@ spec:
       - to:
         - operation:
              methods: ["GET", "HEAD"]       
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.UserSecurityPolicyModel), 'default'],
+    `
+    apiVersion: tmax.io/v1
+    kind: User
+    metadata:
+      name: example
+      labels:
+        encrypted: f
+    userInfo:
+      name: example
+      password: example
+      email: example@tmax.co.kr
+      department: Cloud
+      position: developer
+      phone: 010-0000-0000
+      description: For Example
+    status: active 
 `,
   );

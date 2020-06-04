@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { restyle } from 'plotly.js/lib/core';
-
+import { useTranslation, withTranslation } from 'react-i18next';
 import { BaseGraph } from './base';
 import { connectToURLs, MonitoringRoutes } from '../../monitoring';
 
@@ -16,12 +16,11 @@ const baseData = {
 export class Line_ extends BaseGraph {
   constructor(props) {
     super(props);
-
+    const { t } = this.props;
     let queries = props.query;
     if (!_.isArray(queries)) {
       queries = [queries];
     }
-
     this.data = queries.map(() => Object.assign({}, baseData));
     this.layout = {
       "xaxis": {
@@ -32,7 +31,7 @@ export class Line_ extends BaseGraph {
       },
       "annotations": [
         {
-          "text": "ServiceError",
+          "text": t('STRING:LINE_0'),
           "xref": "paper",
           "yref": "paper",
           "showarrow": false,
@@ -42,37 +41,6 @@ export class Line_ extends BaseGraph {
         }
       ]
     }
-    // this.layout = {
-    //   dragmode: 'pan',
-    //   yaxis: {
-    //     rangemode: 'tozero',
-    //     zeroline: false,
-    //     ticks: '',
-    //     showline: false,
-    //     fixedrange: true,
-    //   },
-    //   xaxis: {
-    //     zeroline: false,
-    //     tickformat: '%H:%M',
-    //     ticks: '',
-    //     showline: true,
-    //     fixedrange: true,
-    //   },
-    //   legend: {
-    //     x: 0, y: 1,
-    //     bgcolor: 'rgba(255, 255, 255, 0.5)',
-    //     size: '12px',
-    //     orientation: 'h'
-    //   },
-    //   margin: {
-    //     l: 30,
-    //     b: 30,
-    //     r: 40,
-    //     t: 0,
-    //     pad: 0,
-    //   },
-    //   shapes: [],
-    // };
     this.options = {
       displaylogo: false,
       displayModeBar: false,
@@ -112,8 +80,8 @@ export class Line_ extends BaseGraph {
     this.node.removeListener('plotly_relayout', this.onPlotlyRelayout);
   }
   updateGraph2(data, target) {
-
     let queries = this.props.query;
+    let nticks = data.length <= 5 ? data.length : 5;
     if (!_.isArray(queries)) {
       queries = [{
         query: queries,
@@ -166,7 +134,7 @@ export class Line_ extends BaseGraph {
         zeroline: false,
         showline: true,
         tickmode: 'auto',
-        nticks: 5,
+        nticks: nticks,
         fixedrange: true, // true인경우 zoom불가
         automargin: true
       },
@@ -226,7 +194,7 @@ export class Line_ extends BaseGraph {
     _.each(data, (result, i) => {
       const query = queries[i];
       const name = query && query.name;
-      if (!result.cpu && result.data.result.length === 0) {
+      if (result.data.result.length === 0) {
         // eslint-disable-next-line no-console
         console.warn(`Graph error: No data from query for ${name || query}.`);
         this.node.layout = {
@@ -259,9 +227,43 @@ export class Line_ extends BaseGraph {
         return
       }
       const lineValues = result.data.result[0].values;
+      this.node.layout = {
+        dragmode: 'pan',
+        yaxis: {
+          visible: true,
+          rangemode: 'tozero',
+          zeroline: false,
+          ticks: '',
+          showline: false,
+          fixedrange: true,
+          automargin: true
+        },
+        xaxis: {
+          visible: true,
+          zeroline: false,
+          showline: true,
+          tickmode: 'auto',
+          fixedrange: true, // true인경우 zoom불가
+          automargin: true
+        },
+        legend: {
+          x: 0, y: 1,
+          bgcolor: 'rgba(255, 255, 255, 0.5)',
+          size: '12px',
+          orientation: 'h'
+        },
+        margin: {
+          l: 30,
+          b: 30,
+          r: 40,
+          t: 0,
+          pad: 0,
+        },
+        shapes: [],
+      };
       restyle(this.node, {
         x: [lineValues.map(v => new Date(v[0] * 1000))],
-        y: [lineValues.map(v => v[1] === "NaN" ? null : v[1])],
+        y: [lineValues.map(v => v[1] === "NaN" ? null : Number(v[1]))],
         // Use a lighter fill color on first line in graphs
         fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
         name,
@@ -269,10 +271,11 @@ export class Line_ extends BaseGraph {
         // eslint-disable-next-line no-console
         console.error(e);
       });
+      console.log(lineValues)
     });
   }
 }
-export const Line = connectToURLs(MonitoringRoutes.Prometheus)(Line_);
+export const Line = withTranslation()(connectToURLs(MonitoringRoutes.Prometheus)(Line_));
 
 Line_.contextTypes = {
   urls: PropTypes.object,

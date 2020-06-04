@@ -187,7 +187,9 @@
     "CONTAINER-DETAIL_2": "마운트된 볼륨이 없습니다.",
     "CONTAINER-DETAIL_3": "볼륨을 사용하면 파드와 데이터를 파일로 공유 할 수 있습니다.",
     "CONTAINER-DETAIL_4": "설정된 변수가 없습니다.",
-    "CONTAINER-DETAIL_5": "설정 값을 전달하는 쉬운 방법"
+    "CONTAINER-DETAIL_5": "설정 값을 전달하는 쉬운 방법",
+    "LINE_0": "데이터를 불러올 수 없습니다.",
+    "LINE_1": "데이터가 존재하지 않습니다."
   },
   "CONTENT": {
     "TRIALTIME": "구독 기간",
@@ -598,7 +600,18 @@
     "REQUESTSIZE": "Request Size",
     "RESPONSESIZE": "Response Size",
     "TCPRECEIVED": "TCP Received",
-    "TCPSENT": "TCP Sent"
+    "TCPSENT": "TCP Sent",
+    "MEMORY": "Memory",
+    "GPU": "GPU",
+    "ALGORITHMNAME": "Algorithm name",
+    "CURRENTTRIAL": "Current Trial",
+    "MAXTRIALCOUNT": "Max Trial Count",
+    "CURRENTOPTIMAL": "Current Optimal",
+    "OBJECTIVE": "Objective",
+    "FRAMEWORK": "Framework",
+    "STORAGEURI": "Storage URI",
+    "PIPELINE": "Pipeline",
+    "ElAPSEDTIME": "elapsed time"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -679,6 +692,12 @@
     "SERVICEENTRY": "서비스 엔트리",
     "REQUESTAUTHENTICATION": "요청 인증",
     "PEERAUTHENTICATION": "피어 인증",
-    "AUTHORIZATIONPOLICY": "인가 정책"
+    "AUTHORIZATIONPOLICY": "인가 정책",
+    "AIOPS": "AI Ops",
+    "NOTEBOOK": "Notebook",
+    "EXPERIMENT": "Experiment",
+    "INFERENCESERVICE": "Inference Service",
+    "WORKFLOWTEMPLATE": "Workflow Template",
+    "WORKFLOW": "Workflow"
   }
 }

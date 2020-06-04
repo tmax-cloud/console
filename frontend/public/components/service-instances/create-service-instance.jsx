@@ -335,7 +335,7 @@ const withServiceInstanceForm = SubForm =>
                             <div className="control-label">{parameter.displayName}</div>
                           </div>
                           <div className="col-xs-3" id={parameter.name}>
-                            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.displayName} required={isRequired} />
+                            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
                           </div>
                         </div>
                         <div className="row">
