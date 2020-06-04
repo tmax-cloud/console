@@ -63,10 +63,14 @@ _.each(namespacedPrefixes, p => {
   namespacedRoutes.push(`${p}/all-namespaces`);
 });
 
-const NamespaceRedirect = () => {
-  const activeNamespace = getActiveNamespace();
-
+const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
+  let activeNamespace = getActiveNamespace();
   let to;
+  if (!flags[FLAGS.CANLIST_NS]) {
+    activeNamespace = 'default';
+  } else {
+    activeNamespace = ALL_NAMESPACES_KEY;
+  }
   if (activeNamespace === ALL_NAMESPACES_KEY) {
     to = '/status/all-namespaces';
   } else if (activeNamespace) {
@@ -74,7 +78,7 @@ const NamespaceRedirect = () => {
   }
   // TODO: check if namespace exists
   return <Redirect to={to} />;
-};
+});
 
 const ActiveNamespaceRedirect = ({ location }) => {
   const activeNamespace = getActiveNamespace();
