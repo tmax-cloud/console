@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { restyle } from 'plotly.js/lib/core';
-
+import { useTranslation, withTranslation } from 'react-i18next';
 import { BaseGraph } from './base';
 import { connectToURLs, MonitoringRoutes } from '../../monitoring';
 
@@ -16,12 +16,11 @@ const baseData = {
 export class Line_ extends BaseGraph {
   constructor(props) {
     super(props);
-
+    const { t } = this.props;
     let queries = props.query;
     if (!_.isArray(queries)) {
       queries = [queries];
     }
-
     this.data = queries.map(() => Object.assign({}, baseData));
     this.layout = {
       "xaxis": {
@@ -32,7 +31,7 @@ export class Line_ extends BaseGraph {
       },
       "annotations": [
         {
-          "text": "ServiceError",
+          "text": t('STRING:LINE_0'),
           "xref": "paper",
           "yref": "paper",
           "showarrow": false,
@@ -42,37 +41,6 @@ export class Line_ extends BaseGraph {
         }
       ]
     }
-    // this.layout = {
-    //   dragmode: 'pan',
-    //   yaxis: {
-    //     rangemode: 'tozero',
-    //     zeroline: false,
-    //     ticks: '',
-    //     showline: false,
-    //     fixedrange: true,
-    //   },
-    //   xaxis: {
-    //     zeroline: false,
-    //     tickformat: '%H:%M',
-    //     ticks: '',
-    //     showline: true,
-    //     fixedrange: true,
-    //   },
-    //   legend: {
-    //     x: 0, y: 1,
-    //     bgcolor: 'rgba(255, 255, 255, 0.5)',
-    //     size: '12px',
-    //     orientation: 'h'
-    //   },
-    //   margin: {
-    //     l: 30,
-    //     b: 30,
-    //     r: 40,
-    //     t: 0,
-    //     pad: 0,
-    //   },
-    //   shapes: [],
-    // };
     this.options = {
       displaylogo: false,
       displayModeBar: false,
@@ -112,8 +80,8 @@ export class Line_ extends BaseGraph {
     this.node.removeListener('plotly_relayout', this.onPlotlyRelayout);
   }
   updateGraph2(data, target) {
-
     let queries = this.props.query;
+    let nticks = data.length <= 5 ? data.length : 5;
     if (!_.isArray(queries)) {
       queries = [{
         query: queries,
@@ -166,7 +134,7 @@ export class Line_ extends BaseGraph {
         zeroline: false,
         showline: true,
         tickmode: 'auto',
-        nticks: 5,
+        nticks: nticks,
         fixedrange: true, // true인경우 zoom불가
         automargin: true
       },
@@ -272,7 +240,7 @@ export class Line_ extends BaseGraph {
     });
   }
 }
-export const Line = connectToURLs(MonitoringRoutes.Prometheus)(Line_);
+export const Line = withTranslation()(connectToURLs(MonitoringRoutes.Prometheus)(Line_));
 
 Line_.contextTypes = {
   urls: PropTypes.object,
