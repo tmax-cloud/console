@@ -45,11 +45,11 @@ export const PodRow = ({ obj: pod }) => {
   const status = validStatuses.has(phase) ? (
     <CamelCaseWrap value={phase} />
   ) : (
-      <span className="co-error co-icon-and-text">
-        <i className="fa fa-times-circle co-icon-and-text__icon" aria-hidden="true" />
-        <CamelCaseWrap value={phase} />
-      </span>
-    );
+    <span className="co-error co-icon-and-text">
+      <i className="fa fa-times-circle co-icon-and-text__icon" aria-hidden="true" />
+      <CamelCaseWrap value={phase} />
+    </span>
+  );
 
   return (
     <ResourceRow obj={pod}>
@@ -63,9 +63,11 @@ export const PodRow = ({ obj: pod }) => {
       <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
         <LabelList kind="Pod" labels={pod.metadata.labels} />
       </div>
-      {!HDCModeFlag && <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
-        <NodeLink name={pod.spec.nodeName} />
-      </div>}
+      {!HDCModeFlag && (
+        <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">
+          <NodeLink name={pod.spec.nodeName} />
+        </div>
+      )}
       <div className="col-lg-2 col-md-2 hidden-sm hidden-xs">{status}</div>
       <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
         <Readiness pod={pod} />
@@ -89,9 +91,11 @@ const PodHeader = props => {
       <ColHead {...props} className="col-lg-2 col-md-3 col-sm-4 hidden-xs" sortField="metadata.labels">
         {t('CONTENT:PODLABELS')}
       </ColHead>
-      {!HDCModeFlag && <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.nodeName">
-        {t('RESOURCE:NODE')}
-      </ColHead>}
+      {!HDCModeFlag && (
+        <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortField="spec.nodeName">
+          {t('RESOURCE:NODE')}
+        </ColHead>
+      )}
       <ColHead {...props} className="col-lg-2 col-md-2 hidden-sm hidden-xs" sortFunc="podPhase">
         {t('CONTENT:STATUS')}
       </ColHead>
@@ -262,12 +266,14 @@ const Details = ({ obj: pod }) => {
               )}
               <dt>{t('CONTENT:PODIP')}</dt>
               <dd>{pod.status.podIP || '-'}</dd>
-              {!HDCModeFlag &&
-                <div><dt>{t('CONTENT:NODE')}</dt>
+              {!HDCModeFlag && (
+                <div>
+                  <dt>{t('CONTENT:NODE')}</dt>
                   <dd>
                     <NodeLink name={pod.spec.nodeName} />
-                  </dd></div>
-              }
+                  </dd>
+                </div>
+              )}
             </dl>
           </div>
         </div>

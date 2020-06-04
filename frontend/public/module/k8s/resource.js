@@ -3,6 +3,8 @@ import { coFetchJSON } from '../../co-fetch';
 import { k8sBasePath } from './k8s';
 import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
+import { getId } from '../../components/utils/auth';
+import store from '../../redux';
 
 /** @type {(model: K8sKind) => string} */
 const getK8sAPIPath = model => {
@@ -82,18 +84,27 @@ export const k8sKill = (kind, resource, opts = {}, json = null) => coFetchJSON.d
 
 export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   let listURL;
-  let query = _.map(_.omit(params, 'ns'), (v, k) => {
-    if (k === 'labelSelector') {
-      v = selectorToString(v);
-    }
-    return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
-  }).join('&');
+  let query =
+    _.map(_.omit(params, 'ns'), (v, k) => {
+      if (k === 'labelSelector') {
+        v = selectorToString(v);
+      }
+      return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+    }).join('&') || '';
 
   if (kind.kind === 'Namespace') {
     listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
   } else {
     listURL = resourceURL(kind, { ns: params.ns });
   }
+
+  // if (kind.kind === 'NamespaceClaim') {
+  //   if (!store.getState().FLAGS.get('CAN_LIST_NS')) {
+  //     // namespace list 조회 권한 여부
+  //     const id = getId();
+  //     query = query.concat(`&labelSelector=owner=${id}`);
+  //   }
+  // }
 
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
 };

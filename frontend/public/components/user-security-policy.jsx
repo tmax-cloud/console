@@ -7,7 +7,7 @@ import { fromNow } from './utils/datetime';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [Cog.factory.Edit];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const UserSecurityPolicyHeader = props => {
     const { t } = useTranslation();
@@ -64,7 +64,9 @@ export const UserSecurityPolicyList = props => {
 UserSecurityPolicyList.displayName = UserSecurityPolicyList;
 
 export const UserSecurityPoliciesPage = props => {
-    return <ListPage {...props} ListComponent={UserSecurityPolicyList} canCreate={false} kind="Usersecuritypolicy" />;
+    const { t } = useTranslation();
+    let canCreate = window.SERVER_FLAGS.HDCModeFlag ? false : true;
+    return <ListPage {...props} ListComponent={UserSecurityPolicyList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={canCreate} kind="Usersecuritypolicy" />;
 };
 UserSecurityPoliciesPage.displayName = 'UserSecurityPoliesPage';
 

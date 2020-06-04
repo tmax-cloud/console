@@ -273,7 +273,7 @@ const withServiceInstanceForm = SubForm =>
             <title>{title}</title>
           </Helmet>
           {/* <form className="co-m-pane__body-group co-create-service-instance-form" onSubmit={() => this.save}> */}
-          <div className="co-m-pane__body-group co-create-service-instance-form">
+          <div className="co-m-pane__body-group co-create-service-instance-form form-group">
             <h1 className="co-m-pane__heading">{title}</h1>
             {/* <p className="co-m-pane__explanation">{this.props.explanation}</p> */}
             <Stepper steps={steps} activeStep={currentStep} />
@@ -327,19 +327,21 @@ const withServiceInstanceForm = SubForm =>
                 {paramList.length > 0 && (
                   <Section label={t('CONTENT:PARAMETERS')} key="params">
                     {paramList.map((parameter, index) => {
-                      let keyValue = parameter.defaultValue ? parameter.displayName + "( default:" + parameter.defaultValue + ")" : parameter.displayName;
-                      let defaultValue = parameter.defaultValue ? parameter.defaultValue : ''
+                      let defaultValue = parameter.defaultValue ? `${parameter.defaultValue}` : ''
                       let isRequired = parameter.required ? true : false;
                       return <div>
-                        <React.Fragment key={index}>
-                          <div>
-                            <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                              {keyValue}
-                            </label>
+                        <div className="row">
+                          <div className={"col-xs-2 form-group " + (isRequired ? 'required' : '')}>
+                            <div className="control-label">{parameter.displayName}</div>
                           </div>
-                          <input className="form-control" type="text" placeholder={t('CONTENT:VALUE')} defaultValue={defaultValue} id={parameter.name} onChange={this.onParamValueChanged} required={isRequired} />
-                        </React.Fragment>
-                        <p className="co-m-pane__explanation">{parameter.description}</p>
+                          <div className="col-xs-3" id={parameter.name}>
+                            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-xs-2" />
+                          <p className="col-xs-10 co-m-pane__explanation">{parameter.description}</p>
+                        </div>
                       </div>
                     }
                     )}

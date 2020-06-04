@@ -171,7 +171,7 @@ const NodeRow = ({ obj: node, expand }) => {
       <div className="col-sm-2 col-xs-4">
         <NodeStatus node={node} />
       </div>
-      <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED')}</span>}</div>
+      <div className="col-sm-3 col-xs-4">{isOperatorInstalled ? <NodeCLStatusRow node={node} /> : <span className="text-muted">{t('CONTENT:NOTCONFIGURED_EN')}</span>}</div>
       <div className="col-sm-3 hidden-xs">
         <NodeIPList ips={node.status.addresses} expand={expand} />
       </div>

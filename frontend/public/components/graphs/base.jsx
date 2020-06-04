@@ -37,16 +37,15 @@ export class BaseGraph extends SafetyFirst {
     const start = this.start || (end - timeSpan);
 
     let queries = this.props.query;
+    let timeUnit = queries[0].timeUnit;
     if (!_.isArray(queries)) {
       queries = [{
-        query: queries,
+        query: queries
       }];
     }
 
     if (queries[0].query === 'cpu' || queries[0].query === 'memory' || queries[0].query === 'storage' || queries[0].query === 'publicIp' || queries[0].query === 'gpu') {
-      const url = `/api/hypercloud/metering?namespace=${document.location.href.split('namespaces/')[1].split('/')[0]}`;
-
-      this.layout.xaxis.tickformat = '%m/%d';
+      const url = `/api/hypercloud/metering?namespace=${document.location.href.split('namespaces/')[1].split('/')[0]}&timeUnit=${timeUnit}&limit=5`;
       coFetchJSON(url)
         .then(res => {
           this.updateGraph2(res, queries[0].query);
@@ -59,7 +58,7 @@ export class BaseGraph extends SafetyFirst {
 
     const basePath = this.props.basePath || prometheusBasePath;
     const pollInterval = timeSpan / 120 || 15000;
-    const stepSize = pollInterval / 1000;
+    const stepSize = pollInterval / 2000;
     const promises = queries.map(q => {
       const url = this.timeSpan
         ? `${basePath}/api/v1/query_range?query=${encodeURIComponent(q.query)}&start=${start / 1000}&end=${end / 1000}&step=${stepSize}`
@@ -86,6 +85,10 @@ export class BaseGraph extends SafetyFirst {
   componentWillMount() {
     this.fetch();
     window.addEventListener('resize', this.resize);
+  }
+
+  componentDidUpdate() {
+    this.fetch();
   }
 
   componentWillUnmount() {

@@ -17,78 +17,78 @@ export const fromNow = (dateTime, now = undefined, options = { omitSuffix: false
 
   if (daysAgo > 548) {
     const count = Math.round(daysAgo / 365);
-    return options.omitSuffix ? `${count} ${t ? t('CONTENT:YEARS') : 'years'}` : `${count} ${t ? t('CONTENT:YEARSAGO') : 'years ago'}`;
+    return options.omitSuffix ? `${count} ${t ? t('DATETIME:YEARS') : 'years'}` : `${count} ${t ? t('DATETIME:YEARSAGO') : 'years ago'}`;
   }
   if (daysAgo > 320) {
-    return options.omitSuffix ? (t ? t('CONTENT:YEAR') : 'year') : t ? t('CONTENT:AYEARAGO') : 'a year ago';
+    return options.omitSuffix ? (t ? t('DATETIME:YEAR') : 'year') : t ? t('DATETIME:AYEARAGO') : 'a year ago';
   }
   if (daysAgo > 45) {
     const count = Math.round(daysAgo / 30);
-    return options.omitSuffix ? `${count} ${t ? t('CONTENT:MONTHS') : 'months'}` : `${count} ${t ? t('CONTENT:MONTHSAGO') : 'months ago'}`;
+    return options.omitSuffix ? `${count} ${t ? t('DATETIME:MONTHS') : 'months'}` : `${count} ${t ? t('DATETIME:MONTHSAGO') : 'months ago'}`;
   }
   if (daysAgo > 26) {
-    return options.omitSuffix ? (t ? t('CONTENT:MONTH') : 'month') : t ? t('CONTENT:AMONTHAGO') : 'a month ago';
+    return options.omitSuffix ? (t ? t('DATETIME:MONTH') : 'month') : t ? t('DATETIME:AMONTHAGO') : 'a month ago';
   }
   if (hoursAgo > 36) {
     const count = Math.round(daysAgo);
-    return options.omitSuffix ? `${count} ${t ? t('CONTENT:DAYS') : 'DAYS'}` : `${count} ${t ? t('CONTENT:DAYSAGO') : 'days ago'}`;
+    return options.omitSuffix ? `${count} ${t ? t('DATETIME:DAYS') : 'DAYS'}` : `${count} ${t ? t('DATETIME:DAYSAGO') : 'days ago'}`;
   }
   if (hoursAgo > 22) {
-    return options.omitSuffix ? (t ? t('CONTENT:DAY') : 'day') : t ? t('CONTENT:ADAYAGO') : 'a day ago';
+    return options.omitSuffix ? (t ? t('DATETIME:DAY') : 'day') : t ? t('DATETIME:ADAYAGO') : 'a day ago';
   }
   if (minutesAgo > 90) {
     const count = Math.round(hoursAgo);
-    return options.omitSuffix ? `${count} ${t ? t('CONTENT:HOURS') : 'hours'}` : `${count} ${t ? t('CONTENT:HOURSAGO') : 'hours ago'}`;
+    return options.omitSuffix ? `${count} ${t ? t('DATETIME:HOURS') : 'hours'}` : `${count} ${t ? t('DATETIME:HOURSAGO') : 'hours ago'}`;
   }
   if (minutesAgo > 45) {
-    return options.omitSuffix ? (t ? t('CONTENT:HOUR') : 'hour') : t ? t('CONTENT:ANHOURAGO') : 'an hour ago';
+    return options.omitSuffix ? (t ? t('DATETIME:HOUR') : 'hour') : t ? t('DATETIME:ANHOURAGO') : 'an hour ago';
   }
   if (secondsAgo > 90) {
     const count = Math.round(minutesAgo);
-    return options.omitSuffix ? `${count} ${t ? t('CONTENT:MINUTES') : 'minutes'}` : `${count} ${t ? t('CONTENT:MINUTESAGO') : 'minutes ago'}`;
+    return options.omitSuffix ? `${count} ${t ? t('DATETIME:MINUTES') : 'minutes'}` : `${count} ${t ? t('DATETIME:MINUTESAGO') : 'minutes ago'}`;
   }
   if (secondsAgo > 45) {
-    return options.omitSuffix ? (t ? t('CONTENT:MINUTE') : 'minute') : t ? t('CONTENT:AMINUTEAGO') : 'a minute ago';
+    return options.omitSuffix ? (t ? t('DATETIME:MINUTE') : 'minute') : t ? t('DATETIME:AMINUTEAGO') : 'a minute ago';
   }
   if (secondsAgo > 15) {
-    return options.omitSuffix ? (t ? t('CONTENT:FEWSECONDS') : 'few seconds') : t ? t('CONTENT:LESSTHANAMINUTEAGO') : 'less than a minute ago';
+    return options.omitSuffix ? (t ? t('DATETIME:FEWSECONDS') : 'few seconds') : t ? t('DATETIME:LESSTHANAMINUTEAGO') : 'less than a minute ago';
   }
 
   if (secondsAgo >= 0) {
-    return options.omitSuffix ? (t ? t('CONTENT:FEWSECONDS') : 'few seconds') : t ? t('CONTENT:AFEWSECONDSAGO') : 'a few seconds ago';
+    return options.omitSuffix ? (t ? t('DATETIME:FEWSECONDS') : 'few seconds') : t ? t('DATETIME:AFEWSECONDSAGO') : 'a few seconds ago';
   }
 
   if (secondsAgo > -45) {
-    return t ? t('CONTENT:AFEWSECONDSFROMNOW') : 'a few seconds from now';
+    return t ? t('DATETIME:AFEWSECONDSFROMNOW') : 'a few seconds from now';
   }
   if (secondsAgo > -90) {
-    return t ? t('CONTENT:AMINUTEFROMNOW') : 'a minute from now';
+    return t ? t('DATETIME:AMINUTEFROMNOW') : 'a minute from now';
   }
   if (minutesAgo > -45) {
-    return `${-Math.round(minutesAgo)} ${t ? t('CONTENT:MINUTESFROMNOW') : 'minutes from now'}`;
+    return `${-Math.round(minutesAgo)} ${t ? t('DATETIME:MINUTESFROMNOW') : 'minutes from now'}`;
   }
   if (minutesAgo > -90) {
-    return t ? t('CONTENT:ANHOURFROMNOW') : 'an hour from now';
+    return t ? t('DATETIME:ANHOURFROMNOW') : 'an hour from now';
   }
   if (hoursAgo > -22) {
-    return `${-Math.round(hoursAgo)} ${t ? t('CONTENT:HOURSFROMNOW') : 'hours from now'}`;
+    return `${-Math.round(hoursAgo)} ${t ? t('DATETIME:HOURSFROMNOW') : 'hours from now'}`;
   }
   if (hoursAgo > -36) {
-    return t ? t('CONTENT:ADAYFROMNOW') : 'a day from now';
+    return t ? t('DATETIME:ADAYFROMNOW') : 'a day from now';
   }
   if (daysAgo > -26) {
-    return `${-Math.round(daysAgo)} ${t ? t('CONTENT:DAYSFROMNOW') : 'days from now'}`;
+    return `${-Math.round(daysAgo)} ${t ? t('DATETIME:DAYSFROMNOW') : 'days from now'}`;
   }
   if (daysAgo > -45) {
-    return t ? t('CONTENT:AMONTHFROMNOW') : 'a month from now';
+    return t ? t('DATETIME:AMONTHFROMNOW') : 'a month from now';
   }
   if (daysAgo > -320) {
-    return `${-Math.round(daysAgo / 30)} ${t ? t('CONTENT:MONTHSFROMNOW') : 'months from now'}`;
+    return `${-Math.round(daysAgo / 30)} ${t ? t('DATETIME:MONTHSFROMNOW') : 'months from now'}`;
   }
   if (daysAgo > -580) {
-    return t ? t('CONTENT:AYEARFROMNOW') : 'a year from now';
+    return t ? t('DATETIME:AYEARFROMNOW') : 'a year from now';
   }
-  return `${-Math.round(daysAgo / 365)} ${t ? t('CONTENT:YEARSFROMNOW') : 'years from now'}`;
+  return `${-Math.round(daysAgo / 365)} ${t ? t('DATETIME:YEARSFROMNOW') : 'years from now'}`;
 };
 
 export const isValid = (dateTime: Date) => dateTime instanceof Date && !_.isNaN(dateTime.valueOf());

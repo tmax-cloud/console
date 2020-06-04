@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 export const createModalLauncher = Component => (props = {}) => {
   const modalContainer = document.getElementById('modal-container');
-
   const result = new Promise(resolve => {
     const closeModal = e => {
       // Disable closing the modal with the escape key for "blocking" modals
@@ -30,7 +29,7 @@ export const createModalLauncher = Component => (props = {}) => {
     ReactDOM.render(
       <Provider store={store}>
         <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-          <Modal isOpen={true} contentLabel="Modal" onRequestClose={closeModal} className="modal-dialog modal-content" overlayClassName="co-overlay" shouldCloseOnOverlayClick={!props.blocking}>
+          <Modal isOpen={true} contentLabel="Modal" onRequestClose={closeModal} className="modal-dialog modal-content" overlayClassName="co-overlay" shouldCloseOnOverlayClick={false /*!props.blocking*/}>
             <Component {...props} cancel={closeModal} close={closeModal} />
           </Modal>
         </Router>
@@ -109,3 +108,31 @@ ModalSubmitFooter.propTypes = {
 //   submitText: PropTypes.node.isRequired,
 //   cancelText: PropTypes.node.isRequired,
 // };
+
+/** @type {React.SFC<{message?: string, errorMessage?: string, inProgress: boolean, cancel: (e: Event) => void, submitText: string, submitDisabled?: boolean}>} */
+export const CustomModalSubmitFooter = ({ message, errorMessage, inProgress, cancel, leftText, rightText, clickLeft, clickRight }) => {
+  const onCancelClick = e => {
+    e.stopPropagation();
+    cancel(e);
+  };
+  // const { t } = useTranslation();
+  return (
+    <ModalFooter inProgress={inProgress} errorMessage={errorMessage} message={message}>
+      <button type="button" className="btn btn-primary" onClick={clickLeft}>
+        {leftText}
+      </button>
+      <button type="button" className="btn btn-default" onClick={clickRight}>
+        {rightText}
+      </button>
+    </ModalFooter>
+  );
+};
+
+CustomModalSubmitFooter.propTypes = {
+  cancel: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  inProgress: PropTypes.bool.isRequired,
+  message: PropTypes.string,
+  leftText: PropTypes.node.isRequired,
+  rightText: PropTypes.node.isRequired,
+};

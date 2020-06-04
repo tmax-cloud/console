@@ -10,7 +10,7 @@ import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 const NODE_ENV = process.env.NODE_ENV;
 
 /* Helpers */
-const extractCSS = new MiniCssExtractPlugin({filename: 'app-bundle.css'});
+const extractCSS = new MiniCssExtractPlugin({ filename: 'app-bundle.css' });
 
 let config: webpack.Configuration = {
   entry: [
@@ -117,7 +117,7 @@ let config: webpack.Configuration = {
     }),
     extractCSS,
   ],
-  devtool: "cheap-module-source-map", // 개발할 때 "inline-source-map"으로 사용하기
+  devtool: "source-map",  // 개발할 때 "inline-source-map"으로 사용하기
   stats: "minimal"
 };
 

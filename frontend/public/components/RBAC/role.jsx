@@ -5,7 +5,7 @@ import * as fuzzy from 'fuzzysearch';
 
 import { ColHead, DetailsPage, List, ListHeader, MultiListPage, ResourceRow, TextFilter } from '../factory';
 import { Cog, SectionHeading, MsgBox, navFactory, ResourceCog, ResourceLink, Timestamp } from '../utils';
-import { BindingName, BindingsList, RulesList } from './index';
+import { BindingName, BindingsList, RulesList, RoleBindingsPage } from './index';
 import { flatten as bindingsFlatten } from './bindings';
 import { flagPending, connectToFlags, FLAGS } from '../../features';
 import { useTranslation } from 'react-i18next';
@@ -155,6 +155,7 @@ const BindingHeader = props => {
     </ListHeader>
   );
 };
+BindingHeader.displayName = 'BindingHeader';
 
 const BindingRow = ({ obj: binding }) => (
   <ResourceRow obj={binding}>
@@ -167,7 +168,7 @@ const BindingRow = ({ obj: binding }) => (
   </ResourceRow>
 );
 
-const BindingsListComponent = props => <BindingsList {...props} Header={BindingHeader} Row={BindingRow} />;
+const BindingsListComponent = props => <BindingsList {...props} Header={BindingHeader} Row={BindingRow} virtualize />;
 
 export const BindingsForRolePage = props => {
   const {
@@ -177,7 +178,7 @@ export const BindingsForRolePage = props => {
     obj: { kind },
   } = props;
 
-  let resources = [{ kind: 'RoleBinding', namespaced: true }];
+  const resources = [{ kind: 'RoleBinding', namespaced: true }];
   if (!ns) {
     resources.push({ kind: 'ClusterRoleBinding', namespaced: false, optional: true });
   }

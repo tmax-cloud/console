@@ -25,7 +25,6 @@ import { UIActions, getActiveNamespace } from '../ui/ui-actions';
 import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
 import { referenceForModel } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
-import { Loading } from './utils';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
@@ -124,8 +123,13 @@ class App extends React.PureComponent {
     // HDC 모델
     if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
       // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL;
+      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '?redirect=console';
       return;
+    }
+
+    if (window.location.search === '?first') {
+      window.location.href = window.location.href.split('?')[0];
+      localStorage.removeItem('bridge/last-namespace-name');
     }
 
     this.state = {
@@ -166,17 +170,6 @@ class App extends React.PureComponent {
     });
   }
 
-  componentWillUnmount() {
-    localStorage.removeItem('bridge/last-namespace-name');
-  }
-
-  // componentDidMount() {
-  //   if (window.SERVER_FLAGS.releaseModeFlag && window.sessionStorage.getItem('refreshToken') && window.sessionStorage.getItem('accessToken')) {
-  //     if (window.sessionStorage.getItem('role') !== 'cluster-admin') {
-  //     this.changeRole_();
-  //     }
-  //   }
-  // }
   componentDidUpdate(prevProps) {
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
