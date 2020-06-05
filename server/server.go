@@ -3,7 +3,6 @@ package server
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -286,7 +285,7 @@ func (s *Server) HTTPHandler() http.Handler {
 					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString))
 				}
 
-				respBody := httpCall(urltocall, tokenForUserSecurityPolicy)
+				respBody := s.httpCall(urltocall, tokenForUserSecurityPolicy)
 				// 	log.Println(string(respBody))
 
 				if strings.Contains(string(r.URL.Path), "login") {
@@ -846,25 +845,43 @@ func (s *Server) handleOpenShiftTokenDeletion(user *auth.User, w http.ResponseWr
 	resp.Body.Close()
 }
 
-func httpCall(url, token string) []byte {
-	transCfg := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
-	}
+func (s *Server) httpCall(url, token string) []byte {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	req.Header.Add("Authorization", "Bearer "+token)
-	client := &http.Client{Transport: transCfg}
-	resp, err := client.Do(req)
+	resp, err := s.K8sClient.Do(req)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp.Body.Close()
 	return respBody
 }
+
+// func httpCall(url, token string) []byte {
+// 	transCfg := &http.Transport{
+// 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
+// 	}
+// 	req, err := http.NewRequest("GET", url, nil)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	req.Header.Add("Authorization", "Bearer "+token)
+// 	client := &http.Client{Transport: transCfg}
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer resp.Body.Close()
+// 	respBody, err := ioutil.ReadAll(resp.Body)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	resp.Body.Close()
+// 	return respBody
+// }

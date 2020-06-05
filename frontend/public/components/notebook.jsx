@@ -7,7 +7,7 @@ import { fromNow } from './utils/datetime';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [...Cog.factory.common];
+const menuActions = [...Cog.factory.common, Cog.factory.Connect];
 
 const NotebookHeader = props => {
     const { t } = useTranslation();
@@ -19,16 +19,16 @@ const NotebookHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.template.spec.containers[0].image">
                 {t('CONTENT:IMAGE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.template.spec.containers[0].resources.requests.cpu">
                 {t('CONTENT:CPU')}
             </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.template.spec.containers[0].resources.requests.memory">
                 {t('CONTENT:MEMORY')}
             </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.template.spec.containers[0].resources.requests.gpu">
                 {t('CONTENT:GPU')}
             </ColHead>
         </ListHeader>
@@ -45,10 +45,10 @@ const NotebookRow = () =>
                     <ResourceLink kind="Notebook" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].image}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].resources.requests.cpu}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].resources.requests.memory}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].resources.requests.gpu}</div>
             </div>
         );
     };

@@ -108,7 +108,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let key = event.target.id
     let templateInstance = { ...this.state.templateInstance };
     templateInstance.spec.template.parameters.forEach(obj => {
-      if (obj.displayName === key) {
+      if (obj.name === key) {
         obj.value = event.target.value;
       }
     });
