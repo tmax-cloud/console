@@ -3792,19 +3792,12 @@ spec:
     [referenceForModel(k8sModels.UserSecurityPolicyModel), 'default'],
     `
     apiVersion: tmax.io/v1
-    kind: User
+    kind: Usersecuritypolicy
     metadata:
-      name: example
-      labels:
-        encrypted: f
-    userInfo:
-      name: example
-      password: example
-      email: example@tmax.co.kr
-      department: Cloud
-      position: developer
-      phone: 010-0000-0000
-      description: For Example
-    status: active 
+      name: example-tmax.co.kr
+    otpEnable: f
+    otp: 123456
+    ipRange: 192.168.0.0/16
+
 `,
   );
