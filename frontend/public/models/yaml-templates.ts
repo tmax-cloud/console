@@ -2438,7 +2438,31 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: example
-  namespace: demo-ns
+  namespace: default
+spec:
+  schedule: '*/10 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample2'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: default
 spec:
   schedule: '@daily'
   jobTemplate:
@@ -2451,7 +2475,56 @@ spec:
               args:
                 - /bin/sh
                 - '-c'
-                - date; echo Hello from the Kubernetes cluster
+                - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample3'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: default
+spec:
+  schedule: '5 4-5 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample4'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: default
+spec:
+  schedule: '*/10 * * * *'
+  ConcurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo 'Hello from the Kubernetes cluster'
           restartPolicy: OnFailure
 `,
   )

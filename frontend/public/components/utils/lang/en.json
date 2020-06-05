@@ -199,7 +199,15 @@
     "CONFIGMAP-SIDEBAR_0": "Create the default ConfigMap.",
     "CONFIGMAP-SIDEBAR_1": "This 'Roll' can write non-encrypted data in a key/data pair. Related data is read from the container.",
     "CONFIGMAP-SIDEBAR_2": "Create ConfigMap as a file.",
-    "CONFIGMAP-SIDEBAR_3": "This 'Roll' can write non-encrypted data in a key/data pair."
+    "CONFIGMAP-SIDEBAR_3": "This 'Roll' can write non-encrypted data in a key/data pair.",
+    "CRONJOB-SIDEBAR_0": "Run CronJob every 10 minutes.",
+    "CRONJOB-SIDEBAR_1": "This 'role' can be used to run jobs on a specific cycle (5 minutes).",
+    "CRONJOB-SIDEBAR_2": "Run CronJob on a daily basis.",
+    "CRONJOB-SIDEBAR_3": "This 'role' can be used to run jobs on a daily basis (midnight).",
+    "CRONJOB-SIDEBAR_4": "Run CronJob at specific times every day.",
+    "CRONJOB-SIDEBAR_5": "This 'role' can be used to run jobs at a specific point in time every day (4:05 / 5:05).",
+    "CRONJOB-SIDEBAR_6": "Do not run CroJobs at the same time.",
+    "CRONJOB-SIDEBAR_7": "This 'role' prohibits simultaneous execution in periodic and recurring jobs. The next run cannot start until the previous run completes."
   },
   "CONTENT": {
     "TRIALTIME": "Trial Time",
