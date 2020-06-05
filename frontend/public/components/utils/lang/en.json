@@ -210,6 +210,7 @@
     "CRONJOB-SIDEBAR_7": "This 'role' prohibits simultaneous execution in periodic and recurring jobs. The next run cannot start until the previous run completes."
   },
   "CONTENT": {
+    "CONNECT": "Connect",
     "TRIALTIME": "Trial Time",
     "HOUR": "Hour",
     "DAY": "Day",
