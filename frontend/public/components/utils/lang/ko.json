@@ -189,7 +189,11 @@
     "CONTAINER-DETAIL_4": "설정된 변수가 없습니다.",
     "CONTAINER-DETAIL_5": "설정 값을 전달하는 쉬운 방법",
     "LINE_0": "데이터를 불러올 수 없습니다.",
-    "LINE_1": "데이터가 존재하지 않습니다."
+    "LINE_1": "데이터가 존재하지 않습니다.",
+    "SECRET-SIDEBAR_0": "기본인증 시크릿 생성",
+    "SECRET-SIDEBAR_1": "이 '롤'은 username /password의 조합으로\nSCM 서버에 대한 인증을 위한 시크릿을 생성할 수 있습니다.",
+    "SECRET-SIDEBAR_2": "사용자 정의 데이터 형태의 시크릿 생성",
+    "SECRET-SIDEBAR_3": "이 '롤'은 Key/value로 이루어진 data값에 Base64형태로 인코딩 합니다."
   },
   "CONTENT": {
     "TRIALTIME": "구독 기간",

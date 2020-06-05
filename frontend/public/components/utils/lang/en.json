@@ -191,7 +191,11 @@
     "CONTAINER-DETAIL_4": "No variables have been set",
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values",
     "LINE_0": "Service Error",
-    "LINE_1": "No Matching Data Found"
+    "LINE_1": "No Matching Data Found",
+    "SECRET-SIDEBAR_0": "1. Create a basic authentication secret. ",
+    "SECRET-SIDEBAR_1": "This 'Roll' can generate a secret to authenticate the SCM server with a username/password pair.",
+    "SECRET-SIDEBAR_2": "2. Create a user-defined secret. ",
+    "SECRET-SIDEBAR_3": "This 'Roll' encodes data values in a key/value pair to Base64 format. secretKeyRef can be explicitly set for deployment."
   },
   "CONTENT": {
     "TRIALTIME": "Trial Time",
