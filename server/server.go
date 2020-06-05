@@ -220,8 +220,8 @@ func (s *Server) HTTPHandler() http.Handler {
 				// Query에서 Token이 있다면 가져오기
 				queryTokens, _ := r.URL.Query()["token"]
 
-				// login, refresh 서비스
-				if strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "refresh") {
+				// otp, login, refresh 서비스
+				if strings.Contains(string(r.URL.Path), "otp") || strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "refresh") {
 
 					// id나 token을 가져오기 위해 body를 parse
 					body, err := ioutil.ReadAll(r.Body)
