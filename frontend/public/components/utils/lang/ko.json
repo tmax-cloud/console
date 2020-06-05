@@ -193,7 +193,11 @@
     "SECRET-SIDEBAR_0": "기본인증 시크릿 생성",
     "SECRET-SIDEBAR_1": "이 '롤'은 username /password의 조합으로\nSCM 서버에 대한 인증을 위한 시크릿을 생성할 수 있습니다.",
     "SECRET-SIDEBAR_2": "사용자 정의 데이터 형태의 시크릿 생성",
-    "SECRET-SIDEBAR_3": "이 '롤'은 Key/value로 이루어진 data값에 Base64형태로 인코딩 합니다."
+    "SECRET-SIDEBAR_3": "이 '롤'은 Key/value로 이루어진 data값에 Base64형태로 인코딩 합니다.",
+    "CONFIGMAP-SIDEBAR_0": "기본 컨피그맵 생성",
+    "CONFIGMAP-SIDEBAR_1": "이 '롤'은 비암호된 데이터를 키/데이터 형태로 작성할수 있습니다. 컨테이너에서 데이터를 읽어서 구성을 할 수 있습니다.",
+    "CONFIGMAP-SIDEBAR_2": "파일형태의 컨피그맵 생성",
+    "CONFIGMAP-SIDEBAR_3": "이 '롤'은 파일형태로 비암호된 데이터를 키/데이터 형태으로 작성할 수 있습니다."
   },
   "CONTENT": {
     "TRIALTIME": "구독 기간",

@@ -2388,14 +2388,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: example
-  namespace: demo-ns
+  namespace: default
 data:
-  example.property.1: hello
-  example.property.2: world
-  example.property.file: |-
-    property.1=value-1
-    property.2=value-2
-    property.3=value-3
+  os: hello
+  version: world
 `,
   )
   .setIn(
@@ -2404,13 +2400,12 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config-hypercloud
+  name: example
   namespace: default
 data:
-  DB_URL: localhost
-  DB_USER: hypercloud
-  DB_PASS: hypercloud
-  DEBUG_INFO: debug
+  sample-configmap.properties: |
+    os=prolinux
+    version=7.5
 `,
   )
   .setIn(
@@ -3304,11 +3299,11 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: example
-  namespace: demo-ns
-type: Opaque
+  namespace: default
+type: kubernetes.io/basic-auth
 stringData:
-  username: admin
-  password: damin
+  username: YWRtaW4=
+  password: YWRtaW4=
 `,
   )
   .setIn(
@@ -3317,11 +3312,12 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mysecret
+  name: example
+  namespace: default
 type: Opaque
-data:
-  username: aHlwZXJjbG91ZA==
-  password: aHlwZXJjbG91ZDQ=
+Data:
+  language: java
+  version: 5
 `,
   )
   .setIn(

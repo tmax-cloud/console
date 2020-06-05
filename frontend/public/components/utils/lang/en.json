@@ -192,10 +192,14 @@
     "CONTAINER-DETAIL_5": "An easy way to pass configuration values",
     "LINE_0": "Service Error",
     "LINE_1": "No Matching Data Found",
-    "SECRET-SIDEBAR_0": "1. Create a basic authentication secret. ",
+    "SECRET-SIDEBAR_0": "Create a basic authentication secret. ",
     "SECRET-SIDEBAR_1": "This 'Roll' can generate a secret to authenticate the SCM server with a username/password pair.",
-    "SECRET-SIDEBAR_2": "2. Create a user-defined secret. ",
-    "SECRET-SIDEBAR_3": "This 'Roll' encodes data values in a key/value pair to Base64 format. secretKeyRef can be explicitly set for deployment."
+    "SECRET-SIDEBAR_2": "Create a user-defined secret. ",
+    "SECRET-SIDEBAR_3": "This 'Roll' encodes data values in a key/value pair to Base64 format. secretKeyRef can be explicitly set for deployment.",
+    "CONFIGMAP-SIDEBAR_0": "Create the default ConfigMap.",
+    "CONFIGMAP-SIDEBAR_1": "This 'Roll' can write non-encrypted data in a key/data pair. Related data is read from the container.",
+    "CONFIGMAP-SIDEBAR_2": "Create ConfigMap as a file.",
+    "CONFIGMAP-SIDEBAR_3": "This 'Roll' can write non-encrypted data in a key/data pair."
   },
   "CONTENT": {
     "TRIALTIME": "Trial Time",
