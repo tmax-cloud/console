@@ -36,6 +36,12 @@ spec:
         - mountPath: /var/https-cert
           name: https-cert
           readOnly: true
+        - mountPath: /etc/localtime
+          name: localtime
+          readOnly: true
+        - mountPath: /etc/timezone
+          name: timezone
+          readOnly: true
         name: console
         ports:
         - containerPort: 6443
@@ -59,3 +65,9 @@ spec:
         secret:
           defaultMode: 288
           secretName: console-https-secret
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: timezone
+        hostPath:
+          path: /etc/timezone
