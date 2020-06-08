@@ -43,9 +43,11 @@ const KubeFedClusterRow = () =>
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.metadata.namespace}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">
-          <span onClick={() => window.open('https://' + obj.metadata.annotations.portalurl, '_blank')} value={obj.metadata.annotations.portalurl} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
-            {'https://' + String(obj.metadata.annotations.portalurl)}
-          </span>
+          {obj.metadata.annotations && (
+            <span onClick={() => window.open('https://' + obj.metadata.annotations.portalurl, '_blank')} value={obj.metadata.annotations.portalurl} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+              'https://' + String(obj.metadata.annotations.portalurl)
+            </span>
+          )}
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
