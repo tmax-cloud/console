@@ -1025,14 +1025,13 @@ spec:
     [referenceForModel(k8sModels.RegistryModel), 'default'],
     `
     # Note: To use the optional key, remove the '#' at the front of the key.
-
 apiVersion: tmax.io/v1
 kind: Registry
 metadata:
   name: example # (required) [string] registry's name
   namespace: example # (required) [string] registry's namespace
 spec:
-  image: registryIP:5000/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
+  image: registry:2.7.1 # (required)
   #description: example # (optional) [string] a brief description of the registry.
   loginId: example # (required) [string] username for registry login
   loginPassword: example # (required) [string] password for registry login
