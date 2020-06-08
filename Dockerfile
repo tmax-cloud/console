@@ -1,6 +1,6 @@
 FROM openshift/origin-base
 RUN mkdir -p /opt/bridge/bin
-RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+RUN ["/bin/bash", "-c", "ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime"]
 COPY ./bin/bridge /opt/bridge/bin
 COPY ./frontend/public/dist /opt/bridge/static
 COPY ./swagger/autocomplete--swagger.json /opt/bridge/static/assets
