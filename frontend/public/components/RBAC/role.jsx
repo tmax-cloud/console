@@ -211,10 +211,17 @@ export const roleType = role => {
 
 export const RolesPage = connectToFlags(
   FLAGS.PROJECTS_AVAILBLE,
-  FLAGS.PROJECTS_AVAILBLE,
+  FLAGS.CAN_LIST_CR,
 )(({ namespace, showTitle, flags }) => {
   const projectsAvailable = !flagPending(flags.PROJECTS_AVAILBLE) && flags.PROJECTS_AVAILBLE;
+  const isAdmin = !flagPending(flags.CAN_LIST_CR) && flags.CAN_LIST_CR;
   const { t } = useTranslation();
+  const data = isAdmin
+    ? [
+        { kind: 'Role', namespaced: true, optional: !projectsAvailable },
+        { kind: 'ClusterRole', namespaced: false, optional: true },
+      ]
+    : [{ kind: 'Role', namespaced: true, optional: !projectsAvailable }];
   return (
     <MultiListPage
       ListComponent={RolesList}
@@ -225,10 +232,7 @@ export const RolesPage = connectToFlags(
       filterLabel="Roles by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Role', t) })}
-      resources={[
-        { kind: 'Role', namespaced: true, optional: !projectsAvailable },
-        { kind: 'ClusterRole', namespaced: false, optional: true },
-      ]}
+      resources={data}
       rowFilters={[
         {
           type: 'role-kind',
