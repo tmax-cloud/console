@@ -292,25 +292,27 @@ func (s *Server) HTTPHandler() http.Handler {
 					plog.Printf("%s", respBody)
 				}
 
-				// user security parse
-				var userSecurity UserSecurityPolicy
-				err := json.Unmarshal(respBody, &userSecurity)
-				if err != nil {
-					panic(err)
-				}
-
 				// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
 				if strings.Contains(string(respBody), "page not found") {
 					plog.Println(string(respBody))
 					hf(s.StaticUser, w, r)
 					return
 				}
+
 				// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
 				if !strings.Contains(string(respBody), "ipRange") {
 					plog.Println("ipRange does not exist, Allow all Ip addr")
 					hf(s.StaticUser, w, r)
 					return
 				}
+
+				// 위 예외처리에 걸리지 않은 경우, user security를 parse
+				var userSecurity UserSecurityPolicy
+				err := json.Unmarshal(respBody, &userSecurity)
+				if err != nil {
+					panic(err)
+				}
+
 				// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
 				if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
 					plog.Println("userSecurity does not exist, Allow all Ip addr ", userSecurity.Message)
