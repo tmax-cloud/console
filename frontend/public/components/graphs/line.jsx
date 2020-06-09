@@ -242,7 +242,7 @@ export class Line_ extends BaseGraph {
           visible: true,
           zeroline: false,
           showline: true,
-          tickmode: 'auto',
+          tickformat: '%H:%M',
           fixedrange: true, // true인경우 zoom불가
           automargin: true
         },
@@ -254,9 +254,9 @@ export class Line_ extends BaseGraph {
         },
         margin: {
           l: 30,
-          b: 30,
+          b: 40,
           r: 40,
-          t: 0,
+          t: 10,
           pad: 0,
         },
         shapes: [],
@@ -271,7 +271,6 @@ export class Line_ extends BaseGraph {
         // eslint-disable-next-line no-console
         console.error(e);
       });
-      console.log(lineValues)
     });
   }
 }
