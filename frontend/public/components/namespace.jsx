@@ -328,7 +328,8 @@ class NamespaceDropdown_ extends React.Component {
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
 
-    if (loadError && loadError.response.status === 403) {
+    // if (loadError && loadError.response.status === 403) {
+    if (loadError && loadError.response && loadError.response.status === 403) {
       window.location.href = '/noNamespace';
     }
 

@@ -6,6 +6,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
 import { TaskModel } from '../models';
+import { flagPending, connectToFlags, FLAGS } from './../features';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
@@ -77,8 +78,15 @@ export const taskType = task => {
   return task.metadata.namespace ? 'namespace' : 'cluster';
 };
 
-export const TasksPage = (({ namespace, showTitle }) => {
+export const TasksPage = connectToFlags(FLAGS.CAN_LIST_NS)(({ namespace, showTitle, flags }) => {
   const { t } = useTranslation();
+  const isAdmin = !flagPending(flags.CAN_LIST_NS) && flags.CAN_LIST_NS;
+  const data = isAdmin
+    ? [
+        { kind: 'Task', namespaced: true, optional: true },
+        { kind: 'ClusterTask', namespaced: false, optional: true },
+      ]
+    : [{ kind: 'Task', namespaced: true, optional: true }];
   return (
     <MultiListPage
       ListComponent={TaskList}
@@ -89,10 +97,7 @@ export const TasksPage = (({ namespace, showTitle }) => {
       filterLabel="Tasks by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Task', t) })}
-      resources={[
-        { kind: 'Task', namespaced: true, optional: true },
-        { kind: 'ClusterTask', namespaced: false, optional: true },
-      ]}
+      resources={data}
       rowFilters={[
         {
           type: 'task-kind',
@@ -108,10 +113,6 @@ export const TasksPage = (({ namespace, showTitle }) => {
     />
   );
 });
-
-
-
-
 
 export const TaskDetailsPage = props => {
   const { t } = useTranslation();

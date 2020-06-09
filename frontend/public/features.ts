@@ -47,9 +47,11 @@ export enum FLAGS {
   CAN_LIST_CRD = 'CAN_LIST_CRD',
   CAN_CREATE_PROJECT = 'CAN_CREATE_PROJECT',
   PROJECTS_AVAILABLE = 'PROJECTS_AVAILABLE',
+  CAN_LIST_CR = 'CAN_LIST_CR',
+  CAN_LIST_TASK = 'CAN_LIST_TASK',
 }
 
-export const DEFAULTS_ = _.mapValues(FLAGS, flag => flag === FLAGS.AUTH_ENABLED ? false : undefined);
+export const DEFAULTS_ = _.mapValues(FLAGS, flag => (flag === FLAGS.AUTH_ENABLED ? false : undefined));
 
 export const CRDs = {
   [referenceForModel(ChannelOperatorConfigModel)]: FLAGS.CLUSTER_UPDATES,
@@ -60,7 +62,7 @@ export const CRDs = {
 };
 
 const SET_FLAG = 'SET_FLAG';
-export const setFlag = (dispatch, flag, value) => dispatch({flag, value, type: SET_FLAG});
+export const setFlag = (dispatch, flag, value) => dispatch({ flag, value, type: SET_FLAG });
 
 const retryFlagDetection = (dispatch, cb) => {
   setTimeout(() => cb(dispatch), 15000);
@@ -81,13 +83,12 @@ const detectCalicoFlags = dispatch => {
   if ((window as any).SERVER_FLAGS.releaseModeFlag && (!getAccessToken() || !getRefreshToken())) {
     return;
   }
-  
-  coFetchJSON(calicoDaemonSetPath)
-  .then(
+
+  coFetchJSON(calicoDaemonSetPath).then(
     res => setFlag(dispatch, FLAGS.CALICO, _.size(res.items) > 0),
-    err => handleError(err, FLAGS.CALICO, dispatch, detectCalicoFlags)
+    err => handleError(err, FLAGS.CALICO, dispatch, detectCalicoFlags),
   );
-}
+};
 
 // FIXME: /oapi is deprecated. What else can we use to detect OpenShift?
 // const openshiftPath = `${k8sBasePath}/oapi/v1`;
@@ -117,7 +118,7 @@ const detectProjectsAvailable = dispatch => {
 // const projectRequestPath = `${k8sBasePath}/apis/project.openshift.io/v1/projectrequests`;
 const detectCanCreateProject = dispatch => {
   setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, false);
-}
+};
 // const detectCanCreateProject = dispatch => coFetchJSON(projectRequestPath)
 //   .then(
 //     res => setFlag(dispatch, FLAGS.CAN_CREATE_PROJECT, res.status === 'Success'),
@@ -132,36 +133,34 @@ const detectCanCreateProject = dispatch => {
 //     }
 //   );
 
-export let featureActions = [
-  detectCalicoFlags,
-  detectOpenShift,
-  detectProjectsAvailable,
-  detectCanCreateProject
-];
+export let featureActions = [detectCalicoFlags, detectOpenShift, detectProjectsAvailable, detectCanCreateProject];
 
 // generate additional featureActions
 [
+  [FLAGS.CAN_LIST_TASK, { resource: 'clustertasks', verb: 'list' }],
   [FLAGS.CAN_LIST_NS, { resource: 'namespaces', verb: 'list' }],
+  [FLAGS.CAN_LIST_CR, { resource: 'clusterroles', verb: 'list' }],
   [FLAGS.CAN_LIST_NODE, { resource: 'nodes', verb: 'list' }],
   [FLAGS.CAN_LIST_PV, { resource: 'persistentvolumes', verb: 'list' }],
   [FLAGS.CAN_LIST_STORE, { group: 'storage.k8s.io', resource: 'storageclasses', verb: 'list' }],
   [FLAGS.CAN_LIST_CRD, { group: 'apiextensions.k8s.io', resource: 'customresourcedefinitions', verb: 'list' }],
-].forEach(_.spread((FLAG, resourceAttributes) => {
-  const req = {
-    spec: { resourceAttributes }
-  };
-  const fn = (dispatch) => {
-    if ((window as any).SERVER_FLAGS.releaseModeFlag && (!getAccessToken() || !getRefreshToken())) {
-      return;
-    }
-    return k8sCreate(SelfSubjectAccessReviewModel, req)
-      .then(
-        (res) => setFlag(dispatch, FLAG, res.status.allowed),
-        (err) => handleError(err, FLAG, dispatch, fn)
+].forEach(
+  _.spread((FLAG, resourceAttributes) => {
+    const req = {
+      spec: { resourceAttributes },
+    };
+    const fn = dispatch => {
+      if ((window as any).SERVER_FLAGS.releaseModeFlag && (!getAccessToken() || !getRefreshToken())) {
+        return;
+      }
+      return k8sCreate(SelfSubjectAccessReviewModel, req).then(
+        res => setFlag(dispatch, FLAG, res.status.allowed),
+        err => handleError(err, FLAG, dispatch, fn),
       );
-  };
-  featureActions.push(fn);
-}));
+    };
+    featureActions.push(fn);
+  }),
+);
 
 export const featureReducerName = 'FLAGS';
 export const featureReducer = (state: ImmutableMap<string, any>, action) => {
@@ -174,13 +173,14 @@ export const featureReducer = (state: ImmutableMap<string, any>, action) => {
       if (!FLAGS[action.flag]) {
         throw new Error(`unknown key for reducer ${action.flag}`);
       }
-      return state.merge({[action.flag]: action.value});
+      return state.merge({ [action.flag]: action.value });
 
     case types.resources:
       // Flip all flags to false to signify that we did not see them
-      _.each(CRDs, v => state = state.set(v, false));
+      _.each(CRDs, v => (state = state.set(v, false)));
 
-      return action.resources.models.filter(model => CRDs[referenceForModel(model)] !== undefined)
+      return action.resources.models
+        .filter(model => CRDs[referenceForModel(model)] !== undefined)
         .reduce((nextState, model) => {
           const flag = CRDs[referenceForModel(model)];
           // eslint-disable-next-line no-console
@@ -195,16 +195,15 @@ export const featureReducer = (state: ImmutableMap<string, any>, action) => {
 };
 
 export const stateToProps = (desiredFlags: string[], state) => {
-  const flags = desiredFlags.reduce((allFlags, f) => ({...allFlags, [f]: state[featureReducerName].get(f)}), {});
-  return {flags};
+  const flags = desiredFlags.reduce((allFlags, f) => ({ ...allFlags, [f]: state[featureReducerName].get(f) }), {});
+  return { flags };
 };
 
 type WithFlagsProps = {
-  flags: {[key: string]: boolean};
+  flags: { [key: string]: boolean };
 };
 
-export type ConnectToFlags = <P extends WithFlagsProps>(...flags: FLAGS[]) => (C: React.ComponentType<P>) =>
-  React.ComponentType<Omit<P, keyof WithFlagsProps>> & {WrappedComponent: React.ComponentType<P>};
+export type ConnectToFlags = <P extends WithFlagsProps>(...flags: FLAGS[]) => (C: React.ComponentType<P>) => React.ComponentType<Omit<P, keyof WithFlagsProps>> & { WrappedComponent: React.ComponentType<P> };
 export const connectToFlags: ConnectToFlags = (...flags) => connect(state => stateToProps(flags, state));
 
 // Flag detection is not complete if the flag's value is `undefined`.
