@@ -1025,14 +1025,13 @@ spec:
     [referenceForModel(k8sModels.RegistryModel), 'default'],
     `
     # Note: To use the optional key, remove the '#' at the front of the key.
-
 apiVersion: tmax.io/v1
 kind: Registry
 metadata:
   name: example # (required) [string] registry's name
   namespace: example # (required) [string] registry's namespace
 spec:
-  image: registryIP:5000/registry:b004 # (required) [string] registry:b004 image's repository (ex: 192.168.6.110:5000/registry:b004)
+  image: registry:2.7.1 # (required)
   #description: example # (optional) [string] a brief description of the registry.
   loginId: example # (required) [string] username for registry login
   loginPassword: example # (required) [string] password for registry login
@@ -2388,14 +2387,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: example
-  namespace: demo-ns
+  namespace: default
 data:
-  example.property.1: hello
-  example.property.2: world
-  example.property.file: |-
-    property.1=value-1
-    property.2=value-2
-    property.3=value-3
+  os: hello
+  version: world
 `,
   )
   .setIn(
@@ -2404,13 +2399,12 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config-hypercloud
+  name: example
   namespace: default
 data:
-  DB_URL: localhost
-  DB_USER: hypercloud
-  DB_PASS: hypercloud
-  DEBUG_INFO: debug
+  sample-configmap.properties: |
+    os=prolinux
+    version=7.5
 `,
   )
   .setIn(
@@ -2443,7 +2437,31 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: example
-  namespace: demo-ns
+  namespace: default
+spec:
+  schedule: '*/10 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample2'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: default
 spec:
   schedule: '@daily'
   jobTemplate:
@@ -2456,7 +2474,56 @@ spec:
               args:
                 - /bin/sh
                 - '-c'
-                - date; echo Hello from the Kubernetes cluster
+                - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample3'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: default
+spec:
+  schedule: '5 4-5 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo 'Hello from the Kubernetes cluster'
+          restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CronJobModel), 'cronjob-sample4'],
+    `
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: example
+  namespace: default
+spec:
+  schedule: '*/10 * * * *'
+  ConcurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - '-c'
+                - date; echo 'Hello from the Kubernetes cluster'
           restartPolicy: OnFailure
 `,
   )
@@ -3304,11 +3371,11 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: example
-  namespace: demo-ns
-type: Opaque
+  namespace: default
+type: kubernetes.io/basic-auth
 stringData:
-  username: admin
-  password: damin
+  username: YWRtaW4=
+  password: YWRtaW4=
 `,
   )
   .setIn(
@@ -3317,11 +3384,12 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mysecret
+  name: example
+  namespace: default
 type: Opaque
-data:
-  username: aHlwZXJjbG91ZA==
-  password: aHlwZXJjbG91ZDQ=
+Data:
+  language: java
+  version: 5
 `,
   )
   .setIn(
@@ -3723,19 +3791,12 @@ spec:
     [referenceForModel(k8sModels.UserSecurityPolicyModel), 'default'],
     `
     apiVersion: tmax.io/v1
-    kind: User
+    kind: Usersecuritypolicy
     metadata:
-      name: example
-      labels:
-        encrypted: f
-    userInfo:
-      name: example
-      password: example
-      email: example@tmax.co.kr
-      department: Cloud
-      position: developer
-      phone: 010-0000-0000
-      description: For Example
-    status: active 
+      name: example-tmax.co.kr
+    otpEnable: f
+    otp: 123456
+    ipRange: 192.168.0.0/16
+
 `,
   );

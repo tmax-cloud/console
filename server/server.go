@@ -3,7 +3,6 @@ package server
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -286,18 +285,11 @@ func (s *Server) HTTPHandler() http.Handler {
 					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString))
 				}
 
-				respBody := httpCall(urltocall, tokenForUserSecurityPolicy)
+				respBody := s.httpCall(urltocall, tokenForUserSecurityPolicy)
 				// 	log.Println(string(respBody))
 
 				if strings.Contains(string(r.URL.Path), "login") {
 					plog.Printf("%s", respBody)
-				}
-
-				// user security parse
-				var userSecurity UserSecurityPolicy
-				err := json.Unmarshal(respBody, &userSecurity)
-				if err != nil {
-					panic(err)
 				}
 
 				// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
@@ -306,12 +298,21 @@ func (s *Server) HTTPHandler() http.Handler {
 					hf(s.StaticUser, w, r)
 					return
 				}
+
 				// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
 				if !strings.Contains(string(respBody), "ipRange") {
 					plog.Println("ipRange does not exist, Allow all Ip addr")
 					hf(s.StaticUser, w, r)
 					return
 				}
+
+				// 위 예외처리에 걸리지 않은 경우, user security를 parse
+				var userSecurity UserSecurityPolicy
+				err := json.Unmarshal(respBody, &userSecurity)
+				if err != nil {
+					panic(err)
+				}
+
 				// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
 				if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
 					plog.Println("userSecurity does not exist, Allow all Ip addr ", userSecurity.Message)
@@ -846,25 +847,43 @@ func (s *Server) handleOpenShiftTokenDeletion(user *auth.User, w http.ResponseWr
 	resp.Body.Close()
 }
 
-func httpCall(url, token string) []byte {
-	transCfg := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
-	}
+func (s *Server) httpCall(url, token string) []byte {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	req.Header.Add("Authorization", "Bearer "+token)
-	client := &http.Client{Transport: transCfg}
-	resp, err := client.Do(req)
+	resp, err := s.K8sClient.Do(req)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp.Body.Close()
 	return respBody
 }
+
+// func httpCall(url, token string) []byte {
+// 	transCfg := &http.Transport{
+// 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
+// 	}
+// 	req, err := http.NewRequest("GET", url, nil)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	req.Header.Add("Authorization", "Bearer "+token)
+// 	client := &http.Client{Transport: transCfg}
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer resp.Body.Close()
+// 	respBody, err := ioutil.ReadAll(resp.Body)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	resp.Body.Close()
+// 	return respBody
+// }
