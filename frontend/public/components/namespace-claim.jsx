@@ -57,9 +57,7 @@ const NamespaceClaimRow = () =>
         </div>
         <div className="col-xs-1 col-sm-1 hidden-xs">{obj.status && obj.status.status}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div>
-        <div className="col-md-3 col-xs-3 co-resource-link-wrapper">
-          <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />
-        </div>
+        <div className="col-md-3 col-xs-3 co-resource-link-wrapper">{obj.status && obj.status.status === 'Success' && <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />}</div>
         <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
