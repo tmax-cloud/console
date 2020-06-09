@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage, MultiListPage } from './factory';
-import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, Loading } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
 import { TaskModel } from '../models';
@@ -78,9 +78,15 @@ export const taskType = task => {
   return task.metadata.namespace ? 'namespace' : 'cluster';
 };
 
-export const TasksPage = connectToFlags(FLAGS.CAN_LIST_NS)(({ namespace, showTitle, flags }) => {
+export const TasksPage = connectToFlags(
+  FLAGS.CAN_LIST_TASK,
+  FLAGS.CAN_LIST_NS,
+)(({ namespace, showTitle, flags }) => {
   const { t } = useTranslation();
-  const isAdmin = !flagPending(flags.CAN_LIST_NS) && flags.CAN_LIST_NS;
+  const isAdmin = !flagPending(flags.CAN_LIST_TASK) && flags.CAN_LIST_TASK;
+  if (!flags.CAN_LIST_NS && !flagPending(flags.CAN_LIST_TASK)) {
+    return <Loading />;
+  }
   const data = isAdmin
     ? [
         { kind: 'Task', namespaced: true, optional: true },

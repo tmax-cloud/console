@@ -4,7 +4,7 @@ import * as fuzzy from 'fuzzysearch';
 // import { Link } from 'react-router-dom';
 
 import { ColHead, DetailsPage, List, ListHeader, MultiListPage, ResourceRow, TextFilter } from '../factory';
-import { Cog, SectionHeading, MsgBox, navFactory, ResourceCog, ResourceLink, Timestamp } from '../utils';
+import { Cog, SectionHeading, MsgBox, navFactory, ResourceCog, Loading, ResourceLink, Timestamp } from '../utils';
 import { BindingName, BindingsList, RulesList, RoleBindingsPage } from './index';
 import { flatten as bindingsFlatten } from './bindings';
 import { flagPending, connectToFlags, FLAGS } from '../../features';
@@ -211,17 +211,22 @@ export const roleType = role => {
 
 export const RolesPage = connectToFlags(
   FLAGS.PROJECTS_AVAILBLE,
+  FLAGS.CAN_LIST_NS,
   FLAGS.CAN_LIST_CR,
 )(({ namespace, showTitle, flags }) => {
   const projectsAvailable = !flagPending(flags.PROJECTS_AVAILBLE) && flags.PROJECTS_AVAILBLE;
   const isAdmin = !flagPending(flags.CAN_LIST_CR) && flags.CAN_LIST_CR;
   const { t } = useTranslation();
+  if (!flags.CAN_LIST_NS && !flagPending(flags.CAN_LIST_CR)) {
+    return <Loading />;
+  }
   const data = isAdmin
     ? [
         { kind: 'Role', namespaced: true, optional: !projectsAvailable },
         { kind: 'ClusterRole', namespaced: false, optional: true },
       ]
     : [{ kind: 'Role', namespaced: true, optional: !projectsAvailable }];
+
   return (
     <MultiListPage
       ListComponent={RolesList}
