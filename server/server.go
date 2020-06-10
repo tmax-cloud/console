@@ -112,13 +112,13 @@ type Server struct {
 }
 
 type UserSecurityPolicy struct {
-	Name      string `json:"name"`
-	OtpEnable string `json:"otpEnable"`
-	Otp       int    `json:"otp"`
-	IPRange   string `json:"ipRange"`
-	Code      int    `json:"code"`
-	Message   string `json:"message"`
-	Status    string `json:"status"`
+	Name      string   `json:"name"`
+	OtpEnable string   `json:"otpEnable"`
+	Otp       int      `json:"otp"`
+	IPRange   []string `json:"ipRange"`
+	Code      int      `json:"code"`
+	Message   string   `json:"message"`
+	Status    string   `json:"status"`
 }
 
 type TokenData struct {
@@ -281,79 +281,19 @@ func (s *Server) HTTPHandler() http.Handler {
 				}
 
 				// body가 소모된 경우 복구
+				clientAddr, _ := getIP(r)
 				if bodyReadFlag {
 					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString))
 				}
-
-				respBody := s.httpCall(urltocall, tokenForUserSecurityPolicy)
-				// 	log.Println(string(respBody))
-
-				if strings.Contains(string(r.URL.Path), "login") {
-					plog.Printf("%s", respBody)
-				}
-
-				// user security parse
-				var userSecurity UserSecurityPolicy
-				err := json.Unmarshal(respBody, &userSecurity)
-				if err != nil {
-					panic(err)
-				}
-
-				// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
-				if strings.Contains(string(respBody), "page not found") {
-					plog.Println(string(respBody))
+				result, message := s.verifyIpRange(urltocall, tokenForUserSecurityPolicy, clientAddr)
+				switch result {
+				case true:
+					plog.Info(message)
 					hf(s.StaticUser, w, r)
 					return
-				}
-				// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
-				if !strings.Contains(string(respBody), "ipRange") {
-					plog.Println("ipRange does not exist, Allow all Ip addr")
-					hf(s.StaticUser, w, r)
-					return
-				}
-				// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
-				if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
-					plog.Println("userSecurity does not exist, Allow all Ip addr ", userSecurity.Message)
-					hf(s.StaticUser, w, r)
-					return
-				}
-
-				// id는 존재하나, IP Range가 설정되어 있지 않은 경우에는 모든 IP 차단
-				if len(userSecurity.IPRange) == 0 {
-					plog.Println("IpRange key exist but ipRange value is empty. all IPs are blocked")
-					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("The IpRange for user named (%v) is not set. If not set, all IPs are blocked", userSecurity.Name)})
-					return
-				}
-
-				// IP 정보를 가져와 parse
-				clientAddr, err := getIP(r)
-				if err != nil {
-					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Failed to get client IP.")})
-					return
-				}
-
-				if strings.Contains(string(r.URL.Path), "login") {
-					plog.Printf("client: %v", clientAddr)
-				}
-				ipAddr := strings.Split(clientAddr, ":")[0]
-				ipRange := userSecurity.IPRange
-
-				_, subnet, err := net.ParseCIDR(ipRange)
-				if err != nil {
-					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Invalid CIDR: %v", ipRange)})
-					return
-				}
-				result := subnet.Contains(net.ParseIP(ipAddr))
-
-				if strings.Contains(string(r.URL.Path), "login") {
-					plog.Printf("IP Addr: %v", ipAddr)
-					plog.Printf("IP Range: %v", ipRange)
-					plog.Printf("IP Auth Result: %v", result)
-				}
-
-				// IP Range 검증에서 실패한 경우
-				if result == false {
-					sendResponse(w, http.StatusForbidden, apiError{fmt.Sprintf("Invalid IP: %v. Allowed IP: %v", ipAddr, ipRange)})
+				case false:
+					plog.Info(message)
+					sendResponse(w, http.StatusForbidden, apiError{message})
 					return
 				}
 				hf(s.StaticUser, w, r)
@@ -861,6 +801,59 @@ func (s *Server) httpCall(url, token string) []byte {
 		log.Fatal(err)
 	}
 	return respBody
+}
+
+func (s *Server) verifyIpRange(url, token, clientAddr string) (result bool, message string) {
+	respBody := s.httpCall(url, token)
+
+	// user security parse
+	var userSecurity UserSecurityPolicy
+	err := json.Unmarshal(respBody, &userSecurity)
+	if err != nil {
+		return false, ("json.Unmarshal has failed" + err.Error())
+	}
+
+	// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
+	if strings.Contains(string(respBody), "page not found") {
+		return true, "usersecuritypolicies do not exist. do not verify IpRange"
+	}
+	// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
+	if !strings.Contains(string(respBody), "ipRange") {
+		return true, "ipRange does not exist, Allow all Ip addr"
+	}
+	// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
+	if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
+		return true, ("id does not exist. Allow all Ip addr " + userSecurity.Message)
+	}
+
+	// id는 존재하나, IP Range가 설정되어 있지 않은 경우에는 모든 IP 차단
+	if len(userSecurity.IPRange) == 0 {
+		return false, ("The IpRange for user named (%v) is not set. If not set, all IPs are blocked" + userSecurity.Name)
+	}
+
+	// IP 정보를 가져와 parse
+	if err != nil {
+		return false, "Failed to get client IP."
+	}
+
+	ipAddr := strings.Split(clientAddr, ":")[0]
+	ipRanges := userSecurity.IPRange
+	for idx, ipRange := range ipRanges {
+		_, subnet, err := net.ParseCIDR(ipRange)
+		if err != nil {
+			return false, ("Invalid CIRD: " + ipRange)
+		}
+		// IP Range 검증에 성공한 경우
+		result := subnet.Contains(net.ParseIP(ipAddr))
+		if result == true {
+			return true, ("Accept user login: Ip Addr: " + ipAddr)
+		}
+		// IP Range 검증에 실패한 경우
+		if (idx + 1) == len(ipRanges) {
+			return false, "Refuse user login: IpAddr: " + ipAddr + "IpRange: " + strings.Join(ipRanges, " ")
+		}
+	}
+	return false, "verifyIpRange fail"
 }
 
 // func httpCall(url, token string) []byte {

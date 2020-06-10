@@ -327,9 +327,11 @@ class NamespaceDropdown_ extends React.Component {
     const model = getModel(useProjects);
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
-
-    if (loadError && loadError.response.status === 403) {
-      window.location.href = '/noNamespace';
+    // if (loadError && loadError.response.status === 403) {
+    if (loadError && loadError.response && loadError.response.status === 403) {
+      if (!window.location.href.includes('roles') && !window.location.href.includes('rolebindings') && !window.location.href.includes('tasks')) {
+        window.location.href = '/noNamespace';
+      }
     }
 
     if (canListNS) {

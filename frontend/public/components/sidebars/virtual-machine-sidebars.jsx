@@ -28,6 +28,13 @@ export const VirtualMachineSidebar = ({ kindObj, loadSampleYaml, downloadSampleY
       templateName: 'virtualmachine-sample2',
       kind: referenceForModel(VirtualMachineModel),
     },
+    {
+      header: 'centos6 가상머신 샘플',
+      details: `cenots6 가상머신에 대한 VM 오브젝트를 생성하는데 사용한다.
+      .spec.template.spec – device 및 resource 설정 항목이다.`,
+      templateName: 'virtualmachine-sample3',
+      kind: referenceForModel(VirtualMachineModel),
+    },
   ];
   const filteredSamples = isCreateMode ? samples : _.filter(samples, { kind: referenceForModel(kindObj) });
   console.log(filteredSamples);
