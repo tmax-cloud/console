@@ -806,29 +806,30 @@ func (s *Server) httpCall(url, token string) []byte {
 func (s *Server) verifyIpRange(url, token, clientAddr string) (result bool, message string) {
 	respBody := s.httpCall(url, token)
 
+	// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
+	if strings.Contains(string(respBody), "page not found") {
+		return true, "UserSecurityPolicy CRD does not exist. IP Range validation skipped."
+	}
+	// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
+	if !strings.Contains(string(respBody), "ipRange") {
+		return true, "IP Range key does not exist. All IP allowed."
+	}
+
 	// user security parse
 	var userSecurity UserSecurityPolicy
 	err := json.Unmarshal(respBody, &userSecurity)
 	if err != nil {
-		return false, ("json.Unmarshal has failed" + err.Error())
+		return false, ("Failed to parse string to JSON. " + err.Error())
 	}
 
-	// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
-	if strings.Contains(string(respBody), "page not found") {
-		return true, "usersecuritypolicies do not exist. do not verify IpRange"
-	}
-	// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
-	if !strings.Contains(string(respBody), "ipRange") {
-		return true, "ipRange does not exist, Allow all Ip addr"
-	}
 	// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
 	if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
-		return true, ("id does not exist. Allow all Ip addr " + userSecurity.Message)
+		return true, ("User Security Policy for this user does not exist. All IP allowed. " + userSecurity.Message)
 	}
 
 	// id는 존재하나, IP Range가 설정되어 있지 않은 경우에는 모든 IP 차단
 	if len(userSecurity.IPRange) == 0 {
-		return false, ("The IpRange for this user is not set. If not set, all IPs are blocked")
+		return false, ("IP Range(CIDR) for this user is not set. All IP blocked.")
 	}
 
 	// IP 정보를 가져와 parse
@@ -841,16 +842,16 @@ func (s *Server) verifyIpRange(url, token, clientAddr string) (result bool, mess
 	for idx, ipRange := range ipRanges {
 		_, subnet, err := net.ParseCIDR(ipRange)
 		if err != nil {
-			return false, ("Invalid CIRD: " + ipRange)
+			return false, "Failed to parse IP Range(CIDR) for this user."
 		}
 		// IP Range 검증에 성공한 경우
 		result := subnet.Contains(net.ParseIP(ipAddr))
 		if result == true {
-			return true, ("Accept user login: Ip Addr: " + ipAddr)
+			return true, "Access accepted. IP = " + ipAddr
 		}
 		// IP Range 검증에 실패한 경우
 		if (idx + 1) == len(ipRanges) {
-			return false, "Refuse user login: IpAddr: " + ipAddr + " IpRange: " + strings.Join(ipRanges, " ")
+			return false, "Invalid IP Address. IP = " + ipAddr
 		}
 	}
 	return false, "verifyIpRange fail"
