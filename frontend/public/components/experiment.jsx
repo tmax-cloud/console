@@ -19,10 +19,10 @@ const ExperimentHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-1 col-sm-1" sortField="spec.hosts">
+            <ColHead {...props} className="col-xs-1 col-sm-1">
                 {t('CONTENT:STATUS')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.gateways">
+            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.algorithm.algorithmName">
                 {t('CONTENT:ALGORITHMNAME')}
             </ColHead>
             <ColHead {...props} className="col-sm-2 hidden-xs">
