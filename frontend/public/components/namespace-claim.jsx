@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
-let namespaceList = [];
+// let namespaceList = [];
 let flag = 0;
 
 const NamespaceClaimHeader = props => {
@@ -20,45 +20,45 @@ const NamespaceClaimHeader = props => {
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-xs-1 col-sm-1" sortField="status.status">
+      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
         {t('CONTENT:STATUS')}
       </ColHead>
-      <ColHead {...props} className="col-xs-3 col-sm-3">
+      {/* <ColHead {...props} className="col-xs-3 col-sm-3">
         {t('CONTENT:TRIALTIME')}
-      </ColHead>
+      </ColHead> */}
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="resourceName">
         {t('ADDITIONAL:NAME', { something: t('RESOURCE:NAMESPACE') })}
       </ColHead>
-      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
   );
 };
 
-const TrialTime = namespace => {
-  let createTime = new Date(namespace.metadata.creationTimestamp.iMillis);
-  let start = String(createTime.getFullYear()) + '.' + String(createTime.getMonth() + 1) + '.' + String(createTime.getDate());
-  let end = String(createTime.getFullYear()) + '.' + String(createTime.getMonth() + 2) + '.' + String(createTime.getDate());
-  return start + '~' + end;
-};
+// const TrialTime = namespace => {
+//   let createTime = new Date(namespace.metadata.creationTimestamp.iMillis);
+//   let start = String(createTime.getFullYear()) + '.' + String(createTime.getMonth() + 1) + '.' + String(createTime.getDate());
+//   let end = String(createTime.getFullYear()) + '.' + String(createTime.getMonth() + 2) + '.' + String(createTime.getDate());
+//   return start + '~' + end;
+// };
 
 const NamespaceClaimRow = () =>
   // eslint-disable-next-line no-shadow
   function NamespaceClaimRow({ obj }) {
     flag = flag + 1;
-    const namespace = namespaceList.filter(cur => cur.metadata.name === obj.resourceName)[0];
-    let time = namespace && TrialTime(namespace);
+    // const namespace = namespaceList.filter(cur => cur.metadata.name === obj.resourceName)[0];
+    // let time = namespace && TrialTime(namespace);
     return (
       <div className="row co-resource-list__item">
         <div className="col-md-3 col-xs-3 co-resource-link-wrapper">
           <ResourceCog actions={menuActions} kind="NamespaceClaim" resource={obj} />
           <ResourceLink kind="NamespaceClaim" name={obj.metadata.name} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-1 col-sm-1 hidden-xs">{obj.status && obj.status.status}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
+        {/* <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div> */}
         <div className="col-md-3 col-xs-3 co-resource-link-wrapper">{obj.status && obj.status.status === 'Success' && <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -114,22 +114,22 @@ export const NamespaceClaimsPage = props => {
     items: createItems,
     createLink: type => `/k8s/cluster/namespaceclaims/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  React.useEffect(() => {
-    k8sList(kindObj('Namespace'))
-      .then(reponse => reponse)
-      .then(
-        data => {
-          if (flag && !namespaceList.length) {
-            // 이유는 모르겠는데 맨처음 페이지 진입시에는 then으로 바로 안들어오고 다음에 옴. flag값으로 분기 처리.
-            location.reload();
-          }
-          namespaceList = data;
-        },
-        err => {
-          console.error(err);
-        },
-      );
-  }, []);
+  // React.useEffect(() => {
+  //   k8sList(kindObj('Namespace'))
+  //     .then(reponse => reponse)
+  //     .then(
+  //       data => {
+  //         if (flag && !namespaceList.length) {
+  //           // 이유는 모르겠는데 맨처음 페이지 진입시에는 then으로 바로 안들어오고 다음에 옴. flag값으로 분기 처리.
+  //           location.reload();
+  //         }
+  //         namespaceList = data;
+  //       },
+  //       err => {
+  //         console.error(err);
+  //       },
+  //     );
+  // }, []);
   return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createProps={createProps} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
