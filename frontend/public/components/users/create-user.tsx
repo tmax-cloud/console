@@ -3,13 +3,11 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-// import { NsDropdown } from '../RBAC/bindings';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
-import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { connectToFlags, FLAGS, flagPending } from '../../features';
+
 enum CreateType {
     generic = 'generic',
     form = 'form',
@@ -24,13 +22,14 @@ const Section = ({ label, children }) => (
     </div>
 );
 
-class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, ServiceAccountState_>  {
+
+class UserFormComponent extends React.Component<UserProps_, UserState_>  {
     constructor(props) {
         super(props);
-        const existingServiceAccount = _.pick(props.obj, ['metadata', 'type']);
-        const serviceAccount = _.defaultsDeep({}, props.fixed, existingServiceAccount, {
+        const existingUser = _.pick(props.obj, ['metadata', 'type']);
+        const serviceAccount = _.defaultsDeep({}, props.fixed, existingUser, {
             apiVersion: 'tmax.io/v1',
-            kind: 'ServiceAccount',
+            kind: 'User',
             metadata: {
                 name: ''
             },
@@ -86,15 +85,15 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
         e.preventDefault();
         const { kind, metadata } = this.state.serviceAccount;
         this.setState({ inProgress: true });
-        const newServiceAccount = _.assign({}, this.state.serviceAccount);
+        const newUser = _.assign({}, this.state.serviceAccount);
 
         const ko = kindObj(kind);
         (this.props.isCreate
-            ? k8sCreate(ko, newServiceAccount)
-            : k8sUpdate(ko, newServiceAccount, metadata.namespace, newServiceAccount.metadata.name)
+            ? k8sCreate(ko, newUser)
+            : k8sUpdate(ko, newUser, metadata.namespace, newUser.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push(formatNamespacedRouteForResource('serviceAccounts'));
+            history.push('/k8s/cluster/users');
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
@@ -107,7 +106,7 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
             </Helmet >
             <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
                 <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.serviceAccount.kind, t) })}</h1>
-                <p className="co-m-pane__explanation">Represents an identity for processes that run in a pod.</p>
+                <p className="co-m-pane__explanation">Create user through the form editor.</p>
 
                 <fieldset disabled={!this.props.isCreate}>
 
@@ -119,14 +118,53 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
                             id="template-instance-name"
                             required />
                     </Section>
-                    <Section label={t('CONTENT:NAMESPACE')}>
-                        <select className="form-control form-group" id="template" required>
-                            {[1, 2, 3, 4, 5]}
-                        </select>
+                    <Section label={t('CONTENT:EMAIL')}>
+                        <input className="form-control form-group"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.serviceAccount.metadata.name}
+                            id="template-instance-name"
+                            required />
+                    </Section>
+                    <Section label={t('CONTENT:PASSWORD')}>
+                        <input className="form-control form-group"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.serviceAccount.metadata.name}
+                            id="template-instance-name"
+                            required />
+                    </Section>
+                    <Section label={t('CONTENT:PHONE')}>
+                        <input className="form-control form-group"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.serviceAccount.metadata.name}
+                            id="template-instance-name" />
+                    </Section>
+                    <Section label={t('CONTENT:DEPARTMENT')}>
+                        <input className="form-control form-group"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.serviceAccount.metadata.name}
+                            id="template-instance-name" />
+                    </Section>
+                    <Section label={t('CONTENT:POSITION')}>
+                        <input className="form-control form-group"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.serviceAccount.metadata.name}
+                            id="template-instance-name" />
+                    </Section>
+                    <Section label={t('CONTENT:DESCRIPTION')}>
+                        <input className="form-control form-group"
+                            type="text"
+                            onChange={this.onNameChanged}
+                            value={this.state.serviceAccount.metadata.name}
+                            id="template-instance-name" />
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-                        <Link to={formatNamespacedRouteForResource('serviceAccounts')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+                        <Link to='/k8s/cluster/users' className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
@@ -135,9 +173,9 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
     }
 };
 
-export const CreateServiceAccount = ({ match: { params } }) => {
+export const CreateUser = ({ match: { params } }) => {
     const { t } = useTranslation();
-    return <ServiceAccountFormComponent
+    return <UserFormComponent
         t={t}
         fixed={{ metadata: { namespace: params.ns } }}
         serviceAccountTypeAbstraction={params.type}
@@ -145,7 +183,7 @@ export const CreateServiceAccount = ({ match: { params } }) => {
         isCreate={true}
     />;
 };
-export type ServiceAccountState_ = {
+export type UserState_ = {
     serviceAccountTypeAbstraction?: CreateType,
     serviceAccount: K8sResourceKind,
     inProgress: boolean,
@@ -154,7 +192,7 @@ export type ServiceAccountState_ = {
     quota: Array<any>
 };
 
-export type ServiceAccountProps_ = {
+export type UserProps_ = {
     obj?: K8sResourceKind,
     fixed: any,
     kind?: string,
