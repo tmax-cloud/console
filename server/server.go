@@ -279,7 +279,7 @@ func (s *Server) HTTPHandler() http.Handler {
 				} else {
 					tokenForUserSecurityPolicy = s.MasterToken
 				}
-
+				// tokenForUserSecurityPolicy = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgiLCJpZCI6ImFkbWluLXRtYXguY28ua3IiLCJleHAiOjE1OTE3NzMyNDcsInV1aWQiOiJmNDE3YTFhOS0xYjg5LTQwNDktODI1NS03Y2ZmYTE2MjY1YjQifQ.dhF3x2LPKeZiHV-6UqWPgm6sLt7CIxNRcX-zHBqPxPs"
 				// body가 소모된 경우 복구
 				clientAddr, _ := getIP(r)
 				if bodyReadFlag {
@@ -293,7 +293,7 @@ func (s *Server) HTTPHandler() http.Handler {
 					return
 				case false:
 					plog.Info(message)
-					sendResponse(w, http.StatusForbidden, apiError{message})
+					sendResponse(w, http.StatusForbidden, apiError{"Your IP Address has been forbidden."})
 					return
 				}
 				hf(s.StaticUser, w, r)
@@ -828,7 +828,7 @@ func (s *Server) verifyIpRange(url, token, clientAddr string) (result bool, mess
 
 	// id는 존재하나, IP Range가 설정되어 있지 않은 경우에는 모든 IP 차단
 	if len(userSecurity.IPRange) == 0 {
-		return false, ("The IpRange for user named (%v) is not set. If not set, all IPs are blocked" + userSecurity.Name)
+		return false, ("The IpRange for this user is not set. If not set, all IPs are blocked")
 	}
 
 	// IP 정보를 가져와 parse
@@ -850,7 +850,7 @@ func (s *Server) verifyIpRange(url, token, clientAddr string) (result bool, mess
 		}
 		// IP Range 검증에 실패한 경우
 		if (idx + 1) == len(ipRanges) {
-			return false, "Refuse user login: IpAddr: " + ipAddr + "IpRange: " + strings.Join(ipRanges, " ")
+			return false, "Refuse user login: IpAddr: " + ipAddr + " IpRange: " + strings.Join(ipRanges, " ")
 		}
 	}
 	return false, "verifyIpRange fail"
