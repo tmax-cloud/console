@@ -1247,3 +1247,15 @@ export const WorkflowModel: K8sKind = {
   kind: 'Workflow',
   id: 'workflow',
 };
+export const CatalogServiceClaimModel: K8sKind = {
+  label: 'CatalogServiceClaim',
+  labelPlural: 'Catalog Service Claim',
+  apiVersion: 'v1',
+  path: 'catalogserviceclaims',
+  apiGroup: 'tmax.io',
+  plural: 'catalogserviceclaims',
+  abbr: 'CSC',
+  namespaced: true,
+  kind: 'CatalogServiceClaim',
+  id: 'catalogserviceclaim',
+};

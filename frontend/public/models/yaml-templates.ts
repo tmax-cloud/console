@@ -3880,4 +3880,66 @@ spec:
     ipRange: 192.168.0.0/16
 
 `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CatalogServiceClaimModel), 'default'],
+    `
+apiVersion: tmax.io/v1
+kind: CatalogServiceClaim
+metadata:
+  name: nginx-catalog-service-claim
+  namespace: default
+spec:
+  apiVersion: tmax.io/v1
+  kind: Template
+  metadata:
+    name: example-template
+    namespace: default
+  imageUrl: example.com/example.gif
+  provider: tmax
+  recommend: true
+  objects:
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: \${NAME}
+      labels:
+        app: \${NAME}
+    spec:
+      selector:
+        matchLabels:
+          app: \${NAME}
+      template:
+        metadata:
+          labels:
+            app: \${NAME}
+        spec:
+          containers:
+          - name: \${NAME}
+            image: example/image:version
+            ports:
+            - name: example
+              containerPort: 80
+  plans:
+  - name: example-plan
+    metadata:
+      bullets:
+      - feat 1
+      - feat 2
+      costs:
+        amount: 100
+        unit: $
+      bindable: true
+      schemas:
+        service_instance:
+          create:
+            parameters:
+              EXAMPLE_PARAM: value
+  parameters:
+  - name: NAME
+    description: Application name
+    valueType: string
+    value: example
+
+`,
   );
