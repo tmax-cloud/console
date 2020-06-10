@@ -78,21 +78,18 @@ export const taskType = task => {
   return task.metadata.namespace ? 'namespace' : 'cluster';
 };
 
-export const TasksPage = connectToFlags(
-  FLAGS.CAN_LIST_TASK,
-  FLAGS.CAN_LIST_NS,
-)(({ namespace, showTitle, flags }) => {
+export const TasksPage = ({ namespace, showTitle, flags }) => {
   const { t } = useTranslation();
-  const isAdmin = !flagPending(flags.CAN_LIST_TASK) && flags.CAN_LIST_TASK;
-  if (!flags.CAN_LIST_NS && !flagPending(flags.CAN_LIST_TASK)) {
-    return <Loading />;
-  }
-  const data = isAdmin
-    ? [
-        { kind: 'Task', namespaced: true, optional: true },
-        { kind: 'ClusterTask', namespaced: false, optional: true },
-      ]
-    : [{ kind: 'Task', namespaced: true, optional: true }];
+  // const isAdmin = !flagPending(flags.CAN_LIST_TASK) && flags.CAN_LIST_TASK;
+  // if (!flags.CAN_LIST_NS && !flagPending(flags.CAN_LIST_TASK)) {
+  //   return <Loading />;
+  // }
+  // const data = isAdmin
+  //   ? [
+  //       { kind: 'Task', namespaced: true, optional: true },
+  //       { kind: 'ClusterTask', namespaced: false, optional: true },
+  //     ]
+  //   : [{ kind: 'Task', namespaced: true, optional: true }];
   return (
     <MultiListPage
       ListComponent={TaskList}
@@ -103,7 +100,11 @@ export const TasksPage = connectToFlags(
       filterLabel="Tasks by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Task', t) })}
-      resources={data}
+      resources={[
+        { kind: 'Task', namespaced: true, optional: true },
+        { kind: 'ClusterTask', namespaced: false, optional: true },
+      ]}
+      // resources={data}
       rowFilters={[
         {
           type: 'task-kind',
@@ -118,7 +119,7 @@ export const TasksPage = connectToFlags(
       title={t('RESOURCE:TASK')}
     />
   );
-});
+};
 
 export const TaskDetailsPage = props => {
   const { t } = useTranslation();
