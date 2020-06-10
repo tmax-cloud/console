@@ -3,7 +3,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { NsDropdown } from '../RBAC/bindings';
+// import { NsDropdown } from '../RBAC/bindings';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
