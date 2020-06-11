@@ -1173,33 +1173,56 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
     `
-apiVersion: tmax.io/v1
-kind: Template
-metadata:
-  name: example-template
-  namespace: default
-objects:
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: example
-    labels:
-      app: example
-  spec:
-    selector:
-      matchLabels:
-        app: example
-    template:
+    apiVersion: tmax.io/v1
+    kind: Template
+    metadata:
+      name: example-template
+      namespace: default
+    imageUrl: example.com/example.gif
+    provider: tmax
+    recommend: true
+    objects:
+    - apiVersion: apps/v1
+      kind: Deployment
       metadata:
+        name: \${NAME}
         labels:
-          app: example
+          app: \${NAME}
       spec:
-        containers:
-        - name: example
-          image: example/image:version
-          ports:
-          - name: example
-            containerPort: 80
+        selector:
+          matchLabels:
+            app: \${NAME}
+        template:
+          metadata:
+            labels:
+              app: \${NAME}
+          spec:
+            containers:
+            - name: \${NAME}
+              image: example/image:version
+              ports:
+              - name: example
+                containerPort: 80
+    plans:
+    - name: example-plan
+      metadata:
+        bullets:
+        - feat 1
+        - feat 2
+        costs:
+          amount: 100
+          unit: $
+        bindable: true
+        schemas:
+          service_instance:
+            create:
+              parameters:
+                EXAMPLE_PARAM: value
+    parameters:
+    - name: NAME
+      description: Application name
+      valueType: string
+      value: example
 
 `,
   )
@@ -2059,32 +2082,25 @@ spec:
     [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample'],
     `
     apiVersion: tmax.io/v1
-    kind: Template
+    kind: TemplateInstance
     metadata:
-      name: example-template
-      namespace: demo-ns
-    objects:
-      - apiVersion: apps/v1
-        kind: Deployment
+      name: example-instance
+      namespace: default
+    spec:
+      template:
         metadata:
-          name: example
-          labels:
-            app: example
-        spec:
-          selector:
-            matchLabels:
-              app: example
-          template:
-            metadata:
-              labels:
-                app: example
-            spec:
-              containers:
-                - name: example
-                  image: 'example/image:version'
-                  ports:
-                    - name: example
-                      containerPort: 80
+          name: example-template
+        parameters:
+        - description: Example Name.
+          displayName: Name
+          name: NAME
+          required: true
+          value: example-instance
+        - description: Example Image.
+          displayName: Image
+          name: IMAGE
+          required: true
+          value: example/image:version
 `,
   )
   .setIn(
