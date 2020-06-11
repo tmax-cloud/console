@@ -58,7 +58,20 @@ export const watchURL = (kind, options) => {
   return resourceURL(kind, opts);
 };
 
-export const k8sGet = (kind, name, ns, opts) => coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
+export const k8sGet = (kind, name, ns, opts) => {
+  let listURL;
+  if (kind.kind === 'Namespace') {
+    listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
+  } else if (kind.kind === 'NamespaceClaim') {
+    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim`;
+  } else {
+    listURL = resourceURL(kind, Object.assign({ ns, name }, opts));
+  }
+
+  return coFetchJSON(`${listURL}`, opts);
+
+  // return coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
+};
 
 export const k8sCreate = (kind, data, opts = {}) => {
   // Occassionally, a resource won't have a metadata property.
@@ -94,17 +107,11 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
 
   if (kind.kind === 'Namespace') {
     listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
+  } else if (kind.kind === 'NamespaceClaim') {
+    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim`;
   } else {
     listURL = resourceURL(kind, { ns: params.ns });
   }
-
-  // if (kind.kind === 'NamespaceClaim') {
-  //   if (!store.getState().FLAGS.get('CAN_LIST_NS')) {
-  //     // namespace list 조회 권한 여부
-  //     const id = getId();
-  //     query = query.concat(`&labelSelector=owner=${id}`);
-  //   }
-  // }
 
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
 };
@@ -116,11 +123,6 @@ export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
 export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   const queryParams = { watch: true };
   const opts = { queryParams };
-  // let path;
-
-  // if (kind.kind !== 'Namespace') {
-  //   path = resourceURL(kind, opts);
-  // }
 
   wsOptions = Object.assign(
     {
@@ -152,8 +154,6 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   if (query.resourceVersion) {
     queryParams.resourceVersion = encodeURIComponent(query.resourceVersion);
   }
-  //path가 없는경우 return 값 없도록 예외처리
-  // if (path) {
   const path = resourceURL(kind, opts);
   wsOptions.path = path;
   return new WSFactory(path, wsOptions);

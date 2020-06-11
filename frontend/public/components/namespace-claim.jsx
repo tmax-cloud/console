@@ -11,7 +11,7 @@ import { ResourcePlural } from './utils/lang/resource-plural';
 
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete, Cog.factory.EditStatus];
 // let namespaceList = [];
-let flag = 0;
+// let flag = 0;
 
 const NamespaceClaimHeader = props => {
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ const NamespaceClaimHeader = props => {
 const NamespaceClaimRow = () =>
   // eslint-disable-next-line no-shadow
   function NamespaceClaimRow({ obj }) {
-    flag = flag + 1;
+    // flag = flag + 1;
     // const namespace = namespaceList.filter(cur => cur.metadata.name === obj.resourceName)[0];
     // let time = namespace && TrialTime(namespace);
     return (
@@ -58,7 +58,7 @@ const NamespaceClaimRow = () =>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
         {/* <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div> */}
         <div className="col-md-3 col-xs-3 co-resource-link-wrapper">{obj.status && obj.status.status === 'Success' && <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(new Date(obj.metadata.creationTimestamp.iMillis))}</div>
       </div>
     );
   };
