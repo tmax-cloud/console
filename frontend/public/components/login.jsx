@@ -112,23 +112,16 @@ class LoginComponent extends Component {
       .then(data => {
         const curTime = new Date();
         this.setState({ loading: false });
-        // if (data.accessToken && data.refreshToken) {
-        //   setAccessToken(data.accessToken);
-        //   setRefreshToken(data.refreshToken);
-        //   if (window.localStorage.getItem('forceLogout') === 'true') {
-        //     window.localStorage.setItem('forceLogout', false);
-        //   } else {
-        //     window.localStorage.setItem('forceLogout', true);
-        //   }
-        //   this.props.history.push('/');
-        //   this.props.history.go(0);
-
-        // } else {
+        // ID나 pw 가 틀린경우
+        if (data.msg) {
+          this.setState({ error: data.msg });
+          return
+        }
         //otp인증을 해야하는 경우
         data.otpEnable
           ? OtpModal_({ data: json, initialTime: curTime })
           : // 로그인서비스 콜
-            this._login(json);
+          this._login(json);
         return;
         //}
 
