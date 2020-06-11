@@ -35,12 +35,14 @@ import './utils/i18n';
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
+import { ProvidePlugin } from 'webpack';
 
 // React Router's proptypes are incorrect. See https://github.com/ReactTraining/react-router/pull/5393
 Route.propTypes.path = PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]);
 
 const RedirectComponent = props => {
   const to = `/k8s${props.location.pathname}`;
+
   return <Redirect to={to} />;
 };
 
@@ -190,6 +192,10 @@ class App extends React.PureComponent {
   }
 
   render() {
+    // const props = this.props;
+    // if (props.location.pathname.indexOf('new') > 0) {
+    //   console.log('여기서 ns selector없애야함 ')
+    // }
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
@@ -251,11 +257,14 @@ class App extends React.PureComponent {
               // <LazyRoute path="/k8s/cluster/clusterroles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             }
             <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} />
-            {/* clusterles/new를 detail페이지로 인식해서 순서 이동 */}
+            {/* clusteroles/new를 detail페이지로 인식해서 순서 이동 */}
             {
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             }
+            <LazyRoute path="/k8s/cluster/usergroups/new/:type" exact kind="Usergroup" loader={() => import('./usergroups/create-usergroup').then(m => m.CreateUserGroup)} />
+            <LazyRoute path="/k8s/cluster/users/new/:type" exact kind="User" loader={() => import('./users/create-user').then(m => m.CreateUser)} />
+            <LazyRoute path="/k8s/ns/:ns/serviceaccounts/new/:type" exact kind="ServiceAccount" loader={() => import('./serviceAccounts/create-serviceAccount').then(m => m.CreateServiceAccount)} />
             <LazyRoute path="/k8s/ns/:ns/resourcequotaclaims/new/:type" exact kind="ResourceQuotaClaim" loader={() => import('./resourceQuotaClaims/create-resourceQuotaClaim').then(m => m.CreateResouceQuotaClaim)} />
             <LazyRoute path="/k8s/ns/:ns/rolebindingclaims/new/:type" exact kind="RoleBindingClaim" loader={() => import('./roleBindingClaims/create-roleBindingClaim').then(m => m.CreateRoleBindingClaim)} />
             <LazyRoute path="/k8s/cluster/namespaceclaims/new/:type" exact kind="NamespaceClaim" loader={() => import('./namespaceClaims/create-namespaceClaim').then(m => m.CreateNamespaceClaim)} />

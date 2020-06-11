@@ -123,10 +123,6 @@ class LoginComponent extends Component {
           : // 로그인서비스 콜
           this._login(json);
         return;
-        //}
-
-        // const url_ = window.location.href.split('/login')[0]
-        // window.location = `${url_}/status/all-namespaces`;
       })
       // .then(() => {
       //   // 미리: split 버그 수정

@@ -22,24 +22,24 @@ const Section = ({ label, children, isRequired }) => {
     </div>
 }
 
-class UserFormComponent extends React.Component<UserProps_, UserState_>  {
+class UserGroupFormComponent extends React.Component<UserGroupProps_, UserGroupState_>  {
     constructor(props) {
         super(props);
-        const existingUser = _.pick(props.obj, ['metadata', 'type']);
-        const user = _.defaultsDeep({}, props.fixed, existingUser, {
+        const existingUserGroup = _.pick(props.obj, ['metadata', 'type']);
+        const userGroup = _.defaultsDeep({}, props.fixed, existingUserGroup, {
             apiVersion: 'tmax.io/v1',
-            kind: 'User',
+            kind: 'Usergroup',
             metadata: {
                 name: ''
             },
             status: 'active',
-            userInfo: {
+            userGroupInfo: {
             }
         });
 
         this.state = {
-            userTypeAbstraction: this.props.userTypeAbstraction,
-            user: user,
+            userGroupTypeAbstraction: this.props.userGroupTypeAbstraction,
+            userGroup: userGroup,
             inProgress: false,
             type: 'form',
             quota: [['', '']]
@@ -49,47 +49,38 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
     }
 
     onValueChanged(event) {
-        let user = { ...this.state.user };
+        let userGroup = { ...this.state.userGroup };
         switch (String(event.target.id)) {
             case 'name':
-                user.userInfo.name = String(event.target.value);
-                user.metadata.name = String(event.target.value);
-                break;
-            case 'email':
-                user.userInfo.email = String(event.target.value);
-                break;
-            case 'password':
-                user.userInfo.password = String(event.target.value);
-                break;
-            case 'phone':
-                user.userInfo.phone = String(event.target.value);
+                userGroup.userGroupInfo.name = String(event.target.value);
+                userGroup.metadata.name = String(event.target.value);
                 break;
             case 'department':
-                user.userInfo.department = String(event.target.value);
+                userGroup.userGroupInfo.department = String(event.target.value);
                 break;
             case 'position':
-                user.userInfo.position = String(event.target.value);
+                userGroup.userGroupInfo.position = String(event.target.value);
                 break;
             case 'description':
-                user.userInfo.description = String(event.target.value);
+                userGroup.userGroupInfo.description = String(event.target.value);
                 break;
 
         }
-        this.setState({ user });
+        this.setState({ userGroup });
     }
     save(e) {
         e.preventDefault();
-        const { kind, metadata } = this.state.user;
+        const { kind, metadata } = this.state.userGroup;
         this.setState({ inProgress: true });
-        const newUser = _.assign({}, this.state.user);
+        const newUserGroup = _.assign({}, this.state.userGroup);
 
         const ko = kindObj(kind);
         (this.props.isCreate
-            ? k8sCreate(ko, newUser)
-            : k8sUpdate(ko, newUser, metadata.namespace, newUser.metadata.name)
+            ? k8sCreate(ko, newUserGroup)
+            : k8sUpdate(ko, newUserGroup, metadata.namespace, newUserGroup.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push('/k8s/cluster/users');
+            history.push('/k8s/cluster/usergroups');
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
@@ -97,11 +88,11 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
         const { t } = this.props;
         return <div className="co-m-pane__body">
             < Helmet >
-                <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.user.kind, t) })}</title>
+                <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.userGroup.kind, t) })}</title>
             </Helmet >
             <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
-                <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.user.kind, t) })}</h1>
-                <p className="co-m-pane__explanation">Create user through the form editor.</p>
+                <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.userGroup.kind, t) })}</h1>
+                <p className="co-m-pane__explanation">Create user group to which multiple users can belong.</p>
 
                 <fieldset disabled={!this.props.isCreate}>
 
@@ -111,26 +102,6 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                             onChange={this.onValueChanged}
                             id="name"
                             required />
-                    </Section>
-                    <Section label={t('CONTENT:EMAIL')} isRequired={true}>
-                        <input className="form-control form-group"
-                            type="text"
-                            onChange={this.onValueChanged}
-                            id="email"
-                            required />
-                    </Section>
-                    <Section label={t('CONTENT:PASSWORD')} isRequired={true} >
-                        <input className="form-control form-group"
-                            type="text"
-                            onChange={this.onValueChanged}
-                            id="password"
-                            required />
-                    </Section>
-                    <Section label={t('CONTENT:PHONE')} isRequired={false}>
-                        <input className="form-control form-group"
-                            type="text"
-                            onChange={this.onValueChanged}
-                            id="phone" />
                     </Section>
                     <Section label={t('CONTENT:DEPARTMENT')} isRequired={false}>
                         <input className="form-control form-group"
@@ -151,7 +122,7 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-                        <Link to='/k8s/cluster/users' className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+                        <Link to='/k8s/cluster/userGroups' className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
@@ -160,32 +131,30 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
     }
 };
 
-export const CreateUser = ({ match: { params } }) => {
+export const CreateUserGroup = ({ match: { params } }) => {
     const { t } = useTranslation();
-    return <UserFormComponent
+    return <UserGroupFormComponent
         t={t}
-        fixed={{ metadata: { namespace: params.ns } }}
-        userTypeAbstraction={params.type}
+        userGroupTypeAbstraction={params.type}
         titleVerb="Create"
         isCreate={true}
     />;
 };
-export type UserState_ = {
-    userTypeAbstraction?: CreateType,
-    user: any,
+export type UserGroupState_ = {
+    userGroupTypeAbstraction?: CreateType,
+    userGroup: any,
     inProgress: boolean,
     error?: any,
     type: string,
     quota: Array<any>
 };
 
-export type UserProps_ = {
+export type UserGroupProps_ = {
     obj?: K8sResourceKind,
-    fixed: any,
     kind?: string,
     isCreate: boolean,
     titleVerb: string,
-    userTypeAbstraction?: CreateType,
+    userGroupTypeAbstraction?: CreateType,
     saveButtonText?: string,
     t: any
 };

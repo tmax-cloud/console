@@ -64,18 +64,18 @@ UserList.displayName = UserList;
 
 export const UsersPage = props => {
   const { t } = useTranslation();
-  // const createItems = {
-  //   form: t('CONTENT:FORMEDITOR'),
-  //   yaml: t('CONTENT:YAMLEDITOR'),
-  // };
-  // const createProps = {
-  //   items: createItems,
-  //   createLink: type => `/k8s/cluster/users/new${type !== 'yaml' ? '/' + type : ''}`,
-  // };
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/cluster/users/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
   return HDCModeFlag ?
     <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> :
-    <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
-  // <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} canCreate={true} kind="User" />
+    // <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
+    <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} canCreate={true} kind="User" />
 };
 UsersPage.displayName = 'UsersPage';
 
