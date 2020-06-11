@@ -327,7 +327,7 @@ class NamespaceDropdown_ extends React.Component {
     const model = getModel(useProjects);
     const allNamespacesTitle = `all ${model.labelPlural.toLowerCase()}`;
     const items = {};
-    // if (loadError && loadError.response.status === 403) {
+
     if (loadError && loadError.response && loadError.response.status === 403) {
       if (!window.location.href.includes('roles') && !window.location.href.includes('rolebindings') && !window.location.href.includes('tasks')) {
         window.location.href = '/noNamespace';
@@ -357,31 +357,23 @@ class NamespaceDropdown_ extends React.Component {
     if (getAccessToken()) {
       if (activeNamespace === ALL_NAMESPACES_KEY) {
         title = allNamespacesTitle;
-      } else if (loaded && !_.has(items, title)) {
-        // If the currently active namespace is not found in the list of all namespaces, put it in anyway
-        items[title] = title;
       }
     }
 
     if (!localStorage.getItem('bridge/last-namespace-name') && loaded) {
       if (!canListNS) {
-        title = data[0].metadata.name;
-        dispatch(UIActions.setActiveNamespace(title));
+        activeNamespace = data[0].metadata.name;
+        dispatch(UIActions.setActiveNamespace(activeNamespace));
       } else {
-        title = allNamespacesTitle;
+        activeNamespace = allNamespacesTitle;
         dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
       }
     }
 
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
-    // return !canListNS && title === 'default' ? null : <NamespaceSelectorComponent model={model} items={items} title={title} onChange={onChange} selectedKey={title} />;
 
     return loaded && <NamespaceSelectorComponent model={model} items={items} title={title} activeNamespace={activeNamespace} onChange={onChange} selectedKey={title} />;
-    // <div className="co-namespace-selector">
-    //   {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
-    //     <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={model.label} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={`Select ${model.label.toLowerCase()}...`} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
-    //   )}
-    // </div>
+
   }
 }
 

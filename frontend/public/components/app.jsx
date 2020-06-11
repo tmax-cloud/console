@@ -66,7 +66,8 @@ _.each(namespacedPrefixes, p => {
 });
 
 const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
-  let activeNamespace = getActiveNamespace();
+  // let activeNamespace = getActiveNamespace();
+  let activeNamespace;
   let to;
   if (!flags[FLAGS.CANLIST_NS]) {
     activeNamespace = 'default';
