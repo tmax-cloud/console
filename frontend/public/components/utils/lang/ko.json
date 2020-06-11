@@ -718,6 +718,7 @@
     "EXPERIMENT": "Experiment",
     "INFERENCESERVICE": "Inference Service",
     "WORKFLOWTEMPLATE": "Workflow Template",
-    "WORKFLOW": "Workflow"
+    "WORKFLOW": "Workflow",
+    "CATALOGSERVICECLAIM": "카탈로그 서비스 클레임"
   }
 }
