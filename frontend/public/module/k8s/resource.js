@@ -58,20 +58,22 @@ export const watchURL = (kind, options) => {
   return resourceURL(kind, opts);
 };
 
-export const k8sGet = (kind, name, ns, opts) => {
-  let listURL;
-  if (kind.kind === 'Namespace') {
-    listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
-  } else if (kind.kind === 'NamespaceClaim') {
-    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim`;
-  } else {
-    listURL = resourceURL(kind, Object.assign({ ns, name }, opts));
-  }
+export const k8sGet = (kind, name, ns, opts) => coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
 
-  return coFetchJSON(`${listURL}`, opts);
+// export const k8sGet = (kind, name, ns, opts) => {
+//   let path;
+//   // if (kind.kind === 'Namespace') {
+//   //   path = `${document.location.origin}/api/hypercloud/nameSpace/${name}`;
+//   // } else if (kind.kind === 'NamespaceClaim') {
+//   //   path = `${document.location.origin}/api/hypercloud/nameSpaceClaim/${name}`;
+//   // } else {
+//   path = resourceURL(kind, Object.assign({ ns, name }, opts));
+//   // }
 
-  // return coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
-};
+//   return coFetchJSON(`${path}`, opts);
+
+//   // return coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
+// };
 
 export const k8sCreate = (kind, data, opts = {}) => {
   // Occassionally, a resource won't have a metadata property.
