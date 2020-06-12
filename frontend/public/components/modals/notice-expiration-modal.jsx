@@ -30,7 +30,7 @@ class NoticeExpirationModal extends Component {
   tick() {
     this.setState({ time: Math.floor(this.state.time - 1) });
     if (Math.floor(this.state.time) === 0) {
-        this._logout();
+      this._logout();
     }
   }
 
@@ -46,15 +46,11 @@ class NoticeExpirationModal extends Component {
         <ModalTitle>세션 만료 알림</ModalTitle>
         <ModalBody>
           <div className="form-group" style={{ width: '400px' }}>
-            <label className="control-label">
-              {Math.floor(this.state.time)}초 뒤에 자동으로 로그아웃 될 예정입니다.
-            </label>
-            <label className="control-label">
-              로그인 상태를 유지하시려면 연장 버튼을 클릭해주세요.
-            </label>
+            <label className="control-label">{Math.floor(this.state.time)}초 뒤에 자동으로 로그아웃 될 예정입니다.</label>
+            <label className="control-label">로그인 상태를 유지하시려면 연장 버튼을 클릭해주세요.</label>
           </div>
         </ModalBody>
-        <CustomModalSubmitFooter inProgress={this.state.inProgress} leftText='연장' rightText='로그아웃' clickLeft={this._extend} clickRight={this._logout} cancel={this._closeModal} />
+        <CustomModalSubmitFooter inProgress={this.state.inProgress} leftText="세션 연장" rightText="로그아웃" clickLeft={this._extend} clickRight={this._logout} cancel={this._closeModal} />
       </form>
     );
   }
@@ -66,10 +62,4 @@ NoticeExpirationModal.propTypes = {
   executeFn: PropTypes.func.isRequired,
 };
 
-export const NoticeExpirationModal_ = createModalLauncher(props => (
-  <NoticeExpirationModal
-    path="status"
-    title="세션 만료 알림"
-    {...props}
-  />
-));
+export const NoticeExpirationModal_ = createModalLauncher(props => <NoticeExpirationModal path="status" title="세션 만료 알림" {...props} />);
