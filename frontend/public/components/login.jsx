@@ -10,7 +10,7 @@ import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
 import { setAccessToken, setRefreshToken, setId, resetLoginState, getAccessToken } from './utils/auth';
 import { OtpModal_ } from './modals/otp-modal';
-import { useTranslation, withTranslation } from 'react-i18next';
+
 class LoginComponent extends Component {
   // useState 대신 useRef 써도 됨
   state = {
@@ -18,6 +18,8 @@ class LoginComponent extends Component {
     pw: '',
     error: '',
     loading: false,
+    capsLockShow: false,
+    altShow: false,
   };
 
   constructor(props) {
@@ -95,14 +97,12 @@ class LoginComponent extends Component {
     });
   }
   onClick = e => {
-    // const { t } = useTranslation();
     if (e.type === 'keypress' && e.key !== 'Enter') {
       return;
     }
     this.setState({ loading: true });
     const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/otp`;
 
-    //if (this.state.id !== undefined && this.state.pw !== undefined) {
     const json = {
       id: this.state.id,
       password: sha512(this.state.pw),
@@ -115,30 +115,40 @@ class LoginComponent extends Component {
         // ID나 pw 가 틀린경우
         if (data.msg) {
           this.setState({ error: data.msg });
-          return
+          return;
         }
         //otp인증을 해야하는 경우
         data.otpEnable
           ? OtpModal_({ data: json, initialTime: curTime })
           : // 로그인서비스 콜
-          this._login(json);
+            this._login(json);
         return;
       })
-      // .then(() => {
-      //   // 미리: split 버그 수정
-      //   if (window.sessionStorage.getItem('accessToken')) {
-      //     const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-      //     window.sessionStorage.setItem('role', userRole);
-      //     this.props.history.push('/');
-      //     this.props.history.go(0);
-      //   }
-      // })
       .catch(error => {
         console.log(error.message);
         this.setState({ error: error.message });
         this.setState({ loading: false });
       });
-    //}
+  };
+
+  onChange = e => {
+    // 한글 입력 방지
+    if (/[ㄱ-ㅎㅏ-ㅡ가-핳]/.test(e.target.value)) {
+      this.setState({ id: e.target.value.replace(/[ㄱ-ㅎㅏ-ㅡ가-핳]/g, '') });
+      this.setState({ altShow: true });
+    } else {
+      this.setState({ id: e.target.value });
+      this.setState({ altShow: false });
+    }
+    return;
+  };
+
+  onKeyUp = e => {
+    if (e.getModifierState('CapsLock')) {
+      this.setState({ capsLockShow: true });
+    } else {
+      this.setState({ capsLockShow: false });
+    }
   };
 
   render() {
@@ -170,19 +180,12 @@ class LoginComponent extends Component {
             <form>
               <input type="hidden"></input>
               <input type="hidden"></input>
+
               <div className="box_login">
                 <div className="inp_text">
-                  <input
-                    type="text"
-                    id="loginId"
-                    autoFocus="autofocus"
-                    placeholder="ID"
-                    value={this.state.id}
-                    onKeyPress={this.onClick}
-                    onChange={e => {
-                      this.setState({ id: e.target.value });
-                    }}
-                  ></input>
+                  <input type="text" id="loginId" autoFocus="autofocus" placeholder="ID" value={this.state.id} onKeyPress={this.onClick} onChange={this.onChange} onKeyUp={this.onKeyUp}></input>
+                  {this.state.capsLockShow && <span className="tooltip">Caps Lock이 켜져 있습니다.</span>}
+                  {this.state.altShow && <span className="tooltip">한/영키가 켜져 있습니다.</span>}
                 </div>
                 <div className="box_login">
                   <div className="inp_text">
