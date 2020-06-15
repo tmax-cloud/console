@@ -292,7 +292,7 @@ export class ExpTimer extends Component {
     }
 
     if (Math.floor(expTime) === 60) {
-      NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime })
+      NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
     }
     // Test 용으로 짝수 분에 튕기도록
     if (expTime === 0 || expTime < 0 /*|| Math.floor(expTime / 60 % 2) === 0*/) {
@@ -312,14 +312,13 @@ export class ExpTimer extends Component {
         <span className="co-masthead__timer__span">
           <span>{expMin}</span>:<span>{expSec}</span>
         </span>
-        
       </div>
-      
     );
   }
 }
 
-export const Masthead = props => {
+export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags }) => {
+  // props => {
   let timerRef = null;
   // const [tokenTime, setTokenTime] = useState(60);
   // const [modalShow, setModalShow] = useState(false);
@@ -391,7 +390,7 @@ export const Masthead = props => {
         window.location.href = `${document.location.origin}`;
       })
       .catch(error => {
-        props.setLoading();
+        setLoading();
         console.log(error);
       });
   };
@@ -410,7 +409,8 @@ export const Masthead = props => {
             ref={input => {
               timerRef = input;
             }}
-            logout={logout} tokenRefresh={tokenRefresh}
+            logout={logout}
+            tokenRefresh={tokenRefresh}
           />
         </div>
       )}
@@ -419,19 +419,16 @@ export const Masthead = props => {
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          {!HDCModeFlag && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>}
-          {/* {modalShow && NoticeExpirationModal_({ logout: logout, tokenRefresh: tokenRefresh, closeModal: closeModal })} */}
-          <div className="extend-refresh-border"></div>
+          {!HDCModeFlag && flags.CAN_LIST_NS && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>}
+          {flags.CAN_LIST_NS && <div className="extend-refresh-border"></div>}
         </div>
       )}
       <div className="co-masthead__lang">
         <LanguageWrapper />
       </div>
-      {/* {releaseModeFlag && ( */}
       <div className="co-masthead__user">
-        <UserMenuWrapper setLoading={props.setLoading} />
+        <UserMenuWrapper setLoading={setLoading} />
       </div>
-      {/* )} */}
     </header>
   );
-};
+});

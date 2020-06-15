@@ -1,6 +1,6 @@
 .co-masthead {
   align-items: center;
-  background-color: #31475E;
+  background-color: #31475e;
   color: $color-os-nav-title;
   display: flex;
   //height: $masthead-height-mobile;
@@ -12,7 +12,7 @@
   @media (max-width: $grid-float-breakpoint-max) {
     padding-left: 50px; // make space for .sidebar-toggle
   }
-  @media(min-width: $grid-float-breakpoint) {
+  @media (min-width: $grid-float-breakpoint) {
     //height: $masthead-height-desktop;
     height: 56px;
   }
@@ -20,7 +20,7 @@
     margin-left: 10px;
     top: 184px;
     right: 15px;
-    @media(max-width: $grid-float-breakpoint-max) {
+    @media (max-width: $grid-float-breakpoint-max) {
       display: none;
     }
   }
@@ -80,7 +80,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: none;
-    @media(min-width: $screen-md-min) {
+    @media (min-width: $screen-md-min) {
       max-width: 300px;
     }
     @media (min-width: $grid-float-breakpoint) {
@@ -118,9 +118,9 @@
   margin-left: 3px;
 }
 
-
 .co-masthead__expire {
   display: none;
+  margin-right: 10px;
   @media (min-width: $grid-float-breakpoint) {
     display: block;
     margin-left: 0px;
@@ -131,20 +131,24 @@
   // float: left;
   // margin-right: 10px;
   font-weight: initial !important;
-  background-color: #31475E !important;
-  border-color: #FFFFFF !important;
+  background-color: #31475e !important;
+  border-color: #ffffff !important;
   background-image: none !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
   outline: none !important;
   border: 1px solid;
 }
 
-.btn-token-refresh:focus, .btn-token-refresh.focus, .btn-token-refresh:active, .btn-token-refresh.active, .btn-token-refresh .open .dropdown-toggle.btn-token-refresh {
+.btn-token-refresh:focus,
+.btn-token-refresh.focus,
+.btn-token-refresh:active,
+.btn-token-refresh.active,
+.btn-token-refresh .open .dropdown-toggle.btn-token-refresh {
   font-weight: initial !important;
-  background-color: #31475E !important;
-  border-color: #FFFFFF !important;
+  background-color: #31475e !important;
+  border-color: #ffffff !important;
   background-image: none !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .extend-refresh-icon {
@@ -153,14 +157,14 @@
 }
 
 .extend-refresh-border {
-  width: 1px; 
+  width: 1px;
   height: 18px;
-  background-color: rgb(255, 255, 255); 
-  margin: 6px 9px 6px 9px; 
-  border-width: 0px; 
-  border-style: solid; 
-  text-align: left; 
-  vertical-align: middle; 
+  background-color: rgb(255, 255, 255);
+  margin: 6px 0 6px 9px;
+  border-width: 0px;
+  border-style: solid;
+  text-align: left;
+  vertical-align: middle;
   overflow: hidden;
   float: right;
 }
