@@ -9,37 +9,28 @@ import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { connectToFlags, FLAGS, flagPending } from '../../features';
-enum CreateType {
-    generic = 'generic',
-    form = 'form',
-}
+import { NsDropdown } from '../RBAC';
+
 
 const Section = ({ label, children }) => (
     <div className="row">
         <div className="col-xs-2 control-label">
             <strong>{label}</strong>
         </div>
-        <div className="col-xs-4">{children}</div>
+        <div className="col-xs-10">{children}</div>
     </div>
 );
 
-class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, ServiceAccountState_>  {
+class ServiceAccountFormComponent extends React.Component {
     constructor(props) {
         super(props);
         const existingServiceAccount = _.pick(props.obj, ['metadata', 'type']);
         const serviceAccount = _.defaultsDeep({}, props.fixed, existingServiceAccount, {
-            apiVersion: 'tmax.io/v1',
+            apiVersion: 'v1',
             kind: 'ServiceAccount',
             metadata: {
-                name: ''
-            },
-            resourceName: '',
-            spec: {
-                hard: {
-                    'limits.cpu': '',
-                    'limits.memory': ''
-                }
+                name: '',
+                namespace: ''
             }
         });
 
@@ -50,17 +41,9 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
             type: 'form',
             quota: [['', '']]
         };
-        this.onResourceNameChanged = this.onResourceNameChanged.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
-        this.onQuotaChanged = this.onQuotaChanged.bind(this);
-        this._updateQuota = this._updateQuota.bind(this);
+        this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
         this.save = this.save.bind(this);
-    }
-
-    onResourceNameChanged(event) {
-        let serviceAccount = { ...this.state.serviceAccount };
-        serviceAccount['resourceName'] = String(event.target.value);
-        this.setState({ serviceAccount });
     }
 
     onNameChanged(event) {
@@ -68,19 +51,10 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
         serviceAccount.metadata.name = String(event.target.value);
         this.setState({ serviceAccount });
     }
-    onQuotaChanged(event) {
+    onNamespaceChanged(namespace) {
         let serviceAccount = { ...this.state.serviceAccount };
-        if (event.target.id === 'cpu') {
-            serviceAccount.spec.hard['limits.cpu'] = String(event.target.value);
-        } else {
-            serviceAccount.spec.hard['limits.memory'] = String(event.target.value);
-        }
+        serviceAccount.metadata.namespace = String(namespace);
         this.setState({ serviceAccount });
-    }
-    _updateQuota(quota) {
-        this.setState({
-            quota: quota.keyValuePairs
-        });
     }
     save(e) {
         e.preventDefault();
@@ -94,14 +68,13 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
             : k8sUpdate(ko, newServiceAccount, metadata.namespace, newServiceAccount.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push(formatNamespacedRouteForResource('serviceaccounts'));
+            history.push('/k8s/ns/' + metadata.namespace + '/serviceaccounts/' + metadata.name);
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
     render() {
-        const { saveButtonText, t, titleVerb } = this.props;
-        const fixed = { metadata: { namespace: 'a' } }
-        return <div className="co-m-pane__body">
+        const { t } = this.props;
+        return <div className="rbac-edit-binding co-m-pane__body">
             < Helmet >
                 <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.serviceAccount.kind, t) })}</title>
             </Helmet >
@@ -116,13 +89,11 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
                             type="text"
                             onChange={this.onNameChanged}
                             value={this.state.serviceAccount.metadata.name}
-                            id="template-instance-name"
+                            id="service-account-name"
                             required />
                     </Section>
                     <Section label={t('CONTENT:NAMESPACE')}>
-                        <select className="form-control form-group" id="template" required>
-                            {[1, 2, 3, 4, 5]}
-                        </select>
+                        <NsDropdown id="service-account-namespace" t={t} onChange={this.onNamespaceChanged} />
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
@@ -144,25 +115,6 @@ export const CreateServiceAccount = ({ match: { params } }) => {
         titleVerb="Create"
         isCreate={true}
     />;
-};
-export type ServiceAccountState_ = {
-    serviceAccountTypeAbstraction?: CreateType,
-    serviceAccount: K8sResourceKind,
-    inProgress: boolean,
-    error?: any,
-    type: string,
-    quota: Array<any>
-};
-
-export type ServiceAccountProps_ = {
-    obj?: K8sResourceKind,
-    fixed: any,
-    kind?: string,
-    isCreate: boolean,
-    titleVerb: string,
-    serviceAccountTypeAbstraction?: CreateType,
-    saveButtonText?: string,
-    t: any
 };
 
 
