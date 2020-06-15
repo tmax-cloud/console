@@ -94,7 +94,7 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
             : k8sUpdate(ko, newServiceAccount, metadata.namespace, newServiceAccount.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push(formatNamespacedRouteForResource('serviceAccounts'));
+            history.push(formatNamespacedRouteForResource('serviceaccounts'));
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
@@ -126,7 +126,7 @@ class ServiceAccountFormComponent extends React.Component<ServiceAccountProps_, 
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-                        <Link to={formatNamespacedRouteForResource('serviceAccounts')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+                        <Link to={formatNamespacedRouteForResource('serviceaccounts')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
                     </ButtonBar>
                 </fieldset>
             </form>
