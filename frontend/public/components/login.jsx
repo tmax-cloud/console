@@ -1,18 +1,14 @@
-import React, { Component, setState } from 'react';
-//import { Link } from 'react-router-dom';
-// import { Redirect } from 'react-router-dom';
-//import { App } from './app';
+import React, { Component } from 'react';
 import * as bgLoginNavy from '../imgs/bg_login_navy2.png';
 import * as logoAc from '../imgs/logo_ac.svg';
 import * as productHyperCloudLogo from '../imgs/product_hypercloud_logo.svg';
-import { coFetchJSON, coFetchUtils } from '../co-fetch';
+import { coFetchJSON } from '../co-fetch';
 import { sha512 } from 'js-sha512';
 import { Loading } from './utils';
-import { setAccessToken, setRefreshToken, setId, resetLoginState, getAccessToken } from './utils/auth';
+import { setAccessToken, setRefreshToken, setId, getAccessToken } from './utils/auth';
 import { OtpModal_ } from './modals/otp-modal';
 
 class LoginComponent extends Component {
-  // useState 대신 useRef 써도 됨
   state = {
     id: '',
     pw: '',
@@ -24,78 +20,47 @@ class LoginComponent extends Component {
 
   constructor(props) {
     super(props);
-    // HDC 모델
-    if (window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
-      // tmaxcloud portal 에서 로그인 안하고 넘어온 상태
-      window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '?redirect=console';
-      return;
-    }
     localStorage.removeItem('bridge/last-namespace-name');
 
+    let at = getAccessToken();
+
     if (window.SERVER_FLAGS.HDCModeFlag) {
-      window.location.href = `${document.location.origin}`;
+      at ? (location.href = `${document.location.origin}`) : (location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '?redirect=console');
       return;
     }
-    // if (searchParam('at')) {
-    //   window.sessionStorage.setItem('accessToken', searchParam('at'));
-    //   window.sessionStorage.setItem('refreshToken', searchParam('rt'));
-    //   // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-    //   // window.sessionStorage.setItem('role', userRole);
 
-    //   this.props.history.push('/');
-    //   this.props.history.go(0);
-    // }
-
-    if (props.history.action === 'POP') {
-      history.go(1);
-    }
-
-    if (document.referrer) {
+    if (at) {
+      // if (!document.referrer) {
+      props.history.replace('/');
+    } else {
+      //   props.history.goForward();
       history.pushState(null, null, location.href);
-      window.onpopstate = function (event) {
+      window.onpopstate = function () {
         history.go(1);
       };
-      // if (sessionStorage.getItem('accessToken') === '') {
-      //   // 로그아웃 된 상태
-      //   history.pushState(null, null, location.href);
-      //   // this.props.history.push('/login');
-      //   window.onpopstate = function(event) {
-      //   history.go(1);
-      // }
-
-      // if (props.history.action !== 'REPLACE') {
-      //   history.pushState(null, null, location.href);
-      //   window.onpopstate = function(event) {
-      //   history.go(1);
-      //   }
-      // }
     }
-  }
 
-  componentWillUnmount() {
-    // console.log('componentWillUnmount');
+    return;
   }
 
   _login(userInfo) {
     const uri = `${document.location.origin}/api/hypercloud/login`;
     coFetchJSON.post(uri, userInfo).then(data => {
-      // localStorage.removeItem('bridge/last-namespace-name');
       this.setState({ loading: false });
       if (data.accessToken && data.refreshToken) {
         setAccessToken(data.accessToken);
         setRefreshToken(data.refreshToken);
         setId(JSON.parse(atob(data.accessToken.split('.')[1])).id);
-        if (window.localStorage.getItem('forceLogout') === 'true') {
-          window.localStorage.setItem('forceLogout', false);
-        } else {
-          window.localStorage.setItem('forceLogout', true);
-        }
-        this.props.history.push('/');
-        this.props.history.go(0);
-      } else {
+
+        localStorage.getItem('forceLogout') ? localStorage.removeItem('forceLogout') : localStorage.setItem('forceLogout', true);
+
+        location.href = `${document.location.origin}`;
+        // this.props.history.push('/');
+        // this.props.history.go(0);
       }
     });
   }
+
   onClick = e => {
     if (e.type === 'keypress' && e.key !== 'Enter') {
       return;
@@ -132,23 +97,13 @@ class LoginComponent extends Component {
   };
 
   onChange = e => {
-    // 한글 입력 방지
-    if (/[ㄱ-ㅎㅏ-ㅡ가-핳]/.test(e.target.value)) {
-      this.setState({ id: e.target.value.replace(/[ㄱ-ㅎㅏ-ㅡ가-핳]/g, '') });
-      this.setState({ altShow: true });
-    } else {
-      this.setState({ id: e.target.value });
-      this.setState({ altShow: false });
-    }
+    this.setState({ altShow: /[ㄱ-ㅎㅏ-ㅡ가-핳]/.test(e.target.value) });
+    this.setState({ id: e.target.value.replace(/[ㄱ-ㅎㅏ-ㅡ가-핳]/g, '') });
     return;
   };
 
   onKeyUp = e => {
-    if (e.getModifierState('CapsLock')) {
-      this.setState({ capsLockShow: true });
-    } else {
-      this.setState({ capsLockShow: false });
-    }
+    this.setState({ capsLockShow: e.getModifierState('CapsLock') });
   };
 
   render() {
