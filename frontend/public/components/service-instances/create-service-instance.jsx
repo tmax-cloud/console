@@ -90,6 +90,7 @@ const withServiceInstanceForm = SubForm =>
           const classListData = res.items.map(item => {
             return {
               name: _.get(item, 'metadata.name'),
+              externalName: _.get(item, 'spec.externalName'),
               uid: _.get(item, 'metadata.uid'),
               description: _.get(item, 'spec.description') || '',
               imageUrl: _.get(item, 'spec.externalMetadata.imageUrl') || '',
@@ -472,7 +473,7 @@ export const EditServiceInstance = ({ match: { params }, kind }) => (
 );
 
 const ServicePlanItem = ({ item, onChangePlan, selectedPlan }) => {
-  const { name, description, bullets, amount, unit } = item;
+  const { description, bullets, amount, unit } = item;
   const bulletList = bullets.map((bullet, index) => <li key={index}>{bullet}</li>);
   const _onClickPlan = servicePlan => {
     onChangePlan(servicePlan);
@@ -482,7 +483,7 @@ const ServicePlanItem = ({ item, onChangePlan, selectedPlan }) => {
       <div style={{ display: 'inline-flex' }}>
         <input type="radio" name="servicePlan" onChange={() => _onClickPlan(item)} checked={selectedPlan && selectedPlan.uid === item.uid}></input>
         <div onClick={() => _onClickPlan(item)}>
-          <b>{name}</b>
+          <b>{item.spec.externalName}</b>
           <br></br>
           <span>{description}</span>
           {bullets.length > 0 && bulletList}
