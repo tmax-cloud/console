@@ -66,14 +66,21 @@ _.each(namespacedPrefixes, p => {
 });
 
 const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
-  // let activeNamespace = getActiveNamespace();
-  let activeNamespace;
+  let activeNamespace = getActiveNamespace();
   let to;
-  if (!flags[FLAGS.CANLIST_NS]) {
-    activeNamespace = 'default';
-  } else {
-    activeNamespace = ALL_NAMESPACES_KEY;
+  if (flagPending(flags[FLAGS.CAN_LIST_NS])) {
+    // CAN_LIST_NS 로딩 될때까지 기다리기
+    return null;
   }
+
+  if (FLAGS.CAN_LIST_NS) {
+    // admin
+    activeNamespace = ALL_NAMESPACES_KEY;
+  } else if (activeNamespace === ALL_NAMESPACES_KEY) {
+    //user이면서 allnamespace 가 activenamespace인 경우
+    return null;
+  }
+
   if (activeNamespace === ALL_NAMESPACES_KEY) {
     to = '/status/all-namespaces';
   } else if (activeNamespace) {
