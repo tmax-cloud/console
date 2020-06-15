@@ -625,13 +625,14 @@
     "TCPSENT": "TCP Sent",
     "MEMORY": "Memory",
     "GPU": "GPU",
-    "ALGORITHMNAME": "Algorithm name",
-    "CURRENTTRIALS/MAXTRIALCOUNT": "Current Trials/Max Trial Count",
-    "CURRENTOPTIMAL/OBJECTIVE": "Current Optimal/Objective",
-    "FRAMEWORK": "Framework",
-    "STORAGEURI": "Storage URI",
+    "ALGORITHMNAME": "알고리즘 이름",
+    "CURRENTTRIALS/MAXTRIALCOUNT": "트라이얼 개수",
+    "CURRENTOPTIMAL/OBJECTIVE": "최적화 상태",
+    "FRAMEWORK": "프레임워크",
+    "STORAGEURI": "스토리지 Uri",
     "PIPELINE": "Pipeline",
-    "ElAPSEDTIME": "elapsed time"
+    "ElAPSEDTIME": "elapsed time",
+    "CANARY": "Canary"
   },
   "RESOURCE": {
     "HOME": "홈",
@@ -714,9 +715,9 @@
     "PEERAUTHENTICATION": "피어 인증",
     "AUTHORIZATIONPOLICY": "인가 정책",
     "AIOPS": "AI Ops",
-    "NOTEBOOK": "Notebook",
-    "EXPERIMENT": "Experiment",
-    "INFERENCESERVICE": "Inference Service",
+    "NOTEBOOK": "노트북 서버",
+    "EXPERIMENT": "카티브",
+    "INFERENCESERVICE": "KF 서빙",
     "WORKFLOWTEMPLATE": "Workflow Template",
     "WORKFLOW": "Workflow",
     "CATALOGSERVICECLAIM": "카탈로그 서비스 클레임"
