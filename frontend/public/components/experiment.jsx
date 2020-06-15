@@ -19,9 +19,6 @@ const ExperimentHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-1 col-sm-1">
-                {t('CONTENT:STATUS')}
-            </ColHead>
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.algorithm.algorithmName">
                 {t('CONTENT:ALGORITHMNAME')}
             </ColHead>
@@ -31,7 +28,9 @@ const ExperimentHeader = props => {
             <ColHead {...props} className="col-sm-2 hidden-xs">
                 {t('CONTENT:CURRENTOPTIMAL/OBJECTIVE')}
             </ColHead>
-
+            <ColHead {...props} className="col-xs-1 col-sm-1">
+                {t('CONTENT:STATUS')}
+            </ColHead>
         </ListHeader>
     );
 };
@@ -40,7 +39,7 @@ const ExperimentRow = () =>
     // eslint-disable-next-line no-shadow
     function ExperimentRow({ obj }) {
         let trial = obj.status.trials + '/' + obj.spec.maxTrialCount;
-        let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].status : '';
+        let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].type : '';
         let objectiveMetricName = obj.spec.objective.objectiveMetricName
         let currentOptimal = objectiveMetricName ? obj.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
         let optimal = currentOptimal.value + "/" + obj.spec.objective.goal
@@ -51,11 +50,10 @@ const ExperimentRow = () =>
                     <ResourceLink kind="Experiment" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-1 col-sm-1 co-break-word">{status}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.algorithm.algorithmName}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{trial}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{optimal}</div>
-
+                <div className="col-xs-1 col-sm-1 co-break-word">{status}</div>
             </div>
         );
     };

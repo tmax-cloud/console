@@ -19,18 +19,10 @@ const NotebookHeader = props => {
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.template.spec.containers[0].image">
+            <ColHead {...props} className="col-xs-5 col-sm-5" sortField="spec.template.spec.containers[0].image">
                 {t('CONTENT:IMAGE')}
             </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.template.spec.containers[0].resources.requests.cpu">
-                {t('CONTENT:CPU')}
-            </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.template.spec.containers[0].resources.requests.memory">
-                {t('CONTENT:MEMORY')}
-            </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.template.spec.containers[0].resources.requests.gpu">
-                {t('CONTENT:GPU')}
-            </ColHead>
+
         </ListHeader>
     );
 };
@@ -45,10 +37,7 @@ const NotebookRow = () =>
                     <ResourceLink kind="Notebook" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].image}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].resources.requests.cpu}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].resources.requests.memory}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.template.spec.containers[0].resources.requests.gpu}</div>
+                <div className="col-xs-5 col-sm-5 co-break-word">{obj.spec.template.spec.containers[0].image}</div>
             </div>
         );
     };
@@ -59,7 +48,7 @@ const Details = ({ obj: condition }) => {
         <React.Fragment>
             <ScrollToTopOnMount />
             <div className="co-m-pane__body">
-                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('UserSecurityPolicy', t) })} />
+                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Notebook', t) })} />
                 <div className="row">
                     <div className="col-sm-6">
                         <ResourceSummary resource={condition} />
@@ -91,7 +80,7 @@ export const NotebookDetailsPage = props => {
             {...props}
             kind="Notebook"
             menuActions={menuActions}
-            pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+            pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(t('RESOURCE:POD'))]}
         />
     );
 };

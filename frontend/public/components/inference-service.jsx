@@ -20,22 +20,19 @@ const InferenceServiceHeader = props => {
                 {t('CONTENT:NAMESPACE')}
             </ColHead>
             <ColHead {...props} className="col-xs-1 col-sm-1">
-                {t('CONTENT:STATUS')}
-            </ColHead>
-            <ColHead {...props} className="col-xs-1 col-sm-1">
                 {t('CONTENT:FRAMEWORK')}
-            </ColHead>
-            <ColHead {...props} className="col-sm-1 hidden-xs">
-                {t('CONTENT:CPU')}
-            </ColHead>
-            <ColHead {...props} className="col-sm-1 hidden-xs">
-                {t('CONTENT:MEMORY')}
             </ColHead>
             <ColHead {...props} className="col-sm-2 hidden-xs">
                 {t('CONTENT:STORAGEURI')}
             </ColHead>
-            <ColHead {...props} className="col-sm-2 hidden-xs">
+            <ColHead {...props} className="col-sm-3 hidden-xs">
                 {t('CONTENT:URL')}
+            </ColHead>
+            <ColHead {...props} className="col-sm-1 hidden-xs">
+                {t('CONTENT:CANARY')}
+            </ColHead>
+            <ColHead {...props} className="col-xs-1 col-sm-1">
+                {t('CONTENT:STATUS')}
             </ColHead>
         </ListHeader>
     );
@@ -44,11 +41,10 @@ const InferenceServiceHeader = props => {
 const InferenceServiceRow = () =>
     // eslint-disable-next-line no-shadow
     function InferenceServiceRow({ obj }) {
-        let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].status : '';
+        let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].type : '';
         let framework = Object.keys(obj.spec.default.predictor)[0];
-        let cpuLimit = obj.spec.default.predictor[framework].resources.limits.cpu;
-        let memoryLimit = obj.spec.default.predictor[framework].resources.limits.memory;
         let storageUri = obj.spec.default.predictor[framework].storageUri;
+        let canary = Object.keys(obj.status.canary).length === 0 ? 'N' : 'Y';
         return (
             <div className="row co-resource-list__item">
                 <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
@@ -56,12 +52,11 @@ const InferenceServiceRow = () =>
                     <ResourceLink kind="InferenceService" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-1 col-sm-1 co-break-word">{status}</div>
                 <div className="col-xs-1 col-sm-1 co-break-word">{framework}</div>
-                <div className="col-xs-1 col-sm-1 co-break-word">{cpuLimit}</div>
-                <div className="col-xs-1 col-sm-1 co-break-word">{memoryLimit}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{storageUri}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.status.url}</div>
+                <div className="col-xs-3 col-sm-3 co-break-word">{obj.status.url}</div>
+                <div className="col-xs-1 col-sm-1 co-break-word">{canary}</div>
+                <div className="col-xs-1 col-sm-1 co-break-word">{status}</div>
             </div>
         );
     };
