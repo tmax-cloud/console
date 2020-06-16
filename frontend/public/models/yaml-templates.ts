@@ -3992,4 +3992,170 @@ spec:
     value: example
 
 `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.NotebookModel), 'default'],
+    `
+    apiVersion: kubeflow.org/v1
+    kind: Notebook
+    metadata:
+      labels:
+        app: my-notebook
+      name: my-notebook
+      namespace: my-namespace
+    spec:
+      template:
+        spec:
+          containers:
+          - env: []
+            image: gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-cpu:1.0.0
+            name: my-notebook
+            resources:
+              requests:
+                cpu: "1"
+                memory: "2"
+            volumeMounts:
+            - mountPath: /home/jovyan
+              name: workspace-my-notebook
+            - mountPath: /dev/shm
+              name: dshm
+          serviceAccountName: default-editor
+          ttlSecondsAfterFinished: 300
+          volumes:
+          - name: workspace-my-notebook
+            persistentVolumeClaim:
+              claimName: workspace-my-notebook
+          - emptyDir:
+              medium: Memory
+            name: dshm
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ExperimentModel), 'default'],
+    `
+    apiVersion: "kubeflow.org/v1alpha3"
+    kind: Experiment
+    metadata:
+      namespace: defualt
+      name: defualt
+    spec:
+      parallelTrialCount: 1
+      maxTrialCount: 12
+      maxFailedTrialCount: 3
+      objective:
+        type: maximize
+        goal: 0.99
+        objectiveMetricName: Validation-accuracy
+        additionalMetricNames:
+          - accuracy
+      algorithm:
+        algorithmName: random
+      parameters:
+        - name: --learning_rate
+          parameterType: double
+          feasibleSpace:
+            min: "0.01"
+            max: "0.2"
+        - name: --dropout
+          parameterType: double
+          feasibleSpace:
+            min: "0.1"
+            max: "0.5"
+      trialTemplate:
+        goTemplate:
+            rawTemplate: |-
+              apiVersion: batch/v1
+              kind: Job
+              metadata:
+                name: {{.Trial}}
+                namespace: {{.NameSpace}}
+              spec:
+                template:
+                  spec:
+                    containers:
+                    - name: {{.Trial}}
+                      image: katib-mnist-job:0.0.1
+                      command:
+                      - "python3"
+                      - "/app/katib-mnist-random-job.py"
+                      {{- with .HyperParameters}}
+                      {{- range .}}
+                      - "{{.Name}}={{.Value}}"
+                      {{- end}}
+                      {{- end}}
+                    restartPolicy: Never
+    
+    
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.InferenceServiceModel), 'default'],
+    `
+    apiVersion: serving.kubeflow.org/v1alpha2
+    kind: InferenceService
+    metadata:
+      name: tensorrt-simple-string
+    spec:
+      default:
+        predictor:
+          tensorrt:
+            storageUri: gs://kfserving-samples/models/tensorrt
+            resources:
+              limits:
+                cpu: 100m
+                memory: 1Gi
+              requests:
+                cpu: 100m
+                memory: 1Gi
+      canaryTrafficPercent: 10
+      canary:
+        predictor:
+          tensorflow:
+            storageUri: pvc://kfserving-models-pvc/models/tensorflow/mnist/    
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.WorkflowTemplateModel), 'default'],
+    `
+    apiVersion: argoproj.io/v1alpha1
+    kind: WorkflowTemplate
+    metadata:
+      name: workflow-template-whalesay-template
+    spec:
+      entrypoint: whalesay-template
+      templates:
+      - name: whalesay-template
+        inputs:
+          parameters:
+          - name: message
+        container:
+          image: docker/whalesay
+          command: [cowsay]
+          args: ["{{inputs.parameters.message}}"]
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.WorkflowModel), 'default'],
+    `
+    apiVersion: argoproj.io/v1alpha1
+    kind: Workflow
+    metadata:
+      generateName: workflow-template-hello-world-
+    spec:
+      entrypoint: whalesay
+      templates:
+      - name: whalesay
+        steps:
+          - - name: call-whalesay-template
+              templateRef:
+                name: workflow-template-whalesay-template
+                template: whalesay-template
+              arguments:
+                parameters:
+                - name: message
+                  value: "hello world"
+`,
   );
