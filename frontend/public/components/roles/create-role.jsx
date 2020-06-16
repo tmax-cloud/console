@@ -105,9 +105,9 @@ class RoleFormComponent extends React.Component {
                             id="role-name"
                             required />
                     </Section>
-                    <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
+                    {kind === 'Role' && <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
                         <NsDropdown id="role-namespace" t={t} onChange={this.onNamespaceChanged} />
-                    </Section>
+                    </Section>}
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
                         <Link to={formatNamespacedRouteForResource('roles')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
