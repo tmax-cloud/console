@@ -725,8 +725,8 @@
     "NOTEBOOK": "노트북 서버",
     "EXPERIMENT": "카티브",
     "INFERENCESERVICE": "KF 서빙",
-    "WORKFLOWTEMPLATE": "Workflow Template",
-    "WORKFLOW": "Workflow",
+    "WORKFLOWTEMPLATE": "워크플로우 템플릿",
+    "WORKFLOW": "워크플로우",
     "CATALOGSERVICECLAIM": "카탈로그 서비스 클레임"
   }
 }
