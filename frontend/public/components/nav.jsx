@@ -457,23 +457,17 @@ class Nav extends React.Component {
             </NavSection>
 
             <NavSection text={t('RESOURCE:NETWORK')} icon="pficon pficon-network">
-              {/* istio, virtual service 추가 */}
               <ResourceNSLink resource="ingresses" name={ResourcePlural('Ingress', t)} onClick={this.close} />
               <ResourceNSLink resource="services" name={ResourcePlural('Service', t)} onClick={this.close} />
-              {/* <ResourceNSLink resource="istiogateways" name="이스티오 게이트웨이" onClick={this.close} /> */}
-              {/* <ResourceNSLink resource="virtualservices" name="가상 서비스" onClick={this.close} /> */}
               {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              {/* <ResourceNSLink resource="networkpolicies" name="Network Policies" onClick={this.close} /> */}
             </NavSection>
 
             <NavSection text={t('RESOURCE:STORAGE')} icon="fa fa-database">
-              {/* {isAdmin && <ResourceClusterLink resource="storageclasses" name="스토리지 클래스" onClick={this.close} required={FLAGS.CAN_LIST_STORE} />} */}
               {<ResourceClusterLink resource="storageclasses" name={ResourcePlural('StorageClass', t)} onClick={this.close} />}
               {/* data volume 추가 */}
               <ResourceNSLink resource="datavolumes" name={ResourcePlural('DataVolume', t)} onClick={this.close} />
               <ResourceNSLink resource="persistentvolumeclaims" name={ResourcePlural('PersistentVolumeClaim', t)} onClick={this.close} />
               <ResourceClusterLink resource="persistentvolumes" name={ResourcePlural('PersistentVolume', t)} onClick={this.close} />
-              {/* <ResourceClusterLink resource="persistentvolumes" name="영구 볼륨" onClick={this.close} required={FLAGS.CAN_LIST_PV} /> */}
             </NavSection>
 
             {/* <NavSection text="Builds" icon="pficon pficon-build">
@@ -520,16 +514,12 @@ class Nav extends React.Component {
               <ResourceClusterLink resource="namespaces" name={ResourcePlural('Namespace', t)} onClick={this.close} />
               <ResourceClusterLink resource="namespaceclaims" name={ResourcePlural('NamespaceClaim', t)} onClick={this.close} />
               {<ResourceNSLink resource="limitranges" name={ResourcePlural('LimitRange', t)} onClick={this.close} />}
-              {/* <ResourceNSLink resource="metering" name="미터링" onClick={this.close} /> */}
               <ResourceNSLink resource="resourcequotas" name={ResourcePlural('ResourceQuota', t)} onClick={this.close} />
               <ResourceNSLink resource="resourcequotaclaims" name={ResourcePlural('ResourceQuotaClaim', t)} onClick={this.close} />
               <ResourceClusterLink resource="customresourcedefinitions" name={ResourcePlural('CustomResourceDefinition', t)} onClick={this.close} />
-              {/* <ResourceClusterLink resource="customresourcedefinitions" name="커스텀 리소스 정의" onClick={this.close} required={FLAGS.CAN_LIST_CRD} /> */}
             </NavSection>
 
             <NavSection text={t('RESOURCE:HOST')} icon="pficon pficon-server">
-              {/* <ResourceClusterLink resource="nodes" name="Nodes" onClick={this.close} /> */}
-              {/* <ResourceClusterLink resource="nodes" name="노드" onClick={this.close} required={FLAGS.CAN_LIST_NODE} /> */}
               <ResourceClusterLink resource="nodes" name={ResourcePlural('Node', t)} onClick={this.close} />
             </NavSection>
 
