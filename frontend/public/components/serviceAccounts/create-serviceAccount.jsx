@@ -11,15 +11,14 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
 
-
-const Section = ({ label, children }) => (
-    <div className="row">
+const Section = ({ label, children, isRequired }) => {
+    return <div className={"row form-group " + (isRequired ? 'required' : '')}>
         <div className="col-xs-2 control-label">
             <strong>{label}</strong>
         </div>
         <div className="col-xs-10">{children}</div>
     </div>
-);
+}
 
 class ServiceAccountFormComponent extends React.Component {
     constructor(props) {
@@ -84,7 +83,7 @@ class ServiceAccountFormComponent extends React.Component {
 
                 <fieldset disabled={!this.props.isCreate}>
 
-                    <Section label={t('CONTENT:NAME')}>
+                    <Section label={t('CONTENT:NAME')} isRequired={true}>
                         <input className="form-control form-group"
                             type="text"
                             onChange={this.onNameChanged}
@@ -92,7 +91,7 @@ class ServiceAccountFormComponent extends React.Component {
                             id="service-account-name"
                             required />
                     </Section>
-                    <Section label={t('CONTENT:NAMESPACE')}>
+                    <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
                         <NsDropdown id="service-account-namespace" t={t} onChange={this.onNamespaceChanged} />
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
