@@ -636,7 +636,8 @@
     "PIPELINE": "Pipeline",
     "ElAPSEDTIME": "elapsed time",
     "CANARY": "Canary",
-    "ROLETYPE": "롤 유형"
+    "ROLETYPE": "롤 유형",
+    "GRANTRESOURCES": "리소스 부여"
   },
   "RESOURCE": {
     "HOME": "홈",

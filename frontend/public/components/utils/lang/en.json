@@ -637,7 +637,8 @@
     "PIPELINE": "Pipeline",
     "ElAPSEDTIME": "elapsed time",
     "CANARY": "Canary",
-    "ROLETYPE": "Role Type"
+    "ROLETYPE": "Role Type",
+    "GRANTRESOURCES": "Grant Resources"
   },
   "RESOURCE": {
     "HOME": "Home",
