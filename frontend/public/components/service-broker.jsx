@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import {
   Cog,
@@ -13,6 +13,7 @@ import {
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference } from '../module/k8s';
+import { ResourcePlural } from './utils/lang/resource-plural';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 
 const menuActions = [
@@ -22,41 +23,45 @@ const menuActions = [
   Cog.factory.Delete
 ];
 
-const ServiceBrokerHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-2" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.url"
-    >
-      Broker URL
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="status.conditions.status"
-    >
-      Status
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-4 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const ServiceBrokerHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-2" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-xs-2"
+        sortField="metadata.namespace"
+      >
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.url"
+      >
+        {t('CONTENT:URL')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="status.conditions.status"
+      >
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-4 hidden-xs"
+        sortField="metadata.creationTimestamp"
+      >
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+}
+
 
 // template-instance status 값
 const ServiceBrokerPhase = instance => {
@@ -111,6 +116,7 @@ const ServiceBrokerRow = () =>
   };
 
 const Details = ({ obj: servicebroker }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -123,9 +129,9 @@ const Details = ({ obj: servicebroker }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Status</dt>
+              <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{ServiceBrokerPhase(servicebroker)}</dd>
-              <dt>Broker Url</dt>
+              <dt>{t('CONTENT:URL')}</dt>
               <dd>{servicebroker.spec.url}</dd>
               {/* {activeDeadlineSeconds && (
                   <React.Fragment>
@@ -165,14 +171,18 @@ export const ServiceBrokerList = props => {
 };
 ServiceBrokerList.displayName = ServiceBrokerList;
 
-export const ServiceBrokersPage = props => (
-  <ListPage
-    {...props}
-    ListComponent={ServiceBrokerList}
-    canCreate={true}
-    kind="ServiceBroker"
-  />
-);
+export const ServiceBrokersPage = props => {
+  const { t } = useTranslation();
+  return (
+    <ListPage
+      {...props}
+      ListComponent={ServiceBrokerList}
+      canCreate={true}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('ServiceBroker', t) })}
+      kind="ServiceBroker"
+    />
+  )
+};
 ServiceBrokersPage.displayName = 'ServiceBrokersPage';
 
 export const ServiceBrokersDetailsPage = props => (

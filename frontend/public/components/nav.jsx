@@ -403,6 +403,9 @@ class Nav extends React.Component {
             </NavSection>
             {/* Service Catalog 전체 추가 */}
             <NavSection text={t('RESOURCE:SERVICECATALOG')} icon="pficon pficon-catalog">
+              <ResourceNSLink resource="servicebrokers" name={ResourcePlural('ServiceBroker', t)} onClick={this.close} />
+              <ResourceNSLink resource="serviceclasses" name={ResourcePlural('ServiceClass', t)} onClick={this.close} />
+              <ResourceNSLink resource="serviceplans" name={ResourcePlural('ServicePlan', t)} onClick={this.close} />
               <ResourceClusterLink resource="clusterservicebrokers" name={ResourcePlural('ClusterServiceBroker', t)} onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceclasses" name={ResourcePlural('ClusterServiceClass', t)} onClick={this.close} />
               <ResourceClusterLink resource="clusterserviceplans" name={ResourcePlural('ClusterServicePlan', t)} onClick={this.close} />
