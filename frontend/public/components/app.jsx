@@ -270,6 +270,7 @@ class App extends React.PureComponent {
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             }
+            <LazyRoute path="/k8s/cluster/roles/new/:type" exact kind="role" loader={() => import('./roles/create-role').then(m => m.CreateRole)} />
             <LazyRoute path="/k8s/cluster/usergroups/new/:type" exact kind="Usergroup" loader={() => import('./usergroups/create-usergroup').then(m => m.CreateUserGroup)} />
             <LazyRoute path="/k8s/cluster/users/new/:type" exact kind="User" loader={() => import('./users/create-user').then(m => m.CreateUser)} />
             <LazyRoute path="/k8s/cluster/serviceaccounts/new/:type" exact kind="ServiceAccount" loader={() => import('./serviceAccounts/create-serviceAccount').then(m => m.CreateServiceAccount)} />
