@@ -635,7 +635,7 @@
     "FRAMEWORK": "Framework",
     "STORAGEURI": "Storage URI",
     "PIPELINE": "Pipeline",
-    "ElAPSEDTIME": "elapsed time",
+    "ENDTIME": "end time",
     "CANARY": "Canary",
     "ROLETYPE": "Role Type",
     "GRANTRESOURCES": "Grant Resources"

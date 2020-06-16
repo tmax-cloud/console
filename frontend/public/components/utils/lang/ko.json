@@ -633,8 +633,8 @@
     "CURRENTOPTIMAL/OBJECTIVE": "최적화 상태",
     "FRAMEWORK": "프레임워크",
     "STORAGEURI": "스토리지 Uri",
-    "PIPELINE": "Pipeline",
-    "ElAPSEDTIME": "elapsed time",
+    "PIPELINE": "파이프 라인",
+    "ENDTIME": "종료 시간",
     "CANARY": "Canary",
     "ROLETYPE": "롤 유형",
     "GRANTRESOURCES": "리소스 부여"
