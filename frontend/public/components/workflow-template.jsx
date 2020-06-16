@@ -13,14 +13,11 @@ const WorkflowTemplateHeader = props => {
     const { t } = useTranslation();
     return (
         <ListHeader>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
+            <ColHead {...props} className="col-xs-4 col-sm-4" sortField="metadata.name">
                 {t('CONTENT:NAME')}
             </ColHead>
             <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.namespace">
                 {t('CONTENT:NAMESPACE')}
-            </ColHead>
-            <ColHead {...props} className="col-xs-2 col-sm-2" sortField="spec.hosts">
-                {t('CONTENT:DESCRIPTION')}
             </ColHead>
             <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
                 {t('CONTENT:CREATED')}
@@ -34,12 +31,11 @@ const WorkflowTemplateRow = () =>
     function WorkflowTemplateRow({ obj }) {
         return (
             <div className="row co-resource-list__item">
-                <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
+                <div className="col-xs-4 col-sm-4 co-resource-link-wrapper">
                     <ResourceCog actions={menuActions} kind="WorkflowTemplate" resource={obj} />
                     <ResourceLink kind="WorkflowTemplate" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
                 <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );
