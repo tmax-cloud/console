@@ -2,11 +2,11 @@
 hypercloud-console:1.1.25.2부터 적용되는 가이드입니다.<br>
 최근 업데이트: ***2020/06/16***
 
-IP Range Validation을 테스트하기 위해서는 Load Balancer 서비스와 LoadBalancer Public IP를 사용해야 합니다.<br>
+- IP Range Validation을 테스트하기 위해서는 Load Balancer 서비스와 LoadBalancer Public IP를 사용해야 합니다.<br>
 LB yaml의 spec에는 "externalTrafficPolicy: Local"이 추가되어야 하고,<br>
 deployment yaml의 template spec에는 "serviceAccountName: @@NAME_NS@@-admin"가 추가되어야 합니다.
 
-HDC (public) 모드로 설치하는 경우에는 console과 portal이 쿠키를 공유할 수 있도록 같은 도메인의 서브도메인으로 세팅되어야 합니다.<br>
+- HDC (public) 모드로 설치하는 경우에는 console과 portal이 쿠키를 공유할 수 있도록 같은 도메인의 서브도메인으로 세팅되어야 합니다.<br>
 console과 portal 둘 다 443 포트의 LB 서비스로 생성하거나, 또는 둘 다 Node Port 서비스로 생성하고서 둘 다 동일한 Node IP로만 접속해야 합니다.<br>
 (Node Port를 사용하는 경우, 로그인용 계정에 UserSecurityPolicy가 설정되어 있으면 IP Range Validation에서 오동작을 할 수 있습니다.)
 
