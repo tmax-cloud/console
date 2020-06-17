@@ -7,6 +7,7 @@ import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
+import { sha512 } from 'js-sha512';
 
 enum CreateType {
     generic = 'generic',
@@ -30,7 +31,10 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
             apiVersion: 'tmax.io/v1',
             kind: 'User',
             metadata: {
-                name: ''
+                name: '',
+                labels: {
+                    encrypted: "f"
+                }
             },
             status: 'active',
             userInfo: {
@@ -59,7 +63,8 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                 user.userInfo.email = String(event.target.value);
                 break;
             case 'password':
-                user.userInfo.password = String(event.target.value);
+                let pw = sha512(String(event.target.value));
+                user.userInfo.password = pw;
                 break;
             case 'phone':
                 user.userInfo.phone = String(event.target.value);
@@ -155,7 +160,6 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                     </ButtonBar>
                 </fieldset>
             </form>
-
         </div >;
     }
 };
