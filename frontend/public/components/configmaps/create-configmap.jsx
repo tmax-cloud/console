@@ -43,6 +43,7 @@ class ConfigMapFormComponent extends React.Component {
         };
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
+        this._updateData = this._updateData.bind(this);
         this.save = this.save.bind(this);
     }
 
@@ -56,9 +57,9 @@ class ConfigMapFormComponent extends React.Component {
         configMap.metadata.namespace = String(namespace);
         this.setState({ configMap });
     }
-    _updateEnv(envs) {
+    _updateData(datas) {
         this.setState({
-            data: envs.keyValuePairs,
+            data: datas.keyValuePairs,
         });
     }
     save(e) {
@@ -66,7 +67,14 @@ class ConfigMapFormComponent extends React.Component {
         const { kind, metadata } = this.state.configMap;
         this.setState({ inProgress: true });
         const newConfigMap = _.assign({}, this.state.configMap);
-
+        //  데이터 가공
+        let obj = {};
+        this.state.data.forEach(arr => {
+            if (arr[0] !== '' && arr[1] !== '') {
+                obj[arr[0]] = arr[1];
+            }
+        });
+        newConfigMap.data = obj;
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newConfigMap)
@@ -101,7 +109,7 @@ class ConfigMapFormComponent extends React.Component {
                         <NsDropdown id="config-map-namespace" t={t} onChange={this.onNamespaceChanged} />
                     </Section>
                     <Section label={t('CONTENT:CONFIGMAPVALUE')}>
-                        <KeyValueEditor t={t} keyValuePairs={this.state.data} updateParentData={this._updateEnv} />
+                        <KeyValueEditor t={t} keyValuePairs={this.state.data} updateParentData={this._updateData} />
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
