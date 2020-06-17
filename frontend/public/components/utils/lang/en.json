@@ -638,7 +638,8 @@
     "ENDTIME": "end time",
     "CANARY": "Canary",
     "ROLETYPE": "Role Type",
-    "GRANTRESOURCES": "Grant Resources"
+    "GRANTRESOURCES": "Grant Resources",
+    "CONFIGMAPVALUE": "Config Map Value"
   },
   "RESOURCE": {
     "HOME": "Home",

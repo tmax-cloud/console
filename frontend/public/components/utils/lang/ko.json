@@ -637,7 +637,8 @@
     "ENDTIME": "종료 시간",
     "CANARY": "Canary",
     "ROLETYPE": "롤 유형",
-    "GRANTRESOURCES": "리소스 부여"
+    "GRANTRESOURCES": "리소스 부여",
+    "CONFIGMAPVALUE": "컨피그 맵 값"
   },
   "RESOURCE": {
     "HOME": "홈",
