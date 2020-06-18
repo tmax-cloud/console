@@ -7,8 +7,8 @@ import { fromNow } from './utils/datetime';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
-const menuActions = [...Cog.factory.common, Cog.factory.Connect];
-
+// const menuActions = [...Cog.factory.common, Cog.factory.Connect];
+const menuActions = [...Cog.factory.common];
 const NotebookHeader = props => {
     const { t } = useTranslation();
     return (
