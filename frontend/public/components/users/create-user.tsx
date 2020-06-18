@@ -131,7 +131,7 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                             id="password"
                             required />
                     </Section>
-                    <Section label={t('CONTENT:PHONE')} isRequired={false}>
+                    <Section label={t('CONTENT:PHONE')} isRequired={true}>
                         <input className="form-control form-group"
                             type="text"
                             onChange={this.onValueChanged}
