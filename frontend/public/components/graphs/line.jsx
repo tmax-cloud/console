@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { restyle } from 'plotly.js/lib/core';
-
+import { useTranslation, withTranslation } from 'react-i18next';
 import { BaseGraph } from './base';
 import { connectToURLs, MonitoringRoutes } from '../../monitoring';
 
@@ -13,48 +13,34 @@ const baseData = {
   fill: 'tozeroy',
   type: 'scatter',
 };
-
 export class Line_ extends BaseGraph {
   constructor(props) {
     super(props);
-
+    const { t } = this.props;
     let queries = props.query;
     if (!_.isArray(queries)) {
       queries = [queries];
     }
-
     this.data = queries.map(() => Object.assign({}, baseData));
     this.layout = {
-      dragmode: 'pan',
-      yaxis: {
-        rangemode: 'tozero',
-        zeroline: false,
-        ticks: '',
-        showline: false,
-        fixedrange: true,
+      "xaxis": {
+        "visible": false
       },
-      xaxis: {
-        zeroline: false,
-        tickformat: '%H:%M',
-        ticks: '',
-        showline: true,
-        fixedrange: true,
+      "yaxis": {
+        "visible": false
       },
-      legend: {
-        x: 0, y: 1,
-        bgcolor: 'rgba(255, 255, 255, 0.5)',
-        size: '12px',
-        orientation: 'h'
-      },
-      margin: {
-        l: 30,
-        b: 30,
-        r: 40,
-        t: 0,
-        pad: 0,
-      },
-      shapes: [],
-    };
+      "annotations": [
+        {
+          "text": t('STRING:LINE_0'),
+          "xref": "paper",
+          "yref": "paper",
+          "showarrow": false,
+          "font": {
+            "size": 28
+          }
+        }
+      ]
+    }
     this.options = {
       displaylogo: false,
       displayModeBar: false,
@@ -62,6 +48,7 @@ export class Line_ extends BaseGraph {
     this.style = { width: '100%' };
     this.onPlotlyRelayout = e => {
       if (!e) {
+        console.log('error')
         return;
       }
       let start = this.start;
@@ -94,6 +81,7 @@ export class Line_ extends BaseGraph {
   }
   updateGraph2(data, target) {
     let queries = this.props.query;
+    let nticks = data.length <= 5 ? data.length : 5;
     if (!_.isArray(queries)) {
       queries = [{
         query: queries,
@@ -101,12 +89,84 @@ export class Line_ extends BaseGraph {
       }];
     }
     if (data.length === 0) {
-      // eslint-disable-next-line no-console
-      // console.warn(`Graph error: No data from query for ${name || query}.`);
+      this.node.layout = {
+        "xaxis": {
+          "visible": false
+        },
+        "yaxis": {
+          "visible": false
+        },
+        "annotations": [
+          {
+            "text": "No matching data found",
+            "xref": "paper",
+            "yref": "paper",
+            "showarrow": false,
+            "font": {
+              "size": 28
+            }
+          }
+        ]
+      };
+      restyle(this.node, {
+        x: [],
+        y: [],
+        name,
+      }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
       return;
     }
-
-
+    this.node.layout = {
+      dragmode: 'pan',
+      yaxis: {
+        visible: true,
+        rangemode: 'tozero',
+        zeroline: false,
+        ticks: '',
+        showline: false,
+        fixedrange: true,
+        automargin: true
+      },
+      xaxis: {
+        visible: true,
+        zeroline: false,
+        showline: true,
+        tickmode: 'auto',
+        nticks: nticks,
+        fixedrange: true, // true인경우 zoom불가
+        automargin: true
+      },
+      legend: {
+        x: 0, y: 1,
+        bgcolor: 'rgba(255, 255, 255, 0.5)',
+        size: '12px',
+        orientation: 'h'
+      },
+      margin: {
+        l: 30,
+        b: 30,
+        r: 40,
+        t: 0,
+        pad: 0,
+      },
+      shapes: [],
+    };
+    switch (this.props.query[0].timeUnit) {
+      case 'hour':
+        this.node.layout.xaxis.tickformat = '%H:%M';
+        break;
+      case 'day':
+        this.node.layout.xaxis.tickformat = '%m/%d';
+        break;
+      case 'month':
+        this.node.layout.xaxis.tickformat = '%B';
+        break;
+      case 'year':
+        this.node.layout.xaxis.tickformat = '%Y';
+        break;
+    }
     data.forEach((cur, i) => {
       restyle(this.node, {
         x: [data.map(v => new Date(v.meteringTime))],
@@ -134,16 +194,76 @@ export class Line_ extends BaseGraph {
     _.each(data, (result, i) => {
       const query = queries[i];
       const name = query && query.name;
-      if (!result.cpu && result.data.result.length === 0) {
+      if (result.data.result.length === 0) {
         // eslint-disable-next-line no-console
         console.warn(`Graph error: No data from query for ${name || query}.`);
-        return;
+        this.node.layout = {
+          "xaxis": {
+            "visible": false
+          },
+          "yaxis": {
+            "visible": false
+          },
+          "annotations": [
+            {
+              "text": "No matching data found",
+              "xref": "paper",
+              "yref": "paper",
+              "showarrow": false,
+              "font": {
+                "size": 28
+              }
+            }
+          ]
+        };
+        restyle(this.node, {
+          x: [],
+          y: [],
+          name,
+        }, [i]).catch(e => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+        return
       }
       const lineValues = result.data.result[0].values;
-
+      this.node.layout = {
+        dragmode: 'pan',
+        yaxis: {
+          visible: true,
+          rangemode: 'tozero',
+          zeroline: false,
+          ticks: '',
+          showline: false,
+          fixedrange: true,
+          automargin: true
+        },
+        xaxis: {
+          visible: true,
+          zeroline: false,
+          showline: true,
+          tickformat: '%H:%M',
+          fixedrange: true, // true인경우 zoom불가
+          automargin: true
+        },
+        legend: {
+          x: 0, y: 1,
+          bgcolor: 'rgba(255, 255, 255, 0.5)',
+          size: '12px',
+          orientation: 'h'
+        },
+        margin: {
+          l: 30,
+          b: 40,
+          r: 40,
+          t: 10,
+          pad: 0,
+        },
+        shapes: [],
+      };
       restyle(this.node, {
         x: [lineValues.map(v => new Date(v[0] * 1000))],
-        y: [lineValues.map(v => v[1] === "NaN" ? null : v[1])],
+        y: [lineValues.map(v => v[1] === "NaN" ? null : Number(v[1]))],
         // Use a lighter fill color on first line in graphs
         fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
         name,
@@ -154,7 +274,7 @@ export class Line_ extends BaseGraph {
     });
   }
 }
-export const Line = connectToURLs(MonitoringRoutes.Prometheus)(Line_);
+export const Line = withTranslation()(connectToURLs(MonitoringRoutes.Prometheus)(Line_));
 
 Line_.contextTypes = {
   urls: PropTypes.object,

@@ -108,7 +108,7 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     let key = event.target.id
     let templateInstance = { ...this.state.templateInstance };
     templateInstance.spec.template.parameters.forEach(obj => {
-      if (obj.displayName === key) {
+      if (obj.name === key) {
         obj.value = event.target.value;
       }
     });
@@ -176,21 +176,21 @@ const Requestform = (SubForm) => class SecretFormComponent extends React.Compone
     });
 
     let paramDivs = paramList.map((parameter) => {
-      let defaultValue = parameter.defaultValue ? `default : ${parameter.defaultValue}` : ''
+      let defaultValue = parameter.defaultValue ? `${parameter.defaultValue}` : ''
       let isRequired = parameter.required ? true : false;
       return <div>
         <div className="row">
-          <div className="col-xs-2">
-            <div>{parameter.displayName}</div>
+          <div className={"col-xs-2 form-group " + (isRequired ? 'required' : '')}>
+            <div className="control-label">{parameter.displayName}</div>
           </div>
           <div className="col-xs-3" id={parameter.name}>
-            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={t('CONTENT:VALUE')} id={parameter.displayName} required={isRequired} />
-          </div>
-          <div className="col-xs-5" id={parameter.name}>
-            <p className="co-m-pane__explanation">{defaultValue}</p>
+            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
           </div>
         </div>
-        <p className="co-m-pane__explanation">{parameter.description}</p>
+        <div className="row">
+          <div className="col-xs-2" />
+          <p className="col-xs-10 co-m-pane__explanation">{parameter.description}</p>
+        </div>
       </div>
     });
 

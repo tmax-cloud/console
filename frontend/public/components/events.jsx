@@ -28,7 +28,8 @@ const categoryFilter = (category, { reason }) => {
     return true;
   }
   const errorSubstrings = ['error', 'failed', 'unhealthy', 'nodenotready'];
-  const isError = errorSubstrings.find(substring => reason.toLowerCase().includes(substring));
+  //reason이 undefined인 경우가 있어 예외처리 , 이 경우 error가 아닌 이벤트들과 동일하게 취급 
+  const isError = reason ? errorSubstrings.find(substring => reason.toLowerCase().includes(substring)) : false;
   return category === 'error' ? isError : !isError;
 };
 

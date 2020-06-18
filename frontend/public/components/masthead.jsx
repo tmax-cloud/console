@@ -10,6 +10,7 @@ import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
 // import LoginComponent from './login';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
+import { NoticeExpirationModal_ } from './modals/notice-expiration-modal';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { getAccessToken, getRefreshToken, setAccessToken, resetLoginState } from './utils/auth';
 import i18n from 'i18next';
@@ -206,6 +207,7 @@ export class ExpTimer extends Component {
   state = {
     expMin: '',
     expSec: '',
+    modalShow: false,
   };
 
   constructor(props) {
@@ -241,6 +243,10 @@ export class ExpTimer extends Component {
     }
 
     expTime = logoutTime;
+  }
+
+  closeModal() {
+    this.setState({ modalShow: false });
   }
 
   componentDidUpdate() {
@@ -285,6 +291,9 @@ export class ExpTimer extends Component {
       expTime -= 1;
     }
 
+    if (Math.floor(expTime) === 60) {
+      NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
+    }
     // Test 용으로 짝수 분에 튕기도록
     if (expTime === 0 || expTime < 0 /*|| Math.floor(expTime / 60 % 2) === 0*/) {
       resetLoginState();
@@ -308,10 +317,17 @@ export class ExpTimer extends Component {
   }
 }
 
-export const Masthead = props => {
+export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags }) => {
+  // props => {
   let timerRef = null;
   // const [tokenTime, setTokenTime] = useState(60);
+  // const [modalShow, setModalShow] = useState(false);
   const { t } = useTranslation();
+
+  // const closeModal = () => {
+  //   setModalShow(false);
+  // }
+
   const setExpireTime = time => {
     // setTokenTime(time);
 
@@ -356,6 +372,29 @@ export const Masthead = props => {
       });
   };
 
+  const logout = e => {
+    // props.setLoading();
+    e.preventDefault();
+
+    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
+
+    const json = {
+      accessToken: getAccessToken(),
+    };
+
+    coFetchJSON
+      .post(AUTH_SERVER_URL, json)
+      .then(data => {
+        // props.setLoading();
+        resetLoginState();
+        window.location.href = `${document.location.origin}`;
+      })
+      .catch(error => {
+        setLoading();
+        console.log(error);
+      });
+  };
+
   return (
     <header role="banner" className="co-masthead">
       <LogoImage />
@@ -370,6 +409,8 @@ export const Masthead = props => {
             ref={input => {
               timerRef = input;
             }}
+            logout={logout}
+            tokenRefresh={tokenRefresh}
           />
         </div>
       )}
@@ -378,18 +419,16 @@ export const Masthead = props => {
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          {!HDCModeFlag && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>}
-          <div className="extend-refresh-border"></div>
+          {!HDCModeFlag && flags.CAN_LIST_NS && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>}
+          {flags.CAN_LIST_NS && <div className="extend-refresh-border"></div>}
         </div>
       )}
       <div className="co-masthead__lang">
         <LanguageWrapper />
       </div>
-      {/* {releaseModeFlag && ( */}
       <div className="co-masthead__user">
-        <UserMenuWrapper setLoading={props.setLoading} />
+        <UserMenuWrapper setLoading={setLoading} />
       </div>
-      {/* )} */}
     </header>
   );
-};
+});

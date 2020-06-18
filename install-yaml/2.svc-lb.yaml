@@ -4,6 +4,7 @@ metadata:
   name: console-lb
   namespace: @@NAME_NS@@
 spec:
+  externalTrafficPolicy: Local
   type: LoadBalancer
   ports:
   - name: "https-lb"

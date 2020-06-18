@@ -104,6 +104,12 @@ import {
   RequestAuthenticationModel,
   PeerAuthenticationModel,
   AuthorizationPolicyModel,
+  NotebookModel,
+  ExperimentModel,
+  InferenceServiceModel,
+  WorkflowTemplateModel,
+  WorkflowModel,
+  CatalogServiceClaimModel,
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
@@ -201,9 +207,21 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(ServiceEntryModel), () => import('./service-entry' /* webpackChunkName: "task" */).then(m => m.ServiceEntryDetailsPage))
   .set(referenceForModel(RequestAuthenticationModel), () => import('./request-authentication' /* webpackChunkName: "task" */).then(m => m.RequestAuthenticationDetailsPage))
   .set(referenceForModel(PeerAuthenticationModel), () => import('./peer-authentication' /* webpackChunkName: "task" */).then(m => m.PeerAuthenticationDetailsPage))
-  .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyDetailsPage));
+  .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyDetailsPage))
+  .set(referenceForModel(NotebookModel), () => import('./notebook' /* webpackChunkName: "task" */).then(m => m.NotebookDetailsPage))
+  .set(referenceForModel(ExperimentModel), () => import('./experiment' /* webpackChunkName: "task" */).then(m => m.ExperimentDetailsPage))
+  .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "task" */).then(m => m.InferenceServiceDetailsPage))
+  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "task" */).then(m => m.WorkflowTemplateDetailsPage))
+  .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "task" */).then(m => m.WorkflowDetailsPage))
+  .set(referenceForModel(CatalogServiceClaimModel), () => import('./catalog-service-claim' /* webpackChunkName: "task" */).then(m => m.CatalogServiceClaimsDetailsPage));
 
 export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(CatalogServiceClaimModel), () => import('./catalog-service-claim' /* webpackChunkName: "task" */).then(m => m.CatalogServiceClaimPage))
+  .set(referenceForModel(NotebookModel), () => import('./notebook' /* webpackChunkName: "task" */).then(m => m.NotebookPage))
+  .set(referenceForModel(ExperimentModel), () => import('./experiment' /* webpackChunkName: "task" */).then(m => m.ExperimentPage))
+  .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "task" */).then(m => m.InferenceServicePage))
+  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "task" */).then(m => m.WorkflowTemplatePage))
+  .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "task" */).then(m => m.WorkflowPage))
   .set(referenceForModel(KubeadmControlPlaneModel), () => import('./kubeadm-control-plane' /* webpackChunkName: "task" */).then(m => m.KubeadmControlPlanesPage))
   .set(referenceForModel(KubeadmConfigTemplateModel), () => import('./kubeadm-config-template' /* webpackChunkName: "task" */).then(m => m.KubeadmConfigTemplatesPage))
   .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesPage))
@@ -281,7 +299,6 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(ServiceModel), () => import('./service' /* webpackChunkName: "service" */).then(m => m.ServicesPage))
   .set(referenceForModel(IngressModel), () => import('./ingress' /* webpackChunkName: "ingress" */).then(m => m.IngressesPage))
   .set(referenceForModel(RouteModel), () => import('./routes' /* webpackChunkName: "routes" */).then(m => m.RoutesPage))
-  .set(referenceForModel(ClusterRoleModel), () => import('./RBAC/cluster-role' /* webpackChunkName: "role" */).then(m => m.ClusterRolesPage))
   .set(referenceForModel(RoleModel), () => import('./RBAC/role' /* webpackChunkName: "role" */).then(m => m.RolesPage))
   .set(referenceForModel(RoleBindingModel), () => import('./RBAC/bindings' /* webpackChunkName: "bindings" */).then(m => m.RoleBindingsPage))
   .set(referenceForModel(PrometheusModel), () => import('./prometheus' /* webpackChunkName: "prometheus" */).then(m => m.PrometheusInstancesPage))

@@ -9,11 +9,16 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"io/ioutil"
+	"log"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"path"
+	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/coreos/dex/api"
 	"github.com/coreos/dex/connector"
@@ -29,6 +34,10 @@ import (
 )
 
 const (
+	// NOTE: k8s bearer token 가져오기 위해 추가 // 정동민
+	k8sInClusterCA          = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+	k8sInClusterBearerToken = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
 	indexPageTemplateName     = "index.html"
 	tokenizerPageTemplateName = "tokener.html"
 
@@ -65,8 +74,8 @@ type jsGlobals struct {
 	// ClusterName          string `json:"clusterName"`
 	// GoogleTagManagerID   string `json:"googleTagManagerID"`
 	// LoadTestFactor       int    `json:"loadTestFactor"`
-	ReleaseModeFlag bool `json:"releaseModeFlag"`
-	HDCModeFlag bool `json:"HDCModeFlag"`
+	ReleaseModeFlag    bool   `json:"releaseModeFlag"`
+	HDCModeFlag        bool   `json:"HDCModeFlag"`
 	TmaxCloudPortalURL string `json:tmaxCloudPortalURL`
 }
 
@@ -87,8 +96,9 @@ type Server struct {
 	Branding             string
 	GoogleTagManagerID   string
 	LoadTestFactor       int
+	MasterToken          string
 	ReleaseModeFlag      bool
-	HDCModeFlag			 bool
+	HDCModeFlag          bool
 	TmaxCloudPortalURL   string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
@@ -102,10 +112,33 @@ type Server struct {
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
+type UserSecurityPolicy struct {
+	Name      string   `json:"name"`
+	OtpEnable string   `json:"otpEnable"`
+	Otp       int      `json:"otp"`
+	IPRange   []string `json:"ipRange"`
+	Code      int      `json:"code"`
+	Message   string   `json:"message"`
+	Status    string   `json:"status"`
+}
+
+type TokenData struct {
+	TokenId string `json:"tokenId"`
+	Iss     string `json:"iss"`
+	Id      string `json:"id"`
+	Exp     int    `json:"exp"`
+}
+
+type AuthData struct {
+	Id           string `json:"id"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+}
+
 func (s *Server) authDisabled() bool {
 	// return s.Auther == nil
 	return true
-	// NOTE: authDisabled true로 테스트 // 정동민
+	// NOTE: OpenShift auth 사용하지 않음 // 정동민
 }
 
 func (s *Server) prometheusProxyEnabled() bool {
@@ -156,12 +189,115 @@ func (s *Server) HTTPHandler() http.Handler {
 		return authMiddlewareWithUser(s.Auther, hf)
 	}
 
+	// NOTE: 여기 유심히 봐야 할 듯
 	if s.authDisabled() {
 		authHandler = func(hf http.HandlerFunc) http.Handler {
 			return hf
 		}
 		authHandlerWithUser = func(hf func(*auth.User, http.ResponseWriter, *http.Request)) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+				// api 목록 서비스, logout 서비스에는 IP Range 검증하지 않음
+				reg, _ := regexp.Compile("/api/kubernetes/.*(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
+				if strings.Contains(string(r.URL.Path), "logout") || reg.MatchString(string(r.URL.Path)) {
+					hf(s.StaticUser, w, r)
+					return
+				}
+
+				// IP Range 검증을 위한 변수들 세팅
+				var token string
+				var tokenPayload string
+				var id string
+				var bodyId string
+				var bodyToken string
+				var requestBodyString string
+				var bodyReadFlag bool
+				var authData AuthData
+				var tokenPayloadParsedJson TokenData
+
+				// Authorization Header 가져오기
+				headerTokens := r.Header["Authorization"]
+
+				// Query에서 Token이 있다면 가져오기
+				queryTokens, _ := r.URL.Query()["token"]
+
+				// otp, login, refresh 서비스
+				if strings.Contains(string(r.URL.Path), "otp") || strings.Contains(string(r.URL.Path), "login") || strings.Contains(string(r.URL.Path), "refresh") {
+
+					// id나 token을 가져오기 위해 body를 parse
+					body, err := ioutil.ReadAll(r.Body)
+					if err != nil {
+						panic(err)
+					}
+					requestBodyString = string(body) // body가 소모된 뒤 복구해주기 위한 사본 생성
+
+					err = json.Unmarshal(body, &authData)
+					if err != nil {
+						panic(err)
+					}
+
+					bodyId = authData.Id
+					bodyToken = authData.AccessToken
+					bodyReadFlag = true
+				}
+
+				// id를 얻어오기, 필요한 경우 token을 parse하기
+				if len(bodyId) == 0 {
+					if len(bodyToken) > 0 {
+						token = string(bodyToken)
+					} else if len(headerTokens) > 0 {
+						headerTokenSplit := strings.Split(string(headerTokens[0]), "Bearer ")
+						if len(headerTokenSplit) > 1 {
+							token = headerTokenSplit[1]
+						} else {
+							token = headerTokenSplit[0]
+						}
+					} else if len(queryTokens) > 0 {
+						token = string(queryTokens[0])
+					}
+
+					tokenPayload = strings.Split(token, ".")[1]
+					tokenPayloadParsed, _ := base64.StdEncoding.DecodeString(tokenPayload + "==")
+					tokenPayloadParsedString := string(tokenPayloadParsed)
+
+					json.Unmarshal([]byte(tokenPayloadParsedString), &tokenPayloadParsedJson)
+					id = tokenPayloadParsedJson.Id
+				} else {
+					id = bodyId
+				}
+
+				if strings.Contains(string(r.URL.Path), "login") {
+					plog.Println("id: " + id)
+				}
+
+				// user security policy를 가져오기 위한 서비스콜
+				path := "/apis/tmax.io/v1/usersecuritypolicies/" + id
+				urltocall := proxy.SingleJoiningSlash(s.K8sProxyConfig.Endpoint.String(), path)
+
+				var tokenForUserSecurityPolicy string
+				// NOTE: in-cluster인 경우 MasterToken을 ""로 바꿔두었음. 이 경우 InClusterBearerToken 사용
+				if s.MasterToken == "" {
+					tokenForUserSecurityPolicy = s.StaticUser.Token
+				} else {
+					tokenForUserSecurityPolicy = s.MasterToken
+				}
+				// tokenForUserSecurityPolicy = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUbWF4LVByb0F1dGgiLCJpZCI6ImFkbWluLXRtYXguY28ua3IiLCJleHAiOjE1OTE3NzMyNDcsInV1aWQiOiJmNDE3YTFhOS0xYjg5LTQwNDktODI1NS03Y2ZmYTE2MjY1YjQifQ.dhF3x2LPKeZiHV-6UqWPgm6sLt7CIxNRcX-zHBqPxPs"
+				// body가 소모된 경우 복구
+				clientAddr, _ := getIP(r)
+				if bodyReadFlag {
+					r.Body = ioutil.NopCloser(strings.NewReader(requestBodyString))
+				}
+				result, message := s.verifyIpRange(urltocall, tokenForUserSecurityPolicy, clientAddr)
+				switch result {
+				case true:
+					plog.Info(message)
+					hf(s.StaticUser, w, r)
+					return
+				case false:
+					plog.Info(message)
+					sendResponse(w, http.StatusForbidden, apiError{"Your IP Address has been forbidden."})
+					return
+				}
 				hf(s.StaticUser, w, r)
 			})
 		}
@@ -252,6 +388,36 @@ func sendResponse(rw http.ResponseWriter, code int, resp interface{}) {
 	}
 }
 
+func getIP(r *http.Request) (string, error) {
+	//Get IP from the X-REAL-IP header
+	ip := r.Header.Get("X-REAL-IP")
+	netIP := net.ParseIP(ip)
+	if netIP != nil {
+		return ip, nil
+	}
+
+	//Get IP from X-FORWARDED-FOR header
+	ips := r.Header.Get("X-FORWARDED-FOR")
+	splitIps := strings.Split(ips, ",")
+	for _, ip := range splitIps {
+		netIP := net.ParseIP(ip)
+		if netIP != nil {
+			return ip, nil
+		}
+	}
+
+	//Get IP from RemoteAddr
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return "", err
+	}
+	netIP = net.ParseIP(ip)
+	if netIP != nil {
+		return ip, nil
+	}
+	return "", fmt.Errorf("No valid ip found")
+}
+
 type apiError struct {
 	Err string `json:"error"`
 }
@@ -304,8 +470,8 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		// DocumentationBaseURL: s.DocumentationBaseURL.String(),
 		// GoogleTagManagerID:   s.GoogleTagManagerID,
 		// LoadTestFactor:       s.LoadTestFactor,
-		ReleaseModeFlag: s.ReleaseModeFlag,
-		HDCModeFlag: s.HDCModeFlag,
+		ReleaseModeFlag:    s.ReleaseModeFlag,
+		HDCModeFlag:        s.HDCModeFlag,
 		TmaxCloudPortalURL: s.TmaxCloudPortalURL,
 	}
 
@@ -620,3 +786,98 @@ func (s *Server) handleOpenShiftTokenDeletion(user *auth.User, w http.ResponseWr
 	io.Copy(w, resp.Body)
 	resp.Body.Close()
 }
+
+func (s *Server) httpCall(url, token string) []byte {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", "Bearer "+token)
+	resp, err := s.K8sClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return respBody
+}
+
+func (s *Server) verifyIpRange(url, token, clientAddr string) (result bool, message string) {
+	respBody := s.httpCall(url, token)
+
+	// usersecuritypolicies CRD가 존재하지 않음, 검증 거치지 않음
+	if strings.Contains(string(respBody), "page not found") {
+		return true, "UserSecurityPolicy CRD does not exist. IP Range validation skipped."
+	}
+	// ipRange key가 존재하지 않을 경우, 검증 거치지 않음
+	if !strings.Contains(string(respBody), "ipRange") {
+		return true, "IP Range key does not exist. All IP allowed."
+	}
+
+	// user security parse
+	var userSecurity UserSecurityPolicy
+	err := json.Unmarshal(respBody, &userSecurity)
+	if err != nil {
+		return false, ("Failed to parse string to JSON. " + err.Error())
+	}
+
+	// usersecuritypolicies CRD는 존재하나, id는 존재하지않음
+	if userSecurity.Status == "Failure" || userSecurity.Code == 404 {
+		return true, ("User Security Policy for this user does not exist. All IP allowed. " + userSecurity.Message)
+	}
+
+	// id는 존재하나, IP Range가 설정되어 있지 않은 경우에는 모든 IP 차단
+	if len(userSecurity.IPRange) == 0 {
+		return false, ("IP Range(CIDR) for this user is not set. All IP blocked.")
+	}
+
+	// IP 정보를 가져와 parse
+	if err != nil {
+		return false, "Failed to get client IP."
+	}
+
+	ipAddr := strings.Split(clientAddr, ":")[0]
+	ipRanges := userSecurity.IPRange
+	for idx, ipRange := range ipRanges {
+		_, subnet, err := net.ParseCIDR(ipRange)
+		if err != nil {
+			return false, "Failed to parse IP Range(CIDR) for this user."
+		}
+		// IP Range 검증에 성공한 경우
+		result := subnet.Contains(net.ParseIP(ipAddr))
+		if result == true {
+			return true, "Access accepted. IP = " + ipAddr
+		}
+		// IP Range 검증에 실패한 경우
+		if (idx + 1) == len(ipRanges) {
+			return false, "Invalid IP Address. IP = " + ipAddr
+		}
+	}
+	return false, "verifyIpRange fail"
+}
+
+// func httpCall(url, token string) []byte {
+// 	transCfg := &http.Transport{
+// 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates https://www.socketloop.com/tutorials/golang-disable-security-check-for-http-ssl-with-bad-or-expired-certificate
+// 	}
+// 	req, err := http.NewRequest("GET", url, nil)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	req.Header.Add("Authorization", "Bearer "+token)
+// 	client := &http.Client{Transport: transCfg}
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer resp.Body.Close()
+// 	respBody, err := ioutil.ReadAll(resp.Body)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	resp.Body.Close()
+// 	return respBody
+// }

@@ -59,11 +59,9 @@ class ServiceClassCard extends Component {
           </div>
           <div className="card-pf-body" style={{ margin: '0', padding: '0' }}>
             <div className="card-pf-items text-left" style={{ display: 'flex', marginTop: '10px' }}>
-              <div className="card-logo" style={{ width: '70px', height: '70px', lineHeight: '70px' }}>
+              <div className="card-logo" style={{ width: '70px', height: '70px', lineHeight: '70px', textAlign: "center" }}>
                 <img
-                  style={{ verticalAlign: 'middle' }}
-                  width="100%"
-                  height="auto"
+                  style={{ verticalAlign: 'middle', width: "auto", height: "auto", maxWidth: "70px", maxHeight: "70px" }}
                   src={imageUrl || defaultImg}
                   onError={e => {
                     e.target.onerror = null;

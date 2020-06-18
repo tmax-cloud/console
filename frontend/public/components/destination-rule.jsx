@@ -51,7 +51,7 @@ const Details = ({ obj: condition }) => {
         <React.Fragment>
             <ScrollToTopOnMount />
             <div className="co-m-pane__body">
-                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('UserSecurityPolicy', t) })} />
+                <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('DestinationRule', t) })} />
                 <div className="row">
                     <div className="col-sm-6">
                         <ResourceSummary resource={condition} />
