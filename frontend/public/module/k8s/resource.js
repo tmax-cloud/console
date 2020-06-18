@@ -3,6 +3,8 @@ import { coFetchJSON } from '../../co-fetch';
 import { k8sBasePath } from './k8s';
 import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
+import { getId } from '../../components/utils/auth';
+import store from '../../redux';
 
 /** @type {(model: K8sKind) => string} */
 const getK8sAPIPath = model => {
@@ -58,6 +60,21 @@ export const watchURL = (kind, options) => {
 
 export const k8sGet = (kind, name, ns, opts) => coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
 
+// export const k8sGet = (kind, name, ns, opts) => {
+//   let path;
+//   // if (kind.kind === 'Namespace') {
+//   //   path = `${document.location.origin}/api/hypercloud/nameSpace/${name}`;
+//   // } else if (kind.kind === 'NamespaceClaim') {
+//   //   path = `${document.location.origin}/api/hypercloud/nameSpaceClaim/${name}`;
+//   // } else {
+//   path = resourceURL(kind, Object.assign({ ns, name }, opts));
+//   // }
+
+//   return coFetchJSON(`${path}`, opts);
+
+//   // return coFetchJSON(resourceURL(kind, Object.assign({ ns, name }, opts)));
+// };
+
 export const k8sCreate = (kind, data, opts = {}) => {
   // Occassionally, a resource won't have a metadata property.
   // For example: apps.openshift.io/v1 DeploymentRequest
@@ -92,12 +109,10 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
 
   if (kind.kind === 'Namespace') {
     listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
+  } else if (kind.kind === 'NamespaceClaim') {
+    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim`;
   } else {
     listURL = resourceURL(kind, { ns: params.ns });
-  }
-
-  if (kind.kind === 'NamespaceClaim') {
-    query = query.concat(`&labelSelector=owner=${window.sessionStorage.id}`);
   }
 
   return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
@@ -110,11 +125,6 @@ export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
 export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   const queryParams = { watch: true };
   const opts = { queryParams };
-  // let path;
-
-  // if (kind.kind !== 'Namespace') {
-  //   path = resourceURL(kind, opts);
-  // }
 
   wsOptions = Object.assign(
     {
@@ -146,8 +156,6 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
   if (query.resourceVersion) {
     queryParams.resourceVersion = encodeURIComponent(query.resourceVersion);
   }
-  //path가 없는경우 return 값 없도록 예외처리
-  // if (path) {
   const path = resourceURL(kind, opts);
   wsOptions.path = path;
   return new WSFactory(path, wsOptions);

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
+import SingleSelect from '../utils/select';
 import { VolumeEditorPair } from './index';
 
 export class VolumeEditor extends React.Component {
@@ -30,7 +31,7 @@ export class VolumeEditor extends React.Component {
   _change(e, i, type) {
     const { updateParentData, nameValueId } = this.props;
     const volumePairs = _.cloneDeep(this.props.volumePairs);
-    volumePairs[i][type] = e.target.value;
+    volumePairs[i][type] = e.target ? e.target.value : e.value;
     updateParentData({ volumePairs }, nameValueId);
   }
   render() {
@@ -111,6 +112,15 @@ class VolumePairElement extends React.Component {
       </React.Fragment>
     );
 
+    const selectOptions = options.map(option => {
+      return (
+        {
+          value: option.props.value,
+          label: option.props.children
+        }
+      );
+    });
+
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
@@ -120,9 +130,12 @@ class VolumePairElement extends React.Component {
           <input type="text" className="form-control" placeholder={t(`CONTENT:${mountPathString.toUpperCase()}`)} value={pair[VolumeEditorPair.MountPath]} onChange={this._onChangeMountPath} />
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
-          <select value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} className="form-control">
+          {/* <select value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} className="form-control">
             {options}
-          </select>
+          </select> react-select 라이브러리 사용하여 select 변경 */}
+          {options && <SingleSelect
+            options={selectOptions} name="PVC" value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC}
+          />}
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
           <select value={pair[VolumeEditorPair.ReadOnly]} onChange={this._onChangeReadOnly} className="form-control">

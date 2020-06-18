@@ -57,8 +57,16 @@ EmptyBox.displayName = 'EmptyBox';
 
 export const MsgBox = ({ title, detail, className = '' }) => (
   <Box className={className}>
-    {title && <div className="text-center" style={{ fontSize: '30px' }}>{title}</div>}
-    {detail && <div className="text-center" style={{ fontSize: '30px' }}>{detail}</div>}
+    {title && (
+      <div className="text-center" style={{ fontSize: '30px' }}>
+        {title}
+      </div>
+    )}
+    {detail && (
+      <div className="text-center" style={{ fontSize: '30px' }}>
+        {detail}
+      </div>
+    )}
   </Box>
 );
 MsgBox.displayName = 'MsgBox';
@@ -67,7 +75,7 @@ export const AccessDenied = ({ message }) => {
   const { t } = useTranslation();
   const [errorDetail, setErrorDetail] = React.useState({ show: false, icon: 'fa-angle-down' });
   const onClickErrorDetail = () => {
-    errorDetail.show ? setErrorDetail({ ...errorDetail, show: false, icon: 'fa-angle-down' }) : setErrorDetail({ ...errorDetail, show: true, icon: 'fa-angle-up' })
+    errorDetail.show ? setErrorDetail({ ...errorDetail, show: false, icon: 'fa-angle-down' }) : setErrorDetail({ ...errorDetail, show: true, icon: 'fa-angle-up' });
   };
   return (
     <Box className="text-center">
@@ -75,14 +83,11 @@ export const AccessDenied = ({ message }) => {
       <MsgBox title={t('STRING:RESTRICTED_0')} detail={t('STRING:RESTRICTED_1')} />
       {_.isString(message) && (
         <div>
-          <p className="alert-danger text-center" style={{ fontSize: '18px' }} >
+          <p className="alert-danger text-center" style={{ fontSize: '18px' }}>
             {t('STRING:RESTRICTED_2')}
             <span className={`fa ${errorDetail.icon} fa-fw`} aria-hidden="true" value={errorDetail} onClick={onClickErrorDetail}></span>
           </p>
-          {errorDetail.show && <div className="alert alert-danger text-center">
-            {message}
-          </div>}
-
+          {errorDetail.show && <div className="alert alert-danger text-center">{message}</div>}
         </div>
       )}
     </Box>

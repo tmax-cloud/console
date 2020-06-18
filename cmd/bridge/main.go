@@ -90,11 +90,12 @@ func main() {
 	// NOTE: hypercloud endpoint 추가 // 정동민
 	fHypercloudEndpoint := fs.String("hypercloud-endpoint", "", "URL of the hypercloud API server.")
 	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
+	fMasterToken := fs.String("master-token", "", "Master token for the k8s master API server.")
 	// NOTE: 여기까지
 
 	fReleaseModeFlag := fs.Bool("release-mode", true, "DEV ONLY. When false, disable login/logout.")
 
-	// NOTE: HDC 모델 TmaxCloud Portal 연동 추가 // 조미리 
+	// NOTE: HDC 모델 TmaxCloud Portal 연동 추가 // 조미리
 	fHDCModeFlag := fs.Bool("hdc-mode", false, "When true, login through tmaxcloud portal is required.")
 	fTmaxCloudPortalURL := fs.String("tmaxcloud-portal", "", "URL of the TmaxCloud Portal.")
 
@@ -176,6 +177,7 @@ func main() {
 		DocumentationBaseURL: documentationBaseURL,
 		GoogleTagManagerID:   *fGoogleTagManagerID,
 		LoadTestFactor:       *fLoadTestFactor,
+		MasterToken:          *fMasterToken,
 		ReleaseModeFlag:      *fReleaseModeFlag,
 		HDCModeFlag:          *fHDCModeFlag,
 		TmaxCloudPortalURL:   *fTmaxCloudPortalURL,
@@ -253,6 +255,11 @@ func main() {
 			Endpoint:        prometheusEndpoint,
 		}
 		// NOTE: 여기까지
+
+		// NOTE: in-cluster인 경우 master token을 empty string으로 수정 // 정동민
+		srv.MasterToken = ""
+		// NOTE: 여기까지
+
 		host, port := os.Getenv("KUBERNETES_SERVICE_HOST"), os.Getenv("KUBERNETES_SERVICE_PORT")
 		if len(host) == 0 || len(port) == 0 {
 			log.Fatalf("unable to load in-cluster configuration, KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT must be defined")

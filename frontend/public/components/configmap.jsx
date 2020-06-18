@@ -63,7 +63,15 @@ const ConfigMapDetails = ({ obj: configMap }) => {
 const ConfigMaps = props => <List {...props} Header={ConfigMapHeader} Row={ConfigMapRow} />;
 const ConfigMapsPage = props => {
   const { t } = useTranslation();
-  return <ListPage ListComponent={ConfigMaps} canCreate={true} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/configmaps/new` : `/k8s/cluster/configmaps/new/form`
+  };
+  return <ListPage ListComponent={ConfigMaps} canCreate={true} {...props} createProps={createProps} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 const ConfigMapsDetailsPage = props => {
   const { t } = useTranslation();

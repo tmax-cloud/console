@@ -14,6 +14,8 @@ export const Scalar = props => <AsyncComponent loader={() => import('./graph-loa
 export const Donut = props => <AsyncComponent loader={() => import('./graph-loader').then(c => c.Donut)} {...props} />;
 
 const canAccessPrometheus = (openshiftFlag, prometheusFlag, canListNS) => {
+
+
   if (flagPending(prometheusFlag) || flagPending(openshiftFlag)) {
     // Wait for feature detection to complete before showing graphs so we don't show them, then hide them.
     return false;
@@ -45,6 +47,7 @@ export const requirePrometheus = WrappedComponent => connectToFlags(FLAGS.OPENSH
   const prometheusFlag = flags[FLAGS.PROMETHEUS];
   const canListNS = flags[FLAGS.CAN_LIST_NS];
   if (!canAccessPrometheus(openshiftFlag, prometheusFlag, canListNS)) {
+    console.log(canAccessPrometheus)
     return null;
   }
 

@@ -144,6 +144,14 @@ const ServiceAccountsDetailsPage = props => {
 const ServiceAccountsList = props => <List {...props} Header={Header} Row={ServiceAccountRow} />;
 const ServiceAccountsPage = props => {
   const { t } = useTranslation();
-  return <ListPage ListComponent={ServiceAccountsList} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/serviceaccounts/new` : `/k8s/cluster/serviceaccounts/new/form`
+  };
+  return <ListPage ListComponent={ServiceAccountsList} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} canCreate={true} />;
 };
 export { ServiceAccountsList, ServiceAccountsPage, ServiceAccountsDetailsPage };

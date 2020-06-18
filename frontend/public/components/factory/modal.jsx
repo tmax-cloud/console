@@ -108,3 +108,31 @@ ModalSubmitFooter.propTypes = {
 //   submitText: PropTypes.node.isRequired,
 //   cancelText: PropTypes.node.isRequired,
 // };
+
+/** @type {React.SFC<{message?: string, errorMessage?: string, inProgress: boolean, cancel: (e: Event) => void, submitText: string, submitDisabled?: boolean}>} */
+export const CustomModalSubmitFooter = ({ message, errorMessage, inProgress, cancel, leftText, rightText, clickLeft, clickRight }) => {
+  const onCancelClick = e => {
+    e.stopPropagation();
+    cancel(e);
+  };
+  // const { t } = useTranslation();
+  return (
+    <ModalFooter inProgress={inProgress} errorMessage={errorMessage} message={message}>
+      <button type="button" className="btn btn-primary" onClick={clickLeft}>
+        {leftText}
+      </button>
+      <button type="button" className="btn btn-default" onClick={clickRight}>
+        {rightText}
+      </button>
+    </ModalFooter>
+  );
+};
+
+CustomModalSubmitFooter.propTypes = {
+  cancel: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  inProgress: PropTypes.bool.isRequired,
+  message: PropTypes.string,
+  leftText: PropTypes.node.isRequired,
+  rightText: PropTypes.node.isRequired,
+};

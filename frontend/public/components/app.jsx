@@ -19,27 +19,30 @@ import { NamespaceSelector } from './namespace';
 import Nav from './nav';
 import { SearchPage } from './search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
-import { history, AsyncComponent, Loading } from './utils';
+import { history, AsyncComponent, Loading, kindObj } from './utils';
 import { namespacedPrefixes } from './utils/link';
 import { UIActions, getActiveNamespace } from '../ui/ui-actions';
 import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
-import { referenceForModel } from '../module/k8s';
+import { referenceForModel, k8sList } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
 import { getAccessToken, resetLoginState } from './utils/auth';
+import { NoNamespace } from './nonamespaces';
 
 import './utils/i18n';
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
+import { ProvidePlugin } from 'webpack';
 
 // React Router's proptypes are incorrect. See https://github.com/ReactTraining/react-router/pull/5393
 Route.propTypes.path = PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]);
 
 const RedirectComponent = props => {
   const to = `/k8s${props.location.pathname}`;
+
   return <Redirect to={to} />;
 };
 
@@ -62,10 +65,22 @@ _.each(namespacedPrefixes, p => {
   namespacedRoutes.push(`${p}/all-namespaces`);
 });
 
-const NamespaceRedirect = () => {
-  const activeNamespace = getActiveNamespace();
-
+const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
+  let activeNamespace = getActiveNamespace();
   let to;
+  if (flagPending(flags[FLAGS.CAN_LIST_NS])) {
+    // CAN_LIST_NS 로딩 될때까지 기다리기
+    return null;
+  }
+
+  if (FLAGS.CAN_LIST_NS) {
+    // admin
+    activeNamespace = ALL_NAMESPACES_KEY;
+  } else if (activeNamespace === ALL_NAMESPACES_KEY) {
+    //user이면서 allnamespace 가 activenamespace인 경우
+    return null;
+  }
+
   if (activeNamespace === ALL_NAMESPACES_KEY) {
     to = '/status/all-namespaces';
   } else if (activeNamespace) {
@@ -73,7 +88,7 @@ const NamespaceRedirect = () => {
   }
   // TODO: check if namespace exists
   return <Redirect to={to} />;
-};
+});
 
 const ActiveNamespaceRedirect = ({ location }) => {
   const activeNamespace = getActiveNamespace();
@@ -185,6 +200,10 @@ class App extends React.PureComponent {
   }
 
   render() {
+    // const props = this.props;
+    // if (props.location.pathname.indexOf('new') > 0) {
+    //   console.log('여기서 ns selector없애야함 ')
+    // }
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
@@ -218,18 +237,9 @@ class App extends React.PureComponent {
                 })
               }
             />
-            <LazyRoute
-              path="/status/ns/"
-              exact
-              loader={() =>
-                import('./utils' /* webpackChunkName: "cluster-overview" */).then(m => {
-                  if (!localStorage.getItem('bridge/last-namespace-name')) {
-                    return m.AccessDenied;
-                  }
-                })
-              }
-            />
             <Route path="/status" exact component={NamespaceRedirect} />
+            {/* <Route path="/noNamespace" exact loader={() => import('./nonamespaces').then(m => m.NoNamespace)} /> */}
+            <Route path="/noNamespace" exact component={NoNamespace} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
             {/* <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} /> */}
@@ -255,11 +265,16 @@ class App extends React.PureComponent {
               // <LazyRoute path="/k8s/cluster/clusterroles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             }
             <Route path="/k8s/cluster/clusterroles/:name" component={props => <ResourceDetailsPage {...props} plural="clusterroles" />} />
-            {/* clusterles/new를 detail페이지로 인식해서 순서 이동 */}
+            {/* clusteroles/new를 detail페이지로 인식해서 순서 이동 */}
             {
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             }
+            <LazyRoute path="/k8s/cluster/roles/new/:type" exact kind="role" loader={() => import('./roles/create-role').then(m => m.CreateRole)} />
+            <LazyRoute path="/k8s/cluster/configmaps/new/:type" exact kind="ConfigMap" loader={() => import('./configmaps/create-configmap').then(m => m.CreateConfigMap)} />
+            <LazyRoute path="/k8s/cluster/usergroups/new/:type" exact kind="Usergroup" loader={() => import('./usergroups/create-usergroup').then(m => m.CreateUserGroup)} />
+            <LazyRoute path="/k8s/cluster/users/new/:type" exact kind="User" loader={() => import('./users/create-user').then(m => m.CreateUser)} />
+            <LazyRoute path="/k8s/cluster/serviceaccounts/new/:type" exact kind="ServiceAccount" loader={() => import('./serviceAccounts/create-serviceAccount').then(m => m.CreateServiceAccount)} />
             <LazyRoute path="/k8s/ns/:ns/resourcequotaclaims/new/:type" exact kind="ResourceQuotaClaim" loader={() => import('./resourceQuotaClaims/create-resourceQuotaClaim').then(m => m.CreateResouceQuotaClaim)} />
             <LazyRoute path="/k8s/ns/:ns/rolebindingclaims/new/:type" exact kind="RoleBindingClaim" loader={() => import('./roleBindingClaims/create-roleBindingClaim').then(m => m.CreateRoleBindingClaim)} />
             <LazyRoute path="/k8s/cluster/namespaceclaims/new/:type" exact kind="NamespaceClaim" loader={() => import('./namespaceClaims/create-namespaceClaim').then(m => m.CreateNamespaceClaim)} />
@@ -296,7 +311,6 @@ class App extends React.PureComponent {
             <LazyRoute path="/settings/cluster" exact loader={() => import('./cluster-settings/cluster-settings').then(m => m.ClusterSettingsPage)} />
             <LazyRoute path="/error" exact loader={() => import('./error').then(m => m.ErrorPage)} />
             <Route path="/" exact component={DefaultPage} />
-            <LazyRoute loader={() => import('./utils').then(m => m.AccessDenied)} />
             <LazyRoute loader={() => import('./error').then(m => m.ErrorPage404)} />
           </Switch>
         </div>

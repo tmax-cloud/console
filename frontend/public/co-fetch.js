@@ -127,7 +127,7 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
 
   if (url.indexOf('otp') < 0 && url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
     if (!window.SERVER_FLAGS.releaseModeFlag) {
-      if (url.indexOf('nameSpace') < 0) {
+      if (url.indexOf('nameSpace') < 0 && url.indexOf('nameSpaceClaim') < 0) {
         allOptions.headers.Authorization =
           "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiY2x1c3Rlci1hZG1pbiIsInRva2VuSWQiOiJ3b29AdG1heC5jby5rciIsImlzcyI6IlRtYXgtUHJvQXV0aC1XZWJIb29rIiwiaWQiOiJhZG1pbkB0bWF4LmNvLmtyIiwiZXhwIjoxNzQzMzAxNDM1fQ.ls9Cj1BX4NPJ3XxxHwcrGDzveaaqsauMo5L4e5BfUnE";
       } else {
@@ -136,7 +136,7 @@ export const coFetch = (url, options = {}, timeout = 20000) => {
       }
 
     } else {
-      if (url.indexOf('nameSpace') < 0) {
+      if (url.indexOf('nameSpace') < 0 && url.indexOf('nameSpaceClaim') < 0) {
         allOptions.headers.Authorization = "Bearer " + getAccessToken();
       } else {
         allOptions.headers.Authorization = getAccessToken(); {/* nameSpace 서비스에는 Bearer 제외하고 token 보내야함.*/ }
@@ -235,7 +235,6 @@ const coFetchSendJSON = (url, method, json = null, options = {}) => {
           };charset=UTF-8`
       }
     };
-    console.log(allOptions);
   }
 
 

@@ -4,8 +4,6 @@ import * as React from 'react';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
-import { kindForReference } from '../module/k8s';
-import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
@@ -62,7 +60,15 @@ UsergroupList.displayName = UsergroupList;
 
 export const UsergroupsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={UsergroupList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="Usergroup" />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/cluster/usergroups/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage {...props} ListComponent={UsergroupList} createProps={createProps} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="Usergroup" />;
 };
 UsergroupsPage.displayName = 'UsergroupsPage';
 
@@ -71,12 +77,6 @@ export const UsergroupsDetailsPage = props => {
   return (
     <DetailsPage
       {...props}
-      // breadcrumbsFor={obj =>
-      //   breadcrumbsForOwnerRefs(obj).concat({
-      //     name: 'Usergroup Details',
-      //     path: props.match.url,
-      //   })
-      // }
       kind="Usergroup"
       menuActions={menuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
