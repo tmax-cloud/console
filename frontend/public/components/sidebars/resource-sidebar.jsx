@@ -60,13 +60,9 @@ export const SampleYaml = ({ sample, loadSampleYaml, downloadSampleYaml }) => {
         <span className="text-uppercase">{highlightText}</span> {header} <span className="co-role-sidebar-subheader">{subheader}</span>
       </h5>
       {img && <img src={img} className="co-resource-sidebar-item__img" />}
-<<<<<<< HEAD
-      <p className="co-resource-sidebar-item__details">{details}</p>
-=======
       <p className="co-resource-sidebar-item__details" style={{ whiteSpace: 'pre-line' }}>
         {details}
       </p>
->>>>>>> hc-dev
       <button className="btn btn-link" onClick={() => loadSampleYaml(templateName, kind)}>
         <span className="fa fa-fw fa-paste" aria-hidden="true"></span> {t('CONTENT:TRYIT')}
       </button>
@@ -84,12 +80,7 @@ export const ResourceSidebar = props => {
   }
   const { t } = useTranslation();
   let { kind, label } = kindObj;
-<<<<<<< HEAD
-  label === 'Federated Resource' ? label : t('RESOURCE:' + kind.toUpperCase());
-
-=======
   label = t('RESOURCE:' + kind.toUpperCase());
->>>>>>> hc-dev
   let SidebarComponent = resourceSidebars.get(kind);
   if (SidebarComponent) {
     return (
