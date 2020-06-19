@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { RoleEditorPair } from './index';
-
+import Checkbox from './Checkbox';
 export class RoleEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -32,7 +32,7 @@ export class RoleEditor extends React.Component {
     }
     render() {
         const { keyString, valueString, addString, rolePairs, allowSorting, readOnly, nameValueId, t } = this.props;
-        const portItems = rolePairs.map((pair, i) => {
+        const roleItems = rolePairs.map((pair, i) => {
             const key = _.get(pair, [RoleEditorPair.Index], i);
             return <RolePairElement onChange={this._change} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
         });
@@ -42,7 +42,7 @@ export class RoleEditor extends React.Component {
                     <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${keyString.toUpperCase()}`)}</div>
                     <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
                 </div>
-                {portItems}
+                {roleItems}
                 <div className="row">
                     <div className="col-md-12 col-xs-12">
                         {readOnly ? null : (
@@ -95,14 +95,29 @@ class RolePairElement extends React.Component {
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
+        const verbItems = ['All', 'Create', 'Delete', 'Get', 'List', 'Patch', 'Update', 'Watch'];
+
+        let checkboxList = verbItems.map(verb =>
+            <div style={{ float: 'left' }}>
+                <input type="checkbox" />
+                <label style={{ margin: '0 10px' }}>{verb}</label>
+            </div>)
 
         return (
-            <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
-                <div className="col-md-2 col-xs-2 pairs-list__name-field">
-                    <select type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[RoleEditorPair.Key]} onChange={this._onChangeKey} />
+
+            <div className={classNames('pairs-list__row')} ref={node => (this.node = node)}>
+                <div className="row">
+                    <div className="col-md-2 col-xs-2 pairs-list__name-field">
+                        <input type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[RoleEditorPair.Key]} onChange={this._onChangeKey} />
+                    </div>
+                    <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
+                        <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[RoleEditorPair.Value] || ''} onChange={this._onChangeValue} />
+                    </div>
                 </div>
-                <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-                    <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[RoleEditorPair.Value] || ''} onChange={this._onChangeValue} />
+                <div className="row col-md-6 col-xs-6">
+                    <div className="pairs-list__name-field">
+                        {checkboxList}
+                    </div>
                 </div>
                 {readOnly ? null : (
                     <div className="col-md-1 col-xs-2">
