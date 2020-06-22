@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import {
   Cog,
@@ -14,63 +14,66 @@ import {
 } from './utils';
 import { fromNow } from './utils/datetime';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
+import { ResourcePlural } from './utils/lang/resource-plural';
+// const menuActions = [
+//   Cog.factory.ModifyLabels,
+//   Cog.factory.ModifyAnnotations,
+//   Cog.factory.Edit,
+//   Cog.factory.Delete
+// ];
 
-const menuActions = [
-  Cog.factory.ModifyLabels,
-  Cog.factory.ModifyAnnotations,
-  Cog.factory.Edit,
-  Cog.factory.Delete
-];
-
-const ServicePlanHeader = props => (
-  <ListHeader>
-    <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
-      Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-xs-2 col-sm-2"
-      sortField="metadata.namespace"
-    >
-      Namespace
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.bindable"
-    >
-      Bindable
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="spec.externalName"
-    >
-      External Name
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-1 hidden-xs"
-      sortField="spec.serviceBrokerName"
-    >
-      Service Broker
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-1 hidden-xs"
-      sortField="spec.serviceClassRef.name"
-    >
-      Service Class
-    </ColHead>
-    <ColHead
-      {...props}
-      className="col-sm-2 hidden-xs"
-      sortField="metadata.creationTimestamp"
-    >
-      Created
-    </ColHead>
-  </ListHeader>
-);
+const ServicePlanHeader = props => {
+  const { t } = useTranslation();
+  return (
+    <ListHeader>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
+        {t('CONTENT:NAME')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-xs-2 col-sm-2"
+        sortField="metadata.namespace"
+      >
+        {t('CONTENT:NAMESPACE')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.bindable"
+      >
+        {t('CONTENT:BINDABLE')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.externalName"
+      >
+        {t('CONTENT:EXTERNALNAME')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-1 hidden-xs"
+        sortField="spec.serviceBrokerName"
+      >
+        {t('RESOURCE:SERVICEBROKER')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-1 hidden-xs"
+        sortField="spec.serviceClassRef.name"
+      >
+        {t('RESOURCE:SERVICECLASS')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="metadata.creationTimestamp"
+      >
+        {t('CONTENT:CREATED')}
+      </ColHead>
+    </ListHeader>
+  )
+};
 
 const ServicePlanRow = () =>
   // eslint-disable-next-line no-shadow
@@ -78,11 +81,11 @@ const ServicePlanRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
-          <ResourceCog
+          {/* <ResourceCog
             actions={menuActions}
             kind="ServicePlan"
             resource={obj}
-          />
+          /> */}
           <ResourceLink
             kind="ServicePlan"
             name={obj.metadata.name}
@@ -129,25 +132,26 @@ const ServicePlanRow = () =>
 //   };
 
 const Details = ({ obj: serviceplan }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
 
       <div className="co-m-pane__body">
-        <SectionHeading text="Pod Overview" />
+        <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('SERVICEPLAN', t) })} />
         <div className="row">
           <div className="col-sm-6">
             <ResourceSummary resource={serviceplan} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>Bindable</dt>
+              <dt>{t('CONTENT:BINDABLE')}</dt>
               <dd>{serviceplan.spec.bindable ? 'True' : 'False'}</dd>
-              <dt>External Name</dt>
+              <dt>{t('CONTENT:EXTERNALNAME')}</dt>
               <dd>{serviceplan.spec.externalName}</dd>
-              <dt>Service Broker</dt>
+              <dt> {t('RESOURCE:SERVICEBROKER')}</dt>
               <dd>{serviceplan.spec.serviceBrokerName}</dd>
-              <dt>Service Class</dt>
+              <dt>{t('RESOURCE:SERVICECLASS')}</dt>
               <dd>{serviceplan.spec.serviceClassRef.name}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
@@ -184,17 +188,16 @@ ServicePlansPage.displayName = 'ServicePlansPage';
 export const ServicePlansDetailsPage = props => (
   <DetailsPage
     {...props}
-    breadcrumbsFor={obj =>
-      breadcrumbsForOwnerRefs(obj).concat({
-        name: 'ServicePlan Details',
-        path: props.match.url
-      })
-    }
+    // breadcrumbsFor={obj =>
+    //   breadcrumbsForOwnerRefs(obj).concat({
+    //     name: 'ServicePlan Details',
+    //     path: props.match.url
+    //   })
+    // }
     kind="ServicePlan"
-    menuActions={menuActions}
+    //  menuActions={menuActions}
     pages={[
-      navFactory.details(Details),
-      navFactory.editYaml()
+      navFactory.details(Details)
     ]}
   />
 );
