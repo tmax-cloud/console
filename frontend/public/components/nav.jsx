@@ -403,6 +403,7 @@ class Nav extends React.Component {
               <HrefLink href="/status" name={t('RESOURCE:STATUS')} activePath="/status/" onClick={this.close} />
               <HrefLink href="/search" name={t('RESOURCE:SEARCH')} onClick={this.close} startsWith={searchStartsWith} />
               <ResourceNSLink resource="events" name={t('RESOURCE:EVENT')} onClick={this.close} />
+              <HrefLink href="/grafana" name={t('RESOURCE:GRAFANA')} />
             </NavSection>
 
             {/* Service Catalog 전체 추가 */}
