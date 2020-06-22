@@ -198,9 +198,8 @@ func (s *Server) HTTPHandler() http.Handler {
 		}
 		authHandlerWithUser = func(hf func(*auth.User, http.ResponseWriter, *http.Request)) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 				// api 목록 서비스, logout 서비스에는 IP Range 검증하지 않음
-				reg, _ := regexp.Compile("/api/kubernetes/.*(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
+				reg, _ := regexp.Compile("(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
 				if strings.Contains(string(r.URL.Path), "logout") || reg.MatchString(string(r.URL.Path)) {
 					hf(s.StaticUser, w, r)
 					return
@@ -372,7 +371,16 @@ func (s *Server) HTTPHandler() http.Handler {
 		handle(grafanaProxyAPIPath, http.StripPrefix(
 			proxy.SingleJoiningSlash(s.BaseURL.Path, grafanaProxyAPIPath),
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				fmt.Println(w.Header())
 				grafanaProxy.ServeHTTP(w, r)
+				// remove x-frame option in order to show webpage on iframe
+				fmt.Println(w.Header())
+				fmt.Println(w.Header().Get("X-Frame-Options"))
+				// temp := w.Header().Get("X-Frame-options")
+				// if w.Header().Get("X-frame-options") == temp {
+				// 	w.Header().Set("X-frame-options", "SAMEORIGIN")
+				// }
+				fmt.Println(w.Header().Get("X-frame-options"))
 			})),
 		// authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 		// 	grafanaProxy.ServeHTTP(w, r)
@@ -386,7 +394,8 @@ func (s *Server) HTTPHandler() http.Handler {
 	handle("/api/tectonic/certs", authHandler(s.certsHandler))
 	mux.HandleFunc(s.BaseURL.Path, s.indexHandler)
 
-	return securityHeadersMiddleware(http.Handler(mux))
+	// return securityHeadersMiddleware(http.Handler(mux))
+	return http.Handler(mux)
 }
 
 func sendResponse(rw http.ResponseWriter, code int, resp interface{}) {
