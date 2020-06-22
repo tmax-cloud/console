@@ -208,7 +208,10 @@
     "CRONJOB-SIDEBAR_7": "이 '롤'은 특정 주기마다 반복적인 상황에서 이전 실행이 완료되지 않는 시점에 다음 실행 주기가 도달해도 실행되지 않도록 동시 실행을 금지합니다.",
     "ROLE-CREATE_0": "네임 스페이스 롤 생성 시 해당 네임 스페이스에만 적용됩니다.",
     "ROLE-CREATE_1": "클러스터 롤 생성 시 모든 네임 스페이스에 적용됩니다.",
-    "ROLE-CREATE_2": "롤에 부여할 권한을 선택해 주세요."
+    "ROLE-CREATE_2": "롤에 부여할 권한을 선택해 주세요.",
+    "STATEFULSET-CREATE_0": "파드 집합의 디플로이먼트와 파드, 스케일링을 관리합니다.",
+    "STATEFULSET-CREATE_1": "Enter를 입력하여 레이블을 추가할 수 있습니다.",
+    "STATEFULSET-CREATE_2": "스테이트풀 셋에서 관리하는 파드의 개수를 정의해 주세요."
   },
   "CONTENT": {
     "PHONE": "핸드폰 번호",
@@ -638,7 +641,15 @@
     "CANARY": "Canary",
     "ROLETYPE": "롤 유형",
     "GRANTRESOURCES": "리소스 부여",
-    "CONFIGMAPVALUE": "컨피그 맵 값"
+    "CONFIGMAPVALUE": "컨피그 맵 값",
+    "IMAGEREGISTRY": "이미지 레지스트리",
+    "BYSELF": "직접 입력",
+    "PODTEMPLATE": "파드 템플릿",
+    "REPLICA": "레플리카",
+    "USE": "사용",
+    "UNUSE": "사용 안 함",
+    "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
+    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임"
   },
   "RESOURCE": {
     "HOME": "홈",

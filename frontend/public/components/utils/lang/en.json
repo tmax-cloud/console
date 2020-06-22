@@ -210,7 +210,10 @@
     "CRONJOB-SIDEBAR_7": "This 'role' prohibits simultaneous execution in periodic and recurring jobs. The next run cannot start until the previous run completes.",
     "ROLE-CREATE_0": "The Namespace Role applies only to the Namespace to which it belongs.",
     "ROLE-CREATE_1": "The Cluster Role appplies accross all Namespaces.",
-    "ROLE-CREATE_2": "List the rules that will be assigned to the role."
+    "ROLE-CREATE_2": "List the rules that will be assigned to the role.",
+    "STATEFULSET-CREATE_0": "파드 집합의 디플로이먼트와 파드, 스케일링을 관리합니다.",
+    "STATEFULSET-CREATE_1": "Enter를 입력하여 레이블을 추가할 수 있습니다.",
+    "STATEFULSET-CREATE_2": "스테이트풀 셋에서 관리하는 파드의 개수를 정의해 주세요."
   },
   "CONTENT": {
     "PHONE": "Phone",
@@ -639,7 +642,15 @@
     "CANARY": "Canary",
     "ROLETYPE": "Role Type",
     "GRANTRESOURCES": "Grant Resources",
-    "CONFIGMAPVALUE": "Config Map Value"
+    "CONFIGMAPVALUE": "Config Map Value",
+    "IMAGEREGISTRY": "Image Registry",
+    "BYSELF": "직접 입력",
+    "PODTEMPLATE": "파드 템플릿",
+    "REPLICA": "레플리카",
+    "USE": "사용",
+    "UNUSE": "사용 안 함",
+    "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
+    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임"
   },
   "RESOURCE": {
     "HOME": "Home",

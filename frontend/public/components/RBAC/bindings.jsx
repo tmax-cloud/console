@@ -62,15 +62,15 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate, t) => {
     subjects.length === 1
       ? Cog.factory.Delete
       : (kind, binding) => ({
-        label: `Delete ${kind.label} Subject...`,
-        callback: () =>
-          confirmModal({
-            title: `Delete ${kind.label} Subject`,
-            message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
-            btnText: 'Delete Subject',
-            executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
-          }),
-      }),
+          label: `Delete ${kind.label} Subject...`,
+          callback: () =>
+            confirmModal({
+              title: `Delete ${kind.label} Subject`,
+              message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
+              btnText: 'Delete Subject',
+              executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
+            }),
+        }),
   ];
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
