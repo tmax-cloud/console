@@ -211,6 +211,8 @@
     "ROLE-CREATE_2": "롤에 부여할 권한을 선택해 주세요."
   },
   "CONTENT": {
+    "BINDABLE": "Bindable",
+    "EXTERNALNAME": "External Name",
     "PHONE": "핸드폰 번호",
     "EMAIL": "이메일",
     "DEPARTMENT": "부서",

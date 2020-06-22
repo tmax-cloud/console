@@ -213,6 +213,8 @@
     "ROLE-CREATE_2": "List the rules that will be assigned to the role."
   },
   "CONTENT": {
+    "BINDABLE": "Bindable",
+    "EXTERNALNAME": "External Name",
     "PHONE": "Phone",
     "EMAIL": "Email",
     "DEPARTMENT": "Department",
