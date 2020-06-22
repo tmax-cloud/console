@@ -94,6 +94,13 @@ export const enum KeyValueEditorPair {
   Index,
 }
 
+export const enum RoleEditorPair {
+  Group,
+  Resource,
+  Role,
+  Index,
+}
+
 export const enum IngressEditorPair {
   PathName,
   ServiceName,
