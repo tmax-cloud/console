@@ -73,7 +73,7 @@ const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
     return null;
   }
 
-  if (FLAGS.CAN_LIST_NS) {
+  if (flags[FLAGS.CAN_LIST_NS]) {
     // admin
     activeNamespace = ALL_NAMESPACES_KEY;
   } else if (activeNamespace === ALL_NAMESPACES_KEY) {
