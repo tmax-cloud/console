@@ -11,6 +11,10 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
 import { RadioGroup } from '../radio';
+import { RoleEditor } from '../utils/role-editor';
+
+import { coFetch, coFetchJSON } from '../../co-fetch';
+
 const Section = ({ label, children, isRequired }) => {
     return <div className={"row form-group " + (isRequired ? 'required' : '')}>
         <div className="col-xs-2 control-label">
@@ -38,12 +42,18 @@ class RoleFormComponent extends React.Component {
             role: role,
             inProgress: false,
             type: 'form',
-            quota: [['', '']]
+            roleList: [['', '', { 'All': 1, 'Create': 1, 'Delete': 1, 'Get': 1, 'List': 1, 'Patch': 1, 'Update': 1, 'Watch': 1 }]],
+            APIGroupList: []
         };
         this.setKind = this.setKind.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
+        this.getAPIGroupList = this.getAPIGroupList.bind(this);
         this.save = this.save.bind(this);
+        this._updateRoles = this._updateRoles.bind(this);
+    }
+    componentDidMount() {
+        this.getAPIGroupList();
     }
     setKind(e) {
         let role = { ...this.state.role };
@@ -52,6 +62,24 @@ class RoleFormComponent extends React.Component {
             role.metadata = { namespace: null };
         }
         this.setState({ role });
+    }
+    getAPIGroupList() {
+        coFetchJSON(`${document.location.origin}/api/kubernetes/apis`).then(
+            data => {
+                const APIGroupList = data.groups.map(group => group.preferredVersion.groupVersion)
+                this.setState({
+                    APIGroupList: APIGroupList
+                });
+            },
+            err => {
+                this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+            },
+        );
+    }
+    _updateRoles(role) {
+        this.setState({
+            roleList: role.rolePairs,
+        });
     }
     onNameChanged(event) {
         let role = { ...this.state.role };
@@ -82,6 +110,7 @@ class RoleFormComponent extends React.Component {
     render() {
         const { t } = this.props;
         const { kind, metadata, roleRef } = this.state.role;
+        const { APIGroupList } = this.state
         const roleKinds = [
             { value: 'Role', title: "Namespace Role (Role)", desc: t('STRING:ROLE-CREATE_0') },
             { value: 'ClusterRole', title: "Cluster Role (Cluster Role)", desc: t('STRING:ROLE-CREATE_1') },
@@ -108,6 +137,9 @@ class RoleFormComponent extends React.Component {
                     {kind === 'Role' && <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
                         <NsDropdown id="role-namespace" t={t} onChange={this.onNamespaceChanged} />
                     </Section>}
+                    <Section label={t('CONTENT:GRANTRESOURCES')} isRequired={true}>
+                        <RoleEditor desc={t('STRING:ROLE-CREATE_2')} APIGroupList={APIGroupList} ResourceList={[]} t={t} rolePairs={this.state.roleList} updateParentData={this._updateRoles} />
+                    </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
                         <Link to={formatNamespacedRouteForResource('roles')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>

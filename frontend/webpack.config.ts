@@ -13,10 +13,7 @@ const NODE_ENV = process.env.NODE_ENV;
 const extractCSS = new MiniCssExtractPlugin({ filename: 'app-bundle.css' });
 
 let config: webpack.Configuration = {
-  entry: [
-    './polyfills.js',
-    './public/components/app.jsx',
-  ],
+  entry: ['./polyfills.js', './public/components/app.jsx'],
   output: {
     path: path.resolve(__dirname, 'public/dist'),
     publicPath: 'static/',
@@ -42,26 +39,26 @@ let config: webpack.Configuration = {
             options: {
               // Leave one core spare for fork-ts-checker-webpack-plugin
               workers: require('os').cpus().length - 1,
-            }
+            },
           },
           {
             loader: 'ts-loader',
             options: {
               happyPackMode: true, // This implicitly enables transpileOnly! No type checking!
               transpileOnly: true, // fork-ts-checker-webpack-plugin takes care of type checking
-            }
+            },
           },
         ],
       },
       {
         test: /\.s?css$/,
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: './'
-            }
+              publicPath: './',
+            },
           },
           { loader: 'cache-loader' },
           { loader: 'thread-loader' },
@@ -69,20 +66,20 @@ let config: webpack.Configuration = {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-            }
+            },
           },
           {
             loader: 'resolve-url-loader',
             options: {
               sourceMap: true,
-            }
+            },
           },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
               outputStyle: 'compressed',
-            }
+            },
           },
         ],
       },
@@ -93,7 +90,7 @@ let config: webpack.Configuration = {
           name: 'assets/[name].[ext]',
         },
       },
-    ]
+    ],
   },
   optimization: {
     splitChunks: {
@@ -117,8 +114,8 @@ let config: webpack.Configuration = {
     }),
     extractCSS,
   ],
-  devtool: "source-map",  // 개발할 때 "inline-source-map"으로 사용하기
-  stats: "minimal"
+  devtool: 'source-map', // 개발할 때 "inline-source-map"으로 사용하기
+  stats: 'minimal',
 };
 
 /* Production settings */

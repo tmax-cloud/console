@@ -196,9 +196,8 @@ func (s *Server) HTTPHandler() http.Handler {
 		}
 		authHandlerWithUser = func(hf func(*auth.User, http.ResponseWriter, *http.Request)) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 				// api 목록 서비스, logout 서비스에는 IP Range 검증하지 않음
-				reg, _ := regexp.Compile("/api/kubernetes/.*(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
+				reg, _ := regexp.Compile("(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
 				if strings.Contains(string(r.URL.Path), "logout") || reg.MatchString(string(r.URL.Path)) {
 					hf(s.StaticUser, w, r)
 					return
