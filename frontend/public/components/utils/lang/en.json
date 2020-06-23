@@ -621,6 +621,7 @@
     "TRUE": "True",
     "False": "False",
     "TRAFFIC": "Traffic",
+    "TRACE": "Trace",
     "SERVERREQUESTVOLUME": "Server Request Volume",
     "SERVERREQUESTDURATION": "Server Request Duration",
     "REQUESTSIZE": "Request Size",

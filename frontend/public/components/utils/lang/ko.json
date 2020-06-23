@@ -620,6 +620,7 @@
     "TRUE": "참",
     "FALSE": "거짓",
     "TRAFFIC": "Traffic",
+    "TRACE": "Trace",
     "SERVERREQUESTVOLUME": "Server Request Volume",
     "SERVERREQUESTDURATION": "Server Request Duration",
     "REQUESTSIZE": "Request Size",
