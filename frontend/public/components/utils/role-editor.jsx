@@ -3,7 +3,7 @@ import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { RoleEditorPair } from './index';
 import SingleSelect from '../utils/select'
-import Checkbox from './Checkbox';
+import { coFetch, coFetchJSON } from '../../co-fetch';
 export class RoleEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -73,24 +73,44 @@ RoleEditor.defaultProps = {
 class RolePairElement extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            resourceList: []
+        };
+
         this._onRemove = this._onRemove.bind(this);
-        this._onChangeKey = this._onChangeKey.bind(this);
         this._onChangeGroup = this._onChangeGroup.bind(this);
+        this._onChangeResource = this._onChangeResource.bind(this);
+        this._getResourceList = this._getResourceList.bind(this);
     }
     _onRemove() {
         const { index, onRemove } = this.props;
         onRemove(index);
     }
-    _onChangeKey(e) {
-        const { index, onChange } = this.props;
-        onChange(e, index, RoleEditorPair.Key);
-    }
     _onChangeGroup(e) {
         const { index, onChange } = this.props;
         onChange(e, index, RoleEditorPair.Group);
+        this._getResourceList(e.value);
+    }
+    _onChangeResource(e) {
+        const { index, onChange } = this.props;
+        onChange(e, index, RoleEditorPair.Resource);
+    }
+    _getResourceList(apiGroup) {
+        coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup}`).then(
+            data => {
+                const resourceList = data.resources.map(resource => resource.name)
+                this.setState({
+                    resourceList: resourceList
+                });
+            },
+            err => {
+                this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+            },
+        );
     }
     render() {
-        const { keyString, valueString, allowSorting, readOnly, pair, t, APIGroupList, ResourceList } = this.props;
+        const { keyString, valueString, allowSorting, readOnly, pair, t, APIGroupList } = this.props;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -114,7 +134,7 @@ class RolePairElement extends React.Component {
                 }
             );
         });
-        const ResourceOptions = ResourceList.map(option => {
+        const ResourceOptions = this.state.resourceList.map(option => {
             return (
                 {
                     value: option,
@@ -124,17 +144,18 @@ class RolePairElement extends React.Component {
         });
         return (
             <div>
-                <div className={classNames('pairs-list__row col-xs-8')} style={{ marginLeft: '-15px' }} ref={node => (this.node = node)}>
+                <div className={classNames('pairs-list__row col-xs-8')} style={{ margin: '0px 10px -15px 0px', backgroundColor: '#F5F5F5' }} ref={node => (this.node = node)}>
                     <div className="row pairs-list__row">
                         <div className="col-md-4 col-xs-4 pairs-list__port-field">
                             {APIOptions && <SingleSelect
-                                options={APIOptions} name="APIGroup" value={pair[RoleEditorPair.PVC]} onChange={this._onChangeGroup}
+                                options={APIOptions} name="APIGroup" value={pair[RoleEditorPair.Group]} onChange={this._onChangeGroup}
                             />}
                         </div>
                         <div className="col-md-4 col-xs-4 pairs-list__port-field">
                             {ResourceOptions && <SingleSelect
-                                options={ResourceOptions} name="Resource" value={pair[RoleEditorPair.PVC]}
-                            />}  </div>
+                                options={ResourceOptions} name="Resource" value={pair[RoleEditorPair.Resource]}
+                            />}
+                        </div>
                     </div>
                     <div className="row col-md-12 col-xs-12">
                         <div className="pairs-list__name-field">
