@@ -42,7 +42,7 @@ class RoleFormComponent extends React.Component {
             role: role,
             inProgress: false,
             type: 'form',
-            roleList: [['', '', []]],
+            roleList: [['', '', { 'All': 1, 'Create': 1, 'Delete': 1, 'Get': 1, 'List': 1, 'Patch': 1, 'Update': 1, 'Watch': 1 }]],
             APIGroupList: []
         };
         this.setKind = this.setKind.bind(this);

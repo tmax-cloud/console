@@ -13,20 +13,50 @@ export class RoleEditor extends React.Component {
     }
     _append(event) {
         const { updateParentData, rolePairs, nameValueId, allowSorting } = this.props;
-        updateParentData({ rolePairs: allowSorting ? portPairs.concat([['', '', rolePairs.length]]) : rolePairs.concat([['', '']]) }, nameValueId);
+        updateParentData({ rolePairs: allowSorting ? rolePairs.concat([['', '', rolePairs.length]]) : rolePairs.concat([['', '', { 'All': 1, 'Create': 1, 'Delete': 1, 'Get': 1, 'List': 1, 'Patch': 1, 'Update': 1, 'Watch': 1 }]]) }, nameValueId);
     }
 
     _remove(i) {
         const { updateParentData, nameValueId } = this.props;
         const rolePairs = _.cloneDeep(this.props.rolePairs);
         rolePairs.splice(i, 1);
-        updateParentData({ rolePairs: rolePairs.length ? rolePairs : [['', '']] }, nameValueId);
+        updateParentData({ rolePairs: rolePairs.length ? rolePairs : [['', '', []]] }, nameValueId);
     }
 
     _change(e, i, type) {
         const { updateParentData, nameValueId } = this.props;
         const rolePairs = _.cloneDeep(this.props.rolePairs);
-        rolePairs[i][type] = e.target ? e.target.value : e.value;
+        //check인경우 
+        let keyList = Object.keys(rolePairs[i][type])
+        if (e.target.type === 'checkbox') {
+            if (e.target.id === 'All') {
+                rolePairs[i][type][e.target.id] = rolePairs[i][type][e.target.id] ? 0 : 1;
+                if (rolePairs[i][type][e.target.id]) {
+                    //[0,1,0,1,1,0,0,1] => [1,1,1,1,1,1,1,1]
+                    keyList.forEach(key => {
+                        rolePairs[i][type][key] = 1;
+                    })
+                } else {
+                    keyList.forEach(key => {
+                        rolePairs[i][type][key] = 0;
+                    })
+                }
+            } else {
+                //하나라도 체크안된게 있으면 all을 0으로 다체크되면 1로 
+                rolePairs[i][type][e.target.id] = rolePairs[i][type][e.target.id] ? 0 : 1;
+                let isAll = 0;
+                keyList.forEach(key => {
+                    if (key !== 'All') {
+                        rolePairs[i][type][key] === 0 ? rolePairs[i][type]['All'] = 0 : isAll++
+                    }
+                })
+                if (rolePairs[i][type]['All'] === 0 && isAll === 7) {
+                    rolePairs[i][type]['All'] = 1
+                }
+            }
+        } else {
+            rolePairs[i][type] = e.target ? e.target.value : e.value;
+        }
         updateParentData({ rolePairs }, nameValueId);
     }
     render() {
@@ -73,14 +103,13 @@ RoleEditor.defaultProps = {
 class RolePairElement extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             resourceList: []
         };
-
         this._onRemove = this._onRemove.bind(this);
         this._onChangeGroup = this._onChangeGroup.bind(this);
         this._onChangeResource = this._onChangeResource.bind(this);
+        this._onChangeRole = this._onChangeRole.bind(this);
         this._getResourceList = this._getResourceList.bind(this);
     }
     _onRemove() {
@@ -95,6 +124,10 @@ class RolePairElement extends React.Component {
     _onChangeResource(e) {
         const { index, onChange } = this.props;
         onChange(e, index, RoleEditorPair.Resource);
+    }
+    _onChangeRole(e) {
+        const { index, onChange } = this.props;
+        onChange(e, index, RoleEditorPair.Role);
     }
     _getResourceList(apiGroup) {
         coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup}`).then(
@@ -117,34 +150,18 @@ class RolePairElement extends React.Component {
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
-        const verbItems = ['All', 'Create', 'Delete', 'Get', 'List', 'Patch', 'Update', 'Watch'];
-
-        let checkboxList = verbItems.map(verb =>
-            <div style={{ float: 'left', width: '100px' }}>
-                <input type="checkbox" />
+        let checkboxList = Object.keys(pair[2]).map(verb => {
+            let ischecked = pair[2][verb]
+            return <div style={{ float: 'left', width: '100px' }}>
+                <input type="checkbox" id={verb} checked={ischecked} onChange={this._onChangeRole} />
                 <label style={{ margin: '0 10px' }}>{verb}</label>
-            </div>)
-
-
-        const APIOptions = APIGroupList.map(option => {
-            return (
-                {
-                    value: option,
-                    label: option
-                }
-            );
-        });
-        const ResourceOptions = this.state.resourceList.map(option => {
-            return (
-                {
-                    value: option,
-                    label: option
-                }
-            );
-        });
+            </div>
+        })
+        const APIOptions = APIGroupList.map(option => ({ value: option, label: option }));
+        const ResourceOptions = this.state.resourceList.map(option => ({ value: option, label: option }));
         return (
             <div>
-                <div className={classNames('pairs-list__row col-xs-8')} style={{ margin: '0px 10px -15px 0px', backgroundColor: '#F5F5F5' }} ref={node => (this.node = node)}>
+                <div className={classNames('pairs-list__row col-xs-8')} style={{ margin: '0px 0px 10px -15px', backgroundColor: '#F5F5F5' }} ref={node => (this.node = node)}>
                     <div className="row pairs-list__row">
                         <div className="col-md-4 col-xs-4 pairs-list__port-field">
                             {APIOptions && <SingleSelect
