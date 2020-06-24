@@ -2912,6 +2912,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: test-ingress
+  namespace: sample1-name
 spec:
   backend:
     serviceName: testsvc
@@ -2925,6 +2926,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: example
+  namespace: default
 spec:
   selector: {}
   template:
@@ -2945,6 +2947,7 @@ spec:
     kind: Job
     metadata:
       name: example-job
+      namespace: default
     spec:
       template:
         spec:
@@ -2962,6 +2965,7 @@ spec:
     kind: Job
     metadata:
       name: example-job
+      namespace: default
     spec:
       template:
         spec:
@@ -2980,6 +2984,7 @@ spec:
     kind: Job
     metadata:
       name: example-job
+      namespace: default
     spec:
       template:
         spec:
@@ -2998,6 +3003,7 @@ spec:
     kind: Job
     metadata:
       name: example-job
+      namespace: default
     spec:
       completions: 3
       parallelism: 3
