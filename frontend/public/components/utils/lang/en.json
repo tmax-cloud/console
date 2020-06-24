@@ -210,7 +210,15 @@
     "CRONJOB-SIDEBAR_7": "This 'role' prohibits simultaneous execution in periodic and recurring jobs. The next run cannot start until the previous run completes.",
     "ROLE-CREATE_0": "The Namespace Role applies only to the Namespace to which it belongs.",
     "ROLE-CREATE_1": "The Cluster Role appplies accross all Namespaces.",
-    "ROLE-CREATE_2": "List the rules that will be assigned to the role."
+    "ROLE-CREATE_2": "List the rules that will be assigned to the role.",
+    "JOB-SIDEBAR_0": "Run a job using a perl image",
+    "JOB-SIDEBAR_1": "Can run commands by executing a job within a perl image. (Print pi up to 2000 digits)",
+    "JOB-SIDEBAR_2": "Specify the number of retries of the job",
+    "JOB-SIDEBAR_3": "Can use backoffLimit to specify the number of retries (4 times) when executing a job.(Default: 6 times)",
+    "JOB-SIDEBAR_4": "Specify an active deadline of the job ",
+    "JOB-SIDEBAR_5": "Can use activeDeadlineSeconds to specify the active deadline time (10 seconds) for the job. The value must be specified as a positive number.",
+    "JOB-SIDEBAR_6": "Run 3 parallel jobs",
+    "JOB-SIDEBAR_7": "Can run jobs in parallel by specifying completions (number of successful pods) and parallelism (number of pods to run)."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
