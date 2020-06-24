@@ -2117,87 +2117,61 @@ spec:
     `
     apiVersion: tmax.io/v1
     kind: TemplateInstance
-    metadata:
-      name: example-instance
+    metadata:    
+      name: gitlab-template-instance
       namespace: default
     spec:
       template:
         metadata:
-          name: example-template
+          name: gitlab-template
         parameters:
-        - description: Example Name.
-          displayName: Name
-          name: NAME
-          required: true
-          value: example-instance
-        - description: Example Image.
-          displayName: Image
-          name: IMAGE
-          required: true
-          value: example/image:version
+        - name: APP_NAME
+          value: gitlab-test-deploy
+        - name: NAMESPACE
+          value: default
+        - name: STORAGE 
+          value: 30Gi 
+        - name: SERVICE_TYPE 
+          value: LoadBalancer
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample2'],
     `
-    apiVersion: tmax.io/v1
-    kind: TemplateInstance
+apiVersion: tmax.io/v1
+kind: TemplateInstance
+metadata:
+  name: apache-cicd-template-instance
+  namespace: default
+spec:
+  template:
     metadata:
-      name: apache-cicd-template-instance
-      namespace: default
-    spec:
-      template:
-        metadata:
-          name: apache-cicd-template
-        parameters:
-        - name: APP_NAME
-          value: apache-sample-app
-        - name: NAMESPACE
-          value: default
-        - name: SERVICE_ACCOUNT_NAME
-          value: tutorial-service
-        - name: GIT_URL
-          value: https://github.com/microsoft/project-html-website
-        - name: GIT_REV
-          value: master
-        - name: IMAGE_URL
-          value: 192.168.6.110:5000/apache-sample:latest
-        - name: WAS_PORT
-          value: '8080'
-        - name: SERVICE_TYPE
-          value: LoadBalancer
-        - name: PACKAGE_SERVER_URL
-          value: ''
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample3'],
-    `
-    apiVersion: tmax.io/v1
-    kind: TemplateInstance
-    metadata:
-      name: mysql-template-instance
-      namespace: default
-    spec:
-      template:
-        metadata:
-          name: mysql-template
-        parameters:
-        - name: APP_NAME
-          value: mysql-sample-app
-        - name: NAMESPACE
-          description: A Namespace Name
-          value: default
-        - name: DB_STORAGE
-          value: "20Gi"
-        - name: SERVICE_TYPE
-          value: ClusterIP
-        - name: MYSQL_USER
-          value: mysqluser
-        - name: MYSQL_PASSWORD
-          value: mysqlpassword
-        - name: MYSQL_DATABASE
-          value: mysqldb
+      name: apache-cicd-template
+    parameters:
+    - name: APP_NAME
+      value: apache-sample-app
+    - name: NAMESPACE
+      value: default
+    - name: SERVICE_ACCOUNT_NAME
+      value: tutorial-service
+    - name: GIT_URL
+      value: https://github.com/microsoft/project-html-website
+    - name: GIT_REV
+      value: master
+    - name: IMAGE_URL
+      value: xxx.xxx.xxx.xxx:5000/apache-sample:latest
+    - name: REGISTRY_SECRET
+      value: ''
+    - name: REGISTRY_ID
+      value: ''
+    - name: REGISTRY_PW
+      value: ''
+    - name: WAS_PORT
+      value: 8080
+    - name: SERVICE_TYPE
+      value: LoadBalancer
+    - name: PACKAGE_SERVER_URL
+      value: ''
 `,
   )
   .setIn(

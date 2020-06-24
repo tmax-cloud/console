@@ -216,7 +216,11 @@
     "JOB-SIDEBAR_4": "잡의 유효 데드라인 지정하여 실행",
     "JOB-SIDEBAR_5": "잡을 실행시 activeDeadlineSeconds를 통해 잡의 유효 데드라인 시간 10(초)을 지정하여 수행할 수 있습니다. 값은 양수로 지정하여야 합니다.",
     "JOB-SIDEBAR_6": "3개 잡의 병렬 작업을 실행",
-    "JOB-SIDEBAR_7": "잡을 병렬로 수행하고자 할때 completions(성공한 파드 수), parallelism(실행할 파드 수)을 지정하여 수행할 수 있습니다."
+    "JOB-SIDEBAR_7": "잡을 병렬로 수행하고자 할때 completions(성공한 파드 수), parallelism(실행할 파드 수)을 지정하여 수행할 수 있습니다.",
+    "TEMPLATEINSTANCE-SIDEBAR_0": "gitlab-template을 이용하여 템플릿 인스턴스 생성",
+    "TEMPLATEINSTANCE-SIDEBAR_1": "등록된 템플릿(gitlab-template)를 이용하여 템플릿 인스턴스를 생성 할 수 있으며, 서비스 인스턴스에서 선택하여 사용할 수 있습니다.",
+    "TEMPLATEINSTANCE-SIDEBAR_2": "apache-cicd-template을 이용하여 템플릿 인스턴스 생성",
+    "TEMPLATEINSTANCE-SIDEBAR_3": "템플릿(apache-cicd-template)을 이용하여 apache 와 git-lab을 연동하여 ci/cd 배포까지 할 수 있습니다."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

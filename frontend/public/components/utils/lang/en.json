@@ -218,7 +218,11 @@
     "JOB-SIDEBAR_4": "Specify an active deadline of the job ",
     "JOB-SIDEBAR_5": "Can use activeDeadlineSeconds to specify the active deadline time (10 seconds) for the job. The value must be specified as a positive number.",
     "JOB-SIDEBAR_6": "Run 3 parallel jobs",
-    "JOB-SIDEBAR_7": "Can run jobs in parallel by specifying completions (number of successful pods) and parallelism (number of pods to run)."
+    "JOB-SIDEBAR_7": "Can run jobs in parallel by specifying completions (number of successful pods) and parallelism (number of pods to run).",
+    "TEMPLATEINSTANCE-SIDEBAR_0": "Create a template instance using gitlab-template",
+    "TEMPLATEINSTANCE-SIDEBAR_1": "Can use the registered template (gitlab-template) to create template instances, and select one from the service instances.",
+    "TEMPLATEINSTANCE-SIDEBAR_2": "Create a template instance using apache-cicd-template",
+    "TEMPLATEINSTANCE-SIDEBAR_3": "Can use template (apache-cicd-template) to deploy applications with GitLab CI/CD, and select one from the service instances."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
