@@ -2941,90 +2941,76 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.JobModel), 'job-sample'],
     `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  template:
+    apiVersion: batch/v1
+    kind: Job
     metadata:
-      name: pi
+      name: example-job
     spec:
-      containers:
-        - name: pi
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: perl
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          restartPolicy: Never
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.JobModel), 'job-sample2'],
     `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  selector: {}
-  template:
+    apiVersion: batch/v1
+    kind: Job
     metadata:
-      name: pi
+      name: example-job
     spec:
-      containers:
-        - name: pi
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(100)
-        - name: pi2
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(200)
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: perl
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          restartPolicy: Never
+      backoffLimit: 4
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.JobModel), 'job-sample3'],
     `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  completions: 3
-  parallelism: 3
-  selector: {}
-  template:
+    apiVersion: batch/v1
+    kind: Job
     metadata:
-      name: pi
+      name: example-job
     spec:
-      containers:
-        - name: pi
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(100)
-        - name: pi2
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(200)
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: perl
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          restartPolicy: Never
+      activeDeadlineSeconds:: 10
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample4'],
+    `
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: example-job
+    spec:
+      completions: 3
+      parallelism: 3
+      template:
+        spec:
+          containers:
+          - name: pi1
+            image: perl:latest
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(100)"]
+          - name: pi2
+            image: perl:latest
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(200)"]
+          restartPolicy: Never
 `,
   )
   .setIn(
