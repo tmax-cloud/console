@@ -1233,22 +1233,46 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.RegistryModel), 'registry-sample'],
     `
-apiVersion: tmax.io/v1
-kind: Registry
-metadata:
-  name: example
-  namespace: default
-spec:
-  image: 'example/registry:b004'
-  loginId: example
-  loginPassword: example
-  service:
-    type: example
-  persistentVolumeClaim:
-    accessModes:
-      - example
-    storageSize: example
-    storageClassName: example  
+    apiVersion: tmax.io/v1
+    kind: Registry
+    metadata:
+      name: sample-registry
+      namespace: default
+    spec:
+      image: <image ip addr>:5000/registry:latest
+      description: default image registry
+      loginId: tmax
+      loginPassword: tmax123
+      service:
+         type: LoadBalancer
+      persistentVolumeClaim:
+         accessModes: [ReadWriteMany]
+         storageSize: 10Gi
+         storageClassName: csi-cephfs-sc
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RegistryModel), 'registry-sample2'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Registry
+    metadata:
+      name: sample-registry
+      namespace: default
+    spec:
+      image: <image ip addr>:5000/registry:latest
+      description: default image registry
+      loginId: tmax
+      loginPassword: tmax123
+      replicaSet:
+        nodeSelector:
+          kubernetes.io/hostname: worker01
+      service:
+         type: NodePort
+      persistentVolumeClaim:
+         accessModes: [ReadWriteMany]
+         storageSize: 10Gi
+         storageClassName: csi-cephfs-sc
 `,
   )
   .setIn(
