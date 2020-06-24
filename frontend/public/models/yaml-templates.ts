@@ -3299,6 +3299,83 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: hdd-ceph-fs
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample2'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: hdd-ceph-block
+      volumeMode: Block
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample3'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+      volumeName: sample-pv
+      storageClassName: storage-sample
+      volumeMode: Filesystem
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample4'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+       matchExpressions:
+         - key: localstorage
+           operator: In
+           values:
+            - hdd
+      storageClassName: storage-sample 
+      volumeMode: Filesystem
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ResourceQuotaModel), 'default'],
     `
 apiVersion: v1

@@ -19,8 +19,8 @@ import { CronJobSidebar } from './cron-job-sidebar';
 import { ServiceSidebar } from './service-sidebar';
 import { IngressSidebar } from './ingress-sidebar';
 // import { StorageClassSidebar } from './storage-class-sidebar';
-// import { DataVolumeSidebar } from './data-volume-sidebar';
-// import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar';
+import { DataVolumeSidebar } from './data-volume-sidebar';
+import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar';
 // import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
@@ -58,8 +58,8 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Ingress', IngressSidebar)
   .set('Service', ServiceSidebar)
   // .set('StorageClass', StorageClassSidebar)
-  // .set('DataVolume', DataVolumeSidebar)
-  // .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
+  .set('DataVolume', DataVolumeSidebar)
+  .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
   // .set('PersistentVolume', PersistentVolumeSidebar)
   .set('Task', TaskSidebar)
   .set('TaskRun', TaskRunSidebar)

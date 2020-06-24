@@ -222,7 +222,15 @@
     "TEMPLATEINSTANCE-SIDEBAR_0": "Create a template instance using gitlab-template",
     "TEMPLATEINSTANCE-SIDEBAR_1": "Can use the registered template (gitlab-template) to create template instances, and select one from the service instances.",
     "TEMPLATEINSTANCE-SIDEBAR_2": "Create a template instance using apache-cicd-template",
-    "TEMPLATEINSTANCE-SIDEBAR_3": "Can use template (apache-cicd-template) to deploy applications with GitLab CI/CD, and select one from the service instances."
+    "TEMPLATEINSTANCE-SIDEBAR_3": "Can use template (apache-cicd-template) to deploy applications with GitLab CI/CD, and select one from the service instances.",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_0": "Create 1 Gi file storage in the RWX mode",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_1": "Can create 1 Gi file storage using a storage class. Multiple pods can be connected and read/written.\nReadWriteOnce: The volume can be mounted as read-write by a single pod.\nReadOnlyMany: The volume can be mounted as read by multiple pods.\nReadWriteMany: The volume can be mounted as read-write by multiple pods. ",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_2": "Create 1 Gi block storage in the ROX mode",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_3": "Can create 1 Gi block storage using a storage class. A single pod can be connected and read/written.(volumeMode: Filesystem (default)/Block )",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_4": "Create a PersistentVolumeClamin in the RWX mode with your PersistentVolume ",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_5": "Can create a PersistentVolumeClaim in RWX mode to bind with the PersistentVolume (volumeName) you created.\nThe PersistentVolumeClaim’s access modes and resource requests must be satisfied in order for the PersistentVolume and PersistentVolumeClaim to be bound.",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_6": "Create a PersistentVolumeClaim of the RWX mode to meet the conditions of the selector. ",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_7": "Can use a storage class to create a PersistentVolumeClaim of the ReadWriteOnce mode which will be bound with the PersistentVolume based on the matching labels."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
