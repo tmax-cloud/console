@@ -21,7 +21,7 @@ import { IngressSidebar } from './ingress-sidebar';
 // import { StorageClassSidebar } from './storage-class-sidebar';
 import { DataVolumeSidebar } from './data-volume-sidebar';
 import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar';
-// import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
+import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
 import { ServiceAccountSidebar } from './service-account-sidebar';
@@ -60,7 +60,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   // .set('StorageClass', StorageClassSidebar)
   .set('DataVolume', DataVolumeSidebar)
   .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
-  // .set('PersistentVolume', PersistentVolumeSidebar)
+  .set('PersistentVolume', PersistentVolumeSidebar)
   .set('Task', TaskSidebar)
   .set('TaskRun', TaskRunSidebar)
   .set('Pipeline', PipelineSidebar)

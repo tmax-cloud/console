@@ -246,7 +246,15 @@
     "REPLICASET-SIDEBAR_4": "레플리카 셋의 파드를 실행시 초 단위 딜레이 이후 실행하기",
     "REPLICASET-SIDEBAR_5": "이 '롤'은 특정 파드의 개수(3개) 레플리카를 수행하며, 레플리카 파드 생성 시 컨테이너 간 충돌을 피하기 위해 10초(minReadySeconds 옵션)후 실행하도록 설정할 수 있습니다.(minReadySeconds  default : 0 )",
     "REPLICASET-SIDEBAR_6": "파드 셀렉터 요건의 2개의 레플리카 셋 실행",
-    "REPLICASET-SIDEBAR_7": "이 '롤'은 matchLabels외에 matchExpressions를 이용하여 파드 셀렉터 요건 목록을 통한 선택된 파드를 수행하고자 할 때 사용 할 수 있습니다."
+    "REPLICASET-SIDEBAR_7": "이 '롤'은 matchLabels외에 matchExpressions를 이용하여 파드 셀렉터 요건 목록을 통한 선택된 파드를 수행하고자 할 때 사용 할 수 있습니다.",
+    "PERSISTENTVOLUME-SIDEBAR_0": "ReadWriteOnce Mode로 영구 볼륨 생성",
+    "PERSISTENTVOLUME-SIDEBAR_1": "하나의 노드에서 볼륨을 읽기, 쓰기로 마운트하며, 사용이 끝난 영구 볼륨을 삭제하도록 생성할 수 있습니다.",
+    "PERSISTENTVOLUME-SIDEBAR_2": "ReadOnlyMany Mode로 영구 볼륨 생성",
+    "PERSISTENTVOLUME-SIDEBAR_3": "여러 노드에서 볼륨을 읽기 전용으로 마운트하며, 사용이 끝난 영구 볼륨을 삭제하지 않고 데이터를 보존정책으로 생성할 수 있습니다.",
+    "PERSISTENTVOLUME-SIDEBAR_4": "ReadWriteMany Mode로 영구 볼륨 생성",
+    "PERSISTENTVOLUME-SIDEBAR_5": "하나의 노드에서 볼륨을 읽기, 쓰기로 마운트하며, 사용이 끝난 영구 볼륨을 삭제하도록 생성할 수 있습니다.\n블록 스토리지 클래스를 사용하고 volumeMode가 Block인 경우에만 ReadWriteMany 적용이 가능합니다.",
+    "PERSISTENTVOLUME-SIDEBAR_6": "플러그인 유형 스토리지 프로비저닝",
+    "PERSISTENTVOLUME-SIDEBAR_7": "플러그인 유형의 스토리지를 사용시에는 상세 명세(nfs, mountOptions) 가 필요합니다. 사용이 끝난 영구 볼륨은 데이터를 삭제하고, 새로운 영구 볼륨 클레임에서 재사용이 가능합니다.\nRecycle은 플러그인 유형이 nfs, hostpath인 경우만 사용 가능합니다."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

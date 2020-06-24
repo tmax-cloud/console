@@ -18,19 +18,19 @@ export const ReplicaSetSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
     {
       header: t('STRING:REPLICASET-SIDEBAR_2'),
       details: t('STRING:REPLICASET-SIDEBAR_3'),
-      templateName: 'replicaset-sample',
+      templateName: 'replicaset-sample2',
       kind: referenceForModel(ReplicaSetModel),
     },
     {
       header: t('STRING:REPLICASET-SIDEBAR_4'),
       details: t('STRING:REPLICASET-SIDEBAR_5'),
-      templateName: 'replicaset-sample',
+      templateName: 'replicaset-sample3',
       kind: referenceForModel(ReplicaSetModel),
     },
     {
       header: t('STRING:REPLICASET-SIDEBAR_6'),
       details: t('STRING:REPLICASET-SIDEBAR_7'),
-      templateName: 'replicaset-sample',
+      templateName: 'replicaset-sample4',
       kind: referenceForModel(ReplicaSetModel),
     },
   ];

@@ -2792,6 +2792,83 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteOnce
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hdd-ceph-fs
+      hostPath:
+        path: "/tmp"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample2'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadOnlyMany
+      persistentVolumeReclaimPolicy: Retain
+      storageClassName: hdd-ceph-fs
+      hostPath:
+        path: "/tmp"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample3'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteMany
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hdd-ceph-block
+      volumeMode: Block
+      hostPath:
+        path: "/tmp"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample4'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteOnce
+      persistentVolumeReclaimPolicy: Recycle
+      storageClassName: hdd-ceph-fs
+      mountOptions:
+        - hard
+        - nfsvers=4.1
+      nfs:
+        path: /tmp
+        server: xxx.xxx.xxx.xxx
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PersistentVolumeModel), 'default'],
     `
 apiVersion: v1

@@ -248,7 +248,15 @@
     "REPLICASET-SIDEBAR_4": "Run ReplicaSet pods after the delay period of seconds. ",
     "REPLICASET-SIDEBAR_5": "This 'roll' is used to run 3 pod replicas. When creating a replica pod, it is set to wait 10 seconds (minReadySeconds option) to avoid container crashing. (Default: 0)",
     "REPLICASET-SIDEBAR_6": "Run 2 ReplicaSets that match the requirements of the pod selector",
-    "REPLICASET-SIDEBAR_7": "This 'roll' is used to run the pods that match the list of pod selector requirements through matchExpressions as well as matchLabels. "
+    "REPLICASET-SIDEBAR_7": "This 'roll' is used to run the pods that match the list of pod selector requirements through matchExpressions as well as matchLabels. ",
+    "PERSISTENTVOLUME-SIDEBAR_0": "Create a PersistentVolume in ReadWriteOnce mode",
+    "PERSISTENTVOLUME-SIDEBAR_1": "Can mount a volume as read-write in a single node, and delete the PersistentVolume after use. ",
+    "PERSISTENTVOLUME-SIDEBAR_2": "Create a PersistentVolume in ReadOnlyMany mode",
+    "PERSISTENTVOLUME-SIDEBAR_3": "Can mount a volume as read-only in multiple nodes, and not delete but store the PersistentVolume after use. ",
+    "PERSISTENTVOLUME-SIDEBAR_4": "ReadWriteMany Mode",
+    "PERSISTENTVOLUME-SIDEBAR_5": "Can mount a volume as read-write in a single node, and delete the PersistentVolume after use.\nReadWriteMany is applicable only when the block storage class is used and the volumeMode is Block.",
+    "PERSISTENTVOLUME-SIDEBAR_6": "Plug-in type storage provisioning",
+    "PERSISTENTVOLUME-SIDEBAR_7": "To use plug-in type storage, detailed specifications (nfs, mountOptions) are required. After using a PersistentVolume, you can delete the data and reuse the data in a new PersistentVolumeClaim.\nRecycle is only available when plug-in type is nfs or hostpath. "
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
