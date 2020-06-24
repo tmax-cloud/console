@@ -1274,6 +1274,7 @@ spec:
          storageSize: 10Gi
          storageClassName: csi-cephfs-sc
 `,
+
   )
   .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
@@ -3655,9 +3656,9 @@ metadata:
   name: example
   namespace: default
 type: Opaque
-Data:
+stringData:
   language: java
-  version: 5
+  version: "5"
 `,
   )
   .setIn(
