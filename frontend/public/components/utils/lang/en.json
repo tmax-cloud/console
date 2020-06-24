@@ -216,6 +216,8 @@
     "STATEFULSET-CREATE_2": "스테이트풀 셋에서 관리하는 파드의 개수를 정의해 주세요."
   },
   "CONTENT": {
+    "BINDABLE": "Bindable",
+    "EXTERNALNAME": "External Name",
     "PHONE": "Phone",
     "EMAIL": "Email",
     "DEPARTMENT": "Department",
