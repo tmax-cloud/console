@@ -238,7 +238,15 @@
     "REGISTRY-SIDEBAR_0": "이미지 레지스트리 생성",
     "REGISTRY-SIDEBAR_1": "이미지 레지스트리를 10Gi의 FileStorage 크기로 생성할 수 있습니다.\n외부에서 해당 레지스트리로 접근할 때 아이디와 비밀번호를 입력 후 접근 가능합니다.",
     "REGISTRY-SIDEBAR_2": "특정 노드에 이미지 레지스트리 생성",
-    "REGISTRY-SIDEBAR_3": "이미지 레지스트리를 특정 노드(worker01)에 위치하여 10Gi의 FileStorage 크기로 생성할 수 있습니다."
+    "REGISTRY-SIDEBAR_3": "이미지 레지스트리를 특정 노드(worker01)에 위치하여 10Gi의 FileStorage 크기로 생성할 수 있습니다.",
+    "REPLICASET-SIDEBAR_0": "기본 레플리카 셋에서 레플리카 미설정 실행",
+    "REPLICASET-SIDEBAR_1": "이 '롤'은 특정 파드의 기본 레플리카 개수(1개)를 수행 하고자 할때 사용할 수 있습니다.\n별도 명시하지 않으면 기본값(1)로 1개의 파드가 실행됩니다.",
+    "REPLICASET-SIDEBAR_2": "기본 3개의 레플리카 셋 실행",
+    "REPLICASET-SIDEBAR_3": "이 '역할'은 특정 파드의 레플리카 3개를 수행하고자 할때 사용할 수 있습니다.",
+    "REPLICASET-SIDEBAR_4": "레플리카 셋의 파드를 실행시 초 단위 딜레이 이후 실행하기",
+    "REPLICASET-SIDEBAR_5": "이 '롤'은 특정 파드의 개수(3개) 레플리카를 수행하며, 레플리카 파드 생성 시 컨테이너 간 충돌을 피하기 위해 10초(minReadySeconds 옵션)후 실행하도록 설정할 수 있습니다.(minReadySeconds  default : 0 )",
+    "REPLICASET-SIDEBAR_6": "파드 셀렉터 요건의 2개의 레플리카 셋 실행",
+    "REPLICASET-SIDEBAR_7": "이 '롤'은 matchLabels외에 matchExpressions를 이용하여 파드 셀렉터 요건 목록을 통한 선택된 파드를 수행하고자 할 때 사용 할 수 있습니다."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

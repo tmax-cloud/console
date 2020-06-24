@@ -240,7 +240,15 @@
     "REGISTRY-SIDEBAR_0": "Create an image registry",
     "REGISTRY-SIDEBAR_1": "Can create an image registry with file size of 10 Gi.\nExternal access is allowed by entering Login ID and password. ",
     "REGISTRY-SIDEBAR_2": "Create an image registry on a specific node. ",
-    "REGISTRY-SIDEBAR_3": "Can locate the image registry on a specific node (worker01) to create a file storage size of 10 Gi."
+    "REGISTRY-SIDEBAR_3": "Can locate the image registry on a specific node (worker01) to create a file storage size of 10 Gi.",
+    "REPLICASET-SIDEBAR_0": "Run a single ReplicaSet by default",
+    "REPLICASET-SIDEBAR_1": "This 'roll' is used to run the basic number of pod replica (1).\nOne pod is executed by default if specified.",
+    "REPLICASET-SIDEBAR_2": "Run 3 ReplicaSets by default",
+    "REPLICASET-SIDEBAR_3": "This 'roll' is used to run 3 pod replicas. ",
+    "REPLICASET-SIDEBAR_4": "Run ReplicaSet pods after the delay period of seconds. ",
+    "REPLICASET-SIDEBAR_5": "This 'roll' is used to run 3 pod replicas. When creating a replica pod, it is set to wait 10 seconds (minReadySeconds option) to avoid container crashing. (Default: 0)",
+    "REPLICASET-SIDEBAR_6": "Run 2 ReplicaSets that match the requirements of the pod selector",
+    "REPLICASET-SIDEBAR_7": "This 'roll' is used to run the pods that match the list of pod selector requirements through matchExpressions as well as matchLabels. "
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

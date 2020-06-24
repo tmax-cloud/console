@@ -3668,6 +3668,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: example
+  namespace: default
 spec:
   replicas: 2
   selector:
@@ -3695,7 +3696,32 @@ spec:
       name: example
       namespace: default
     spec:
-      replicas: 2
+      selector:
+        matchLabels:
+          app: hello-hypercloud
+      template:
+        metadata:
+          name: hello-hypercloud
+          labels:
+            app: hello-hypercloud
+        spec:
+          containers:
+            - name: hello-hypercloud
+              image: hypercloud/hello-hypercloud  
+              ports:
+                - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample2'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 3
       selector:
         matchLabels:
           app: hello-hypercloud
@@ -3710,6 +3736,58 @@ spec:
               image: hypercloud/hello-hypercloud
               ports:
                 - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 3
+      minReadySeconds: 10
+      selector:
+        matchLabels:
+          app: hello-hypercloud
+      template:
+        metadata:
+          name: hello-hypercloud
+          labels:
+            app: hello-hypercloud
+        spec:
+          containers:
+            - name: hello-hypercloud
+              image: hypercloud/hello-hypercloud
+              ports:
+                - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 2
+      selector:
+        matchExpressions:
+          - {key: tier, operator: In, values: [example1]}
+      template:
+        metadata:
+          labels:
+            tier: example1
+        spec:
+          containers:
+          - name: hello-hypercloud
+            image: hypercloud/hello-hypercloud
+            ports:
+            - containerPort: 8080
 `,
   )
   .setIn(
