@@ -230,7 +230,13 @@
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_4": "Create a PersistentVolumeClamin in the RWX mode with your PersistentVolume ",
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_5": "Can create a PersistentVolumeClaim in RWX mode to bind with the PersistentVolume (volumeName) you created.\nThe PersistentVolumeClaim’s access modes and resource requests must be satisfied in order for the PersistentVolume and PersistentVolumeClaim to be bound.",
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_6": "Create a PersistentVolumeClaim of the RWX mode to meet the conditions of the selector. ",
-    "PERSISTENCEVOLUMECLAIM-SIDEBAR_7": "Can use a storage class to create a PersistentVolumeClaim of the ReadWriteOnce mode which will be bound with the PersistentVolume based on the matching labels."
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_7": "Can use a storage class to create a PersistentVolumeClaim of the ReadWriteOnce mode which will be bound with the PersistentVolume based on the matching labels.",
+    "DATAVOLUME-SIDEBAR_0": "Create a DataVolume using HTTP URL ",
+    "DATAVOLUME-SIDEBAR_1": "Can create a DataVolume from an imported VM image using HTTP URL.\nContent type (kubevirt (default), archive)/ volumeMode (Filesystem (default), block)",
+    "DATAVOLUME-SIDEBAR_2": "Create a DataVolume using s3",
+    "DATAVOLUME-SIDEBAR_3": "Can create a DataVolume from an imported VM image using s3.\nReadWriteMany is allowed because volumeMode is set to block. ",
+    "DATAVOLUME-SIDEBAR_4": "Create a DataVolume using a registry",
+    "DATAVOLUME-SIDEBAR_5": "Can create a DataVolume from an imported VM image using a registry. "
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

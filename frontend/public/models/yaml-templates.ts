@@ -572,6 +572,76 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample'],
+    `
+    apiVersion: cdi.kubevirt.io/v1alpha1
+    kind: DataVolume
+    metadata:
+      name: sample-datavolume
+      namespace: default
+    spec:
+      source:
+        http:
+          url: 'https://download.cirros-cloud.net/contrib/0.3.0/cirros-0.3.0-i386-disk.img'
+      contentType: "archive"
+      pvc:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: "hdd-ceph-fs" 
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample2'],
+    `
+    apiVersion: cdi.kubevirt.io/v1alpha1
+    kind: DataVolume
+    metadata:
+      name: sample-datavolume
+      namespace: default
+    spec:
+      pvc:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: hdd-ceph-block
+        volumeMode: Block
+      source:
+        s3:
+          contentType: kubevirt
+          secretRef: ''
+          url: 'http://mybucket/virtual-disk-img' 
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample3'],
+    `
+    apiVersion: cdi.kubevirt.io/v1alpha1
+    kind: DataVolume
+    metadata:
+      name: sample-datavolume
+      namespace: default
+    spec:
+      source:
+        registry:
+          url: "xxx.xxx.xxx.xxx:xx"
+          secretRef: ""
+          certConfigMap: ""
+          contentType: "archive"
+      pvc:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: "hdd-ceph-fs"
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ServiceInstanceModel), 'default'],
     `
   apiVersion: servicecatalog.k8s.io/v1beta1
