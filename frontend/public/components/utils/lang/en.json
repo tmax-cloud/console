@@ -256,7 +256,9 @@
     "PERSISTENTVOLUME-SIDEBAR_4": "ReadWriteMany Mode",
     "PERSISTENTVOLUME-SIDEBAR_5": "Can mount a volume as read-write in a single node, and delete the PersistentVolume after use.\nReadWriteMany is applicable only when the block storage class is used and the volumeMode is Block.",
     "PERSISTENTVOLUME-SIDEBAR_6": "Plug-in type storage provisioning",
-    "PERSISTENTVOLUME-SIDEBAR_7": "To use plug-in type storage, detailed specifications (nfs, mountOptions) are required. After using a PersistentVolume, you can delete the data and reuse the data in a new PersistentVolumeClaim.\nRecycle is only available when plug-in type is nfs or hostpath. "
+    "PERSISTENTVOLUME-SIDEBAR_7": "To use plug-in type storage, detailed specifications (nfs, mountOptions) are required. After using a PersistentVolume, you can delete the data and reuse the data in a new PersistentVolumeClaim.\nRecycle is only available when plug-in type is nfs or hostpath. ",
+    "RESOURCEQUOTACLAIM-SIDEBAR_0": "Set resource quota with CPU and memory",
+    "RESOURCEQUOTACLAIM-SIDEBAR_1": "Used to specify the quota (CPU, memory) for a resource.\nThe claim is approved through the Edit Status."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

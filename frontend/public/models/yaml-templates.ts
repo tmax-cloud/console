@@ -886,6 +886,23 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'resourcequotaclaim-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: ResourceQuotaClaim
+    metadata:
+      name: example-resourcequotaclaim
+      namespace: default
+    resourceName: example-resourceclaim
+    spec:
+      hard:
+        requests.cpu: '1'
+        requests.memory: 1Gi
+        limits.cpu: '2'
+        limits.memory: 2Gi
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.RoleBindingClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1

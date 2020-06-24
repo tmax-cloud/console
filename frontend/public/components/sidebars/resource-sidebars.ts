@@ -33,6 +33,7 @@ import { TaskSidebar } from './task-sidebar';
 import { TaskRunSidebar } from './task-run-sidebar';
 import { LimitRangeSidebar } from './limit-range-sidebar';
 import { ResourceQuotaSidebar } from './resource-quota-sidebar';
+import { ResourceQuotaClaimSidebar } from './resource-quota-claim-sidebar';
 import { CustomResourceDefinitionSidebar } from './custom-resource-definition-sidebar';
 // import { PodSecurityPolicySidebar } from './pod-security-policy-sidebar';
 
@@ -71,6 +72,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Registry', RegistrySidebar)
   .set('LimitRange', LimitRangeSidebar)
   .set('ResourceQuota', ResourceQuotaSidebar)
+  .set('ResourceQuotaClaim', ResourceQuotaClaimSidebar)
   .set('CustomResourceDefinition', CustomResourceDefinitionSidebar)
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)

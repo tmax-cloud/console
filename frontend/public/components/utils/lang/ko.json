@@ -254,7 +254,9 @@
     "PERSISTENTVOLUME-SIDEBAR_4": "ReadWriteMany Mode로 영구 볼륨 생성",
     "PERSISTENTVOLUME-SIDEBAR_5": "하나의 노드에서 볼륨을 읽기, 쓰기로 마운트하며, 사용이 끝난 영구 볼륨을 삭제하도록 생성할 수 있습니다.\n블록 스토리지 클래스를 사용하고 volumeMode가 Block인 경우에만 ReadWriteMany 적용이 가능합니다.",
     "PERSISTENTVOLUME-SIDEBAR_6": "플러그인 유형 스토리지 프로비저닝",
-    "PERSISTENTVOLUME-SIDEBAR_7": "플러그인 유형의 스토리지를 사용시에는 상세 명세(nfs, mountOptions) 가 필요합니다. 사용이 끝난 영구 볼륨은 데이터를 삭제하고, 새로운 영구 볼륨 클레임에서 재사용이 가능합니다.\nRecycle은 플러그인 유형이 nfs, hostpath인 경우만 사용 가능합니다."
+    "PERSISTENTVOLUME-SIDEBAR_7": "플러그인 유형의 스토리지를 사용시에는 상세 명세(nfs, mountOptions) 가 필요합니다. 사용이 끝난 영구 볼륨은 데이터를 삭제하고, 새로운 영구 볼륨 클레임에서 재사용이 가능합니다.\nRecycle은 플러그인 유형이 nfs, hostpath인 경우만 사용 가능합니다.",
+    "RESOURCEQUOTACLAIM-SIDEBAR_0": "CPU와 메모리를 설정하여 리소스 쿼타 요청",
+    "RESOURCEQUOTACLAIM-SIDEBAR_1": "사용하고자 하는 리소스 이름에 대한  리소스(cpu, memory) 범위를 지정할 때 사용할 수 있습니다. \nEdit Status를 이용해서 승인할 수 있습니다"
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
