@@ -449,11 +449,11 @@ class Nav extends React.Component {
               <ResourceNSLink resource="kubeadmconfigtemplates" name={t('RESOURCE:KUBEADMCONFIGTEMPLATE')} onClick={this.close} />
             </NavSection>
 
-            <NavSection text={t('RESOURCE:BAREMETALMANAGEMENT')} icon="pficon pficon-build">
+            {/* <NavSection text={t('RESOURCE:BAREMETALMANAGEMENT')} icon="pficon pficon-build">
               <ResourceClusterLink resource="baremetalclusters" name={t('RESOURCE:METAL3CLUSTER')} onClick={this.close} />
               <ResourceClusterLink resource="baremetalmachines" name={t('RESOURCE:METAL3MACHINE')} onClick={this.close} />
               <ResourceClusterLink resource="baremetalmachinetemplates" name={t('RESOURCE:METAL3MACHINETEMPLATE')} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
             <NavSection text={t('RESOURCE:AWSMANAGEMENT')} icon="fa fa-shield">
               <ResourceNSLink resource="awsclusters" name={t('RESOURCE:AWSCLUSTER')} onClick={this.close} />
