@@ -50,11 +50,12 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
           <label style={{ marginRight: '10px' }}>Display</label>
           <select name="display" onChange={e => setDisplay(e.target.value)}>
             <option value="all">All</option>
-            {operationList.map(ops => (
-              <option key={ops} value={ops}>
-                {ops}
-              </option>
-            ))}
+            {operationList &&
+              operationList.map(ops => (
+                <option key={ops} value={ops}>
+                  {ops}
+                </option>
+              ))}
           </select>
         </span>
       </div>
