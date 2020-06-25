@@ -285,7 +285,15 @@
     "HPA-SIDEBAR_0": "CPU 기준으로 HPA (Horizontal파드Autoscaler) 생성",
     "HPA-SIDEBAR_1": "파드의 CPU 사용율이 50%가 넘어갈 경우 AutoScaling이 발생합니다.\n최소 파드의 개수는 1개이며, 최대 파드 개수는 3개입니다.\nAutoScale 조건 (targetAverageUtilization / targetAverageValue)",
     "HPA-SIDEBAR_2": "Memory 기준으로 HPA(Horizontal파드Autoscaler) 생성",
-    "HPA-SIDEBAR_3": "파드의 Memory 사용이 100Mi가 넘어갈 경우 AutoScaling이 발생합니다.\n최소 파드의 개수는 1개이며, 최대 파드 개수는 5개입니다.\nAutoScale 조건 (targetAverageUtilization / targetAverageValue)"
+    "HPA-SIDEBAR_3": "파드의 Memory 사용이 100Mi가 넘어갈 경우 AutoScaling이 발생합니다.\n최소 파드의 개수는 1개이며, 최대 파드 개수는 5개입니다.\nAutoScale 조건 (targetAverageUtilization / targetAverageValue)",
+    "DEPLOYMENT-SIDEBAR_0": "기본 디플로이먼트 생성",
+    "DEPLOYMENT-SIDEBAR_1": "image(nginx)를 이용하여 파드 1개로 구성된 디플로이먼트를 생성할 수 있습니다.",
+    "DEPLOYMENT-SIDEBAR_2": "파드 3개의 디플로이먼트 생성",
+    "DEPLOYMENT-SIDEBAR_3": "image(ngix)를 이용하여 3개의 파드로 구성한 디플로이먼트를 생성할 수 있습니다.\n생성된 파드가 10초(minReadySeconds 옵션)안에 Ready 상태가 되도록 임계치 설정이 가능합니다.",
+    "DEPLOYMENT-SIDEBAR_4": "롤링 업데이트를 설정하여 디플로이먼트 생성",
+    "DEPLOYMENT-SIDEBAR_5": "롤링 업데이트 시 신버전 파드를 30%씩 추가하고 구버전 파드를 30%씩 삭제를 반복하여 이미지를 업그레이드 하는 정책으로 디플로이먼트를 생성할 수 있습니다.\n정책을 명시하지 않으면 maxSure, maxUnavailable 는 기본적으로 25% 씩 설정됩니다.",
+    "DEPLOYMENT-SIDEBAR_6": "볼륨 마운트하여 디플로이먼트 생성",
+    "DEPLOYMENT-SIDEBAR_7": "디플로이먼트 생성 시에 hostPath 영구 볼륨을 생성할 수 있습니다.\n노드의 디렉토리의 real path를 이용하여 hostpath로 설정하여 사용할 수 있습니다."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

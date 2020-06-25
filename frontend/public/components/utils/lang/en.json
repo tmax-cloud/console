@@ -287,7 +287,15 @@
     "HPA-SIDEBAR_0": "Create a Horizontal Pod Autoscaler (HPA) based on CPU",
     "HPA-SIDEBAR_1": "AutoScaling occurs when the pod's CPU utilization exceeds 50%.\nThe minimum number of pods is 1, and the maximum number of pods is 3.\nAutoScale condition (targetAverageUtilization/ targetAverageValue)",
     "HPA-SIDEBAR_2": "Create a Horizontal Pod Autoscaler (HPA) based on memory",
-    "HPA-SIDEBAR_3": "AutoScaling occurs when the pod's memory usage exceeds 100 Mi.\nThe minimum number of pods is 1, and the maximum number of pods is 5.\nAutoScale condition (targetAverageUtilization/ targetAverageValue)"
+    "HPA-SIDEBAR_3": "AutoScaling occurs when the pod's memory usage exceeds 100 Mi.\nThe minimum number of pods is 1, and the maximum number of pods is 5.\nAutoScale condition (targetAverageUtilization/ targetAverageValue)",
+    "DEPLOYMENT-SIDEBAR_0": "Create a default deployment ",
+    "DEPLOYMENT-SIDEBAR_1": "Can use the nginx image to create a deployment consisting of one pod. ",
+    "DEPLOYMENT-SIDEBAR_2": "Create a deployment consisting of 3 pods ",
+    "DEPLOYMENT-SIDEBAR_3": "Can use the ngix image to create a deployment consisting of 3 pods.\n A threshold can be set so that the created pod is ready in 10 seconds (minReadySeconds option).",
+    "DEPLOYMENT-SIDEBAR_4": "Create a deployment by configuring rollong update. ",
+    "DEPLOYMENT-SIDEBAR_5": "When you create a deployment with the rolling update strategy, it continues scaling up and down by adding 30% new pods and deleting 30% old pods. \nIf no policy is specified, maxSure and maxUnavailable are set by 25% by default.",
+    "DEPLOYMENT-SIDEBAR_6": "Create a deployment by mounting volumes",
+    "DEPLOYMENT-SIDEBAR_7": "Can create a hostPath persistent volume in deployment creation. \n Set a hostpath volume using the real path of the node directory."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
