@@ -277,7 +277,13 @@
     "STATEFULSET-SIDEBAR_4": "Set the number of revisions to be maintained for a StatefulSet ",
     "STATEFULSET-SIDEBAR_5": "The maximum number of revisions that will be maintained in the StatefulSet's revision history.(Default: 10)",
     "STATEFULSET-SIDEBAR_6": "Set an update strategy",
-    "STATEFULSET-SIDEBAR_7": "Terminates each Pod, and waits for it to transition to running and ready prior to updating the next pod."
+    "STATEFULSET-SIDEBAR_7": "Terminates each Pod, and waits for it to transition to running and ready prior to updating the next pod.",
+    "DAEMONSET-SIDEBAR_0": "Create DemonSets on all nodes of the cluster",
+    "DAEMONSET-SIDEBAR_1": "1) Create a DaemonSet using the image of DockerHub (apache).\n2) A resource-limited pod is created with 0.2 GB of CPU/0.1 Core/Memory on all nodes of the cluster.",
+    "DAEMONSET-SIDEBAR_2": "Create DemonSets except for the Master node",
+    "DAEMONSET-SIDEBAR_3": "Create DaemonSet pods using DockerHub (apache) image.\n Pods with limited resources are created with CPU 0.1 Core/Memory 0.2 GB on all nodes except the master node. (Even if it is a master node, a pod is created if node-role.kubernetes.io/master does not exist in Taint.)",
+    "DAEMONSET-SIDEBAR_4": "Create a DemonSet with an update strategy",
+    "DAEMONSET-SIDEBAR_5": "1) Create a DaemonSet using DockerHub (apache) image, and pods are created on all nodes that make up the cluster.\n2) Can select an update strategy (RollingUpdate, OnDelete (default)) for the pod image. \n3) minReadySeconds sets the waiting time of the created pod. (Ddefault: 0)"
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

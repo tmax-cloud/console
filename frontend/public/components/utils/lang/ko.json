@@ -275,7 +275,13 @@
     "STATEFULSET-SIDEBAR_4": "Statefulset 생성 시 변경 내역이 유지될 개수를 지정 후 생성",
     "STATEFULSET-SIDEBAR_5": "현재 적용된 내역 이외의 변경 내역에 대해 유지 될 최대 개정 수를 설정할 수 있습니다.(revisionHistoryLimit  default : 10 )",
     "STATEFULSET-SIDEBAR_6": "업데이트 전략 설정",
-    "STATEFULSET-SIDEBAR_7": "각 파드를 한 번에 하나씩 업데이트하여 파드 종료와 생성을 실행합니다. 이전 버전을 업데이트하기 전에 업데이트 된 파드가 실행 중이고 준비 될 때까지 대기합니다."
+    "STATEFULSET-SIDEBAR_7": "각 파드를 한 번에 하나씩 업데이트하여 파드 종료와 생성을 실행합니다. 이전 버전을 업데이트하기 전에 업데이트 된 파드가 실행 중이고 준비 될 때까지 대기합니다.",
+    "DAEMONSET-SIDEBAR_0": "클러스터의 모든 노드에 데몬셋 생성",
+    "DAEMONSET-SIDEBAR_1": "1) DockerHub(apache)의 이미지를 이용하여 데몬셋을 생성합니다.\n 2) 클러스터의 모든 노드에 CPU 0.1 Core/Memory 0.2GB로 자원이 제한된 파드가 생성됩니다.",
+    "DAEMONSET-SIDEBAR_2": "Master Node를 제외하여 데몬셋 생성",
+    "DAEMONSET-SIDEBAR_3": "DockerHub(apache) 이미지를 이용하여 데몬셋을 생성합니다. \n마스터 노드를 제외한 모든 노드에 CPU 0.1 Core/Memory 0.2GB로 자원이 제한된 파드가 생성됩니다. (마스터 노드일 경우에도, Taint에 node-role.kubernetes.io/master 가 없으면 생성됩니다. )",
+    "DAEMONSET-SIDEBAR_4": "업데이트 전략 방식을 이용한 데몬셋 생성",
+    "DAEMONSET-SIDEBAR_5": "1) DockerHub(apache) 이미지를 이용하여 데몬셋을 생성하며, 클러스터를 구성하는 모든 노드에 파드가 생성됩니다.\n2) 파드 이미지 업데이트 시 업데이트 전략 설정으로  업데이트 방식을 선택할 수 있습니다. (RollingUpdate, OnDelete(default) )\n3) 생성된 파드의 대기 시간을 minReadySeconds  조절할 수 있습니다. (default(0초) )"
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

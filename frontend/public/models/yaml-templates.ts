@@ -3467,55 +3467,99 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample'],
     `
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: example
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: hello-hypercloud
-  template:
+    apiVersion: apps/v1
+    kind: DaemonSet
     metadata:
-      labels:
-        app: hello-hypercloud
+      name: example-daemonset
+      namespace: default
     spec:
-      containers:
-        - name: hello-hypercloud
-          image: hypercloud/hello-hypercloud
-          ports:
-            - containerPort: 8080
+      selector:
+        matchLabels:
+          app: example-daemonset
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 200Mi
+                requests:
+                  cpu: 100m
+                  memory: 200Mi
+              ports:
+                - containerPort: 80
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample2'],
     `
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: resource-example
-  namespace: demo-ns
-spec:
-  selector:
-    matchLabels:
-      name: sample-fluentd
-  template:
+    apiVersion: apps/v1
+    kind: DaemonSet
     metadata:
-      labels:
-        name: sample-fluentd
+      name: example-daemonset
+      namespace: default
     spec:
-      containers:
-      - name: hello-fluentd
-        image: gcr.io/google-containers/fluentd-elasticsearch:1.20
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
+      selector:
+        matchLabels:
+          app: example-daemonset
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          tolerations:
+          # this toleration is to have the daemonset runnable on master nodes
+          # remove it if your masters can't run pods
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 200Mi
+                requests:
+                  cpu: 100m
+                  memory: 200Mi
+              ports:
+                - containerPort: 80
 `,
   )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      name: example-daemonset
+      namespace: default
+    spec:
+      selector:
+        matchLabels:
+          app: example-daemonset
+      updateStrategy:
+        type: RollingUpdate
+      minReadySeconds: 3
+      revisionHistoryLimit: 100
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              ports:
+                - containerPort: 80
+`,
+  )
+
   .setIn(
     [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'],
     `
