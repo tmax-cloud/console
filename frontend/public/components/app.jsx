@@ -9,6 +9,7 @@ import * as PropTypes from 'prop-types';
 import store from '../redux';
 import { productName } from '../branding';
 import LoginComponent from './login';
+// import AuditPage from './audits';
 import { ALL_NAMESPACES_KEY } from '../const';
 import { connectToFlags, featureActions, flagPending, FLAGS } from '../features';
 import { detectMonitoringURLs } from '../monitoring';
@@ -19,16 +20,18 @@ import { NamespaceSelector } from './namespace';
 import Nav from './nav';
 import { SearchPage } from './search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
-import { history, AsyncComponent, Loading, kindObj } from './utils';
+import { history, AsyncComponent, Loading, kindObj, AccessDenied } from './utils';
 import { namespacedPrefixes } from './utils/link';
 import { UIActions, getActiveNamespace } from '../ui/ui-actions';
 import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
 import { referenceForModel, k8sList } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
+import { k8sGet } from '../module/k8s';
+import { ConfigMapModel } from '../models';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
-import { getAccessToken, resetLoginState } from './utils/auth';
+import { getAccessToken, resetLoginState, getId } from './utils/auth';
 import { NoNamespace } from './nonamespaces';
 
 import './utils/i18n';
@@ -150,6 +153,8 @@ class App extends React.PureComponent {
     this.state = {
       isAdmin: true,
       isLoading: false,
+      configData: '',
+      activeNamespace: '',
     };
 
     // 임시 로직
@@ -173,11 +178,6 @@ class App extends React.PureComponent {
       false,
     );
   }
-  // changeRole_() {
-  //   this.setState({
-  //     isAdmin: !this.state.isAdmin,
-  //   });
-  // }
 
   setLoading_() {
     this.setState({
@@ -185,7 +185,103 @@ class App extends React.PureComponent {
     });
   }
 
+  componentDidMount() {
+    if (this.state.activeNamespace === '') {
+      this.setState({ activeNamespace: getActiveNamespace() });
+    }
+    // if (getActiveNamespace() !== '' && this.state.activeNamespace !== getActiveNamespace()) {
+    //   this.setState({ activeNamespace: getActiveNamespace() });
+    //   k8sGet(ConfigMapModel, null, getActiveNamespace())
+    //     .then(data => {
+    //       if (data.kind === 'ConfigMapList' && this.state.configData !== data) {
+    //         // console.log(this.state.configData);
+    //         let menuConfig;
+    //         data.items.forEach(item => {
+    //           if (item.metadata.name === 'usermenusetting') {
+    //             menuConfig = item;
+    //           }
+    //         });
+
+    //         if (menuConfig !== undefined && menuConfig.data.hasOwnProperty(getId())) {
+    //           // console.log(menuConfig.data[getId()]);
+    //           this.setState({ configData: menuConfig.data[getId()] });
+    //         }
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
+  }
+
+  componentWillUpdate() {
+    if (this.state.configData !== '') {
+      let configArr = this.state.configData.split(',');
+      configArr.forEach(item => {
+        console.log(item);
+        // if (window.location.href.indexOf('item') !== -1) {
+        // }
+      });
+    }
+
+    if (this.state.activeNamespace !== getActiveNamespace()) {
+      this.setState({ configData: '' });
+      if (getActiveNamespace() !== '#ALL_NS#') {
+        this.setState({ activeNamespace: getActiveNamespace() });
+        k8sGet(ConfigMapModel, null, getActiveNamespace())
+          .then(data => {
+            if (data.kind === 'ConfigMapList' && this.state.configData !== data) {
+              let menuConfig;
+              data.items.forEach(item => {
+                if (item.metadata.name === 'usermenusetting') {
+                  menuConfig = item;
+                }
+              });
+
+              if (menuConfig !== undefined && menuConfig.data.hasOwnProperty(getId())) {
+                this.setState({ configData: menuConfig.data[getId()] });
+                let arr = menuConfig.data[getId()].split(',');
+                arr.forEach(item => {
+                  if (window.location.href.indexOf(item) !== -1) {
+                    window.location.href = '/error';
+                    // return <AccessDenied />;
+                  }
+                });
+              }
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  }
+
   componentDidUpdate(prevProps) {
+    // if (this.state.activeNamespace !== getActiveNamespace()) {
+    //   this.setState({ activeNamespace: getActiveNamespace() });
+    //   k8sGet(ConfigMapModel, null, getActiveNamespace())
+    //     .then(data => {
+    //       if (data.kind === 'ConfigMapList' && this.state.configData !== data) {
+    //         // console.log(this.state.configData);
+    //         let menuConfig;
+    //         data.items.forEach(item => {
+    //           if (item.metadata.name === 'usermenusetting') {
+    //             menuConfig = item;
+    //           }
+    //         });
+
+    //         if (menuConfig !== undefined && menuConfig.data.hasOwnProperty(getId())) {
+    //           // console.log(menuConfig.data[getId()]);
+    //           this.setState({ configData: menuConfig.data[getId()] });
+    //         }
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
+
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
     const oldLocation = _.omit(prevProps.location, ['key']);
@@ -200,7 +296,7 @@ class App extends React.PureComponent {
   }
 
   render() {
-    // const props = this.props;
+    const { configData } = this.state;
     // if (props.location.pathname.indexOf('new') > 0) {
     //   console.log('여기서 ns selector없애야함 ')
     // }
@@ -208,7 +304,7 @@ class App extends React.PureComponent {
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <Masthead setLoading={this.setLoading} />
-        <Nav />
+        <Nav menu={configData} />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />
@@ -240,6 +336,7 @@ class App extends React.PureComponent {
             <Route path="/status" exact component={NamespaceRedirect} />
             {/* <Route path="/noNamespace" exact loader={() => import('./nonamespaces').then(m => m.NoNamespace)} /> */}
             <Route path="/noNamespace" exact component={NoNamespace} />
+            {/* <Route path="/audit" exact component={AuditPage} /> */}
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
             {/* <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} /> */}
@@ -278,6 +375,7 @@ class App extends React.PureComponent {
             <LazyRoute path="/k8s/ns/:ns/resourcequotaclaims/new/:type" exact kind="ResourceQuotaClaim" loader={() => import('./resourceQuotaClaims/create-resourceQuotaClaim').then(m => m.CreateResouceQuotaClaim)} />
             <LazyRoute path="/k8s/ns/:ns/rolebindingclaims/new/:type" exact kind="RoleBindingClaim" loader={() => import('./roleBindingClaims/create-roleBindingClaim').then(m => m.CreateRoleBindingClaim)} />
             <LazyRoute path="/k8s/cluster/namespaceclaims/new/:type" exact kind="NamespaceClaim" loader={() => import('./namespaceClaims/create-namespaceClaim').then(m => m.CreateNamespaceClaim)} />
+
             <LazyRoute path="/k8s/ns/:ns/deployments/new/:type" exact kind="Deployment" loader={() => import('./deployments/create-deployment').then(m => m.CreateDeployment)} />
             <LazyRoute path="/k8s/ns/:ns/ingresses/new/:type" exact kind="Ingress" loader={() => import('./ingresses/create-ingress').then(m => m.CreateIngress)} />
             <LazyRoute path="/k8s/ns/:ns/pipelineruns/new/:type" exact kind="PipelineRun" loader={() => import('./pipelineRuns/create-pipelineRun').then(m => m.CreatePipelineRun)} />
@@ -302,6 +400,8 @@ class App extends React.PureComponent {
             <Route path="/k8s/cluster/:plural/:name" component={ResourceDetailsPage} />
             <LazyRoute path="/k8s/ns/:ns/pods/:podName/containers/:name" loader={() => import('./container').then(m => m.ContainersDetailsPage)} />
             <LazyRoute path="/k8s/ns/:ns/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => NamespaceFromURL(m.CreateYAML))} />
+            {/* <Route path="/k8s/ns/:ns/audits" exact component={AuditPage} />
+            <Route path="/k8s/all-namespaces/audits" exact component={AuditPage} /> */}
             <Route path="/k8s/ns/:ns/:plural/:name" component={ResourceDetailsPage} />
             <Route path="/k8s/ns/:ns/:plural" exact component={ResourceListPage} />
             <Route path="/k8s/all-namespaces/:plural" exact component={ResourceListPage} />
