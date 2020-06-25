@@ -30,7 +30,7 @@ spec:
         - --prometheus-endpoint=http://@@PROM@@/api
         - --hdc-mode=@@HDC_FLAG@@
         - --tmaxcloud-portal=@@PORTAL@@
-        image: 192.168.6.110:5000/hypercloud-console:@@VER@@
+        image: tmaxcloudck/hypercloud-console:@@VER@@
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - mountPath: /var/https-cert
