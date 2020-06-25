@@ -269,7 +269,15 @@
     "PIPELINERESOURCE-SIDEBAR_4": "Create a pipeline resource using an image resource",
     "PIPELINERESOURCE-SIDEBAR_5": "Used to create a pipeline resource using image resources from remote storage.\nIn general, it can be used to push to any registry.",
     "PIPELINERESOURCE-SIDEBAR_6": "Create a pipeline resource by adding descriptions",
-    "PIPELINERESOURCE-SIDEBAR_7": "Used to create a pipeline resource by adding the descriptions of the resource."
+    "PIPELINERESOURCE-SIDEBAR_7": "Used to create a pipeline resource by adding the descriptions of the resource.",
+    "STATEFULSET-SIDEBAR_0": "Create 3 pods for a StatefulSet by default ",
+    "STATEFULSET-SIDEBAR_1": "Used to create 3 StatefulSet pods with unique identities. \nThe desired number of pods can be set by entering the replica value. (Default: 1)",
+    "STATEFULSET-SIDEBAR_2": "Create pods in parallel when running StatefulSets",
+    "STATEFULSET-SIDEBAR_3": "Pod management policies can be used to create and launch pods in parallel.\nOrderedReady is the default policy where pods are created in increasing order and the controller will wait until each pod is ready before continuing. ",
+    "STATEFULSET-SIDEBAR_4": "Set the number of revisions to be maintained for a StatefulSet ",
+    "STATEFULSET-SIDEBAR_5": "The maximum number of revisions that will be maintained in the StatefulSet's revision history.(Default: 10)",
+    "STATEFULSET-SIDEBAR_6": "Set an update strategy",
+    "STATEFULSET-SIDEBAR_7": "Terminates each Pod, and waits for it to transition to running and ready prior to updating the next pod."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

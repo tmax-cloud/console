@@ -3706,42 +3706,169 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample'],
     `
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  serviceName: nginx
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: StatefulSet
     metadata:
-      labels:
-        app: nginx
+      name: example-statefulset
+      namespace: default
     spec:
-      terminationGracePeriodSeconds: 10
-      containers:
-        - name: nginx
-          image: 'gcr.io/google_containers/nginx-slim:0.8'
-          ports:
-            - containerPort: 80
-              name: web
-          volumeMounts:
-            - name: www
-              mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
-    - metadata:
-        name: www
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: my-storage-class
-        resources:
-          requests:
-            storage: 1Gi
+      serviceName: example-statefulset
+      replicas: 3
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: nginx
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample2'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      podManagementPolicy: Parallel
+      replicas: 3
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      replicas: 3
+      revisionHistoryLimit: 15
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      replicas: 3
+      updateStrategy:
+        type: RollingUpdate
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
 `,
   )
   .setIn(
