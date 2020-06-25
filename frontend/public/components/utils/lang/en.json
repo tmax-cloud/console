@@ -261,7 +261,15 @@
     "PERSISTENTVOLUME-SIDEBAR_6": "Plug-in type storage provisioning",
     "PERSISTENTVOLUME-SIDEBAR_7": "To use plug-in type storage, detailed specifications (nfs, mountOptions) are required. After using a PersistentVolume, you can delete the data and reuse the data in a new PersistentVolumeClaim.\nRecycle is only available when plug-in type is nfs or hostpath. ",
     "RESOURCEQUOTACLAIM-SIDEBAR_0": "Set resource quota with CPU and memory",
-    "RESOURCEQUOTACLAIM-SIDEBAR_1": "Used to specify the quota (CPU, memory) for a resource.\nThe claim is approved through the Edit Status."
+    "RESOURCEQUOTACLAIM-SIDEBAR_1": "Used to specify the quota (CPU, memory) for a resource.\nThe claim is approved through the Edit Status.",
+    "PIPELINERESOURCE-SIDEBAR_0": "Create a pipeline resource using Git URL",
+    "PIPELINERESOURCE-SIDEBAR_1": "Used to create pipeline resources using Git resource.",
+    "PIPELINERESOURCE-SIDEBAR_2": "Create a pipeline resource using a proxy (HTTP/HTTPS)",
+    "PIPELINERESOURCE-SIDEBAR_3": "Can create a pipeline resource using SSL using a proxy server.\nIf you do not use SSL proxy, set it to noProxy.\n(- name: noProxy/ value: 'no.proxy.com')",
+    "PIPELINERESOURCE-SIDEBAR_4": "Create a pipeline resource using an image resource",
+    "PIPELINERESOURCE-SIDEBAR_5": "Used to create a pipeline resource using image resources from remote storage.\nIn general, it can be used to push to any registry.",
+    "PIPELINERESOURCE-SIDEBAR_6": "Create a pipeline resource by adding descriptions",
+    "PIPELINERESOURCE-SIDEBAR_7": "Used to create a pipeline resource by adding the descriptions of the resource."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

@@ -1069,14 +1069,64 @@ spec:
     kind: PipelineResource
     metadata:
       name: example-pipeline-resource-git
-      namespace: teespaceb2c
+      namespace: default
     spec:
       type: git
       params:
         - name: revision
           value: master
         - name: url
-          value: 'https://github.com/sample/git/url'
+          value: https://github.com/wizzbangcorp/wizzbang.git
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample2'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git
+      namespace: default
+    spec:
+      type: git
+      params:
+        - name: revision
+          value: sample_revision
+        - name: httpsProxy
+          value: "my-sample.proxy.com"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample3'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resources-image
+      namespace: default
+    spec:
+      type: image
+      params:
+        - name: url
+          value: gcr.io/staging-images/kritis
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample4'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git-description
+      namespace: default
+    spec:
+      type: git
+      description: description of the resource.
+      params:
+        - name: revision
+          value: master
+        - name: url     
+          value: https://github.com/wizzbangcorp/wizzbang.git
 `,
   )
   .setIn(
