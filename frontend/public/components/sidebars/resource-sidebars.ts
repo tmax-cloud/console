@@ -19,9 +19,9 @@ import { CronJobSidebar } from './cron-job-sidebar';
 import { ServiceSidebar } from './service-sidebar';
 import { IngressSidebar } from './ingress-sidebar';
 // import { StorageClassSidebar } from './storage-class-sidebar';
-// import { DataVolumeSidebar } from './data-volume-sidebar';
-// import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar';
-// import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
+import { DataVolumeSidebar } from './data-volume-sidebar';
+import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar';
+import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
 import { ServiceAccountSidebar } from './service-account-sidebar';
@@ -33,6 +33,7 @@ import { TaskSidebar } from './task-sidebar';
 import { TaskRunSidebar } from './task-run-sidebar';
 import { LimitRangeSidebar } from './limit-range-sidebar';
 import { ResourceQuotaSidebar } from './resource-quota-sidebar';
+import { ResourceQuotaClaimSidebar } from './resource-quota-claim-sidebar';
 import { CustomResourceDefinitionSidebar } from './custom-resource-definition-sidebar';
 // import { PodSecurityPolicySidebar } from './pod-security-policy-sidebar';
 
@@ -58,9 +59,9 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Ingress', IngressSidebar)
   .set('Service', ServiceSidebar)
   // .set('StorageClass', StorageClassSidebar)
-  // .set('DataVolume', DataVolumeSidebar)
-  // .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
-  // .set('PersistentVolume', PersistentVolumeSidebar)
+  .set('DataVolume', DataVolumeSidebar)
+  .set('PersistentVolumeClaim', PersistentVolumeClaimSidebar)
+  .set('PersistentVolume', PersistentVolumeSidebar)
   .set('Task', TaskSidebar)
   .set('TaskRun', TaskRunSidebar)
   .set('Pipeline', PipelineSidebar)
@@ -71,6 +72,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Registry', RegistrySidebar)
   .set('LimitRange', LimitRangeSidebar)
   .set('ResourceQuota', ResourceQuotaSidebar)
+  .set('ResourceQuotaClaim', ResourceQuotaClaimSidebar)
   .set('CustomResourceDefinition', CustomResourceDefinitionSidebar)
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)

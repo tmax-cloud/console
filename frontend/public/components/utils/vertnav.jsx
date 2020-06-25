@@ -8,6 +8,7 @@ import { EmptyBox, StatusBox } from './index';
 import { PodsPage } from '../pod';
 import { ImagesPage } from '../image';
 import { TrafficPage } from '../traffic';
+import { TracePage } from '../trace';
 import { AsyncComponent } from '../utils/async';
 
 const editYamlComponent = props => {
@@ -54,6 +55,15 @@ class TrafficComponent extends React.PureComponent {
       metadata: { namespace, name },
     } = this.props.obj;
     return <TrafficPage showTitle={false} namespace={namespace} name={name} canCreate={false} />;
+  }
+}
+
+class TraceComponent extends React.PureComponent {
+  render() {
+    const {
+      metadata: { namespace, name },
+    } = this.props.obj;
+    return <TracePage showTitle={false} namespace={namespace} name={name} canCreate={false} />;
   }
 }
 
@@ -112,6 +122,11 @@ export const navFactory = {
     href: 'traffic',
     name: name || 'traffic',
     component: component || TrafficComponent,
+  }),
+  trace: (name, component) => ({
+    href: 'trace',
+    name: name || 'trace',
+    component: component || TraceComponent,
   }),
 };
 
