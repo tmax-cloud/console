@@ -281,7 +281,11 @@
     "DAEMONSET-SIDEBAR_2": "Master Node를 제외하여 데몬셋 생성",
     "DAEMONSET-SIDEBAR_3": "DockerHub(apache) 이미지를 이용하여 데몬셋을 생성합니다. \n마스터 노드를 제외한 모든 노드에 CPU 0.1 Core/Memory 0.2GB로 자원이 제한된 파드가 생성됩니다. (마스터 노드일 경우에도, Taint에 node-role.kubernetes.io/master 가 없으면 생성됩니다. )",
     "DAEMONSET-SIDEBAR_4": "업데이트 전략 방식을 이용한 데몬셋 생성",
-    "DAEMONSET-SIDEBAR_5": "1) DockerHub(apache) 이미지를 이용하여 데몬셋을 생성하며, 클러스터를 구성하는 모든 노드에 파드가 생성됩니다.\n2) 파드 이미지 업데이트 시 업데이트 전략 설정으로  업데이트 방식을 선택할 수 있습니다. (RollingUpdate, OnDelete(default) )\n3) 생성된 파드의 대기 시간을 minReadySeconds  조절할 수 있습니다. (default(0초) )"
+    "DAEMONSET-SIDEBAR_5": "1) DockerHub(apache) 이미지를 이용하여 데몬셋을 생성하며, 클러스터를 구성하는 모든 노드에 파드가 생성됩니다.\n2) 파드 이미지 업데이트 시 업데이트 전략 설정으로  업데이트 방식을 선택할 수 있습니다. (RollingUpdate, OnDelete(default) )\n3) 생성된 파드의 대기 시간을 minReadySeconds  조절할 수 있습니다. (default(0초) )",
+    "HPA-SIDEBAR_0": "CPU 기준으로 HPA (Horizontal파드Autoscaler) 생성",
+    "HPA-SIDEBAR_1": "파드의 CPU 사용율이 50%가 넘어갈 경우 AutoScaling이 발생합니다.\n최소 파드의 개수는 1개이며, 최대 파드 개수는 3개입니다.\nAutoScale 조건 (targetAverageUtilization / targetAverageValue)",
+    "HPA-SIDEBAR_2": "Memory 기준으로 HPA(Horizontal파드Autoscaler) 생성",
+    "HPA-SIDEBAR_3": "파드의 Memory 사용이 100Mi가 넘어갈 경우 AutoScaling이 발생합니다.\n최소 파드의 개수는 1개이며, 최대 파드 개수는 5개입니다.\nAutoScale 조건 (targetAverageUtilization / targetAverageValue)"
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

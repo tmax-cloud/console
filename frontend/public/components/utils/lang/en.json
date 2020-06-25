@@ -283,7 +283,11 @@
     "DAEMONSET-SIDEBAR_2": "Create DemonSets except for the Master node",
     "DAEMONSET-SIDEBAR_3": "Create DaemonSet pods using DockerHub (apache) image.\n Pods with limited resources are created with CPU 0.1 Core/Memory 0.2 GB on all nodes except the master node. (Even if it is a master node, a pod is created if node-role.kubernetes.io/master does not exist in Taint.)",
     "DAEMONSET-SIDEBAR_4": "Create a DemonSet with an update strategy",
-    "DAEMONSET-SIDEBAR_5": "1) Create a DaemonSet using DockerHub (apache) image, and pods are created on all nodes that make up the cluster.\n2) Can select an update strategy (RollingUpdate, OnDelete (default)) for the pod image. \n3) minReadySeconds sets the waiting time of the created pod. (Ddefault: 0)"
+    "DAEMONSET-SIDEBAR_5": "1) Create a DaemonSet using DockerHub (apache) image, and pods are created on all nodes that make up the cluster.\n2) Can select an update strategy (RollingUpdate, OnDelete (default)) for the pod image. \n3) minReadySeconds sets the waiting time of the created pod. (Ddefault: 0)",
+    "HPA-SIDEBAR_0": "Create a Horizontal Pod Autoscaler (HPA) based on CPU",
+    "HPA-SIDEBAR_1": "AutoScaling occurs when the pod's CPU utilization exceeds 50%.\nThe minimum number of pods is 1, and the maximum number of pods is 3.\nAutoScale condition (targetAverageUtilization/ targetAverageValue)",
+    "HPA-SIDEBAR_2": "Create a Horizontal Pod Autoscaler (HPA) based on memory",
+    "HPA-SIDEBAR_3": "AutoScaling occurs when the pod's memory usage exceeds 100 Mi.\nThe minimum number of pods is 1, and the maximum number of pods is 5.\nAutoScale condition (targetAverageUtilization/ targetAverageValue)"
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
@@ -746,6 +750,7 @@
     "DEPLOYMENT": "Deployment",
     "REPLICASET": "Replica Set",
     "HPA": "HPA",
+    "HORIZONTALPODAUTOSCALER": "HPA",
     "DAEMONSET": "Daemon Set",
     "STATEFULSET": "Stateful Set",
     "VIRTUALMACHINE": "Virtual Machine",

@@ -2981,20 +2981,20 @@ spec:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
     metadata:
-      name: sample-cpu-scaling
+      name: example-hpa
       namespace: default
     spec:
       scaleTargetRef:
         apiVersion: apps/v1
         kind: Deployment
-        name: sample-name
+        name: example-deployment
       minReplicas: 1
       maxReplicas: 3
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            targetAverageUtilization: 50
+      - type: Resource
+        resource:
+          name: cpu
+          targetAverageUtilization: 50
 `,
   )
   .setIn(
@@ -3003,19 +3003,20 @@ spec:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
     metadata:
-      name: sample-mem-scaling
+      name: example-hpa
       namespace: default
     spec:
       scaleTargetRef:
+        apiVersion: apps/v1
         kind: Deployment
-        name: sample-name
+        name: example-deployment
       minReplicas: 1
-      maxReplicas: 3
-      metrics:
-        - type: Resource
-          resource:
-            name: memory
-            targetAverageValue: 1G
+      maxReplicas: 5
+      metrics:              
+      - type: Resource
+        resource:
+          name: memory
+          targetAverageValue: 100Mi
 `,
   )
   .setIn(
