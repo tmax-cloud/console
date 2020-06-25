@@ -61,15 +61,16 @@ func securityHeadersMiddleware(hdlr http.Handler) http.HandlerFunc {
 		// Ancient weak protection against reflected XSS (equivalent to CSP no unsafe-inline)
 		w.Header().Set("X-XSS-Protection", "1; mode=block")
 		// Prevent clickjacking attacks involving iframes
-		w.Header().Set("X-Frame-Options", "sameorigin")
+		w.Header().Set("X-Frame-Options", "allowall")
 		// Less information leakage about what domains we link to
 		w.Header().Set("X-DNS-Prefetch-Control", "off")
 		// Less information leakage about what domains we link to
 		// w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
 		w.Header().Set("Referrer-Policy", "no-referrer-when-downgrade")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+		// w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Access-Control-Allow-Headers", "*")
 		hdlr.ServeHTTP(w, r)
 	}
 }

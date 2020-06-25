@@ -13,6 +13,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -367,24 +368,23 @@ func (s *Server) HTTPHandler() http.Handler {
 	// NOTE: grafan proxy 등록 // 윤진수
 	if s.GrafanaProxyConfig != nil {
 		grafanaProxyAPIPath := grafanaProxyEndpoint
-		grafanaProxy := proxy.NewProxy(s.GrafanaProxyConfig)
+		// grafanaProxy := proxy.NewProxy(s.GrafanaProxyConfig)
+		// director := func(req *http.Request) {
+		// req.Header.Add("X-Forwarded-Host", req.Host)
+		// req.Header.Add("X-Origin-Host", origin.Host)
+		// req.Header.Add("X-Frame-Options", "sameorigin")
+		// req.Header.Add("X-Forwarded-For", req.RemoteAddr)
+		// req.Header.Add("X-Frame-Options", "allowall")
+		// req.URL.Scheme = "http"
+		// req.URL.Host = origin.Host
+		// }
+		// grafanaProxy := &httputil.ReverseProxy{Director: director}
+		grafanaProxy := httputil.NewSingleHostReverseProxy(s.GrafanaProxyConfig.Endpoint)
 		handle(grafanaProxyAPIPath, http.StripPrefix(
 			proxy.SingleJoiningSlash(s.BaseURL.Path, grafanaProxyAPIPath),
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				fmt.Println(w.Header())
 				grafanaProxy.ServeHTTP(w, r)
-				// remove x-frame option in order to show webpage on iframe
-				fmt.Println(w.Header())
-				fmt.Println(w.Header().Get("X-Frame-Options"))
-				// temp := w.Header().Get("X-Frame-options")
-				// if w.Header().Get("X-frame-options") == temp {
-				// 	w.Header().Set("X-frame-options", "SAMEORIGIN")
-				// }
-				fmt.Println(w.Header().Get("X-frame-options"))
 			})),
-		// authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
-		// 	grafanaProxy.ServeHTTP(w, r)
-		// })),
 		)
 	}
 	// NOTE: 여기까지
@@ -394,8 +394,7 @@ func (s *Server) HTTPHandler() http.Handler {
 	handle("/api/tectonic/certs", authHandler(s.certsHandler))
 	mux.HandleFunc(s.BaseURL.Path, s.indexHandler)
 
-	// return securityHeadersMiddleware(http.Handler(mux))
-	return http.Handler(mux)
+	return securityHeadersMiddleware(http.Handler(mux))
 }
 
 func sendResponse(rw http.ResponseWriter, code int, resp interface{}) {
