@@ -215,15 +215,6 @@ class App extends React.PureComponent {
   }
 
   componentWillUpdate() {
-    if (this.state.configData !== '') {
-      let configArr = this.state.configData.split(',');
-      configArr.forEach(item => {
-        console.log(item);
-        // if (window.location.href.indexOf('item') !== -1) {
-        // }
-      });
-    }
-
     if (this.state.activeNamespace !== getActiveNamespace()) {
       this.setState({ configData: '' });
       if (getActiveNamespace() !== '#ALL_NS#') {
@@ -242,6 +233,7 @@ class App extends React.PureComponent {
                 this.setState({ configData: menuConfig.data[getId()] });
                 let arr = menuConfig.data[getId()].split(',');
                 arr.forEach(item => {
+                  item = item.replace(' ', '');
                   if (window.location.href.indexOf(item) !== -1) {
                     window.location.href = '/error';
                     // return <AccessDenied />;
