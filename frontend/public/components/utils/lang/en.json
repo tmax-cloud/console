@@ -768,6 +768,7 @@
     "INFERENCESERVICE": "Inference Service",
     "WORKFLOWTEMPLATE": "Workflow Template",
     "WORKFLOW": "Workflow",
-    "CATALOGSERVICECLAIM": "Catalog Service Claim"
+    "CATALOGSERVICECLAIM": "Catalog Service Claim",
+    "DASHBOARD": "Dashboard"
   }
 }

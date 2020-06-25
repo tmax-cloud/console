@@ -99,6 +99,10 @@ func main() {
 	fHDCModeFlag := fs.Bool("hdc-mode", false, "When true, login through tmaxcloud portal is required.")
 	fTmaxCloudPortalURL := fs.String("tmaxcloud-portal", "", "URL of the TmaxCloud Portal.")
 
+	// NOTE: Grafana 연동 추가 // 윤진수
+	fGrafanaEndpoint := fs.String("grafana-endpoint", "", "URL of the Grafana API server.")
+	// NOTE: 여기까지
+
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -256,6 +260,13 @@ func main() {
 		}
 		// NOTE: 여기까지
 
+		// NOTE: grafanaEndpoint 추가 // 윤진수
+		grafanaEndpoint := validateFlagIsURL("grafana-endpoint", *fGrafanaEndpoint)
+		srv.GrafanaProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        grafanaEndpoint,
+		}
+
 		// NOTE: in-cluster인 경우 master token을 empty string으로 수정 // 정동민
 		srv.MasterToken = ""
 		// NOTE: 여기까지
@@ -329,6 +340,15 @@ func main() {
 			Endpoint:        prometheusEndpoint,
 		}
 		// NOTE: 여기까지 // 정동민
+
+		// NOTE: grafanaEndpoint 추가 //윤진수
+		grafanaEndpoint := validateFlagIsURL("grafana-endpoint", *fGrafanaEndpoint)
+		srv.GrafanaProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        grafanaEndpoint,
+		}
+		// NOTE: 여기까지 // 윤진수
+
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)
 
 		srv.K8sProxyConfig = &proxy.Config{

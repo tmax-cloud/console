@@ -13,6 +13,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -49,6 +50,7 @@ const (
 	k8sProxyEndpoint          = "/api/kubernetes/"
 	prometheusProxyEndpoint   = "/api/prometheus"
 	hypercloudProxyEndpoint   = "/api/hypercloud/"
+	grafanaProxyEndpoint      = "/api/grafana/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
 )
 
@@ -109,6 +111,7 @@ type Server struct {
 	K8sClient             *http.Client
 	PrometheusProxyConfig *proxy.Config
 	HypercloudProxyConfig *proxy.Config
+	GrafanaProxyConfig    *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
@@ -196,9 +199,8 @@ func (s *Server) HTTPHandler() http.Handler {
 		}
 		authHandlerWithUser = func(hf func(*auth.User, http.ResponseWriter, *http.Request)) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 				// api 목록 서비스, logout 서비스에는 IP Range 검증하지 않음
-				reg, _ := regexp.Compile("/api/kubernetes/.*(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
+				reg, _ := regexp.Compile("(?:apis|api|v[1-9]|v[1-9]beta[1-9]|v[1-9]alpha[1-9])$")
 				if strings.Contains(string(r.URL.Path), "logout") || reg.MatchString(string(r.URL.Path)) {
 					hf(s.StaticUser, w, r)
 					return
@@ -362,6 +364,30 @@ func (s *Server) HTTPHandler() http.Handler {
 			})),
 		)
 	}
+
+	// NOTE: grafan proxy 등록 // 윤진수
+	if s.GrafanaProxyConfig != nil {
+		grafanaProxyAPIPath := grafanaProxyEndpoint
+		// grafanaProxy := proxy.NewProxy(s.GrafanaProxyConfig)
+		// director := func(req *http.Request) {
+		// req.Header.Add("X-Forwarded-Host", req.Host)
+		// req.Header.Add("X-Origin-Host", origin.Host)
+		// req.Header.Add("X-Frame-Options", "sameorigin")
+		// req.Header.Add("X-Forwarded-For", req.RemoteAddr)
+		// req.Header.Add("X-Frame-Options", "allowall")
+		// req.URL.Scheme = "http"
+		// req.URL.Host = origin.Host
+		// }
+		// grafanaProxy := &httputil.ReverseProxy{Director: director}
+		grafanaProxy := httputil.NewSingleHostReverseProxy(s.GrafanaProxyConfig.Endpoint)
+		handle(grafanaProxyAPIPath, http.StripPrefix(
+			proxy.SingleJoiningSlash(s.BaseURL.Path, grafanaProxyAPIPath),
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				grafanaProxy.ServeHTTP(w, r)
+			})),
+		)
+	}
+	// NOTE: 여기까지
 
 	handle("/api/tectonic/version", authHandler(s.versionHandler))
 	handle("/api/tectonic/ldap/validate", authHandler(handleLDAPVerification))
