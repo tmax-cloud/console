@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next';
 
 export const Grafana = props => {
   const { t } = useTranslation();
+  console.log(window.location.origin);
+  const grafanaURL = window.location.origin + '/api/grafana';
   return (
     <div>
       {/* <iframe width="1700" height="880" scrolling="auto" src="https://192.168.0.191:9000/api/grafana/d/bbb2a765a623ae38130206c7d94a160f/kubernetes-networking-namespace-workload?orgId=1&refresh=30s" sandbox="allow-scripts">
@@ -19,10 +21,9 @@ export const Grafana = props => {
       </iframe> */}
       {/* <iframe width="1700" height="880" scrolling="auto" src="http://192.168.0.191:9000/api/grafana/" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-popups-to-escape-sandbox allow-presentation allow-top-navigation allow-top-navigation-by-user-activation"> */}
       {/* <iframe width="1700" height="880" scrolling="auto" src="http://192.168.0.191:9000/api/grafana/" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-popups-to-escape-sandbox allow-presentation allow-top-navigation allow-top-navigation-by-user-activation">   */}
-      <iframe width="1700" height="880" scrolling="auto" src="https://192.168.0.191:9000/api/grafana/">
-        https://192.168.0.191:9000/api/grafana/
+      <iframe width="1700" height="880" scrolling="auto" src={grafanaURL}>
+        {grafanaURL}
       </iframe>
     </div>
   );
 };
-
