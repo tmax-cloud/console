@@ -78,5 +78,9 @@ const CRDRow = ({ obj: crd }) => {
 export const CustomResourceDefinitionsList = props => <List {...props} Header={CRDHeader} Row={CRDRow} />;
 export const CustomResourceDefinitionsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} filterLabel="CRDs by name" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  if (window.location.pathname.includes('federatedresources')) {
+    return <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" title="Federated Resource" canCreate={true} filterLabel="CRDs by name" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('FederatedResource', t) })} />;
+  } else {
+    return <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} filterLabel="CRDs by name" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  }
 };
