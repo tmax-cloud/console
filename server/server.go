@@ -50,6 +50,7 @@ const (
 	k8sProxyEndpoint          = "/api/kubernetes/"
 	prometheusProxyEndpoint   = "/api/prometheus"
 	hypercloudProxyEndpoint   = "/api/hypercloud/"
+	jaegerProxyEndpoint       = "/api/jaeger/"
 	grafanaProxyEndpoint      = "/api/grafana/"
 	kialiProxyEndpoint        = "/api/kiali/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
@@ -112,6 +113,7 @@ type Server struct {
 	K8sClient             *http.Client
 	PrometheusProxyConfig *proxy.Config
 	HypercloudProxyConfig *proxy.Config
+	JaegerProxyConfig     *proxy.Config
 	GrafanaProxyConfig    *proxy.Config
 	KialiProxyConfig      *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
@@ -351,6 +353,14 @@ func (s *Server) HTTPHandler() http.Handler {
 		proxy.SingleJoiningSlash(s.BaseURL.Path, hypercloudProxyAPIPath),
 		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 			hypercloudProxy.ServeHTTP(w, r)
+		})),
+	)
+	jaegerProxyAPIPath := jaegerProxyEndpoint
+	jaegerProxy := proxy.NewProxy(s.JaegerProxyConfig)
+	handle(jaegerProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, jaegerProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			jaegerProxy.ServeHTTP(w, r)
 		})),
 	)
 	// NOTE: 여기까지
