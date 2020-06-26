@@ -253,7 +253,7 @@ class ListDropdown_ extends React.Component {
 
     // Namespace Role Binding 생성일 때 Cluster Role이랑 Role 서비스 둘 다 오류일 때만 에러 표시되도록
     if (resources.hasOwnProperty('Role') && resources.hasOwnProperty('ClusterRole')) {
-      if (resources.Role.loaded === false && resources.ClusterRole.loaded === false) {
+      if (resources.Role.loaded === false && resources.ClusterRole.loaded === false && loadError) {
         this.setState({
           title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
         });
