@@ -934,6 +934,76 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample'],
+    `
+    apiVersion: cdi.kubevirt.io/v1alpha1
+    kind: DataVolume
+    metadata:
+      name: sample-datavolume
+      namespace: default
+    spec:
+      source:
+        http:
+          url: 'https://download.cirros-cloud.net/contrib/0.3.0/cirros-0.3.0-i386-disk.img'
+      contentType: "archive"
+      pvc:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: "hdd-ceph-fs" 
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample2'],
+    `
+    apiVersion: cdi.kubevirt.io/v1alpha1
+    kind: DataVolume
+    metadata:
+      name: sample-datavolume
+      namespace: default
+    spec:
+      pvc:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: hdd-ceph-block
+        volumeMode: Block
+      source:
+        s3:
+          contentType: kubevirt
+          secretRef: ''
+          url: 'http://mybucket/virtual-disk-img' 
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample3'],
+    `
+    apiVersion: cdi.kubevirt.io/v1alpha1
+    kind: DataVolume
+    metadata:
+      name: sample-datavolume
+      namespace: default
+    spec:
+      source:
+        registry:
+          url: "xxx.xxx.xxx.xxx:xx"
+          secretRef: ""
+          certConfigMap: ""
+          contentType: "archive"
+      pvc:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: "hdd-ceph-fs"
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ServiceInstanceModel), 'default'],
     `
   apiVersion: servicecatalog.k8s.io/v1beta1
@@ -1178,6 +1248,23 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'resourcequotaclaim-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: ResourceQuotaClaim
+    metadata:
+      name: example-resourcequotaclaim
+      namespace: default
+    resourceName: example-resourceclaim
+    spec:
+      hard:
+        requests.cpu: '1'
+        requests.memory: 1Gi
+        limits.cpu: '2'
+        limits.memory: 2Gi
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.RoleBindingClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1
@@ -1344,14 +1431,64 @@ spec:
     kind: PipelineResource
     metadata:
       name: example-pipeline-resource-git
-      namespace: teespaceb2c
+      namespace: default
     spec:
       type: git
       params:
         - name: revision
           value: master
         - name: url
-          value: 'https://github.com/sample/git/url'
+          value: https://github.com/wizzbangcorp/wizzbang.git
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample2'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git
+      namespace: default
+    spec:
+      type: git
+      params:
+        - name: revision
+          value: sample_revision
+        - name: httpsProxy
+          value: "my-sample.proxy.com"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample3'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resources-image
+      namespace: default
+    spec:
+      type: image
+      params:
+        - name: url
+          value: gcr.io/staging-images/kritis
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample4'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git-description
+      namespace: default
+    spec:
+      type: git
+      description: description of the resource.
+      params:
+        - name: revision
+          value: master
+        - name: url     
+          value: https://github.com/wizzbangcorp/wizzbang.git
 `,
   )
   .setIn(
@@ -1525,23 +1662,48 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.RegistryModel), 'registry-sample'],
     `
-apiVersion: tmax.io/v1
-kind: Registry
-metadata:
-  name: example
-  namespace: default
-spec:
-  image: 'example/registry:b004'
-  loginId: example
-  loginPassword: example
-  service:
-    type: example
-  persistentVolumeClaim:
-    accessModes:
-      - example
-    storageSize: example
-    storageClassName: example  
+    apiVersion: tmax.io/v1
+    kind: Registry
+    metadata:
+      name: sample-registry
+      namespace: default
+    spec:
+      image: <image ip addr>:5000/registry:latest
+      description: default image registry
+      loginId: tmax
+      loginPassword: tmax123
+      service:
+         type: LoadBalancer
+      persistentVolumeClaim:
+         accessModes: [ReadWriteMany]
+         storageSize: 10Gi
+         storageClassName: csi-cephfs-sc
 `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.RegistryModel), 'registry-sample2'],
+    `
+    apiVersion: tmax.io/v1
+    kind: Registry
+    metadata:
+      name: sample-registry
+      namespace: default
+    spec:
+      image: <image ip addr>:5000/registry:latest
+      description: default image registry
+      loginId: tmax
+      loginPassword: tmax123
+      replicaSet:
+        nodeSelector:
+          kubernetes.io/hostname: worker01
+      service:
+         type: NodePort
+      persistentVolumeClaim:
+         accessModes: [ReadWriteMany]
+         storageSize: 10Gi
+         storageClassName: csi-cephfs-sc
+`,
+
   )
   .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
@@ -2479,87 +2641,61 @@ spec:
     `
     apiVersion: tmax.io/v1
     kind: TemplateInstance
-    metadata:
-      name: example-instance
+    metadata:    
+      name: gitlab-template-instance
       namespace: default
     spec:
       template:
         metadata:
-          name: example-template
+          name: gitlab-template
         parameters:
-        - description: Example Name.
-          displayName: Name
-          name: NAME
-          required: true
-          value: example-instance
-        - description: Example Image.
-          displayName: Image
-          name: IMAGE
-          required: true
-          value: example/image:version
+        - name: APP_NAME
+          value: gitlab-test-deploy
+        - name: NAMESPACE
+          value: default
+        - name: STORAGE 
+          value: 30Gi 
+        - name: SERVICE_TYPE 
+          value: LoadBalancer
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample2'],
     `
-    apiVersion: tmax.io/v1
-    kind: TemplateInstance
+apiVersion: tmax.io/v1
+kind: TemplateInstance
+metadata:
+  name: apache-cicd-template-instance
+  namespace: default
+spec:
+  template:
     metadata:
-      name: apache-cicd-template-instance
-      namespace: default
-    spec:
-      template:
-        metadata:
-          name: apache-cicd-template
-        parameters:
-        - name: APP_NAME
-          value: apache-sample-app
-        - name: NAMESPACE
-          value: default
-        - name: SERVICE_ACCOUNT_NAME
-          value: tutorial-service
-        - name: GIT_URL
-          value: https://github.com/microsoft/project-html-website
-        - name: GIT_REV
-          value: master
-        - name: IMAGE_URL
-          value: 192.168.6.110:5000/apache-sample:latest
-        - name: WAS_PORT
-          value: '8080'
-        - name: SERVICE_TYPE
-          value: LoadBalancer
-        - name: PACKAGE_SERVER_URL
-          value: ''
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.TemplateInstanceModel), 'templateinstance-sample3'],
-    `
-    apiVersion: tmax.io/v1
-    kind: TemplateInstance
-    metadata:
-      name: mysql-template-instance
-      namespace: default
-    spec:
-      template:
-        metadata:
-          name: mysql-template
-        parameters:
-        - name: APP_NAME
-          value: mysql-sample-app
-        - name: NAMESPACE
-          description: A Namespace Name
-          value: default
-        - name: DB_STORAGE
-          value: "20Gi"
-        - name: SERVICE_TYPE
-          value: ClusterIP
-        - name: MYSQL_USER
-          value: mysqluser
-        - name: MYSQL_PASSWORD
-          value: mysqlpassword
-        - name: MYSQL_DATABASE
-          value: mysqldb
+      name: apache-cicd-template
+    parameters:
+    - name: APP_NAME
+      value: apache-sample-app
+    - name: NAMESPACE
+      value: default
+    - name: SERVICE_ACCOUNT_NAME
+      value: tutorial-service
+    - name: GIT_URL
+      value: https://github.com/microsoft/project-html-website
+    - name: GIT_REV
+      value: master
+    - name: IMAGE_URL
+      value: xxx.xxx.xxx.xxx:5000/apache-sample:latest
+    - name: REGISTRY_SECRET
+      value: ''
+    - name: REGISTRY_ID
+      value: ''
+    - name: REGISTRY_PW
+      value: ''
+    - name: WAS_PORT
+      value: 8080
+    - name: SERVICE_TYPE
+      value: LoadBalancer
+    - name: PACKAGE_SERVER_URL
+      value: ''
 `,
   )
   .setIn(
@@ -2783,64 +2919,121 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample'],
     `
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: example-deployment
+      namespace: default
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample2'],
     `
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
-metadata:
-  name: mysql2
-spec:
-  selector:
-    matchLabels:
-      app: mysql
-  strategy:
-    type: Recreate
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: example-deployment
+      namespace: default
       labels:
-        app: mysql
+        app: nginx
     spec:
-      containers:
-      - image: mysql:5.6
-        name: mysql
-        env:
-          # Use secret in real usage
-        - name: MYSQL_ROOT_PASSWORD
-          value: password
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-              claimName: mysql-pv-claim
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 3
+      minReadySeconds: 10
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: example-deployment
+      namespace: default
+      labels:
+        app: nginx
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 3
+      strategy:
+        rollingUpdate:
+          maxSurge: 30%
+          maxUnavailable: 30%
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: example-deployment
+      namespace: default
+      labels:
+        app: nginx
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
+            volumeMounts:
+            - mountPath: /example_data
+              name: example-volume
+          volumes:
+          - name: example-volume
+            hostPath:
+              path: /example
+              type: Directory
 `,
   )
   .setIn(
@@ -3085,6 +3278,83 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteOnce
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hdd-ceph-fs
+      hostPath:
+        path: "/tmp"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample2'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadOnlyMany
+      persistentVolumeReclaimPolicy: Retain
+      storageClassName: hdd-ceph-fs
+      hostPath:
+        path: "/tmp"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample3'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteMany
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hdd-ceph-block
+      volumeMode: Block
+      hostPath:
+        path: "/tmp"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeModel), 'persistentvolume-sample4'],
+    `
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: example-PersistentVolume
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteOnce
+      persistentVolumeReclaimPolicy: Recycle
+      storageClassName: hdd-ceph-fs
+      mountOptions:
+        - hard
+        - nfsvers=4.1
+      nfs:
+        path: /tmp
+        server: xxx.xxx.xxx.xxx
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.PersistentVolumeModel), 'default'],
     `
 apiVersion: v1
@@ -3130,20 +3400,20 @@ spec:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
     metadata:
-      name: sample-cpu-scaling
+      name: example-hpa
       namespace: default
     spec:
       scaleTargetRef:
         apiVersion: apps/v1
         kind: Deployment
-        name: sample-name
+        name: example-deployment
       minReplicas: 1
       maxReplicas: 3
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            targetAverageUtilization: 50
+      - type: Resource
+        resource:
+          name: cpu
+          targetAverageUtilization: 50
 `,
   )
   .setIn(
@@ -3152,19 +3422,20 @@ spec:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
     metadata:
-      name: sample-mem-scaling
+      name: example-hpa
       namespace: default
     spec:
       scaleTargetRef:
+        apiVersion: apps/v1
         kind: Deployment
-        name: sample-name
+        name: example-deployment
       minReplicas: 1
-      maxReplicas: 3
-      metrics:
-        - type: Resource
-          resource:
-            name: memory
-            targetAverageValue: 1G
+      maxReplicas: 5
+      metrics:              
+      - type: Resource
+        resource:
+          name: memory
+          targetAverageValue: 100Mi
 `,
   )
   .setIn(
@@ -3274,6 +3545,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: test-ingress
+  namespace: sample1-name
 spec:
   backend:
     serviceName: testsvc
@@ -3287,6 +3559,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: example
+  namespace: default
 spec:
   selector: {}
   template:
@@ -3303,90 +3576,80 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.JobModel), 'job-sample'],
     `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  template:
+    apiVersion: batch/v1
+    kind: Job
     metadata:
-      name: pi
+      name: example-job
+      namespace: default
     spec:
-      containers:
-        - name: pi
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: perl
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          restartPolicy: Never
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.JobModel), 'job-sample2'],
     `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  selector: {}
-  template:
+    apiVersion: batch/v1
+    kind: Job
     metadata:
-      name: pi
+      name: example-job
+      namespace: default
     spec:
-      containers:
-        - name: pi
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(100)
-        - name: pi2
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(200)
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: perl
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          restartPolicy: Never
+      backoffLimit: 4
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.JobModel), 'job-sample3'],
     `
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  completions: 3
-  parallelism: 3
-  selector: {}
-  template:
+    apiVersion: batch/v1
+    kind: Job
     metadata:
-      name: pi
+      name: example-job
+      namespace: default
     spec:
-      containers:
-        - name: pi
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(100)
-        - name: pi2
-          image: perl
-          command:
-            - perl
-            - '-Mbignum=bpi'
-            - '-wle'
-            - print bpi(200)
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: perl
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          restartPolicy: Never
+      activeDeadlineSeconds:: 10
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.JobModel), 'job-sample4'],
+    `
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: example-job
+      namespace: default
+    spec:
+      completions: 3
+      parallelism: 3
+      template:
+        spec:
+          containers:
+          - name: pi1
+            image: perl:latest
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(100)"]
+          - name: pi2
+            image: perl:latest
+            command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(200)"]
+          restartPolicy: Never
 `,
   )
   .setIn(
@@ -3624,55 +3887,99 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample'],
     `
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: example
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: hello-hypercloud
-  template:
+    apiVersion: apps/v1
+    kind: DaemonSet
     metadata:
-      labels:
-        app: hello-hypercloud
+      name: example-daemonset
+      namespace: default
     spec:
-      containers:
-        - name: hello-hypercloud
-          image: hypercloud/hello-hypercloud
-          ports:
-            - containerPort: 8080
+      selector:
+        matchLabels:
+          app: example-daemonset
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 200Mi
+                requests:
+                  cpu: 100m
+                  memory: 200Mi
+              ports:
+                - containerPort: 80
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample2'],
     `
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: resource-example
-  namespace: demo-ns
-spec:
-  selector:
-    matchLabels:
-      name: sample-fluentd
-  template:
+    apiVersion: apps/v1
+    kind: DaemonSet
     metadata:
-      labels:
-        name: sample-fluentd
+      name: example-daemonset
+      namespace: default
     spec:
-      containers:
-      - name: hello-fluentd
-        image: gcr.io/google-containers/fluentd-elasticsearch:1.20
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
+      selector:
+        matchLabels:
+          app: example-daemonset
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          tolerations:
+          # this toleration is to have the daemonset runnable on master nodes
+          # remove it if your masters can't run pods
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 200Mi
+                requests:
+                  cpu: 100m
+                  memory: 200Mi
+              ports:
+                - containerPort: 80
 `,
   )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      name: example-daemonset
+      namespace: default
+    spec:
+      selector:
+        matchLabels:
+          app: example-daemonset
+      updateStrategy:
+        type: RollingUpdate
+      minReadySeconds: 3
+      revisionHistoryLimit: 100
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              ports:
+                - containerPort: 80
+`,
+  )
+
   .setIn(
     [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'],
     `
@@ -3692,6 +3999,83 @@ spec:
       release: "stable"
     matchExpressions:
       - {key: environment, operator: In, values: [dev]}
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: hdd-ceph-fs
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample2'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: hdd-ceph-block
+      volumeMode: Block
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample3'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+      volumeName: sample-pv
+      storageClassName: storage-sample
+      volumeMode: Filesystem
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'persistentvolumeclaim-sample4'],
+    `
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: sample
+      namespace: default
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+       matchExpressions:
+         - key: localstorage
+           operator: In
+           values:
+            - hdd
+      storageClassName: storage-sample 
+      volumeMode: Filesystem
 `,
   )
   .setIn(
@@ -3786,42 +4170,169 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample'],
     `
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  serviceName: nginx
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: StatefulSet
     metadata:
-      labels:
-        app: nginx
+      name: example-statefulset
+      namespace: default
     spec:
-      terminationGracePeriodSeconds: 10
-      containers:
-        - name: nginx
-          image: 'gcr.io/google_containers/nginx-slim:0.8'
-          ports:
-            - containerPort: 80
-              name: web
-          volumeMounts:
-            - name: www
-              mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
-    - metadata:
-        name: www
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: my-storage-class
-        resources:
-          requests:
-            storage: 1Gi
+      serviceName: example-statefulset
+      replicas: 3
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: nginx
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample2'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      podManagementPolicy: Parallel
+      replicas: 3
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      replicas: 3
+      revisionHistoryLimit: 15
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      replicas: 3
+      updateStrategy:
+        type: RollingUpdate
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
 `,
   )
   .setIn(
@@ -3880,9 +4391,9 @@ metadata:
   name: example
   namespace: default
 type: Opaque
-Data:
+stringData:
   language: java
-  version: 5
+  version: "5"
 `,
   )
   .setIn(
@@ -3892,6 +4403,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: example
+  namespace: default
 spec:
   replicas: 2
   selector:
@@ -3919,7 +4431,32 @@ spec:
       name: example
       namespace: default
     spec:
-      replicas: 2
+      selector:
+        matchLabels:
+          app: hello-hypercloud
+      template:
+        metadata:
+          name: hello-hypercloud
+          labels:
+            app: hello-hypercloud
+        spec:
+          containers:
+            - name: hello-hypercloud
+              image: hypercloud/hello-hypercloud  
+              ports:
+                - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample2'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 3
       selector:
         matchLabels:
           app: hello-hypercloud
@@ -3934,6 +4471,58 @@ spec:
               image: hypercloud/hello-hypercloud
               ports:
                 - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 3
+      minReadySeconds: 10
+      selector:
+        matchLabels:
+          app: hello-hypercloud
+      template:
+        metadata:
+          name: hello-hypercloud
+          labels:
+            app: hello-hypercloud
+        spec:
+          containers:
+            - name: hello-hypercloud
+              image: hypercloud/hello-hypercloud
+              ports:
+                - containerPort: 8080
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSetModel), 'replicaset-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      replicas: 2
+      selector:
+        matchExpressions:
+          - {key: tier, operator: In, values: [example1]}
+      template:
+        metadata:
+          labels:
+            tier: example1
+        spec:
+          containers:
+          - name: hello-hypercloud
+            image: hypercloud/hello-hypercloud
+            ports:
+            - containerPort: 8080
 `,
   )
   .setIn(

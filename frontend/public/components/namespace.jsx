@@ -56,31 +56,50 @@ const NamespaceHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.name">
+      <ColHead {...props} className="col-sm-3 col-xs-6" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-sm-4 col-xs-6" sortField="status.phase">
+      <ColHead {...props} className="col-sm-3 col-xs-6" sortField="status.phase">
         {t('CONTENT:STATUS')}
       </ColHead>
-      <ColHead {...props} className="col-sm-4 hidden-xs" sortField="metadata.labels">
+      <ColHead {...props} className="col-sm-3 col-xs-6" sortField="metadata.labels.mailSendDate">
+        {t('CONTENT:TRIALTIME')}
+      </ColHead>
+      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.labels">
         {t('CONTENT:LABELS')}
       </ColHead>
     </ListHeader>
   );
 };
 
-const NamespaceRow = ({ obj: ns }) => (
-  <ResourceRow obj={ns}>
-    <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
-      <ResourceCog actions={nsMenuActions} kind="Namespace" resource={ns} />
-      <ResourceLink kind="Namespace" name={ns.metadata.name} title={ns.metadata.uid} />
-    </div>
-    <div className="col-sm-4 col-xs-6 co-break-word">{ns.status.phase}</div>
-    <div className="col-sm-4 hidden-xs">
-      <LabelList kind="Namespace" labels={ns.metadata.labels} />
-    </div>
-  </ResourceRow>
-);
+const TrialTime = ns => {
+  console.log(ns.metadata.labels);
+  if (ns.metadata.labels && ns.metadata.labels.trial) {
+    let createTime = new Date(ns.metadata.creationTimestamp.iMillis);
+    let endTime = ns.metadata.labels.period ? new Date(ns.metadata.creationTimestamp.iMillis + 30 * 1000 * 60 * 60 * 24 * Number(ns.metadata.labels.period)) : new Date(ns.metadata.creationTimestamp.iMillis + 30 * 1000 * 60 * 60 * 24);
+    let start = String(createTime.getFullYear()) + '-' + String(createTime.getMonth() + 1) + '-' + String(createTime.getDate());
+    let end = ns.metadata.labels.deletionDate ? ns.metadata.labels.deletionDate.split('T')[0] : String(endTime.getFullYear()) + '-' + String(endTime.getMonth() + 1) + '-' + String(endTime.getDate());
+    return `${start} ~ ${end}`;
+  }
+  return '';
+};
+
+const NamespaceRow = ({ obj: ns }) => {
+  let period = TrialTime(ns);
+  return (
+    <ResourceRow obj={ns}>
+      <div className="col-sm-3 col-xs-6 co-resource-link-wrapper">
+        <ResourceCog actions={nsMenuActions} kind="Namespace" resource={ns} />
+        <ResourceLink kind="Namespace" name={ns.metadata.name} title={ns.metadata.uid} />
+      </div>
+      <div className="col-sm-3 col-xs-6 co-break-word">{ns.status.phase}</div>
+      <div className="col-sm-3 col-xs-6 co-break-word">{period}</div>
+      <div className="col-sm-3 hidden-xs">
+        <LabelList kind="Namespace" labels={ns.metadata.labels} />
+      </div>
+    </ResourceRow>
+  );
+};
 
 export const NamespacesList = props => <List {...props} Header={NamespaceHeader} Row={NamespaceRow} />;
 export const NamespacesPage = props => {
@@ -373,7 +392,6 @@ class NamespaceDropdown_ extends React.Component {
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
 
     return loaded && <NamespaceSelectorComponent model={model} items={items} title={title} activeNamespace={activeNamespace} onChange={onChange} selectedKey={title} />;
-
   }
 }
 

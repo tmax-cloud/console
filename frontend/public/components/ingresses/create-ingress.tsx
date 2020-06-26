@@ -108,7 +108,6 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
             );
           }
         });
-        console.log(serviceNameList)
         let initPortList = serviceNameList[0].portList;
         if (serviceNameList.length === 0) {
           return;

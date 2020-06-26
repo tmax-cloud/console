@@ -33,6 +33,14 @@ const environmentComponent = props => {
 export const StatefulSetsList = props => <List {...props} Header={WorkloadListHeader} Row={Row} />;
 export const StatefulSetsPage = props => {
   const { t } = useTranslation();
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/statefulsets/new` : `/k8s/cluster/statefulsets/new/form`),
+  };
   return <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StatefulSet', t) })} />;
 };
 

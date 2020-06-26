@@ -1,86 +1,83 @@
-.pairs-list__port-field {
+.basic-single {
+    width: 100%;
 
-    .basic-single {
-        width: 100%;
+    .select__control {
+        border: 1px solid #bbb;
+        border-radius: 1px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        text-transform: none;
 
-        .select__control {
-            border: 1px solid #bbb;
-            border-radius: 1px;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-            text-transform: none;
-
-            &.select__control--is-focused {
-                border-color: #0088ce;
-                outline: 0;
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 136, 206, 0.6);
-            }
-
-            .select__value-container {
-                height: 100%;
-            }
-
-            .select__indicators {
-                .select__indicator-separator {
-                    display: none;
-                }
-
-                .select__indicator {
-                    padding: 0px;
-
-                    svg {
-                        width: 15px;
-                        height: 15px;
-                        color: black;
-                    }
-
-                }
-            }
+        &.select__control--is-focused {
+            border-color: #0088ce;
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 136, 206, 0.6);
         }
 
-        .select__menu {
-            margin: 0;
-            border: 1px solid black;
-            border-radius: unset;
+        .select__value-container {
+            height: 100%;
+        }
 
-            .select__menu-list {
-                padding: 0;
+        .select__indicators {
+            .select__indicator-separator {
+                display: none;
+            }
 
-                &:hover>*:not(:hover) {
+            .select__indicator {
+                padding: 0px;
+
+                svg {
+                    width: 15px;
+                    height: 15px;
+                    color: black;
+                }
+
+            }
+        }
+    }
+
+    .select__menu {
+        margin: 0;
+        border: 1px solid black;
+        border-radius: unset;
+
+        .select__menu-list {
+            padding: 0;
+
+            &:hover>*:not(:hover) {
+                background-color: #ffffff;
+                color: #363636;
+                outline: unset;
+
+                &.select__option--is-selected {
                     background-color: #ffffff;
                     color: #363636;
                     outline: unset;
+                }
+            }
 
-                    &.select__option--is-selected {
-                        background-color: #ffffff;
-                        color: #363636;
-                        outline: unset;
-                    }
+            .select__option {
+                height: 20px;
+                padding: 0 8px;
+                white-space: nowrap;
+                min-width: fit-content;
+
+                &.select__option--is-focused {
+                    background-color: #ffffff;
+                    color: #363636;
+                    outline: unset;
                 }
 
-                .select__option {
-                    height: 20px;
-                    padding: 0 8px;
-                    white-space: nowrap;
-                    min-width: fit-content;
+                &.select__option--is-selected {
+                    background-color: #1e90ff;
+                    color: #fff;
+                    outline: 2px solid black;
+                }
 
-                    &.select__option--is-focused {
-                        background-color: #ffffff;
-                        color: #363636;
-                        outline: unset;
-                    }
-
-                    &.select__option--is-selected {
-                        background-color: #1e90ff;
-                        color: #fff;
-                        outline: 2px solid black;
-                    }
-
-                    &:hover {
-                        background-color: #1e90ff;
-                        color: #fff;
-                        outline: 2px solid black;
-                    }
+                &:hover {
+                    background-color: #1e90ff;
+                    color: #fff;
+                    outline: 2px solid black;
                 }
             }
         }

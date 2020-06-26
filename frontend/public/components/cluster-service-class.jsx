@@ -13,10 +13,35 @@ const ClusterServiceClassHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-xs-6 col-sm-6" sortField="metadata.name">
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-sm-6 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.bindable"
+      >
+        {t('CONTENT:BINDABLE')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.externalName"
+      >
+        {t('CONTENT:EXTERNALNAME')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="spec.clusterServiceBrokerName"
+      >
+        {t('RESOURCE:CLUSTERSERVICEBROKER')}
+      </ColHead>
+      <ColHead
+        {...props}
+        className="col-sm-2 hidden-xs"
+        sortField="metadata.creationTimestamp"
+      >
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -28,11 +53,20 @@ const ClusterServiceClassRow = () =>
   function ClusterServiceClassRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
+        <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
           {/* <ResourceCog actions={menuActions} kind="ClusterServiceClass" resource={obj} /> */}
           <ResourceLink kind="ClusterServiceClass" name={obj.metadata.name} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-xs-2 col-sm-2 co-break-word">
+          {obj.spec.bindable ? 'True' : 'False'}
+        </div>
+        <div className="col-xs-2 col-sm-2 co-break-word">
+          {obj.spec.externalName}
+        </div>
+        <div className="col-xs-2 col-sm-2 co-break-word">
+          {obj.spec.clusterServiceBrokerName}
+        </div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
@@ -48,12 +82,22 @@ const Details = ({ obj: ClusterServiceClass }) => {
           <div className="col-sm-6">
             <ResourceSummary resource={ClusterServiceClass} />
           </div>
-          {/* {activeDeadlineSeconds && (
-                <React.Fragment>
-                  <dt>Active Deadline</dt>
-                  <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
-                </React.Fragment>
-              )} */}
+          <div className="col-sm-6">
+            <dl className="co-m-pane__details">
+              <dt>{t('CONTENT:BINDABLE')}</dt>
+              <dd>{ClusterServiceClass.spec.bindable ? 'True' : 'False'}</dd>
+              <dt>{t('CONTENT:EXTERNALNAME')}</dt>
+              <dd>{ClusterServiceClass.spec.externalName}</dd>
+              <dt> {t('RESOURCE:CLUSTERSERVICEBROKER')}</dt>
+              <dd>{ClusterServiceClass.spec.clusterServiceBrokerName}</dd>
+              {/* {activeDeadlineSeconds && (
+                    <React.Fragment>
+                      <dt>Active Deadline</dt>
+                      <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
+                    </React.Fragment>
+                  )} */}
+            </dl>
+          </div>
         </div>
       </div>
     </React.Fragment>
