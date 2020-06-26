@@ -14,4 +14,5 @@
     --hypercloud-endpoint=http://192.168.6.211:28677 \
     --prometheus-endpoint=http://192.168.6.196:30562/api \
     --grafana-endpoint=http://192.168.6.196:31527 \
+    --kiali-endpoint=http://192.168.6.196:31971 \
     --release-mode=true \

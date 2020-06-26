@@ -102,6 +102,9 @@ func main() {
 	// NOTE: Grafana 연동 추가 // 윤진수
 	fGrafanaEndpoint := fs.String("grafana-endpoint", "", "URL of the Grafana API server.")
 	// NOTE: 여기까지
+	// NOTE: kiali 연동 추가 // 윤진수
+	fKialiEndpoint := fs.String("kiali-endpoint", "", "URL of the KIALI Portal")
+	// NOTE: 여기까지
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -267,6 +270,12 @@ func main() {
 			Endpoint:        grafanaEndpoint,
 		}
 
+		// NOTE: kiali 추가 // 윤진수
+		kialiEndpoint := validateFlagIsURL("kiali-endpoint", *fKialiEndpoint)
+		srv.KialiProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        kialiEndpoint,
+		}
 		// NOTE: in-cluster인 경우 master token을 empty string으로 수정 // 정동민
 		srv.MasterToken = ""
 		// NOTE: 여기까지
@@ -348,6 +357,13 @@ func main() {
 			Endpoint:        grafanaEndpoint,
 		}
 		// NOTE: 여기까지 // 윤진수
+
+		// NOTE: kiali 추가 // 윤진수
+		kialiEndpoint := validateFlagIsURL("kiali-endpoint", *fKialiEndpoint)
+		srv.KialiProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        kialiEndpoint,
+		}
 
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)
 
