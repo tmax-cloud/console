@@ -15,4 +15,5 @@
     --prometheus-endpoint=http://192.168.6.196:30562/api \
     --grafana-endpoint=http://192.168.6.196:31527 \
     --kiali-endpoint=http://192.168.6.196:31971 \
+    --jaeger-endpoint=http://192.168.6.196:32602 \
     --release-mode=true \
