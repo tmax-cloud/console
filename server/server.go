@@ -13,6 +13,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -49,6 +50,8 @@ const (
 	k8sProxyEndpoint          = "/api/kubernetes/"
 	prometheusProxyEndpoint   = "/api/prometheus"
 	hypercloudProxyEndpoint   = "/api/hypercloud/"
+	grafanaProxyEndpoint      = "/api/grafana/"
+	kialiProxyEndpoint        = "/api/kiali/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
 )
 
@@ -109,6 +112,8 @@ type Server struct {
 	K8sClient             *http.Client
 	PrometheusProxyConfig *proxy.Config
 	HypercloudProxyConfig *proxy.Config
+	GrafanaProxyConfig    *proxy.Config
+	KialiProxyConfig      *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
@@ -358,6 +363,42 @@ func (s *Server) HTTPHandler() http.Handler {
 			authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 				// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
 				prometheusProxy.ServeHTTP(w, r)
+			})),
+		)
+	}
+
+	// NOTE: grafan proxy 등록 // 윤진수
+	if s.GrafanaProxyConfig != nil {
+		grafanaProxyAPIPath := grafanaProxyEndpoint
+		grafanaProxy := httputil.NewSingleHostReverseProxy(s.GrafanaProxyConfig.Endpoint)
+		handle(grafanaProxyAPIPath, http.StripPrefix(
+			proxy.SingleJoiningSlash(s.BaseURL.Path, grafanaProxyAPIPath),
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				grafanaProxy.ServeHTTP(w, r)
+			})),
+		)
+	}
+	// NOTE: 여기까지
+
+	// NOTE: kiali proxy 등록 // 윤진수
+	if s.KialiProxyConfig != nil {
+		kialiProxyAPIPath := kialiProxyEndpoint
+		// grafanaProxy := proxy.NewProxy(s.GrafanaProxyConfig)
+		// director := func(req *http.Request) {
+		// req.Header.Add("X-Forwarded-Host", req.Host)
+		// req.Header.Add("X-Origin-Host", origin.Host)
+		// req.Header.Add("X-Frame-Options", "sameorigin")
+		// req.Header.Add("X-Forwarded-For", req.RemoteAddr)
+		// req.Header.Add("X-Frame-Options", "allowall")
+		// req.URL.Scheme = "http"
+		// req.URL.Host = origin.Host
+		// }
+		// grafanaProxy := &httputil.ReverseProxy{Director: director}
+		kialiProxy := httputil.NewSingleHostReverseProxy(s.KialiProxyConfig.Endpoint)
+		handle(kialiProxyAPIPath, http.StripPrefix(
+			proxy.SingleJoiningSlash(s.BaseURL.Path, kialiProxyAPIPath),
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				kialiProxy.ServeHTTP(w, r)
 			})),
 		)
 	}

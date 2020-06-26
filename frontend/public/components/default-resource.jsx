@@ -62,7 +62,9 @@ export const DefaultList = props => {
 };
 DefaultList.displayName = DefaultList;
 
-export const DefaultPage = props => <ListPage {...props} ListComponent={DefaultList} canCreate={props.canCreate || _.get(kindObj(props.kind), 'crd')} />;
+export const DefaultPage = props => {
+  return <ListPage {...props} ListComponent={DefaultList} canCreate={true} />;
+};
 DefaultPage.displayName = 'DefaultPage';
 
 export const DefaultDetailsPage = props => {
