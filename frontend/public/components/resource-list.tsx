@@ -35,13 +35,15 @@ const ResourceListPage_ = connectToPlural((props: ResourceListPageProps) => {
   const ref = props.match.path.indexOf('customresourcedefinitions') === -1 ? referenceForModel(kindObj) : null;
   const componentLoader = resourceListPages.get(ref, () => Promise.resolve(DefaultPage));
 
-  return <div className="co-m-list">
-    {showGettingStarted && <OpenShiftGettingStarted />}
-    <Helmet>
-      <title>{kindObj.labelPlural}</title>
-    </Helmet>
-    <AsyncComponent loader={componentLoader} match={props.match} namespace={ns} kind={modelRef} fake={showGettingStarted} />
-  </div>;
+  return (
+    <div className="co-m-list">
+      {showGettingStarted && <OpenShiftGettingStarted />}
+      <Helmet>
+        <title>{kindObj.labelPlural}</title>
+      </Helmet>
+      <AsyncComponent loader={componentLoader} match={props.match} namespace={ns} kind={modelRef} fake={showGettingStarted} />
+    </div>
+  );
 });
 
 export const ResourceListPage = connectToFlags(FLAGS.PROJECTS_AVAILABLE, FLAGS.OPENSHIFT)(ResourceListPage_);
@@ -57,20 +59,20 @@ export const ResourceDetailsPage = connectToPlural((props: ResourceDetailsPagePr
   }
 
   const ref = props.match.path.indexOf('customresourcedefinitions') === -1 ? referenceForModel(kindObj) : null;
-  const componentLoader = props.match.params.appName
-    ? () => import('./cloud-services/clusterserviceversion-resource' /* webpackChunkName: "csv-resource" */).then(m => m.ClusterServiceVersionResourcesDetailsPage)
-    : resourceDetailPages.get(ref, () => Promise.resolve(DefaultDetailsPage));
+  const componentLoader = props.match.params.appName ? () => import('./cloud-services/clusterserviceversion-resource' /* webpackChunkName: "csv-resource" */).then(m => m.ClusterServiceVersionResourcesDetailsPage) : resourceDetailPages.get(ref, () => Promise.resolve(DefaultDetailsPage));
 
-  return <React.Fragment>
-    <Helmet>
-      <title>{`${name} · Details`}</title>
-    </Helmet>
-    <AsyncComponent loader={componentLoader} match={props.match} namespace={ns} kind={props.modelRef} name={name} />
-  </React.Fragment>;
+  return (
+    <React.Fragment>
+      <Helmet>
+        <title>{`${name} · Details`}</title>
+      </Helmet>
+      <AsyncComponent loader={componentLoader} match={props.match} namespace={ns} kind={props.modelRef} name={name} />
+    </React.Fragment>
+  );
 });
 
 export type ResourceListPageProps = {
-  flags: any,
+  flags: any;
   modelRef: K8sResourceKindReference;
   match: match<any>;
   kindObj: K8sKind;

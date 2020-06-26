@@ -97,7 +97,9 @@ class ResourceClusterLink extends NavLink {
   }
 
   get to() {
-    return `/k8s/cluster/${this.props.resource}`;
+    // console.log(this.props);
+
+    return this.props.name === 'Federated Resources' ? `/k8s/cluster/${this.props.resource}?group=types.kubefed.io` : `/k8s/cluster/${this.props.resource}`;
   }
 }
 
@@ -266,10 +268,10 @@ class NavSection_ extends React.Component {
           {!href ? (
             text
           ) : (
-              <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
-                {text}
-              </Link>
-            )}
+            <Link className="navigation-container__section__title__link" to={href} onClick={this.open}>
+              {text}
+            </Link>
+          )}
         </div>
         {Children && (
           <ul className="navigation-container__list" style={{ maxHeight }}>
@@ -289,6 +291,7 @@ const Sep = () => <div className="navigation-container__section__separator" />;
 const searchStartsWith = ['search'];
 const rolesStartsWith = ['roles', 'clusterroles'];
 const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
+// const federatedresourceStartsWith = ['federatednamespaces', 'federateddeployments'];
 const imagestreamsStartsWith = ['imagestreams', 'imagestreamtags'];
 const clusterSettingsStartsWith = ['settings/cluster', 'settings/ldap'];
 
@@ -400,7 +403,9 @@ class Nav extends React.Component {
               <HrefLink href="/status" name={t('RESOURCE:STATUS')} activePath="/status/" onClick={this.close} />
               <HrefLink href="/search" name={t('RESOURCE:SEARCH')} onClick={this.close} startsWith={searchStartsWith} />
               <ResourceNSLink resource="events" name={t('RESOURCE:EVENT')} onClick={this.close} />
+              <HrefLink href="/grafana" name={t('RESOURCE:DASHBOARD')} />
             </NavSection>
+
             {/* Service Catalog 전체 추가 */}
             <NavSection text={t('RESOURCE:SERVICECATALOG')} icon="pficon pficon-catalog">
               <ResourceNSLink resource="servicebrokers" name={ResourcePlural('ServiceBroker', t)} onClick={this.close} />
@@ -416,6 +421,58 @@ class Nav extends React.Component {
               <ResourceNSLink resource="templateinstances" name={ResourcePlural('TemplateInstance', t)} onClick={this.close} />
             </NavSection>
 
+            <NavSection text={t('RESOURCE:FEDERATION')} icon="pficon pficon-catalog">
+              <ResourceNSLink resource="federationclusters" name={t('RESOURCE:KUBEFEDCLUSTER')} onClick={this.close} />
+              <ResourceNSLink resource="federationconfigs" name={t('RESOURCE:KUBEFEDCONFIG')} onClick={this.close} />
+              <ResourceNSLink resource="federatedtypeconfigs" name={t('RESOURCE:FEDERATEDTYPECONFIG')} onClick={this.close} />
+              <ResourceClusterLink resource="federatedresources" name={t('RESOURCE:FEDERATEDRESOURCE')} onClick={this.close} />
+            </NavSection>
+
+            <NavSection text={t('RESOURCE:FEDERATEDWORKLOAD')} icon="fa fa-briefcase">
+              <ResourceNSLink resource="replicaschedulingpreferences" name={t('RESOURCE:REPLICASCHEDULINGPREFERENCE')} onClick={this.close} />
+            </NavSection>
+
+            <NavSection text={t('RESOURCE:MULTICLUSTERNETWORK')} icon="pficon-network">
+              <ResourceNSLink resource="dnsendpoints" name={t('RESOURCE:DNSENDPOINT')} onClick={this.close} />
+              <ResourceNSLink resource="domains" name={t('RESOURCE:DOMAIN')} onClick={this.close} />
+              <ResourceNSLink resource="ingressdnsrecords" name={t('RESOURCE:INGRESSDNSRECORD')} onClick={this.close} />
+              <ResourceNSLink resource="servicednsrecords" name={t('RESOURCE:SERVICEDNSRECORD')} onClick={this.close} />
+            </NavSection>
+
+            <NavSection text={t('RESOURCE:CLUSTERMANAGEMENT')} icon="fa fa-database">
+              <ResourceNSLink resource="clusters" name={t('RESOURCE:CLUSTER')} onClick={this.close} />
+              <ResourceNSLink resource="machinedeployments" name={t('RESOURCE:MACHINEDEPLOYMENT')} onClick={this.close} />
+              {/* <ResourceNSLink resource="machinehealthchecks" name={t('RESOURCE:MACHINEHEALTHCHECK')} onClick={this.close} /> */}
+              <ResourceNSLink resource="machines" name={t('RESOURCE:MACHINE')} onClick={this.close} />
+              <ResourceNSLink resource="machinesets" name={t('RESOURCE:MACHINESET')} onClick={this.close} />
+              <ResourceNSLink resource="kubeadmcontrolplanes" name={t('RESOURCE:KUBEADMCONTROLPLANE')} onClick={this.close} />
+              <ResourceNSLink resource="kubeadmconfigtemplates" name={t('RESOURCE:KUBEADMCONFIGTEMPLATE')} onClick={this.close} />
+            </NavSection>
+
+            <NavSection text={t('RESOURCE:BAREMETALMANAGEMENT')} icon="pficon pficon-build">
+              <ResourceClusterLink resource="baremetalclusters" name={t('RESOURCE:METAL3CLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="baremetalmachines" name={t('RESOURCE:METAL3MACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="baremetalmachinetemplates" name={t('RESOURCE:METAL3MACHINETEMPLATE')} onClick={this.close} />
+            </NavSection>
+
+            <NavSection text={t('RESOURCE:AWSMANAGEMENT')} icon="fa fa-shield">
+              <ResourceNSLink resource="awsclusters" name={t('RESOURCE:AWSCLUSTER')} onClick={this.close} />
+              <ResourceNSLink resource="awsmachines" name={t('RESOURCE:AWSMACHINE')} onClick={this.close} />
+              <ResourceNSLink resource="awsmachinetemplates" name={t('RESOURCE:AWSMACHINETEMPLATE')} onClick={this.close} />
+            </NavSection>
+
+            {/* <NavSection text={t('RESOURCE:AZUREMANAGEMENT')} icon="pficon pficon-process-automation">
+              <ResourceClusterLink resource="azureclusters" name={t('RESOURCE:AZURECLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="azuremachines" name={t('RESOURCE:AZUREMACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="azuremachinetemplates" name={t('RESOURCE:AZUREMACHINETEMPLATE')} onClick={this.close} />
+            </NavSection> */}
+
+            {/* <NavSection text={t('RESOURCE:GCPMANAGEMENT')} icon="pficon pficon-image">
+              <ResourceClusterLink resource="gcpclusters" name={t('RESOURCE:GCPCLUSTER')} onClick={this.close} />
+              <ResourceClusterLink resource="gcpmachines" name={t('RESOURCE:GCPMACHINE')} onClick={this.close} />
+              <ResourceClusterLink resource="gcpmachinetemplates" name={t('RESOURCE:GCPMACHINETEMPLATE')} onClick={this.close} />
+            </NavSection> */}
+
             {/* <NavSection required={FLAGS.OPERATOR_LIFECYCLE_MANAGER} text="Operators" img={operatorImg} activeImg={operatorActiveImg} >
             <ResourceNSLink model={ClusterServiceVersionModel} resource={ClusterServiceVersionModel.plural} name="Cluster Service Versions" onClick={this.close} />
             <Sep />
@@ -424,8 +481,21 @@ class Nav extends React.Component {
             <ResourceNSLink model={InstallPlanModel} resource={InstallPlanModel.plural} name="Install Plans" onClick={this.close} />
           </NavSection> */}
 
+            {/* Service Mesh 전체 추가 */}
+            {/* <NavSection text={t('RESOURCE:SERVICEMESH')} icon="pficon pficon-catalog">
+              <ResourceNSLink resource="virtualservices" name={ResourcePlural('VirtualService', t)} onClick={this.close} />
+              <ResourceNSLink resource="destinationrules" name={ResourcePlural('DestinationRule', t)} onClick={this.close} />
+              <ResourceNSLink resource="envoyfilters" name={ResourcePlural('EnvoyFilter', t)} onClick={this.close} />
+              <ResourceNSLink resource="gateways" name={ResourcePlural('Gateway', t)} onClick={this.close} />
+              <ResourceNSLink resource="sidecars" name={ResourcePlural('Sidecar', t)} onClick={this.close} />
+              <ResourceNSLink resource="serviceentries" name={ResourcePlural('ServiceEntry', t)} onClick={this.close} />
+              <ResourceNSLink resource="requestauthentications" name={ResourcePlural('RequestAuthentication', t)} onClick={this.close} />
+              <ResourceNSLink resource="peerauthentications" name={ResourcePlural('PeerAuthentication', t)} onClick={this.close} />
+              <ResourceNSLink resource="authorizationpolicies" name={ResourcePlural('AuthorizationPolicy', t)} onClick={this.close} />
+            </NavSection> */}
+
             {/* WORKLOAD  */}
-            <NavSection text={t('RESOURCE:WORKLOAD')} icon="fa fa-briefcase">
+            {/* <NavSection text={t('RESOURCE:WORKLOAD')} icon="fa fa-briefcase">
               <ResourceNSLink resource="pods" name={ResourcePlural('Pod', t)} onClick={this.close} />
               <ResourceNSLink resource="deployments" name={ResourcePlural('Deployment', t)} onClick={this.close} />
               <ResourceNSLink resource="replicasets" name={ResourcePlural('ReplicaSet', t)} onClick={this.close} />
@@ -437,14 +507,14 @@ class Nav extends React.Component {
               <ResourceNSLink resource="configmaps" name={ResourcePlural('ConfigMap', t)} onClick={this.close} />
               <ResourceNSLink resource="secrets" name={ResourcePlural('Secret', t)} onClick={this.close} />
               {/* <ResourceNSLink resource="replicationcontrollers" name="레플리케이션 컨트롤러" onClick={this.close} /> */}
-              <ResourceNSLink resource="jobs" name={ResourcePlural('Job', t)} onClick={this.close} />
-              <ResourceNSLink resource="cronjobs" name={ResourcePlural('CronJob', t)} onClick={this.close} />
-              {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-              {/* <Sep /> */}
-            </NavSection>
+            {/* <ResourceNSLink resource="jobs" name={ResourcePlural('Job', t)} onClick={this.close} />
+              <ResourceNSLink resource="cronjobs" name={ResourcePlural('CronJob', t)} onClick={this.close} /> */}
+            {/* <ResourceNSLink resource="deploymentconfigs" name={DeploymentConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
+            {/* <Sep /> */}
+            {/* </NavSection> */}
 
             {/* Service Mesh 전체 추가 */}
-            <NavSection text={t('RESOURCE:SERVICEMESH')} icon="fa fa-connectdevelop">
+            {/* <NavSection text={t('RESOURCE:SERVICEMESH')} icon="fa fa-connectdevelop">
               <ResourceNSLink resource="virtualservices" name={ResourcePlural('VirtualService', t)} onClick={this.close} />
               <ResourceNSLink resource="destinationrules" name={ResourcePlural('DestinationRule', t)} onClick={this.close} />
               <ResourceNSLink resource="envoyfilters" name={ResourcePlural('EnvoyFilter', t)} onClick={this.close} />
@@ -454,21 +524,21 @@ class Nav extends React.Component {
               <ResourceNSLink resource="requestauthentications" name={ResourcePlural('RequestAuthentication', t)} onClick={this.close} />
               <ResourceNSLink resource="peerauthentications" name={ResourcePlural('PeerAuthentication', t)} onClick={this.close} />
               <ResourceNSLink resource="authorizationpolicies" name={ResourcePlural('AuthorizationPolicy', t)} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
-            <NavSection text={t('RESOURCE:NETWORK')} icon="pficon pficon-network">
-              <ResourceNSLink resource="ingresses" name={ResourcePlural('Ingress', t)} onClick={this.close} />
-              <ResourceNSLink resource="services" name={ResourcePlural('Service', t)} onClick={this.close} />
-              {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
-            </NavSection>
+            {/* <NavSection text={t('RESOURCE:NETWORK')} icon="pficon pficon-network"> */}
+            {/* <ResourceNSLink resource="ingresses" name={ResourcePlural('Ingress', t)} onClick={this.close} /> */}
+            {/* <ResourceNSLink resource="services" name={ResourcePlural('Service', t)} onClick={this.close} /> */}
+            {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
+            {/* </NavSection> */}
 
-            <NavSection text={t('RESOURCE:STORAGE')} icon="fa fa-database">
-              {<ResourceClusterLink resource="storageclasses" name={ResourcePlural('StorageClass', t)} onClick={this.close} />}
-              {/* data volume 추가 */}
-              <ResourceNSLink resource="datavolumes" name={ResourcePlural('DataVolume', t)} onClick={this.close} />
+            {/* <NavSection text={t('RESOURCE:STORAGE')} icon="fa fa-database">
+              {<ResourceClusterLink resource="storageclasses" name={ResourcePlural('StorageClass', t)} onClick={this.close} />} */}
+            {/* data volume 추가 */}
+            {/* <ResourceNSLink resource="datavolumes" name={ResourcePlural('DataVolume', t)} onClick={this.close} />
               <ResourceNSLink resource="persistentvolumeclaims" name={ResourcePlural('PersistentVolumeClaim', t)} onClick={this.close} />
               <ResourceClusterLink resource="persistentvolumes" name={ResourcePlural('PersistentVolume', t)} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
             {/* <NavSection text="Builds" icon="pficon pficon-build">
             <ResourceNSLink resource="buildconfigs" name={BuildConfigModel.labelPlural} onClick={this.close} required={FLAGS.OPENSHIFT} />
@@ -479,8 +549,8 @@ class Nav extends React.Component {
             {/* <MonitoringNavSection closeMenu={this.close} /> */}
 
             {/* CI/CD 전체 추가 */}
-            <NavSection text={t('RESOURCE:CICD')} icon="pficon pficon-process-automation">
-              <ResourceNSLink resource="tasks" name={ResourcePlural('Task', t)} onClick={this.close} />
+            {/* <NavSection text={t('RESOURCE:CICD')} icon="pficon pficon-process-automation"> */}
+            {/* <ResourceNSLink resource="tasks" name={ResourcePlural('Task', t)} onClick={this.close} />
               <ResourceNSLink resource="taskruns" name={ResourcePlural('TaskRun', t)} onClick={this.close} />
               <ResourceNSLink resource="pipelines" name={ResourcePlural('Pipeline', t)} onClick={this.close} />
               <ResourceNSLink resource="pipelineruns" name={ResourcePlural('PipelineRun', t)} onClick={this.close} />
@@ -489,7 +559,7 @@ class Nav extends React.Component {
             </NavSection>
 
             {/* AI Ops 전체 추가*/}
-            <NavSection text={t('RESOURCE:AIOPS')} icon="pficon pficon-builder-image">
+            {/* <NavSection text={t('RESOURCE:AIOPS')} icon="pficon pficon-builder-image">
               <ResourceNSLink resource="notebooks" name={ResourcePlural('Notebook', t)} onClick={this.close} />
               <ResourceNSLink resource="experiments" name={ResourcePlural('Experiment', t)} onClick={this.close} />
               <ResourceNSLink resource="inferenceservices" name={ResourcePlural('InferenceService', t)} onClick={this.close} />
@@ -500,22 +570,21 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:SECURITY')} icon="fa fa-shield">
               {<ResourceClusterLink resource="podsecuritypolicies" name={ResourcePlural('PodSecurityPolicy', t)} onClick={this.close} />}
               <ResourceNSLink resource="networkpolicies" name={ResourcePlural('NetworkPolicy', t)} onClick={this.close} />
-            </NavSection>
+            </NavSection> */}
 
-            <NavSection text={t('RESOURCE:IMAGE')} icon="pficon pficon-image">
+            {/* <NavSection text={t('RESOURCE:IMAGE')} icon="pficon pficon-image">
               <ResourceNSLink resource="registries" name={ResourcePlural('Registry', t)} onClick={this.close} />
-              {/* <ResourceNSLink resource="image" name="이미지" onClick={this.close} /> */}
-            </NavSection>
+            </NavSection> */}
 
             <NavSection text={t('RESOURCE:MANAGEMENT')} icon="pficon pficon-services">
               {/* {!isAdmin && <ResourceNSLink resource="controllerrevisions" name="Controller Revisions" onClick={this.close} />} */}
               {/* {isAdmin && <ResourceClusterLink resource="projects" name="프로젝트" onClick={this.close} />} */}
               {/* <ResourceClusterLink resource="projects" name="Projects" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
               <ResourceClusterLink resource="namespaces" name={ResourcePlural('Namespace', t)} onClick={this.close} />
-              <ResourceClusterLink resource="namespaceclaims" name={ResourcePlural('NamespaceClaim', t)} onClick={this.close} />
-              {<ResourceNSLink resource="limitranges" name={ResourcePlural('LimitRange', t)} onClick={this.close} />}
+              {/* <ResourceClusterLink resource="namespaceclaims" name={ResourcePlural('NamespaceClaim', t)} onClick={this.close} /> */}
+              {/* {<ResourceNSLink resource="limitranges" name={ResourcePlural('LimitRange', t)} onClick={this.close} />} */}
               <ResourceNSLink resource="resourcequotas" name={ResourcePlural('ResourceQuota', t)} onClick={this.close} />
-              <ResourceNSLink resource="resourcequotaclaims" name={ResourcePlural('ResourceQuotaClaim', t)} onClick={this.close} />
+              {/* <ResourceNSLink resource="resourcequotaclaims" name={ResourcePlural('ResourceQuotaClaim', t)} onClick={this.close} /> */}
               <ResourceClusterLink resource="customresourcedefinitions" name={ResourcePlural('CustomResourceDefinition', t)} onClick={this.close} />
             </NavSection>
 
@@ -526,9 +595,10 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:AUTH')} icon="fa fa-id-card-o">
               {/* {isAdmin && <ResourceClusterLink resource="clusterroles" name="클러스터 롤" onClick={this.close} />}
               {isAdmin && <ResourceClusterLink resource="clusterrolebindings" name="클러스터 롤 바인딩" onClick={this.close} />} */}
-              <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} startsWith={rolesStartsWith} onClick={this.close} />
+              {/* <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} startsWith={rolesStartsWith} onClick={this.close} /> */}
+              <ResourceNSLink resource="roles" name={ResourcePlural('Role', t)} onClick={this.close} />
               <ResourceNSLink resource="rolebindings" name={ResourcePlural('RoleBinding', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
-              <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} />
+              {/* <ResourceNSLink resource="rolebindingclaims" name={ResourcePlural('RoleBindingClaim', t)} onClick={this.close} startsWith={rolebindingsStartsWith} /> */}
               {<ResourceClusterLink resource="users" name={ResourcePlural('User', t)} onClick={this.close} />}
               {<ResourceClusterLink resource="usergroups" name={ResourcePlural('Usergroup', t)} onClick={this.close} />}
               {<ResourceClusterLink resource="usersecuritypolicies" name={ResourcePlural('Usersecuritypolicy', t)} onClick={this.close} />}

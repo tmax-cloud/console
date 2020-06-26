@@ -12,10 +12,372 @@ export const yamlTemplates = ImmutableMap<GroupVersionKind, ImmutableMap<string,
   .setIn(
     ['DEFAULT', 'default'],
     `
-  apiVersion: ''
-  kind: ''
-  metadata:
-    name: example
+apiVersion: ''
+kind: ''
+metadata:
+  name: example
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedNamespaceModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedNamespace
+    metadata:
+      name: test-namespace
+      namespace: test-namespace
+    spec:
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedDeploymentModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedDeployment
+    metadata:
+      name: test-deployment
+      namespace: test-namespace
+    spec:
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          replicas: 3
+          selector:
+            matchLabels:
+              app: nginx
+          template:
+            metadata:
+              labels:
+                app: nginx
+            spec:
+              containers:
+              - image: nginx
+                name: nginx
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedConfigMapModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedConfigMap
+    metadata:
+      name: test-configmap
+      namespace: test-namespace
+    spec:
+      template:
+        data:
+          A: ala ma kota
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+      overrides:
+      - clusterName: cluster2
+        clusterOverrides:
+        - path: /data
+          value:
+            foo: bar
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedIngressModel), 'default'],
+    `
+    apiVersion: types.kubefed.io/v1beta1
+    kind: FederatedIngress
+    metadata:
+      name: test-ingress
+      namespace: test-namespace
+    spec:
+      template:
+        spec:
+          rules:
+          - host: ingress.example.com
+            http:
+              paths:
+              - backend:
+                  serviceName: test-service
+                  servicePort: 80
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.KubeadmConfigTemplateModel), 'default'],
+    `
+    apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+    kind: KubeadmConfigTemplate
+    metadata:
+      name: capi-quickstart-md-0
+      namespace: default
+    spec:
+      template:
+        spec:
+          joinConfiguration:
+            nodeRegistration:
+              kubeletExtraArgs:
+                cloud-provider: aws
+              name: '{{ ds.meta_data.local_hostname }}'    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.KubeadmControlPlaneModel), 'default'],
+    `
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+    kind: KubeadmControlPlane
+    metadata:
+      name: capi-quickstart-control-plane
+      namespace: default
+    spec:
+      infrastructureTemplate:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+        kind: AWSMachineTemplate
+        name: capi-quickstart-control-plane
+      kubeadmConfigSpec:
+        clusterConfiguration:
+          apiServer:
+            extraArgs:
+              cloud-provider: aws
+          controllerManager:
+            extraArgs:
+              cloud-provider: aws
+        initConfiguration:
+          nodeRegistration:
+            kubeletExtraArgs:
+              cloud-provider: aws
+            name: '{{ ds.meta_data.local_hostname }}'
+        joinConfiguration:
+          nodeRegistration:
+            kubeletExtraArgs:
+              cloud-provider: aws
+            name: '{{ ds.meta_data.local_hostname }}'
+        postKubeadmCommands:
+          - mkdir -p $HOME/.kube
+          - cp /etc/kubernetes/admin.conf $HOME/.kube/config
+          - chown $UESR:$USER $HOME/.kube/config
+          - kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+      replicas: 1
+      version: v1.17.3
+   
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.FederatedResourceModel), 'default'],
+    `
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: crontabs.stable.example.com
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: stable.example.com
+  # version name to use for REST API: /apis/<group>/<version>
+  version: v1
+  # either Namespaced or Cluster
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: crontabs
+    # singular name to be used as an alias on the CLI and for display
+    singular: crontab
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: CronTab
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - ct
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ReplicaSchedulingPreferenceModel), 'default'],
+    `
+    apiVersion: scheduling.kubefed.io/v1alpha1
+    kind: ReplicaSchedulingPreference
+    metadata:
+      name: test-deployment
+      namespace: test-namespace
+    spec:
+      targetKind: FederatedDeployment
+      totalReplicas: 10
+      rebalance: true
+      clusters:
+        cluster1:
+          weight: 2
+        cluster2:
+          weight: 3
+
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.IngressDNSRecordModel), 'default'],
+    `
+    apiVersion: multiclusterdns.kubefed.io/v1alpha1
+    kind: IngressDNSRecord
+    metadata:
+      name: test-ingress
+      namespace: test-namespace
+    spec:
+      hosts:
+      - ingress.example.com
+      recordTTL: 300
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceDNSRecordModel), 'default'],
+    `
+    apiVersion: multiclusterdns.kubefed.io/v1alpha1
+    kind: ServiceDNSRecord
+    metadata:
+      # The name of the sample service.
+      name: test-service
+      # The namespace of the sample deployment/service.
+      namespace: test-namespace
+    spec:
+      # The name of the corresponding Domain.
+      domainRef: test-domain
+      recordTTL: 300
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceDNSRecordModel), 'default'],
+    `
+    apiVersion: multiclusterdns.kubefed.io/v1alpha1
+    kind: ServiceDNSRecord
+    metadata:
+      # The name of the sample service.
+      name: test-service
+      # The namespace of the sample deployment/service.
+      namespace: test-namespace
+    spec:
+      # The name of the corresponding Domain.
+      domainRef: test-domain
+      recordTTL: 300
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ClusterModel), 'default'],
+    `
+    apiVersion: cluster.x-k8s.io/v1alpha3
+    kind: Cluster
+    metadata:
+      name: capi-example
+      namespace: default
+    spec:
+      clusterNetwork:
+        pods:
+          cidrBlocks:
+          - x.x.x.x/x
+      controlPlaneRef:
+        apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+        kind: KubeadmControlPlane
+        name: capi-example-control-plane
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+        kind: infraProvider
+        name: capi-example
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.MachineDeploymentModel), 'default'],
+    `
+    apiVersion: cluster.x-k8s.io/v1alpha3
+    kind: MachineDeployment
+    metadata:
+      name: capi-example-md-0
+      namespace: default
+    spec:
+      clusterName: capi-example
+      replicas: 3
+      selector:
+        matchLabels: null
+      template:
+        spec:
+          bootstrap:
+            configRef:
+              apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+              kind: KubeadmConfigTemplate
+              name: capi-example-md-0
+          clusterName: capi-example
+          infrastructureRef:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+            kind: InfraProverMachineTemplate
+            name: capi-example-md-0
+          version: v1.17.3
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.Metal3ClusterModel), 'default'],
+    `
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: Metal3Cluster
+    metadata:
+      name: capi-example
+    spec:
+      controlPlaneEndpoint:
+        host: x.x.x.x
+        port: xxxx
+      noCloudProvider: false
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.Metal3MachineTemplateModel), 'default'],
+    `
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: Metal3MachineTemplate
+    metadata:
+      name: capi-example-control-plane
+    spec:
+      template:
+        spec:
+          image:
+            url: urlPath
+            checksum: checksumPath
+    
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.AWSClusterModel), 'default'],
+    `
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: AWSCluster
+    metadata:
+      name: capi-example
+      namespace: default
+    spec:
+      region: us-east-1
+      sshKeyName: default
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.AWSMachineTemplateModel), 'default'],
+    `
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: AWSMachineTemplate
+    metadata:
+      name: capi-example-control-plane
+      namespace: default
+    spec:
+      template:
+        spec:
+          iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+          instanceType: t3.large
+          sshKeyName: default
+    
 `,
   )
   .setIn(

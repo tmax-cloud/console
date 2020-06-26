@@ -5,6 +5,25 @@ import { Map as ImmutableMap } from 'immutable';
 import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import {
+  KubeadmControlPlaneModel,
+  KubeadmConfigTemplateModel,
+  KubeFedClusterModel,
+  KubeFedConfigModel,
+  FederatedTypeConfigModel,
+  ReplicaSchedulingPreferenceModel,
+  DNSEndpointModel,
+  DomainModel,
+  IngressDNSRecordModel,
+  ServiceDNSRecordModel,
+  MachineModel,
+  MachineSetModel,
+  Metal3ClusterModel,
+  Metal3MachineModel,
+  Metal3MachineTemplateModel,
+  AWSClusterModel,
+  AWSMachineModel,
+  AWSMachineTemplateModel,
+  MachineDeploymentModel,
   ConditionModel,
   UsergroupModel,
   LimitRangeModel,
@@ -90,10 +109,29 @@ import {
   InferenceServiceModel,
   WorkflowTemplateModel,
   WorkflowModel,
-  CatalogServiceClaimModel
+  CatalogServiceClaimModel,
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
+  .set(referenceForModel(KubeadmControlPlaneModel), () => import('./kubeadm-control-plane' /* webpackChunkName: "task" */).then(m => m.KubeadmControlPlanesDetailsPage))
+  .set(referenceForModel(KubeadmConfigTemplateModel), () => import('./kubeadm-config-template' /* webpackChunkName: "task" */).then(m => m.KubeadmConfigTemplatesDetailsPage))
+  .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesDetailsPage))
+  .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersDetailsPage))
+  .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsDetailsPage))
+  .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsDetailsPage))
+  .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsDetailsPage))
+  .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsDetailsPage))
+  .set(referenceForModel(IngressDNSRecordModel), () => import('./ingress-dns-record' /* webpackChunkName: "task" */).then(m => m.IngressDNSRecordsDetailsPage))
+  .set(referenceForModel(ServiceDNSRecordModel), () => import('./service-dns-record' /* webpackChunkName: "task" */).then(m => m.ServiceDNSRecordsDetailsPage))
+  .set(referenceForModel(MachineDeploymentModel), () => import('./machine-deployment' /* webpackChunkName: "task" */).then(m => m.MachineDeploymentsDetailsPage))
+  .set(referenceForModel(MachineModel), () => import('./machine' /* webpackChunkName: "task" */).then(m => m.MachinesDetailsPage))
+  .set(referenceForModel(MachineSetModel), () => import('./machine-set' /* webpackChunkName: "task" */).then(m => m.MachineSetsDetailsPage))
+  .set(referenceForModel(Metal3ClusterModel), () => import('./baremetal-cluster' /* webpackChunkName: "task" */).then(m => m.Metal3ClustersDetailsPage))
+  .set(referenceForModel(Metal3MachineModel), () => import('./baremetal-machine' /* webpackChunkName: "task" */).then(m => m.Metal3MachinesDetailsPage))
+  .set(referenceForModel(Metal3MachineTemplateModel), () => import('./baremetal-machine-template' /* webpackChunkName: "task" */).then(m => m.Metal3MachineTemplatesDetailsPage))
+  .set(referenceForModel(AWSClusterModel), () => import('./aws-cluster' /* webpackChunkName: "task" */).then(m => m.AWSClustersDetailsPage))
+  .set(referenceForModel(AWSMachineModel), () => import('./aws-machine' /* webpackChunkName: "task" */).then(m => m.AWSMachinesDetailsPage))
+  .set(referenceForModel(AWSMachineTemplateModel), () => import('./aws-machine-template' /* webpackChunkName: "task" */).then(m => m.AWSMachineTemplatesDetailsPage))
   .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesDetailsPage))
   .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsDetailsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesDetailsPage))
@@ -120,7 +158,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(RegistryModel), () => import('./registry' /* webpackChunkName: "template" */).then(m => m.RegistryDetailsPage))
   .set(referenceForModel(TemplateInstanceModel), () => import('./template-instance' /* webpackChunkName: "template" */).then(m => m.TemplateInstancesDetailsPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesDetailsPage))
-  .set(referenceForModel(ClusterModel), () => import('./clusters' /* webpackChunkName: "clusters" */).then(m => m.ClustersPage))
+  .set(referenceForModel(ClusterModel), () => import('./cluster' /* webpackChunkName: "clusters" */).then(m => m.ClustersDetailsPage))
   .set(referenceForModel(ConfigMapModel), () => import('./configmap' /* webpackChunkName: "configmap" */).then(m => m.ConfigMapsDetailsPage))
   .set(referenceForModel(ContainerModel), () => import('./container' /* webpackChunkName: "container" */).then(m => m.ContainersDetailsPage))
   .set(referenceForModel(DaemonSetModel), () => import('./daemonset' /* webpackChunkName: "daemonset" */).then(m => m.DaemonSetsDetailsPage))
@@ -184,6 +222,25 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "task" */).then(m => m.InferenceServicePage))
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "task" */).then(m => m.WorkflowTemplatePage))
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "task" */).then(m => m.WorkflowPage))
+  .set(referenceForModel(KubeadmControlPlaneModel), () => import('./kubeadm-control-plane' /* webpackChunkName: "task" */).then(m => m.KubeadmControlPlanesPage))
+  .set(referenceForModel(KubeadmConfigTemplateModel), () => import('./kubeadm-config-template' /* webpackChunkName: "task" */).then(m => m.KubeadmConfigTemplatesPage))
+  .set(referenceForModel(ReplicaSchedulingPreferenceModel), () => import('./replica-scheduling-preference' /* webpackChunkName: "task" */).then(m => m.ReplicaSchedulingPreferencesPage))
+  .set(referenceForModel(KubeFedClusterModel), () => import('./federation-cluster' /* webpackChunkName: "task" */).then(m => m.KubeFedClustersPage))
+  .set(referenceForModel(KubeFedConfigModel), () => import('./federation-config' /* webpackChunkName: "task" */).then(m => m.KubeFedConfigsPage))
+  .set(referenceForModel(FederatedTypeConfigModel), () => import('./federated-type-config' /* webpackChunkName: "task" */).then(m => m.FederatedTypeConfigsPage))
+  .set(referenceForModel(DNSEndpointModel), () => import('./dns-endpoint' /* webpackChunkName: "task" */).then(m => m.DNSEndpointsPage))
+  .set(referenceForModel(DomainModel), () => import('./domain' /* webpackChunkName: "task" */).then(m => m.DomainsPage))
+  .set(referenceForModel(IngressDNSRecordModel), () => import('./ingress-dns-record' /* webpackChunkName: "task" */).then(m => m.IngressDNSRecordsPage))
+  .set(referenceForModel(ServiceDNSRecordModel), () => import('./service-dns-record' /* webpackChunkName: "task" */).then(m => m.ServiceDNSRecordsPage))
+  .set(referenceForModel(MachineDeploymentModel), () => import('./machine-deployment' /* webpackChunkName: "task" */).then(m => m.MachineDeploymentsPage))
+  .set(referenceForModel(MachineModel), () => import('./machine' /* webpackChunkName: "task" */).then(m => m.MachinesPage))
+  .set(referenceForModel(MachineSetModel), () => import('./machine-set' /* webpackChunkName: "task" */).then(m => m.MachineSetsPage))
+  .set(referenceForModel(Metal3ClusterModel), () => import('./baremetal-cluster' /* webpackChunkName: "task" */).then(m => m.Metal3ClustersPage))
+  .set(referenceForModel(Metal3MachineModel), () => import('./baremetal-machine' /* webpackChunkName: "task" */).then(m => m.Metal3MachinesPage))
+  .set(referenceForModel(Metal3MachineTemplateModel), () => import('./baremetal-machine-template' /* webpackChunkName: "task" */).then(m => m.Metal3MachineTemplatesPage))
+  .set(referenceForModel(AWSClusterModel), () => import('./aws-cluster' /* webpackChunkName: "task" */).then(m => m.AWSClustersPage))
+  .set(referenceForModel(AWSMachineModel), () => import('./aws-machine' /* webpackChunkName: "task" */).then(m => m.AWSMachinesPage))
+  .set(referenceForModel(AWSMachineTemplateModel), () => import('./aws-machine-template' /* webpackChunkName: "task" */).then(m => m.AWSMachineTemplatesPage))
   .set(referenceForModel(VirtualServiceModel), () => import('./virtual-service' /* webpackChunkName: "task" */).then(m => m.VirtualServicePage))
   .set(referenceForModel(DestinationRuleModel), () => import('./destination-rule' /* webpackChunkName: "task" */).then(m => m.DestinationRulePage))
   .set(referenceForModel(EnvoyFilterModel), () => import('./envoy-filter' /* webpackChunkName: "task" */).then(m => m.EnvoyFilterPage))
@@ -220,7 +277,7 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(RegistryModel), () => import('./registry' /* webpackChunkName: "template" */).then(m => m.RegistryPage))
   .set(referenceForModel(TemplateInstanceModel), () => import('./template-instance' /* webpackChunkName: "template" */).then(m => m.TemplateInstancesPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesPage))
-  .set(referenceForModel(ClusterModel), () => import('./clusters' /* webpackChunkName: "clusters" */).then(m => m.ClustersPage))
+  .set(referenceForModel(ClusterModel), () => import('./cluster' /* webpackChunkName: "clusters" */).then(m => m.ClustersPage))
   .set(referenceForModel(ConfigMapModel), () => import('./configmap' /* webpackChunkName: "configmap" */).then(m => m.ConfigMapsPage))
   .set(referenceForModel(DaemonSetModel), () => import('./daemonset' /* webpackChunkName: "daemonset" */).then(m => m.DaemonSetsPage))
   .set(referenceForModel(DeploymentConfigModel), () => import('./deployment-config' /* webpackChunkName: "deployment-config" */).then(m => m.DeploymentConfigsPage))
