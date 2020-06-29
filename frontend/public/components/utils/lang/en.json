@@ -49,7 +49,8 @@
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
-    "DUPLICATE-KEY": "Duplicate keys found."
+    "DUPLICATE-KEY": "Duplicate keys found.",
+    "EMPTY-INPUT": "Enter a(n) {{something}}"
   },
   "DATETIME": {
     "YEARS": "years",
