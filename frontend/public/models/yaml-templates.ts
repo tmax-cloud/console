@@ -3290,7 +3290,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       hostPath:
         path: "/tmp"
 `,
@@ -3308,7 +3308,7 @@ spec:
       accessModes:
         - ReadOnlyMany
       persistentVolumeReclaimPolicy: Retain
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       hostPath:
         path: "/tmp"
 `,
@@ -3326,7 +3326,7 @@ spec:
       accessModes:
         - ReadWriteMany
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hdd-ceph-block
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Block
       hostPath:
         path: "/tmp"
@@ -3345,7 +3345,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       persistentVolumeReclaimPolicy: Recycle
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       mountOptions:
         - hard
         - nfsvers=4.1
@@ -3367,7 +3367,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
+  storageClassName: \${STORAGECLASSNAME}
   nfs:
     path: /tmp
     server: 172.17.0.2
@@ -3993,7 +3993,7 @@ spec:
   resources:
     requests:
       storage: 8Gi
-  storageClassName: slow
+  storageClassName: \${STORAGECLASSNAME}
   selector:
     matchLabels:
       release: "stable"
@@ -4015,7 +4015,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
 `,
   )
   .setIn(
@@ -4032,7 +4032,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: hdd-ceph-block
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Block
 `,
   )
@@ -4051,7 +4051,7 @@ spec:
         requests:
           storage: 1Gi
       volumeName: sample-pv
-      storageClassName: storage-sample
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Filesystem
 `,
   )
@@ -4069,12 +4069,12 @@ spec:
       resources:
         requests:
           storage: 1Gi
-       matchExpressions:
-         - key: localstorage
-           operator: In
-           values:
+      matchExpressions:
+        - key: localstorage
+          operator: In
+          values:
             - hdd
-      storageClassName: storage-sample 
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Filesystem
 `,
   )

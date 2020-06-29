@@ -356,13 +356,14 @@ func (s *Server) HTTPHandler() http.Handler {
 		})),
 	)
 	jaegerProxyAPIPath := jaegerProxyEndpoint
-	jaegerProxy := proxy.NewProxy(s.JaegerProxyConfig)
+	jaegerProxy := httputil.NewSingleHostReverseProxy(s.JaegerProxyConfig.Endpoint)
 	handle(jaegerProxyAPIPath, http.StripPrefix(
 		proxy.SingleJoiningSlash(s.BaseURL.Path, jaegerProxyAPIPath),
-		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			jaegerProxy.ServeHTTP(w, r)
 		})),
 	)
+
 	// NOTE: 여기까지
 	if s.prometheusProxyEnabled() {
 		// Only proxy requests to the Prometheus API, not the UI.

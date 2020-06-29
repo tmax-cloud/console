@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 ./bin/bridge \
-    --listen=https://192.168.0.191:9000 \
-    --base-address=https://192.168.0.191:9000 \
+    --listen=https://192.168.8.25:9000 \
+    --base-address=https://192.168.8.25:9000 \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
     --k8s-mode=off-cluster \
@@ -15,5 +15,5 @@
     --prometheus-endpoint=http://192.168.6.196:30562/api \
     --grafana-endpoint=http://192.168.6.196:31527 \
     --kiali-endpoint=http://192.168.6.196:31971 \
-    --jaeger-endpoint=http://192.168.6.196:32602 \
+    --jaeger-endpoint=http://192.168.6.196:32602/api/jaeger \
     --release-mode=true \
