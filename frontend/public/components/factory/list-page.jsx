@@ -39,7 +39,7 @@ export const TextFilter = ({ label, onChange, defaultValue, style, className, au
   }
   const { t } = useTranslation();
   // return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={`Filter ${label}...`} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
-  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={(id === 'event' && t('CONTENT:FILTERLABELHOLDEREVENT')) || (id === 'rule' && t('CONTENT:FILTERLABELHOLDERRULE')) || t('CONTENT:FILTERLABELHOLDER')} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
+  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={(id === 'event' && t('CONTENT:FILTERLABELHOLDEREVENT')) || (id === 'rule' && t('CONTENT:FILTERLABELHOLDERRULE')) || (id === 'audit' && '메시지로 검색') || t('CONTENT:FILTERLABELHOLDER')} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
 };
 
 TextFilter.displayName = 'TextFilter';
