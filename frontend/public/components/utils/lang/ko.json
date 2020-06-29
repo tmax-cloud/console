@@ -230,7 +230,7 @@
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_3": "스토리지 클래스를 이용하여  1Gi Blockstorage를 생성하고 하나의 파드는 마운트 및 읽기/쓰기가 가능합니다.(volumeMode : Filesystem(default) / Block )",
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_4": "생성된 영구 볼륨을 이용하여 RWX모드로 영구 볼륨 클레임 생성",
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_5": "생성된 영구 볼륨 (volumeName)를 이용하여 영구 볼륨 클레임을 RWX모드로 생성할 수 있습니다.\naccessModes 및 리소스 항목은 영구 볼륨과 동일해야 합니다.",
-    "PERSISTENCEVOLUMECLAIM-SIDEBAR_6": "셀렉터 조건에 맞는 영구 볼륨 클레임을 RWX 모두로 생성",
+    "PERSISTENCEVOLUMECLAIM-SIDEBAR_6": "셀렉터 조건에 맞는 영구 볼륨 클레임을 RWX 모드로 생성",
     "PERSISTENCEVOLUMECLAIM-SIDEBAR_7": "생성된 스토리지 클래스를 사용하여 라벨 조건에 만족하는 영구 볼륨과 연결하여 ReadWriteOnce 모드로 영구 볼륨 클레임을 생성할 수 있습니다.",
     "DATAVOLUME-SIDEBAR_0": "http url 이용하여 데이터 볼륨 생성",
     "DATAVOLUME-SIDEBAR_1": "http url를 이용하여 가상 머신 이미지를 가져와서 데이터 볼륨을 생성할 수 있습니다.\n컨텐츠 유형 (kubevirt (default), archive )  / volumeMode (Filesystem(default) / block))",
