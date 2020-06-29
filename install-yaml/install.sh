@@ -106,8 +106,8 @@ GRAFANA=${GRAFANA_IP}:${GRAFANA_PORT}
 echo "grafana Addr = ${GRAFANA}"
 
 # get kiali ip addr 
-KIALI_IP=$(kubectl get svc -A | grep ${NAME_KIALI} | awk '{print $4}')
-KIALI_PORT=$(kubectl get svc -A | grep ${NAME_KIALI} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+KIALI_IP=$(kubectl get svc -A | grep ${NAME_KIALI} | grep -v "operator" | awk '{print $4}')
+KIALI_PORT=$(kubectl get svc -A | grep ${NAME_KIALI} | grep -v "operator" | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $KIALI_IP ]; then
     echo "Cannot find KIALI_IP in ${NAME_KIALI}. Is kiali installed?"
     KIALI_IP="0.0.0.0:20001"
