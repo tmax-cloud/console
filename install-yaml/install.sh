@@ -2,6 +2,9 @@
 
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
+NAME_GRAFANA='grafana'
+NAME_KIALI='kiali'
+NAME_JAEGER='tracing'
 
 file_initialization="./1.initialization.yaml"
 file_initialization_temp="./1.initialization-temp.yaml"
@@ -91,6 +94,39 @@ fi
 PROM=${PROM_IP}:${PROM_PORT}
 echo "Prometheus Addr = ${PROM}"
 
+# get grafana ip addr 
+GRAFANA_IP=$(kubectl get svc -A | grep ${NAME_GRAFANA} | awk '{print $4}')
+GRAFANA_PORT=$(kubectl get svc -A | grep ${NAME_GRAFANA} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+if [ -z $GRAFANA_IP ]; then
+    echo "Cannot find GRAFANA_IP in ${NAME_GRAFANA}. Is grafana installed?"
+    GRAFANA_IP="0.0.0.0:3000"
+    echo "GRAFANA_IP dummy value temporarily set to 0.0.0.0:3000."
+fi
+GRAFANA=${GRAFANA_IP}:${GRAFANA_PORT}
+echo "grafana Addr = ${GRAFANA}"
+
+# get kiali ip addr 
+KIALI_IP=$(kubectl get svc -A | grep ${NAME_KIALI} | awk '{print $4}')
+KIALI_PORT=$(kubectl get svc -A | grep ${NAME_KIALI} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+if [ -z $KIALI_IP ]; then
+    echo "Cannot find KIALI_IP in ${NAME_KIALI}. Is kiali installed?"
+    KIALI_IP="0.0.0.0:20001"
+    echo "KIALI_IP dummy value temporarily set to 0.0.0.0:20001."
+fi
+KIALI=${KIALI_IP}:${KIALI_PORT}
+echo "kiali Addr = ${KIALI}"
+
+# get jaeger ip addr 
+JAEGER_IP=$(kubectl get svc -A | grep ${NAME_JAEGER} | awk '{print $4}')
+JAEGER_PORT=$(kubectl get svc -A | grep ${NAME_JAEGER} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+if [ -z $JAEGER_IP ]; then
+    echo "Cannot find JAEGER_IP in ${NAME_JAEGER}. Is jaeger installed?"
+    JAEGER_IP="0.0.0.0:80"
+    echo "JAEGER_IP dummy value temporarily set to 0.0.0.0:80."
+fi
+JAEGER=${JAEGER_IP}:${JAEGER_PORT}
+echo "Jaeger Addr = ${JAEGER}"
+
 # inject ENV into yaml
 cp $file_initialization $file_initialization_temp
 cp $file_svc_lb $file_svc_lb_temp
@@ -106,6 +142,8 @@ sed -i "s%@@NODE_PORT@@%${NODE_PORT}%g" ${file_svc_np_temp}
 sed -i "s%@@NAME_NS@@%${NAME_NS}%g" ${file_deployment_pod_temp}
 sed -i "s%@@HC4@@%${HC4}%g" ${file_deployment_pod_temp}
 sed -i "s%@@PROM@@%${PROM}%g" ${file_deployment_pod_temp}
+sed -i "s%@@GRAFANA@@%${GRAFANA}%g" ${file_deployment_pod_temp}
+sed -i "s%@@KIALI@@%${KIALI}%g" ${file_deployment_pod_temp}
 sed -i "s%@@VER@@%${CONSOLE_VERSION}%g" ${file_deployment_pod_temp}
 
 if [ -z "$PORTAL_URL" ]; then
