@@ -30,7 +30,7 @@ spec:
         - --prometheus-endpoint=http://@@PROM@@/api
         - --grafana-endpoint=http://@@GRAFANA@@/
         - --kiali-endpoint=http://@@KIALI@@/
-        - --jaeger-endpoint=http://@@JAEGER@@/
+        - --jaeger-endpoint=http://@@JAEGER@@/api/jaeger
         - --hdc-mode=@@HDC_FLAG@@
         - --tmaxcloud-portal=@@PORTAL@@
         image: tmaxcloudck/hypercloud-console:@@VER@@
