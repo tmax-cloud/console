@@ -2928,7 +2928,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       hostPath:
         path: "/tmp"
 `,
@@ -2946,7 +2946,7 @@ spec:
       accessModes:
         - ReadOnlyMany
       persistentVolumeReclaimPolicy: Retain
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       hostPath:
         path: "/tmp"
 `,
@@ -2964,7 +2964,7 @@ spec:
       accessModes:
         - ReadWriteMany
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hdd-ceph-block
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Block
       hostPath:
         path: "/tmp"
@@ -2983,7 +2983,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       persistentVolumeReclaimPolicy: Recycle
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       mountOptions:
         - hard
         - nfsvers=4.1
@@ -3005,7 +3005,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
+  storageClassName: \${STORAGECLASSNAME}
   nfs:
     path: /tmp
     server: 172.17.0.2
