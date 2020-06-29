@@ -3631,7 +3631,7 @@ spec:
   resources:
     requests:
       storage: 8Gi
-  storageClassName: slow
+  storageClassName: \${STORAGECLASSNAME}
   selector:
     matchLabels:
       release: "stable"
@@ -3653,7 +3653,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
 `,
   )
   .setIn(
@@ -3670,7 +3670,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: hdd-ceph-block
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Block
 `,
   )
@@ -3689,7 +3689,7 @@ spec:
         requests:
           storage: 1Gi
       volumeName: sample-pv
-      storageClassName: storage-sample
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Filesystem
 `,
   )
@@ -3707,12 +3707,12 @@ spec:
       resources:
         requests:
           storage: 1Gi
-       matchExpressions:
-         - key: localstorage
-           operator: In
-           values:
+      matchExpressions:
+        - key: localstorage
+          operator: In
+          values:
             - hdd
-      storageClassName: storage-sample 
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Filesystem
 `,
   )
