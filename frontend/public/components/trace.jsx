@@ -50,7 +50,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
           <label style={{ marginRight: '10px' }}>Display</label>
           <select name="display" onChange={e => setDisplay(e.target.value)}>
             <option value="all">All</option>
-            {operationList &&
+            {!!operationList &&
               operationList.map(ops => (
                 <option key={ops} value={ops}>
                   {ops}
@@ -66,7 +66,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
 
 const TraceGraphs = requirePrometheus(({ namespace, name, limit, statusCode, display }) => {
   const query = `?uiEmbed=v0&service=${name}` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`);
-  const jaegerURL = `${jaegerServer}/search${query}`;
+  const jaegerURL = `${document.location.origin}/api/jaeger/search${query}`;
 
   return <iframe style={{ width: '100%', height: '100vh', border: 0 }} src={jaegerURL} target="_blank"></iframe>;
 });
