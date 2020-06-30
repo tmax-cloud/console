@@ -1622,7 +1622,7 @@ metadata:
   name: example # (required) [string] registry's name
   namespace: example # (required) [string] registry's namespace
 spec:
-  image: registry:2.7.1 # (required)
+  image: registry:2.6.2 # (required)
   #description: example # (optional) [string] a brief description of the registry.
   loginId: example # (required) [string] username for registry login
   loginPassword: example # (required) [string] password for registry login
@@ -1703,7 +1703,6 @@ spec:
          storageSize: 10Gi
          storageClassName: csi-cephfs-sc
 `,
-
   )
   .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
