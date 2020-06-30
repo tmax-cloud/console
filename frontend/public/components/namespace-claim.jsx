@@ -27,7 +27,8 @@ const NamespaceClaimHeader = props => {
         {t('CONTENT:TRIALTIME')}
       </ColHead> */}
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="resourceName">
-        {t('ADDITIONAL:NAME', { something: t('RESOURCE:NAMESPACE') })}
+        {/* {t('ADDITIONAL:NAME', { something: t('RESOURCE:NAMESPACE') })} */}
+        {t('RESOURCE:NAMESPACE')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
@@ -57,7 +58,7 @@ const NamespaceClaimRow = () =>
         </div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
         {/* <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div> */}
-        <div className="col-md-3 col-xs-3 co-resource-link-wrapper">{obj.status && obj.status.status === 'Success' && <ResourceLink kind="Namespace" name={obj.resourceName} title={obj.resourceName} />}</div>
+        <div className="col-md-3 col-xs-3 co-resource-link-wrapper">{obj.resourceName}</div>
         <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(new Date(obj.metadata.creationTimestamp.iMillis))}</div>
       </div>
     );
