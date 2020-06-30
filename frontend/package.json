@@ -81,7 +81,7 @@
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",
     "react-dom": "16.8.0",
-    "react-helmet": "5.x",
+    "react-helmet": "6.1.0",
     "react-i18next": "^11.3.4",
     "react-lightweight-tooltip": "1.x",
     "react-markdown": "4.3.x",
