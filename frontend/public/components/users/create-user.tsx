@@ -141,7 +141,7 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
             </Helmet >
             <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
                 <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.user.kind, t) })}</h1>
-                <p className="co-m-pane__explanation">Create user through the form editor.</p>
+                <p className="co-m-pane__explanation">{t('STRING:USER-CREATE_0')}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
 
