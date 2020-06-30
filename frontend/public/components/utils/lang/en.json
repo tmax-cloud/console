@@ -296,7 +296,9 @@
     "DEPLOYMENT-SIDEBAR_4": "Create a deployment by configuring rollong update. ",
     "DEPLOYMENT-SIDEBAR_5": "When you create a deployment with the rolling update strategy, it continues scaling up and down by adding 30% new pods and deleting 30% old pods. \nIf no policy is specified, maxSure and maxUnavailable are set by 25% by default.",
     "DEPLOYMENT-SIDEBAR_6": "Create a deployment by mounting volumes",
-    "DEPLOYMENT-SIDEBAR_7": "Can create a hostPath persistent volume in deployment creation. \n Set a hostpath volume using the real path of the node directory."
+    "DEPLOYMENT-SIDEBAR_7": "Can create a hostPath persistent volume in deployment creation. \n Set a hostpath volume using the real path of the node directory.",
+    "USER-CREATE_0": "Create user through the form editor.",
+    "USERGROUP-CREATE_0": "Create user group to which multiple users can belong."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",

@@ -294,7 +294,9 @@
     "DEPLOYMENT-SIDEBAR_4": "롤링 업데이트를 설정하여 디플로이먼트 생성",
     "DEPLOYMENT-SIDEBAR_5": "롤링 업데이트 시 신버전 파드를 30%씩 추가하고 구버전 파드를 30%씩 삭제를 반복하여 이미지를 업그레이드 하는 정책으로 디플로이먼트를 생성할 수 있습니다.\n정책을 명시하지 않으면 maxSure, maxUnavailable 는 기본적으로 25% 씩 설정됩니다.",
     "DEPLOYMENT-SIDEBAR_6": "볼륨 마운트하여 디플로이먼트 생성",
-    "DEPLOYMENT-SIDEBAR_7": "디플로이먼트 생성 시에 hostPath 영구 볼륨을 생성할 수 있습니다.\n노드의 디렉토리의 real path를 이용하여 hostpath로 설정하여 사용할 수 있습니다."
+    "DEPLOYMENT-SIDEBAR_7": "디플로이먼트 생성 시에 hostPath 영구 볼륨을 생성할 수 있습니다.\n노드의 디렉토리의 real path를 이용하여 hostpath로 설정하여 사용할 수 있습니다.",
+    "USER-CREATE_0": "Form 에디터를 사용하여 사용자를 생성하십시오.",
+    "USERGROUP-CREATE_0": "여러 사용자가 속할 수 있는 사용자 그룹을 생성하십시오."
   },
   "CONTENT": {
     "BINDABLE": "Bindable",
