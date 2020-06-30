@@ -4516,7 +4516,8 @@ spec:
       name: example-tmax.co.kr
     otpEnable: f
     otp: 123456
-    ipRange: 192.168.0.0/16
+    ipRange: 
+      - 192.168.0.0/16
 
 `,
   )
