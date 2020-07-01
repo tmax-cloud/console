@@ -223,10 +223,10 @@ const Details = ({ obj: s }) => {
   );
 };
 
-const { details, pods, editYaml, traffic } = navFactory;
+const { details, pods, editYaml, traffic, trace } = navFactory;
 const ServicesDetailsPage = props => {
   const { t } = useTranslation();
-  return <DetailsPage {...props} menuActions={menuActions} pages={[details(Details, t('CONTENT:OVERVIEW')), editYaml(), pods(t('CONTENT:PODS')), traffic(t('CONTENT:TRAFFIC'))]} />;
+  return <DetailsPage {...props} menuActions={menuActions} pages={[details(Details, t('CONTENT:OVERVIEW')), editYaml(), pods(t('CONTENT:PODS')), traffic(t('CONTENT:TRAFFIC')), trace(t('CONTENT:TRACE'))]} />;
 };
 
 const ServicesList = props => <List {...props} Header={ServiceHeader} Row={ServiceRow} />;
