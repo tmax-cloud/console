@@ -10,10 +10,10 @@ export const TrafficPage = ({ namespace: namespace, name: name }) => {
     return <div className="co-m-pane__body">
         <SectionHeading text={t('CONTENT:TRAFFIC')} />
         <div>
-            <label style={{ marginRight: '10px' }}>Reported from</label>
+            <label style={{ marginRight: '10px' }}>{t('CONTENT:REPORTEDFROM')}</label>
             <select name="reporter" onChange={e => setReporter(e.target.value)}>
-                <option value="destination">Destination</option>
-                <option value="source">Source</option>
+                <option value="destination">{t('CONTENT:DESTINATION')}</option>
+                <option value="source">{t('CONTENT:SOURCE')}</option>
             </select>
         </div>
         <TrafficGraphs namespace={namespace} name={name} showTitle={false} reporter={reporter} />

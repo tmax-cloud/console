@@ -294,9 +294,13 @@
     "DEPLOYMENT-SIDEBAR_4": "롤링 업데이트를 설정하여 디플로이먼트 생성",
     "DEPLOYMENT-SIDEBAR_5": "롤링 업데이트 시 신버전 파드를 30%씩 추가하고 구버전 파드를 30%씩 삭제를 반복하여 이미지를 업그레이드 하는 정책으로 디플로이먼트를 생성할 수 있습니다.\n정책을 명시하지 않으면 maxSure, maxUnavailable 는 기본적으로 25% 씩 설정됩니다.",
     "DEPLOYMENT-SIDEBAR_6": "볼륨 마운트하여 디플로이먼트 생성",
-    "DEPLOYMENT-SIDEBAR_7": "디플로이먼트 생성 시에 hostPath 영구 볼륨을 생성할 수 있습니다.\n노드의 디렉토리의 real path를 이용하여 hostpath로 설정하여 사용할 수 있습니다."
+    "DEPLOYMENT-SIDEBAR_7": "디플로이먼트 생성 시에 hostPath 영구 볼륨을 생성할 수 있습니다.\n노드의 디렉토리의 real path를 이용하여 hostpath로 설정하여 사용할 수 있습니다.",
+    "USER-CREATE_0": "Form 에디터를 사용하여 사용자를 생성하십시오.",
+    "USERGROUP-CREATE_0": "여러 사용자가 속할 수 있는 사용자 그룹을 생성하십시오."
   },
   "CONTENT": {
+    "REPORTEDFROM": "출발지",
+    "DESTINATION": "목적지",
     "BINDABLE": "Bindable",
     "EXTERNALNAME": "External Name",
     "PHONE": "핸드폰 번호",
@@ -500,7 +504,7 @@
     "MAXPODS": "최대 파드",
     "IMAGE": "이미지",
     "IMAGE_EN": "Image",
-    "SOURCE": "Source",
+    "SOURCE": " 원본",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
     "OPAQUE": "Opaque",
@@ -707,15 +711,15 @@
     "ENTERNAME": "이름 입력",
     "TRUE": "참",
     "FALSE": "거짓",
-    "TRAFFIC": "Traffic",
+    "TRAFFIC": "트래픽",
     "TRACE": "Trace",
-    "SERVERREQUESTVOLUME": "Server Request Volume",
-    "SERVERREQUESTDURATION": "Server Request Duration",
-    "REQUESTSIZE": "Request Size",
-    "RESPONSESIZE": "Response Size",
-    "TCPRECEIVED": "TCP Received",
-    "TCPSENT": "TCP Sent",
-    "MEMORY": "Memory",
+    "SERVERREQUESTVOLUME": "서버 요청 볼륨",
+    "SERVERREQUESTDURATION": "서버 요청 기간",
+    "REQUESTSIZE": "요청 사이즈 ",
+    "RESPONSESIZE": "응답 사이즈 ",
+    "TCPRECEIVED": "TCP 수신 ",
+    "TCPSENT": "TCP 송신",
+    "MEMORY": "메모리",
     "GPU": "GPU",
     "ALGORITHMNAME": "알고리즘 이름",
     "CURRENTTRIALS/MAXTRIALCOUNT": "트라이얼 개수",
@@ -826,6 +830,8 @@
     "INFERENCESERVICE": "KF 서빙",
     "WORKFLOWTEMPLATE": "워크플로우 템플릿",
     "WORKFLOW": "워크플로우",
-    "CATALOGSERVICECLAIM": "카탈로그 서비스 클레임"
+    "CATALOGSERVICECLAIM": "카탈로그 서비스 클레임",
+    "GRAFANA": "그라파나",
+    "KIALI": "키알리"
   }
 }

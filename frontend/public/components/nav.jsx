@@ -413,7 +413,7 @@ class Nav extends React.Component {
               {blockMenu.indexOf('search') === -1 && <HrefLink href="/search" name={t('RESOURCE:SEARCH')} onClick={this.close} startsWith={searchStartsWith} />}
               {/* {blockMenu.indexOf('audit') === -1 && <ResourceNSLink resource="audits" name="감사 로그" onClick={this.close} />} */}
               {blockMenu.indexOf('events') === -1 && <ResourceNSLink resource="events" name={t('RESOURCE:EVENT')} onClick={this.close} />}
-              {blockMenu.indexOf('grafana') === -1 && <HrefLink href="/grafana" name='Grafana' onClick={this.close} />}
+              {blockMenu.indexOf('grafana') === -1 && <HrefLink href="/grafana" name={t('RESOURCE:GRAFANA')} onClick={this.close} />}
             </NavSection>
             {/* Service Catalog 전체 추가 */}
             <NavSection text={t('RESOURCE:SERVICECATALOG')} icon="pficon pficon-catalog">
@@ -473,7 +473,7 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:NETWORK')} icon="pficon pficon-network">
               {blockMenu.indexOf('ingresses') === -1 && <ResourceNSLink resource="ingresses" name={ResourcePlural('Ingress', t)} onClick={this.close} />}
               {blockMenu.indexOf('services') === -1 && <ResourceNSLink resource="services" name={ResourcePlural('Service', t)} onClick={this.close} />}
-              {blockMenu.indexOf('kiali') === -1 && <HrefLink href="/kiali" name='Kiali' onClick={this.close} />}
+              {blockMenu.indexOf('kiali') === -1 && <HrefLink href="/kiali" name={t('RESOURCE:KIALI')} onClick={this.close} />}
               {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
             </NavSection>
 
