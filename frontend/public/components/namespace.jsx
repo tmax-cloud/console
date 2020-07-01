@@ -355,9 +355,9 @@ class NamespaceDropdown_ extends React.Component {
 
     if (canListNS) {
       items[ALL_NAMESPACES_KEY] = allNamespacesTitle;
-      if (!localStorage.getItem('bridge/last-namespace-name')) {
-        activeNamespace = '#ALL_NS#';
-      }
+      // if (!localStorage.getItem('bridge/last-namespace-name')) {
+      //   activeNamespace = '#ALL_NS#';
+      // }
     }
     _.map(data, 'metadata.name')
       .sort()
@@ -382,15 +382,16 @@ class NamespaceDropdown_ extends React.Component {
     if (!localStorage.getItem('bridge/last-namespace-name') && loaded) {
       if (!canListNS) {
         activeNamespace = data[0].metadata.name;
+        // localStorage.setItem('bridge/last-namespace-name', activeNamespace);
         dispatch(UIActions.setActiveNamespace(activeNamespace));
       } else {
         activeNamespace = allNamespacesTitle;
+        // localStorage.setItem('bridge/last-namespace-name', activeNamespace);
         dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
       }
     }
-
+    localStorage.setItem('bridge/last-namespace-name', activeNamespace);
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
-
     return loaded && <NamespaceSelectorComponent model={model} items={items} title={title} activeNamespace={activeNamespace} onChange={onChange} selectedKey={title} />;
   }
 }
@@ -474,10 +475,10 @@ const NamespaceSelector_ = ({ useProjects, inFlight }) =>
   inFlight ? (
     <div className="co-namespace-selector" />
   ) : (
-    <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
-      <NamespaceDropdown useProjects={useProjects} />
-    </Firehose>
-  );
+      <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
+        <NamespaceDropdown useProjects={useProjects} />
+      </Firehose>
+    );
 
 const namespaceSelectorStateToProps = ({ k8s }) => ({
   inFlight: k8s.getIn(['RESOURCES', 'inFlight']),
