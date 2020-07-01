@@ -739,7 +739,8 @@
     "USE": "사용",
     "UNUSE": "사용 안 함",
     "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
-    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임"
+    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임",
+    "IPORURL": "IP 또는 URL"
   },
   "RESOURCE": {
     "HOME": "홈",
