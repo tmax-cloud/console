@@ -828,6 +828,8 @@
     "WORKFLOWTEMPLATE": "Workflow Template",
     "WORKFLOW": "Workflow",
     "CATALOGSERVICECLAIM": "Catalog Service Claim",
-    "DASHBOARD": "Dashboard"
+    "DASHBOARD": "Dashboard",
+    "GRAFANA": "Grafana",
+    "KIALI": "Kiali"
   }
 }

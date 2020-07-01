@@ -828,6 +828,8 @@
     "WORKFLOWTEMPLATE": "워크플로우 템플릿",
     "WORKFLOW": "워크플로우",
     "CATALOGSERVICECLAIM": "카탈로그 서비스 클레임",
-    "DASHBOARD": "대시보드"
+    "DASHBOARD": "대시보드",
+    "GRAFANA": "그라파나",
+    "KIALI": "키알리"
   }
 }
