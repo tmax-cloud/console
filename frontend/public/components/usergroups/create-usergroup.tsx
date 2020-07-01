@@ -92,10 +92,8 @@ class UserGroupFormComponent extends React.Component<UserGroupProps_, UserGroupS
             </Helmet >
             <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
                 <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.userGroup.kind, t) })}</h1>
-                <p className="co-m-pane__explanation">Create user group to which multiple users can belong.</p>
-
+                <p className="co-m-pane__explanation">{t('STRING:USERGROUP-CREATE_0')}</p>
                 <fieldset disabled={!this.props.isCreate}>
-
                     <Section label={t('CONTENT:NAME')} isRequired={true}>
                         <input className="form-control form-group"
                             type="text"

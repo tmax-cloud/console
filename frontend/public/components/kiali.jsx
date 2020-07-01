@@ -1,19 +1,13 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
 import * as PropTypes from 'prop-types';
-import * as classNames from 'classnames';
 
 import { history, NavTitle, SelectorInput, LoadingBox } from './utils';
 import { namespaceProptype } from '../propTypes';
-import { split, selectorFromString } from '../module/k8s/selector';
-import { requirementFromString } from '../module/k8s/selector-requirement';
 import { resourceListPages } from './resource-pages';
-import { ResourceListDropdown } from './resource-dropdown';
 import { connectToModel } from '../kinds';
 import { connectToFlags, FLAGS, flagPending } from '../features';
-import { OpenShiftGettingStarted } from './start-guide';
 import { referenceForModel, kindForReference } from '../module/k8s';
 import { AsyncComponent } from './utils/async';
 import { DefaultPage } from './default-resource';
@@ -37,7 +31,6 @@ const updateUrlParams = (k, v) => {
 };
 
 const updateKind = kind => updateUrlParams('kind', encodeURIComponent(kind));
-const updateTags = tags => updateUrlParams('q', tags.map(encodeURIComponent).join(','));
 
 class KialiPage_ extends React.PureComponent {
     constructor(props) {
@@ -51,31 +44,14 @@ class KialiPage_ extends React.PureComponent {
 
     render() {
         const { flags, location, namespace, t } = this.props;
-        let kind, q;
 
         if (flagPending(flags.OPENSHIFT) || flagPending(flags.PROJECTS_AVAILABLE)) {
             return null;
         }
-
-        if (location.search) {
-            const sp = new URLSearchParams(window.location.search);
-            kind = sp.get('kind');
-            q = sp.get('q');
-        }
-
-        // Ensure that the "kind" route parameter is a valid resource kind ID
-        kind = kind ? decodeURIComponent(kind) : 'Service';
-
-        const tags = split(_.isString(q) ? decodeURIComponent(q) : '');
-        const validTags = _.reject(tags, tag => requirementFromString(tag) === undefined);
-        const selector = selectorFromString(validTags.join(','));
-        const labelClassName = `co-text-${_.toLower(kindForReference(kind))}`;
-        const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
         let url = `${document.location.origin}/api/kiali`
         return (
             <React.Fragment>
-                {showGettingStarted && <OpenShiftGettingStarted />}
-                <div className={classNames({ 'co-disabled': showGettingStarted })}>
+                <div>
                     <Helmet>
                         <title>Kiali</title>
                     </Helmet>

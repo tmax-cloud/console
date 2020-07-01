@@ -47,6 +47,7 @@ const validateStatus = (response, url) => {
 
   if (response.status === 401 && shouldLogout(url)) {
     authSvc.logout(window.location.pathname);
+    return response;
   }
 
   const contentType = response.headers.get("content-type");

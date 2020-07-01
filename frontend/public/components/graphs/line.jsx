@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { restyle } from 'plotly.js/lib/core';
-import { useTranslation, withTranslation } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { BaseGraph } from './base';
 import { connectToURLs, MonitoringRoutes } from '../../monitoring';
 
@@ -13,34 +13,35 @@ const baseData = {
   fill: 'tozeroy',
   type: 'scatter',
 };
+
 export class Line_ extends BaseGraph {
   constructor(props) {
     super(props);
-    const { t } = this.props;
+    const { t } = props;
     let queries = props.query;
     if (!_.isArray(queries)) {
       queries = [queries];
     }
     this.data = queries.map(() => Object.assign({}, baseData));
     this.layout = {
-      "xaxis": {
-        "visible": false
+      xaxis: {
+        visible: false,
       },
-      "yaxis": {
-        "visible": false
+      yaxis: {
+        visible: false,
       },
-      "annotations": [
+      annotations: [
         {
-          "text": t('STRING:LINE_0'),
-          "xref": "paper",
-          "yref": "paper",
-          "showarrow": false,
-          "font": {
-            "size": 28
-          }
-        }
-      ]
-    }
+          text: t('STRING:LINE_0'),
+          xref: 'paper',
+          yref: 'paper',
+          showarrow: false,
+          font: {
+            size: 28,
+          },
+        },
+      ],
+    };
     this.options = {
       displaylogo: false,
       displayModeBar: false,
@@ -48,7 +49,7 @@ export class Line_ extends BaseGraph {
     this.style = { width: '100%' };
     this.onPlotlyRelayout = e => {
       if (!e) {
-        console.log('error')
+        console.log('error');
         return;
       }
       let start = this.start;
@@ -82,31 +83,34 @@ export class Line_ extends BaseGraph {
   updateGraph2(data, target) {
     let queries = this.props.query;
     let nticks = data.length <= 5 ? data.length : 5;
+    const { t } = this.props;
     if (!_.isArray(queries)) {
-      queries = [{
-        query: queries,
-        name: this.props.title,
-      }];
+      queries = [
+        {
+          query: queries,
+          name: this.props.title,
+        },
+      ];
     }
     if (data.length === 0) {
       this.node.layout = {
-        "xaxis": {
-          "visible": false
+        xaxis: {
+          visible: false,
         },
-        "yaxis": {
-          "visible": false
+        yaxis: {
+          visible: false,
         },
-        "annotations": [
+        annotations: [
           {
-            "text": "No matching data found",
-            "xref": "paper",
-            "yref": "paper",
-            "showarrow": false,
-            "font": {
-              "size": 28
-            }
-          }
-        ]
+            text: t('STRING:LINE_1'),
+            xref: 'paper',
+            yref: 'paper',
+            showarrow: false,
+            font: {
+              size: 28,
+            },
+          },
+        ],
       };
       restyle(this.node, {
         x: [],
@@ -127,7 +131,7 @@ export class Line_ extends BaseGraph {
         ticks: '',
         showline: false,
         fixedrange: true,
-        automargin: true
+        automargin: true,
       },
       xaxis: {
         visible: true,
@@ -136,13 +140,14 @@ export class Line_ extends BaseGraph {
         tickmode: 'auto',
         nticks: nticks,
         fixedrange: true, // true인경우 zoom불가
-        automargin: true
+        automargin: true,
       },
       legend: {
-        x: 0, y: 1,
+        x: 0,
+        y: 1,
         bgcolor: 'rgba(255, 255, 255, 0.5)',
         size: '12px',
-        orientation: 'h'
+        orientation: 'h',
       },
       margin: {
         l: 30,
@@ -166,30 +171,39 @@ export class Line_ extends BaseGraph {
       case 'year':
         this.node.layout.xaxis.tickformat = '%Y';
         break;
+      default:
+        break;
     }
-    data.forEach((cur, i) => {
-      restyle(this.node, {
-        x: [data.map(v => new Date(v.meteringTime))],
-        y: [data.map(v => v[target])],
-        // Use a lighter fill color on first line in graphs
-        fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
-        name,
-      }, [i]);
-    })
+    data
+      .forEach((cur, i) => {
+        restyle(
+          this.node,
+          {
+            x: [data.map(v => new Date(v.meteringTime))],
+            y: [data.map(v => v[target])],
+            // Use a lighter fill color on first line in graphs
+            fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
+            name,
+          },
+          [i],
+        );
+      })
       .catch(e => {
         // eslint-disable-next-line no-console
         console.error(e);
       });
   }
 
-
   updateGraph(data) {
     let queries = this.props.query;
+    const { t } = this.props;
     if (!_.isArray(queries)) {
-      queries = [{
-        query: queries,
-        name: this.props.title,
-      }];
+      queries = [
+        {
+          query: queries,
+          name: this.props.title,
+        },
+      ];
     }
     _.each(data, (result, i) => {
       const query = queries[i];
@@ -198,33 +212,37 @@ export class Line_ extends BaseGraph {
         // eslint-disable-next-line no-console
         console.warn(`Graph error: No data from query for ${name || query}.`);
         this.node.layout = {
-          "xaxis": {
-            "visible": false
+          xaxis: {
+            visible: false,
           },
-          "yaxis": {
-            "visible": false
+          yaxis: {
+            visible: false,
           },
-          "annotations": [
+          annotations: [
             {
-              "text": "No matching data found",
-              "xref": "paper",
-              "yref": "paper",
-              "showarrow": false,
-              "font": {
-                "size": 28
-              }
-            }
-          ]
+              text: t('STRING:LINE_1'),
+              xref: 'paper',
+              yref: 'paper',
+              showarrow: false,
+              font: {
+                size: 28,
+              },
+            },
+          ],
         };
-        restyle(this.node, {
-          x: [],
-          y: [],
-          name,
-        }, [i]).catch(e => {
+        restyle(
+          this.node,
+          {
+            x: [],
+            y: [],
+            name,
+          },
+          [i],
+        ).catch(e => {
           // eslint-disable-next-line no-console
           console.error(e);
         });
-        return
+        return;
       }
       const lineValues = result.data.result[0].values;
       this.node.layout = {
@@ -236,7 +254,7 @@ export class Line_ extends BaseGraph {
           ticks: '',
           showline: false,
           fixedrange: true,
-          automargin: true
+          automargin: true,
         },
         xaxis: {
           visible: true,
@@ -244,13 +262,14 @@ export class Line_ extends BaseGraph {
           showline: true,
           tickformat: '%H:%M',
           fixedrange: true, // true인경우 zoom불가
-          automargin: true
+          automargin: true,
         },
         legend: {
-          x: 0, y: 1,
+          x: 0,
+          y: 1,
           bgcolor: 'rgba(255, 255, 255, 0.5)',
           size: '12px',
-          orientation: 'h'
+          orientation: 'h',
         },
         margin: {
           l: 30,
@@ -261,13 +280,17 @@ export class Line_ extends BaseGraph {
         },
         shapes: [],
       };
-      restyle(this.node, {
-        x: [lineValues.map(v => new Date(v[0] * 1000))],
-        y: [lineValues.map(v => v[1] === "NaN" ? null : Number(v[1]))],
-        // Use a lighter fill color on first line in graphs
-        fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
-        name,
-      }, [i]).catch(e => {
+      restyle(
+        this.node,
+        {
+          x: [lineValues.map(v => new Date(v[0] * 1000))],
+          y: [lineValues.map(v => (v[1] === 'NaN' ? null : Number(v[1])))],
+          // Use a lighter fill color on first line in graphs
+          fillcolor: i === 0 ? 'rgba(31, 119, 190, 0.3)' : undefined,
+          name,
+        },
+        [i],
+      ).catch(e => {
         // eslint-disable-next-line no-console
         console.error(e);
       });
