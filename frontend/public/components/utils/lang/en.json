@@ -301,6 +301,8 @@
     "USERGROUP-CREATE_0": "Create user group to which multiple users can belong."
   },
   "CONTENT": {
+    "REPORTEDFROM": "Reported from",
+    "DESTINATION": "Destination",
     "BINDABLE": "Bindable",
     "EXTERNALNAME": "External Name",
     "PHONE": "Phone",
