@@ -299,6 +299,8 @@
     "USERGROUP-CREATE_0": "여러 사용자가 속할 수 있는 사용자 그룹을 생성하십시오."
   },
   "CONTENT": {
+    "REPORTEDFROM": "출발지",
+    "DESTINATION": "목적지",
     "BINDABLE": "Bindable",
     "EXTERNALNAME": "External Name",
     "PHONE": "핸드폰 번호",
@@ -502,7 +504,7 @@
     "MAXPODS": "최대 파드",
     "IMAGE": "이미지",
     "IMAGE_EN": "Image",
-    "SOURCE": "Source",
+    "SOURCE": " 원본",
     "TLS": "TLS",
     "SERVICEACCOUNTTOKEN": "Service Account Token",
     "OPAQUE": "Opaque",
