@@ -17,8 +17,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
     coFetch(`/api/jaeger/api/services/${name}/operations`)
       .then(res => res.json())
       .then(res => {
-        console.log(res);
-        // setOperationList(data);
+        res.data && setOperationList(res.data);
       });
   }, []);
 
@@ -57,27 +56,15 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   );
 };
 
-const TraceGraphs = requirePrometheus(({ namespace, name, limit, statusCode, display }) => {
+const TraceGraphs = requirePrometheus(({ name, limit, statusCode, display }) => {
   const iframeRef = React.useRef();
-  const query = `?uiEmbed=v0&service=${name}` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`);
+  const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${name}`;
   const jaegerURL = `${document.location.origin}/api/jaeger/search${query}`;
 
-  React.useEffect(() => {
-    const resizeHeight = () => {
-      if (iframeRef.current.contentDocument.readyState === 'complete') {
-        iframeRef.current.style.height = null;
-        iframeRef.current.style.height = iframeRef.current.contentDocument.documentElement.scrollHeight + 'px';
+  const onLoad = () => {
+    iframeRef.current.contentWindow.document.body.style.height = 'auto';
+    iframeRef.current.style.height = iframeRef.current.contentDocument.documentElement.scrollHeight + 'px';
+  };
 
-        iframeRef.current.contentDocument.onclick = () => {
-          iframeRef.current.style.height = null;
-          iframeRef.current.style.height = iframeRef.current.contentDocument.documentElement.scrollHeight + 'px';
-        };
-      } else {
-        setTimeout(resizeHeight, 300);
-      }
-    };
-    setTimeout(resizeHeight, 300);
-  });
-
-  return <iframe id="iframe-jaeger" ref={iframeRef} width="100%" style={{ border: 0 }} src={jaegerURL} target="_blank"></iframe>;
+  return <iframe ref={iframeRef} width="100%" height="500px" style={{ border: 0 }} src={jaegerURL} target="_blank" onLoad={onLoad}></iframe>;
 });
