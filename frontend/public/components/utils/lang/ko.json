@@ -347,8 +347,8 @@
     "RUNCOMMANDARGUMENTS": "커맨드 인수 실행",
     "ENVVARIABLES": "환경 변수",
     "CONTAINERIMAGE": "컨테이너 이미지",
-    "IMAGEPULLPOLICY": "이미지 풀 폴리시",
-    "IFNOTPRESENT": "존재하지 않으면",
+    "IMAGEPULLPOLICY": "이미지 다운로드 정책",
+    "IFNOTPRESENT": "로컬 환경에 이미지가 없을 경우",
     "ALWAYS": "항상",
     "NEVER": "절대 안 함",
     "REPLICAS": "레플리카",
@@ -739,7 +739,8 @@
     "USE": "사용",
     "UNUSE": "사용 안 함",
     "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
-    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임"
+    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임",
+    "IPORURL": "IP 또는 URL"
   },
   "RESOURCE": {
     "HOME": "홈",
