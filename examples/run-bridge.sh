@@ -19,7 +19,7 @@
     --public-dir=./frontend/public/dist \
     --hypercloud-endpoint=http://192.168.6.211:28677 \
     --kiali-endpoint=http://192.168.6.196:30197/api/kiali \
-    --jaeger-endpoint=http://192.168.6.197:32602/api/jaeger \
+    --jaeger-endpoint=http://192.168.6.197:30573/api/jaeger \
     --grafana-endpoint=http://192.168.6.196:31527 \
     --prometheus-endpoint=http://192.168.6.196:30562/api \
     --release-mode=true \

@@ -264,7 +264,7 @@ func main() {
 			Endpoint:        prometheusEndpoint,
 		}
 		jaegerEndpoint = validateFlagIsURL("jaeger-endpoint", *fJaegerEndpoint)
-		srv.HypercloudProxyConfig = &proxy.Config{
+		srv.JaegerProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        jaegerEndpoint,
 		}
