@@ -29,7 +29,7 @@ spec:
         - --hypercloud-endpoint=http://@@HC4@@
         - --prometheus-endpoint=http://@@PROM@@/api
         - --grafana-endpoint=http://@@GRAFANA@@/
-        - --kiali-endpoint=http://@@KIALI@@/
+        - --kiali-endpoint=http://@@KIALI@@/api/kiali
         - --jaeger-endpoint=http://@@JAEGER@@/api/jaeger
         - --hdc-mode=@@HDC_FLAG@@
         - --tmaxcloud-portal=@@PORTAL@@
