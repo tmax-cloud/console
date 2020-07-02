@@ -20,11 +20,37 @@ export const VolumeclaimTemplate = props => {
         <FirstSection label={t('CONTENT:VOLUMECLAIMTEMPLATE')} isRequired={false}>
           <div className="row">
             <div className="col-xs-2" style={{ float: 'left' }}>
-              <input type="radio" value={true} name="pod-template" onChange={e => setUseVolumeclaimTemplate(true)} checked={useVolumeclaimTemplate} />
+              <input
+                type="radio"
+                value={true}
+                name="volumeclaim-template"
+                onChange={e => {
+                  setUseVolumeclaimTemplate(true);
+                  onVolumeclaimTemplateChange({
+                    value: true,
+                    id: 'useVolumeclaimTemplate',
+                    label: '',
+                  });
+                }}
+                checked={useVolumeclaimTemplate}
+              />
               {t('CONTENT:USE')}
             </div>
             <div className="col-xs-2" style={{ float: 'left' }}>
-              <input type="radio" value={false} name="pod-template" onChange={e => setUseVolumeclaimTemplate(false)} checked={!useVolumeclaimTemplate} />
+              <input
+                type="radio"
+                value={false}
+                name="volumeclaim-template"
+                onChange={e => {
+                  setUseVolumeclaimTemplate(false);
+                  onVolumeclaimTemplateChange({
+                    value: false,
+                    id: 'useVolumeclaimTemplate',
+                    label: '',
+                  });
+                }}
+                checked={!useVolumeclaimTemplate}
+              />
               {t('CONTENT:UNUSE')}
             </div>
           </div>
@@ -32,7 +58,7 @@ export const VolumeclaimTemplate = props => {
 
         {useVolumeclaimTemplate && (
           <div id="volumeclaim-template">
-            <SecondSection valueWidth={'400px'} label={'볼륨 클레임 템플릿 이름'} id={'image'} isRequired={true}>
+            <SecondSection valueWidth={'400px'} label={'볼륨 클레임 템플릿 이름'} id={'image'} required>
               <input
                 className="form-control"
                 type="text"

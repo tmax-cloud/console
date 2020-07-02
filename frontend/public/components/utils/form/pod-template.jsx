@@ -10,11 +10,16 @@ import { BasicPortEditor } from '../basic-port-editor';
 import SingleSelect from '../select';
 
 export const PodTemplate = props => {
-  let { t, onLabelChanged, imageRegistryList, pvcList, getImageList, imageList, onPodTemplateResourceChange } = props;
+  let { t, podTemplate, onLabelChanged, imageRegistryList, pvcList, imageList, onPodTemplateResourceChange, imageTagList, onImageChange, onImageRegistryChange } = props;
 
-  const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0].value);
+  // const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0]);
+  const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
   const [image, setImage] = React.useState(imageList.length && imageList[0].value);
+  const [imageTag, setImageTag] = React.useState(imageTagList.length && imageTagList[0].value);
   const [imagePullPolicy, setImagePullPolicy] = React.useState('');
+
+  // const [imageTagListBind, setImageTagListBind] = React.useState(imageTagList);
+  // const [imageListBind, setImageListBind] = React.useState(imageList);
 
   const [runCommands, setRunCommands] = React.useState([['']]);
   const [runCommandArguments, setRunCommandArguments] = React.useState([['']]);
@@ -39,23 +44,64 @@ export const PodTemplate = props => {
     { value: 'Never', label: t('CONTENT:NEVER') },
   ];
 
-  const onImageRegistryChange = e => {
-    console.log('1');
-    setImageRegistry(e.value);
-    getImageList({ metadata: { name: e.value } });
-  };
+  // const onImageRegistryChange = e => {
+  //   setImageRegistry(e.value);
+  //   getImageList({ metadata: { name: e.label } });
+  //   // setImageListBind(imageList);
+  // };
 
+  // const onImageChange = e => {
+  //   setImage(e.value);
+  //   console.log(imageAllTagList);
+  //   imageTagList = imageAllTagList
+  //     .filter(cur => {
+  //       return cur.image === e.value;
+  //     })[0]
+  //     .value.map(version => {
+  //       return {
+  //         value: version,
+  //         label: version,
+  //       };
+  //     });
+  //   setImageTag(e.tagList[0]);
+  // };
   return (
     <div>
       <div>
         <FirstSection label={t('CONTENT:PODTEMPLATE')} isRequired={false}>
           <div className="row">
             <div className="col-xs-2" style={{ float: 'left' }}>
-              <input type="radio" value={true} name="pod-template" onChange={e => setUsePodTemplate(true)} checked={usePodTemplate} />
+              <input
+                type="radio"
+                value={true}
+                name="pod-template"
+                onChange={e => {
+                  setUsePodTemplate(true);
+                  onPodTemplateResourceChange({
+                    value: true,
+                    id: 'usePodTemplate',
+                    label: '',
+                  });
+                }}
+                checked={usePodTemplate}
+              />
               {t('CONTENT:IMAGEREGISTRY')}
             </div>
             <div className="col-xs-2" style={{ float: 'left' }}>
-              <input type="radio" value={false} name="pod-template" onChange={e => setUsePodTemplate(false)} checked={!usePodTemplate} />
+              <input
+                type="radio"
+                value={false}
+                name="pod-template"
+                onChange={e => {
+                  setUsePodTemplate(false);
+                  onPodTemplateResourceChange({
+                    value: false,
+                    id: 'usePodTemplate',
+                    label: '',
+                  });
+                }}
+                checked={!usePodTemplate}
+              />
               {t('CONTENT:BYSELF')}
             </div>
           </div>
@@ -67,7 +113,8 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imageRegistryList}
                 name={'ImageRegistry'}
-                value={imageRegistry}
+                value={imageRegistry.value}
+                label={imageRegistry.label}
                 onChange={e => {
                   onImageRegistryChange(e);
                   onPodTemplateResourceChange(e);
@@ -78,9 +125,20 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imageList}
                 name={'Image'}
-                value={image}
+                value={podTemplate.image}
                 onChange={e => {
-                  setImage(e.value);
+                  onImageChange(e);
+                  onPodTemplateResourceChange(e);
+                }}
+              />
+            </SecondSection>
+            <SecondSection valueWidth={'400px'} label={'이미지 태그'} id={'image-tag'}>
+              <SingleSelect
+                options={imageTagList}
+                name={'ImageTag'}
+                value={podTemplate.imageTag}
+                onChange={e => {
+                  setImageTag(e.value);
                   onPodTemplateResourceChange(e);
                 }}
               />
