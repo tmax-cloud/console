@@ -39,7 +39,7 @@ export const TextFilter = ({ label, onChange, defaultValue, style, className, au
   }
   const { t } = useTranslation();
   // return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={`Filter ${label}...`} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
-  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={(id === 'event' && t('CONTENT:FILTERLABELHOLDEREVENT')) || (id === 'rule' && t('CONTENT:FILTERLABELHOLDERRULE')) || t('CONTENT:FILTERLABELHOLDER')} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
+  return <input type="text" autoCapitalize="none" style={style} className={classNames('form-control text-filter', className)} tabIndex={0} placeholder={(id === 'event' && t('CONTENT:FILTERLABELHOLDEREVENT')) || (id === 'rule' && t('CONTENT:FILTERLABELHOLDERRULE')) || (id === 'audit' && '메시지로 검색') || t('CONTENT:FILTERLABELHOLDER')} onChange={onChange} autoFocus={autoFocus} defaultValue={defaultValue} onKeyDown={e => e.key === 'Escape' && e.target.blur()} />;
 };
 
 TextFilter.displayName = 'TextFilter';
@@ -239,7 +239,7 @@ FireMan_.propTypes = {
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
   const { t } = useTranslation();
-  const { title, createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
+  let { title, createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
   const { labelPlural, plural, namespaced, label } = ko;
@@ -258,6 +258,8 @@ export const ListPage = props => {
 
   // Don't show row filters if props.filters were passed. The content is already filtered and the row filters will have incorrect counts.
   const rowFilters = _.isEmpty(filters) ? props.rowFilters : null;
+
+  title = window.location.pathname.includes(':') ? label : title;
 
   if (!namespaced && namespace) {
     return <ErrorPage404 />;
@@ -292,7 +294,7 @@ ListPage.displayName = 'ListPage';
 
 /** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, flatten?: Function, title?: string, showTitle?: boolean, dropdownFilters?: any[], filterLabel?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string}>} */
 export const MultiListPage = props => {
-  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake, id } = props;
+  const { createButtonText, flatten, filterLabel, createProps, showTitle = true, title, namespace, fake, id, query } = props;
   const resources = _.map(props.resources, r => ({
     ...r,
     isList: true,
@@ -300,8 +302,10 @@ export const MultiListPage = props => {
     namespace: r.namespaced ? namespace : r.namespace,
   }));
 
+  title = window.location.pathname === 'federatedresources' ? 'Federated Resource' : title;
+
   const elems = (
-    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
+    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} query={query} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
       <Firehose resources={resources}>
         <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
       </Firehose>

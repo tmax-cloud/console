@@ -47,7 +47,7 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('USER', t) })} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('User', t) })} />
           <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
         </div>
       </React.Fragment>
@@ -72,26 +72,20 @@ export const UsersPage = props => {
     items: createItems,
     createLink: type => `/k8s/cluster/users/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  return HDCModeFlag ?
-    <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> :
+  return HDCModeFlag ? (
+    <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" />
+  ) : (
     // <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
     <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} canCreate={true} kind="User" />
+  );
 };
 UsersPage.displayName = 'UsersPage';
 
 export const UsersDetailsPage = props => {
   const { t } = useTranslation();
   let menu = HDCModeFlag ? null : menuActions;
-  let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] :
-    [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]
-  return (
-    <DetailsPage
-      {...props}
-      kind="User"
-      menuActions={menu}
-      pages={page}
-    />
-  )
+  let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] : [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
+  return <DetailsPage {...props} kind="User" menuActions={menu} pages={page} />;
 };
 
 UsersDetailsPage.displayName = 'UsersDetailsPage';

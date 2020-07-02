@@ -38,15 +38,25 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
             },
             status: 'active',
             userInfo: {
+                email: '',
+                password: '',
+                phone: ''
             }
         });
+
+        const inputError = {
+            name: null,
+            email: null,
+            password: null,
+            phone: null
+        }
 
         this.state = {
             userTypeAbstraction: this.props.userTypeAbstraction,
             user: user,
             inProgress: false,
             type: 'form',
-            quota: [['', '']]
+            inputError: inputError
         };
         this.onValueChanged = this.onValueChanged.bind(this);
         this.save = this.save.bind(this);
@@ -63,7 +73,7 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                 user.userInfo.email = String(event.target.value);
                 break;
             case 'password':
-                let pw = sha512(String(event.target.value));
+                let pw = event.target.value !== '' ? sha512(String(event.target.value)) : "";
                 user.userInfo.password = pw;
                 break;
             case 'phone':
@@ -84,10 +94,35 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
     }
     save(e) {
         e.preventDefault();
+        const { t } = this.props;
         const { kind, metadata } = this.state.user;
-        this.setState({ inProgress: true });
         const newUser = _.assign({}, this.state.user);
-
+        //input 에러처리 
+        if (newUser.metadata.name === '') {
+            this.setState({ inputError: { name: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:NAME`) }) } });
+            return
+        } else {
+            this.setState({ inputError: { name: null } });
+        }
+        if (newUser.userInfo.email === '') {
+            this.setState({ inputError: { email: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:EMAIL`) }) } });
+            return
+        } else {
+            this.setState({ inputError: { email: null } });
+        }
+        if (newUser.userInfo.password === '') {
+            this.setState({ inputError: { password: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:PASSWORD`) }) } });
+            return
+        } else {
+            this.setState({ inputError: { password: null } });
+        }
+        if (newUser.userInfo.phone === '') {
+            this.setState({ inputError: { phone: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:PHONE`) }) } });
+            return
+        } else {
+            this.setState({ inputError: { phone: null } });
+        }
+        this.setState({ inProgress: true });
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newUser)
@@ -106,7 +141,7 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
             </Helmet >
             <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
                 <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.user.kind, t) })}</h1>
-                <p className="co-m-pane__explanation">Create user through the form editor.</p>
+                <p className="co-m-pane__explanation">{t('STRING:USER-CREATE_0')}</p>
 
                 <fieldset disabled={!this.props.isCreate}>
 
@@ -114,28 +149,37 @@ class UserFormComponent extends React.Component<UserProps_, UserState_>  {
                         <input className="form-control form-group"
                             type="text"
                             onChange={this.onValueChanged}
-                            id="name"
-                            required />
+                            id="name" />
+                        {this.state.inputError.name &&
+                            <p className="error_text">{this.state.inputError.name}</p>
+                        }
                     </Section>
                     <Section label={t('CONTENT:EMAIL')} isRequired={true}>
                         <input className="form-control form-group"
                             type="text"
                             onChange={this.onValueChanged}
-                            id="email"
-                            required />
+                            id="email" />
+                        {this.state.inputError.email &&
+                            <p className="error_text">{this.state.inputError.email}</p>
+                        }
                     </Section>
                     <Section label={t('CONTENT:PASSWORD')} isRequired={true} >
                         <input className="form-control form-group"
                             type="text"
                             onChange={this.onValueChanged}
-                            id="password"
-                            required />
+                            id="password" />
+                        {this.state.inputError.password &&
+                            <p className="error_text">{this.state.inputError.password}</p>
+                        }
                     </Section>
                     <Section label={t('CONTENT:PHONE')} isRequired={true}>
                         <input className="form-control form-group"
                             type="text"
                             onChange={this.onValueChanged}
                             id="phone" />
+                        {this.state.inputError.phone &&
+                            <p className="error_text">{this.state.inputError.phone}</p>
+                        }
                     </Section>
                     <Section label={t('CONTENT:DEPARTMENT')} isRequired={false}>
                         <input className="form-control form-group"
@@ -180,7 +224,7 @@ export type UserState_ = {
     inProgress: boolean,
     error?: any,
     type: string,
-    quota: Array<any>
+    inputError?: any
 };
 
 export type UserProps_ = {
