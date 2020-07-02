@@ -1211,6 +1211,43 @@ export const ExperimentModel: K8sKind = {
   kind: 'Experiment',
   id: 'experiment',
 };
+export const TrainingJobModel: K8sKind = {
+  label: 'Training Job',
+  labelPlural: 'Training Jobs',
+  apiVersion: 'v1',
+  path: 'trainingjobs',
+  apiGroup: 'kubeflow.org',
+  plural: 'trainingjobs',
+  abbr: 'TJ',
+  namespaced: true,
+  kind: 'TrainingJob',
+  id: 'trainingjob',
+  crd:false
+};
+export const TFJobModel: K8sKind = {
+  label: 'TFJob',
+  labelPlural: 'TF Jobs',
+  apiVersion: 'v1',
+  path: 'tfjobs',
+  apiGroup: 'kubeflow.org',
+  plural: 'tfjobs',
+  abbr: 'TFJ',
+  namespaced: true,
+  kind: 'TFJob',
+  id: 'tfjob',
+};
+export const PyTorchJobModel: K8sKind = {
+  label: 'PyTorchJob',
+  labelPlural: 'PyTorch Jobs',
+  apiVersion: 'v1',
+  path: 'pytorchjobs',
+  apiGroup: 'kubeflow.org',
+  plural: 'pytorchjobs',
+  abbr: 'PTJ',
+  namespaced: true,
+  kind: 'PyTorchJob',
+  id: 'pytorchjob',
+};
 export const InferenceServiceModel: K8sKind = {
   label: 'Inference Service',
   labelPlural: 'KFServing',
