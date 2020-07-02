@@ -3,6 +3,7 @@
 NAME_HC4="hypercloud4-operator-service"
 NAME_PROM="prometheus-k8s"
 NAME_GRAFANA='grafana'
+NAMESPACE_GRAFANA='monitoring'
 NAME_KIALI='kiali'
 NAME_JAEGER='tracing'
 
@@ -95,15 +96,15 @@ PROM=${PROM_IP}:${PROM_PORT}
 echo "Prometheus Addr = ${PROM}"
 
 # get grafana ip addr 
-GRAFANA_IP=$(kubectl get svc -A | grep ${NAME_GRAFANA} | awk '{print $4}')
-GRAFANA_PORT=$(kubectl get svc -A | grep ${NAME_GRAFANA} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+GRAFANA_IP=$(kubectl get svc -A | grep ${NAME_GRAFANA} | grep ${NAMESPACE_GRAFANA} | awk '{print $4}')
+GRAFANA_PORT=$(kubectl get svc -A | grep ${NAME_GRAFANA} | grep ${NAMESPACE_GRAFANA} | awk '{print $6}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $GRAFANA_IP ]; then
     echo "Cannot find GRAFANA_IP in ${NAME_GRAFANA}. Is grafana installed?"
     GRAFANA_IP="0.0.0.0:3000"
     echo "GRAFANA_IP dummy value temporarily set to 0.0.0.0:3000."
 fi
 GRAFANA=${GRAFANA_IP}:${GRAFANA_PORT}
-echo "grafana Addr = ${GRAFANA}"
+echo "Grafana Addr = ${GRAFANA}"
 
 # get kiali ip addr 
 KIALI_IP=$(kubectl get svc -A | grep ${NAME_KIALI} | grep -v "operator" | awk '{print $4}')
