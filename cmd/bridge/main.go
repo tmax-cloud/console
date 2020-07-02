@@ -376,6 +376,9 @@ func main() {
 		// NOTE: kiali 추가 // 윤진수
 		kialiEndpoint := validateFlagIsURL("kiali-endpoint", *fKialiEndpoint)
 		srv.KialiProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        kialiEndpoint,
 		}
