@@ -8,7 +8,7 @@ import { Dropdown } from './';
 
 const statuses = { success: 'Success', reject: 'Reject' };
 
-const Section = ({ label, children, id }) => <div className="row">
+const Section = ({ label, children, id }) => <div className="row" style={{ marginTop: '10px' }}>
   <div className="col-xs-2">
     <div>{label}</div>
   </div>
@@ -45,7 +45,7 @@ export class StatusSelector extends Component {
     return <div style={{ width: '350px' }}>
       <Dropdown title="Success" className="btn-group" items={statuses} onChange={this.onStatusChange} />
       {this.state.status === 'Reject' && <Section label="Reason" id="reason">
-        <p><textarea cols="30" rows="5" onChange={this.onReasonChange}></textarea></p>
+        <p><textarea cols="70" rows="3" onChange={this.onReasonChange} style={{ resize: 'none' }}></textarea></p>
       </Section>}
     </div>;
 

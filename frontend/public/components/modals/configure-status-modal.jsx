@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import { k8sPatch2 } from '../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
-import { PromiseComponent, StatusEditorPair } from '../utils';
+import { PromiseComponent, StatusEditorPair, AccessDenied } from '../utils';
 import { AsyncComponent } from '../utils/async';
 
 const StautusEditorComponent = props => <AsyncComponent loader={() => import('../utils/status-editor.jsx').then(c => c.StatusSelector)} {...props} />;
@@ -11,9 +11,9 @@ const StautusEditorComponent = props => <AsyncComponent loader={() => import('..
 class ConfigureStatusModal extends PromiseComponent {
   constructor(props) {
     super(props);
-
     this.status = {
       status: props.status,
+      error: ""
     };
 
     this._cancel = props.cancel.bind(this);
@@ -31,11 +31,11 @@ class ConfigureStatusModal extends PromiseComponent {
     let data =
       StatusEditorPair.Status === 'Reject'
         ? {
-            status: {
-              status: StatusEditorPair.Status,
-              reason: StatusEditorPair.Reason,
-            },
-          }
+          status: {
+            status: StatusEditorPair.Status,
+            reason: StatusEditorPair.Reason,
+          },
+        }
         : { status: { status: StatusEditorPair.Status } };
 
     const op = {
@@ -46,21 +46,23 @@ class ConfigureStatusModal extends PromiseComponent {
     const promise = k8sPatch2(this.props.resourceKind, this.props.resource, data, op).then(
       () => {
         location.reload();
-      },
-      err => {
-        console.error(err);
-      },
-    );
-
-    this.handlePromise(promise).then(this.props.close);
+      }
+    ).catch(error => {
+      this.setState({ error: error.message })
+    });
+    this.handlePromise(promise);
+    // this.handlePromise(promise).then(this.props.close);
   }
 
   render() {
     return (
-      <form onSubmit={this._submit} name="form">
+      <form onSubmit={this._submit} name="form" style={{ width: '600px' }}>
         <ModalTitle>{this.props.title}</ModalTitle>
         <ModalBody>
           <StautusEditorComponent submit={this._submit} />
+          <div className="col-xs-10">
+            <p className="error_text">{this.state.error}</p>
+          </div>
         </ModalBody>
         <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={this.props.btnText || 'Confirm'} cancel={this._cancel} />
       </form>
