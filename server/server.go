@@ -355,14 +355,16 @@ func (s *Server) HTTPHandler() http.Handler {
 			hypercloudProxy.ServeHTTP(w, r)
 		})),
 	)
-	jaegerProxyAPIPath := jaegerProxyEndpoint
-	jaegerProxy := httputil.NewSingleHostReverseProxy(s.JaegerProxyConfig.Endpoint)
-	handle(jaegerProxyAPIPath, http.StripPrefix(
-		proxy.SingleJoiningSlash(s.BaseURL.Path, jaegerProxyAPIPath),
-		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			jaegerProxy.ServeHTTP(w, r)
-		})),
-	)
+	if s.JaegerProxyConfig != nil {
+		jaegerProxyAPIPath := jaegerProxyEndpoint
+		jaegerProxy := httputil.NewSingleHostReverseProxy(s.JaegerProxyConfig.Endpoint)
+		handle(jaegerProxyAPIPath, http.StripPrefix(
+			proxy.SingleJoiningSlash(s.BaseURL.Path, jaegerProxyAPIPath),
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				jaegerProxy.ServeHTTP(w, r)
+			})),
+		)
+	}
 
 	// NOTE: 여기까지
 	if s.prometheusProxyEnabled() {
