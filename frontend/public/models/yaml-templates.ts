@@ -4680,6 +4680,182 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.TrainingJobModel), 'default'],
+    `
+    apiVersion: kubeflow.org/v1
+    kind: TFJob
+    metadata:
+      name: tf-smoke-gpu
+      namespace: default
+    spec:
+      tfReplicaSpecs:
+        PS:
+          replicas: 1
+          template:
+            metadata:
+              creationTimestamp: null
+            spec:
+              containers:
+              - args:
+                - python
+                - tf_cnn_benchmarks.py
+                - --batch_size=32
+                - --model=resnet50
+                - --variable_update=parameter_server
+                - --flush_stdout=true
+                - --num_gpus=1
+                - --local_parameter_device=cpu
+                - --device=cpu
+                - --data_format=NHWC
+                image: gcr.io/kubeflow/tf-benchmarks-cpu
+                name: tensorflow
+                ports:
+                - containerPort: 2222
+                  name: tfjob-port
+                resources:
+                  limits:
+                    cpu: '1'
+                workingDir: /opt/tf-benchmarks/scripts/tf_cnn_benchmarks
+              restartPolicy: OnFailure
+        Worker:
+          replicas: 1
+          template:
+            metadata:
+              creationTimestamp: null
+            spec:
+              containers:
+              - args:
+                - python
+                - tf_cnn_benchmarks.py
+                - --batch_size=32
+                - --model=resnet50
+                - --variable_update=parameter_server
+                - --flush_stdout=true
+                - --num_gpus=1
+                - --local_parameter_device=cpu
+                - --device=gpu
+                - --data_format=NHWC
+                image: gcr.io/kubeflow/tf-benchmarks-gpu
+                name: tensorflow
+                ports:
+                - containerPort: 2222
+                  name: tfjob-port
+                resources:
+                  limits:
+                    nvidia.com/gpu: 1
+                workingDir: /opt/tf-benchmarks/scripts/tf_cnn_benchmarks
+              restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TFJobModel), 'default'],
+    `
+    apiVersion: kubeflow.org/v1
+    kind: TFJob
+    metadata:
+      name: tf-smoke-gpu
+      namespace: default
+    spec:
+      tfReplicaSpecs:
+        PS:
+          replicas: 1
+          template:
+            metadata:
+              creationTimestamp: null
+            spec:
+              containers:
+              - args:
+                - python
+                - tf_cnn_benchmarks.py
+                - --batch_size=32
+                - --model=resnet50
+                - --variable_update=parameter_server
+                - --flush_stdout=true
+                - --num_gpus=1
+                - --local_parameter_device=cpu
+                - --device=cpu
+                - --data_format=NHWC
+                image: gcr.io/kubeflow/tf-benchmarks-cpu
+                name: tensorflow
+                ports:
+                - containerPort: 2222
+                  name: tfjob-port
+                resources:
+                  limits:
+                    cpu: '1'
+                workingDir: /opt/tf-benchmarks/scripts/tf_cnn_benchmarks
+              restartPolicy: OnFailure
+        Worker:
+          replicas: 1
+          template:
+            metadata:
+              creationTimestamp: null
+            spec:
+              containers:
+              - args:
+                - python
+                - tf_cnn_benchmarks.py
+                - --batch_size=32
+                - --model=resnet50
+                - --variable_update=parameter_server
+                - --flush_stdout=true
+                - --num_gpus=1
+                - --local_parameter_device=cpu
+                - --device=gpu
+                - --data_format=NHWC
+                image: gcr.io/kubeflow/tf-benchmarks-gpu
+                name: tensorflow
+                ports:
+                - containerPort: 2222
+                  name: tfjob-port
+                resources:
+                  limits:
+                    nvidia.com/gpu: 1
+                workingDir: /opt/tf-benchmarks/scripts/tf_cnn_benchmarks
+              restartPolicy: OnFailure
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PyTorchJobModel), 'default'],
+    `
+    apiVersion: kubeflow.org/v1
+    kind: PyTorchJob
+    metadata:
+      name: pytorch-tcp-dist-mnist
+      namespace: default
+    spec:
+      pytorchReplicaSpecs:
+        Master:
+          replicas: 1
+          restartPolicy: OnFailure
+          template:
+            spec:
+              containers:
+                - name: pytorch
+                  image: gcr.io/kubeflow-ci/pytorch-dist-mnist_test:1.0
+                  ports:
+                  - name: pytorchjob-port
+                    containerPort: 23456
+                  resources:
+                    limits:
+                      nvidia.com/gpu: 1
+        Worker:
+          replicas: 1
+          restartPolicy: OnFailure
+          template:
+            spec:
+              containers:
+                - name: pytorch
+                  image: gcr.io/kubeflow-ci/pytorch-dist-mnist_test:1.0
+                  ports:
+                  - name: pytorchjob-port
+                    containerPort: 23456
+                  resources:
+                    limits:
+                      nvidia.com/gpu: 1
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.InferenceServiceModel), 'default'],
     `
     apiVersion: serving.kubeflow.org/v1alpha2

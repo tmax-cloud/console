@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import { Map as ImmutableMap } from 'immutable';
 
 import { types } from './ui-actions';
-import { ALL_NAMESPACES_KEY, LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, NAMESPACE_LOCAL_STORAGE_KEY } from '../const';
+import { ALL_NAMESPACES_KEY, LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY } from '../const';
 import { legalNamePattern, getNamespace } from '../components/utils/link';
 
 export default (state, action) => {
@@ -11,20 +11,14 @@ export default (state, action) => {
 
     let activeNamespace = getNamespace(pathname);
     if (!activeNamespace) {
-      const parsedFavorite = localStorage.getItem(NAMESPACE_LOCAL_STORAGE_KEY);
-      if (_.isString(parsedFavorite) && (parsedFavorite.match(legalNamePattern) || parsedFavorite === ALL_NAMESPACES_KEY)) {
-        activeNamespace = parsedFavorite;
-      } else {
-        activeNamespace = localStorage.getItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY);
-      }
+      activeNamespace = localStorage.getItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY);
     }
-
 
     return ImmutableMap({
       activeNavSectionId: 'workloads',
       location: pathname,
       activeNamespace: activeNamespace || 'default',
-      createProjectMessage: ''
+      createProjectMessage: '',
     });
   }
 
@@ -46,7 +40,7 @@ export default (state, action) => {
       return state.set('activeNamespace', ns);
     }
     case types.startImpersonate:
-      return state.set('impersonate', {kind: action.kind, name: action.name, subprotocols: action.subprotocols});
+      return state.set('impersonate', { kind: action.kind, name: action.name, subprotocols: action.subprotocols });
 
     case types.stopImpersonate:
       return state.delete('impersonate');
@@ -63,6 +57,6 @@ export default (state, action) => {
   return state;
 };
 
-export const createProjectMessageStateToProps = ({UI}) => {
-  return {createProjectMessage: UI.get('createProjectMessage')};
+export const createProjectMessageStateToProps = ({ UI }) => {
+  return { createProjectMessage: UI.get('createProjectMessage') };
 };

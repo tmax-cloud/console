@@ -1,4 +1,3 @@
-
 export const CONST = {
   title: 'Bridge',
   dateFmt: 'MM-dd-yyyy',
@@ -17,5 +16,4 @@ export const EVENTS = {
 
 // Use a key for the "all" namespaces option that would be an invalid namespace name to avoid a potential clash
 export const ALL_NAMESPACES_KEY = '#ALL_NS#';
-export const NAMESPACE_LOCAL_STORAGE_KEY = 'dropdown-storage-namespaces';
 export const LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY = 'bridge/last-namespace-name';
