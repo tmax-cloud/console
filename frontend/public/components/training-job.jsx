@@ -95,12 +95,11 @@ const Header = props => {
   );
 };
 
-const kind = 'TrainingJob';
 const Row = ({ obj }) => {
   return (
     <div className="row co-resource-list__item">
       <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
-        <ResourceCog actions={menuActions} kind={kind} resource={obj} />
+        <ResourceCog actions={menuActions} kind={obj.kind} resource={obj} />
         <ResourceLink kind={obj.kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
       </div>
       <div className="col-sm-4 col-xs-4 co-break-word">
