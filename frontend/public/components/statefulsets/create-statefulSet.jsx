@@ -85,14 +85,14 @@ class StatefulSetFormComponent extends React.Component {
       requests: [],
       limits: [],
       restartPolicy: '',
-      usePodTemplate: '',
+      usePodTemplate: true,
     };
     const volumeclaimTemplate = {
       name: '',
-      accessModes: '',
+      accessModes: 'ReadWriteOnce',
       storageClassName: '',
       storage: '',
-      useVolumeclaimTemplate: '',
+      useVolumeclaimTemplate: true,
     };
 
     this.state = {
@@ -107,18 +107,23 @@ class StatefulSetFormComponent extends React.Component {
       imageTagList: [],
       imageAllTagList: [],
       pvcList: [], // podTemplate 에서 pvc List
+      storageClassNameList: [],
       // quota: [['', '']],
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
 
     this.getImageRegistryList = this.getImageRegistryList.bind(this);
+    this.getImageList = this.getImageList.bind(this);
+    this.getPVCList = this.getPVCList.bind(this);
+    this.getStorageClassList = this.getStorageClassList.bind(this);
 
     this.save = this.save.bind(this);
   }
   componentDidMount() {
     this.getImageRegistryList();
     this.getPVCList();
+    this.getStorageClassList();
   }
 
   onNameChanged(event) {
@@ -176,8 +181,7 @@ class StatefulSetFormComponent extends React.Component {
               tagList: cur.spec.versions,
             };
           });
-          
-          let node = { ...this.state.podTemplate };
+
           node.image = String(imageList[0].value);
           // podTemplate.image = String(imageList[0].value);
 
@@ -217,10 +221,10 @@ class StatefulSetFormComponent extends React.Component {
       );
   };
 
-  getPVCList = () => {
+  getPVCList = async () => {
     const ko = kindObj('PersistentVolumeClaim');
     const namespace = statefulSet.metadata.namespace || 'default';
-    k8sGet(ko, '', namespace)
+    await k8sGet(ko, '', namespace)
       .then(reponse => reponse)
       .then(
         data => {
@@ -243,26 +247,51 @@ class StatefulSetFormComponent extends React.Component {
         },
       );
   };
+  getStorageClassList = () => {
+    const ko = kindObj('StorageClass');
+    k8sList(ko)
+      .then(reponse => reponse)
+      .then(
+        data => {
+          let storageClassNameList = data.map(cur => {
+            return {
+              value: cur.metadata.name,
+              id: 'storageClass',
+              label: cur.metadata.name,
+            };
+          });
+          this.setState({ storageClassNameList });
+
+          let node = { ...this.state.volumeclaimTemplate };
+          node.storageClassName = String(storageClassNameList[0].value);
+          // podTemplate.imageRegistry = String(imageRegistryList[0]);
+          // podTemplate.imageRegistry = String(imageRegistryList[0].value);
+          this.setState({ volumeclaimTemplate: node });
+        },
+        err => {
+          this.setState({ error: err.message, inProgress: false });
+          this.setState({ statefulSet: [] });
+        },
+      );
+  };
 
   onImageRegistryChange = e => {
     getImageList({ metadata: { name: e.label } });
     this.setState(prevState => ({
-      podTemplate:{
+      podTemplate: {
         ...prevState.podTemplate,
         imageRegistry: e.value,
-      }
+      },
     }));
-    // podTemplate.imageRegistry = e.value;
-    // setImageListBind(imageList);
   };
 
   onImageChange = e => {
     this.setState(prevState => ({
-      podTemplate:{
+      podTemplate: {
         ...prevState.podTemplate,
         image: e.value,
-        imageTag: e.tagList[0]
-      }
+        imageTag: e.tagList[0],
+      },
     }));
 
     let imageTagList = this.state.imageAllTagList
@@ -276,55 +305,48 @@ class StatefulSetFormComponent extends React.Component {
         };
       });
     this.setState({ imageTagList });
-    // podTemplate.image = e.value;
-    // podTemplate.imageTag = e.tagList[0];
-    // console.log(imageAllTagList);
-    // imageTagList = imageAllTagList
-    //   .filter(cur => {
-    //     return cur.image === e.value;
-    //   })[0]
-    //   .value.map(version => {
-    //     return {
-    //       value: version,
-    //       label: version,
-    //     };
-    //   });
-    // setImageTag(e.tagList[0]);
   };
 
   onPodTemplateResourceChange = e => {
     console.log('figure type: ', typeof e.value);
 
-    
-
     if (typeof e.value === 'string') {
       this.setState(prevState => ({
-        podTemplate:{
+        podTemplate: {
           ...prevState.podTemplate,
           [e.id]: e.value,
-        }
+        },
       }));
       // podTemplate[e.id] = e.value;
     } else {
       this.setState(prevState => ({
-        podTemplate:{
+        podTemplate: {
           ...prevState.podTemplate,
-          [e.id]: _.cloneDeep(e.value)
-        }
+          [e.id]: e.value,
+          // [e.id]: _.cloneDeep(e.value),
+        },
       }));
-      // podTemplate[e.id] = _.cloneDeep(e.value);
     }
     console.log(this.state.podTemplate);
   }; // podTemplate 안에 resource들이 변경 되었을 때 불리게 될 event
 
   onVolumeclaimTemplateChange = e => {
     console.log('figure type: ', typeof e.value);
-    if (typeof e.value === 'string') {
-      volumeclaimTemplate[e.id] = e.value;
-    } else {
-      volumeclaimTemplate[e.id] = _.cloneDeep(e.value);
-    }
-    console.log(volumeclaimTemplate);
+    // if (typeof e.value === 'string') {
+    this.setState(
+      prevState => ({
+        volumeclaimTemplate: {
+          ...prevState.volumeclaimTemplate,
+          [e.id]: e.value,
+        },
+      }),
+      console.log(this.state.volumeclaimTemplate),
+    );
+    // }
+    // else {
+    //   volumeclaimTemplate[e.id] = _.cloneDeep(e.value);
+    // }
+    // console.log(this.state.volumeclaimTemplate);
   }; // podTemplate 안에 resource들이 변경 되었을 때 불리게 될 event
 
   save(e) {
@@ -412,7 +434,7 @@ class StatefulSetFormComponent extends React.Component {
               </div>
             </FirstSection>
             <PodTemplate t={t} onImageChange={this.onImageChange} onImageRegistryChange={this.onImageRegistryChange} podTemplate={this.state.podTemplate} pvcList={this.state.pvcList} imageRegistryList={this.state.imageRegistryList} imageList={this.state.imageList} imageTagList={this.state.imageTagList} imageAllTagList={this.state.imageAllTagList} onLabelChanged={this.onLabelChanged} onPodTemplateResourceChange={this.onPodTemplateResourceChange} getImageList={this.getImageList} />
-            <VolumeclaimTemplate t={t} onVolumeclaimTemplateChange={this.onVolumeclaimTemplateChange} />
+            <VolumeclaimTemplate t={t} onVolumeclaimTemplateChange={this.onVolumeclaimTemplateChange} volumeclaimTemplate={this.state.volumeclaimTemplate} storageClassNameList={this.state.storageClassNameList} />
             {/* <FirstSection label={t('CONTENT:PERSISTENTVOLUMECLAIM')} isRequired={true}>
               <input className="form-control" type="text" onChange={} value={} id="replica" />
               <div style={{ fontSize: '12px', color: '#696969' }}>
