@@ -2,8 +2,8 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 
-import { ColHead, DetailsPage, List, ListHeader, ListPage, ResourceRow, MultiListPage } from './factory';
-import { Cog, SectionHeading, ResourceCog, ResourceLink, ResourceSummary, detailsPage, navFactory, resourceObjPath, kindObj } from './utils';
+import { ColHead, DetailsPage, List, ListHeader, MultiListPage } from './factory';
+import { Cog, SectionHeading, ResourceCog, ResourceLink, ResourceSummary, navFactory } from './utils';
 
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
