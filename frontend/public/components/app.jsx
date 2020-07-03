@@ -33,6 +33,7 @@ import '../style.scss';
 import { useTranslation } from 'react-i18next';
 import { getAccessToken, resetLoginState, getId } from './utils/auth';
 import { NoNamespace } from './nonamespaces';
+import { Grafana } from './grafana';
 
 import './utils/i18n';
 
@@ -328,7 +329,7 @@ class App extends React.PureComponent {
             <Route path="/status" exact component={NamespaceRedirect} />
             {/* <Route path="/noNamespace" exact loader={() => import('./nonamespaces').then(m => m.NoNamespace)} /> */}
             <Route path="/noNamespace" exact component={NoNamespace} />
-            {/* <Route path="/audit" exact component={AuditPage} /> */}
+            <Route path="/grafana" exact component={Grafana} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
             {/* <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} /> */}
