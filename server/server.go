@@ -49,6 +49,7 @@ const (
 	k8sProxyEndpoint          = "/api/kubernetes/"
 	prometheusProxyEndpoint   = "/api/prometheus"
 	hypercloudProxyEndpoint   = "/api/hypercloud/"
+	grafanaProxyEndpoint      = "/api/grafana/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
 )
 
@@ -109,6 +110,7 @@ type Server struct {
 	K8sClient             *http.Client
 	PrometheusProxyConfig *proxy.Config
 	HypercloudProxyConfig *proxy.Config
+	GrafanaProxyConfig    *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
@@ -361,6 +363,22 @@ func (s *Server) HTTPHandler() http.Handler {
 			})),
 		)
 	}
+
+	// NOTE: grafan proxy 등록 // 윤진수
+	if s.GrafanaProxyConfig != nil {
+		grafanaProxyAPIPath := grafanaProxyEndpoint
+		grafanaProxy := proxy.NewProxy(s.GrafanaProxyConfig)
+		handle(grafanaProxyAPIPath, http.StripPrefix(
+			proxy.SingleJoiningSlash(s.BaseURL.Path, grafanaProxyAPIPath),
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				grafanaProxy.ServeHTTP(w, r)
+			})),
+		// authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+		// 	grafanaProxy.ServeHTTP(w, r)
+		// })),
+		)
+	}
+	// NOTE: 여기까지
 
 	handle("/api/tectonic/version", authHandler(s.versionHandler))
 	handle("/api/tectonic/ldap/validate", authHandler(handleLDAPVerification))
