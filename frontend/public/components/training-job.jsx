@@ -179,7 +179,7 @@ const TrainingJobsDetailsPage = props => {
     <DetailsPage
       {...props}
       menuActions={menuActions}
-      pages={[navFactory.details(DetailsForKind, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(t('CONTENT:PODS'))]}
+      pages={[navFactory.details(DetailsForKind, t('CONTENT:OVERVIEW')), navFactory.editYaml() /*, navFactory.pods(t('CONTENT:PODS')) */]}
     />
   );
 };
