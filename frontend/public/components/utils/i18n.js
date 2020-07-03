@@ -32,7 +32,7 @@ i18n
       en: {
         PLURAL: en.PLURAL,
         ADDITIONAL: en.ADDITIONAL,
-        VALIDATION: ko.VALIDATION,
+        VALIDATION: en.VALIDATION,
         DATETIME: en.DATETIME,
         RESOURCE: en.RESOURCE,
         STRING: en.STRING,

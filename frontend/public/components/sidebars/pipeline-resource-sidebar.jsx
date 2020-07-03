@@ -4,19 +4,33 @@ import * as React from 'react';
 import { PipelineResourceModel } from '../../models';
 import { referenceForModel } from '../../module/k8s';
 import { SampleYaml } from './resource-sidebar';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export const PipelineResourceSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const samples = [
     {
-      header: 'Create Pipeline Resources',
-      details: `파이프라인의 입력(예: Git 저장소) 또는 출력(예: Docker 이미지)을 정의하는 '파이프라인 리소스'를 생성할 수 있다.
-      리소스 이름: 
-      (1) name 파이프라인 리소스의 이름
-      (2) type 파이프라인 리소스 유형
-      (3) params 형상관리 저장소 및 레지스트리의 상세 명세`,
+      header: t('STRING:PIPELINERESOURCE-SIDEBAR_0'),
+      details: t('STRING:PIPELINERESOURCE-SIDEBAR_1'),
       templateName: 'pipelineresource-sample',
+      kind: referenceForModel(PipelineResourceModel),
+    },
+    {
+      header: t('STRING:PIPELINERESOURCE-SIDEBAR_2'),
+      details: t('STRING:PIPELINERESOURCE-SIDEBAR_3'),
+      templateName: 'pipelineresource-sample2',
+      kind: referenceForModel(PipelineResourceModel),
+    },
+    {
+      header: t('STRING:PIPELINERESOURCE-SIDEBAR_4'),
+      details: t('STRING:PIPELINERESOURCE-SIDEBAR_5'),
+      templateName: 'pipelineresource-sample3',
+      kind: referenceForModel(PipelineResourceModel),
+    },
+    {
+      header: t('STRING:PIPELINERESOURCE-SIDEBAR_6'),
+      details: t('STRING:PIPELINERESOURCE-SIDEBAR_7'),
+      templateName: 'pipelineresource-sample4',
       kind: referenceForModel(PipelineResourceModel),
     },
   ];

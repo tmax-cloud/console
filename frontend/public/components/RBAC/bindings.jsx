@@ -16,6 +16,7 @@ import { ButtonBar, Cog, Dropdown, Firehose, history, kindObj, LoadingInline, Ms
 import { isSystemRole } from './index';
 import { connectToFlags, FLAGS, flagPending } from '../../features';
 import { ResourcePlural } from '../utils/lang/resource-plural';
+import { resourceSidebars } from '../sidebars/resource-sidebars';
 
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
@@ -234,20 +235,42 @@ class ListDropdown_ extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { loaded, loadError } = nextProps;
 
-    if (loadError) {
-      this.setState({
-        title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
-      });
-      return;
-    }
+    // Namespace Role Binding 생성인데 Cluster Role 서비스만 에러일 때 롤 조회도 안됨.
+    // if (loadError) {
+    //   this.setState({
+    //     title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
+    //   });
+    //   return;
+    // }
 
-    if (!loaded) {
-      return;
-    }
+    // if (!loaded) {
+    //   return;
+    // }
 
     const state = {};
 
     const { resources, dataFilter } = nextProps;
+
+    // Namespace Role Binding 생성일 때 Cluster Role이랑 Role 서비스 둘 다 오류일 때만 에러 표시되도록
+    if (resources.hasOwnProperty('Role') && resources.hasOwnProperty('ClusterRole')) {
+      if (resources.Role.loaded === false && resources.ClusterRole.loaded === false && loadError) {
+        this.setState({
+          title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
+        });
+        return;
+      }
+    } else {
+      if (loadError) {
+        this.setState({
+          title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
+        });
+        return;
+      }
+      if (!loaded) {
+        return;
+      }
+    }
+
     state.items = {};
     _.each(resources, ({ data }, kindLabel) => {
       _.reduce(
@@ -360,7 +383,7 @@ const NsRoleDropdown_ = props => {
   if (props.fixed) {
     kinds = [props.selectedKeyKind];
   } else if (props.namespace) {
-    kinds = ['Role', 'ClusterRole'];
+    kinds = ['ClusterRole', 'Role'];
   } else {
     kinds = ['ClusterRole'];
   }

@@ -1069,14 +1069,64 @@ spec:
     kind: PipelineResource
     metadata:
       name: example-pipeline-resource-git
-      namespace: teespaceb2c
+      namespace: default
     spec:
       type: git
       params:
         - name: revision
           value: master
         - name: url
-          value: 'https://github.com/sample/git/url'
+          value: https://github.com/wizzbangcorp/wizzbang.git
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample2'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git
+      namespace: default
+    spec:
+      type: git
+      params:
+        - name: revision
+          value: sample_revision
+        - name: httpsProxy
+          value: "my-sample.proxy.com"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample3'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resources-image
+      namespace: default
+    spec:
+      type: image
+      params:
+        - name: url
+          value: gcr.io/staging-images/kritis
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineResourceModel), 'pipelineresource-sample4'],
+    `
+    apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: example-pipeline-resource-git-description
+      namespace: default
+    spec:
+      type: git
+      description: description of the resource.
+      params:
+        - name: revision
+          value: master
+        - name: url     
+          value: https://github.com/wizzbangcorp/wizzbang.git
 `,
   )
   .setIn(
@@ -1210,7 +1260,7 @@ metadata:
   name: example # (required) [string] registry's name
   namespace: example # (required) [string] registry's namespace
 spec:
-  image: registry:2.7.1 # (required)
+  image: registry:2.6.2 # (required)
   #description: example # (optional) [string] a brief description of the registry.
   loginId: example # (required) [string] username for registry login
   loginPassword: example # (required) [string] password for registry login
@@ -1291,7 +1341,6 @@ spec:
          storageSize: 10Gi
          storageClassName: csi-cephfs-sc
 `,
-
   )
   .setIn(
     [referenceForModel(k8sModels.TemplateModel), 'default'],
@@ -2507,64 +2556,121 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample'],
     `
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: example-deployment
+      namespace: default
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample2'],
     `
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
-metadata:
-  name: mysql2
-spec:
-  selector:
-    matchLabels:
-      app: mysql
-  strategy:
-    type: Recreate
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: example-deployment
+      namespace: default
       labels:
-        app: mysql
+        app: nginx
     spec:
-      containers:
-      - image: mysql:5.6
-        name: mysql
-        env:
-          # Use secret in real usage
-        - name: MYSQL_ROOT_PASSWORD
-          value: password
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-              claimName: mysql-pv-claim
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 3
+      minReadySeconds: 10
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: example-deployment
+      namespace: default
+      labels:
+        app: nginx
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 3
+      strategy:
+        rollingUpdate:
+          maxSurge: 30%
+          maxUnavailable: 30%
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.DeploymentModel), 'deployment-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: example-deployment
+      namespace: default
+      labels:
+        app: nginx
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.14.2
+            ports:
+            - containerPort: 80
+            volumeMounts:
+            - mountPath: /example_data
+              name: example-volume
+          volumes:
+          - name: example-volume
+            hostPath:
+              path: /example
+              type: Directory
 `,
   )
   .setIn(
@@ -2821,7 +2927,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       hostPath:
         path: "/tmp"
 `,
@@ -2839,7 +2945,7 @@ spec:
       accessModes:
         - ReadOnlyMany
       persistentVolumeReclaimPolicy: Retain
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       hostPath:
         path: "/tmp"
 `,
@@ -2857,7 +2963,7 @@ spec:
       accessModes:
         - ReadWriteMany
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hdd-ceph-block
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Block
       hostPath:
         path: "/tmp"
@@ -2876,7 +2982,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       persistentVolumeReclaimPolicy: Recycle
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
       mountOptions:
         - hard
         - nfsvers=4.1
@@ -2898,7 +3004,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
+  storageClassName: \${STORAGECLASSNAME}
   nfs:
     path: /tmp
     server: 172.17.0.2
@@ -2931,20 +3037,20 @@ spec:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
     metadata:
-      name: sample-cpu-scaling
+      name: example-hpa
       namespace: default
     spec:
       scaleTargetRef:
         apiVersion: apps/v1
         kind: Deployment
-        name: sample-name
+        name: example-deployment
       minReplicas: 1
       maxReplicas: 3
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            targetAverageUtilization: 50
+      - type: Resource
+        resource:
+          name: cpu
+          targetAverageUtilization: 50
 `,
   )
   .setIn(
@@ -2953,19 +3059,20 @@ spec:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
     metadata:
-      name: sample-mem-scaling
+      name: example-hpa
       namespace: default
     spec:
       scaleTargetRef:
+        apiVersion: apps/v1
         kind: Deployment
-        name: sample-name
+        name: example-deployment
       minReplicas: 1
-      maxReplicas: 3
-      metrics:
-        - type: Resource
-          resource:
-            name: memory
-            targetAverageValue: 1G
+      maxReplicas: 5
+      metrics:              
+      - type: Resource
+        resource:
+          name: memory
+          targetAverageValue: 100Mi
 `,
   )
   .setIn(
@@ -3417,55 +3524,99 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample'],
     `
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: example
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: hello-hypercloud
-  template:
+    apiVersion: apps/v1
+    kind: DaemonSet
     metadata:
-      labels:
-        app: hello-hypercloud
+      name: example-daemonset
+      namespace: default
     spec:
-      containers:
-        - name: hello-hypercloud
-          image: hypercloud/hello-hypercloud
-          ports:
-            - containerPort: 8080
+      selector:
+        matchLabels:
+          app: example-daemonset
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 200Mi
+                requests:
+                  cpu: 100m
+                  memory: 200Mi
+              ports:
+                - containerPort: 80
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample2'],
     `
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: resource-example
-  namespace: demo-ns
-spec:
-  selector:
-    matchLabels:
-      name: sample-fluentd
-  template:
+    apiVersion: apps/v1
+    kind: DaemonSet
     metadata:
-      labels:
-        name: sample-fluentd
+      name: example-daemonset
+      namespace: default
     spec:
-      containers:
-      - name: hello-fluentd
-        image: gcr.io/google-containers/fluentd-elasticsearch:1.20
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
+      selector:
+        matchLabels:
+          app: example-daemonset
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          tolerations:
+          # this toleration is to have the daemonset runnable on master nodes
+          # remove it if your masters can't run pods
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 200Mi
+                requests:
+                  cpu: 100m
+                  memory: 200Mi
+              ports:
+                - containerPort: 80
 `,
   )
+  .setIn(
+    [referenceForModel(k8sModels.DaemonSetModel), 'daemonset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      name: example-daemonset
+      namespace: default
+    spec:
+      selector:
+        matchLabels:
+          app: example-daemonset
+      updateStrategy:
+        type: RollingUpdate
+      minReadySeconds: 3
+      revisionHistoryLimit: 100
+      template:
+        metadata:
+          labels:
+            app: example-daemonset
+        spec:
+          containers:
+            - name: example-daemonset-apache
+              image: httpd:latest
+              ports:
+                - containerPort: 80
+`,
+  )
+
   .setIn(
     [referenceForModel(k8sModels.PersistentVolumeClaimModel), 'default'],
     `
@@ -3479,7 +3630,7 @@ spec:
   resources:
     requests:
       storage: 8Gi
-  storageClassName: slow
+  storageClassName: \${STORAGECLASSNAME}
   selector:
     matchLabels:
       release: "stable"
@@ -3501,7 +3652,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: hdd-ceph-fs
+      storageClassName: \${STORAGECLASSNAME}
 `,
   )
   .setIn(
@@ -3518,7 +3669,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: hdd-ceph-block
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Block
 `,
   )
@@ -3537,7 +3688,7 @@ spec:
         requests:
           storage: 1Gi
       volumeName: sample-pv
-      storageClassName: storage-sample
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Filesystem
 `,
   )
@@ -3555,12 +3706,12 @@ spec:
       resources:
         requests:
           storage: 1Gi
-       matchExpressions:
-         - key: localstorage
-           operator: In
-           values:
+      matchExpressions:
+        - key: localstorage
+          operator: In
+          values:
             - hdd
-      storageClassName: storage-sample 
+      storageClassName: \${STORAGECLASSNAME}
       volumeMode: Filesystem
 `,
   )
@@ -3656,42 +3807,169 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample'],
     `
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: example
-  namespace: demo-ns
-spec:
-  serviceName: nginx
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: StatefulSet
     metadata:
-      labels:
-        app: nginx
+      name: example-statefulset
+      namespace: default
     spec:
-      terminationGracePeriodSeconds: 10
-      containers:
-        - name: nginx
-          image: 'gcr.io/google_containers/nginx-slim:0.8'
-          ports:
-            - containerPort: 80
-              name: web
-          volumeMounts:
-            - name: www
-              mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
-    - metadata:
-        name: www
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: my-storage-class
-        resources:
-          requests:
-            storage: 1Gi
+      serviceName: example-statefulset
+      replicas: 3
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: nginx
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample2'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      podManagementPolicy: Parallel
+      replicas: 3
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample3'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      replicas: 3
+      revisionHistoryLimit: 15
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StatefulSetModel), 'statefulset-sample4'],
+    `
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: example-statefulset
+      namespace: default
+    spec:
+      serviceName: example-statefulset
+      replicas: 3
+      updateStrategy:
+        type: RollingUpdate
+      selector:
+        matchLabels:
+          app: example-statefulset
+      template:
+        metadata:
+          labels:
+            app: example-statefulset
+        spec:
+          terminationGracePeriodSeconds: 10
+          containers:
+            - name: example-statefulset
+              image: 'httpd:latest'
+              ports:
+                - containerPort: 80
+                  name: web
+              volumeMounts:
+                - name: www
+                  mountPath: /usr/share/httpd/html
+      volumeClaimTemplates:
+        - metadata:
+            name: www
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: csi-cephfs-sc
+            resources:
+              requests:
+                storage: 1Gi
 `,
   )
   .setIn(
@@ -4237,7 +4515,8 @@ spec:
       name: example-tmax.co.kr
     otpEnable: f
     otp: 123456
-    ipRange: 192.168.0.0/16
+    ipRange: 
+      - 192.168.0.0/16
 
 `,
   )
