@@ -10,9 +10,13 @@ import { BasicPortEditor } from '../basic-port-editor';
 import SingleSelect from '../select';
 
 export const VolumeclaimTemplate = props => {
-  let { t, onVolumeclaimTemplateChange } = props;
+  let { t, onVolumeclaimTemplateChange, storageClassNameList } = props;
 
   const [useVolumeclaimTemplate, setUseVolumeclaimTemplate] = React.useState(true);
+  const [name, setName] = React.useState('');
+  const [accessMode, setAccessMode] = React.useState(true);
+  const [storageClassName, setStorageClassName] = React.useState('');
+  const [storageSizeRequest, setStorageSizeRequest] = React.useState('');
 
   return (
     <div>
@@ -62,12 +66,87 @@ export const VolumeclaimTemplate = props => {
               <input
                 className="form-control"
                 type="text"
-                value={}
+                value={name}
                 id="service-name"
                 onChange={e => {
-                  onVolumeclaimTemplateChange(e.target.value);
+                  setName(e.target.value);
+                  onVolumeclaimTemplateChange({
+                    value: e.target.value,
+                    id: 'name',
+                    label: '',
+                  });
                 }}
                 required
+              />
+            </SecondSection>
+            <SecondSection label={'액세스 모드'} required>
+              <div className="row">
+                <div className="col-xs-2" style={{ float: 'left' }}>
+                  <input
+                    type="radio"
+                    value={true}
+                    name="access-mode"
+                    onChange={e => {
+                      setAccessMode(true);
+                      onVolumeclaimTemplateChange({
+                        value: 'ReadWriteOnce',
+                        id: 'accessModes',
+                        label: '',
+                      });
+                    }}
+                    checked={accessMode}
+                  />
+                  {'ReadWriteOnce'}
+                </div>
+                <div className="col-xs-2" style={{ float: 'left' }}>
+                  <input
+                    type="radio"
+                    value="ReadWriteMany"
+                    name="access-mode"
+                    onChange={e => {
+                      setAccessMode(false);
+                      onVolumeclaimTemplateChange({
+                        value: false,
+                        id: 'accessModes',
+                        label: '',
+                      });
+                    }}
+                    checked={!accessMode}
+                  />
+                  {'ReadWriteMany'}
+                </div>
+              </div>
+            </SecondSection>
+            <SecondSection valueWidth={'400px'} label={'스토리지 클래스'} id={'storageclass'}>
+              <SingleSelect
+                options={storageClassNameList}
+                name={'storageClass'}
+                value={storageClassName}
+                label={storageClassName}
+                onChange={e => {
+                  setStorageClassName(e.value);
+                  onVolumeclaimTemplateChange({
+                    value: e.value,
+                    id: 'storageClassName',
+                    label: 'e.label',
+                  });
+                }}
+              />
+            </SecondSection>
+            <SecondSection valueWidth={'400px'} label={'Storage Size Request'} id={'storage-size-request'}>
+              <input
+                className="form-control"
+                type="text"
+                value={storageSizeRequest}
+                id="storage-size-request"
+                onChange={e => {
+                  setStorageSizeRequest(e.target.value);
+                  onVolumeclaimTemplateChange({
+                    value: e.target.value,
+                    id: 'storage',
+                    label: '',
+                  });
+                }}
               />
             </SecondSection>
           </div>
