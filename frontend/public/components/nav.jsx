@@ -21,7 +21,7 @@ import * as operatorImg from '../imgs/operator.svg';
 import * as operatorActiveImg from '../imgs/operator-active.svg';
 import * as routingImg from '../imgs/routing.svg';
 import * as routingActiveImg from '../imgs/routing-active.svg';
-import * as aiOpsImg from '../imgs/ic_lnb_aiops.svg';
+import * as aiOpsImg from '../imgs/ic_lnb_aidevops.svg';
 import { history, stripBasePath } from './utils';
 
 import { withTranslation } from 'react-i18next';
