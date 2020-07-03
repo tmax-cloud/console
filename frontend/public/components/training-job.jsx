@@ -133,13 +133,23 @@ TrainingJobsList.displayName = 'TrainingJobsList';
 const TrainingJobsPage = ({ namespace, showTitle}) => {
   const { t } = useTranslation();
 
+  const createItems = {
+    tfjob: t('CONTENT:YAMLEDITORTFJOB'),
+    pytorchjob: t('CONTENT:YAMLEDITORPYTORCHJOB'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${namespace || 'default'}/${type}s/new`,
+  };
+
   return (
     <MultiListPage
       ListComponent={TrainingJobsList}
       canCreate={true}
       showTitle={showTitle}
       namespace={namespace}
-      createProps={{ to: `/k8s/ns/${namespace || 'default'}/trainingjobs/new`}}
+      createProps={createProps}
       filterLabel="TrainingJobs by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('TrainingJob', t) })}
@@ -169,7 +179,7 @@ const TrainingJobsDetailsPage = props => {
     <DetailsPage
       {...props}
       menuActions={menuActions}
-      pages={[navFactory.details(DetailsForKind, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      pages={[navFactory.details(DetailsForKind, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(t('CONTENT:PODS'))]}
     />
   );
 };

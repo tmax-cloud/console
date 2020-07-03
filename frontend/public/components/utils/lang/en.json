@@ -391,6 +391,8 @@
     "EDIT": "Edit",
     "FORMEDITOR": "Form Editor",
     "YAMLEDITOR": "Yaml Editor",
+    "YAMLEDITORTFJOB": "Yaml Editor(TF Job)",
+    "YAMLEDITORPYTORCHJOB": "Yaml Editor(PyTorch Job)",
     "ACCESSMODES": "Access Modes",
     "H": "h",
     "M": "m",
