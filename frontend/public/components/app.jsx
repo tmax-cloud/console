@@ -327,7 +327,7 @@ class App extends React.PureComponent {
             <Route path="/status" exact component={NamespaceRedirect} />
             {/* <Route path="/noNamespace" exact loader={() => import('./nonamespaces').then(m => m.NoNamespace)} /> */}
             <Route path="/noNamespace" exact component={NoNamespace} />
-            <Route path="/grafana" exact component={Grafana} />
+            {/* <Route path="/grafana" exact component={Grafana} /> */}
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
             {/* <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} /> */}
