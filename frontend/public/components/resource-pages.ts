@@ -87,6 +87,9 @@ import {
   AuthorizationPolicyModel,
   NotebookModel,
   ExperimentModel,
+  TrainingJobModel,
+  TFJobModel,
+  PyTorchJobModel,
   InferenceServiceModel,
   WorkflowTemplateModel,
   WorkflowModel,
@@ -174,6 +177,9 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyDetailsPage))
   .set(referenceForModel(NotebookModel), () => import('./notebook' /* webpackChunkName: "task" */).then(m => m.NotebookDetailsPage))
   .set(referenceForModel(ExperimentModel), () => import('./experiment' /* webpackChunkName: "task" */).then(m => m.ExperimentDetailsPage))
+  .set(referenceForModel(TrainingJobModel), () => import('./training-job' /* webpackChunkName: "task" */).then(m => m.TrainingJobsDetailsPage))
+  .set(referenceForModel(TFJobModel), () => import('./training-job' /* webpackChunkName: "task" */).then(m => m.TrainingJobsDetailsPage))
+  .set(referenceForModel(PyTorchJobModel), () => import('./training-job' /* webpackChunkName: "task" */).then(m => m.TrainingJobsDetailsPage))
   .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "task" */).then(m => m.InferenceServiceDetailsPage))
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "task" */).then(m => m.WorkflowTemplateDetailsPage))
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "task" */).then(m => m.WorkflowDetailsPage))
@@ -183,6 +189,9 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(CatalogServiceClaimModel), () => import('./catalog-service-claim' /* webpackChunkName: "task" */).then(m => m.CatalogServiceClaimPage))
   .set(referenceForModel(NotebookModel), () => import('./notebook' /* webpackChunkName: "task" */).then(m => m.NotebookPage))
   .set(referenceForModel(ExperimentModel), () => import('./experiment' /* webpackChunkName: "task" */).then(m => m.ExperimentPage))
+  .set(referenceForModel(TrainingJobModel), () => import('./training-job' /* webpackChunkName: "task" */).then(m => m.TrainingJobsPage))
+  .set(referenceForModel(TFJobModel), () => import('./training-job' /* webpackChunkName: "task" */).then(m => m.TrainingJobsPage))
+  .set(referenceForModel(PyTorchJobModel), () => import('./training-job' /* webpackChunkName: "task" */).then(m => m.TrainingJobsPage))
   .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "task" */).then(m => m.InferenceServicePage))
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "task" */).then(m => m.WorkflowTemplatePage))
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "task" */).then(m => m.WorkflowPage))

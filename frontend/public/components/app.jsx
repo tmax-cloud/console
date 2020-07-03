@@ -33,6 +33,7 @@ import '../style.scss';
 import { useTranslation } from 'react-i18next';
 import { getAccessToken, resetLoginState, getId } from './utils/auth';
 import { NoNamespace } from './nonamespaces';
+import { Grafana } from './grafana';
 
 import './utils/i18n';
 
@@ -95,14 +96,12 @@ const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
 
 const ActiveNamespaceRedirect = ({ location }) => {
   const activeNamespace = getActiveNamespace();
-
   let to;
   if (activeNamespace === ALL_NAMESPACES_KEY) {
-    to = '/search/all-namespaces';
+    to = `${location.pathname}/all-namespaces`;
   } else if (activeNamespace) {
-    to = `/search/ns/${activeNamespace}`;
+    to = `${location.pathname}/ns/${activeNamespace}`;
   }
-
   to += location.search;
   return <Redirect to={to} />;
 };
@@ -328,7 +327,7 @@ class App extends React.PureComponent {
             <Route path="/status" exact component={NamespaceRedirect} />
             {/* <Route path="/noNamespace" exact loader={() => import('./nonamespaces').then(m => m.NoNamespace)} /> */}
             <Route path="/noNamespace" exact component={NoNamespace} />
-            {/* <Route path="/audit" exact component={AuditPage} /> */}
+            <Route path="/grafana" exact component={Grafana} />
             <LazyRoute path="/cluster-health" exact loader={() => import('./cluster-health' /* webpackChunkName: "cluster-health" */).then(m => m.ClusterHealth)} />
             {/* <LazyRoute path="/start-guide" exact loader={() => import('./start-guide' ).then(m => m.StartGuidePage)} /> */}
             {/* <LazyRoute path={`/k8s/ns/:ns/${SubscriptionModel.plural}/new`} exact loader={() => import('./cloud-services').then(m => NamespaceFromURL(m.CreateSubscriptionYAML))} /> */}
@@ -343,6 +342,14 @@ class App extends React.PureComponent {
             <Route path="/search" exact component={ActiveNamespaceRedirect} />
             <LazyRoute path="/search/all-namespaces" exact loader={() => import('./search').then(m => NamespaceFromURL(m.SearchPage))} />
             <LazyRoute path="/search/ns/:ns" exact loader={() => import('./search').then(m => NamespaceFromURL(m.SearchPage))} />
+
+            <Route path="/grafana" exact component={ActiveNamespaceRedirect} />
+            <LazyRoute path="/grafana/all-namespaces" exact loader={() => import('./grafana').then(m => NamespaceFromURL(m.GrafanaPage))} />
+            <LazyRoute path="/grafana/ns/:ns" exact loader={() => import('./grafana').then(m => NamespaceFromURL(m.GrafanaPage))} />
+
+            <Route path="/kiali" exact component={ActiveNamespaceRedirect} />
+            <LazyRoute path="/kiali/all-namespaces" exact loader={() => import('./kiali').then(m => NamespaceFromURL(m.KialiPage))} />
+            <LazyRoute path="/kiali/ns/:ns" exact loader={() => import('./kiali').then(m => NamespaceFromURL(m.KialiPage))} />
 
             <Route path="/k8s/ns/:ns/customresourcedefinitions/:plural" exact component={ResourceListPage} />
             <Route path="/k8s/ns/:ns/customresourcedefinitions/:plural/:name" component={ResourceDetailsPage} />

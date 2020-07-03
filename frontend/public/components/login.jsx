@@ -53,10 +53,14 @@ class LoginComponent extends Component {
         setId(JSON.parse(atob(data.accessToken.split('.')[1])).id);
 
         localStorage.getItem('forceLogout') ? localStorage.removeItem('forceLogout') : localStorage.setItem('forceLogout', true);
-
         location.href = `${document.location.origin}`;
         // this.props.history.push('/');
         // this.props.history.go(0);
+      } else {
+        if (data.msg) {
+          this.setState({ error: data.msg });
+          return;
+        }
       }
     });
   }
@@ -86,7 +90,7 @@ class LoginComponent extends Component {
         data.otpEnable
           ? OtpModal_({ data: json, initialTime: curTime })
           : // 로그인서비스 콜
-            this._login(json);
+          this._login(json);
         return;
       })
       .catch(error => {

@@ -49,7 +49,8 @@
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
-    "DUPLICATE-KEY": "Duplicate keys found."
+    "DUPLICATE-KEY": "Duplicate keys found.",
+    "EMPTY-INPUT": "Enter a(n) {{something}}"
   },
   "DATETIME": {
     "YEARS": "years",
@@ -87,8 +88,8 @@
     "YEARSFROMNOW": "years from now"
   },
   "STRING": {
-    "CREATE-DEPLOYMENT_0": "해당 값 정의 시, 도커 이미지의 기본 엔트리 포인트와 기본 cmd가 덮어 씌워집니다.",
-    "CREATE-DEPLOYMENT_1": "해당 값 정의 시, 도커 이미지의 기본 엔트리가 덮어 씌워집니다.",
+    "CREATE-DEPLOYMENT_0": "The default entry point and cmd of the docker image are set to the value.",
+    "CREATE-DEPLOYMENT_1": "The default entry point of the docker image is set to the value.",
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
     "SERVICE_DETAIL_0": "Accessible outside the cluster",
     "SERVICE_DETAIL_1": "Ingress point(s) of load balancer",
@@ -295,9 +296,13 @@
     "DEPLOYMENT-SIDEBAR_4": "Create a deployment by configuring rollong update. ",
     "DEPLOYMENT-SIDEBAR_5": "When you create a deployment with the rolling update strategy, it continues scaling up and down by adding 30% new pods and deleting 30% old pods. \nIf no policy is specified, maxSure and maxUnavailable are set by 25% by default.",
     "DEPLOYMENT-SIDEBAR_6": "Create a deployment by mounting volumes",
-    "DEPLOYMENT-SIDEBAR_7": "Can create a hostPath persistent volume in deployment creation. \n Set a hostpath volume using the real path of the node directory."
+    "DEPLOYMENT-SIDEBAR_7": "Can create a hostPath persistent volume in deployment creation. \n Set a hostpath volume using the real path of the node directory.",
+    "USER-CREATE_0": "Create user through the form editor.",
+    "USERGROUP-CREATE_0": "Create user group to which multiple users can belong."
   },
   "CONTENT": {
+    "REPORTEDFROM": "Reported from",
+    "DESTINATION": "Destination",
     "BINDABLE": "Bindable",
     "EXTERNALNAME": "External Name",
     "PHONE": "Phone",
@@ -582,6 +587,7 @@
     "CREATE": "Create",
     "PATH": "Path",
     "STATUS": "Status",
+    "COMPOSITION": "Composition",
     "ID": "ID",
     "STATE": "State",
     "RESTARTS": "Restarts",
@@ -735,7 +741,8 @@
     "USE": "사용",
     "UNUSE": "사용 안 함",
     "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
-    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임"
+    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임",
+    "IPORURL": "IP 또는 URL"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -821,9 +828,13 @@
     "AIOPS": "AI Ops",
     "NOTEBOOK": "Notebook",
     "EXPERIMENT": "Experiment",
+    "TRAININGJOB": "Training Job",
     "INFERENCESERVICE": "Inference Service",
     "WORKFLOWTEMPLATE": "Workflow Template",
     "WORKFLOW": "Workflow",
-    "CATALOGSERVICECLAIM": "Catalog Service Claim"
+    "CATALOGSERVICECLAIM": "Catalog Service Claim",
+    "DASHBOARD": "Dashboard",
+    "GRAFANA": "Grafana",
+    "KIALI": "Kiali"
   }
 }
