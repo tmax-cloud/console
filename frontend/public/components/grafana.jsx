@@ -95,4 +95,3 @@ GrafanaPage.propTypes = {
   namespace: namespaceProptype,
   location: PropTypes.object.isRequired,
 };
-
