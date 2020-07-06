@@ -1306,16 +1306,21 @@ spec:
       name: sample-registry
       namespace: default
     spec:
-      image: <image ip addr>:5000/registry:latest
+      image: <image registry>/registry:2.6.2
       description: default image registry
       loginId: tmax
       loginPassword: tmax123
       service:
-         type: LoadBalancer
+        loadBalancer:
+          port: 443
       persistentVolumeClaim:
-         accessModes: [ReadWriteMany]
-         storageSize: 10Gi
-         storageClassName: csi-cephfs-sc
+        create: 
+          accessModes:
+            - ReadWriteMany
+          storageSize: 10Gi
+          storageClassName: csi-cephfs-sc
+          volumeMode: Filesystem    
+          deleteWithPvc: false
 `,
   )
   .setIn(
@@ -1327,7 +1332,7 @@ spec:
       name: sample-registry
       namespace: default
     spec:
-      image: <image ip addr>:5000/registry:latest
+      image: <image registry>/registry:2.6.2
       description: default image registry
       loginId: tmax
       loginPassword: tmax123
@@ -1335,11 +1340,16 @@ spec:
         nodeSelector:
           kubernetes.io/hostname: worker01
       service:
-         type: NodePort
+        loadBalancer:     
+          port: 443
       persistentVolumeClaim:
-         accessModes: [ReadWriteMany]
-         storageSize: 10Gi
-         storageClassName: csi-cephfs-sc
+        create:
+          accessModes:
+            - ReadWriteMany
+          storageSize: 10Gi
+          storageClassName: csi-cephfs-sc
+          volumeMode: Filesystem
+          deleteWithPvc: false
 `,
   )
   .setIn(
