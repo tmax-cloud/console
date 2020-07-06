@@ -458,7 +458,7 @@ class Nav extends React.Component {
             </NavSection>
 
             {/* Service Mesh 전체 추가 */}
-            <NavSection text={t('RESOURCE:SERVICEMESH')} icon="fa fa-connectdevelop">
+            <NavSection text={t('RESOURCE:SERVICEMESH')} icon="pficon pficon-infrastructure">
               {blockMenu.indexOf('virtualservices') === -1 && <ResourceNSLink resource="virtualservices" name={ResourcePlural('VirtualService', t)} onClick={this.close} />}
               {blockMenu.indexOf('destinationrules') === -1 && <ResourceNSLink resource="destinationrules" name={ResourcePlural('DestinationRule', t)} onClick={this.close} />}
               {blockMenu.indexOf('envoyfilters') === -1 && <ResourceNSLink resource="envoyfilters" name={ResourcePlural('EnvoyFilter', t)} onClick={this.close} />}
@@ -468,12 +468,12 @@ class Nav extends React.Component {
               {blockMenu.indexOf('requestauthentications') === -1 && <ResourceNSLink resource="requestauthentications" name={ResourcePlural('RequestAuthentication', t)} onClick={this.close} />}
               {blockMenu.indexOf('peerauthentications') === -1 && <ResourceNSLink resource="peerauthentications" name={ResourcePlural('PeerAuthentication', t)} onClick={this.close} />}
               {blockMenu.indexOf('authorizationpolicies') === -1 && <ResourceNSLink resource="authorizationpolicies" name={ResourcePlural('AuthorizationPolicy', t)} onClick={this.close} />}
+              {blockMenu.indexOf('kiali') === -1 && <HrefLink href="/kiali" name={t('RESOURCE:KIALI')} onClick={this.close} />}
             </NavSection>
 
             <NavSection text={t('RESOURCE:NETWORK')} icon="pficon pficon-network">
               {blockMenu.indexOf('ingresses') === -1 && <ResourceNSLink resource="ingresses" name={ResourcePlural('Ingress', t)} onClick={this.close} />}
               {blockMenu.indexOf('services') === -1 && <ResourceNSLink resource="services" name={ResourcePlural('Service', t)} onClick={this.close} />}
-              {blockMenu.indexOf('kiali') === -1 && <HrefLink href="/kiali" name={t('RESOURCE:KIALI')} onClick={this.close} />}
               {/* <ResourceNSLink resource="routes" name="Routes" onClick={this.close} required={FLAGS.OPENSHIFT} /> */}
             </NavSection>
 
