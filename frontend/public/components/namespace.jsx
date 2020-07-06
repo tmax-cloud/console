@@ -14,7 +14,7 @@ import { Cog, Dropdown, Firehose, LabelList, LoadingInline, navFactory, Resource
 import { createNamespaceModal, createProjectModal, deleteNamespaceModal, configureNamespacePullSecretModal } from './modals';
 import { RoleBindingsPage } from './RBAC';
 import { Bar, Line, requirePrometheus } from './graphs';
-import { NAMESPACE_LOCAL_STORAGE_KEY, ALL_NAMESPACES_KEY } from '../const';
+import { ALL_NAMESPACES_KEY } from '../const';
 import { FLAGS, featureReducerName, flagPending, setFlag, connectToFlags } from '../features';
 import { openshiftHelpBase } from './utils/documentation';
 import { createProjectMessageStateToProps } from '../ui/ui-reducers';
@@ -320,9 +320,7 @@ const NamespaceSelectorComponent = ({ activeNamespace, items, model, title, onCh
   const { t } = useTranslation();
   return (
     <div className="co-namespace-selector">
-      {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && (
-        <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={t(`RESOURCE:${model.kind.toUpperCase()}`)} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={t('CONTENT:SELECTNAMESPACE')} defaultBookmarks={defaultBookmarks} storageKey={NAMESPACE_LOCAL_STORAGE_KEY} shortCut="n" />
-      )}
+      {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton items={items} titlePrefix={t(`RESOURCE:${model.kind.toUpperCase()}`)} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={t('CONTENT:SELECTNAMESPACE')} shortCut="n" />}
     </div>
   );
 };
@@ -475,10 +473,10 @@ const NamespaceSelector_ = ({ useProjects, inFlight }) =>
   inFlight ? (
     <div className="co-namespace-selector" />
   ) : (
-      <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
-        <NamespaceDropdown useProjects={useProjects} />
-      </Firehose>
-    );
+    <Firehose resources={[{ kind: getModel(useProjects).kind, prop: 'namespace', isList: true }]}>
+      <NamespaceDropdown useProjects={useProjects} />
+    </Firehose>
+  );
 
 const namespaceSelectorStateToProps = ({ k8s }) => ({
   inFlight: k8s.getIn(['RESOURCES', 'inFlight']),

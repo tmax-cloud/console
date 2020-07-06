@@ -56,7 +56,6 @@ class KialiPage_ extends React.PureComponent {
                         <title>Kiali</title>
                     </Helmet>
                     <NavTitle title='Kiali'>
-
                     </NavTitle>
                     <iframe style={{ width: '100%', height: '100vh', border: 0 }} src={url} target="_blank" />
                 </div>
