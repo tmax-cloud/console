@@ -22,7 +22,7 @@ const SingleSelect = ({ options, name, id, placeholder, onChange }: SingleSelect
 
   return (
     <React.Fragment>
-      <Select className="basic-single" classNamePrefix="select" id={id} defaultValue={options[0]} placeholder={placeholder} name={name} options={options} onChange={onChange} styles={colorStyles} isSearchable={false} />
+      <Select className="basic-single" classNamePrefix="select" id={id} placeholder={placeholder} name={name} options={options} onChange={onChange} styles={colorStyles} isSearchable={false} />
     </React.Fragment>
   );
 };
