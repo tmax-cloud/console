@@ -58,11 +58,14 @@ export const VolumeclaimTemplate = props => {
               {t('CONTENT:UNUSE')}
             </div>
           </div>
+          <div style={{ fontSize: '12px', color: '#696969' }}>
+            <p>{'스테이트풀 셋에 볼륨 클레임을 생성합니다.'}</p>
+          </div>
         </FirstSection>
 
         {useVolumeclaimTemplate && (
           <div id="volumeclaim-template">
-            <SecondSection valueWidth={'400px'} label={'볼륨 클레임 템플릿 이름'} id={'image'} required>
+            <SecondSection label={t('ADDITIONAL:NAME', { something: t('CONTENT:VOLUMECLAIMTEMPLATE') })} id={'image'} isRequired={true}>
               <input
                 className="form-control"
                 type="text"
@@ -79,7 +82,7 @@ export const VolumeclaimTemplate = props => {
                 required
               />
             </SecondSection>
-            <SecondSection label={'액세스 모드'} required>
+            <SecondSection label={t('CONTENT:ACCESSMODE')} isRequired={true}>
               <div className="row">
                 <div className="col-xs-2" style={{ float: 'left' }}>
                   <input
@@ -96,7 +99,7 @@ export const VolumeclaimTemplate = props => {
                     }}
                     checked={accessMode}
                   />
-                  {'ReadWriteOnce'}
+                  {t('CONTENT:READWRITEONCE')}
                 </div>
                 <div className="col-xs-2" style={{ float: 'left' }}>
                   <input
@@ -113,16 +116,17 @@ export const VolumeclaimTemplate = props => {
                     }}
                     checked={!accessMode}
                   />
-                  {'ReadWriteMany'}
+                  {t('CONTENT:READWRITEMANY')}
                 </div>
               </div>
             </SecondSection>
-            <SecondSection valueWidth={'400px'} label={'스토리지 클래스'} id={'storageclass'}>
+            <SecondSection label={t('CONTENT:STORAGECLASS')} id={'storageclass'}>
               <SingleSelect
                 options={storageClassNameList}
                 name={'storageClass'}
                 value={storageClassName}
                 label={storageClassName}
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:STORAGECLASS') })}
                 onChange={e => {
                   setStorageClassName(e.value);
                   onVolumeclaimTemplateChange({
@@ -133,12 +137,13 @@ export const VolumeclaimTemplate = props => {
                 }}
               />
             </SecondSection>
-            <SecondSection valueWidth={'400px'} label={'Storage Size Request'} id={'storage-size-request'}>
+            <SecondSection label={t('CONTENT:STORAGESIZEREQUEST')} id={'storage-size-request'}>
               <input
                 className="form-control"
                 type="text"
                 value={storageSizeRequest}
                 id="storage-size-request"
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:STORAGESIZEREQUEST') })}
                 onChange={e => {
                   setStorageSizeRequest(e.target.value);
                   onVolumeclaimTemplateChange({

@@ -307,8 +307,6 @@ const Metering = ({ obj: { metadata } }) => {
 
 const autocompleteFilter = (text, item) => fuzzy(text, item);
 
-const defaultBookmarks = {};
-
 const namespaceDropdownStateToProps = state => {
   const activeNamespace = state.UI.get('activeNamespace');
   const canListNS = state[featureReducerName].get(FLAGS.CAN_LIST_NS);
@@ -387,8 +385,8 @@ class NamespaceDropdown_ extends React.Component {
         // localStorage.setItem('bridge/last-namespace-name', activeNamespace);
         dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
       }
+      localStorage.setItem('bridge/last-namespace-name', activeNamespace);
     }
-    localStorage.setItem('bridge/last-namespace-name', activeNamespace);
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
     return loaded && <NamespaceSelectorComponent model={model} items={items} title={title} activeNamespace={activeNamespace} onChange={onChange} selectedKey={title} />;
   }

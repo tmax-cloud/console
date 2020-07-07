@@ -90,7 +90,7 @@ class ValuePairElement extends React.Component {
 
     return (
       <div className={classNames('row')} ref={node => (this.node = node)}>
-        <div className="col-md-8 col-xs-8 pairs-list__protocol-field">
+        <div className="col-md-4 col-xs-4 pairs-list__protocol-field">
           <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[ValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
         </div>
         {readOnly ? null : (

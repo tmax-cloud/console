@@ -12,17 +12,17 @@ import SingleSelect from '../select';
 export const PodTemplate = props => {
   let { t, podTemplate, onLabelChanged, imageRegistryList, pvcList, imageList, onPodTemplateResourceChange, imageTagList, onImageChange, onImageRegistryChange } = props;
 
-  // // const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0]);
-  // const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
-  // const [image, setImage] = React.useState(imageList.length && imageList[0].value);
-  const [imageTag, setImageTag] = React.useState(imageTagList.length && imageTagList[0].value);
+  // const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0]);
+  const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
+  const [image, setImage] = React.useState(imageList.length > 0 && imageList[0].value);
+  const [imageTag, setImageTag] = React.useState(imageTagList.length > 0 && imageTagList[0].value);
   const [imagePullPolicy, setImagePullPolicy] = React.useState('');
 
   const [runCommands, setRunCommands] = React.useState([['']]);
   const [runCommandArguments, setRunCommandArguments] = React.useState([['']]);
   const [envs, setEnvs] = React.useState([['', '']]);
   const [ports, setPorts] = React.useState([['', '', 'TCP']]);
-  const [volumes, setVolumes] = React.useState([['', '', pvcList.length && pvcList[0].value, false]]);
+  const [volumes, setVolumes] = React.useState([['', '', '', false]]);
   const [requests, setRequests] = React.useState([['', '']]);
   const [limits, setLimits] = React.useState([['', '']]);
   const [restartPolicy, setRestartPolicy] = React.useState('');
@@ -84,36 +84,37 @@ export const PodTemplate = props => {
 
         {usePodTemplate && (
           <div id="pod-template">
-            <SecondSection valueWidth={'400px'} label={'이미지 레지스트리'} id={'imageregistry'}>
+            <SecondSection label={t('CONTENT:IMAGEREGISTRY')} id={'imageregistry'}>
               <SingleSelect
                 options={imageRegistryList}
+                defaultValue={imageRegistryList[0]}
                 name={'ImageRegistry'}
-                value={podTemplate.imageRegistry.value}
-                label={podTemplate.imageRegistry.label}
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGEREGISTRY') })}
                 onChange={e => {
                   onImageRegistryChange(e);
                   onPodTemplateResourceChange(e);
                 }}
               />
             </SecondSection>
-            <SecondSection valueWidth={'400px'} label={'이미지'} id={'image'}>
+            <SecondSection label={t('CONTENT:IMAGE')} id={'image'}>
               <SingleSelect
                 options={imageList}
                 name={'Image'}
-                value={podTemplate.image}
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGE') })}
                 onChange={e => {
                   onImageChange(e);
                   onPodTemplateResourceChange(e);
                 }}
               />
             </SecondSection>
-            <SecondSection valueWidth={'400px'} label={'이미지 태그'} id={'image-tag'}>
+            <SecondSection label={t('CONTENT:IMAGETAG')} id={'image-tag'}>
               <SingleSelect
                 options={imageTagList}
                 name={'ImageTag'}
-                value={imageTag}
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGETAG') })}
+                value={podTemplate.imageTag}
                 onChange={e => {
-                  setImageTag(e.value);
+                  // setImageTag(e.value);
                   onPodTemplateResourceChange(e);
                 }}
               />
@@ -171,11 +172,12 @@ export const PodTemplate = props => {
               />
             </SecondSection>
             {/* Image Pull Policy */}
-            <SecondSection valueWidth={'400px'} label={'이미지 풀 정책'} id={'image-pull-policy'}>
+            <SecondSection label={t('CONTENT:IMAGEPULLPOLICY')} id={'image-pull-policy'}>
               <SingleSelect
                 options={imagePullPolicyList}
                 name={'ImagePullPolicy'}
                 label={t(`CONTENT:${imagePullPolicy.toUpperCase()}`)}
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGEPULLPOLICY') })}
                 value={imagePullPolicy}
                 onChange={e => {
                   setImagePullPolicy(e.value);
@@ -188,7 +190,7 @@ export const PodTemplate = props => {
               />
             </SecondSection>
             {/* Environment variables */}
-            <SecondSection label={'환경 변수'} id={'environment'}>
+            <SecondSection label={t('CONTENT:ENVVARIABLES')} id={'environment'}>
               <KeyValueEditor
                 t={t}
                 keyValuePairs={envs}
@@ -203,7 +205,7 @@ export const PodTemplate = props => {
               />
             </SecondSection>
             {/* Port */}
-            <SecondSection label={'포트'} id={'port'}>
+            <SecondSection label={t('CONTENT:PORT')} id={'port'}>
               <BasicPortEditor
                 t={t}
                 portPairs={ports}
@@ -219,7 +221,7 @@ export const PodTemplate = props => {
             </SecondSection>
 
             {/* Volume */}
-            <SecondSection label={'볼륨'} id={'volume'}>
+            <SecondSection label={t('CONTENT:VOLUME')} id={'volume'}>
               <VolumeEditor
                 options={pvcList}
                 t={t}
@@ -236,12 +238,12 @@ export const PodTemplate = props => {
               />
             </SecondSection>
             {/* Resource Request */}
-            <SecondSection label={'리소스 요청'} id={'request'}>
+            <SecondSection label={t('CONTENT:RESOURCEREQUESTS')} id={'request'}>
               <KeyValueEditor
                 keyValuePairs={requests}
                 t={t}
                 keyString="resource(request)"
-                valueString="resource(request)"
+                valueString="quantity(request)"
                 updateParentData={e => {
                   setRequests(e.keyValuePairs);
                   onPodTemplateResourceChange({
@@ -253,12 +255,12 @@ export const PodTemplate = props => {
               />
             </SecondSection>
             {/* Resource Limit */}
-            <SecondSection label={'리소스 제한'} id={'limit'}>
+            <SecondSection label={t('CONTENT:RESOURCELIMITS')} id={'limit'}>
               <KeyValueEditor
                 keyValuePairs={limits}
                 t={t}
                 keyString="resource(limits)"
-                valueString="resource(limits)"
+                valueString="quantity(limits)"
                 updateParentData={e => {
                   setLimits(e.keyValuePairs);
                   onPodTemplateResourceChange({
@@ -270,11 +272,12 @@ export const PodTemplate = props => {
               />
             </SecondSection>
             {/* Restart Policy */}
-            <SecondSection valueWidth={'400px'} label={'재시작 정책'} id={'restart'}>
+            <SecondSection label={t('CONTENT:RESTARTPOLICY')} id={'restart'}>
               <SingleSelect
                 options={restartPolicyList}
                 name={'RestartPolicy'}
                 value={t(`CONTENT:${restartPolicy.toUpperCase()}`)}
+                placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:RESTARTPOLICY') })}
                 onChange={e => {
                   setRestartPolicy(e.value);
                   onPodTemplateResourceChange({
@@ -293,10 +296,13 @@ export const PodTemplate = props => {
               <input
                 className="form-control"
                 type="text"
-                value={}
-                id="service-name"
+                id="iporurl"
                 onChange={e => {
-                  onPodTemplateResourceChange(e.target.value);
+                  onPodTemplateResourceChange({
+                    value: e.target.value,
+                    id: 'iporurl',
+                    label: '',
+                  });
                 }}
                 required
               />

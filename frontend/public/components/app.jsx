@@ -70,13 +70,12 @@ _.each(namespacedPrefixes, p => {
 });
 
 const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
-  let activeNamespace = getActiveNamespace();
   let to;
   if (flagPending(flags[FLAGS.CAN_LIST_NS])) {
     // CAN_LIST_NS 로딩 될때까지 기다리기
     return null;
   }
-
+  let activeNamespace = getActiveNamespace();
   if (flags[FLAGS.CAN_LIST_NS]) {
     // admin
     activeNamespace = ALL_NAMESPACES_KEY;
