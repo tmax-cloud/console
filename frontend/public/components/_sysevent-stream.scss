@@ -26,6 +26,13 @@ $color-dark-border: #ddd;
   top: 35px;
 }
 
+.co-sysevent-audit__timeline {
+  margin-left: 0;
+  bottom: 203px;
+  position: absolute;
+  top: 26px;
+}
+
 .co-sysevent-stream__status {
   display: flex;
   justify-content: space-between;
@@ -33,7 +40,7 @@ $color-dark-border: #ddd;
   top: 9px;
   left: 40px;
   right: 4px;
-  @media(min-width: $screen-sm-min) {
+  @media (min-width: $screen-sm-min) {
     padding-left: 25px;
     left: 45px;
     right: 0;
@@ -87,6 +94,10 @@ $color-dark-border: #ddd;
   justify-content: space-between;
 }
 
+.co-sysevent__details__alignRight {
+  justify-content: flex-end;
+}
+
 .co-sysevent__resourcelink {
   display: block;
   overflow: hidden;
@@ -119,14 +130,13 @@ $color-dark-border: #ddd;
 .co-sysevent__message:after {
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
   bottom: 0;
-  content: "";
+  content: '';
   height: 25px;
   position: absolute;
   right: 0;
   width: 15%;
   text-align: right;
 }
-
 
 .co-sysevent__icon-box {
   flex: 0 0 100px;
@@ -150,7 +160,7 @@ $color-dark-border: #ddd;
 }
 
 /* The AutoSizer/VirtualList height change kicks in here. This is meant to handle the remainder of the mobile view (which has a shorter row height). */
-@media(min-width: 508px) {
+@media (min-width: 508px) {
   .co-sysevent {
     height: 95px;
   }
@@ -160,7 +170,7 @@ $color-dark-border: #ddd;
   }
 }
 
-@media(min-width: $grid-float-breakpoint) {
+@media (min-width: $grid-float-breakpoint) {
   .co-sysevent {
     flex-wrap: nowrap;
     margin-left: -40px;
@@ -180,6 +190,10 @@ $color-dark-border: #ddd;
   .co-sysevent-stream {
     padding-top: 50px;
     padding-left: 10px;
+  }
+
+  .co-sysevent-audit {
+    padding-top: 10px;
   }
 
   .co-sysevent-stream__timeline {
