@@ -119,8 +119,9 @@ RegistryPage.displayName = 'RegistryPage';
 // };
 const { details, editYaml, images } = navFactory;
 export const RegistryDetailsPage = props => {
+  const ns = location.pathname.split('/')[3]; 
   const { t } = useTranslation();
-  const pages = [details(Details, t('CONTENT:OVERVIEW')), editYaml(), images(t('CONTENT:IMAGES'), ({ obj }) => <ImagesPage showTitle={false} selector={{ matchLabels: { registry: `${obj.metadata.name}` } }} />)];
+  const pages = [details(Details, t('CONTENT:OVERVIEW')), editYaml(), images(t('CONTENT:IMAGES'), ({ obj }) => <ImagesPage showTitle={false} namespace={ns}selector={{ matchLabels: { registry: `${obj.metadata.name}` } }} />)];
   return <DetailsPage {...props} kind="Registry" menuActions={menuActions} pages={pages} />;
 };
 
