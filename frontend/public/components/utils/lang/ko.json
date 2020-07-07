@@ -42,7 +42,8 @@
     "STRATEGY-MODAL_1": "이상",
     "NAMESPACE-MODAL_0": "아래 {{something}}를 입력하여 삭제를 확인하십시오",
     "PODSELECTOR-EMPTY_0": "{{something}}내의 모든 파드",
-    "GENERATEDFROM": "{{something}} 생성"
+    "GENERATEDFROM": "{{something}} 생성",
+    "SELECT": "{{something}} 선택"
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
@@ -213,6 +214,7 @@
     "STATEFULSET-CREATE_0": "파드 집합의 디플로이먼트와 파드, 스케일링을 관리합니다.",
     "STATEFULSET-CREATE_1": "Enter를 입력하여 레이블을 추가할 수 있습니다.",
     "STATEFULSET-CREATE_2": "스테이트풀 셋에서 관리하는 파드의 개수를 정의해 주세요.",
+    "STATEFULSET-CREATE_3": "스테이트풀 셋에 볼륨 클레임을 생성합니다.",
     "JOB-SIDEBAR_0": "perl image를 이용하여 잡 실행",
     "JOB-SIDEBAR_1": "perl image를 이용하여 잡을 실행하여 커맨드의 명령어를 실행할 수 있습니다. (pi의 2000자리까지출력)",
     "JOB-SIDEBAR_2": "잡의 재시도 횟수를 지정하여 실행",
@@ -343,6 +345,8 @@
     "VOLUMES": "볼륨",
     "RESOURCE(REQUEST)": "리소스(요청)",
     "RESOURCE(LIMITS)": "리소스(제한)",
+    "QUANTITY(REQUEST)": "수량(요청)",
+    "QUANTITY(LIMITS)": "수량(제한)",
     "RUNCOMMAND": "커맨드 실행",
     "RUNCOMMANDARGUMENTS": "커맨드 인수 실행",
     "ENVVARIABLES": "환경 변수",
@@ -374,6 +378,7 @@
     "FORCLUSTERROLEBINDING": "(클러스터 롤 바인딩의 경우)",
     "DENY": "거부",
     "ALLOW": "허용",
+    "NOTALLOW": "허용 안 함",
     "LIMIT": "제한",
     "VIEWSAMPLES": "샘플 보기",
     "SAMPLES": "샘플",
@@ -708,7 +713,7 @@
     "VOLUMENAME": "볼륨 이름",
     "MOUNTPATH": "마운트 경로",
     "PVC": "영구 볼륨 클레임",
-    "READONLY": "Read Only",
+    "READONLY": "읽기 권한",
     "RESOURCE": "리소스",
     "QUANTITY": "수량",
     "ENTERNAME": "이름 입력",
@@ -742,8 +747,15 @@
     "USE": "사용",
     "UNUSE": "사용 안 함",
     "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
-    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임",
-    "IPORURL": "IP 또는 URL"
+    "PERSISTENEVOLUMECLAIM": "영구 볼륨 클레임",
+    "PERSISTENEVOLUME": "영구 볼륨",
+    "IPORURL": "IP 또는 URL",
+    "VOLUME": "볼륨",
+    "ACCESSMODE": "액세스 모드",
+    "STORAGESIZEREQUEST": "Storage Size Request",
+    "IMAGETAG": "이미지 태그",
+    "READWRITEONCE": "Read Write Once",
+    "READWRITEMANY": "Read Write Many"
   },
   "RESOURCE": {
     "HOME": "홈",
