@@ -385,8 +385,8 @@ class NamespaceDropdown_ extends React.Component {
         // localStorage.setItem('bridge/last-namespace-name', activeNamespace);
         dispatch(UIActions.setActiveNamespace('#ALL_NS#'));
       }
+      localStorage.setItem('bridge/last-namespace-name', activeNamespace);
     }
-    localStorage.setItem('bridge/last-namespace-name', activeNamespace);
     const onChange = newNamespace => dispatch(UIActions.setActiveNamespace(newNamespace));
     return loaded && <NamespaceSelectorComponent model={model} items={items} title={title} activeNamespace={activeNamespace} onChange={onChange} selectedKey={title} />;
   }
