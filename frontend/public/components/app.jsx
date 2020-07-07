@@ -9,7 +9,7 @@ import * as PropTypes from 'prop-types';
 import store from '../redux';
 import { productName } from '../branding';
 import LoginComponent from './login';
-// import AuditPage from './audits';
+import { AuditPage } from './audits';
 import { ALL_NAMESPACES_KEY } from '../const';
 import { connectToFlags, featureActions, flagPending, FLAGS } from '../features';
 import { detectMonitoringURLs } from '../monitoring';
@@ -400,8 +400,8 @@ class App extends React.PureComponent {
             <Route path="/k8s/cluster/:plural/:name" component={ResourceDetailsPage} />
             <LazyRoute path="/k8s/ns/:ns/pods/:podName/containers/:name" loader={() => import('./container').then(m => m.ContainersDetailsPage)} />
             <LazyRoute path="/k8s/ns/:ns/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => NamespaceFromURL(m.CreateYAML))} />
-            {/* <Route path="/k8s/ns/:ns/audits" exact component={AuditPage} />
-            <Route path="/k8s/all-namespaces/audits" exact component={AuditPage} /> */}
+            <Route path="/k8s/ns/:ns/audits" exact component={AuditPage} />
+            <Route path="/k8s/all-namespaces/audits" exact component={AuditPage} />
             <Route path="/k8s/ns/:ns/:plural/:name" component={ResourceDetailsPage} />
             <Route path="/k8s/ns/:ns/:plural" exact component={ResourceListPage} />
             <Route path="/k8s/all-namespaces/:plural" exact component={ResourceListPage} />
