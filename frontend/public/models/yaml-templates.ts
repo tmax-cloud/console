@@ -4923,13 +4923,13 @@ spec:
       templates:
       - name: whalesay
         steps:
-          - - name: call-whalesay-template
-              templateRef:
-                name: workflow-template-whalesay-template
-                template: whalesay-template
-              arguments:
-                parameters:
-                - name: message
-                  value: "hello world"
+          - name: call-whalesay-template
+            templateRef:
+              name: workflow-template-whalesay-template
+              template: whalesay-template
+            arguments:
+              parameters:
+              - name: message
+                value: "hello world"
 `,
   );
