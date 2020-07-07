@@ -164,7 +164,7 @@ const TrainingJobsPage = ({ namespace, showTitle}) => {
           reducer: tjKind,
           items: [
             { id: 'tfjob', title: 'TF Job' },
-            { id: 'pytorchjob', title: 'Pythorch Job' },
+            { id: 'pytorchjob', title: 'Pytorch Job' },
           ],
         },
       ]}
