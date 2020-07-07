@@ -318,7 +318,7 @@ const NamespaceSelectorComponent = ({ activeNamespace, items, model, title, onCh
   const { t } = useTranslation();
   return (
     <div className="co-namespace-selector">
-      {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton canFavorite items={items} titlePrefix={t(`RESOURCE:${model.kind.toUpperCase()}`)} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={t('CONTENT:SELECTNAMESPACE')} shortCut="n" />}
+      {!(!localStorage.getItem('bridge/last-namespace-name') && activeNamespace === 'default') && <Dropdown className="co-namespace-selector__dropdown" menuClassName="co-namespace-selector__menu" noButton items={items} titlePrefix={t(`RESOURCE:${model.kind.toUpperCase()}`)} title={title} onChange={onChange} selectedKey={activeNamespace || ALL_NAMESPACES_KEY} autocompleteFilter={autocompleteFilter} autocompletePlaceholder={t('CONTENT:SELECTNAMESPACE')} shortCut="n" />}
     </div>
   );
 };

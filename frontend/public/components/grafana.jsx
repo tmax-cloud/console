@@ -65,13 +65,9 @@ class GrafanaPage_ extends React.PureComponent {
 
     // Ensure that the "kind" route parameter is a valid resource kind ID
     kind = kind ? decodeURIComponent(kind) : 'Service';
-
-    const tags = split(_.isString(q) ? decodeURIComponent(q) : '');
-    const validTags = _.reject(tags, tag => requirementFromString(tag) === undefined);
-    const selector = selectorFromString(validTags.join(','));
-    const labelClassName = `co-text-${_.toLower(kindForReference(kind))}`;
+    let ns = localStorage.getItem('bridge/last-namespace-name');
     const showGettingStarted = flags.OPENSHIFT && !flags.PROJECTS_AVAILABLE;
-    let url = `${document.location.origin}/api/grafana`
+    let url = `${document.location.origin}/api/grafana/d/k8s-namespace/?var-namespace=${ns}`
     return (
       <React.Fragment>
         {showGettingStarted && <OpenShiftGettingStarted />}
@@ -80,7 +76,6 @@ class GrafanaPage_ extends React.PureComponent {
             <title>Grafana</title>
           </Helmet>
           <NavTitle title='Grafana'>
-
           </NavTitle>
           <iframe style={{ width: '100%', height: '100vh', border: 0 }} src={url} target="_blank" />
         </div>

@@ -2,8 +2,8 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 
-import { ColHead, DetailsPage, List, ListHeader, ListPage, ResourceRow, MultiListPage } from './factory';
-import { Cog, SectionHeading, ResourceCog, ResourceLink, ResourceSummary, detailsPage, navFactory, resourceObjPath, kindObj } from './utils';
+import { ColHead, DetailsPage, List, ListHeader, MultiListPage } from './factory';
+import { Cog, SectionHeading, ResourceCog, ResourceLink, ResourceSummary, navFactory } from './utils';
 
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
@@ -95,12 +95,11 @@ const Header = props => {
   );
 };
 
-const kind = 'TrainingJob';
 const Row = ({ obj }) => {
   return (
     <div className="row co-resource-list__item">
       <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
-        <ResourceCog actions={menuActions} kind={kind} resource={obj} />
+        <ResourceCog actions={menuActions} kind={obj.kind} resource={obj} />
         <ResourceLink kind={obj.kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
       </div>
       <div className="col-sm-4 col-xs-4 co-break-word">
@@ -134,13 +133,23 @@ TrainingJobsList.displayName = 'TrainingJobsList';
 const TrainingJobsPage = ({ namespace, showTitle}) => {
   const { t } = useTranslation();
 
+  const createItems = {
+    tfjob: t('CONTENT:YAMLEDITORTFJOB'),
+    pytorchjob: t('CONTENT:YAMLEDITORPYTORCHJOB'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${namespace || 'default'}/${type}s/new`,
+  };
+
   return (
     <MultiListPage
       ListComponent={TrainingJobsList}
       canCreate={true}
       showTitle={showTitle}
       namespace={namespace}
-      createProps={{ to: `/k8s/ns/${namespace || 'default'}/trainingjobs/new`}}
+      createProps={createProps}
       filterLabel="TrainingJobs by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('TrainingJob', t) })}
@@ -170,7 +179,7 @@ const TrainingJobsDetailsPage = props => {
     <DetailsPage
       {...props}
       menuActions={menuActions}
-      pages={[navFactory.details(DetailsForKind, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      pages={[navFactory.details(DetailsForKind, t('CONTENT:OVERVIEW')), navFactory.editYaml() /*, navFactory.pods(t('CONTENT:PODS')) */]}
     />
   );
 };

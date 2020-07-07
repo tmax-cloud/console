@@ -274,6 +274,7 @@ Dropdown.propTypes = {
   autocompletePlaceholder: PropTypes.string,
   className: PropTypes.string,
   dropDownClassName: PropTypes.string,
+  headerBefore: PropTypes.objectOf(PropTypes.string),
   items: PropTypes.object.isRequired,
   menuClassName: PropTypes.string,
   noButton: PropTypes.bool,

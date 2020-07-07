@@ -388,6 +388,8 @@
     "ROLEBINDINGS": "롤 바인딩",
     "FORMEDITOR": "폼 에디터",
     "YAMLEDITOR": "Yaml 에디터",
+    "YAMLEDITORTFJOB": "Yaml 에디터(TF Job)",
+    "YAMLEDITORPYTORCHJOB": "Yaml 에디터(PyTorch Job)",
     "ACCESSMODES": "접근 모드",
     "H": "시",
     "M": "분",

@@ -123,8 +123,8 @@ const actions = {
         return;
       }
 
-      const response = await k8sList(k8skind, { ...query, limit: paginationLimit, ...(continueToken ? { continue: continueToken } : {}) }, true);
-
+      // const response = await k8sList(k8skind, { ...query, limit: paginationLimit, ...(continueToken ? { continue: continueToken } : {}) }, true);
+      const response = await k8sList(k8skind, { ...query, ...(continueToken ? { continue: continueToken } : {}) }, true);
       if (!REF_COUNTS[id]) {
         return;
       }

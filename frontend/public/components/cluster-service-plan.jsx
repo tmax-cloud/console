@@ -18,7 +18,7 @@ const ClusterServicePlanHeader = props => {
       </ColHead>
       <ColHead
         {...props}
-        className="col-sm-2 hidden-xs"
+        className="col-sm-1 hidden-xs"
         sortField="spec.bindable"
       >
         {t('CONTENT:BINDABLE')}
@@ -39,7 +39,7 @@ const ClusterServicePlanHeader = props => {
       </ColHead>
       <ColHead
         {...props}
-        className="col-sm-1 hidden-xs"
+        className="col-sm-2 hidden-xs"
         sortField="spec.serviceClassRef.name"
       >
         {t('RESOURCE:CLUSTERSERVICECLASS')}
@@ -60,7 +60,7 @@ const ClusterServicePlanRow = () =>
           {/* <ResourceCog actions={menuActions} kind="ClusterServicePlan" resource={obj} /> */}
           <ResourceLink kind="ClusterServicePlan" name={obj.metadata.name} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-2 col-sm-2 co-break-word">
+        <div className="col-xs-1 col-sm-1 co-break-word">
           {obj.spec.bindable ? 'True' : 'False'}
         </div>
         <div className="col-xs-2 col-sm-2 co-break-word">
@@ -69,7 +69,7 @@ const ClusterServicePlanRow = () =>
         <div className="col-xs-1 col-sm-2 co-break-word">
           {obj.spec.clusterServiceBrokerName}
         </div>
-        <div className="col-xs-1 col-sm-1 co-break-word">
+        <div className="col-xs-2 col-sm-2 co-break-word">
           {obj.spec.clusterServiceClassRef.name}
         </div>
         <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>

@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import { Map as ImmutableMap } from 'immutable';
 
 import { types } from './ui-actions';
-import { ALL_NAMESPACES_KEY, LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, NAMESPACE_LOCAL_STORAGE_KEY } from '../const';
+import { ALL_NAMESPACES_KEY, LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY } from '../const';
 import { legalNamePattern, getNamespace } from '../components/utils/link';
 
 export default (state, action) => {

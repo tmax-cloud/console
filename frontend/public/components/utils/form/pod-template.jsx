@@ -12,14 +12,11 @@ import SingleSelect from '../select';
 export const PodTemplate = props => {
   let { t, podTemplate, onLabelChanged, imageRegistryList, pvcList, imageList, onPodTemplateResourceChange, imageTagList, onImageChange, onImageRegistryChange } = props;
 
-  // const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0]);
-  const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
-  const [image, setImage] = React.useState(imageList.length && imageList[0].value);
+  // // const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0]);
+  // const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
+  // const [image, setImage] = React.useState(imageList.length && imageList[0].value);
   const [imageTag, setImageTag] = React.useState(imageTagList.length && imageTagList[0].value);
   const [imagePullPolicy, setImagePullPolicy] = React.useState('');
-
-  // const [imageTagListBind, setImageTagListBind] = React.useState(imageTagList);
-  // const [imageListBind, setImageListBind] = React.useState(imageList);
 
   const [runCommands, setRunCommands] = React.useState([['']]);
   const [runCommandArguments, setRunCommandArguments] = React.useState([['']]);
@@ -43,28 +40,6 @@ export const PodTemplate = props => {
     { value: 'OnFailure', label: t('CONTENT:ONFAILURE') },
     { value: 'Never', label: t('CONTENT:NEVER') },
   ];
-
-  // const onImageRegistryChange = e => {
-  //   setImageRegistry(e.value);
-  //   getImageList({ metadata: { name: e.label } });
-  //   // setImageListBind(imageList);
-  // };
-
-  // const onImageChange = e => {
-  //   setImage(e.value);
-  //   console.log(imageAllTagList);
-  //   imageTagList = imageAllTagList
-  //     .filter(cur => {
-  //       return cur.image === e.value;
-  //     })[0]
-  //     .value.map(version => {
-  //       return {
-  //         value: version,
-  //         label: version,
-  //       };
-  //     });
-  //   setImageTag(e.tagList[0]);
-  // };
   return (
     <div>
       <div>
@@ -113,8 +88,8 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imageRegistryList}
                 name={'ImageRegistry'}
-                value={imageRegistry.value}
-                label={imageRegistry.label}
+                value={podTemplate.imageRegistry.value}
+                label={podTemplate.imageRegistry.label}
                 onChange={e => {
                   onImageRegistryChange(e);
                   onPodTemplateResourceChange(e);
@@ -136,7 +111,7 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imageTagList}
                 name={'ImageTag'}
-                value={podTemplate.imageTag}
+                value={imageTag}
                 onChange={e => {
                   setImageTag(e.value);
                   onPodTemplateResourceChange(e);
@@ -200,7 +175,8 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imagePullPolicyList}
                 name={'ImagePullPolicy'}
-                value={t(`CONTENT:${imagePullPolicy.toUpperCase()}`)}
+                label={t(`CONTENT:${imagePullPolicy.toUpperCase()}`)}
+                value={imagePullPolicy}
                 onChange={e => {
                   setImagePullPolicy(e.value);
                   onPodTemplateResourceChange({
@@ -248,6 +224,7 @@ export const PodTemplate = props => {
                 options={pvcList}
                 t={t}
                 volumePairs={volumes}
+                defaultValue={pvcList.length && pvcList[0].value}
                 updateParentData={e => {
                   setVolumes(e.volumePairs);
                   onPodTemplateResourceChange({
