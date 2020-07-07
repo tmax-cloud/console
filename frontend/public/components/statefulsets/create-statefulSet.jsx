@@ -3,16 +3,15 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-// import { NsDropdown } from '../RBAC/bindings';
 import { k8sList, k8sGet, k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput, makeQuery } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
-import { FirstSection, SecondSection } from '../utils/form/section';
-import { PodTemplate } from '../utils/form/pod-template';
-import { VolumeclaimTemplate } from '../utils/form/volumeclaim-template';
+import { FirstSection, SecondSection, PodTemplate, VolumeclaimTemplate } from '../utils/form';
+// import { PodTemplate } from '../utils/form/pod-template';
+// import { VolumeclaimTemplate } from '../utils/form/volumeclaim-template';
 
 class StatefulSetFormComponent extends React.Component {
   constructor(props) {
@@ -85,6 +84,7 @@ class StatefulSetFormComponent extends React.Component {
       requests: [],
       limits: [],
       restartPolicy: '',
+      iporurl: '',
       usePodTemplate: true,
     };
     const volumeclaimTemplate = {
@@ -112,6 +112,9 @@ class StatefulSetFormComponent extends React.Component {
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
+    this.onServiceNameChanged = this.onServiceNameChanged.bind(this);
+    this.onReplicaChanged = this.onReplicaChanged.bind(this);
+    this.onLabelChanged = this.onLabelChanged.bind(this);
 
     this.getImageRegistryList = this.getImageRegistryList.bind(this);
     this.getImageList = this.getImageList.bind(this);
@@ -127,9 +130,9 @@ class StatefulSetFormComponent extends React.Component {
   }
 
   onNameChanged(event) {
-    let serviceAccount = { ...this.state.serviceAccount };
-    serviceAccount.metadata.name = String(event.target.value);
-    this.setState({ serviceAccount });
+    let statefulSet = { ...this.state.statefulSet };
+    statefulSet.metadata.name = String(event.target.value);
+    this.setState({ statefulSet });
   }
   onNamespaceChanged(namespace) {
     let statefulSet = { ...this.state.statefulSet };
@@ -137,6 +140,16 @@ class StatefulSetFormComponent extends React.Component {
     this.setState({ statefulSet });
   }
 
+  onServiceNameChanged(event) {
+    let statefulSet = { ...this.state.statefulSet };
+    statefulSet.spec.serviceName = event.target.value;
+    this.setState({ statefulSet });
+  }
+  onReplicaChanged(event) {
+    let statefulSet = { ...this.state.statefulSet };
+    statefulSet.spec.replicas = event.target.value;
+    this.setState({ statefulSet });
+  }
   getImageRegistryList = () => {
     const ko = kindObj('Registry');
     k8sList(ko)
@@ -157,7 +170,7 @@ class StatefulSetFormComponent extends React.Component {
           // podTemplate.imageRegistry = String(imageRegistryList[0]);
           // podTemplate.imageRegistry = String(imageRegistryList[0].value);
           this.setState({ podTemplate: node });
-          this.getImageList(data[0]);
+          // this.getImageList(data[0]);
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
@@ -168,7 +181,7 @@ class StatefulSetFormComponent extends React.Component {
 
   getImageList = obj => {
     const ko = kindObj('Image');
-    let query = makeQuery(statefulSet.metadata.namespace, { matchLabels: { registry: `${obj.metadata.name}` } }, '', 'Image');
+    let query = makeQuery('', { matchLabels: { registry: `${obj.metadata.name}` } }, '', '');
     k8sList(ko, query)
       .then(reponse => reponse)
       .then(
@@ -182,36 +195,21 @@ class StatefulSetFormComponent extends React.Component {
             };
           });
 
-          node.image = String(imageList[0].value);
-          // podTemplate.image = String(imageList[0].value);
+          let node = { ...this.state.podTemplate };
+          node.image = imageList.length && String(imageList[0].value);
 
-          let imageTagList = data
-            .filter(image => {
-              if (image.metadata.name === node.image) {
-                return true;
-              }
-            })[0]
-            .spec.versions.map(version => {
+          let imageAllTagList =
+            data.length &&
+            data.map(image => {
               return {
-                value: version,
-                label: version,
+                value: image.spec.versions,
+                label: image.spec.versions,
+                image: image.metadata.name,
               };
             });
 
-          let imageAllTagList = data.map(image => {
-            return {
-              value: image.spec.versions,
-              label: image.spec.versions,
-              image: image.metadata.name,
-            };
-          });
-
-          node.imageTag = String(imageTagList[0].value);
-          // podTemplate.imageTag = String(imageTagList[0].value);
-
           this.setState({ podTemplate: node });
 
-          this.setState({ imageTagList });
           this.setState({ imageList });
           this.setState({ imageAllTagList });
         },
@@ -236,8 +234,8 @@ class StatefulSetFormComponent extends React.Component {
             };
           });
           let node = { ...this.state.podTemplate };
-          node.volumes = [['', '', String(pvcList[0].value), false]];
-          podTemplate.volumes = [['', '', String(pvcList[0].value), false]];
+          node.volumes = [['', '', '', false]];
+          // podTemplate.volumes = [['', '', String(pvcList[0].value), false]];
           this.setState({ podTemplate: node });
           this.setState({ pvcList });
         },
@@ -275,8 +273,25 @@ class StatefulSetFormComponent extends React.Component {
       );
   };
 
+  onLabelChanged(event) {
+    let statefulSet = { ...this.state.statefulSet };
+    statefulSet.spec.selector.matchLabels = {};
+    if (event.length !== 0) {
+      event.forEach(item => {
+        if (item.split('=')[1] === undefined) {
+          document.getElementById('labelErrMsg').style.display = 'block';
+          event.pop(item);
+          return;
+        }
+        document.getElementById('labelErrMsg').style.display = 'none';
+        statefulSet.spec.selector.matchLabels[item.split('=')[0]] = item.split('=')[1];
+      });
+    }
+    this.setState({ statefulSet });
+  }
+
   onImageRegistryChange = e => {
-    getImageList({ metadata: { name: e.label } });
+    this.getImageList({ metadata: { name: e.label } });
     this.setState(prevState => ({
       podTemplate: {
         ...prevState.podTemplate,
@@ -322,8 +337,7 @@ class StatefulSetFormComponent extends React.Component {
       this.setState(prevState => ({
         podTemplate: {
           ...prevState.podTemplate,
-          [e.id]: e.value,
-          // [e.id]: _.cloneDeep(e.value),
+          [e.id]: _.cloneDeep(e.value),
         },
       }));
     }
@@ -353,7 +367,23 @@ class StatefulSetFormComponent extends React.Component {
     e.preventDefault();
 
     this.setState({ inProgress: true });
-    statefulSet = _.cloneDeep(this.state.statefulSet);
+    let statefulSet = _.cloneDeep(this.state.statefulSet);
+    let podTemplate = _.cloneDeep(this.state.podTemplate);
+    let volumeclaimTemplate = _.cloneDeep(this.state.volumeclaimTemplate);
+
+    let request = podTemplate.requests.map(cur => {
+      return { [cur[0]]: cur[1] };
+    });
+    let limit = podTemplate.limits.map(cur => {
+      return { [cur[0]]: cur[1] };
+    });
+    let port = podTemplate.ports.map(cur => {
+      return { name: cur[0], containerPort: cur[1], protocol: cur[2] };
+    });
+    let env = podTemplate.env.map(cur => {
+      return { name: cur[0], value: cur[1] };
+    });
+
     if (podTemplate.usePodTemplate) {
       let template = {
         metadata: {
@@ -361,37 +391,61 @@ class StatefulSetFormComponent extends React.Component {
         },
         spec: {
           containers: {
-            name: this.state.statefulSet.metadata.name,
+            name: this.state.statefulSet.metadata.name + '-template',
             image: podTemplate.imageRegistry + '/' + podTemplate.image + ':' + podTemplate.imageTag,
             command: _.cloneDeep(podTemplate.command),
             args: _.cloneDeep(podTemplate.args),
             imagePullPolicy: podTemplate.imagePullPolicy,
-            env: _.cloneDeep(podTemplate.env),
+            env: _.cloneDeep(env),
+            resources: {
+              requests: _.cloneDeep(request),
+              limits: _.cloneDeep(limit),
+            },
+            ports: _.cloneDeep(port),
+          },
+          volumes,
+          restartPolicy: podTemplate.restartPolicy,
+        },
+      };
+      console.log(template);
+      statefulSet.spec.template = _.cloneDeep(template);
+    } else {
+      let template = {
+        spec: {
+          containers: {
+            image: podTemplate.iporurl,
           },
         },
       };
       console.log(template);
+      statefulSet.spec.template = _.cloneDeep(template);
     }
-
-    // const { kind, metadata } = this.state.serviceAccount;
-    // this.setState({ inProgress: true });
-    // const newServiceAccount = _.assign({}, this.state.serviceAccount);
-
-    // const ko = kindObj(kind);
-    // (this.props.isCreate ? k8sCreate(ko, newServiceAccount) : k8sUpdate(ko, newServiceAccount, metadata.namespace, newServiceAccount.metadata.name)).then(
-    //   () => {
-    //     this.setState({ inProgress: false });
-    //     history.push(`/k8s/ns/${metadata.namespace}/serviceaccounts/${metadata.name}`);
-    //   },
-    //   err => this.setState({ error: err.message, inProgress: false }),
-    // );
+    if (volumeclaimTemplate.useVolumeclaimTemplate) {
+      let template = {
+        metadata: {
+          name: volumeclaimTemplate.name,
+        },
+        spec: {
+          accessModes: volumeclaimTemplate.accessModes,
+          storageClassName: volumeclaimTemplate.storageClassName,
+          resources: {
+            requests: {
+              storage: volumeclaimTemplate.storage,
+            },
+          },
+        },
+      };
+      console.log(template);
+      statefulSet.spec.volumeClaimTemplates = _.cloneDeep(template);
+    }
+    console.log(statefulSet);
   }
 
   render() {
     const { t } = this.props;
 
     return (
-      <div className="rbac-edit-binding co-m-pane__body">
+      <div className="form-create co-m-pane__body">
         <Helmet>
           <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StatefulSet', t) })}</title>
         </Helmet>
@@ -401,7 +455,7 @@ class StatefulSetFormComponent extends React.Component {
 
           <fieldset disabled={!this.props.isCreate}>
             <FirstSection label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.statefulSet.metadata.name} id="service-account-name" required />
+              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.statefulSet.metadata.name} id="statefulset-name" required />
             </FirstSection>
             <FirstSection label={t('CONTENT:NAMESPACE')} isRequired={true}>
               <NsDropdown id="stateful-set-namespace" t={t} onChange={this.onNamespaceChanged} />
@@ -425,16 +479,16 @@ class StatefulSetFormComponent extends React.Component {
               }
             />
             <FirstSection label={t('CONTENT:SERVICENAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={} value={} id="service-name" required />
+              <input className="form-control" type="text" onChange={this.onServiceNameChanged} id="service-name" required />
             </FirstSection>
             <FirstSection label={t('CONTENT:REPLICA')} isRequired={true}>
-              <input className="form-control" type="text" onChange={} value={} id="replica" required />
+              <input className="form-control" type="text" onChange={this.onReplicaChanged} id="replica" required />
               <div style={{ fontSize: '12px', color: '#696969' }}>
                 <p>{t('STRING:STATEFULSET-CREATE_2')}</p>
               </div>
             </FirstSection>
-            <PodTemplate t={t} onImageChange={this.onImageChange} onImageRegistryChange={this.onImageRegistryChange} podTemplate={this.state.podTemplate} pvcList={this.state.pvcList} imageRegistryList={this.state.imageRegistryList} imageList={this.state.imageList} imageTagList={this.state.imageTagList} imageAllTagList={this.state.imageAllTagList} onLabelChanged={this.onLabelChanged} onPodTemplateResourceChange={this.onPodTemplateResourceChange} getImageList={this.getImageList} />
-            <VolumeclaimTemplate t={t} onVolumeclaimTemplateChange={this.onVolumeclaimTemplateChange} volumeclaimTemplate={this.state.volumeclaimTemplate} storageClassNameList={this.state.storageClassNameList} />
+            <PodTemplate t={t} onImageChange={this.onImageChange} onImageRegistryChange={this.onImageRegistryChange} onLabelChanged={this.onLabelChanged} onPodTemplateResourceChange={this.onPodTemplateResourceChange} podTemplate={this.state.podTemplate} pvcList={this.state.pvcList} imageRegistryList={this.state.imageRegistryList} imageList={this.state.imageList} imageTagList={this.state.imageTagList} />
+            <VolumeclaimTemplate t={t} onVolumeclaimTemplateChange={this.onVolumeclaimTemplateChange} />
             {/* <FirstSection label={t('CONTENT:PERSISTENTVOLUMECLAIM')} isRequired={true}>
               <input className="form-control" type="text" onChange={} value={} id="replica" />
               <div style={{ fontSize: '12px', color: '#696969' }}>
@@ -442,15 +496,10 @@ class StatefulSetFormComponent extends React.Component {
               </div>
             </FirstSection> */}
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                id="sa
-              ve-changes"
-              >
+              <button className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
               </button>
-              <Link to={formatNamespacedRouteForResource('serviceaccounts')} className="btn btn-default" id="cancel">
+              <Link to={formatNamespacedRouteForResource('statefulsets')} className="btn btn-default" id="cancel">
                 {t('CONTENT:CANCEL')}
               </Link>
             </ButtonBar>
