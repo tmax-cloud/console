@@ -411,7 +411,7 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:HOME')} icon="pficon pficon-home">
               {blockMenu.indexOf('status') === -1 && <HrefLink href="/status" name={t('RESOURCE:STATUS')} activePath="/status/" onClick={this.close} />}
               {blockMenu.indexOf('search') === -1 && <HrefLink href="/search" name={t('RESOURCE:SEARCH')} onClick={this.close} startsWith={searchStartsWith} />}
-              {blockMenu.indexOf('audit') === -1 && <ResourceNSLink resource="audits" name="감사 로그" onClick={this.close} />}
+              {/* {blockMenu.indexOf('audit') === -1 && <ResourceNSLink resource="audits" name="감사 로그" onClick={this.close} />} */}
               {blockMenu.indexOf('events') === -1 && <ResourceNSLink resource="events" name={t('RESOURCE:EVENT')} onClick={this.close} />}
               {blockMenu.indexOf('grafana') === -1 && <HrefLink href="/grafana" name={t('RESOURCE:GRAFANA')} onClick={this.close} />}
             </NavSection>
