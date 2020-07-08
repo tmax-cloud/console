@@ -85,7 +85,15 @@ const environmentComponent = props => {
 const DaemonSets = props => <List {...props} Header={DaemonSetHeader} Row={DaemonSetRow} />;
 const DaemonSetsPage = props => {
   const { t } = useTranslation();
-  return <ListPage canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} ListComponent={DaemonSets} {...props} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/daemonsets/new` : `/k8s/cluster/daemonsets/new/form`),
+  };
+  return <ListPage canCreate={true} createProps={createProps} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} ListComponent={DaemonSets} {...props} />;
 };
 
 const DaemonSetsDetailsPage = props => {

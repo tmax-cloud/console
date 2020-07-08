@@ -165,7 +165,7 @@ export const PodTemplate = props => {
                   setRunCommandArguments(e.values);
                   onPodTemplateResourceChange({
                     value: e.values,
-                    id: 'arg',
+                    id: 'args',
                     label: '',
                   });
                 }}
@@ -274,6 +274,7 @@ export const PodTemplate = props => {
             {/* Restart Policy */}
             <SecondSection label={t('CONTENT:RESTARTPOLICY')} id={'restart'}>
               <SingleSelect
+                className="form-control"
                 options={restartPolicyList}
                 name={'RestartPolicy'}
                 value={t(`CONTENT:${restartPolicy.toUpperCase()}`)}
