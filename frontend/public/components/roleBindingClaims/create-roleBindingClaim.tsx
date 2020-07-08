@@ -74,62 +74,75 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
   }
   componentDidMount() {
     this.getNamespaceList();
-    // this.getRoleList();
+    this.getRoleList();
   }
   getRoleList() {
     let finalRoleList = [];
     // clusterRole
     const ko = kindObj('ClusterRole');
-    k8sList(ko)
-      .then(reponse => reponse)
-      .then(
-        data => {
-          let clusterRoleList = data.map(cur => {
-            return {
-              kind: 'ClusterRole',
-              name: cur.metadata.name,
-              nameString: `${cur.metadata.name}(Cluster Role)`,
-              apiGroup: 'rbac.authorization.k8s.io',
-            };
-          });
-          clusterRoleList.forEach(element => {
-            finalRoleList.push(element);
-          });
-          this.setState({
-            roleList: finalRoleList,
-          });
-        },
-        err => {
-          this.setState({ error: err.message, inProgress: false });
-          this.setState({ roleList: [] });
-        },
-      );
+    let promiseList = [];
+    promiseList.push(
+      k8sList(ko)
+        .then(reponse => reponse)
+        .then(
+          data => {
+            let clusterRoleList = data.map(cur => {
+              return {
+                kind: 'ClusterRole',
+                name: cur.metadata.name,
+                nameString: `${cur.metadata.name}(Cluster Role)`,
+                apiGroup: 'rbac.authorization.k8s.io',
+              };
+            });
+            clusterRoleList.forEach(element => {
+              finalRoleList.push(element);
+            });
+            this.setState(() => ({
+              roleList: finalRoleList,
+            }));
+          },
+          err => {
+            this.setState({ error: err.message, inProgress: false });
+            this.setState({ roleList: [] });
+          },
+        ),
+    );
     // 해당 ns의 Role
     const role = kindObj('Role');
-    k8sList(role, { ns: this.state.roleBindingClaim.metadata.namespace })
-      .then(reponse => reponse)
-      .then(
-        data => {
-          let roleList = data.map(cur => {
-            return {
-              kind: 'Role',
-              name: cur.metadata.name,
-              nameString: `${cur.metadata.name}(Role)`,
-              apiGroup: 'rbac.authorization.k8s.io',
-            };
-          });
-          roleList.forEach(element => {
-            finalRoleList.push(element);
-          });
-          this.setState({
-            roleList: finalRoleList,
-          });
+    promiseList.push(
+      k8sList(role, { ns: this.state.roleBindingClaim.metadata.namespace })
+        .then(reponse => reponse)
+        .then(
+          data => {
+            let roleList = data.map(cur => {
+              return {
+                kind: 'Role',
+                name: cur.metadata.name,
+                nameString: `${cur.metadata.name}(Role)`,
+                apiGroup: 'rbac.authorization.k8s.io',
+              };
+            });
+            roleList.forEach(element => {
+              finalRoleList.push(element);
+            });
+            this.setState({
+              roleList: finalRoleList,
+            });
+          },
+          err => {
+            this.setState({ error: err.message, inProgress: false });
+            this.setState({ roleList: [] });
+          },
+        ),
+    );
+    Promise.all(promiseList).then(() => {
+      this.setState(prevState => ({
+        roleBindingClaim: {
+          ...prevState.roleBindingClaim,
+          ['roleRef']: { apiGroup: 'rbac.authorization.k8s.io', name: finalRoleList[0].name, kind: 'ClusterRole' },
         },
-        err => {
-          this.setState({ error: err.message, inProgress: false });
-          this.setState({ roleList: [] });
-        },
-      );
+      }));
+    });
     // role + clusterRole list
 
     // this.setState({
@@ -153,14 +166,9 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
           }
           this.setState({ roleBindingClaim });
 
-          this.setState(
-            {
-              namespaceList: namespaceList,
-            },
-            () => {
-              this.getRoleList();
-            },
-          );
+          this.setState({
+            namespaceList: namespaceList,
+          });
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
