@@ -51,12 +51,12 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
           </select>
         </span>
       </div>
-      <TraceGraphs namespace={namespace} name={name} limit={limit} statusCode={statusCode} display={display} />
+      <Trace namespace={namespace} name={name} limit={limit} statusCode={statusCode} display={display} />
     </div>
   );
 };
 
-const TraceGraphs = requirePrometheus(({ name, limit, statusCode, display }) => {
+const Trace = () => {
   const iframeRef = React.useRef();
   const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${name}`;
   const jaegerURL = `${document.location.origin}/api/jaeger/search${query}`;
@@ -67,4 +67,4 @@ const TraceGraphs = requirePrometheus(({ name, limit, statusCode, display }) => 
   };
 
   return <iframe ref={iframeRef} width="100%" height="500px" style={{ border: 0 }} src={jaegerURL} target="_blank" onLoad={onLoad}></iframe>;
-});
+};

@@ -30,6 +30,11 @@
     margin-right: 10px;
     min-width: 0; // enables truncation of selected item, if needed
   }
+  .btn-group-audit {
+    .dropdown button {
+      width: 120px;
+    }
+  }
   &--alt {
     margin-left: 0;
     margin-right: 0;
@@ -66,7 +71,7 @@
 }
 
 .co-m-pane__heading {
-  // display: flex;
+  display: flex;
   justify-content: space-between;
   margin: 0 0 $grid-gutter-width;
   &--center {
@@ -318,4 +323,21 @@ input[type='number']::-webkit-outer-spin-button {
   @media (max-width: $screen-xs-max) {
     align-items: flex-end;
   }
+}
+.co-datepicker {
+  margin: 0 10px;
+  width: 90px;
+  height: 25px;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  color: #4d5258;
+  text-align: right;
+}
+
+.co-flowchart-diagram {
+  margin-bottom: 10px;
+}
+
+.co-flowchart-diagram > div {
+  height: 300px;
 }
