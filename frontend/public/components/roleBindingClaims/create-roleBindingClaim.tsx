@@ -89,7 +89,7 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
               kind: 'ClusterRole',
               name: cur.metadata.name,
               nameString: `${cur.metadata.name}(Cluster Role)`,
-              apiGroup: 'rbac.authorization.k8s.io/v1',
+              apiGroup: 'rbac.authorization.k8s.io',
             };
           });
           clusterRoleList.forEach(element => {
@@ -115,7 +115,7 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
               kind: 'Role',
               name: cur.metadata.name,
               nameString: `${cur.metadata.name}(Role)`,
-              apiGroup: 'rbac.authorization.k8s.io/v1',
+              apiGroup: 'rbac.authorization.k8s.io',
             };
           });
           roleList.forEach(element => {
