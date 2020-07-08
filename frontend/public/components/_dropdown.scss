@@ -1,8 +1,8 @@
 $co-namespace-selector-desktop: 40px;
 $co-namespace-selector-mobile: 27px;
-$color-dropdown-hover: rgba(0, 0, 0, .05);
-$color-bookmarker--hover: #AAA;
-$color-bookmarker: #DDD;
+$color-dropdown-hover: rgba(0, 0, 0, 0.05);
+$color-bookmarker--hover: #aaa;
+$color-bookmarker: #ddd;
 
 .dropdown {
   position: relative;
@@ -78,7 +78,7 @@ $color-bookmarker: #DDD;
       flex-grow: 1;
       width: 100%;
       &.next-to-bookmark {
-        padding-left: 5px
+        padding-left: 5px;
       }
       &.hover {
         background-color: $dropdown-link-hover-bg;
@@ -109,20 +109,20 @@ $color-bookmarker: #DDD;
     }
 
     > a {
-    color: white;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
       color: white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+      }
     }
   }
-}
 }
 
 .co-namespace-selector {
   //background-color: #292E34;
-  border-bottom: 1px solid #C5C7C8;
-  background-color: #F4F6F9;
+  border-bottom: 1px solid #c5c7c8;
+  background-color: #f4f6f9;
   color: $color-os-nav-title;
   display: flex;
   font-size: ($font-size-base + 1);
@@ -131,7 +131,7 @@ $color-bookmarker: #DDD;
   white-space: nowrap;
 
   @media (min-width: $grid-float-breakpoint) {
-    border-left: 1px solid #F4F6F9; //$color-os-nav-item-seperator;
+    border-left: 1px solid #f4f6f9; //$color-os-nav-item-seperator;
     font-size: ($font-size-base + 3);
     height: $co-namespace-selector-desktop;
   }
@@ -217,6 +217,7 @@ $color-bookmarker: #DDD;
     }
     > a {
       padding: 6px;
+      padding-left: 11px;
       text-decoration: none;
       &.active {
         border-color: transparent;

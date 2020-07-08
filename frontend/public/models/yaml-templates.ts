@@ -583,7 +583,6 @@ spec:
       source:
         http:
           url: 'https://download.cirros-cloud.net/contrib/0.3.0/cirros-0.3.0-i386-disk.img'
-      contentType: "archive"
       pvc:
         accessModes:
           - ReadWriteOnce
@@ -4924,13 +4923,13 @@ spec:
       templates:
       - name: whalesay
         steps:
-          - - name: call-whalesay-template
-              templateRef:
-                name: workflow-template-whalesay-template
-                template: whalesay-template
-              arguments:
-                parameters:
-                - name: message
-                  value: "hello world"
+          - name: call-whalesay-template
+            templateRef:
+              name: workflow-template-whalesay-template
+              template: whalesay-template
+            arguments:
+              parameters:
+              - name: message
+                value: "hello world"
 `,
   );

@@ -91,7 +91,6 @@ const Caret = () => <span className="caret" />;
 class DropDownRow extends React.PureComponent {
   render() {
     const { itemKey, content, onclick, className, selected, hover } = this.props;
-
     return (
       <li role="option" className={classNames(className)} key={itemKey}>
         <a href="#" ref={this.link} id={`${itemKey}-link`} className={classNames({ 'next-to-bookmark': hover, focus: selected })} onClick={e => onclick(itemKey, e)}>
@@ -169,7 +168,6 @@ export class Dropdown extends DropdownMixin {
 
   applyTextFilter_(autocompleteText, items) {
     const { autocompleteFilter } = this.props;
-    // items = Object.assign({}, this.state.bookmarks, items);
     if (autocompleteFilter && !_.isEmpty(autocompleteText)) {
       items = _.pickBy(items, (item, key) => autocompleteFilter(autocompleteText, item, key));
     }
@@ -281,8 +279,6 @@ Dropdown.propTypes = {
   menuClassName: PropTypes.string,
   noButton: PropTypes.bool,
   noSelection: PropTypes.bool,
-  storageKey: PropTypes.string,
-  spacerBefore: PropTypes.instanceOf(Set),
   textFilter: PropTypes.string,
   title: PropTypes.node,
 };
