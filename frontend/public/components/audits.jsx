@@ -3,7 +3,6 @@ import { CSSTransition } from 'react-transition-group';
 import { Helmet } from 'react-helmet';
 import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
-import { AutoSizer, List as VirtualList, WindowScroller } from 'react-virtualized';
 import { SafetyFirst } from './safety-first';
 import { TextFilter } from './factory';
 import { Dropdown, Box, NavTitle, Timestamp } from './utils';
@@ -31,9 +30,9 @@ class Inner extends React.PureComponent {
     };
   }
 
-  onClickDetail = () => {
+  onClickDetail() {
     this.state.angle === 'down' ? this.setState({ angle: 'up' }) : this.setState({ angle: 'down' });
-  };
+  }
 
   render() {
     const { klass, status, verb, objectRef, user, stageTimestamp, responseStatus, t } = this.props;
@@ -648,7 +647,6 @@ class AuditList extends SafetyFirst {
     };
 
     this.rowRenderer = function rowRenderer({ index, style, key }) {
-      // const event = this.state.filteredEvents ? this.state.filteredEvents[index] : this.props.data[index];
       const event = this.state.filteredEvents[index];
       const t = this.props.t;
       return <SysEvent {...event} key={key} style={style} index={index} t={t} />;
@@ -666,7 +664,6 @@ class AuditList extends SafetyFirst {
         return true;
       }
       const message = _.get(obj, 'responseStatus.message', '');
-      // const message = _.toLower(obj.message);
       return _.every(words, word => message.indexOf(word) !== -1);
     };
 
@@ -712,8 +709,7 @@ class AuditList extends SafetyFirst {
   }
 
   render() {
-    // const filteredEvents = this.state.filteredEvents.length === 0 ? this.props.data : this.state.filteredEvents;
-    const { filteredEvents, items } = this.state;
+    const { items } = this.state;
 
     let count;
     if (this.state.filteredEvents) {
