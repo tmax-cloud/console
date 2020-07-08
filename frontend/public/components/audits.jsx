@@ -218,6 +218,8 @@ class AuditPage_ extends React.Component {
       end: new Date(),
       offset: 0,
       pages: 0,
+      tempPages: 0,
+      paginationPos: '215px',
     };
 
     this.onChangeResourceType = e => this.onChangeResourceType_(e);
@@ -227,6 +229,7 @@ class AuditPage_ extends React.Component {
     this.onChangeStartDate = e => this.onChangeStartDate_(e);
     this.onChangeEndDate = e => this.onChangeEndDate_(e);
     this.onChangePage = e => this.onChangePage_(e);
+    this.changePaginationPos = val => this.changePaginationPos_(val);
   }
 
   onChangeResourceType_(e) {
@@ -271,6 +274,7 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
+        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -304,6 +308,7 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
+          tempPages: Math.ceil(response.totalNum / 100),
         });
       })
       .catch(error => {
@@ -346,6 +351,7 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
+        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -384,6 +390,7 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
+        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -429,6 +436,7 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
+        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -474,6 +482,7 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
+        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -508,6 +517,7 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
+        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -531,6 +541,7 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
+          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     } else {
@@ -540,6 +551,7 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
+          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     }
@@ -558,6 +570,7 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
+          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     } else {
@@ -567,15 +580,30 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
+          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     }
   }
 
+  changePaginationPos_(val) {
+    if (val === '305px') {
+      this.setState({
+        tempPages: this.state.pages,
+        pages: 1,
+      });
+    } else {
+      this.setState({
+        pages: this.state.tempPages,
+      });
+    }
+    this.setState({
+      paginationPos: val,
+    });
+  }
+
   render() {
     const { data, start, end, textFilter, actionList } = this.state;
-    const topPosition = `${data.length * 110 + 215}px`;
-    // console.log(topPosition);
 
     return (
       <React.Fragment>
@@ -599,9 +627,9 @@ class AuditPage_ extends React.Component {
               <TextFilter id="audit" label="검색" onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={true} textFilterRef={this.textFilterRef} />
             </div>
           </div>
-          <AuditList {...this.props} textFilter={textFilter} data={data} />
+          <AuditList {...this.props} textFilter={textFilter} data={data} changePaginationPos={this.changePaginationPos} />
           {data && data.length !== 0 && (
-            <div className="pagination-div" style={{ top: topPosition }}>
+            <div className="pagination-div" style={{ top: this.state.paginationPos }}>
               <ReactPaginate previousLabel={'<'} nextLabel={'>'} breakLabel={'...'} breakClassName={'break-me'} pageCount={this.state.pages} marginPagesDisplayed={2} pageRangeDisplayed={5} onPageChange={this.onChangePage} containerClassName={'pagination'} subContainerClassName={'pages pagination'} activeClassName={'active'} forcePage={this.state.offset} />
             </div>
           )}
@@ -658,9 +686,15 @@ class AuditList extends SafetyFirst {
     if (textFilter === nextProps.textFilter && filteredEvents === nextProps.data) {
       return {};
     }
-    // console.log(arr);
 
     // console.log(nextProps.data);
+    if (items.length !== AuditList.filterEvents(nextProps.data, nextProps).length) {
+      if (AuditList.filterEvents(nextProps.data, nextProps).length === 0) {
+        nextProps.changePaginationPos('305px');
+      } else {
+        nextProps.changePaginationPos(`${AuditList.filterEvents(nextProps.data, nextProps).length * 110 + 215}px`);
+      }
+    }
 
     return {
       filteredEvents: AuditList.filterEvents(nextProps.data, nextProps),
