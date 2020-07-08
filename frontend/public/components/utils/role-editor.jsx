@@ -28,7 +28,8 @@ export class RoleEditor extends React.Component {
         const rolePairs = _.cloneDeep(this.props.rolePairs);
         //check인경우 
         let keyList = Object.keys(rolePairs[i][type])
-        if (e.target.type === 'checkbox') {
+
+        if (e.target && e.target.type === 'checkbox') {
             if (e.target.id === 'All') {
                 rolePairs[i][type][e.target.id] = rolePairs[i][type][e.target.id] ? 0 : 1;
                 if (rolePairs[i][type][e.target.id]) {
@@ -63,16 +64,10 @@ export class RoleEditor extends React.Component {
         const { desc, keyString, valueString, addString, rolePairs, allowSorting, readOnly, nameValueId, t, APIGroupList, ResourceList } = this.props;
         const roleItems = rolePairs.map((pair, i) => {
             const key = _.get(pair, [RoleEditorPair.Index], i);
-            return <RolePairElement onChange={this._change} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} APIGroupList={APIGroupList} ResourceList={ResourceList} />;
+            return <RolePairElement onChange={this._change} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} ResourceList={ResourceList} APIGroupList={APIGroupList} />;
         });
         return (
             <React.Fragment>
-                <div className="row col-xs-8" style={{ marginLeft: '-15px' }}>
-                    <div className="row">
-                        <div className="col-md-4 col-xs-4 text-secondary">{t(`CONTENT:${keyString.toUpperCase()}`)}</div>
-                        <div className="col-md-4 col-xs-4 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
-                    </div>
-                </div>
                 {roleItems}
                 <span className="row col-xs-10">{desc}</span>
                 <div className="row">
@@ -92,7 +87,7 @@ export class RoleEditor extends React.Component {
     }
 }
 RoleEditor.defaultProps = {
-    keyString: 'API Group',
+    keyString: 'APIGroups',
     valueString: 'Resource',
     addString: 'Add More',
     allowSorting: false,
@@ -104,7 +99,7 @@ class RolePairElement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            resourceList: []
+            ResourceList: this.props.ResourceList
         };
         this._onRemove = this._onRemove.bind(this);
         this._onChangeGroup = this._onChangeGroup.bind(this);
@@ -129,12 +124,13 @@ class RolePairElement extends React.Component {
         const { index, onChange } = this.props;
         onChange(e, index, RoleEditorPair.Role);
     }
+
     _getResourceList(apiGroup) {
         coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup}`).then(
             data => {
-                const resourceList = data.resources.map(resource => resource.name)
+                let ResourceList = data.resources.map(resource => resource.name)
                 this.setState({
-                    resourceList: resourceList
+                    ResourceList: ResourceList
                 });
             },
             err => {
@@ -143,34 +139,46 @@ class RolePairElement extends React.Component {
         );
     }
     render() {
-        const { keyString, valueString, allowSorting, readOnly, pair, t, APIGroupList } = this.props;
+        const { keyString, valueString, allowSorting, readOnly, pair, t, APIGroupList, ResourceList } = this.props;
+        const { ResourceList } = this.state;
         const deleteButton = (
             <React.Fragment>
                 <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
                 <span className="sr-only">Delete</span>
             </React.Fragment>
         );
+
         let checkboxList = Object.keys(pair[2]).map(verb => {
             let ischecked = pair[2][verb]
-            return <div style={{ float: 'left', width: '100px' }}>
+            return <div style={{ float: 'left', width: '100px' }} value={pair[RoleEditorPair.Role]}>
                 <input type="checkbox" id={verb} checked={ischecked} onChange={this._onChangeRole} />
                 <label style={{ margin: '0 10px' }}>{verb}</label>
             </div>
         })
-        const APIOptions = APIGroupList.map(option => ({ value: option, label: option }));
-        const ResourceOptions = this.state.resourceList.map(option => ({ value: option, label: option }));
+        let APIOptions = APIGroupList !== [] ? APIGroupList.map(option => ({ value: option, label: option })) : [];
+        ResourceList = !ResourceList.length ? this.props.ResourceList : this.state.ResourceList;
+        let ResourceOptions = ResourceList.map(option => ({ value: option, label: option }));
+
+        // ResourceOptions에 pair[RoleEditorPair.Resource]가 없는 경우 
+        if (!ResourceOptions.some(resource => resource.value === pair[RoleEditorPair.Resource])) {
+            if (ResourceOptions.length) {
+                pair[RoleEditorPair.Resource] = ResourceOptions[0].value
+            }
+        }
         return (
             <div>
-                <div className={classNames('pairs-list__row col-xs-8')} style={{ margin: '0px 0px 10px -15px', backgroundColor: '#F5F5F5' }} ref={node => (this.node = node)}>
+                <div className={classNames('pairs-list__row col-xs-9')} style={{ margin: '0px 0px 10px -15px', backgroundColor: '#F5F5F5' }} ref={node => (this.node = node)}>
                     <div className="row pairs-list__row">
-                        <div className="col-md-4 col-xs-4 pairs-list__port-field">
+                        <div className="col-md-2 col-xs-2 pairs-list__port-field">{t(`CONTENT:${keyString.toUpperCase()}`)}</div>
+                        <div className="col-md-3 col-xs-3 pairs-list__port-field">
                             {APIOptions && <SingleSelect
                                 options={APIOptions} name="APIGroup" value={pair[RoleEditorPair.Group]} onChange={this._onChangeGroup}
                             />}
                         </div>
-                        <div className="col-md-4 col-xs-4 pairs-list__port-field">
+                        <div className="col-md-2 col-xs-2 pairs-list__port-field">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
+                        <div className="col-md-3 col-xs-3 pairs-list__port-field">
                             {ResourceOptions && <SingleSelect
-                                options={ResourceOptions} name="Resource" value={pair[RoleEditorPair.Resource]}
+                                options={ResourceOptions} name="Resource" value={pair[RoleEditorPair.Resource]} onChange={this._onChangeResource}
                             />}
                         </div>
                     </div>

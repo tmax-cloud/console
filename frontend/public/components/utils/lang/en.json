@@ -45,7 +45,8 @@
     "STRATEGY-MODAL_1": "greater than {{something}}",
     "NAMESPACE-MODAL_0": "Confirm deletion by typing {{something}} below ",
     "PODSELECTOR-EMPTY_0": "All pods within {{something}}",
-    "GENERATEDFROM": "Generated from {{something}}"
+    "GENERATEDFROM": "Generated from {{something}}",
+    "SELECT": "Select {{something}}"
   },
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
@@ -215,6 +216,7 @@
     "STATEFULSET-CREATE_0": "파드 집합의 디플로이먼트와 파드, 스케일링을 관리합니다.",
     "STATEFULSET-CREATE_1": "Enter를 입력하여 레이블을 추가할 수 있습니다.",
     "STATEFULSET-CREATE_2": "스테이트풀 셋에서 관리하는 파드의 개수를 정의해 주세요.",
+    "STATEFULSET-CREATE_3": "스테이트풀 셋에 볼륨 클레임을 생성합니다.",
     "JOB-SIDEBAR_0": "Run a job using a perl image",
     "JOB-SIDEBAR_1": "Can run commands by executing a job within a perl image. (Print pi up to 2000 digits)",
     "JOB-SIDEBAR_2": "Specify the number of retries of the job",
@@ -376,6 +378,7 @@
     "FORCLUSTERROLEBINDING": "(for ClusterRoleBinding)",
     "DENY": "Deny",
     "ALLOW": "Allow",
+    "NOTALLOW": "Not Allow",
     "LIMIT": "Limit",
     "VIEWSAMPLES": "View samples",
     "SAMPLES": "samples",
@@ -738,13 +741,20 @@
     "CONFIGMAPVALUE": "Config Map Value",
     "IMAGEREGISTRY": "Image Registry",
     "BYSELF": "직접 입력",
-    "PODTEMPLATE": "파드 템플릿",
-    "REPLICA": "레플리카",
+    "PODTEMPLATE": "Pod Template",
+    "REPLICA": "Replica",
     "USE": "사용",
     "UNUSE": "사용 안 함",
-    "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
-    "PERSISTENEVOLUMECLAIM": "퍼시스턴트 볼륨 클레임",
-    "IPORURL": "IP 또는 URL"
+    "VOLUMECLAIMTEMPLATE": "Volume Claim Template",
+    "PERSISTENEVOLUMECLAIM": "Persistent Volume Claim",
+    "PERSISTENEVOLUME": "Persistent Volume",
+    "IPORURL": "IP or URL",
+    "VOLUME": "Volume",
+    "ACCESSMODE": "Access Mode",
+    "STORAGESIZEREQUEST": "Storage Size Request",
+    "IMAGETAG": "Image Tag",
+    "READWRITEONCE": "Read Write Once",
+    "READWRITEMANY": "Read Write Many"
   },
   "RESOURCE": {
     "HOME": "Home",

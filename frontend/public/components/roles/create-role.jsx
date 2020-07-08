@@ -3,7 +3,6 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-// import { NsDropdown } from '../RBAC/bindings';
 import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
 import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +11,6 @@ import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
 import { RadioGroup } from '../radio';
 import { RoleEditor } from '../utils/role-editor';
-
 import { coFetch, coFetchJSON } from '../../co-fetch';
 
 const Section = ({ label, children, isRequired }) => {
@@ -29,7 +27,7 @@ class RoleFormComponent extends React.Component {
         super(props);
         const existingRole = _.pick(props.obj, ['metadata', 'type']);
         const role = _.defaultsDeep({}, props.fixed, existingRole, {
-            apiVersion: 'v1',
+            apiVersion: 'rbac.authorization.k8s.io/v1',
             kind: 'Role',
             metadata: {
                 name: '',
@@ -43,12 +41,14 @@ class RoleFormComponent extends React.Component {
             inProgress: false,
             type: 'form',
             roleList: [['', '', { 'All': 1, 'Create': 1, 'Delete': 1, 'Get': 1, 'List': 1, 'Patch': 1, 'Update': 1, 'Watch': 1 }]],
-            APIGroupList: []
+            APIGroupList: [],
+            ResourceList: []
         };
         this.setKind = this.setKind.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
         this.getAPIGroupList = this.getAPIGroupList.bind(this);
+        this.dataProcessing = this.dataProcessing.bind(this);
         this.save = this.save.bind(this);
         this._updateRoles = this._updateRoles.bind(this);
     }
@@ -67,14 +67,25 @@ class RoleFormComponent extends React.Component {
         coFetchJSON(`${document.location.origin}/api/kubernetes/apis`).then(
             data => {
                 const APIGroupList = data.groups.map(group => group.preferredVersion.groupVersion)
-                this.setState({
-                    APIGroupList: APIGroupList
-                });
+                return APIGroupList
             },
             err => {
                 this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
             },
-        );
+        ).then(apiGroup => {
+            coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup[0]}`).then(
+                data => {
+                    const ResourceList = data.resources.map(resource => resource.name)
+                    this.setState({
+                        ResourceList: ResourceList,
+                        APIGroupList: apiGroup
+                    });
+                },
+                err => {
+                    this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+                },
+            );
+        });
     }
     _updateRoles(role) {
         this.setState({
@@ -91,12 +102,34 @@ class RoleFormComponent extends React.Component {
         role.metadata.namespace = String(namespace);
         this.setState({ role });
     }
+    dataProcessing(originData) {
+        // originData = [['apiGroup','resource', { 'Create': 1, 'Delete': 1}],['apiGroup','resource', { 'Create': 1, 'Delete': 1}]]
+        // changedData = [{verbs:['create','delete'],apiGroups:'apiGroup',resources:'resource'},{verbs:['create','delete'],apiGroups:'apiGroup',resources:'resource'}]
+        let changedData = []
+        originData.forEach(originRule => {
+            let rule = { verbs: [], apiGroups: [originRule[0]], resources: [originRule[1]] }
+            let originVerbs = _.assign({}, originRule[2]);// { 'All':1, 'Create': 1, 'Delete': 1}
+            delete originVerbs.All;// { 'Create': 1, 'Delete': 1}
+            let verbs = [];
+            Object.keys(originVerbs).forEach(verb => {
+                if (originVerbs[verb] === 1) {
+                    verbs.push(verb)
+                }
+            });
+            rule.verbs = verbs
+            changedData.push(rule)
+        })
+        return changedData
+    }
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.role;
+        //rule데이터 가공 
+        let changedData = this.dataProcessing(this.state.roleList);
+        console.log(changedData)
         this.setState({ inProgress: true });
         const newRole = _.assign({}, this.state.role);
-
+        newRole.rules = changedData;
         const ko = kindObj(kind);
         (this.props.isCreate
             ? k8sCreate(ko, newRole)
@@ -110,7 +143,7 @@ class RoleFormComponent extends React.Component {
     render() {
         const { t } = this.props;
         const { kind, metadata, roleRef } = this.state.role;
-        const { APIGroupList } = this.state
+        const { APIGroupList, ResourceList } = this.state
         const roleKinds = [
             { value: 'Role', title: "Namespace Role (Role)", desc: t('STRING:ROLE-CREATE_0') },
             { value: 'ClusterRole', title: "Cluster Role (Cluster Role)", desc: t('STRING:ROLE-CREATE_1') },
@@ -138,7 +171,7 @@ class RoleFormComponent extends React.Component {
                         <NsDropdown id="role-namespace" t={t} onChange={this.onNamespaceChanged} />
                     </Section>}
                     <Section label={t('CONTENT:GRANTRESOURCES')} isRequired={true}>
-                        <RoleEditor desc={t('STRING:ROLE-CREATE_2')} APIGroupList={APIGroupList} ResourceList={[]} t={t} rolePairs={this.state.roleList} updateParentData={this._updateRoles} />
+                        <RoleEditor desc={t('STRING:ROLE-CREATE_2')} APIGroupList={APIGroupList} ResourceList={ResourceList} t={t} rolePairs={this.state.roleList} updateParentData={this._updateRoles} />
                     </Section>
                     <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
                         <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>

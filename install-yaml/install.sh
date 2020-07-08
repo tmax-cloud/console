@@ -115,7 +115,7 @@ if [ -z $KIALI_IP ]; then
     echo "KIALI_IP dummy value temporarily set to 0.0.0.0:20001."
 fi
 KIALI=${KIALI_IP}:${KIALI_PORT}
-echo "kiali Addr = ${KIALI}/api/kiali"
+echo "kiali Addr = ${KIALI}"
 
 # get jaeger ip addr 
 JAEGER_IP=$(kubectl get svc -A | grep ${NAME_JAEGER} | awk '{print $4}')
