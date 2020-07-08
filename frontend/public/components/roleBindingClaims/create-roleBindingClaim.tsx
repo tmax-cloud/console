@@ -95,6 +95,9 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
           clusterRoleList.forEach(element => {
             finalRoleList.push(element);
           });
+          this.setState({
+            roleList: finalRoleList,
+          });
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
