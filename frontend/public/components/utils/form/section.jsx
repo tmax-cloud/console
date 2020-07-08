@@ -10,12 +10,14 @@ export const FirstSection = ({ label, children, isRequired }) => (
   </div>
 );
 
-export const SecondSection = ({ label, children, id, valueWidth }) => (
-  <div className="row form-group">
+export const SecondSection = ({ label, children, id, isRequired }) => (
+  <div className={'row form-group ' + (isRequired ? 'required' : '')}>
     <div className="col-xs-2"></div>
-    <div className="col-xs-10" id={id}>
-      <label htmlFor="secret-type">{label}</label>
-      <div style={{ width: valueWidth }}>{children}</div>
+    <div className={'col-xs-10'} id={id}>
+      <label className="control-label" htmlFor="secret-type">
+        {label}
+      </label>
+      <div>{children}</div>
     </div>
   </div>
 );

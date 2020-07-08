@@ -4,59 +4,59 @@
    rather than overriding or bringing in built assets.
    The coreos-web project is no longer actively maintained */
 
-   @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 100;
-    src: url(fonts/NotoSansCJKkr-Thin.otf) format('opentype');
-  }
-  @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 300;
-    src: url(fonts/NotoSansCJKkr-Light.otf) format('opentype');
-  }
-  @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 350;
-    src: url(fonts/NotoSansCJKkr-DemiLight.otf) format('opentype');
-  }
-  @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 400;
-    src: url(fonts/NotoSansCJKkr-Regular.otf) format('opentype');
-  }
-  @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 500;
-    src: url(fonts/NotoSansCJKkr-Medium.otf) format('opentype');
-  }
-  @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 700;
-    src: url(fonts/NotoSansCJKkr-Bold.otf) format('opentype');
-  }
-  @font-face {
-    font-family: 'Noto Sans CJK KR';
-    font-style: normal;
-    font-weight: 900;
-    src: url(fonts/NotoSansCJKkr-Black.otf) format('opentype');
-  } 
-  * {
-    font-family: 'Noto Sans CJK KR', sans-serif; // !important;
-  }
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 100;
+  src: url(fonts/NotoSansCJKkr-Thin.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 300;
+  src: url(fonts/NotoSansCJKkr-Light.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 350;
+  src: url(fonts/NotoSansCJKkr-DemiLight.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/NotoSansCJKkr-Regular.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 500;
+  src: url(fonts/NotoSansCJKkr-Medium.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 700;
+  src: url(fonts/NotoSansCJKkr-Bold.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 900;
+  src: url(fonts/NotoSansCJKkr-Black.otf) format('opentype');
+}
+* {
+  font-family: 'Noto Sans CJK KR', sans-serif; // !important;
+}
 
-  .ace_content * {
-    font-family:  'Ubuntu Mono', 'source-code-pro', monospace !important;
-  }
+.ace_content * {
+  font-family: 'Ubuntu Mono', 'source-code-pro', monospace !important;
+}
 
-  .ace_doc-tooltip sup {
-    color: red
-  }
+.ace_doc-tooltip sup {
+  color: red;
+}
 // override patternfly's extra thin font weight for headers
 h1,
 .h1,
@@ -73,7 +73,8 @@ small {
   font-size: 12px;
 }
 
-.form-control[disabled], fieldset[disabled] .form-control {
+.form-control[disabled],
+fieldset[disabled] .form-control {
   cursor: auto;
 }
 
@@ -84,7 +85,8 @@ small {
 
 .co-m-primary-action {
   color: black;
-  &:hover, &:visited {
+  &:hover,
+  &:visited {
     color: black;
   }
 }
@@ -119,11 +121,11 @@ tags-input .tags {
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
   border: 1px solid $input-border;
   border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
-  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
-  @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+  @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
+  @include transition(border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s);
 }
 .modal-dialog {
-  width:fit-content;
+  width: fit-content;
 }
 .modal-body tags-input .tags {
   min-height: 200px;
@@ -131,7 +133,7 @@ tags-input .tags {
 tags-input .tags.focused,
 tags-input .tags:focus {
   outline: none;
-  border-color: #66AFE9;
+  border-color: #66afe9;
 }
 tags-input .tags .tag-list {
   margin: 0;
@@ -193,7 +195,7 @@ tags-input.ng-invalid .tags {
 }
 
 tags-input .autocomplete {
-  margin-top: 5px; 
+  margin-top: 5px;
   position: absolute;
   padding: 5px 0;
   z-index: 999;
@@ -215,7 +217,7 @@ tags-input .autocomplete .suggestion-item {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: black;
   background-color: white;
 }
@@ -228,7 +230,7 @@ tags-input .autocomplete .suggestion-item.selected em {
   background-color: #0097cf;
 }
 tags-input .autocomplete .suggestion-item em {
-  font: normal bold 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: normal bold 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: black;
   background-color: white;
 }
@@ -273,82 +275,140 @@ tags-input .autocomplete .suggestion-item em {
 }
 
 .btn-primary {
-  background-color: #1E6CB9;
+  background-color: #1e6cb9;
   background-image: none;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background-color: #175B9E;
+  background-color: #175b9e;
   background-image: none;
 }
 
-.btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary .open .dropdown-toggle.btn-primary {
-  background-color: #0F4B86;
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary .open .dropdown-toggle.btn-primary {
+  background-color: #0f4b86;
   background-image: none;
   border: 0px;
 }
 
-.btn-primary:active:hover, .btn-primary:active:focus, .btn-primary:active.focus, .btn-primary.active:hover, .btn-primary.active:focus, .btn-primary.active.focus, .btn-primary .open .dropdown-toggle.btn-primary:hover, .btn-primary .open .dropdown-toggle.btn-primary:focus, .btn-primary .open .dropdown-toggle.btn-primary.focus {
-  background-color: #0F4B86;
+.btn-primary:active:hover,
+.btn-primary:active:focus,
+.btn-primary:active.focus,
+.btn-primary.active:hover,
+.btn-primary.active:focus,
+.btn-primary.active.focus,
+.btn-primary .open .dropdown-toggle.btn-primary:hover,
+.btn-primary .open .dropdown-toggle.btn-primary:focus,
+.btn-primary .open .dropdown-toggle.btn-primary.focus {
+  background-color: #0f4b86;
   border: 0px;
 }
-
 
 .btn-default {
   background-color: #ffffff;
   background-image: none;
-  color: #4D5258;
+  color: #4d5258;
   border: 1px solid #bbb;
 }
 
-
-
 .btn-default:hover {
-  background-color: #D0D0D0 ;
+  background-color: #d0d0d0;
   background-image: none;
 }
 
-.btn-default:focus, .btn-default:active, .btn-default.active, .btn-default .open .dropdown-toggle.btn-default {
-  background-color: #BBBBBB;
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.btn-default .open .dropdown-toggle.btn-default {
+  background-color: #bbbbbb;
   background-image: none;
 }
 
-.btn-default:active:hover, .btn-default:active:focus, .btn-default:active.focus, .btn-default.active:hover, .btn-default.active:focus, .btn-default.active.focus, .btn-default .open .dropdown-toggle.btn-default:hover, .btn-default .open .dropdown-toggle.btn-default:focus, .btn-default .open .dropdown-toggle.btn-default.focus {
-  background-color: #BBBBBB;
+.btn-default:active:hover,
+.btn-default:active:focus,
+.btn-default:active.focus,
+.btn-default.active:hover,
+.btn-default.active:focus,
+.btn-default.active.focus,
+.btn-default .open .dropdown-toggle.btn-default:hover,
+.btn-default .open .dropdown-toggle.btn-default:focus,
+.btn-default .open .dropdown-toggle.btn-default.focus {
+  background-color: #bbbbbb;
   border: 0px;
 }
 
 .alert-danger {
-  color: #FD5461;
+  color: #fd5461;
   font-size: 12px;
   background-color: transparent;
   border: 0px;
 }
 
 .alert-info {
-  color: #1976D2;
+  color: #1976d2;
   font-size: 12px;
   background-color: transparent;
   border: 0px;
 }
 
 .alert-success {
-  color:#29CB97;
+  color: #29cb97;
   font-size: 12px;
   background-color: transparent;
   border: 0px;
 }
 
-.btn-token-refresh:focus, .btn-token-refresh.focus, .btn-token-refresh:active, .btn-token-refresh.active, .btn-token-refresh .open .dropdown-toggle.btn-token-refresh {
+.btn-token-refresh:focus,
+.btn-token-refresh.focus,
+.btn-token-refresh:active,
+.btn-token-refresh.active,
+.btn-token-refresh .open .dropdown-toggle.btn-token-refresh {
   font-weight: initial !important;
-  background-color: #31475E !important;
-  border-color: #FFFFFF !important;
+  background-color: #31475e !important;
+  border-color: #ffffff !important;
   background-image: none !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
-// event 검색창에서 특정 문자 입력시 상단공백 생겨 추가한 부분 
-// -> 적용시 하단공백생기고 유실데이터 발생되어 주석처리  
+// event 검색창에서 특정 문자 입력시 상단공백 생겨 추가한 부분
+// -> 적용시 하단공백생기고 유실데이터 발생되어 주석처리
 // .ReactVirtualized__Grid__innerScrollContainer > div {
 //   position: static !important;
 // }
+
+.pagination-div {
+  text-align: center;
+  position: absolute;
+  margin: 20px auto;
+  width: 1425.45px;
+}
+
+.pagination {
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 15px auto;
+  // display: flex;
+  list-style: none;
+  outline: none;
+}
+
+.pagination li {
+  display: inline-block;
+}
+
+.pagination > li > a {
+  padding: 5px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+.pagination .active {
+  font-weight: bold;
+}
+
+.pagination .disabled {
+  cursor: initial;
+}

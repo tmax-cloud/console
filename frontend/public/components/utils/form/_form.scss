@@ -1,0 +1,33 @@
+.form-create {
+  .alert {
+    margin-top: 20px;
+  }
+
+  .btn--dropdown {
+    max-width: 444px;
+    width: 100%;
+  }
+
+  .btn-group {
+    width: 100%;
+  }
+
+  .form-control {
+    max-width: 444px;
+  }
+  .dropdown {
+    max-width: 444px;
+  }
+
+  .radio-item {
+    margin: 10px 0;
+    .co-m-radio-desc {
+      margin-left: 19px;
+    }
+  }
+
+  .separator {
+    border-top: solid 1px #eee;
+    margin: 30px 0;
+  }
+}
