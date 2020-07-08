@@ -25,6 +25,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
     <div className="co-m-pane__body">
       <SectionHeading text={t('CONTENT:TRACE')} />
       <div>
+        {/* limit */}
         <span style={{ marginRight: '15px' }}>
           <label style={{ marginRight: '10px' }}>Limit Results</label>
           <select name="limit" onChange={e => setLimit(e.target.value)}>
@@ -34,10 +35,12 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
             <option value="all">All</option>
           </select>
         </span>
+        {/* status code */}
         <span style={{ marginRight: '15px' }}>
           <label style={{ marginRight: '10px' }}>Status Code</label>
           <input style={{ display: 'inline-block' }} ref={statusCodeRef} className="form-control" name="statusCode" type="number" onChange={e => (statusCodeRef.current = e.target.value)} onKeyDown={e => e.keyCode === 13 && setStatusCode(statusCodeRef.current)} />
         </span>
+        {/* display (operation) */}
         <span style={{ marginRight: '15px' }}>
           <label style={{ marginRight: '10px' }}>Display</label>
           <select name="display" onChange={e => setDisplay(e.target.value)}>
@@ -56,7 +59,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   );
 };
 
-const Trace = () => {
+const Trace = ({ namespace, name, limit, statusCode, display }) => {
   const iframeRef = React.useRef();
   const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${name}`;
   const jaegerURL = `${document.location.origin}/api/jaeger/search${query}`;
