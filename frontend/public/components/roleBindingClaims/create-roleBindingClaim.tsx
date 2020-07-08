@@ -73,8 +73,8 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
     this.save = this.save.bind(this);
   }
   componentDidMount() {
-    this.getRoleList();
     this.getNamespaceList();
+    // this.getRoleList();
   }
   getRoleList() {
     let finalRoleList = [];
@@ -103,7 +103,7 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
       );
     // 해당 ns의 Role
     const role = kindObj('Role');
-    k8sList(role)
+    k8sList(role, { ns: this.state.roleBindingClaim.metadata.namespace })
       .then(reponse => reponse)
       .then(
         data => {
@@ -118,6 +118,9 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
           roleList.forEach(element => {
             finalRoleList.push(element);
           });
+          this.setState({
+            roleList: finalRoleList,
+          });
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
@@ -126,9 +129,9 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
       );
     // role + clusterRole list
 
-    this.setState({
-      roleList: finalRoleList,
-    });
+    // this.setState({
+    //   roleList: finalRoleList,
+    // });
   }
   getNamespaceList() {
     const ko = kindObj('Namespace');
@@ -147,9 +150,14 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
           }
           this.setState({ roleBindingClaim });
 
-          this.setState({
-            namespaceList: namespaceList,
-          });
+          this.setState(
+            {
+              namespaceList: namespaceList,
+            },
+            () => {
+              this.getRoleList();
+            },
+          );
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
