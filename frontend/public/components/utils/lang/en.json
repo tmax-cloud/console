@@ -763,6 +763,7 @@
     "HOME": "Home",
     "STATUS": "Status",
     "SEARCH": "Search",
+    "AUDIT": "Audit",
     "EVENT": "Event",
     "SERVICECATALOG": "Service Catalog",
     "SERVICEBROKER": "Service Broker",
