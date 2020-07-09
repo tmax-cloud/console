@@ -15,11 +15,9 @@ import ReactPaginate from 'react-paginate';
 
 // TODO
 
-// 1. pagination - 검색 고려 해야 함
-// 2. textfilter 값 빼는거
-
-// 3. i18n 적용 - 7월 3주차에 나옴
-// 4. date picker 빼기 - 리뷰 후 결정
+// 1. i18n 적용 - 7월 3주차에 나옴
+// 2. date picker 빼기 - 리뷰 후 결정
+// 3. onchange 중복 로직 제거 (코드 리팩토링)
 
 class Inner extends React.PureComponent {
   constructor(props) {
@@ -202,7 +200,6 @@ class AuditPage_ extends React.Component {
     super(props);
     let date = new Date();
     date.setDate(date.getDate() - 7);
-    this.textFilterRef = React.createRef();
 
     this.state = {
       namespace: '',
@@ -217,7 +214,6 @@ class AuditPage_ extends React.Component {
       end: new Date(),
       offset: 0,
       pages: 0,
-      tempPages: 0,
       paginationPos: '215px',
     };
 
@@ -228,7 +224,7 @@ class AuditPage_ extends React.Component {
     this.onChangeStartDate = e => this.onChangeStartDate_(e);
     this.onChangeEndDate = e => this.onChangeEndDate_(e);
     this.onChangePage = e => this.onChangePage_(e);
-    this.changePaginationPos = val => this.changePaginationPos_(val);
+    this.onSearch = e => this.onSearch_(e);
   }
 
   onChangeResourceType_(e) {
@@ -273,7 +269,6 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
-        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -307,7 +302,6 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
-          tempPages: Math.ceil(response.totalNum / 100),
         });
       })
       .catch(error => {
@@ -350,7 +344,6 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
-        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -389,7 +382,6 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
-        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -435,7 +427,6 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
-        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -481,7 +472,6 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
-        tempPages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -492,7 +482,6 @@ class AuditPage_ extends React.Component {
       offset: e.selected,
       textFilter: '',
     });
-    this.textFilterRef.current.value = '';
 
     let uri = `${document.location.origin}/api/hypercloud/audit?limit=100&offset=${e.selected * 100}&startTime=${this.state.start.getTime()}&endTime=${this.state.end.getTime()}`;
 
@@ -516,7 +505,41 @@ class AuditPage_ extends React.Component {
       this.setState({
         data: response.items,
         pages: Math.ceil(response.totalNum / 100),
-        tempPages: Math.ceil(response.totalNum / 100),
+      });
+    });
+  }
+
+  onSearch_(e) {
+    if (e.key !== 'Enter') {
+      return;
+    }
+
+    this.setState({
+      offset: 0,
+    });
+
+    let uri = `${document.location.origin}/api/hypercloud/audit?limit=100&offset=0&startTime=${this.state.start.getTime()}&endTime=${this.state.end.getTime()}&message=${e.target.value}`;
+
+    if (this.state.action !== this.state.actionList.all) {
+      uri += `&verb=${this.state.action}`;
+    }
+    if (this.state.resourceType !== resourceList.all) {
+      uri += `&resource=${this.state.resourceType}`;
+    }
+    if (this.state.namespace !== undefined) {
+      uri += `&namespace=${this.state.namespace}`;
+    }
+    if (this.state.status !== statusList.all) {
+      uri += `&status=${this.state.status}`;
+    }
+    if (this.state.code !== codeList.all) {
+      uri += `&code=${this.state.code}`;
+    }
+    coFetchJSON(uri).then(response => {
+      // console.log(response.items);
+      this.setState({
+        data: response.items,
+        pages: Math.ceil(response.totalNum / 100),
       });
     });
   }
@@ -540,7 +563,6 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
-          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     } else {
@@ -550,7 +572,6 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
-          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     }
@@ -569,7 +590,6 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
-          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     } else {
@@ -579,26 +599,9 @@ class AuditPage_ extends React.Component {
         this.setState({
           data: response.items,
           pages: Math.ceil(response.totalNum / 100),
-          tempPages: Math.ceil(response.totalNum / 100),
         });
       });
     }
-  }
-
-  changePaginationPos_(val) {
-    if (val === '305px') {
-      this.setState({
-        tempPages: this.state.pages,
-        pages: 1,
-      });
-    } else {
-      this.setState({
-        pages: this.state.tempPages,
-      });
-    }
-    this.setState({
-      paginationPos: val,
-    });
   }
 
   render() {
@@ -623,12 +626,12 @@ class AuditPage_ extends React.Component {
               <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
             </div>
             <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-              <TextFilter id="audit" label="검색" onChange={e => this.setState({ textFilter: e.target.value || '' })} autoFocus={true} textFilterRef={this.textFilterRef} />
+              <TextFilter id="audit" label="검색" autoFocus={true} onKeyUp={this.onSearch} />
             </div>
           </div>
-          <AuditList {...this.props} textFilter={textFilter} data={data} changePaginationPos={this.changePaginationPos} />
+          <AuditList {...this.props} textFilter={textFilter} data={data} />
           {data && data.length !== 0 && (
-            <div className="pagination-div" style={{ top: this.state.paginationPos }}>
+            <div className="pagination-div">
               <ReactPaginate previousLabel={'<'} nextLabel={'>'} breakLabel={'...'} breakClassName={'break-me'} pageCount={this.state.pages} marginPagesDisplayed={2} pageRangeDisplayed={5} onPageChange={this.onChangePage} containerClassName={'pagination'} subContainerClassName={'pages pagination'} activeClassName={'active'} forcePage={this.state.offset} />
             </div>
           )}
@@ -682,15 +685,6 @@ class AuditList extends SafetyFirst {
 
     if (textFilter === nextProps.textFilter && filteredEvents === nextProps.data) {
       return {};
-    }
-
-    // console.log(nextProps.data);
-    if (items.length !== AuditList.filterEvents(nextProps.data, nextProps).length) {
-      if (AuditList.filterEvents(nextProps.data, nextProps).length === 0) {
-        nextProps.changePaginationPos('305px');
-      } else {
-        nextProps.changePaginationPos(`${AuditList.filterEvents(nextProps.data, nextProps).length * 110 + 215}px`);
-      }
     }
 
     return {

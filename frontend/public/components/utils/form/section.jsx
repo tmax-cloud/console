@@ -21,3 +21,14 @@ export const SecondSection = ({ label, children, id, isRequired }) => (
     </div>
   </div>
 );
+
+export const SecondSection2 = ({ label, children, id, isRequired }) => (
+  <div className={'row form-group ' + (isRequired ? 'required' : '')}>
+    <div id={id}>
+      <label className="control-label" htmlFor="secret-type">
+        {label}
+      </label>
+      <div>{children}</div>
+    </div>
+  </div>
+);

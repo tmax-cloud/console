@@ -86,6 +86,9 @@
     "YEARSFROMNOW": "years from now"
   },
   "STRING": {
+    "DAEMONSET-CREATE_0": "모든 노드에 파드 실행",
+    "DAEMONSET-CREATE_1": "특정 노드에 파드 실행",
+    "DAEMONSET-CREATE_2": "일부 노드에 파드 실행",
     "CREATE-DEPLOYMENT_0": "해당 값 정의 시, 도커 이미지의 기본 엔트리 포인트와 기본 cmd가 덮어 씌워집니다.",
     "CREATE-DEPLOYMENT_1": "해당 값 정의 시, 도커 이미지의 기본 엔트리가 덮어 씌워집니다.",
     "EMPTYBOX": "표시할 정보가 없습니다.",
@@ -761,6 +764,7 @@
     "HOME": "홈",
     "STATUS": "상태",
     "SEARCH": "검색",
+    "AUDIT": "감사 로그",
     "EVENT": "이벤트",
     "SERVICECATALOG": "서비스 카탈로그",
     "SERVICEBROKER": "서비스 브로커",
