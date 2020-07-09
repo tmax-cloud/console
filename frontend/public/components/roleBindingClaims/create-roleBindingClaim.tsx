@@ -139,7 +139,7 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
       this.setState(prevState => ({
         roleBindingClaim: {
           ...prevState.roleBindingClaim,
-          ['roleRef']: { apiGroup: 'rbac.authorization.k8s.io', name: finalRoleList[0].name, kind: 'ClusterRole' },
+          ['roleRef']: { apiGroup: 'rbac.authorization.k8s.io', name: finalRoleList[0].name, kind: finalRoleList[0].kind },
         },
       }));
     });
