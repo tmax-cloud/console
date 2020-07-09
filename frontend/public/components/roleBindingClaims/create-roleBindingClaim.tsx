@@ -164,11 +164,14 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
           if (namespaceList.length === 0) {
             return;
           }
+          this.setState({
+            selectedSubjectNamespace: namespaceList[0].name,
+          });
           this.setState({ roleBindingClaim });
 
-          this.setState({
+          this.setState(() => ({
             namespaceList: namespaceList,
-          });
+          }));
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
@@ -195,17 +198,31 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
     this.setState({ roleBindingClaim });
   }
   onNamespaceChange(event) {
-    this.setState({
-      selectedSubjectNamespace: event.target.value,
-    });
     let roleBindingClaim = { ...this.state.roleBindingClaim };
-    this.setState({ roleBindingClaim });
+    this.setState(
+      {
+        selectedSubjectNamespace: event.target.value,
+      },
+      () => {
+        roleBindingClaim['subjects'][0].namespace = this.state.selectedSubjectNamespace;
+      },
+    );
+
+    this.setState(() => ({ roleBindingClaim }));
   }
   onSubjectChange(event) {
+    let roleBindingClaim = { ...this.state.roleBindingClaim };
+    if (event.target.value === 'ServiceAccount') {
+      this.setState({ selectedSubjectNamespace: this.state.namespaceList[0].name });
+      roleBindingClaim['subjects'][0].namespace = this.state.namespaceList[0].name;
+      this.setState({ roleBindingClaim });
+    } else {
+      delete roleBindingClaim['subjects'][0].namespace;
+      this.setState({ roleBindingClaim });
+    }
     this.setState({
       subjectKind: event.target.value,
     });
-    let roleBindingClaim = { ...this.state.roleBindingClaim };
     roleBindingClaim['subjects'][0].kind = String(event.target.value);
     this.setState({ roleBindingClaim });
   }
