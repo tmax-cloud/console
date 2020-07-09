@@ -761,6 +761,7 @@
     "HOME": "홈",
     "STATUS": "상태",
     "SEARCH": "검색",
+    "AUDIT": "감사 로그",
     "EVENT": "이벤트",
     "SERVICECATALOG": "서비스 카탈로그",
     "SERVICEBROKER": "서비스 브로커",
