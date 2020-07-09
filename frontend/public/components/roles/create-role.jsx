@@ -136,7 +136,7 @@ class RoleFormComponent extends React.Component {
             : k8sUpdate(ko, newRole, metadata.namespace, newRole.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push('/k8s/ns/' + metadata.namespace + '/roles/' + metadata.name);
+            kind === 'role' ? history.push('/k8s/ns/' + metadata.namespace + '/roles/' + metadata.name) : history.push('/k8s/cluster/clusterroles/' + metadata.name);
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 
