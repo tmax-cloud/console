@@ -10,12 +10,12 @@ import { BasicPortEditor } from '../basic-port-editor';
 import SingleSelect from '../select';
 
 export const PodTemplate = props => {
-  let { t, podTemplate, onLabelChanged, imageRegistryList, pvcList, imageList, onPodTemplateResourceChange, imageTagList, onImageChange, onImageRegistryChange } = props;
+  let { t, imageRegistry, image, imageTag, podTemplate, onLabelChanged, imageRegistryList, pvcList, imageList, onPodTemplateResourceChange, imageTagList, onImageTagChange, onImageChange, onImageRegistryChange } = props;
 
   // const [imageRegistry, setImageRegistry] = React.useState(imageRegistryList.length && imageRegistryList[0]);
-  const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
-  const [image, setImage] = React.useState(imageList.length > 0 && imageList[0].value);
-  const [imageTag, setImageTag] = React.useState(imageTagList.length > 0 && imageTagList[0].value);
+  // const [imageRegistry, setImageRegistry] = React.useState({ value: '', label: '' });
+  // const [image, setImage] = React.useState(imageList.length > 0 && imageList[0].value);
+  // const [imageTag, setImageTag] = React.useState(imageTagList.length > 0 && imageTagList[0].value);
   const [imagePullPolicy, setImagePullPolicy] = React.useState('');
 
   const [runCommands, setRunCommands] = React.useState([['']]);
@@ -87,10 +87,12 @@ export const PodTemplate = props => {
             <SecondSection label={t('CONTENT:IMAGEREGISTRY')} id={'imageregistry'}>
               <SingleSelect
                 options={imageRegistryList}
-                defaultValue={imageRegistryList[0]}
                 name={'ImageRegistry'}
+                value={imageRegistry.value}
+                label={imageRegistry.label}
                 placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGEREGISTRY') })}
                 onChange={e => {
+                  // setImageRegistry(e);
                   onImageRegistryChange(e);
                   onPodTemplateResourceChange(e);
                 }}
@@ -100,8 +102,10 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imageList}
                 name={'Image'}
+                value={image}
                 placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGE') })}
                 onChange={e => {
+                  // setImage(e.value);
                   onImageChange(e);
                   onPodTemplateResourceChange(e);
                 }}
@@ -111,10 +115,10 @@ export const PodTemplate = props => {
               <SingleSelect
                 options={imageTagList}
                 name={'ImageTag'}
+                value={imageTag}
                 placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:IMAGETAG') })}
-                value={podTemplate.imageTag}
                 onChange={e => {
-                  // setImageTag(e.value);
+                  onImageTagChange(e);
                   onPodTemplateResourceChange(e);
                 }}
               />
