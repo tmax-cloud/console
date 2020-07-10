@@ -14,7 +14,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   const [operationList, setOperationList] = React.useState([]);
 
   React.useEffect(() => {
-    if (name === 'jaeger-query' || name === 'istio-ingressgateway' || name === 'istio-engressgateway') {
+    if (name === 'jaeger-query' || name === 'istio-ingressgateway' || name === 'istio-egressgateway') {
       setServiceName(name);
     } else {
       coFetch(`/api/kubernetes/api/v1/namespaces/${namespace}/services/${name}`)
