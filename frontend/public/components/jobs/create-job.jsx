@@ -10,55 +10,18 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { RadioInput } from '../radio';
 import { NsDropdown } from '../RBAC';
-import { FirstSection, SecondSection2, PodTemplate } from '../utils/form';
+import { FirstSection, SecondSection, PodTemplate } from '../utils/form';
 import SingleSelect from '../utils/select';
 import { ValueEditor } from '../utils/value-editor';
 // import { VolumeclaimTemplate } from '../utils/form/volumeclaim-template';
 
-const NodeSchedulerChildren = props => {
-  const { value, _updateNodes, nodes, t } = props;
-  let options = [
-    {
-      value: 'hi',
-      label: 'hi',
-    },
-    { value: 'bye', label: 'bye' },
-  ];
-  let element = '';
-
-  switch (value) {
-    case 'allnodes':
-      break;
-    case 'specificnodes':
-      element = <SingleSelect options={options} name={'Node'} placeholder={t('ADDITIONAL:SELECT', { something: t('RESOURCE:NODE') })} onChange={e => {}} />;
-      break;
-    case 'somenodes':
-      element = (
-        <ValueEditor
-          title="false"
-          valueString=""
-          t={t}
-          updateParentData={e => {
-            _updateNodes(e.values);
-          }}
-          values={nodes}
-          // updateParentData={setRunCommands}
-        />
-      );
-      break;
-    default:
-      break;
-  }
-  return element;
-};
-
-class DaemonSetFormComponent extends React.Component {
+class JobFormComponent extends React.Component {
   constructor(props) {
     super(props);
-    const existingDaemonSet = _.pick(props.obj, ['metadata', 'type']);
-    const daemonSet = _.defaultsDeep({}, props.fixed, existingDaemonSet, {
+    const existingJob = _.pick(props.obj, ['metadata', 'type']);
+    const job = _.defaultsDeep({}, props.fixed, existingJob, {
       apiVersion: 'v1',
-      kind: 'DaemonSet',
+      kind: 'Job',
       metadata: {
         name: '',
         namespace: '',
@@ -114,10 +77,9 @@ class DaemonSetFormComponent extends React.Component {
     };
 
     this.state = {
-      daemonSetTypeAbstraction: this.props.daemonSetTypeAbstraction,
-      daemonSet: daemonSet,
+      jobTypeAbstraction: this.props.jobTypeAbstraction,
+      job: job,
       podTemplate: podTemplate,
-      nodeScheduler: 'all',
       inProgress: false,
       type: 'form',
       imageRegistry: '',
@@ -130,8 +92,7 @@ class DaemonSetFormComponent extends React.Component {
       pvcList: [], // podTemplate 에서 pvc List
       storageClassNameList: [],
       nodes: [['']],
-      updateType: '',
-      maxPodNum: '',
+      isUseMaual: true,
       // quota: [['', '']],
     };
     this._updateNodes = this._updateNodes.bind(this);
@@ -155,14 +116,14 @@ class DaemonSetFormComponent extends React.Component {
     });
   }
   onNameChanged(event) {
-    let daemonSet = { ...this.state.daemonSet };
-    daemonSet.metadata.name = String(event.target.value);
-    this.setState({ daemonSet });
+    let job = { ...this.state.job };
+    job.metadata.name = String(event.target.value);
+    this.setState({ job });
   }
   onNamespaceChanged(namespace) {
-    let daemonSet = { ...this.state.daemonSet };
-    daemonSet.metadata.namespace = String(namespace);
-    this.setState({ daemonSet });
+    let job = { ...this.state.job };
+    job.metadata.namespace = String(namespace);
+    this.setState({ job });
   }
   getImageRegistryList = () => {
     const ko = kindObj('Registry');
@@ -189,7 +150,7 @@ class DaemonSetFormComponent extends React.Component {
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
-          this.setState({ daemonSet: [] });
+          this.setState({ job: [] });
         },
       );
   };
@@ -252,7 +213,7 @@ class DaemonSetFormComponent extends React.Component {
 
   getPVCList = async () => {
     const ko = kindObj('PersistentVolumeClaim');
-    const namespace = daemonSet.metadata.namespace || 'default';
+    const namespace = job.metadata.namespace || 'default';
     await k8sGet(ko, '', namespace)
       .then(reponse => reponse)
       .then(
@@ -272,14 +233,14 @@ class DaemonSetFormComponent extends React.Component {
         },
         err => {
           this.setState({ error: err.message, inProgress: false });
-          this.setState({ daemonSet: [] });
+          this.setState({ job: [] });
         },
       );
   };
 
   onLabelChanged(event) {
-    let daemonSet = { ...this.state.daemonSet };
-    daemonSet.spec.selector.matchLabels = {};
+    let job = { ...this.state.job };
+    job.spec.selector.matchLabels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
@@ -288,10 +249,10 @@ class DaemonSetFormComponent extends React.Component {
           return;
         }
         document.getElementById('labelErrMsg').style.display = 'none';
-        daemonSet.spec.selector.matchLabels[item.split('=')[0]] = item.split('=')[1];
+        job.spec.selector.matchLabels[item.split('=')[0]] = item.split('=')[1];
       });
     }
-    this.setState({ daemonSet });
+    this.setState({ job });
   }
 
   onImageRegistryChange = e => {
@@ -365,7 +326,7 @@ class DaemonSetFormComponent extends React.Component {
     e.preventDefault();
 
     this.setState({ inProgress: true });
-    let daemonSet = _.cloneDeep(this.state.daemonSet);
+    let job = _.cloneDeep(this.state.job);
     let podTemplate = _.cloneDeep(this.state.podTemplate);
 
     let request = podTemplate.requests.map(cur => {
@@ -384,11 +345,11 @@ class DaemonSetFormComponent extends React.Component {
     if (podTemplate.usePodTemplate) {
       let template = {
         metadata: {
-          labels: _.cloneDeep(this.state.daemonSet.spec.selector.matchLabels),
+          labels: _.cloneDeep(this.state.job.spec.selector.matchLabels),
         },
         spec: {
           containers: {
-            name: this.state.daemonSet.metadata.name + '-template',
+            name: this.state.job.metadata.name + '-template',
             image: podTemplate.imageRegistry + '/' + podTemplate.image + ':' + podTemplate.imageTag,
             command: _.cloneDeep(podTemplate.command),
             args: _.cloneDeep(podTemplate.args),
@@ -405,7 +366,7 @@ class DaemonSetFormComponent extends React.Component {
         },
       };
       console.log(template);
-      daemonSet.spec.template = _.cloneDeep(template);
+      job.spec.template = _.cloneDeep(template);
     } else {
       let template = {
         spec: {
@@ -415,59 +376,79 @@ class DaemonSetFormComponent extends React.Component {
         },
       };
       console.log(template);
-      daemonSet.spec.template = _.cloneDeep(template);
+      job.spec.template = _.cloneDeep(template);
     }
-    console.log(daemonSet);
+    console.log(job);
   }
 
   render() {
     const { kind, t } = this.props;
-
-    const schedulerItems = [
-      { value: 'allnodes', title: t('STRING:DAEMONSET-CREATE_0') },
-      { value: 'specificnodes', title: t('STRING:DAEMONSET-CREATE_1') },
-      { value: 'somenodes', title: t('STRING:DAEMONSET-CREATE_2') },
-    ];
-
-    const updateTypeList = [
-      { value: 'rolling-update', label: t('CONTENT:ROLLINTUPDATE') },
-      { value: 'manual-delete', label: t('CONTENT:MANUALDELETE') },
-    ];
+    const { isUseManual } = this.state;
 
     return (
       <div className="form-create co-m-pane__body">
         <Helmet>
-          <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('DaemonSet', t) })}</title>
+          <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Job', t) })}</title>
         </Helmet>
         <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
-          <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('DaemonSet', t) })}</h1>
-          <p className="co-m-pane__explanation">클러스터의 모든 노드나 일부 노드에서 실행될 특정파드를 생성합니다.</p>
+          <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Job', t) })}</h1>
+          <p className="co-m-pane__explanation">하나 이상의 파드를 작성하고 지정된 수의 파드를 성공적으로 종료하도록 합니다.</p>
 
           <fieldset disabled={!this.props.isCreate}>
             <FirstSection label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.daemonSet.metadata.name} id="daemoset-name" />
+              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.job.metadata.name} id="job-name" />
             </FirstSection>
             <FirstSection label={t('CONTENT:NAMESPACE')} isRequired={true}>
-              <NsDropdown id="daemoset-namespace" t={t} onChange={this.onNamespaceChanged} />
+              <NsDropdown id="job-namespace" t={t} onChange={this.onNamespaceChanged} />
             </FirstSection>
-            <FirstSection
-              label={t('CONTENT:LABELS')}
-              children={
-                <div>
+            <FirstSection label={t('CONTENT:USEMANUALSELECTOR')} isRequired={false}>
+              <div className="row">
+                <div className="col-xs-2" style={{ float: 'left' }}>
+                  <input
+                    type="radio"
+                    value={true}
+                    name="use-manual"
+                    onChange={e => {
+                      this.setState({ isUseManual: true });
+                    }}
+                    checked={isUseManual}
+                  />
+                  {t('CONTENT:USE')}
+                </div>
+                <div className="col-xs-2" style={{ float: 'left' }}>
+                  <input
+                    type="radio"
+                    value={false}
+                    name="use-manual"
+                    onChange={e => {
+                      this.setState({ isUseManual: false });
+                    }}
+                    checked={!isUseManual}
+                  />
+                  {t('CONTENT:UNUSE')}
+                </div>
+              </div>
+              {isUseManual && <span>만약 해당 잡의 파드에 고유하지 않고 연관이 없는 파드와 일치하는 레이블 셀렉터를 지정하면, 연관이 없는 잡의 파드가 삭제되거나, 해당 잡이 다른 파드가 완료한것으로 수를 세거나, 하나 또는 양쪽 잡 모두 파드 생성이나 실행 완료를 거부할 수 있습니다. 만약 고유하지 않은 셀렉터가 선택된 경우, 다른 컨트롤러(예: 레플리케이션 컨트롤러)와 해당 파드는 예측할 수 없는 방식으로 작동할 수 있습니다.</span>}
+            </FirstSection>
+            {isUseManual && (
+              <div>
+                <SecondSection label={'잡 레이블'} id={'job-label'}>
                   <div>
                     <div>
-                      <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} t={t} />
+                      <div>
+                        <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} t={t} />
+                      </div>
+                    </div>
+                    <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                      <p>{t('VALIDATION:LABEL_FORM')}</p>
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#696969' }}>
+                      <p>파드를 관리하기 위한 잡 레이블을 정의합니다.</p>
                     </div>
                   </div>
-                  <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-                    <p>{t('VALIDATION:LABEL_FORM')}</p>
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#696969' }}>
-                    <p>{t('STRING:STATEFULSET-CREATE_1')}</p>
-                  </div>
-                </div>
-              }
-            />
+                </SecondSection>
+              </div>
+            )}
             <PodTemplate
               t={t}
               imageRegistry={this.state.imageRegistry}
@@ -484,61 +465,18 @@ class DaemonSetFormComponent extends React.Component {
               imageList={this.state.imageList}
               imageTagList={this.state.imageTagList}
             />
-            <FirstSection label={t('CONTENT:NODESCHEDULER')}>
-              {schedulerItems.map(({ desc, title, value }) => (
-                <div key={value}>
-                  <RadioInput
-                    checked={value === this.state.nodeScheduler}
-                    desc={desc}
-                    onChange={e => {
-                      this.setState({ nodeScheduler: e.target.value });
-                    }}
-                    title={title}
-                    value={value}
-                  />
-                  {value === this.state.nodeScheduler && <NodeSchedulerChildren value={value} t={t} _updateNodes={this._updateNodes} nodes={this.state.nodes} />}
-                </div>
-              ))}
-            </FirstSection>
-            <FirstSection label={t('CONTENT:UPDATESTRATEGY')}>
-              <div className="row">
-                <div className="col-xs-2" style={{ float: 'left', marginLeft: '15px' }}>
-                  <SecondSection2 label={t('CONTENT:UPDATETYPE')} id={'updatetype'}>
-                    <SingleSelect
-                      options={updateTypeList}
-                      defaultValue={updateTypeList[0]}
-                      name={'UpdateType'}
-                      placeholder={t('ADDITIONAL:SELECT', { something: t('CONTENT:TYPE') })}
-                      onChange={e => {
-                        this.setState({ updateType: e.value });
-                      }}
-                    />
-                  </SecondSection2>
-                </div>
-                <div className="col-xs-2" style={{ float: 'left', marginLeft: '15px' }}>
-                  <SecondSection2 label={t('CONTENT:MAXPODNUM')}>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="maxpodnum"
-                      onChange={e => {
-                        this.setState({ maxPodNum: e.value });
-                      }}
-                      required
-                    />
-                  </SecondSection2>
-                </div>
-              </div>
-              <span>데몬 셋 템플릿에서 업데이트를 진행 시 새로운 파드 생성 방식을 선택해 주세요.</span>
-            </FirstSection>
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
               <button className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
               </button>
-              <Link to={formatNamespacedRouteForResource('daemonsets')} className="btn btn-default" id="cancel">
+              <Link to={formatNamespacedRouteForResource('jobs')} className="btn btn-default" id="cancel">
                 {t('CONTENT:CANCEL')}
               </Link>
             </ButtonBar>
+
+            <FirstSection label={'고급 옵션'}>
+              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.job.metadata.name} id="job-name" />
+            </FirstSection>
           </fieldset>
         </form>
       </div>
@@ -546,7 +484,7 @@ class DaemonSetFormComponent extends React.Component {
   }
 }
 
-export const CreateDaemonSet = ({ match: { params } }) => {
+export const CreateJob = ({ match: { params } }) => {
   const { t } = useTranslation();
-  return <DaemonSetFormComponent t={t} fixed={{ metadata: { namespace: params.ns } }} daemonSetTypeAbstraction={params.type} titleVerb="Create" isCreate={true} />;
+  return <JobFormComponent t={t} fixed={{ metadata: { namespace: params.ns } }} jobTypeAbstraction={params.type} titleVerb="Create" isCreate={true} />;
 };
