@@ -1,9 +1,9 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { PodsPage } from './pod';
+import { StatefulSetsPage } from './stateful-set';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
-import { fromNow } from './utils/datetime';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 
@@ -75,6 +75,10 @@ NotebookPage.displayName = 'NotebookPage';
 
 export const NotebookDetailsPage = props => {
     const { t } = useTranslation();
+    const statefultSetComponent = props => {
+        let selector = { matchLabels: { 'notebook-name': props.match.params.name } }
+        return <StatefulSetsPage obj={props.obj} showTitle={false} namespace={props.match.params.ns} selector={selector} canCreate={false} />;
+    };
     const podComponent = props => {
         let selector = { matchLabels: { 'notebook-name': props.match.params.name } }
         return <PodsPage obj={props.obj} showTitle={false} namespace={props.match.params.ns} selector={selector} canCreate={false} />;
@@ -84,7 +88,7 @@ export const NotebookDetailsPage = props => {
             {...props}
             kind="Notebook"
             menuActions={menuActions}
-            pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pods(t('RESOURCE:POD'), podComponent)]}
+            pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.statefulsets(t('RESOURCE:STATEFULSET'), statefultSetComponent), navFactory.pods(t('RESOURCE:POD'), podComponent)]}
         />
     );
 };
