@@ -98,6 +98,11 @@ export const navFactory = {
     name: name || 'Pods',
     component: component || PodsComponent,
   }),
+  statefulsets: (name, component) => ({
+    href: 'statefulsets',
+    name: name || 'StatefulSets',
+    component: component,
+  }),
   roles: (name, component) => ({
     href: 'roles',
     name: name || 'Role Bindings',

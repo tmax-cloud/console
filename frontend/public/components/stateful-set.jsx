@@ -41,7 +41,8 @@ export const StatefulSetsPage = props => {
     items: createItems,
     createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/statefulsets/new` : `/k8s/cluster/statefulsets/new/form`),
   };
-  return <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StatefulSet', t) })} />;
+  const { canCreate = true } = props;
+  return <ListPage {...props} ListComponent={StatefulSetsList} kind={kind} canCreate={canCreate} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('StatefulSet', t) })} />;
 };
 
 export const StatefulSetsDetailsPage = props => {
