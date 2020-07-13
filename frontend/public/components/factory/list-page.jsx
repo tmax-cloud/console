@@ -188,10 +188,10 @@ export const FireMan_ = connect(null, { filterList: k8sActions.filterList })(
         }
       }
 
-      const { title } = this.props;
+      const { title, tooltipTitle, tooltipContentsElements } = this.props;
       return (
         <React.Fragment>
-          {title && <NavTitle title={title} />}
+          {title && <NavTitle title={title} tooltipTitle={tooltipTitle} tooltipContentsElements={tooltipContentsElements} />}
           <div className="co-m-pane__filter-bar">
             {createLink && <div className="co-m-pane__filter-bar-group">{createLink}</div>}
             {canExpand && (
@@ -253,7 +253,7 @@ FireMan_.propTypes = {
 /** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, namespace?: string, filterLabel?: string, title?: string, showTitle?: boolean, dropdownFilters?: any[], rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, fake?: boolean}>} */
 export const ListPage = props => {
   const { t } = useTranslation();
-  const { title, createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake } = props;
+  const { title, createButtonText, createHandler, filterLabel, kind, namespace, selector, name, fieldSelector, filters, limit, showTitle = true, fake, tooltipTitle, tooltipContentsElements } = props;
   let { createProps } = props;
   const ko = kindObj(kind);
   const { labelPlural, plural, namespaced, label } = ko;
@@ -298,6 +298,8 @@ export const ListPage = props => {
       flatten={_resources => _.get(_resources, name || kind, {}).data}
       namespace={namespace}
       fake={fake}
+      tooltipTitle={tooltipTitle}
+      tooltipContentsElements={tooltipContentsElements}
     />
   );
 };
@@ -315,7 +317,7 @@ export const MultiListPage = props => {
   }));
 
   const elems = (
-    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters}>
+    <FireMan_ filterLabel={filterLabel} id={id} selectorFilterLabel="Filter by selector (app=nginx) ..." createProps={createProps} title={showTitle ? title : undefined} canCreate={props.canCreate} canExpand={props.canExpand} createButtonText={createButtonText || 'Create'} textFilter={props.textFilter} resources={resources} autoFocus={fake ? false : props.autoFocus} dropdownFilters={props.dropdownFilters} tooltipTitle={props.tooltipTitle} tooltipContentsElements={props.tooltipContentsElements}>
       <Firehose resources={resources}>
         <ListPageWrapper_ ListComponent={props.ListComponent} kinds={_.map(resources, 'kind')} rowFilters={props.rowFilters} staticFilters={props.staticFilters} flatten={flatten} label={props.label} fake={fake} />
       </Firehose>
