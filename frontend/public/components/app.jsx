@@ -169,7 +169,7 @@ class App extends React.PureComponent {
     window.addEventListener(
       'storage',
       function (evt) {
-        if (evt.key === 'forceLogout') {
+        if (evt.key === 'forceLogout' && !document.hasFocus()) {
           resetLoginState();
         }
       },
