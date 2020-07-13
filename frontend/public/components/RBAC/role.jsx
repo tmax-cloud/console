@@ -226,14 +226,22 @@ export const RolesPage = connectToFlags(
   //       { kind: 'ClusterRole', namespaced: false, optional: true },
   //     ]
   //   : [{ kind: 'Role', namespaced: true, optional: !projectsAvailable }];
-
+  const { t } = useTranslation();
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${namespace || 'default'}/roles/new` : `/k8s/cluster/roles/new/form`
+  };
   return (
     <MultiListPage
       ListComponent={RolesList}
       canCreate={true}
       showTitle={showTitle}
       namespace={namespace}
-      createProps={{ to: `/k8s/ns/${namespace || 'default'}/roles/new` }}
+      createProps={createProps}
       filterLabel="Roles by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Role', t) })}

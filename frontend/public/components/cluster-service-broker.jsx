@@ -44,16 +44,18 @@ const ClusterServiceBrokerHeader = props => {
 
 const ClusterServiceBrokerPhase = instance => {
   let phase = '';
-  instance.status.conditions.forEach(cur => {
-    if (cur.type === 'Ready') {
-      if (cur.status === 'True') {
-        phase = 'Running';
-      } else {
-        phase = 'Error';
+  if (instance.status) {
+    instance.status.conditions.forEach(cur => {
+      if (cur.type === 'Ready') {
+        if (cur.status === 'True') {
+          phase = 'Running';
+        } else {
+          phase = 'Error';
+        }
       }
-    }
-  });
-  return phase;
+    });
+    return phase;
+  }
 };
 
 const ClusterServiceBrokerRow = () =>

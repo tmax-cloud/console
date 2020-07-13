@@ -89,6 +89,9 @@
     "YEARSFROMNOW": "years from now"
   },
   "STRING": {
+    "DAEMONSET-CREATE_0": "모든 노드에 파드 실행",
+    "DAEMONSET-CREATE_1": "특정 노드에 파드 실행",
+    "DAEMONSET-CREATE_2": "일부 노드에 파드 실행",
     "CREATE-DEPLOYMENT_0": "The default entry point and cmd of the docker image are set to the value.",
     "CREATE-DEPLOYMENT_1": "The default entry point of the docker image is set to the value.",
     "INGRESS_DETAIL_0": "These rules are handled by a routing layer (Ingress Controller) which is updated as the rules are modified. The Ingress controller implementation defines how headers and other metadata are forwarded or manipulated.",
@@ -760,6 +763,7 @@
     "HOME": "Home",
     "STATUS": "Status",
     "SEARCH": "Search",
+    "AUDIT": "Audit",
     "EVENT": "Event",
     "SERVICECATALOG": "Service Catalog",
     "SERVICEBROKER": "Service Broker",

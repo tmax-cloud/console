@@ -59,7 +59,7 @@ class RoleFormComponent extends React.Component {
         let role = { ...this.state.role };
         role.kind = e.target.value
         if (role.kind === 'ClusterRole') {
-            role.metadata = { namespace: null };
+            role.metadata.namespace = null
         }
         this.setState({ role });
     }
@@ -124,9 +124,13 @@ class RoleFormComponent extends React.Component {
     save(e) {
         e.preventDefault();
         const { kind, metadata } = this.state.role;
+        this.state.roleList.forEach(role => {
+            if (role[0] === '') {
+                role[0] = this.state.APIGroupList[0]
+            }
+        })
         //rule데이터 가공 
         let changedData = this.dataProcessing(this.state.roleList);
-        console.log(changedData)
         this.setState({ inProgress: true });
         const newRole = _.assign({}, this.state.role);
         newRole.rules = changedData;
@@ -136,7 +140,7 @@ class RoleFormComponent extends React.Component {
             : k8sUpdate(ko, newRole, metadata.namespace, newRole.metadata.name)
         ).then(() => {
             this.setState({ inProgress: false });
-            history.push('/k8s/ns/' + metadata.namespace + '/roles/' + metadata.name);
+            kind === 'Role' ? history.push('/k8s/ns/' + metadata.namespace + '/roles/' + metadata.name) : history.push('/k8s/cluster/clusterroles/' + metadata.name);
         }, err => this.setState({ error: err.message, inProgress: false }));
     }
 

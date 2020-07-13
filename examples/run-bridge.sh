@@ -21,8 +21,8 @@ END
     --k8s-auth-bearer-token=@@ \
     --public-dir=./frontend/public/dist \
     --hypercloud-endpoint=http://$k8sIP:31092 \
-    --kiali-endpoint=http://$k8sIP:30197/api/kiali \
-    --jaeger-endpoint=http://$k8sIP:30573/api/jaeger \
+    --kiali-endpoint=http://$k8sIP:30349/api/kiali \
+    --jaeger-endpoint=http://$k8sIP:31412/api/jaeger \
     --grafana-endpoint=http://$k8sIP:31527 \
     --prometheus-endpoint=http://$k8sIP:30562/api \
     --release-mode=true \

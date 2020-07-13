@@ -76,6 +76,7 @@
     "patternfly": "^3.45.0",
     "plotly.js": "1.28.x",
     "prop-types": "15.6.x",
+    "rc-tooltip": "^4.2.1",
     "react": "16.8.0",
     "react-copy-to-clipboard": "5.x",
     "react-datepicker": "^3.0.0",
