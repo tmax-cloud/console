@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-virtualized-checkbox": "^3.0.1"
+  }
+}
