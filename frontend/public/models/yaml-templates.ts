@@ -3091,6 +3091,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: example
+  namespace: default
   labels:
     app: hello-hypercloud
 spec:
@@ -3112,9 +3113,9 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: example
+  namespace: default
   labels:
     app: hello-hypercloud
-  namespace: default
 spec:
   containers:
     - name: hello-hypercloud
@@ -3130,6 +3131,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: example2
+  namespace: default
   labels:
     app: hello-hypercloud
 spec:
