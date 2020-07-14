@@ -42,7 +42,7 @@ const NotebookRow = () =>
         );
     };
 
-const Details = ({ obj: condition }) => {
+const Details = ({ obj }) => {
     const { t } = useTranslation();
     return (
         <React.Fragment>
@@ -51,7 +51,15 @@ const Details = ({ obj: condition }) => {
                 <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Notebook', t) })} />
                 <div className="row">
                     <div className="col-sm-6">
-                        <ResourceSummary resource={condition} />
+                        <ResourceSummary resource={obj} />
+                    </div>
+                    <div className="col-sm-6">
+                        <dl className="co-m-pane__details">
+                            <dt>{t('CONTENT:STATUS')}</dt>
+                            {obj.status && <dd>{obj.status.status}</dd>}
+                            <dt>{t('CONTENT:IMAGE')}</dt>
+                            <dd>{obj.spec.template.spec.containers[0].image}</dd>
+                        </dl>
                     </div>
                 </div>
             </div>
