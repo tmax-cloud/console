@@ -1,12 +1,13 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { PodsPage } from './pod';
 import { StatefulSetsPage } from './stateful-set';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
-import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj } from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, ScrollToTopOnMount, kindObj, ResourceIcon, Overflow, VolumeIcon } from './utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
-
+import { getVolumeType, getVolumeLocation, getVolumeMountPermissions, getVolumeMountsByPermissions, getRestartPolicyLabel, podPhase, podPhaseFilterReducer, podReadiness } from '../module/k8s/pods';
 // const menuActions = [...Cog.factory.common, Cog.factory.Connect];
 const menuActions = [...Cog.factory.common];
 const NotebookHeader = props => {
@@ -63,10 +64,58 @@ const Details = ({ obj }) => {
                     </div>
                 </div>
             </div>
+            <div className="co-m-pane__body">
+                <SectionHeading text={t('CONTENT:PODVOLUMES')} />
+                <div className="row">
+                    <div className="co-m-table-grid co-m-table-grid--bordered">
+                        <div className="row co-m-table-grid__head">
+                            <div className="col-sm-3 col-xs-4">{t('CONTENT:NAME')}</div>
+                            <div className="col-sm-3 col-xs-4">{t('CONTENT:TYPE')}</div>
+                            <div className="col-sm-3 hidden-xs">{t('CONTENT:PERMISSIONS')}</div>
+                            <div className="col-sm-3 col-xs-4">{t('CONTENT:UTILIZEDBY')}</div>
+                        </div>
+                        <div className="co-m-table-grid__body">
+                            {getVolumeMountsByPermissions(obj).map((v, i) => (
+                                <Volume key={i} pod={obj} volume={v} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </React.Fragment>
     );
 };
+const ContainerLink = ({ pod, name }) => (
+    <span className="co-resource-link co-resource-link--inline">
+        <ResourceIcon kind="Container" />
+        {name}
+        {/* <Link to={`/k8s/ns/${pod.metadata.namespace}/pods/${pod.metadata.name}/containers/${name}`}>{name}</Link> */}
+    </span>
+);
 
+const Volume = ({ pod, volume }) => {
+    const kind = _.get(getVolumeType(volume.volume), 'id', '');
+    const loc = getVolumeLocation(volume.volume);
+    const mountPermissions = getVolumeMountPermissions(volume);
+
+    return (
+        <div className="row">
+            <Overflow className="col-sm-3 col-xs-4 co-truncate" value={volume.name} />
+            <div className="col-sm-3 col-xs-4">
+                <VolumeIcon kind={kind} />
+                <span className="co-break-word">{loc && ` (${loc})`}</span>
+            </div>
+            <div className="col-sm-3 hidden-xs">{mountPermissions}</div>
+            <div className="col-sm-3 col-xs-4">
+                {volume.mounts.map((m, i) => (
+                    <React.Fragment key={i}>
+                        <ContainerLink pod={pod} name={m.container} />
+                    </React.Fragment>
+                ))}
+            </div>
+        </div>
+    );
+};
 export const NotebookList = props => {
     const { kinds } = props;
     const Row = NotebookRow(kinds[0]);
