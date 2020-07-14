@@ -5,7 +5,7 @@ import { NamespaceModel, ProjectRequestModel, NetworkPolicyModel } from '../../m
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
 import { history, PromiseComponent, resourceObjPath, SelectorInput } from '../utils';
 import { useTranslation } from 'react-i18next';
-// import VirtualizedCheckbox from 'react-virtualized-checkbox'
+import VirtualizedCheckbox from 'react-virtualized-checkbox'
 import { UserList } from '../user';
 
 const allow = 'allow';
@@ -107,11 +107,11 @@ class CreateNamespaceModal extends PromiseComponent {
         <div style={{
           height: '250px', boxShadow: 'rgba(0, 0, 0, 0.75) 1px 1px 5px 0px', position: 'relative', overflow: 'auto'
         }}>
-          {/* <VirtualizedCheckbox
+          <VirtualizedCheckbox
             items={items}
             hasOkButton={false}
             hasCancelButton={false}
-          /> */}
+          />
         </div>
         <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('ADDITIONAL:CREATE', { something: t('RESOURCE:NAMESPACE') })} cancel={this.props.cancel.bind(this)} />
       </form >
