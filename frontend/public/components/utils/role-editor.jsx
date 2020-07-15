@@ -124,6 +124,7 @@ class RolePairElement extends React.Component {
     coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup}`).then(
       data => {
         let ResourceList = data.resources.map(resource => resource.name);
+        ResourceList.unshift('All');
         this.setState({
           ResourceList: ResourceList,
         });

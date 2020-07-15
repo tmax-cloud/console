@@ -80,6 +80,7 @@ class RoleFormComponent extends React.Component {
         coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup[0]}`).then(
           data => {
             const ResourceList = data.resources.map(resource => resource.name);
+            ResourceList.unshift('All');
             this.setState({
               ResourceList: ResourceList,
               APIGroupList: apiGroup,
@@ -111,7 +112,11 @@ class RoleFormComponent extends React.Component {
     // changedData = [{verbs:['create','delete'],apiGroups:'apiGroup',resources:'resource'},{verbs:['create','delete'],apiGroups:'apiGroup',resources:'resource'}]
     let changedData = [];
     originData.forEach(originRule => {
-      let rule = { verbs: [], apiGroups: [originRule[0]], resources: [originRule[1]] };
+      //api Group
+      let apiGroup = originRule[0] === 'All' ? '*' : originRule[0];
+      let resource = originRule[1] === 'All' ? '*' : originRule[1];
+      let rule = { verbs: [], apiGroups: [apiGroup], resources: [resource] };
+      //verbs data가공
       let originVerbs = _.assign({}, originRule[2]); // { 'All':1, 'Create': 1, 'Delete': 1}
       let verbs = [];
       if (originVerbs.All) {
