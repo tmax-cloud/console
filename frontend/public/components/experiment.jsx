@@ -41,7 +41,7 @@ const ExperimentRow = () =>
     let trial = obj.status.trials + '/' + obj.spec.maxTrialCount;
     let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].type : '';
     let objectiveMetricName = obj.spec.objective.objectiveMetricName;
-    let currentOptimal = objectiveMetricName ? obj.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
+    let currentOptimal = objectiveMetricName && obj.status.currentOptimalTrial.observation.metrics ? obj.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
     let optimal = currentOptimal.value + '/' + obj.spec.objective.goal;
     return (
       <div className="row co-resource-list__item">
@@ -58,13 +58,13 @@ const ExperimentRow = () =>
     );
   };
 
-const Details = ({ obj: condition }) => {
+const Details = ({ obj }) => {
   const { t } = useTranslation();
-  let status = condition.status.conditions.length ? condition.status.conditions[condition.status.conditions.length - 1].type : '';
-  let currentOptimal = objectiveMetricName ? condition.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
-  let objectiveMetricName = condition.spec.objective.objectiveMetricName;
-  let trial = condition.status.trials + '/' + condition.spec.maxTrialCount;
-  let optimal = currentOptimal.value + '/' + condition.spec.objective.goal;
+  let trial = obj.status.trials + '/' + obj.spec.maxTrialCount;
+  let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].type : '';
+  let objectiveMetricName = obj.spec.objective.objectiveMetricName;
+  let currentOptimal = objectiveMetricName ? obj.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
+  let optimal = currentOptimal.value + '/' + obj.spec.objective.goal;
   return (
     <React.Fragment>
       <ScrollToTopOnMount />
@@ -72,14 +72,14 @@ const Details = ({ obj: condition }) => {
         <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Experiment', t) })} />
         <div className="row">
           <div className="col-sm-6">
-            <ResourceSummary resource={condition} />
+            <ResourceSummary resource={obj} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
               <dt>{t('CONTENT:STATUS')}</dt>
               <dd>{status}</dd>
               <dt>{t('CONTENT:ALGORITHMNAME')}</dt>
-              <dd>{condition.spec.algorithm.algorithmName}</dd>
+              <dd>{obj.spec.algorithm.algorithmName}</dd>
               <dt>{t('CONTENT:CURRENTTRIALS/MAXTRIALCOUNT')}</dt>
               <dd>{trial}</dd>
               <dt>{t('CONTENT:CURRENTOPTIMAL/OBJECTIVE')}</dt>
