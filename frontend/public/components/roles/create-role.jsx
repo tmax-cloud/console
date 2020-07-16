@@ -66,31 +66,20 @@ class RoleFormComponent extends React.Component {
     this.setState({ role });
   }
   getAPIGroupList() {
-    coFetchJSON(`${document.location.origin}/api/kubernetes/apis`)
-      .then(
-        data => {
-          const APIGroupList = data.groups.map(group => group.preferredVersion.groupVersion);
-          return APIGroupList;
-        },
-        err => {
-          this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
-        },
-      )
-      .then(apiGroup => {
-        coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup[0]}`).then(
-          data => {
-            const ResourceList = data.resources.map(resource => resource.name);
-            ResourceList.unshift('All');
-            this.setState({
-              ResourceList: ResourceList,
-              APIGroupList: apiGroup,
-            });
-          },
-          err => {
-            this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
-          },
-        );
-      });
+    coFetchJSON(`${document.location.origin}/api/kubernetes/apis`).then(
+      data => {
+        const APIGroupList = data.groups.map(group => group.preferredVersion.groupVersion);
+        APIGroupList.unshift('Core');
+        APIGroupList.unshift('All');
+        this.setState({
+          ResourceList: ['All'],
+          APIGroupList: APIGroupList,
+        });
+      },
+      err => {
+        this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+      },
+    );
   }
   _updateRoles(role) {
     this.setState({
@@ -113,7 +102,7 @@ class RoleFormComponent extends React.Component {
     let changedData = [];
     originData.forEach(originRule => {
       //api Group
-      let apiGroup = originRule[0] === 'All' ? '*' : originRule[0];
+      let apiGroup = originRule[0] === 'All' ? '*' : originRule[0] === 'Core' ? '' : originRule[0];
       let resource = originRule[1] === 'All' ? '*' : originRule[1];
       let rule = { verbs: [], apiGroups: [apiGroup], resources: [resource] };
       //verbs data가공

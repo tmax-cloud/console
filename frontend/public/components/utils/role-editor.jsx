@@ -121,18 +121,25 @@ class RolePairElement extends React.Component {
   }
 
   _getResourceList(apiGroup) {
-    coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup}`).then(
-      data => {
-        let ResourceList = data.resources.map(resource => resource.name);
-        ResourceList.unshift('All');
-        this.setState({
-          ResourceList: ResourceList,
-        });
-      },
-      err => {
-        this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
-      },
-    );
+    if (apiGroup !== 'All' && apiGroup !== 'Core') {
+      coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup}`).then(
+        data => {
+          let ResourceList = data.resources.map(resource => resource.name);
+          ResourceList.unshift('All');
+          this.setState({
+            ResourceList: ResourceList,
+          });
+        },
+        err => {
+          this.setState({ error: err.message, inProgress: false, serviceNameList: [] });
+        },
+      );
+    } else {
+      let ResourceList = apiGroup === 'All' ? ['All'] : ['All', 'pods', 'configmaps', 'secrets', 'replicationcontrollers', 'services', 'persistentvolumeclaims', 'persistentvolumes', 'namespaces', 'limitranges', 'resourcequotas', 'nodes', 'serviceaccounts'];
+      this.setState({
+        ResourceList: ResourceList,
+      });
+    }
   }
   render() {
     const { keyString, valueString, allowSorting, readOnly, pair, t, APIGroupList } = this.props;
