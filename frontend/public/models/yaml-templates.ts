@@ -4530,6 +4530,193 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ClusterMenuPolicyModel), 'default'],
+    `
+    apiVersion: ui.tmax.io/v1
+    kind: ClusterMenuPolicy
+    metadata:
+      name: admin-tmax.co.kr
+    menus: 
+      - name: home
+        menu:
+        - name: status
+          type: hreflink
+          href: /status
+          activePath: /status
+        - name: search
+          type: hreflink
+          href: /search
+        - name: audit
+          type: resourcenslink
+        - name: event
+          type: resourcenslink
+        - name: grafana
+          type: hreflink
+          href: /grafana
+      - name: servicecatalog
+        menu:
+        - name: ServiceBroker
+          type: resourcenslink
+        - name: ServiceClass
+          type: resourcenslink
+        - name: ServicePlan
+          type: resourcenslink
+        - name: ClusterServiceBroker
+          type: resourceclusterlink
+        - name: ClusterServiceClass
+          type: resourceclusterlink
+        - name: ClusterServicePlan
+          type: resourceclusterlink
+        - name: ServiceInstance
+          type: resourcenslink
+        - name: ServiceBinding
+          type: resourcenslink
+        - name: CatalogServiceClaim
+          type: resourcenslink
+        - name: Template
+          type: resourcenslink
+        - name: TemplateInstance
+          type: resourcenslink
+      - name: workload
+        menu:
+        - name: Pod
+          type: resourcenslink
+        - name: Deployment
+          type: resourcenslink
+        - name: ReplicaSet
+          type: resourcenslink
+        - name: horizontalpodautoscaler
+          type: resourcenslink
+        - name: DaemonSet
+          type: resourcenslink
+        - name: StatefulSet
+          type: resourcenslink
+        - name: VirtualMachine
+          type: resourcenslink
+        - name: VirtualMachineInstance
+          type: resourcenslink
+        - name: ConfigMap
+          type: resourcenslink
+        - name: Secret
+          type: resourcenslink
+        - name: Job
+          type: resourcenslink
+        - name: CronJob
+          type: resourcenslink
+      - name: servicemesh
+        menu:
+        - name: VirtualService
+          type: resourcenslink
+        - name: DestinationRule
+          type: resourcenslink
+        - name: EnvoyFilter
+          type: resourcenslink
+        - name: Gateway
+          type: resourcenslink
+        - name: Sidecar
+          type: resourcenslink
+        - name: ServiceEntry
+          type: resourcenslink
+        - name: RequestAuthentication
+          type: resourcenslink
+        - name: PeerAuthentication
+          type: resourcenslink
+        - name: AuthorizationPolicy
+          type: resourcenslink
+        - name: kiali
+          type: hreflink
+          href: /kiali
+      - name: network
+        menu:
+        - name: Ingress
+          type: resourcenslink
+        - name: Service
+          type: resourcenslink
+      - name: storage
+        menu:
+        - name: StorageClass
+          type: resourceclusterlink
+        - name: DataVolume
+          type: resourcenslink
+        - name: PersistentVolumeClaim
+          type: resourcenslink
+        - name: PersistentVolume
+          type: resourceclusterlink
+      - name: cicd
+        menu:
+        - name: Task
+          type: resourcenslink
+        - name: TaskRun
+          type: resourcenslink
+        - name: Pipeline
+          type: resourcenslink
+        - name: PipelineRun
+          type: resourcenslink
+        - name: PipelineResource
+          type: resourcenslink
+        - name: Condition
+          type: resourcenslink
+      - name: aiops
+        menu:
+        - name: Notebook
+          type: resourcenslink
+        - name: Experiment
+          type: resourcenslink
+        - name: InferenceService
+          type: resourcenslink
+        - name: TrainingJob
+          type: resourcenslink
+        - name: WorkflowTemplate
+          type: resourcenslink
+        - name: Workflow
+          type: resourcenslink
+      - name: security
+        menu:
+        - name: PodSecurityPolicy
+          type: resourceclusterlink
+        - name: NetworkPolicy
+          type: resourcenslink
+      - name: image
+        menu:
+        - name: Registry
+          type: resourcenslink
+      - name: management
+        menu:
+        - name: Namespace
+          type: resourceclusterlink
+        - name: NamespaceClaim
+          type: resourceclusterlink
+        - name: LimitRange
+          type: resourcenslink
+        - name: ResourceQuota
+          type: resourcenslink
+        - name: ResourceQuotaClaim
+          type: resourcenslink
+        - name: CustomResourceDefinition
+          type: resourceclusterlink
+      - name: host
+        menu:
+        - name: Node
+          type: resourceclusterlink
+      - name: auth
+        menu:
+        - name: Role
+          type: resourcenslink
+        - name: RoleBinding
+          type: resourcenslink
+        - name: RoleBindingClaim
+          type: resourcenslink
+        - name: User
+          type: resourceclusterlink
+        - name: Usergroup
+          type: resourceclusterlink
+        - name: Usersecuritypolicy
+          type: resourceclusterlink
+        - name: ServiceAccount
+          type: resourcenslink
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.CatalogServiceClaimModel), 'default'],
     `
 apiVersion: tmax.io/v1

@@ -13,7 +13,7 @@ export const VirtualMachineModel: K8sKind = {
   path: 'virtualmachines',
   id: 'virtualmachine',
   crd: false,
-}
+};
 
 export const VirtualMachineInstanceModel: K8sKind = {
   kind: 'VirtualMachineInstance',
@@ -54,6 +54,20 @@ export const UserSecurityPolicyModel: K8sKind = {
   labelPlural: 'User Security Policies',
   path: 'usersecuritypolicies',
   id: 'usersecuritypolicy',
+  crd: false,
+};
+
+export const ClusterMenuPolicyModel: K8sKind = {
+  kind: 'ClusterMenuPolicy',
+  namespaced: false,
+  label: 'Cluster Menu Policy',
+  plural: 'clustermenupolicies',
+  apiGroup: 'ui.tmax.io',
+  apiVersion: 'v1',
+  abbr: 'CMP',
+  labelPlural: 'Cluster Menu Policies',
+  path: 'clustermenupolicies',
+  id: 'clustermenupolicy',
   crd: false,
 };
 
@@ -1222,7 +1236,7 @@ export const TrainingJobModel: K8sKind = {
   namespaced: true,
   kind: 'TrainingJob',
   id: 'trainingjob',
-  crd:false
+  crd: false,
 };
 export const TFJobModel: K8sKind = {
   label: 'TFJob',

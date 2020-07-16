@@ -76,6 +76,7 @@ import {
   ServiceInstanceModel,
   ImageModel,
   UserSecurityPolicyModel,
+  ClusterMenuPolicyModel,
   VirtualServiceModel,
   DestinationRuleModel,
   EnvoyFilterModel,
@@ -93,7 +94,7 @@ import {
   InferenceServiceModel,
   WorkflowTemplateModel,
   WorkflowModel,
-  CatalogServiceClaimModel
+  CatalogServiceClaimModel,
 } from '../models';
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
@@ -165,6 +166,7 @@ export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () =>
   .set(referenceForModel(SubscriptionModel), () => import('./cloud-services/subscription' /* webpackChunkName: "subscription" */).then(m => m.SubscriptionDetailsPage))
   .set(referenceForModel(InstallPlanModel), () => import('./cloud-services/install-plan' /* webpackChunkName: "install-plan" */).then(m => m.InstallPlanDetailsPage))
   .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesDetailsPage))
+  .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "task" */).then(m => m.ClusterMenuPoliciesDetailsPage))
   .set(referenceForModel(ConditionModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsDetailsPage))
   .set(referenceForModel(VirtualServiceModel), () => import('./virtual-service' /* webpackChunkName: "task" */).then(m => m.VirtualServiceDetailsPage))
   .set(referenceForModel(DestinationRuleModel), () => import('./destination-rule' /* webpackChunkName: "task" */).then(m => m.DestinationRuleDetailsPage))
@@ -206,6 +208,7 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(AuthorizationPolicyModel), () => import('./authorization-policy' /* webpackChunkName: "task" */).then(m => m.AuthorizationPolicyPage))
   .set(referenceForModel(ConditionModel), () => import('./condition' /* webpackChunkName: "task" */).then(m => m.ConditionsPage))
   .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesPage))
+  .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "task" */).then(m => m.ClusterMenuPoliciesPage))
   .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesPage))
   .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesPage))
