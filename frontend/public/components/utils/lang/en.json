@@ -828,6 +828,7 @@
     "USER": "User",
     "USERGROUP": "User Group",
     "USERSECURITYPOLICY": "User Security Policy",
+    "CLUSTERMENUPOLICY": "Cluster Menu Policy",
     "SERVICEACCOUNT": "Service Account",
     "CLUSTERSTATUS": "Cluster Status",
     "GROUP": "User Group",
