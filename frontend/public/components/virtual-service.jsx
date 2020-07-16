@@ -35,6 +35,7 @@ const VirtualServiceHeader = props => {
 const VirtualServiceRow = () =>
     // eslint-disable-next-line no-shadow
     function VirtualServiceRow({ obj }) {
+        let gateways = obj.spec.gateways ? obj.spec.gateways.map(gateway => gateway + ' ') : ''
         return (
             <div className="row co-resource-list__item">
                 <div className="col-xs-2 col-sm-2 co-resource-link-wrapper">
@@ -43,7 +44,7 @@ const VirtualServiceRow = () =>
                 </div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace}</div>
                 <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.hosts}</div>
-                <div className="col-xs-2 col-sm-2 co-break-word">{obj.spec.gateways}</div>
+                <div className="col-xs-2 col-sm-2 co-break-word">{gateways}</div>
                 <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
             </div>
         );

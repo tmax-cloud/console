@@ -111,6 +111,7 @@ let config: webpack.Configuration = {
       template: './public/index.html',
       production: NODE_ENV === 'production',
       chunksSortMode: 'none',
+      favicon: "./public/imgs/hypercloud_favicon.png",
     }),
     extractCSS,
   ],

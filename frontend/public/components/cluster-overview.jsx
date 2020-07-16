@@ -257,7 +257,7 @@ const ClusterOverviewPage_ = props => {
       <Helmet>
         <title>{fake ? 'Overview' : title}</title>
       </Helmet>
-      <NavTitle title={fake ? 'Overview' : title} style={{ alignItems: 'baseline', display: 'flex', justifyContent: 'space-between' }}>
+      <NavTitle title={fake ? 'Overview' : title}>
         {/* <p className="hidden-lg">
           <HashLink smooth to="#software-info">
             Software Info

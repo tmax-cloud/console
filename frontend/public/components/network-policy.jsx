@@ -48,7 +48,37 @@ const Row = ({ obj: np }) => {
 const NetworkPoliciesList = props => <List {...props} Header={Header} Row={Row} />;
 export const NetworkPoliciesPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={NetworkPoliciesList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/networkpolicies/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+
+  console.log('props', props);
+
+  return (
+    <ListPage
+      {...props}
+      ListComponent={NetworkPoliciesList}
+      kind={kind}
+      canCreate={true}
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })}
+      createProps={createProps}
+      // tooltipTitle="네트워크 정책"
+      // tooltipContentsElements={
+      //   <React.Fragment>
+      //     <p>네트워크 정책은 파드 그룹이 서로 간에 또는 다른 네트워크 엔드포인트와 통신할 수 있도록 허용합니다. </p>
+      //     <p>네트워크 정책 리소스는 레이블을 사용해서 파드를 선택하고 선택한 파드에 허용되는 트래픽을 지정하는 규칙을 정의 합니다. </p>
+      //     <p> 네트워크 정책은 네트워크 플러그인으로 구현되며, 네트워크 정책을 사용하려면 네트워크 정책을 지원하는 네트워킹 솔루션을 사용해야 합니다.</p>
+      //   </React.Fragment>
+      // }
+      {...props}
+    />
+  );
 };
 
 const IngressHeader = () => {
