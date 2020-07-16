@@ -58,7 +58,6 @@
     ]
   },
   "dependencies": {
-    "@patternfly/react-icons": "^4.4.2",
     "brace": "0.11.x",
     "classnames": "2.x",
     "core-js": "2.x",

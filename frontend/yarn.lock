@@ -267,11 +267,6 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@patternfly/react-icons@^4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.4.2.tgz#292098ba4b4eca92eab9354d79fdb746756b1ea6"
-  integrity sha512-zj740Zm6243iAZI8O/ar90uUL4sRUikM/wEyAahAtelrKP3bqmEOorWClE7cAa3w6TPHYsS7f+Szn5HyKXD/8w==
-
 "@plotly/d3-sankey@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@plotly/d3-sankey/-/d3-sankey-0.5.0.tgz#b22faea742e58251335ee5d9fba248772607800f"
