@@ -57,6 +57,20 @@ export const UserSecurityPolicyModel: K8sKind = {
   crd: false,
 };
 
+export const ClusterMenuPolicyModel: K8sKind = {
+  kind: 'ClusterMenuPolicy',
+  namespaced: false,
+  label: 'Cluster Menu Policy',
+  plural: 'clustermenupolicies',
+  apiGroup: 'ui.tmax.io',
+  apiVersion: 'v1',
+  abbr: 'CMP',
+  labelPlural: 'Cluster Menu Policies',
+  path: 'clustermenupolicies',
+  id: 'clustermenupolicy',
+  crd: false,
+};
+
 export const NamespaceClaimModel: K8sKind = {
   kind: 'NamespaceClaim',
   namespaced: false,
@@ -1235,7 +1249,7 @@ export const TrainingJobModel: K8sKind = {
   namespaced: true,
   kind: 'TrainingJob',
   id: 'trainingjob',
-  crd:false
+  crd: false,
 };
 export const TFJobModel: K8sKind = {
   label: 'TFJob',

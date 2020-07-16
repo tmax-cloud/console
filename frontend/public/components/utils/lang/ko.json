@@ -829,6 +829,7 @@
     "USER": "사용자",
     "USERGROUP": "사용자 그룹",
     "USERSECURITYPOLICY": "사용자 보안 정책",
+    "CLUSTERMENUPOLICY": "클러스터 메뉴 정책",
     "SERVICEACCOUNT": "서비스 어카운트",
     "CLUSTERSTATUS": "클러스터 상태",
     "GROUP": "사용자 그룹",
