@@ -13,7 +13,7 @@ export const VirtualMachineModel: K8sKind = {
   path: 'virtualmachines',
   id: 'virtualmachine',
   crd: false,
-}
+};
 
 export const VirtualMachineInstanceModel: K8sKind = {
   kind: 'VirtualMachineInstance',
@@ -862,6 +862,19 @@ export const PipelineRunModel: K8sKind = {
   labelPlural: 'Pipeline Runs',
   path: 'pipelineruns',
   id: 'pipelinerun',
+  crd: false,
+};
+export const PipelineApprovalModel: K8sKind = {
+  kind: 'Approval',
+  namespaced: true,
+  label: 'Approval',
+  plural: 'approvals',
+  apiVersion: 'v1',
+  abbr: 'PA',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Pipeline Approvals',
+  path: 'approvals',
+  id: 'approval',
   crd: false,
 };
 export const PetsetModel: K8sKind = {
