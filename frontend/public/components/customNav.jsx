@@ -542,6 +542,9 @@ class CustomNav extends React.Component {
                   case 'pipelineconditions':
                     resource = 'conditions';
                     break;
+                  case 'pipelineapprovals':
+                    resource = 'approvals';
+                    break;
                   case 'notebookserver':
                     resource = 'notebooks';
                     break;
