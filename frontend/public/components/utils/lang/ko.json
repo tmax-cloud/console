@@ -834,6 +834,7 @@
     "CLUSTERSTATUS": "클러스터 상태",
     "GROUP": "사용자 그룹",
     "CONDITION": "파이프라인 컨디션",
+    "APPROVAL": "파이프라인 승인",
     "SERVICEMESH": "서비스 메시",
     "VIRTUALSERVICE": "가상 서비스",
     "DESTINATIONRULE": "목적지 룰",
