@@ -878,6 +878,19 @@ export const PipelineRunModel: K8sKind = {
   id: 'pipelinerun',
   crd: false,
 };
+export const PipelineApprovalModel: K8sKind = {
+  kind: 'Approval',
+  namespaced: true,
+  label: 'Approval',
+  plural: 'approvals',
+  apiVersion: 'v1',
+  abbr: 'PA',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Pipeline Approvals',
+  path: 'approvals',
+  id: 'approval',
+  crd: false,
+};
 export const PetsetModel: K8sKind = {
   apiVersion: 'v1',
   label: 'Petset',
