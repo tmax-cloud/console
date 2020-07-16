@@ -334,10 +334,10 @@ input[type='number']::-webkit-outer-spin-button {
   text-align: right;
 }
 
-.co-flowchart-diagram {
-  margin-bottom: 10px;
-}
-
-.co-flowchart-diagram > div {
-  height: 300px;
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
