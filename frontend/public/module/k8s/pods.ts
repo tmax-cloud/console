@@ -23,7 +23,7 @@ const getRestartPolicy = pod => _.find({
     description: 'Never restart the container. ' +
       'Useful for containers that exit when they have completed a specific job, like a data import daemon.',
   },
-}, {id: _.get<any, string>(pod, 'spec.restartPolicy')});
+}, { id: _.get<any, string>(pod, 'spec.restartPolicy') });
 
 export const VolumeSource = {
   emptyDir: {
@@ -35,7 +35,7 @@ export const VolumeSource = {
     id: 'hostPath',
     label: 'Host Directory',
     description: 'Pre-existing host file or directory, ' +
-        'generally for privileged system daemons or other agents tied to the host.',
+      'generally for privileged system daemons or other agents tied to the host.',
   },
   gitRepo: {
     id: 'gitRepo',
@@ -88,14 +88,14 @@ export const getVolumeType = volume => {
   if (!volume) {
     return null;
   }
-  return _.find(VolumeSource, function(v) {
+  return _.find(VolumeSource, function (v) {
     return !!volume[v.id];
   });
 };
 
 const genericFormatter = volInfo => {
   const keys = Object.keys(volInfo).sort();
-  const parts = keys.map(function(key) {
+  const parts = keys.map(function (key) {
     if (key === 'readOnly') {
       return '';
     }
@@ -150,21 +150,22 @@ export const getVolumeMountsByPermissions = pod => {
   if (!pod || !pod.spec) {
     return [];
   }
-
-  const volumes = pod.spec.volumes.reduce((p, v) => {
+  let containers = pod.kind === "Notebook" ? pod.spec.template.spec.containers : pod.spec.containers;
+  let volumes = pod.kind === "Notebook" ? pod.spec.template.spec.volumes : pod.spec.volumes;
+  volumes = volumes.reduce((p, v) => {
     p[v.name] = v;
     return p;
   }, {});
 
-  const m = {};
-  _.forEach(pod.spec.containers, (c: any) => {
+  const m = {}
+  _.forEach(containers, (c: any) => {
     _.forEach(c.volumeMounts, (v: any) => {
       let k = `${v.name}_${v.readOnly ? 'ro' : 'rw'}`;
-      let mount = {container: c.name, mountPath: v.mountPath};
+      let mount = { container: c.name, mountPath: v.mountPath };
       if (k in m) {
         return m[k].mounts.push(mount);
       }
-      m[k] = {mounts: [mount], name: v.name, readOnly: !!v.readOnly, volume: volumes[v.name]};
+      m[k] = { mounts: [mount], name: v.name, readOnly: !!v.readOnly, volume: volumes[v.name] };
     });
   });
 
@@ -190,7 +191,7 @@ export const podPhase = (pod): PodPhase => {
   let phase = pod.status.phase || pod.status.reason;
 
   _.each(pod.status.initContainerStatuses, (container) => {
-    const {terminated, waiting} = container.state;
+    const { terminated, waiting } = container.state;
     if (terminated && terminated.exitCode === 0) {
       return;
     }
@@ -199,12 +200,12 @@ export const podPhase = (pod): PodPhase => {
     } else if (waiting && waiting.reason && waiting.reason !== 'PodInitializing') {
       phase = `Init${waiting.reason}`;
     }
-    initializing=true;
+    initializing = true;
   });
 
   if (!initializing) {
     _.each(pod.status.containerStatuses, (container) => {
-      const {terminated, waiting} = container.state;
+      const { terminated, waiting } = container.state;
       if (terminated && terminated.reason) {
         phase = terminated.reason;
       } else if (waiting && waiting.reason) {
@@ -230,7 +231,7 @@ export const podPhaseFilterReducer = (pod): PodPhase => {
   return _.get(pod, 'status.phase', 'Unknown');
 };
 
-export const podReadiness = ({status}): PodReadiness => {
+export const podReadiness = ({ status }): PodReadiness => {
   if (_.isEmpty(status.conditions)) {
     return null;
   }
@@ -240,7 +241,7 @@ export const podReadiness = ({status}): PodReadiness => {
     if (c.status !== 'True') {
       allReady = false;
     }
-    return Object.assign({time: new Date(c.lastTransitionTime)}, c);
+    return Object.assign({ time: new Date(c.lastTransitionTime) }, c);
   });
 
   if (allReady) {

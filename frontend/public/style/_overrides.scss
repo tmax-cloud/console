@@ -412,3 +412,9 @@ tags-input .autocomplete .suggestion-item em {
 .pagination .disabled {
   cursor: initial;
 }
+
+.graph-container > svg {
+  margin-left: 30px;
+  width: 1320px !important;
+  height: 200px !important;
+}
