@@ -7883,6 +7883,16 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
+mxgraph-js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mxgraph-js/-/mxgraph-js-1.0.1.tgz#21779cb4e35166ed2b24075eaa2d9447990675a3"
+  integrity sha1-IXectONRZu0rJAdeqi2UR5kGdaM=
+
+mxgraph-react@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/mxgraph-react/-/mxgraph-react-1.0.3.tgz#a87421b28f659f4c026c65336a1af5a45e4917fe"
+  integrity sha512-K7EYeLery2z5I4T0AKm4aNrXipgwWvOxThMwMRGuQ3w7DK/zyAuyavX5R+wiZHfBbFmKhO1NgY7DkkpZVDpuQQ==
+
 nan@^2.10.0, nan@^2.3.0, nan@^2.9.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.10.0.tgz#96d0cd610ebd58d4b4de9cc0c6828cda99c7548f"

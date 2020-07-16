@@ -500,6 +500,7 @@ class Nav extends React.Component {
               {blockMenu.indexOf('pipelines') === -1 && <ResourceNSLink resource="pipelines" name={ResourcePlural('Pipeline', t)} onClick={this.close} />}
               {blockMenu.indexOf('pipelineruns') === -1 && <ResourceNSLink resource="pipelineruns" name={ResourcePlural('PipelineRun', t)} onClick={this.close} />}
               {blockMenu.indexOf('pipelineresources') === -1 && <ResourceNSLink resource="pipelineresources" name={ResourcePlural('PipelineResource', t)} onClick={this.close} />}
+              {blockMenu.indexOf('approvals') === -1 && <ResourceNSLink resource="approvals" name={ResourcePlural('Approval', t)} onClick={this.close} />}
               {blockMenu.indexOf('conditions') === -1 && <ResourceNSLink resource="conditions" name={ResourcePlural('Condition', t)} onClick={this.close} />}
             </NavSection>
 

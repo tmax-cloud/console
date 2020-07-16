@@ -494,7 +494,7 @@ class CustomNav extends React.Component {
     this.setState({ isOpen: !isOpen });
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     if (!getAccessToken() || this.state.nav.length !== 0) {
       return;
     }

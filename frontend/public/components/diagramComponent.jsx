@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { mxGraph, mxClient, mxUtils, mxEvent, mxHierarchicalLayout, mxEdgeHandler, mxConstants, mxMorphing, mxGraphView, mxCellState, mxPerimeter } from 'mxgraph-js';
-import { SearchMinusIcon, SearchPlusIcon } from '@patternfly/react-icons';
 
 export class PipelineDiagramComponent extends React.Component {
   constructor(props) {
@@ -270,16 +269,15 @@ export class PipelineDiagramComponent extends React.Component {
   render() {
     return (
       <div style={{ width: '100%' }}>
-        <div className="graph-container no-drag" style={{ height: '300px', overflow: 'scroll', marginBottom: '20px', backgroundColor: '#f0f0f0' }} ref="divGraph" id="divGraph">
-          <div style={{ float: 'left', padding: '5px 10px', backgroundColor: '#BCBDBE', marginBottom: '30px' }}>
+        <div className="graph-container no-drag" style={{ height: '300px', overflow: 'scroll', marginBottom: '20px', backgroundColor: '#f0f0f0' }} ref="divGraph" id="divGraph" />
+        {/* <div style={{ float: 'left', padding: '5px 10px', backgroundColor: '#BCBDBE', marginBottom: '30px' }}>
             <div style={{ float: 'left' }}>
               <SearchPlusIcon style={{ float: 'left', cursor: 'pointer', width: '25px', height: '25px', marginRight: '10px' }} onClick={() => this.state.graph.zoomIn()} />
             </div>
             <div style={{ float: 'left' }}>
               <SearchMinusIcon style={{ cursor: 'pointer', width: '25px', height: '25px' }} onClick={() => this.state.graph.zoomOut()} />
             </div>
-          </div>
-        </div>
+          </div> */}
       </div>
     );
   }
@@ -665,16 +663,15 @@ export class PipelineRunDiagramComponent extends React.Component {
 
   render() {
     return (
-      <div className="graph-container no-drag" style={{ height: '300px', overflow: 'scroll', marginBottom: '20px', backgroundColor: '#f0f0f0' }} ref="divGraph" id="divGraph">
-        <div style={{ float: 'left', padding: '5px 10px', backgroundColor: '#BCBDBE', marginBottom: '30px' }}>
-          <div style={{ float: 'left' }}>
-            <SearchPlusIcon style={{ float: 'left', cursor: 'pointer', width: '25px', height: '25px', marginRight: '10px' }} onClick={() => _graph.zoomIn()} />
-          </div>
-          <div style={{ float: 'left' }}>
-            <SearchMinusIcon style={{ cursor: 'pointer', width: '25px', height: '25px' }} onClick={() => _graph.zoomOut()} />
-          </div>
-        </div>
-      </div>
+      <div className="graph-container no-drag" style={{ height: '300px', overflow: 'scroll', marginBottom: '20px', backgroundColor: '#f0f0f0' }} ref="divGraph" id="divGraph" />
+      // <div style={{ float: 'left', padding: '5px 10px', backgroundColor: '#BCBDBE', marginBottom: '30px' }}>
+      //   <div style={{ float: 'left' }}>
+      //     <SearchPlusIcon style={{ float: 'left', cursor: 'pointer', width: '25px', height: '25px', marginRight: '10px' }} onClick={() => _graph.zoomIn()} />
+      //   </div>
+      //   <div style={{ float: 'left' }}>
+      //     <SearchMinusIcon style={{ cursor: 'pointer', width: '25px', height: '25px' }} onClick={() => _graph.zoomOut()} />
+      //   </div>
+      // </div>
     );
   }
 }
