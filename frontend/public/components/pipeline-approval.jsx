@@ -54,8 +54,18 @@ const DetailsForKind = kind =>
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
-          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('PIPELINE', t) })} />
-          <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
+          <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Approval', t) })} />
+          <div className="row">
+            <div className="col-sm-6">
+              <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
+            </div>
+            <div className="col-sm-6">
+              <dl className="co-m-pane__details">
+                <dt>{t('RESOURCE:USER')}</dt>
+                <dd>{obj.spec.users.join(' ')}</dd>
+              </dl>
+            </div>
+          </div>
         </div>
       </React.Fragment>
     );
