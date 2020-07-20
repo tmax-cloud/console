@@ -51,6 +51,7 @@ const (
 	prometheusProxyEndpoint   = "/api/prometheus"
 	hypercloudProxyEndpoint   = "/api/hypercloud/"
 	jaegerProxyEndpoint       = "/api/jaeger/"
+	approvalProxyEndpoint     = "/api/approval/"
 	grafanaProxyEndpoint      = "/api/grafana/"
 	kialiProxyEndpoint        = "/api/kiali/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
@@ -114,6 +115,7 @@ type Server struct {
 	PrometheusProxyConfig *proxy.Config
 	HypercloudProxyConfig *proxy.Config
 	JaegerProxyConfig     *proxy.Config
+	ApprovalProxyConfig   *proxy.Config
 	GrafanaProxyConfig    *proxy.Config
 	KialiProxyConfig      *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
@@ -272,10 +274,6 @@ func (s *Server) HTTPHandler() http.Handler {
 					id = bodyId
 				}
 
-				if strings.Contains(string(r.URL.Path), "login") {
-					plog.Println("id: " + id)
-				}
-
 				// user security policy를 가져오기 위한 서비스콜
 				path := "/apis/tmax.io/v1/usersecuritypolicies/" + id
 				urltocall := proxy.SingleJoiningSlash(s.K8sProxyConfig.Endpoint.String(), path)
@@ -296,7 +294,9 @@ func (s *Server) HTTPHandler() http.Handler {
 				result, message := s.verifyIpRange(urltocall, tokenForUserSecurityPolicy, clientAddr)
 				switch result {
 				case true:
-					plog.Info(message)
+					if strings.Contains(string(r.URL.Path), "login") {
+						plog.Info(message)
+					}
 					hf(s.StaticUser, w, r)
 					return
 				case false:
@@ -353,6 +353,14 @@ func (s *Server) HTTPHandler() http.Handler {
 		proxy.SingleJoiningSlash(s.BaseURL.Path, hypercloudProxyAPIPath),
 		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 			hypercloudProxy.ServeHTTP(w, r)
+		})),
+	)
+	approvalProxyAPIPath := approvalProxyEndpoint
+	approvalProxy := proxy.NewProxy(s.ApprovalProxyConfig)
+	handle(approvalProxyAPIPath, http.StripPrefix(
+		proxy.SingleJoiningSlash(s.BaseURL.Path, approvalProxyAPIPath),
+		authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+			approvalProxy.ServeHTTP(w, r)
 		})),
 	)
 	if s.JaegerProxyConfig != nil {
