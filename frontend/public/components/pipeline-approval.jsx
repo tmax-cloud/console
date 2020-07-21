@@ -9,8 +9,7 @@ import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { PipelineApprovalModel } from '../models';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
-// const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.EditStatus];
-const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Approval];
 
 const PipelineApprovalHeader = props => {
   const { t } = useTranslation();
