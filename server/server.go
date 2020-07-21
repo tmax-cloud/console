@@ -51,7 +51,7 @@ const (
 	prometheusProxyEndpoint   = "/api/prometheus"
 	hypercloudProxyEndpoint   = "/api/hypercloud/"
 	jaegerProxyEndpoint       = "/api/jaeger/"
-	approvalProxyEndpoint     = "/api/approval/"
+	approvalProxyEndpoint     = "/api/approve/"
 	grafanaProxyEndpoint      = "/api/grafana/"
 	kialiProxyEndpoint        = "/api/kiali/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
