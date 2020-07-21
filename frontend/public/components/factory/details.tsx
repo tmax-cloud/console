@@ -35,6 +35,7 @@ export type DetailsPageProps = {
   match: match<any>;
   title?: string | JSX.Element;
   menuActions?: any[];
+  getMenuActions?: Function;
   pages: any[];
   kind: K8sResourceKindReference;
   label?: string;

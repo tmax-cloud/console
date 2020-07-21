@@ -37,7 +37,7 @@ const PipelineApprovalRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-sm-3 col-xs-6 co-resource-link-wrapper">
-          <ResourceCog actions={menuActions} kind="Approval" resource={obj} />
+          <ResourceCog actions={obj.status.result === 'Waiting' ? menuActions : menuActions.slice(0, menuActions.length - 1)} kind="Approval" resource={obj} />
           <ResourceLink kind="Approval" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-sm-3 col-xs-6 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
@@ -124,6 +124,13 @@ PipelineApprovalsPage.displayName = 'PipelineApprovalsPage';
 
 export const PipelineApprovalDetailsPage = props => {
   const { t } = useTranslation();
+  const getMenuActions = obj => {
+    console.log('getmenuactions');
+    if (!obj || !obj.status) {
+      return null;
+    }
+    return obj.status.result === 'Waiting' ? menuActions : menuActions.slice(0, menuActions.length - 1);
+  };
   return (
     <DetailsPage
       {...props}
@@ -134,6 +141,7 @@ export const PipelineApprovalDetailsPage = props => {
       //   })
       // }
       menuActions={menuActions}
+      getMenuActions={getMenuActions}
       pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
     />
   );
