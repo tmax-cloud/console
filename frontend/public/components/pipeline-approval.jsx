@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 
-import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
+import { ColHead, DetailsPage, List, ListHeader, ListPage, MultiListPage } from './factory';
 import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
@@ -78,19 +78,47 @@ export const PipelineApprovalList = props => {
 };
 PipelineApprovalList.displayName = PipelineApprovalList;
 
+export const approvalType = approval => {
+  switch (approval.status.result) {
+    case 'Approved':
+      return 'Approved';
+    case 'Canceled':
+      return 'Canceled';
+    case 'Rejected':
+      return 'Rejected';
+    default:
+      return 'Waiting';
+  }
+};
+
 export const PipelineApprovalsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={PipelineApprovalList} canCreate={false} kind="Approval" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  return (
+    <ListPage
+      {...props}
+      ListComponent={PipelineApprovalList}
+      canCreate={false}
+      kind="Approval"
+      createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })}
+      // rowFilters={filters}
+      rowFilters={[
+        {
+          type: 'approval-status',
+          selected: ['Waiting', 'Approved', 'Rejected', 'Canceled'],
+          reducer: approvalType,
+          items: [
+            { id: 'Waiting', title: 'Waiting' },
+            { id: 'Approved', title: 'Approved' },
+            { id: 'Rejected', title: 'Rejected' },
+            { id: 'Canceled', title: 'Canceled' },
+          ],
+        },
+      ]}
+      title={t('RESOURCE:APPROVAL')}
+    />
+  );
 };
 PipelineApprovalsPage.displayName = 'PipelineApprovalsPage';
-
-// export const TaskDetailsPage = props => {
-//   const pages = [
-//     navFactory.details(DetailsForKind(props.kind)),
-//     navFactory.editYaml()
-//   ];
-//   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;
-// };
 
 export const PipelineApprovalDetailsPage = props => {
   const { t } = useTranslation();

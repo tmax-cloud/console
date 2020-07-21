@@ -116,6 +116,13 @@ const listFilters = {
     const phase = pvc.status.phase;
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
+  'approval-status': (statuses, approval) => {
+    if (!statuses || !statuses.selected || !statuses.selected.size) {
+      return true;
+    }
+    const status = approval.status.result;
+    return statuses.selected.has(status) || !_.includes(statuses.all, status);
+  },
 };
 
 const getFilteredRows = (_filters, objects) => {
