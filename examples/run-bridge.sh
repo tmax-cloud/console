@@ -41,5 +41,5 @@ eval $nodePorts
     --grafana-endpoint=http://$k8sIP:$GRAFANA_PORT \
     --kiali-endpoint=http://$k8sIP:$KIALI_PORT/api/kiali \
     --jaeger-endpoint=http://$k8sIP:$JAEGER_PORT/api/jaeger \
-    --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/api/approval \
+    --approval-endpoint=http://$k8sIP:$APPROVAL_PORT \
     --release-mode=true \
