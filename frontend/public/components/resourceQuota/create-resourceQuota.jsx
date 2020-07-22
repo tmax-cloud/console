@@ -112,32 +112,6 @@ class ResourceQuotaFormComponent extends React.Component {
 
   render() {
     const { t } = this.props;
-    const resourceQuotaOptions = [
-      {
-        value: 'limits.cpu',
-        label: 'CPU Limits',
-      },
-      {
-        value: 'limits.memory',
-        label: 'Memory Limits',
-      },
-      {
-        value: 'requests.cpu',
-        label: 'CPU Requests',
-      },
-      {
-        value: 'requests.memory',
-        label: 'Memory Requests',
-      },
-      {
-        value: 'pods',
-        label: '파드 수',
-      },
-      {
-        value: 'etc',
-        label: '기타',
-      },
-    ];
 
     return <div className="rbac-edit-binding co-m-pane__body">
       <Helmet>
@@ -165,7 +139,7 @@ class ResourceQuotaFormComponent extends React.Component {
             </div>
           </Section>
           <Section label={t('CONTENT:PODRESOURCELIMITSRANGE')} isRequired={false} paddingTop={'5px'}>
-            <SelectKeyValueEditor t={t} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
+            <SelectKeyValueEditor t={t} options={ResourceQuotaFormComponent.resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
           </Section>
           <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
             <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
@@ -176,6 +150,33 @@ class ResourceQuotaFormComponent extends React.Component {
     </div >;
   }
 }
+
+ResourceQuotaFormComponent.resourceQuotaOptions = [
+  {
+    value: 'limits.cpu',
+    label: 'CPU Limits',
+  },
+  {
+    value: 'limits.memory',
+    label: 'Memory Limits',
+  },
+  {
+    value: 'requests.cpu',
+    label: 'CPU Requests',
+  },
+  {
+    value: 'requests.memory',
+    label: 'Memory Requests',
+  },
+  {
+    value: 'pods',
+    label: '파드 수',
+  },
+  {
+    value: 'etc',
+    label: '기타',
+  },
+];
 
 export const CreateResourceQuota = ({ match: { params } }) => {
   const { t } = useTranslation();
