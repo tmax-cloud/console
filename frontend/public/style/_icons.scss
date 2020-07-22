@@ -1,6 +1,7 @@
 .node-ready,
 .pvc-bound,
-.route-accepted {
+.route-accepted,
+.approval-approved {
   color: $color-pf-green-400;
 }
 
@@ -16,4 +17,17 @@
 
 .co-icon-space-r {
   margin-right: 0.25em;
+}
+
+.approval-rejected {
+  color: $color-red-error;
+}
+
+.approval-canceled {
+  color: #9c9c9c;
+  // color: $color-orange-warning;
+}
+
+.approval-waiting {
+  color: $color-highlight-blue-dark;
 }

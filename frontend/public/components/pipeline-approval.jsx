@@ -11,6 +11,42 @@ import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Approval];
 
+const ApprovalStatus = ({ approval }) => {
+  const status = approval.status.result;
+  switch (approval.status.result) {
+    case 'Waiting':
+      return (
+        <span className="approval-waiting">
+          <i className="fa fa-hourglass-half"></i>
+          {status}
+        </span>
+      );
+    case 'Approved':
+      return (
+        <span className="approval-approved">
+          <i className="fa fa-check"></i>
+          {status}
+        </span>
+      );
+    case 'Rejected':
+      return (
+        <span className="approval-rejected">
+          <i className="fa fa-times"></i>
+          {status}
+        </span>
+      );
+    case 'Canceled':
+      return (
+        <span className="approval-canceled">
+          <i className="fa fa-ban"></i>
+          {status}
+        </span>
+      );
+    default:
+      return status;
+  }
+};
+
 const PipelineApprovalHeader = props => {
   const { t } = useTranslation();
   return (
@@ -41,7 +77,10 @@ const PipelineApprovalRow = () =>
           <ResourceLink kind="Approval" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-sm-3 col-xs-6 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-        <div className="col-sm-3 col-xs-6 co-break-word">{obj.hasOwnProperty('status') ? obj.status.result : 'Waiting'}</div>
+        <div className="col-sm-3 col-xs-6 co-break-word">
+          <ApprovalStatus approval={obj} />
+          {/* {obj.hasOwnProperty('status') ? obj.status.result : 'Waiting'} */}
+        </div>
         <div className="col-sm-3 col-xs-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
