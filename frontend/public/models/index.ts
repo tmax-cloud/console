@@ -13,7 +13,7 @@ export const VirtualMachineModel: K8sKind = {
   path: 'virtualmachines',
   id: 'virtualmachine',
   crd: false,
-}
+};
 
 export const VirtualMachineInstanceModel: K8sKind = {
   kind: 'VirtualMachineInstance',
@@ -54,6 +54,20 @@ export const UserSecurityPolicyModel: K8sKind = {
   labelPlural: 'User Security Policies',
   path: 'usersecuritypolicies',
   id: 'usersecuritypolicy',
+  crd: false,
+};
+
+export const ClusterMenuPolicyModel: K8sKind = {
+  kind: 'ClusterMenuPolicy',
+  namespaced: false,
+  label: 'Cluster Menu Policy',
+  plural: 'clustermenupolicies',
+  apiGroup: 'ui.tmax.io',
+  apiVersion: 'v1',
+  abbr: 'CMP',
+  labelPlural: 'Cluster Menu Policies',
+  path: 'clustermenupolicies',
+  id: 'clustermenupolicy',
   crd: false,
 };
 
@@ -864,6 +878,19 @@ export const PipelineRunModel: K8sKind = {
   id: 'pipelinerun',
   crd: false,
 };
+export const PipelineApprovalModel: K8sKind = {
+  kind: 'Approval',
+  namespaced: true,
+  label: 'Approval',
+  plural: 'approvals',
+  apiVersion: 'v1',
+  abbr: 'PA',
+  apiGroup: 'tmax.io',
+  labelPlural: 'Pipeline Approvals',
+  path: 'approvals',
+  id: 'approval',
+  crd: false,
+};
 export const PetsetModel: K8sKind = {
   apiVersion: 'v1',
   label: 'Petset',
@@ -1222,7 +1249,7 @@ export const TrainingJobModel: K8sKind = {
   namespaced: true,
   kind: 'TrainingJob',
   id: 'trainingjob',
-  crd:false
+  crd: false,
 };
 export const TFJobModel: K8sKind = {
   label: 'TFJob',

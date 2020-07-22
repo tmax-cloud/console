@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { Tooltip } from './tooltip';
 
-import { annotationsModal, configureReplicaCountModal, labelsModal, podSelectorModal, deleteModal, configureStatusModal } from '../modals';
+import { annotationsModal, configureReplicaCountModal, labelsModal, podSelectorModal, deleteModal, configureStatusModal, approvalModal } from '../modals';
 import { DropdownMixin } from './dropdown';
 import { history, resourceObjPath } from './index';
 import { referenceForModel, K8sResourceKind, K8sResourceKindReference, K8sKind } from '../../module/k8s';
@@ -110,13 +110,25 @@ const cogFactory: CogFactory = {
         }),
     };
   },
+  Approval: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('ADDITIONAL:EDIT', { something: t('CONTENT:STATUS') }),
+      callback: () =>
+        approvalModal({
+          resourceKind: kind,
+          resource: obj,
+          t: t,
+        }),
+    };
+  },
   Connect: (kind, obj) => {
     const { t } = useTranslation();
     return {
       label: t('CONTENT:CONNECT'),
       // href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/environment`,
     };
-  }
+  },
 };
 
 // The common menu actions that most resource share
@@ -168,12 +180,12 @@ export class Cog extends DropdownMixin {
             </div>
           </Tooltip>
         ) : (
-            <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })}>
-              <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
-              <span className="sr-only">Actions</span>
-              {this.state.active && <CogItems options={options} onClick={this.onClick} />}
-            </div>
-          )}
+          <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })}>
+            <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
+            <span className="sr-only">Actions</span>
+            {this.state.active && <CogItems options={options} onClick={this.onClick} />}
+          </div>
+        )}
       </div>
     );
   }

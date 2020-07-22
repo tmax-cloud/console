@@ -1,13 +1,29 @@
 #!/bin/bash -e
 
-myIP=$(ipconfig | grep "IPv4" -a | head -1 | awk '{print $NF}')
 k8sIP='192.168.6.196'
 
-### proxy endpoint들의 node port 정보를 받아오려면, 터미널에서 아래의 주석 두 줄을 차례로 실행하세요.
-: <<'END'
-ssh root@$k8sIP
-printf "\n\n\n"; kubectl get svc -A | grep -E "hypercloud4-operator-service|prometheus-k8s|grafana|kiali|tracing" | grep ":" | awk -F '\t' -v OFS='\t' '{ result=gensub(/[0-9]+:([0-9]+)\/TCP/,"\\1", "g", $0); print result}' | awk '{print $1,$2,$6}' | column -t; printf "\n\n\n"; exit
-END
+myIP=$(ipconfig | grep "IPv4" -a | head -1 | awk '{print $NF}')
+
+
+### k8s 환경에 ssh 최초 접속 시 다음 두 줄을 실행해주세요. 그러면 다음부터 password 없이 login할 수 있습니다.
+### ssh-keygen을 실행하면 파일명과 passphrase를 입력하라고 뜨는데, empty로 놔두고 Enter를 눌러 진행하면 됩니다.
+
+# ssh-keygen
+# ssh-copy-id -i ~/.ssh/id_rsa.pub root@$k8sIP
+
+
+nodePorts=$(ssh root@$k8sIP "
+    HC_PORT=\$(kubectl get svc -n hypercloud4-system hypercloud4-operator-service | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    PROM_PORT=\$(kubectl get svc -n monitoring prometheus-k8s | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    GRAFANA_PORT=\$(kubectl get svc -n monitoring grafana | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    KIALI_PORT=\$(kubectl get svc -n istio-system kiali | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    JAEGER_PORT=\$(kubectl get svc -n istio-system tracing | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    APPROVAL_PORT=\$(kubectl get svc -n approval-system approval-proxy-server | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    echo \"HC_PORT=\$HC_PORT PROM_PORT=\$PROM_PORT GRAFANA_PORT=\$GRAFANA_PORT KIALI_PORT=\$KIALI_PORT JAEGER_PORT=\$JAEGER_PORT APPROVAL_PORT=\$APPROVAL_PORT;\"
+")
+
+eval $nodePorts
+
 
 ./bin/bridge \
     --listen=https://$myIP:9000 \
@@ -20,9 +36,10 @@ END
     --k8s-auth=bearer-token \
     --k8s-auth-bearer-token=@@ \
     --public-dir=./frontend/public/dist \
-    --hypercloud-endpoint=http://$k8sIP:31092 \
-    --kiali-endpoint=http://$k8sIP:30349/api/kiali \
-    --jaeger-endpoint=http://$k8sIP:31412/api/jaeger \
-    --grafana-endpoint=http://$k8sIP:31527 \
-    --prometheus-endpoint=http://$k8sIP:30562/api \
+    --hypercloud-endpoint=http://$k8sIP:$HC_PORT \
+    --prometheus-endpoint=http://$k8sIP:$PROM_PORT/api \
+    --grafana-endpoint=http://$k8sIP:$GRAFANA_PORT \
+    --kiali-endpoint=http://$k8sIP:$KIALI_PORT/api/kiali \
+    --jaeger-endpoint=http://$k8sIP:$JAEGER_PORT/api/jaeger \
+    --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/approve \
     --release-mode=true \

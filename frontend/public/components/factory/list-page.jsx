@@ -51,7 +51,7 @@ export const TextFilter = ({ label, onChange, defaultValue, style, className, au
       autoFocus={autoFocus}
       defaultValue={defaultValue}
       onKeyDown={e => e.key === 'Escape' && e.target.blur()}
-      onKeyUp={id === 'audit' ? onKeyUp : ''}
+      onKeyUp={id === 'audit' ? onKeyUp : null}
     />
   );
 };

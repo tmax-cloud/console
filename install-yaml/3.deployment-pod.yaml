@@ -31,6 +31,7 @@ spec:
         - --grafana-endpoint=http://@@GRAFANA@@/
         - --kiali-endpoint=http://@@KIALI@@/api/kiali
         - --jaeger-endpoint=http://@@JAEGER@@/api/jaeger
+        - --approval-endpoint=http://@@APPROVAL@@/approve
         - --hdc-mode=@@HDC_FLAG@@
         - --tmaxcloud-portal=@@PORTAL@@
         image: tmaxcloudck/hypercloud-console:@@VER@@

@@ -17,7 +17,8 @@ import { analyticsSvc } from '../module/analytics';
 import { GlobalNotifications } from './global-notifications';
 import { Masthead } from './masthead';
 import { NamespaceSelector } from './namespace';
-import Nav from './nav';
+import CustomNav from './customNav';
+// import Nav from './nav';
 import { SearchPage } from './search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
 import { history, AsyncComponent, Loading, kindObj, AccessDenied } from './utils';
@@ -27,7 +28,6 @@ import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from
 import { referenceForModel, k8sList } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
 import { k8sGet } from '../module/k8s';
-import { ConfigMapModel } from '../models';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
@@ -151,8 +151,6 @@ class App extends React.PureComponent {
     this.state = {
       isAdmin: true,
       isLoading: false,
-      configData: '',
-      activeNamespace: '',
     };
 
     // 임시 로직
@@ -183,95 +181,7 @@ class App extends React.PureComponent {
     });
   }
 
-  componentDidMount() {
-    if (this.state.activeNamespace === '') {
-      this.setState({ activeNamespace: getActiveNamespace() });
-    }
-    // if (getActiveNamespace() !== '' && this.state.activeNamespace !== getActiveNamespace()) {
-    //   this.setState({ activeNamespace: getActiveNamespace() });
-    //   k8sGet(ConfigMapModel, null, getActiveNamespace())
-    //     .then(data => {
-    //       if (data.kind === 'ConfigMapList' && this.state.configData !== data) {
-    //         // console.log(this.state.configData);
-    //         let menuConfig;
-    //         data.items.forEach(item => {
-    //           if (item.metadata.name === 'usermenusetting') {
-    //             menuConfig = item;
-    //           }
-    //         });
-
-    //         if (menuConfig !== undefined && menuConfig.data.hasOwnProperty(getId())) {
-    //           // console.log(menuConfig.data[getId()]);
-    //           this.setState({ configData: menuConfig.data[getId()] });
-    //         }
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    // }
-  }
-
-  componentWillUpdate() {
-    if (this.state.activeNamespace !== getActiveNamespace()) {
-      this.setState({ configData: '' });
-      if (getActiveNamespace() !== '#ALL_NS#') {
-        this.setState({ activeNamespace: getActiveNamespace() });
-        k8sGet(ConfigMapModel, null, getActiveNamespace())
-          .then(data => {
-            if (data.kind === 'ConfigMapList' && this.state.configData !== data) {
-              let menuConfig;
-              data.items.forEach(item => {
-                if (item.metadata.name === 'usermenusetting') {
-                  menuConfig = item;
-                }
-              });
-
-              if (menuConfig !== undefined && menuConfig.data.hasOwnProperty(getId())) {
-                this.setState({ configData: menuConfig.data[getId()] });
-                let arr = menuConfig.data[getId()].split(',');
-                arr.forEach(item => {
-                  item = item.replace(' ', '');
-                  if (window.location.href.indexOf(item) !== -1) {
-                    window.location.href = '/error';
-                    // return <AccessDenied />;
-                  }
-                });
-              }
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    }
-  }
-
   componentDidUpdate(prevProps) {
-    // if (this.state.activeNamespace !== getActiveNamespace()) {
-    //   this.setState({ activeNamespace: getActiveNamespace() });
-    //   k8sGet(ConfigMapModel, null, getActiveNamespace())
-    //     .then(data => {
-    //       if (data.kind === 'ConfigMapList' && this.state.configData !== data) {
-    //         // console.log(this.state.configData);
-    //         let menuConfig;
-    //         data.items.forEach(item => {
-    //           if (item.metadata.name === 'usermenusetting') {
-    //             menuConfig = item;
-    //           }
-    //         });
-
-    //         if (menuConfig !== undefined && menuConfig.data.hasOwnProperty(getId())) {
-    //           // console.log(menuConfig.data[getId()]);
-    //           this.setState({ configData: menuConfig.data[getId()] });
-    //         }
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    // }
-
     const props = this.props;
     // Prevent infinite loop in case React Router decides to destroy & recreate the component (changing key)
     const oldLocation = _.omit(prevProps.location, ['key']);
@@ -286,7 +196,6 @@ class App extends React.PureComponent {
   }
 
   render() {
-    const { configData } = this.state;
     // if (props.location.pathname.indexOf('new') > 0) {
     //   console.log('여기서 ns selector없애야함 ')
     // }
@@ -294,7 +203,7 @@ class App extends React.PureComponent {
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <Masthead setLoading={this.setLoading} />
-        <Nav menu={configData} />
+        <CustomNav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
           <GlobalNotifications />

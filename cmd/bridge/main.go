@@ -91,6 +91,7 @@ func main() {
 	fHypercloudEndpoint := fs.String("hypercloud-endpoint", "", "URL of the hypercloud API server.")
 	fPrometheusEndpoint := fs.String("prometheus-endpoint", "", "URL of the prometheus API server.")
 	fJaegerEndpoint := fs.String("jaeger-endpoint", "", "URL of the jaeger API server.")
+	fApprovalEndpoint := fs.String("approval-endpoint", "", "URL of the approval API server.")
 	fMasterToken := fs.String("master-token", "", "Master token for the k8s master API server.")
 	// NOTE: 여기까지
 
@@ -250,6 +251,7 @@ func main() {
 	var hypercloudEndpoint *url.URL
 	var prometheusEndpoint *url.URL
 	var jaegerEndpoint *url.URL
+	var approvalEndpoint *url.URL
 	var k8sEndpoint *url.URL
 	switch *fK8sMode {
 	case "in-cluster":
@@ -267,6 +269,11 @@ func main() {
 		srv.JaegerProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        jaegerEndpoint,
+		}
+		approvalEndpoint = validateFlagIsURL("approval-endpoint", *fApprovalEndpoint)
+		srv.ApprovalProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        approvalEndpoint,
 		}
 		// NOTE: 여기까지
 
@@ -362,6 +369,14 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        jaegerEndpoint,
+		}
+		approvalEndpoint = validateFlagIsURL("approval-endpoint", *fApprovalEndpoint)
+		srv.ApprovalProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        approvalEndpoint,
 		}
 		// NOTE: 여기까지 // 정동민
 
