@@ -48,7 +48,17 @@ const Details = ({ obj: rq }) => {
 export const ResourceQuotasList = props => <List {...props} Header={Header} Row={Row} />;
 export const ResourceQuotasPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={ResourceQuotasList} kind={kind} canCreate={true} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/resourcequotas/new` : '/k8s/cluster/resourcequotas/new/form'
+  };
+
+  return <ListPage {...props} ListComponent={ResourceQuotasList} kind={kind} canCreate={true} createProps={createProps} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 
 export const ResourceQuotasDetailsPage = props => {
