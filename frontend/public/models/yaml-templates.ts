@@ -4654,6 +4654,8 @@ spec:
           type: resourcenslink
         - name: PipelineRun
           type: resourcenslink
+        - name: PipelineApproval
+          type: resourcenslink
         - name: PipelineResource
           type: resourcenslink
         - name: Condition
