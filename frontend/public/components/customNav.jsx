@@ -153,9 +153,9 @@ const defaultMenu = `
       type: resourcenslink
     - name: Experiment
       type: resourcenslink
-    - name: InferenceService
-      type: resourcenslink
     - name: TrainingJob
+      type: resourcenslink
+    - name: InferenceService
       type: resourcenslink
     - name: WorkflowTemplate
       type: resourcenslink
@@ -505,7 +505,6 @@ class CustomNav extends React.Component {
 
     k8sGet(ko, getId())
       .then(response => {
-        // console.log(menus);
         const { t } = this.props;
 
         response.menus.forEach(item => {

@@ -508,8 +508,8 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:AIOPS')} img={aiOpsImg}>
               {blockMenu.indexOf('notebooks') === -1 && <ResourceNSLink resource="notebooks" name={ResourcePlural('Notebook', t)} onClick={this.close} />}
               {blockMenu.indexOf('experiments') === -1 && <ResourceNSLink resource="experiments" name={ResourcePlural('Experiment', t)} onClick={this.close} />}
-              {blockMenu.indexOf('inferenceservices') === -1 && <ResourceNSLink resource="inferenceservices" name={ResourcePlural('InferenceService', t)} onClick={this.close} />}
               {blockMenu.indexOf('trainingjobs') === -1 && <ResourceNSLink resource="trainingjobs" name={ResourcePlural('TrainingJob', t)} onClick={this.close} />}
+              {blockMenu.indexOf('inferenceservices') === -1 && <ResourceNSLink resource="inferenceservices" name={ResourcePlural('InferenceService', t)} onClick={this.close} />}
               {blockMenu.indexOf('workflowtemplates') === -1 && <ResourceNSLink resource="workflowtemplates" name={ResourcePlural('WorkflowTemplate', t)} onClick={this.close} />}
               {blockMenu.indexOf('workflows') === -1 && <ResourceNSLink resource="workflows" name={ResourcePlural('Workflow', t)} onClick={this.close} />}
             </NavSection>
