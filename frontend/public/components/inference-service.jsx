@@ -42,7 +42,8 @@ const InferenceServiceRow = () =>
   // eslint-disable-next-line no-shadow
   function InferenceServiceRow({ obj }) {
     let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].type : '';
-    let framework = Object.keys(obj.spec.default.predictor)[0];
+    const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt'];
+    let framework = frameworkList.includes(Object.keys(obj.spec.default.predictor)[0]) ? Object.keys(obj.spec.default.predictor)[0] : Object.keys(obj.spec.default.predictor)[1];
     let storageUri = obj.spec.default.predictor[framework].storageUri;
     let canary = Object.keys(obj.status.canary).length === 0 ? 'N' : 'Y';
     return (
