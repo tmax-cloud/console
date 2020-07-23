@@ -140,7 +140,6 @@ export const PipelineApprovalsPage = props => {
       ListComponent={PipelineApprovalList}
       canCreate={false}
       kind="Approval"
-      // title="Pipeline Approvals"
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })}
       // rowFilters={filters}
       rowFilters={[
@@ -156,7 +155,7 @@ export const PipelineApprovalsPage = props => {
           ],
         },
       ]}
-      title={t('RESOURCE:APPROVAL')}
+      // title={t('RESOURCE:APPROVAL')}
     />
   );
 };
