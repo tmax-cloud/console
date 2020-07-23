@@ -170,13 +170,13 @@ export class VertNav extends React.PureComponent {
     componentProps.obj = props.obj.data;
     const extraResources = _.reduce(props.resourceKeys, (acc, key) => ({ ...acc, [key]: props[key].data }), {});
 
-    const routes = props.pages.map(p => {
+    const routes = props.pages.map((p => {
       const path = `${props.match.url}/${p.href}`;
       const render = () => {
         return <p.component {...componentProps} {...extraResources} />;
       };
       return <Route path={path} exact key={p.name} render={render} />;
-    });
+    }));
 
     return (
       <div className={props.className}>
