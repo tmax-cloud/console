@@ -51,7 +51,7 @@ const PipelineApprovalHeader = props => {
   const { t } = useTranslation();
   return (
     <ListHeader>
-      <ColHead {...props} className="col-sm-3 col-xs-6" sortField="metadata.name">
+      <ColHead {...props} className="col-sm-4 col-xs-6" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
       <ColHead {...props} className="col-sm-3 col-xs-6" sortField="metadata.namespace">
@@ -60,7 +60,7 @@ const PipelineApprovalHeader = props => {
       <ColHead {...props} className="col-sm-3 col-xs-6" sortField="status.result">
         {t('CONTENT:STATUS')}
       </ColHead>
-      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -72,7 +72,7 @@ const PipelineApprovalRow = () =>
   function PipelineApprovalRow({ obj }) {
     return (
       <div className="row co-resource-list__item">
-        <div className="col-sm-3 col-xs-6 co-resource-link-wrapper">
+        <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
           <ResourceCog actions={obj.status.result === 'Waiting' ? menuActions : menuActions.slice(0, menuActions.length - 1)} kind="Approval" resource={obj} />
           <ResourceLink kind="Approval" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
@@ -81,7 +81,7 @@ const PipelineApprovalRow = () =>
           <ApprovalStatus approval={obj} />
           {/* {obj.hasOwnProperty('status') ? obj.status.result : 'Waiting'} */}
         </div>
-        <div className="col-sm-3 col-xs-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
+        <div className="col-sm-2 col-xs-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
   };
