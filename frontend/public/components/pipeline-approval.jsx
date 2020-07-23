@@ -6,7 +6,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
-import { PipelineApprovalModel } from '../models';
+import { ApprovalModel } from '../models';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Approval];
