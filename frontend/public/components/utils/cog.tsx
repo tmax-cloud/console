@@ -126,10 +126,22 @@ const cogFactory: CogFactory = {
     const { t } = useTranslation();
     return {
       label: t('CONTENT:CONNECT'),
-      // href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/environment`,
+      callback: () => {
+        const regex = /:[0-9]+$/g;
+        const kubeAPIServerIP = window.SERVER_FLAGS.kubeAPIServerURL.replace(regex, ':31380').replace('https', 'http');
+        return window.open(`${kubeAPIServerIP}/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`);
+      }
     };
   },
 };
+
+declare global {
+  interface Window {
+    SERVER_FLAGS: {
+      kubeAPIServerURL: string;
+    };
+  }
+}
 
 // The common menu actions that most resource share
 cogFactory.common = [cogFactory.ModifyLabels, cogFactory.ModifyAnnotations, cogFactory.Edit, cogFactory.Delete];

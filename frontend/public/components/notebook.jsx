@@ -8,8 +8,7 @@ import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSum
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 import { getVolumeType, getVolumeLocation, getVolumeMountPermissions, getVolumeMountsByPermissions, getRestartPolicyLabel, podPhase, podPhaseFilterReducer, podReadiness } from '../module/k8s/pods';
-// const menuActions = [...Cog.factory.common, Cog.factory.Connect];
-const menuActions = [...Cog.factory.common];
+const menuActions = [...Cog.factory.common, Cog.factory.Connect];
 const NotebookHeader = props => {
   const { t } = useTranslation();
   return (
