@@ -878,7 +878,7 @@ export const PipelineRunModel: K8sKind = {
   id: 'pipelinerun',
   crd: false,
 };
-export const PipelineApprovalModel: K8sKind = {
+export const ApprovalModel: K8sKind = {
   kind: 'Approval',
   namespaced: true,
   label: 'Approval',

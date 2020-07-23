@@ -102,10 +102,15 @@ export class SelectorInput extends React.Component {
       </span>;
     };
 
-    return <div className="co-m-selector-input">
-      <tags-input>
-        <TagsInput ref={this.setRef} className="tags" value={tags} addKeys={addKeys} removeKeys={removeKeys} inputProps={inputProps} renderTag={renderTag} onChange={this.handleChange.bind(this)} addOnPaste addOnBlur />
-      </tags-input>
-    </div>;
+    return (
+      <React.Fragment>
+        <div className="co-m-selector-input">
+          <tags-input>
+            <TagsInput ref={this.setRef} className={this.props.isFormControl ? classNames('tags', 'form-control') : 'tags'} value={tags} addKeys={addKeys} removeKeys={removeKeys} inputProps={inputProps} renderTag={renderTag} onChange={this.handleChange.bind(this)} addOnPaste addOnBlur />
+          </tags-input>
+        </div>
+        {this.props.desc ? <span>{this.props.desc}</span> : ''}
+      </React.Fragment>
+    );
   }
 }

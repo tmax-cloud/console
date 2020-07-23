@@ -18,7 +18,17 @@ type SingleSelectProps = {
 };
 
 const SingleSelect = ({ options, name, id, value, placeholder, label, onChange }: SingleSelectProps) => {
-  const newValue = value ? { value, label: label || value } : options.length > 0 && options[0];
+  let newValue;
+  const idx = options.findIndex(option => option.value === value);
+  if (idx !== -1) {
+    newValue = {
+      value: options[idx].value,
+      label: options[idx].label,
+    };
+  } else {
+    newValue = placeholder ? undefined : options.length > 0 && options[0];
+  }
+
   const colorStyles = {
     control: styles => ({ ...styles, backgroundColor: 'white', borderRadius: 0, height: '27px', minHeight: '27px' }),
   };

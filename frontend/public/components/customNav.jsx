@@ -141,6 +141,8 @@ const defaultMenu = `
       type: resourcenslink
     - name: PipelineRun
       type: resourcenslink
+    - name: PipelineApproval
+      type: resourcenslink
     - name: PipelineResource
       type: resourcenslink
     - name: Condition
@@ -527,6 +529,9 @@ class CustomNav extends React.Component {
                   case 'audit':
                     resource = 'audits';
                     break;
+                  case 'PipelineApproval':
+                    resource = 'approvals';
+                    break;
                   case 'horizontalpodautoscaler':
                     resource = 'horizontalpodautoscalers';
                     break;
@@ -541,9 +546,6 @@ class CustomNav extends React.Component {
                     break;
                   case 'pipelineconditions':
                     resource = 'conditions';
-                    break;
-                  case 'pipelineapprovals':
-                    resource = 'approvals';
                     break;
                   case 'notebookserver':
                     resource = 'notebooks';
@@ -612,6 +614,9 @@ class CustomNav extends React.Component {
                         break;
                       case 'audit':
                         resource = 'audits';
+                        break;
+                      case 'PipelineApproval':
+                        resource = 'approvals';
                         break;
                       case 'horizontalpodautoscaler':
                         resource = 'horizontalpodautoscalers';
@@ -695,6 +700,9 @@ class CustomNav extends React.Component {
                         break;
                       case 'horizontalpodautoscaler':
                         resource = 'horizontalpodautoscalers';
+                        break;
+                      case 'PipelineApproval':
+                        resource = 'approvals';
                         break;
                       default:
                         resource = ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase();

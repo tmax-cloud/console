@@ -324,7 +324,6 @@ export class PipelineRunDiagramComponent extends React.Component {
     } else {
       // Disables the built-in context menu
       mxEvent.disableContextMenu(container);
-      console.log('miri test');
       // Creates the graph inside the given container
       let graph = new mxGraph(container);
       let style = graph.getStylesheet().getDefaultEdgeStyle();
@@ -496,11 +495,11 @@ export class PipelineRunDiagramComponent extends React.Component {
               if (task.taskRunName === undefined) {
                 return;
               }
-              if (task.taskRef.kind === 'Task') {
-                window.location.href = `/k8s/ns/${this.props.namespace}/taskruns/${task.taskRunName}`;
-              } else {
-                window.location.href = `/k8s/ns/cluster/taskruns/${task.taskRunName}`;
-              }
+              // if (task.taskRef.kind === 'Task') {
+              window.location.href = `/k8s/ns/${this.props.namespace}/taskruns/${task.taskRunName}`;
+              // } else {
+              // window.location.href = `/k8s/ns/cluster/taskruns/${task.taskRunName}`;
+              // }
             }
           });
           evt.consume();

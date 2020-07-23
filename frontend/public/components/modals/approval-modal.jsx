@@ -31,34 +31,17 @@ class ApprovalModal extends PromiseComponent {
     let data = { decision: StatusEditorPair.Status };
 
     const { namespace, name } = this.props.resource.metadata;
-    let url = `${document.location.origin}/api/approval/approve/${namespace}/${name}`;
-    // let url = `http://192.168.6.196:31470/api/approval/approve/${namespace}/${name}`;
-    // http://192.168.6.196:31470/approve/approval-test/third-task-run-pod-mbx-1
-    coFetchJSON
+    let url = `${document.location.origin}/api/approve/${namespace}/${name}`;
+
+    const promise = coFetchJSON
       .put(url, data)
-      .then(response => {
-        console.log(response);
+      .then(() => {
         location.reload();
       })
       .catch(error => {
         this.setState({ error: error.message });
       });
-    // this.handlePromise(promise).then(this.props.close);
-
-    // const op = {
-    //   path: this.props.path,
-    // };
-
-    // const patch = { path: this.props.path, data };
-    // const promise = k8sPatch2(this.props.resourceKind, this.props.resource, data, op)
-    //   .then(() => {
-    //     location.reload();
-    //   })
-    //   .catch(error => {
-    //     this.setState({ error: error.message });
-    //   });
-    // this.handlePromise(promise);
-    // this.handlePromise(promise).then(this.props.close);
+    this.handlePromise(promise);
   }
 
   render() {
@@ -80,7 +63,7 @@ ApprovalModal.propTypes = {
   btnText: PropTypes.node,
   cancel: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
-  executeFn: PropTypes.func.isRequired,
+  // executeFn: PropTypes.func.isRequired,
   message: PropTypes.node,
   title: PropTypes.node.isRequired,
 };

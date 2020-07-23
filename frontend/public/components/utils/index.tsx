@@ -94,6 +94,13 @@ export const enum KeyValueEditorPair {
   Index,
 }
 
+export const enum SelectKeyValueEditorPair {
+  Select,
+  Key,
+  Value,
+  Index,
+}
+
 export const enum RoleEditorPair {
   Group,
   Resource,
