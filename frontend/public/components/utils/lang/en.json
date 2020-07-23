@@ -811,7 +811,7 @@
     "PIPELINERUN": "Pipeline Run",
     "PIPELINERESOURCE": "Pipeline Resource",
     "CONDITION": "Pipeline Condition",
-    "APPROVAL": "Pipeline Approval",
+    "PIPELINEAPPROVAL": "Pipeline Approval",
     "SECURITY": "Security",
     "PODSECURITYPOLICY": "Pod Security Policy",
     "NETWORKPOLICY": "Network Policy",
