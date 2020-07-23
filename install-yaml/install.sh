@@ -80,8 +80,8 @@ fi
 echo "CONSOLE_VERSION = ${CONSOLE_VERSION}"
 
 # get hypercloud ip addr 
-HC4_IP=$(kubectl get svc -n ${NS_HC4} ${NAME_HC4} | awk '{print $3}')
-HC4_PORT=$(kubectl get svc -n ${NS_HC4} ${NAME_HC4} | awk '{print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+HC4_IP=$(kubectl get svc -n ${NS_HC4} ${NAME_HC4} | awk 'NR>1 {print $3}')
+HC4_PORT=$(kubectl get svc -n ${NS_HC4} ${NAME_HC4} | awk 'NR>1 {print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 
 if [ -z $HC4_IP ]; then 
     echo "Cannot find HC4_IP in ${NAME_HC4}. Is hypercloud4-system installed?"
@@ -91,55 +91,60 @@ HC4=${HC4_IP}:${HC4_PORT}
 echo "Hypercloud Addr = ${HC4}"
 
 # get prometheus ip addr 
-PROM_IP=$(kubectl get svc -n ${NS_PROM} ${NAME_PROM} | awk '{print $3}')
-PROM_PORT=$(kubectl get svc -n ${NS_PROM} ${NAME_PROM} | awk '{print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+PROM_IP=$(kubectl get svc -n ${NS_PROM} ${NAME_PROM} | awk 'NR>1 {print $3}')
+PROM_PORT=$(kubectl get svc -n ${NS_PROM} ${NAME_PROM} | awk 'NR>1 {print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $PROM_IP ]; then 
     echo "Cannot find PROMETHEUS_IP in ${NAME_PROM}. Is prometheus installed?"
-    PROM_IP="0.0.0.0:9090"
+    PROM_IP="0.0.0.0"
+    PROM_PORT="9090"
     echo "PROMETHEUS_IP dummy value temporarily set to 0.0.0.0:9090."
 fi 
 PROM=${PROM_IP}:${PROM_PORT}
 echo "Prometheus Addr = ${PROM}"
 
 # get grafana ip addr 
-GRAFANA_IP=$(kubectl get svc -n ${NS_GRAFANA} ${NAME_GRAFANA} | awk '{print $3}')
-GRAFANA_PORT=$(kubectl get svc -n ${NS_GRAFANA} ${NAME_GRAFANA} | awk '{print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+GRAFANA_IP=$(kubectl get svc -n ${NS_GRAFANA} ${NAME_GRAFANA} | awk 'NR>1 {print $3}')
+GRAFANA_PORT=$(kubectl get svc -n ${NS_GRAFANA} ${NAME_GRAFANA} | awk 'NR>1 {print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $GRAFANA_IP ]; then
     echo "Cannot find GRAFANA_IP in ${NAME_GRAFANA}. Is grafana installed?"
-    GRAFANA_IP="0.0.0.0:3000"
+    GRAFANA_IP="0.0.0.0"
+    GRAFANA_PORT="3000"
     echo "GRAFANA_IP dummy value temporarily set to 0.0.0.0:3000."
 fi
 GRAFANA=${GRAFANA_IP}:${GRAFANA_PORT}
 echo "Grafana Addr = ${GRAFANA}"
 
 # get kiali ip addr 
-KIALI_IP=$(kubectl get svc -n ${NS_KIALI} ${NAME_KIALI} | awk '{print $3}')
-KIALI_PORT=$(kubectl get svc -n ${NS_KIALI} ${NAME_KIALI} | awk '{print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+KIALI_IP=$(kubectl get svc -n ${NS_KIALI} ${NAME_KIALI} | awk 'NR>1 {print $3}')
+KIALI_PORT=$(kubectl get svc -n ${NS_KIALI} ${NAME_KIALI} | awk 'NR>1 {print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $KIALI_IP ]; then
     echo "Cannot find KIALI_IP in ${NAME_KIALI}. Is kiali installed?"
-    KIALI_IP="0.0.0.0:20001"
+    KIALI_IP="0.0.0.0"
+    KIALI_PORT="20001"
     echo "KIALI_IP dummy value temporarily set to 0.0.0.0:20001."
 fi
 KIALI=${KIALI_IP}:${KIALI_PORT}
 echo "kiali Addr = ${KIALI}"
 
 # get jaeger ip addr 
-JAEGER_IP=$(kubectl get svc -n ${NS_JAEGER} ${NAME_JAEGER} | awk '{print $3}')
-JAEGER_PORT=$(kubectl get svc -n ${NS_JAEGER} ${NAME_JAEGER} | awk '{print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+JAEGER_IP=$(kubectl get svc -n ${NS_JAEGER} ${NAME_JAEGER} | awk 'NR>1 {print $3}')
+JAEGER_PORT=$(kubectl get svc -n ${NS_JAEGER} ${NAME_JAEGER} | awk 'NR>1 {print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $JAEGER_IP ]; then
     echo "Cannot find JAEGER_IP in ${NAME_JAEGER}. Is jaeger installed?"
-    JAEGER_IP="0.0.0.0:80"
+    JAEGER_IP="0.0.0.0"
+    JAEGER_PORT="80"
     echo "JAEGER_IP dummy value temporarily set to 0.0.0.0:80."
 fi
 JAEGER=${JAEGER_IP}:${JAEGER_PORT}
 echo "Jaeger Addr = ${JAEGER}"
 
 # get approval ip addr 
-APPROVAL_IP=$(kubectl get svc -n ${NS_APPROVAL} ${NAME_APPROVAL} | awk '{print $3}')
-APPROVAL_PORT=$(kubectl get svc -n ${NS_APPROVAL} ${NAME_APPROVAL} | awk '{print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
+APPROVAL_IP=$(kubectl get svc -n ${NS_APPROVAL} ${NAME_APPROVAL} | awk 'NR>1 {print $3}')
+APPROVAL_PORT=$(kubectl get svc -n ${NS_APPROVAL} ${NAME_APPROVAL} | awk 'NR>1 {print $5}' | awk 'match($0, ":"){print substr($0,1,RSTART-1)}')
 if [ -z $APPROVAL_IP ]; then
     echo "Cannot find APPROVAL_IP in ${NAME_APPROVAL}. Is approval installed?"
-    APPROVAL_IP="0.0.0.0:80"
+    APPROVAL_IP="0.0.0.0"
+    APPROVAL_PORT="80"
     echo "APPROVAL_IP dummy value temporarily set to 0.0.0.0:80."
 fi
 APPROVAL=${APPROVAL_IP}:${APPROVAL_PORT}
