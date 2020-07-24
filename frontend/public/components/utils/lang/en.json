@@ -849,7 +849,7 @@
     "SERVICEENTRY": "ServiceEntry",
     "REQUESTAUTHENTICATION": "Request Authentication",
     "PEERAUTHENTICATION": "Peer Authentication",
-    "AUTHROIZATIONPOLICY": "AuthorizationPolicy",
+    "AUTHORIZATIONPOLICY": "Authorization Policy",
     "AIOPS": "AI DevOps",
     "NOTEBOOK": "Notebook",
     "EXPERIMENT": "Experiment",
