@@ -850,7 +850,7 @@
     "REQUESTAUTHENTICATION": "Request Authentication",
     "PEERAUTHENTICATION": "Peer Authentication",
     "AUTHROIZATIONPOLICY": "AuthorizationPolicy",
-    "AIOPS": "AI Ops",
+    "AIOPS": "AI DevOps",
     "NOTEBOOK": "Notebook",
     "EXPERIMENT": "Experiment",
     "TRAININGJOB": "Training Job",
