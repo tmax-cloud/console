@@ -128,17 +128,17 @@ export const NotebookPage = props => {
 };
 NotebookPage.displayName = 'NotebookPage';
 
-export const NotebookDetailsPage = props => {
+export const NotebookDetailsPage = detailProps => {
   const { t } = useTranslation();
   const statefultSetComponent = props => {
-    let selector = { matchLabels: { 'notebook-name': props.match.params.name } };
-    return <StatefulSetsPage obj={props.obj} showTitle={false} namespace={props.match.params.ns} selector={selector} canCreate={false} />;
+    // let selector = { matchLabels: { 'notebook-name': props.match.params.name } };
+    return <StatefulSetsPage obj={props.obj} showTitle={false} namespace={props.match.params.ns} canCreate={false} fieldSelector={`metadata.name=${props.obj.metadata.name}`} />;
   };
   const podComponent = props => {
     let selector = { matchLabels: { 'notebook-name': props.match.params.name } };
     return <PodsPage obj={props.obj} showTitle={false} namespace={props.match.params.ns} selector={selector} canCreate={false} />;
   };
-  return <DetailsPage {...props} kind="Notebook" menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.statefulsets(t('RESOURCE:STATEFULSET'), statefultSetComponent), navFactory.pods(t('RESOURCE:POD'), podComponent)]} />;
+  return <DetailsPage {...detailProps} kind="Notebook" menuActions={menuActions} pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.statefulsets(t('RESOURCE:STATEFULSET'), statefultSetComponent), navFactory.pods(t('RESOURCE:POD'), podComponent)]} />;
 };
 
 NotebookDetailsPage.displayName = 'NotebookDetailsPage';
