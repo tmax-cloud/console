@@ -49,6 +49,9 @@ export class SelectKeyValueEditor extends React.Component {
               </React.Fragment>
             )}
           </div>
+          <div className="col-md-12 col-xs-12">
+            {this.props.desc ? <span>{this.props.desc}</span> : ''}
+          </div>
         </div>
       </React.Fragment>
     );
