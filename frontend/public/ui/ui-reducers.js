@@ -60,3 +60,7 @@ export default (state, action) => {
 export const createProjectMessageStateToProps = ({ UI }) => {
   return { createProjectMessage: UI.get('createProjectMessage') };
 };
+
+export const impersonateStateToProps = ({ UI }) => {
+  return { impersonate: UI.get('impersonate') };
+};

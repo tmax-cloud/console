@@ -27,11 +27,9 @@ export class SafetyFirst<props, state> extends React.Component<props, state> {
 
       // We are in the constructor...
       // https://reactjs.org/docs/react-component.html#setstate
-      const nextState = _.isFunction(arg0)
-        ? arg0(this.state as any || {}, this.props)
-        : arg0;
+      const nextState = _.isFunction(arg0) ? arg0((this.state as any) || {}, this.props) : arg0;
 
-      this.state = Object.assign({}, this.state as any || {}, nextState);
+      this.state = Object.assign({}, (this.state as any) || {}, nextState);
 
       if (_.isFunction(arg1)) {
         return arg1();
@@ -48,3 +46,17 @@ export class SafetyFirst<props, state> extends React.Component<props, state> {
     this.isMounted_ = true;
   }
 }
+
+export const useSafetyFirst = <S extends any>(initialState: S | (() => S)): [S, React.Dispatch<React.SetStateAction<S>>] => {
+  const mounted = React.useRef(true);
+  React.useEffect(() => () => (mounted.current = false), []);
+
+  const [value, setValue] = React.useState(initialState);
+  const setValueSafe = React.useCallback((newValue: S) => {
+    if (mounted.current) {
+      setValue(newValue);
+    }
+  }, []);
+
+  return [value, setValueSafe];
+};

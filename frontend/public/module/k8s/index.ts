@@ -17,12 +17,12 @@ export type OwnerReference = {
 };
 
 export type ObjectMetadata = {
-  annotations?: {[key: string]: string},
-  name: string,
-  namespace?: string,
-  labels?: {[key: string]: string},
-  ownerReferences?: OwnerReference[],
-  [key: string]: any,
+  annotations?: { [key: string]: string };
+  name: string;
+  namespace?: string;
+  labels?: { [key: string]: string };
+  ownerReferences?: OwnerReference[];
+  [key: string]: any;
 };
 
 export type K8sResourceKind = {
@@ -31,26 +31,26 @@ export type K8sResourceKind = {
   metadata: ObjectMetadata;
   spec?: {
     selector?: {
-      matchLabels?: {[key: string]: any},
-    },
-    [key: string]: any
+      matchLabels?: { [key: string]: any };
+    };
+    [key: string]: any;
   };
-  status?: {[key: string]: any};
-  type?: {[key: string]: any};
+  status?: { [key: string]: any };
+  type?: { [key: string]: any };
 };
 
 export type ConfigMapKind = {
   apiVersion: string;
   kind: string;
   metadata: {
-    annotations?: {[key: string]: string},
-    name: string,
-    namespace?: string,
-    labels?: {[key: string]: string},
-    ownerReferences?: OwnerReference[],
-    [key: string]: any,
+    annotations?: { [key: string]: string };
+    name: string;
+    namespace?: string;
+    labels?: { [key: string]: string };
+    ownerReferences?: OwnerReference[];
+    [key: string]: any;
   };
-  data: {[key: string]: string};
+  data: { [key: string]: string };
 };
 
 export type CustomResourceDefinitionKind = {
@@ -65,7 +65,7 @@ export type CustomResourceDefinitionKind = {
       shortNames?: string[];
     };
     scope?: 'Namespaced';
-  }
+  };
 } & K8sResourceKind;
 
 export type K8sKind = {
@@ -82,9 +82,9 @@ export type K8sKind = {
   apiVersion: string;
   apiGroup?: string;
   namespaced?: boolean;
-  selector?: {matchLabels?: {[key: string]: string}};
-  labels?: {[key: string]: string};
-  annotations?: {[key: string]: string};
+  selector?: { matchLabels?: { [key: string]: string } };
+  labels?: { [key: string]: string };
+  annotations?: { [key: string]: string };
   verbs?: string[];
 };
 
@@ -100,3 +100,117 @@ export type GroupVersionKind = string;
  * Maintains backwards-compatibility with references using the `kind` string field.
  */
 export type K8sResourceKindReference = GroupVersionKind | string;
+
+type ContainerStateValue = {
+  reason?: string;
+  [key: string]: any;
+};
+
+export type ContainerState = {
+  waiting?: ContainerStateValue;
+  running?: ContainerStateValue;
+  terminated?: ContainerStateValue;
+};
+
+export type ContainerStatus = {
+  name: string;
+  state?: ContainerState;
+  lastState?: ContainerState;
+  ready: boolean;
+  restartCount: number;
+  image: string;
+  imageID: string;
+  containerID?: string;
+};
+
+export type K8sResourceCommon = {
+  apiVersion?: string;
+  kind?: string;
+  metadata?: ObjectMetadata;
+};
+
+export type SecretKind = {
+  data: { [key: string]: string };
+  stringData?: { [key: string]: string };
+  type: string;
+} & K8sResourceCommon;
+
+export type K8sVerb = 'create' | 'get' | 'list' | 'update' | 'patch' | 'delete' | 'deletecollection' | 'watch';
+
+export type AccessReviewResourceAttributes = {
+  group?: string;
+  resource?: string;
+  subresource?: string;
+  verb?: K8sVerb;
+  name?: string;
+  namespace?: string;
+};
+
+export type SelfSubjectAccessReviewKind = {
+  apiVersion: string;
+  kind: string;
+  metadata?: ObjectMetadata;
+  spec: {
+    resourceAttributes?: AccessReviewResourceAttributes;
+  };
+  status?: {
+    allowed: boolean;
+    denied?: boolean;
+    reason?: string;
+    evaluationError?: string;
+  };
+};
+
+export enum K8sResourceConditionStatus {
+  True = 'True',
+  False = 'False',
+  Unknown = 'Unknown',
+}
+
+export type K8sResourceCondition = {
+  type: string;
+  status: keyof typeof K8sResourceConditionStatus;
+  lastTransitionTime?: string;
+  reason?: string;
+  message?: string;
+};
+
+export type NodeCondition = {
+  lastHeartbeatTime?: string;
+} & K8sResourceCondition;
+
+export type TaintEffect = '' | 'NoSchedule' | 'PreferNoSchedule' | 'NoExecute';
+
+export type Taint = {
+  key: string;
+  value: string;
+  effect: TaintEffect;
+};
+
+export type NodeKind = {
+  spec: {
+    taints?: Taint[];
+    unschedulable?: boolean;
+  };
+  status?: {
+    capacity?: {
+      [key: string]: string;
+    };
+    conditions?: NodeCondition[];
+    images?: {
+      names: string[];
+      sizeBytes?: number;
+    }[];
+    phase?: string;
+  };
+} & K8sResourceCommon;
+
+export type TolerationOperator = 'Exists' | 'Equal';
+
+export type Toleration = {
+  effect: TaintEffect;
+  key?: string;
+  operator: TolerationOperator;
+  tolerationSeconds?: number;
+  value?: string;
+};
