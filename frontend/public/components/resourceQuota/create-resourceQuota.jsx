@@ -138,8 +138,8 @@ class ResourceQuotaFormComponent extends React.Component {
               <p>{t('VALIDATION:LABEL_FORM')}</p>
             </div>
           </Section>
-          <Section label={t('CONTENT:PODRESOURCELIMITSRANGE')} isRequired={false} paddingTop={'5px'}>
-            <SelectKeyValueEditor t={t} options={ResourceQuotaFormComponent.resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
+          <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
+            <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={ResourceQuotaFormComponent.resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
           </Section>
           <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
             <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
