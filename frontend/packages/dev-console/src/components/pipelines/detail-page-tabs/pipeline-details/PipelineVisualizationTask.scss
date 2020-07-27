@@ -1,6 +1,7 @@
 @import '../../../topology/topology-utils.scss';
 
-$border-color: var(--pf-global--BorderColor--light-100);
+// $border-color: var(--pf-global--BorderColor--light-100);
+$border-color: #b8bbbe;
 .odc-pipeline-vis-task {
   position: relative;
   width: 10em;
