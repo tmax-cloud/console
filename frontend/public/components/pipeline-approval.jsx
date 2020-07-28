@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { ColHead, DetailsPage, List, ListHeader, ListPage, MultiListPage } from './factory';
-import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary } from './utils';
+import { Cog, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, Timestamp } from './utils';
 import { fromNow } from './utils/datetime';
 import { kindForReference, referenceForModel } from '../module/k8s';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
@@ -89,13 +89,23 @@ const PipelineApprovalRow = () =>
 const DetailsForKind = kind =>
   function DetailsForKind_({ obj }) {
     const { t } = useTranslation();
+    let pipelineRun, pipelineTask, taskRun;
+    for (const [key, value] of Object.entries(obj.metadata.labels)) {
+      if (key.endsWith('/pipelineRun')) {
+        pipelineRun = value;
+      } else if (key.endsWith('/pipelineTask')) {
+        pipelineTask = value;
+      } else if (key.endsWith('/taskRun')) {
+        taskRun = value;
+      }
+    }
     return (
       <React.Fragment>
         <div className="co-m-pane__body">
           <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Approval', t) })} />
           <div className="row">
             <div className="col-sm-6">
-              <ResourceSummary resource={obj} podSelector="spec.podSelector" showNodeSelector={false} />
+              <ResourceSummary resource={obj} showPodSelector={false} showNodeSelector={false} />
             </div>
             <div className="col-sm-6">
               <dl className="co-m-pane__details">
@@ -103,6 +113,22 @@ const DetailsForKind = kind =>
                 <dd>{obj.status.result}</dd>
                 <dt>{t('RESOURCE:USER')}</dt>
                 <dd>{obj.spec.users.join(' ')}</dd>
+                <dt>Pipeline Run</dt>
+                <dd>
+                  <ResourceLink kind="PipelineRun" name={pipelineRun} />
+                </dd>
+                <dt>PIPELINE TASK</dt>
+                <dd>
+                  <ResourceLink kind="TaskRun" name={taskRun} displayName={pipelineTask} />
+                </dd>
+                {(obj.status.result === 'Approved' || obj.status.result === 'Rejected') && (
+                  <React.Fragment>
+                    <dt>Decided At</dt>
+                    <dd>
+                      <Timestamp timestamp={obj.status.decisionTime} />
+                    </dd>
+                  </React.Fragment>
+                )}
               </dl>
             </div>
           </div>
@@ -127,6 +153,8 @@ export const approvalType = approval => {
       return 'Canceled';
     case 'Rejected':
       return 'Rejected';
+    case 'Waiting':
+      return 'Waiting';
     default:
       return 'Waiting';
   }
