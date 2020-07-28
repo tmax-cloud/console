@@ -500,6 +500,7 @@ class Nav extends React.Component {
               {blockMenu.indexOf('pipelines') === -1 && <ResourceNSLink resource="pipelines" name={ResourcePlural('Pipeline', t)} onClick={this.close} />}
               {blockMenu.indexOf('pipelineruns') === -1 && <ResourceNSLink resource="pipelineruns" name={ResourcePlural('PipelineRun', t)} onClick={this.close} />}
               {blockMenu.indexOf('pipelineresources') === -1 && <ResourceNSLink resource="pipelineresources" name={ResourcePlural('PipelineResource', t)} onClick={this.close} />}
+              {blockMenu.indexOf('approvals') === -1 && <ResourceNSLink resource="approvals" name={ResourcePlural('Approval', t)} onClick={this.close} />}
               {blockMenu.indexOf('conditions') === -1 && <ResourceNSLink resource="conditions" name={ResourcePlural('Condition', t)} onClick={this.close} />}
             </NavSection>
 
@@ -507,8 +508,8 @@ class Nav extends React.Component {
             <NavSection text={t('RESOURCE:AIOPS')} img={aiOpsImg}>
               {blockMenu.indexOf('notebooks') === -1 && <ResourceNSLink resource="notebooks" name={ResourcePlural('Notebook', t)} onClick={this.close} />}
               {blockMenu.indexOf('experiments') === -1 && <ResourceNSLink resource="experiments" name={ResourcePlural('Experiment', t)} onClick={this.close} />}
-              {blockMenu.indexOf('inferenceservices') === -1 && <ResourceNSLink resource="inferenceservices" name={ResourcePlural('InferenceService', t)} onClick={this.close} />}
               {blockMenu.indexOf('trainingjobs') === -1 && <ResourceNSLink resource="trainingjobs" name={ResourcePlural('TrainingJob', t)} onClick={this.close} />}
+              {blockMenu.indexOf('inferenceservices') === -1 && <ResourceNSLink resource="inferenceservices" name={ResourcePlural('InferenceService', t)} onClick={this.close} />}
               {blockMenu.indexOf('workflowtemplates') === -1 && <ResourceNSLink resource="workflowtemplates" name={ResourcePlural('WorkflowTemplate', t)} onClick={this.close} />}
               {blockMenu.indexOf('workflows') === -1 && <ResourceNSLink resource="workflows" name={ResourcePlural('Workflow', t)} onClick={this.close} />}
             </NavSection>

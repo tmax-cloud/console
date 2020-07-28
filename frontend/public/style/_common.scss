@@ -88,6 +88,38 @@
   flex: 1;
   margin-right: 10px;
   min-width: 0; // necessary for wrapping since its a flex child
+
+  .fa-question-circle {
+    margin-left: 10px;
+  }
+}
+
+.title-tooltip-inner {
+  .rc-tooltip-arrow {
+    visibility: hidden;
+  }
+  .rc-tooltip-inner {
+    background-color: white;
+    border-radius: 2px;
+    width: 500px;
+    color: #696969;
+    font-size: 14px;
+    padding: 10px 20px 20px 20px;
+  }
+  h5 {
+    margin: 0;
+    font-size: 16px;
+    color: #444444;
+    font-weight: normal;
+    letter-spacing: 0;
+    line-height: 16px;
+  }
+  hr {
+    margin: 12px 0 20px 0;
+  }
+  p {
+    margin: 0;
+  }
 }
 
 .co-inline-block {
@@ -334,10 +366,10 @@ input[type='number']::-webkit-outer-spin-button {
   text-align: right;
 }
 
-.co-flowchart-diagram {
-  margin-bottom: 10px;
-}
-
-.co-flowchart-diagram > div {
-  height: 300px;
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }

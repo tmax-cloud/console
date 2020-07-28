@@ -15,3 +15,5 @@ export * from './tags';
 export * from './token-info-modal';
 export * from './delete-modal';
 export * from './service-instance-modal';
+export * from './add-resources-modal';
+export * from './approval-modal';

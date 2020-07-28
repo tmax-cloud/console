@@ -131,7 +131,7 @@ class VolumePairElement extends React.Component {
           {/* <select value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} className="form-control">
             {options}
           </select> react-select 라이브러리 사용하여 select 변경 */}
-          {options && <SingleSelect options={selectOptions} name="PVC" placeholder={t('ADDITIONAL:SELECT', { something: 'PVC' })} value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} />}
+          {options && <SingleSelect options={selectOptions} name="PVC" /* placeholder={t('ADDITIONAL:SELECT', { something: 'PVC' })} */ value={pair[VolumeEditorPair.PVC]} onChange={this._onChangePVC} />}
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__targetPort-field">
           <select value={pair[VolumeEditorPair.ReadOnly]} onChange={this._onChangeReadOnly} className="form-control">
