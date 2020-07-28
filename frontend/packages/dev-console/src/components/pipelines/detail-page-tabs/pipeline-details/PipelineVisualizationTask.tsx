@@ -171,6 +171,7 @@ const TaskComponent: React.FC<TaskProps> = ({
   if (!disableTooltip) {
     taskPill = (
       <Tooltip
+        className="tooltip-bg"
         position="bottom"
         enableFlip={false}
         content={
