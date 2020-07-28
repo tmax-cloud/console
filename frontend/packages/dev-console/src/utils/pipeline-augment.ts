@@ -410,7 +410,7 @@ export const getTaskStatus = (
   return taskStatus;
 };
 
-export const getResourceModelFromTaskKind = (kind: string): K8sKind =>
+export const getResourceModelFromTaskKind = (kind: string): any =>
   kind === ClusterTaskModel.kind ? ClusterTaskModel : TaskModel;
 
 export const getResourceModelFromBindingKind = (kind: string): K8sKind =>
