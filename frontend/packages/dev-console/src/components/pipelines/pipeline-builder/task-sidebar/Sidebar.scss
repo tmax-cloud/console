@@ -3,34 +3,36 @@ $overview-sidebar-width: 550px;
 .odc-sidebar {
   background: #fff;
   bottom: 0;
-  box-shadow: var(--pf-global--BoxShadow--md);
+  // box-shadow: var(--pf-global--BoxShadow--md);
+  box-shadow: 0 4px 8px 0 rgba(3, 3, 3, 0.12), 0 0 4px 0 rgba(3, 3, 3, 0.06);
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
   right: 0;
-  transition:
-    opacity 175ms ease-out,
-    transform 225ms ease-out;
+  transition: opacity 175ms ease-out, transform 225ms ease-out;
   top: 0;
   width: calc(100% - 15px);
   visibility: hidden;
   z-index: 5;
 
-  @media(min-width: 762px) {
+  @media (min-width: 762px) {
     max-width: $overview-sidebar-width;
   }
 
   &__content {
-    padding: var(--pf-global--spacer--lg) 0;
+    // padding: var(--pf-global--spacer--lg) 0;
+    padding: 24px 0;
   }
 
   // CSSTransitionGroup classes
-  &-appear { // start in
+  &-appear {
+    // start in
     opacity: 0;
     transform: translateX(10%);
     visibility: visible;
   }
-  &-appear-active { // finish in
+  &-appear-active {
+    // finish in
     opacity: 1;
     transform: translateX(0);
     visibility: visible;
@@ -38,12 +40,14 @@ $overview-sidebar-width: 550px;
   &-enter-done {
     visibility: visible;
   }
-  &-exit { // start out
+  &-exit {
+    // start out
     opacity: 1;
     transform: translateX(0);
     visibility: visible;
   }
-  &-exit-active { // finish out
+  &-exit-active {
+    // finish out
     opacity: 0;
     transform: translateX(10%);
     visibility: visible;

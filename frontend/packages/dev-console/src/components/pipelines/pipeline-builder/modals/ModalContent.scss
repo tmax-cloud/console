@@ -1,7 +1,10 @@
 .odc-modal-content {
   &__confirm-title {
-    font-size: var(--pf-global--FontSize--lg);
-    margin-top: var(--pf-global--spacer--xs);
-    margin-bottom: var(--pf-global--spacer--lg);
+    // font-size: var(--pf-global--FontSize--lg);
+    // margin-top: var(--pf-global--spacer--xs);
+    // margin-bottom: var(--pf-global--spacer--lg);
+    font-size: 24px;
+    margin-top: 4px;
+    margin-bottom: 24px;
   }
 }

@@ -1,15 +1,20 @@
 .odc-task-sidebar {
   &__header {
-    font-size: var(--pf-global--FontSize--md);
+    // font-size: var(--pf-global--FontSize--md);
+    font-size: 18px;
     height: 33px; // fixed height header to avoid actions from bouncing the header
     margin: 0;
   }
 
-  &__header, &__content {
-    padding: 0 var(--pf-global--spacer--lg);
+  &__header,
+  &__content {
+    // padding: 0 var(--pf-global--spacer--lg);
+    padding: 0 24px;
   }
 
-  &__param, &__resource {
-    margin-bottom: var(--pf-global--spacer--md);
+  &__param,
+  &__resource {
+    // margin-bottom: var(--pf-global--spacer--md);
+    margin-bottom: 16px;
   }
 }

@@ -105,7 +105,10 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
           }}
         >
           <div className="pf-c-dropdown pf-m-expanded">
-            <ul className="pf-c-dropdown__menu pf-m-align-right oc-kebab__popper-items odc-task-list-node__list-items">
+            <ul
+              className="pf-c-dropdown__menu pf-m-align-right oc-kebab__popper-items odc-task-list-node__list-items"
+              style={{ position: 'initial' }}
+            >
               {options.map(option => (
                 <li key={option.label}>
                   <KebabItem

@@ -63,7 +63,8 @@ export const ArrayParam: React.FC<ParameterProps> = props => {
         return (
           <Flex
             key={`${index.toString()}`}
-            style={{ marginBottom: 'var(--pf-global--spacer--xs)' }}
+            // style={{ marginBottom: 'var(--pf-global--spacer--xs)' }}
+            style={{ marginBottom: '4px)' }}
           >
             <FlexItem breakpointMods={[{ modifier: FlexModifiers.grow }]}>
               <StringParam
@@ -105,7 +106,8 @@ export const ArrayParam: React.FC<ParameterProps> = props => {
       })}
       <p
         className="pf-c-form__helper-text"
-        style={{ marginBottom: 'var(--pf-global--spacer--sm)' }}
+        // style={{ marginBottom: 'var(--pf-global--spacer--sm)' }}
+        style={{ marginBottom: '8px' }}
       >
         {description}
       </p>
