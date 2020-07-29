@@ -35,6 +35,7 @@ import { LimitRangeSidebar } from './limit-range-sidebar';
 import { ResourceQuotaSidebar } from './resource-quota-sidebar';
 import { ResourceQuotaClaimSidebar } from './resource-quota-claim-sidebar';
 import { CustomResourceDefinitionSidebar } from './custom-resource-definition-sidebar';
+import { NamespaceClaimSidebar } from './namespace-claim-sidebar';
 // import { PodSecurityPolicySidebar } from './pod-security-policy-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
@@ -74,6 +75,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('ResourceQuota', ResourceQuotaSidebar)
   .set('ResourceQuotaClaim', ResourceQuotaClaimSidebar)
   .set('CustomResourceDefinition', CustomResourceDefinitionSidebar)
+  .set('NamespaceClaim', NamespaceClaimSidebar)
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)
   .set('ClusterRole', RoleSidebar)

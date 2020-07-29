@@ -311,7 +311,9 @@
     "CUSTOMRESOURCEDEFINITION-SIDEBAR_0": "Create a Custom Controller using CRD",
     "CUSTOMRESOURCEDEFINITION-SIDEBAR_1": "Create and use a Custom Controller for CronTab by creating a valid CustomerResourceDefinition (CRD) in the namespace.",
     "CUSTOMRESOURCEDEFINITION-SIDEBAR_2": "Use additional Printer Columns after creating a Custom Controller",
-    "CUSTOMRESOURCEDEFINITION-SIDEBAR_3": "Create and use a Custom Controller for CronTab by creating a valid CustomerResourceDefinition (CRD) in the namespace.\n You can add printer columns with the additionalPrinterColumns tag."
+    "CUSTOMRESOURCEDEFINITION-SIDEBAR_3": "Create and use a Custom Controller for CronTab by creating a valid CustomerResourceDefinition (CRD) in the namespace.\n You can add printer columns with the additionalPrinterColumns tag.",
+    "NAMESPACECLAIM-SIDEBAR_0": "Configure CPU and memory requests for a namespace",
+    "NAMESPACECLAIM-SIDEBAR_1": "Specify the limits for resources including CPU and memory available in the namespace. \nYou can approve it using Edit Status."
   },
   "CONTENT": {
     "REPORTEDFROM": "Reported from",

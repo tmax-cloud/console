@@ -800,6 +800,21 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.NamespaceClaimModel), 'namespaceclaim-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: NamespaceClaim
+    metadata:
+      name: example-namespaceclaims
+    resourceName: namespace
+    spec:
+      hard:
+        limits.cpu: '2'
+        limits.memory: 2Gi
+    
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.LimitRangeModel), 'default'],
     `
 apiVersion: v1
