@@ -1,5 +1,5 @@
 // export { default as CheckboxField } from './CheckboxField';
-// export { default as DropdownField } from './DropdownField';
+export { default as DropdownField } from './DropdownField';
 // export { default as DroppableFileInputField } from './DroppableFileInputField';
 // export { default as EnvironmentField } from './EnvironmentField';
 export { default as InputField } from './InputField';
