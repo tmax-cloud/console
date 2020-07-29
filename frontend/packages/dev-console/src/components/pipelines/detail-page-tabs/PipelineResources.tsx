@@ -2,9 +2,9 @@ import * as React from 'react';
 import { TextInputTypes } from '@patternfly/react-core';
 import {
   MultiColumnField,
-  InputField
+  InputField,
+  DropdownField
 } from '../../../../../console-shared/src';
-import { DropdownField } from '../../../../../console-shared/src/components/dynamic-form/fields';
 import { pipelineResourceTypeSelections } from '../const';
 
 type PipelineResourcesParam = {

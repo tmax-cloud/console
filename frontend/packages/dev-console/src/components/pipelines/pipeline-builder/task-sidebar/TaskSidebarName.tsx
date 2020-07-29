@@ -53,6 +53,8 @@ const TaskSidebarName: React.FC<TaskSidebarNameProps> = (props) => {
           placeholder={taskName}
           type={TextInputTypes.text}
           value={interimName}
+          className="form-control"
+          style={{ borderBottomWidth: 'thin' }}
         />
       </SidebarInputWrapper>
     </FormGroup>

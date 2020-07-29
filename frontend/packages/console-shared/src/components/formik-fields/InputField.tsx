@@ -8,7 +8,13 @@ const InputField: React.FC<BaseInputFieldProps> = ({
   ...baseProps
 }) => (
   <BaseInputField type={type} {...baseProps}>
-    {(props) => <TextInput {...props} />}
+    {props => (
+      <TextInput
+        className="form-control"
+        style={{ borderBottomWidth: 'thin' }}
+        {...props}
+      />
+    )}
   </BaseInputField>
 );
 

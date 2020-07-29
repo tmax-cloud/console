@@ -21,6 +21,9 @@
     right: -30px;
     top: 50%;
     transform: translateY(-50%);
+    button {
+      background-color: #ffffff;
+    }
   }
   &__empty-message {
     // margin-bottom: var(--pf-global--spacer--sm);

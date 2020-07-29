@@ -41,6 +41,8 @@ export const StringParam: React.FC<ParameterProps> = props => {
       }}
       placeholder={defaultValue as string}
       value={(currentValue || '') as string}
+      className="form-control"
+      style={{ borderBottomWidth: 'thin' }}
     />
   );
 };

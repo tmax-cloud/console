@@ -46,6 +46,13 @@ const FormFooter: React.FC<FormFooterProps> = ({
         variant={ButtonVariant.primary}
         isDisabled={disableSubmit}
         data-test-id="submit-button"
+        style={{
+          backgroundColor: '#1e6cb9',
+          color: '#ffffff',
+          padding: '2px 6px',
+          border: 'none',
+          borderRadius: '2px'
+        }}
       >
         {submitLabel}
       </Button>
@@ -55,6 +62,14 @@ const FormFooter: React.FC<FormFooterProps> = ({
           data-test-id="reset-button"
           variant={ButtonVariant.secondary}
           onClick={handleReset}
+          style={{
+            marginLeft: '3px',
+            backgroundColor: '#ffffff',
+            color: '#4d5258',
+            padding: '2px 6px',
+            border: '1px solid #bbb',
+            borderRadius: '2px'
+          }}
         >
           {resetLabel}
         </Button>

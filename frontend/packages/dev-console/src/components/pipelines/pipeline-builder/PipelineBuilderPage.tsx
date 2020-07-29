@@ -33,7 +33,7 @@ export const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => 
   } = props;
 
   const initialValues: PipelineBuilderFormValues = {
-    name: 'new-pipeline',
+    name: '',
     params: [],
     resources: [],
     tasks: [],

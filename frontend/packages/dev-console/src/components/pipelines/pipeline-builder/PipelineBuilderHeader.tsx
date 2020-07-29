@@ -28,7 +28,7 @@ const PipelineBuilderHeader: React.FC<PipelineBuilderHeaderProps> = props => {
             Pipeline Builder
           </h1>
         </FlexItem>
-        <FlexItem>
+        {/* <FlexItem>
           <Button
             variant="link"
             onClick={() => {
@@ -40,7 +40,7 @@ const PipelineBuilderHeader: React.FC<PipelineBuilderHeaderProps> = props => {
         </FlexItem>
         <FlexItem>
           <TechPreviewBadge />
-        </FlexItem>
+        </FlexItem> */}
       </Flex>
       <hr />
     </div>
