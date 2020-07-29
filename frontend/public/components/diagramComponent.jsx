@@ -124,7 +124,7 @@ export class PipelineDiagramComponent extends React.Component {
 
       let layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
 
-      let executeLayout = function (change, post) {
+      let executeLayout = function(change, post) {
         graph.getModel().beginUpdate();
         try {
           if (change != null) {
@@ -139,7 +139,7 @@ export class PipelineDiagramComponent extends React.Component {
           let morph = new mxMorphing(graph);
           morph.addListener(
             mxEvent.DONE,
-            mxUtils.bind(this, function () {
+            mxUtils.bind(this, function() {
               graph.getModel().endUpdate();
 
               if (post != null) {
@@ -155,18 +155,18 @@ export class PipelineDiagramComponent extends React.Component {
       executeLayout();
 
       let edgeHandleConnect = mxEdgeHandler.prototype.connect;
-      mxEdgeHandler.prototype.connect = function (edge, terminal, isSource, isClone, me) {
+      mxEdgeHandler.prototype.connect = function(edge, terminal, isSource, isClone, me) {
         edgeHandleConnect.apply(this, arguments);
         executeLayout();
       };
 
-      graph.resizeCell = function () {
+      graph.resizeCell = function() {
         mxGraph.prototype.resizeCell.apply(this, arguments);
 
         executeLayout();
       };
 
-      graph.connectionHandler.addListener(mxEvent.CONNECT, function () {
+      graph.connectionHandler.addListener(mxEvent.CONNECT, function() {
         executeLayout();
       });
 
@@ -200,13 +200,13 @@ export class PipelineDiagramComponent extends React.Component {
       graph.addMouseListener({
         currentState: null,
         previousStyle: null,
-        mouseDown: function (sender, me) {
+        mouseDown: function(sender, me) {
           if (this.currentState != null) {
             this.dragLeave(me.getEvent(), this.currentState);
             this.currentState = null;
           }
         },
-        mouseMove: function (sender, me) {
+        mouseMove: function(sender, me) {
           if (this.currentState != null && me.getState() == this.currentState) {
             return;
           }
@@ -230,8 +230,8 @@ export class PipelineDiagramComponent extends React.Component {
             }
           }
         },
-        mouseUp: function (sender, me) {},
-        dragEnter: function (evt, state) {
+        mouseUp: function(sender, me) {},
+        dragEnter: function(evt, state) {
           if (state != null) {
             this.previousStyle = state.style;
             state.style = mxUtils.clone(state.style);
@@ -245,7 +245,7 @@ export class PipelineDiagramComponent extends React.Component {
             }
           }
         },
-        dragLeave: function (evt, state) {
+        dragLeave: function(evt, state) {
           if (state != null) {
             state.style = this.previousStyle;
             updateStyle(state, false);
@@ -357,6 +357,11 @@ export class PipelineRunDiagramComponent extends React.Component {
 
         let arr = Object.getOwnPropertyNames(this.props.data.taskRuns);
         // console.log(this.props.data);
+
+        if (this.props.data.pipelineSpec === undefined) {
+          return;
+        }
+
         this.props.data.pipelineSpec.tasks.forEach(item => {
           let color = 'lightcoral';
           let status = '';
@@ -435,7 +440,7 @@ export class PipelineRunDiagramComponent extends React.Component {
 
       let layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
 
-      let executeLayout = function (change, post) {
+      let executeLayout = function(change, post) {
         graph.getModel().beginUpdate();
         try {
           if (change != null) {
@@ -450,7 +455,7 @@ export class PipelineRunDiagramComponent extends React.Component {
           let morph = new mxMorphing(graph);
           morph.addListener(
             mxEvent.DONE,
-            mxUtils.bind(this, function () {
+            mxUtils.bind(this, function() {
               graph.getModel().endUpdate();
 
               if (post != null) {
@@ -466,18 +471,18 @@ export class PipelineRunDiagramComponent extends React.Component {
       executeLayout();
 
       let edgeHandleConnect = mxEdgeHandler.prototype.connect;
-      mxEdgeHandler.prototype.connect = function (edge, terminal, isSource, isClone, me) {
+      mxEdgeHandler.prototype.connect = function(edge, terminal, isSource, isClone, me) {
         edgeHandleConnect.apply(this, arguments);
         executeLayout();
       };
 
-      graph.resizeCell = function () {
+      graph.resizeCell = function() {
         mxGraph.prototype.resizeCell.apply(this, arguments);
 
         executeLayout();
       };
 
-      graph.connectionHandler.addListener(mxEvent.CONNECT, function () {
+      graph.connectionHandler.addListener(mxEvent.CONNECT, function() {
         executeLayout();
       });
 
@@ -516,13 +521,13 @@ export class PipelineRunDiagramComponent extends React.Component {
       graph.addMouseListener({
         currentState: null,
         previousStyle: null,
-        mouseDown: function (sender, me) {
+        mouseDown: function(sender, me) {
           if (this.currentState != null) {
             this.dragLeave(me.getEvent(), this.currentState);
             this.currentState = null;
           }
         },
-        mouseMove: function (sender, me) {
+        mouseMove: function(sender, me) {
           if (this.currentState != null && me.getState() == this.currentState) {
             return;
           }
@@ -546,8 +551,8 @@ export class PipelineRunDiagramComponent extends React.Component {
             }
           }
         },
-        mouseUp: function (sender, me) {},
-        dragEnter: function (evt, state) {
+        mouseUp: function(sender, me) {},
+        dragEnter: function(evt, state) {
           if (state != null) {
             this.previousStyle = state.style;
             state.style = mxUtils.clone(state.style);
@@ -561,7 +566,7 @@ export class PipelineRunDiagramComponent extends React.Component {
             }
           }
         },
-        dragLeave: function (evt, state) {
+        dragLeave: function(evt, state) {
           if (state != null) {
             state.style = this.previousStyle;
             updateStyle(state, false);

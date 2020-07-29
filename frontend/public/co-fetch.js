@@ -60,7 +60,7 @@ const validateStatus = (response, url) => {
   if (response.status === 403) {
     return response.json().then(json => {
       const error = new Error(
-        json.message || "Access denied due to cluster policy."
+        url.indexOf('otp') === -1 ? json.message || "Access denied due to cluster policy." : "Your IP Address has been forbidden."
       );
       error.response = response;
       throw error;
