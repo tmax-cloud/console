@@ -309,7 +309,9 @@
     "CUSTOMRESOURCEDEFINITION-SIDEBAR_0": "CRD를 활용하여 Custom Controller 생성",
     "CUSTOMRESOURCEDEFINITION-SIDEBAR_1": "네임스페이스 범위에서 유효한 CRD (CustomerResourceDefinition)를 생성하여 CronTab에 대한 Custom Controller를 생성하고 사용할 수 있습니다.",
     "CUSTOMRESOURCEDEFINITION-SIDEBAR_2": "Custom Controller 생성 후 additionalPrinterColumns 이용",
-    "CUSTOMRESOURCEDEFINITION-SIDEBAR_3": "네임스페이스 범위에서 유효한 CRD (CustomerResourceDefinition)를 생성하여 CronTab에 대한 Custom Controller 생성하여 사용할 수 있습니다. \n additionalPrinterColumns 태그를 사용하여 표시 컬럼을 추가할 수 있습니다."
+    "CUSTOMRESOURCEDEFINITION-SIDEBAR_3": "네임스페이스 범위에서 유효한 CRD (CustomerResourceDefinition)를 생성하여 CronTab에 대한 Custom Controller 생성하여 사용할 수 있습니다. \n additionalPrinterColumns 태그를 사용하여 표시 컬럼을 추가할 수 있습니다.",
+    "NAMESPACECLAIM-SIDEBAR_0": "CPU, Memory를 설정하여 네임스페이스 요청",
+    "NAMESPACECLAIM-SIDEBAR_1": "네임스페이스에서 사용할수 있는 리소스(CPU, Memory) 범위를 지정할 때 사용할 수 있습니다.\n Edit Status를 이용해서 승인할 수 있습니다."
   },
   "CONTENT": {
     "REPORTEDFROM": "출발지",
