@@ -304,7 +304,11 @@
     "DEPLOYMENT-SIDEBAR_6": "볼륨 마운트하여 디플로이먼트 생성",
     "DEPLOYMENT-SIDEBAR_7": "디플로이먼트 생성 시에 hostPath 영구 볼륨을 생성할 수 있습니다.\n노드의 디렉토리의 real path를 이용하여 hostpath로 설정하여 사용할 수 있습니다.",
     "USER-CREATE_0": "Form 에디터를 사용하여 사용자를 생성하십시오.",
-    "USERGROUP-CREATE_0": "여러 사용자가 속할 수 있는 사용자 그룹을 생성하십시오."
+    "USERGROUP-CREATE_0": "여러 사용자가 속할 수 있는 사용자 그룹을 생성하십시오.",
+    "CUSTOMRESOURCEDEFINITION-SIDEBAR_0": "CRD를 활용하여 Custom Controller 생성",
+    "CUSTOMRESOURCEDEFINITION-SIDEBAR_1": "네임스페이스 범위에서 유효한 CRD (CustomerResourceDefinition)를 생성하여 CronTab에 대한 Custom Controller를 생성하고 사용할 수 있습니다.",
+    "CUSTOMRESOURCEDEFINITION-SIDEBAR_2": "Custom Controller 생성 후 additionalPrinterColumns 이용",
+    "CUSTOMRESOURCEDEFINITION-SIDEBAR_3": "네임스페이스 범위에서 유효한 CRD (CustomerResourceDefinition)를 생성하여 CronTab에 대한 Custom Controller 생성하여 사용할 수 있습니다. \n additionalPrinterColumns 태그를 사용하여 표시 컬럼을 추가할 수 있습니다."
   },
   "CONTENT": {
     "REPORTEDFROM": "출발지",
