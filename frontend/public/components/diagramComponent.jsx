@@ -300,14 +300,14 @@ export class PipelineRunDiagramComponent extends React.Component {
     this.setState({
       data: this.props.data,
     });
-    if (this.props.data !== undefined && this.props.data.taskRuns !== undefined) {
+    if (this.props.data !== undefined && this.props.data.taskRuns !== undefined && this.props.data.pipelineSpec !== undefined) {
       this.LoadGraph();
       init = false;
     }
   }
 
   componentDidUpdate() {
-    if (this.props.data !== undefined && this.props.data.taskRuns !== undefined && init) {
+    if (this.props.data !== undefined && this.props.data.taskRuns !== undefined && this.props.data.pipelineSpec !== undefined && init) {
       this.LoadGraph();
       init = false;
     }
@@ -669,7 +669,7 @@ export class PipelineRunDiagramComponent extends React.Component {
     return (
       <React.Fragment>
         {this.props.data.pipelineSpec && <div className="graph-container no-drag" style={{ height: '300px', overflow: 'scroll', marginBottom: '20px', backgroundColor: '#f0f0f0' }} ref="divGraph" id="divGraph" />}
-        {!this.props.data.pipelineSpec && <div style={{ padding: '10px' }}>Tekton version '&gt;'= 0.12.1 required.</div>}
+        {!this.props.data.pipelineSpec && <div style={{ padding: '10px' }}>Tekton version '&gt;'= 0.12.1 required for Pipelinerun visualization.</div>}
       </React.Fragment>
 
       // <div style={{ float: 'left', padding: '5px 10px', backgroundColor: '#BCBDBE', marginBottom: '30px' }}>
