@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
@@ -20,25 +19,29 @@ const Section = ({ label, children, isRequired, paddingTop }) => {
   </div>;
 };
 
-class ResourceQuotaFormComponent extends React.Component {
+class LimitRangeFormComponent extends React.Component {
   constructor(props) {
     super(props);
-    const existingResourceQuota = _.pick(props.obj, ['metadata', 'type']);
-    const resourceQuota = _.defaultsDeep({}, props.fixed, existingResourceQuota, {
+    const existingLimitRange = _.pick(props.obj, ['metadata', 'type']);
+    const limitRange = _.defaultsDeep({}, props.fixed, existingLimitRange, {
       apiVersion: 'v1',
-      kind: 'ResourceQuota',
+      kind: 'LimitRange',
       metadata: {
         name: '',
         namespace: '',
       },
       spec: {
-        hard: {},
+        limits: [
+          {
+            type: 'Container'
+          }
+        ],
       },
     });
 
     this.state = {
-      resourceQuotaTypeAbstraction: this.props.resourceQuotaTypeAbstraction,
-      resourceQuota: resourceQuota,
+      limitRangeTypeAbstraction: this.props.limitRangeTypeAbstraction,
+      limitRange: limitRange,
       inProgress: false,
       type: 'form',
       quota: [['', '']]
@@ -51,18 +54,18 @@ class ResourceQuotaFormComponent extends React.Component {
   }
 
   onNameChanged(event) {
-    let resouceQuota = { ...this.state.resourceQuota };
-    resouceQuota.metadata.name = String(event.target.value);
-    this.setState({ resourceQuota: resouceQuota });
+    let limitRange = { ...this.state.limitRange };
+    limitRange.metadata.name = String(event.target.value);
+    this.setState({ limitRange: limitRange });
   }
   onNamespaceChanged(namespace) {
-    let resourceQuota = { ...this.state.resourceQuota };
-    resourceQuota.metadata.namespace = String(namespace);
-    this.setState({ resourceQuota: resourceQuota });
+    let limitRange = { ...this.state.limitRange };
+    limitRange.metadata.namespace = String(namespace);
+    this.setState({ limitRange: limitRange });
   }
   onLabelChanged(event) {
-    let resourceQuota = { ...this.state.resourceQuota };
-    resourceQuota.metadata.labels = {};
+    let limitRange = { ...this.state.limitRange };
+    limitRange.metadata.labels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
@@ -71,10 +74,10 @@ class ResourceQuotaFormComponent extends React.Component {
           return;
         }
         document.getElementById('labelErrMsg').style.display = 'none';
-        resourceQuota.metadata.labels[item.split('=')[0]] = item.split('=')[1];
+        limitRange.metadata.labels[item.split('=')[0]] = item.split('=')[1];
       });
     }
-    this.setState({ resourceQuota: resourceQuota });
+    this.setState({ limitRange: limitRange });
   }
   _updateQuota(quota) {
     this.setState({
@@ -83,54 +86,58 @@ class ResourceQuotaFormComponent extends React.Component {
   }
   save(e) {
     e.preventDefault();
-    const { kind, metadata } = this.state.resourceQuota;
+    const { kind, metadata } = this.state.limitRange;
     this.setState({ inProgress: true });
-    const newResourceQuota = _.assign({}, this.state.resourceQuota);
+    const newLimitRange = _.assign({}, this.state.limitRange);
 
     let quota = {};
     this.state.quota.forEach(arr => {
       if (arr[0] === 'etc') {
         quota[arr[1]] = arr[2];
       } else {
-        quota[arr[0]] = arr[2];
+        const minOrMax = arr[0].split('.')[0];
+        const key = arr[0].split('.')[2];
+        quota[minOrMax] = {};
+        quota[minOrMax][key] = arr[2];
       }
     });
 
     if ( quota !== {}) {
-      newResourceQuota.spec.hard = quota;
+      Object.assign(newLimitRange.spec.limits[0], quota);
     }
 
     const ko = kindObj(kind);
     (this.props.isCreate
-      ? k8sCreate(ko, newResourceQuota)
-      : k8sUpdate(ko, newResourceQuota, metadata.namespace, newResourceQuota.metadata.name)
+      ? k8sCreate(ko, newLimitRange)
+      : k8sUpdate(ko, newLimitRange, metadata.namespace, newLimitRange.metadata.name)
     ).then(() => {
       this.setState({ inProgress: false });
-      history.push(`/k8s/ns/${metadata.namespace}/resourcequotas/${metadata.name}`);
+      history.push(`/k8s/ns/${metadata.namespace}/limitranges/${metadata.name}`);
     }, err => this.setState({ error: err.message, inProgress: false }));
   }
+
 
   render() {
     const { t } = this.props;
 
     return <div className="rbac-edit-binding co-m-pane__body">
       <Helmet>
-        <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.resourceQuota.kind, t) })}</title>
+        <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.limitRange.kind, t) })}</title>
       </Helmet >
       <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.resourceQuota.kind, t) })}</h1>
-        <p className="co-m-pane__explanation">{t('STRING:RESOURCEQUOTA-CREATE-0')}</p>
+        <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.limitRange.kind, t) })}</h1>
+        <p className="co-m-pane__explanation">{t('STRING:LIMITRANGE-CREATE-0')}</p>
         <fieldset disabled={!this.props.isCreate}>
           <Section label={t('CONTENT:NAME')} isRequired={true}>
             <input className="form-control"
               type="text"
               onChange={this.onNameChanged}
-              value={this.state.resourceQuota.metadata.name}
-              id="resource-quota-name"
+              value={this.state.limitRange.metadata.name}
+              id="limit-range-name"
               required />
           </Section>
           <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
-            <NsDropdown id="resource-quota-namespace" t={t} onChange={this.onNamespaceChanged} />
+            <NsDropdown id="limit-range-namespace" t={t} onChange={this.onNamespaceChanged} />
           </Section>
           <Section label={t('CONTENT:LABELS')} isRequired={false}>
             <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
@@ -138,12 +145,12 @@ class ResourceQuotaFormComponent extends React.Component {
               <p>{t('VALIDATION:LABEL_FORM')}</p>
             </div>
           </Section>
-          <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
-            <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={ResourceQuotaFormComponent.resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
+          <Section label={t('CONTENT:PODRESOURCELIMITSRANGE')} isRequired={false} paddingTop={'5px'}>
+            <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={LimitRangeFormComponent.limitRangeOptsion} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
           </Section>
           <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
             <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-            <Link to={formatNamespacedRouteForResource('resourcequotas')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
+            <Link to={formatNamespacedRouteForResource('limitranges')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
           </ButtonBar>
         </fieldset>
       </form>
@@ -151,26 +158,22 @@ class ResourceQuotaFormComponent extends React.Component {
   }
 }
 
-ResourceQuotaFormComponent.resourceQuotaOptions = [
+LimitRangeFormComponent.limitRangeOptsion = [
   {
-    value: 'limits.cpu',
-    label: 'CPU Limits',
+    value: 'max.limits.cpu',
+    label: 'Max CPU Limits',
   },
   {
-    value: 'limits.memory',
-    label: 'Memory Limits',
+    value: 'min.limits.cpu',
+    label: 'Min CPU Limits',
   },
   {
-    value: 'requests.cpu',
-    label: 'CPU Requests',
+    value: 'max.limits.memory',
+    label: 'Max Memory Limits',
   },
   {
-    value: 'requests.memory',
-    label: 'Memory Requests',
-  },
-  {
-    value: 'pods',
-    label: '파드 수',
+    value: 'min.limits.memory',
+    label: 'Min Memory Limits',
   },
   {
     value: 'etc',
@@ -178,15 +181,14 @@ ResourceQuotaFormComponent.resourceQuotaOptions = [
   },
 ];
 
-export const CreateResourceQuota = ({ match: { params } }) => {
+
+export const CreateLimitRange = ({ match: { params } }) => {
   const { t } = useTranslation();
-  return <ResourceQuotaFormComponent
+  return <LimitRangeFormComponent
     t={t}
     fixed={{ metadata: { namespace: params.ns } }}
-    resourceQuotaTypeAbstraction={params.type}
+    limitRangeTypeAbstraction={params.type}
     titleVerb="Create"
     isCreate={true}
   />;
 };
-
-

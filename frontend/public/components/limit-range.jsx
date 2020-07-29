@@ -67,7 +67,17 @@ LimitRangeList.displayName = LimitRangeList;
 
 export const LimitRangesPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} kind="LimitRange" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/limitranges/new` : '/k8s/cluster/limitranges/new/form'
+  };
+
+  return <ListPage {...props} ListComponent={LimitRangeList} canCreate={true} createProps={createProps} kind="LimitRange" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 LimitRangesPage.displayName = 'LimitRangesPage';
 
