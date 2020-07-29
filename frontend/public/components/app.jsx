@@ -283,6 +283,7 @@ class App extends React.PureComponent {
             <LazyRoute path="/k8s/cluster/serviceaccounts/new/:type" exact kind="ServiceAccount" loader={() => import('./serviceAccounts/create-serviceAccount').then(m => m.CreateServiceAccount)} />
             <LazyRoute path="/k8s/cluster/resourcequotas/new/:type" exact kind="ResourceQuota" loader={() => import('./resourceQuota/create-resourceQuota').then(m => m.CreateResourceQuota)} />
             <LazyRoute path="/k8s/cluster/limitranges/new/:type" exact kind="LimitRange" loader={() => import('./limitRanges/create-limitRange').then(m => m.CreateLimitRange)} />
+            <LazyRoute path="/k8s/cluster/namespaces/new/:type" exact kind="Namespace" loader={() => import('./namespaces/create-namespace').then(m => m.CreateNamespace)} />
             <LazyRoute path="/k8s/ns/:ns/resourcequotaclaims/new/:type" exact kind="ResourceQuotaClaim" loader={() => import('./resourceQuotaClaims/create-resourceQuotaClaim').then(m => m.CreateResouceQuotaClaim)} />
             <LazyRoute path="/k8s/ns/:ns/rolebindingclaims/new/:type" exact kind="RoleBindingClaim" loader={() => import('./roleBindingClaims/create-roleBindingClaim').then(m => m.CreateRoleBindingClaim)} />
             <LazyRoute path="/k8s/cluster/namespaceclaims/new/:type" exact kind="NamespaceClaim" loader={() => import('./namespaceClaims/create-namespaceClaim').then(m => m.CreateNamespaceClaim)} />
