@@ -10,8 +10,8 @@ import { k8sGet } from '../module/k8s';
 import { UIActions } from '../ui/ui-actions';
 import { ColHead, DetailsPage, List, ListHeader, ListPage, ResourceRow } from './factory';
 import { SafetyFirst } from './safety-first';
-import { Cog, Dropdown, Firehose, LabelList, LoadingInline, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, humanizeMem, MsgBox, AccessDenied } from './utils';
-import { createNamespaceModal, createProjectModal, deleteNamespaceModal, configureNamespacePullSecretModal } from './modals';
+import { Cog, Dropdown, Firehose, LabelList, LoadingInline, navFactory, ResourceCog, SectionHeading, ResourceLink, ResourceSummary, humanizeMem, MsgBox } from './utils';
+import { /* createNamespaceModal, */ createProjectModal, deleteNamespaceModal, configureNamespacePullSecretModal } from './modals';
 import { RoleBindingsPage } from './RBAC';
 import { Bar, Line, requirePrometheus } from './graphs';
 import { ALL_NAMESPACES_KEY } from '../const';
@@ -21,7 +21,7 @@ import { createProjectMessageStateToProps } from '../ui/ui-reducers';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
 // import { MeteringPage } from './metering-overview';
-import { getAccessToken, getRefreshToken } from './utils/auth';
+import { getAccessToken } from './utils/auth';
 
 const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
@@ -77,8 +77,8 @@ const TrialTime = ns => {
   if (ns.metadata.labels && ns.metadata.labels.trial) {
     let createTime = new Date(ns.metadata.creationTimestamp.iMillis);
     let endTime = ns.metadata.labels.period ? new Date(ns.metadata.creationTimestamp.iMillis + 30 * 1000 * 60 * 60 * 24 * Number(ns.metadata.labels.period)) : new Date(ns.metadata.creationTimestamp.iMillis + 30 * 1000 * 60 * 60 * 24);
-    let start = String(createTime.getFullYear()) + '-' + String(createTime.getMonth() + 1) + '-' + String(createTime.getDate());
-    let end = ns.metadata.labels.deletionDate ? ns.metadata.labels.deletionDate.split('T')[0] : String(endTime.getFullYear()) + '-' + String(endTime.getMonth() + 1) + '-' + String(endTime.getDate());
+    let start = `${String(createTime.getFullYear())}-${String(createTime.getMonth() + 1)}-${String(createTime.getDate())}`;
+    let end = ns.metadata.labels.deletionDate ? ns.metadata.labels.deletionDate.split('T')[0] : `${String(endTime.getFullYear())}-${String(endTime.getMonth() + 1)}-${String(endTime.getDate())}`;
     return `${start} ~ ${end}`;
   }
   return '';
@@ -104,7 +104,18 @@ const NamespaceRow = ({ obj: ns }) => {
 export const NamespacesList = props => <List {...props} Header={NamespaceHeader} Row={NamespaceRow} />;
 export const NamespacesPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={NamespacesList} canCreate={true} createHandler={createNamespaceModal} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/namespaces/new` : '/k8s/cluster/namespaces/new/form'
+  };
+
+  // Modal 주석처리
+  // return <ListPage {...props} ListComponent={NamespacesList} canCreate={true} createHandler={createNamespaceModal} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  return <ListPage {...props} ListComponent={NamespacesList} canCreate={true} createProps={createProps} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 
 const projectMenuActions = [Cog.factory.Edit, deleteModal];
