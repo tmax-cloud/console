@@ -1,0 +1,28 @@
+.odc-task-list-node {
+  // border: 1px solid var(--pf-global--BorderColor--light-100);
+  border: 1px solid #b8bbbe;
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &__trigger-background {
+    // background: var(--pf-global--BackgroundColor--light-100);
+    background: #ffffff;
+  }
+  &__trigger {
+    // padding: var(--pf-global--spacer--xs) var(--pf-global--spacer--md);
+    padding: 4px 8px;
+    width: 100%;
+  }
+  &__list-items {
+    max-height: 350px;
+    overflow: auto;
+  }
+  &__divider {
+    // border-color: var(--pf-global--BorderColor--100);
+    border-color: #d2d2d2;
+    margin: 0;
+  }
+}

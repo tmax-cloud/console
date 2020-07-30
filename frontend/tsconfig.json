@@ -5,11 +5,7 @@
     "moduleResolution": "node",
     "outDir": "./public/dist/build/",
     "target": "es5",
-    "lib": [
-      "dom",
-      "es2015",
-      "es2017.object"
-    ],
+    "lib": ["dom", "es2015", "es2017.object"],
     "jsx": "react",
     "allowJs": true,
     "downlevelIteration": true,
@@ -17,16 +13,9 @@
     "sourceMap": true,
     "noUnusedLocals": false,
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "suppressExcessPropertyErrors": true
   },
-  "exclude": [
-    "node_modules",
-    "public/dist"
-  ],
-  "include": [
-    "**/*.js",
-    "**/*.jsx",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["node_modules", "public/dist"],
+  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"]
 }

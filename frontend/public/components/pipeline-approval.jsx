@@ -9,7 +9,8 @@ import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { ApprovalModel } from '../models';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from './utils/lang/resource-plural';
-const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Approval];
+const menuActionsWaiting = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Approval, Cog.factory.Delete];
+const menuActions = [Cog.factory.ModifyLabels, Cog.factory.ModifyAnnotations, Cog.factory.Edit, Cog.factory.Delete];
 
 const ApprovalStatus = ({ approval }) => {
   const status = approval.status.result;
@@ -73,7 +74,7 @@ const PipelineApprovalRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-sm-4 col-xs-6 co-resource-link-wrapper">
-          <ResourceCog actions={obj.status.result === 'Waiting' ? menuActions : menuActions.slice(0, menuActions.length - 1)} kind="Approval" resource={obj} />
+          <ResourceCog actions={obj.status.result === 'Waiting' ? menuActionsWaiting : menuActions} kind="Approval" resource={obj} />
           <ResourceLink kind="Approval" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-sm-3 col-xs-6 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
@@ -110,7 +111,9 @@ const DetailsForKind = kind =>
             <div className="col-sm-6">
               <dl className="co-m-pane__details">
                 <dt>{t('CONTENT:STATUS')}</dt>
-                <dd>{obj.status.result}</dd>
+                <dd>
+                  <ApprovalStatus approval={obj} />
+                </dd>
                 <dt>{t('RESOURCE:USER')}</dt>
                 <dd>{obj.spec.users.join(' ')}</dd>
                 <dt>Pipeline Run</dt>
@@ -196,7 +199,7 @@ export const PipelineApprovalDetailsPage = props => {
     if (!obj || !obj.status) {
       return null;
     }
-    return obj.status.result === 'Waiting' ? menuActions : menuActions.slice(0, menuActions.length - 1);
+    return obj.status.result === 'Waiting' ? menuActionsWaiting : menuActions;
   };
   return (
     <DetailsPage

@@ -146,7 +146,7 @@ class LimitRangeFormComponent extends React.Component {
             </div>
           </Section>
           <Section label={t('CONTENT:PODRESOURCELIMITSRANGE')} isRequired={false} paddingTop={'5px'}>
-            <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={LimitRangeFormComponent.limitRangeOptsion} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
+            <SelectKeyValueEditor desc={t('STRING:LIMITRANGE-CREATE-2')} t={t} options={LimitRangeFormComponent.limitRangeOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
           </Section>
           <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
             <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
@@ -158,7 +158,7 @@ class LimitRangeFormComponent extends React.Component {
   }
 }
 
-LimitRangeFormComponent.limitRangeOptsion = [
+LimitRangeFormComponent.limitRangeOptions = [
   {
     value: 'max.limits.cpu',
     label: 'Max CPU Limits',

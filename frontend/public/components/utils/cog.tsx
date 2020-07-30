@@ -17,7 +17,7 @@ const CogItems: React.SFC<CogItemsProps> = ({ options, onClick }) => {
   const visibleOptions = _.reject(options, o => _.get(o, 'hidden', false));
   const lis = _.map(visibleOptions, (o, i) => (
     <li key={i}>
-      <a onClick={e => onClick(e, o)}>{o.label}</a>
+      <a onClick={e => onClick(e, o)}>{(o as any).label}</a>
     </li>
   ));
   return <ul className="dropdown-menu co-m-cog__dropdown">{lis}</ul>;
@@ -130,7 +130,7 @@ const cogFactory: CogFactory = {
         const regex = /:[0-9]+$/g;
         const kubeAPIServerIP = window.SERVER_FLAGS.kubeAPIServerURL.replace(regex, ':31380').replace('https', 'http');
         return window.open(`${kubeAPIServerIP}/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`);
-      }
+      },
     };
   },
 };
@@ -220,7 +220,7 @@ export type ResourceCogProps = {
 
 export type CogItemsProps = {
   options: CogOption[];
-  onClick: (event: React.MouseEvent<{}>, option: CogOption) => void;
+  onClick: (event: React.MouseEvent<{}>, option: any) => void;
 };
 
 export type CogFactory = { [name: string]: CogAction } & { common?: CogAction[] };
