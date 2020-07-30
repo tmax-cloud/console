@@ -6,19 +6,19 @@ import {
   k8sUpdate,
   k8sGet,
   SecretKind,
-  K8sResourceCommon
+  K8sResourceCommon,
 } from '../../../../public/module/k8s';
 import {
   LOG_SOURCE_RESTARTING,
   LOG_SOURCE_WAITING,
   LOG_SOURCE_RUNNING,
-  LOG_SOURCE_TERMINATED
+  LOG_SOURCE_TERMINATED,
 } from '../../../../public/components/utils';
 import { ServiceAccountModel } from '../../../../public/models';
 import { errorModal } from '../../../../public/components/modals/error-modal';
 import {
   PIPELINE_SERVICE_ACCOUNT,
-  SecretAnnotationId
+  SecretAnnotationId,
 } from '../components/pipelines/const';
 import {
   getLatestRun,
@@ -29,11 +29,11 @@ import {
   PipelineRunParam,
   PipelineTaskRef,
   PipelineWorkspace,
-  PipelineRunWorkspace
+  PipelineRunWorkspace,
 } from './pipeline-augment';
 import {
   pipelineFilterReducer,
-  pipelineRunStatus
+  pipelineRunStatus,
 } from './pipeline-filter-reducer';
 
 interface Resources {
@@ -62,7 +62,7 @@ export const TaskStatusClassNameMap = {
   'In Progress': 'is-running',
   Succeeded: 'is-done',
   Failed: 'is-error',
-  Idle: 'is-idle'
+  Idle: 'is-idle',
 };
 
 export const conditions = {
@@ -72,7 +72,7 @@ export const conditions = {
     task.resources.inputs.length > 0 &&
     !!task.resources.inputs[0].from,
   hasRunAfterDependency: (task: PipelineVisualizationTaskItem): boolean =>
-    task.runAfter && task.runAfter.length > 0
+    task.runAfter && task.runAfter.length > 0,
 };
 
 export enum ListFilterId {
@@ -80,7 +80,7 @@ export enum ListFilterId {
   Failed = 'Failed',
   Succeeded = 'Succeeded',
   Cancelled = 'Cancelled',
-  Other = '-'
+  Other = '-',
 }
 
 export const ListFilterLabels = {
@@ -88,7 +88,7 @@ export const ListFilterLabels = {
   [ListFilterId.Failed]: 'Failed',
   [ListFilterId.Succeeded]: 'Complete',
   [ListFilterId.Cancelled]: 'Cancelled',
-  [ListFilterId.Other]: 'Other'
+  [ListFilterId.Other]: 'Other',
 };
 
 // to be used by both Pipeline and Pipelinerun visualisation
@@ -132,7 +132,7 @@ const sortTasksByRunAfterAndFrom = (
  * @param pipelineRun
  */
 const appendPipelineRunStatus = (pipeline, pipelineRun) => {
-  return _.map(pipeline.spec.tasks, task => {
+  return _.map(pipeline.spec.tasks, (task) => {
     if (!pipelineRun.status) {
       return task;
     }
@@ -143,7 +143,7 @@ const appendPipelineRunStatus = (pipeline, pipelineRun) => {
       status: _.get(
         _.find(pipelineRun.status.taskRuns, { pipelineTaskName: task.name }),
         'status'
-      )
+      ),
     });
     // append task duration
     if (mTask.status && mTask.status.completionTime && mTask.status.startTime) {
@@ -167,9 +167,9 @@ export const getPipelineTasks = (
   pipelineRun: K8sResourceKind = {
     apiVersion: '',
     metadata: {
-      name: ''
+      name: '',
     },
-    kind: 'PipelineRun'
+    kind: 'PipelineRun',
   }
 ): PipelineVisualizationTaskItem[][] => {
   // Each unit in 'out' array is termed as stage | out = [stage1 = [task1], stage2 = [task2,task3], stage3 = [task4]]
@@ -181,8 +181,18 @@ export const getPipelineTasks = (
   // Step 1: Sort Tasks to get in correct order
   const tasks = sortTasksByRunAfterAndFrom(taskList);
 
+  tasks.forEach((task) => {
+    if (task.resources && task.resources.inputs[0].from) {
+      task.resources.inputs[0].from.forEach((item) => {
+        task.runAfter = [];
+        task.runAfter.push(item);
+      });
+      delete task.resources.inputs[0].from;
+    }
+  });
+
   // Step 2: Push all nodes without any dependencies in different stages
-  tasks.forEach(task => {
+  tasks.forEach((task) => {
     if (
       !conditions.hasFromDependency(task) &&
       !conditions.hasRunAfterDependency(task)
@@ -195,43 +205,43 @@ export const getPipelineTasks = (
   });
 
   // Step 3: Push nodes with 'from' dependency and stack similar tasks in a stage
-  tasks.forEach(task => {
-    if (
-      !conditions.hasRunAfterDependency(task) &&
-      conditions.hasFromDependency(task)
-    ) {
-      let flag = out.length - 1;
-      for (let i = 0; i < out.length; i++) {
-        for (const t of out[i]) {
-          if (
-            t.taskRef.name === task.resources.inputs[0].from[0] ||
-            t.name === task.resources.inputs[0].from[0]
-          ) {
-            flag = i;
-          }
-        }
-      }
-      const nextToFlag = out[flag + 1] ? out[flag + 1] : null;
-      if (
-        nextToFlag &&
-        nextToFlag[0] &&
-        nextToFlag[0].resources &&
-        nextToFlag[0].resources.inputs &&
-        nextToFlag[0].resources.inputs[0] &&
-        nextToFlag[0].resources.inputs[0].from &&
-        nextToFlag[0].resources.inputs[0].from[0] &&
-        nextToFlag[0].resources.inputs[0].from[0] ===
-          task.resources.inputs[0].from[0]
-      ) {
-        nextToFlag.push(task);
-      } else {
-        out.splice(flag + 1, 0, [task]);
-      }
-    }
-  });
+  // tasks.forEach((task) => {
+  //   if (
+  //     !conditions.hasRunAfterDependency(task) &&
+  //     conditions.hasFromDependency(task)
+  //   ) {
+  //     let flag = out.length - 1;
+  //     for (let i = 0; i < out.length; i++) {
+  //       for (const t of out[i]) {
+  //         if (
+  //           t.taskRef.name === task.resources.inputs[0].from[0] ||
+  //           t.name === task.resources.inputs[0].from[0]
+  //         ) {
+  //           flag = i;
+  //         }
+  //       }
+  //     }
+  //     const nextToFlag = out[flag + 1] ? out[flag + 1] : null;
+  //     if (
+  //       nextToFlag &&
+  //       nextToFlag[0] &&
+  //       nextToFlag[0].resources &&
+  //       nextToFlag[0].resources.inputs &&
+  //       nextToFlag[0].resources.inputs[0] &&
+  //       nextToFlag[0].resources.inputs[0].from &&
+  //       nextToFlag[0].resources.inputs[0].from[0] &&
+  //       nextToFlag[0].resources.inputs[0].from[0] ===
+  //         task.resources.inputs[0].from[0]
+  //     ) {
+  //       nextToFlag.push(task);
+  //     } else {
+  //       out.splice(flag + 1, 0, [task]);
+  //     }
+  //   }
+  // });
 
   // Step 4: Push nodes with 'runAfter' dependencies and stack similar tasks in a stage
-  tasks.forEach(task => {
+  tasks.forEach((task) => {
     if (conditions.hasRunAfterDependency(task)) {
       let flag = out.length - 1;
       for (let i = 0; i < out.length; i++) {
@@ -305,7 +315,7 @@ export const constructCurrentPipeline = (
 
   const currentPipeline: Pipeline = {
     ...pipeline,
-    latestRun
+    latestRun,
   };
 
   let status: string = pipelineFilterReducer(currentPipeline);
@@ -315,7 +325,7 @@ export const constructCurrentPipeline = (
 
   return {
     currentPipeline,
-    status
+    status,
   };
 };
 
@@ -324,9 +334,9 @@ export const getPipelineRunParams = (
 ): PipelineRunParam[] => {
   return (
     pipelineParams &&
-    pipelineParams.map(param => ({
+    pipelineParams.map((param) => ({
       name: param.name,
-      value: param.default
+      value: param.default,
     }))
   );
 };
@@ -336,9 +346,9 @@ export const getPipelineRunWorkspaces = (
 ): PipelineRunWorkspace[] => {
   return (
     pipelineWorkspaces &&
-    pipelineWorkspaces.map(workspace => ({
+    pipelineWorkspaces.map((workspace) => ({
       name: workspace.name,
-      ...workspace.data
+      ...workspace.data,
     }))
   );
 };
@@ -390,7 +400,7 @@ export const updateServiceAccount = (
   const updatedServiceAccount = _.cloneDeep(originalServiceAccount);
   updatedServiceAccount.secrets = [
     ...updatedServiceAccount.secrets,
-    { name: secretName }
+    { name: secretName },
   ];
   return k8sUpdate(ServiceAccountModel, updatedServiceAccount);
 };
@@ -400,15 +410,17 @@ export const associateServiceAccountToSecret = (
   namespace: string
 ) => {
   k8sGet(ServiceAccountModel, PIPELINE_SERVICE_ACCOUNT, namespace)
-    .then(serviceAccount => {
+    .then((serviceAccount) => {
       if (
-        _.find(serviceAccount.secrets, s => s.name === secret.metadata.name) ===
-        undefined
+        _.find(
+          serviceAccount.secrets,
+          (s) => s.name === secret.metadata.name
+        ) === undefined
       ) {
         updateServiceAccount(secret.metadata.name, serviceAccount);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       errorModal({ error: err.message });
     });
 };
