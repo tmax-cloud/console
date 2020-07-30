@@ -205,7 +205,7 @@ class AuditPage_ extends React.Component {
       namespace: '',
       actionList: { all: '전체 액션' },
       resourceType: resourceList.all,
-      action: '',
+      action: '전체 액션',
       status: statusList.all,
       code: codeList.all,
       textFilter: '',
@@ -233,7 +233,6 @@ class AuditPage_ extends React.Component {
     } else {
       this.setState({ resourceType: resourceList.all });
     }
-
     this.setState({ offset: 0 });
 
     // 리소스 타입 선택에 따라 액션 드롭다운 항목 설정
@@ -264,6 +263,7 @@ class AuditPage_ extends React.Component {
     if (this.state.code !== codeList.all) {
       uri += `&code=${this.state.code}`;
     }
+
     coFetchJSON(uri).then(response => {
       // console.log(response.items);
       this.setState({
@@ -549,10 +549,13 @@ class AuditPage_ extends React.Component {
     if (namespace === this.state.namespace) {
       return;
     }
-
     this.setState({
       namespace: namespace,
       offset: 0,
+      resourceType: resourceList.all,
+      action: this.state.actionList.all,
+      status: statusList.all,
+      code: codeList.all,
     });
     let uri = `${document.location.origin}/api/hypercloud/audit?limit=100&offset=0&startTime=${this.state.start.getTime()}&endTime=${this.state.end.getTime()}`;
 
@@ -616,10 +619,10 @@ class AuditPage_ extends React.Component {
           <NavTitle title="감사 로그" />
           <div className="co-m-pane__filter-bar" style={{ marginBottom: 0 }}>
             <div className="co-m-pane__filter-bar-group">
-              <Dropdown title="전체 리소스 타입" className="btn-group btn-group-audit" items={resourceList} onChange={this.onChangeResourceType} />
-              <Dropdown title="전체 액션" className="btn-group" items={actionList} onChange={this.onChangeAction} />
-              <Dropdown title="전체 상태" className="btn-group" items={statusList} onChange={this.onChangeStatus} />
-              <Dropdown style={{ marginRight: '30px' }} title="전체 코드" className="btn-group" items={codeList} onChange={this.onChangeCode} />
+              <Dropdown title={this.state.resourceType} className="btn-group btn-group-audit" items={resourceList} onChange={this.onChangeResourceType} />
+              <Dropdown title={this.state.action} className="btn-group" items={actionList} onChange={this.onChangeAction} />
+              <Dropdown title={this.state.status} className="btn-group" items={statusList} onChange={this.onChangeStatus} />
+              <Dropdown style={{ marginRight: '30px' }} title={this.state.code} className="btn-group" items={codeList} onChange={this.onChangeCode} />
               조회 기간
               <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
               to

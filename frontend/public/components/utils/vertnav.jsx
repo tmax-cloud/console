@@ -10,6 +10,7 @@ import { ImagesPage } from '../image';
 import { TrafficPage } from '../traffic';
 import { TracePage } from '../trace';
 import { AsyncComponent } from '../utils/async';
+import { PipelineRunLogsWithActiveTask } from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs';
 
 const editYamlComponent = props => {
   const { t } = useTranslation();
@@ -132,6 +133,12 @@ export const navFactory = {
     href: 'trace',
     name: name || 'trace',
     component: component || TraceComponent,
+  }),
+  pipelinerunLogs: (name, component) => ({
+    href: 'logs/:name?',
+    path: 'logs/:name?',
+    name: 'Logs',
+    component: component || PipelineRunLogsWithActiveTask,
   }),
 };
 

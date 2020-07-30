@@ -42,6 +42,8 @@ export * from './build-hooks';
 export * from './webhooks';
 export * from './section-heading';
 export * from './scroll-to-top-on-mount';
+export * from './rbac';
+export * from './kebab';
 
 /*
   Add the enum for NameValueEditorPair here and not in its namesake file because the editor should always be
@@ -57,7 +59,7 @@ export const enum NameValueEditorPair {
 
 export const enum StatusEditorPair {
   Status = '',
-  Reason = ''
+  Reason = '',
 }
 
 export const enum AdvancedPortEditorPair {
@@ -89,6 +91,13 @@ export const enum ValueEditorPair {
 }
 
 export const enum KeyValueEditorPair {
+  Key,
+  Value,
+  Index,
+}
+
+export const enum SelectKeyValueEditorPair {
+  Select,
   Key,
   Value,
   Index,

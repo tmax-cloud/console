@@ -66,7 +66,16 @@ PipelineList.displayName = PipelineList;
 
 export const PipelinesPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={PipelineList} canCreate={true} kind="Pipeline" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    builder: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/pipelines/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
+  return <ListPage {...props} ListComponent={PipelineList} canCreate={true} kind="Pipeline" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} />;
 };
 PipelinesPage.displayName = 'PipelinesPage';
 

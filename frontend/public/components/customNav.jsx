@@ -141,6 +141,8 @@ const defaultMenu = `
       type: resourcenslink
     - name: PipelineRun
       type: resourcenslink
+    - name: PipelineApproval
+      type: resourcenslink
     - name: PipelineResource
       type: resourcenslink
     - name: Condition
@@ -151,9 +153,9 @@ const defaultMenu = `
       type: resourcenslink
     - name: Experiment
       type: resourcenslink
-    - name: InferenceService
-      type: resourcenslink
     - name: TrainingJob
+      type: resourcenslink
+    - name: InferenceService
       type: resourcenslink
     - name: WorkflowTemplate
       type: resourcenslink
@@ -460,6 +462,7 @@ class CustomNav extends React.Component {
     this.scroller = React.createRef();
     this.preventScroll = e => this.preventScroll_(e);
     this.toggle = () => this.toggle_();
+    this.setNav = (data, t) => this.setNav_(data, t);
     this.state = {
       isOpen: false,
       nav: [],
@@ -500,251 +503,117 @@ class CustomNav extends React.Component {
     }
 
     const ko = kindObj('ClusterMenuPolicy');
+    const { t } = this.props;
 
     k8sGet(ko, getId())
       .then(response => {
-        // console.log(menus);
-        const { t } = this.props;
-
-        response.menus.forEach(item => {
-          item.name === 'aiops' ? (item.img = iconList[item.name]) : (item.icon = iconList[item.name]);
-          item.text = t(`RESOURCE:${item.name.toUpperCase()}`);
-
-          let menu_ = item.menu.map((menuItem, idx) => {
-            let temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
-            switch (menuItem.type) {
-              case 'hreflink':
-                if (menuItem.name === 'search') {
-                  menuItem.startsWith = searchStartsWith;
-                }
-                return <HrefLink {...menuItem} name={temp} onClick={this.close} />;
-              case 'resourcenslink': {
-                let resource;
-                switch (menuItem.name) {
-                  case 'event':
-                    resource = 'events';
-                    break;
-                  case 'audit':
-                    resource = 'audits';
-                    break;
-                  case 'horizontalpodautoscaler':
-                    resource = 'horizontalpodautoscalers';
-                    break;
-                  default:
-                    resource = ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase();
-                    break;
-                }
-
-                switch (resource) {
-                  case 'catalogserviceclaim':
-                    resource = 'catalogserviceclaims';
-                    break;
-                  case 'pipelineconditions':
-                    resource = 'conditions';
-                    break;
-                  case 'notebookserver':
-                    resource = 'notebooks';
-                    break;
-                  case 'katib':
-                    resource = 'experiments';
-                    break;
-                  case 'kfserving':
-                    resource = 'inferenceservices';
-                    break;
-                  default:
-                    break;
-                }
-
-                let startsWith;
-                if (menuItem.name.indexOf('role') !== -1) {
-                  menuItem.name === 'roles' ? (startsWith = rolesStartsWith) : (startsWith = rolebindingsStartsWith);
-                }
-                return <ResourceNSLink resource={resource} name={temp} onClick={this.close} startsWith={startsWith} />;
-              }
-              case 'resourceclusterlink':
-                return <ResourceClusterLink resource={ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase()} name={temp} onClick={this.close} />;
-              default:
-                return;
-            }
-          });
-
-          item.menu = menu_;
-        });
-
-        let temp = response.menus.map((item, idx) => (
-          <NavSection key={idx} text={item.text} icon={item.icon} img={item.img}>
-            {item.menu}
-          </NavSection>
-        ));
-        this.setState({
-          nav: temp,
-        });
-        // console.log(temp);
+        this.setNav(response.menus, t);
       })
       .catch(err => {
-        // console.log(err);
-        // default menu 로 설정
         k8sGet(ko, 'default')
           .then(response => {
-            // console.log(menus);
-            const { t } = this.props;
-
-            response.menus.forEach(item => {
-              item.name === 'aiops' ? (item.img = iconList[item.name]) : (item.icon = iconList[item.name]);
-              item.text = t(`RESOURCE:${item.name.toUpperCase()}`);
-
-              let menu_ = item.menu.map((menuItem, idx) => {
-                let temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
-                switch (menuItem.type) {
-                  case 'hreflink':
-                    if (menuItem.name === 'search') {
-                      menuItem.startsWith = searchStartsWith;
-                    }
-                    return <HrefLink {...menuItem} name={temp} onClick={this.close} />;
-                  case 'resourcenslink': {
-                    let resource;
-                    switch (menuItem.name) {
-                      case 'event':
-                        resource = 'events';
-                        break;
-                      case 'audit':
-                        resource = 'audits';
-                        break;
-                      case 'horizontalpodautoscaler':
-                        resource = 'horizontalpodautoscalers';
-                        break;
-                      default:
-                        resource = ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase();
-                        break;
-                    }
-
-                    switch (resource) {
-                      case 'catalogserviceclaim':
-                        resource = 'catalogserviceclaims';
-                        break;
-                      case 'pipelineconditions':
-                        resource = 'conditions';
-                        break;
-                      case 'notebookserver':
-                        resource = 'notebooks';
-                        break;
-                      case 'katib':
-                        resource = 'experiments';
-                        break;
-                      case 'kfserving':
-                        resource = 'inferenceservices';
-                        break;
-                      default:
-                        break;
-                    }
-
-                    let startsWith;
-                    if (menuItem.name.indexOf('role') !== -1) {
-                      menuItem.name === 'roles' ? (startsWith = rolesStartsWith) : (startsWith = rolebindingsStartsWith);
-                    }
-                    return <ResourceNSLink resource={resource} name={temp} onClick={this.close} startsWith={startsWith} />;
-                  }
-                  case 'resourceclusterlink':
-                    return <ResourceClusterLink resource={ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase()} name={temp} onClick={this.close} />;
-                  default:
-                    return;
-                }
-              });
-
-              item.menu = menu_;
-            });
-
-            let temp = response.menus.map((item, idx) => (
-              <NavSection key={idx} text={item.text} icon={item.icon} img={item.img}>
-                {item.menu}
-              </NavSection>
-            ));
-            this.setState({
-              nav: temp,
-            });
-            // console.log(temp);
+            this.setNav(response.menus, t);
           })
           .catch(err => {
             const obj = safeLoad(defaultMenu);
             if (obj === this.state.nav) {
               return;
             }
-            const { t } = this.props;
-            obj.forEach(item => {
-              item.name === 'aiops' ? (item.img = iconList[item.name]) : (item.icon = iconList[item.name]);
-              item.text = t(`RESOURCE:${item.name.toUpperCase()}`);
-              let menu_ = item.menu.map((menuItem, idx) => {
-                let temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
-                switch (menuItem.type) {
-                  case 'hreflink':
-                    if (menuItem.name === 'search') {
-                      menuItem.startsWith = searchStartsWith;
-                    }
-                    return <HrefLink {...menuItem} name={temp} onClick={this.close} />;
-                  case 'resourcenslink': {
-                    let resource;
-                    switch (menuItem.name) {
-                      case 'event':
-                        resource = 'events';
-                        break;
-                      case 'audit':
-                        resource = 'audits';
-                        break;
-                      case 'horizontalpodautoscaler':
-                        resource = 'horizontalpodautoscalers';
-                        break;
-                      default:
-                        resource = ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase();
-                        break;
-                    }
-                    switch (resource) {
-                      case 'catalogserviceclaim':
-                        resource = 'catalogserviceclaims';
-                        break;
-                      case 'pipelineconditions':
-                        resource = 'conditions';
-                        break;
-                      case 'notebookserver':
-                        resource = 'notebooks';
-                        break;
-                      case 'katib':
-                        resource = 'experiments';
-                        break;
-                      case 'kfserving':
-                        resource = 'inferenceservices';
-                        break;
-                      default:
-                        break;
-                    }
-                    let startsWith;
-                    if (menuItem.name.indexOf('role') !== -1) {
-                      menuItem.name === 'roles' ? (startsWith = rolesStartsWith) : (startsWith = rolebindingsStartsWith);
-                    }
-                    return <ResourceNSLink resource={resource} name={temp} onClick={this.close} startsWith={startsWith} />;
-                  }
-                  case 'resourceclusterlink':
-                    return <ResourceClusterLink resource={ResourcePlural(menuItem.name).replace(/ /g, '').toLowerCase()} name={temp} onClick={this.close} />;
-                  default:
-                    return;
-                }
-              });
-              item.menu = menu_;
-            });
-            let temp = obj.map((item, idx) => (
-              <NavSection key={idx} text={item.text} icon={item.icon} img={item.img}>
-                {item.menu}
-              </NavSection>
-            ));
-            this.setState({
-              nav: temp,
-            });
+            this.setNav(obj, t);
           });
       });
   }
 
+  setNav_(data, t) {
+    data.forEach(item => {
+      item.name === 'aiops' ? (item.img = iconList[item.name]) : (item.icon = iconList[item.name]);
+      item.text = t(`RESOURCE:${item.name.toUpperCase()}`);
+
+      let menu_ = item.menu.map(menuItem => {
+        let temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
+        switch (menuItem.type) {
+          case 'hreflink':
+            if (menuItem.name === 'search') {
+              menuItem.startsWith = searchStartsWith;
+            }
+            return <HrefLink {...menuItem} name={temp} onClick={this.close} />;
+          case 'resourcenslink': {
+            let resource;
+            switch (menuItem.name) {
+              case 'event':
+                resource = 'events';
+                break;
+              case 'audit':
+                resource = 'audits';
+                break;
+              case 'PipelineApproval':
+                resource = 'approvals';
+                break;
+              case 'horizontalpodautoscaler':
+                resource = 'horizontalpodautoscalers';
+                break;
+              default:
+                resource = ResourcePlural(menuItem.name)
+                  .replace(/ /g, '')
+                  .toLowerCase();
+                break;
+            }
+
+            switch (resource) {
+              case 'catalogserviceclaim':
+                resource = 'catalogserviceclaims';
+                break;
+              case 'pipelineconditions':
+                resource = 'conditions';
+                break;
+              case 'notebookserver':
+                resource = 'notebooks';
+                break;
+              case 'katib':
+                resource = 'experiments';
+                break;
+              case 'kfserving':
+                resource = 'inferenceservices';
+                break;
+              default:
+                break;
+            }
+
+            let startsWith;
+            if (menuItem.name.indexOf('role') !== -1) {
+              menuItem.name === 'roles' ? (startsWith = rolesStartsWith) : (startsWith = rolebindingsStartsWith);
+            }
+            return <ResourceNSLink resource={resource} name={temp} onClick={this.close} startsWith={startsWith} />;
+          }
+          case 'resourceclusterlink':
+            return (
+              <ResourceClusterLink
+                resource={ResourcePlural(menuItem.name)
+                  .replace(/ /g, '')
+                  .toLowerCase()}
+                name={temp}
+                onClick={this.close}
+              />
+            );
+          default:
+            return;
+        }
+      });
+
+      item.menu = menu_;
+    });
+
+    this.setState({
+      nav: data.map((item, idx) => (
+        <NavSection key={idx} text={item.text} icon={item.icon} img={item.img}>
+          {item.menu}
+        </NavSection>
+      )),
+    });
+  }
+
   render() {
     const { isOpen, nav } = this.state;
-    // console.log(nav);
 
     return (
       <React.Fragment>

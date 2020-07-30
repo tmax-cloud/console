@@ -800,6 +800,21 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.NamespaceClaimModel), 'namespaceclaim-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: NamespaceClaim
+    metadata:
+      name: example-namespaceclaims
+    resourceName: namespace
+    spec:
+      hard:
+        limits.cpu: '2'
+        limits.memory: 2Gi
+    
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.LimitRangeModel), 'default'],
     `
 apiVersion: v1
@@ -2889,15 +2904,84 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.CustomResourceDefinitionModel), 'customresourcedefinition-sample'],
     `
-apiVersion: "stable.example.com/v1" 
-kind: CronTab 
-metadata:
-  name: my-new-cron-object 
-  finalizers: 
-  - finalizer.stable.example.com
-spec: 
-  cronSpec: "* * * * /5"
-  image: my-awesome-cron-image
+    apiVersion: apiextensions.k8s.io/v1beta1
+    kind: CustomResourceDefinition
+    metadata:
+      name: crontabs.stable.example.com
+    spec:
+      conversion:
+        strategy: None
+      group: stable.example.com
+      versions:
+        - name: v1
+          served: true
+          storage: true
+      scope: Namespaced
+      names:
+        plural: crontabs
+        singular: crontab
+        kind: CronTab
+        shortNames:
+        - ct
+      preserveUnknownFields: false
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                cronSpec:
+                  type: string
+                image:
+                  type: string
+                replicas:
+                  type: integer
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.CustomResourceDefinitionModel), 'customresourcedefinition-sample2'],
+    `
+    apiVersion: apiextensions.k8s.io/v1beta1
+    kind: CustomResourceDefinition
+    metadata:
+      name: crontabs.stable.example.com
+    spec:
+      conversion:
+        strategy: None
+      additionalPrinterColumns:
+      - name: CronSpec
+        type: string
+        JSONPath: .spec.cronSpec
+      - name: Age
+        type: date
+        JSONPath: .metadata.creationTimestamp
+      group: stable.example.com
+      versions:
+        - name: v1
+          served: true
+          storage: true
+      scope: Namespaced
+      names:
+        plural: crontabs
+        singular: crontab
+        kind: CronTab
+        shortNames:
+        - ct
+      preserveUnknownFields: false
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                cronSpec:
+                  type: string
+                image:
+                  type: string
+                replicas:
+                  type: integer
 `,
   )
   .setIn(
@@ -4653,6 +4737,8 @@ spec:
         - name: Pipeline
           type: resourcenslink
         - name: PipelineRun
+          type: resourcenslink
+        - name: PipelineApproval
           type: resourcenslink
         - name: PipelineResource
           type: resourcenslink

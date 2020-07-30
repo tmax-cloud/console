@@ -1,6 +1,6 @@
 # HyperCloud Console 설치 가이드라인
-hypercloud-console:1.1.25.2부터 적용되는 가이드입니다.<br>
-최근 업데이트: ***2020/06/16***
+hypercloud-console:1.1.37.1부터 적용되는 가이드입니다.<br>
+최근 업데이트: ***2020/07/24***
 
 - IP Range Validation을 테스트하기 위해서는 Load Balancer 서비스와 LoadBalancer Public IP를 사용해야 합니다.<br>
 LB yaml의 spec에는 "externalTrafficPolicy: Local"이 추가되어야 하고,<br>
@@ -19,7 +19,7 @@ console과 portal 둘 다 443 포트의 LB 서비스로 생성하거나, 또는 
   - install.sh를 사용하는 경우 2A를, 그렇지 않은 경우 2B를 따르면 된다.
 - kubernetes master node의 아무 경로에 작업용 폴더를 생성하고, 다음 파일들을 위치시킨다.<br>
   (이 파일들은 hypercloud-console의 hc-dev 또는 hc-release 브랜치의 install-yaml 폴더 안에 들어있다.)<br>
-  최근 업데이트: ***2020/06/05***
+  최근 업데이트: ***2020/07/24***
   - `1.initialization.yaml` (필수)
   - `2.svc-lb.yaml` 또는 `2.svc-np.yaml` (적어도 하나 필수)
   - `3.deployment-pod.yaml` (필수)
@@ -44,7 +44,7 @@ console과 portal 둘 다 443 포트의 LB 서비스로 생성하거나, 또는 
   - `Enter the name of the namespace.` -> `console-system`
   - `Enter the portal URL. (only if HDC mode / otherwise leave blank)` -> skip, 또는 `https://portal.tmaxcloud.ck2`
   - `Enter the node port number.` -> `31304`
-  - `Enter the console version.` -> `1.1.25.2`
+  - `Enter the console version.` -> `1.1.37.1` (https://hub.docker.com/r/tmaxcloudck/hypercloud-console/tags?page=1&ordering=last_updated 에서 최신 버전 확인)
 - `Console has been successfully deployed.` 메시지를 기다린다.
 
 
@@ -75,16 +75,24 @@ console과 portal 둘 다 443 포트의 LB 서비스로 생성하거나, 또는 
   - 설정을 바꿔야 한다면 `kubectl delete -f 2.xxxxxxxx.yaml`를 먼저 실행한다.
 
 #### 2B-4. Deployment, Pod 생성
-- `vi 3.deployment-pod.yaml`으로 yaml 파일에 필수값들을 기입한다.
+- `vi 3.deployment-pod.yaml`으로 yaml 파일에 필수값들을 기입한다. (없으면 dummy 값이라도 입력하되, URL 형식에 맞게 입력해야 함. 예: `0.0.0.0:80`)
   - @@HC4@@ 부분에 적절한 경로 기입 
-    - `kubectl get svc -A | grep hypercloud4-operator-service` 명령어로 확인 가능
+    - `kubectl get svc -n hypercloud4-system hypercloud4-operator-service` 명령어로 확인 가능
     - 예: `10.96.57.147:28677` 또는 `192.168.6.211:28677`
   - @@PROM@@ 부분에 적절한 경로 기입 
-    - `kubectl get svc -A | grep prometheus-k8s` 명령으로 확인 가능
+    - `kubectl get svc -n monitoring prometheus-k8s` 명령으로 확인 가능
     - 예: `10.96.160.196:9090` 또는 `192.168.6.215:9090`
+  - @@GRAFANA@@ 부분에 적절한 경로 기입 
+    - `kubectl get svc -n monitoring grafana` 명령으로 확인 가능
+  - @@KIALI@@ 부분에 적절한 경로 기입 
+    - `kubectl get svc -n istio-system kiali` 명령으로 확인 가능
+  - @@JAEGER@@ 부분에 적절한 경로 기입 
+    - `kubectl get svc -n istio-system tracing` 명령으로 확인 가능
+  - @@APPROVAL@@ 부분에 적절한 경로 기입 
+    - `kubectl get svc -n approval-system approval-proxy-server` 명령으로 확인 가능
   - HDC 모드로 설치하려는 경우, @@HDC_MODE@@에 true를 기입하고, @@PORTAL@@에 portal URL을 기입한다.
       - HDC 모드가 아닌 경우, @@HDC_MODE@@, @@PORTAL@@ 문자열이 포함된 두 줄을 모두 제거한다.
-  - @@VER@@ 부분에 도커 이미지의 버전 기입. 예: `1.1.21.0`
+  - @@VER@@ 부분에 도커 이미지의 버전 기입. 예: `1.1.37.1` (https://hub.docker.com/r/tmaxcloudck/hypercloud-console/tags?page=1&ordering=last_updated 에서 최신 버전 확인)
 - `kubectl create -f 3.deployment-pod.yaml`을 실행한다.
   - 기존에 이미 실행 중인 것이 있다면 `kubectl delete -f 3.deployment-pod.yaml`을 먼저 실행한다.
 

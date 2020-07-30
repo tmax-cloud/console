@@ -139,7 +139,7 @@ const withServiceInstanceForm = SubForm =>
         .then(res => res.json())
         .then(res => {
           let paramList = res.parameters.map(function (parm) {
-            return { name: parm.name, defaultValue: parm.value, value: '', description: parm.description, required: parm.required, displayName: parm.displayName }
+            return { name: parm.name, defaultValue: parm.value, value: '', description: parm.description, required: parm.required, displayName: parm.displayName };
           });
           if (paramList.length) {
             this.setState({
@@ -160,24 +160,22 @@ const withServiceInstanceForm = SubForm =>
       e.preventDefault();
       this.setState(prevState => {
         let resource = '';
-        //step별 validation추가 
-        //step1 에서 service class선택 안한 경우 
+        //step별 validation추가
+        //step1 에서 service class선택 안한 경우
         if (prevState.currentStep === 0 && prevState.selectedClass) {
           return {
             error: null,
-            currentStep: 1
+            currentStep: 1,
           };
         } else if (prevState.currentStep === 1 && prevState.selectedPlan) {
           return {
             error: null,
-            currentStep: 2
+            currentStep: 2,
           };
-        }
-        else {
-          return prevState.error = prevState.currentStep === 0 ? 'Select Service Class' : 'Select Service Plan'
+        } else {
+          return (prevState.error = prevState.currentStep === 0 ? 'Select Service Class' : 'Select Service Plan');
         }
       });
-
     }
     onChangeClass(selectedClass) {
       this.setState(
@@ -243,7 +241,6 @@ const withServiceInstanceForm = SubForm =>
       // } else {
       //   this.setState({ error: "Name is required." });
       // }
-
     }
     componentDidMount() {
       this.getClassList();
@@ -280,37 +277,45 @@ const withServiceInstanceForm = SubForm =>
             <Stepper steps={steps} activeStep={currentStep} />
             <div className="separator"></div>
             {/* stepper */}
-            {currentStep === 0 && (this.state.classList.length > 0 ? <div>
-              <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
-              <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
-                <div style={{ marginTop: '15px' }}>
-                  <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
-                    {t('CONTENT:NEXT')}
-                  </button>
-                  <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
-                    {t('CONTENT:CANCEL')}
-                  </Link>
+            {currentStep === 0 &&
+              (this.state.classList.length > 0 ? (
+                <div>
+                  <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
+                  <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+                    <div style={{ marginTop: '15px' }}>
+                      <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
+                        {t('CONTENT:NEXT')}
+                      </button>
+                      <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
+                        {t('CONTENT:CANCEL')}
+                      </Link>
+                    </div>
+                  </ButtonBar>
                 </div>
-              </ButtonBar>
-            </div>
-              : <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>)}
-            {currentStep === 1 && (this.state.classList.length > 0 ? <div>
-              <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
-              <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
-                <div style={{ marginTop: '15px' }}>
-                  <button type="button" className="btn btn-default" onClick={this.onClickBack}>
-                    {t('CONTENT:BACK')}
-                  </button>
-                  <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
-                    {t('CONTENT:NEXT')}
-                  </button>
-                  <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
-                    {t('CONTENT:CANCEL')}
-                  </Link>
+              ) : (
+                <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>
+              ))}
+            {currentStep === 1 &&
+              (this.state.classList.length > 0 ? (
+                <div>
+                  <ServicePlanList planList={this.state.planList} onChangePlan={this.onChangePlan} selectedPlan={selectedPlan} />
+                  <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+                    <div style={{ marginTop: '15px' }}>
+                      <button type="button" className="btn btn-default" onClick={this.onClickBack}>
+                        {t('CONTENT:BACK')}
+                      </button>
+                      <button type="button" className="btn btn-primary" onClick={this.onClickNext}>
+                        {t('CONTENT:NEXT')}
+                      </button>
+                      <Link to={formatNamespacedRouteForResource('serviceinstances')} className="btn btn-default" id="cancel">
+                        {t('CONTENT:CANCEL')}
+                      </Link>
+                    </div>
+                  </ButtonBar>
                 </div>
-              </ButtonBar>
-            </div>
-              : <div>{t('STRING:SERVICEINSTANCE-CREATE_4')}</div>)}
+              ) : (
+                <div>{t('STRING:SERVICEINSTANCE-CREATE_4')}</div>
+              ))}
             {currentStep === 2 && (
               <form onSubmit={this.save}>
                 <div className="row">
@@ -328,24 +333,25 @@ const withServiceInstanceForm = SubForm =>
                 {paramList.length > 0 && (
                   <Section label={t('CONTENT:PARAMETERS')} key="params">
                     {paramList.map((parameter, index) => {
-                      let defaultValue = parameter.defaultValue ? `${parameter.defaultValue}` : ''
+                      let defaultValue = parameter.defaultValue ? `${parameter.defaultValue}` : '';
                       let isRequired = parameter.required ? true : false;
-                      return <div>
-                        <div className="row">
-                          <div className={"col-xs-2 form-group " + (isRequired ? 'required' : '')}>
-                            <div className="control-label">{parameter.displayName}</div>
+                      return (
+                        <div>
+                          <div className="row">
+                            <div className={'col-xs-2 form-group ' + (isRequired ? 'required' : '')}>
+                              <div className="control-label">{parameter.displayName}</div>
+                            </div>
+                            <div className="col-xs-3" id={parameter.name}>
+                              <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
+                            </div>
                           </div>
-                          <div className="col-xs-3" id={parameter.name}>
-                            <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
+                          <div className="row">
+                            <div className="col-xs-2" />
+                            <p className="col-xs-10 co-m-pane__explanation">{parameter.description}</p>
                           </div>
                         </div>
-                        <div className="row">
-                          <div className="col-xs-2" />
-                          <p className="col-xs-10 co-m-pane__explanation">{parameter.description}</p>
-                        </div>
-                      </div>
-                    }
-                    )}
+                      );
+                    })}
                   </Section>
                 )}
                 <div className="separator"></div>
@@ -442,8 +448,8 @@ const ServiceInstanceLoadingWrapper = props => {
         {...props}
         ServiceInstanceTypeAbstraction={ServiceInstanceTypeAbstraction}
         obj={props.obj.data}
-      // fixed={fixed}
-      // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
+        // fixed={fixed}
+        // explanation={serviceInstanceFormExplanation[ServiceInstanceTypeAbstraction]}
       />
     </StatusBox>
   );
@@ -475,6 +481,11 @@ export const EditServiceInstance = ({ match: { params }, kind }) => (
 const ServicePlanItem = ({ item, onChangePlan, selectedPlan }) => {
   const { description, bullets, amount, unit } = item;
   const bulletList = bullets.map((bullet, index) => <li key={index}>{bullet}</li>);
+  const paramObj = item.spec.instanceCreateParameterSchema ? item.spec.instanceCreateParameterSchema : [];
+  let paramList = Object.keys(paramObj).map(function (key) {
+    return `${key}:${paramObj[key]}`;
+  });
+  paramList = paramList.map((param, index) => <li key={index}>{param}</li>);
   const _onClickPlan = servicePlan => {
     onChangePlan(servicePlan);
   };
@@ -486,9 +497,29 @@ const ServicePlanItem = ({ item, onChangePlan, selectedPlan }) => {
           <b>{item.spec.externalName}</b>
           <br></br>
           <span>{description}</span>
-          {bullets.length > 0 && bulletList}
-          <span>{amount}</span>
-          <span> {unit}</span>
+          <br></br>
+          {bullets.length > 0 && (
+            <div>
+              <span>제공 기능</span>
+              <br></br>
+              {bulletList}
+            </div>
+          )}
+          {paramList.length > 0 && (
+            <div>
+              <span>파라미터</span>
+              <br></br>
+              {paramList}
+            </div>
+          )}
+          {amount !== '' && amount !== 0 && (
+            <div>
+              <span>플랜 요금</span>
+              <br></br>
+              <span>{amount}</span>
+              <span>{unit}</span>
+            </div>
+          )}
         </div>
       </div>
       <div className="separator"></div>
