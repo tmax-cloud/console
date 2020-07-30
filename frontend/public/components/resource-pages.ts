@@ -6,7 +6,7 @@ import { ReportReference, ReportGenerationQueryReference } from './chargeback';
 import { referenceForModel, GroupVersionKind } from '../module/k8s';
 import {
   ConditionModel,
-  UsergroupModel,
+  UserGroupModel,
   LimitRangeModel,
   DataVolumeModel,
   VirtualMachineInstanceModel,
@@ -100,7 +100,7 @@ import {
 
 export const resourceDetailPages = ImmutableMap<GroupVersionKind | string, () => Promise<React.ComponentType<any>>>()
   .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesDetailsPage))
-  .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsDetailsPage))
+  .set(referenceForModel(UserGroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsDetailsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesDetailsPage))
   .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesDetailsPage))
   .set(referenceForModel(VirtualMachineModel), () => import('./virtual-machine' /* webpackChunkName: "task" */).then(m => m.VirtualMachinesDetailsPage))
@@ -212,7 +212,7 @@ export const resourceListPages = ImmutableMap<GroupVersionKind | string, () => P
   .set(referenceForModel(UserSecurityPolicyModel), () => import('./user-security-policy' /* webpackChunkName: "task" */).then(m => m.UserSecurityPoliciesPage))
   .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "task" */).then(m => m.ClusterMenuPoliciesPage))
   .set(referenceForModel(ImageModel), () => import('./image' /* webpackChunkName: "task" */).then(m => m.ImagesPage))
-  .set(referenceForModel(UsergroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsPage))
+  .set(referenceForModel(UserGroupModel), () => import('./usergroup' /* webpackChunkName: "task" */).then(m => m.UsergroupsPage))
   .set(referenceForModel(LimitRangeModel), () => import('./limit-range' /* webpackChunkName: "task" */).then(m => m.LimitRangesPage))
   .set(referenceForModel(DataVolumeModel), () => import('./data-volume' /* webpackChunkName: "task" */).then(m => m.DataVolumesPage))
   .set(referenceForModel(VirtualMachineModel), () => import('./virtual-machine' /* webpackChunkName: "task" */).then(m => m.VirtualMachinesPage))
