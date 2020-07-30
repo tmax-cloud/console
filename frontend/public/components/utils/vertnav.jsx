@@ -10,6 +10,7 @@ import { ImagesPage } from '../image';
 import { TrafficPage } from '../traffic';
 import { TracePage } from '../trace';
 import { AsyncComponent } from '../utils/async';
+import { PipelineRunLogsWithActiveTask } from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs';
 
 const editYamlComponent = props => {
   const { t } = useTranslation();
@@ -133,6 +134,12 @@ export const navFactory = {
     name: name || 'trace',
     component: component || TraceComponent,
   }),
+  pipelinerunLogs: (name, component) => ({
+    href: 'logs/:name?',
+    path: 'logs/:name?',
+    name: 'Logs',
+    component: component || PipelineRunLogsWithActiveTask,
+  }),
 };
 
 /** @type {React.SFC<{pages: {href: string, name: string}[], basePath: string}>} */
@@ -170,13 +177,13 @@ export class VertNav extends React.PureComponent {
     componentProps.obj = props.obj.data;
     const extraResources = _.reduce(props.resourceKeys, (acc, key) => ({ ...acc, [key]: props[key].data }), {});
 
-    const routes = props.pages.map((p => {
+    const routes = props.pages.map(p => {
       const path = `${props.match.url}/${p.href}`;
       const render = () => {
         return <p.component {...componentProps} {...extraResources} />;
       };
       return <Route path={path} exact key={p.name} render={render} />;
-    }));
+    });
 
     return (
       <div className={props.className}>

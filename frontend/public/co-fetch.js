@@ -258,3 +258,37 @@ coFetchJSON.put = (url, json, options = {}) =>
   coFetchSendJSON(url, "PUT", json, options);
 coFetchJSON.patch = (url, json, options = {}) =>
   coFetchSendJSON(url, "PATCH", json, options);
+
+  
+export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
+  const headers = {};
+  const { kind, name } = store.getState().UI.get('impersonate', {});
+  if ((kind === 'User' || kind === 'Group') && name) {
+    // Even if we are impersonating a group, we still need to set Impersonate-User to something or k8s will complain
+    headers['Impersonate-User'] = name;
+    if (kind === 'Group') {
+      headers['Impersonate-Group'] = name;
+    }
+  }
+  // Pass headers last to let callers to override Accept.
+  const allOptions = _.defaultsDeep({ method }, options, { headers });
+  return coFetch(url, allOptions, timeout).then((response) => {
+    if (!response.ok) {
+      return response.text();
+    }
+
+    // If the response has no body, return promise that resolves with an empty object
+    if (response.headers.get('Content-Length') === '0') {
+      return Promise.resolve(response.headers.get('Content-Type') === 'text/plain' ? '' : {});
+    }
+    if (response.headers.get('Content-Type') === 'text/plain') {
+      return response.text();
+    }
+    return response.json();
+  });
+};
+
+  
+export const coFetchText = (url, options = {}, timeout) => {
+  return coFetchCommon(url, 'GET', options, timeout);
+};

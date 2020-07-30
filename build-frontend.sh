@@ -5,7 +5,7 @@ set -e
 # test -f ./frontend/node_modules/react-i18next/src/index.d.ts && mv ./frontend/node_modules/react-i18next/src/index.d.ts ./frontend/node_modules/react-i18next/src/index.ts
 
 pushd frontend
-yarn install
+yarn install --network-timeout 600000
 yarn run exclude-ts
 yarn run build
 # download latest swagger file
