@@ -111,7 +111,9 @@ const DetailsForKind = kind =>
             <div className="col-sm-6">
               <dl className="co-m-pane__details">
                 <dt>{t('CONTENT:STATUS')}</dt>
-                <dd>{obj.status.result}</dd>
+                <dd>
+                  <ApprovalStatus approval={obj} />
+                </dd>
                 <dt>{t('RESOURCE:USER')}</dt>
                 <dd>{obj.spec.users.join(' ')}</dd>
                 <dt>Pipeline Run</dt>
