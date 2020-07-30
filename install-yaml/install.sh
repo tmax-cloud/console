@@ -168,6 +168,7 @@ sed -i "s%@@PROM@@%${PROM}%g" ${file_deployment_pod_temp}
 sed -i "s%@@GRAFANA@@%${GRAFANA}%g" ${file_deployment_pod_temp}
 sed -i "s%@@KIALI@@%${KIALI}%g" ${file_deployment_pod_temp}
 sed -i "s%@@JAEGER@@%${JAEGER}%g" ${file_deployment_pod_temp}
+sed -i "s%@@APPROVAL@@%${APPROVAL}%g" ${file_deployment_pod_temp}
 sed -i "s%@@VER@@%${CONSOLE_VERSION}%g" ${file_deployment_pod_temp}
 
 if [ -z "$PORTAL_URL" ]; then
