@@ -21,14 +21,14 @@ const types = {
   updateListFromWS: 'updateListFromWS',
 };
 
-type Action = (type: string) => (id: string, k8sObjects: any) => { type: string, id: string, k8sObjects: any };
-const action_: Action = (type) => (id, k8sObjects) => ({ type, id, k8sObjects });
+type Action = (type: string) => (id: string, k8sObjects: any) => { type: string; id: string; k8sObjects: any };
+const action_: Action = type => (id, k8sObjects) => ({ type, id, k8sObjects });
 
 const WS = {} as { [id: string]: WebSocket & any };
 const POLLs = {};
 const REF_COUNTS = {};
 
-const nop = () => { };
+const nop = () => {};
 const paginationLimit = 250;
 
 const actions = {
@@ -68,11 +68,10 @@ const actions = {
     }
 
     const poller = () => {
-      k8sGet(k8sType, name, namespace)
-        .then(
-          o => dispatch(actions.modifyObject(id, o)),
-          e => dispatch(actions.errored(id, e))
-        );
+      k8sGet(k8sType, name, namespace).then(
+        o => dispatch(actions.modifyObject(id, o)),
+        e => dispatch(actions.errored(id, e)),
+      );
     };
     POLLs[id] = setInterval(poller, 30 * 1000);
     poller();
@@ -81,9 +80,7 @@ const actions = {
     //k8sWatch의 리턴값이 없는경우 예외처리
     let watchResult = k8sWatch(k8sType, { ...query, subprotocols });
     if (watchResult) {
-      WS[id] = watchResult.onbulkmessage(events =>
-        events.forEach(e => dispatch(actions.modifyObject(id, e.object)))
-      );
+      WS[id] = watchResult.onbulkmessage(events => events.forEach(e => dispatch(actions.modifyObject(id, e.object))));
     }
   },
 
@@ -132,7 +129,7 @@ const actions = {
       if (!continueToken) {
         dispatch(actions.loaded(id, response.items));
       } else {
-        dispatch(actions.bulkAddToList(id, response.items));
+        continueToken !== 'WrongLabel' ? dispatch(actions.bulkAddToList(id, response.items)) : dispatch(actions.loaded(id, response.items));
       }
 
       if (response.metadata.continue) {
