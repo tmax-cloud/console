@@ -488,7 +488,7 @@ spec:
 `,
   )
   .setIn(
-    [referenceForModel(k8sModels.UsergroupModel), 'default'],
+    [referenceForModel(k8sModels.UserGroupModel), 'default'],
     `
     apiVersion: tmax.io/v1
     kind: Usergroup
@@ -504,14 +504,14 @@ spec:
 `,
   )
   .setIn(
-    [referenceForModel(k8sModels.UsergroupModel), 'usergroup-sample'],
+    [referenceForModel(k8sModels.UserGroupModel), 'usergroup-sample'],
     `
 apiVersion: tmax.io/v1
 kind: Usergroup
 metadata:
-  name: example
+  name: examplegroup
 userGroupInfo:
-  name: example
+  name: examplegroup
   department: Cloud
   position: developer
   description: For Example

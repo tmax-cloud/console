@@ -379,7 +379,7 @@ export const ReplicationControllerModel: K8sKind = {
   labelPlural: 'Replication Controllers',
 };
 
-export const UsergroupModel: K8sKind = {
+export const UserGroupModel: K8sKind = {
   kind: 'Usergroup',
   namespaced: false,
   apiGroup: 'tmax.io',
