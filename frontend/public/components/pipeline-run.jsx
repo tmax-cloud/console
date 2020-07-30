@@ -92,7 +92,7 @@ export const PipelineRunDetailsPage = props => {
       //   })
       // }
       menuActions={menuActions}
-      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      pages={[navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.pipelinerunLogs()]}
     />
   );
 };

@@ -17,7 +17,7 @@ export const PipelineModel: K8sKind = {
   labelPlural: 'Pipelines',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const PipelineRunModel: K8sKind = {
@@ -31,9 +31,9 @@ export const PipelineRunModel: K8sKind = {
   kind: 'PipelineRun',
   id: 'pipelinerun',
   labelPlural: 'Pipeline Runs',
-  crd: true,
+  crd: false,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const TaskModel: K8sKind = {
@@ -49,7 +49,7 @@ export const TaskModel: K8sKind = {
   labelPlural: 'Tasks',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const TaskRunModel: K8sKind = {
@@ -65,7 +65,7 @@ export const TaskRunModel: K8sKind = {
   labelPlural: 'Task Runs',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const PipelineResourceModel: K8sKind = {
@@ -81,7 +81,7 @@ export const PipelineResourceModel: K8sKind = {
   labelPlural: 'Pipeline Resources',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const ClusterTaskModel: K8sKind = {
@@ -97,7 +97,7 @@ export const ClusterTaskModel: K8sKind = {
   labelPlural: 'Cluster Tasks',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const ConditionModel: K8sKind = {
@@ -113,7 +113,7 @@ export const ConditionModel: K8sKind = {
   labelPlural: 'Conditions',
   crd: true,
   badge: BadgeType.DEV,
-  color
+  color,
 };
 
 export const TriggerBindingModel: K8sKind = {
@@ -129,7 +129,7 @@ export const TriggerBindingModel: K8sKind = {
   labelPlural: 'Trigger Bindings',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const ClusterTriggerBindingModel: K8sKind = {
@@ -145,7 +145,7 @@ export const ClusterTriggerBindingModel: K8sKind = {
   labelPlural: 'Cluster Trigger Bindings',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const TriggerTemplateModel: K8sKind = {
@@ -161,7 +161,7 @@ export const TriggerTemplateModel: K8sKind = {
   labelPlural: 'Trigger Templates',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };
 
 export const EventListenerModel: K8sKind = {
@@ -177,5 +177,5 @@ export const EventListenerModel: K8sKind = {
   labelPlural: 'Event Listeners',
   crd: true,
   badge: BadgeType.TECH,
-  color
+  color,
 };

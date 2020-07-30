@@ -214,3 +214,179 @@ export type Toleration = {
   tolerationSeconds?: number;
   value?: string;
 };
+
+type PodPhase = 'Pending' | 'Running' | 'Succeeded' | 'Failed' | 'Unknown';
+
+export type VolumeMount = {
+  mountPath: string;
+  mountPropagation?: 'None' | 'HostToContainer' | 'Bidirectional';
+  name: string;
+  readOnly?: boolean;
+  subPath?: string;
+  subPathExpr?: string;
+};
+
+export type EnvVar = {
+  name: string;
+  value?: string;
+  valueFrom?: EnvVarSource;
+};
+
+export type EnvVarSource = {
+  fieldRef?: {
+    apiVersion?: string;
+    fieldPath: string;
+  };
+  resourceFieldRef?: {
+    resource: string;
+    containerName?: string;
+    divisor?: string;
+  };
+  configMapKeyRef?: {
+    key: string;
+    name: string;
+  };
+  secretKeyRef?: {
+    key: string;
+    name: string;
+  };
+  configMapRef?: {
+    key?: string;
+    name: string;
+  };
+  secretRef?: {
+    key?: string;
+    name: string;
+  };
+  configMapSecretRef?: {
+    key?: string;
+    name: string;
+  };
+  serviceAccountRef?: {
+    key?: string;
+    name: string;
+  };
+};
+
+type ProbePort = string | number;
+
+export type ExecProbe = {
+  command: string[];
+};
+
+export type HTTPGetProbe = {
+  path?: string;
+  port: ProbePort;
+  host?: string;
+  scheme: 'HTTP' | 'HTTPS';
+  httpHeaders?: any[];
+};
+
+export type TCPSocketProbe = {
+  port: ProbePort;
+  host?: string;
+};
+
+export type Handler = {
+  exec?: ExecProbe;
+  httpGet?: HTTPGetProbe;
+  tcpSocket?: TCPSocketProbe;
+};
+
+export type ContainerProbe = {
+  initialDelaySeconds?: number;
+  timeoutSeconds?: number;
+  periodSeconds?: number;
+  successThreshold?: number;
+  failureThreshold?: number;
+} & Handler;
+
+export type ContainerLifecycle = {
+  postStart?: Handler;
+  preStop?: Handler;
+};
+
+export type ContainerPort = {
+  name?: string;
+  containerPort: number;
+  protocol: string;
+};
+
+export enum ImagePullPolicy {
+  Always = 'Always',
+  Never = 'Never',
+  IfNotPresent = 'IfNotPresent',
+}
+
+export type ResourceList = {
+  [resourceName: string]: string;
+};
+
+export type ContainerSpec = {
+  name: string;
+  volumeMounts?: VolumeMount[];
+  env?: EnvVar[];
+  livenessProbe?: ContainerProbe;
+  readinessProbe?: ContainerProbe;
+  lifecycle?: ContainerLifecycle;
+  resources?: {
+    limits?: ResourceList;
+    requested?: ResourceList;
+  };
+  ports?: ContainerPort[];
+  imagePullPolicy?: ImagePullPolicy;
+  [key: string]: any;
+};
+
+export type Volume = {
+  name: string;
+  [key: string]: any;
+};
+
+export type PodSpec = {
+  volumes?: Volume[];
+  initContainers?: ContainerSpec[];
+  containers: ContainerSpec[];
+  restartPolicy?: 'Always' | 'OnFailure' | 'Never';
+  terminationGracePeriodSeconds?: number;
+  activeDeadlineSeconds?: number;
+  nodeSelector?: any;
+  serviceAccountName?: string;
+  priorityClassName?: string;
+  tolerations?: Toleration[];
+  nodeName?: string;
+  hostname?: string;
+  [key: string]: any;
+};
+
+export type PodCondition = {
+  lastProbeTime?: string;
+} & K8sResourceCondition;
+
+export type PodStatus = {
+  phase: PodPhase;
+  conditions?: PodCondition[];
+  message?: string;
+  reason?: string;
+  startTime?: string;
+  initContainerStatuses?: ContainerStatus[];
+  containerStatuses?: ContainerStatus[];
+  [key: string]: any;
+};
+
+export type PodTemplate = {
+  metadata: ObjectMetadata;
+  spec: PodSpec;
+};
+export type PodKind = {
+  status?: PodStatus;
+} & K8sResourceCommon &
+  PodTemplate;
+
+export type FirehoseResult<R extends K8sResourceCommon | K8sResourceCommon[] = K8sResourceKind[]> = {
+  loaded: boolean;
+  loadError: string;
+  optional?: boolean;
+  data: R;
+  kind?: string;
+};
