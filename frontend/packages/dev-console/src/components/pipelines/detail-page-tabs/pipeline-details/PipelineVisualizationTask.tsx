@@ -143,8 +143,6 @@ const TaskComponent: React.FC<TaskProps> = ({
         pipelineRunName,
         namespace
       )}/logs/${name}`
-    : task.data.metadata
-    ? `${resourcePathFromModel(TaskModel, task.data.metadata.name, namespace)}`
     : undefined;
 
   let taskPill = (
