@@ -288,6 +288,7 @@ class App extends React.PureComponent {
 
             <LazyRoute path="/k8s/ns/:ns/deployments/new/:type" exact kind="Deployment" loader={() => import('./deployments/create-deployment').then(m => m.CreateDeployment)} />
             <LazyRoute path="/k8s/ns/:ns/ingresses/new/:type" exact kind="Ingress" loader={() => import('./ingresses/create-ingress').then(m => m.CreateIngress)} />
+            <LazyRoute path="/k8s/ns/:ns/pipelines/new/:type" exact kind="Pipeline" loader={() => import('../../packages/dev-console/src/components/pipelines/pipeline-builder/PipelineBuilderPage').then(m => m.PipelineBuilderPage)} />
             <LazyRoute path="/k8s/ns/:ns/pipelineruns/new/:type" exact kind="PipelineRun" loader={() => import('./pipelineRuns/create-pipelineRun').then(m => m.CreatePipelineRun)} />
             <LazyRoute path="/k8s/ns/:ns/pipelineresources/new/:type" exact kind="PipelineResource" loader={() => import('./pipelineResources/create-pipelineResource').then(m => m.CreatePipelineResources)} />
             <LazyRoute path="/k8s/ns/:ns/services/new/:type" exact kind="Service" loader={() => import('./services/create-service').then(m => m.CreateService)} />

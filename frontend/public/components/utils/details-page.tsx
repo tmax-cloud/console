@@ -5,6 +5,8 @@ import { Cog, kindObj, LabelList, ResourceLink, Selector, Timestamp } from './in
 import { referenceForOwnerRef, K8sResourceKind, referenceFor } from '../../module/k8s';
 import { useTranslation } from 'react-i18next';
 import { PipelineDiagramComponent, PipelineRunDiagramComponent } from '../diagramComponent';
+import { PipelineVisualization } from '../../../packages/dev-console/src/components/pipelines/detail-page-tabs/pipeline-details/PipelineVisualization';
+import { PipelineRunVisualization } from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunVisualization';
 
 export const pluralize = (i: number, singular: string, plural: string = `${singular}s`) => `${i || 0} ${i === 1 ? singular : plural}`;
 
@@ -20,8 +22,10 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
 
   return (
     <dl className="co-m-pane__details">
-      {resource.kind === 'Pipeline' && <PipelineDiagramComponent namespace={metadata.namespace} data={resource.spec.tasks} />}
-      {resource.kind === 'PipelineRun' && <PipelineRunDiagramComponent namespace={metadata.namespace} data={resource.status} />}
+      {/* {resource.kind === 'Pipeline' && <PipelineDiagramComponent namespace={metadata.namespace} data={resource.spec.tasks} />}
+      {resource.kind === 'PipelineRun' && <PipelineRunDiagramComponent namespace={metadata.namespace} data={resource.status} />} */}
+      {resource.kind === 'Pipeline' && <PipelineVisualization pipeline={resource} />}
+      {resource.kind === 'PipelineRun' && <PipelineRunVisualization pipelineRun={resource} />}
       <dt>{t('CONTENT:NAME')}</dt>
       <dd>{metadata.name || '-'}</dd>
       {metadata.namespace ? <dt>{t('CONTENT:NAMESPACE')}</dt> : null}
