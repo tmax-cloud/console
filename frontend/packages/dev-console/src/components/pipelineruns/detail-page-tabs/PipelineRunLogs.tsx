@@ -34,6 +34,7 @@ class PipelineRunLogs extends React.Component<
 
   componentDidMount() {
     const { obj, activeTask } = this.props;
+
     const taskRunFromYaml = _.get(obj, ['status', 'taskRuns'], {});
     const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
     const activeItem = this.getActiveTaskRun(taskRuns, activeTask);
@@ -127,7 +128,7 @@ class PipelineRunLogs extends React.Component<
                       isActive={activeItem === task}
                       className="odc-pipeline-run-logs__navitem"
                     >
-                      {/* <Link
+                      <Link
                         to={
                           path +
                           _.get(
@@ -136,20 +137,20 @@ class PipelineRunLogs extends React.Component<
                             '-'
                           )
                         }
-                      > */}
-                      <StatusIcon
-                        status={pipelineRunFilterReducer(
-                          _.get(obj, ['status', 'taskRuns', task])
-                        )}
-                      />
-                      <span className="odc-pipeline-run-logs__namespan">
-                        {_.get(
-                          taskRunFromYaml,
-                          [task, `pipelineTaskName`],
-                          '-'
-                        )}
-                      </span>
-                      {/* </Link> */}
+                      >
+                        <StatusIcon
+                          status={pipelineRunFilterReducer(
+                            _.get(obj, ['status', 'taskRuns', task])
+                          )}
+                        />
+                        <span className="odc-pipeline-run-logs__namespan">
+                          {_.get(
+                            taskRunFromYaml,
+                            [task, `pipelineTaskName`],
+                            '-'
+                          )}
+                        </span>
+                      </Link>
                     </NavItem>
                   );
                 })}

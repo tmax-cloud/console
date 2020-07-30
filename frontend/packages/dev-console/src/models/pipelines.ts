@@ -47,7 +47,7 @@ export const TaskModel: K8sKind = {
   kind: 'Task',
   id: 'task',
   labelPlural: 'Tasks',
-  crd: true,
+  crd: false,
   badge: BadgeType.TECH,
   color,
 };

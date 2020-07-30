@@ -5,17 +5,17 @@ import { Link } from 'react-router-dom';
 import { Tooltip } from '@patternfly/react-core';
 import {
   K8sResourceKind,
-  referenceForModel
+  referenceForModel,
 } from '../../../../../../../public/module/k8s';
 import {
   Firehose,
-  resourcePathFromModel
+  resourcePathFromModel,
 } from '../../../../../../../public/components/utils';
 import { runStatus } from '../../../../utils/pipeline-augment';
 import {
   PipelineRunModel,
   TaskModel,
-  ClusterTaskModel
+  ClusterTaskModel,
 } from '../../../../models';
 import { ColoredStatusIcon } from './StatusIcon';
 import { PipelineVisualizationStepList } from './PipelineVisualizationStepList';
@@ -23,7 +23,7 @@ import TaskComponentTaskStatus from './TaskComponentTaskStatus';
 import {
   createStepStatus,
   StepStatus,
-  TaskStatus
+  TaskStatus,
 } from './pipeline-step-utils';
 
 import './PipelineVisualizationTask.scss';
@@ -65,11 +65,11 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
   namespace,
   pipelineRunStatus,
   disableTooltip,
-  selected
+  selected,
 }) => {
   const taskStatus = task.status || {
     duration: '',
-    reason: runStatus.Idle
+    reason: runStatus.Idle,
   };
   if (
     pipelineRunStatus === runStatus.Failed ||
@@ -106,8 +106,8 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
       {
         kind: referenceForModel(ClusterTaskModel),
         name: task.taskRef.name,
-        prop: 'task'
-      }
+        prop: 'task',
+      },
     ];
   } else {
     resources = [
@@ -115,8 +115,8 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
         kind: referenceForModel(TaskModel),
         name: task.taskRef.name,
         namespace,
-        prop: 'task'
-      }
+        prop: 'task',
+      },
     ];
   }
   return <Firehose resources={resources}>{taskComponent}</Firehose>;
@@ -129,10 +129,10 @@ const TaskComponent: React.FC<TaskProps> = ({
   name,
   isPipelineRun,
   disableTooltip,
-  selected
+  selected,
 }) => {
   const stepList = _.get(task, ['data', 'spec', 'steps'], []);
-  const stepStatusList: StepStatus[] = stepList.map(step =>
+  const stepStatusList: StepStatus[] = stepList.map((step) =>
     createStepStatus(step, status)
   );
   const showStatusState: boolean = isPipelineRun && !!status && !!status.reason;
@@ -143,17 +143,19 @@ const TaskComponent: React.FC<TaskProps> = ({
         pipelineRunName,
         namespace
       )}/logs/${name}`
+    : task.data.metadata
+    ? `${resourcePathFromModel(TaskModel, task.data.metadata.name, namespace)}`
     : undefined;
 
   let taskPill = (
     <div
       className={cx('odc-pipeline-vis-task__content', {
-        'is-selected': selected
+        'is-selected': selected,
       })}
     >
       <div
         className={cx('odc-pipeline-vis-task__title-wrapper', {
-          'is-text-center': !isPipelineRun
+          'is-text-center': !isPipelineRun,
         })}
       >
         <div className="odc-pipeline-vis-task__title">{visualName}</div>

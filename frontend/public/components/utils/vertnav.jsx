@@ -135,7 +135,7 @@ export const navFactory = {
     component: component || TraceComponent,
   }),
   pipelinerunLogs: (name, component) => ({
-    href: 'logs',
+    href: 'logs/:name?',
     path: 'logs/:name?',
     name: 'Logs',
     component: component || PipelineRunLogsWithActiveTask,
