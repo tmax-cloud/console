@@ -129,7 +129,7 @@ const actions = {
       if (!continueToken) {
         dispatch(actions.loaded(id, response.items));
       } else {
-        continueToken !== 'WrongLabel' ? dispatch(actions.bulkAddToList(id, response.items)) : dispatch(actions.loaded(id, response.items));
+        continueToken !== 'wrongLabel' ? dispatch(actions.bulkAddToList(id, response.items)) : dispatch(actions.loaded(id, response.items));
       }
 
       if (response.metadata.continue) {
