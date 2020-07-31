@@ -24,6 +24,7 @@ import { PersistentVolumeClaimSidebar } from './persistent-volume-claim-sidebar'
 import { PersistentVolumeSidebar } from './persistent-volume-sidebar';
 import { RoleSidebar } from './role-sidebar';
 import { UserGroupSidebar } from './user-group-sidebar';
+import { UserSidebar } from './user-sidebar';
 import { ServiceAccountSidebar } from './service-account-sidebar';
 import { PipelineSidebar } from './pipeline-sidebar';
 import { PipelineRunSidebar } from './pipeline-run-sidebar';
@@ -79,5 +80,6 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('BuildConfig', BuildConfigSidebar)
   .set('Role', RoleSidebar)
   .set('ClusterRole', RoleSidebar)
-  .set('Usergroup', UserGroupSidebar);
-// .set('ServiceAccount', ServiceAccountSidebar);
+  .set('Usergroup', UserGroupSidebar)
+  .set('User', UserSidebar)
+  .set('ServiceAccount', ServiceAccountSidebar);

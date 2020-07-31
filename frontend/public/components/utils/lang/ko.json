@@ -315,7 +315,9 @@
     "NAMESPACECLAIM-SIDEBAR_0": "CPU, Memory를 설정하여 네임스페이스 요청",
     "NAMESPACECLAIM-SIDEBAR_1": "네임스페이스에서 사용할수 있는 리소스(CPU, Memory) 범위를 지정할 때 사용할 수 있습니다.\n Edit Status를 이용해서 승인할 수 있습니다.",
     "USERGROUP-SIDEBAR_0": "사용자 그룹 생성",
-    "USERGROUP-SIDEBAR_1": "HyperCloud에서 사용하고자 하는 사용자 그룹을 생성할 수 있습니다."
+    "USERGROUP-SIDEBAR_1": "HyperCloud에서 사용하고자 하는 사용자 그룹을 생성할 수 있습니다.",
+    "USER-SIDEBAR_0": "사용자 생성",
+    "USER-SIDEBAR_1": "HyperCloud에서 사용할 사용자를 생성할 수 있으며, 콘솔 접속 ID는 메타데이터의 Name Tag의 값으로 접속할 수 있습니다."
   },
   "CONTENT": {
     "REPORTEDFROM": "출발지",

@@ -317,7 +317,9 @@
     "NAMESPACECLAIM-SIDEBAR_0": "Configure CPU and memory requests for a namespace",
     "NAMESPACECLAIM-SIDEBAR_1": "Specify the limits for resources including CPU and memory available in the namespace. \nYou can approve it using Edit Status.",
     "USERGROUP-SIDEBAR_0": "Create a user group",
-    "USERGROUP-SIDEBAR_1": "Create groups of users you want to use in HyperCloud."
+    "USERGROUP-SIDEBAR_1": "Create groups of users you want to use in HyperCloud.",
+    "USER-SIDEBAR_0": "Create a user",
+    "USER-SIDEBAR_1": "Create a HyperCloud user account. The console access ID is based on the tag the metadata name."
   },
   "CONTENT": {
     "REPORTEDFROM": "Reported from",
