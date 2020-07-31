@@ -317,7 +317,9 @@
     "USERGROUP-SIDEBAR_0": "사용자 그룹 생성",
     "USERGROUP-SIDEBAR_1": "HyperCloud에서 사용하고자 하는 사용자 그룹을 생성할 수 있습니다.",
     "USER-SIDEBAR_0": "사용자 생성",
-    "USER-SIDEBAR_1": "HyperCloud에서 사용할 사용자를 생성할 수 있으며, 콘솔 접속 ID는 메타데이터의 Name Tag의 값으로 접속할 수 있습니다."
+    "USER-SIDEBAR_1": "HyperCloud에서 사용할 사용자를 생성할 수 있으며, 콘솔 접속 ID는 메타데이터의 Name Tag의 값으로 접속할 수 있습니다.",
+    "SERVICEACCOUNT-SIDEBAR_0": "API 호출을 위한 계정 생성",
+    "SERVICEACCOUNT-SIDEBAR_1": "HyperCloud API를 호출하거나, 접근 권한을 부여하고자 할 때 생성할 수 있습니다.\n 서비스 계정이 생성될 때 시크릿은 자동 생성됩니다."
   },
   "CONTENT": {
     "REPORTEDFROM": "출발지",

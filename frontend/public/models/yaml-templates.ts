@@ -4122,6 +4122,16 @@ metadata:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.ServiceAccountModel), 'serviceaccount-sample'],
+    `
+    kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: example-serviceaccount
+      namespace: default
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.SecretModel), 'default'],
     `
 apiVersion: v1

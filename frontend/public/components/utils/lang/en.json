@@ -319,7 +319,9 @@
     "USERGROUP-SIDEBAR_0": "Create a user group",
     "USERGROUP-SIDEBAR_1": "Create groups of users you want to use in HyperCloud.",
     "USER-SIDEBAR_0": "Create a user",
-    "USER-SIDEBAR_1": "Create a HyperCloud user account. The console access ID is based on the tag the metadata name."
+    "USER-SIDEBAR_1": "Create a HyperCloud user account. The console access ID is based on the tag the metadata name.",
+    "SERVICEACCOUNT-SIDEBAR_0": "Create an account for API calls",
+    "SERVICEACCOUNT-SIDEBAR_1": "It can be created for enabling the HyperCloud API or granting the access the API.\n As soon as a service account is created, secrets are automatically added to it"
   },
   "CONTENT": {
     "REPORTEDFROM": "Reported from",
