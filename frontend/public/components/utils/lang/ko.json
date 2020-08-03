@@ -48,7 +48,7 @@
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
     "DUPLICATE-KEY": "중복된 입력 값 입니다.",
-    "EMPTY-INPUT": "{{something}} 을(를) 입력하세요.",
+    "EMPTY-INPUT": "{{something}}을(를) 입력하세요.",
     "EMPTY-SELECT": "{{something}}을(를)  선택하세요."
   },
   "DATETIME": {

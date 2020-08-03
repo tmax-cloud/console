@@ -35,13 +35,17 @@ class ConfigMapFormComponent extends React.Component {
         namespace: '',
       },
     });
-
+    const inputError = {
+      name: null,
+      namespace: null,
+    };
     this.state = {
       configMapTypeAbstraction: this.props.configMapTypeAbstraction,
       configMap: configMap,
       inProgress: false,
       type: 'form',
       data: [['', '']],
+      inputError: inputError,
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
@@ -66,9 +70,22 @@ class ConfigMapFormComponent extends React.Component {
   }
   save(e) {
     e.preventDefault();
+    const { t } = this.props;
     const { kind, metadata } = this.state.configMap;
-    this.setState({ inProgress: true });
     const newConfigMap = _.assign({}, this.state.configMap);
+    //input 에러처리
+    if (newConfigMap.metadata.name === '') {
+      this.setState({ inputError: { name: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:NAME`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { name: null } });
+    }
+    if (newConfigMap.metadata.namespace === '') {
+      this.setState({ inputError: { namespace: t('VALIDATION:EMPTY-SELECT', { something: t(`CONTENT:NAMESPACE`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { namespace: null } });
+    }
     //  데이터 가공
     let obj = {};
     this.state.data.forEach(arr => {
@@ -77,6 +94,7 @@ class ConfigMapFormComponent extends React.Component {
       }
     });
     newConfigMap.data = obj;
+    this.setState({ inProgress: true });
     const ko = kindObj(kind);
     (this.props.isCreate ? k8sCreate(ko, newConfigMap) : k8sUpdate(ko, newConfigMap, metadata.namespace, newConfigMap.metadata.name)).then(
       () => {
@@ -99,10 +117,12 @@ class ConfigMapFormComponent extends React.Component {
           <p className="co-m-pane__explanation">{t('STRING:CONFIGMAP-CREATE_0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.configMap.metadata.name} id="config-map-name" required />
+              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.configMap.metadata.name} id="config-map-name" />
+              {this.state.inputError.name && <p className="cos-error-title">{this.state.inputError.name}</p>}
             </Section>
             <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
               <NsDropdown id="config-map-namespace" t={t} onChange={this.onNamespaceChanged} />
+              {this.state.inputError.namespace && <p className="cos-error-title">{this.state.inputError.namespace}</p>}
             </Section>
             <Section label={t('CONTENT:CONFIGMAPVALUE')}>
               <KeyValueEditor t={t} keyValuePairs={this.state.data} updateParentData={this._updateData} />
