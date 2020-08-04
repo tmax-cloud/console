@@ -105,11 +105,11 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
             />
             <div
               style={{
-                float: 'right',
+                // float: 'right',
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
-                width: '350px',
+                width: '330px',
                 height: '33px'
               }}
             >
