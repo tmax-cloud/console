@@ -103,7 +103,18 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
                 getResourceModelFromTaskKind(taskResource.kind)
               )}
             />
-            {taskResource.metadata.name}
+            <div
+              style={{
+                float: 'right',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                width: '350px',
+                height: '33px'
+              }}
+            >
+              {taskResource.metadata.name}
+            </div>
           </div>
           <div className="co-actions">
             <ActionsMenu

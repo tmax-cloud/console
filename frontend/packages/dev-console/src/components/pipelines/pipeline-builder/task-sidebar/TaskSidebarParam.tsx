@@ -11,14 +11,19 @@ type TaskSidebarParamProps = {
   onChange: (newValue: string) => void;
 };
 
-const TaskSidebarParam: React.FC<TaskSidebarParamProps> = (props) => {
+const TaskSidebarParam: React.FC<TaskSidebarParamProps> = props => {
   const { hasParamError, onChange, resourceParam, taskParam } = props;
   const [dirty, setDirty] = React.useState(false);
 
   const currentValue = taskParam?.value;
   const emptyIsInvalid = taskParamIsRequired(resourceParam);
 
-  const isValid = !(dirty && hasParamError && emptyIsInvalid && currentValue != null);
+  const isValid = !(
+    dirty &&
+    hasParamError &&
+    emptyIsInvalid &&
+    (currentValue === '' || currentValue === undefined)
+  );
 
   const paramRenderProps: ParameterProps = {
     currentValue,
