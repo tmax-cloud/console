@@ -67,30 +67,32 @@ const UserMenuWrapper = connectToFlags(
   // });
   // }
   const logout = e => {
-    props.setLoading();
-    e.preventDefault();
+    console.log('logout');
+    props.keycloak.logout();
+    // props.setLoading();
+    // e.preventDefault();
 
-    // TODO 로그아웃 api 연동
-    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
+    // // TODO 로그아웃 api 연동
+    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
 
-    const json = {
-      accessToken: getAccessToken(),
-    };
+    // const json = {
+    //   accessToken: getAccessToken(),
+    // };
 
-    coFetchJSON
-      .post(AUTH_SERVER_URL, json)
-      .then(data => {
-        props.setLoading();
-        resetLoginState();
-        // localStorage.removeItem('bridge/last-namespace-name');
+    // coFetchJSON
+    //   .post(AUTH_SERVER_URL, json)
+    //   .then(data => {
+    //     props.setLoading();
+    //     resetLoginState();
+    //     // localStorage.removeItem('bridge/last-namespace-name');
 
-        // const url_ = window.location.href.split('/')[2]
-        window.location.href = `${document.location.origin}`;
-      })
-      .catch(error => {
-        props.setLoading();
-        console.log(error);
-      });
+    //     // const url_ = window.location.href.split('/')[2]
+    //     window.location.href = `${document.location.origin}`;
+    //   })
+    //   .catch(error => {
+    //     props.setLoading();
+    //     console.log(error);
+    //   });
   };
   actions.push({
     label: t('CONTENT:LOGOUT'),
@@ -317,7 +319,7 @@ export class ExpTimer extends Component {
   }
 }
 
-export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags }) => {
+export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, keycloak }) => {
   // props => {
   let timerRef = null;
   // const [tokenTime, setTokenTime] = useState(60);
@@ -427,7 +429,7 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags }
         <LanguageWrapper />
       </div>
       <div className="co-masthead__user">
-        <UserMenuWrapper setLoading={setLoading} />
+        <UserMenuWrapper setLoading={setLoading} keycloak={keycloak} />
       </div>
     </header>
   );

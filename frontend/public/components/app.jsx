@@ -31,9 +31,10 @@ import { k8sGet } from '../module/k8s';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
-import { getAccessToken, resetLoginState, getId } from './utils/auth';
+import { getAccessToken, resetLoginState, getId, setAccessToken, setRefreshToken, setId } from './utils/auth';
 import { NoNamespace } from './nonamespaces';
 import { Grafana } from './grafana';
+import Keycloak from 'keycloak-js';
 
 import './utils/i18n';
 
@@ -107,10 +108,44 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
-  // Private 모델에서 세션에 토큰이 없는 경우 로그인 페이지로 리다이렉션
-  if (!window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
-    return <Redirect to="/login" />;
+  // const keycloak = new Keycloak({
+  //   url: 'https://172.22.6.11/auth',
+  //   realm: 'tmax',
+  //   clientId: 'kubernetes',
+  //   responseType: 'idToken',
+  // });
+  // keycloak
+  //   .init({
+  //     flow: 'implicit',
+  //   })
+  //   .then(authenticated => {
+  //     console.log(authenticated ? 'authenticated' : 'not authenticated');
+  //     if (!authenticated) {
+  //       console.log('login');
+  //       keycloak.login({
+  //         redirectUri: 'https://192.168.8.21:9000',
+  //       });
+  //     }
+  //     if (authenticated) {
+  //       console.log('authenticated');
+  //       this.setState({ keycloak: keycloak, authenticated: authenticated });
+  //       // this.setState({ authenticated: authenticated });
+  //     }
+  //     console.log('keyCloak', keycloak);
+  //   })
+  //   .catch(() => {
+  //     console.log('failed to initialize');
+  //   });
+
+  if (!getAccessToken()) {
+    console.log('DefaultPage 토큰 없을때');
+    // window.location.href =
   }
+
+  // Private 모델에서 세션에 토큰이 없는 경우 로그인 페이지로 리다이렉션
+  // if (!window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
+  //   return <Redirect to="/login" />;
+  // }
 
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag)) {
@@ -166,7 +201,7 @@ class App extends React.PureComponent {
 
     window.addEventListener(
       'storage',
-      function (evt) {
+      function(evt) {
         if (evt.key === 'forceLogout' && !document.hasFocus()) {
           resetLoginState();
         }
@@ -202,7 +237,7 @@ class App extends React.PureComponent {
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
-        <Masthead setLoading={this.setLoading} />
+        <Masthead setLoading={this.setLoading} keycloak={this.props.keycloak} />
         <CustomNav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
@@ -342,7 +377,7 @@ analyticsSvc.push({ tier: 'tectonic' });
 // Used by GUI tests to check for unhandled exceptions
 window.windowError = false;
 
-window.onerror = function (message, source, lineno, colno, optError = {}) {
+window.onerror = function(message, source, lineno, colno, optError = {}) {
   try {
     const e = `${message} ${source} ${lineno} ${colno}`;
     analyticsSvc.error(e, null, optError.stack);
@@ -385,14 +420,49 @@ if ('serviceWorker' in navigator) {
       .catch(e => console.warn('Error unregistering service workers', e));
   }
 }
-render(
-  <Provider store={store}>
-    <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-      <Switch>
-        <Route path="/login" component={LoginComponent} />
-        <Route path="/" component={App} />
-      </Switch>
-    </Router>
-  </Provider>,
-  document.getElementById('app'),
-);
+
+//keycloak init options
+const keycloak = new Keycloak({
+  url: 'https://172.22.6.11/auth',
+  realm: 'tmax',
+  clientId: 'hypercloud4',
+  responseType: 'idToken',
+});
+
+keycloak
+  .init({
+    flow: 'implicit',
+  })
+  .then(auth => {
+    if (!auth) {
+      keycloak.login({
+        redirectUri: window.location.href,
+      });
+      return;
+    } else {
+      console.info('Authenticated');
+    }
+
+    setAccessToken(keycloak.idToken);
+    setRefreshToken(keycloak.idToken);
+
+    setId(keycloak.idTokenParsed.preferred_username);
+    // console.log('id', id);
+
+    render(
+      <Provider store={store}>
+        <Router history={history} basename={window.SERVER_FLAGS.basePath}>
+          <Switch>
+            <Route path="/login" component={LoginComponent} />
+            {/* <Route path="/" component={App} /> */}
+            <Route path="/" render={() => <App keycloak={keycloak} />} />
+          </Switch>
+        </Router>
+      </Provider>,
+      document.getElementById('app'),
+    );
+  })
+  .catch(function() {
+    console.log('failed to initialize');
+  });
+console.log('keycloak', keycloak);
