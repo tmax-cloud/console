@@ -530,26 +530,31 @@ class CustomNav extends React.Component {
       item.text = t(`RESOURCE:${item.name.toUpperCase()}`);
 
       let menu_ = item.menu.map(menuItem => {
-        let temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
+        let temp = ResourcePlural(menuItem.name, t);
         switch (menuItem.type) {
           case 'hreflink':
             if (menuItem.name === 'search') {
               menuItem.startsWith = searchStartsWith;
             }
+            temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
             return <HrefLink {...menuItem} name={temp} onClick={this.close} />;
           case 'resourcenslink': {
             let resource;
             switch (menuItem.name) {
               case 'event':
+                temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
                 resource = 'events';
                 break;
               case 'audit':
+                temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
                 resource = 'audits';
                 break;
               case 'PipelineApproval':
+                temp = t(`RESOURCE:${menuItem.name.toUpperCase()}`);
                 resource = 'approvals';
                 break;
               case 'horizontalpodautoscaler':
+                temp = 'HPA';
                 resource = 'horizontalpodautoscalers';
                 break;
               default:

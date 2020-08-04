@@ -19,10 +19,14 @@ export const ResourceIcon = (props: ResourceIconProps) => {
   const klass = classNames(`co-m-resource-icon co-m-resource-${kindStr.toLowerCase()}`, className);
   const iconLabel = (kindObj && kindObj.abbr) || kindToAbbr(kindStr);
 
-  const rendered = <React.Fragment>
-    <span className="sr-only">{kindStr}</span>
-    <span className={klass} title={kindStr}>{iconLabel}</span>
-  </React.Fragment>;
+  const rendered = (
+    <React.Fragment>
+      <span className="sr-only">{kindStr}</span>
+      <span className={klass} style={{ float: 'left' }} title={kindStr}>
+        {iconLabel}
+      </span>
+    </React.Fragment>
+  );
   if (kindObj) {
     MEMO[memoKey] = rendered;
   }
@@ -42,6 +46,10 @@ export type ResourceNameProps = {
 };
 /* eslint-enable no-undef */
 
-export const ResourceName: React.SFC<ResourceNameProps> = (props) => <span className="co-resource-link"><ResourceIcon kind={props.kind} /> <span className="co-resource-link__resource-name">{props.name}</span></span>;
+export const ResourceName: React.SFC<ResourceNameProps> = props => (
+  <span className="co-resource-link">
+    <ResourceIcon kind={props.kind} /> <span className="co-resource-link__resource-name">{props.name}</span>
+  </span>
+);
 
 ResourceName.displayName = 'ResourceName';
