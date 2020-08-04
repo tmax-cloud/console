@@ -99,7 +99,7 @@ const UserMenuWrapper = connectToFlags(
     callback: logout,
   });
   // if (props.flags[FLAGS.OPENSHIFT]) {
-  return <OSUserMenu actions={actions} />;
+  return <OSUserMenu actions={actions} keycloak={props.keycloak} />;
   // }
 
   actions.unshift({
@@ -159,15 +159,17 @@ class OSUserMenu extends SafetyFirst {
       // } else {
       //   this.setState({ username: 'Admin' });
       // }
-      const userName = JSON.parse(atob(getAccessToken().split('.')[1])).id;
+      // const userName = JSON.parse(atob(getAccessToken().split('.')[1])).id;
+      const userName = this.props.keycloak.idTokenParsed.preferred_username;
       this.setState({ username: userName });
+      // preferred_username;
     } else {
       this.setState({ username: 'admin@tmax.co.kr' });
     }
   }
 
   render() {
-    const username = this.state.username;
+    const { username } = this.state;
     return username ? <UserMenu actions={this.props.actions} username={username} /> : null;
   }
 }
