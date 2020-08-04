@@ -35,6 +35,7 @@ import { getAccessToken, resetLoginState, getId, setAccessToken, setRefreshToken
 import { NoNamespace } from './nonamespaces';
 import { Grafana } from './grafana';
 import Keycloak from 'keycloak-js';
+import keycloakJSON from '../keycloak.json';
 
 import './utils/i18n';
 
@@ -422,12 +423,7 @@ if ('serviceWorker' in navigator) {
 }
 
 //keycloak init options
-const keycloak = new Keycloak({
-  url: 'https://172.22.6.11/auth',
-  realm: 'tmax',
-  clientId: 'hypercloud4',
-  responseType: 'idToken',
-});
+const keycloak = new Keycloak(keycloakJSON);
 
 keycloak
   .init({
