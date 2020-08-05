@@ -2,10 +2,14 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { KeyValueEditorPair } from './index';
+import { is } from 'immutable';
 
 export class KeyValueEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isDuplicated: false,
+    };
     this._append = this._append.bind(this);
     this._change = this._change.bind(this);
     this._remove = this._remove.bind(this);
@@ -26,12 +30,27 @@ export class KeyValueEditor extends React.Component {
 
   _change(e, i, type) {
     const { updateParentData, nameValueId } = this.props;
+    const { isDuplicated } = this.state;
     const keyValuePairs = _.cloneDeep(this.props.keyValuePairs);
-    keyValuePairs[i][type] = e.target.value;
-    updateParentData({ keyValuePairs }, nameValueId);
+    //키값이 중복되는 경우
+    if (type === 0) {
+      isDuplicated = false;
+      this.setState({ isDuplicated });
+      keyValuePairs.some(pair => {
+        if (pair[0] === e.target.value) {
+          isDuplicated = true;
+          this.setState({ isDuplicated });
+        }
+      });
+    }
+    if (!isDuplicated) {
+      keyValuePairs[i][type] = e.target.value;
+      updateParentData({ keyValuePairs }, nameValueId);
+    }
   }
   render() {
     const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, nameValueId, t } = this.props;
+    const { isDuplicated } = this.state;
     const portItems = keyValuePairs.map((pair, i) => {
       const key = _.get(pair, [KeyValueEditorPair.Index], i);
       return <KeyValuePairElement onChange={this._change} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
@@ -43,6 +62,7 @@ export class KeyValueEditor extends React.Component {
           <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
         </div>
         {portItems}
+        <div className="row">{isDuplicated ? <div className="col-md-12 col-xs-12 cos-error-title">{t(`VALIDATION:DUPLICATE-KEY`)}</div> : null}</div>
         <div className="row">
           <div className="col-md-12 col-xs-12">
             {readOnly ? null : (

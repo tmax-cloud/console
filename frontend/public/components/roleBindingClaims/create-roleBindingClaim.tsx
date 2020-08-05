@@ -136,12 +136,14 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
         ),
     );
     Promise.all(promiseList).then(() => {
-      this.setState(prevState => ({
-        roleBindingClaim: {
-          ...prevState.roleBindingClaim,
-          ['roleRef']: { apiGroup: 'rbac.authorization.k8s.io', name: finalRoleList[0].name, kind: finalRoleList[0].kind },
-        },
-      }));
+      if (finalRoleList.length) {
+        this.setState(prevState => ({
+          roleBindingClaim: {
+            ...prevState.roleBindingClaim,
+            ['roleRef']: { apiGroup: 'rbac.authorization.k8s.io', name: finalRoleList[0].name, kind: finalRoleList[0].kind },
+          },
+        }));
+      }
     });
     // role + clusterRole list
 

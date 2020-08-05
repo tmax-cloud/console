@@ -47,8 +47,9 @@
   },
   "VALIDATION": {
     "LABEL_FORM": "레이블은 '키=값' 형식이어야 합니다.",
-    "DUPLICATE-KEY": "중복 키가 발견되었습니다.",
-    "EMPTY-INPUT": "{{something}} 을(를) 입력하세요."
+    "DUPLICATE-KEY": "중복된 입력 값 입니다.",
+    "EMPTY-INPUT": "{{something}}을(를) 입력하세요.",
+    "EMPTY-SELECT": "{{something}}을(를)  선택하세요."
   },
   "DATETIME": {
     "YEARS": "years",
@@ -205,6 +206,7 @@
     "SECRET-SIDEBAR_1": "이 '롤'은 username /password의 조합으로 SCM 서버에 대한 인증을 위한 시크릿을 생성할 수 있습니다.",
     "SECRET-SIDEBAR_2": "사용자 정의 데이터 형태의 시크릿 생성",
     "SECRET-SIDEBAR_3": "이 '롤'은 Key/value로 이루어진 data값에 Base64형태로 인코딩 합니다.",
+    "CONFIGMAP-CREATE_0": "컨테이너에서 필요한 설정 값을 입력하여 환경별로 구성 요소를 분리할 수 있습니다.",
     "CONFIGMAP-SIDEBAR_0": "기본 컨피그맵 생성",
     "CONFIGMAP-SIDEBAR_1": "이 '롤'은 비암호된 데이터를 키/데이터 형태로 작성할수 있습니다. 컨테이너에서 데이터를 읽어서 구성을 할 수 있습니다.",
     "CONFIGMAP-SIDEBAR_2": "파일형태의 컨피그맵 생성",
@@ -315,7 +317,11 @@
     "NAMESPACECLAIM-SIDEBAR_0": "CPU, Memory를 설정하여 네임스페이스 요청",
     "NAMESPACECLAIM-SIDEBAR_1": "네임스페이스에서 사용할수 있는 리소스(CPU, Memory) 범위를 지정할 때 사용할 수 있습니다.\n Edit Status를 이용해서 승인할 수 있습니다.",
     "USERGROUP-SIDEBAR_0": "사용자 그룹 생성",
-    "USERGROUP-SIDEBAR_1": "HyperCloud에서 사용하고자 하는 사용자 그룹을 생성할 수 있습니다."
+    "USERGROUP-SIDEBAR_1": "HyperCloud에서 사용하고자 하는 사용자 그룹을 생성할 수 있습니다.",
+    "USER-SIDEBAR_0": "사용자 생성",
+    "USER-SIDEBAR_1": "HyperCloud에서 사용할 사용자를 생성할 수 있으며, 콘솔 접속 ID는 메타데이터의 Name Tag의 값으로 접속할 수 있습니다.",
+    "SERVICEACCOUNT-SIDEBAR_0": "API 호출을 위한 계정 생성",
+    "SERVICEACCOUNT-SIDEBAR_1": "HyperCloud API를 호출하거나, 접근 권한을 부여하고자 할 때 생성할 수 있습니다.\n 서비스 계정이 생성될 때 시크릿은 자동 생성됩니다."
   },
   "CONTENT": {
     "REPORTEDFROM": "출발지",

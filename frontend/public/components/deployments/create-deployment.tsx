@@ -111,7 +111,7 @@ const Requestform = SubForm =>
         .then(res => res.json())
         .then(
           myJson => {
-            let pvcList = myJson.items.map(function (pvc) {
+            let pvcList = myJson.items.map(function(pvc) {
               return pvc.metadata.name;
             });
             if (pvcList.length > 0) {
@@ -132,7 +132,7 @@ const Requestform = SubForm =>
             });
           },
         )
-        .catch(function (myJson) {
+        .catch(function(myJson) {
           this.state.volumeOptions = [];
         });
 
@@ -273,7 +273,7 @@ const Requestform = SubForm =>
       }
       // limits 데이터 가공
       let limitObj = {};
-      this.state.requests.forEach(arr => {
+      this.state.limits.forEach(arr => {
         if (arr[0] !== '' && arr[1] !== '') {
           limitObj[arr[0]] = arr[1];
         }
@@ -307,6 +307,7 @@ const Requestform = SubForm =>
           let volumeMount = {
             name: arr[0],
             mountPath: arr[1],
+            readOnly: arr[3],
           };
           if (arr[2] === '') {
             arr[2] = this.state.volumeOptions[0];
@@ -315,11 +316,10 @@ const Requestform = SubForm =>
             name: arr[0],
             persistentVolumeClaim: {
               claimName: arr[2],
-              readOnly: arr[3],
             },
           };
           if (arr[3] === '') {
-            volume.persistentVolumeClaim.readOnly = false;
+            volumeMount.readOnly = false;
           }
           volumeList = volumeList.concat(volume);
           volumeMountList = volumeMountList.concat(volumeMount);
@@ -349,7 +349,7 @@ const Requestform = SubForm =>
     render() {
       const { volumeOptions } = this.state;
       const { t } = this.props;
-      let pvcList = volumeOptions.map(function (pvc) {
+      let pvcList = volumeOptions.map(function(pvc) {
         return <option value={pvc}>{pvc}</option>;
       });
       return (

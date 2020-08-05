@@ -794,6 +794,26 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.UserModel), 'user-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: User
+    metadata:
+      name: exampleuser
+      labels:
+        encrypted: f
+    userInfo:
+      name: exampleuser
+      password: exampleuser
+      email: exampleuser@tmax.co.kr
+      department: Cloud
+      position: developer
+      phone: 010-0000-0000
+      description: For Example
+    status: active
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1
@@ -4108,6 +4128,16 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: example
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceAccountModel), 'serviceaccount-sample'],
+    `
+    kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: example-serviceaccount
+      namespace: default
 `,
   )
   .setIn(
