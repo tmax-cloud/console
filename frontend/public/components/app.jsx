@@ -393,7 +393,7 @@ window.onerror = function(message, source, lineno, colno, optError = {}) {
   window.windowError = true;
 };
 
-window.onunhandledrejection = function (e) {
+window.onunhandledrejection = function(e) {
   try {
     analyticsSvc.error(e, null);
   } catch (err) {
@@ -427,7 +427,7 @@ const keycloak = new Keycloak(keycloakJSON);
 
 keycloak
   .init({
-    flow: 'implicit',
+    // flow: 'implicit',
   })
   .then(auth => {
     if (!auth) {
@@ -461,4 +461,27 @@ keycloak
   .catch(function() {
     console.log('failed to initialize');
   });
+
+keycloak.onReady = function() {
+  console.log('[keycloak] onReady');
+};
+keycloak.onAuthSuccess = function() {
+  console.log('[keycloak] onAuthSuccess');
+};
+keycloak.onAuthError = function() {
+  console.log('[keycloak] onAuthError');
+};
+keycloak.onAuthRefreshSuccess = function() {
+  console.log('[keycloak] onAuthRefreshSuccess');
+};
+keycloak.onAuthRefreshError = function() {
+  console.log('[keycloak] onAuthRefreshError');
+};
+keycloak.onAuthLogout = function() {
+  console.log('[keycloak] onAuthLogout');
+};
+keycloak.onTokenExpired = function() {
+  console.log('[keycloak] onTokenExpired ');
+  keycloak.logout();
+};
 console.log('keycloak', keycloak);
