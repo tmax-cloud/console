@@ -344,7 +344,7 @@ class App extends React.PureComponent {
             <LazyRoute path="/k8s/ns/:ns/rolebindings/:name/edit" exact kind="RoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
             <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
             <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/edit" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
-            <Route path="/login" exact component={LoginComponent} />
+            {/* <Route path="/login" exact component={LoginComponent} /> */}
             <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
             <LazyRoute path="/k8s/cluster/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => m.CreateYAML)} />
             <Route path="/k8s/cluster/:plural/:name" component={ResourceDetailsPage} />
@@ -445,7 +445,7 @@ keycloak
       <Provider store={store}>
         <Router history={history} basename={window.SERVER_FLAGS.basePath}>
           <Switch>
-            <Route path="/login" component={LoginComponent} />
+            {/* <Route path="/login" component={LoginComponent} /> */}
             {/* <Route path="/" component={App} /> */}
             <Route path="/" render={() => <App keycloak={keycloak} />} />
           </Switch>
