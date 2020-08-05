@@ -426,9 +426,7 @@ if ('serviceWorker' in navigator) {
 const keycloak = new Keycloak(keycloakJSON);
 
 keycloak
-  .init({
-    // flow: 'implicit',
-  })
+  .init()
   .then(auth => {
     if (!auth) {
       keycloak.login({
@@ -441,9 +439,7 @@ keycloak
 
     setAccessToken(keycloak.idToken);
     setRefreshToken(keycloak.idToken);
-
     setId(keycloak.idTokenParsed.preferred_username);
-    // console.log('id', id);
 
     render(
       <Provider store={store}>
@@ -459,7 +455,7 @@ keycloak
     );
   })
   .catch(function() {
-    console.log('failed to initialize');
+    render(<div>Failed to initialize Keycloak</div>, document.getElementById('app'));
   });
 
 keycloak.onReady = function() {
@@ -484,4 +480,5 @@ keycloak.onTokenExpired = function() {
   console.log('[keycloak] onTokenExpired ');
   keycloak.logout();
 };
+
 console.log('keycloak', keycloak);
