@@ -360,6 +360,8 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
           // expired time < 60
           alert('Token was successfully refreshed');
           console.log('keycloak', keycloak);
+          setAccessToken(keycloak.idToken);
+          timerRef.tokRefresh();
         } else {
           // expired time > 60
           alert('Token is still valid');
