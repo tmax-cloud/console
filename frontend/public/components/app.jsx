@@ -430,7 +430,8 @@ keycloak
   .then(auth => {
     if (!auth) {
       keycloak.login({
-        redirectUri: window.location.href,
+        redirectUri: window.location.origin,
+        // redirectUri: window.location.href,
       });
       return;
     } else {
