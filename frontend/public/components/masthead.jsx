@@ -333,70 +333,91 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
   // }
 
   const setExpireTime = time => {
-    // setTokenTime(time);
+    console.log('setExpireTime');
+    tokenRefresh();
+    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
+    // const json = {
+    //   atExpireTime: Number(time), // Number
+    // };
 
-    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
-    const json = {
-      atExpireTime: Number(time), // Number
-    };
-
-    coFetchJSON
-      .put(AUTH_SERVER_URL, json)
-      .then(data => {
-        // console.log(data);
-        tokenRefresh();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // coFetchJSON
+    //   .put(AUTH_SERVER_URL, json)
+    //   .then(data => {
+    //     // console.log(data);
+    //     tokenRefresh();
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const tokenRefresh = () => {
-    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
-    const json = {
-      accessToken: getAccessToken(),
-      refreshToken: getRefreshToken(),
-      // atExpireTime: Number(tokenTime), // Number
-    };
-
-    coFetchJSON
-      .post(AUTH_SERVER_URL, json)
-      .then(data => {
-        // console.log(data);
-        if (data.accessToken) {
-          setAccessToken(data.accessToken);
-          timerRef.tokRefresh();
-          return;
+    keycloak
+      .updateToken(60)
+      .then(refreshed => {
+        console.log('refreshed', refreshed);
+        if (refreshed) {
+          // expired time < 60
+          alert('Token was successfully refreshed');
+          console.log('keycloak', keycloak);
         } else {
-          return;
+          // expired time > 60
+          alert('Token is still valid');
         }
       })
-      .catch(error => {
-        console.log(error);
+      .catch(() => {
+        // refresh token 없음
+        alert('Failed to refresh the token, or the session has expired');
       });
+    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
+    // const json = {
+    //   accessToken: getAccessToken(),
+    //   refreshToken: getRefreshToken(),
+    //   // atExpireTime: Number(tokenTime), // Number
+    // };
+
+    // coFetchJSON
+    //   .post(AUTH_SERVER_URL, json)
+    //   .then(data => {
+    //     // console.log(data);
+    //     if (data.accessToken) {
+    //       setAccessToken(data.accessToken);
+    //       timerRef.tokRefresh();
+    //       return;
+    //     } else {
+    //       return;
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const logout = e => {
+    console.log('masthead logout');
     // props.setLoading();
-    e.preventDefault();
+    // e.preventDefault();
 
-    const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
+    resetLoginState();
+    keycloak.logout();
 
-    const json = {
-      accessToken: getAccessToken(),
-    };
+    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
 
-    coFetchJSON
-      .post(AUTH_SERVER_URL, json)
-      .then(data => {
-        // props.setLoading();
-        resetLoginState();
-        window.location.href = `${document.location.origin}`;
-      })
-      .catch(error => {
-        setLoading();
-        console.log(error);
-      });
+    // const json = {
+    //   accessToken: getAccessToken(),
+    // };
+
+    // coFetchJSON
+    //   .post(AUTH_SERVER_URL, json)
+    //   .then(data => {
+    //     // props.setLoading();
+    //     resetLoginState();
+    //     window.location.href = `${document.location.origin}`;
+    //   })
+    //   .catch(error => {
+    //     setLoading();
+    //     console.log(error);
+    //   });
   };
 
   return (
@@ -415,6 +436,7 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
             }}
             logout={logout}
             tokenRefresh={tokenRefresh}
+            keycloak={keycloak}
           />
         </div>
       )}
