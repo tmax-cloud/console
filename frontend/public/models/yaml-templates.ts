@@ -785,6 +785,15 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.NamespaceModel), 'default'],
+    `
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: example-namespace
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1
