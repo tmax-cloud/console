@@ -221,14 +221,11 @@ export class ExpTimer extends Component {
   componentDidMount() {
     if (getAccessToken()) {
       const curTime = new Date();
-      const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+      const { keycloak } = this.props;
+      // const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+      const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
 
       const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
-      if (logoutTime < 0) {
-        resetLoginState();
-        window.location.href = `${document.location.origin}`;
-      }
-
       expTime = logoutTime;
       timerID = window.setInterval(() => this.tick(), 1000);
     } else {
@@ -238,14 +235,14 @@ export class ExpTimer extends Component {
 
   tokRefresh() {
     const curTime = new Date();
-    const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+    const { keycloak } = this.props;
+    // const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+    const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
+    console.log('curTime', curTime);
+    console.log('exptime', new Date(keycloak.idTokenParsed.exp * 1000));
+    console.log('tokenExpTime', tokenExpTime);
 
     const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
-    if (logoutTime < 0) {
-      resetLoginState();
-      window.location.href = `${document.location.origin}`;
-    }
-
     expTime = logoutTime;
   }
 
@@ -254,7 +251,6 @@ export class ExpTimer extends Component {
   }
 
   componentDidUpdate() {
-    // console.log('ExpTimer componentDidUpdate');
     if (!getAccessToken() || !getRefreshToken()) {
       resetLoginState();
       window.location.href = `${document.location.origin}`;
@@ -275,34 +271,30 @@ export class ExpTimer extends Component {
   }
 
   tick() {
+    const { keycloak } = this.props;
     if (HDCModeFlag) {
       const curTime = new Date();
       if (!getAccessToken()) {
-        resetLoginState();
-        window.location.href = `${document.location.origin}`;
-        return;
+        // resetLoginState();
+        // window.location.href = `${document.location.origin}`;
+        // return;
       }
 
-      const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+      // const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
+      const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
       const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
-      if (logoutTime < 0) {
-        resetLoginState();
-        window.location.href = `${document.location.origin}`;
-      }
 
       expTime = logoutTime;
     } else {
-      expTime -= 1;
+      if (expTime > 0) {
+        expTime -= 1;
+      }
     }
 
-    if (Math.floor(expTime) === 60) {
+    if (Math.floor(expTime) === 20) {
       NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
     }
-    // Test 용으로 짝수 분에 튕기도록
-    if (expTime === 0 || expTime < 0 /*|| Math.floor(expTime / 60 % 2) === 0*/) {
-      resetLoginState();
-      window.location.href = `${document.location.origin}`;
-    }
+
     // console.log(Math.floor(expTime / 60) + " Min " + Math.floor(expTime % 60) + " Sec");
     this.setState({ expMin: this.numFormat(Math.floor(expTime / 60)) });
     this.setState({ expSec: this.numFormat(Math.floor(expTime % 60)) });
@@ -358,10 +350,13 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
         console.log('refreshed', refreshed);
         if (refreshed) {
           // expired time < 60
-          alert('Token was successfully refreshed');
-          console.log('keycloak', keycloak);
+          // alert('Token was successfully refreshed');
           setAccessToken(keycloak.idToken);
           timerRef.tokRefresh();
+          console.log('keycloak', keycloak);
+          console.log('idTokenParsed', keycloak.idTokenParsed);
+          console.log('exp', keycloak.idTokenParsed.exp);
+          console.log('tokenTimeoutHandle', keycloak.tokenTimeoutHandle);
         } else {
           // expired time > 60
           alert('Token is still valid');
