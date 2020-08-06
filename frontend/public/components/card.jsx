@@ -15,7 +15,7 @@ class ServiceClassCard extends Component {
   }
   render() {
     const { selectedClass } = this.props;
-    const { uid, name, imageUrl, description, providerDisplayName, recommend, isNew } = this.props.serviceClass;
+    const { uid, externalName, imageUrl, description, providerDisplayName, recommend, isNew } = this.props.serviceClass;
     const isActive = selectedClass && selectedClass.uid === uid;
     return (
       <div className="col-xs-12 col-sm-6 col-md-4 col-lg-2" onClick={() => this.onClickCard(this.props.serviceClass)} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
@@ -59,9 +59,9 @@ class ServiceClassCard extends Component {
           </div>
           <div className="card-pf-body" style={{ margin: '0', padding: '0' }}>
             <div className="card-pf-items text-left" style={{ display: 'flex', marginTop: '10px' }}>
-              <div className="card-logo" style={{ width: '70px', height: '70px', lineHeight: '70px', textAlign: "center" }}>
+              <div className="card-logo" style={{ width: '70px', height: '70px', lineHeight: '70px', textAlign: 'center' }}>
                 <img
-                  style={{ verticalAlign: 'middle', width: "auto", height: "auto", maxWidth: "70px", maxHeight: "70px" }}
+                  style={{ verticalAlign: 'middle', width: 'auto', height: 'auto', maxWidth: '70px', maxHeight: '70px' }}
                   src={imageUrl || defaultImg}
                   onError={e => {
                     e.target.onerror = null;
