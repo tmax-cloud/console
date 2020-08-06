@@ -54,7 +54,15 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
   ];
 
   return (
-    <foreignObject width={width} height={height} className="odc-task-list-node">
+    <foreignObject
+      width={width}
+      height={height}
+      className="odc-task-list-node"
+      style={{
+        border: '1px solid #ACB0BC',
+        borderRadius: '2px'
+      }}
+    >
       <div className="odc-task-list-node__trigger-background" ref={triggerRef}>
         <Button
           className="odc-task-list-node__trigger"
@@ -63,6 +71,7 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
             setMenuOpen(!isMenuOpen);
           }}
           variant="control"
+          style={{ backgroundColor: '#ffffff' }}
         >
           {options.length === 0 ? (
             'No Tasks'
@@ -72,10 +81,12 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
                 { modifier: FlexModifiers.nowrap },
                 { modifier: FlexModifiers['space-items-none'] }
               ]}
+              style={{ textAlign: 'left' }}
             >
               <FlexItem
                 className="odc-task-list-node__label"
                 breakpointMods={[{ modifier: FlexModifiers.grow }]}
+                style={{ fontSize: '13px' }}
               >
                 {unselectedText || 'Select task'}
               </FlexItem>
@@ -107,7 +118,14 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
           <div className="pf-c-dropdown pf-m-expanded">
             <ul
               className="pf-c-dropdown__menu pf-m-align-right oc-kebab__popper-items odc-task-list-node__list-items"
-              style={{ position: 'initial', backgroundColor: '#ffffff' }}
+              style={{
+                position: 'initial',
+                backgroundColor: '#ffffff',
+                listStyle: 'none',
+                padding: '0',
+                marginBottom: '0px',
+                overflowX: 'hidden'
+              }}
             >
               {options.map(option => (
                 <li key={option.label}>
@@ -122,7 +140,10 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
               {onRemoveTask && (
                 <>
                   <li>
-                    <hr className="odc-task-list-node__divider" />
+                    <hr
+                      className="odc-task-list-node__divider"
+                      style={{ borderColor: '#677E9A', opacity: '0.7' }}
+                    />
                   </li>
                   <li>
                     <KebabItem

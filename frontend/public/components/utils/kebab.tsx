@@ -55,7 +55,7 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option,
   const disabled = !isAllowed || option.isDisabled;
   const classes = classNames('pf-c-dropdown__menu-item', { 'pf-m-disabled': disabled });
   return (
-    <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label}>
+    <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label} style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', height: '30px' }}>
       {option.icon && <span className="oc-kebab__icon">{option.icon}</span>}
       {option.label}
     </button>
