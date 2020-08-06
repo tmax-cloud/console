@@ -71,7 +71,7 @@ class ServiceClassCard extends Component {
               </div>
               <div className="card-pf-item" style={{ paddingLeft: '20px' }}>
                 <h2 className="card-pf-title text-left" style={{ fontSize: '13px', color: '#222222', fontWeight: 'bold' }}>
-                  {name}
+                  {externalName}
                 </h2>
                 <span className="card-pf-item-text text-left" style={{ color: '#222222', fontSize: '13px' }}>
                   {providerDisplayName}
