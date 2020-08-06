@@ -160,7 +160,6 @@ const TaskComponent: React.FC<TaskProps> = ({
       className={cx('odc-pipeline-vis-task__content', {
         'is-selected': selected
       })}
-      style={{ width: '143px', height: '38px' }}
     >
       <div
         className={cx('odc-pipeline-vis-task__title-wrapper', {

@@ -55,10 +55,8 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
 
   return (
     <foreignObject
-      // width={width}
-      // height={height}
-      width="143px"
-      height="38px"
+      width={width}
+      height={height}
       className="odc-task-list-node"
       style={{
         border: '1px solid #ACB0BC',
@@ -73,7 +71,7 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
             setMenuOpen(!isMenuOpen);
           }}
           variant="control"
-          style={{ backgroundColor: '#ffffff', height: '36px' }}
+          style={{ backgroundColor: '#ffffff' }}
         >
           {options.length === 0 ? (
             'No Tasks'

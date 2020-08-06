@@ -18,12 +18,9 @@ type BuilderNodeProps = {
 
 const BuilderNode: React.FC<BuilderNodeProps> = ({ element }) => {
   const [showAdd, setShowAdd] = React.useState(false);
-  // const { width, height } = element.getBounds();
+  const { width, height } = element.getBounds();
   const data = element.getData();
   const { error, onAddNode, onNodeSelection } = data;
-
-  const width = 143;
-  const height = 38;
 
   return (
     <g

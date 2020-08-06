@@ -11,11 +11,9 @@ type TaskNodeProps = {
 };
 
 const TaskNode: React.FC<TaskNodeProps> = ({ element, disableTooltip }) => {
-  // const { height, width } = element.getBounds();
+  const { height, width } = element.getBounds();
   const { pipeline, pipelineRun, task, selected } = element.getData();
 
-  const height = 38;
-  const width = 143;
   return (
     <foreignObject width={width} height={height + DROP_SHADOW_SPACING}>
       <PipelineVisualizationTask

@@ -7,10 +7,8 @@ $border-color: #b8bbbe;
   width: 10em;
 
   &__content {
-    // width: inherit;
-    // height: 2.5em;
-    width: 143px;
-    height: 38px;
+    width: inherit;
+    height: 2.5em;
     white-space: normal;
     border: 1px solid $border-color;
     border-radius: 20px;
