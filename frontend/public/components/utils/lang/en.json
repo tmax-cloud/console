@@ -51,7 +51,8 @@
   "VALIDATION": {
     "LABEL_FORM": "Lables must be 'key=value' form.",
     "DUPLICATE-KEY": "Duplicate keys found.",
-    "EMPTY-INPUT": "Enter a(n) {{something}}"
+    "EMPTY-INPUT": "Enter a(n) {{something}}",
+    "EMPTY-SELECT": "Select a(n) {{something}}"
   },
   "DATETIME": {
     "YEARS": "years",
@@ -207,6 +208,7 @@
     "SECRET-SIDEBAR_1": "This 'Roll' can generate a secret to authenticate the SCM server with a username/password pair.",
     "SECRET-SIDEBAR_2": "Create a user-defined secret. ",
     "SECRET-SIDEBAR_3": "This 'Roll' encodes data values in a key/value pair to Base64 format. secretKeyRef can be explicitly set for deployment.",
+    "CONFIGMAP-CREATE_0": "Decouple configuration artifacts by specifying the required configuration values for the container.",
     "CONFIGMAP-SIDEBAR_0": "Create the default ConfigMap.",
     "CONFIGMAP-SIDEBAR_1": "This 'Roll' can write non-encrypted data in a key/data pair. Related data is read from the container.",
     "CONFIGMAP-SIDEBAR_2": "Create ConfigMap as a file.",
@@ -317,7 +319,11 @@
     "NAMESPACECLAIM-SIDEBAR_0": "Configure CPU and memory requests for a namespace",
     "NAMESPACECLAIM-SIDEBAR_1": "Specify the limits for resources including CPU and memory available in the namespace. \nYou can approve it using Edit Status.",
     "USERGROUP-SIDEBAR_0": "Create a user group",
-    "USERGROUP-SIDEBAR_1": "Create groups of users you want to use in HyperCloud."
+    "USERGROUP-SIDEBAR_1": "Create groups of users you want to use in HyperCloud.",
+    "USER-SIDEBAR_0": "Create a user",
+    "USER-SIDEBAR_1": "Create a HyperCloud user account. The console access ID is based on the tag the metadata name.",
+    "SERVICEACCOUNT-SIDEBAR_0": "Create an account for API calls",
+    "SERVICEACCOUNT-SIDEBAR_1": "It can be created for enabling the HyperCloud API or granting the access the API.\n As soon as a service account is created, secrets are automatically added to it"
   },
   "CONTENT": {
     "REPORTEDFROM": "Reported from",

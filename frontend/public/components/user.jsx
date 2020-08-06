@@ -81,9 +81,11 @@ UsersPage.displayName = 'UsersPage';
 
 export const UsersDetailsPage = props => {
   const { t } = useTranslation();
-  let menu = HDCModeFlag ? null : menuActions;
-  let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] :
-    [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]
+  // let menu = HDCModeFlag ? null : menuActions;
+  // let page = HDCModeFlag ? [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW'))] :
+  //   [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]
+  let menu = menuActions;
+  let page = [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
   return (
     <DetailsPage
       {...props}

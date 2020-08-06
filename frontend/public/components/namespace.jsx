@@ -106,11 +106,12 @@ export const NamespacesPage = props => {
   const { t } = useTranslation();
   const createItems = {
     form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
   };
 
   const createProps = {
     items: createItems,
-    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/namespaces/new` : '/k8s/cluster/namespaces/new/form'
+    createLink: type => `/k8s/cluster/namespaces/new${type !== 'yaml' ? `/${type}` : ''}`,
   };
 
   // Modal 주석처리

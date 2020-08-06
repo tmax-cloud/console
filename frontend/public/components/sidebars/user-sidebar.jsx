@@ -1,19 +1,19 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 
-import { ServiceAccountModel } from '../../models';
+import { UserModel } from '../../models';
 import { referenceForModel } from '../../module/k8s';
 import { SampleYaml } from './resource-sidebar';
 import { useTranslation } from 'react-i18next';
 
-export const ServiceAccountSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
+export const UserSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
   const { t } = useTranslation();
   const samples = [
     {
-      header: t('STRING:SERVICEACCOUNT-SIDEBAR_0'),
-      details: t('STRING:SERVICEACCOUNT-SIDEBAR_1'),
-      templateName: 'serviceaccount-sample',
-      kind: referenceForModel(ServiceAccountModel),
+      header: t('STRING:USER-SIDEBAR_0'),
+      details: t('STRING:USER-SIDEBAR_1'),
+      templateName: 'user-sample',
+      kind: referenceForModel(UserModel),
     },
   ];
 

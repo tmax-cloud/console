@@ -785,18 +785,59 @@ spec:
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.NamespaceModel), 'default'],
+    `
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: example-namespace
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.UserModel), 'user-sample'],
+    `
+    apiVersion: tmax.io/v1
+    kind: User
+    metadata:
+      name: exampleuser
+      labels:
+        encrypted: f
+    userInfo:
+      name: exampleuser
+      password: exampleuser
+      email: exampleuser@tmax.co.kr
+      department: Cloud
+      position: developer
+      phone: 010-0000-0000
+      description: For Example
+    status: active
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
     `
     apiVersion: tmax.io/v1
     kind: NamespaceClaim
     metadata:
       name: example-claim
+      labels: 
+        handled: f
+        #trial: t
+        #owner: example-tmax.co.kr
+      annotations:
+        #usage: for test
+        #company: tmax
+        #companyAddress: bundang
+        #companyNumber: 02-1234-5678
+        #clientPosition: CEO
+        #clientName: kim
+        #clientNumber: 010-0000-0000
+        #request: thanks
     resourceName: example-namespace
     spec:
       hard:
         limits.cpu: "1"
         limits.memory: "1Gi"
-    
 `,
   )
   .setIn(
@@ -891,12 +932,13 @@ spec:
     metadata:
       name: example-resource-quota
       namespace: example-namespace
+      labels:
+        handled: f
     resourceName: example-claim
     spec:
       hard:
         limits.cpu: "1"
         limits.memory: "1Gi"
-    
 `,
   )
   .setIn(
@@ -924,6 +966,8 @@ spec:
     metadata:
       name: example-role-biniding
       namespace: example-namespace
+      labels:
+        handled: f
     resourceName: example-claim
     subjects:
     - kind: User
@@ -932,7 +976,6 @@ spec:
       kind: ClusterRole
       name: namespace-user
       apiGroup: rbac.authorization.k8s.io
-    
 `,
   )
   .setIn(
@@ -4085,6 +4128,16 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: example
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ServiceAccountModel), 'serviceaccount-sample'],
+    `
+    kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: example-serviceaccount
+      namespace: default
 `,
   )
   .setIn(
