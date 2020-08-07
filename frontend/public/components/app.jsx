@@ -238,7 +238,7 @@ class App extends React.PureComponent {
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
-        <Masthead setLoading={this.setLoading} keycloak={this.props.keycloak} />
+        <Masthead setLoading={this.setLoading} keycloak={keycloak} />
         <CustomNav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
@@ -445,11 +445,8 @@ keycloak
     render(
       <Provider store={store}>
         <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-          <Switch>
-            {/* <Route path="/login" component={LoginComponent} /> */}
-            {/* <Route path="/" component={App} /> */}
-            <Route path="/" render={() => <App keycloak={keycloak} />} />
-          </Switch>
+          <Route path="/" component={App} />
+          {/* <Route path="/" render={() => <App keycloak={keycloak} />} /> */}
         </Router>
       </Provider>,
       document.getElementById('app'),
