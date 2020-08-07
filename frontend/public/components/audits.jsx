@@ -609,14 +609,15 @@ class AuditPage_ extends React.Component {
 
   render() {
     const { data, start, end, textFilter, actionList } = this.state;
+    const { t } = this.props;
 
     return (
       <React.Fragment>
         <div>
           <Helmet>
-            <title>감사 로그</title>
+            <title>{t('RESOURCE:AUDIT')}</title>
           </Helmet>
-          <NavTitle title="감사 로그" />
+          <NavTitle title={t('RESOURCE:AUDIT')} />
           <div className="co-m-pane__filter-bar" style={{ marginBottom: 0 }}>
             <div className="co-m-pane__filter-bar-group">
               <Dropdown title={this.state.resourceType} className="btn-group btn-group-audit" items={resourceList} onChange={this.onChangeResourceType} />

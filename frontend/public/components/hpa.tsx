@@ -228,7 +228,7 @@ HorizontalPodAutoscalersList.displayName = 'HorizontalPodAutoscalersList';
 
 export const HorizontalPodAutoscalersPage: React.SFC<HorizontalPodAutoscalersPageProps> = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} kind={HorizontalPodAutoscalersReference} title="HPAs" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: 'HPA' })} ListComponent={HorizontalPodAutoscalersList} canCreate={true} filterLabel="HPAs by name" />;
+  return <ListPage {...props} kind={HorizontalPodAutoscalersReference} title="HPAs" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: 'HPAs' })} ListComponent={HorizontalPodAutoscalersList} canCreate={true} filterLabel="HPAs by name" />;
 };
 HorizontalPodAutoscalersPage.displayName = 'HorizontalPodAutoscalersListPage';
 

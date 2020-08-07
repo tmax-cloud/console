@@ -197,7 +197,7 @@ export const RoleBindingsPage = ({ namespace, showTitle = true, fake }) => {
       ]}
       showTitle={showTitle}
       textFilter="role-binding"
-      title={t('RESOURCE:ROLEBINDING')}
+      title={ResourcePlural('RoleBinding', t)}
       id="rolebinding"
     />
   );
