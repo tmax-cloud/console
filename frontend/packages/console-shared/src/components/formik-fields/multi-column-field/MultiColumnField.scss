@@ -12,6 +12,9 @@
   &__col {
     // margin-right: var(--pf-global--spacer--md);
     margin-right: 16px;
+    .pf-m-error {
+      color: #f04c5c;
+    }
   }
 
   &__col--button {

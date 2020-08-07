@@ -10,6 +10,9 @@
   &__content {
     // padding: 0 var(--pf-global--spacer--lg);
     padding: 0 24px;
+    .pf-m-error {
+      color: #f04c5c;
+    }
   }
 
   &__param,
