@@ -108,9 +108,9 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
     }).join('&') || '';
 
   if (kind.kind === 'Namespace') {
-    listURL = `${document.location.origin}/api/hypercloud/nameSpace`;
+    listURL = `${document.location.origin}/api/hypercloud/nameSpace?labelSelector&userId=${getId()}`;
   } else if (kind.kind === 'NamespaceClaim') {
-    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim`;
+    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim?labelSelector&userId=${getId()}`;
   } else {
     listURL = resourceURL(kind, { ns: params.ns });
   }
