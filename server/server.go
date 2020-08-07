@@ -55,6 +55,7 @@ const (
 	grafanaProxyEndpoint      = "/api/grafana/"
 	kialiProxyEndpoint        = "/api/kiali/"
 	kubeflowEndpoint          = "/api/kubeflow/"
+	vncEndpoint               = "/api/vnc/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
 )
 
@@ -120,6 +121,7 @@ type Server struct {
 	GrafanaProxyConfig    *proxy.Config
 	KialiProxyConfig      *proxy.Config
 	KubeflowProxyConfig   *proxy.Config
+	VncProxyConfig        *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
@@ -422,6 +424,17 @@ func (s *Server) HTTPHandler() http.Handler {
 			http.StripPrefix(s.BaseURL.Path,
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					kubeflowProxy.ServeHTTP(w, r)
+				})),
+		)
+	}
+
+	if s.VncProxyConfig != nil {
+		vncProxyAPIPath := vncEndpoint
+		vncProxy := httputil.NewSingleHostReverseProxy(s.VncProxyConfig.Endpoint)
+		handle(vncProxyAPIPath,
+			http.StripPrefix(proxy.SingleJoiningSlash(s.BaseURL.Path, vncProxyAPIPath),
+				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					vncProxy.ServeHTTP(w, r)
 				})),
 		)
 	}

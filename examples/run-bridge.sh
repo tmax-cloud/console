@@ -43,5 +43,6 @@ KUBEFLOW_PORT=80
     --kiali-endpoint=http://$k8sIP:$KIALI_PORT/api/kiali \
     --jaeger-endpoint=http://$k8sIP:$JAEGER_PORT/api/jaeger \
     --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/approve \
-    --kubeflow-endpoint=http://$KUBEFLOW_IP:$KUBEFLOW_PORT \ 
+    --kubeflow-endpoint=http://$KUBEFLOW_IP:$KUBEFLOW_PORT/ \
+    --vnc-endpoint=http://192.168.6.196:31390 \
     --release-mode=true \

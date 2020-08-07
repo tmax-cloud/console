@@ -108,8 +108,9 @@ func main() {
 	fKialiEndpoint := fs.String("kiali-endpoint", "", "URL of the KIALI Portal")
 	// NOTE: 여기까지
 	//NOTE: kubeflow 연동 추가 // 윤진수
-	kubeflowEndpoint := fs.String("kubeflow-endpoint", "", "URL of the KIALI Portal")
+	fkubeflowEndpoint := fs.String("kubeflow-endpoint", "", "URL of the KIALI Portal")
 	//NOTE: 여기까지
+	fvncEndpoint := fs.String("vnc-endpoint", "", "URL of the VNC")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -294,14 +295,21 @@ func main() {
 			Endpoint:        kialiEndpoint,
 		}
 		// NOTE: kubeflow 추가 // 윤진수
-		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *kubeflowEndpoint)
+		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *fkubeflowEndpoint)
 		srv.KubeflowProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        kubeflowEndpoint,
 		}
+
+		// NOTE: vnc 추가 // 윤진수
+		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
+		srv.VncProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        vncEndpoint,
+		}
+
 		// NOTE: in-cluster인 경우 master token을 empty string으로 수정 // 정동민
 		srv.MasterToken = ""
-		// NOTE: 여기까지
 
 		host, port := os.Getenv("KUBERNETES_SERVICE_HOST"), os.Getenv("KUBERNETES_SERVICE_PORT")
 		if len(host) == 0 || len(port) == 0 {
@@ -407,14 +415,23 @@ func main() {
 			Endpoint:        kialiEndpoint,
 		}
 		// NOTE: kubeflow 추가 // 윤진수
-		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *kubeflowEndpoint)
+		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *fkubeflowEndpoint)
 		srv.KubeflowProxyConfig = &proxy.Config{
 
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
 			},
-			// HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint: kubeflowEndpoint,
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        kubeflowEndpoint,
+		}
+
+		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
+		srv.VncProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        vncEndpoint,
 		}
 
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)
