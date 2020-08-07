@@ -367,7 +367,7 @@ export const calculateRelativeTime = (
   const daysAgo = hoursAgo / 24;
 
   if (daysAgo >= 100) {
-    return 'about a few days';
+    return 'a few days ago';
   }
 
   if (hoursAgo >= 24) {
