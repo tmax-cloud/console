@@ -344,8 +344,11 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
   };
 
   const tokenRefresh = () => {
+    const curTime = new Date();
+    const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
+    const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
     keycloak
-      .updateToken(60)
+      .updateToken(Math.ceil(logoutTime))
       .then(refreshed => {
         console.log('refreshed', refreshed);
         if (refreshed) {
