@@ -205,7 +205,13 @@ const TaskComponent: React.FC<TaskProps> = ({
   );
   return (
     <div className="odc-pipeline-vis-task">
-      {path ? <Link to={path}>{visTask}</Link> : visTask}
+      {path ? (
+        <Link to={path} style={{ textDecoration: 'none' }}>
+          {visTask}
+        </Link>
+      ) : (
+        visTask
+      )}
     </div>
   );
 };

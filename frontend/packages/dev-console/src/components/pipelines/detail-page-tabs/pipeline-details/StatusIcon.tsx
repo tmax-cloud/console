@@ -6,9 +6,12 @@ import {
   CircleIcon,
   ExclamationCircleIcon,
   PendingIcon,
-  SyncAltIcon,
+  SyncAltIcon
 } from '@patternfly/react-icons';
-import { getRunStatusColor, runStatus } from '../../../../utils/pipeline-augment';
+import {
+  getRunStatusColor,
+  runStatus
+} from '../../../../utils/pipeline-augment';
 
 interface StatusIconProps {
   status: string;
@@ -43,13 +46,33 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
   }
 };
 
-export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others }) => {
+export const ColoredStatusIcon: React.FC<StatusIconProps> = ({
+  status,
+  ...others
+}) => {
+  let iconColor;
+  switch (status) {
+    case 'Succeeded':
+      iconColor = '#4D8AFF';
+      break;
+    case 'Failed':
+      iconColor = '#FD5461';
+      break;
+    // case '':
+    //   iconColor = '';
+    //   break;
+    // 실행중
+    default:
+      iconColor = '#4BBBCF';
+      break;
+  }
   return (
     <div
       style={{
-        color: status
-          ? getRunStatusColor(status).pftoken.value
-          : getRunStatusColor(runStatus.Cancelled).pftoken.value,
+        // color: status
+        //   ? getRunStatusColor(status).pftoken.value
+        //   : getRunStatusColor(runStatus.Cancelled).pftoken.value
+        color: iconColor
       }}
     >
       <StatusIcon status={status} {...others} />
