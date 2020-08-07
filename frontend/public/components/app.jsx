@@ -455,6 +455,7 @@ keycloak.onAuthRefreshError = function() {
 };
 keycloak.onAuthLogout = function() {
   console.log('[keycloak] onAuthLogout');
+  keycloak.logout();
 };
 keycloak.onTokenExpired = function() {
   console.log('[keycloak] onTokenExpired ');
