@@ -66,10 +66,10 @@ function NamespaceFromURL(Component) {
 }
 
 const namespacedRoutes = [];
-_.each(namespacedPrefixes, p => {
-  namespacedRoutes.push(`${p}/ns/:ns`);
-  namespacedRoutes.push(`${p}/all-namespaces`);
-});
+// _.each(namespacedPrefixes, p => {
+//   namespacedRoutes.push(`${p}/ns/:ns`);
+//   namespacedRoutes.push(`${p}/all-namespaces`);
+// });
 
 const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
   let to;
@@ -109,35 +109,6 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
-  // const keycloak = new Keycloak({
-  //   url: 'https://172.22.6.11/auth',
-  //   realm: 'tmax',
-  //   clientId: 'kubernetes',
-  //   responseType: 'idToken',
-  // });
-  // keycloak
-  //   .init({
-  //     flow: 'implicit',
-  //   })
-  //   .then(authenticated => {
-  //     console.log(authenticated ? 'authenticated' : 'not authenticated');
-  //     if (!authenticated) {
-  //       console.log('login');
-  //       keycloak.login({
-  //         redirectUri: 'https://192.168.8.21:9000',
-  //       });
-  //     }
-  //     if (authenticated) {
-  //       console.log('authenticated');
-  //       this.setState({ keycloak: keycloak, authenticated: authenticated });
-  //       // this.setState({ authenticated: authenticated });
-  //     }
-  //     console.log('keyCloak', keycloak);
-  //   })
-  //   .catch(() => {
-  //     console.log('failed to initialize');
-  //   });
-
   if (!getAccessToken()) {
     console.log('DefaultPage 토큰 없을때');
     // window.location.href =
@@ -369,11 +340,11 @@ class App extends React.PureComponent {
   }
 }
 
-_.each(featureActions, store.dispatch);
-store.dispatch(k8sActions.getResources());
-store.dispatch(detectMonitoringURLs);
+// _.each(featureActions, store.dispatch);
+// store.dispatch(k8sActions.getResources());
+// store.dispatch(detectMonitoringURLs);
 
-analyticsSvc.push({ tier: 'tectonic' });
+// analyticsSvc.push({ tier: 'tectonic' });
 
 // Used by GUI tests to check for unhandled exceptions
 window.windowError = false;
@@ -427,20 +398,31 @@ const keycloak = new Keycloak(keycloakJSON);
 
 keycloak
   .init()
+  // .init({ onLoad: 'login-required' })
   .then(auth => {
     if (!auth) {
-      keycloak.login({
-        redirectUri: window.location.origin,
-        // redirectUri: window.location.href,
-      });
+      // keycloak.login({
+      // redirectUri: window.location.origin,
+      //   // redirectUri: window.location.href,
+      // });
+      keycloak.login();
       return;
-    } else {
-      console.info('Authenticated');
     }
 
     setAccessToken(keycloak.idToken);
     setRefreshToken(keycloak.idToken);
     setId(keycloak.idTokenParsed.preferred_username);
+
+    _.each(namespacedPrefixes, p => {
+      namespacedRoutes.push(`${p}/ns/:ns`);
+      namespacedRoutes.push(`${p}/all-namespaces`);
+    });
+
+    _.each(featureActions, store.dispatch);
+    store.dispatch(k8sActions.getResources());
+    store.dispatch(detectMonitoringURLs);
+
+    analyticsSvc.push({ tier: 'tectonic' });
 
     render(
       <Provider store={store}>
