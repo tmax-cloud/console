@@ -353,7 +353,7 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
         console.log('refreshed', refreshed);
         if (refreshed) {
           // expired time < 60
-          // alert('Token was successfully refreshed');
+          console.log('Token was successfully refreshed');
           setAccessToken(keycloak.idToken);
           timerRef.tokRefresh();
           console.log('keycloak', keycloak);
@@ -362,12 +362,12 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
           console.log('tokenTimeoutHandle', keycloak.tokenTimeoutHandle);
         } else {
           // expired time > 60
-          alert('Token is still valid');
+          console.log('Token is still valid');
         }
       })
       .catch(() => {
         // refresh token 없음
-        alert('Failed to refresh the token, or the session has expired');
+        console.log('Failed to refresh the token, or the session has expired');
       });
     // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
     // const json = {
