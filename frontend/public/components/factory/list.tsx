@@ -13,6 +13,7 @@ import { getJobTypeAndCompletions, isNodeReady, podPhase, podPhaseFilterReducer,
 import { UIActions } from '../../ui/ui-actions';
 import { ingressValidHosts } from '../ingress';
 import { routeStatus } from '../routes';
+import { namespaceclaimPhaseFilterReducer } from '../namespace-claim';
 import { secretTypeFilterReducer } from '../secret';
 import { bindingType, roleType } from '../RBAC';
 import { taskType } from '../task';
@@ -58,6 +59,15 @@ const listFilters = {
     }
 
     const phase = podPhaseFilterReducer(pod);
+    return phases.selected.has(phase) || !_.includes(phases.all, phase);
+  },
+
+  'namespaceclaim-status': (phases, namespaceclaim) => {
+    if (!phases || !phases.selected || !phases.selected.size) {
+      return true;
+    }
+
+    const phase = namespaceclaimPhaseFilterReducer(namespaceclaim);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
