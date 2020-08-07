@@ -26,6 +26,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       {resource.kind === 'PipelineRun' && <PipelineRunDiagramComponent namespace={metadata.namespace} data={resource.status} />} */}
       {resource.kind === 'Pipeline' && <PipelineVisualization pipeline={resource} />}
       {resource.kind === 'PipelineRun' && <PipelineRunVisualization pipelineRun={resource} />}
+      {resource.kind === 'PipelineRun' && !resource.status.pipelineSpec && <div style={{ padding: '10px' }}>Tekton version '&gt;'= 0.12.1 required for Pipelinerun visualization.</div>}
       <dt>{t('CONTENT:NAME')}</dt>
       <dd>{metadata.name || '-'}</dd>
       {metadata.namespace ? <dt>{t('CONTENT:NAMESPACE')}</dt> : null}
