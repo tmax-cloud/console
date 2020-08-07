@@ -107,6 +107,9 @@ func main() {
 	// NOTE: kiali 연동 추가 // 윤진수
 	fKialiEndpoint := fs.String("kiali-endpoint", "", "URL of the KIALI Portal")
 	// NOTE: 여기까지
+	//NOTE: kubeflow 연동 추가 // 윤진수
+	kubeflowEndpoint := fs.String("kubeflow-endpoint", "", "URL of the KIALI Portal")
+	//NOTE: 여기까지
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -290,6 +293,12 @@ func main() {
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        kialiEndpoint,
 		}
+		// NOTE: kubeflow 추가 // 윤진수
+		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *kubeflowEndpoint)
+		srv.KubeflowProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        kubeflowEndpoint,
+		}
 		// NOTE: in-cluster인 경우 master token을 empty string으로 수정 // 정동민
 		srv.MasterToken = ""
 		// NOTE: 여기까지
@@ -396,6 +405,16 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        kialiEndpoint,
+		}
+		// NOTE: kubeflow 추가 // 윤진수
+		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *kubeflowEndpoint)
+		srv.KubeflowProxyConfig = &proxy.Config{
+
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			// HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint: kubeflowEndpoint,
 		}
 
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)
