@@ -422,4 +422,21 @@ tags-input .autocomplete .suggestion-item em {
 
 .tooltip-bg {
   background-color: #ffffff;
+  width: 222px;
+  border: 1px solid #677e9a;
+  border-radius: 2px;
+  padding: 0 11.8px;
+}
+
+.tooltip-bg-pipeline {
+  width: 191px;
+}
+
+.tippy-popper {
+  margin-top: -25px;
+}
+
+.tippy-tooltip {
+  // max-width: 250px !important;
+  left: 22px !important;
 }
