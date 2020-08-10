@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import * as _ from 'lodash-es';
 import { Link } from 'react-router-dom';
 import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
@@ -6,7 +6,6 @@ import * as hyperCloudLogoImg from '../imgs/gnb_logo_circle.svg';
 import { FLAGS, connectToFlags } from '../features';
 import { authSvc } from '../module/auth';
 import { Dropdown, ActionsMenu } from './utils';
-import { coFetchJSON } from '../co-fetch';
 import { SafetyFirst } from './safety-first';
 // import LoginComponent from './login';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
@@ -46,53 +45,11 @@ const UserMenuWrapper = connectToFlags(
   FLAGS.AUTH_ENABLED,
   FLAGS.OPENSHIFT,
 )(props => {
-  // if (flagPending(props.flags[FLAGS.OPENSHIFT]) || flagPending(props.flags[FLAGS.AUTH_ENABLED])) {
-  //   return null;
-  // }
   const { t } = useTranslation();
-
   const actions = [];
-  // if (props.flags[FLAGS.AUTH_ENABLED]) {
-  //   const logout = e => {
-  //     e.preventDefault();
-  //     if (props.flags[FLAGS.OPENSHIFT]) {
-  //       authSvc.deleteOpenShiftToken().then(() => authSvc.logout());
-  //     } else {
-  //       authSvc.logout();
-  //     }
-  //   };
-  // actions.push({
-  //   label: 'Logout',
-  //   callback: logout
-  // });
-  // }
   const logout = e => {
     console.log('logout');
     props.keycloak.logout();
-    // props.setLoading();
-    // e.preventDefault();
-
-    // // TODO 로그아웃 api 연동
-    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
-
-    // const json = {
-    //   accessToken: getAccessToken(),
-    // };
-
-    // coFetchJSON
-    //   .post(AUTH_SERVER_URL, json)
-    //   .then(data => {
-    //     props.setLoading();
-    //     resetLoginState();
-    //     // localStorage.removeItem('bridge/last-namespace-name');
-
-    //     // const url_ = window.location.href.split('/')[2]
-    //     window.location.href = `${document.location.origin}`;
-    //   })
-    //   .catch(error => {
-    //     props.setLoading();
-    //     console.log(error);
-    //   });
   };
   actions.push({
     label: t('CONTENT:LOGOUT'),
@@ -153,16 +110,8 @@ class OSUserMenu extends SafetyFirst {
   _getUserInfo() {
     // TODO 유저 정보 조회 서비스 연동
     if (getAccessToken() && getRefreshToken()) {
-      // const userRole = JSON.parse(atob(window.sessionStorage.getItem('accessToken').split('.')[1])).role;
-      // if (userRole !== 'cluster-admin') {
-      //   this.setState({ username: 'User' });
-      // } else {
-      //   this.setState({ username: 'Admin' });
-      // }
-      // const userName = JSON.parse(atob(getAccessToken().split('.')[1])).id;
       const userName = this.props.keycloak.idTokenParsed.preferred_username;
       this.setState({ username: userName });
-      // preferred_username;
     } else {
       this.setState({ username: 'admin@tmax.co.kr' });
     }
@@ -194,7 +143,6 @@ export const LogoImage = () => {
   let logoAlt = 'HyperCloud';
 
   // Webpack won't bundle these images if we don't directly reference them, hence the switch
-
   return (
     <div className="co-masthead__logo">
       <Link to="/" className="co-masthead__logo-link">
@@ -221,10 +169,9 @@ export class ExpTimer extends Component {
     if (getAccessToken()) {
       const curTime = new Date();
       const { keycloak } = this.props;
-      // const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
       const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
-
       const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
+
       expTime = logoutTime;
       timerID = window.setInterval(() => this.tick(), 1000);
     } else {
@@ -235,7 +182,6 @@ export class ExpTimer extends Component {
   tokRefresh() {
     const curTime = new Date();
     const { keycloak } = this.props;
-    // const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
     const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
     console.log('curTime', curTime);
     console.log('exptime', new Date(keycloak.idTokenParsed.exp * 1000));
@@ -275,25 +221,10 @@ export class ExpTimer extends Component {
     this.setState({ expText: expText });
   }
 
-  numFormat(num) {
-    var val = Number(num).toString();
-    if (num < 10 && val.length == 1) {
-      val = '0' + val;
-    }
-    return val;
-  }
-
   tick() {
     const { keycloak } = this.props;
     if (HDCModeFlag) {
       const curTime = new Date();
-      if (!getAccessToken()) {
-        // resetLoginState();
-        // window.location.href = `${document.location.origin}`;
-        // return;
-      }
-
-      // const tokenExpTime = new Date(JSON.parse(atob(getAccessToken().split('.')[1])).exp * 1000);
       const tokenExpTime = new Date((keycloak.idTokenParsed.exp + keycloak.timeSkew) * 1000);
       const logoutTime = (tokenExpTime.getTime() - curTime.getTime()) / 1000;
 
@@ -325,33 +256,12 @@ export class ExpTimer extends Component {
 }
 
 export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, keycloak }) => {
-  // props => {
   let timerRef = null;
-  // const [tokenTime, setTokenTime] = useState(60);
-  // const [modalShow, setModalShow] = useState(false);
   const { t } = useTranslation();
-
-  // const closeModal = () => {
-  //   setModalShow(false);
-  // }
 
   const setExpireTime = time => {
     console.log('setExpireTime');
     tokenRefresh();
-    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
-    // const json = {
-    //   atExpireTime: Number(time), // Number
-    // };
-
-    // coFetchJSON
-    //   .put(AUTH_SERVER_URL, json)
-    //   .then(data => {
-    //     // console.log(data);
-    //     tokenRefresh();
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
   };
 
   const tokenRefresh = () => {
@@ -380,55 +290,13 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
         // refresh token 없음
         console.log('Failed to refresh the token, or the session has expired');
       });
-    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/refresh`;
-    // const json = {
-    //   accessToken: getAccessToken(),
-    //   refreshToken: getRefreshToken(),
-    //   // atExpireTime: Number(tokenTime), // Number
-    // };
-
-    // coFetchJSON
-    //   .post(AUTH_SERVER_URL, json)
-    //   .then(data => {
-    //     // console.log(data);
-    //     if (data.accessToken) {
-    //       setAccessToken(data.accessToken);
-    //       timerRef.tokRefresh();
-    //       return;
-    //     } else {
-    //       return;
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
   };
 
   const logout = e => {
     console.log('masthead logout');
-    // props.setLoading();
-    // e.preventDefault();
 
     resetLoginState();
     keycloak.logout();
-
-    // const AUTH_SERVER_URL = `${document.location.origin}/api/hypercloud/logout`;
-
-    // const json = {
-    //   accessToken: getAccessToken(),
-    // };
-
-    // coFetchJSON
-    //   .post(AUTH_SERVER_URL, json)
-    //   .then(data => {
-    //     // props.setLoading();
-    //     resetLoginState();
-    //     window.location.href = `${document.location.origin}`;
-    //   })
-    //   .catch(error => {
-    //     setLoading();
-    //     console.log(error);
-    //   });
   };
 
   return (
