@@ -824,6 +824,7 @@
     "PERSISTENTVOLUMECLAIM": "영구 볼륨 클레임",
     "PERSISTENTVOLUME": "영구 볼륨",
     "CICD": "CI/CD",
+    "CLUSTERTASK": "클러스터 태스크",
     "TASK": "태스크",
     "TASKRUN": "태스크 런",
     "PIPELINE": "파이프라인",
