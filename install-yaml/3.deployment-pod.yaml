@@ -32,6 +32,7 @@ spec:
         - --kiali-endpoint=http://@@KIALI@@/api/kiali
         - --jaeger-endpoint=http://@@JAEGER@@/api/jaeger
         - --approval-endpoint=http://@@APPROVAL@@/approve
+        - --kubeflow-endpoint=http://@@kubeflow@@/
         - --hdc-mode=@@HDC_FLAG@@
         - --tmaxcloud-portal=@@PORTAL@@
         image: tmaxcloudck/hypercloud-console:@@VER@@

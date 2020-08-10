@@ -32,36 +32,21 @@ export const BreadCrumbs: React.SFC<BreadCrumbsProps> = ({ breadcrumbs }) => (
 );
 
 export const NavTitle = connectToModel((props: NavTitleProps) => {
-  const { kind, kindObj, detail, title, getMenuActions, obj, breadcrumbsFor, style, tooltipTitle, tooltipContentsElements } = props;
+  const { kind, kindObj, detail, title, getMenuActions, obj, breadcrumbsFor, style, tooltipContents } = props;
   const data = _.get(obj, 'data');
   const isCSV = kind === referenceForModel(ClusterServiceVersionModel);
   const csvLogo = () => (!_.isEmpty(data) ? <ClusterServiceVersionLogo icon={_.get(data, 'spec.icon', [])[0]} displayName={data.spec.displayName} version={data.spec.version} provider={data.spec.provider} /> : <div style={{ height: '60px' }} />);
 
-  const tooltip =
-    tooltipTitle && tooltipContentsElements ? (
-      <Tooltip
-        placement="bottomLeft"
-        trigger={['hover']}
-        overlayClassName="title-tooltip-inner"
-        overlay={
-          <div>
-            <h5>{tooltipTitle}</h5>
-            <hr></hr>
-            {tooltipContentsElements}
-          </div>
-        }
-      >
-        <i className="fa fa-question-circle" />
-      </Tooltip>
-    ) : (
-      ''
-    );
   const logo = isCSV ? (
     csvLogo()
   ) : (
     <div className="co-m-pane__name">
       {kind && <ResourceIcon kind={kind} className="co-m-resource-icon--lg pull-left" />} <span id="resource-title">{title}</span>
-      {tooltip}
+      {tooltipContents && (
+        <Tooltip placement="bottomLeft" trigger={['hover']} overlayClassName="title-tooltip-inner" overlay={tooltipContents}>
+          <i className="fa fa-question-circle" />
+        </Tooltip>
+      )}
     </div>
   );
 
@@ -91,8 +76,7 @@ export type NavTitleProps = {
   breadcrumbsFor?: (obj: K8sResourceKind) => { name: string; path: string }[];
   children?: React.ReactChildren;
   style?: object;
-  tooltipTitle?: string;
-  tooltipContentsElements?: JSX.Element;
+  tooltipContents?: string;
 };
 
 export type BreadCrumbsProps = {

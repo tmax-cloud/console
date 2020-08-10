@@ -1,11 +1,11 @@
 .odc-pipeline-vis-steps-list {
   min-width: 10em;
-
   &__task-name {
     // font-weight: var(--pf-global--FontWeight--bold);
     font-weight: 700;
     line-height: 1.5em;
     max-height: 3em;
+    padding: 0 10.8px;
 
     // Limit the size of the title so the content doesn't have unnecessary whitespace in the middle
     max-width: 15em;

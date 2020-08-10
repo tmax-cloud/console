@@ -261,7 +261,7 @@ export const RolesPage = connectToFlags(
           ],
         },
       ]}
-      title={t('RESOURCE:ROLE')}
+      title={ResourcePlural('Role', t)}
     />
   );
 });

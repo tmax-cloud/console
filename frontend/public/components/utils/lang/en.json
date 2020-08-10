@@ -871,7 +871,7 @@
     "AIOPS": "AI DevOps",
     "NOTEBOOK": "Notebook",
     "EXPERIMENT": "Experiment",
-    "TRAININGJOB": "Training Job",
+    "TRAININGJOB": "Training Jobs",
     "INFERENCESERVICE": "Inference Service",
     "WORKFLOWTEMPLATE": "Workflow Template",
     "WORKFLOW": "Workflow",

@@ -10,5 +10,8 @@
 
   &__short-section {
     max-width: 400px;
+    .pf-m-error {
+      color: #f04c5c;
+    }
   }
 }
