@@ -209,8 +209,7 @@ let expTime = 0;
 
 export class ExpTimer extends Component {
   state = {
-    expMin: '',
-    expSec: '',
+    expText: '',
     modalShow: false,
   };
 
@@ -262,6 +261,20 @@ export class ExpTimer extends Component {
     window.clearInterval(timerID);
   }
 
+  expFormat() {
+    let temp = Math.floor(expTime);
+    const sec = temp % 60;
+    temp = Math.floor(temp / 60);
+    const min = temp % 60;
+    temp = Math.floor(temp / 60);
+    const hour = temp % 24;
+    temp = Math.floor(temp / 24);
+    const day = temp;
+    const expText = (!!day ? day + 'day(s) ' : '') + (!!hour ? (hour < 10 ? '0' + hour : hour) + ':' : '') + (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec);
+
+    this.setState({ expText: expText });
+  }
+
   numFormat(num) {
     var val = Number(num).toString();
     if (num < 10 && val.length == 1) {
@@ -295,18 +308,16 @@ export class ExpTimer extends Component {
       NoticeExpirationModal_({ logout: this.props.logout, tokenRefresh: this.props.tokenRefresh, time: expTime });
     }
 
-    // console.log(Math.floor(expTime / 60) + " Min " + Math.floor(expTime % 60) + " Sec");
-    this.setState({ expMin: this.numFormat(Math.floor(expTime / 60)) });
-    this.setState({ expSec: this.numFormat(Math.floor(expTime % 60)) });
+    this.expFormat();
   }
 
   render() {
-    const { expMin, expSec } = this.state;
+    const { expText } = this.state;
     return (
       <div className="exp-timer">
         <i className="fa fa-clock-o" aria-hidden="true"></i>
         <span className="co-masthead__timer__span">
-          <span>{expMin}</span>:<span>{expSec}</span>
+          <span>{expText}</span>
         </span>
       </div>
     );
