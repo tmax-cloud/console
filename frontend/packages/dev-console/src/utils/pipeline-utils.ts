@@ -182,7 +182,11 @@ export const getPipelineTasks = (
   const tasks = sortTasksByRunAfterAndFrom(taskList);
 
   tasks.forEach(task => {
-    if (task.resources && task.resources.inputs[0].from) {
+    if (
+      task.resources &&
+      task.resources.inputs &&
+      task.resources.inputs[0].from
+    ) {
       task.resources.inputs[0].from.forEach(item => {
         task.runAfter = [];
         task.runAfter.push(item);
