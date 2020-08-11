@@ -17,19 +17,22 @@ import {
   getPipelineURL
 } from './utils';
 import { validationSchema } from './validation-utils';
-
+import { withTranslation } from 'react-i18next';
+import { ResourcePlural } from '../../../../../../public/components/utils/lang/resource-plural';
 import './PipelineBuilderPage.scss';
 
 type PipelineBuilderPageProps = RouteComponentProps<{ ns?: string }> & {
   existingPipeline?: Pipeline;
+  t: any;
 };
 
-export const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => {
+const PipelineBuilderPage_: React.FC<PipelineBuilderPageProps> = props => {
   const {
     existingPipeline,
     match: {
       params: { ns }
-    }
+    },
+    t
   } = props;
 
   const initialValues: PipelineBuilderFormValues = {
@@ -73,7 +76,11 @@ export const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => 
   return (
     <div className="odc-pipeline-builder-page">
       <Helmet>
-        <title>Pipeline Builder</title>
+        <title>
+          {t('ADDITIONAL:CREATEBUTTON', {
+            something: ResourcePlural('Pipeline', t)
+          })}
+        </title>
       </Helmet>
       <Formik
         initialValues={initialValues}
@@ -85,6 +92,7 @@ export const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => 
             {...formikProps}
             namespace={ns}
             existingPipeline={existingPipeline}
+            t={t}
           />
         )}
       />
@@ -92,4 +100,4 @@ export const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = props => 
   );
 };
 
-// export default PipelineBuilderPage;
+export const PipelineBuilderPage = withTranslation()(PipelineBuilderPage_);

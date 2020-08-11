@@ -26,6 +26,7 @@ import './PipelineBuilderForm.scss';
 type PipelineBuilderFormProps = FormikProps<FormikValues> & {
   existingPipeline: Pipeline;
   namespace: string;
+  t: any;
 };
 
 const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
@@ -46,7 +47,8 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
     namespace,
     setFieldValue,
     setStatus,
-    values
+    values,
+    t
   } = props;
   const statusRef = React.useRef(status);
   statusRef.current = status;
@@ -98,6 +100,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
           <PipelineBuilderHeader
             existingPipeline={existingPipeline}
             namespace={namespace}
+            t={t}
           />
         </StackItem>
         <StackItem isFilled className="odc-pipeline-builder-form__content">
@@ -107,16 +110,31 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
           >
             <div className="odc-pipeline-builder-form__short-section">
               <InputField
-                label="Name"
+                // label={t('CONTENT:NAME')}
                 name="name"
+                resourceType="pipeline"
                 type={TextInputTypes.text}
                 isDisabled={!!existingPipeline}
                 required
               />
             </div>
+            <div>
+              <h2>{t('CONTENT:PIPELINEPARAMETERS')}</h2>
+              <PipelineParameters
+                addLabel={t('CONTENT:ADDMORE')}
+                fieldName="params"
+              />
+            </div>
 
             <div>
-              <h2>Tasks</h2>
+              <h2>{t('CONTENT:PIPELINERESOURCES')}</h2>
+              <PipelineResources
+                addLabel={t('CONTENT:ADDMORE')}
+                fieldName="resources"
+              />
+            </div>
+            <div>
+              <h2>{t('CONTENT:PIPELINEBUILD')}</h2>
               <PipelineBuilderVisualization
                 namespace={namespace}
                 tasksInError={status?.tasks || {}}
@@ -135,33 +153,18 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
               />
             </div>
 
-            <div>
-              <h2>Parameters</h2>
-              <PipelineParameters
-                addLabel="Add Parameters"
-                fieldName="params"
-              />
-            </div>
-
-            <div>
-              <h2>Resources</h2>
-              <PipelineResources
-                addLabel="Add Resources"
-                fieldName="resources"
-              />
-            </div>
             <FormFooter
               handleReset={closeSidebarAndHandleReset}
               errorMessage={status?.submitError}
               isSubmitting={isSubmitting}
-              submitLabel={existingPipeline ? 'Save' : 'Create'}
+              submitLabel={existingPipeline ? 'Save' : t('CONTENT:CREATE')}
               disableSubmit={
                 !dirty ||
                 !_.isEmpty(errors) ||
                 !_.isEmpty(status?.tasks) ||
                 values.tasks.length === 0
               }
-              resetLabel="Cancel"
+              resetLabel={t('CONTENT:CANCEL')}
               sticky
             />
           </Form>
