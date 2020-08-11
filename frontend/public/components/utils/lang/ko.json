@@ -321,7 +321,10 @@
     "USER-SIDEBAR_0": "사용자 생성",
     "USER-SIDEBAR_1": "HyperCloud에서 사용할 사용자를 생성할 수 있으며, 콘솔 접속 ID는 메타데이터의 Name Tag의 값으로 접속할 수 있습니다.",
     "SERVICEACCOUNT-SIDEBAR_0": "API 호출을 위한 계정 생성",
-    "SERVICEACCOUNT-SIDEBAR_1": "HyperCloud API를 호출하거나, 접근 권한을 부여하고자 할 때 생성할 수 있습니다.\n 서비스 계정이 생성될 때 시크릿은 자동 생성됩니다."
+    "SERVICEACCOUNT-SIDEBAR_1": "HyperCloud API를 호출하거나, 접근 권한을 부여하고자 할 때 생성할 수 있습니다.\n 서비스 계정이 생성될 때 시크릿은 자동 생성됩니다.",
+    "PIPELINE-CREATE_0": "특정 빌드 또는 배치를 수행하는 시작하는 일련의 태스크를 정의하십시오. 이벤트에 의해 시작되거나 PipelineRun에서 호출될 수 있습니다.",
+    "PIPELINE-CREATE_1": "노드 간 순차 혹은 병렬 배치를 통해 연결하여 파이프라인을 생성할 수 있습니다.",
+    "PIPELINE-CREATE_2": "태스크 선택"
   },
   "CONTENT": {
     "REPORTEDFROM": "출발지",
@@ -784,7 +787,9 @@
     "STORAGESIZEREQUEST": "Storage Size Request",
     "IMAGETAG": "이미지 태그",
     "READWRITEONCE": "Read Write Once",
-    "READWRITEMANY": "Read Write Many"
+    "READWRITEMANY": "Read Write Many",
+    "DEFAULTVALUE": "기본 값",
+    "SELECTRESOURCETYPE": "리소스 타입 선택"
   },
   "RESOURCE": {
     "HOME": "홈",
