@@ -11,7 +11,7 @@ $border-color: #b8bbbe;
     width: inherit;
     // height: 2.5em;
     height: 38px;
-    padding: 0 24px;
+    padding: 0 20px;
     white-space: normal;
     border: 1px solid $border-color;
     border-radius: 19px;
@@ -46,14 +46,18 @@ $border-color: #b8bbbe;
 
   &__status {
     // margin: 0 3px 0 7px;
-    width: 1.5em;
-    height: 1.5em;
+    // width: 1.5em;
+    // height: 1.5em;
+    width: 16px;
+    height: 16px;
     flex-grow: 0;
     flex-shrink: 0;
     order: -1;
   }
 
   &__title-wrapper {
+    width: 81px;
+    margin-left: 6px;
     flex: 0 0 75px;
     display: flex;
     flex-direction: column;
