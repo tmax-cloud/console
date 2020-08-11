@@ -789,7 +789,11 @@
     "READWRITEONCE": "Read Write Once",
     "READWRITEMANY": "Read Write Many",
     "DEFAULTVALUE": "기본 값",
-    "SELECTRESOURCETYPE": "리소스 타입 선택"
+    "SELECTRESOURCETYPE": "리소스 타입 선택",
+    "INPUTRESOURCE": "인풋 리소스",
+    "OUTPUTRESOURCE": "아웃풋 리소스",
+    "SELECTIMAGERESOURCE": "이미지 리소스 선택",
+    "SELECTGITRESOURCE": "Git 리소스 선택"
   },
   "RESOURCE": {
     "HOME": "홈",

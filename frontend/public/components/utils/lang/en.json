@@ -788,7 +788,11 @@
     "READWRITEONCE": "Read Write Once",
     "READWRITEMANY": "Read Write Many",
     "DEFAULTVALUE": "Default Value",
-    "SELECTRESOURCETYPE": "Select resource type"
+    "SELECTRESOURCETYPE": "Select resource type",
+    "INPUTRESOURCE": "Input Resources",
+    "OUTPUTRESOURCE": "Output Resources",
+    "SELECTIMAGERESOURCE": "Select image resource",
+    "SELECTGITRESOURCE": "Select git resource"
   },
   "RESOURCE": {
     "HOME": "Home",
