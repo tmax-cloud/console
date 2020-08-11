@@ -104,6 +104,12 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
           />
         </StackItem>
         <StackItem isFilled className="odc-pipeline-builder-form__content">
+          <p
+            className="co-m-pane__explanation"
+            style={{ marginBottom: '10px' }}
+          >
+            {t('STRING:PIPELINE-CREATE_0')}
+          </p>
           <Form
             className="odc-pipeline-builder-form__grid"
             onSubmit={handleSubmit}
@@ -116,6 +122,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
                 type={TextInputTypes.text}
                 isDisabled={!!existingPipeline}
                 required
+                t={t}
               />
             </div>
             <div>
@@ -151,6 +158,12 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
                 }
                 taskGroup={taskGroup}
               />
+              <p
+                className="co-m-pane__explanation"
+                style={{ marginTop: '10px' }}
+              >
+                {t('STRING:PIPELINE-CREATE_1')}
+              </p>
             </div>
 
             <FormFooter
@@ -206,6 +219,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
               }}
               selectedPipelineTaskIndex={selectedTask.taskIndex}
               taskResource={selectedTask.resource}
+              t={t}
             />
           </div>
         )}

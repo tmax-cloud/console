@@ -5,7 +5,7 @@ import BaseInputField from './BaseInputField';
 
 const InputField: React.FC<BaseInputFieldProps> = ({
   type = TextInputTypes.text,
-
+  t,
   ...baseProps
 }) => (
   <BaseInputField type={type} {...baseProps}>
@@ -13,7 +13,7 @@ const InputField: React.FC<BaseInputFieldProps> = ({
       props.resourceType === 'pipeline' ? (
         <div className={'row form-group required'}>
           <div className="col-xs-2 control-label">
-            <strong>Name</strong>
+            <strong>{t('CONTENT:NAME')}</strong>
           </div>
           <div className="col-xs-10">
             <TextInput

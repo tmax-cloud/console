@@ -34,6 +34,7 @@ type TaskSidebarProps = {
   resourceList: PipelineResource[];
   selectedPipelineTaskIndex: number;
   taskResource: PipelineResourceTask;
+  t: any;
 };
 
 const TaskSidebar: React.FC<TaskSidebarProps> = props => {
@@ -43,7 +44,8 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
     onUpdateTask,
     resourceList,
     selectedPipelineTaskIndex,
-    taskResource
+    taskResource,
+    t
   } = props;
   const formikTaskReference = `tasks.${selectedPipelineTaskIndex}`;
   const [taskField] = useField<PipelineTask>(formikTaskReference);
@@ -92,6 +94,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
     );
   };
 
+  let _label = t('ADDITIONAL:DELETE', { something: t('RESOURCE:TASK') });
   return (
     <div className="odc-task-sidebar">
       <div className="odc-task-sidebar__header">
@@ -120,7 +123,8 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
             <ActionsMenu
               actions={[
                 {
-                  label: 'Remove Task',
+                  // label: 'Remove Task',
+                  label: _label,
                   callback: () => onRemoveTask(taskField.value.name)
                 }
               ]}
