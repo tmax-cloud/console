@@ -323,7 +323,10 @@
     "USER-SIDEBAR_0": "Create a user",
     "USER-SIDEBAR_1": "Create a HyperCloud user account. The console access ID is based on the tag the metadata name.",
     "SERVICEACCOUNT-SIDEBAR_0": "Create an account for API calls",
-    "SERVICEACCOUNT-SIDEBAR_1": "It can be created for enabling the HyperCloud API or granting the access the API.\n As soon as a service account is created, secrets are automatically added to it"
+    "SERVICEACCOUNT-SIDEBAR_1": "It can be created for enabling the HyperCloud API or granting the access the API.\n As soon as a service account is created, secrets are automatically added to it",
+    "PIPELINE-CREATE_0": "Define a series of Tasks that accomplish a specific build or delivery goal. Can be triggered by an event or invoked from a PipelineRun.",
+    "PIPELINE-CREATE_1": "Can create a pipeline through sequential or parallel batch between nodes.",
+    "PIPELINE-CREATE_2": "Select task"
   },
   "CONTENT": {
     "REPORTEDFROM": "Reported from",
@@ -760,6 +763,9 @@
     "FRAMEWORK": "Framework",
     "STORAGEURI": "Storage URI",
     "PIPELINE": "Pipeline",
+    "PIPELINEBUILD": "Pipeline Build",
+    "PIPELINEPARAMETERS": "Parameter Configuration",
+    "PIPELINERESOURCES": "Resource Configuration",
     "ENDTIME": "end time",
     "CANARY": "Canary",
     "ROLETYPE": "Role Type",
@@ -780,7 +786,9 @@
     "STORAGESIZEREQUEST": "Storage Size Request",
     "IMAGETAG": "Image Tag",
     "READWRITEONCE": "Read Write Once",
-    "READWRITEMANY": "Read Write Many"
+    "READWRITEMANY": "Read Write Many",
+    "DEFAULTVALUE": "Default Value",
+    "SELECTRESOURCETYPE": "Select resource type"
   },
   "RESOURCE": {
     "HOME": "Home",
