@@ -333,7 +333,7 @@ export const Masthead = connectToFlags(FLAGS.CAN_LIST_NS)(({ setLoading, flags, 
           <button className="btn btn-token-refresh" id="token-refresh" onClick={tokenRefresh}>
             {t('CONTENT:EXTEND')}
           </button>
-          {!HDCModeFlag && flags.CAN_LIST_NS && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>}
+          {/* {!HDCModeFlag && flags.CAN_LIST_NS && <i className="fa fa-cog extend-refresh-icon" onClick={() => ExtendSessionModal_({ setExpireTimeFunc: setExpireTime, t: t })}></i>} */}
           {flags.CAN_LIST_NS && <div className="extend-refresh-border"></div>}
         </div>
       )}
