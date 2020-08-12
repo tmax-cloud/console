@@ -7,7 +7,7 @@ import {
   ButtonType,
   GridItem,
   Grid,
-  gridItemSpanValueShape,
+  gridItemSpanValueShape
 } from '@patternfly/react-core';
 import './MultiColumnField.scss';
 
@@ -22,7 +22,11 @@ export interface MultiColumnFieldRowProps {
   spans: gridItemSpanValueShape[];
 }
 
-const minusCircleIcon = (onDelete: () => void, disableDeleteRow?: boolean, toolTip?: string) => {
+const minusCircleIcon = (
+  onDelete: () => void,
+  disableDeleteRow?: boolean,
+  toolTip?: string
+) => {
   return (
     <div className={'odc-multi-column-field__col--button'}>
       <Button
@@ -43,10 +47,12 @@ const minusCircleIcon = (onDelete: () => void, disableDeleteRow?: boolean, toolT
 const renderMinusCircleIcon = (
   onDelete: () => void,
   toolTip?: string,
-  disableDeleteRow?: boolean,
+  disableDeleteRow?: boolean
 ) => {
   return toolTip ? (
-    <Tooltip content={toolTip}>{minusCircleIcon(onDelete, disableDeleteRow, toolTip)}</Tooltip>
+    <Tooltip content={toolTip}>
+      {minusCircleIcon(onDelete, disableDeleteRow, toolTip)}
+    </Tooltip>
   ) : (
     minusCircleIcon(onDelete, disableDeleteRow)
   );
@@ -60,16 +66,18 @@ const MultiColumnFieldRow: React.FC<MultiColumnFieldRowProps> = ({
   children,
   isReadOnly,
   disableDeleteRow,
-  spans,
+  spans
 }) => (
   <div className="odc-multi-column-field__row">
-    <Grid>
+    <Grid className="odc-multi-column-field__row">
       {React.Children.map(children, (child: React.ReactElement, i) => {
         const fieldName = `${name}.${rowIndex}.${child.props.name}`;
         const newProps = { ...child.props, name: fieldName };
         return (
           <GridItem span={spans[i]} key={fieldName}>
-            <div className="odc-multi-column-field__col">{React.cloneElement(child, newProps)}</div>
+            <div className="odc-multi-column-field__col">
+              {React.cloneElement(child, newProps)}
+            </div>
           </GridItem>
         );
       })}

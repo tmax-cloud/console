@@ -147,7 +147,7 @@ export const navFactory = {
   pipelinerunLogs: (name, component) => ({
     href: 'logs/:name?',
     path: 'logs/:name?',
-    name: 'Logs',
+    name: name || 'Logs',
     component: component || PipelineRunLogsWithActiveTask,
   }),
   vnc: (name, component) => ({
