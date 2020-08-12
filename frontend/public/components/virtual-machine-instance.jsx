@@ -117,7 +117,7 @@ export const VirtualMachineInstancesDetailsPage = props => {
       }
       kind="VirtualMachineInstance"
       menuActions={menuActions}
-      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml()]}
+      pages={[navFactory.details(Details, t('CONTENT:OVERVIEW')), navFactory.editYaml(), navFactory.vnc(t('CONTENT:TERMINAL'))]}
     />
   );
 };

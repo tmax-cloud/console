@@ -11,6 +11,7 @@ import { TrafficPage } from '../traffic';
 import { TracePage } from '../trace';
 import { AsyncComponent } from '../utils/async';
 import { PipelineRunLogsWithActiveTask } from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs';
+import { VNCPage } from '../vnc';
 
 const editYamlComponent = props => {
   const { t } = useTranslation();
@@ -65,6 +66,15 @@ class TraceComponent extends React.PureComponent {
       metadata: { namespace, name },
     } = this.props.obj;
     return <TracePage showTitle={false} namespace={namespace} name={name} canCreate={false} />;
+  }
+}
+
+class VNCComponent extends React.PureComponent {
+  render() {
+    const {
+      metadata: { namespace, name },
+    } = this.props.obj;
+    return <VNCPage showTitle={false} namespace={namespace} name={name} canCreate={false} />;
   }
 }
 
@@ -139,6 +149,11 @@ export const navFactory = {
     path: 'logs/:name?',
     name: 'Logs',
     component: component || PipelineRunLogsWithActiveTask,
+  }),
+  vnc: (name, component) => ({
+    href: 'vnc',
+    name: name || 'vnc',
+    component: component || VNCComponent,
   }),
 };
 
