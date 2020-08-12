@@ -114,7 +114,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
             className="odc-pipeline-builder-form__grid"
             onSubmit={handleSubmit}
           >
-            <div>
+            <div className="odc-pipeline-builder-form__name">
               <InputField
                 // label={t('CONTENT:NAME')}
                 name="name"
