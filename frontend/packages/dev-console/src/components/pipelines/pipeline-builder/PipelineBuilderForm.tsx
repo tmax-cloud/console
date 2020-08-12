@@ -114,7 +114,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
             className="odc-pipeline-builder-form__grid"
             onSubmit={handleSubmit}
           >
-            <div className="odc-pipeline-builder-form__short-section">
+            <div>
               <InputField
                 // label={t('CONTENT:NAME')}
                 name="name"
@@ -125,23 +125,46 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
                 t={t}
               />
             </div>
-            <div>
+            {/* <div>
               <h2>{t('CONTENT:PIPELINEPARAMETERS')}</h2>
               <PipelineParameters
                 addLabel={t('CONTENT:ADDMORE')}
                 fieldName="params"
               />
-            </div>
+            </div> */}
 
+            <div className={'row form-group'}>
+              <div className="col-xs-2 control-label">
+                <strong>{t('CONTENT:PIPELINEPARAMETERS')}</strong>
+              </div>
+              <div className="col-xs-10">
+                <PipelineParameters
+                  addLabel={t('CONTENT:ADDMORE')}
+                  fieldName="params"
+                />
+              </div>
+            </div>
+            <div className={'row form-group required'}>
+              <div className="col-xs-2 control-label">
+                <strong>{t('CONTENT:PIPELINERESOURCES')}</strong>
+              </div>
+              <div className="col-xs-10">
+                <PipelineResources
+                  addLabel={t('CONTENT:ADDMORE')}
+                  fieldName="resources"
+                />
+              </div>
+            </div>
+            {/* 
             <div>
               <h2>{t('CONTENT:PIPELINERESOURCES')}</h2>
               <PipelineResources
                 addLabel={t('CONTENT:ADDMORE')}
                 fieldName="resources"
               />
-            </div>
+            </div> */}
             <div>
-              <h2>{t('CONTENT:PIPELINEBUILD')}</h2>
+              <strong>{t('CONTENT:PIPELINEBUILD')}</strong>
               <PipelineBuilderVisualization
                 namespace={namespace}
                 tasksInError={status?.tasks || {}}

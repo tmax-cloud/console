@@ -65,11 +65,14 @@ const MultiColumnField: React.FC<MultiColumnFieldProps> = ({
                   toolTip={toolTip}
                   rowIndex={index}
                   onDelete={() => {
-                    RemovePipelineResourcesModal_({
-                      removeFunc: remove,
-                      idx: index
-                    });
-                    // remove(index);
+                    if (name === 'resources') {
+                      RemovePipelineResourcesModal_({
+                        removeFunc: remove,
+                        idx: index
+                      });
+                    } else {
+                      remove(index);
+                    }
                   }}
                   isReadOnly={isReadOnly}
                   disableDeleteRow={disableDeleteRow}
