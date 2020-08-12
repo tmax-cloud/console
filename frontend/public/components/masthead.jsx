@@ -47,10 +47,19 @@ const UserMenuWrapper = connectToFlags(
 )(props => {
   const { t } = useTranslation();
   const actions = [];
+  const manageAccount = e => {
+    // console.log('manageAccount');
+    window.open(props.keycloak.createAccountUrl());
+  };
   const logout = e => {
     console.log('logout');
     props.keycloak.logout();
   };
+  actions.push({
+    label: '계정 관리',
+    callback: manageAccount,
+    link: true,
+  });
   actions.push({
     label: t('CONTENT:LOGOUT'),
     callback: logout,
