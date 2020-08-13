@@ -45,7 +45,7 @@ class ConfigMapFormComponent extends React.Component {
       inProgress: false,
       type: 'form',
       data: [['', '']],
-      inputError: inputError,
+      inputError: inputError
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
@@ -66,6 +66,7 @@ class ConfigMapFormComponent extends React.Component {
   _updateData(datas) {
     this.setState({
       data: datas.keyValuePairs,
+      isDuplicated: datas.isDuplicated || false
     });
   }
   save(e) {
@@ -85,6 +86,9 @@ class ConfigMapFormComponent extends React.Component {
       return;
     } else {
       this.setState({ inputError: { namespace: null } });
+    }
+    if (this.state.isDuplicated) {
+      return;
     }
     //  데이터 가공
     let obj = {};
