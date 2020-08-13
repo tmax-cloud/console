@@ -9,6 +9,7 @@ import MultiColumnFieldRow from './MultiColumnFieldRow';
 import MultiColumnFieldFooter from './MultiColumnFieldFooter';
 import { getSpans } from './multicolumn-field-utils';
 import './MultiColumnField.scss';
+import { RemovePipelineResourcesModal_ } from '../../../../../../public/components/modals/remove-pipeline-resources-modal';
 
 const MultiColumnField: React.FC<MultiColumnFieldProps> = ({
   children,
@@ -63,7 +64,16 @@ const MultiColumnField: React.FC<MultiColumnFieldProps> = ({
                   name={name}
                   toolTip={toolTip}
                   rowIndex={index}
-                  onDelete={() => remove(index)}
+                  onDelete={() => {
+                    if (name === 'resources') {
+                      RemovePipelineResourcesModal_({
+                        removeFunc: remove,
+                        idx: index
+                      });
+                    } else {
+                      remove(index);
+                    }
+                  }}
                   isReadOnly={isReadOnly}
                   disableDeleteRow={disableDeleteRow}
                   spans={fieldSpans}

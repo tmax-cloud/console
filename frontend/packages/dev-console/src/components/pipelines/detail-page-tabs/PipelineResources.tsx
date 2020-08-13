@@ -5,8 +5,8 @@ import {
   InputField,
   DropdownField
 } from '../../../../../console-shared/src';
-import { pipelineResourceTypeSelections } from '../const';
-
+// import { pipelineResourceTypeSelections } from '../const';
+import { useTranslation } from 'react-i18next';
 type PipelineResourcesParam = {
   addLabel?: string;
   fieldName: string;
@@ -19,12 +19,22 @@ const PipelineResources: React.FC<PipelineResourcesParam> = props => {
     fieldName,
     isReadOnly = false
   } = props;
-  const emptyMessage = 'No resources are associated with this pipeline.';
+  // const emptyMessage = 'No resources are associated with this pipeline.';
+  const emptyMessage = '';
+  const { t } = useTranslation();
+
+  let pipelineResourceTypeSelections = {
+    '': t('CONTENT:SELECTRESOURCETYPE'),
+    git: 'Git',
+    image: t('CONTENT:IMAGE')
+    // cluster: 'Cluster',
+    // storage: t('CONTENT:STORAGE')
+  };
   return (
     <MultiColumnField
       name={fieldName}
       addLabel={addLabel}
-      headers={['Name', 'Resource Type']}
+      headers={[t('CONTENT:NAME'), t('CONTENT:RESOURCETYPE')]}
       emptyValues={{ name: '', type: '' }}
       emptyMessage={emptyMessage}
       isReadOnly={isReadOnly}
@@ -32,7 +42,7 @@ const PipelineResources: React.FC<PipelineResourcesParam> = props => {
       <InputField
         name="name"
         type={TextInputTypes.text}
-        placeholder="Name"
+        placeholder={t('CONTENT:NAME')}
         isReadOnly={isReadOnly}
       />
       <DropdownField

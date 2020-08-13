@@ -1051,7 +1051,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.TaskRunModel), 'default'],
     `
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
 metadata:
     name: example-taskrun
@@ -1078,7 +1078,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample'],
     `
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
 metadata:
   name: example-taskrun

@@ -11,24 +11,24 @@ export class ValueEditor extends React.Component {
     this._remove = this._remove.bind(this);
   }
   _append(event) {
-    const { updateParentData, values, nameValueId, allowSorting } = this.props;
+    const { updateParentData, values, nameValueId, allowSorting, editorIdx } = this.props;
     let lastIndex = this.props.values.length - 1;
     let lastData = this.props.values[lastIndex];
-    updateParentData({ values: allowSorting ? portPairs.concat([['', values.length]]) : values.concat([['']]) }, nameValueId);
+    updateParentData({ values: allowSorting ? portPairs.concat([['', values.length]]) : values.concat([['']]), editorIdx }, nameValueId);
   }
 
   _remove(i) {
-    const { updateParentData, nameValueId } = this.props;
+    const { updateParentData, nameValueId, editorIdx } = this.props;
     const values = _.cloneDeep(this.props.values);
     values.splice(i, 1);
-    updateParentData({ values: values.length ? values : [['', '']] }, nameValueId);
+    updateParentData({ values: values.length ? values : [['', '']], editorIdx }, nameValueId);
   }
 
   _change(e, i, type) {
-    const { updateParentData, nameValueId } = this.props;
+    const { updateParentData, nameValueId, editorIdx } = this.props;
     const values = _.cloneDeep(this.props.values);
     values[i][type] = e.target.value;
-    updateParentData({ values }, nameValueId);
+    updateParentData({ values, editorIdx }, nameValueId);
   }
   render() {
     const { desc, title, valueString, addString, values, allowSorting, readOnly, nameValueId, isModal, t } = this.props;
