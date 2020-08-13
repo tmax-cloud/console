@@ -18,15 +18,15 @@ const TaskComponentTaskStatus: React.FC<TaskStatusProps> = ({ steps }) => {
       case 'Succeeded':
         barColor = '#4D8AFF';
         break;
-      case 'Failed':
-        barColor = '#FD5461';
+      case 'Running':
+        barColor = '#4BBBCF';
         break;
       // case '':
-      //   iconColor = '';
+      //   iconColor = '4BBBCF';
       //   break;
       // 실행중
       default:
-        barColor = '#4BBBCF';
+        barColor = '#FD5461';
         break;
     }
     return {

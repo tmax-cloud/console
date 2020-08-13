@@ -19,9 +19,13 @@ const MultiColumnFieldFooter: React.FC<MultiColumnFieldHeader> = ({
     onClick={onAdd}
     icon={<PlusCircleIcon />}
     isInline
-    style={{ color: '#0088ce', backgroundColor: '#ffffff', marginTop: '5px' }}
+    style={{
+      color: '#0088ce',
+      backgroundColor: '#ffffff',
+      marginTop: '5px'
+    }}
   >
-    {addLabel || 'Add values'}
+    <span style={{ marginLeft: '4px' }}>{addLabel || 'Add values'}</span>
   </Button>
 );
 
