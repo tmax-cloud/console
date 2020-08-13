@@ -32,7 +32,10 @@ class ResourceQuotaClaimFormComponent extends React.Component<ResourceQuotaClaim
             apiVersion: 'tmax.io/v1',
             kind: 'ResourceQuotaClaim',
             metadata: {
-                name: ''
+                name: '',
+                labels: {
+                    handled: 'f'
+                }
             },
             resourceName: '',
             spec: {

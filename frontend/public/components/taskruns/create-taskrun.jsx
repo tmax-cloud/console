@@ -263,6 +263,7 @@ spec:
                 type: cur.type,
                 default: cur.default || '',
                 description: cur.description || '',
+                isRequired: !cur.default,
               };
             })
           : [];
@@ -275,17 +276,20 @@ spec:
               ...item,
             });
           } else {
-            paramList.push({ ...item, value: '' });
+            // string type
+            paramList.push({ value: '', ...item });
           }
         });
-        const selectedPR = this.state.pipelineResourceList.length > 0 ? this.state.pipelineResourceList[0] : null;
+        const selectedPR = this.state.pipelineResourceList.length > 0 ? this.state.pipelineResourceList[0] : '';
         const inputList = details.spec.resources ? details.spec.resources.inputs || [] : [];
         const outputList = details.spec.resources ? details.spec.resources.outputs || [] : [];
         inputList.forEach(item => {
           item.selectedPR = selectedPR;
+          item.isRequired = !item.optional ? true : false;
         });
         outputList.forEach(item => {
           item.selectedPR = selectedPR;
+          item.isRequired = !item.optional ? true : false;
         });
 
         this.setState({
@@ -363,12 +367,14 @@ spec:
       },
       spec: {
         params: paramList
+          .filter(item => item.isRequired || item.value)
           .map(item => ({
             name: item.name,
-            value: item.value || '',
+            value: item.value,
           }))
           .concat(
             arrayParamList.map(item => ({
+              // TODO : 필수 입력 , 필수 입력 아닌데 입력했을 경우 필터링
               name: item.name,
               value: item.values.map(item => item[0] || item.default || ''),
             })),
@@ -410,13 +416,14 @@ spec:
             className="form-control"
             type="text"
             placeholder={item.default || ''}
-            required={!item.default ? true : false}
+            required={item.isRequired}
             onChange={e => {
               this.onParamChanged(e, idx);
             }}
             id={item.name}
+            value={item.value}
           />
-          <span>{`입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`}</span>
+          {item.default && <span>{`입력하지 않을 경우 '${item.default}'(으)로 자동 입력됩니다.`}</span>}
         </div>
       );
     });
@@ -427,7 +434,7 @@ spec:
             {item.name}
           </label>
           <span style={{ display: 'block' }}>{item.description}</span>
-          <ValueEditor title="false" desc={`입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`} valueString={item.default || ''} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
+          <ValueEditor title="false" desc={item.default && `입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`} valueString={item.default || ''} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
         </div>
       );
     });
@@ -442,7 +449,7 @@ spec:
             onChange={e => {
               this.onPipelineResourceChanged(e, idx, 'input');
             }}
-            required={item.optional ? true : false}
+            required={item.isRequired}
           >
             {pipelineResourceList.map(cur => {
               return <option value={cur.name}>{cur.name}</option>;
@@ -463,7 +470,7 @@ spec:
             onChange={e => {
               this.onPipelineResourceChanged(e, idx, 'output');
             }}
-            required={item.optional ? true : false}
+            required={item.isRequired}
           >
             {pipelineResourceList.map(cur => {
               return <option value={cur.name}>{cur.name}</option>;
@@ -489,7 +496,7 @@ spec:
             <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
               <NsDropdown id="taskrun-namespace" t={t} onChange={this.onNamespaceChanged} />
             </Section>
-            <Section label="태스크 선택" isRequired={true}>
+            <Section label={t('STRING:PIPELINE-CREATE_2')} isRequired={true}>
               <select id="task-list" onChange={this.onTaskChanged} className="form-control" required>
                 {taskList.map(cur => {
                   return <option value={cur.name}>{cur.name}</option>;
@@ -498,31 +505,29 @@ spec:
             </Section>
             <div className="separator"></div>
 
-            <Section label="태스크 파라미터 값" isRequired={true}>
+            <Section label={t('STRING:TASKRUN-CREATE_0')} isRequired={true}>
               {params}
               {arrayParams}
             </Section>
             <div className="separator"></div>
 
-            <Section label="인풋 리소스" isRequired={false}>
+            <Section label={t('CONTENT:INPUTRESOURCE')} isRequired={false}>
               {inputs}
             </Section>
             <div className="separator"></div>
-
-            <Section label="아웃풋 리소스" isRequired={false}>
+            <Section label={t('CONTENT:OUTPUTRESOURCE')} isRequired={false}>
               {outputs}
             </Section>
             <div className="separator"></div>
-            <Section label="타임아웃 실패 시점 설정" isRequired={false}>
+            <Section label={t('STRING:TASKRUN-CREATE_2')} isRequired={false}>
               <div style={{ display: 'flex' }}>
-                <input className="form-control" type="number" onChange={this.onTimeoutChanged} placeholder="예 : 60, 120, 30" id="timeout" />분
+                <input className="form-control" type="number" onChange={this.onTimeoutChanged} placeholder={t('STRING:TASKRUN-CREATE_1')} id="timeout" />
+                {t('STRING:TASKRUN-CREATE_4')}
               </div>
-              <span>시간 초과 필드를 사용하여 원하는 시간 초과 값을 분 단위로 설정할 수 있습니다. 값이 지정되지 않을 경우, 세계 시간 기준으로 기본 타임아웃 값이 적용됩니다. 값을 0으로 설정 시, 태스크 런이 되지 않습니다.</span>
+              <span>{t('STRING:TASKRUN-CREATE_3')}</span>
             </Section>
-            <Section label="서비스 어카운트 지정" isRequired={false}>
-              <label htmlFor="service-account-list" className="rbac-edit-binding__input-label">
-                서비스 어카운트
-              </label>
+            <Section label={t('STRING:TASKRUN-CREATE_5')} isRequired={false}>
+              {/* <SingleSelect className="form-control" options={serviceAccountList.map(item => ({ value: item.name, label: item.name }))} name="ServiceAccount" value={this.state.selectedServiceAccount} label="라벨" placeholder="서비스 어카운트 선택" onChange={e => this.setState({ selectedServiceAccount: e.value })} /> */}
               <select id="service-account-list" onChange={e => this.setState({ selectedServiceAccount: e.target.value })} className="form-control">
                 {serviceAccountList.map(cur => {
                   return <option value={cur.name}>{cur.name}</option>;

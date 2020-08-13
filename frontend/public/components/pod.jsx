@@ -192,17 +192,18 @@ const ContainerTable = ({ heading, containers, pod }) => {
 
 const PodGraphs = requirePrometheus(({ pod }) => {
   const { t } = useTranslation();
+  // FIXME: kube 버전별로 쿼리 pod / pod_name 분기처리 (IMS235473, IMS232818)
   return (
     <React.Fragment>
       <div className="row">
         <div className="col-md-4">
-          <Line title={t('CONTENT:RAM')} query={`pod_name:container_memory_usage_bytes:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
+          <Line title={t('CONTENT:RAM')} query={`pod:container_memory_usage_bytes:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
         </div>
         <div className="col-md-4">
-          <Line title={t('CONTENT:CPUSHARES')} query={`pod_name:container_cpu_usage:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'} * 1000`} />
+          <Line title={t('CONTENT:CPUSHARES')} query={`pod:container_cpu_usage:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'} * 1000`} />
         </div>
         <div className="col-md-4">
-          <Line title={t('CONTENT:FILESYSTEM')} query={`pod_name:container_fs_usage_bytes:sum{pod_name='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
+          <Line title={t('CONTENT:FILESYSTEM')} query={`pod:container_fs_usage_bytes:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
         </div>
       </div>
 

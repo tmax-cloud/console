@@ -1,0 +1,11 @@
+{
+  "realm": "tmax",
+  "auth-server-url": "https://172.22.6.11/auth/",
+  "url": "https://172.22.6.11/auth/",
+  "ssl-required": "external",
+  "resource": "hypercloud4",
+  "clientId": "hypercloud4",
+  "public-client": true,
+  "verify-token-audience": true,
+  "confidential-port": 0
+}

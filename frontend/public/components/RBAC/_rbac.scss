@@ -91,6 +91,10 @@
 
   .form-control {
     max-width: 400px;
+
+    &::placeholder {
+      font-style: normal;
+    }
   }
   .dropdown {
     max-width: 400px;
@@ -106,6 +110,25 @@
     margin-bottom: 5px;
   }
 
+  .form-row {
+    display: flex;
+    max-width: 400px;
+    margin-bottom: unset;
+
+    .radio-item {
+      max-width: 200px;
+      width: 100%;
+
+      label {
+        font-weight: normal;
+      }
+    }
+  }
+
+  .half {
+    max-width: 200px;
+  }
+  
   .radio-item {
     margin: 10px 0;
     .co-m-radio-desc {

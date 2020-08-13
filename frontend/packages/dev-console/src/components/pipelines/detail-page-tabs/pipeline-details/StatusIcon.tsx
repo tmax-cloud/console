@@ -28,21 +28,22 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
     case runStatus.Succeeded:
       return <CheckCircleIcon {...props} />;
 
-    case runStatus.Failed:
-      return <ExclamationCircleIcon {...props} />;
-
-    case runStatus.Idle:
-    case runStatus.Pending:
-      return <PendingIcon {...props} />;
-
-    case runStatus.Cancelled:
-      return <BanIcon {...props} />;
-
-    case runStatus.Skipped:
-      return <AngleDoubleRightIcon {...props} />;
-
+    // case runStatus.Failed:
+    //   return <ExclamationCircleIcon {...props} />;
     default:
-      return <CircleIcon {...props} />;
+      return <ExclamationCircleIcon {...props} />;
+    // case runStatus.Idle:
+    // case runStatus.Pending:
+    //   return <PendingIcon {...props} />;
+
+    // case runStatus.Cancelled:
+    //   return <BanIcon {...props} />;
+
+    // case runStatus.Skipped:
+    //   return <AngleDoubleRightIcon {...props} />;
+
+    // default:
+    //   return <CircleIcon {...props} />;
   }
 };
 
@@ -55,15 +56,14 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({
     case 'Succeeded':
       iconColor = '#4D8AFF';
       break;
-    case 'Failed':
-      iconColor = '#FD5461';
-      break;
-    // case '':
-    //   iconColor = '';
+    // case 'Failed':
+    //   iconColor = '#FD5461';
     //   break;
-    // 실행중
-    default:
+    case 'Running':
       iconColor = '#4BBBCF';
+      break;
+    default:
+      iconColor = '#FD5461';
       break;
   }
   return (

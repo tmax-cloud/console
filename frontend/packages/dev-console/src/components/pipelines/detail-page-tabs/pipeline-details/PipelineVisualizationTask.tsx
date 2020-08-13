@@ -183,7 +183,7 @@ const TaskComponent: React.FC<TaskProps> = ({
     taskPill = (
       <Tooltip
         className={cx('tooltip-bg', { 'tooltip-bg-pipeline': !isPipelineRun })}
-        position="bottom"
+        position="top"
         enableFlip={false}
         content={
           <PipelineVisualizationStepList
