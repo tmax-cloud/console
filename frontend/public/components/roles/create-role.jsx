@@ -114,7 +114,7 @@ class RoleFormComponent extends React.Component {
         delete originVerbs.All;
         Object.keys(originVerbs).forEach(verb => {
           if (originVerbs[verb] === 1) {
-            verbs.push(verb);
+            verbs.push(verb.toLowerCase());
           }
         });
       }

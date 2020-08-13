@@ -4,6 +4,7 @@ import {
   MultiColumnField,
   InputField
 } from '../../../../../console-shared/src';
+import { useTranslation } from 'react-i18next';
 
 type PipelineParametersProps = {
   addLabel?: string;
@@ -17,13 +18,18 @@ const PipelineParameters: React.FC<PipelineParametersProps> = props => {
     fieldName,
     isReadOnly = false
   } = props;
-  const emptyMessage = 'No parameters are associated with this pipeline.';
-
+  // const emptyMessage = 'No parameters are associated with this pipeline.';
+  const emptyMessage = '';
+  const { t } = useTranslation();
   return (
     <MultiColumnField
       name={fieldName}
       addLabel={addLabel}
-      headers={['Name', 'Description', 'Default Value']}
+      headers={[
+        t('CONTENT:NAME'),
+        t('CONTENT:DESCRIPTION'),
+        t('CONTENT:DEFAULTVALUE')
+      ]}
       emptyValues={{ name: '', description: '', default: '' }}
       emptyMessage={emptyMessage}
       isReadOnly={isReadOnly}
@@ -31,19 +37,19 @@ const PipelineParameters: React.FC<PipelineParametersProps> = props => {
       <InputField
         name="name"
         type={TextInputTypes.text}
-        placeholder="Name"
+        placeholder={t('CONTENT:NAME')}
         isReadOnly={isReadOnly}
       />
       <InputField
         name="description"
         type={TextInputTypes.text}
-        placeholder="Description"
+        placeholder={t('CONTENT:DESCRIPTION')}
         isReadOnly={isReadOnly}
       />
       <InputField
         name="default"
         type={TextInputTypes.text}
-        placeholder="Default Value"
+        placeholder={t('CONTENT:DEFAULTVALUE')}
         isReadOnly={isReadOnly}
       />
     </MultiColumnField>

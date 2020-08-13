@@ -7,7 +7,7 @@ import {
   PipelineTaskResource
 } from '../../../../utils/pipeline-augment';
 import { SidebarInputWrapper } from './temp-utils';
-
+import { useTranslation } from 'react-i18next';
 type TaskSidebarResourceProps = {
   availableResources: PipelineResource[];
   onChange: (resourceName: string, resource: PipelineResource) => void;
@@ -21,7 +21,7 @@ const TaskSidebarResource: React.FC<TaskSidebarResourceProps> = props => {
   const dropdownResources = availableResources.filter(
     ({ name, type }) => resource.type === type && !!name
   );
-
+  const { t } = useTranslation();
   return (
     <FormGroup
       fieldId={resource.name}
@@ -37,7 +37,11 @@ const TaskSidebarResource: React.FC<TaskSidebarResourceProps> = props => {
     >
       <SidebarInputWrapper>
         <Dropdown
-          title={`Select ${resource.type} resource...`}
+          title={
+            resource.type === 'image'
+              ? t('CONTENT:SELECTIMAGERESOURCE')
+              : t('CONTENT:SELECTGITRESOURCE')
+          }
           items={dropdownResources.reduce(
             (acc, { name }) => ({ ...acc, [name]: name }),
             {}

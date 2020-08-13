@@ -25,6 +25,8 @@ export interface BaseInputFieldProps extends FieldProps {
   placeholder?: string;
   onChange?: (event) => void;
   onBlur?: (event) => void;
+  resourceType?: string;
+  t?: any;
 }
 
 export interface GroupInputProps extends BaseInputFieldProps {

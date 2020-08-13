@@ -425,7 +425,7 @@ class JobFormComponent extends React.Component {
                     }}
                     checked={!isUseManual}
                   />
-                  {t('CONTENT:UNUSE')}
+                  {t('CONTENT:NOTUSE')}
                 </div>
               </div>
               {isUseManual && <span>만약 해당 잡의 파드에 고유하지 않고 연관이 없는 파드와 일치하는 레이블 셀렉터를 지정하면, 연관이 없는 잡의 파드가 삭제되거나, 해당 잡이 다른 파드가 완료한것으로 수를 세거나, 하나 또는 양쪽 잡 모두 파드 생성이나 실행 완료를 거부할 수 있습니다. 만약 고유하지 않은 셀렉터가 선택된 경우, 다른 컨트롤러(예: 레플리케이션 컨트롤러)와 해당 파드는 예측할 수 없는 방식으로 작동할 수 있습니다.</span>}

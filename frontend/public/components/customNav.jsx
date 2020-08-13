@@ -554,7 +554,7 @@ class CustomNav extends React.Component {
                 resource = 'approvals';
                 break;
               case 'horizontalpodautoscaler':
-                temp = 'HPA';
+                temp = 'HPAs';
                 resource = 'horizontalpodautoscalers';
                 break;
               default:

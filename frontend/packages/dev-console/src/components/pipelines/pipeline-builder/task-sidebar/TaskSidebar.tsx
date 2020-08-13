@@ -34,6 +34,7 @@ type TaskSidebarProps = {
   resourceList: PipelineResource[];
   selectedPipelineTaskIndex: number;
   taskResource: PipelineResourceTask;
+  t: any;
 };
 
 const TaskSidebar: React.FC<TaskSidebarProps> = props => {
@@ -43,7 +44,8 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
     onUpdateTask,
     resourceList,
     selectedPipelineTaskIndex,
-    taskResource
+    taskResource,
+    t
   } = props;
   const formikTaskReference = `tasks.${selectedPipelineTaskIndex}`;
   const [taskField] = useField<PipelineTask>(formikTaskReference);
@@ -92,6 +94,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
     );
   };
 
+  let _label = t('ADDITIONAL:DELETE', { something: t('RESOURCE:TASK') });
   return (
     <div className="odc-task-sidebar">
       <div className="odc-task-sidebar__header">
@@ -120,7 +123,8 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
             <ActionsMenu
               actions={[
                 {
-                  label: 'Remove Task',
+                  // label: 'Remove Task',
+                  label: _label,
                   callback: () => onRemoveTask(taskField.value.name)
                 }
               ]}
@@ -139,7 +143,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
 
         {params && (
           <>
-            <h2>Parameters</h2>
+            <h2>{t('CONTENT:PARAMETERS')}</h2>
             {params.map(param => {
               const taskParams: PipelineTaskParam[] =
                 taskField.value?.params || [];
@@ -173,13 +177,13 @@ const TaskSidebar: React.FC<TaskSidebarProps> = props => {
 
         {inputResources && (
           <>
-            <h2>Input Resources</h2>
+            <h2>{t('CONTENT:INPUTRESOURCE')}</h2>
             {inputResources.map(renderResource('inputs'))}
           </>
         )}
         {outputResources && (
           <>
-            <h2>Output Resources</h2>
+            <h2>{t('CONTENT:OUTPUTRESOURCE')}</h2>
             {outputResources.map(renderResource('outputs'))}
           </>
         )}
