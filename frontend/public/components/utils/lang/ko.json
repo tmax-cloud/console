@@ -325,7 +325,13 @@
     "SERVICEACCOUNT-SIDEBAR_1": "HyperCloud API를 호출하거나, 접근 권한을 부여하고자 할 때 생성할 수 있습니다.\n 서비스 계정이 생성될 때 시크릿은 자동 생성됩니다.",
     "PIPELINE-CREATE_0": "특정 빌드 또는 배치를 수행하는 시작하는 일련의 태스크를 정의하십시오. 이벤트에 의해 시작되거나 PipelineRun에서 호출될 수 있습니다.",
     "PIPELINE-CREATE_1": "노드 간 순차 혹은 병렬 배치를 통해 연결하여 파이프라인을 생성할 수 있습니다.",
-    "PIPELINE-CREATE_2": "태스크 선택"
+    "PIPELINE-CREATE_2": "태스크 선택",
+    "VM-SIDEBAR_0": "Windows 가상머신 샘플",
+    "VM-SIDEBAR_1": "Windows 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec.Affinity.nodeAffinity - 생성 시 선호 노드 설정\n.spec.template.domain.devices.disk - 인스턴스에 attach할 디스크 설정\n.spec.template.domain.devices.interfaces - 네트워크 인터페이스에 대한 설정\n.spec.template.domain.gpus - attach할 GPU device 설정\n.spec.template.domain.cpu - attach할 CPU 설정\n.spec.template.domain.memory - attach할 Memory 설정",
+    "VM-SIDEBAR_2": "Ubuntu 가상머신 샘플",
+    "VM-SIDEBAR_3": "Ubuntu 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec – device 및 리소스 설정",
+    "VM-SIDEBAR_4": "CentOS 6 가상머신 샘플",
+    "VM-SIDEBAR_5": "CentOS 6 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec - device 및 리소스 설정"
   },
   "CONTENT": {
     "INPUTRESOURCE": "인풋 리소스",
