@@ -87,6 +87,7 @@
     "YEARSFROMNOW": "years from now"
   },
   "STRING": {
+    "TASK-CREATE_0": "입력을 처리하고 출력을 생성하는 특정 빌드 또는 배치 도구의 시작을 위한 일련의 스텝(Step)을 정의하십시오.",
     "DAEMONSET-CREATE_0": "모든 노드에 파드 실행",
     "DAEMONSET-CREATE_1": "특정 노드에 파드 실행",
     "DAEMONSET-CREATE_2": "일부 노드에 파드 실행",
@@ -331,9 +332,19 @@
     "TASKRUN-CREATE_3": "시간 초과 필드를 사용하여 원하는 시간 초과 값을 분 단위로 설정할 수 있습니다. 값이 지정되지 않을 경우, 세계 시간 기준으로 기본 타임아웃 값이 적용됩니다. 값을 0으로 설정 시, 태스크 실행이 되지 않습니다.",
     "TASKRUN-CREATE_4": "분",
     "TASKRUN-CREATE_5": "서비스 어카운트 지정",
-    "TASKRUN-CREATE_6": "서비스 어카운트 선택"
+    "TASKRUN-CREATE_6": "서비스 어카운트 선택",
+    "VM-SIDEBAR_0": "Windows 가상머신 샘플",
+    "VM-SIDEBAR_1": "Windows 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec.Affinity.nodeAffinity - 생성 시 선호 노드 설정\n.spec.template.domain.devices.disk - 인스턴스에 attach할 디스크 설정\n.spec.template.domain.devices.interfaces - 네트워크 인터페이스에 대한 설정\n.spec.template.domain.gpus - attach할 GPU device 설정\n.spec.template.domain.cpu - attach할 CPU 설정\n.spec.template.domain.memory - attach할 Memory 설정",
+    "VM-SIDEBAR_2": "Ubuntu 가상머신 샘플",
+    "VM-SIDEBAR_3": "Ubuntu 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec – device 및 리소스 설정",
+    "VM-SIDEBAR_4": "CentOS 6 가상머신 샘플",
+    "VM-SIDEBAR_5": "CentOS 6 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec - device 및 리소스 설정"
   },
   "CONTENT": {
+    "INPUTRESOURCE": "인풋 리소스",
+    "OUTPUTRESOURCE": "아웃풋 리소스",
+    "TASKPARAMETERCONFIG": "태스크 파라미터 구성",
+    "STEP": "스텝",
     "REPORTEDFROM": "출발지",
     "DESTINATION": "목적지",
     "BINDABLE": "Bindable",
@@ -784,7 +795,7 @@
     "PODTEMPLATE": "파드 템플릿",
     "REPLICA": "레플리카",
     "USE": "사용",
-    "UNUSE": "사용 안 함",
+    "NOTUSE": "사용 안 함",
     "VOLUMECLAIMTEMPLATE": "볼륨 클레임 템플릿",
     "PERSISTENEVOLUMECLAIM": "영구 볼륨 클레임",
     "PERSISTENEVOLUME": "영구 볼륨",

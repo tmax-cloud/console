@@ -80,6 +80,14 @@ export const taskType = task => {
 
 export const TasksPage = ({ namespace, showTitle, flags }) => {
   const { t } = useTranslation();
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/cluster/tasks/new${type !== 'yaml' ? '/' + type : ''}`,
+  };
   // const isAdmin = !flagPending(flags.CAN_LIST_TASK) && flags.CAN_LIST_TASK;
   // if (!flags.CAN_LIST_NS && !flagPending(flags.CAN_LIST_TASK)) {
   //   return <Loading />;
