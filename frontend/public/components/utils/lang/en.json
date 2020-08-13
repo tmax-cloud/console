@@ -326,7 +326,13 @@
     "SERVICEACCOUNT-SIDEBAR_1": "It can be created for enabling the HyperCloud API or granting the access the API.\n As soon as a service account is created, secrets are automatically added to it",
     "PIPELINE-CREATE_0": "Define a series of Tasks that accomplish a specific build or delivery goal. Can be triggered by an event or invoked from a PipelineRun.",
     "PIPELINE-CREATE_1": "Can create a pipeline through sequential or parallel batch between nodes.",
-    "PIPELINE-CREATE_2": "Select task"
+    "PIPELINE-CREATE_2": "Select task",
+    "VM-SIDEBAR_0": "Windows Virtual Machine Sample",
+    "VM-SIDEBAR_1": "Creates VM objects for Windows virtual machine.\n.spec.template.spec.Affinity.nodeAffinity- Node affinity setting\n.spec.template.domain.devices.disk – Instance-attached disk setting\n.spec.template.domain.devices.interfaces- Network interface setting\n.spec.template.domain.gpus – CPU device setting .spec.template.domain.cpu – CPU setting\n.spec.template.domain.memory – Memory setting",
+    "VM-SIDEBAR_2": "Ubuntu Virtual Machine Sample",
+    "VM-SIDEBAR_3": "Creates VM objects for ubuntu virtual machines.\n.spec.template.spec – Device and resource setting",
+    "VM-SIDEBAR_4": "CentOS 6 Virtual Machine Sample",
+    "VM-SIDEBAR_5": "Create VM objects for CentOS 6 virtual machines.\n.spec.template.spec-device and resource settings"
   },
   "CONTENT": {
     "REPORTEDFROM": "Reported from",
