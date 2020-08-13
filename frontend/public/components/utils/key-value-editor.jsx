@@ -77,7 +77,7 @@ export class KeyValueEditor extends React.Component {
           <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
         </div>
         {portItems}
-        <div className="row">{isDuplicated ? <div className="col-md-12 col-xs-12 cos-error-title">{t(`VALIDATION:DUPLICATE-KEY`)}</div> : null}</div>
+        <div className="row">{isDuplicated ? <div className="col-md-12 col-xs-12 cos-error-title" style={{ marginTop: '-15px' }}>{t(`VALIDATION:DUPLICATE-KEY`)}</div> : null}</div>
         <div className="row">
           <div className="col-md-12 col-xs-12">
             {readOnly ? null : (

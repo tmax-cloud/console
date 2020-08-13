@@ -121,7 +121,7 @@ class ConfigMapFormComponent extends React.Component {
           <p className="co-m-pane__explanation">{t('STRING:CONFIGMAP-CREATE_0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.configMap.metadata.name} id="config-map-name" />
+              <input className="form-control " type="text" onChange={this.onNameChanged} value={this.state.configMap.metadata.name} id="config-map-name" />
               {this.state.inputError.name && <p className="cos-error-title">{this.state.inputError.name}</p>}
             </Section>
             <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
