@@ -28,15 +28,15 @@ const TooltipColoredStatusIcon = ({ status }) => {
     case 'Succeeded':
       iconColor = '#4D8AFF';
       break;
-    case 'Failed':
-      iconColor = '#FD5461';
+    case 'Running':
+      iconColor = '#4BBBCF';
       break;
     // case '':
-    //   iconColor = '';
+    //   iconColor = '4BBBCF';
     //   break;
     // 실행중
     default:
-      iconColor = '#4BBBCF';
+      iconColor = '#FD5461';
       break;
   }
   if (status === runStatus.Succeeded || status === runStatus.Failed) {
