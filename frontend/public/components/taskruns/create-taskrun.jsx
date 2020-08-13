@@ -263,6 +263,7 @@ spec:
                 type: cur.type,
                 default: cur.default || '',
                 description: cur.description || '',
+                isRequired: !cur.default,
               };
             })
           : [];
@@ -275,17 +276,20 @@ spec:
               ...item,
             });
           } else {
-            paramList.push({ ...item, value: '' });
+            // string type
+            paramList.push({ value: '', ...item });
           }
         });
-        const selectedPR = this.state.pipelineResourceList.length > 0 ? this.state.pipelineResourceList[0] : null;
+        const selectedPR = this.state.pipelineResourceList.length > 0 ? this.state.pipelineResourceList[0] : '';
         const inputList = details.spec.resources ? details.spec.resources.inputs || [] : [];
         const outputList = details.spec.resources ? details.spec.resources.outputs || [] : [];
         inputList.forEach(item => {
           item.selectedPR = selectedPR;
+          item.isRequired = !item.optional ? true : false;
         });
         outputList.forEach(item => {
           item.selectedPR = selectedPR;
+          item.isRequired = !item.optional ? true : false;
         });
 
         this.setState({
@@ -363,12 +367,14 @@ spec:
       },
       spec: {
         params: paramList
+          .filter(item => item.isRequired || item.value)
           .map(item => ({
             name: item.name,
-            value: item.value || '',
+            value: item.value,
           }))
           .concat(
             arrayParamList.map(item => ({
+              // TODO : 필수 입력 , 필수 입력 아닌데 입력했을 경우 필터링
               name: item.name,
               value: item.values.map(item => item[0] || item.default || ''),
             })),
@@ -410,13 +416,14 @@ spec:
             className="form-control"
             type="text"
             placeholder={item.default || ''}
-            required={!item.default ? true : false}
+            required={item.isRequired}
             onChange={e => {
               this.onParamChanged(e, idx);
             }}
             id={item.name}
+            value={item.value}
           />
-          <span>{`입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`}</span>
+          {item.default && <span>{`입력하지 않을 경우 '${item.default}'(으)로 자동 입력됩니다.`}</span>}
         </div>
       );
     });
@@ -427,7 +434,7 @@ spec:
             {item.name}
           </label>
           <span style={{ display: 'block' }}>{item.description}</span>
-          <ValueEditor title="false" desc={`입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`} valueString={item.default || ''} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
+          <ValueEditor title="false" desc={item.default && `입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`} valueString={item.default || ''} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
         </div>
       );
     });
@@ -442,7 +449,7 @@ spec:
             onChange={e => {
               this.onPipelineResourceChanged(e, idx, 'input');
             }}
-            required={item.optional ? true : false}
+            required={item.isRequired}
           >
             {pipelineResourceList.map(cur => {
               return <option value={cur.name}>{cur.name}</option>;
@@ -463,7 +470,7 @@ spec:
             onChange={e => {
               this.onPipelineResourceChanged(e, idx, 'output');
             }}
-            required={item.optional ? true : false}
+            required={item.isRequired}
           >
             {pipelineResourceList.map(cur => {
               return <option value={cur.name}>{cur.name}</option>;
