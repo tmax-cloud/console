@@ -27,6 +27,7 @@ import {
 } from './pipeline-step-utils';
 
 import './PipelineVisualizationTask.scss';
+import { ContextMenu } from 'packages/topology/src';
 
 interface TaskProps {
   pipelineRunName?: string;
@@ -181,7 +182,7 @@ const TaskComponent: React.FC<TaskProps> = ({
   if (!disableTooltip) {
     taskPill = (
       <Tooltip
-        className="tooltip-bg"
+        className={cx('tooltip-bg', { 'tooltip-bg-pipeline': !isPipelineRun })}
         position="bottom"
         enableFlip={false}
         content={

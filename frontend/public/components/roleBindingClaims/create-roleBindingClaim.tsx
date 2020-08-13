@@ -36,6 +36,9 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
       metadata: {
         name: '',
         namespace: '',
+        labels: {
+          handled: 'f'
+        }
       },
       resourceName: '',
       subjects: [
@@ -307,7 +310,7 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
               label={t('CONTENT:SUBJECT')}
               children={
                 <div>
-                  <RadioGroup currentValue={subjectKind} items={subjectKinds} onChange={this.onSubjectChange} />
+                  <RadioGroup currentValue={subjectKind} items={subjectKinds} onChange={this.onSubjectChange} formRow={false} />
                   {subjectKind === 'ServiceAccount' && (
                     <FirstSection
                       label={t('CONTENT:SUBJECTNAMESPACE')}

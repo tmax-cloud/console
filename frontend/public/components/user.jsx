@@ -33,7 +33,7 @@ const UserRow = () =>
     return (
       <div className="row co-resource-list__item">
         <div className="col-xs-6 col-sm-6 co-resource-link-wrapper">
-          {!HDCModeFlag && <ResourceCog actions={menuActions} kind="User" resource={obj} />}
+          <ResourceCog actions={menuActions} kind="User" resource={obj} />
           <ResourceLink kind="User" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-6 col-sm-6 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
@@ -72,10 +72,12 @@ export const UsersPage = props => {
     items: createItems,
     createLink: type => `/k8s/cluster/users/new${type !== 'yaml' ? '/' + type : ''}`,
   };
-  return HDCModeFlag ?
-    <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" /> :
+  return HDCModeFlag ? (
+    <ListPage {...props} ListComponent={UserList} canCreate={false} kind="User" />
+  ) : (
     // <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} canCreate={true} kind="User" />
     <ListPage {...props} ListComponent={UserList} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} canCreate={true} kind="User" />
+  );
 };
 UsersPage.displayName = 'UsersPage';
 
@@ -86,14 +88,7 @@ export const UsersDetailsPage = props => {
   //   [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()]
   let menu = menuActions;
   let page = [navFactory.details(DetailsForKind(props.kind), t('CONTENT:OVERVIEW')), navFactory.editYaml()];
-  return (
-    <DetailsPage
-      {...props}
-      kind="User"
-      menuActions={menu}
-      pages={page}
-    />
-  )
+  return <DetailsPage {...props} kind="User" menuActions={menu} pages={page} />;
 };
 
 UsersDetailsPage.displayName = 'UsersDetailsPage';

@@ -10,7 +10,7 @@ import {
 import { observer, Node, NodeModel } from '../../../../../topology/src';
 import { PipelineResourceTask } from '../../../utils/pipeline-augment';
 import { NewTaskNodeCallback, TaskListNodeModelData } from './types';
-
+import { useTranslation } from 'react-i18next';
 import './TaskListNode.scss';
 
 const taskToOption = (
@@ -47,7 +47,7 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
     onNewTask,
     onRemoveTask
   } = element.getData();
-
+  const { t } = useTranslation();
   const options = [
     ...namespaceTaskList.map(task => taskToOption(task, onNewTask)),
     ...clusterTaskList.map(task => taskToOption(task, onNewTask))
@@ -88,7 +88,7 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
                 breakpointMods={[{ modifier: FlexModifiers.grow }]}
                 style={{ fontSize: '13px' }}
               >
-                {unselectedText || 'Select task'}
+                {unselectedText || t('STRING:PIPELINE-CREATE_2')}
               </FlexItem>
               <FlexItem>
                 <CaretDownIcon />
@@ -147,7 +147,12 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({
                   </li>
                   <li>
                     <KebabItem
-                      option={{ label: 'Delete Task', callback: onRemoveTask }}
+                      option={{
+                        label: t('ADDITIONAL:DELETE', {
+                          something: t('RESOURCE:TASK')
+                        }),
+                        callback: onRemoveTask
+                      }}
                       onClick={onRemoveTask}
                     />
                   </li>

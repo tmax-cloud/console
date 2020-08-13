@@ -274,6 +274,7 @@ class App extends React.PureComponent {
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/add-rule" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
               // <LazyRoute path="/k8s/ns/:ns/roles/:name/:rule/edit" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRulePage)} />
             }
+            <LazyRoute path="/k8s/cluster/tasks/new/:type" exact kind="Task" loader={() => import('./tasks/create-task').then(m => m.CreateTask)} />
             <LazyRoute path="/k8s/cluster/jobs/new/:type" exact kind="Job" loader={() => import('./jobs/create-job').then(m => m.CreateJob)} />
             <LazyRoute path="/k8s/cluster/daemonsets/new/:type" exact kind="Daemonset" loader={() => import('./daemonsets/create-daemonset').then(m => m.CreateDaemonSet)} />
             <LazyRoute path="/k8s/cluster/statefulsets/new/:type" exact kind="StatefulSet" loader={() => import('./statefulsets/create-statefulset').then(m => m.CreateStatefulSet)} />
@@ -285,12 +286,15 @@ class App extends React.PureComponent {
             <LazyRoute path="/k8s/cluster/resourcequotas/new/:type" exact kind="ResourceQuota" loader={() => import('./resourceQuota/create-resourceQuota').then(m => m.CreateResourceQuota)} />
             <LazyRoute path="/k8s/cluster/limitranges/new/:type" exact kind="LimitRange" loader={() => import('./limitRanges/create-limitRange').then(m => m.CreateLimitRange)} />
             <LazyRoute path="/k8s/cluster/namespaces/new/:type" exact kind="Namespace" loader={() => import('./namespaces/create-namespace').then(m => m.CreateNamespace)} />
+            <LazyRoute path="/k8s/cluster/registries/new/:type" exact kind="Registry" loader={() => import('./registries/create-registry').then(m => m.CreateRegistry)} />
             <LazyRoute path="/k8s/ns/:ns/resourcequotaclaims/new/:type" exact kind="ResourceQuotaClaim" loader={() => import('./resourceQuotaClaims/create-resourceQuotaClaim').then(m => m.CreateResouceQuotaClaim)} />
             <LazyRoute path="/k8s/ns/:ns/rolebindingclaims/new/:type" exact kind="RoleBindingClaim" loader={() => import('./roleBindingClaims/create-roleBindingClaim').then(m => m.CreateRoleBindingClaim)} />
             <LazyRoute path="/k8s/cluster/namespaceclaims/new/:type" exact kind="NamespaceClaim" loader={() => import('./namespaceClaims/create-namespaceClaim').then(m => m.CreateNamespaceClaim)} />
 
             <LazyRoute path="/k8s/ns/:ns/deployments/new/:type" exact kind="Deployment" loader={() => import('./deployments/create-deployment').then(m => m.CreateDeployment)} />
             <LazyRoute path="/k8s/ns/:ns/ingresses/new/:type" exact kind="Ingress" loader={() => import('./ingresses/create-ingress').then(m => m.CreateIngress)} />
+            {/* <LazyRoute path="/k8s/ns/:ns/taskruns/new/:type" exact kind="TaskRun" loader={() => import('./taskruns/create-taskrun').then(m => m.CreateTaskRun)} /> */}
+            <LazyRoute path="/k8s/cluster/taskruns/new/:type" exact kind="TaskRun" loader={() => import('./taskruns/create-taskrun').then(m => m.CreateTaskRun)} />
             <LazyRoute path="/k8s/ns/:ns/pipelines/new/:type" exact kind="Pipeline" loader={() => import('../../packages/dev-console/src/components/pipelines/pipeline-builder/PipelineBuilderPage').then(m => m.PipelineBuilderPage)} />
             <LazyRoute path="/k8s/ns/:ns/pipelineruns/new/:type" exact kind="PipelineRun" loader={() => import('./pipelineRuns/create-pipelineRun').then(m => m.CreatePipelineRun)} />
             <LazyRoute path="/k8s/ns/:ns/pipelineresources/new/:type" exact kind="PipelineResource" loader={() => import('./pipelineResources/create-pipelineResource').then(m => m.CreatePipelineResources)} />

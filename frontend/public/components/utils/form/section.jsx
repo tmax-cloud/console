@@ -14,9 +14,9 @@ export const SecondSection = ({ label, children, id, isRequired }) => (
   <div className={'row form-group ' + (isRequired ? 'required' : '')}>
     <div className="col-xs-2"></div>
     <div className={'col-xs-10'} id={id}>
-      <label className="control-label" htmlFor="secret-type">
+      {label && <label className="control-label" htmlFor="secret-type">
         {label}
-      </label>
+      </label>}
       <div>{children}</div>
     </div>
   </div>
@@ -25,9 +25,9 @@ export const SecondSection = ({ label, children, id, isRequired }) => (
 export const SecondSection2 = ({ label, children, id, isRequired }) => (
   <div className={'row form-group ' + (isRequired ? 'required' : '')}>
     <div id={id}>
-      <label className="control-label" htmlFor="secret-type">
+      {label && <label className="control-label" htmlFor="secret-type">
         {label}
-      </label>
+      </label>}
       <div>{children}</div>
     </div>
   </div>

@@ -90,6 +90,11 @@ export const enum ValueEditorPair {
   Index,
 }
 
+export const enum ResourceEditorPair {
+  Value,
+  Index,
+}
+
 export const enum KeyValueEditorPair {
   Key,
   Value,

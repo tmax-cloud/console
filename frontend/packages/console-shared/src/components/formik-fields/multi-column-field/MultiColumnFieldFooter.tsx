@@ -11,7 +11,7 @@ export interface MultiColumnFieldHeader {
 const MultiColumnFieldFooter: React.FC<MultiColumnFieldHeader> = ({
   addLabel,
   onAdd,
-  disableAddRow = false,
+  disableAddRow = false
 }) => (
   <Button
     variant="link"
@@ -19,7 +19,7 @@ const MultiColumnFieldFooter: React.FC<MultiColumnFieldHeader> = ({
     onClick={onAdd}
     icon={<PlusCircleIcon />}
     isInline
-    style={{ color: '#0088ce', backgroundColor: '#ffffff' }}
+    style={{ color: '#0088ce', backgroundColor: '#ffffff', marginTop: '5px' }}
   >
     {addLabel || 'Add values'}
   </Button>

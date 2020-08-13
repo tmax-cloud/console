@@ -24,7 +24,7 @@ const PipelineTopologyGraph: React.FC<PipelineTopologyGraphProps> = ({
   return (
     <div
       className="odc-pipeline-topology-graph"
-      style={{ display: fluid ? 'block' : undefined }}
+      style={{ display: fluid ? 'block' : undefined, marginTop: '10px' }}
     >
       <PipelineVisualizationSurface
         model={{
