@@ -433,10 +433,18 @@ tags-input .autocomplete .suggestion-item em {
 }
 
 .tippy-popper {
-  margin-top: -25px;
+  // margin-top: -25px;
+  top: 25px !important;
 }
 
 .tippy-tooltip {
   // max-width: 250px !important;
   left: 22px !important;
+}
+
+.dropdown--full-width {
+  button {
+    min-width: 130px;
+    max-width: 130px;
+  }
 }

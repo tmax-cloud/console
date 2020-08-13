@@ -32,7 +32,10 @@ class NamespaceClaimFormComponent extends React.Component<NamespaceClaimProps_, 
             apiVersion: 'tmax.io/v1',
             kind: 'NamespaceClaim',
             metadata: {
-                name: ''
+                name: '',
+                labels: {
+                    handled: 'f'
+                }
             },
             resourceName: '',
             spec: {
