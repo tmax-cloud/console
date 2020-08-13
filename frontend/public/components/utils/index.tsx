@@ -44,6 +44,10 @@ export * from './section-heading';
 export * from './scroll-to-top-on-mount';
 export * from './rbac';
 export * from './kebab';
+export * from './resource-editor';
+export * from './parameter-editor';
+export * from './volume-editor';
+export * from './step-editor';
 
 /*
   Add the enum for NameValueEditorPair here and not in its namesake file because the editor should always be
@@ -90,9 +94,65 @@ export const enum ValueEditorPair {
   Index,
 }
 
-export const enum ResourceEditorPair {
+export const enum ResourceModalEditorPair {
   Value,
   Index,
+}
+
+export const enum ResourceModalPair {
+  Name,
+  Type,
+  Path,
+  Optional,
+}
+
+export const enum ParameterModalEditorPair {
+  Value,
+  Index,
+}
+
+export const enum ParameterModalPair {
+  Name,
+  Description,
+  Type,
+  Default,
+}
+
+export const enum VolumeModalEditorPair {
+  Value,
+  Index,
+}
+
+export const enum VolumeModalPair {
+  Name,
+  Type,
+  ConfigMap,
+  Secret,
+}
+
+export const enum StepModalEditorPair {
+  Value,
+  Index,
+}
+
+export const enum StepModalPair {
+  Name,
+  ImageRegistry,
+  Image,
+  ImageVersion,
+  MailServer,
+  MailFrom,
+  MailSubject,
+  MailContent,
+  RunCommandArguments,
+  RunCommands,
+  Env,
+  VolumeMountName,
+  VolumeMountPath,
+  Type,
+  Preset,
+  ImageType,
+  SelfImage,
 }
 
 export const enum KeyValueEditorPair {

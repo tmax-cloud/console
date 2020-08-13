@@ -9,34 +9,68 @@ import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
+import { ResourceModalEditor, ParameterModalEditor, VolumeModalEditor, StepModalEditor } from '../utils';
 import { FirstSection, SecondSection, PodTemplate, VolumeclaimTemplate } from '../utils/form';
-// import {TaskModal} from './../modals/input-resource-modal';
 
 class TaskFormComponent extends React.Component {
   constructor(props) {
     super(props);
     const existingTask = _.pick(props.obj, ['metadata', 'type']);
     const task = _.defaultsDeep({}, props.fixed, existingTask, {
-      apiVersion: 'v1',
+      apiVersion: 'tekton.dev/v1alpha1',
       kind: 'Task',
       metadata: {
         name: '',
         namespace: '',
       },
-      spec: {},
+      spec: {
+        resources: {
+          inputs: [],
+          outputs: [],
+        },
+        params: [],
+        volumes: [],
+        steps: [],
+      },
     });
 
     this.state = {
       taskTypeAbstraction: this.props.taskTypeAbstraction,
+      namespace: '',
       task: task,
       inProgress: false,
       type: 'form',
-      inputResources: [],
+      inputResourceNames: '',
+      inputResources: '',
+      outputResourceNames: '',
+      outputResources: '',
+      parameterConfigNames: '',
+      parameterConfigs: '',
+      volumeNames: '',
+      volumes: '',
+      stepNames: '',
+      steps: '',
+      // imageRegistryList: [],
+      // imageList: [],
+      // imageTagList: [],
+      // imageAllTagList: [],
+      imageRegistry: '',
+      image: '',
+      imageTag: '',
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
-    this.onInputResource = this.onInputResource.bind(this);
-    // this.onLabelChanged = this.onLabelChanged.bind(this);
+    this._updateInputName = this._updateInputName.bind(this);
+    this._updateInputResources = this._updateInputResources.bind(this);
+    this._updateOutputName = this._updateOutputName.bind(this);
+    this._updateOutputResources = this._updateOutputResources.bind(this);
+    this._updateParameterConfigName = this._updateParameterConfigName.bind(this);
+    this._updateParameterConfigs = this._updateParameterConfigs.bind(this);
+    this._updateVolumeName = this._updateVolumeName.bind(this);
+    this._updateVolumes = this._updateVolumes.bind(this);
+    this._updateStepName = this._updateStepName.bind(this);
+    this._updateSteps = this._updateSteps.bind(this);
+
     this.save = this.save.bind(this);
   }
   componentDidMount() {}
@@ -50,16 +84,223 @@ class TaskFormComponent extends React.Component {
     let task = { ...this.state.task };
     task.metadata.namespace = String(namespace);
     this.setState({ task });
+    this.setState({ namespace });
   }
-  onInputResource(e) {
-    console.log('input resource: ', e);
+
+  _updateInputName(resources) {
+    this.setState({
+      inputResourceNames: resources.names,
+    });
   }
+
+  _updateInputResources(resources) {
+    this.setState({
+      inputResources: resources,
+    });
+  }
+
+  _updateOutputName(resources) {
+    this.setState({
+      outputResourceNames: resources.names,
+    });
+  }
+
+  _updateOutputResources(resources) {
+    this.setState({
+      outputResources: resources,
+    });
+  }
+
+  _updateParameterConfigName(parameters) {
+    this.setState({
+      parameterConfigNames: parameters.names,
+    });
+  }
+
+  _updateParameterConfigs(parameters) {
+    this.setState({
+      parameterConfigs: parameters,
+    });
+  }
+
+  _updateVolumeName(volumes) {
+    this.setState({
+      volumeNames: volumes.names,
+    });
+  }
+
+  _updateVolumes(volumes) {
+    this.setState({
+      volumes: volumes,
+    });
+  }
+
+  _updateStepName(steps) {
+    this.setState({
+      stepNames: steps.names,
+    });
+  }
+
+  _updateSteps(steps) {
+    this.setState({
+      steps: steps,
+    });
+  }
+
   save(e) {
     e.preventDefault();
 
     this.setState({ inProgress: true });
     let task = _.cloneDeep(this.state.task);
 
+    this.state.inputResources.length > 0 &&
+      this.state.inputResources.forEach(cur => {
+        let inputresource = {
+          name: cur[0],
+          type: cur[1],
+          targetPath: cur[2],
+          optional: cur[3],
+        };
+        task.spec.resources.inputs.push(inputresource);
+      });
+
+    this.state.outputResources.length > 0 &&
+      this.state.outputResources.forEach(cur => {
+        let outputresource = {
+          name: cur[0],
+          type: cur[1],
+          targetPath: cur[2],
+          optional: cur[3],
+        };
+        task.spec.resources.outputs.push(outputresource);
+      });
+
+    this.state.parameterConfigs.length > 0 &&
+      this.state.parameterConfigs.forEach(cur => {
+        let defaultValue = [];
+        if (cur[2] === 'Array') {
+          cur[3].forEach(dv => {
+            defaultValue.push(dv[0]);
+          });
+        }
+        let params = {
+          name: cur[0],
+          description: cur[1],
+          type: cur[2].toLowerCase(),
+          default: cur[2] === 'String' ? cur[3] : defaultValue,
+        };
+        task.spec.params.push(params);
+      });
+
+    this.state.volumes.length > 0 &&
+      this.state.volumes.forEach(cur => {
+        let volume = {};
+        if (cur[1] === 'emptyDir') {
+          volume = {
+            name: cur[0],
+            emptyDir: {},
+          };
+        } else if (cur[1] === 'ConfigMap') {
+          volume = {
+            name: cur[0],
+            configMap: {
+              name: cur[2],
+            },
+          };
+        } else if (cur[1] === 'Secret') {
+          volume = {
+            name: cur[0],
+            secret: {
+              secretName: cur[3],
+            },
+          };
+        }
+        task.spec.volumes.push(volume);
+      });
+
+    this.state.steps.length > 0 &&
+      this.state.steps.forEach(cur => {
+        let step = {};
+        let volumeMounts = [];
+        volumeMounts.push({ name: cur[11], mountPath: cur[12] });
+        if (cur[13]) {
+          // type: preset
+          if (cur[14] === 'Approve') {
+            // preset: Approve
+            if (cur[15]) {
+              // imageType: imageRegistry
+              step = {
+                name: cur[0].toLowerCase(),
+                image: `${cur[1]}/${cur[2]}:${cur[3]}`,
+                volumeMounts: volumeMounts, // 여러개 올수 있음
+              };
+            } else {
+              // imageType: free
+              step = {
+                name: cur[0].toLowerCase(),
+                image: cur[16],
+                volumeMounts: volumeMounts,
+              };
+            }
+          } else if (cur[14] === 'Notify') {
+            // preset: Notify
+            let env = ['MAIL_SERVER', 'MAIL_FROM', 'MAIL_SUBJECT', 'MAILCONTENT'].map((val, idx) => ({
+              name: val,
+              value: cur[idx + 4],
+            }));
+            if (cur[15]) {
+              // imageType: imageRegistry
+              step = {
+                name: cur[0].toLowerCase(),
+                image: `${cur[1]}/${cur[2]}:${cur[3]}`,
+                env: env,
+                volumeMounts: volumeMounts,
+              };
+            } else {
+              // imageType: free
+              step = {
+                name: cur[0].toLowerCase(),
+                image: cur[16],
+                env: env,
+                volumeMounts: volumeMounts,
+              };
+            }
+          }
+        } else {
+          //  type: free
+          let env = cur[10].map(val => ({
+            name: val[0],
+            value: val[1],
+          }));
+          let command = cur[9].map(val => val[0]);
+          let args = cur[8].map(val => val[0]);
+          if (cur[15]) {
+            // imageType: imageRegistry
+            step = {
+              name: cur[0].toLowerCase(),
+              image: `${cur[1]}/${cur[2]}:${cur[3]}`,
+              env: env,
+              command: command,
+              args: args,
+              volumeMounts: volumeMounts,
+            };
+          } else {
+            step = {
+              name: cur[0].toLowerCase(),
+              image: cur[16],
+              env: env,
+              command: command,
+              args: args,
+              volumeMounts: volumeMounts,
+            };
+          }
+        }
+        task.spec.steps.push(step);
+      });
+
+    console.log(task);
+
+    const ko = kindObj('Task');
     (this.props.isCreate ? k8sCreate(ko, task) : k8sUpdate(ko, task, task.namespace, task.metadata.name)).then(
       () => {
         this.setState({ inProgress: false });
@@ -90,19 +331,22 @@ class TaskFormComponent extends React.Component {
             </FirstSection>
             <hr />
             <FirstSection label={t('CONTENT:INPUTRESOURCE')} isRequired={false}>
-              <div>{/* <ValueEditor desc={t('STRING:CREATE-DEPLOYMENT_0')} title="false" valueString="RunCommand" t={t} values={this.state.inputResources} updateParentData={} /> */}</div>
-              <span
-                className="btn-link pairs-list__btn"
-                onClick={() => {
-                  import('./../modals/input-resource-modal').then(m => {
-                    m.TaskModal({ onInputResource: this.onInputResource });
-                  });
-                }}
-              >
-                <i aria-hidden="true" className="fa fa-plus-circle pairs-list__add-icon" />
-                {t('CONTENT:ADDMORE')}
-              </span>
+              <ResourceModalEditor desc={} title="false" valueString="InputResource" t={t} resources={this.state.inputResources} names={this.state.inputResourceNames} visibleData={this._updateInputName} realData={this._updateInputResources} />
             </FirstSection>
+            <FirstSection label={t('CONTENT:OUTPUTRESOURCE')} isRequired={false}>
+              <ResourceModalEditor desc={} title="false" valueString="OutputResource" t={t} resources={this.state.outputResources} names={this.state.outputResourceNames} visibleData={this._updateOutputName} realData={this._updateOutputResources} />
+            </FirstSection>
+            <FirstSection label={t('CONTENT:TASKPARAMETER')} isRequired={false}>
+              <ParameterModalEditor desc={} title="false" valueString="TaskParameter" t={t} parameters={this.state.parameterConfigs} names={this.state.parameterConfigNames} visibleData={this._updateParameterConfigName} realData={this._updateParameterConfigs} />
+            </FirstSection>
+            <hr />
+            <FirstSection label={t('CONTENT:VOLUME')} isRequired={false}>
+              <VolumeModalEditor desc={} title="false" valueString="Volume" t={t} volumes={this.state.volumes} names={this.state.volumeNames} visibleData={this._updateVolumeName} realData={this._updateVolumes} />
+            </FirstSection>
+            <FirstSection label={t('CONTENT:STEP')} isRequired={false}>
+              <StepModalEditor desc={} title="false" valueString="Step" t={t} namespace={this.state.namespace} steps={this.state.steps} names={this.state.stepNames} visibleData={this._updateStepName} realData={this._updateSteps} volumeList={this.state.volumeNames} />
+            </FirstSection>
+
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
               <button className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
