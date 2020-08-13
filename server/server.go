@@ -84,6 +84,9 @@ type jsGlobals struct {
 	ReleaseModeFlag    bool   `json:"releaseModeFlag"`
 	HDCModeFlag        bool   `json:"HDCModeFlag"`
 	TmaxCloudPortalURL string `json:tmaxCloudPortalURL`
+	KeycloakRealm      string `json:keycloakRealm`
+	KeycloakAuthURL    string `json:keycloakAuthURL`
+	KeycloakClientId   string `json:keycloakClientId`
 }
 
 type Server struct {
@@ -107,6 +110,9 @@ type Server struct {
 	ReleaseModeFlag      bool
 	HDCModeFlag          bool
 	TmaxCloudPortalURL   string
+	KeycloakRealm        string
+	KeycloakAuthURL      string
+	KeycloakClientId     string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
 	KubectlAuther  *auth.Authenticator
@@ -549,6 +555,9 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		ReleaseModeFlag:    s.ReleaseModeFlag,
 		HDCModeFlag:        s.HDCModeFlag,
 		TmaxCloudPortalURL: s.TmaxCloudPortalURL,
+		KeycloakRealm:      s.KeycloakRealm,
+		KeycloakAuthURL:    s.KeycloakAuthURL,
+		KeycloakClientId:   s.KeycloakClientId,
 	}
 
 	if s.prometheusProxyEnabled() {

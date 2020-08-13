@@ -747,6 +747,7 @@
     "SESSIONEXPIREDTIME": "세션 만료 시간",
     "MINUTE": "분",
     "MINIMUM1,MAXIMUM60": "최소 1분, 최대 60분",
+    "MANAGEACCOUNT": "계정 관리",
     "LOGOUT": "로그아웃",
     "ALLCATEGORIES": "전체 카테고리",
     "ALLTYPES": "전체 타입",

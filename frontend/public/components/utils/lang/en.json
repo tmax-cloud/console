@@ -748,6 +748,7 @@
     "SESSIONEXPIREDTIME": "Session Expired Time",
     "MINUTE": "Minute",
     "MINIMUM1,MAXIMUM60": "Minimum 1 minute, maximum 60 minutes",
+    "MANAGEACCOUNT": "Manage Account",
     "LOGOUT": "Logout",
     "ALLCATEGORIES": "All Categories",
     "ALLTYPES": "All Types",

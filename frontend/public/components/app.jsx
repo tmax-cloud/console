@@ -1,5 +1,5 @@
 import * as _ from 'lodash-es';
-import React, { useState } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { Provider } from 'react-redux';
@@ -8,7 +8,6 @@ import * as PropTypes from 'prop-types';
 
 import store from '../redux';
 import { productName } from '../branding';
-import LoginComponent from './login';
 import { AuditPage } from './audits';
 import { ALL_NAMESPACES_KEY } from '../const';
 import { connectToFlags, featureActions, flagPending, FLAGS } from '../features';
@@ -18,28 +17,23 @@ import { GlobalNotifications } from './global-notifications';
 import { Masthead } from './masthead';
 import { NamespaceSelector } from './namespace';
 import CustomNav from './customNav';
-// import Nav from './nav';
-import { SearchPage } from './search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
-import { history, AsyncComponent, Loading, kindObj, AccessDenied } from './utils';
+import { history, AsyncComponent, Loading } from './utils';
 import { namespacedPrefixes } from './utils/link';
 import { UIActions, getActiveNamespace } from '../ui/ui-actions';
-import { ClusterServiceVersionModel, SubscriptionModel, AlertmanagerModel } from '../models';
-import { referenceForModel, k8sList } from '../module/k8s';
 import k8sActions from '../module/k8s/k8s-actions';
-import { k8sGet } from '../module/k8s';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
-import { getAccessToken, resetLoginState, getId } from './utils/auth';
+import { getAccessToken, resetLoginState, setAccessToken, setRefreshToken, setId } from './utils/auth';
 import { NoNamespace } from './nonamespaces';
-import { Grafana } from './grafana';
+import Keycloak from 'keycloak-js';
+import keycloakJSON from '../keycloak.json';
 
 import './utils/i18n';
 
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
-import { ProvidePlugin } from 'webpack';
 
 // React Router's proptypes are incorrect. See https://github.com/ReactTraining/react-router/pull/5393
 Route.propTypes.path = PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]);
@@ -64,10 +58,6 @@ function NamespaceFromURL(Component) {
 }
 
 const namespacedRoutes = [];
-_.each(namespacedPrefixes, p => {
-  namespacedRoutes.push(`${p}/ns/:ns`);
-  namespacedRoutes.push(`${p}/all-namespaces`);
-});
 
 const NamespaceRedirect = connectToFlags(FLAGS.CAN_LIST_NS)(({ flags }) => {
   let to;
@@ -107,11 +97,6 @@ const ActiveNamespaceRedirect = ({ location }) => {
 
 // The default page component lets us connect to flags without connecting the entire App.
 const DefaultPage = connectToFlags(FLAGS.OPENSHIFT)(({ flags }) => {
-  // Private 모델에서 세션에 토큰이 없는 경우 로그인 페이지로 리다이렉션
-  if (!window.SERVER_FLAGS.HDCModeFlag && !getAccessToken()) {
-    return <Redirect to="/login" />;
-  }
-
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   if (flagPending(openshiftFlag)) {
     return <Loading />;
@@ -166,7 +151,7 @@ class App extends React.PureComponent {
 
     window.addEventListener(
       'storage',
-      function (evt) {
+      function(evt) {
         if (evt.key === 'forceLogout' && !document.hasFocus()) {
           resetLoginState();
         }
@@ -202,7 +187,7 @@ class App extends React.PureComponent {
     return (
       <React.Fragment>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
-        <Masthead setLoading={this.setLoading} />
+        <Masthead setLoading={this.setLoading} keycloak={keycloak} />
         <CustomNav />
         <div id="content">
           <Route path={namespacedRoutes} component={NamespaceSelector} />
@@ -312,7 +297,7 @@ class App extends React.PureComponent {
             <LazyRoute path="/k8s/ns/:ns/rolebindings/:name/edit" exact kind="RoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
             <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/copy" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CopyRoleBinding)} />
             <LazyRoute path="/k8s/cluster/clusterrolebindings/:name/edit" exact kind="ClusterRoleBinding" loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.EditRoleBinding)} />
-            <Route path="/login" exact component={LoginComponent} />
+            {/* <Route path="/login" exact component={LoginComponent} /> */}
             <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
             <LazyRoute path="/k8s/cluster/:plural/new" exact loader={() => import('./create-yaml' /* webpackChunkName: "create-yaml" */).then(m => m.CreateYAML)} />
             <Route path="/k8s/cluster/:plural/:name" component={ResourceDetailsPage} />
@@ -337,16 +322,10 @@ class App extends React.PureComponent {
   }
 }
 
-_.each(featureActions, store.dispatch);
-store.dispatch(k8sActions.getResources());
-store.dispatch(detectMonitoringURLs);
-
-analyticsSvc.push({ tier: 'tectonic' });
-
 // Used by GUI tests to check for unhandled exceptions
 window.windowError = false;
 
-window.onerror = function (message, source, lineno, colno, optError = {}) {
+window.onerror = function(message, source, lineno, colno, optError = {}) {
   try {
     const e = `${message} ${source} ${lineno} ${colno}`;
     analyticsSvc.error(e, null, optError.stack);
@@ -361,7 +340,7 @@ window.onerror = function (message, source, lineno, colno, optError = {}) {
   window.windowError = true;
 };
 
-window.onunhandledrejection = function (e) {
+window.onunhandledrejection = function(e) {
   try {
     analyticsSvc.error(e, null);
   } catch (err) {
@@ -389,14 +368,72 @@ if ('serviceWorker' in navigator) {
       .catch(e => console.warn('Error unregistering service workers', e));
   }
 }
-render(
-  <Provider store={store}>
-    <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-      <Switch>
-        <Route path="/login" component={LoginComponent} />
-        <Route path="/" component={App} />
-      </Switch>
-    </Router>
-  </Provider>,
-  document.getElementById('app'),
-);
+
+//keycloak init options
+const keycloak = new Keycloak({
+  realm: window.SERVER_FLAGS.KeycloakRealm,
+  url: window.SERVER_FLAGS.KeycloakAuthURL,
+  clientId: window.SERVER_FLAGS.KeycloakClientId,
+});
+
+keycloak
+  .init()
+  .then(auth => {
+    if (!auth) {
+      keycloak.login();
+      return;
+    }
+
+    setAccessToken(keycloak.idToken);
+    setRefreshToken(keycloak.idToken);
+    setId(keycloak.idTokenParsed.preferred_username);
+
+    _.each(namespacedPrefixes, p => {
+      namespacedRoutes.push(`${p}/ns/:ns`);
+      namespacedRoutes.push(`${p}/all-namespaces`);
+    });
+
+    _.each(featureActions, store.dispatch);
+    store.dispatch(k8sActions.getResources());
+    store.dispatch(detectMonitoringURLs);
+
+    analyticsSvc.push({ tier: 'tectonic' });
+
+    render(
+      <Provider store={store}>
+        <Router history={history} basename={window.SERVER_FLAGS.basePath}>
+          <Route path="/" component={App} />
+        </Router>
+      </Provider>,
+      document.getElementById('app'),
+    );
+  })
+  .catch(function() {
+    render(<div>Failed to initialize Keycloak</div>, document.getElementById('app'));
+  });
+
+keycloak.onReady = function() {
+  console.log('[keycloak] onReady');
+};
+keycloak.onAuthSuccess = function() {
+  console.log('[keycloak] onAuthSuccess');
+};
+keycloak.onAuthError = function() {
+  console.log('[keycloak] onAuthError');
+};
+keycloak.onAuthRefreshSuccess = function() {
+  console.log('[keycloak] onAuthRefreshSuccess');
+};
+keycloak.onAuthRefreshError = function() {
+  console.log('[keycloak] onAuthRefreshError');
+};
+keycloak.onAuthLogout = function() {
+  console.log('[keycloak] onAuthLogout');
+  keycloak.logout();
+};
+keycloak.onTokenExpired = function() {
+  console.log('[keycloak] onTokenExpired ');
+  keycloak.logout();
+};
+
+console.log('keycloak', keycloak);

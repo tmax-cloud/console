@@ -4851,10 +4851,6 @@ spec:
           type: resourcenslink
         - name: RoleBindingClaim
           type: resourcenslink
-        - name: User
-          type: resourceclusterlink
-        - name: Usergroup
-          type: resourceclusterlink
         - name: Usersecuritypolicy
           type: resourceclusterlink
         - name: ServiceAccount
