@@ -1,0 +1,47 @@
+$form-width: 600px;
+$form-half-width: 300px;
+
+.registry-edit {
+    .form-control {
+        max-width: $form-width;
+        margin-right: 1rem;
+
+        &::placeholder {
+            font-style: normal;
+        }
+    }
+
+    .dropdown {
+        max-width: $form-width;
+    }
+
+    .btn--dropdown {
+        max-width: $form-width;
+        width: 100%;
+    }
+
+    @media (min-width: $grid-float-breakpoint) {
+        .dropdown-menu {
+            min-width: $form-width;
+        }
+    }
+
+    .form-row {
+        display: flex;
+        max-width: $form-width;
+        margin-bottom: unset;
+
+        .radio-item {
+            max-width: $form-half-width;
+            width: 100%;
+
+            label {
+                font-weight: normal;
+            }
+        }
+    }
+
+    .half {
+        max-width: $form-half-width;
+    }
+}
