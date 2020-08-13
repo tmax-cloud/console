@@ -106,7 +106,17 @@ RegistryList.displayName = RegistryList;
 
 export const RegistryPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={RegistryList} canCreate={true} kind="Registry" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/registries/new` : '/k8s/cluster/registries/new/form'
+  };
+
+  return <ListPage {...props} ListComponent={RegistryList} canCreate={true} createProps={createProps} kind="Registry" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 RegistryPage.displayName = 'RegistryPage';
 
@@ -119,9 +129,9 @@ RegistryPage.displayName = 'RegistryPage';
 // };
 const { details, editYaml, images } = navFactory;
 export const RegistryDetailsPage = props => {
-  const ns = location.pathname.split('/')[3]; 
+  const ns = location.pathname.split('/')[3];
   const { t } = useTranslation();
-  const pages = [details(Details, t('CONTENT:OVERVIEW')), editYaml(), images(t('CONTENT:IMAGES'), ({ obj }) => <ImagesPage showTitle={false} namespace={ns}selector={{ matchLabels: { registry: `${obj.metadata.name}` } }} />)];
+  const pages = [details(Details, t('CONTENT:OVERVIEW')), editYaml(), images(t('CONTENT:IMAGES'), ({ obj }) => <ImagesPage showTitle={false} namespace={ns} selector={{ matchLabels: { registry: `${obj.metadata.name}` } }} />)];
   return <DetailsPage {...props} kind="Registry" menuActions={menuActions} pages={pages} />;
 };
 

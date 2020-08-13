@@ -334,7 +334,7 @@ class ListDropdown_ extends React.Component {
   }
 }
 
-const ListDropdown = props => {
+export const ListDropdown = props => {
   const resources = _.map(props.resources, resource => _.assign({ isList: true, prop: resource.kind }, resource));
   return (
     <Firehose resources={resources}>
