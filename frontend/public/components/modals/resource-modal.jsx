@@ -8,94 +8,103 @@ import { FirstSection, SecondSection, PodTemplate, VolumeclaimTemplate } from '.
 import SingleSelect from '../utils/select';
 import { useTranslation, Trans } from 'react-i18next';
 
-class BaseTaskModal extends PromiseComponent {
+class BaseResourceModal extends PromiseComponent {
   constructor(props) {
     super(props);
-    let { onResource } = this.props;
+    this.state = {
+      name: props.resource?.[0] || '',
+      type: props.resource?.[1] || '',
+      path: props.resource?.[2] || '',
+      optional: props.resource?.[3] || false,
+      inProgress: false,
+      errorMessage: '',
+    };
     this._submit = this._submit.bind(this);
     this._cancel = props.cancel.bind(this);
   }
 
-  _changeType() {
-    console.log('change');
-  }
-
   _submit(e) {
     e.preventDefault();
-
-    const { kind, path, resource } = this.props;
-
-    const patch = [
-      {
-        op: this.createPath ? 'add' : 'replace',
-        path,
-        value: SelectorInput.objectify(this.state.labels),
-      },
-    ];
-
-    // https://kubernetes.io/docs/user-guide/deployments/#selector
-    //   .spec.selector must match .spec.template.metadata.labels, or it will be rejected by the API
-    const promise = k8sPatch(kind, resource, patch);
-    this.handlePromise(promise).then(this.props.close);
+    const { kind, path, resource, updateParentData, isNew, index } = this.props;
+    updateParentData({
+      name: this.state.name,
+      type: this.state.type,
+      path: this.state.path,
+      optional: this.state.optional,
+      isNew: isNew,
+      index: index,
+    });
+    this.props.close();
   }
 
+  onNameChange = name => {
+    this.setState({
+      name: name.value,
+    });
+  };
+
+  onTypeChange = type => {
+    this.setState({
+      type: type.value,
+    });
+  };
+
+  onPathChange = path => {
+    this.setState({
+      path: path.target.value,
+    });
+  };
+
+  onOptionalChange = optional => {
+    this.setState({
+      optional: optional.currentTarget.checked,
+    });
+  };
+
   render() {
-    const { kind, resource, pair, onResource, t } = this.props;
+    const { kind, resource, pair, onResource, title, t } = this.props;
     const typeOptions = [
-      { value: 'Git', label: t('CONTENT:GIT') },
-      { value: 'Image', label: t('CONTENT:IMAGE') },
+      { value: 'git', label: 'Git' },
+      { value: 'image', label: t('CONTENT:IMAGE') },
     ];
 
     return (
       <form style={{ width: '500px' }} onSubmit={this._submit} name="form">
-        <ModalTitle>{t('CONTENT:RESOURCE')}</ModalTitle>
+        <ModalTitle>{title}</ModalTitle>
         <ModalBody>
-          <SecondSection label={t('CONTENT:NAME')} isRequired={true}>
+          <SecondSection isModal={true} label={t('CONTENT:NAME')} isRequired={true}>
             {/* <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" required /> */}
             <input
               className="form-control form-group"
               type="text"
               id="resource-name"
+              value={this.state.name || resource?.[0]}
               onChange={e => {
-                onResource({ id: 'name', value: e.target });
+                this.onNameChange(e.target);
               }}
               required
             />
           </SecondSection>
-          <SecondSection label={t('CONTENT:TYPE')} isRequired={true}>
-            <SingleSelect
-              options={typeOptions}
-              name="Type"
-              placeholder="Select Type"
-              onChange={e => {
-                onResource({ id: 'type', value: 'e' });
-              }}
-            />
+          <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={true}>
+            <SingleSelect options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type || resource?.[1]} onChange={this.onTypeChange} />
           </SecondSection>
-          <SecondSection label={t('CONTENT:RESOURCESTORAGEPATH')} isRequired={false}>
-            <input
-              className="form-control form-group"
-              type="text"
-              id="resourcestoragepath-name"
-              onChange={e => {
-                onResource({ id: 'path', value: 'e.target' });
-              }}
-            />
+          <SecondSection isModal={true} label={t('CONTENT:RESOURCEPATH')} isRequired={false}>
+            <input className="form-control form-group" type="text" id="resourcestoragepath-name" value={this.state.path || resource?.[2]} onChange={this.onPathChange} />
           </SecondSection>
-          <SecondSection label={''} isRequired={false}>
+          <SecondSection isModal={true} label={''} isRequired={false}>
             <label>
-              <input className="" type="checkbox" id="cbx-select" />이 리소스를 선택 항목으로 제공합니다.
+              <input className="" type="checkbox" id="cbx-select" checked={this.state.optional} onChange={this.onOptionalChange} />이 리소스를 선택 항목으로 제공합니다.
             </label>
             <p>선택 항목으로 제공할 경우, 태스크 런 또는 파이프라인 메뉴에서 파이프라인 리소스를 필요에 따라 할당할 수 있습니다. </p>
           </SecondSection>
         </ModalBody>
-        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('Content:Add')} cancel={this._cancel} />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={this.props.isNew ? t('CONTENT:ADD') : t('CONTENT:EDIT')} cancel={this._cancel} />
       </form>
     );
   }
 }
 
-export const TaskModal = createModalLauncher(props => {
+export const ResourceModal = createModalLauncher(props => {
   const { t } = useTranslation();
-  return <BaseTaskModal {...props} t={t} onChange={props.onResource} />;
+  return <BaseResourceModal {...props} t={t} onChange={props.onResource} />;
 });
