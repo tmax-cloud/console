@@ -36,6 +36,9 @@ class RoleBindingClaimFormComponent extends React.Component<RoleBindingClaimProp
       metadata: {
         name: '',
         namespace: '',
+        labels: {
+          handled: 'f'
+        }
       },
       resourceName: '',
       subjects: [

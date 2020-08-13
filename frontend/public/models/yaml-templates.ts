@@ -847,6 +847,8 @@ spec:
     kind: NamespaceClaim
     metadata:
       name: example-namespaceclaims
+      labels:
+        handled: f
     resourceName: namespace
     spec:
       hard:
@@ -949,6 +951,8 @@ spec:
     metadata:
       name: example-resourcequotaclaim
       namespace: default
+      labels:
+        handled: f
     resourceName: example-resourceclaim
     spec:
       hard:
@@ -4865,6 +4869,8 @@ kind: CatalogServiceClaim
 metadata:
   name: nginx-catalog-service-claim
   namespace: default
+  labels: 
+    handled: f
 spec:
   apiVersion: tmax.io/v1
   kind: Template
