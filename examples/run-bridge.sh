@@ -42,4 +42,7 @@ eval $nodePorts
     --kiali-endpoint=http://$k8sIP:$KIALI_PORT/api/kiali \
     --jaeger-endpoint=http://$k8sIP:$JAEGER_PORT/api/jaeger \
     --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/approve \
+    --keycloak-realm=tmax \
+    --keycloak-auth-url=https://172.22.6.11/auth \
+    --keycloak-client-id=hypercloud4 \
     --release-mode=true \

@@ -366,7 +366,11 @@ if ('serviceWorker' in navigator) {
 }
 
 //keycloak init options
-const keycloak = new Keycloak(keycloakJSON);
+const keycloak = new Keycloak({
+  realm: window.SERVER_FLAGS.KeycloakRealm,
+  url: window.SERVER_FLAGS.KeycloakAuthURL,
+  clientId: window.SERVER_FLAGS.KeycloakClientId,
+});
 
 keycloak
   .init()

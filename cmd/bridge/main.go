@@ -101,6 +101,11 @@ func main() {
 	fHDCModeFlag := fs.Bool("hdc-mode", false, "When true, login through tmaxcloud portal is required.")
 	fTmaxCloudPortalURL := fs.String("tmaxcloud-portal", "", "URL of the TmaxCloud Portal.")
 
+	// NOTE: Keycloak 연동 추가 // 최여진
+	fKeycloakRealm := fs.String("keycloak-realm", "", "Keycloak Realm Name")
+	fKeycloakAuthURL := fs.String("keycloak-auth-url", "", "URL of the Keycloak Auth server.")
+	fKeycloakClientId := fs.String("keycloak-client-id", "", "Keycloak Client Id")
+
 	// NOTE: Grafana 연동 추가 // 윤진수
 	fGrafanaEndpoint := fs.String("grafana-endpoint", "", "URL of the Grafana API server.")
 	// NOTE: 여기까지
@@ -190,6 +195,9 @@ func main() {
 		ReleaseModeFlag:      *fReleaseModeFlag,
 		HDCModeFlag:          *fHDCModeFlag,
 		TmaxCloudPortalURL:   *fTmaxCloudPortalURL,
+		KeycloakRealm:        *fKeycloakRealm,
+		KeycloakAuthURL:     *fKeycloakAuthURL,
+		KeycloakClientId:     *fKeycloakClientId,
 	}
 
 	if (*fKubectlClientID == "") != (*fKubectlClientSecret == "" && *fKubectlClientSecretFile == "") {
