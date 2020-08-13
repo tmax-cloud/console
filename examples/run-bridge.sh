@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-k8sIP='192.168.6.196'
+k8sIP='172.22.6.2'
 
 myIP=$(ipconfig | grep "IPv4" -a | head -1 | awk '{print $NF}')
 
