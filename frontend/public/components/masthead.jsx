@@ -56,7 +56,7 @@ const UserMenuWrapper = connectToFlags(
     props.keycloak.logout();
   };
   actions.push({
-    label: '계정 관리',
+    label: t('CONTENT:MANAGEACCOUNT'),
     callback: manageAccount,
     link: true,
   });
