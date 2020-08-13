@@ -323,12 +323,12 @@ class ListDropdown_ extends React.Component {
     return (
       <div>
         {Component}
-        {loaded && _.isEmpty(items) && (
+        {/* {loaded && _.isEmpty(items) && (
           <p className="alert alert-info">
             <span className="pficon pficon-info" aria-hidden="true"></span>
             {(this.props.t('ADDITIONAL:NOFOUNDORDEFINED'), { something: desc })}
           </p>
-        )}
+        )} */}
       </div>
     );
   }
