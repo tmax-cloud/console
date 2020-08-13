@@ -27,6 +27,7 @@ import {
 } from './pipeline-step-utils';
 
 import './PipelineVisualizationTask.scss';
+import { ContextMenu } from 'packages/topology/src';
 
 interface TaskProps {
   pipelineRunName?: string;
@@ -181,8 +182,8 @@ const TaskComponent: React.FC<TaskProps> = ({
   if (!disableTooltip) {
     taskPill = (
       <Tooltip
-        className="tooltip-bg"
-        position="bottom"
+        className={cx('tooltip-bg', { 'tooltip-bg-pipeline': !isPipelineRun })}
+        position="top"
         enableFlip={false}
         content={
           <PipelineVisualizationStepList
@@ -205,7 +206,13 @@ const TaskComponent: React.FC<TaskProps> = ({
   );
   return (
     <div className="odc-pipeline-vis-task">
-      {path ? <Link to={path}>{visTask}</Link> : visTask}
+      {path ? (
+        <Link to={path} style={{ textDecoration: 'none' }}>
+          {visTask}
+        </Link>
+      ) : (
+        visTask
+      )}
     </div>
   );
 };

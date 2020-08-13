@@ -12,6 +12,7 @@ export class KeyValueEditor extends React.Component {
     };
     this._append = this._append.bind(this);
     this._change = this._change.bind(this);
+    this._blur = this._blur.bind(this);
     this._remove = this._remove.bind(this);
   }
   _append(event) {
@@ -23,46 +24,65 @@ export class KeyValueEditor extends React.Component {
 
   _remove(i) {
     const { updateParentData, nameValueId } = this.props;
+    const { isDuplicated } = this.state;
     const keyValuePairs = _.cloneDeep(this.props.keyValuePairs);
     keyValuePairs.splice(i, 1);
-    updateParentData({ keyValuePairs: keyValuePairs.length ? keyValuePairs : [['', '']] }, nameValueId);
+    if (this.state.isDuplicated) {
+      let array = keyValuePairs.map(pair => pair[0]);
+      if (new Set(array).size !== array.length) {
+        this.setState({ isDuplicated: true });
+        updateParentData({ keyValuePairs: keyValuePairs.length ? keyValuePairs : [['', '']], isDuplicated: true }, nameValueId);
+      } else {
+        this.setState({ isDuplicated: false });
+        updateParentData({ keyValuePairs: keyValuePairs.length ? keyValuePairs : [['', '']], isDuplicated: false }, nameValueId);
+      }
+    } else {
+      updateParentData({ keyValuePairs: keyValuePairs.length ? keyValuePairs : [['', '']], isDuplicated: false }, nameValueId);
+    }
   }
 
   _change(e, i, type) {
     const { updateParentData, nameValueId } = this.props;
+    const keyValuePairs = _.cloneDeep(this.props.keyValuePairs);
+    keyValuePairs[i][type] = e.target.value;
+    updateParentData({ keyValuePairs }, nameValueId);
+  }
+  _blur(e, i, type) {
+    const { updateParentData, nameValueId } = this.props;
     const { isDuplicated } = this.state;
     const keyValuePairs = _.cloneDeep(this.props.keyValuePairs);
     //키값이 중복되는 경우
-    if (type === 0) {
-      isDuplicated = false;
-      this.setState({ isDuplicated });
-      keyValuePairs.some(pair => {
-        if (pair[0] === e.target.value) {
-          isDuplicated = true;
-          this.setState({ isDuplicated });
-        }
-      });
-    }
-    if (!isDuplicated) {
-      keyValuePairs[i][type] = e.target.value;
-      updateParentData({ keyValuePairs }, nameValueId);
+    let array = keyValuePairs.map(pair => pair[0]);
+    if (new Set(array).size !== array.length) {
+      this.setState({ isDuplicated: true });
+      updateParentData({ keyValuePairs, isDuplicated: true }, nameValueId);
+    } else {
+      this.setState({ isDuplicated: false });
+      updateParentData({ keyValuePairs, isDuplicated: false }, nameValueId);
     }
   }
+
   render() {
-    const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, nameValueId, t } = this.props;
+    const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, isModal, nameValueId, t } = this.props;
     const { isDuplicated } = this.state;
     const portItems = keyValuePairs.map((pair, i) => {
       const key = _.get(pair, [KeyValueEditorPair.Index], i);
-      return <KeyValuePairElement onChange={this._change} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <KeyValuePairElement onChange={this._change} onBlur={this._blur} t={t} index={i} keyString={keyString} valueString={valueString} isModal={isModal} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${keyString.toUpperCase()}`)}</div>
-          <div className="col-md-2 col-xs-2 text-secondary">{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
+          <div className={classNames(isModal ? 'col-md-5 col-xs-5 pairs-list__name-field' : 'col-md-2 col-xs-2 pairs-list__name-field')}>{t(`CONTENT:${keyString.toUpperCase()}`)}</div>
+          <div className={classNames(isModal ? 'col-md-5 col-xs-5 pairs-list__name-field' : 'col-md-2 col-xs-2 pairs-list__name-field')}>{t(`CONTENT:${valueString.toUpperCase()}`)}</div>
         </div>
         {portItems}
-        <div className="row">{isDuplicated ? <div className="col-md-12 col-xs-12 cos-error-title">{t(`VALIDATION:DUPLICATE-KEY`)}</div> : null}</div>
+        <div className="row">
+          {isDuplicated ? (
+            <div className="col-md-12 col-xs-12 cos-error-title" style={{ marginTop: '-15px' }}>
+              {t(`VALIDATION:DUPLICATE-KEY`)}
+            </div>
+          ) : null}
+        </div>
         <div className="row">
           <div className="col-md-12 col-xs-12">
             {readOnly ? null : (
@@ -94,6 +114,7 @@ class KeyValuePairElement extends React.Component {
     this._onRemove = this._onRemove.bind(this);
     this._onChangeKey = this._onChangeKey.bind(this);
     this._onChangeValue = this._onChangeValue.bind(this);
+    this._onBlurKey = this._onBlurKey.bind(this);
   }
   _onRemove() {
     const { index, onRemove } = this.props;
@@ -107,8 +128,12 @@ class KeyValuePairElement extends React.Component {
     const { index, onChange } = this.props;
     onChange(e, index, KeyValueEditorPair.Value);
   }
+  _onBlurKey(e) {
+    const { index, onBlur } = this.props;
+    onBlur(e, index, KeyValueEditorPair.Key);
+  }
   render() {
-    const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
+    const { keyString, valueString, allowSorting, readOnly, pair, t, isModal = false } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -118,10 +143,10 @@ class KeyValuePairElement extends React.Component {
 
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
-        <div className="col-md-2 col-xs-2 pairs-list__name-field">
-          <input type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[KeyValueEditorPair.Key]} onChange={this._onChangeKey} />
+        <div className={classNames(isModal ? 'col-md-5 col-xs-5 pairs-list__name-field' : 'col-md-2 col-xs-2 pairs-list__name-field')}>
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[KeyValueEditorPair.Key]} onChange={this._onChangeKey} onBlur={this._onBlurKey} />
         </div>
-        <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
+        <div className={classNames(isModal ? 'col-md-5 col-xs-5 pairs-list__name-field' : 'col-md-2 col-xs-2 pairs-list__name-field')}>
           <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[KeyValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
         </div>
         {readOnly ? null : (

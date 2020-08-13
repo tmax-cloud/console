@@ -11,30 +11,30 @@ export class ValueEditor extends React.Component {
     this._remove = this._remove.bind(this);
   }
   _append(event) {
-    const { updateParentData, values, nameValueId, allowSorting } = this.props;
+    const { updateParentData, values, nameValueId, allowSorting, editorIdx } = this.props;
     let lastIndex = this.props.values.length - 1;
     let lastData = this.props.values[lastIndex];
-    updateParentData({ values: allowSorting ? portPairs.concat([['', values.length]]) : values.concat([['']]) }, nameValueId);
+    updateParentData({ values: allowSorting ? portPairs.concat([['', values.length]]) : values.concat([['']]), editorIdx }, nameValueId);
   }
 
   _remove(i) {
-    const { updateParentData, nameValueId } = this.props;
+    const { updateParentData, nameValueId, editorIdx } = this.props;
     const values = _.cloneDeep(this.props.values);
     values.splice(i, 1);
-    updateParentData({ values: values.length ? values : [['', '']] }, nameValueId);
+    updateParentData({ values: values.length ? values : [['', '']], editorIdx }, nameValueId);
   }
 
   _change(e, i, type) {
-    const { updateParentData, nameValueId } = this.props;
+    const { updateParentData, nameValueId, editorIdx } = this.props;
     const values = _.cloneDeep(this.props.values);
     values[i][type] = e.target.value;
-    updateParentData({ values }, nameValueId);
+    updateParentData({ values, editorIdx }, nameValueId);
   }
   render() {
-    const { desc, title, valueString, addString, values, allowSorting, readOnly, nameValueId, t } = this.props;
+    const { desc, title, valueString = '', addString, values, allowSorting, readOnly, nameValueId, isModal, t } = this.props;
     const portItems = values.map((pair, i) => {
       const key = _.get(pair, [ValueEditorPair.Index], i);
-      return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} isModal={isModal} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <React.Fragment>
@@ -80,7 +80,7 @@ class ValuePairElement extends React.Component {
     onChange(e, index, ValueEditorPair.Value);
   }
   render() {
-    const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
+    const { keyString, valueString, allowSorting, readOnly, pair, t, isModal = false } = this.props;
     const deleteButton = (
       <React.Fragment>
         <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
@@ -90,7 +90,8 @@ class ValuePairElement extends React.Component {
 
     return (
       <div className={classNames('row')} ref={node => (this.node = node)}>
-        <div className="col-md-4 col-xs-4 pairs-list__protocol-field">
+        <div className={classNames(isModal ? 'col-md-11 col-xs-10 pairs-list__protocol-field' : 'col-md-4 col-xs-4 pairs-list__protocol-field')}>
+          {/* <div className="col-md-4 col-xs-4 pairs-list__protocol-field"> */}
           <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[ValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
         </div>
         {readOnly ? null : (

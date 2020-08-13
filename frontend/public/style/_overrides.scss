@@ -127,9 +127,26 @@ tags-input .tags {
 .modal-dialog {
   width: fit-content;
 }
+
 .modal-body tags-input .tags {
   min-height: 200px;
 }
+
+.modal-body.scroll {
+  padding: 0px;
+}
+
+.modal-body.scroll > div {
+  padding: 15px;
+}
+
+.modal-body.scroll > .modal-body-scroll {
+  max-height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 15px;
+}
+
 tags-input .tags.focused,
 tags-input .tags:focus {
   outline: none;
@@ -422,4 +439,29 @@ tags-input .autocomplete .suggestion-item em {
 
 .tooltip-bg {
   background-color: #ffffff;
+  width: 222px;
+  border: 1px solid #677e9a;
+  border-radius: 2px;
+  padding: 0 11.8px;
+}
+
+.tooltip-bg-pipeline {
+  width: 191px;
+}
+
+.tippy-popper {
+  // margin-top: -25px;
+  top: 25px !important;
+}
+
+.tippy-tooltip {
+  // max-width: 250px !important;
+  left: 22px !important;
+}
+
+.dropdown--full-width {
+  button {
+    min-width: 130px;
+    max-width: 130px;
+  }
 }

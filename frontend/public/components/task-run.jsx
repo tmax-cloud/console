@@ -67,7 +67,17 @@ TaskRunList.displayName = TaskRunList;
 
 export const TaskRunsPage = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} ListComponent={TaskRunList} canCreate={true} kind="TaskRun" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  const createItems = {
+    form: t('CONTENT:FORMEDITOR'),
+    yaml: t('CONTENT:YAMLEDITOR'),
+  };
+  const createProps = {
+    items: createItems,
+    // createLink: type => `/k8s/ns/${props.namespace || 'default'}/taskruns/new${type !== 'yaml' ? '/' + type : ''}`,
+    createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/taskruns/new` : `/k8s/cluster/taskruns/new/form`),
+  };
+
+  return <ListPage {...props} ListComponent={TaskRunList} canCreate={true} kind="TaskRun" createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} createProps={createProps} />;
 };
 TaskRunsPage.displayName = 'TaskRunsPage';
 

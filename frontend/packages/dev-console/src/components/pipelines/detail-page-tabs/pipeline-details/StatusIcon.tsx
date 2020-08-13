@@ -6,9 +6,12 @@ import {
   CircleIcon,
   ExclamationCircleIcon,
   PendingIcon,
-  SyncAltIcon,
+  SyncAltIcon
 } from '@patternfly/react-icons';
-import { getRunStatusColor, runStatus } from '../../../../utils/pipeline-augment';
+import {
+  getRunStatusColor,
+  runStatus
+} from '../../../../utils/pipeline-augment';
 
 interface StatusIconProps {
   status: string;
@@ -25,31 +28,51 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
     case runStatus.Succeeded:
       return <CheckCircleIcon {...props} />;
 
-    case runStatus.Failed:
-      return <ExclamationCircleIcon {...props} />;
-
-    case runStatus.Idle:
-    case runStatus.Pending:
-      return <PendingIcon {...props} />;
-
-    case runStatus.Cancelled:
-      return <BanIcon {...props} />;
-
-    case runStatus.Skipped:
-      return <AngleDoubleRightIcon {...props} />;
-
+    // case runStatus.Failed:
+    //   return <ExclamationCircleIcon {...props} />;
     default:
-      return <CircleIcon {...props} />;
+      return <ExclamationCircleIcon {...props} />;
+    // case runStatus.Idle:
+    // case runStatus.Pending:
+    //   return <PendingIcon {...props} />;
+
+    // case runStatus.Cancelled:
+    //   return <BanIcon {...props} />;
+
+    // case runStatus.Skipped:
+    //   return <AngleDoubleRightIcon {...props} />;
+
+    // default:
+    //   return <CircleIcon {...props} />;
   }
 };
 
-export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others }) => {
+export const ColoredStatusIcon: React.FC<StatusIconProps> = ({
+  status,
+  ...others
+}) => {
+  let iconColor;
+  switch (status) {
+    case 'Succeeded':
+      iconColor = '#4D8AFF';
+      break;
+    // case 'Failed':
+    //   iconColor = '#FD5461';
+    //   break;
+    case 'Running':
+      iconColor = '#4BBBCF';
+      break;
+    default:
+      iconColor = '#FD5461';
+      break;
+  }
   return (
     <div
       style={{
-        color: status
-          ? getRunStatusColor(status).pftoken.value
-          : getRunStatusColor(runStatus.Cancelled).pftoken.value,
+        // color: status
+        //   ? getRunStatusColor(status).pftoken.value
+        //   : getRunStatusColor(runStatus.Cancelled).pftoken.value
+        color: iconColor
       }}
     >
       <StatusIcon status={status} {...others} />

@@ -20,17 +20,20 @@ const NamespaceClaimHeader = props => {
       <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.name">
         {t('CONTENT:NAME')}
       </ColHead>
-      <ColHead {...props} className="col-xs-3 col-sm-3" sortField="status.status">
-        {t('CONTENT:STATUS')}
-      </ColHead>
-      {/* <ColHead {...props} className="col-xs-3 col-sm-3">
-        {t('CONTENT:TRIALTIME')}
-      </ColHead> */}
       <ColHead {...props} className="col-xs-3 col-sm-3" sortField="resourceName">
         {/* {t('ADDITIONAL:NAME', { something: t('RESOURCE:NAMESPACE') })} */}
         {t('RESOURCE:NAMESPACE')}
       </ColHead>
-      <ColHead {...props} className="col-sm-3 hidden-xs" sortField="metadata.creationTimestamp">
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="status.status">
+        {t('CONTENT:STATUS')}
+      </ColHead>
+      <ColHead {...props} className="col-xs-2 col-sm-2" sortField="metadata.annotations.updater">
+        {t('CONTENT:USERNAME')}
+      </ColHead>
+      {/* <ColHead {...props} className="col-xs-3 col-sm-3">
+        {t('CONTENT:TRIALTIME')}
+      </ColHead> */}
+      <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
       </ColHead>
     </ListHeader>
@@ -56,10 +59,11 @@ const NamespaceClaimRow = () =>
           <ResourceCog actions={menuActions} kind="NamespaceClaim" resource={obj} />
           <ResourceLink kind="NamespaceClaim" name={obj.metadata.name} title={obj.metadata.name} />
         </div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{obj.status && obj.status.status}</div>
-        {/* <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div> */}
         <div className="col-md-3 col-xs-3 co-resource-link-wrapper">{obj.resourceName}</div>
-        <div className="col-xs-3 col-sm-3 hidden-xs">{fromNow(new Date(obj.metadata.creationTimestamp.iMillis))}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.status && obj.status.status}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj?.metadata?.labels?.owner}</div>
+        {/* <div className="col-xs-3 col-sm-3 hidden-xs">{time}</div> */}
+        <div className="col-xs-2 col-sm-2 hidden-xs">{fromNow(new Date(obj.metadata.creationTimestamp.iMillis))}</div>
       </div>
     );
   };
@@ -105,6 +109,13 @@ export const NamespaceClaimList = props => {
 };
 NamespaceClaimList.displayName = NamespaceClaimList;
 
+export const namespaceclaimPhaseFilterReducer = namespaceclaim => {
+  switch (namespaceclaim?.status?.status) {
+    default:
+      return namespaceclaim?.status?.status;
+  }
+};
+
 export const NamespaceClaimsPage = props => {
   const { t } = useTranslation();
   const createItems = {
@@ -115,6 +126,19 @@ export const NamespaceClaimsPage = props => {
     items: createItems,
     createLink: type => `/k8s/cluster/namespaceclaims/new${type !== 'yaml' ? '/' + type : ''}`,
   };
+  const filters = [
+    {
+      type: 'namespaceclaim-status',
+      selected: ['Success', 'Awaiting', 'Reject', 'Error'],
+      reducer: namespaceclaimPhaseFilterReducer,
+      items: [
+        { id: 'Success', title: t('CONTENT:Success') },
+        { id: 'Awaiting', title: t('CONTENT:Awaiting') },
+        { id: 'Reject', title: t('CONTENT:Reject') },
+        { id: 'Error', title: t('CONTENT:Error') },
+      ],
+    },
+  ];
   // React.useEffect(() => {
   //   k8sList(kindObj('Namespace'))
   //     .then(reponse => reponse)
@@ -131,7 +155,7 @@ export const NamespaceClaimsPage = props => {
   //       },
   //     );
   // }, []);
-  return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createProps={createProps} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  return <ListPage {...props} ListComponent={NamespaceClaimList} canCreate={true} kind="NamespaceClaim" createProps={createProps} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} rowFilters={filters} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 

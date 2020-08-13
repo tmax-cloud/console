@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-k8sIP='192.168.6.196'
+k8sIP='172.22.6.2'
 
 myIP=$(ipconfig | grep "IPv4" -a | head -1 | awk '{print $NF}')
 
@@ -19,11 +19,13 @@ nodePorts=$(ssh root@$k8sIP "
     KIALI_PORT=\$(kubectl get svc -n istio-system kiali | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
     JAEGER_PORT=\$(kubectl get svc -n istio-system tracing | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
     APPROVAL_PORT=\$(kubectl get svc -n approval-system approval-proxy-server | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
-    echo \"HC_PORT=\$HC_PORT PROM_PORT=\$PROM_PORT GRAFANA_PORT=\$GRAFANA_PORT KIALI_PORT=\$KIALI_PORT JAEGER_PORT=\$JAEGER_PORT APPROVAL_PORT=\$APPROVAL_PORT;\"
+    VNC_PORT=\$(kubectl get svc -n kubevirt virtvnc | awk '{print \$5}' | awk 'match(\$0, /:[0-9]+\//){print substr(\$0,RSTART+1,RLENGTH-2)}');
+    echo \"HC_PORT=\$HC_PORT PROM_PORT=\$PROM_PORT GRAFANA_PORT=\$GRAFANA_PORT KIALI_PORT=\$KIALI_PORT JAEGER_PORT=\$JAEGER_PORT APPROVAL_PORT=\$APPROVAL_PORT VNC_PORT=\$VNC_PORT;\"
 ")
 
 eval $nodePorts
-
+KUBEFLOW_IP=192.168.6.185
+KUBEFLOW_PORT=80
 
 ./bin/bridge \
     --listen=https://$myIP:9000 \
@@ -42,4 +44,9 @@ eval $nodePorts
     --kiali-endpoint=http://$k8sIP:$KIALI_PORT/api/kiali \
     --jaeger-endpoint=http://$k8sIP:$JAEGER_PORT/api/jaeger \
     --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/approve \
+    --kubeflow-endpoint=http://$KUBEFLOW_IP:$KUBEFLOW_PORT/ \
+    --vnc-endpoint=http://$k8sIP:$VNC_PORT \
+    --keycloak-realm=tmax \
+    --keycloak-auth-url=https://172.22.6.11/auth \
+    --keycloak-client-id=hypercloud4 \
     --release-mode=true \

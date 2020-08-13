@@ -307,7 +307,7 @@ const Requestform = SubForm =>
           let volumeMount = {
             name: arr[0],
             mountPath: arr[1],
-            readOnly: arr[3],
+            readOnly: !!(arr[3] === 'true'),
           };
           if (arr[2] === '') {
             arr[2] = this.state.volumeOptions[0];
@@ -318,9 +318,6 @@ const Requestform = SubForm =>
               claimName: arr[2],
             },
           };
-          if (arr[3] === '') {
-            volumeMount.readOnly = false;
-          }
           volumeList = volumeList.concat(volume);
           volumeMountList = volumeMountList.concat(volumeMount);
         }

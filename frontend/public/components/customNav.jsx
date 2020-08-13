@@ -197,10 +197,6 @@ const defaultMenu = `
       type: resourcenslink
     - name: RoleBindingClaim
       type: resourcenslink
-    - name: User
-      type: resourceclusterlink
-    - name: Usergroup
-      type: resourceclusterlink
     - name: Usersecuritypolicy
       type: resourceclusterlink
     - name: ServiceAccount
@@ -554,7 +550,7 @@ class CustomNav extends React.Component {
                 resource = 'approvals';
                 break;
               case 'horizontalpodautoscaler':
-                temp = 'HPA';
+                temp = 'HPAs';
                 resource = 'horizontalpodautoscalers';
                 break;
               default:

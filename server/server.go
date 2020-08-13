@@ -54,6 +54,8 @@ const (
 	approvalProxyEndpoint     = "/api/approve/"
 	grafanaProxyEndpoint      = "/api/grafana/"
 	kialiProxyEndpoint        = "/api/kiali/"
+	kubeflowEndpoint          = "/api/kubeflow/"
+	vncEndpoint               = "/api/vnc/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
 )
 
@@ -82,6 +84,9 @@ type jsGlobals struct {
 	ReleaseModeFlag    bool   `json:"releaseModeFlag"`
 	HDCModeFlag        bool   `json:"HDCModeFlag"`
 	TmaxCloudPortalURL string `json:tmaxCloudPortalURL`
+	KeycloakRealm      string `json:keycloakRealm`
+	KeycloakAuthURL    string `json:keycloakAuthURL`
+	KeycloakClientId   string `json:keycloakClientId`
 }
 
 type Server struct {
@@ -105,6 +110,9 @@ type Server struct {
 	ReleaseModeFlag      bool
 	HDCModeFlag          bool
 	TmaxCloudPortalURL   string
+	KeycloakRealm        string
+	KeycloakAuthURL      string
+	KeycloakClientId     string
 	// Helpers for logging into kubectl and rendering kubeconfigs. These fields
 	// may be nil.
 	KubectlAuther  *auth.Authenticator
@@ -118,6 +126,8 @@ type Server struct {
 	ApprovalProxyConfig   *proxy.Config
 	GrafanaProxyConfig    *proxy.Config
 	KialiProxyConfig      *proxy.Config
+	KubeflowProxyConfig   *proxy.Config
+	VncProxyConfig        *proxy.Config
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
@@ -404,23 +414,34 @@ func (s *Server) HTTPHandler() http.Handler {
 	// NOTE: kiali proxy 등록 // 윤진수
 	if s.KialiProxyConfig != nil {
 		kialiProxyAPIPath := kialiProxyEndpoint
-		// grafanaProxy := proxy.NewProxy(s.GrafanaProxyConfig)
-		// director := func(req *http.Request) {
-		// req.Header.Add("X-Forwarded-Host", req.Host)
-		// req.Header.Add("X-Origin-Host", origin.Host)
-		// req.Header.Add("X-Frame-Options", "sameorigin")
-		// req.Header.Add("X-Forwarded-For", req.RemoteAddr)
-		// req.Header.Add("X-Frame-Options", "allowall")
-		// req.URL.Scheme = "http"
-		// req.URL.Host = origin.Host
-		// }
-		// grafanaProxy := &httputil.ReverseProxy{Director: director}
 		kialiProxy := httputil.NewSingleHostReverseProxy(s.KialiProxyConfig.Endpoint)
 		handle(kialiProxyAPIPath, http.StripPrefix(
 			proxy.SingleJoiningSlash(s.BaseURL.Path, kialiProxyAPIPath),
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				kialiProxy.ServeHTTP(w, r)
 			})),
+		)
+	}
+
+	if s.KubeflowProxyConfig != nil {
+		kubeflowProxyAPIPath := kubeflowEndpoint
+		kubeflowProxy := httputil.NewSingleHostReverseProxy(s.KubeflowProxyConfig.Endpoint)
+		handle(kubeflowProxyAPIPath,
+			http.StripPrefix(s.BaseURL.Path,
+				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					kubeflowProxy.ServeHTTP(w, r)
+				})),
+		)
+	}
+
+	if s.VncProxyConfig != nil {
+		vncProxyAPIPath := vncEndpoint
+		vncProxy := httputil.NewSingleHostReverseProxy(s.VncProxyConfig.Endpoint)
+		handle(vncProxyAPIPath,
+			http.StripPrefix(proxy.SingleJoiningSlash(s.BaseURL.Path, vncProxyAPIPath),
+				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					vncProxy.ServeHTTP(w, r)
+				})),
 		)
 	}
 
@@ -534,6 +555,9 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		ReleaseModeFlag:    s.ReleaseModeFlag,
 		HDCModeFlag:        s.HDCModeFlag,
 		TmaxCloudPortalURL: s.TmaxCloudPortalURL,
+		KeycloakRealm:      s.KeycloakRealm,
+		KeycloakAuthURL:    s.KeycloakAuthURL,
+		KeycloakClientId:   s.KeycloakClientId,
 	}
 
 	if s.prometheusProxyEnabled() {

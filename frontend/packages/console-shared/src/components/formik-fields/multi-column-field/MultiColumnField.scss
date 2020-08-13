@@ -5,13 +5,17 @@
     // margin-bottom: var(--pf-global--spacer--lg);
     // max-height: var(--pf-global--spacer--xl);
     margin-right: 24px;
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
+    margin-bottom: 8px;
     max-height: 32px;
   }
 
   &__col {
     // margin-right: var(--pf-global--spacer--md);
     margin-right: 16px;
+    .pf-m-error {
+      color: #f04c5c;
+    }
   }
 
   &__col--button {

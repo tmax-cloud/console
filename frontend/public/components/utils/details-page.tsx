@@ -24,8 +24,6 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
     <dl className="co-m-pane__details">
       {/* {resource.kind === 'Pipeline' && <PipelineDiagramComponent namespace={metadata.namespace} data={resource.spec.tasks} />}
       {resource.kind === 'PipelineRun' && <PipelineRunDiagramComponent namespace={metadata.namespace} data={resource.status} />} */}
-      {resource.kind === 'Pipeline' && <PipelineVisualization pipeline={resource} />}
-      {resource.kind === 'PipelineRun' && <PipelineRunVisualization pipelineRun={resource} />}
       <dt>{t('CONTENT:NAME')}</dt>
       <dd>{metadata.name || '-'}</dd>
       {metadata.namespace ? <dt>{t('CONTENT:NAMESPACE')}</dt> : null}
@@ -67,6 +65,9 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       </dd>
       {owners.length ? <dt>{t('CONTENT:OWNER')}</dt> : null}
       {owners.length ? <dd>{owners}</dd> : null}
+      {resource.kind === 'Pipeline' && <PipelineVisualization pipeline={resource} />}
+      {resource.kind === 'PipelineRun' && <PipelineRunVisualization pipelineRun={resource} />}
+      {resource.kind === 'PipelineRun' && !resource.status.pipelineSpec && <div style={{ padding: '10px' }}>Tekton version '&gt;'= 0.12.1 required for Pipelinerun visualization.</div>}
     </dl>
   );
 };

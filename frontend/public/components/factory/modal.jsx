@@ -46,7 +46,7 @@ export const ModalTitle = ({ children, className = 'modal-header' }) => (
   </div>
 );
 
-export const ModalBody = ({ children }) => <div className="modal-body">{children}</div>;
+export const ModalBody = ({ children }) => <div className="modal-body scroll">{children}</div>;
 
 export const ModalFooter = ({ message, errorMessage, inProgress, children }) => {
   return (

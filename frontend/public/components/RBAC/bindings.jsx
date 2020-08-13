@@ -197,7 +197,7 @@ export const RoleBindingsPage = ({ namespace, showTitle = true, fake }) => {
       ]}
       showTitle={showTitle}
       textFilter="role-binding"
-      title={t('RESOURCE:ROLEBINDING')}
+      title={ResourcePlural('RoleBinding', t)}
       id="rolebinding"
     />
   );
@@ -323,18 +323,18 @@ class ListDropdown_ extends React.Component {
     return (
       <div>
         {Component}
-        {loaded && _.isEmpty(items) && (
+        {/* {loaded && _.isEmpty(items) && (
           <p className="alert alert-info">
             <span className="pficon pficon-info" aria-hidden="true"></span>
             {(this.props.t('ADDITIONAL:NOFOUNDORDEFINED'), { something: desc })}
           </p>
-        )}
+        )} */}
       </div>
     );
   }
 }
 
-const ListDropdown = props => {
+export const ListDropdown = props => {
   const resources = _.map(props.resources, resource => _.assign({ isList: true, prop: resource.kind }, resource));
   return (
     <Firehose resources={resources}>

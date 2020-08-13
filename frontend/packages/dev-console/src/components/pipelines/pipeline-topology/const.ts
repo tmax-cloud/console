@@ -7,23 +7,25 @@ export const BUILDER_NODE_ADD_RADIUS = 9;
 export const BUILDER_NODE_ERROR_RADIUS = 9;
 export const BUILDER_NODE_ADD_PADDING = 4;
 
-export const NODE_WIDTH = 120;
-export const NODE_HEIGHT = 30;
+// export const NODE_WIDTH = 120;
+// export const NODE_HEIGHT = 30;
+export const NODE_WIDTH = 143;
+export const NODE_HEIGHT = 38;
 
 export enum NodeType {
   TASK_NODE = 'task',
   SPACER_NODE = 'spacer',
   TASK_LIST_NODE = 'task-list',
   BUILDER_NODE = 'builder',
-  INVALID_TASK_LIST_NODE = 'invalid-task-list',
+  INVALID_TASK_LIST_NODE = 'invalid-task-list'
 }
 export enum DrawDesign {
   INTEGRAL_SHAPE = 'integral-shape',
-  STRAIGHT = 'line',
+  STRAIGHT = 'line'
 }
 export enum PipelineLayout {
   DAGRE_BUILDER = 'dagre-builder',
-  DAGRE_VIEWER = 'dagre-viewer',
+  DAGRE_VIEWER = 'dagre-viewer'
 }
 
 export enum AddNodeDirection {
@@ -46,7 +48,7 @@ export enum AddNodeDirection {
    *  - we inherit all that `relatedTask` is pointing at
    *  - we are added to all that is pointing at `relatedTask`
    */
-  PARALLEL = 'shared-parallel',
+  PARALLEL = 'shared-parallel'
 }
 
 const DAGRE_SHARED_PROPS: dagre.GraphLabel = {
@@ -57,15 +59,15 @@ const DAGRE_SHARED_PROPS: dagre.GraphLabel = {
   rankdir: 'LR',
   align: 'UL',
   marginx: 20,
-  marginy: 20,
+  marginy: 20
 };
 export const DAGRE_VIEWER_PROPS: dagre.GraphLabel = {
-  ...DAGRE_SHARED_PROPS,
+  ...DAGRE_SHARED_PROPS
 };
 export const DAGRE_BUILDER_PROPS: dagre.GraphLabel = {
   ...DAGRE_SHARED_PROPS,
   ranksep: NODE_SEPARATION_HORIZONTAL + BUILDER_NODE_ADD_RADIUS * 2,
   nodesep: NODE_SEPARATION_VERTICAL + BUILDER_NODE_ADD_RADIUS,
   marginx: DAGRE_SHARED_PROPS.marginx + BUILDER_NODE_ADD_RADIUS * 2,
-  marginy: DAGRE_SHARED_PROPS.marginy + BUILDER_NODE_ADD_RADIUS * 2,
+  marginy: DAGRE_SHARED_PROPS.marginy + BUILDER_NODE_ADD_RADIUS * 2
 };
