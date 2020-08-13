@@ -25,7 +25,7 @@ const MultiColumnFieldFooter: React.FC<MultiColumnFieldHeader> = ({
       marginTop: '5px'
     }}
   >
-    <span style={{ marginLeft: '2px' }}>{addLabel || 'Add values'}</span>
+    <span style={{ marginLeft: '4px' }}>{addLabel || 'Add values'}</span>
   </Button>
 );
 
