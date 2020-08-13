@@ -55,7 +55,7 @@ export const VolumeclaimTemplate = props => {
                 }}
                 checked={!useVolumeclaimTemplate}
               />
-              {t('CONTENT:UNUSE')}
+              {t('CONTENT:NOTUSE')}
             </div>
           </div>
           <div style={{ fontSize: '12px', color: '#696969' }}>

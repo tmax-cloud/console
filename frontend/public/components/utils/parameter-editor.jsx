@@ -3,18 +3,18 @@ import * as _ from 'lodash-es';
 import { MdEdit } from 'react-icons/md';
 import { FaMinus } from 'react-icons/fa';
 import * as classNames from 'classnames';
-import { ResourceModalEditorPair, ResourceModalPair } from './index';
+import { ParameterModalEditorPair, ParameterModalPair } from './index';
 
-export class ResourceModalEditor extends React.Component {
+export class ParameterModalEditor extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentResources: {
+      currentParameters: {
         name: '',
         type: '',
-        path: '',
-        optional: false,
+        description: '',
+        default: '',
       },
       names: props.names,
     };
@@ -26,13 +26,14 @@ export class ResourceModalEditor extends React.Component {
   }
 
   _updateParentData = data => {
-    const { visibleData, realData, resources, names, nameValueId, allowSorting, t, valueString } = this.props;
+    const { visibleData, realData, names, nameValueId, allowSorting, t, valueString } = this.props;
     let index = data.isNew ? this.props.names.length : data.index; // 수정이면 index다르게 줘야함
     const names = [...this.state.names];
     names[index][0] = data.name;
-    const currentResources = [...this.state.currentResources];
-    ['Name', 'Type', 'Path', 'Optional'].forEach(cur => {
-      currentResources[index][ResourceModalPair[cur]] = data[cur.toLowerCase()];
+    const currentParameters = [...this.state.currentParameters];
+    ['Name', 'Description', 'Type', 'Default'].forEach(cur => {
+      currentParameters[index][ParameterModalPair[cur]] = data[cur.toLowerCase()];
+      console.log([ParameterModalPair[cur]]);
     });
 
     this.setState(prevState => ({
@@ -41,26 +42,26 @@ export class ResourceModalEditor extends React.Component {
     }));
     this.setState(prevState => ({
       ...prevState,
-      currentResources,
+      currentParameters,
     }));
 
     visibleData({ names }, nameValueId);
-    realData(this.state.currentResources);
+    realData(this.state.currentParameters);
   };
 
   _append(event) {
-    const { resources, names, nameValueId, allowSorting, t, valueString } = this.props;
+    const { parameters, names, nameValueId, allowSorting, t, valueString } = this.props;
 
     names = typeof names === 'string' ? [['']] : names.concat([['']]);
-    resources = typeof resources === 'string' ? [['', '', '', false]] : resources.concat([['', '', '', false]]);
+    parameters = typeof parameters === 'string' ? [['', '', '', '']] : parameters.concat([['', '', '', '']]);
     this.setState(prevState => ({
       ...prevState,
       names,
-      currentResources: resources,
+      currentParameters: parameters,
     }));
 
-    import('./../modals/resource-modal').then(m => {
-      m.ResourceModal({
+    import('./../modals/parameter-modal').then(m => {
+      m.ParameterModal({
         title: t(`CONTENT:${valueString.toUpperCase()}`),
         isNew: true,
         updateParentData: this._updateParentData,
@@ -69,12 +70,12 @@ export class ResourceModalEditor extends React.Component {
   }
 
   _change(e, i) {
-    const { resources, names, nameValueId, allowSorting, t, valueString } = this.props;
+    const { parameters, names, nameValueId, allowSorting, t, valueString } = this.props;
 
-    import('./../modals/resource-modal').then(m => {
-      m.ResourceModal({
+    import('./../modals/parameter-modal').then(m => {
+      m.ParameterModal({
         title: t(`CONTENT:${valueString.toUpperCase()}`),
-        resource: resources[i],
+        parameter: parameters[i],
         isNew: false,
         updateParentData: this._updateParentData,
         index: i,
@@ -85,11 +86,11 @@ export class ResourceModalEditor extends React.Component {
   _remove(i) {
     const { visibleData, realData, nameValueId } = this.props;
     const names = _.cloneDeep(this.props.names);
-    const resources = _.cloneDeep(this.props.resources);
+    const parameters = _.cloneDeep(this.props.parameters);
     names.splice(i, 1);
-    resources.splice(i, 1);
+    parameters.splice(i, 1);
     visibleData({ names });
-    realData(resources);
+    realData(parameters);
   }
 
   render() {
@@ -97,8 +98,8 @@ export class ResourceModalEditor extends React.Component {
     const portItems =
       names &&
       names.map((pair, i) => {
-        const key = _.get(pair, [ResourceModalEditorPair.Index], i);
-        return <ResourceModalElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+        const key = _.get(pair, [ParameterModalEditorPair.Index], i);
+        return <ParameterModalElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
       });
     return (
       <React.Fragment>
@@ -122,7 +123,7 @@ export class ResourceModalEditor extends React.Component {
     );
   }
 }
-ResourceModalEditor.defaultProps = {
+ParameterModalEditor.defaultProps = {
   valueString: 'Value',
   addString: 'AddMore',
   allowSorting: false,
@@ -130,7 +131,7 @@ ResourceModalEditor.defaultProps = {
   nameValueId: 0,
 };
 
-class ResourceModalElement extends React.Component {
+class ParameterModalElement extends React.Component {
   constructor(props) {
     super(props);
     this._onRemove = this._onRemove.bind(this);
@@ -156,7 +157,7 @@ class ResourceModalElement extends React.Component {
     const editButton = (
       <React.Fragment>
         <MdEdit style={{ marginRight: '0.63rem', marginBottom: '0.18rem' }} onClick={this._onEdit} />
-        {/* <i className="fa fa-pencil-square fa-2x pairs-list__side-btn" aria-hidden="true" onClick={this._onEdit}></i> */}
+        {/* <i className="fa fa-pencil-square fa-lx pairs-list__side-btn" aria-hidden="true" onClick={this._onEdit}></i> */}
         <span className="sr-only">Edit</span>
       </React.Fragment>
     );
@@ -164,7 +165,7 @@ class ResourceModalElement extends React.Component {
     return (
       <div className={classNames('row')} ref={node => (this.node = node)}>
         <div className="col-md-4 col-xs-4 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[ResourceModalEditorPair.Value] || ''} onChange={this._onChangeValue} readOnly />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[ParameterModalEditorPair.Value] || ''} onChange={this._onChangeValue} readOnly />
         </div>
         {/* {readOnly ? null : ( */}
         {

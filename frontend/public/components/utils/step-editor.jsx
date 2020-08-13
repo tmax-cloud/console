@@ -3,18 +3,19 @@ import * as _ from 'lodash-es';
 import { MdEdit } from 'react-icons/md';
 import { FaMinus } from 'react-icons/fa';
 import * as classNames from 'classnames';
-import { ResourceModalEditorPair, ResourceModalPair } from './index';
+import { StepModalEditorPair, StepModalPair } from './index';
+import { DataVolumeList } from '../data-volume';
 
-export class ResourceModalEditor extends React.Component {
+export class StepModalEditor extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentResources: {
+      currentSteps: {
         name: '',
         type: '',
-        path: '',
-        optional: false,
+        description: '',
+        default: '',
       },
       names: props.names,
     };
@@ -26,13 +27,13 @@ export class ResourceModalEditor extends React.Component {
   }
 
   _updateParentData = data => {
-    const { visibleData, realData, resources, names, nameValueId, allowSorting, t, valueString } = this.props;
+    const { visibleData, realData, names, nameValueId, allowSorting, t, valueString } = this.props;
     let index = data.isNew ? this.props.names.length : data.index; // 수정이면 index다르게 줘야함
     const names = [...this.state.names];
     names[index][0] = data.name;
-    const currentResources = [...this.state.currentResources];
-    ['Name', 'Type', 'Path', 'Optional'].forEach(cur => {
-      currentResources[index][ResourceModalPair[cur]] = data[cur.toLowerCase()];
+    const currentSteps = [...this.state.currentSteps];
+    ['Name', 'ImageRegistry', 'Image', 'ImageVersion', 'MailServer', 'MailFrom', 'MailSubject', 'MailContent', 'RunCommands', 'RunCommandArguments', 'Env', 'VolumeMountName', 'VolumeMountPath', 'Type', 'Preset', 'ImageType', 'SelfImage'].forEach(cur => {
+      currentSteps[index][StepModalPair[cur]] = data[cur.toLowerCase()];
     });
 
     this.setState(prevState => ({
@@ -41,42 +42,48 @@ export class ResourceModalEditor extends React.Component {
     }));
     this.setState(prevState => ({
       ...prevState,
-      currentResources,
+      currentSteps,
     }));
 
     visibleData({ names }, nameValueId);
-    realData(this.state.currentResources);
+    realData(this.state.currentSteps);
   };
 
   _append(event) {
-    const { resources, names, nameValueId, allowSorting, t, valueString } = this.props;
+    const { steps, names, nameValueId, allowSorting, t, valueString } = this.props;
 
     names = typeof names === 'string' ? [['']] : names.concat([['']]);
-    resources = typeof resources === 'string' ? [['', '', '', false]] : resources.concat([['', '', '', false]]);
+    steps = typeof steps === 'string' ? [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']] : steps.concat([['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']]);
     this.setState(prevState => ({
       ...prevState,
       names,
-      currentResources: resources,
+      currentSteps: steps,
     }));
 
-    import('./../modals/resource-modal').then(m => {
-      m.ResourceModal({
+    import('./../modals/step-modal').then(m => {
+      m.StepModal({
         title: t(`CONTENT:${valueString.toUpperCase()}`),
         isNew: true,
+        volumeNames: this.props.volumeList,
         updateParentData: this._updateParentData,
+        namespace: this.props.namespace,
+        steps: this.props.steps,
       });
     });
   }
 
   _change(e, i) {
-    const { resources, names, nameValueId, allowSorting, t, valueString } = this.props;
+    const { steps, names, nameValueId, allowSorting, t, valueString } = this.props;
 
-    import('./../modals/resource-modal').then(m => {
-      m.ResourceModal({
+    import('./../modals/step-modal').then(m => {
+      m.StepModal({
         title: t(`CONTENT:${valueString.toUpperCase()}`),
-        resource: resources[i],
+        step: steps[i],
         isNew: false,
+        volumeNames: this.props.volumeList,
         updateParentData: this._updateParentData,
+        namespace: this.props.namespace,
+        steps: this.props.steps,
         index: i,
       });
     });
@@ -85,11 +92,11 @@ export class ResourceModalEditor extends React.Component {
   _remove(i) {
     const { visibleData, realData, nameValueId } = this.props;
     const names = _.cloneDeep(this.props.names);
-    const resources = _.cloneDeep(this.props.resources);
+    const steps = _.cloneDeep(this.props.steps);
     names.splice(i, 1);
-    resources.splice(i, 1);
+    steps.splice(i, 1);
     visibleData({ names });
-    realData(resources);
+    realData(steps);
   }
 
   render() {
@@ -97,8 +104,8 @@ export class ResourceModalEditor extends React.Component {
     const portItems =
       names &&
       names.map((pair, i) => {
-        const key = _.get(pair, [ResourceModalEditorPair.Index], i);
-        return <ResourceModalElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+        const key = _.get(pair, [StepModalEditorPair.Index], i);
+        return <StepModalElement onChange={this._change} index={i} t={t} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
       });
     return (
       <React.Fragment>
@@ -122,7 +129,7 @@ export class ResourceModalEditor extends React.Component {
     );
   }
 }
-ResourceModalEditor.defaultProps = {
+StepModalEditor.defaultProps = {
   valueString: 'Value',
   addString: 'AddMore',
   allowSorting: false,
@@ -130,7 +137,7 @@ ResourceModalEditor.defaultProps = {
   nameValueId: 0,
 };
 
-class ResourceModalElement extends React.Component {
+class StepModalElement extends React.Component {
   constructor(props) {
     super(props);
     this._onRemove = this._onRemove.bind(this);
@@ -148,15 +155,15 @@ class ResourceModalElement extends React.Component {
     const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
     const deleteButton = (
       <React.Fragment>
-        <FaMinus style={{ marginRight: '0.63rem', marginBottom: '0.18rem', border: '1px' }} onClick={this._onRemove} />
-        {/* <i className="fa fa-minus-circle fa-lx pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i> */}
+        {/* <FaMinus style={{ marginRight: '0.63rem', marginBottom: '0.18rem', border: '1px' }} onClick={this._onRemove} /> */}
+        <i className="fa fa-minus-circle fa-lx pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
     const editButton = (
       <React.Fragment>
-        <MdEdit style={{ marginRight: '0.63rem', marginBottom: '0.18rem' }} onClick={this._onEdit} />
-        {/* <i className="fa fa-pencil-square fa-2x pairs-list__side-btn" aria-hidden="true" onClick={this._onEdit}></i> */}
+        {/* <MdEdit style={{ marginRight: '0.63rem', marginBottom: '0.18rem' }} onClick={this._onEdit} /> */}
+        <i className="fa fa-pencil-square fa-lx pairs-list__side-btn" aria-hidden="true" onClick={this._onEdit}></i>
         <span className="sr-only">Edit</span>
       </React.Fragment>
     );
@@ -164,7 +171,7 @@ class ResourceModalElement extends React.Component {
     return (
       <div className={classNames('row')} ref={node => (this.node = node)}>
         <div className="col-md-4 col-xs-4 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[ResourceModalEditorPair.Value] || ''} onChange={this._onChangeValue} readOnly />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[StepModalEditorPair.Value] || ''} onChange={this._onChangeValue} readOnly />
         </div>
         {/* {readOnly ? null : ( */}
         {

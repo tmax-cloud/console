@@ -352,8 +352,6 @@
     "VM-SIDEBAR_5": "Create VM objects for CentOS 6 virtual machines.\n.spec.template.spec-device and resource settings"
   },
   "CONTENT": {
-    "INPUTRESOURCE": "Input Resource",
-    "OUTPUTRESOURCE": "Output Resource",
     "TASKPARAMETERCONFIG": "Task Paramter Config",
     "STEP": "Step",
     "REPORTEDFROM": "Reported from",
@@ -749,6 +747,7 @@
     "SESSIONEXPIREDTIME": "Session Expired Time",
     "MINUTE": "Minute",
     "MINIMUM1,MAXIMUM60": "Minimum 1 minute, maximum 60 minutes",
+    "MANAGEACCOUNT": "Manage Account",
     "LOGOUT": "Logout",
     "ALLCATEGORIES": "All Categories",
     "ALLTYPES": "All Types",
@@ -829,7 +828,13 @@
     "INPUTRESOURCE": "Input Resources",
     "OUTPUTRESOURCE": "Output Resources",
     "SELECTIMAGERESOURCE": "Select image resource",
-    "SELECTGITRESOURCE": "Select git resource"
+    "SELECTGITRESOURCE": "Select git resource",
+    "TASKPARAMETER": " Task Parameter",
+    "RESOURCEPATH": "Resource Path",
+    "ADD": "Add",
+    "PRESET": "Preset",
+    "VOLUMEMOUNT": "Volume Mount",
+    "VOLUMEmOUNTPATH": "Volumn Mount Path"
   },
   "RESOURCE": {
     "HOME": "Home",

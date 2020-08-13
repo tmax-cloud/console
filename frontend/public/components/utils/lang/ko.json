@@ -349,8 +349,7 @@
     "VM-SIDEBAR_5": "CentOS 6 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec - device 및 리소스 설정"
   },
   "CONTENT": {
-    "INPUTRESOURCE": "인풋 리소스",
-    "OUTPUTRESOURCE": "아웃풋 리소스",
+    "ADD": "추가",
     "TASKPARAMETERCONFIG": "태스크 파라미터 구성",
     "STEP": "스텝",
     "REPORTEDFROM": "출발지",
@@ -747,6 +746,7 @@
     "SESSIONEXPIREDTIME": "세션 만료 시간",
     "MINUTE": "분",
     "MINIMUM1,MAXIMUM60": "최소 1분, 최대 60분",
+    "MANAGEACCOUNT": "계정 관리",
     "LOGOUT": "로그아웃",
     "ALLCATEGORIES": "전체 카테고리",
     "ALLTYPES": "전체 타입",
@@ -827,7 +827,12 @@
     "INPUTRESOURCE": "인풋 리소스",
     "OUTPUTRESOURCE": "아웃풋 리소스",
     "SELECTIMAGERESOURCE": "이미지 리소스 선택",
-    "SELECTGITRESOURCE": "Git 리소스 선택"
+    "SELECTGITRESOURCE": "Git 리소스 선택",
+    "TASKPARAMETER": "태스크 파라미터 구성",
+    "RESOURCEPATH": "리소스 저장 경로",
+    "PRESET": "프리셋",
+    "VOLUMEMOUNT": "볼륨 마운트",
+    "VOLUMEMOUNTPATH": "몰륨 마운트 경로"
   },
   "RESOURCE": {
     "HOME": "홈",

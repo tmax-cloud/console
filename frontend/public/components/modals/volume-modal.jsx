@@ -6,19 +6,24 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '.
 import { PromiseComponent, ResourceIcon, SelectorInput } from '../utils';
 import { FirstSection, SecondSection, PodTemplate, VolumeclaimTemplate } from '../utils/form';
 import SingleSelect from '../utils/select';
+import { ValueEditor } from '../utils/value-editor';
 import { useTranslation, Trans } from 'react-i18next';
 
-class BaseResourceModal extends PromiseComponent {
+class BaseVolumeModal extends PromiseComponent {
   constructor(props) {
     super(props);
     this.state = {
-      name: props.resource?.[0] || '',
-      type: props.resource?.[1] || '',
-      path: props.resource?.[2] || '',
-      optional: props.resource?.[3] || false,
+      name: props.volume?.[0] || '',
+      type: props.volume?.[1] || 'emptydir',
+      configMap: props.volume?.[2] || '',
+      secret: props.volume?.[3] || '',
       inProgress: false,
       errorMessage: '',
     };
+    this.onNameChange = this.onNameChange.bind(this);
+    this.onTypeChange = this.onTypeChange.bind(this);
+    this.onConfigMapChange = this.onConfigMapChange.bind(this);
+    this.onSecretChange = this.onSecretChange.bind(this);
     this._submit = this._submit.bind(this);
     this._cancel = props.cancel.bind(this);
   }
@@ -29,14 +34,13 @@ class BaseResourceModal extends PromiseComponent {
     updateParentData({
       name: this.state.name,
       type: this.state.type,
-      path: this.state.path,
-      optional: this.state.optional,
+      secret: this.state.secret,
+      configmap: this.state.configMap,
       isNew: isNew,
       index: index,
     });
     this.props.close();
   }
-
   onNameChange = name => {
     this.setState({
       name: name.value,
@@ -49,23 +53,24 @@ class BaseResourceModal extends PromiseComponent {
     });
   };
 
-  onPathChange = path => {
+  onConfigMapChange = configMap => {
     this.setState({
-      path: path.target.value,
+      configMap: configMap.target.value,
     });
   };
 
-  onOptionalChange = optional => {
+  onSecretChange = secret => {
     this.setState({
-      optional: optional.currentTarget.checked,
+      secret: secret.target.value,
     });
   };
 
   render() {
-    const { kind, resource, pair, onResource, title, t } = this.props;
+    const { kind, parameter, pair, onResource, title, t } = this.props;
     const typeOptions = [
-      { value: 'git', label: 'Git' },
-      { value: 'image', label: t('CONTENT:IMAGE') },
+      { value: 'emptyDir', label: t('CONTENT:EMPTYDIR') },
+      { value: 'ConfigMap', label: t('CONTENT:CONFIGMAP') },
+      { value: 'Secret', label: t('CONTENT:SECRET') },
     ];
 
     return (
@@ -73,12 +78,11 @@ class BaseResourceModal extends PromiseComponent {
         <ModalTitle>{title}</ModalTitle>
         <ModalBody>
           <SecondSection isModal={true} label={t('CONTENT:NAME')} isRequired={true}>
-            {/* <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" required /> */}
             <input
               className="form-control form-group"
               type="text"
               id="resource-name"
-              value={this.state.name || resource?.[0]}
+              value={this.state.name || parameter?.[0]}
               onChange={e => {
                 this.onNameChange(e.target);
               }}
@@ -86,17 +90,18 @@ class BaseResourceModal extends PromiseComponent {
             />
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={true}>
-            <SingleSelect options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type || resource?.[1]} onChange={this.onTypeChange} />
+            <SingleSelect style={{ margin: '15px' }} options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type} onChange={this.onTypeChange} />
           </SecondSection>
-          <SecondSection isModal={true} label={t('CONTENT:RESOURCEPATH')} isRequired={false}>
-            <input className="form-control form-group" type="text" id="resourcestoragepath-name" value={this.state.path || resource?.[2]} onChange={this.onPathChange} />
-          </SecondSection>
-          <SecondSection isModal={true} label={''} isRequired={false}>
-            <label>
-              <input className="" type="checkbox" id="cbx-select" checked={this.state.optional} onChange={this.onOptionalChange} />이 리소스를 선택 항목으로 제공합니다.
-            </label>
-            <p>선택 항목으로 제공할 경우, 태스크 런 또는 파이프라인 메뉴에서 파이프라인 리소스를 필요에 따라 할당할 수 있습니다. </p>
-          </SecondSection>
+          {this.state.type === 'ConfigMap' && (
+            <SecondSection isModal={true} label={t('CONTENT:CONFIGMAP')} isRequired={false}>
+              <input className="form-control form-group" type="text" id="resource-configmap" value={this.state.default} onChange={this.onConfigMapChange} />
+            </SecondSection>
+          )}
+          {this.state.type === 'Secret' && (
+            <SecondSection isModal={true} label={t('CONTENT:SECRET')} isRequired={false}>
+              <input className="form-control form-group" type="text" id="resource-secret" value={this.state.default} onChange={this.onSecretChange} />
+            </SecondSection>
+          )}
         </ModalBody>
         <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={this.props.isNew ? t('CONTENT:ADD') : t('CONTENT:EDIT')} cancel={this._cancel} />
       </form>
@@ -104,7 +109,7 @@ class BaseResourceModal extends PromiseComponent {
   }
 }
 
-export const ResourceModal = createModalLauncher(props => {
+export const VolumeModal = createModalLauncher(props => {
   const { t } = useTranslation();
-  return <BaseResourceModal {...props} t={t} onChange={props.onResource} />;
+  return <BaseVolumeModal {...props} t={t} onChange={props.onResource} />;
 });
