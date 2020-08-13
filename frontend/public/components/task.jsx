@@ -104,7 +104,7 @@ export const TasksPage = ({ namespace, showTitle, flags }) => {
       canCreate={true}
       showTitle={showTitle}
       namespace={namespace}
-      createProps={createProps}
+      createProps={{ to: `/k8s/ns/${namespace || 'default'}/tasks/new` }}
       filterLabel="Tasks by name"
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('Task', t) })}
