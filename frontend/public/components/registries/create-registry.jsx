@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
 import { useTranslation } from 'react-i18next';
-import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown, ListDropdown } from '../RBAC/bindings';
 import { RadioGroup } from '../radio';
 import { connectToFlags, FLAGS, flagPending } from '../../features';
+import SingleSelect from '../utils/select';
 
 const Section = ({ label, children, isRequired, paddingTop }) => {
   return <div className={`row form-group ${isRequired ? 'required' : ''}`}>
@@ -20,18 +20,23 @@ const Section = ({ label, children, isRequired, paddingTop }) => {
   </div>;
 };
 
-const LabelInput = ({ label, placeholder, onChange, value, id, half, isPassword }) => {
+const LabelInput = ({ label, placeholder, onChange, value, id, half, isPassword, children }) => {
   return (
     <>
       <label htmlFor={id}>{label}</label>
-      <input className={half ? "form-control half" : "form-control"}
-        type={isPassword ? "password" : "text"}
-        onChange={onChange}
-        value={value}
-        id={id}
-        style={{ marginBottom: '10px' }}
-        placeholder={placeholder}
-        required />
+      <div style={{ display: 'flex' }}>
+        <input className={half ? "form-control half" : "form-control"}
+          type={isPassword ? "password" : "text"}
+          onChange={onChange}
+          value={value}
+          id={id}
+          style={{ marginBottom: '10px' }}
+          placeholder={placeholder}
+          required />
+        {children ? <span style={{ width: '40px' }}>
+          {children}
+        </span> : ''}
+      </div>
     </>
   )
 };
@@ -69,6 +74,7 @@ class RegistryFormComponent extends React.Component {
       port: '',
       accessModes: 'ReadWriteOnce',
       storageSize: '',
+      storageSizeUnit: 'Mi',
       storageClassName: '',
     };
   }
@@ -122,6 +128,9 @@ class RegistryFormComponent extends React.Component {
   onPVCStorageSizeChanged = e => {
     this.setState({ storageSize: e.target.value });
   }
+  onPVCStorageSizeUnitChanged = e => {
+    this.setState({ storageSizeUnit: e.value });
+  }
   onPVCStorageClassNameChanged = storageClassName => {
     this.setState({ storageClassName: String(storageClassName) });
   }
@@ -144,7 +153,6 @@ class RegistryFormComponent extends React.Component {
 
   save = e => {
     const { t } = this.props;
-    // const pwdErrorMsg = t('STRING:REGISTRY-CREATE_0');
     e.preventDefault();
     const { kind, metadata } = this.state.registry;
     this.setState({ error: undefined, inProgress: true });
@@ -167,7 +175,7 @@ class RegistryFormComponent extends React.Component {
       pvc[pvcType] = {};
       if (pvcType === 'create') {
         pvc[pvcType]['accessModes'] = [this.state.accessModes];
-        pvc[pvcType]['storageSize'] = this.state.storageSize;
+        pvc[pvcType]['storageSize'] = this.state.storageSize.concat(this.state.storageSizeUnit);
         pvc[pvcType]['storageClassName'] = this.state.storageClassName;
       } else {
         pvc[pvcType]['pvcName'] = this.state.pvc;
@@ -202,7 +210,7 @@ class RegistryFormComponent extends React.Component {
       { value: 'ReadWriteMany', title: t('CONTENT:READWRITEMANY') }
     ]
 
-    return <div className="rbac-edit-binding co-m-pane__body">
+    return <div className="registry-edit co-m-pane__body">
       <Helmet>
         <title>{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.registry.kind.toUpperCase()}`) })}</title>
       </Helmet>
@@ -286,9 +294,10 @@ class RegistryFormComponent extends React.Component {
                   onChange={this.onPVCStorageSizeChanged}
                   value={this.state.storageSize}
                   id="registry-storage-size"
-                  placeholder="10Gi"
-                  half
-                />
+                  placeholder="10"
+                  half>
+                  <SingleSelect options={RegistryFormComponent.storageSizeUnitOptions} value={this.state.storageSizeUnit} onChange={this.onPVCStorageSizeUnitChanged} />
+                </LabelInput>
                 <label>{t('CONTENT:STORAGECLASSNAME')}</label>
                 <ScDropdown id='registy-sc' t={t} onChange={this.onPVCStorageClassNameChanged} />
               </>
@@ -347,3 +356,16 @@ const ScDropdown_ = props => {
 }
 
 const ScDropdown = connectToFlags(FLAGS.OPENSHIFT)(ScDropdown_);
+
+RegistryFormComponent.storageSizeUnitOptions = [
+  { value: 'Mi', label: 'Mi' },
+  { value: 'Gi', label: 'Gi' },
+  { value: 'Ti', label: 'Ti' },
+  { value: 'Pi', label: 'Pi' },
+  { value: 'Ei', label: 'Ei' },
+  { value: 'M', label: 'M' },
+  { value: 'G', label: 'G' },
+  { value: 'T', label: 'T' },
+  { value: 'P', label: 'P' },
+  { value: 'E', label: 'E' },
+];
