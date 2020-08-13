@@ -32,8 +32,11 @@ spec:
         - --kiali-endpoint=http://@@KIALI@@/api/kiali
         - --jaeger-endpoint=http://@@JAEGER@@/api/jaeger
         - --approval-endpoint=http://@@APPROVAL@@/approve
-        - --hdc-mode=@@HDC_FLAG@@
-        - --tmaxcloud-portal=@@PORTAL@@
+        - --keycloak-realm=@@REALM@@ 
+        - --keycloak-auth-url=http://@@KEYCLOAK@@/auth 
+        - --keyclaok-client-id=@@CLIENTID@@  
+        - --hdc-mode=@@HDC_FLAG@@ 
+        - --tmaxcloud-portal=@@PORTAL@@ 
         image: tmaxcloudck/hypercloud-console:@@VER@@
         imagePullPolicy: IfNotPresent
         volumeMounts:
