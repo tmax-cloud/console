@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Alert } from '@patternfly/react-core';
 import { k8sGet } from '../../../../../../public/module/k8s';
-import { PipelineModel } from '../../../models';
+// import { PipelineModel } from '../../../models';
+import { PipelineModel } from '../../../../../../public/models';
 import { PipelineVisualization } from '../../pipelines/detail-page-tabs/pipeline-details/PipelineVisualization';
 import {
   Pipeline,
