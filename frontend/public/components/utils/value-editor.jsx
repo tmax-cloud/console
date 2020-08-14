@@ -31,7 +31,7 @@ export class ValueEditor extends React.Component {
     updateParentData({ values, editorIdx }, nameValueId);
   }
   render() {
-    const { desc, title, valueString, addString, values, allowSorting, readOnly, nameValueId, isModal, t } = this.props;
+    const { desc, title, valueString = '', addString, values, allowSorting, readOnly, nameValueId, isModal, t } = this.props;
     const portItems = values.map((pair, i) => {
       const key = _.get(pair, [ValueEditorPair.Index], i);
       return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} isModal={isModal} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
