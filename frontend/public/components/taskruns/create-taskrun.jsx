@@ -10,6 +10,7 @@ import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
 import { ValueEditor } from '../utils/value-editor';
+import * as classNames from 'classnames';
 
 const Section = ({ label, children, isRequired }) => {
   return (
@@ -408,7 +409,7 @@ spec:
     const params = paramList.map((item, idx) => {
       return (
         <div className="form-group" key={idx}>
-          <label style={{ display: 'block' }} htmlFor={item.name} className="rbac-edit-binding__input-label">
+          <label style={{ display: 'block' }} htmlFor={item.name} className={classNames('rbac-edit-binding__input-label', { required: item.isRequired })}>
             {item.name}
           </label>
           <span style={{ display: 'block' }}>{item.description}</span>
@@ -430,7 +431,7 @@ spec:
     const arrayParams = arrayParamList.map((item, idx) => {
       return (
         <div className="form-group" key={idx}>
-          <label style={{ display: 'block' }} htmlFor={item.name} className="rbac-edit-binding__input-label">
+          <label style={{ display: 'block' }} htmlFor={item.name} className={classNames('rbac-edit-binding__input-label', { required: item.isRequired })}>
             {item.name}
           </label>
           <span style={{ display: 'block' }}>{item.description}</span>
@@ -505,7 +506,7 @@ spec:
             </Section>
             <div className="separator"></div>
 
-            <Section label={t('STRING:TASKRUN-CREATE_0')} isRequired={true}>
+            <Section label={t('STRING:TASKRUN-CREATE_0')}>
               {params}
               {arrayParams}
             </Section>
