@@ -360,7 +360,7 @@ spec:
     this.setState({ inProgress: true });
     // const newTaskRun0 = _.assign({}, this.state.TaskRun);
     const newTaskRun = {
-      apiVersion: 'tekton.dev/v1alpha1',
+      apiVersion: 'tekton.dev/v1beta1',
       kind: 'TaskRun',
       metadata: {
         name,
