@@ -17,7 +17,7 @@ class TaskFormComponent extends React.Component {
     super(props);
     const existingTask = _.pick(props.obj, ['metadata', 'type']);
     const task = _.defaultsDeep({}, props.fixed, existingTask, {
-      apiVersion: 'tekton.dev/v1alpha1',
+      apiVersion: 'tekton.dev/v1beta1',
       kind: 'Task',
       metadata: {
         name: '',
