@@ -20,7 +20,9 @@ export type AceSnippet = {
 };
 
 export const snippets = ImmutableMap<string, string>()
-  .set('metadata', `
+  .set(
+    'metadata',
+    `
     metadata:
       name: \${1}
       namespace: \${2}
@@ -28,13 +30,19 @@ export const snippets = ImmutableMap<string, string>()
         \${3}
       annotations:
         \${4}
-  `)
-  .set('selector', `
+  `,
+  )
+  .set(
+    'selector',
+    `
     selector:
       matchLabels:
         \${1}
-  `)
-  .set('containers', `
+  `,
+  )
+  .set(
+    'containers',
+    `
     containers:
       - name: \${1}
         image: \${2}
@@ -45,8 +53,11 @@ export const snippets = ImmutableMap<string, string>()
             mountPath: \${5}
         command:
           - \${6}
-  `)
-  .set('volumeClaimTemplates', `
+  `,
+  )
+  .set(
+    'volumeClaimTemplates',
+    `
     volumeClaimTemplates:
       - metadata:
           name: \${1}
@@ -57,8 +68,11 @@ export const snippets = ImmutableMap<string, string>()
           resources:
             requests:
               storage: 1Gi
-  `)
-  .set('rules', `
+  `,
+  )
+  .set(
+    'rules',
+    `
     rules:
       - http:
           paths:
@@ -66,28 +80,48 @@ export const snippets = ImmutableMap<string, string>()
               backend:
                 serviceName: \${2}
                 servicePort: 80
-  `)
-  .set('ports', `
+  `,
+  )
+  .set(
+    'ports',
+    `
     ports:
       - protocol: TCP
         port: 80
         targetPort: \${1}
-  `)
-  .set('parameters', `
+  `,
+  )
+  .set(
+    'parameters',
+    `
     parameters:
       - name: \${1}
         value: \${2}
         description: \${3}
-  `)
-  .set('triggers', `
+  `,
+  )
+  .set(
+    'triggers',
+    `
     triggers:
       - imageChange:
           from:
             kind: ImageStreamTag
             name: \${1}
         type: ImageChange
-  `)
-  .map((content, name) => ({name, content: content.split('\n').slice(1, content.split('\n').length - 1).map(s => s.substring(4)).join('\n')} as AceSnippet));
+  `,
+  )
+  .map(
+    (content, name) =>
+      ({
+        name,
+        content: content
+          .split('\n')
+          .slice(1, content.split('\n').length - 1)
+          .map(s => s.substring(4))
+          .join('\n'),
+      } as AceSnippet),
+  );
 
 /**
  * Defines a bunch of possibilities for property value completion, defined in the OpenAPI/Swagger spec.
@@ -99,9 +133,11 @@ export const simpleCompletions = ImmutableMap<string, string[]>()
   .set('terminationMessagePath', ['/dev/termination-log'])
   .set('dnsPolicy', ['ClusterFirstWithHostNet', 'ClusterFirst', 'Default', 'None'])
   // FIXME: `type` is too generic, should figure out how to detect nested properties
-  .set('type', ['RollingUpdate', 'Recreate'] // Deployment.spec.strategy.type
-    .concat(['ClusterIP', 'LoadBalancer', 'None']) // Service.spec.type
-    .concat(['Opaque']) // Secret.type
+  .set(
+    'type',
+    ['RollingUpdate', 'Recreate'] // Deployment.spec.strategy.type
+      .concat(['ClusterIP', 'LoadBalancer', 'None']) // Service.spec.type
+      .concat(['Opaque']), // Secret.type
   )
   .set('sessionAffinity', ['ClientIP', 'None'])
   .set('protocol', ['TCP', 'UDP'])
@@ -131,11 +167,12 @@ export const clusterStateCompletions = ImmutableMap<string, K8sKind>()
   .set('serverSecret', SecretModel)
   .set('alertmanagers', AlertmanagerModel);
 
-export const getPropertyCompletions = async(state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
-  const valueFor = (property: string) => session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
-    return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
-  }, '');
-  
+export const getPropertyCompletions = async (state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
+  const valueFor = (property: string) =>
+    session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
+      return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
+    }, '');
+
   const kind = valueFor('kind');
   const apiVersion = valueFor('apiVersion');
 
@@ -156,15 +193,14 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
     }
 
     if (apiVersion.indexOf('tmax') !== -1) {
-    
-      // 미리: 현재 위치와 비교하여 추천 키워드를 변경하는 로직 
+      // 미리: 현재 위치와 비교하여 추천 키워드를 변경하는 로직
       // var specIdx;
       // session.getLines(0, session.getLength()).forEach((item, idx) => {
       //   if (item.includes('spec')) {
       //     specIdx = idx;
       //   }
       // });
-  
+
       // if (pos.row < specIdx) {
       //   getBeforeSpecPropertyCompletions(state, session, pos, prefix, callback);
       //   return;
@@ -172,12 +208,12 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
       //   getAfterSpecPropertyCompletions(state, session, pos, prefix, callback);
       //   return;
       // }
-  
+
       const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1.${kind}`));
       // console.log(defKey);
       var results;
       if (kind === 'Template') {
-        // 미리: 템플릿은 고민을 더 해봐야 함 
+        // 미리: 템플릿은 고민을 더 해봐야 함
         results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties'], {})).map(prop => ({
           name: prop,
           score: 1000,
@@ -187,14 +223,14 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
         }));
       } else {
         results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'properties'], {})).map(prop => ({
-        name: prop,
-        score: 1000,
-        value: prop,
-        meta: kind,
-        required: false,
-      }));
+          name: prop,
+          score: 1000,
+          value: prop,
+          meta: kind,
+          required: false,
+        }));
       }
-      // 미리: 필수값 로직 
+      // 미리: 필수값 로직
       // _.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'required'], {}).map(item => {
       //   results.map(prop => {
       //     if (prop.name === item) {
@@ -202,12 +238,12 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
       //     }
       //   })
       // })
-  
+
       callback(null, results);
     }
 
-    if (apiVersion.indexOf('tekton') !== -1) {  
-      const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1alpha1.${kind}`));
+    if (apiVersion.indexOf('tekton') !== -1) {
+      const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1alpha1.${kind}`)) || Object.keys(swagger.definitions).find(key => key.endsWith(`v1beta1.${kind}`));
       // console.log(defKey);
       const results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'properties'], {})).map(prop => ({
         name: prop,
@@ -216,52 +252,54 @@ export const getPropertyCompletions = async(state: Editor, session: IEditSession
         meta: kind,
         required: false,
       }));
-      
+
       callback(null, results);
     }
-
   });
   xhr.open('GET', `${document.location.origin}/static/assets/autocomplete--swagger.json`);
   xhr.send();
-  
 };
 
 /**
  * Resource 내에서 Context 에 맞는 자동 완성 기능 제공을 위한 테스트
  */
 
-export const getBeforeSpecPropertyCompletions = async(state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
-  const valueFor = (property: string) => session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
-    return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
-  }, '');
-  
+export const getBeforeSpecPropertyCompletions = async (state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
+  const valueFor = (property: string) =>
+    session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
+      return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
+    }, '');
+
   const kind = valueFor('kind');
 
   const swagger: SwaggerAPISpec = JSON.parse(window.sessionStorage.getItem(`${(window as any).SERVER_FLAGS.consoleVersion}--swagger.json`));
 
   const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1.${kind}`));
-  
-  const arr = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties'], {})).filter(item => item !== 'spec').map(prop => ({
-    name: prop,
-    score: 1000,
-    value: prop,
-    meta: kind,
-  }))
-  
+
+  const arr = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties'], {}))
+    .filter(item => item !== 'spec')
+    .map(prop => ({
+      name: prop,
+      score: 1000,
+      value: prop,
+      meta: kind,
+    }));
+
   callback(null, arr);
 };
 
-export const getAfterSpecPropertyCompletions = async(state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
-  const valueFor = (property: string) => session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
-    return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
-  }, '');
-  
+export const getAfterSpecPropertyCompletions = async (state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
+  const valueFor = (property: string) =>
+    session.getLines(0, session.getLength()).reduce((foundKind, cur) => {
+      return foundKind.length || !cur.startsWith(`${property}: `) ? foundKind : cur.slice(`${property}: `.length - cur.length);
+    }, '');
+
   const kind = valueFor('kind');
 
   const swagger: SwaggerAPISpec = JSON.parse(window.sessionStorage.getItem(`${(window as any).SERVER_FLAGS.consoleVersion}--swagger.json`));
 
   const defKey = Object.keys(swagger.definitions).find(key => key.endsWith(`v1.${kind}`));
-  
+
   const results = Object.keys(_.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'properties'], {})).map(prop => ({
     name: prop,
     score: 1000,
@@ -269,23 +307,22 @@ export const getAfterSpecPropertyCompletions = async(state: Editor, session: IEd
     meta: kind,
     required: false,
   }));
-  
+
   _.get(swagger.definitions, [`${defKey}`, 'properties', 'spec', 'required'], {}).map(item => {
     results.map(prop => {
       if (prop.name === item) {
         prop.required = true;
       }
-    })
-  })
-    
+    });
+  });
+
   callback(null, results);
 };
-
 
 /**
  * Provides completion using either static values derived from k8s API spec, or by fetching cluster resources.
  */
-export const getPropertyValueCompletions = async(state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
+export const getPropertyValueCompletions = async (state: Editor, session: IEditSession, pos: Position, prefix: string, callback: CompletionCallback) => {
   const line = session.getLine(pos.row).substr(0, pos.column);
   const field = (/([\w]+):[^:]*$/.exec(line) || {})[1];
 
@@ -293,20 +330,26 @@ export const getPropertyValueCompletions = async(state: Editor, session: IEditSe
     if (currentRow < 1) {
       return '';
     }
-    return session.getLine(currentRow - 1).trim().endsWith(':')
+    return session
+      .getLine(currentRow - 1)
+      .trim()
+      .endsWith(':')
       ? (/([\w]+):[^:]*$/.exec(session.getLine(currentRow - 1)) || {})[1]
       : parentPropertyFor(currentRow - 1);
   };
 
   if (simpleCompletions.has(field)) {
-    callback(null, simpleCompletions.get(field).map((value, i) => ({
-      name: value,
-      score: 10000 + i,
-      value,
-      meta: field,
-    })));
+    callback(
+      null,
+      simpleCompletions.get(field).map((value, i) => ({
+        name: value,
+        score: 10000 + i,
+        value,
+        meta: field,
+      })),
+    );
   } else if (clusterStateCompletions.has(field)) {
-    const results = (await k8sListPartialMetadata(clusterStateCompletions.get(field), {ns: getActiveNamespace()}) as K8sResourceKind[]).map(obj => ({
+    const results = ((await k8sListPartialMetadata(clusterStateCompletions.get(field), { ns: getActiveNamespace() })) as K8sResourceKind[]).map(obj => ({
       name: obj.metadata.name,
       score: 10000,
       value: obj.metadata.name,
@@ -314,7 +357,7 @@ export const getPropertyValueCompletions = async(state: Editor, session: IEditSe
     }));
     callback(null, results);
   } else if (clusterStateCompletions.has(parentPropertyFor(pos.row))) {
-    const results = (await k8sListPartialMetadata(clusterStateCompletions.get(parentPropertyFor(pos.row)), {ns: getActiveNamespace()}) as K8sResourceKind[]).map(obj => ({
+    const results = ((await k8sListPartialMetadata(clusterStateCompletions.get(parentPropertyFor(pos.row)), { ns: getActiveNamespace() })) as K8sResourceKind[]).map(obj => ({
       name: obj.metadata.name,
       score: 10000,
       value: obj.metadata.name,
@@ -336,12 +379,14 @@ export const getCompletions: Completer['getCompletions'] = (editor, session, pos
 
 export type SwaggerAPISpec = {
   swagger: string;
-  info: {title: string, version: string};
-  paths: {[path: string]: any};
-  definitions: {[name: string]: {
-    description: string;
-    properties: {[prop: string]: {description: string, type: string}};
-  }};
+  info: { title: string; version: string };
+  paths: { [path: string]: any };
+  definitions: {
+    [name: string]: {
+      description: string;
+      properties: { [prop: string]: { description: string; type: string } };
+    };
+  };
 };
 
 // TODO: Remove once https://github.com/DefinitelyTyped/DefinitelyTyped/pull/25337 is merged

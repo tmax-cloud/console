@@ -54,7 +54,7 @@ class PipelineRunFormComponent extends React.Component<PipelineRunProps_, Pipeli
     super(props);
     const existingPipelineRun = _.pick(props.obj, ['metadata', 'type']);
     const pipelineRun = _.defaultsDeep({}, props.fixed, existingPipelineRun, {
-      apiVersion: 'tekton.dev/v1alpha1',
+      apiVersion: 'tekton.dev/v1beta1',
       kind: 'PipelineRun',
       metadata: {
         name: '',
