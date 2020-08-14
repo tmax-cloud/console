@@ -22,6 +22,16 @@ file_svc_np_temp="./2.svc-np-temp.yaml"
 file_deployment_pod="./3.deployment-pod.yaml"
 file_deployment_pod_temp="./3.deployment-pod-temp.yaml"
 
+# Necessary to develop a fuction that add information during installation.  
+CLIENTID="hypercloud4"
+REALM="tmax"
+KEYCLOAK="172.22.6.11"
+
+# Add VNC reverseproxy 
+VNC="0.0.0.0"
+# Add kubeflow reverseproxy 
+kubeflow "0.0.0.0"
+
 echo "==============================================================="
 echo "STEP 1. ENV Setting"
 echo "==============================================================="
@@ -170,6 +180,13 @@ sed -i "s%@@KIALI@@%${KIALI}%g" ${file_deployment_pod_temp}
 sed -i "s%@@JAEGER@@%${JAEGER}%g" ${file_deployment_pod_temp}
 sed -i "s%@@APPROVAL@@%${APPROVAL}%g" ${file_deployment_pod_temp}
 sed -i "s%@@VER@@%${CONSOLE_VERSION}%g" ${file_deployment_pod_temp}
+
+sed -i "s%@@CLIENTID@@%${CLIENTID}%g" ${file_deployment_pod_temp}
+sed -i "s%@@KEYCLOAK@@%${KEYCLOAK}%g" ${file_deployment_pod_temp}
+sed -i "s%@@REALM@@%${REALM}%g" ${file_deployment_pod_temp}
+
+sed -i "s%@@KUBEFLOW@@%${KUBEFLOW}%g" ${file_deployment_pod_temp}
+sed -i "s%@@VNC@@%${VNC}%g" ${file_deployment_pod_temp}
 
 if [ -z "$PORTAL_URL" ]; then
     sed -i '/--hdc-mode=/d' ${file_deployment_pod_temp}
