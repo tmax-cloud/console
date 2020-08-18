@@ -337,6 +337,7 @@
     "PIPELINE-CREATE_0": "Define a series of Tasks that accomplish a specific build or delivery goal. Can be triggered by an event or invoked from a PipelineRun.",
     "PIPELINE-CREATE_1": "Can create a pipeline through sequential or parallel batch between nodes.",
     "PIPELINE-CREATE_2": "Select task",
+    "PIPELINE-CREATE_3": "Select pipeline resource",
     "TASKRUN-CREATE_0": "Task Parameter Value",
     "TASKRUN-CREATE_1": "e.g. 60, 120, 30",
     "TASKRUN-CREATE_2": "Time Point of Timeout Error",
