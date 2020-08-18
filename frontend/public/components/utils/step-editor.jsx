@@ -144,12 +144,14 @@ class StepModalElement extends React.Component {
     this._onRemove = this._onRemove.bind(this);
     this._onEdit = this._onEdit.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onEdit(e) {
     const { index, onChange } = this.props;
+    event.preventDefault();
     onChange(e, index);
   }
   render() {

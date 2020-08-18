@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import { FaMinus } from 'react-icons/fa';
+import { Button } from './button';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
@@ -218,8 +220,9 @@ const PairElement = DragSource(
         this._onChangeValue = this._onChangeValue.bind(this);
       }
 
-      _onRemove() {
+      _onRemove(e) {
         const { index, onRemove } = this.props;
+        e.preventDefault();
         onRemove(index);
       }
 
@@ -237,14 +240,14 @@ const PairElement = DragSource(
         const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, nameString, valueString, allowSorting, readOnly, pair, configMaps, secrets } = this.props;
         const deleteButton = (
           <React.Fragment>
-            <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+            <Button children={<FaMinus />} onClick={this._onRemove}></Button>
             <span className="sr-only">Delete</span>
           </React.Fragment>
         );
 
         return connectDropTarget(
           connectDragPreview(
-            <div className={classNames('row', isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row')} ref={node => (this.node = node)}>
+            <div className={classNames('row', isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row')} style={{ marginRight: '0px' }} ref={node => (this.node = node)}>
               <div className="col-md-5 col-xs-5 pairs-list__name-field">
                 <input type="text" className="form-control" placeholder={nameString.toLowerCase()} value={pair[NameValueEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
               </div>

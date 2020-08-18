@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { FaMinus } from 'react-icons/fa';
+import { Button } from './button';
 import * as classNames from 'classnames';
 import { BasicPortEditorPair } from './index';
 
@@ -66,7 +68,7 @@ BasicPortEditor.defaultProps = {
   addString: 'AddMore',
   allowSorting: false,
   readOnly: false,
-  nameValueId: 0
+  nameValueId: 0,
 };
 
 class BasicPortPairElement extends React.Component {
@@ -77,8 +79,9 @@ class BasicPortPairElement extends React.Component {
     this._onChangeProtocol = this._onChangeProtocol.bind(this);
     this._onChangePort = this._onChangePort.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onChangeName(e) {
@@ -97,7 +100,7 @@ class BasicPortPairElement extends React.Component {
     const { nameString, portString, allowSorting, readOnly, pair, t } = this.props;
     const deleteButton = (
       <React.Fragment>
-        <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
@@ -112,9 +115,9 @@ class BasicPortPairElement extends React.Component {
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
           <select value={pair[BasicPortEditorPair.Protocol]} onChange={this._onChangeProtocol} disabled={readOnly} className="form-control" id="protocol">
-            <option value='TCP'>{t(`CONTENT:TCP`)}</option>
-            <option value='UDP'>{t(`CONTENT:UDP`)}</option>
-            <option value='SCDP'>{t(`CONTENT:SCDP`)}</option>
+            <option value="TCP">{t(`CONTENT:TCP`)}</option>
+            <option value="UDP">{t(`CONTENT:UDP`)}</option>
+            <option value="SCDP">{t(`CONTENT:SCDP`)}</option>
           </select>
         </div>
         {readOnly ? null : (

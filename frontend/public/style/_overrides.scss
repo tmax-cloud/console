@@ -128,6 +128,10 @@ tags-input .tags {
   @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
   @include transition(border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s);
 }
+
+.form-group.row {
+  margin-right: 0px;
+}
 .modal-dialog {
   width: fit-content;
 }

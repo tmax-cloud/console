@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { FaMinus } from 'react-icons/fa';
+import { Button } from './button';
 import * as classNames from 'classnames';
 import { kindObj, IngressEditorPair } from './index';
 import { k8sGet } from '../../module/k8s';
@@ -82,8 +84,9 @@ class IngressPairElement extends React.Component {
     this._onChangeServicePort = this._onChangeServicePort.bind(this);
     this._getServicePortList = this._getServicePortList.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onChangeName(e) {
@@ -121,7 +124,7 @@ class IngressPairElement extends React.Component {
     const { servicePortList } = this.state;
     const deleteButton = (
       <React.Fragment>
-        <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
