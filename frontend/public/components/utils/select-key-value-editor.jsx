@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { FaMinus } from 'react-icons/fa';
+import { Button } from './button';
 import * as classNames from 'classnames';
 import { SelectKeyValueEditorPair } from './index';
 import SingleSelect from './select';
@@ -49,9 +51,7 @@ export class SelectKeyValueEditor extends React.Component {
               </React.Fragment>
             )}
           </div>
-          <div className="col-md-12 col-xs-12">
-            {this.props.desc ? <span>{this.props.desc}</span> : ''}
-          </div>
+          <div className="col-md-12 col-xs-12">{this.props.desc ? <span>{this.props.desc}</span> : ''}</div>
         </div>
       </React.Fragment>
     );
@@ -74,8 +74,9 @@ class SelectKeyValuePairElement extends React.Component {
     this._onChangeKey = this._onChangeKey.bind(this);
     this._onChangeValue = this._onChangeValue.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onChangeSelect(e) {
@@ -96,7 +97,7 @@ class SelectKeyValuePairElement extends React.Component {
     const { keyString, valueString, allowSorting, readOnly, pair, t, options } = this.props;
     const deleteButton = (
       <React.Fragment>
-        <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
@@ -106,9 +107,13 @@ class SelectKeyValuePairElement extends React.Component {
         <div className="col-md-2 col-xs-2 pairs-list__name-field">
           <SingleSelect options={options} value={pair[SelectKeyValueEditorPair.Select]} name={''} placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} onChange={this._onChangeSelect} />
         </div>
-        { pair[SelectKeyValueEditorPair.Select] === 'etc' ? <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[SelectKeyValueEditorPair.Key] || ''} onChange={this._onChangeKey} />
-        </div> : ''}
+        {pair[SelectKeyValueEditorPair.Select] === 'etc' ? (
+          <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
+            <input type="text" className="form-control" placeholder={t(`CONTENT:${keyString.toUpperCase()}`)} value={pair[SelectKeyValueEditorPair.Key] || ''} onChange={this._onChangeKey} />
+          </div>
+        ) : (
+          ''
+        )}
         <div className="col-md-2 col-xs-2 pairs-list__protocol-field">
           <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[SelectKeyValueEditorPair.Value] || ''} onChange={this._onChangeValue} />
         </div>

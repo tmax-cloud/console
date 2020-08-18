@@ -65,6 +65,10 @@ h2,
   font-weight: normal;
 }
 
+.wrap-content {
+  padding: 0px;
+}
+
 .text-secondary {
   color: $color-text-secondary;
 }
@@ -123,6 +127,10 @@ tags-input .tags {
   border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
   @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075));
   @include transition(border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s);
+}
+
+.form-group.row {
+  margin-right: 0px;
 }
 .modal-dialog {
   width: fit-content;

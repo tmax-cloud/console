@@ -13,7 +13,7 @@ class BaseResourceModal extends PromiseComponent {
     super(props);
     this.state = {
       name: props.resource?.[0] || '',
-      type: props.resource?.[1] || '',
+      type: props.resource?.[1] || 'git',
       path: props.resource?.[2] || '',
       optional: props.resource?.[3] || false,
       inProgress: false,
@@ -78,7 +78,7 @@ class BaseResourceModal extends PromiseComponent {
               className="form-control form-group"
               type="text"
               id="resource-name"
-              value={this.state.name || resource?.[0]}
+              value={this.state.name}
               onChange={e => {
                 this.onNameChange(e.target);
               }}
@@ -86,10 +86,10 @@ class BaseResourceModal extends PromiseComponent {
             />
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={true}>
-            <SingleSelect options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type || resource?.[1]} onChange={this.onTypeChange} />
+            <SingleSelect options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type} onChange={this.onTypeChange} />
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:RESOURCEPATH')} isRequired={false}>
-            <input className="form-control form-group" type="text" id="resourcestoragepath-name" value={this.state.path || resource?.[2]} onChange={this.onPathChange} />
+            <input className="form-control form-group" type="text" id="resourcestoragepath-name" value={this.state.path} onChange={this.onPathChange} />
           </SecondSection>
           <SecondSection isModal={true} label={''} isRequired={false}>
             <label>

@@ -14,7 +14,7 @@ class BaseVolumeModal extends PromiseComponent {
     super(props);
     this.state = {
       name: props.volume?.[0] || '',
-      type: props.volume?.[1] || 'emptydir',
+      type: props.volume?.[1] || 'emptyDir',
       configMap: props.volume?.[2] || '',
       secret: props.volume?.[3] || '',
       inProgress: false,
@@ -90,7 +90,7 @@ class BaseVolumeModal extends PromiseComponent {
             />
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={true}>
-            <SingleSelect style={{ margin: '15px' }} options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type} onChange={this.onTypeChange} />
+            <SingleSelect style={{ margin: '15px' }} value={this.state.type} options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type} onChange={this.onTypeChange} />
           </SecondSection>
           {this.state.type === 'ConfigMap' && (
             <SecondSection isModal={true} label={t('CONTENT:CONFIGMAP')} isRequired={false}>

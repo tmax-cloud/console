@@ -835,7 +835,12 @@
     "ADD": "Add",
     "PRESET": "Preset",
     "VOLUMEMOUNT": "Volume Mount",
-    "VOLUMEmOUNTPATH": "Volumn Mount Path"
+    "VOLUMEMOUNTPATH": "Volumn Mount Path",
+    "MAILCONFIG": "Mail Config",
+    "MAILSERVER": "Mail Server",
+    "MAILFROM": "Mail From",
+    "TITLE": "Title",
+    "CONTENT": "Content"
   },
   "RESOURCE": {
     "HOME": "Home",
