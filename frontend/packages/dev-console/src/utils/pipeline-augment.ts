@@ -11,13 +11,20 @@ import {
   K8sResourceKind,
   referenceForModel
 } from '../../../../public/module/k8s';
+// import {
+//   ClusterTaskModel,
+//   ClusterTriggerBindingModel,
+//   PipelineRunModel,
+//   TaskModel,
+//   TriggerBindingModel
+// } from '../models';
 import {
   ClusterTaskModel,
   ClusterTriggerBindingModel,
   PipelineRunModel,
   TaskModel,
   TriggerBindingModel
-} from '../models';
+} from '../../../../public/models';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
 
 interface Metadata {

@@ -53,10 +53,10 @@ export type StepStatus = {
 export const createStepStatus = (step: { name: string }, status: TaskStatus): StepStatus => {
   let stepRunStatus: runStatus = runStatus.PipelineNotStarted;
   let duration: string = null;
-
+  
   if (!status || !status.reason) {
     stepRunStatus = runStatus.Cancelled;
-  } else if (status.reason === runStatus['In Progress']) {
+  } else if (status.reason === runStatus['In Progress'] || status.reason === runStatus.Running) {
     // In progress, try to get granular statuses
     const matchingStep: TaskStatusStep = getMatchingStep(step, status);
 

@@ -18,13 +18,21 @@
     }
   }
 
+  &__col--left-button {
+    div {
+      float: left;
+    }
+  }
+
   &__col--button {
     // line-height: var(--pf-global--spacer--xl);
-    line-height: 32px;
-    position: absolute;
-    right: -30px;
-    top: 50%;
-    transform: translateY(-50%);
+    line-height: 26px;
+    margin-left: 5px;
+    float: left;
+    // position: absolute;
+    // right: -30px;
+    // top: 50%;
+    // transform: translateY(-50%);
     button {
       background-color: #ffffff;
     }

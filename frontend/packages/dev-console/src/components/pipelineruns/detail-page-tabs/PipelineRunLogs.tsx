@@ -10,7 +10,8 @@ import {
 } from '../../../../../../public/components/utils';
 import { pipelineRunFilterReducer } from '../../../utils/pipeline-filter-reducer';
 import { PipelineRun } from '../../../utils/pipeline-augment';
-import { PipelineRunModel } from '../../../models';
+// import { PipelineRunModel } from '../../../models';
+import { PipelineRunModel } from '../../../../../../public/models';
 import LogsWrapperComponent from '../logs/LogsWrapperComponent';
 import { getDownloadAllLogsCallback } from '../logs/logs-utils';
 import './PipelineRunLogs.scss';
