@@ -324,7 +324,7 @@ class TaskFormComponent extends React.Component {
 
           <fieldset disabled={!this.props.isCreate}>
             <FirstSection label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" required />
+              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" />
             </FirstSection>
             <FirstSection label={t('CONTENT:NAMESPACE')} isRequired={true}>
               <NsDropdown id="task-namespace" t={t} onChange={this.onNamespaceChanged} />

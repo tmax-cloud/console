@@ -62,7 +62,8 @@ const DeploymentDetails = ({ obj: deployment }) => {
 
   const { t } = useTranslation();
   return (
-    <React.Fragment>
+    // <React.Fragment>
+    <>
       <div className="co-m-pane__body">
         <SectionHeading text={t('ADDITIONAL:OVERVIEWTITLE', { something: ResourcePlural('Deployment', t) })} />
         <DeploymentPodCounts resource={deployment} resourceKind={DeploymentModel} t={t} />
@@ -120,7 +121,8 @@ const DeploymentDetails = ({ obj: deployment }) => {
         <SectionHeading text={t('CONTENT:CONDITIONS')} />
         <Conditions conditions={deployment.status.conditions} />
       </div>
-    </React.Fragment>
+      {/* </React.Fragment> */}
+    </>
   );
 };
 
