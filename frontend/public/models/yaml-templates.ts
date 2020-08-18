@@ -4136,6 +4136,59 @@ reclaimPolicy: Delete
 `,
   )
   .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'storageclass-sample'],
+    `
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: example-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'storageclass-sample2'],
+    `
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: example-cephblock
+provisioner: rook-ceph.rbd.csi.ceph.com
+parameters:
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  imageFormat: '2'
+  clusterID: rook-ceph
+  imageFeatures: layering
+  pool: replicapool
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'storageclass-sample3'],
+    `
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: example-cephfssc
+provisioner: rook-ceph.cephfs.csi.ceph.com
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  fsName: myfs
+  pool: myfs-data0
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+`,
+  )
+  .setIn(
     [referenceForModel(k8sModels.ServiceAccountModel), 'default'],
     `
 apiVersion: v1
