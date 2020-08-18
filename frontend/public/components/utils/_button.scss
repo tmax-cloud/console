@@ -1,0 +1,17 @@
+.button-icon {
+  height: 27px;
+  width: 27px;
+  border: 1px solid #677e9a;
+  border-radius: 2px;
+  margin-top: 5px;
+  background: #fff;
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.button-icon > svg {
+  color: #536881;
+  position: relative;
+  right: 2px;
+  bottom: 1px;
+}
