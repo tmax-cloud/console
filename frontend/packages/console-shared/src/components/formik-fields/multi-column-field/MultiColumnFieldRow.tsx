@@ -10,6 +10,7 @@ import {
   gridItemSpanValueShape
 } from '@patternfly/react-core';
 import './MultiColumnField.scss';
+import classNames from 'classnames';
 
 export interface MultiColumnFieldRowProps {
   name: string;
@@ -76,13 +77,16 @@ const MultiColumnFieldRow: React.FC<MultiColumnFieldRowProps> = ({
         return (
           <GridItem span={spans[i]} key={fieldName}>
             <div className="odc-multi-column-field__col">
+              <div className={classNames({ 'odc-multi-column-field__col--left-button': i === (children as any).length-1 })}>
               {React.cloneElement(child, newProps)}
+              {!isReadOnly && i === (children as any).length-1 && renderMinusCircleIcon(onDelete, toolTip, disableDeleteRow)}
+              </div>
             </div>
           </GridItem>
         );
       })}
     </Grid>
-    {!isReadOnly && renderMinusCircleIcon(onDelete, toolTip, disableDeleteRow)}
+    {/* {!isReadOnly && renderMinusCircleIcon(onDelete, toolTip, disableDeleteRow)} */}
   </div>
 );
 

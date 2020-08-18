@@ -4,7 +4,8 @@ import { Helmet } from 'react-helmet';
 import { Formik, FormikBag } from 'formik';
 import { history } from '../../../../../../public/components/utils';
 import { k8sCreate, k8sUpdate } from '../../../../../../public/module/k8s';
-import { PipelineModel } from '../../../models';
+// import { PipelineModel } from '../../../models';
+import { PipelineModel } from '../../../../../../public/models';
 import { Pipeline } from '../../../utils/pipeline-augment';
 import PipelineBuilderForm from './PipelineBuilderForm';
 import {

@@ -459,14 +459,16 @@ class BaseStepModal extends React.Component {
                         this.onVolumeMountNameChange(e);
                       }}
                     />
-                    <SecondSection isModal={true} label={'- ' + t('CONTENT:VOLUMEMOUNTPATH')} id={'volumepath'}>
-                      <input className="form-control" type="text" id="volumepath" value={this.state.volumemountpath} onChange={this.onVolumeMountPathChange} />
-                    </SecondSection>
                   </div>
                 ) : (
                   '마운트할 볼륨을 먼저 추가해 주세요.'
                 )}
               </SecondSection>
+              {volumeOptions.length > 0 && (
+                <SecondSection isModal={true} label={t('CONTENT:VOLUMEMOUNTPATH')} id={'volumepath'}>
+                  <input className="form-control" type="text" id="volumepath" value={this.state.volumemountpath} onChange={this.onVolumeMountPathChange} />
+                </SecondSection>
+              )}
             </div>
           </div>
         </ModalBody>

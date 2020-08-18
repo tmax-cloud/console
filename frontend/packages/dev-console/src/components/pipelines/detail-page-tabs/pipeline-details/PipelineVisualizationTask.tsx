@@ -12,11 +12,16 @@ import {
   resourcePathFromModel
 } from '../../../../../../../public/components/utils';
 import { runStatus } from '../../../../utils/pipeline-augment';
+// import {
+//   PipelineRunModel,
+//   TaskModel,
+//   ClusterTaskModel
+// } from '../../../../models';
 import {
   PipelineRunModel,
   TaskModel,
   ClusterTaskModel
-} from '../../../../models';
+} from '../../../../../../../public/models';
 import { ColoredStatusIcon } from './StatusIcon';
 import { PipelineVisualizationStepList } from './PipelineVisualizationStepList';
 import TaskComponentTaskStatus from './TaskComponentTaskStatus';
@@ -73,6 +78,7 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
     duration: '',
     reason: runStatus.Idle
   };
+  
   if (
     pipelineRunStatus === runStatus.Failed ||
     pipelineRunStatus === runStatus.Cancelled
@@ -106,7 +112,8 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
   if (task.taskRef.kind === ClusterTaskModel.kind) {
     resources = [
       {
-        kind: referenceForModel(ClusterTaskModel),
+        // kind: referenceForModel(ClusterTaskModel),
+        kind: 'ClusterTask',
         name: task.taskRef.name,
         prop: 'task'
       }
@@ -114,7 +121,8 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
   } else {
     resources = [
       {
-        kind: referenceForModel(TaskModel),
+        // kind: referenceForModel(TaskModel),
+        kind: 'Task',
         name: task.taskRef.name,
         namespace,
         prop: 'task'
@@ -133,6 +141,7 @@ const TaskComponent: React.FC<TaskProps> = ({
   disableTooltip,
   selected
 }) => {
+  
   const stepList = _.get(task, ['data', 'spec', 'steps'], []);
   const stepStatusList: StepStatus[] = stepList.map(step =>
     createStepStatus(step, status)

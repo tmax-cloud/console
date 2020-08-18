@@ -119,7 +119,7 @@ const DeploymentDetails = ({ obj: deployment }) => {
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('CONTENT:CONDITIONS')} />
-        <Conditions conditions={deployment.status.conditions} />
+        {deployment.status && deployment.status.conditions && <Conditions conditions={deployment.status.conditions} />}
       </div>
       {/* </React.Fragment> */}
     </>

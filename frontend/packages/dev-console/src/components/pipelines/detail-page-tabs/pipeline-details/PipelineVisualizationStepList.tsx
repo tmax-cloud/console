@@ -6,7 +6,6 @@ import {
 } from '../../../../utils/pipeline-augment';
 import { StatusIcon } from './StatusIcon';
 import { StepStatus } from './pipeline-step-utils';
-
 import './PipelineVisualizationStepList.scss';
 
 export interface PipelineVisualizationStepListProps {
@@ -24,11 +23,13 @@ const TooltipColoredStatusIcon = ({ status }) => {
 
   const icon = <StatusIcon status={status} {...sharedProps} />;
   let iconColor;
+  
   switch (status) {
     case 'Succeeded':
       iconColor = '#4D8AFF';
       break;
     case 'Running':
+    case 'In Progress':
       iconColor = '#4BBBCF';
       break;
     // case '':
@@ -39,14 +40,14 @@ const TooltipColoredStatusIcon = ({ status }) => {
       iconColor = '#FD5461';
       break;
   }
-  if (status === runStatus.Succeeded || status === runStatus.Failed) {
+  if (status === runStatus.Succeeded || status === runStatus.Failed || status === runStatus["In Progress"] || status === runStatus.Idle) {
     // Succeeded and Failed icons have transparent centers shapes - in tooltips, this becomes an undesired black
     // This will simply wrap the icon and place a white backdrop
 
     return (
       // <div style={{ color: getRunStatusColor(status).pftoken.value }}>
       <div style={{ color: iconColor }}>
-        <svg {...sharedProps}>
+        <svg className={classNames({ 'fa-spin': status === runStatus["In Progress"] || status === runStatus.Running})} {...sharedProps} >
           <circle
             className="odc-pipeline-vis-steps-list__icon-backdrop"
             cx={size / 2}
