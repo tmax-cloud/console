@@ -12,12 +12,16 @@ import { useTranslation, Trans } from 'react-i18next';
 class BaseParameterModal extends PromiseComponent {
   constructor(props) {
     super(props);
+    const inputError = {
+      name: null,
+    };
     this.state = {
       name: props.parameter?.[0] || '',
       description: props.parameter?.[1] || '',
       type: props.parameter?.[2] || 'String',
       default: props.parameter?.[3] || '',
       defaultArray: props.parameter?.[3] || [['']],
+      inputError: inputError,
       inProgress: false,
       errorMessage: '',
     };
@@ -32,7 +36,14 @@ class BaseParameterModal extends PromiseComponent {
 
   _submit(e) {
     e.preventDefault();
-    const { kind, path, resource, updateParentData, isNew, index } = this.props;
+    const { kind, path, resource, updateParentData, isNew, index, t } = this.props;
+
+    if (!this.state.name) {
+      this.setState({ inputError: { name: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:NAME`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { name: null } });
+    }
     updateParentData({
       name: this.state.name,
       type: this.state.type,
@@ -94,8 +105,8 @@ class BaseParameterModal extends PromiseComponent {
               onChange={e => {
                 this.onNameChange(e.target);
               }}
-              required
             />
+            {this.state.inputError.name && <p className="error_text">{this.state.inputError.name}</p>}
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:DESCRIPTION')} isRequired={false}>
             <input className="form-control form-group" type="text" id="resource-description" value={this.state.description} onChange={this.onDescriptionChange} />

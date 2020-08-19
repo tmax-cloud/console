@@ -52,7 +52,8 @@
     "LABEL_FORM": "Lables must be 'key=value' form.",
     "DUPLICATE-KEY": "Duplicate keys found.",
     "EMPTY-INPUT": "Enter a(n) {{something}}",
-    "EMPTY-SELECT": "Select a(n) {{something}}"
+    "EMPTY-SELECT": "Select a(n) {{something}}",
+    "EMPTY-LIST": "Add a(n) {{something}}"
   },
   "DATETIME": {
     "YEARS": "years",
