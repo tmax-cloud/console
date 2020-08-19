@@ -74,7 +74,7 @@ class RegistryFormComponent extends React.Component {
       port: '',
       accessModes: 'ReadWriteOnce',
       storageSize: '',
-      storageSizeUnit: 'Mi',
+      storageSizeUnit: 'Gi',
       storageClassName: '',
     };
   }
