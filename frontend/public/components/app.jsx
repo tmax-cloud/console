@@ -377,10 +377,10 @@ const keycloak = new Keycloak({
 });
 
 keycloak
-  .init()
+  .init({ onLoad: 'check-sso' })
   .then(auth => {
     if (!auth) {
-      keycloak.login();
+      keycloak.login({ redirectUri: document.location.origin });
       return;
     }
 

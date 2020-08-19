@@ -17,7 +17,7 @@ class TaskFormComponent extends React.Component {
     super(props);
     const existingTask = _.pick(props.obj, ['metadata', 'type']);
     const task = _.defaultsDeep({}, props.fixed, existingTask, {
-      apiVersion: 'tekton.dev/v1alpha1',
+      apiVersion: 'tekton.dev/v1beta1',
       kind: 'Task',
       metadata: {
         name: '',
@@ -33,6 +33,12 @@ class TaskFormComponent extends React.Component {
         steps: [],
       },
     });
+
+    const inputError = {
+      name: null,
+      namespace: null,
+      step: null,
+    };
 
     this.state = {
       taskTypeAbstraction: this.props.taskTypeAbstraction,
@@ -50,6 +56,7 @@ class TaskFormComponent extends React.Component {
       volumes: '',
       stepNames: '',
       steps: '',
+      inputError: inputError,
       // imageRegistryList: [],
       // imageList: [],
       // imageTagList: [],
@@ -149,9 +156,28 @@ class TaskFormComponent extends React.Component {
 
   save(e) {
     e.preventDefault();
+    const t = this.props.t;
 
-    this.setState({ inProgress: true });
     let task = _.cloneDeep(this.state.task);
+
+    if (!task.metadata.name) {
+      this.setState({ inputError: { name: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:NAME`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { name: null } });
+    }
+    if (!task.metadata.namespace) {
+      this.setState({ inputError: { namespace: t('VALIDATION:EMPTY-SELECT', { something: t(`CONTENT:NAMESPACE`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { namespace: null } });
+    }
+    if (this.state.steps.length === 0) {
+      this.setState({ inputError: { step: t('VALIDATION:EMPTY-LIST', { something: t(`CONTENT:STEP`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { step: null } });
+    }
 
     this.state.inputResources.length > 0 &&
       this.state.inputResources.forEach(cur => {
@@ -297,8 +323,8 @@ class TaskFormComponent extends React.Component {
         }
         task.spec.steps.push(step);
       });
-
     console.log(task);
+    this.setState({ inProgress: true });
 
     const ko = kindObj('Task');
     (this.props.isCreate ? k8sCreate(ko, task) : k8sUpdate(ko, task, task.namespace, task.metadata.name)).then(
@@ -324,10 +350,12 @@ class TaskFormComponent extends React.Component {
 
           <fieldset disabled={!this.props.isCreate}>
             <FirstSection label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" required />
+              <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" />
+              {this.state.inputError.name && <p className="error_text">{this.state.inputError.name}</p>}
             </FirstSection>
             <FirstSection label={t('CONTENT:NAMESPACE')} isRequired={true}>
               <NsDropdown id="task-namespace" t={t} onChange={this.onNamespaceChanged} />
+              {this.state.inputError.namespace && <p className="error_text">{this.state.inputError.namespace}</p>}
             </FirstSection>
             <hr />
             <FirstSection label={t('CONTENT:INPUTRESOURCE')} isRequired={false}>
@@ -343,12 +371,13 @@ class TaskFormComponent extends React.Component {
             <FirstSection label={t('CONTENT:VOLUME')} isRequired={false}>
               <VolumeModalEditor desc={} title="false" valueString="Volume" t={t} volumes={this.state.volumes} names={this.state.volumeNames} visibleData={this._updateVolumeName} realData={this._updateVolumes} />
             </FirstSection>
-            <FirstSection label={t('CONTENT:STEP')} isRequired={false}>
+            <FirstSection label={t('CONTENT:STEP')} isRequired={true}>
               <StepModalEditor desc={} title="false" valueString="Step" t={t} namespace={this.state.namespace} steps={this.state.steps} names={this.state.stepNames} visibleData={this._updateStepName} realData={this._updateSteps} volumeList={this.state.volumeNames} />
+              {this.state.inputError.step && <p className="error_text">{this.state.inputError.step}</p>}
             </FirstSection>
 
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
-              <button className="btn btn-primary" id="save-changes">
+              <button type="submit" className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
               </button>
               <Link to={formatNamespacedRouteForResource('task')} className="btn btn-default" id="cancel">

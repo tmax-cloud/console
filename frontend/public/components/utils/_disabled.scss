@@ -16,3 +16,8 @@
   user-select: none;
   z-index: 10;
 }
+
+input[type='text']:disabled {
+  background-color: #f1f1f1;
+  border: #c1c1c1 1px solid;
+}

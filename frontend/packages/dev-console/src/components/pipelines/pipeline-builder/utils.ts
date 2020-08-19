@@ -6,7 +6,8 @@ import {
   apiVersionForModel,
   referenceForModel
 } from '../../../../../../public/module/k8s';
-import { ClusterTaskModel, PipelineModel } from '../../../models';
+// import { ClusterTaskModel, PipelineModel } from '../../../models';
+import { ClusterTaskModel, PipelineModel } from '../../../../../../public/models';
 import {
   Pipeline,
   PipelineResourceTask,

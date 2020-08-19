@@ -985,28 +985,27 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.TaskModel), 'default'],
     `
-apiVersion: tekton.dev/v1alpha1
-kind: Task
-metadata:
-    name: example-task
-    namespace: example-namespace
-spec:
-    inputs:
-        resources:
-            - name: git-source
-              type: git
-        params:
-            - name: example-string
-              type: string
-              description: a sample string
-              default: default-string-value
-    outputs:
-        resources:
-            - name: output-image
-              type: image
-    steps:
-        - name: sample-job
-          image: sample-image-name:latest
+    apiVersion: tekton.dev/v1beta1
+    kind: Task
+    metadata:
+      name: example-task
+      namespace: default
+    spec:
+      resources:
+        inputs:
+          - name: git-source
+            type: git
+        outputs:
+          - name: output-image
+            type: image
+      params:
+      - name: example-string
+        type: string
+        description: a sample string
+        default: default-string-value
+      steps:
+        - name: example-job
+          image: example-image-name:latest
           env:
             - name: "SAMPLE_ENV"
               value: "hello/world/"
@@ -1015,47 +1014,58 @@ spec:
           args:
             - -c
             - "echo helloworld"
+          volumeMounts:
+            - name: example-volume
+              mountPath: /example/path
+      volumes:
+        - name: example-volume
+          emptyDir: {}
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.TaskModel), 'task-sample'],
     `
-apiVersion: tekton.dev/v1alpha1
-kind: Task
-metadata:
-  name: example-task
-  namespace: default
-spec:
-  inputs:
-    resources:
-      - name: git-source
-        type: git
-    params:
+    apiVersion: tekton.dev/v1beta1
+    kind: Task
+    metadata:
+      name: example-task
+      namespace: example-namespace
+    spec:
+      resources:
+        inputs:
+          - name: git-source
+            type: git
+        outputs:
+          - name: output-image
+            type: image
+      params:
       - name: example-string
         type: string
         description: a sample string
         default: default-string-value
-  outputs:
-    resources:
-      - name: output-image
-        type: image
-  steps:
-    - name: sample-job
-      image: 'sample-image-name:latest'
-      env:
-        - name: SAMPLE_ENV
-          value: hello/world/
-      command:
-        - /bin/sh
-      args:
-        - '-c'
-        - echo helloworld
+      steps:
+        - name: example-job
+          image: example-image-name:latest
+          env:
+            - name: "SAMPLE_ENV"
+              value: "hello/world/"
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - "echo helloworld"
+          volumeMounts:
+            - name: example-volume
+              mountPath: /example/path
+      volumes:
+        - name: example-volume
+          emptyDir: {}
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.TaskRunModel), 'default'],
     `
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
     name: example-taskrun
@@ -1082,7 +1092,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample'],
     `
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
   name: example-taskrun
@@ -1193,7 +1203,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.PipelineModel), 'default'],
     `
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: example-pipeline
@@ -1233,7 +1243,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
     `
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: example-pipeline
@@ -1272,7 +1282,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.PipelineRunModel), 'default'],
     `
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
     name: example-pipeline-run
@@ -1293,7 +1303,7 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.PipelineRunModel), 'pipelinerun-sample'],
     `
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: example-pipeline-run
@@ -1641,7 +1651,7 @@ spec:
         params:
         - name: url
           value: \${IMAGE_URL}
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: Pipeline
       metadata:
         name: \${APP_NAME}-pipeline
@@ -1717,7 +1727,7 @@ spec:
                 value: $(tasks.build-source.results.image-url)
               - name: deploy-cfg-name
                 value: $(params.deploy-cfg-name)
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         generateName: \${APP_NAME}-pipeline-run-
@@ -2213,7 +2223,7 @@ objects:
     params:
     - name: url
       value: \${IMAGE_URL}
-- apiVersion: tekton.dev/v1alpha1
+- apiVersion: tekton.dev/v1beta1
   kind: Pipeline
   metadata:
     name: \${APP_NAME}-pipeline
@@ -2293,7 +2303,7 @@ objects:
         value: $(tasks.build-source.results.image-url)
       - name: deploy-cfg-name
         value: $(params.deploy-cfg-name)
-- apiVersion: tekton.dev/v1alpha1
+- apiVersion: tekton.dev/v1beta1
   kind: PipelineRun
   metadata:
     generateName: \${APP_NAME}-run-
@@ -4123,6 +4133,59 @@ metadata:
   name: example
 provisioner: my-provisioner
 reclaimPolicy: Delete
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'storageclass-sample'],
+    `
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: example-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'storageclass-sample2'],
+    `
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: example-cephblock
+provisioner: rook-ceph.rbd.csi.ceph.com
+parameters:
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  imageFormat: '2'
+  clusterID: rook-ceph
+  imageFeatures: layering
+  pool: replicapool
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.StorageClassModel), 'storageclass-sample3'],
+    `
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: example-cephfssc
+provisioner: rook-ceph.cephfs.csi.ceph.com
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  fsName: myfs
+  pool: myfs-data0
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
 `,
   )
   .setIn(

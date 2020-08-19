@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { FaMinus } from 'react-icons/fa';
+import { Button } from './button';
 import * as classNames from 'classnames';
 import { RoleEditorPair } from './index';
 import SingleSelect from '../utils/select';
@@ -102,8 +104,9 @@ class RolePairElement extends React.Component {
     this._onChangeRole = this._onChangeRole.bind(this);
     this._getResourceList = this._getResourceList.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onChangeGroup(e) {
@@ -146,7 +149,7 @@ class RolePairElement extends React.Component {
     const { ResourceList } = this.state;
     const deleteButton = (
       <React.Fragment>
-        <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
