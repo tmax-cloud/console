@@ -283,13 +283,13 @@ class BaseStepModal extends React.Component {
       { value: 'Notify', label: t('CONTENT:NOTIFY') },
     ];
     const volumeOptions = volumeNames ? volumeNames.map(cur => ({ value: cur[0], label: cur[0] })) : [];
-    let maxHeight = window.innerHeight - 150;
-    // let maxHeight = 700;
+    let maxHeight = window.innerHeight - 180;
     return (
       <form style={{ width: '500px' }} onSubmit={this._submit} name="form">
         <ModalTitle>{title}</ModalTitle>
         <ModalBody>
-          <div className="modal-body-scroll" style={{ maxHeight: `${maxHeight}px` }}>
+          {/* <div className="modal-body-scroll" style={{ maxHeight: `${maxHeight}px` }}> */}
+          <div className="modal-body-scroll">
             <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={false}>
               <div className="row">
                 <div className="col-xs-6" style={{ float: 'left' }}>
