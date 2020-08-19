@@ -12,11 +12,15 @@ import { useTranslation, Trans } from 'react-i18next';
 class BaseVolumeModal extends PromiseComponent {
   constructor(props) {
     super(props);
+    const inputError = {
+      name: null,
+    };
     this.state = {
       name: props.volume?.[0] || '',
       type: props.volume?.[1] || 'emptyDir',
       configMap: props.volume?.[2] || '',
       secret: props.volume?.[3] || '',
+      inputError: inputError,
       inProgress: false,
       errorMessage: '',
     };
@@ -30,7 +34,13 @@ class BaseVolumeModal extends PromiseComponent {
 
   _submit(e) {
     e.preventDefault();
-    const { kind, path, resource, updateParentData, isNew, index } = this.props;
+    const { kind, path, resource, updateParentData, isNew, index, t } = this.props;
+    if (!this.state.name) {
+      this.setState({ inputError: { name: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:NAME`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { name: null } });
+    }
     updateParentData({
       name: this.state.name,
       type: this.state.type,
@@ -86,8 +96,8 @@ class BaseVolumeModal extends PromiseComponent {
               onChange={e => {
                 this.onNameChange(e.target);
               }}
-              required
             />
+            {this.state.inputError.name && <p className="error_text">{this.state.inputError.name}</p>}
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={true}>
             <SingleSelect style={{ margin: '15px' }} value={this.state.type} options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type} onChange={this.onTypeChange} />
