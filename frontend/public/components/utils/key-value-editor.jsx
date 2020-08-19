@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { FaMinus } from 'react-icons/fa';
+import { Button } from './button';
 import * as classNames from 'classnames';
 import { KeyValueEditorPair } from './index';
 import { is } from 'immutable';
@@ -116,8 +118,9 @@ class KeyValuePairElement extends React.Component {
     this._onChangeValue = this._onChangeValue.bind(this);
     this._onBlurKey = this._onBlurKey.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onChangeKey(e) {
@@ -136,7 +139,7 @@ class KeyValuePairElement extends React.Component {
     const { keyString, valueString, allowSorting, readOnly, pair, t, isModal = false } = this.props;
     const deleteButton = (
       <React.Fragment>
-        <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );

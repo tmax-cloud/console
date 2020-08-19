@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { Button } from './button';
 import { MdEdit } from 'react-icons/md';
 import { FaMinus } from 'react-icons/fa';
 import * as classNames from 'classnames';
@@ -84,8 +85,9 @@ class VolumePairElement extends React.Component {
     this._onChangePVC = this._onChangePVC.bind(this);
     this._onChangeReadOnly = this._onChangeReadOnly.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onChangeName(e) {
@@ -109,7 +111,7 @@ class VolumePairElement extends React.Component {
     const { nameString, mountPathString, allowSorting, pair, options, t } = this.props;
     const deleteButton = (
       <React.Fragment>
-        <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i>
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
@@ -280,26 +282,28 @@ class VolumeModalElement extends React.Component {
     this._onRemove = this._onRemove.bind(this);
     this._onEdit = this._onEdit.bind(this);
   }
-  _onRemove() {
+  _onRemove(e) {
     const { index, onRemove } = this.props;
+    event.preventDefault();
     onRemove(index);
   }
   _onEdit(e) {
     const { index, onChange } = this.props;
+    event.preventDefault();
     onChange(e, index);
   }
   render() {
     const { keyString, valueString, allowSorting, readOnly, pair, t } = this.props;
     const deleteButton = (
       <React.Fragment>
-        <FaMinus style={{ marginRight: '0.63rem', marginBottom: '0.18rem', border: '1px' }} onClick={this._onRemove} />
-        {/* <i className="fa fa-minus-circle pairs-list__side-btn pairs-list__delete-icon" aria-hidden="true" onClick={this._onRemove}></i> */}
+        <Button children={<FaMinus />} onClick={this._onRemove}></Button>
+        {/* <Button children={<FaMinus />} onClick={this._onRemove}></Button> */}
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
     const editButton = (
       <React.Fragment>
-        <MdEdit style={{ marginRight: '0.63rem', marginBottom: '0.18rem', border: '1px solid #000000' }} onClick={this._onEdit} />
+        <Button children={<MdEdit />} onClick={this._onEdit}></Button>
         {/* <i className="fa fa-pencil-square pairs-list__side-btn" aria-hidden="true" onClick={this._onEdit}></i> */}
         <span className="sr-only">Edit</span>
       </React.Fragment>
@@ -308,11 +312,11 @@ class VolumeModalElement extends React.Component {
     return (
       <div className={classNames('row')} ref={node => (this.node = node)}>
         <div className="col-md-4 col-xs-4 pairs-list__protocol-field">
-          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[VolumeModalEditorPair.Value] || ''} onChange={this._onChangeValue} readOnly />
+          <input type="text" className="form-control" placeholder={t(`CONTENT:${valueString.toUpperCase()}`)} value={pair[VolumeModalEditorPair.Value] || ''} onChange={this._onChangeValue} disabled />
         </div>
         {/* {readOnly ? null : ( */}
         {
-          <div className="col-md-1 col-xs-2">
+          <div className="col-md-1 col-xs-2 wrap-content">
             <span className={classNames(allowSorting ? 'pairs-list__span-btns' : null)}>{allowSorting ? <React.Fragment>{editButton}</React.Fragment> : editButton}</span>
             <span className={classNames(allowSorting ? 'pairs-list__span-btns' : null)}>{allowSorting ? <React.Fragment>{deleteButton}</React.Fragment> : deleteButton}</span>
           </div>
