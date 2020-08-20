@@ -601,30 +601,6 @@ spec:
       name: sample-datavolume
       namespace: default
     spec:
-      pvc:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 1Gi
-        storageClassName: hdd-ceph-block
-        volumeMode: Block
-      source:
-        s3:
-          contentType: kubevirt
-          secretRef: ''
-          url: 'http://mybucket/virtual-disk-img' 
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.DataVolumeModel), 'datavolume-sample3'],
-    `
-    apiVersion: cdi.kubevirt.io/v1alpha1
-    kind: DataVolume
-    metadata:
-      name: sample-datavolume
-      namespace: default
-    spec:
       source:
         registry:
           url: "xxx.xxx.xxx.xxx:xx"
