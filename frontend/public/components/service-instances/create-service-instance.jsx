@@ -277,8 +277,21 @@ const withServiceInstanceForm = SubForm =>
             <Stepper steps={steps} activeStep={currentStep} />
             <div className="separator"></div>
             {/* stepper */}
-            {currentStep === 0 &&
-              (this.state.classList.length > 0 ? (
+            {currentStep === 0 && (
+              <div>
+                <div className="col-xs-2">
+                  <b>{t('CONTENT:SERVICECLASSGROUP')}</b>
+                </div>
+                <form>
+                  <label class="radio-inline" style={{ marginRight: '50px' }}>
+                    <input class="radio-inline" type="radio" name = "ServiceClass" value="Cluster" checked="checked"/> {t('RESOURCE:CLUSTERSERVICECLASS')}
+                  </label>
+                  <label class="radio-inline" style={{ marginRight: '50px' }}>
+                    <input type="radio" name = "ServiceClass" value="Namespace" /> {t('RESOURCE:NAMESPACESERVICECLASS')}
+                  </label>
+                </form>
+                <div className="separator"></div>
+                {this.state.classList.length > 0 ? (
                 <div>
                   <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
                   <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
@@ -294,7 +307,9 @@ const withServiceInstanceForm = SubForm =>
                 </div>
               ) : (
                 <div>{t('STRING:SERVICEINSTANCE-CREATE_3')}</div>
-              ))}
+              )}
+              </div>
+            )}
             {currentStep === 1 &&
               (this.state.classList.length > 0 ? (
                 <div>
