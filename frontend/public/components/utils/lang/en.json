@@ -543,6 +543,7 @@
     "IMAGES": "Images",
     "SIZE": "Size",
     "NUMBEROFPODS": "Number of Pods",
+    "OTHERS": "Others",
     "NETWORKIN": "Network In",
     "NETWORKOUT": "Network Out",
     "FILESYSTEM": "Filesystem",
