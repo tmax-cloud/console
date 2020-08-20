@@ -28,9 +28,9 @@ class BaseStepModal extends React.Component {
       env: props.step?.[10] || [['', '']],
       volumemountname: props.step?.[11] || '',
       volumemountpath: props.step?.[12] || '',
-      type: props.step?.[13] || true,
+      isType: props.step?.[13],
       preset: props.step?.[14] || 'Approve',
-      imagetype: props.step?.[15] || true,
+      imagetype: props.step?.[15],
       selfimage: props.step?.[16] || '',
       imageRegistryList: [],
       imageList: [],
@@ -60,7 +60,10 @@ class BaseStepModal extends React.Component {
     this._cancel = props.cancel.bind(this);
   }
   componentDidMount() {
-    this.getImageRegistryList();
+    if (!this.props.isNew) {
+      return;
+    }
+    this.state.imageType && this.getImageRegistryList();
   }
 
   getImageRegistryList = () => {
@@ -144,7 +147,7 @@ class BaseStepModal extends React.Component {
     e.preventDefault();
     const { kind, path, steps, updateParentData, isNew, index } = this.props;
     let name = '';
-    if (this.state.type) {
+    if (this.state.isType) {
       const name_idx = typeof steps !== 'string' && steps?.filter(cur => cur[13] === this.state.preset);
       if (name_idx.length > 0) {
         name = `${this.state.preset}-${name_idx.length}`;
@@ -168,7 +171,7 @@ class BaseStepModal extends React.Component {
       env: this.state.env,
       volumemountname: this.state.volumemountname,
       volumemountpath: this.state.volumemountpath,
-      type: this.state.type,
+      type: this.state.isType,
       preset: this.state.preset,
       imagetype: this.state.imagetype,
       selfimage: this.state.selfimage,
@@ -185,7 +188,7 @@ class BaseStepModal extends React.Component {
 
   onTypeChange = type => {
     this.setState({
-      type: type,
+      isType: type,
     });
     if (type === true) {
       this.setState({
@@ -299,7 +302,7 @@ class BaseStepModal extends React.Component {
                     onChange={e => {
                       this.onTypeChange(true);
                     }}
-                    checked={this.state.type}
+                    checked={this.state.isType}
                   />
                   {t('CONTENT:PRESET')}
                 </div>
@@ -311,30 +314,33 @@ class BaseStepModal extends React.Component {
                     onChange={e => {
                       this.onTypeChange(false);
                     }}
-                    checked={!this.state.type}
+                    checked={!this.state.isType}
                   />
                   {t('CONTENT:BYSELF')}
                 </div>
               </div>
             </SecondSection>
             <div>
-              {this.state.type && (
-                <SingleSelect
-                  options={presetOptions}
-                  name="Type"
-                  placeholder="Select Type"
-                  value={this.state.preset}
-                  onChange={e => {
-                    this.onPresetChange(e);
-                  }}
-                />
+              {this.state.isType && (
+                <div style={{ marginBottom: '15px' }}>
+                  <SingleSelect
+                    className="form-group"
+                    options={presetOptions}
+                    name="Type"
+                    placeholder="Select Type"
+                    value={this.state.preset}
+                    onChange={e => {
+                      this.onPresetChange(e);
+                    }}
+                  />
+                </div>
               )}
-              {!this.state.type && (
+              {!this.state.isType && (
                 <div>
                   <SecondSection isModal={true} label={t('CONTENT:NAME')} isRequired={true}>
                     {/* <input className="form-control form-group" type="text" onChange={this.onNameChanged} value={this.state.task.metadata.name} id="task-name" required /> */}
                     <input
-                      className="form-control form-group"
+                      className="form-control"
                       type="text"
                       id="resource-name"
                       value={this.state.name}
@@ -416,7 +422,7 @@ class BaseStepModal extends React.Component {
                   <input className="form-control form-group" type="text" id="self-image" value={this.state.selfimage} onChange={this.onSelfImageChange} />
                 </div>
               )}
-              {this.state.type && this.state.preset === 'Notify' && (
+              {this.state.isType && this.state.preset === 'Notify' && (
                 <div>
                   <label>{t('CONTENT:MAILCONFIG')}</label>
                   <SecondSection isModal={true} label={'- ' + t('CONTENT:MAILSERVER')} id={'mail-server'}>
@@ -433,7 +439,7 @@ class BaseStepModal extends React.Component {
                   </SecondSection>
                 </div>
               )}
-              {!this.state.type && (
+              {!this.state.isType && (
                 <div>
                   <SecondSection isModal={true} label={'- ' + t('CONTENT:RUNCOMMAND')} id={'runcommand'}>
                     <ValueEditor isModal={true} desc={} title="false" valueString="RunCommand" t={t} values={this.state.runcommands} updateParentData={this._updateRunCommands} />

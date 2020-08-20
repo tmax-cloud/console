@@ -54,7 +54,7 @@ export class StepModalEditor extends React.Component {
     const { steps, names, nameValueId, allowSorting, t, valueString } = this.props;
 
     names = typeof names === 'string' ? [['']] : names.concat([['']]);
-    steps = typeof steps === 'string' ? [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']] : steps.concat([['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']]);
+    steps = typeof steps === 'string' ? [['', '', '', '', '', '', '', '', '', '', '', '', '', true, '', true, '', '', '', '', '']] : steps.concat([['', '', '', '', '', '', '', '', '', '', '', '', '', true, '', true, '', '', '', '', '']]);
     this.setState(prevState => ({
       ...prevState,
       names,
@@ -69,6 +69,7 @@ export class StepModalEditor extends React.Component {
         updateParentData: this._updateParentData,
         namespace: this.props.namespace,
         steps: this.props.steps,
+        step: ['', '', '', '', '', '', '', '', '', '', '', '', '', true, '', true, '', '', '', '', ''],
       });
     });
   }
