@@ -253,7 +253,7 @@ const ResourceUsage = requirePrometheus(({ ns }) => {
           />
         </div>
       </div>
-      <Bar title={t('CONTENT:MEMORYUSAGEBYPOD(TOP10)')} query={`sort(topk(10, sum by (pod_name)(container_memory_usage_bytes{pod_name!="", namespace="${ns.metadata.name}"})))`} humanize={humanizeMem} metric="pod_name" />
+      <Bar title={t('CONTENT:MEMORYUSAGEBYPOD(TOP10)')} query={`topk(10,sum(container_memory_usage_bytes{container_name!="POD",pod!="",namespace="${ns.metadata.name}"})by(pod,namespace))`} humanize={humanizeMem} metric="pod_name" />
     </div>
   );
 });
