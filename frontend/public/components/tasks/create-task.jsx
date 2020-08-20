@@ -354,7 +354,7 @@ class TaskFormComponent extends React.Component {
               {this.state.inputError.name && <p className="error_text">{this.state.inputError.name}</p>}
             </FirstSection>
             <FirstSection label={t('CONTENT:NAMESPACE')} isRequired={true}>
-              <NsDropdown id="task-namespace" t={t} onChange={this.onNamespaceChanged} />
+              <NsDropdown dropDownClassName="form-group" id="task-namespace" t={t} onChange={this.onNamespaceChanged} />
               {this.state.inputError.namespace && <p className="error_text">{this.state.inputError.namespace}</p>}
             </FirstSection>
             <hr />

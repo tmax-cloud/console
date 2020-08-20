@@ -310,7 +310,7 @@ class ListDropdown_ extends React.Component {
   }
 
   render() {
-    const { desc, fixed, placeholder, id, loaded } = this.props;
+    const { desc, fixed, placeholder, id, loaded, dropDownClassName } = this.props;
     const items = {};
     const sortedItems = _.keys(this.state.items).sort();
 
@@ -318,7 +318,7 @@ class ListDropdown_ extends React.Component {
 
     const { selectedKey } = this.state;
 
-    const Component = fixed ? items[selectedKey] : <Dropdown autocompleteFilter={this.autocompleteFilter} autocompletePlaceholder={placeholder} items={items} sortedItemKeys={sortedItems} selectedKey={selectedKey} title={this.state.title} onChange={this.onChange} id={id} menuClassName="dropdown-menu--text-wrap" />;
+    const Component = fixed ? items[selectedKey] : <Dropdown autocompleteFilter={this.autocompleteFilter} autocompletePlaceholder={placeholder} items={items} sortedItemKeys={sortedItems} selectedKey={selectedKey} title={this.state.title} onChange={this.onChange} id={id} dropDownClassName={dropDownClassName} menuClassName="dropdown-menu--text-wrap" />;
 
     return (
       <div>

@@ -155,6 +155,10 @@ tags-input .tags {
   padding: 0px 15px;
 }
 
+.form-group .error_text {
+  margin-top: -15px;
+}
+
 tags-input .tags.focused,
 tags-input .tags:focus {
   outline: none;
