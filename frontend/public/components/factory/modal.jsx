@@ -6,6 +6,7 @@ import * as Modal from 'react-modal';
 import * as PropTypes from 'prop-types';
 import { Router } from 'react-router-dom';
 
+import * as classNames from 'classnames';
 import store from '../../redux';
 import { ButtonBar } from '../utils/button-bar';
 import { history } from '../utils/router';
@@ -46,7 +47,7 @@ export const ModalTitle = ({ children, className = 'modal-header' }) => (
   </div>
 );
 
-export const ModalBody = ({ children }) => <div className="modal-body scroll">{children}</div>;
+export const ModalBody = ({ needScroll = true, children }) => <div className={classNames(needScroll ? 'modal-body scroll' : 'modal-body')}>{children}</div>;
 
 export const ModalFooter = ({ message, errorMessage, inProgress, children }) => {
   return (
