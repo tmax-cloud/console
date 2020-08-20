@@ -140,22 +140,12 @@ tags-input .tags {
   min-height: 200px;
 }
 
-// .modal-body.scroll > .modal-body-scroll {
-//   &::-webkit-scrollbar {
-//     display: none !important; // 윈도우 크롬 등
-//   }
-//   overflow-y: scroll;
-//   overflow-x: hidden;
-//   max-height: $modal-body-max-height;
-//   padding: 15px;
-// }
-
 .modal-body.scroll {
   &::-webkit-scrollbar {
     display: none !important; // 윈도우 크롬 등
   }
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: scroll;
   max-height: $modal-body-max-height;
   padding: 15px;
 }

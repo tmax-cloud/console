@@ -330,7 +330,7 @@ class TaskFormComponent extends React.Component {
     (this.props.isCreate ? k8sCreate(ko, task) : k8sUpdate(ko, task, task.namespace, task.metadata.name)).then(
       () => {
         this.setState({ inProgress: false });
-        history.push(formatNamespacedRouteForResource('tasks'));
+        history.push(`/k8s/ns/${task.namespace}/tasks`);
       },
       err => this.setState({ error: err.message, inProgress: false }),
     );
