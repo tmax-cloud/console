@@ -3867,35 +3867,67 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample'],
     `
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: example
-  namespace: default
-spec:
-  hard:
-    requests.cpu: '1'
-    requests.memory: 1Gi
-    limits.cpu: '2'
-    limits.memory: 2Gi
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        requests.cpu: '1'
+        requests.memory: 1Gi
+        limits.cpu: '2'
+        limits.memory: 2Gi
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample2'],
     `
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: example
-  namespace: default
-spec:
-  hard:
-    configmaps: '10'
-    persistentvolumeclaims: '4'
-    replicationcontrollers: '20'
-    secrets: '10'
-    services: '10'
-    services.loadbalancers: '2'
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        requests.storage: 10Gi
+        persistentvolumeclaims: 2
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample3'],
+    `
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        requests.cpu: '1'
+        requests.memory: 1Gi
+        limits.cpu: '2'
+        limits.memory: 2Gi
+      scopeSelector:
+        matchExpressions:
+        - operator : In
+          scopeName : PriorityClass
+          values: ["low"]
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample4'],
+    `
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        pods: 2
+      scopes:
+      - BestEffort
 `,
   )
   .setIn(
