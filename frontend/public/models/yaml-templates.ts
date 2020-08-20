@@ -888,42 +888,23 @@ spec:
 apiVersion: "v1"
 kind: "LimitRange"
 metadata:
-  name: "core-resource-limits" 
+  name: "example-limitrange"
+  namespace: default
 spec:
   limits:
-    - type: "Pod or Container"
-      max:
-        cpu: "2" 
-        memory: "1Gi" 
+    - max:
+        cpu: 800m
+        memory: 1Gi
       min:
-        cpu: "200m" 
-        memory: "6Mi" 
+        cpu: 100m
+        memory: 99Mi
       default:
-        cpu: "300m" 
-        memory: "200Mi" 
+        cpu: 700m
+        memory: 900Mi
       defaultRequest:
-        cpu: "200m" 
-        memory: "100Mi" 
-      maxLimitRequestRatio:
-        cpu: "10"
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample2'],
-    `
-apiVersion: "v1"
-kind: "LimitRange"
-metadata:
-  name: "tmax-resource-limits"
-spec:
-  limits:
-    - type: tmax.io/Image
-      max:
-        storage: 1Gi 
-    - type: tmax.io/ImageStream
-      max:
-        tmax.io/image-tags: 20 
-        tmax.io/images: 30
+        cpu: 110m
+        memory: 111Mi
+      type: Container
 `,
   )
   .setIn(
@@ -3886,35 +3867,67 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample'],
     `
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: example
-  namespace: default
-spec:
-  hard:
-    requests.cpu: '1'
-    requests.memory: 1Gi
-    limits.cpu: '2'
-    limits.memory: 2Gi
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        requests.cpu: '1'
+        requests.memory: 1Gi
+        limits.cpu: '2'
+        limits.memory: 2Gi
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample2'],
     `
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: example
-  namespace: default
-spec:
-  hard:
-    configmaps: '10'
-    persistentvolumeclaims: '4'
-    replicationcontrollers: '20'
-    secrets: '10'
-    services: '10'
-    services.loadbalancers: '2'
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        requests.storage: 10Gi
+        persistentvolumeclaims: 2
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample3'],
+    `
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        requests.cpu: '1'
+        requests.memory: 1Gi
+        limits.cpu: '2'
+        limits.memory: 2Gi
+      scopeSelector:
+        matchExpressions:
+        - operator : In
+          scopeName : PriorityClass
+          values: ["low"]
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.ResourceQuotaModel), 'resourcequota-sample4'],
+    `
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: example-resourcequota
+      namespace: default
+    spec:
+      hard:
+        pods: 2
+      scopes:
+      - BestEffort
 `,
   )
   .setIn(
