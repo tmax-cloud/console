@@ -36,13 +36,13 @@ $color-grey-border: #eee;
 $color-grey-background: #f5f5f5;
 $color-grey-background-border: #ccc;
 
-$color-red-error: #D64456;
+$color-red-error: #d64456;
 $color-orange-warning: #fca657;
 
 $color-highlight-blue: #52a3d9;
-$color-highlight-blue-dark: #2276AD;
+$color-highlight-blue-dark: #2276ad;
 
-$color-tectonic-green: #68C28D;
+$color-tectonic-green: #68c28d;
 
 $color-border-brown: #947663;
 
@@ -83,3 +83,5 @@ $contextselector-pf-dropdown-toggle-padding-top: 20px;
 $contextselector-pf-margin-left: 20px;
 $contextselector-pf-bootstrap-select-width-desktop: 145px;
 $contextselector-pf-bootstrap-select-width-mobile: $contextselector-pf-bootstrap-select-width-desktop;
+
+$modal-body-max-height: calc(100vh - 180px);

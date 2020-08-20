@@ -11,11 +11,16 @@ import { useTranslation, Trans } from 'react-i18next';
 class BaseResourceModal extends PromiseComponent {
   constructor(props) {
     super(props);
+
+    const inputError = {
+      name: null,
+    };
     this.state = {
       name: props.resource?.[0] || '',
       type: props.resource?.[1] || 'git',
       path: props.resource?.[2] || '',
       optional: props.resource?.[3] || false,
+      inputError: inputError,
       inProgress: false,
       errorMessage: '',
     };
@@ -25,7 +30,15 @@ class BaseResourceModal extends PromiseComponent {
 
   _submit(e) {
     e.preventDefault();
-    const { kind, path, resource, updateParentData, isNew, index } = this.props;
+    const { kind, path, resource, updateParentData, isNew, index, t } = this.props;
+
+    if (!this.state.name) {
+      this.setState({ inputError: { name: t('VALIDATION:EMPTY-INPUT', { something: t(`CONTENT:NAME`) }) } });
+      return;
+    } else {
+      this.setState({ inputError: { name: null } });
+    }
+
     updateParentData({
       name: this.state.name,
       type: this.state.type,
@@ -82,8 +95,8 @@ class BaseResourceModal extends PromiseComponent {
               onChange={e => {
                 this.onNameChange(e.target);
               }}
-              required
             />
+            {this.state.inputError.name && <p className="error_text">{this.state.inputError.name}</p>}
           </SecondSection>
           <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={true}>
             <SingleSelect options={typeOptions} name="Type" placeholder={t('VALIDATION:EMPTY-SELECT', { something: t('CONTENT:TYPE') })} value={this.state.type} onChange={this.onTypeChange} />

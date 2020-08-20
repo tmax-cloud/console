@@ -73,9 +73,9 @@ class GrafanaPage_ extends React.PureComponent {
         {showGettingStarted && <OpenShiftGettingStarted />}
         <div className={classNames({ 'co-disabled': showGettingStarted })}>
           <Helmet>
-            <title>Grafana</title>
+            <title>{t('RESOURCE:GRAFANA')}</title>
           </Helmet>
-          <NavTitle title='Grafana'>
+          <NavTitle title={t('RESOURCE:GRAFANA')}>
           </NavTitle>
           <iframe style={{ width: '100%', height: '100vh', border: 0 }} src={url} target="_blank" />
         </div>

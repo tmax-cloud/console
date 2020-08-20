@@ -2,15 +2,19 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
+import * as fuzzy from 'fuzzysearch';
 import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate, K8sResourceKind, k8sList, k8sGet } from '../../module/k8s';
 import { ButtonBar, history, kindObj } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
-import { NsDropdown } from '../RBAC';
 import { ValueEditor } from '../utils/value-editor';
+import * as PropTypes from 'prop-types';
+import { NsDropdown } from '../RBAC/bindings';
+import { connectToFlags, FLAGS, flagPending } from '../../features';
 import * as classNames from 'classnames';
+import { Dropdown, Firehose, ResourceName, LoadingInline, ResourceLink } from '../utils';
 
 const Section = ({ label, children, isRequired }) => {
   return (
@@ -22,6 +26,213 @@ const Section = ({ label, children, isRequired }) => {
     </div>
   );
 };
+
+class ListDropdown_ extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: {},
+    };
+
+    if (props.selectedKey) {
+      this.state.selectedKey = props.selectedKeyKind ? `${props.selectedKey}-${props.selectedKeyKind}` : props.selectedKey;
+    }
+
+    this.state.title = props.loaded ? <span className="text-muted">{props.placeholder}</span> : <LoadingInline />;
+
+    this.autocompleteFilter = (text, item) => fuzzy(text, item.props.name);
+    // Pass both the resource name and the resource kind to onChange()
+    this.onChange = key => {
+      const { name, kindLabel } = _.get(this.state, ['items', key], {});
+      this.setState({ selectedKey: key, title: <ResourceName kind={kindLabel} name={name} /> });
+      this.props.onChange(name, kindLabel, this.props.id);
+    };
+  }
+
+  componentWillMount() {
+    // we need to trigger state changes to get past shouldComponentUpdate...
+    //   but the entire working set of data can be loaded in memory at this point in time
+    //   in which case componentWillReceiveProps would not be called for a while...
+    this.componentWillReceiveProps(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { loaded, loadError } = nextProps;
+
+    // Namespace Role Binding 생성인데 Cluster Role 서비스만 에러일 때 롤 조회도 안됨.
+    // if (loadError) {
+    //   this.setState({
+    //     title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
+    //   });
+    //   return;
+    // }
+
+    // if (!loaded) {
+    //   return;
+    // }
+
+    const state = {};
+
+    const { resources, dataFilter } = nextProps;
+
+    // Namespace Role Binding 생성일 때 Cluster Role이랑 Role 서비스 둘 다 오류일 때만 에러 표시되도록
+    if (resources.hasOwnProperty('Role') && resources.hasOwnProperty('ClusterRole')) {
+      if (resources.Role.loaded === false && resources.ClusterRole.loaded === false && loadError) {
+        this.setState({
+          title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
+        });
+        return;
+      }
+    } else {
+      if (loadError) {
+        this.setState({
+          title: <div className="cos-error-title">{this.props.t('ADDITIONAL:ERRORLOADING', { something: this.props.t(`CONTENT:${nextProps.desc.toUpperCase()}`) })}</div>,
+        });
+        return;
+      }
+      if (!loaded) {
+        return;
+      }
+    }
+
+    state.items = {};
+    _.each(resources, ({ data }, kindLabel) => {
+      _.reduce(
+        data,
+        (acc, resource) => {
+          if (!dataFilter || dataFilter(resource)) {
+            acc[`${resource.metadata.name}-${kindLabel}`] = { kindLabel, name: resource.metadata.name };
+          }
+          return acc;
+        },
+        state.items,
+      );
+    });
+
+    const { selectedKey } = this.state;
+    if (Object.keys(state.items).length === 0 || this.props.selectedKey == null) {
+      selectedKey = undefined;
+      state.selectedKey = undefined;
+    }
+
+    // did we switch from !loaded -> loaded ?
+    if (!this.props.loaded && !selectedKey) {
+      state.title = <span className="text-muted">{nextProps.placeholder}</span>;
+    }
+
+    if (selectedKey) {
+      const item = state.items[selectedKey];
+      // item may not exist if selectedKey is a role and then user switches to creating a ClusterRoleBinding
+      if (item) {
+        state.title = <ResourceName kind={item.kindLabel} name={item.name} />;
+      } else {
+        // state.selectedKey = undefined;
+        state.title = <span className="text-muted">{nextProps.placeholder}</span>;
+      }
+    }
+
+    this.setState(state);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (_.isEqual(this.state, nextState)) {
+      return false;
+    }
+    return true;
+  }
+
+  render() {
+    const { desc, fixed, placeholder, id, loaded } = this.props;
+    const items = {};
+    const sortedItems = _.keys(this.state.items).sort();
+
+    _.each(this.state.items, (v, key) => (items[key] = <ResourceName kind={v.kindLabel} name={v.name} />));
+
+    const { selectedKey } = this.state;
+
+    const Component = fixed ? items[selectedKey] : <Dropdown autocompleteFilter={this.autocompleteFilter} autocompletePlaceholder={placeholder} items={items} sortedItemKeys={sortedItems} selectedKey={selectedKey} title={this.state.title} onChange={this.onChange} id={id} menuClassName="dropdown-menu--text-wrap" />;
+
+    return (
+      <div>
+        {Component}
+        {/* {loaded && _.isEmpty(items) && (
+          <p className="alert alert-info">
+            <span className="pficon pficon-info" aria-hidden="true"></span>
+            {(this.props.t('ADDITIONAL:NOFOUNDORDEFINED'), { something: desc })}
+          </p>
+        )} */}
+      </div>
+    );
+  }
+}
+
+export const ListDropdown = props => {
+  const resources = _.map(props.resources, resource => _.assign({ isList: true, prop: resource.kind }, resource));
+  return (
+    <Firehose resources={resources}>
+      <ListDropdown_ {...props} />
+    </Firehose>
+  );
+};
+
+ListDropdown.propTypes = {
+  dataFilter: PropTypes.func,
+  desc: PropTypes.string,
+  // specify both key/kind
+  selectedKey: PropTypes.string,
+  selectedKeyKind: PropTypes.string,
+  fixed: PropTypes.bool,
+  resources: PropTypes.arrayOf(
+    PropTypes.shape({
+      kind: PropTypes.string.isRequired,
+      namespace: PropTypes.string,
+    }),
+  ).isRequired,
+  placeholder: PropTypes.string,
+};
+
+const TaskDropdown_ = props => {
+  const openshiftFlag = props.flags[FLAGS.OPENSHIFT];
+  if (flagPending(openshiftFlag)) {
+    return null;
+  }
+  const kind = openshiftFlag ? 'Project' : 'Task';
+
+  const resources = props.namespace ? [{ kind, namespace: props.namespace }] : [];
+  const { t } = props;
+  return <ListDropdown {...props} desc="Task" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:PIPELINE-CREATE_2')} />;
+};
+
+const TaskDropdown = connectToFlags(FLAGS.OPENSHIFT)(TaskDropdown_);
+
+const PipelineResourceDropdown_ = props => {
+  const openshiftFlag = props.flags[FLAGS.OPENSHIFT];
+  if (flagPending(openshiftFlag)) {
+    return null;
+  }
+  const kind = openshiftFlag ? 'Project' : 'PipelineResource';
+
+  // const resources = [{ kind, namespace: props.namespace || null }];
+  const resources = props.namespace ? [{ kind, namespace: props.namespace }] : [];
+  const { t } = props;
+  return <ListDropdown {...props} desc="PipelineResource" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:PIPELINE-CREATE_3')} />;
+};
+
+const PipelineResourceDropdown = connectToFlags(FLAGS.OPENSHIFT)(PipelineResourceDropdown_);
+
+const ServiceAccountDropdown_ = props => {
+  const openshiftFlag = props.flags[FLAGS.OPENSHIFT];
+  if (flagPending(openshiftFlag)) {
+    return null;
+  }
+  const kind = openshiftFlag ? 'Project' : 'ServiceAccount';
+  // const resources = [{ kind, namespace: props.namespace }];
+  const resources = props.namespace ? [{ kind, namespace: props.namespace }] : [];
+  const { t } = props;
+  return <ListDropdown {...props} desc="ServiceAccount" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:TASKRUN-CREATE_6')} />;
+};
+
+const ServiceAccountDropdown = connectToFlags(FLAGS.OPENSHIFT)(ServiceAccountDropdown_);
 
 /*
 {
@@ -146,6 +357,7 @@ spec:
     this.onTaskChanged = this.onTaskChanged.bind(this);
     this.onParamChanged = this.onParamChanged.bind(this);
     this.onPipelineResourceChanged = this.onPipelineResourceChanged.bind(this);
+    this.onServiceAccountChanged = this.onServiceAccountChanged.bind(this);
     this.onTimeoutChanged = this.onTimeoutChanged.bind(this);
     this._updateArrayParms = this._updateArrayParms.bind(this);
     this.changeTimeoutFormat = this.changeTimeoutFormat.bind(this);
@@ -161,14 +373,14 @@ spec:
   componentDidMount() {}
 
   onNamespaceChanged(namespace) {
-    this.setState({ selectedNamespace: namespace }, () => {
-      this.getTaskList();
+    this.setState({ selectedNamespace: namespace, selectedServiceAccount: null, selectedTask: null, paramList: [], arrayParamList: [], outputList: [], inputList: [] }, () => {
+      // this.getTaskList();
       this.getPipelineResourceList();
       this.getServiceAccountList();
     });
   }
-  onTaskChanged(e) {
-    this.setState({ selectedTask: e.target.value }, () => {
+  onTaskChanged(taskName) {
+    this.setState({ selectedTask: String(taskName) }, () => {
       this.getTaskDetails();
     });
   }
@@ -192,19 +404,22 @@ spec:
       }),
     });
   }
-
-  onPipelineResourceChanged(e, resourceIdx, type) {
+  onPipelineResourceChanged(pipelineName, kindLabel, id) {
+    const [, type, resourceIdx] = id.split('-');
     this.setState({
       [`${type}List`]: this.state[`${type}List`].map((item, idx) => {
-        return idx === resourceIdx
+        return idx == resourceIdx
           ? {
               ...item,
-              selectedPR: e.target.value,
+              selectedPR: pipelineName,
             }
           : item;
       }),
     });
   }
+  onServiceAccountChanged = serviceAccountName => {
+    this.setState({ selectedServiceAccount: String(serviceAccountName) });
+  };
   _updateArrayParms({ values, editorIdx }, nameValueId) {
     const pl = this.state.arrayParamList.map((item, idx) => {
       return idx === editorIdx
@@ -230,26 +445,21 @@ spec:
     const { selectedNamespace } = this.state;
     k8sList(kindObj('Task'), { ns: selectedNamespace }).then(
       taskList => {
-        if (taskList.length > 0) {
-          this.setState(
-            {
-              taskList: taskList.map(item => ({
-                name: item.metadata.name,
-                task: item,
-              })),
-              selectedTask: taskList[0].metadata.name,
-            },
-            () => {
-              this.getTaskDetails();
-            },
-          );
-        } else {
-          this.setState({ taskList: [], paramList: [], outputList: [], inputList: [], selectedTask: null });
-        }
+        this.setState({
+          taskList: taskList.map(item => ({
+            name: item.metadata.name,
+            task: item,
+          })),
+          paramList: [],
+          arryaParamList: [],
+          outputList: [],
+          inputList: [],
+          selectedTask: null,
+        });
       },
       err => {
         this.setState({ error: err.message, inProgress: false });
-        this.setState({ resourceRefList: [], paramList: [], outputList: [], inputList: [] });
+        this.setState({ taskList: [], paramList: [], arrayParamList: [], outputList: [], inputList: [] });
       },
     );
   }
@@ -263,6 +473,7 @@ spec:
                 name: cur.name,
                 type: cur.type,
                 default: cur.default || '',
+                value: cur.default || '',
                 description: cur.description || '',
                 isRequired: !cur.default,
               };
@@ -273,7 +484,7 @@ spec:
         params.forEach(item => {
           if (item.type && item.type === 'array') {
             arrayParamList.push({
-              values: [['']],
+              values: [[item.default ? item.default : '']],
               ...item,
             });
           } else {
@@ -281,15 +492,14 @@ spec:
             paramList.push({ value: '', ...item });
           }
         });
-        const selectedPR = this.state.pipelineResourceList.length > 0 ? this.state.pipelineResourceList[0] : '';
         const inputList = details.spec.resources ? details.spec.resources.inputs || [] : [];
         const outputList = details.spec.resources ? details.spec.resources.outputs || [] : [];
         inputList.forEach(item => {
-          item.selectedPR = selectedPR;
+          item.selectedPR = null;
           item.isRequired = !item.optional ? true : false;
         });
         outputList.forEach(item => {
-          item.selectedPR = selectedPR;
+          item.selectedPR = null;
           item.isRequired = !item.optional ? true : false;
         });
 
@@ -302,7 +512,7 @@ spec:
       },
       err => {
         this.setState({ error: err.message, inProgress: false });
-        this.setState({ paramList: [], outputList: [], inputList: [] });
+        this.setState({ paramList: [], arrayParamList: [], outputList: [], inputList: [] });
       },
     );
   }
@@ -334,7 +544,6 @@ spec:
             name: item.metadata.name,
             serviceAccount: item,
           })),
-          selectedServiceAccount: data.length > 0 ? data[0].metadata.name : '',
         });
       },
       err => {
@@ -350,7 +559,7 @@ spec:
     }
     if (timeout >= 60) {
       return `${(timeout - (timeout % 60)) / 60}h${timeout % 60}m`;
-    }
+    } else return `${timeout}m`;
   }
 
   save(e) {
@@ -358,7 +567,6 @@ spec:
     const { kind, metadata } = this.state.TaskRun;
     const { name, selectedNamespace, selectedTask, paramList, arrayParamList, inputList, outputList, selectedServiceAccount, timeout } = this.state;
     this.setState({ inProgress: true });
-    // const newTaskRun0 = _.assign({}, this.state.TaskRun);
     const newTaskRun = {
       apiVersion: 'tekton.dev/v1beta1',
       kind: 'TaskRun',
@@ -381,8 +589,8 @@ spec:
             })),
           ),
         resources: {
-          inputs: inputList.map(item => ({ name: item.name, resourceRef: { name: item.selectedPR } })),
-          outputs: outputList.map(item => ({ name: item.name, resourceRef: { name: item.selectedPR } })),
+          inputs: inputList.map(item => ({ name: item.name, resourceRef: { name: item.selectedPR || '' } })),
+          outputs: outputList.map(item => ({ name: item.name, resourceRef: { name: item.selectedPR || '' } })),
         },
         taskRef: {
           name: selectedTask,
@@ -391,6 +599,7 @@ spec:
         timeout: timeout ? this.changeTimeoutFormat(timeout) : '',
       },
     };
+    console.log('newTask', newTaskRun);
     const ko = kindObj(kind);
 
     (this.props.isCreate ? k8sCreate(ko, newTaskRun) : k8sUpdate(ko, newTaskRun, metadata.namespace, newTaskRun.metadata.name)).then(
@@ -416,7 +625,7 @@ spec:
           <input
             className="form-control"
             type="text"
-            placeholder={item.default || ''}
+            // placeholder={item.default || ''}
             required={item.isRequired}
             onChange={e => {
               this.onParamChanged(e, idx);
@@ -424,7 +633,8 @@ spec:
             id={item.name}
             value={item.value}
           />
-          {item.default && <span>{`입력하지 않을 경우 '${item.default}'(으)로 자동 입력됩니다.`}</span>}
+          {/* TODO: 번역 */}
+          {item.default && <span>{`입력하지 않을 경우 태스크 생성 시 설정한 기본 값으로 자동 입력됩니다.`}</span>}
         </div>
       );
     });
@@ -435,7 +645,7 @@ spec:
             {item.name}
           </label>
           <span style={{ display: 'block' }}>{item.description}</span>
-          <ValueEditor title="false" desc={item.default && `입력하지 않을 경우 '${item.default || ''}'(으)로 자동 입력됩니다.`} valueString={item.default || ''} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
+          <ValueEditor title="false" desc={item.default && `입력하지 않을 경우 태스크 생성 시 설정한 기본 값으로 자동 입력됩니다.`} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
         </div>
       );
     });
@@ -444,7 +654,8 @@ spec:
       return (
         <div key={idx}>
           <label htmlFor={item.name} className="rbac-edit-binding__input-label">{`${item.name} ( ${item.type} )`}</label>
-          <select
+          <PipelineResourceDropdown id={`pipeline-input-${idx}`} t={t} namespace={this.state.selectedNamespace} onChange={this.onPipelineResourceChanged} />
+          {/* <select
             id={item.name}
             className="form-control"
             onChange={e => {
@@ -455,7 +666,7 @@ spec:
             {pipelineResourceList.map(cur => {
               return <option value={cur.name}>{cur.name}</option>;
             })}
-          </select>
+          </select> */}
         </div>
       );
     });
@@ -465,18 +676,7 @@ spec:
           <label htmlFor={item.name} className="rbac-edit-binding__input-label">
             {`${item.name} ( ${item.type} )`}
           </label>
-          <select
-            id={item.name}
-            className="form-control"
-            onChange={e => {
-              this.onPipelineResourceChanged(e, idx, 'output');
-            }}
-            required={item.isRequired}
-          >
-            {pipelineResourceList.map(cur => {
-              return <option value={cur.name}>{cur.name}</option>;
-            })}
-          </select>
+          <PipelineResourceDropdown id={`pipeline-output-${idx}`} t={t} namespace={this.state.selectedNamespace} onChange={this.onPipelineResourceChanged} />
         </div>
       );
     });
@@ -495,14 +695,10 @@ spec:
               <input className="form-control" type="text" onChange={this.onNameChanged} defaultValue={this.state.name} id="taskrun-name" required />
             </Section>
             <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
-              <NsDropdown id="taskrun-namespace" t={t} onChange={this.onNamespaceChanged} />
+              <NsDropdown id="taskrun-namespace" t={t} onChange={this.onNamespaceChanged} selectedKey={this.state.selectedNamespace} />
             </Section>
             <Section label={t('STRING:PIPELINE-CREATE_2')} isRequired={true}>
-              <select id="task-list" onChange={this.onTaskChanged} className="form-control" required>
-                {taskList.map(cur => {
-                  return <option value={cur.name}>{cur.name}</option>;
-                })}
-              </select>
+              <TaskDropdown id="task-list" t={t} namespace={this.state.selectedNamespace} selectedKey={this.state.selectedTask} onChange={this.onTaskChanged}></TaskDropdown>
             </Section>
             <div className="separator"></div>
 
@@ -528,12 +724,7 @@ spec:
               <span>{t('STRING:TASKRUN-CREATE_3')}</span>
             </Section>
             <Section label={t('STRING:TASKRUN-CREATE_5')} isRequired={false}>
-              {/* <SingleSelect className="form-control" options={serviceAccountList.map(item => ({ value: item.name, label: item.name }))} name="ServiceAccount" value={this.state.selectedServiceAccount} label="라벨" placeholder="서비스 어카운트 선택" onChange={e => this.setState({ selectedServiceAccount: e.value })} /> */}
-              <select id="service-account-list" onChange={e => this.setState({ selectedServiceAccount: e.target.value })} className="form-control">
-                {serviceAccountList.map(cur => {
-                  return <option value={cur.name}>{cur.name}</option>;
-                })}
-              </select>
+              <ServiceAccountDropdown id="service-account" t={t} onChange={this.onServiceAccountChanged} namespace={this.state.selectedNamespace} selectedKey={this.state.selectedServiceAccount} />
               <span>You can execute the Task in your TaskRun with a specific set of credentials by specifying a ServiceAccount. If you do not explicitly specify this, the TaskRun executes with the credentials specified in the configmap-defaults ConfigMap. If this default is not specified, TaskRuns will execute with the default service account set for the target namespace.</span>
             </Section>
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
