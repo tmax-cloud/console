@@ -380,7 +380,7 @@ class TaskFormComponent extends React.Component {
               <button type="submit" className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
               </button>
-              <Link to={formatNamespacedRouteForResource('task')} className="btn btn-default" id="cancel">
+              <Link to={formatNamespacedRouteForResource('tasks')} className="btn btn-default" id="cancel">
                 {t('CONTENT:CANCEL')}
               </Link>
             </ButtonBar>
