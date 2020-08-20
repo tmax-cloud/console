@@ -888,42 +888,23 @@ spec:
 apiVersion: "v1"
 kind: "LimitRange"
 metadata:
-  name: "core-resource-limits" 
+  name: "example-limitrange"
+  namespace: default
 spec:
   limits:
-    - type: "Pod or Container"
-      max:
-        cpu: "2" 
-        memory: "1Gi" 
+    - max:
+        cpu: 800m
+        memory: 1Gi
       min:
-        cpu: "200m" 
-        memory: "6Mi" 
+        cpu: 100m
+        memory: 99Mi
       default:
-        cpu: "300m" 
-        memory: "200Mi" 
+        cpu: 700m
+        memory: 900Mi
       defaultRequest:
-        cpu: "200m" 
-        memory: "100Mi" 
-      maxLimitRequestRatio:
-        cpu: "10"
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample2'],
-    `
-apiVersion: "v1"
-kind: "LimitRange"
-metadata:
-  name: "tmax-resource-limits"
-spec:
-  limits:
-    - type: tmax.io/Image
-      max:
-        storage: 1Gi 
-    - type: tmax.io/ImageStream
-      max:
-        tmax.io/image-tags: 20 
-        tmax.io/images: 30
+        cpu: 110m
+        memory: 111Mi
+      type: Container
 `,
   )
   .setIn(
