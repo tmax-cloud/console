@@ -80,7 +80,7 @@ volumes: [
         // }
         sh "kubectl apply -f ./install-yaml/2.svc-lb.yaml"
         sh "kubectl apply -f ./install-yaml/2.svc-np.yaml"
-        sh "kubectl apply -f ./install-yaml/3.deployment-pod.yaml"
+        sh "kubectl apply -f ./install-yaml/3.deployment.yaml"
 
         // sh "kubectl apply -f ./install-yaml/3.deployment-pod.yaml"
       }
