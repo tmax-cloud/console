@@ -8,7 +8,7 @@
 // def MINOR_VERSION = "1"
 def CHOICE = "${params.choice}"
 def MAJOR_VERSION = "${params.major_version}"
-def MINOR_VERSION = "{params.minor_version}"
+def MINOR_VERSION = "${params.minor_version}"
 def PATCH_VERSION = "2"
 def HOTFIX_VERSION = "3"
 def DOCKER_REGISTRY = "tmaxcloudck"
@@ -78,9 +78,9 @@ volumes: [
         // } catch {
         //   sh "echo Error from server (AlreadyExists): secrets console-https-secret already exists"
         // }
-        sh "kubectl apply -f 2.svc-lb.yaml"
-        sh "kubectl apply -f 2.svc-np.yaml"
-        sh "kubectl apply -f 3.deployment-pod.yaml"
+        sh "kubectl apply -f ./install-yaml/2.svc-lb.yaml"
+        sh "kubectl apply -f ./install-yaml/2.svc-np.yaml"
+        sh "kubectl apply -f ./install-yaml/3.deployment-pod.yaml"
 
         // sh "kubectl apply -f ./install-yaml/3.deployment-pod.yaml"
       }
