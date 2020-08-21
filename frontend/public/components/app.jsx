@@ -376,11 +376,13 @@ const keycloak = new Keycloak({
   clientId: window.SERVER_FLAGS.KeycloakClientId,
 });
 
+keycloak.logout = keycloak.logout.bind(keycloak, { redirectUri: document.location.origin + '?first' });
+
 keycloak
-  .init({ onLoad: 'check-sso' })
+  .init()
   .then(auth => {
     if (!auth) {
-      keycloak.login({ redirectUri: document.location.origin + '?first' });
+      keycloak.login();
       return;
     }
 
