@@ -9,7 +9,7 @@
 def CHOICE = "${params.choice}"
 def MAJOR_VERSION = "${params.major_version}"
 def MINOR_VERSION = "{params.minor_version}"
-def PATCH_VERSION = "${params.BUILD_NUMBER}"
+def PATCH_VERSION = "2"
 def HOTFIX_VERSION = "3"
 def DOCKER_REGISTRY = "tmaxcloudck"
 def PRODUCT = "hypercloud-console"
@@ -73,11 +73,11 @@ volumes: [
         sh "sed -i '/--tmaxcloud-portal=/d' ./install-yaml/3.deployment-pod.yaml"
         sh "cat ./install-yaml/3.deployment-pod.yaml"
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
-        try {
-            sh "kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}"
-        } catch {
-          sh "echo Error from server (AlreadyExists): secrets console-https-secret already exists"
-        }
+        // try {
+        //     sh "kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}"
+        // } catch {
+        //   sh "echo Error from server (AlreadyExists): secrets console-https-secret already exists"
+        // }
         sh "kubectl apply -f 2.svc-lb.yaml"
         sh "kubectl apply -f 2.svc-np.yaml"
         sh "kubectl apply -f 3.deployment-pod.yaml"
