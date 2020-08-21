@@ -67,7 +67,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       {owners.length ? <dd>{owners}</dd> : null}
       {resource.kind === 'Pipeline' && <PipelineVisualization pipeline={resource} />}
       {resource.kind === 'PipelineRun' && <PipelineRunVisualization pipelineRun={resource} />}
-      {resource.kind === 'PipelineRun' && <div style={{ padding: '10px' }}>Tekton version &gt;= 0.12.1 required for Pipelinerun visualization.</div>}
+      {resource.kind === 'PipelineRun' && !resource.status.pipelineSpec && <div style={{ padding: '10px' }}>Tekton version &gt;= 0.12.1 required for Pipelinerun visualization.</div>}
     </dl>
   );
 };

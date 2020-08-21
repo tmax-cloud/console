@@ -140,24 +140,23 @@ tags-input .tags {
   min-height: 200px;
 }
 
-// .modal-body.scroll > .modal-body-scroll {
-//   &::-webkit-scrollbar {
-//     display: none !important; // 윈도우 크롬 등
-//   }
-//   overflow-y: scroll;
-//   overflow-x: hidden;
-//   max-height: $modal-body-max-height;
-//   padding: 15px;
-// }
-
 .modal-body.scroll {
-  &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
-  }
-  overflow-y: scroll;
+  // &::-webkit-scrollbar {
+  //   display: none !important;
+  // }
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
   overflow-x: hidden;
   max-height: $modal-body-max-height;
-  padding: 15px;
+  padding: 0px 15px;
+}
+
+.modal-body {
+  padding: 0px 15px;
+}
+
+.form-group .error_text {
+  margin-top: -15px;
 }
 
 tags-input .tags.focused,

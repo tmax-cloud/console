@@ -212,7 +212,6 @@ const PipelineResourceDropdown_ = props => {
   }
   const kind = openshiftFlag ? 'Project' : 'PipelineResource';
 
-  // const resources = [{ kind, namespace: props.namespace || null }];
   const resources = props.namespace ? [{ kind, namespace: props.namespace }] : [];
   const { t } = props;
   return <ListDropdown {...props} desc="PipelineResource" resources={resources} selectedKeyKind={kind} placeholder={t('STRING:PIPELINE-CREATE_3')} />;
@@ -310,30 +309,6 @@ class TaskRunFormComponent extends React.Component {
         name: '',
       },
     });
-    /*
-apiVersion: tekton.dev/v1beta1
-kind: TaskRun
-metadata:
-    name: example-taskrun
-    namespace: example-namespace
-spec:
-    serviceAccountName: example-san
-    taskRef:
-        name: example-task
-    inputs:
-        resources:
-            - name: git-source
-              resourceRef:
-                name: example-pipeline-resource-git
-        params:
-            - name: example-string
-              value: input-string
-    outputs:
-        resources:
-            - name: output-image
-              resourceRef:
-                name: example-pipeline-resource-image
-*/
     this.state = {
       TaskRunTypeAbstraction: this.props.TaskRunTypeAbstraction,
       TaskRun: TaskRun,
@@ -359,12 +334,12 @@ spec:
     this.onPipelineResourceChanged = this.onPipelineResourceChanged.bind(this);
     this.onServiceAccountChanged = this.onServiceAccountChanged.bind(this);
     this.onTimeoutChanged = this.onTimeoutChanged.bind(this);
-    this._updateArrayParms = this._updateArrayParms.bind(this);
+    // this._updateArrayParms = this._updateArrayParms.bind(this);
     this.changeTimeoutFormat = this.changeTimeoutFormat.bind(this);
 
-    this.getTaskList = this.getTaskList.bind(this);
-    this.getPipelineResourceList = this.getPipelineResourceList.bind(this);
-    this.getServiceAccountList = this.getServiceAccountList.bind(this);
+    // this.getTaskList = this.getTaskList.bind(this);
+    // this.getPipelineResourceList = this.getPipelineResourceList.bind(this);
+    // this.getServiceAccountList = this.getServiceAccountList.bind(this);
     this.getTaskDetails = this.getTaskDetails.bind(this);
 
     this.save = this.save.bind(this);
@@ -375,8 +350,8 @@ spec:
   onNamespaceChanged(namespace) {
     this.setState({ selectedNamespace: namespace, selectedServiceAccount: null, selectedTask: null, paramList: [], arrayParamList: [], outputList: [], inputList: [] }, () => {
       // this.getTaskList();
-      this.getPipelineResourceList();
-      this.getServiceAccountList();
+      // this.getPipelineResourceList();
+      // this.getServiceAccountList();
     });
   }
   onTaskChanged(taskName) {
@@ -420,7 +395,7 @@ spec:
   onServiceAccountChanged = serviceAccountName => {
     this.setState({ selectedServiceAccount: String(serviceAccountName) });
   };
-  _updateArrayParms({ values, editorIdx }, nameValueId) {
+  _updateArrayParms(editorIdx, { values }, nameValueId) {
     const pl = this.state.arrayParamList.map((item, idx) => {
       return idx === editorIdx
         ? {
@@ -441,28 +416,28 @@ spec:
     });
   }
 
-  getTaskList() {
-    const { selectedNamespace } = this.state;
-    k8sList(kindObj('Task'), { ns: selectedNamespace }).then(
-      taskList => {
-        this.setState({
-          taskList: taskList.map(item => ({
-            name: item.metadata.name,
-            task: item,
-          })),
-          paramList: [],
-          arryaParamList: [],
-          outputList: [],
-          inputList: [],
-          selectedTask: null,
-        });
-      },
-      err => {
-        this.setState({ error: err.message, inProgress: false });
-        this.setState({ taskList: [], paramList: [], arrayParamList: [], outputList: [], inputList: [] });
-      },
-    );
-  }
+  // getTaskList() {
+  //   const { selectedNamespace } = this.state;
+  //   k8sList(kindObj('Task'), { ns: selectedNamespace }).then(
+  //     taskList => {
+  //       this.setState({
+  //         taskList: taskList.map(item => ({
+  //           name: item.metadata.name,
+  //           task: item,
+  //         })),
+  //         paramList: [],
+  //         arryaParamList: [],
+  //         outputList: [],
+  //         inputList: [],
+  //         selectedTask: null,
+  //       });
+  //     },
+  //     err => {
+  //       this.setState({ error: err.message, inProgress: false });
+  //       this.setState({ taskList: [], paramList: [], arrayParamList: [], outputList: [], inputList: [] });
+  //     },
+  //   );
+  // }
   getTaskDetails() {
     k8sGet(kindObj('Task'), this.state.selectedTask, this.state.selectedNamespace).then(
       details => {
@@ -484,8 +459,9 @@ spec:
         params.forEach(item => {
           if (item.type && item.type === 'array') {
             arrayParamList.push({
-              values: [[item.default ? item.default : '']],
               ...item,
+              values: item.default.length === 1 ? [[item.default[0] || '']] : [...item.default.map(value => [value])],
+              isRequired: item.default.length === 1 && !item.default[0] ? true : false,
             });
           } else {
             // string type
@@ -517,41 +493,41 @@ spec:
     );
   }
 
-  getPipelineResourceList() {
-    const { selectedNamespace } = this.state;
-    k8sList(kindObj('PipelineResource'), { ns: selectedNamespace })
-      .then(reponse => reponse)
-      .then(
-        data => {
-          this.setState({
-            pipelineResourceList: data.map(item => ({
-              name: item.metadata.name,
-            })),
-          });
-        },
-        err => {
-          this.setState({ error: err.message, inProgress: false });
-          this.setState({ pipelineResourceList: [] });
-        },
-      );
-  }
-  getServiceAccountList() {
-    const { selectedNamespace } = this.state;
-    k8sList(kindObj('ServiceAccount'), { ns: selectedNamespace }).then(
-      data => {
-        this.setState({
-          serviceAccountList: data.map(item => ({
-            name: item.metadata.name,
-            serviceAccount: item,
-          })),
-        });
-      },
-      err => {
-        this.setState({ error: err.message, inProgress: false });
-        this.setState({ serviceAccountList: [] });
-      },
-    );
-  }
+  // getPipelineResourceList() {
+  //   const { selectedNamespace } = this.state;
+  //   k8sList(kindObj('PipelineResource'), { ns: selectedNamespace })
+  //     .then(reponse => reponse)
+  //     .then(
+  //       data => {
+  //         this.setState({
+  //           pipelineResourceList: data.map(item => ({
+  //             name: item.metadata.name,
+  //           })),
+  //         });
+  //       },
+  //       err => {
+  //         this.setState({ error: err.message, inProgress: false });
+  //         this.setState({ pipelineResourceList: [] });
+  //       },
+  //     );
+  // }
+  // getServiceAccountList() {
+  //   const { selectedNamespace } = this.state;
+  //   k8sList(kindObj('ServiceAccount'), { ns: selectedNamespace }).then(
+  //     data => {
+  //       this.setState({
+  //         serviceAccountList: data.map(item => ({
+  //           name: item.metadata.name,
+  //           serviceAccount: item,
+  //         })),
+  //       });
+  //     },
+  //     err => {
+  //       this.setState({ error: err.message, inProgress: false });
+  //       this.setState({ serviceAccountList: [] });
+  //     },
+  //   );
+  // }
   changeTimeoutFormat(timeout) {
     timeout = Number(timeout);
     if (timeout == 0) {
@@ -645,7 +621,7 @@ spec:
             {item.name}
           </label>
           <span style={{ display: 'block' }}>{item.description}</span>
-          <ValueEditor title="false" desc={item.default && `입력하지 않을 경우 태스크 생성 시 설정한 기본 값으로 자동 입력됩니다.`} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms} editorIdx={idx} />
+          <ValueEditor title="false" desc={!item.isRequired && `입력하지 않을 경우 태스크 생성 시 설정한 기본 값으로 자동 입력됩니다.`} t={t} values={arrayParamList[idx].values} updateParentData={this._updateArrayParms.bind(this, idx)} editorIdx={idx} />
         </div>
       );
     });

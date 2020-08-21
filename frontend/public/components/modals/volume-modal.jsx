@@ -86,7 +86,7 @@ class BaseVolumeModal extends PromiseComponent {
     return (
       <form style={{ width: '500px' }} onSubmit={this._submit} name="form">
         <ModalTitle>{title}</ModalTitle>
-        <ModalBody>
+        <ModalBody needScroll={false}>
           <SecondSection isModal={true} label={t('CONTENT:NAME')} isRequired={true}>
             <input
               className="form-control form-group"

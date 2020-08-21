@@ -380,7 +380,7 @@ keycloak
   .init({ onLoad: 'check-sso' })
   .then(auth => {
     if (!auth) {
-      keycloak.login({ redirectUri: document.location.origin });
+      keycloak.login({ redirectUri: document.location.origin + '?first' });
       return;
     }
 

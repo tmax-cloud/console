@@ -10,35 +10,32 @@ export const ResourceQuotaSidebar = ({ loadSampleYaml, downloadSampleYaml }) => 
   // const { t } = useTranslation();
   const samples = [
     {
-      header: 'Set compute resource quota',
-      details: `Limit the total amount of memory and CPU that can be used in a namespace.
-      리소스 이름: 
-      apiVersion kubernetes의 v1 API를 사용
-      kind ResourceQuota의 작업 명시
-      metadata.name ResourceQuota Name 선언
-      metadata.namespace ResourceQuota NameSpace 선언
-      limits.cpu 터미널이 아닌 상태의 모든 파드에서 CPU 제한의 합은 이 값을 초과할 수 없음
-      limits.memory 터미널이 아닌 상태의 모든 파드에서 메모리 제한의 합은 이 값을 초과할 수 없음
-      requests.cpu 터미널이 아닌 상태의 모든 파드에서 CPU 요청의 합은 이 값을 초과할 수 없음
-      requests.memory 터미널이 아닌 상태의 모든 파드에서 메모리 요청의 합은 이 값을 초과할 수 없음`,
+      header: '파드에서 CPU, 메모리 요청 제한',
+      details: `터미널이 아닌 모든 상태의 모든 파드에서 사용하는 CPU와 메모리의 요청과 제한을 설정 합니다.`,
       templateName: 'resourcequota-sample',
       kind: referenceForModel(ResourceQuotaModel),
     },
     {
-      header: 'Set maximum count for any resource',
-      details: `Restrict maximum count of each resource so users cannot create more than the allotted amount.
-      리소스 이름: 
-      apiVersion kubernetes의 v1 API를 사용
-      kind ResourceQuota의 작업 명시
-      metadata.name ResourceQuota Name 선언
-      metadata.namespace ResourceQuota NameSpace 선언
-      configmaps 네임스페이스에 존재할 수 있는 총 구성 맵 수
-      persistentvolumeclaims 네임스페이스에 존재할 수 있는 총 퍼시스턴트 볼륨 클레임 수
-      replicationcontrollers 네임스페이스에 존재할 수 있는 총 레플리케이션 컨트롤러 수
-      services 네임스페이스에 존재할 수 있는 총 서비스 수
-      services.loadbalancers    네임스페이스에 존재할 수 있는 로드 밸런서 유형의 총 서비스 수
-      secrets 네임스페이스에 존재할 수 있는 총 시크릿 수`,
+      header: '요청 스토리지 용량 제한 및 생성 개수 제어',
+      details: `네임 스페이스에서 요청할 수 있는 총 스토리지 용량을 제한하며, 해당 네임 스페이스에 존재할 수 있는 개수를 설정 합니다.`,
       templateName: 'resourcequota-sample2',
+      kind: referenceForModel(ResourceQuotaModel),
+    },
+    {
+      header: '우선 순위에 따른 시스템 리소스 사용 제어',
+      details: `우선 순위에 따라 파드의 시스템 리소스 사용을 제어할 수 있습니다.
+      (values: 'low(낮음)', 'medium(중간)', 'high(높음)')
+      (operator: 'In', 'NotIn', 'Exist', 'DoesNotExist')`,
+      templateName: 'resourcequota-sample3',
+      kind: referenceForModel(ResourceQuotaModel),
+    },
+    {
+      header: '할당량의 연결된 범위 설정',
+      details: `범위가 할당량에 추가되면 해당 범위와 관련된 리소스로 지원하는 리소스 수를 제한 합니다.
+
+      (scope: Terminating, NotTerminating, BestEffort, NotBestEffort)
+      * 리소스 요구 사항이 설정되지 않아야 합니다.`,
+      templateName: 'resourcequota-sample4',
       kind: referenceForModel(ResourceQuotaModel),
     },
   ];

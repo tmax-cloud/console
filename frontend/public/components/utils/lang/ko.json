@@ -542,6 +542,7 @@
     "IMAGES": "이미지",
     "SIZE": "크기",
     "NUMBEROFPODS": "파드 수",
+    "OTHERS": "기타",
     "NETWORKIN": "네트워크 인",
     "NETWORKOUT": "네트워크 아웃",
     "FILESYSTEM": "파일시스템",

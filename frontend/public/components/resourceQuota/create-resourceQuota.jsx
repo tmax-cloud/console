@@ -5,18 +5,19 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
 import { useTranslation } from 'react-i18next';
-import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
 import { SelectKeyValueEditor } from '../utils/select-key-value-editor';
 
 const Section = ({ label, children, isRequired, paddingTop }) => {
-  return <div className={`row form-group ${isRequired ? 'required' : ''}`}>
-    <div className="col-xs-2 control-label" style={{paddingTop: paddingTop}}>
-      <strong>{label}</strong>
+  return (
+    <div className={`row form-group ${isRequired ? 'required' : ''}`}>
+      <div className="col-xs-2 control-label" style={{ paddingTop: paddingTop }}>
+        <strong>{label}</strong>
+      </div>
+      <div className="col-xs-10">{children}</div>
     </div>
-    <div className="col-xs-10">{children}</div>
-  </div>;
+  );
 };
 
 class ResourceQuotaFormComponent extends React.Component {
@@ -40,7 +41,7 @@ class ResourceQuotaFormComponent extends React.Component {
       resourceQuota: resourceQuota,
       inProgress: false,
       type: 'form',
-      quota: [['', '']]
+      quota: [['', '']],
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
@@ -77,7 +78,7 @@ class ResourceQuotaFormComponent extends React.Component {
   }
   _updateQuota(quota) {
     this.setState({
-      quota: quota.keyValuePairs
+      quota: quota.keyValuePairs,
     });
   }
   save(e) {
@@ -95,58 +96,86 @@ class ResourceQuotaFormComponent extends React.Component {
       }
     });
 
-    if ( quota !== {}) {
+    if (quota !== {}) {
       newResourceQuota.spec.hard = quota;
     }
 
     const ko = kindObj(kind);
-    (this.props.isCreate
-      ? k8sCreate(ko, newResourceQuota)
-      : k8sUpdate(ko, newResourceQuota, metadata.namespace, newResourceQuota.metadata.name)
-    ).then(() => {
-      this.setState({ inProgress: false });
-      history.push(`/k8s/ns/${metadata.namespace}/resourcequotas/${metadata.name}`);
-    }, err => this.setState({ error: err.message, inProgress: false }));
+    (this.props.isCreate ? k8sCreate(ko, newResourceQuota) : k8sUpdate(ko, newResourceQuota, metadata.namespace, newResourceQuota.metadata.name)).then(
+      () => {
+        this.setState({ inProgress: false });
+        history.push(`/k8s/ns/${metadata.namespace}/resourcequotas/${metadata.name}`);
+      },
+      err => this.setState({ error: err.message, inProgress: false }),
+    );
   }
 
   render() {
     const { t } = this.props;
 
-    return <div className="rbac-edit-binding co-m-pane__body">
-      <Helmet>
-        <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.resourceQuota.kind, t) })}</title>
-      </Helmet >
-      <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.resourceQuota.kind, t) })}</h1>
-        <p className="co-m-pane__explanation">{t('STRING:RESOURCEQUOTA-CREATE-0')}</p>
-        <fieldset disabled={!this.props.isCreate}>
-          <Section label={t('CONTENT:NAME')} isRequired={true}>
-            <input className="form-control"
-              type="text"
-              onChange={this.onNameChanged}
-              value={this.state.resourceQuota.metadata.name}
-              id="resource-quota-name"
-              required />
-          </Section>
-          <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
-            <NsDropdown id="resource-quota-namespace" t={t} onChange={this.onNamespaceChanged} />
-          </Section>
-          <Section label={t('CONTENT:LABELS')} isRequired={false}>
-            <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
-            <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-              <p>{t('VALIDATION:LABEL_FORM')}</p>
-            </div>
-          </Section>
-          <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
-            <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={ResourceQuotaFormComponent.resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
-          </Section>
-          <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
-            <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-            <Link to={formatNamespacedRouteForResource('resourcequotas')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
-          </ButtonBar>
-        </fieldset>
-      </form>
-    </div >;
+    const resourceQuotaOptions = [
+      {
+        value: 'limits.cpu',
+        label: 'CPU Limits',
+      },
+      {
+        value: 'limits.memory',
+        label: 'Memory Limits',
+      },
+      {
+        value: 'requests.cpu',
+        label: 'CPU Requests',
+      },
+      {
+        value: 'requests.memory',
+        label: 'Memory Requests',
+      },
+      {
+        value: 'pods',
+        label: t('CONTENT:NUMBEROFPODS'),
+      },
+      {
+        value: 'etc',
+        label: t('CONTENT:OTHERS'),
+      },
+    ];
+
+    return (
+      <div className="rbac-edit-binding co-m-pane__body">
+        <Helmet>
+          <title>{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.resourceQuota.kind.toUpperCase()}`) })}</title>
+        </Helmet>
+        <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
+          <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.resourceQuota.kind.toUpperCase()}`) })}</h1>
+          <p className="co-m-pane__explanation">{t('STRING:RESOURCEQUOTA-CREATE-0')}</p>
+          <fieldset disabled={!this.props.isCreate}>
+            <Section label={t('CONTENT:NAME')} isRequired={true}>
+              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.resourceQuota.metadata.name} id="resource-quota-name" required />
+            </Section>
+            <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
+              <NsDropdown id="resource-quota-namespace" t={t} onChange={this.onNamespaceChanged} />
+            </Section>
+            <Section label={t('CONTENT:LABELS')} isRequired={false}>
+              <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
+              <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                <p>{t('VALIDATION:LABEL_FORM')}</p>
+              </div>
+            </Section>
+            <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
+              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
+            </Section>
+            <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+              <button type="submit" className="btn btn-primary" id="save-changes">
+                {t('CONTENT:CREATE')}
+              </button>
+              <Link to={formatNamespacedRouteForResource('resourcequotas')} className="btn btn-default" id="cancel">
+                {t('CONTENT:CANCEL')}
+              </Link>
+            </ButtonBar>
+          </fieldset>
+        </form>
+      </div>
+    );
   }
 }
 
@@ -179,13 +208,5 @@ ResourceQuotaFormComponent.resourceQuotaOptions = [
 
 export const CreateResourceQuota = ({ match: { params } }) => {
   const { t } = useTranslation();
-  return <ResourceQuotaFormComponent
-    t={t}
-    fixed={{ metadata: { namespace: params.ns } }}
-    resourceQuotaTypeAbstraction={params.type}
-    titleVerb="Create"
-    isCreate={true}
-  />;
+  return <ResourceQuotaFormComponent t={t} fixed={{ metadata: { namespace: params.ns } }} resourceQuotaTypeAbstraction={params.type} titleVerb="Create" isCreate={true} />;
 };
-
-

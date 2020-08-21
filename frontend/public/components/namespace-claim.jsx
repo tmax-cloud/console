@@ -132,8 +132,8 @@ export const NamespaceClaimsPage = props => {
       selected: ['Success', 'Awaiting', 'Reject', 'Error'],
       reducer: namespaceclaimPhaseFilterReducer,
       items: [
-        { id: 'Success', title: t('CONTENT:Success') },
         { id: 'Awaiting', title: t('CONTENT:Awaiting') },
+        { id: 'Success', title: t('CONTENT:Success') },
         { id: 'Reject', title: t('CONTENT:Reject') },
         { id: 'Error', title: t('CONTENT:Error') },
       ],

@@ -330,7 +330,7 @@ class TaskFormComponent extends React.Component {
     (this.props.isCreate ? k8sCreate(ko, task) : k8sUpdate(ko, task, task.namespace, task.metadata.name)).then(
       () => {
         this.setState({ inProgress: false });
-        history.push(formatNamespacedRouteForResource('tasks'));
+        history.push(`/k8s/ns/${task.namespace}/tasks`);
       },
       err => this.setState({ error: err.message, inProgress: false }),
     );
@@ -354,7 +354,7 @@ class TaskFormComponent extends React.Component {
               {this.state.inputError.name && <p className="error_text">{this.state.inputError.name}</p>}
             </FirstSection>
             <FirstSection label={t('CONTENT:NAMESPACE')} isRequired={true}>
-              <NsDropdown id="task-namespace" t={t} onChange={this.onNamespaceChanged} />
+              <NsDropdown dropDownClassName="form-group" id="task-namespace" t={t} onChange={this.onNamespaceChanged} />
               {this.state.inputError.namespace && <p className="error_text">{this.state.inputError.namespace}</p>}
             </FirstSection>
             <hr />
@@ -380,7 +380,7 @@ class TaskFormComponent extends React.Component {
               <button type="submit" className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
               </button>
-              <Link to={formatNamespacedRouteForResource('task')} className="btn btn-default" id="cancel">
+              <Link to={formatNamespacedRouteForResource('tasks')} className="btn btn-default" id="cancel">
                 {t('CONTENT:CANCEL')}
               </Link>
             </ButtonBar>
