@@ -9,15 +9,15 @@ type OptionType = {
 type SingleSelectProps = {
   name: string;
   options: OptionType[];
-  label?: string;
   value?: string;
   placeholder?: string;
   className?: string;
   id?: string;
   onChange: () => {};
+  onBlur: () => {};
 };
 
-const SingleSelect = ({ options, name, id, value, placeholder, label, onChange }: SingleSelectProps) => {
+const SingleSelect = ({ options, name, id, value, placeholder, onChange, onBlur }: SingleSelectProps) => {
   let newValue;
   const idx = options.findIndex(option => option.value === value);
   if (idx !== -1) {
@@ -35,7 +35,7 @@ const SingleSelect = ({ options, name, id, value, placeholder, label, onChange }
 
   return (
     <React.Fragment>
-      <Select className="basic-single" classNamePrefix="select" value={newValue} id={id} placeholder={placeholder} name={name} options={options} onChange={onChange} styles={colorStyles} isSearchable={false} />
+      <Select className="basic-single" classNamePrefix="select" value={newValue} id={id} placeholder={placeholder} name={name} options={options} onChange={onChange} onBlur={onBlur} styles={colorStyles} isSearchable={false} />
     </React.Fragment>
   );
 };
