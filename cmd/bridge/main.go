@@ -117,6 +117,9 @@ func main() {
 	//NOTE: 여기까지
 	fvncEndpoint := fs.String("vnc-endpoint", "", "URL of the VNC")
 
+	// NOTE: hyperauth 연동 추가 // 윤진수
+	fhyperAuthEndpoint := fs.String("hyperauth-endpoint", "", "URL of the HyperAuth")
+
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -200,7 +203,7 @@ func main() {
 		HDCModeFlag:          *fHDCModeFlag,
 		TmaxCloudPortalURL:   *fTmaxCloudPortalURL,
 		KeycloakRealm:        *fKeycloakRealm,
-		KeycloakAuthURL:     *fKeycloakAuthURL,
+		KeycloakAuthURL:      *fKeycloakAuthURL,
 		KeycloakClientId:     *fKeycloakClientId,
 	}
 
@@ -314,6 +317,12 @@ func main() {
 		srv.VncProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
+		}
+
+		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
+		srv.HyperAuthProxyConfig = &proxy.Config{
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        hyperAuthEndpoint,
 		}
 
 		// NOTE: in-cluster인 경우 master token을 empty string으로 수정 // 정동민
@@ -440,6 +449,15 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
+		}
+
+		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
+		srv.HyperAuthProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        hyperAuthEndpoint,
 		}
 
 		k8sEndpoint = validateFlagIsURL("k8s-mode-off-cluster-endpoint", *fK8sModeOffClusterEndpoint)
