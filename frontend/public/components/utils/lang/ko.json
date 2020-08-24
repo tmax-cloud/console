@@ -319,7 +319,7 @@
     "DEPLOYMENT-SIDEBAR_0": "기본 디플로이먼트 생성",
     "DEPLOYMENT-SIDEBAR_1": "image(nginx)를 이용하여 파드 1개로 구성된 디플로이먼트를 생성할 수 있습니다.",
     "DEPLOYMENT-SIDEBAR_2": "파드 3개의 디플로이먼트 생성",
-    "DEPLOYMENT-SIDEBAR_3": "image(ngix)를 이용하여 3개의 파드로 구성한 디플로이먼트를 생성할 수 있습니다.\n생성된 파드가 10초(minReadySeconds 옵션)안에 Ready 상태가 되도록 임계치 설정이 가능합니다.",
+    "DEPLOYMENT-SIDEBAR_3": "image(nginx)를 이용하여 3개의 파드로 구성한 디플로이먼트를 생성할 수 있습니다.\n생성된 파드가 10초(minReadySeconds 옵션)안에 Ready 상태가 되도록 임계치 설정이 가능합니다.",
     "DEPLOYMENT-SIDEBAR_4": "롤링 업데이트를 설정하여 디플로이먼트 생성",
     "DEPLOYMENT-SIDEBAR_5": "롤링 업데이트 시 신버전 파드를 30%씩 추가하고 구버전 파드를 30%씩 삭제를 반복하여 이미지를 업그레이드 하는 정책으로 디플로이먼트를 생성할 수 있습니다.\n정책을 명시하지 않으면 maxSure, maxUnavailable 는 기본적으로 25% 씩 설정됩니다.",
     "DEPLOYMENT-SIDEBAR_6": "볼륨 마운트하여 디플로이먼트 생성",

@@ -323,7 +323,7 @@
     "DEPLOYMENT-SIDEBAR_0": "Create a default deployment ",
     "DEPLOYMENT-SIDEBAR_1": "Can use the nginx image to create a deployment consisting of one pod. ",
     "DEPLOYMENT-SIDEBAR_2": "Create a deployment consisting of 3 pods ",
-    "DEPLOYMENT-SIDEBAR_3": "Can use the ngix image to create a deployment consisting of 3 pods.\n A threshold can be set so that the created pod is ready in 10 seconds (minReadySeconds option).",
+    "DEPLOYMENT-SIDEBAR_3": "Can use the nginx image to create a deployment consisting of 3 pods.\nA threshold can be set so that the created pod is ready in 10 seconds (minReadySeconds option).",
     "DEPLOYMENT-SIDEBAR_4": "Create a deployment by configuring rollong update. ",
     "DEPLOYMENT-SIDEBAR_5": "When you create a deployment with the rolling update strategy, it continues scaling up and down by adding 30% new pods and deleting 30% old pods. \nIf no policy is specified, maxSure and maxUnavailable are set by 25% by default.",
     "DEPLOYMENT-SIDEBAR_6": "Create a deployment by mounting volumes",
