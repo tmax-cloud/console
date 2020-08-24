@@ -376,7 +376,11 @@
     "TASK-SIDEBAR_0": "Python 스크립트를 실행하는 태스크 생성",
     "TASK-SIDEBAR_1": "파이프라인 리소스에서 생성한 리소스를 참조하여 Python 스크립트를 실행할 수 있는 태스크를 생성할 수 있습니다.",
     "TASK-SIDEBAR_2": "Steps에서 파라미터를 사용하도록 태스크 생성",
-    "TASK-SIDEBAR_3": "Flags 및 샘플 URL 항목을 파라미터 형태로 받아 태스크를 생성할 수 있습니다."
+    "TASK-SIDEBAR_3": "Flags 및 샘플 URL 항목을 파라미터 형태로 받아 태스크를 생성할 수 있습니다.",
+    "TASKRUN-SIDEBAR_0": "태스크를 실행하는 태스크 런 생성",
+    "TASKRUN-SIDEBAR_1": "파이프라인 리소스에서 생성한 리소스를 이용하여 파드가 생성되고 태스크를 실행할 수 있습니다.",
+    "TASKRUN-SIDEBAR_2": "태스크를 실행할 때 파라미터를 설정하여 태스크 런 생성",
+    "TASKRUN-SIDEBAR_3": "Flags 및 샘플 URL 항목을 파라미터 형태로 받아 태스크를 실행하는 태스크 런을 생성할 수 있습니다."
   },
   "CONTENT": {
     "ADD": "추가",
