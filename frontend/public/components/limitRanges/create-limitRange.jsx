@@ -5,18 +5,19 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
 import { useTranslation } from 'react-i18next';
-import { ResourcePlural } from '../utils/lang/resource-plural';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { NsDropdown } from '../RBAC';
 import { SelectKeyValueEditor } from '../utils/select-key-value-editor';
 
 const Section = ({ label, children, isRequired, paddingTop }) => {
-  return <div className={`row form-group ${isRequired ? 'required' : ''}`}>
-    <div className="col-xs-2 control-label" style={{paddingTop: paddingTop}}>
-      <strong>{label}</strong>
+  return (
+    <div className={`row form-group ${isRequired ? 'required' : ''}`}>
+      <div className="col-xs-2 control-label" style={{ paddingTop: paddingTop }}>
+        <strong>{label}</strong>
+      </div>
+      <div className="col-xs-10">{children}</div>
     </div>
-    <div className="col-xs-10">{children}</div>
-  </div>;
+  );
 };
 
 class LimitRangeFormComponent extends React.Component {
@@ -33,8 +34,8 @@ class LimitRangeFormComponent extends React.Component {
       spec: {
         limits: [
           {
-            type: 'Container'
-          }
+            type: 'Container',
+          },
         ],
       },
     });
@@ -44,7 +45,8 @@ class LimitRangeFormComponent extends React.Component {
       limitRange: limitRange,
       inProgress: false,
       type: 'form',
-      quota: [['', '']]
+      quota: [['', '']],
+      isDuplicated: false,
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
@@ -81,114 +83,126 @@ class LimitRangeFormComponent extends React.Component {
   }
   _updateQuota(quota) {
     this.setState({
-      quota: quota.keyValuePairs
+      quota: quota.keyValuePairs,
+      isDuplicated: quota.isDuplicated,
     });
   }
+
   save(e) {
     e.preventDefault();
     const { kind, metadata } = this.state.limitRange;
     this.setState({ inProgress: true });
     const newLimitRange = _.assign({}, this.state.limitRange);
 
+    if (this.state.isDuplicated) {
+      this.setState({ inProgress: false });
+      return;
+    }
+
+    const limitRangeOptionsMap = new Map(LimitRangeFormComponent.limitRangeOptions);
+
     let quota = {};
     this.state.quota.forEach(arr => {
-      if (arr[0] === 'etc') {
-        quota[arr[1]] = arr[2];
-      } else {
-        const minOrMax = arr[0].split('.')[0];
-        const key = arr[0].split('.')[2];
+      let key;
+      key = arr[0] === 'etc' ? arr[1] : arr[0];
+      const mappedKey = limitRangeOptionsMap.get(key);
+      if (mappedKey) {
+        const minOrMax = mappedKey.split('.')[0];
+        const cpuOrMemory = mappedKey.split('.')[2];
         quota[minOrMax] = {};
-        quota[minOrMax][key] = arr[2];
+        quota[minOrMax][cpuOrMemory] = arr[2];
+      } else {
+        quota[key] = arr[2];
       }
     });
 
-    if ( quota !== {}) {
+    if (quota !== {}) {
       Object.assign(newLimitRange.spec.limits[0], quota);
     }
 
     const ko = kindObj(kind);
-    (this.props.isCreate
-      ? k8sCreate(ko, newLimitRange)
-      : k8sUpdate(ko, newLimitRange, metadata.namespace, newLimitRange.metadata.name)
-    ).then(() => {
-      this.setState({ inProgress: false });
-      history.push(`/k8s/ns/${metadata.namespace}/limitranges/${metadata.name}`);
-    }, err => this.setState({ error: err.message, inProgress: false }));
+    (this.props.isCreate ? k8sCreate(ko, newLimitRange) : k8sUpdate(ko, newLimitRange, metadata.namespace, newLimitRange.metadata.name)).then(
+      () => {
+        this.setState({ inProgress: false });
+        history.push(`/k8s/ns/${metadata.namespace}/limitranges/${metadata.name}`);
+      },
+      err => this.setState({ error: err.message, inProgress: false }),
+    );
   }
-
 
   render() {
     const { t } = this.props;
 
-    return <div className="rbac-edit-binding co-m-pane__body">
-      <Helmet>
-        <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.limitRange.kind, t) })}</title>
-      </Helmet >
-      <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
-        <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.limitRange.kind, t) })}</h1>
-        <p className="co-m-pane__explanation">{t('STRING:LIMITRANGE-CREATE-0')}</p>
-        <fieldset disabled={!this.props.isCreate}>
-          <Section label={t('CONTENT:NAME')} isRequired={true}>
-            <input className="form-control"
-              type="text"
-              onChange={this.onNameChanged}
-              value={this.state.limitRange.metadata.name}
-              id="limit-range-name"
-              required />
-          </Section>
-          <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
-            <NsDropdown id="limit-range-namespace" t={t} onChange={this.onNamespaceChanged} />
-          </Section>
-          <Section label={t('CONTENT:LABELS')} isRequired={false}>
-            <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
-            <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-              <p>{t('VALIDATION:LABEL_FORM')}</p>
-            </div>
-          </Section>
-          <Section label={t('CONTENT:PODRESOURCELIMITSRANGE')} isRequired={false} paddingTop={'5px'}>
-            <SelectKeyValueEditor desc={t('STRING:LIMITRANGE-CREATE-2')} t={t} options={LimitRangeFormComponent.limitRangeOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
-          </Section>
-          <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress} >
-            <button type="submit" className="btn btn-primary" id="save-changes">{t('CONTENT:CREATE')}</button>
-            <Link to={formatNamespacedRouteForResource('limitranges')} className="btn btn-default" id="cancel">{t('CONTENT:CANCEL')}</Link>
-          </ButtonBar>
-        </fieldset>
-      </form>
-    </div >;
+    const limitRangeOptions = [
+      {
+        value: 'Max CPU Limits',
+        label: 'Max CPU Limits',
+      },
+      {
+        value: 'Min CPU Limits',
+        label: 'Min CPU Limits',
+      },
+      {
+        value: 'Max Memory Limits',
+        label: 'Max Memory Limits',
+      },
+      {
+        value: 'Min Memory Limits',
+        label: 'Min Memory Limits',
+      },
+      {
+        value: 'etc',
+        label: t('CONTENT:OTHERS'),
+      },
+    ];
+
+    return (
+      <div className="rbac-edit-binding co-m-pane__body">
+        <Helmet>
+          <title>{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.limitRange.kind.toUpperCase()}`) })}</title>
+        </Helmet>
+        <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
+          <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.limitRange.kind.toUpperCase()}`) })}</h1>
+          <p className="co-m-pane__explanation">{t('STRING:LIMITRANGE-CREATE-0')}</p>
+          <fieldset disabled={!this.props.isCreate}>
+            <Section label={t('CONTENT:NAME')} isRequired={true}>
+              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.limitRange.metadata.name} id="limit-range-name" required />
+            </Section>
+            <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
+              <NsDropdown id="limit-range-namespace" t={t} onChange={this.onNamespaceChanged} />
+            </Section>
+            <Section label={t('CONTENT:LABELS')} isRequired={false}>
+              <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
+              <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                <p>{t('VALIDATION:LABEL_FORM')}</p>
+              </div>
+            </Section>
+            <Section label={t('CONTENT:PODRESOURCELIMITSRANGE')} isRequired={false} paddingTop={'5px'}>
+              <SelectKeyValueEditor desc={t('STRING:LIMITRANGE-CREATE-2')} t={t} options={limitRangeOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
+            </Section>
+            <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
+              <button type="submit" className="btn btn-primary" id="save-changes">
+                {t('CONTENT:CREATE')}
+              </button>
+              <Link to={formatNamespacedRouteForResource('limitranges')} className="btn btn-default" id="cancel">
+                {t('CONTENT:CANCEL')}
+              </Link>
+            </ButtonBar>
+          </fieldset>
+        </form>
+      </div>
+    );
   }
 }
 
 LimitRangeFormComponent.limitRangeOptions = [
-  {
-    value: 'max.limits.cpu',
-    label: 'Max CPU Limits',
-  },
-  {
-    value: 'min.limits.cpu',
-    label: 'Min CPU Limits',
-  },
-  {
-    value: 'max.limits.memory',
-    label: 'Max Memory Limits',
-  },
-  {
-    value: 'min.limits.memory',
-    label: 'Min Memory Limits',
-  },
-  {
-    value: 'etc',
-    label: '기타',
-  },
+  ['Max CPU Limits', 'max.limits.cpu'],
+  ['Min CPU Limits', 'min.limits.cpu'],
+  ['Max Memory Limits', 'max.limits.memory'],
+  ['Min Memory Limits', 'min.limits.memory'],
 ];
-
 
 export const CreateLimitRange = ({ match: { params } }) => {
   const { t } = useTranslation();
-  return <LimitRangeFormComponent
-    t={t}
-    fixed={{ metadata: { namespace: params.ns } }}
-    limitRangeTypeAbstraction={params.type}
-    titleVerb="Create"
-    isCreate={true}
-  />;
+  return <LimitRangeFormComponent t={t} fixed={{ metadata: { namespace: params.ns } }} limitRangeTypeAbstraction={params.type} titleVerb="Create" isCreate={true} />;
 };

@@ -899,7 +899,7 @@
     "MANAGEMENT": "매니지먼트",
     "NAMESPACE": "네임스페이스",
     "NAMESPACECLAIM": "네임스페이스 클레임",
-    "LIMITRANGE": "기본 리소스 제한",
+    "LIMITRANGE": "제한 범위",
     "RESOURCEQUOTA": "리소스 쿼타",
     "RESOURCEQUOTACLAIM": "리소스 쿼타 클레임",
     "CUSTOMRESOURCEDEFINITION": "사용자 리소스 정의",
