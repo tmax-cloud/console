@@ -56,6 +56,7 @@ const (
 	kialiProxyEndpoint        = "/api/kiali/"
 	kubeflowEndpoint          = "/api/kubeflow/"
 	vncEndpoint               = "/api/vnc/"
+	hyperAuthEndpoint         = "/api/auth/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
 )
 
@@ -128,6 +129,8 @@ type Server struct {
 	KialiProxyConfig      *proxy.Config
 	KubeflowProxyConfig   *proxy.Config
 	VncProxyConfig        *proxy.Config
+	HyperAuthProxyConfig  *proxy.Config
+
 	// NOTE: hypercloud api 프록시를 위해 HypercloudProxyConfig 추가 // 정동민
 }
 
@@ -441,6 +444,18 @@ func (s *Server) HTTPHandler() http.Handler {
 			http.StripPrefix(proxy.SingleJoiningSlash(s.BaseURL.Path, vncProxyAPIPath),
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					vncProxy.ServeHTTP(w, r)
+				})),
+		)
+	}
+
+	// hyperAuth proxy for Authentication // jinsoo-youn
+	if s.HyperAuthProxyConfig != nil {
+		hyperAuthAPIPath := hyperAuthEndpoint
+		hyperAuthProxy := httputil.NewSingleHostReverseProxy(s.HyperAuthProxyConfig.Endpoint)
+		handle(hyperAuthAPIPath,
+			http.StripPrefix(s.BaseURL.Path,
+				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					hyperAuthProxy.ServeHTTP(w, r)
 				})),
 		)
 	}

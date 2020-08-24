@@ -46,6 +46,7 @@ KUBEFLOW_PORT=80
     --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/approve \
     --kubeflow-endpoint=http://$KUBEFLOW_IP:$KUBEFLOW_PORT/ \
     --vnc-endpoint=http://$k8sIP:$VNC_PORT \
+    --hyperauth-endpoint=http://0.0.0.0:8080 \
     --keycloak-realm=tmax \
     --keycloak-auth-url=https://172.22.6.11/auth \
     --keycloak-client-id=hypercloud4 \

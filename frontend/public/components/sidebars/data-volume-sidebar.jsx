@@ -16,15 +16,9 @@ export const DataVolumeSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
       kind: referenceForModel(DataVolumeModel),
     },
     {
-      header: t('STRING:DATAVOLUME-SIDEBAR_2'),
-      details: t('STRING:DATAVOLUME-SIDEBAR_3'),
-      templateName: 'datavolume-sample2',
-      kind: referenceForModel(DataVolumeModel),
-    },
-    {
       header: t('STRING:DATAVOLUME-SIDEBAR_4'),
       details: t('STRING:DATAVOLUME-SIDEBAR_5'),
-      templateName: 'datavolume-sample3',
+      templateName: 'datavolume-sample2',
       kind: referenceForModel(DataVolumeModel),
     },
   ];
