@@ -1032,25 +1032,24 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-    name: example-taskrun
-    namespace: example-namespace
+  name: example-taskrun
+  namespace: example-namespace
 spec:
-    serviceAccountName: example-san
-    taskRef:
-        name: example-task
+  serviceAccountName: example-san
+  taskRef:
+    name: example-task
+  resources:
     inputs:
-        resources:
-            - name: git-source
-              resourceRef:
-                name: example-pipeline-resource-git
-        params:
-            - name: example-string
-              value: input-string
+      - name: git-source
+        resourceRef:
+          name: example-pipeline-resource-git
     outputs:
-        resources:
-            - name: output-image
-              resourceRef:
-                name: example-pipeline-resource-image
+      - name: output-image
+        resourceRef:
+          name: example-pipeline-resource-image
+  params:
+    - name: example-string
+      value: input-string
 `,
   )
   .setIn(
@@ -1190,35 +1189,39 @@ metadata:
   name: example-pipeline
   namespace: example-namespace
 spec:
-    resources:
-        resources:
-            - name: source-repo
-              type: git
-            - name: sample-image
-              type: image
-    tasks:
-        - name: task1
-          taskRef:
-            name: example-task1
-          params:
-            - name: example-string
-              value: sample-string1
-          resources:
-            inputs:
-                - name: example-pipeline-resource-git
-                  resource: source-repo
-            outputs:
-                - name: example-pipeline-resource-image
-                  resource: sample-image
-        - name: task2
-          taskRef:
-            name: example-task2
-          resources:
-            inputs:
-                - name: example-input-image
-                  resource: sample-image
-                  from:
-                    - task1
+  resources:
+    - name: source-repo
+      type: git
+    - name: sample-image
+      type: image
+  params:
+    - name: example-param
+      type: string
+      description: sample param
+      default: hello
+  tasks:
+    - name: task1
+      taskRef:
+        name: example-task1
+      params:
+        - name: example-string
+          value: sample-string1
+      resources:
+        inputs:
+          - name: example-pipeline-resource-git
+            resource: source-repo
+        outputs:
+          - name: example-pipeline-resource-image
+            resource: sample-image
+    - name: task2
+      taskRef:
+        name: example-task2
+      resources:
+        inputs:
+          - name: example-input-image
+            resource: sample-image
+            from:
+              - task1
 `,
   )
   .setIn(
