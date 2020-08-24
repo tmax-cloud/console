@@ -39,12 +39,13 @@ export class DeploymentPodCounts extends React.Component {
       event.preventDefault();
       event.target.blur();
 
-      const { resourceKind, resource } = this.props;
+      const { resourceKind, resource, t } = this.props;
 
       configureReplicaCountModal({
         resourceKind,
         resource,
         invalidateState: (waitingForUpdate, desiredCount) => this.setState({ waitingForUpdate, desiredCount }),
+        t
       });
     };
   }
