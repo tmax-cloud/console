@@ -1062,22 +1062,39 @@ metadata:
   name: example-taskrun
   namespace: default
 spec:
-  serviceAccountName: example-san
   taskRef:
     name: example-task
-  inputs:
-    resources:
-      - name: git-source
+  resources:
+    inputs:
+      - name: example-taskinput
         resourceRef:
-          name: example-pipeline-resource-git
-    params:
-      - name: example-string
-        value: input-string
-  outputs:
-    resources:
-      - name: output-image
+          name: example-pipelineresource
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample2'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: example-taskrun
+  namespace: default
+spec:
+  taskRef:
+    name: example-task
+  params:
+    - name: flags
+      value:
+         - "1"
+         - "2"
+         - "3"
+    - name: sampleURL
+      value: hypercloud.com
+  resources:
+    inputs:
+      - name: example-taskinput
         resourceRef:
-          name: example-pipeline-resource-image
+          name: example-pipelineresource
 `,
   )
   .setIn(
