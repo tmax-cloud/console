@@ -283,7 +283,6 @@
     "STORAGECLASS-SIDEBAR_3": "Create a block storage class using rook-ceph.",
     "STORAGECLASS-SIDEBAR_4": "Create a storage class using Ceph-fs",
     "STORAGECLASS-SIDEBAR_5": "You can create a CephFS storage class using rook-ceph.",
-
     "PERSISTENTVOLUME-SIDEBAR_0": "Create a PersistentVolume in ReadWriteOnce mode",
     "PERSISTENTVOLUME-SIDEBAR_1": "Can mount a volume as read-write in a single node, and delete the PersistentVolume after use. ",
     "PERSISTENTVOLUME-SIDEBAR_2": "Create a PersistentVolume in ReadOnlyMany mode",
@@ -358,7 +357,11 @@
     "VM-SIDEBAR_2": "Ubuntu Virtual Machine Sample",
     "VM-SIDEBAR_3": "Creates VM objects for ubuntu virtual machines.\n.spec.template.spec – Device and resource setting",
     "VM-SIDEBAR_4": "CentOS 6 Virtual Machine Sample",
-    "VM-SIDEBAR_5": "Create VM objects for CentOS 6 virtual machines.\n.spec.template.spec-device and resource settings"
+    "VM-SIDEBAR_5": "Create VM objects for CentOS 6 virtual machines.\n.spec.template.spec-device and resource settings",
+    "PIPELINE-SIDEBAR_0": "Create a pipeline that runs a single task",
+    "PIPELINE-SIDEBAR_1": "Create a pipeline for pipeline resources and Jobs created in a task.",
+    "PIPELINE-SIDEBAR_2": "Create a pipeline by using a task (parameter)",
+    "PIPELINE-SIDEBAR_3": "Create a pipeline for pipeline resources and Jobs created in a task (parameter)."
   },
   "CONTENT": {
     "TASKPARAMETERCONFIG": "Task Paramter Config",

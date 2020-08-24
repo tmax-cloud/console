@@ -1207,33 +1207,46 @@ metadata:
   namespace: default
 spec:
   resources:
-      - name: source-repo
-        type: git
-      - name: sample-image
-        type: image
+    - name: example-piperesource
+      type: image
   tasks:
-    - name: task1
-      taskRef:
-        name: example-task1
-      params:
-        - name: example-string
-          value: sample-string1
-      resources:
-        inputs:
-          - name: example-pipeline-resource-git
-            resource: source-repo
-        outputs:
-          - name: example-pipeline-resource-image
-            resource: sample-image
-    - name: task2
-      taskRef:
-        name: example-task2
-      resources:
-        inputs:
-          - name: example-input-image
-            resource: sample-image
-            from:
-              - task1
+  - name: example-pipelinetask
+    taskRef:
+      name: example-task
+    resources:
+      inputs:
+        - name: example-taskinput
+          resource: example-piperesource
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample2'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+    - name: example-piperesource
+      type: image
+  tasks:
+  - name: example-pipelinetask
+    taskRef:
+      name: example-task
+    params:
+      - name: flags
+        value:
+           - "1"
+           - "2"
+           - "3"
+      - name: sampleURL
+        value: hypercloud.com
+    resources:
+      inputs:
+        - name: example-taskinput
+          resource: example-piperesource
 `,
   )
   .setIn(

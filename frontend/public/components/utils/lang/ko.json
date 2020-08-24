@@ -354,7 +354,11 @@
     "VM-SIDEBAR_2": "Ubuntu 가상머신 샘플",
     "VM-SIDEBAR_3": "Ubuntu 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec – device 및 리소스 설정",
     "VM-SIDEBAR_4": "CentOS 6 가상머신 샘플",
-    "VM-SIDEBAR_5": "CentOS 6 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec - device 및 리소스 설정"
+    "VM-SIDEBAR_5": "CentOS 6 가상머신에 대한 VM 오브젝트를 생성하는데 사용할 수 있습니다.\n.spec.template.spec - device 및 리소스 설정",
+    "PIPELINE-SIDEBAR_0": "단일 태스크를 실행하는 파이프라인 생성",
+    "PIPELINE-SIDEBAR_1": "파이프라인 리소스와 태스크에서 생성한 잡에 대해 파이프라인을 생성할 수 있습니다.",
+    "PIPELINE-SIDEBAR_2": "태스크(파라미터)를 활용하여 파이프라인 생성",
+    "PIPELINE-SIDEBAR_3": "파이프라인 리소스와 태스크(파라미터)에서 생성한 잡에 대해 파이프라인을 생성할 수 있습니다."
   },
   "CONTENT": {
     "ADD": "추가",
