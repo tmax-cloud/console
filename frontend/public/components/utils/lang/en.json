@@ -363,7 +363,11 @@
     "PIPELINE-SIDEBAR_2": "Create a pipeline by using a task (parameter)",
     "PIPELINE-SIDEBAR_3": "Create a pipeline for pipeline resources and Jobs created in a task (parameter).",
     "PIPELINERUN-SIDEBAR_0": "Create a pipeline run that runs a single pipeline",
-    "PIPELINERUN-SIDEBAR_1": "Use resources created by a pipeline resource and run each task defined by the pipeline."
+    "PIPELINERUN-SIDEBAR_1": "Use resources created by a pipeline resource and run each task defined by the pipeline.",
+    "TASK-SIDEBAR_0": "Create a task to run a Python script",
+    "TASK-SIDEBAR_1": "Create a task that can run Python scripts by referencing the pipeline resource.",
+    "TASK-SIDEBAR_2": "Create a task to use parameters in steps",
+    "TASK-SIDEBAR_3": "Create a task by getting flags and sample URL items as parameters."
   },
   "CONTENT": {
     "TASKPARAMETERCONFIG": "Task Paramter Config",

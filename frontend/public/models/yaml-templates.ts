@@ -984,39 +984,46 @@ spec:
     `
     apiVersion: tekton.dev/v1beta1
     kind: Task
-    metadata:
+metadata:
+  name: example-task
+  namespace: default
+spec:
+  resources:
+    inputs:
+      - name: example-taskinput
+        type: image
+  steps:
+    - image: python
       name: example-task
-      namespace: example-namespace
-    spec:
-      resources:
-        inputs:
-          - name: git-source
-            type: git
-        outputs:
-          - name: output-image
-            type: image
-      params:
-      - name: example-string
-        type: string
-        description: a sample string
-        default: default-string-value
-      steps:
-        - name: example-job
-          image: example-image-name:latest
-          env:
-            - name: "SAMPLE_ENV"
-              value: "hello/world/"
-          command:
-            - /bin/sh
-          args:
-            - -c
-            - "echo helloworld"
-          volumeMounts:
-            - name: example-volume
-              mountPath: /example/path
-      volumes:
-        - name: example-volume
-          emptyDir: {}
+      script: |
+        #!/usr/bin/env python3
+        print("Hello from Python!")
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskModel), 'task-sample2'],
+    `
+    apiVersion: tekton.dev/v1beta1
+    kind: Task
+metadata:
+  name: example-task
+  namespace:  default
+spec:
+  resources:
+    inputs:
+      - name: example-taskinput
+        type: image
+  params:
+    - name: flags
+      type: array
+    - name: sampleURL
+      type: string
+  steps:
+    - name: example-task
+      image: ubuntu
+      command:
+      - /bin/bash
+      args: ["-c", "echo url=$(params.sampleURL)"]
 `,
   )
   .setIn(
