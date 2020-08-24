@@ -33,7 +33,7 @@ spec:
         - --jaeger-endpoint=http://tracing.istio-system.svc:80/api/jaeger
         - --approval-endpoint=http://approval-proxy-server.approval-system.svc:80/approve
         - --kubeflow-endpoint=http://argo-ui.kubeflow.svc:80/
-        - --vnc-endpoint=http://virtnvc.kubevirt:8001/
+        - --vnc-endpoint=http://virtvnc.kubevirt:8001/
         - --hyperauth-endpoint=http://hyperauth.hyperauth.svc:8080/
         - --keycloak-realm=@@REALM@@
         - --keycloak-auth-url=https://@@KEYCLOAK@@/auth
