@@ -984,39 +984,46 @@ spec:
     `
     apiVersion: tekton.dev/v1beta1
     kind: Task
-    metadata:
+metadata:
+  name: example-task
+  namespace: default
+spec:
+  resources:
+    inputs:
+      - name: example-taskinput
+        type: image
+  steps:
+    - image: python
       name: example-task
-      namespace: example-namespace
-    spec:
-      resources:
-        inputs:
-          - name: git-source
-            type: git
-        outputs:
-          - name: output-image
-            type: image
-      params:
-      - name: example-string
-        type: string
-        description: a sample string
-        default: default-string-value
-      steps:
-        - name: example-job
-          image: example-image-name:latest
-          env:
-            - name: "SAMPLE_ENV"
-              value: "hello/world/"
-          command:
-            - /bin/sh
-          args:
-            - -c
-            - "echo helloworld"
-          volumeMounts:
-            - name: example-volume
-              mountPath: /example/path
-      volumes:
-        - name: example-volume
-          emptyDir: {}
+      script: |
+        #!/usr/bin/env python3
+        print("Hello from Python!")
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskModel), 'task-sample2'],
+    `
+    apiVersion: tekton.dev/v1beta1
+    kind: Task
+metadata:
+  name: example-task
+  namespace:  default
+spec:
+  resources:
+    inputs:
+      - name: example-taskinput
+        type: image
+  params:
+    - name: flags
+      type: array
+    - name: sampleURL
+      type: string
+  steps:
+    - name: example-task
+      image: ubuntu
+      command:
+      - /bin/bash
+      args: ["-c", "echo url=$(params.sampleURL)"]
 `,
   )
   .setIn(
@@ -1025,25 +1032,24 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-    name: example-taskrun
-    namespace: example-namespace
+  name: example-taskrun
+  namespace: example-namespace
 spec:
-    serviceAccountName: example-san
-    taskRef:
-        name: example-task
+  serviceAccountName: example-san
+  taskRef:
+    name: example-task
+  resources:
     inputs:
-        resources:
-            - name: git-source
-              resourceRef:
-                name: example-pipeline-resource-git
-        params:
-            - name: example-string
-              value: input-string
+      - name: git-source
+        resourceRef:
+          name: example-pipeline-resource-git
     outputs:
-        resources:
-            - name: output-image
-              resourceRef:
-                name: example-pipeline-resource-image
+      - name: output-image
+        resourceRef:
+          name: example-pipeline-resource-image
+  params:
+    - name: example-string
+      value: input-string
 `,
   )
   .setIn(
@@ -1055,22 +1061,39 @@ metadata:
   name: example-taskrun
   namespace: default
 spec:
-  serviceAccountName: example-san
   taskRef:
     name: example-task
-  inputs:
-    resources:
-      - name: git-source
+  resources:
+    inputs:
+      - name: example-taskinput
         resourceRef:
-          name: example-pipeline-resource-git
-    params:
-      - name: example-string
-        value: input-string
-  outputs:
-    resources:
-      - name: output-image
+          name: example-pipelineresource
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample2'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: example-taskrun
+  namespace: default
+spec:
+  taskRef:
+    name: example-task
+  params:
+    - name: flags
+      value:
+         - "1"
+         - "2"
+         - "3"
+    - name: sampleURL
+      value: hypercloud.com
+  resources:
+    inputs:
+      - name: example-taskinput
         resourceRef:
-          name: example-pipeline-resource-image
+          name: example-pipelineresource
 `,
   )
   .setIn(
@@ -1166,51 +1189,16 @@ metadata:
   name: example-pipeline
   namespace: example-namespace
 spec:
-    resources:
-        resources:
-            - name: source-repo
-              type: git
-            - name: sample-image
-              type: image
-    tasks:
-        - name: task1
-          taskRef:
-            name: example-task1
-          params:
-            - name: example-string
-              value: sample-string1
-          resources:
-            inputs:
-                - name: example-pipeline-resource-git
-                  resource: source-repo
-            outputs:
-                - name: example-pipeline-resource-image
-                  resource: sample-image
-        - name: task2
-          taskRef:
-            name: example-task2
-          resources:
-            inputs:
-                - name: example-input-image
-                  resource: sample-image
-                  from:
-                    - task1
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
-    `
-apiVersion: tekton.dev/v1beta1
-kind: Pipeline
-metadata:
-  name: example-pipeline
-  namespace: default
-spec:
   resources:
-      - name: source-repo
-        type: git
-      - name: sample-image
-        type: image
+    - name: source-repo
+      type: git
+    - name: sample-image
+      type: image
+  params:
+    - name: example-param
+      type: string
+      description: sample param
+      default: hello
   tasks:
     - name: task1
       taskRef:
@@ -1234,6 +1222,58 @@ spec:
             resource: sample-image
             from:
               - task1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+    - name: example-piperesource
+      type: image
+  tasks:
+  - name: example-pipelinetask
+    taskRef:
+      name: example-task
+    resources:
+      inputs:
+        - name: example-taskinput
+          resource: example-piperesource
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample2'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+    - name: example-piperesource
+      type: image
+  tasks:
+  - name: example-pipelinetask
+    taskRef:
+      name: example-task
+    params:
+      - name: flags
+        value:
+           - "1"
+           - "2"
+           - "3"
+      - name: sampleURL
+        value: hypercloud.com
+    resources:
+      inputs:
+        - name: example-taskinput
+          resource: example-piperesource
 `,
   )
   .setIn(
@@ -1263,19 +1303,16 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: example-pipeline-run
+  name:  example-pipelinerun
   namespace: default
 spec:
-  serviceAccountName: example-san
   pipelineRef:
     name: example-pipeline
   resources:
-    - name: source-repo
+    - name: example-piperesource
       resourceRef:
-        name: example-pipeline-resource-git
-    - name: sample-image
-      resourceRef:
-        name: example-pipeline-resource-image
+        name: example-pipelineresource
+  serviceAccountName: example-serviceaccount
 `,
   )
   .setIn(
