@@ -1276,19 +1276,16 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: example-pipeline-run
+  name:  example-pipelinerun
   namespace: default
 spec:
-  serviceAccountName: example-san
   pipelineRef:
     name: example-pipeline
   resources:
-    - name: source-repo
+    - name: example-piperesource
       resourceRef:
-        name: example-pipeline-resource-git
-    - name: sample-image
-      resourceRef:
-        name: example-pipeline-resource-image
+        name: example-pipelineresource
+  serviceAccountName: example-serviceaccount
 `,
   )
   .setIn(

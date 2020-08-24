@@ -361,7 +361,9 @@
     "PIPELINE-SIDEBAR_0": "Create a pipeline that runs a single task",
     "PIPELINE-SIDEBAR_1": "Create a pipeline for pipeline resources and Jobs created in a task.",
     "PIPELINE-SIDEBAR_2": "Create a pipeline by using a task (parameter)",
-    "PIPELINE-SIDEBAR_3": "Create a pipeline for pipeline resources and Jobs created in a task (parameter)."
+    "PIPELINE-SIDEBAR_3": "Create a pipeline for pipeline resources and Jobs created in a task (parameter).",
+    "PIPELINERUN-SIDEBAR_0": "Create a pipeline run that runs a single pipeline",
+    "PIPELINERUN-SIDEBAR_1": "Use resources created by a pipeline resource and run each task defined by the pipeline."
   },
   "CONTENT": {
     "TASKPARAMETERCONFIG": "Task Paramter Config",
