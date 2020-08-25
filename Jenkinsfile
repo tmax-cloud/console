@@ -79,7 +79,7 @@ volumes: [
         // sh "secret=$(kubectl get secret console-https-secret -n ${NAME_NS})"
 
         secret = sh (
-          script: 'kubectl get secret console-https-secret -n ${NAME_NS}',
+          script: 'kubectl get secret console-https-secret -n "${NAME_NS}"',
           returnStdout: true
         ).trim()
         sh """
