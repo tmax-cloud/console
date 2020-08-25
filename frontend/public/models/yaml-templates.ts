@@ -766,7 +766,7 @@ spec:
     apiVersion: v1
     kind: Namespace
     metadata:
-      name: example-namespace
+      name: example
 `,
   )
   .setIn(
@@ -792,28 +792,18 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
     `
+
     apiVersion: tmax.io/v1
     kind: NamespaceClaim
     metadata:
-      name: example-claim
-      labels: 
+      name: example
+      labels:
         handled: f
-        #trial: t
-        #owner: example-tmax.co.kr
-      annotations:
-        #usage: for test
-        #company: tmax
-        #companyAddress: bundang
-        #companyNumber: 02-1234-5678
-        #clientPosition: CEO
-        #clientName: kim
-        #clientNumber: 010-0000-0000
-        #request: thanks
-    resourceName: example-namespace
+    resourceName: example-namespaceclaim
     spec:
       hard:
         limits.cpu: "1"
-        limits.memory: "1Gi"
+        limits.memory: 1Gi
 `,
   )
   .setIn(
@@ -836,25 +826,18 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.LimitRangeModel), 'default'],
     `
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: example-limit-range
-spec:
-  limits:
-  - max:
-      cpu: "800m"
-      memory: "1Gi"
-    min:
-      cpu: "100m"
-      memory: "99Mi"
-    default:
-      cpu: "700m"
-      memory: "900Mi"
-    defaultRequest:
-      cpu: "110m"
-      memory: "111Mi"
-    type: Container
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      limits:
+      - default:
+          memory: 512Mi
+        defaultRequest:
+          memory: 256Mi
+        type: Container
 
 `,
   )
@@ -886,18 +869,21 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'],
     `
+
     apiVersion: tmax.io/v1
     kind: ResourceQuotaClaim
     metadata:
-      name: example-resource-quota
-      namespace: example-namespace
+      name: example
+      namespace: default
       labels:
         handled: f
-    resourceName: example-claim
+    resourceName: example-resourcequotaclaim
     spec:
       hard:
-        limits.cpu: "1"
-        limits.memory: "1Gi"
+        limits.cpu: '1'
+        limits.memory: 1Gi
+    
+    
 `,
   )
   .setIn(
