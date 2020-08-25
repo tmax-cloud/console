@@ -14,6 +14,7 @@ def HOTFIX_VERSION = "3"
 def DOCKER_REGISTRY = "tmaxcloudck"
 def PRODUCT = "hypercloud-console"
 def VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
+def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
 // def VER = "1.1.38.1"
 def REALM = "${params.realm}"
 def KEYCLOAK = "${params.keycloak}"
@@ -40,8 +41,12 @@ volumes: [
     def gitBranch = myRepo.GIT_BRANCH 
 
     stage('Input'){
-      sh "echo ${CHOICE}"
-      sh "echo ${MAJOR_VERSION}"
+      sh "echo 'INSTALL TO ${CHOICE}'"
+      sh "echo 'PRODUCT=${PRODUCT}'"
+      sh "echo 'VERSION=${VER}'"
+      sh "echo 'PREVIOUS_VERSION=${PRE_VER}'"
+      sh "echo 'BRANCH_NAME=${BRANCH_NAME}'"
+      sh "========================================="
     }
 
     stage('Docker Build'){
@@ -81,9 +86,29 @@ volumes: [
         sh "kubectl apply -f ./install-yaml/2.svc-lb.yaml"
         sh "kubectl apply -f ./install-yaml/2.svc-np.yaml"
         sh "kubectl apply -f ./install-yaml/3.deployment.yaml"
-
         // sh "kubectl apply -f ./install-yaml/3.deployment-pod.yaml"
       }
+    }
+
+    stage('GIT Commit & Psh'){
+      sh "git tag ${VER}"
+
+      sh "git push -u origin --tags"
+    }
+
+    stage('Patch-Note Create'){
+
+      sh "echo '# hypercloud-console patch note' > CHANGELOG_${PRODUCT}_${VER}.md" 
+      sh "echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> CHANGELOG_${PRODUCT}_${VER}.md"
+      sh "date '+%F  %r' >> CHANGELOG_${PRODUCT}_${VER}.md"
+      
+      sh """
+      git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
+       --pretty=format:"- %s (%cn) %n    Message: %b" \
+       --simplify-merges ${PRODUCT}_${VER}..${PRODUCT}_${PRE_VER} \
+       >> CHANGELOG_${PRODUCT}_${VER}.md
+      """
+      sh "cat CHANGELOG_${PRODUCT}_${VER}.md"
     }
 
   }
