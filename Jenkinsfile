@@ -76,7 +76,10 @@ volumes: [
         sh "sed -i '/--tmaxcloud-portal=/d' ./install-yaml/3.deployment-pod.yaml"
         sh "cat ./install-yaml/3.deployment-pod.yaml"
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
-        sh "secret=$(kubectl get secret console-https-secret -n ${NAME_NS})"
+        sh """
+        secret=$(kubectl get secret console-https-secret -n ${NAME_NS})
+        """
+        
         sh """
         if [ -z "${secret}" ]; then
           kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
