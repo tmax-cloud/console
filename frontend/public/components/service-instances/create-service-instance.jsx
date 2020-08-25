@@ -13,6 +13,7 @@ import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
 import { k8sCreate } from '../../module/k8s';
+import { NsDropdown } from '../RBAC';
 // import { element } from 'prop-types';
 
 const ServiceInstanceTypeAbstraction = {
@@ -24,9 +25,9 @@ const determineServiceInstanceTypeAbstraction = () => {
   return 'form';
 };
 
-const Section = ({ label, children }) => (
-  <div className="row">
-    <div className="col-xs-2">
+const Section = ({ label, children,  isRequired }) => (
+  <div className={'row form-group ' + (isRequired ? 'required' : '')}>
+    <div className="col-xs-2 control-label">
       <strong>{label}</strong>
     </div>
     <div className="col-xs-10">{children}</div>
@@ -40,6 +41,7 @@ const withServiceInstanceForm = SubForm =>
       super(props);
       this.state = {
         inProgress: false,
+        serviceClass: 'Cluster',
         error: null,
         steps: this.props.steps,
         currentStep: 0,
@@ -62,12 +64,15 @@ const withServiceInstanceForm = SubForm =>
         planList: [],
         selectedPlan: null,
         paramList: [],
+        namespace: 'default'
       };
       // stepper
       this.onClickNext = this.onClickNext.bind(this);
       this.onClickBack = this.onClickBack.bind(this);
 
       // step1
+      this.setKind = this.setKind.bind(this);
+      this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
       this.getClassList = this.getClassList.bind(this);
       this.onChangeClass = this.onChangeClass.bind(this);
 
@@ -84,7 +89,10 @@ const withServiceInstanceForm = SubForm =>
       this.save = this.save.bind(this);
     }
     getClassList() {
-      coFetch(`/api/kubernetes/apis/${k8sModels.ClusterServiceBrokerModel.apiGroup}/${k8sModels.ClusterServiceBrokerModel.apiVersion}/clusterserviceclasses`)
+
+      const url = this.state.serviceClass === 'Cluster' ? 'clusterserviceclasses' : `namespaces/${this.state.namespace}/serviceclasses`;
+
+      coFetch(`/api/kubernetes/apis/${k8sModels.ClusterServiceBrokerModel.apiGroup}/${k8sModels.ClusterServiceBrokerModel.apiVersion}/${url}`)
         .then(res => res.json())
         .then(res => {
           const classListData = res.items.map(item => {
@@ -109,11 +117,15 @@ const withServiceInstanceForm = SubForm =>
         });
     }
     getPlanList() {
-      coFetch(`/api/kubernetes/apis/${k8sModels.ClusterServicePlanModel.apiGroup}/${k8sModels.ClusterServicePlanModel.apiVersion}/clusterserviceplans`)
+
+      const url = this.state.serviceClass === 'Cluster' ? 'clusterserviceplans' : `namespaces/${this.state.namespace}/serviceplans`;
+      const ref = this.state.serviceClass === 'Cluster' ? 'spec.clusterServiceClassRef.name' : 'spec.serviceClassRef.name';
+
+      coFetch(`/api/kubernetes/apis/${k8sModels.ClusterServicePlanModel.apiGroup}/${k8sModels.ClusterServicePlanModel.apiVersion}/${url}`)
         // coFetch(`/api/kubernetes/apis/${k8sModels.ServicePlanModel.apiGroup}/${k8sModels.ServicePlanModel.apiVersion}/serviceplans`)
         .then(res => res.json())
         .then(res => {
-          const planListData = _.filter(res.items, ['spec.clusterServiceClassRef.name', this.state.selectedClass.name]).map(item => {
+          const planListData = _.filter(res.items, [ref, this.state.selectedClass.name]).map(item => {
             return {
               name: _.get(item, 'metadata.name'),
               uid: _.get(item, 'metadata.uid'),
@@ -247,6 +259,28 @@ const withServiceInstanceForm = SubForm =>
       // this.getPlanList();
       // this.getParams();
     }
+
+    componentDidUpdate(prevProps, prevState) {
+      if (_.isEqual(prevState, this.state)) {
+        return;
+      }
+      
+      this.getClassList();
+    }
+
+    setKind(e){
+      this.setState({
+        serviceClass: e.target.value,
+        namespace : 'default'
+      });
+    }
+
+    onNamespaceChanged(namespace) {
+      this.setState({
+        namespace : String(namespace)
+      });
+    }
+
     render() {
       const { t } = this.props;
       const title = t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural('ServiceInstance', t) });
@@ -266,7 +300,7 @@ const withServiceInstanceForm = SubForm =>
         );
       };
       return (
-        <div className="co-m-pane__body">
+        <div className="rbac-edit-binding co-m-pane__body">
           <Helmet>
             <title>{title}</title>
           </Helmet>
@@ -279,17 +313,23 @@ const withServiceInstanceForm = SubForm =>
             {/* stepper */}
             {currentStep === 0 && (
               <div>
-                <div className="col-xs-2">
-                  <b>{t('CONTENT:SERVICECLASSGROUP')}</b>
-                </div>
-                <form>
-                  <label class="radio-inline" style={{ marginRight: '50px' }}>
-                    <input class="radio-inline" type="radio" name = "ServiceClass" value="Cluster" checked="checked"/> {t('RESOURCE:CLUSTERSERVICECLASS')}
-                  </label>
-                  <label class="radio-inline" style={{ marginRight: '50px' }}>
-                    <input type="radio" name = "ServiceClass" value="Namespace" /> {t('RESOURCE:NAMESPACESERVICECLASS')}
-                  </label>
-                </form>
+                <Section label={t('CONTENT:SERVICECLASSGROUP')}>
+                  <form>
+                    <label className="radio-inline" style={{ marginRight: '50px' }}>
+                      <input type="radio" name = "ServiceClass" value="Cluster" checked={this.state.serviceClass === 'Cluster'} 
+                      onChange={this.setKind}/> {t('RESOURCE:CLUSTERSERVICECLASS')}
+                    </label>
+                    <label className="radio-inline" style={{ marginRight: '50px' }}>
+                      <input type="radio" name = "ServiceClass" value="Namespace" checked={this.state.serviceClass === 'Namespace'}
+                      onChange={this.setKind}/> {t('RESOURCE:NAMESPACESERVICECLASS')}
+                    </label>
+                  </form>
+                </Section>
+                {this.state.serviceClass === "Namespace" && (
+                  <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
+                    <NsDropdown id="role-namespace" t={t} onChange={this.onNamespaceChanged} />
+                  </Section>
+                )}
                 <div className="separator"></div>
                 {this.state.classList.length > 0 ? (
                 <div>
