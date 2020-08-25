@@ -104,15 +104,15 @@ volumes: [
         """
 
         sh """
-          echo '# hypercloud-console patch note' > CHANGELOG_${PRODUCT}_${VER}.md
-          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> CHANGELOG_${PRODUCT}_${VER}.md
-          echo 'Version: ${PRODUCT}_${VER}' >> CHANGELOG_${PRODUCT}_${VER}.md
-          date '+%F  %r' >> CHANGELOG_${PRODUCT}_${VER}.md
+          echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
+          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
+          echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
+          date '+%F  %r' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
 
           git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
           --pretty=format:"- %s (%cn) %n    Message: %b" \
           --simplify-merges ${PRE_VER}..${VER} \
-          >> CHANGELOG_${PRODUCT}_${VER}.md
+          >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
         """
         sh "git add -A"
         sh "git commit -m 'build ${PRODUCT}_${VER}' "
