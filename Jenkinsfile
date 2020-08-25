@@ -77,7 +77,7 @@ volumes: [
         sh "cat ./install-yaml/3.deployment-pod.yaml"
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
         sh """
-        secret=$(kubectl get secret console-https-secret -n console-test)
+        secret='(kubectl get secret console-https-secret -n ${NAME_NS})'
         """
         
         sh """
