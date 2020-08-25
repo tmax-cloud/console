@@ -812,12 +812,14 @@ spec:
     apiVersion: tmax.io/v1
     kind: NamespaceClaim
     metadata:
-      name: example-namespaceclaims
+      name: sample-namespaceclaim
       labels:
         handled: f
-    resourceName: namespace
+    resourceName: sample-namespaceclaim
     spec:
       hard:
+        requests.cpu: "1"
+        requests.memory: 1Gi
         limits.cpu: '2'
         limits.memory: 2Gi
     
@@ -844,26 +846,26 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample'],
     `
-apiVersion: "v1"
-kind: "LimitRange"
-metadata:
-  name: "example-limitrange"
-  namespace: default
-spec:
-  limits:
-    - max:
-        cpu: 800m
-        memory: 1Gi
-      min:
-        cpu: 100m
-        memory: 99Mi
-      default:
-        cpu: 700m
-        memory: 900Mi
-      defaultRequest:
-        cpu: 110m
-        memory: 111Mi
-      type: Container
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: sample-limitrange
+      namespace: default
+    spec:
+      limits:
+        - max:
+            cpu: 800m
+            memory: 1Gi
+          min:
+            cpu: 100m
+            memory: 99Mi
+          default:
+            cpu: 700m
+            memory: 900Mi
+          defaultRequest:
+            cpu: 110m
+            memory: 111Mi
+          type: Container
 `,
   )
   .setIn(
@@ -888,15 +890,15 @@ spec:
   )
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'resourcequotaclaim-sample'],
-    `
+    `    
     apiVersion: tmax.io/v1
     kind: ResourceQuotaClaim
     metadata:
-      name: example-resourcequotaclaim
+      name: sample-resourcequotaclaim
       namespace: default
       labels:
         handled: f
-    resourceName: example-resourceclaim
+    resourceName: sample-resourcequotaclaim
     spec:
       hard:
         requests.cpu: '1'
@@ -3869,7 +3871,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -3885,7 +3887,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -3899,7 +3901,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -3920,7 +3922,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
