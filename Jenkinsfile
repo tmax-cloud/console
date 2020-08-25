@@ -23,7 +23,7 @@ def BRANCH = "hc-dev-jenkins-test"
  
 // k8s environment 
 def NAME_NS = "console-test"
-def NODE_PORT = "31311"
+def NODE_PORT = "31333"
 def HDC_FLAG = "false"
 def PORTAL = "false"
 
@@ -48,18 +48,18 @@ volumes: [
       sh "echo 'PREVIOUS_VERSION=${PRE_VER}'"
     }
 
-    stage('Docker Build'){
-      container('docker'){
-        withCredentials([usernamePassword(
-          credentialsId: 'tmaxcloudck', 
-          usernameVariable: 'DOCKER_USER',
-          passwordVariable: 'DOCKER_PWD')]){
-          sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
-          sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION} -f ./Dockerfile.jenkins ."
-          sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
-          }
-      }
-    }
+    // stage('Docker Build'){
+    //   container('docker'){
+    //     withCredentials([usernamePassword(
+    //       credentialsId: 'tmaxcloudck', 
+    //       usernameVariable: 'DOCKER_USER',
+    //       passwordVariable: 'DOCKER_PWD')]){
+    //       sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
+    //       sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION} -f ./Dockerfile.jenkins ."
+    //       sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
+    //       }
+    //   }
+    // }
     
     stage('K8S Deploy'){
       container('kubectl'){     
@@ -76,7 +76,12 @@ volumes: [
         sh "sed -i '/--tmaxcloud-portal=/d' ./install-yaml/3.deployment-pod.yaml"
         sh "cat ./install-yaml/3.deployment-pod.yaml"
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
-        sh "secret=$(kubectl get secret console-https-secret -n ${NAME_NS})"
+        // sh "secret=$(kubectl get secret console-https-secret -n ${NAME_NS})"
+
+        secret = sh (
+          script: 'kubectl get secret console-https-secret -n ${NAME_NS}',
+          returnStdout: true
+        ).trim()
         sh """
         if [ -z "${secret}" ]; then
           kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
