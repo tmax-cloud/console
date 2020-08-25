@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: console-np
-  namespace: @@NAME_NS@@
+  namespace: console-test
 spec:
   type: NodePort
   ports:
   - name: "https"
     port: 80
     targetPort: 6443
-    nodePort: @@NODE_PORT@@
+    nodePort: 31333
   selector:
     app: console   
     hypercloud: ui
