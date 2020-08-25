@@ -5,6 +5,7 @@ import { Button } from './button';
 import * as classNames from 'classnames';
 import { IngressHostEditorPair } from './index';
 import { IngressEditor } from '../utils/ingress-path-editor';
+
 export class IngressHostEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -13,17 +14,17 @@ export class IngressHostEditor extends React.Component {
     this._remove = this._remove.bind(this);
   }
   _append(event) {
-    const { updateParentData, values, nameValueId, allowSorting } = this.props;
+    const { updateParentData, values, nameValueId, allowSorting, initialServiceName, initialServicePort } = this.props;
     let lastIndex = this.props.values.length - 1;
     let lastData = this.props.values[lastIndex];
-    lastData[0] !== '' && updateParentData({ values: allowSorting ? values.concat([['', '', values.length]]) : values.concat([['', '']]) }, nameValueId);
+    lastData[0] !== '' && updateParentData({ values: allowSorting ? values.concat([['', '', values.length]]) : values.concat([['', [['', initialServiceName, initialServicePort]]]]) }, nameValueId);
   }
 
   _remove(i) {
-    const { updateParentData, nameValueId } = this.props;
+    const { updateParentData, nameValueId, serviceList, initialServiceName, initialServicePort } = this.props;
     const values = _.cloneDeep(this.props.values);
     values.splice(i, 1);
-    updateParentData({ values: values.length ? values : [['', '']] }, nameValueId);
+    updateParentData({ values: values.length ? values : [['', [['', initialServiceName, initialServicePort]]]] }, nameValueId);
   }
 
   _change(e, i, type) {
@@ -33,10 +34,10 @@ export class IngressHostEditor extends React.Component {
     updateParentData({ values }, nameValueId);
   }
   render() {
-    const { valueString, addString, values, allowSorting, readOnly, nameValueId, t, serviceList, servicePortList } = this.props;
+    const { valueString, addString, values, allowSorting, readOnly, nameValueId, t, serviceList, servicePortList, initialServiceName, initialServicePort } = this.props;
     const portItems = values.map((pair, i) => {
       const key = _.get(pair, [IngressHostEditorPair.Index], i);
-      return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} serviceList={serviceList} servicePortList={servicePortList} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <ValuePairElement onChange={this._change} index={i} t={t} valueString={valueString} serviceList={serviceList} servicePortList={servicePortList} initialServiceName={initialServiceName} initialServicePort={initialServicePort} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       // return (
@@ -70,9 +71,6 @@ IngressHostEditor.defaultProps = {
 class ValuePairElement extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   paths: this.props.pair[IngressHostEditorPair.Path] || [['', '', '']],
-    // };
     this._onRemove = this._onRemove.bind(this);
     this._onChangeValue = this._onChangeValue.bind(this);
     this._updatePaths = this._updatePaths.bind(this);
@@ -91,8 +89,7 @@ class ValuePairElement extends React.Component {
     onChange(path, index, IngressHostEditorPair.Path);
   }
   render() {
-    const { keyString, valueString, allowSorting, readOnly, pair, t, serviceList, servicePortList } = this.props;
-    // const { paths } = this.state;
+    const { keyString, valueString, allowSorting, readOnly, pair, t, serviceList, servicePortList, initialServiceName, initialServicePort } = this.props;
     const deleteButton = (
       <React.Fragment>
         <Button children={<FaMinus />} onClick={this._onRemove}></Button>
@@ -109,7 +106,7 @@ class ValuePairElement extends React.Component {
             <input type="text" style={{ marginLeft: '-15px' }} className="form-control" placeholder={t(`CONTENT:HOSTNAME`)} onChange={this._onChangeValue} value={pair[IngressHostEditorPair.HostName]} required />
           </div>
           <div>
-            <IngressEditor serviceList={serviceList} servicePortList={servicePortList} servicePortOptions={servicePortList} pair={pair} t={t} pathPairs={pair[IngressHostEditorPair.Path] || [['', '', '']]} updateParentData={this._updatePaths} />
+            <IngressEditor serviceList={serviceList} servicePortList={servicePortList} pair={pair} t={t} pathPairs={pair[IngressHostEditorPair.Path] || [['', initialServiceName, initialServicePort]]} initialServiceName={initialServiceName} initialServicePort={initialServicePort} updateParentData={this._updatePaths} />
           </div>
         </div>
         {readOnly ? null : (

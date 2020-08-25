@@ -62,8 +62,10 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
       ingress: ingress,
       inProgress: false,
       type: 'form',
-      hosts: [['', '']],
+      hosts: [['', [['', '', '']]]],
       paths: [['', '', '']],
+      initialServiceName: '',
+      initialServicePort: '',
       serviceNameList: [],
       servicePortList: [],
       serviceNameOptions: [],
@@ -73,6 +75,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     this.getServiceList = this.getServiceList.bind(this);
     this._updateHosts = this._updateHosts.bind(this);
     this.save = this.save.bind(this);
+    this.getServiceList();
   }
   _updateHosts(host) {
     this.setState({
@@ -81,7 +84,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
   }
 
   componentDidMount() {
-    this.getServiceList();
+    // this.getServiceList();
   }
 
   // 선택된 ns에 있는 Service 리스트 호출 -> serviceName으로 service List생성
@@ -91,6 +94,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
     k8sList(ko, { ns: ns }).then(
       data => {
         let serviceNameList = [];
+
         data.forEach(cur => {
           // service type이 External Name인경우는 제외
           if (cur.spec.type !== 'ExternalName') {
@@ -100,21 +104,24 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
                 value: port.port,
               };
             });
-            serviceNameList.push(
-              {
-                name: cur.metadata.name,
-                portList: portList,
-              }
-            );
+            serviceNameList.push({
+              name: cur.metadata.name,
+              portList: portList,
+            });
           }
         });
+
         let initPortList = serviceNameList[0].portList;
+
         if (serviceNameList.length === 0) {
           return;
         }
         this.setState({
           serviceNameList: serviceNameList,
           servicePortList: initPortList,
+          hosts: [['', [['', serviceNameList[0].name, serviceNameList[0].portList[0].value]]]],
+          initialServiceName: serviceNameList[0].name,
+          initialServicePort: initPortList[0].value,
         });
       },
       err => {
@@ -131,32 +138,39 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
   save(e) {
     e.preventDefault();
     const { kind, metadata } = this.state.ingress;
-    const { hosts, serviceNameList, servicePortList } = this.state;
+    const { hosts } = this.state;
     const newIngress = _.assign({}, this.state.ingress);
     this.setState({ inProgress: true });
-    //hosts data 가공
-    let hostData = hosts.map(host => {
-      let hostName = host[0];
-      let paths = host[1];
-      let pathData = {};
-      //path가 필수값이 아니기 때문에 입력 안하는경우 paths가 ""으로 들어옴
-      if (typeof paths !== 'string') {
-        pathData = paths.map(path => {
-          let serviceName = path[1] === '' ? serviceNameList[0].name : path[1];
-          let servicePort = path[2] === '' ? servicePortList[0].value : path[2];
-          return {
-            path: path[0],
-            backend: { serviceName: serviceName, servicePort: servicePort },
-          };
-        });
-      } else {
-        pathData = [{ path: '', backend: { serviceName: serviceNameList[0].name, servicePort: servicePortList[0].value } }];
-      }
 
-      paths = { paths: pathData };
-      return { host: hostName, http: paths };
-    });
-    newIngress.spec.rules = hostData;
+    const hostList = hosts.map(host => ({
+      host: host[0],
+      http: {
+        paths: host[1].map(path => ({ path: path[0], backend: { serviceName: path[1], servicePort: path[2] } })),
+      },
+    }));
+    // let hostData = hosts.map(host => {
+    //   let hostName = host[0];
+    //   let paths = host[1];
+    //   let pathData = {};
+    //   //path가 필수값이 아니기 때문에 입력 안하는경우 paths가 ""으로 들어옴
+    //   if (typeof paths !== 'string') {
+    //     pathData = paths.map(path => {
+    //       let serviceName = path[1] === '' ? serviceNameList[0].name : path[1];
+    //       let servicePort = path[2] === '' ? servicePortList[0].value : path[2];
+    //       return {
+    //         path: path[0],
+    //         backend: { serviceName, servicePort },
+    //       };
+    //     });
+    //   } else {
+    //     pathData = [{ path: '', backend: { serviceName: serviceNameList[0].name, servicePort: servicePortList[0].value } }];
+    //   }
+
+    //   paths = { paths: pathData };
+    //   return { host: hostName, http: paths };
+    // });
+    // console.log('hostList', hostList);
+    newIngress.spec.rules = hostList;
 
     const ko = kindObj(kind);
     (this.props.isCreate ? k8sCreate(ko, newIngress) : k8sUpdate(ko, newIngress, metadata.namespace, newIngress.metadata.name)).then(
@@ -169,11 +183,8 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
   }
 
   render() {
-    const { hosts, servicePortOptions, serviceNameList, servicePortList } = this.state;
+    const { hosts, serviceNameList, servicePortList, initialServiceName, initialServicePort } = this.state;
     const { t } = this.props;
-    let serviceList = serviceNameList.length ? serviceNameList.map(service => {
-      return <option value={service.name}>{service.name}</option>;
-    }) : [];
     return (
       <div className="co-m-pane__body">
         <Helmet>
@@ -189,7 +200,7 @@ class IngressFormComponent extends React.Component<IngressProps_, IngressState_>
 
             {/* Host */}
             <FirstSection label={t('CONTENT:HOST')} id="host">
-              <IngressHostEditor values={hosts} serviceList={serviceList} servicePortList={servicePortList} t={t} updateParentData={this._updateHosts} />
+              <IngressHostEditor values={hosts} serviceList={serviceNameList} servicePortList={servicePortList} initialServiceName={initialServiceName} initialServicePort={initialServicePort} t={t} updateParentData={this._updateHosts} />
             </FirstSection>
 
             {/* Button */}
@@ -232,6 +243,8 @@ export type IngressState_ = {
   hosts: Array<any>;
   serviceNameList: Array<any>;
   servicePortList: Array<any>;
+  initialServiceName: string;
+  initialServicePort: string;
   serviceNameOptions: Array<any>;
   servicePortOptions: Array<any>;
 };

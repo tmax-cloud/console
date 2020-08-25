@@ -37,7 +37,7 @@ import { ResourceQuotaSidebar } from './resource-quota-sidebar';
 import { ResourceQuotaClaimSidebar } from './resource-quota-claim-sidebar';
 import { CustomResourceDefinitionSidebar } from './custom-resource-definition-sidebar';
 import { NamespaceClaimSidebar } from './namespace-claim-sidebar';
-// import { PodSecurityPolicySidebar } from './pod-security-policy-sidebar';
+import { PodSecurityPolicySidebar } from './pod-security-policy-sidebar';
 
 // sidebar 추가 시 여기에 컴포넌트 연결해줘야함
 // .set(kind, 사이드바 컴포넌트명)
@@ -69,7 +69,7 @@ export const resourceSidebars = new Map<string, React.ComponentType<any>>()
   .set('Pipeline', PipelineSidebar)
   .set('PipelineRun', PipelineRunSidebar)
   .set('PipelineResource', PipelineResourceSidebar)
-  // .set('PodSecurityPolicy', PodSecurityPolicySidebar)
+  .set('PodSecurityPolicy', PodSecurityPolicySidebar)
   .set('NetworkPolicy', NetworkPolicySidebar)
   .set('Registry', RegistrySidebar)
   .set('LimitRange', LimitRangeSidebar)
