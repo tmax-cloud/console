@@ -112,7 +112,8 @@ const Requestform = SubForm =>
         selectedPipelineResourceType: event.target.value,
       });
       let secret = { ...this.state.secret };
-      secret.spec.params.type = event.target.value;
+      // secret.spec.params.type = event.target.value;
+      secret.spec.type = event.target.value;
       this.setState({ secret });
     }
     save(e) {
@@ -122,7 +123,12 @@ const Requestform = SubForm =>
 
       const newSecret = _.assign({}, this.state.secret);
       const ko = kindObj(kind);
-      // console.log(_.assign({}, this.state.secret));
+
+      if (newSecret.spec.type !== 'git') {
+        newSecret.spec.params = newSecret.spec.params.filter(item => item.name === 'url');
+      }
+
+      // console.log(newSecret);
       // return;
       (this.props.isCreate ? k8sCreate(ko, newSecret) : k8sUpdate(ko, newSecret, metadata.namespace, newSecret.metadata.name)).then(
         () => {
