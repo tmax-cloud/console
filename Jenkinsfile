@@ -9,20 +9,22 @@
 def CHOICE = "${params.choice}"
 def MAJOR_VERSION = "${params.major_version}"
 def MINOR_VERSION = "${params.minor_version}"
-def PATCH_VERSION = "2"
-def HOTFIX_VERSION = "3"
+def PATCH_VERSION = "${params.patch_version}"
+def PRE_VERSION = (("${params.patch_version}" as int) - 1).toString()
+def HOTFIX_VERSION = "${params.hotfix_version}"
 def DOCKER_REGISTRY = "tmaxcloudck"
 def PRODUCT = "hypercloud-console"
 def VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
-def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
+def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PRE_VERSION}.${HOTFIX_VERSION}"
 // def VER = "1.1.38.1"
 def REALM = "${params.realm}"
 def KEYCLOAK = "${params.keycloak}"
 def CLIENTID = "${params.clientid}"
+def BRANCH = "hc-release"
  
 // k8s environment 
 def NAME_NS = "console-system"
-def NODE_PORT = "31304"
+def NODE_PORT = "31303"
 def HDC_FLAG = "false"
 def PORTAL = "false"
 
@@ -45,8 +47,6 @@ volumes: [
       sh "echo 'PRODUCT=${PRODUCT}'"
       sh "echo 'VERSION=${VER}'"
       sh "echo 'PREVIOUS_VERSION=${PRE_VER}'"
-      sh "echo 'BRANCH_NAME=${BRANCH_NAME}'"
-      sh "========================================="
     }
 
     stage('Docker Build'){
@@ -61,7 +61,6 @@ volumes: [
           }
       }
     }
-
     
     stage('K8S Deploy'){
       container('kubectl'){     
@@ -78,11 +77,16 @@ volumes: [
         sh "sed -i '/--tmaxcloud-portal=/d' ./install-yaml/3.deployment-pod.yaml"
         sh "cat ./install-yaml/3.deployment-pod.yaml"
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
-        // try {
-        //     sh "kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}"
-        // } catch {
-        //   sh "echo Error from server (AlreadyExists): secrets console-https-secret already exists"
-        // }
+
+        secret = sh (
+          script: 'kubectl get secret console-https-secret -n "${NAME_NS}"',
+          returnStdout: true
+        ).trim()
+        sh """
+        if [ -z "${secret}" ]; then
+          kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
+        fi
+        """
         sh "kubectl apply -f ./install-yaml/2.svc-lb.yaml"
         sh "kubectl apply -f ./install-yaml/2.svc-np.yaml"
         sh "kubectl apply -f ./install-yaml/3.deployment.yaml"
@@ -90,26 +94,34 @@ volumes: [
       }
     }
 
-    stage('GIT Commit & Psh'){
-      sh "git tag ${VER}"
+    stage('GIT Commit & Push'){
+      withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
+        sh """
+          git config --global user.name ${username}
+          git config --global user.email jinsoo_youn@tmax.co.kr
+          git config --global credential.username ${username}
+          git config --global credential.helper "!echo password=${password}; echo"          
+        """
 
-      sh "git push -u origin --tags"
+        sh """
+          echo '# hypercloud-console patch note' > CHANGELOG_${PRODUCT}_${VER}.md
+          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> CHANGELOG_${PRODUCT}_${VER}.md
+          echo 'Version: ${PRODUCT}_${VER}' >> CHANGELOG_${PRODUCT}_${VER}.md
+          date '+%F  %r' >> CHANGELOG_${PRODUCT}_${VER}.md
+
+          git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
+          --pretty=format:"- %s (%cn) %n    Message: %b" \
+          --simplify-merges ${PRE_VER}..${VER} \
+          >> CHANGELOG_${PRODUCT}_${VER}.md
+        """
+        sh "git add -A"
+        sh "git commit -m 'build ${PRODUCT}_${VER}' "
+        sh "git tag ${VER}"
+        sh "git push origin HEAD:${BRANCH} --tags"        
+
+      }
     }
 
-    stage('Patch-Note Create'){
-
-      sh "echo '# hypercloud-console patch note' > CHANGELOG_${PRODUCT}_${VER}.md" 
-      sh "echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> CHANGELOG_${PRODUCT}_${VER}.md"
-      sh "date '+%F  %r' >> CHANGELOG_${PRODUCT}_${VER}.md"
-      
-      sh """
-      git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
-       --pretty=format:"- %s (%cn) %n    Message: %b" \
-       --simplify-merges ${PRODUCT}_${VER}..${PRODUCT}_${PRE_VER} \
-       >> CHANGELOG_${PRODUCT}_${VER}.md
-      """
-      sh "cat CHANGELOG_${PRODUCT}_${VER}.md"
-    }
 
   }
 }
