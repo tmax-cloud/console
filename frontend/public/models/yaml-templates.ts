@@ -547,7 +547,7 @@ status: active
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ClusterServiceBroker
 metadata:
-  name: hyperbroker4
+  name: example-clusterservicebroker
 spec:
   url: 'http://0.0.0.0:28677'
 `,
@@ -638,64 +638,14 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: nginx-instance
-  namespace: demo-ns
+  name: example-serviceinstance
+  namespace: default
 spec:
   clusterServiceClassName: nginx-template
   clusterServicePlanName: example-plan1
   parameters:
     NAME: nginx
     IMAGE: 'nginx:1'
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample2'],
-    `
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: roh-test
-  namespace: demo-ns
-spec:
-  clusterServiceClassName: apache-cicd-template
-  clusterServiceClassRef:
-    name: apache-cicd-template
-  clusterServicePlanName: apache-plan1
-  clusterServicePlanRef:
-    name: apache-plan1
-  parameters:
-    APP_NAME: apache-sample-app-roh
-    GIT_REV: master
-    GIT_URL: 'https://github.com/microsoft/project-html-website'
-    IMAGE_URL: '192.168.6.110:5000/apache-sample:latest'
-    NAMESPACE: demo-ns
-    SERVICE_ACCOUNT_NAME: tutorial-service
-    SERVICE_TYPE: LoadBalancer
-    WAS_PORT: '8080'
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample3'],
-    `
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: roh-test-mysql
-  namespace: demo-ns 
-spec:
-  clusterServiceClassName: mysql-template
-  clusterServiceClassRef:
-    name: mysql-template
-  clusterServicePlanName: mysql-plan1
-  clusterServicePlanRef:
-    name: mysql-plan1
-  parameters:
-    APP_NAME: mysql-sample-app-roh
-    DB_STORAGE: 10Gi
-    MYSQL_DATABASE: mysqldb
-    MYSQL_PASSWORD: mysqlpassword
-    MYSQL_USER: mysqluser
-    NAMESPACE: demo-ns
 `,
   )
   .setIn(
