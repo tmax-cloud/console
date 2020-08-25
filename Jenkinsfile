@@ -9,21 +9,22 @@
 def CHOICE = "${params.choice}"
 def MAJOR_VERSION = "${params.major_version}"
 def MINOR_VERSION = "${params.minor_version}"
-def PATCH_VERSION = "2"
-def HOTFIX_VERSION = "test"
+def PATCH_VERSION = "${params.patch_version}"
+def PRE_VERSION = (("${params.patch_version}" as int) - 1).toString()
+def HOTFIX_VERSION = "${params.hotfix_version}"
 def DOCKER_REGISTRY = "tmaxcloudck"
 def PRODUCT = "hypercloud-console"
 def VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
-def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
+def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PRE_VERSION}.${HOTFIX_VERSION}"
 // def VER = "1.1.38.1"
 def REALM = "${params.realm}"
 def KEYCLOAK = "${params.keycloak}"
 def CLIENTID = "${params.clientid}"
-def BRANCH = "hc-dev-jenkins-test"
+def BRANCH = "hc-release"
  
 // k8s environment 
-def NAME_NS = "console-test"
-def NODE_PORT = "31333"
+def NAME_NS = "console-system"
+def NODE_PORT = "31303"
 def HDC_FLAG = "false"
 def PORTAL = "false"
 
@@ -48,18 +49,18 @@ volumes: [
       sh "echo 'PREVIOUS_VERSION=${PRE_VER}'"
     }
 
-    // stage('Docker Build'){
-    //   container('docker'){
-    //     withCredentials([usernamePassword(
-    //       credentialsId: 'tmaxcloudck', 
-    //       usernameVariable: 'DOCKER_USER',
-    //       passwordVariable: 'DOCKER_PWD')]){
-    //       sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
-    //       sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION} -f ./Dockerfile.jenkins ."
-    //       sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
-    //       }
-    //   }
-    // }
+    stage('Docker Build'){
+      container('docker'){
+        withCredentials([usernamePassword(
+          credentialsId: 'tmaxcloudck', 
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PWD')]){
+          sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}"
+          sh "docker build -t ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION} -f ./Dockerfile.jenkins ."
+          sh "docker push ${DOCKER_REGISTRY}/${PRODUCT}:${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
+          }
+      }
+    }
     
     stage('K8S Deploy'){
       container('kubectl'){     
@@ -76,10 +77,9 @@ volumes: [
         sh "sed -i '/--tmaxcloud-portal=/d' ./install-yaml/3.deployment-pod.yaml"
         sh "cat ./install-yaml/3.deployment-pod.yaml"
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
-        // sh "secret=$(kubectl get secret console-https-secret -n ${NAME_NS})"
 
         secret = sh (
-          script: 'kubectl get secret -A | grep console-https-secret',
+          script: 'kubectl get secret console-https-secret -n "${NAME_NS}"',
           returnStdout: true
         ).trim()
         sh """
@@ -87,11 +87,6 @@ volumes: [
           kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
         fi
         """
-        // try {
-        //     sh "kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}"
-        // } catch {
-        //   sh "echo Error from server (AlreadyExists): secrets console-https-secret already exists"
-        // }
         sh "kubectl apply -f ./install-yaml/2.svc-lb.yaml"
         sh "kubectl apply -f ./install-yaml/2.svc-np.yaml"
         sh "kubectl apply -f ./install-yaml/3.deployment.yaml"
@@ -116,7 +111,7 @@ volumes: [
 
           git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
           --pretty=format:"- %s (%cn) %n    Message: %b" \
-          --simplify-merges -10 \
+          --simplify-merges ${PRE_VER}..${VER} \
           >> CHANGELOG_${PRODUCT}_${VER}.md
         """
         sh "git add -A"
