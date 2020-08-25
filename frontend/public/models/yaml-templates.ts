@@ -547,7 +547,7 @@ status: active
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ClusterServiceBroker
 metadata:
-  name: hyperbroker4
+  name: example-clusterservicebroker
 spec:
   url: 'http://0.0.0.0:28677'
 `,
@@ -638,64 +638,14 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: nginx-instance
-  namespace: demo-ns
+  name: example-serviceinstance
+  namespace: default
 spec:
   clusterServiceClassName: nginx-template
   clusterServicePlanName: example-plan1
   parameters:
     NAME: nginx
     IMAGE: 'nginx:1'
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample2'],
-    `
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: roh-test
-  namespace: demo-ns
-spec:
-  clusterServiceClassName: apache-cicd-template
-  clusterServiceClassRef:
-    name: apache-cicd-template
-  clusterServicePlanName: apache-plan1
-  clusterServicePlanRef:
-    name: apache-plan1
-  parameters:
-    APP_NAME: apache-sample-app-roh
-    GIT_REV: master
-    GIT_URL: 'https://github.com/microsoft/project-html-website'
-    IMAGE_URL: '192.168.6.110:5000/apache-sample:latest'
-    NAMESPACE: demo-ns
-    SERVICE_ACCOUNT_NAME: tutorial-service
-    SERVICE_TYPE: LoadBalancer
-    WAS_PORT: '8080'
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.ServiceInstanceModel), 'serviceinstance-sample3'],
-    `
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: roh-test-mysql
-  namespace: demo-ns 
-spec:
-  clusterServiceClassName: mysql-template
-  clusterServiceClassRef:
-    name: mysql-template
-  clusterServicePlanName: mysql-plan1
-  clusterServicePlanRef:
-    name: mysql-plan1
-  parameters:
-    APP_NAME: mysql-sample-app-roh
-    DB_STORAGE: 10Gi
-    MYSQL_DATABASE: mysqldb
-    MYSQL_PASSWORD: mysqlpassword
-    MYSQL_USER: mysqluser
-    NAMESPACE: demo-ns
 `,
   )
   .setIn(
@@ -766,7 +716,7 @@ spec:
     apiVersion: v1
     kind: Namespace
     metadata:
-      name: example-namespace
+      name: example
 `,
   )
   .setIn(
@@ -792,28 +742,18 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.NamespaceClaimModel), 'default'],
     `
+
     apiVersion: tmax.io/v1
     kind: NamespaceClaim
     metadata:
-      name: example-claim
-      labels: 
+      name: example
+      labels:
         handled: f
-        #trial: t
-        #owner: example-tmax.co.kr
-      annotations:
-        #usage: for test
-        #company: tmax
-        #companyAddress: bundang
-        #companyNumber: 02-1234-5678
-        #clientPosition: CEO
-        #clientName: kim
-        #clientNumber: 010-0000-0000
-        #request: thanks
-    resourceName: example-namespace
+    resourceName: example-namespaceclaim
     spec:
       hard:
         limits.cpu: "1"
-        limits.memory: "1Gi"
+        limits.memory: 1Gi
 `,
   )
   .setIn(
@@ -822,12 +762,14 @@ spec:
     apiVersion: tmax.io/v1
     kind: NamespaceClaim
     metadata:
-      name: example-namespaceclaims
+      name: sample-namespaceclaim
       labels:
         handled: f
-    resourceName: namespace
+    resourceName: sample-namespaceclaim
     spec:
       hard:
+        requests.cpu: "1"
+        requests.memory: 1Gi
         limits.cpu: '2'
         limits.memory: 2Gi
     
@@ -836,81 +778,77 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.LimitRangeModel), 'default'],
     `
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: example-limit-range
-spec:
-  limits:
-  - max:
-      cpu: "800m"
-      memory: "1Gi"
-    min:
-      cpu: "100m"
-      memory: "99Mi"
-    default:
-      cpu: "700m"
-      memory: "900Mi"
-    defaultRequest:
-      cpu: "110m"
-      memory: "111Mi"
-    type: Container
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: example
+      namespace: default
+    spec:
+      limits:
+      - default:
+          memory: 512Mi
+        defaultRequest:
+          memory: 256Mi
+        type: Container
 
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.LimitRangeModel), 'limitrange-sample'],
     `
-apiVersion: "v1"
-kind: "LimitRange"
-metadata:
-  name: "example-limitrange"
-  namespace: default
-spec:
-  limits:
-    - max:
-        cpu: 800m
-        memory: 1Gi
-      min:
-        cpu: 100m
-        memory: 99Mi
-      default:
-        cpu: 700m
-        memory: 900Mi
-      defaultRequest:
-        cpu: 110m
-        memory: 111Mi
-      type: Container
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: sample-limitrange
+      namespace: default
+    spec:
+      limits:
+        - max:
+            cpu: 800m
+            memory: 1Gi
+          min:
+            cpu: 100m
+            memory: 99Mi
+          default:
+            cpu: 700m
+            memory: 900Mi
+          defaultRequest:
+            cpu: 110m
+            memory: 111Mi
+          type: Container
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'default'],
     `
+
     apiVersion: tmax.io/v1
     kind: ResourceQuotaClaim
     metadata:
-      name: example-resource-quota
-      namespace: example-namespace
+      name: example
+      namespace: default
       labels:
         handled: f
-    resourceName: example-claim
+    resourceName: example-resourcequotaclaim
     spec:
       hard:
-        limits.cpu: "1"
-        limits.memory: "1Gi"
+        limits.cpu: '1'
+        limits.memory: 1Gi
+    
+    
 `,
   )
   .setIn(
     [referenceForModel(k8sModels.ResourceQuotaClaimModel), 'resourcequotaclaim-sample'],
-    `
+    `    
     apiVersion: tmax.io/v1
     kind: ResourceQuotaClaim
     metadata:
-      name: example-resourcequotaclaim
+      name: sample-resourcequotaclaim
       namespace: default
       labels:
         handled: f
-    resourceName: example-resourceclaim
+    resourceName: sample-resourcequotaclaim
     spec:
       hard:
         requests.cpu: '1'
@@ -984,39 +922,46 @@ spec:
     `
     apiVersion: tekton.dev/v1beta1
     kind: Task
-    metadata:
+metadata:
+  name: example-task
+  namespace: default
+spec:
+  resources:
+    inputs:
+      - name: example-taskinput
+        type: image
+  steps:
+    - image: python
       name: example-task
-      namespace: example-namespace
-    spec:
-      resources:
-        inputs:
-          - name: git-source
-            type: git
-        outputs:
-          - name: output-image
-            type: image
-      params:
-      - name: example-string
-        type: string
-        description: a sample string
-        default: default-string-value
-      steps:
-        - name: example-job
-          image: example-image-name:latest
-          env:
-            - name: "SAMPLE_ENV"
-              value: "hello/world/"
-          command:
-            - /bin/sh
-          args:
-            - -c
-            - "echo helloworld"
-          volumeMounts:
-            - name: example-volume
-              mountPath: /example/path
-      volumes:
-        - name: example-volume
-          emptyDir: {}
+      script: |
+        #!/usr/bin/env python3
+        print("Hello from Python!")
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskModel), 'task-sample2'],
+    `
+    apiVersion: tekton.dev/v1beta1
+    kind: Task
+metadata:
+  name: example-task
+  namespace:  default
+spec:
+  resources:
+    inputs:
+      - name: example-taskinput
+        type: image
+  params:
+    - name: flags
+      type: array
+    - name: sampleURL
+      type: string
+  steps:
+    - name: example-task
+      image: ubuntu
+      command:
+      - /bin/bash
+      args: ["-c", "echo url=$(params.sampleURL)"]
 `,
   )
   .setIn(
@@ -1025,25 +970,24 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-    name: example-taskrun
-    namespace: example-namespace
+  name: example-taskrun
+  namespace: example-namespace
 spec:
-    serviceAccountName: example-san
-    taskRef:
-        name: example-task
+  serviceAccountName: example-san
+  taskRef:
+    name: example-task
+  resources:
     inputs:
-        resources:
-            - name: git-source
-              resourceRef:
-                name: example-pipeline-resource-git
-        params:
-            - name: example-string
-              value: input-string
+      - name: git-source
+        resourceRef:
+          name: example-pipeline-resource-git
     outputs:
-        resources:
-            - name: output-image
-              resourceRef:
-                name: example-pipeline-resource-image
+      - name: output-image
+        resourceRef:
+          name: example-pipeline-resource-image
+  params:
+    - name: example-string
+      value: input-string
 `,
   )
   .setIn(
@@ -1055,22 +999,39 @@ metadata:
   name: example-taskrun
   namespace: default
 spec:
-  serviceAccountName: example-san
   taskRef:
     name: example-task
-  inputs:
-    resources:
-      - name: git-source
+  resources:
+    inputs:
+      - name: example-taskinput
         resourceRef:
-          name: example-pipeline-resource-git
-    params:
-      - name: example-string
-        value: input-string
-  outputs:
-    resources:
-      - name: output-image
+          name: example-pipelineresource
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.TaskRunModel), 'taskrun-sample2'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: example-taskrun
+  namespace: default
+spec:
+  taskRef:
+    name: example-task
+  params:
+    - name: flags
+      value:
+         - "1"
+         - "2"
+         - "3"
+    - name: sampleURL
+      value: hypercloud.com
+  resources:
+    inputs:
+      - name: example-taskinput
         resourceRef:
-          name: example-pipeline-resource-image
+          name: example-pipelineresource
 `,
   )
   .setIn(
@@ -1166,51 +1127,16 @@ metadata:
   name: example-pipeline
   namespace: example-namespace
 spec:
-    resources:
-        resources:
-            - name: source-repo
-              type: git
-            - name: sample-image
-              type: image
-    tasks:
-        - name: task1
-          taskRef:
-            name: example-task1
-          params:
-            - name: example-string
-              value: sample-string1
-          resources:
-            inputs:
-                - name: example-pipeline-resource-git
-                  resource: source-repo
-            outputs:
-                - name: example-pipeline-resource-image
-                  resource: sample-image
-        - name: task2
-          taskRef:
-            name: example-task2
-          resources:
-            inputs:
-                - name: example-input-image
-                  resource: sample-image
-                  from:
-                    - task1
-`,
-  )
-  .setIn(
-    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
-    `
-apiVersion: tekton.dev/v1beta1
-kind: Pipeline
-metadata:
-  name: example-pipeline
-  namespace: default
-spec:
   resources:
-      - name: source-repo
-        type: git
-      - name: sample-image
-        type: image
+    - name: source-repo
+      type: git
+    - name: sample-image
+      type: image
+  params:
+    - name: example-param
+      type: string
+      description: sample param
+      default: hello
   tasks:
     - name: task1
       taskRef:
@@ -1234,6 +1160,58 @@ spec:
             resource: sample-image
             from:
               - task1
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+    - name: example-piperesource
+      type: image
+  tasks:
+  - name: example-pipelinetask
+    taskRef:
+      name: example-task
+    resources:
+      inputs:
+        - name: example-taskinput
+          resource: example-piperesource
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PipelineModel), 'pipeline-sample2'],
+    `
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: default
+spec:
+  resources:
+    - name: example-piperesource
+      type: image
+  tasks:
+  - name: example-pipelinetask
+    taskRef:
+      name: example-task
+    params:
+      - name: flags
+        value:
+           - "1"
+           - "2"
+           - "3"
+      - name: sampleURL
+        value: hypercloud.com
+    resources:
+      inputs:
+        - name: example-taskinput
+          resource: example-piperesource
 `,
   )
   .setIn(
@@ -1263,19 +1241,16 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: example-pipeline-run
+  name:  example-pipelinerun
   namespace: default
 spec:
-  serviceAccountName: example-san
   pipelineRef:
     name: example-pipeline
   resources:
-    - name: source-repo
+    - name: example-piperesource
       resourceRef:
-        name: example-pipeline-resource-git
-    - name: sample-image
-      resourceRef:
-        name: example-pipeline-resource-image
+        name: example-pipelineresource
+  serviceAccountName: example-serviceaccount
 `,
   )
   .setIn(
@@ -3846,7 +3821,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -3862,7 +3837,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -3876,7 +3851,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -3897,7 +3872,7 @@ spec:
     apiVersion: v1
     kind: ResourceQuota
     metadata:
-      name: example-resourcequota
+      name: sample-resourcequota
       namespace: default
     spec:
       hard:
@@ -5313,5 +5288,162 @@ spec:
               parameters:
               - name: message
                 value: "hello world"
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'default'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-priviligedfalse-psp
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-priviligedfalse-psp
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample2'],
+    `
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-nonrootpsp
+spec:
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: MustRunAsNonRoot
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample3'],
+    `
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-usergrouppsp
+spec:
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: MustRunAs
+  runAsUser:
+    rule: RunAsAny
+  runAsGroup:
+    rule: MustRunAs
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample4'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-volumespsp
+spec:
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample5'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-requiredDropCapabilities-psp
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+  requiredDropCapabilities:
+  - KILL
+  - CHOWN
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample6'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-allowflexvolumes
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+    - flexVolume
+  allowedFlexVolumes:
+    - driver: example/lvm
+    - driver: example/cifs
 `,
   );

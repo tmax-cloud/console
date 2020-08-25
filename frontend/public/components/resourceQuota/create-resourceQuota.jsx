@@ -42,6 +42,7 @@ class ResourceQuotaFormComponent extends React.Component {
       inProgress: false,
       type: 'form',
       quota: [['', '']],
+      isDuplicated: false,
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
@@ -79,21 +80,29 @@ class ResourceQuotaFormComponent extends React.Component {
   _updateQuota(quota) {
     this.setState({
       quota: quota.keyValuePairs,
+      isDuplicated: quota.isDuplicated,
     });
   }
+
   save(e) {
     e.preventDefault();
     const { kind, metadata } = this.state.resourceQuota;
     this.setState({ inProgress: true });
     const newResourceQuota = _.assign({}, this.state.resourceQuota);
 
+    if (this.state.isDuplicated) {
+      this.setState({ inProgress: false });
+      return;
+    }
+
+    const resourceQuotaOptionsMap = new Map(ResourceQuotaFormComponent.resourceQuotaOptions);
+
     let quota = {};
     this.state.quota.forEach(arr => {
-      if (arr[0] === 'etc') {
-        quota[arr[1]] = arr[2];
-      } else {
-        quota[arr[0]] = arr[2];
-      }
+      let key;
+      key = arr[0] === 'etc' ? arr[1] : arr[0];
+      const value = resourceQuotaOptionsMap.get(key) ?? key;
+      quota[value] = arr[2];
     });
 
     if (quota !== {}) {
@@ -115,23 +124,23 @@ class ResourceQuotaFormComponent extends React.Component {
 
     const resourceQuotaOptions = [
       {
-        value: 'limits.cpu',
+        value: 'CPU Limits',
         label: 'CPU Limits',
       },
       {
-        value: 'limits.memory',
+        value: 'Memory Limits',
         label: 'Memory Limits',
       },
       {
-        value: 'requests.cpu',
+        value: 'CPU Requests',
         label: 'CPU Requests',
       },
       {
-        value: 'requests.memory',
+        value: 'Memory Requests',
         label: 'Memory Requests',
       },
       {
-        value: 'pods',
+        value: 'Number Of Pods',
         label: t('CONTENT:NUMBEROFPODS'),
       },
       {
@@ -162,7 +171,7 @@ class ResourceQuotaFormComponent extends React.Component {
               </div>
             </Section>
             <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
-              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} />
+              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
             </Section>
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
               <button type="submit" className="btn btn-primary" id="save-changes">
@@ -180,30 +189,10 @@ class ResourceQuotaFormComponent extends React.Component {
 }
 
 ResourceQuotaFormComponent.resourceQuotaOptions = [
-  {
-    value: 'limits.cpu',
-    label: 'CPU Limits',
-  },
-  {
-    value: 'limits.memory',
-    label: 'Memory Limits',
-  },
-  {
-    value: 'requests.cpu',
-    label: 'CPU Requests',
-  },
-  {
-    value: 'requests.memory',
-    label: 'Memory Requests',
-  },
-  {
-    value: 'pods',
-    label: '파드 수',
-  },
-  {
-    value: 'etc',
-    label: '기타',
-  },
+  ['CPU Limits', 'limits.cpu'],
+  ['Memory Limits', 'limits.memory'],
+  ['CPU Requests', 'requests.cpu'],
+  ['Memory Requests', 'requests.memory'],
 ];
 
 export const CreateResourceQuota = ({ match: { params } }) => {
