@@ -5289,4 +5289,161 @@ spec:
               - name: message
                 value: "hello world"
 `,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'default'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-priviligedfalse-psp
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-priviligedfalse-psp
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample2'],
+    `
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-nonrootpsp
+spec:
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: MustRunAsNonRoot
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample3'],
+    `
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-usergrouppsp
+spec:
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: MustRunAs
+  runAsUser:
+    rule: RunAsAny
+  runAsGroup:
+    rule: MustRunAs
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample4'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-volumespsp
+spec:
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample5'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-requiredDropCapabilities-psp
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+  requiredDropCapabilities:
+  - KILL
+  - CHOWN
+`,
+  )
+  .setIn(
+    [referenceForModel(k8sModels.PodSecurityPolicyModel), 'podsecuritypolicy-sample6'],
+    `
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: example-allowflexvolumes
+spec:
+  privileged: false 
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+    - flexVolume
+  allowedFlexVolumes:
+    - driver: example/lvm
+    - driver: example/cifs
+`,
   );
