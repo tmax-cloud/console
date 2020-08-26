@@ -103,6 +103,8 @@ volumes: [
           git config --global credential.username ${username}
           git config --global credential.helper "!echo password=${password}; echo"          
         """
+        sh "git tag ${PRODUCT}_${VER}"
+        sh "git push origin HEAD:${BRANCH} --tags"    
 
         sh """
           echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
@@ -111,15 +113,14 @@ volumes: [
           date '+%F  %r' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
 
           git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
-          --pretty=format:"- %s (%cn) %n    Message: %b" \
-          --simplify-merges ${PRE_VER}..${VER} \
+          --pretty=format:\"- %s (%cn) %n    Message: %b\" \
+          --simplify-merges ${PRODUCT}_${PRE_VER}..${PRODUCT}_${VER} \
           >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
         """
         sh "rm -r ./temp-yaml"
         sh "git add -A"
         sh "git commit -m 'build ${PRODUCT}_${VER}' "
-        sh "git tag ${VER}"
-        sh "git push origin HEAD:${BRANCH} --tags"        
+        sh "git push origin HEAD:${BRANCH}"        
 
       }
     }
