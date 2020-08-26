@@ -152,10 +152,10 @@ class ResourceQuotaClaimFormComponent extends React.Component {
     return (
       <div className="rbac-edit-binding co-m-pane__body">
         <Helmet>
-          <title>{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.resourceQuotaClaim.kind, t) })}</title>
+          <title>{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.resourceQuotaClaim.kind.toUpperCase()}`) })}</title>
         </Helmet>
         <form className="co-m-pane__body-group co-create-secret-form" onSubmit={this.save}>
-          <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.resourceQuotaClaim.kind, t) })}</h1>
+          <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: t(`RESOURCE:${this.state.resourceQuotaClaim.kind.toUpperCase()}`) })}</h1>
           <p className="co-m-pane__explanation">{t('STRING:RESOURCEQUOTACLAIM-CREATE-0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
