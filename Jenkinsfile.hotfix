@@ -79,7 +79,7 @@ volumes: [
         sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
 
         secret = sh (
-          script: 'kubectl get secret console-https-secret -A | grep console-https-secret',
+          script: 'kubectl get secret -A | grep console-https-secret',
           returnStdout: true
         ).trim()
         sh """
@@ -104,15 +104,15 @@ volumes: [
         """
 
         sh """
-          echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-          echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-          date '+%F  %r' >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
+          echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG_hotfix_${PRODUCT}_${VER}.md
+          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG_hotfix_${PRODUCT}_${VER}.md
+          echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG_hotfix_${PRODUCT}_${VER}.md
+          date '+%F  %r' >> ./docs-internal/CHANGELOG_hotfix_${PRODUCT}_${VER}.md
 
           git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
           --pretty=format:"- %s (%cn) %n    Message: %b" \
           --simplify-merges ${PRE_VER}..${VER} \
-          >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
+          >> ./docs-internal/CHANGELOG_hotfix_${PRODUCT}_${VER}.md
         """
         sh "git add -A"
         sh "git commit -m 'build ${PRODUCT}_${VER}' "

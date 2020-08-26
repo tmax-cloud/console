@@ -80,7 +80,7 @@ volumes: [
         sh "kubectl apply -f ./temp-yaml/1.initialization.yaml"
 
         secret = sh (
-          script: 'kubectl get secret console-https-secret -A | grep console-https-secret',
+          script: 'kubectl get secret -A | grep console-https-secret',
           returnStdout: true
         ).trim()
         sh """
