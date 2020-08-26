@@ -87,6 +87,7 @@ func decodeSubprotocolCloud(encodedProtocol string) (string, error) {
 
 var headerBlacklistCloud = []string{"Cookie", "X-CSRFToken"}
 
+// serveHTTP에서 websocket 연결에 무관한 코드 주석처리
 func (p *Proxy) ServeHTTPCloud(w http.ResponseWriter, r *http.Request) {
 	// // Block scripts from running in proxied content for browsers that support Content-Security-Policy.
 	// w.Header().Set("Content-Security-Policy", "sandbox;")
