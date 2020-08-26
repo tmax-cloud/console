@@ -440,6 +440,7 @@ func (s *Server) HTTPHandler() http.Handler {
 	if s.VncProxyConfig != nil {
 		vncProxyAPIPath := vncEndpoint
 		// vncProxy := httputil.NewSingleHostReverseProxy(s.VncProxyConfig.Endpoint)
+		// websocket proxy를 위해 proxyCloud 추가
 		vncProxy := proxy.NewProxyCloud(s.VncProxyConfig)
 		handle(vncProxyAPIPath,
 			http.StripPrefix(proxy.SingleJoiningSlashCloud(s.BaseURL.Path, vncProxyAPIPath),
