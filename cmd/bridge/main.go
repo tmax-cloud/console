@@ -361,7 +361,9 @@ func main() {
 
 		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
 		srv.VncProxyConfig = &proxy.Config{
-			TLSClientConfig: tlsConfig,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
 		}
