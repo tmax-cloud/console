@@ -307,7 +307,7 @@ func main() {
 		}
 		// NOTE: kubeflow 추가 // 윤진수
 		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *fkubeflowEndpoint)
-		srv.KubeflowProxyConfig = &proxy.Config{
+		srv.HyperflowProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        kubeflowEndpoint,
 		}
@@ -433,7 +433,7 @@ func main() {
 		}
 		// NOTE: kubeflow 추가 // 윤진수
 		kubeflowEndpoint := validateFlagIsURL("kubeflow-endpoint", *fkubeflowEndpoint)
-		srv.KubeflowProxyConfig = &proxy.Config{
+		srv.HyperflowProxyConfig = &proxy.Config{
 
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
