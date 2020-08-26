@@ -313,14 +313,14 @@ func main() {
 		}
 
 		// NOTE: vnc 추가 // 윤진수
-		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
-		srv.VncProxyConfig = &proxy.Config{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
-			},
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        vncEndpoint,
-		}
+		// vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
+		// srv.VncProxyConfig = &proxy.Config{
+		// 	TLSClientConfig: &tls.Config{
+		// 		InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+		// 	},
+		// 	HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+		// 	Endpoint:        vncEndpoint,
+		// }
 
 		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
 		srv.HyperAuthProxyConfig = &proxy.Config{
@@ -359,6 +359,12 @@ func main() {
 			Endpoint:        k8sEndpoint,
 		}
 
+		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
+		srv.VncProxyConfig = &proxy.Config{
+			TLSClientConfig: tlsConfig,
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        vncEndpoint,
+		}
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 
 		// NOTE: 아래 코드 주석처리
