@@ -460,6 +460,7 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
+			Origin:          "http://localhost",
 		}
 
 		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
