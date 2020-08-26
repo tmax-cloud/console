@@ -24,7 +24,7 @@ nodePorts=$(ssh root@$k8sIP "
 ")
 
 eval $nodePorts
-KUBEFLOW_IP=192.168.6.185
+KUBEFLOW_IP=172.22.1.11
 KUBEFLOW_PORT=80
 
 ./bin/bridge \

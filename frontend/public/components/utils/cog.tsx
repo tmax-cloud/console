@@ -127,9 +127,8 @@ const cogFactory: CogFactory = {
     return {
       label: t('CONTENT:CONNECT'),
       callback: () => {
-        const regex = /:[0-9]+$/g;
-        const kubeAPIServerIP = window.SERVER_FLAGS.kubeAPIServerURL.replace(regex, ':31380').replace('https', 'http');
-        return window.open(`${kubeAPIServerIP}/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`);
+        let url = `/api/kubeflow/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+        window.open(url);
       },
     };
   },
