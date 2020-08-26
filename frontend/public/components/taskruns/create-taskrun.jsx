@@ -345,7 +345,7 @@ class TaskRunFormComponent extends React.Component {
     this.save = this.save.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   onNamespaceChanged(namespace) {
     this.setState({ selectedNamespace: namespace, selectedServiceAccount: null, selectedTask: null, paramList: [], arrayParamList: [], outputList: [], inputList: [] }, () => {
@@ -372,9 +372,9 @@ class TaskRunFormComponent extends React.Component {
       paramList: this.state.paramList.map((item, idx) => {
         return idx === paramIndex
           ? {
-              ...item,
-              value: e.target.value,
-            }
+            ...item,
+            value: e.target.value,
+          }
           : item;
       }),
     });
@@ -385,9 +385,9 @@ class TaskRunFormComponent extends React.Component {
       [`${type}List`]: this.state[`${type}List`].map((item, idx) => {
         return idx == resourceIdx
           ? {
-              ...item,
-              selectedPR: pipelineName,
-            }
+            ...item,
+            selectedPR: pipelineName,
+          }
           : item;
       }),
     });
@@ -399,18 +399,18 @@ class TaskRunFormComponent extends React.Component {
     const pl = this.state.arrayParamList.map((item, idx) => {
       return idx === editorIdx
         ? {
-            ...item,
-            values,
-          }
+          ...item,
+          values,
+        }
         : item;
     });
     this.setState({
       arrayParamList: this.state.arrayParamList.map((item, idx) => {
         return idx === editorIdx
           ? {
-              ...item,
-              values,
-            }
+            ...item,
+            values,
+          }
           : item;
       }),
     });
@@ -444,15 +444,15 @@ class TaskRunFormComponent extends React.Component {
         //params, resource가 없는경우
         const params = details.spec.params
           ? details.spec.params.map(cur => {
-              return {
-                name: cur.name,
-                type: cur.type,
-                default: cur.default || '',
-                value: cur.default || '',
-                description: cur.description || '',
-                isRequired: !cur.default,
-              };
-            })
+            return {
+              name: cur.name,
+              type: cur.type,
+              default: cur.default || '',
+              value: cur.default || '',
+              description: cur.description || '',
+              isRequired: !cur.default,
+            };
+          })
           : [];
         const paramList = [];
         const arrayParamList = [];
@@ -576,6 +576,11 @@ class TaskRunFormComponent extends React.Component {
       },
     };
     console.log('newTask', newTaskRun);
+
+    if (!timeout) {
+      delete newTaskRun.spec.timeout;
+    }
+
     const ko = kindObj(kind);
 
     (this.props.isCreate ? k8sCreate(ko, newTaskRun) : k8sUpdate(ko, newTaskRun, metadata.namespace, newTaskRun.metadata.name)).then(

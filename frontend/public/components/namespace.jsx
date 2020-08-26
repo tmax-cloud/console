@@ -357,7 +357,13 @@ class NamespaceDropdown_ extends React.Component {
 
     if (loadError && loadError.response && loadError.response.status === 403) {
       if (!window.location.href.includes('roles') && !window.location.href.includes('rolebindings') && !window.location.href.includes('tasks')) {
-        window.location.href = '/noNamespace';
+        if (window.SERVER_FLAGS.HDCModeFlag) {
+          // HDC 모드에서 할당된 네임 스페이스 없는 경우 Trial 신청 화면으로 리다이렉트하는 로직 추가
+          window.location.href = window.SERVER_FLAGS.TmaxCloudPortalURL + '/#!/pricing/policy/trial';
+          return;
+        } else {
+          window.location.href = '/noNamespace';
+        }
       }
     }
 

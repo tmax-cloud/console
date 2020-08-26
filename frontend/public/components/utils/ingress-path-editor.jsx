@@ -13,29 +13,53 @@ export class IngressEditor extends React.Component {
     this._remove = this._remove.bind(this);
   }
   _append(event) {
-    const { updateParentData, pathPairs, nameValueId, allowSorting } = this.props;
+    const { updateParentData, pathPairs, nameValueId, allowSorting, initialServiceName, initialServicePort } = this.props;
     let lastIndex = this.props.pathPairs.length - 1;
-    updateParentData({ pathPairs: allowSorting ? pathPairs.concat([['', '', 'TCP', pathPairs.length]]) : pathPairs.concat([['', '', '']]) }, nameValueId);
+    updateParentData({ pathPairs: allowSorting ? pathPairs.concat([['', '', 'TCP', pathPairs.length]]) : pathPairs.concat([['', initialServiceName, initialServicePort]]) }, nameValueId);
   }
 
   _remove(i) {
     const { updateParentData, nameValueId } = this.props;
     const pathPairs = _.cloneDeep(this.props.pathPairs);
     pathPairs.splice(i, 1);
-    updateParentData({ pathPairs: pathPairs.length ? pathPairs : [['', '', '']] }, nameValueId);
+    updateParentData({ pathPairs: pathPairs.length ? pathPairs : [['', initialServiceName, initialServicePort]] }, nameValueId);
   }
 
   _change(e, i, type) {
-    const { updateParentData, nameValueId } = this.props;
+    const { updateParentData, nameValueId, serviceList } = this.props;
+    // const pathPairs = this.props.pathPairs.map((pair, idx) => {
+    //   if (i === idx) {
+    //     pair[type] = type === 2 ? Number(e.target.value) : e.target.value;
+    //   }
+    //   return [...pair];
+    // });
     const pathPairs = _.cloneDeep(this.props.pathPairs);
-    pathPairs[i][type] = type === 2 ? Number(e.target.value) : e.target.value;
+    switch (type) {
+      case 0:
+        pathPairs[i][type] = e.target.value;
+        break;
+      case 1:
+        pathPairs[i][type] = e.target.value;
+        pathPairs[i][2] = serviceList.find(service => service.name === e.target.value).portList[0].value;
+        break;
+      case 2:
+        pathPairs[i][type] = Number(e.target.value);
+        break;
+
+      default:
+        break;
+    }
     updateParentData({ pathPairs }, nameValueId);
   }
   render() {
     const { pathNameString, servicePortString, serviceNameString, addString, pathPairs, allowSorting, readOnly, nameValueId, t, serviceList, servicePortList } = this.props;
     const pathItems = pathPairs.map((pair, i) => {
+      let portList = servicePortList;
+      if (serviceList.length > 0 && pair[1]) {
+        portList = serviceList.find(service => service.name === pair[1]).portList;
+      }
       const key = _.get(pair, [IngressEditorPair.Index], i);
-      return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} servicePortList={servicePortList} pathNameString={pathNameString} servicePortString={servicePortString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={i} onRemove={this._remove} rowSourceId={nameValueId} />;
+      return <IngressPairElement onChange={this._change} index={i} t={t} serviceList={serviceList} servicePortList={portList} pathNameString={pathNameString} serviceNameString={serviceNameString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={i} onRemove={this._remove} rowSourceId={nameValueId} />;
     });
     return (
       <div style={{ marginLeft: '20px', marginTop: '40px' }}>
@@ -75,8 +99,8 @@ class IngressPairElement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      servicePortList: [],
       serviceList: this.props.serviceList,
+      servicePortList: this.props.servicePortList,
     };
     this._onRemove = this._onRemove.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
@@ -94,10 +118,8 @@ class IngressPairElement extends React.Component {
     onChange(e, index, IngressEditorPair.PathName);
   }
   _onChangeServiceName(e) {
-    const { index, onChange, serviceList } = this.props;
+    const { index, onChange } = this.props;
     onChange(e, index, IngressEditorPair.ServiceName);
-    // service port get
-    this._getServicePortList(e.target.value);
   }
   _onChangeServicePort(e) {
     const { index, onChange } = this.props;
@@ -118,24 +140,30 @@ class IngressPairElement extends React.Component {
       },
     );
   }
-
   render() {
-    const { pathNameString, allowSorting, readOnly, pair, t, servicePortOptions, serviceList, pathPairs, servicePortList } = this.props;
-    const { servicePortList } = this.state;
+    const { pathNameString, allowSorting, readOnly, pair, t, serviceList, pathPairs, servicePortList } = this.props;
     const deleteButton = (
       <React.Fragment>
         <Button children={<FaMinus />} onClick={this._onRemove}></Button>
         <span className="sr-only">Delete</span>
       </React.Fragment>
     );
-    servicePortList = !servicePortList.length ? this.props.servicePortList : this.state.servicePortList;
-    let portList = servicePortList.map((port, i) => {
+    const serviceListOptions = serviceList.map((service, i) => {
       return (
-        <option key={i} value={port.port}>
-          {port.name}
+        <option key={i} value={service.name}>
+          {service.name}
         </option>
       );
     });
+    let portList = servicePortList
+      ? servicePortList.map((port, i) => {
+          return (
+            <option key={i} value={port.value}>
+              {port.name}
+            </option>
+          );
+        })
+      : [];
 
     return (
       <div className={classNames('row', 'pairs-list__row')} ref={node => (this.node = node)}>
@@ -144,7 +172,7 @@ class IngressPairElement extends React.Component {
         </div>
         <div className="col-md-3 col-xs-3 pairs-list__protocol-field">
           <select className="form-control" value={pair[IngressEditorPair.ServiceName]} onChange={this._onChangeServiceName}>
-            {serviceList}
+            {serviceListOptions}
           </select>
         </div>
         <div className="col-md-2 col-xs-2 pairs-list__port-field">
