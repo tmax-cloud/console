@@ -127,7 +127,7 @@ const cogFactory: CogFactory = {
     return {
       label: t('CONTENT:CONNECT'),
       callback: () => {
-        let url = `/api/kubeflow/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+        let url = `/api/hyperflow/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
         window.open(url);
       },
     };
@@ -191,12 +191,12 @@ export class Cog extends DropdownMixin {
             </div>
           </Tooltip>
         ) : (
-          <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })}>
-            <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
-            <span className="sr-only">Actions</span>
-            {this.state.active && <CogItems options={options} onClick={this.onClick} />}
-          </div>
-        )}
+            <div ref={this.dropdownElement} onClick={this.toggle} className={classNames('co-m-cog', { 'co-m-cog--disabled': isDisabled })}>
+              <span className={classNames('fa', 'fa-cog', 'co-m-cog__icon', { 'co-m-cog__icon--disabled': isDisabled })} aria-hidden="true"></span>
+              <span className="sr-only">Actions</span>
+              {this.state.active && <CogItems options={options} onClick={this.onClick} />}
+            </div>
+          )}
       </div>
     );
   }
