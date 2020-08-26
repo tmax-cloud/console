@@ -185,6 +185,8 @@
     "LIMITRANGE-CREATE-0": "Create a resource such as Pods, containers, and permanent volume claims in a namespace.",
     "LIMITRANGE-CREATE-2": "Set the LimitRange for each resource type of a Pod to create in a namespace.",
     "NAMESPACE-CREATE-0": "",
+    "NAMESPACECLAIM-CREATE-0": "Request a namespace by specifying resources such as CPU and memory.",
+    "NAMESPACECLAIM-CREATE-1": "Restrict quota for each resource type of a namespace to create.",
     "REGISTRY-CREATE_0": "registry:2.6.2",
     "REGISTRY-CREATE_1": "Enter an image address of a registry to create.",
     "REGISTRY-CREATE_2": "Enter account information required to access a registry to create.",
