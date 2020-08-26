@@ -94,7 +94,7 @@ const Graphs = requirePrometheus(
                   <Gauge title={t('CONTENT:SCHEDULERSUP')} query={`(sum(up{job="${schedulerJob}"} == 1) / count(up{job="${schedulerJob}"})) * 100`} invert={true} thresholds={{ warn: 15, error: 50 }} />
                 </div>
                 <div className="col-md-3 col-sm-6">
-                  <Gauge title={t('CONTENT:APIREQUESTSUCCESSRATE')} query={'sum(rate(apiserver_request_count{code=~"2.."}[5m])) / sum(rate(apiserver_request_count[5m])) * 100'} invert={true} thresholds={{ warn: 15, error: 30 }} />
+                  <Gauge title={t('CONTENT:APIREQUESTSUCCESSRATE')} query={'sum(rate(apiserver_request_total{code=~"2.."}[5m])) / sum(rate(apiserver_request_total[5m])) * 100'} invert={true} thresholds={{ warn: 15, error: 30 }} />
                 </div>
               </div>
             </div>
