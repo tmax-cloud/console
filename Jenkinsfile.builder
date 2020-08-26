@@ -10,12 +10,12 @@ def CHOICE = "${params.choice}"
 def MAJOR_VERSION = "${params.major_version}"
 def MINOR_VERSION = "${params.minor_version}"
 def PATCH_VERSION = "${params.patch_version}"
-def PRE_VERSION = (("${params.hotfix_version}" as int) - 1).toString()
+def PRE_VERSION = (("${params.patch_version}" as int) - 1).toString()
 def HOTFIX_VERSION = "${params.hotfix_version}"
 def DOCKER_REGISTRY = "tmaxcloudck"
 def PRODUCT = "hypercloud-console"
 def VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${HOTFIX_VERSION}"
-def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}.${PRE_VERSION}"
+def PRE_VER = "${MAJOR_VERSION}.${MINOR_VERSION}.${PRE_VERSION}.${HOTFIX_VERSION}"
 // def VER = "1.1.38.1"
 def REALM = "${params.realm}"
 def KEYCLOAK = "${params.keycloak}"
@@ -64,22 +64,23 @@ volumes: [
     
     // stage('K8S Deploy'){
     //   container('kubectl'){     
-    //     sh "sed -i 's#@@NAME_NS@@#${NAME_NS}#g' ./install-yaml/*.yaml"
-    //     sh "cat ./install-yaml/1.initialization.yaml"
-    //     sh "sed -i 's#@@NODE_PORT@@#${NODE_PORT}#g' ./install-yaml/2.svc-np.yaml"
-    //     sh "cat ./install-yaml/2.svc-np.yaml"
+    //     sh "cp -r ./install-yaml ./temp-yaml"
+    //     sh "sed -i 's#@@NAME_NS@@#${NAME_NS}#g' ./temp-yaml/*.yaml"
+    //     sh "cat ./temp-yaml/1.initialization.yaml"
+    //     sh "sed -i 's#@@NODE_PORT@@#${NODE_PORT}#g' ./temp-yaml/2.svc-np.yaml"
+    //     sh "cat ./temp-yaml/2.svc-np.yaml"
         
-    //     sh "sed -i 's#@@REALM@@#${REALM}#g' ./install-yaml/3.deployment-pod.yaml "
-    //     sh "sed -i 's#@@KEYCLOAK@@#${KEYCLOAK}#g' ./install-yaml/3.deployment-pod.yaml "
-    //     sh "sed -i 's#@@CLIENTID@@#${CLIENTID}#g' ./install-yaml/3.deployment-pod.yaml "
-    //     sh "sed -i 's#@@VER@@#${VER}#g' ./install-yaml/3.deployment-pod.yaml "
-    //     sh "sed -i '/--hdc-mode=/d' ./install-yaml/3.deployment-pod.yaml"
-    //     sh "sed -i '/--tmaxcloud-portal=/d' ./install-yaml/3.deployment-pod.yaml"
-    //     sh "cat ./install-yaml/3.deployment-pod.yaml"
-    //     sh "kubectl apply -f ./install-yaml/1.initialization.yaml"
+    //     sh "sed -i 's#@@REALM@@#${REALM}#g' ./temp-yaml/3.deployment.yaml "
+    //     sh "sed -i 's#@@KEYCLOAK@@#${KEYCLOAK}#g' ./temp-yaml/3.deployment.yaml "
+    //     sh "sed -i 's#@@CLIENTID@@#${CLIENTID}#g' ./temp-yaml/3.deployment.yaml "
+    //     sh "sed -i 's#@@VER@@#${VER}#g' ./temp-yaml/3.deployment.yaml "
+    //     sh "sed -i '/--hdc-mode=/d' ./temp-yaml/3.deployment.yaml"
+    //     sh "sed -i '/--tmaxcloud-portal=/d' ./temp-yaml/3.deployment.yaml"
+    //     sh "cat ./temp-yaml/3.deployment.yaml"
+    //     sh "kubectl apply -f ./temp-yaml/1.initialization.yaml"
 
     //     secret = sh (
-    //       script: 'kubectl get secret console-https-secret -n "${NAME_NS}"',
+    //       script: 'kubectl get secret -A | grep console-https-secret',
     //       returnStdout: true
     //     ).trim()
     //     sh """
@@ -87,38 +88,10 @@ volumes: [
     //       kubectl create secret tls console-https-secret --cert=tls/tls.crt --key=tls/tls.key -n ${NAME_NS}
     //     fi
     //     """
-    //     sh "kubectl apply -f ./install-yaml/2.svc-lb.yaml"
-    //     sh "kubectl apply -f ./install-yaml/2.svc-np.yaml"
-    //     sh "kubectl apply -f ./install-yaml/3.deployment.yaml"
-    //     // sh "kubectl apply -f ./install-yaml/3.deployment-pod.yaml"
-    //   }
-    // }
-
-    // stage('GIT Commit & Push'){
-    //   withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
-    //     sh """
-    //       git config --global user.name ${username}
-    //       git config --global user.email jinsoo_youn@tmax.co.kr
-    //       git config --global credential.username ${username}
-    //       git config --global credential.helper "!echo password=${password}; echo"          
-    //     """
-
-    //     sh """
-    //       echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-    //       echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-    //       echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-    //       date '+%F  %r' >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-
-    //       git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
-    //       --pretty=format:"- %s (%cn) %n    Message: %b" \
-    //       --simplify-merges ${PRE_VER}..${VER} \
-    //       >> ./docs-internal/CHANGELOG(hotfix)_${PRODUCT}_${VER}.md
-    //     """
-    //     sh "git add -A"
-    //     sh "git commit -m 'build ${PRODUCT}_${VER}' "
-    //     sh "git tag ${VER}"
-    //     sh "git push origin HEAD:${BRANCH} --tags"        
-
+    //     sh "kubectl apply -f ./temp-yaml/2.svc-lb.yaml"
+    //     sh "kubectl apply -f ./temp-yaml/2.svc-np.yaml"
+    //     sh "kubectl apply -f ./temp-yaml/3.deployment.yaml"
+    //     // sh "kubectl apply -f ./temp-yaml/3.deployment.yaml"
     //   }
     // }
 
