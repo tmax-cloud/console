@@ -47,7 +47,7 @@ export const ModalTitle = ({ children, className = 'modal-header' }) => (
   </div>
 );
 
-export const ModalBody = ({ needScroll = true, children }) => <div className={classNames(needScroll ? 'modal-body scroll' : 'modal-body')}>{children}</div>;
+export const ModalBody = ({ needScroll = false, children }) => <div className={classNames(needScroll ? 'modal-body scroll' : 'modal-body')}>{children}</div>;
 
 export const ModalFooter = ({ message, errorMessage, inProgress, children }) => {
   return (
