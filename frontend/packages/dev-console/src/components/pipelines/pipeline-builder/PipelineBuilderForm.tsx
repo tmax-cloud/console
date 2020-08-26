@@ -195,10 +195,11 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
               isSubmitting={isSubmitting}
               submitLabel={existingPipeline ? 'Save' : t('CONTENT:CREATE')}
               disableSubmit={
-                !dirty ||
-                !_.isEmpty(errors) ||
-                !_.isEmpty(status?.tasks) ||
-                values.tasks.length === 0
+                false
+                // !dirty ||
+                // !_.isEmpty(errors) ||
+                // !_.isEmpty(status?.tasks) ||
+                // values.tasks.length === 0
               }
               resetLabel={t('CONTENT:CANCEL')}
               sticky
