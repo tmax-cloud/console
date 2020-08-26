@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { k8sCreate, k8sUpdate } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
 import { useTranslation } from 'react-i18next';
-import { ResourcePlural } from '../utils/lang/resource-plural';
 import { NsDropdown } from '../RBAC';
 import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { SelectKeyValueEditor } from '../utils/select-key-value-editor';
@@ -47,6 +46,7 @@ class ResourceQuotaClaimFormComponent extends React.Component {
       inProgress: false,
       type: 'form',
       quota: [['', '']],
+      isDuplicated: false,
     };
     this.onResourceNameChanged = this.onResourceNameChanged.bind(this);
     this.onNameChanged = this.onNameChanged.bind(this);
@@ -90,6 +90,7 @@ class ResourceQuotaClaimFormComponent extends React.Component {
   _updateQuota(quota) {
     this.setState({
       quota: quota.keyValuePairs,
+      isDuplicated: quota.isDuplicated,
     });
   }
   save(e) {
@@ -180,7 +181,7 @@ class ResourceQuotaClaimFormComponent extends React.Component {
               <button type="submit" className="btn btn-primary" id="save-changes">
                 {t('CONTENT:CREATE')}
               </button>
-              <Link to={formatNamespacedRouteForResource('resourcequotas')} className="btn btn-default" id="cancel">
+              <Link to={formatNamespacedRouteForResource('resourcequotaclaims')} className="btn btn-default" id="cancel">
                 {t('CONTENT:CANCEL')}
               </Link>
             </ButtonBar>
