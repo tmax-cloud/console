@@ -442,7 +442,7 @@ func (s *Server) HTTPHandler() http.Handler {
 		// vncProxy := httputil.NewSingleHostReverseProxy(s.VncProxyConfig.Endpoint)
 		vncProxy := proxy.NewProxyCloud(s.VncProxyConfig)
 		handle(vncProxyAPIPath,
-			http.StripPrefix(proxy.SingleJoiningSlash(s.BaseURL.Path, vncProxyAPIPath),
+			http.StripPrefix(proxy.SingleJoiningSlashCloud(s.BaseURL.Path, vncProxyAPIPath),
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					// r.Header.Add("Origin", "http://localhost")
 					vncProxy.ServeHTTPCloud(w, r)
