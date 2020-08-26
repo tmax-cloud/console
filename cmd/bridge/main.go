@@ -447,8 +447,8 @@ func main() {
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
 			},
-			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint:        vncEndpoint,
+			// HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint: vncEndpoint,
 		}
 
 		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
