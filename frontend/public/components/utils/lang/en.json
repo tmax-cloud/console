@@ -888,8 +888,7 @@
     "MAILSERVER": "Mail Server",
     "MAILFROM": "Mail From",
     "TITLE": "Title",
-    "CONTENT": "Content",
-    "SERVICECLASSGROUP" : "Service Class Group"
+    "CONTENT": "Content"
   },
   "RESOURCE": {
     "HOME": "Home",
@@ -899,7 +898,6 @@
     "EVENT": "Event",
     "SERVICECATALOG": "Service Catalog",
     "SERVICEBROKER": "Service Broker",
-    "NAMESPACESERVICECLASS" : "Namespace Service Class",
     "SERVICECLASS": "Service Class",
     "SERVICEPLAN": "Service Plan",
     "CLUSTERSERVICEBROKER": "Cluster Service Broker",

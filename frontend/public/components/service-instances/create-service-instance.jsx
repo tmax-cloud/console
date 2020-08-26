@@ -14,6 +14,7 @@ import * as k8sModels from '../../models';
 import { coFetch } from '../../co-fetch';
 import { k8sCreate } from '../../module/k8s';
 import { NsDropdown } from '../RBAC';
+import { TextFilter } from '../factory';
 // import { element } from 'prop-types';
 
 const ServiceInstanceTypeAbstraction = {
@@ -261,11 +262,10 @@ const withServiceInstanceForm = SubForm =>
     }
 
     componentDidUpdate(prevProps, prevState) {
-      if (_.isEqual(prevState, this.state)) {
-        return;
-      }
-      
-      this.getClassList();
+      if ( !_.isEqual(prevState.namespace, this.state.namespace) || !_.isEqual(prevState.serviceClass, this.state.serviceClass)) {
+        this.getClassList();
+      }  
+      return;
     }
 
     setKind(e){
@@ -313,7 +313,7 @@ const withServiceInstanceForm = SubForm =>
             {/* stepper */}
             {currentStep === 0 && (
               <div>
-                <Section label={t('CONTENT:SERVICECLASSGROUP')}>
+                <Section label={'서비스 클래스 분류'}>
                   <form>
                     <label className="radio-inline" style={{ marginRight: '50px' }}>
                       <input type="radio" name = "ServiceClass" value="Cluster" checked={this.state.serviceClass === 'Cluster'} 
@@ -321,18 +321,27 @@ const withServiceInstanceForm = SubForm =>
                     </label>
                     <label className="radio-inline" style={{ marginRight: '50px' }}>
                       <input type="radio" name = "ServiceClass" value="Namespace" checked={this.state.serviceClass === 'Namespace'}
-                      onChange={this.setKind}/> {t('RESOURCE:NAMESPACESERVICECLASS')}
+                      onChange={this.setKind}/> {'네임스페이스 서비스 클래스'}
                     </label>
                   </form>
                 </Section>
                 {this.state.serviceClass === "Namespace" && (
-                  <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
+                  <Section label={t('CONTENT:NAMESPACE')}>
                     <NsDropdown id="role-namespace" t={t} onChange={this.onNamespaceChanged} />
+                    <p style={{color: '#777'}}>{"접근 권한이 있는 네임스페이스에서 서비스 클래스를 선택합니다."}</p>
                   </Section>
                 )}
                 <div className="separator"></div>
                 {this.state.classList.length > 0 ? (
                 <div>
+                  <div className = "row form-group">
+                    <div className = "col-xs-2 control-label">
+                      <b style={{fontSize : "16px"}}>{"서비스 클래스 목록"}</b>
+                    </div>
+                    {/* <div className = "co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
+                      <TextFilter id="serviceClass" autoFocus={true} onChange={e => this.applyFilter(textFilter, e.target.value)}></TextFilter>
+                    </div> */}
+                  </div>
                   <CardList classList={this.state.classList} onChangeClass={this.onChangeClass} selectedClass={selectedClass} />
                   <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                     <div style={{ marginTop: '15px' }}>
@@ -524,7 +533,7 @@ export const CreateServiceInstance = ({ match: { params } }) => {
     },
   ];
   const ServiceInstanceFormComponent = serviceInstanceFormFactory(params.type);
-  return <ServiceInstanceFormComponent namespace={params.ns} t={t} steps={steps} />;
+  return <ServiceInstanceFormComponent namespace='default' t={t} steps={steps} />;
 };
 
 export const EditServiceInstance = ({ match: { params }, kind }) => (
