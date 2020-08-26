@@ -159,8 +159,11 @@ class RegistryFormComponent extends React.Component {
       service[serviceType] = {};
       if (serviceType === 'ingress') {
         service[serviceType]['domainName'] = this.state.domainName;
+        service[serviceType]['port'] = 443;
+      } else {
+        service[serviceType]['port'] = Number(this.state.port);
       }
-      service[serviceType]['port'] = Number(this.state.port);
+
       newRegistry.spec.service = service;
 
       let pvc = {};
@@ -231,7 +234,7 @@ class RegistryFormComponent extends React.Component {
               <label>{t('CONTENT:SERVICETYPE')}</label>
               <RadioGroup currentValue={this.state.serviceType} items={serviceTypes} onChange={this.onServiceTypeChanged} formRow={true} />
               {this.state.serviceType === 'ingress' ? <LabelInput label={t('CONTENT:DOMAINNAME')} onChange={this.onServiceDomainNameChanged} value={this.state.domainName} id="registry-domain-name" placeholder="192.168.6.110.nip.io" /> : ''}
-              <LabelInput label={t('CONTENT:PORT')} onChange={this.onServicePortChanged} value={this.state.port} id="registry-port" placeholder="1~65535" half />
+              {this.state.serviceType === 'loadBalancer' ? <LabelInput label={t('CONTENT:PORT')} onChange={this.onServicePortChanged} value={this.state.port} id="registry-port" placeholder="1~65535" half /> : ''}
               <span>{t('STRING:REGISTRY-CREATE_3')}</span>
             </Section>
             <Section label={t('CONTENT:PVC')} isRequired={true}>
