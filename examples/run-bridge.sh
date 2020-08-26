@@ -24,7 +24,7 @@ nodePorts=$(ssh root@$k8sIP "
 ")
 
 eval $nodePorts
-KUBEFLOW_IP=192.168.6.185
+KUBEFLOW_IP=172.22.1.11
 KUBEFLOW_PORT=80
 
 ./bin/bridge \
@@ -44,7 +44,7 @@ KUBEFLOW_PORT=80
     --kiali-endpoint=http://$k8sIP:$KIALI_PORT/api/kiali \
     --jaeger-endpoint=http://$k8sIP:$JAEGER_PORT/api/jaeger \
     --approval-endpoint=http://$k8sIP:$APPROVAL_PORT/approve \
-    --kubeflow-endpoint=http://$KUBEFLOW_IP:$KUBEFLOW_PORT/ \
+    --kubeflow-endpoint=http://$KUBEFLOW_IP:$KUBEFLOW_PORT \
     --vnc-endpoint=http://$k8sIP:$VNC_PORT \
     --hyperauth-endpoint=http://0.0.0.0:8080 \
     --keycloak-realm=tmax \

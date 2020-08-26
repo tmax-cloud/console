@@ -1226,7 +1226,7 @@ export const NotebookModel: K8sKind = {
   labelPlural: 'Notebook Server',
   apiVersion: 'v1',
   path: 'notebooks',
-  apiGroup: 'kubeflow.org',
+  apiGroup: 'hyperflow.tmax.io',
   plural: 'notebooks',
   abbr: 'NB',
   namespaced: true,

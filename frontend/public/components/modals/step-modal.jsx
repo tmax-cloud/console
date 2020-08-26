@@ -290,7 +290,7 @@ class BaseStepModal extends React.Component {
     return (
       <form style={{ width: '500px' }} onSubmit={this._submit} name="form">
         <ModalTitle>{title}</ModalTitle>
-        <ModalBody>
+        <ModalBody needScroll={true}>
           <div>
             <SecondSection isModal={true} label={t('CONTENT:TYPE')} isRequired={false}>
               <div className="row">

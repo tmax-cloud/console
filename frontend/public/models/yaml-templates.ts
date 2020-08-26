@@ -4878,8 +4878,6 @@ spec:
           type: resourcenslink
         - name: RoleBindingClaim
           type: resourcenslink
-        - name: Usersecuritypolicy
-          type: resourceclusterlink
         - name: ServiceAccount
           type: resourcenslink
 `,
@@ -4951,39 +4949,41 @@ spec:
   .setIn(
     [referenceForModel(k8sModels.NotebookModel), 'default'],
     `
-    apiVersion: kubeflow.org/v1
+    apiVersion: hyperflow.tmax.io/v1
     kind: Notebook
     metadata:
       labels:
         app: my-notebook
       name: my-notebook
-      namespace: my-namespace
+      namespace: default
     spec:
+      volumeClaim:
+      - name: workspace-my-notebook
+        size: 10Gi
       template:
         spec:
           containers:
-          - env: []
-            image: gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-cpu:1.0.0
-            name: my-notebook
-            resources:
-              requests:
-                cpu: "1"
-                memory: "2"
-            volumeMounts:
-            - mountPath: /home/jovyan
-              name: workspace-my-notebook
-            - mountPath: /dev/shm
-              name: dshm
+            - env: []
+              image: 'gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-cpu:1.0.0'
+              name: my-notebook
+              resources:
+                requests:
+                  cpu: '1'
+                  memory: '2'
+              volumeMounts:
+                - mountPath: /home/jovyan
+                  name: workspace-my-notebook
+                - mountPath: /dev/shm
+                  name: dshm
           serviceAccountName: default-editor
           ttlSecondsAfterFinished: 300
           volumes:
-          - name: workspace-my-notebook
-            persistentVolumeClaim:
-              claimName: workspace-my-notebook
-          - emptyDir:
-              medium: Memory
-            name: dshm
-    
+            - name: workspace-my-notebook
+              persistentVolumeClaim:
+                claimName: workspace-my-notebook
+            - emptyDir:
+                medium: Memory
+              name: dshm
 `,
   )
   .setIn(
