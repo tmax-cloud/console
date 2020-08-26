@@ -315,6 +315,9 @@ func main() {
 		// NOTE: vnc 추가 // 윤진수
 		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
 		srv.VncProxyConfig = &proxy.Config{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
+			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
 		}
@@ -447,8 +450,8 @@ func main() {
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: *fK8sModeOffClusterSkipVerifyTLS,
 			},
-			// HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			Endpoint: vncEndpoint,
+			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
+			Endpoint:        vncEndpoint,
 		}
 
 		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
