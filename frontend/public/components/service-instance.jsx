@@ -18,10 +18,10 @@ const ServiceInstanceHeader = props => {
         {t('CONTENT:NAMESPACE')}
       </ColHead>
       <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.serviceClassName">
-        {t('RESOURCE:CLUSTERSERVICECLASS')}
+        {t('RESOURCE:SERVICECLASS')}
       </ColHead>
       <ColHead {...props} className="col-sm-2 hidden-xs" sortField="spec.servicePlanName">
-        {t('RESOURCE:CLUSTERSERVICEPLAN')}
+        {t('RESOURCE:SERVICEPLAN')}
       </ColHead>
       <ColHead {...props} className="col-sm-2 hidden-xs" sortField="metadata.creationTimestamp">
         {t('CONTENT:CREATED')}
@@ -92,7 +92,8 @@ export const ServiceInstancesPage = props => {
   };
   const createProps = {
     items: createItems,
-    createLink: type => `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new/${type !== 'yaml' ? type : ''}`,
+    createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new/${type !== 'yaml' ? type : ''}` 
+    : `/k8s/cluster/serviceinstances/new/${type !== 'yaml' ? type : ''}`),
   };
   return (
     <ListPage

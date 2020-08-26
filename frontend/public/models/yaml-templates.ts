@@ -4878,8 +4878,6 @@ spec:
           type: resourcenslink
         - name: RoleBindingClaim
           type: resourcenslink
-        - name: Usersecuritypolicy
-          type: resourceclusterlink
         - name: ServiceAccount
           type: resourcenslink
 `,
