@@ -70,13 +70,13 @@ volumes: [
         sh "sed -i 's#@@NODE_PORT@@#${NODE_PORT}#g' ./temp-yaml/2.svc-np.yaml"
         sh "cat ./temp-yaml/2.svc-np.yaml"
         
-        sh "sed -i 's#@@REALM@@#${REALM}#g' ./temp-yaml/3.deployment-pod.yaml "
-        sh "sed -i 's#@@KEYCLOAK@@#${KEYCLOAK}#g' ./temp-yaml/3.deployment-pod.yaml "
-        sh "sed -i 's#@@CLIENTID@@#${CLIENTID}#g' ./temp-yaml/3.deployment-pod.yaml "
-        sh "sed -i 's#@@VER@@#${VER}#g' ./temp-yaml/3.deployment-pod.yaml "
-        sh "sed -i '/--hdc-mode=/d' ./temp-yaml/3.deployment-pod.yaml"
-        sh "sed -i '/--tmaxcloud-portal=/d' ./temp-yaml/3.deployment-pod.yaml"
-        sh "cat ./temp-yaml/3.deployment-pod.yaml"
+        sh "sed -i 's#@@REALM@@#${REALM}#g' ./temp-yaml/3.deployment.yaml "
+        sh "sed -i 's#@@KEYCLOAK@@#${KEYCLOAK}#g' ./temp-yaml/3.deployment.yaml "
+        sh "sed -i 's#@@CLIENTID@@#${CLIENTID}#g' ./temp-yaml/3.deployment.yaml "
+        sh "sed -i 's#@@VER@@#${VER}#g' ./temp-yaml/3.deployment.yaml "
+        sh "sed -i '/--hdc-mode=/d' ./temp-yaml/3.deployment.yaml"
+        sh "sed -i '/--tmaxcloud-portal=/d' ./temp-yaml/3.deployment.yaml"
+        sh "cat ./temp-yaml/3.deployment.yaml"
         sh "kubectl apply -f ./temp-yaml/1.initialization.yaml"
 
         secret = sh (
@@ -91,7 +91,7 @@ volumes: [
         sh "kubectl apply -f ./temp-yaml/2.svc-lb.yaml"
         sh "kubectl apply -f ./temp-yaml/2.svc-np.yaml"
         sh "kubectl apply -f ./temp-yaml/3.deployment.yaml"
-        // sh "kubectl apply -f ./temp-yaml/3.deployment-pod.yaml"
+        // sh "kubectl apply -f ./temp-yaml/3.deployment.yaml"
       }
     }
 
@@ -117,7 +117,7 @@ volumes: [
           --simplify-merges ${PRODUCT}_${PRE_VER}..${PRODUCT}_${VER} \
           >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
         """
-        sh "rm -r ./temp-yaml"
+        // sh "rm -r ./temp-yaml"
         sh "git add -A"
         sh "git commit -m 'build ${PRODUCT}_${VER}' "
         sh "git push origin HEAD:${BRANCH}"        
