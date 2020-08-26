@@ -45,7 +45,7 @@ export class SelectKeyValueEditor extends React.Component {
   };
 
   render() {
-    const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, nameValueId, t, options, isDuplicated } = this.props;
+    const { keyString, valueString, addString, keyValuePairs, allowSorting, readOnly, nameValueId, t, options, isDuplicated, desc, anotherDesc } = this.props;
     const keyValueItems = keyValuePairs.map((pair, i) => {
       const key = _.get(pair, [SelectKeyValueEditorPair.Index], i);
       return <SelectKeyValuePairElement options={options} onChange={this._change} onBlur={this._blur} t={t} index={i} keyString={keyString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} rowSourceId={nameValueId} />;
@@ -71,7 +71,8 @@ export class SelectKeyValueEditor extends React.Component {
               </React.Fragment>
             )}
           </div>
-          <div className="col-md-12 col-xs-12">{this.props.desc ? <span>{this.props.desc}</span> : ''}</div>
+          <div className="col-md-12 col-xs-12">{desc ? <span>{desc}</span> : ''}</div>
+          <div className="col-md-12 col-xs-12">{anotherDesc ? <span>{anotherDesc}</span> : ''}</div>
         </div>
       </React.Fragment>
     );

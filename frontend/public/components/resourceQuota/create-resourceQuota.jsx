@@ -95,13 +95,10 @@ class ResourceQuotaFormComponent extends React.Component {
       return;
     }
 
-    const resourceQuotaOptionsMap = new Map(ResourceQuotaFormComponent.resourceQuotaOptions);
-
     let quota = {};
     this.state.quota.forEach(arr => {
       let key;
       key = arr[0] === 'etc' ? arr[1] : arr[0];
-      const value = resourceQuotaOptionsMap.get(key) ?? key;
       quota[value] = arr[2];
     });
 
@@ -124,23 +121,23 @@ class ResourceQuotaFormComponent extends React.Component {
 
     const resourceQuotaOptions = [
       {
-        value: 'CPU Limits',
+        value: 'limits.cpu',
         label: 'CPU Limits',
       },
       {
-        value: 'Memory Limits',
+        value: 'limits.memory',
         label: 'Memory Limits',
       },
       {
-        value: 'CPU Requests',
+        value: 'requests.cpu',
         label: 'CPU Requests',
       },
       {
-        value: 'Memory Requests',
+        value: 'requests.memory',
         label: 'Memory Requests',
       },
       {
-        value: 'Number Of Pods',
+        value: 'pods',
         label: t('CONTENT:NUMBEROFPODS'),
       },
       {
@@ -171,7 +168,7 @@ class ResourceQuotaFormComponent extends React.Component {
               </div>
             </Section>
             <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
-              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
+              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} anotherDesc={t('STRING:RESOURCEQUOTA-CREATE-3')} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
             </Section>
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
               <button type="submit" className="btn btn-primary" id="save-changes">
@@ -187,13 +184,6 @@ class ResourceQuotaFormComponent extends React.Component {
     );
   }
 }
-
-ResourceQuotaFormComponent.resourceQuotaOptions = [
-  ['CPU Limits', 'limits.cpu'],
-  ['Memory Limits', 'limits.memory'],
-  ['CPU Requests', 'requests.cpu'],
-  ['Memory Requests', 'requests.memory'],
-];
 
 export const CreateResourceQuota = ({ match: { params } }) => {
   const { t } = useTranslation();
