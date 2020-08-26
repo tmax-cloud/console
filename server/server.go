@@ -54,7 +54,7 @@ const (
 	approvalProxyEndpoint     = "/api/approve/"
 	grafanaProxyEndpoint      = "/api/grafana/"
 	kialiProxyEndpoint        = "/api/kiali/"
-	kubeflowEndpoint          = "/api/kubeflow/"
+	hyperflowEndpoint         = "/api/hyperflow/"
 	vncEndpoint               = "/api/vnc/"
 	hyperAuthEndpoint         = "/api/auth/"
 	// NOTE: hypercloud api 프록시를 위해 hypercloudProxyEndpoint 추가 // 정동민
@@ -127,7 +127,7 @@ type Server struct {
 	ApprovalProxyConfig   *proxy.Config
 	GrafanaProxyConfig    *proxy.Config
 	KialiProxyConfig      *proxy.Config
-	KubeflowProxyConfig   *proxy.Config
+	HyperflowProxyConfig  *proxy.Config
 	VncProxyConfig        *proxy.Config
 	HyperAuthProxyConfig  *proxy.Config
 
@@ -426,13 +426,13 @@ func (s *Server) HTTPHandler() http.Handler {
 		)
 	}
 
-	if s.KubeflowProxyConfig != nil {
-		kubeflowProxyAPIPath := kubeflowEndpoint
-		kubeflowProxy := httputil.NewSingleHostReverseProxy(s.KubeflowProxyConfig.Endpoint)
-		handle(kubeflowProxyAPIPath,
+	if s.HyperflowProxyConfig != nil {
+		hyperflowProxyAPIPath := hyperflowEndpoint
+		hyperflowProxy := httputil.NewSingleHostReverseProxy(s.HyperflowProxyConfig.Endpoint)
+		handle(hyperflowProxyAPIPath,
 			http.StripPrefix(s.BaseURL.Path,
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					kubeflowProxy.ServeHTTP(w, r)
+					hyperflowProxy.ServeHTTP(w, r)
 				})),
 		)
 	}
