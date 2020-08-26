@@ -37,10 +37,7 @@ class ResourceQuotaClaimFormComponent extends React.Component {
       },
       resourceName: '',
       spec: {
-        hard: {
-          'limits.cpu': '',
-          'limits.memory': '',
-        },
+        hard: {},
       },
     });
 
@@ -55,7 +52,6 @@ class ResourceQuotaClaimFormComponent extends React.Component {
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onNamespaceChanged = this.onNamespaceChanged.bind(this);
     this.onLabelChanged = this.onLabelChanged.bind(this);
-    // this.onQuotaChanged = this.onQuotaChanged.bind(this);
     this._updateQuota = this._updateQuota.bind(this);
     this.save = this.save.bind(this);
   }
@@ -71,13 +67,13 @@ class ResourceQuotaClaimFormComponent extends React.Component {
     this.setState({ resourceQuotaClaim });
   }
   onNamespaceChanged(namespace) {
-    let resourceQuota = { ...this.state.resourceQuota };
-    resourceQuota.metadata.namespace = String(namespace);
-    this.setState({ resourceQuota: resourceQuota });
+    let resourceQuotaClaim = { ...this.state.resourceQuotaClaim };
+    resourceQuotaClaim.metadata.namespace = String(namespace);
+    this.setState({ resourceQuotaClaim });
   }
   onLabelChanged(event) {
-    let resourceQuota = { ...this.state.resourceQuota };
-    resourceQuota.metadata.labels = {};
+    let resourceQuotaClaim = { ...this.state.resourceQuotaClaim };
+    resourceQuotaClaim.metadata.labels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
@@ -86,20 +82,11 @@ class ResourceQuotaClaimFormComponent extends React.Component {
           return;
         }
         document.getElementById('labelErrMsg').style.display = 'none';
-        resourceQuota.metadata.labels[item.split('=')[0]] = item.split('=')[1];
+        resourceQuotaClaim.metadata.labels[item.split('=')[0]] = item.split('=')[1];
       });
     }
-    this.setState({ resourceQuota: resourceQuota });
+    this.setState({ resourceQuotaClaim });
   }
-  // onQuotaChanged(event) {
-  //   let resourceQuotaClaim = { ...this.state.resourceQuotaClaim };
-  //   if (event.target.id === 'cpu') {
-  //     resourceQuotaClaim.spec.hard['limits.cpu'] = String(event.target.value);
-  //   } else {
-  //     resourceQuotaClaim.spec.hard['limits.memory'] = String(event.target.value);
-  //   }
-  //   this.setState({ resourceQuotaClaim });
-  // }
   _updateQuota(quota) {
     this.setState({
       quota: quota.keyValuePairs,
@@ -114,10 +101,10 @@ class ResourceQuotaClaimFormComponent extends React.Component {
     // quota 데이터 가공
     let quota = {};
     this.state.quota.forEach(arr => {
-      if (arr[0] !== '' && arr[1] !== '') {
-        quota[`requests.${arr[0]}`] = arr[1];
-      }
+      const key = arr[0] === 'etc' ? arr[1] : arr[0];
+      quota[key] = arr[2];
     });
+
     if (quota !== {}) {
       Object.assign(newResourceQuotaClaim.spec.hard, quota);
     }
@@ -135,7 +122,7 @@ class ResourceQuotaClaimFormComponent extends React.Component {
   render() {
     const { t } = this.props;
 
-    const resourceQuotaOptions = [
+    const resourceQuotaClaimOptions = [
       {
         value: 'limits.cpu',
         label: 'CPU Limits',
@@ -172,10 +159,10 @@ class ResourceQuotaClaimFormComponent extends React.Component {
           <p className="co-m-pane__explanation">{t('STRING:RESOURCEQUOTACLAIM-CREATE-0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.resourceQuotaClaim.metadata.name} id="resource-quota-name" required />
+              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.resourceQuotaClaim.metadata.name} id="resource-quota-claim-name" required />
             </Section>
             <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
-              <NsDropdown id="resource-quota-namespace" t={t} onChange={this.onNamespaceChanged} />
+              <NsDropdown id="resource-quota-claim-namespace" t={t} onChange={this.onNamespaceChanged} />
             </Section>
             <Section label={t('CONTENT:LABELS')} isRequired={false}>
               <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
@@ -184,10 +171,10 @@ class ResourceQuotaClaimFormComponent extends React.Component {
               </div>
             </Section>
             <Section label={t('CONTENT:RESOURCENAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onResourceNameChanged} value={this.state.resourceQuotaClaim.resourceName} id="resource-quota-resource-name" required />
+              <input className="form-control" type="text" onChange={this.onResourceNameChanged} value={this.state.resourceQuotaClaim.resourceName} id="resource-quota-claim-resource-name" required />
             </Section>
             <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
-              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} anotherDesc={t('STRING:RESOURCEQUOTA-CREATE-3')} options={resourceQuotaOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
+              <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} anotherDesc={t('STRING:RESOURCEQUOTA-CREATE-3')} options={resourceQuotaClaimOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
             </Section>
             <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
               <button type="submit" className="btn btn-primary" id="save-changes">

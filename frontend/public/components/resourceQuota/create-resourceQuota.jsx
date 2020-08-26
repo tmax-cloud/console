@@ -97,9 +97,8 @@ class ResourceQuotaFormComponent extends React.Component {
 
     let quota = {};
     this.state.quota.forEach(arr => {
-      let key;
-      key = arr[0] === 'etc' ? arr[1] : arr[0];
-      quota[value] = arr[2];
+      const key = arr[0] === 'etc' ? arr[1] : arr[0];
+      quota[key] = arr[2];
     });
 
     if (quota !== {}) {
