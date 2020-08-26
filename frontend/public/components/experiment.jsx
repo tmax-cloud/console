@@ -63,7 +63,9 @@ const Details = ({ obj }) => {
   let trial = obj.status.trials + '/' + obj.spec.maxTrialCount;
   let status = obj.status.conditions.length ? obj.status.conditions[obj.status.conditions.length - 1].type : '';
   let objectiveMetricName = obj.spec.objective.objectiveMetricName;
-  let currentOptimal = objectiveMetricName ? obj.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
+  const metrics = _.get(obj, 'status.currentOptimalTrial.observation.metrics');
+  let currentOptimal = objectiveMetricName && Array.isArray(metrics) ? metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
+
   let optimal = currentOptimal.value + '/' + obj.spec.objective.goal;
   return (
     <React.Fragment>
