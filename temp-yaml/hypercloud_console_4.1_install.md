@@ -24,7 +24,7 @@ console과 portal 둘 다 443 포트의 LB 서비스로 생성하거나, 또는 
   - `2.svc-lb.yaml` 또는 `2.svc-np.yaml` (적어도 하나 필수)
   - `3.deployment.yaml` (필수)
 - 일반적 루틴 : 이미 설치를 완료한 적이 있고 Namespace/Secret/Service를 바꾸지 않아도 되는 경우, 아래의 작업만 하면 충분하다.
-  - `kubectl apply -f 3.deployment-pod.yaml`
+  - `kubectl apply -f 3.deployment.yaml`
 
 ## 2. kubectl tool을 이용한 설치 
 

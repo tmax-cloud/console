@@ -9,7 +9,7 @@ spec:
   - name: "https"
     port: 80
     targetPort: 6443
-    nodePort: 31303
+    nodePort: 31304
   selector:
     app: console   
     hypercloud: ui
