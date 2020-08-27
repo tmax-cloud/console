@@ -106,18 +106,20 @@ volumes: [
         sh "git tag ${PRODUCT}_${VER}"
         sh "git push origin HEAD:${BRANCH} --tags"    
 
-        sh """
-          echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
-          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
-          echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
-          date '+%F  %r' >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
+        // NOTE: 4.1.3.0 정기 배포관련된 패치 노트는 젠킨스 이용 x tag가 꼬여서 직접 만들어서 업로드 함 
+        // sh """
+        //   echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG.md
+        //   echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG.md
+        //   echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG.md
+        //   date '+%F  %r' >> ./docs-internal/CHANGELOG.md
 
-          git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
-          --pretty=format:\"- %s (%cn) %n    Message: %b\" \
-          --simplify-merges ${PRODUCT}_${PRE_VER}..${PRODUCT}_${VER} \
-          >> ./docs-internal/CHANGELOG_${PRODUCT}_${VER}.md
-        """
-        // sh "rm -r ./temp-yaml"
+        //   git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
+        //   --pretty=format:\"- %s (%cn) %n    Message: %b\" \
+        //   --simplify-merges ${PRODUCT}_${PRE_VER}..${PRODUCT}_${VER} \
+        //   >> ./docs-internal/CHANGELOG.md
+        // """
+
+        //// sh "rm -r ./temp-yaml"
         sh "git add -A"
         sh "git commit -m 'build ${PRODUCT}_${VER}' "
         sh "git push origin HEAD:${BRANCH}"        
