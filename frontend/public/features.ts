@@ -9,7 +9,7 @@ import { k8sBasePath, referenceForModel } from './module/k8s/k8s';
 import { k8sCreate } from './module/k8s/resource';
 import { types } from './module/k8s/k8s-actions';
 import { coFetchJSON } from './co-fetch';
-import { getAccessToken, getRefreshToken } from './components/utils/auth';
+import { getAccessToken } from './components/utils/auth';
 
 // import { UIActions } from './ui/ui-actions';
 
@@ -80,7 +80,7 @@ const handleError = (res, flag, dispatch, cb) => {
 
 const calicoDaemonSetPath = `${k8sBasePath}/apis/apps/v1/daemonsets?fieldSelector=metadata.name%3Dkube-calico`;
 const detectCalicoFlags = dispatch => {
-  if ((window as any).SERVER_FLAGS.releaseModeFlag && (!getAccessToken() || !getRefreshToken())) {
+  if ((window as any).SERVER_FLAGS.releaseModeFlag && !getAccessToken()) {
     return;
   }
 
@@ -150,7 +150,7 @@ export let featureActions = [detectCalicoFlags, detectOpenShift, detectProjectsA
       spec: { resourceAttributes },
     };
     const fn = dispatch => {
-      if ((window as any).SERVER_FLAGS.releaseModeFlag && (!getAccessToken() || !getRefreshToken())) {
+      if ((window as any).SERVER_FLAGS.releaseModeFlag && !getAccessToken()) {
         return;
       }
       return k8sCreate(SelfSubjectAccessReviewModel, req).then(
