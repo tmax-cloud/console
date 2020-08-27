@@ -340,7 +340,7 @@ const withServiceInstanceForm = SubForm =>
         );
       };
       return (
-        <div className="rbac-edit-binding co-m-pane__body">
+        <div className="co-m-pane__body">
           <Helmet>
             <title>{title}</title>
           </Helmet>
@@ -352,7 +352,7 @@ const withServiceInstanceForm = SubForm =>
             <div className="separator"></div>
             {/* stepper */}
             {currentStep === 0 && (
-              <div>
+              <div className="rbac-edit-binding">
                 <Section label={'서비스 클래스 분류'}>
                   <form>
                     <label className="radio-inline" style={{ marginRight: '50px' }}>
@@ -441,13 +441,13 @@ const withServiceInstanceForm = SubForm =>
                             <div className={'col-xs-2 form-group ' + (isRequired ? 'required' : '')}>
                               <div className="control-label">{parameter.displayName}</div>
                             </div>
-                            <div className="col-xs-10" id={parameter.name}>
+                            <div className="col-xs-5" id={parameter.name}>
                               <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
                             </div>
                           </div>
                           <div className="row">
                             <div className="col-xs-2" />
-                            <p className="col-xs-10 co-m-pane__explanation">{parameter.description}</p>
+                            <p className="col-xs-10" style={{color: '#777'}}>{parameter.description}</p>
                           </div>
                         </div>
                       );
