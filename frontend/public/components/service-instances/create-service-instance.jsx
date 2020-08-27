@@ -162,7 +162,7 @@ const withServiceInstanceForm = SubForm =>
       if (!selectedClass) {
         return;
       }
-      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/default/templates/${selectedClass.name}`)
+      coFetch(`/api/kubernetes/apis/${k8sModels.TemplateModel.apiGroup}/${k8sModels.TemplateModel.apiVersion}/namespaces/${this.state.namespace}/templates/${selectedClass.name}`)
         .then(res => res.json())
         .then(res => {
           let paramList = res.parameters.map(function (parm) {
@@ -277,6 +277,7 @@ const withServiceInstanceForm = SubForm =>
         newNamespaceInstance = _.cloneDeep(this.state.NamespaceServiceInstance);
         newNamespaceInstance.metadata = newServiceInstance.metadata;
         newNamespaceInstance.metadata.namespace = this.state.namespace;
+        newNamespaceInstance.spec.parameters = newServiceInstance.spec.parameters;
         newNamespaceInstance.spec.serviceClassName = this.state.selectedClass.name;
         newNamespaceInstance.spec.servicePlanName = this.state.selectedPlan.name;
 
@@ -421,18 +422,14 @@ const withServiceInstanceForm = SubForm =>
               ))}
             {currentStep === 2 && (
               <form onSubmit={this.save}>
-                <div className="row">
-                  <div className="col-xs-2">
-                    <strong>{t('RESOURCE:SERVICEINSTANCE')}</strong>
-                  </div>
-                  <div className="col-xs-10">
-                    <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                      {t('CONTENT:NAME')}
-                    </label>
-                    <input className="form-control" type="text" onChange={this.onNameChanged} id="application-name" required />
-                    <p className="help-block" id="secret-name-help"></p>
-                  </div>
-                </div>
+                <Section label={t('RESOURCE:SERVICEINSTANCE')}>
+                  <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                    {t('CONTENT:NAME')}
+                  </label>
+                  <input className="form-control" type="text" onChange={this.onNameChanged} id="application-name" required />
+                  <p className="help-block" id="secret-name-help"></p>
+                </Section>
+                <div className="separator"></div>
                 {paramList.length > 0 && (
                   <Section label={t('CONTENT:PARAMETERS')} key="params">
                     {paramList.map((parameter, index) => {
@@ -444,7 +441,7 @@ const withServiceInstanceForm = SubForm =>
                             <div className={'col-xs-2 form-group ' + (isRequired ? 'required' : '')}>
                               <div className="control-label">{parameter.displayName}</div>
                             </div>
-                            <div className="col-xs-3" id={parameter.name}>
+                            <div className="col-xs-10" id={parameter.name}>
                               <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
                             </div>
                           </div>
@@ -458,17 +455,12 @@ const withServiceInstanceForm = SubForm =>
                   </Section>
                 )}
                 <div className="separator"></div>
-                <div className="row">
-                  <div className="col-xs-2">
-                    <strong>{t('CONTENT:LABELS')}</strong>
+                <Section label={t('CONTENT:LABELS')}>
+                  <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
+                  <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                    <p>{t('VALIDATION:LABEL_FORM')}</p>
                   </div>
-                  <div className="col-xs-10">
-                    <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
-                    <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-                      <p>{t('VALIDATION:LABEL_FORM')}</p>
-                    </div>
-                  </div>
-                </div>
+                </Section>
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                   <div style={{ marginTop: '15px' }}>
                     <button type="button" className="btn btn-default" onClick={this.onClickBack}>
