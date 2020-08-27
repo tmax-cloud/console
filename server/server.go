@@ -439,11 +439,14 @@ func (s *Server) HTTPHandler() http.Handler {
 
 	if s.VncProxyConfig != nil {
 		vncProxyAPIPath := vncEndpoint
-		vncProxy := httputil.NewSingleHostReverseProxy(s.VncProxyConfig.Endpoint)
+		// vncProxy := httputil.NewSingleHostReverseProxy(s.VncProxyConfig.Endpoint)
+		// websocket proxy를 위해 proxyCloud 추가
+		vncProxy := proxy.NewProxyCloud(s.VncProxyConfig)
 		handle(vncProxyAPIPath,
 			http.StripPrefix(proxy.SingleJoiningSlash(s.BaseURL.Path, vncProxyAPIPath),
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					vncProxy.ServeHTTP(w, r)
+					// r.Header.Add("Origin", "http://localhost")
+					vncProxy.ServeHTTPCloud(w, r)
 				})),
 		)
 	}
