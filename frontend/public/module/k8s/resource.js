@@ -41,7 +41,7 @@ export const resourceURL = (model, options) => {
     u += `/${options.path}`;
   }
   if (!_.isEmpty(options.queryParams)) {
-    q = _.map(options.queryParams, function (v, k) {
+    q = _.map(options.queryParams, function(v, k) {
       return `${k}=${v}`;
     });
     u += `?${q.join('&')}`;
@@ -108,14 +108,15 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
     }).join('&') || '';
 
   if (kind.kind === 'Namespace') {
-    listURL = `${document.location.origin}/api/hypercloud/nameSpace?labelSelector&userId=${getId()}`;
+    listURL = `${document.location.origin}/api/hypercloud/nameSpace?userId=${getId()}`;
+    return coFetchJSON(`${listURL}${query && '&' + query}`, 'GET', options).then(result => (raw ? result : result.items));
   } else if (kind.kind === 'NamespaceClaim') {
-    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim?labelSelector&userId=${getId()}`;
+    listURL = `${document.location.origin}/api/hypercloud/nameSpaceClaim?userId=${getId()}`;
+    return coFetchJSON(`${listURL}${query && '&' + query}`, 'GET', options).then(result => (raw ? result : result.items));
   } else {
     listURL = resourceURL(kind, { ns: params.ns });
+    return coFetchJSON(`${listURL}${query && '?' + query}`, 'GET', options).then(result => (raw ? result : result.items));
   }
-
-  return coFetchJSON(`${listURL}${query && '?' + query}`, 'GET', options).then(result => (raw ? result : result.items));
 };
 
 export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {

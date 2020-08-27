@@ -89,6 +89,7 @@ var headerBlacklistCloud = []string{"Cookie", "X-CSRFToken"}
 
 // serveHTTP에서 websocket 연결에 무관한 코드 주석처리
 func (p *Proxy) ServeHTTPCloud(w http.ResponseWriter, r *http.Request) {
+	// sandbox 사용 주석처리
 	// // Block scripts from running in proxied content for browsers that support Content-Security-Policy.
 	// w.Header().Set("Content-Security-Policy", "sandbox;")
 	// // Add `X-Content-Security-Policy` for IE11 and older browsers.
@@ -136,6 +137,7 @@ func (p *Proxy) ServeHTTPCloud(w http.ResponseWriter, r *http.Request) {
 		for _, protocols := range value {
 			for _, protocol := range strings.Split(protocols, ",") {
 				protocol = strings.TrimSpace(protocol)
+				// proxy header에 필요 없는 해더 내용 주석처리
 				// TODO: secure by stripping newlines & other invalid stuff
 				// "Impersonate-User" and "Impersonate-Group" and bridge specific (not a k8s thing)
 				// if strings.HasPrefix(protocol, "Impersonate-User.") {
