@@ -60,6 +60,20 @@ const withServiceInstanceForm = SubForm =>
             parameters: {},
           },
         },
+        NamespaceServiceInstance: {
+          apiVersion: 'servicecatalog.k8s.io/v1beta1',
+          kind: 'ServiceInstance',
+          metadata: {
+            name: '',
+            namespace: props.namespace,
+            labels: {},
+          },
+          spec: {
+            serviceClassName: '',
+            servicePlanName: '',
+            parameters: {},
+          },
+        },
         classList: [],
         selectedClass: null,
         planList: [],
@@ -239,21 +253,46 @@ const withServiceInstanceForm = SubForm =>
       e.preventDefault();
       const { kind } = this.state.serviceInstance;
       const newServiceInstance = _.cloneDeep(this.state.serviceInstance);
-      newServiceInstance.spec.clusterServiceClassName = this.state.selectedClass.name;
-      newServiceInstance.spec.clusterServicePlanName = this.state.selectedPlan.name;
-      const ko = kindObj(kind);
-      //     if (this.state.serviceInstance.metadata.name) {
-      this.setState({ inProgress: true });
-      k8sCreate(ko, newServiceInstance).then(
-        () => {
-          this.setState({ inProgress: false });
-          history.push(formatNamespacedRouteForResource('serviceinstances'));
-        },
-        err => this.setState({ error: err.message, inProgress: false }),
-      );
-      // } else {
-      //   this.setState({ error: "Name is required." });
-      // }
+      const newNamespaceInstance;
+      const instanceType;
+
+      if(this.state.serviceClass==="Cluster"){
+        newServiceInstance.spec.clusterServiceClassName = this.state.selectedClass.name;
+        newServiceInstance.spec.clusterServicePlanName = this.state.selectedPlan.name;
+
+        const ko = kindObj(kind);
+        //     if (this.state.serviceInstance.metadata.name) {
+        this.setState({ inProgress: true });
+  
+  
+        k8sCreate(ko, newServiceInstance).then(
+          () => {
+            this.setState({ inProgress: false });
+            history.push(formatNamespacedRouteForResource('serviceinstances'));
+          },
+          err => this.setState({ error: err.message, inProgress: false }),
+        );
+      }
+      else {
+        newNamespaceInstance = _.cloneDeep(this.state.NamespaceServiceInstance);
+        newNamespaceInstance.metadata = newServiceInstance.metadata;
+        newNamespaceInstance.metadata.namespace = this.state.namespace;
+        newNamespaceInstance.spec.serviceClassName = this.state.selectedClass.name;
+        newNamespaceInstance.spec.servicePlanName = this.state.selectedPlan.name;
+
+        const ko = kindObj(kind);
+        //     if (this.state.serviceInstance.metadata.name) {
+        this.setState({ inProgress: true });
+  
+  
+        k8sCreate(ko, newNamespaceInstance).then(
+          () => {
+            this.setState({ inProgress: false });
+            history.push(formatNamespacedRouteForResource('serviceinstances'));
+          },
+          err => this.setState({ error: err.message, inProgress: false }),
+        );
+      }
     }
     componentDidMount() {
       this.getClassList();
@@ -533,7 +572,7 @@ export const CreateServiceInstance = ({ match: { params } }) => {
     },
   ];
   const ServiceInstanceFormComponent = serviceInstanceFormFactory(params.type);
-  return <ServiceInstanceFormComponent namespace='default' t={t} steps={steps} />;
+  return <ServiceInstanceFormComponent namespace={params.ns} t={t} steps={steps} />;
 };
 
 export const EditServiceInstance = ({ match: { params }, kind }) => (
