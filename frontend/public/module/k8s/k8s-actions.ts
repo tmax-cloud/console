@@ -2,7 +2,7 @@
 
 import { getResources as getResources_ } from './get-resources';
 import { k8sList, k8sWatch, k8sGet } from './resource';
-import { getAccessToken, getRefreshToken } from '../../components/utils/auth';
+import { getAccessToken } from '../../components/utils/auth';
 
 const types = {
   resources: 'resources',
@@ -39,7 +39,7 @@ const actions = {
   [types.modifyObject]: action_(types.modifyObject),
 
   getResources: () => dispatch => {
-    if (!getAccessToken() || !getRefreshToken()) {
+    if (!getAccessToken()) {
       return;
     }
     dispatch({ type: types.getResourcesInFlight });
