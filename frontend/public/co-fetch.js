@@ -4,7 +4,7 @@ import "whatwg-fetch";
 import { analyticsSvc } from "./module/analytics";
 import { authSvc } from "./module/auth";
 import store from "./redux";
-import { getAccessToken, getRefreshToken } from './components/utils/auth';
+import { getAccessToken } from './components/utils/auth';
 
 const initDefaults = {
   headers: {},
@@ -109,7 +109,7 @@ const getCSRFToken = () =>
 
 export const coFetch = (url, options = {}, timeout = 20000) => {
   if (url.indexOf('otp') < 0 && url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
-    if (!getAccessToken() || !getRefreshToken()) {
+    if (!getAccessToken()) {
       return;
     }
   }
@@ -163,7 +163,7 @@ export const coFetchUtils = {
 
 export const coFetchJSON = (url, method = "GET", options = {}) => {
   if (url.indexOf('otp') < 0 && url.indexOf('login') < 0 && url.indexOf('logout') < 0 && url.indexOf('tokenrefresh') < 0) {
-    if (!getAccessToken() || !getRefreshToken()) {
+    if (!getAccessToken()) {
       return;
     }
   }
