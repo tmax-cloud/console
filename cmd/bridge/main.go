@@ -313,10 +313,13 @@ func main() {
 		}
 
 		// NOTE: vnc 추가 // 윤진수
+		// vnc ws proxy 위해 Origin 항목 추가 (proxyCloud.go 에서 Origin 검증에 필요)
 		vncEndpoint := validateFlagIsURL("vnc-endpoint", *fvncEndpoint)
 		srv.VncProxyConfig = &proxy.Config{
+			// TLSClientConfig: tlsConfig,
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
+			Origin:          "http://localhost",
 		}
 
 		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)
@@ -449,6 +452,7 @@ func main() {
 			},
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			Endpoint:        vncEndpoint,
+			Origin:          "http://localhost",
 		}
 
 		hyperAuthEndpoint := validateFlagIsURL("hyperAuth-endpoint", *fhyperAuthEndpoint)

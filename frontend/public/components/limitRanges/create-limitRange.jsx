@@ -99,14 +99,10 @@ class LimitRangeFormComponent extends React.Component {
       return;
     }
 
-    const limitRangeOptionsMap = new Map(LimitRangeFormComponent.limitRangeOptions);
-
     let quota = {};
     this.state.quota.forEach(arr => {
-      let key;
-      key = arr[0] === 'etc' ? arr[1] : arr[0];
-      const mappedKey = limitRangeOptionsMap.get(key);
-      if (mappedKey) {
+      const key = arr[0] === 'etc' ? arr[1] : arr[0];
+      if (key) {
         const minOrMax = mappedKey.split('.')[0];
         const cpuOrMemory = mappedKey.split('.')[2];
         quota[minOrMax] = {};
@@ -135,19 +131,19 @@ class LimitRangeFormComponent extends React.Component {
 
     const limitRangeOptions = [
       {
-        value: 'Max CPU Limits',
+        value: 'max.limits.cpu',
         label: 'Max CPU Limits',
       },
       {
-        value: 'Min CPU Limits',
+        value: 'min.limits.cpu',
         label: 'Min CPU Limits',
       },
       {
-        value: 'Max Memory Limits',
+        value: 'max.limits.memory',
         label: 'Max Memory Limits',
       },
       {
-        value: 'Min Memory Limits',
+        value: 'min.limits.memory',
         label: 'Min Memory Limits',
       },
       {

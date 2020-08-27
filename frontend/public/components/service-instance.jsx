@@ -39,8 +39,8 @@ const ServiceInstanceRow = () =>
           <ResourceLink kind="ServiceInstance" name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
         </div>
         <div className="col-xs-2 col-sm-2 co-break-word">{obj.metadata.namespace ? <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} /> : 'None'}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.clusterServiceClassName}</div>
-        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.clusterServicePlanName}</div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.clusterServiceClassName} {obj.spec.serviceClassName} </div>
+        <div className="col-xs-2 col-sm-2 hidden-xs">{obj.spec.clusterServicePlanName} {obj.spec.servicePlanName}  </div>
         <div className="col-xs-4 col-sm-4 hidden-xs">{fromNow(obj.metadata.creationTimestamp)}</div>
       </div>
     );
@@ -58,10 +58,10 @@ const Details = ({ obj: clusterserviceinstance }) => {
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <dt>{t('RESOURCE:CLUSTERSERVICECLASS')}</dt>
-              <dd>{clusterserviceinstance.spec.clusterServiceClassName}</dd>
-              <dt>{t('RESOURCE:CLUSTERSERVICEPLAN')}</dt>
-              <dd>{clusterserviceinstance.spec.clusterServicePlanName}</dd>
+              <dt>{t('RESOURCE:SERVICECLASS')}</dt>
+              <dd>{clusterserviceinstance.spec.clusterServiceClassName} {clusterserviceinstance.spec.serviceClassName}</dd>
+              <dt>{t('RESOURCE:SERVICEPLAN')}</dt>
+              <dd>{clusterserviceinstance.spec.clusterServicePlanName} {clusterserviceinstance.spec.servicePlanName}</dd>
               {/* {activeDeadlineSeconds && (
                 <React.Fragment>
                   <dt>Active Deadline</dt>
@@ -92,8 +92,7 @@ export const ServiceInstancesPage = props => {
   };
   const createProps = {
     items: createItems,
-    createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new/${type !== 'yaml' ? type : ''}` 
-    : `/k8s/cluster/serviceinstances/new/${type !== 'yaml' ? type : ''}`),
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/serviceinstances/new/${type !== 'yaml' ? type : ''}`,
   };
   return (
     <ListPage

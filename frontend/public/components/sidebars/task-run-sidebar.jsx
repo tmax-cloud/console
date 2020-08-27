@@ -18,7 +18,7 @@ export const TaskRunSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
     {
       header: t('STRING:TASKRUN-SIDEBAR_2'),
       details: t('STRING:TASKRUN-SIDEBAR_3'),
-      templateName: 'taskrun-sample',
+      templateName: 'taskrun-sample2',
       kind: referenceForModel(TaskRunModel),
     },
   ];
