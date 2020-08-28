@@ -4,17 +4,14 @@ import * as React from 'react';
 import { LimitRangeModel } from '../../models';
 import { referenceForModel } from '../../module/k8s';
 import { SampleYaml } from './resource-sidebar';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export const LimitRangeSidebar = ({ loadSampleYaml, downloadSampleYaml }) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const samples = [
     {
-      header: 'Limit Range 설정',
-      details: `
-        namespace에서 pod 또는 container가 사용 가능한 리소스(cpu, memory)의 범위를 지정할 수 있습니다.
-        (default : 기본 리소스 쿼타 제한 정보 / defaultRequest : 기본 리소스 쿼타 요청 정보)
-      `,
+      header: t('STRING:LIMITRANGE-SIDEBAR_0'),
+      details: t('STRING:LIMITRANGE-SIDEBAR_1'),
       templateName: 'limitrange-sample',
       kind: referenceForModel(LimitRangeModel),
     },
