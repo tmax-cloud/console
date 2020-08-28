@@ -219,7 +219,7 @@ export class Dropdown extends DropdownMixin {
 
   render() {
     const { active, autocompleteText, selectedKey, items, title, keyboardHoverKey } = this.state;
-    const { autocompleteFilter, autocompletePlaceholder, noButton, className, buttonClassName, menuClassName, dropDownClassName, titlePrefix } = this.props;
+    const { autocompleteFilter, autocompletePlaceholder, noButton, className, buttonClassName, menuClassName, dropDownClassName, titlePrefix, onFocus } = this.props;
 
     const rows = [];
 
@@ -257,7 +257,7 @@ export class Dropdown extends DropdownMixin {
             <ul role="listbox" ref={this.dropdownList} className={classNames('dropdown-menu', menuClassName)}>
               {autocompleteFilter && (
                 <div className="dropdown-menu__filter">
-                  <input autoFocus type="text" ref={input => (this.input = input)} onChange={this.changeTextFilter} placeholder={autocompletePlaceholder} value={autocompleteText || ''} autoCapitalize="none" onKeyDown={this.onKeyDown} className="form-control dropdown--text-filter" onClick={e => e.stopPropagation()} />
+                  <input autoFocus type="text" ref={input => (this.input = input)} onChange={this.changeTextFilter} onFocus={onFocus} placeholder={autocompletePlaceholder} value={autocompleteText || ''} autoCapitalize="none" onKeyDown={this.onKeyDown} className="form-control dropdown--text-filter" onClick={e => e.stopPropagation()} />
                 </div>
               )}
               {rows}
