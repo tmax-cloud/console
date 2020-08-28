@@ -371,6 +371,7 @@
     "USER-SIDEBAR_1": "Create a HyperCloud user account. The console access ID is based on the tag the metadata name.",
     "SERVICEACCOUNT-SIDEBAR_0": "Create an account for API calls",
     "SERVICEACCOUNT-SIDEBAR_1": "It can be created for enabling the HyperCloud API or granting the access the API.\n As soon as a service account is created, secrets are automatically added to it",
+    "SERVICEACCOUNT-CREATE_0": "Represents an identity for processes that run in a pod.",
     "PIPELINE-CREATE_0": "Define a series of Tasks that accomplish a specific build or delivery goal. Can be triggered by an event or invoked from a PipelineRun.",
     "PIPELINE-CREATE_1": "Can create a pipeline through sequential or parallel batch between nodes.",
     "PIPELINE-CREATE_2": "Select task",
