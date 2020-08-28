@@ -96,6 +96,11 @@ class NamespaceClaimFormComponent extends React.Component {
     this.setState({ inProgress: true });
     const newNamespaceclaim = _.assign({}, this.state.namespaceclaim);
 
+    if (this.state.isDuplicated) {
+      this.setState({ inProgress: false });
+      return;
+    }
+
     // quota 데이터 가공
     let quota = {};
     this.state.quota.forEach(arr => {

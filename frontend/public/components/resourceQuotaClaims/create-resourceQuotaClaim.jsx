@@ -98,6 +98,11 @@ class ResourceQuotaClaimFormComponent extends React.Component {
     this.setState({ inProgress: true });
     const newResourceQuotaClaim = _.assign({}, this.state.resourceQuotaClaim);
 
+    if (this.state.isDuplicated) {
+      this.setState({ inProgress: false });
+      return;
+    }
+
     // quota 데이터 가공
     let quota = {};
     this.state.quota.forEach(arr => {
