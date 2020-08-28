@@ -33,6 +33,9 @@ class NamespaceFormComponent extends React.Component {
       namespace: namespace,
       inProgress: false,
       type: 'form',
+      inputError: {
+        name: null,
+      },
     };
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onLabelChanged = this.onLabelChanged.bind(this);
@@ -60,11 +63,42 @@ class NamespaceFormComponent extends React.Component {
     }
     this.setState({ namespace: namespace });
   }
+  isRequiredFilled = (k8sResource, item, element) => {
+    console.log('isRequiredFilled', k8sResource, item, element);
+    const { t } = this.props;
+    if (k8sResource.metadata[item] === '') {
+      switch (item) {
+        case 'name':
+          this.setState({ inputError: { name: t(`VALIDATION:EMPTY-${element}`, { something: t(`CONTENT:NAME`) }) } });
+          return false;
+      }
+    } else {
+      this.setState({
+        inputError: {
+          [item]: null,
+        },
+      });
+      return true;
+    }
+  };
+  onFocusName = () => {
+    this.setState({
+      inputError: {
+        name: null,
+      },
+    });
+  };
+
   save(e) {
     e.preventDefault();
     const { metadata } = this.state.namespace;
     this.setState({ inProgress: true });
     const newNamespace = _.assign({}, this.state.namespace);
+
+    if (!this.isRequiredFilled(newNamespace, 'name', 'INPUT')) {
+      this.setState({ inProgress: false });
+      return;
+    }
 
     const ko = kindObj('Namespace');
     (this.props.isCreate ? k8sCreate(ko, newNamespace) : '').then(
@@ -89,7 +123,8 @@ class NamespaceFormComponent extends React.Component {
           <p className="co-m-pane__explanation">{t('STRING:NAMESPACE-CREATE-0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.namespace.metadata.name} id="namespace-name" required />
+              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.namespace.metadata.name} id="namespace-name" />
+              {this.state.inputError.name && <p className="cos-error-title">{this.state.inputError.name}</p>}
             </Section>
             <Section label={t('CONTENT:LABELS')} isRequired={false}>
               <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
