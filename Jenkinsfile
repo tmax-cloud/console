@@ -63,8 +63,8 @@ volumes: [
     }
     
     stage('K8S Deploy'){
+      container('kubectl'){     
       container('kubectl'){
-        sh "rm -rf ./temp-yaml"     
         sh "cp -r ./install-yaml ./temp-yaml"
         sh "sed -i 's#@@NAME_NS@@#${NAME_NS}#g' ./temp-yaml/*.yaml"
         sh "cat ./temp-yaml/1.initialization.yaml"
@@ -108,17 +108,17 @@ volumes: [
         sh "git push origin HEAD:${BRANCH} --tags"    
 
         // NOTE: 4.1.3.0 정기 배포관련된 패치 노트는 젠킨스 이용 x tag가 꼬여서 직접 만들어서 업로드 함 
-        // sh """
-        //   echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG.md
-        //   echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG.md
-        //   echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG.md
-        //   date '+%F  %r' >> ./docs-internal/CHANGELOG.md
+        sh """
+          echo '# hypercloud-console patch note' > ./docs-internal/CHANGELOG.md
+          echo '## [Product Name]_[major].[minor].[patch].[hotfix]' >> ./docs-internal/CHANGELOG.md
+          echo 'Version: ${PRODUCT}_${VER}' >> ./docs-internal/CHANGELOG.md
+          date '+%F  %r' >> ./docs-internal/CHANGELOG.md
 
-        //   git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
-        //   --pretty=format:\"- %s (%cn) %n    Message: %b\" \
-        //   --simplify-merges ${PRODUCT}_${PRE_VER}..${PRODUCT}_${VER} \
-        //   >> ./docs-internal/CHANGELOG.md
-        // """
+          git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
+          --pretty=format:\"- %s (%cn) %n    Message: %b\" \
+          --simplify-merges ${PRODUCT}_${PRE_VER}..${PRODUCT}_${VER} \
+          >> ./docs-internal/CHANGELOG.md
+        """
 
         //// sh "rm -r ./temp-yaml"
         sh "git add -A"
