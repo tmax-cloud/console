@@ -922,20 +922,20 @@ spec:
     `
     apiVersion: tekton.dev/v1beta1
     kind: Task
-metadata:
-  name: example-task
-  namespace: default
-spec:
-  resources:
-    inputs:
-      - name: example-taskinput
-        type: image
-  steps:
-    - image: python
+    metadata:
       name: example-task
-      script: |
-        #!/usr/bin/env python3
-        print("Hello from Python!")
+      namespace: default
+    spec:
+      resources:
+        inputs:
+          - name: example-taskinput
+            type: image
+      steps:
+        - image: python
+          name: example-task
+          script: |
+            #!/usr/bin/env python3
+            print("Hello from Python!")
 `,
   )
   .setIn(
@@ -943,25 +943,25 @@ spec:
     `
     apiVersion: tekton.dev/v1beta1
     kind: Task
-metadata:
-  name: example-task
-  namespace:  default
-spec:
-  resources:
-    inputs:
-      - name: example-taskinput
-        type: image
-  params:
-    - name: flags
-      type: array
-    - name: sampleURL
-      type: string
-  steps:
-    - name: example-task
-      image: ubuntu
-      command:
-      - /bin/bash
-      args: ["-c", "echo url=$(params.sampleURL)"]
+    metadata:
+      name: example-task
+      namespace:  default
+    spec:
+      resources:
+        inputs:
+          - name: example-taskinput
+            type: image
+      params:
+        - name: flags
+          type: array
+        - name: sampleURL
+          type: string
+      steps:
+        - name: example-task
+          image: ubuntu
+          command:
+          - /bin/bash
+          args: ["-c", "echo url=$(params.sampleURL)"]
 `,
   )
   .setIn(

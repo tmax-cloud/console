@@ -25,7 +25,7 @@ import k8sActions from '../module/k8s/k8s-actions';
 import '../vendor.scss';
 import '../style.scss';
 import { useTranslation } from 'react-i18next';
-import { getAccessToken, resetLoginState, setAccessToken, setRefreshToken, setId } from './utils/auth';
+import { getAccessToken, resetLoginState, setAccessToken, setId } from './utils/auth';
 import { NoNamespace } from './nonamespaces';
 import Keycloak from 'keycloak-js';
 import keycloakJSON from '../keycloak.json';
@@ -387,7 +387,6 @@ keycloak
     }
 
     setAccessToken(keycloak.idToken);
-    setRefreshToken(keycloak.idToken);
     setId(keycloak.idTokenParsed.preferred_username);
 
     _.each(namespacedPrefixes, p => {

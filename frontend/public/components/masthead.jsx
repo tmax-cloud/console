@@ -11,7 +11,7 @@ import { SafetyFirst } from './safety-first';
 import { ExtendSessionModal_ } from './modals/extend-session-modal';
 import { NoticeExpirationModal_ } from './modals/notice-expiration-modal';
 import { useTranslation, withTranslation } from 'react-i18next';
-import { getAccessToken, getRefreshToken, setAccessToken, resetLoginState } from './utils/auth';
+import { getAccessToken, setAccessToken, resetLoginState } from './utils/auth';
 import i18n from 'i18next';
 
 const developerConsoleURL = window.SERVER_FLAGS.developerConsoleURL;
@@ -118,7 +118,7 @@ class OSUserMenu extends SafetyFirst {
 
   _getUserInfo() {
     // TODO 유저 정보 조회 서비스 연동
-    if (getAccessToken() && getRefreshToken()) {
+    if (getAccessToken()) {
       const userName = this.props.keycloak.idTokenParsed.preferred_username;
       this.setState({ username: userName });
     } else {
@@ -205,7 +205,7 @@ export class ExpTimer extends Component {
   }
 
   componentDidUpdate() {
-    if (!getAccessToken() || !getRefreshToken()) {
+    if (!getAccessToken()) {
       resetLoginState();
       window.location.href = `${document.location.origin}`;
     }

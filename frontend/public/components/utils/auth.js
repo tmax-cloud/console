@@ -10,7 +10,7 @@ export const getAccessToken = function () {
     return sessionStorage.getItem('accessToken');
   }
 };
-
+// HyperAuth 연동 후, 사용하지 않음
 export const getRefreshToken = function () {
   // TODO ReleaseMode false 일 때 마스터 토큰 넘겨주도록 수정
   if (!window.SERVER_FLAGS.releaseModeFlag) {
@@ -47,7 +47,7 @@ export const setAccessToken = function (at) {
     return sessionStorage.setItem('accessToken', at);
   }
 };
-
+// HyperAuth 연동 후, 사용하지 않음
 export const setRefreshToken = function (rt) {
   if (!window.SERVER_FLAGS.releaseModeFlag) {
     return false;
