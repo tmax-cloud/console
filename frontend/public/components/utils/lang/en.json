@@ -180,7 +180,7 @@
     "RESOURCEQUOTA-CREATE-0": "Set and limit total resource usage of the namespace.",
     "RESOURCEQUOTA-CREATE-1": "You can add a label by pressing Enter.",
     "RESOURCEQUOTA-CREATE-2": "Set the LimitRange for each resource type of a Pod to create in a namespace.",
-    "RESOURCEQUOTA-CREATE-3": "\"기타\"항목 선택 시, 리소스 이름을 yaml 포맷으로 입력해 주세요.",
+    "RESOURCEQUOTA-CREATE-3": "When selecting \"Others\", enter the resource name in the yaml format.",
     "RESOURCEQUOTACLAIM-CREATE-0": "Request a resource quota by specifying resources such as CPU and memory. The resource quota can later be applied to a namespace.",
     "LIMITRANGE-CREATE-0": "Create a resource such as Pods, containers, and permanent volume claims in a namespace.",
     "LIMITRANGE-CREATE-2": "Set the LimitRange for each resource type of a Pod to create in a namespace.",
