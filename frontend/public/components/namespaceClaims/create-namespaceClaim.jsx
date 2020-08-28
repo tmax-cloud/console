@@ -71,7 +71,6 @@ class NamespaceClaimFormComponent extends React.Component {
   }
   onLabelChanged(event) {
     let namespaceclaim = { ...this.state.namespaceclaim };
-    namespaceclaim.metadata.labels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
