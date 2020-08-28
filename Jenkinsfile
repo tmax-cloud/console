@@ -63,8 +63,8 @@ volumes: [
     }
     
     stage('K8S Deploy'){
-      container('kubectl'){     
       container('kubectl'){
+        sh "rm -rf ./temp-yaml"     
         sh "cp -r ./install-yaml ./temp-yaml"
         sh "sed -i 's#@@NAME_NS@@#${NAME_NS}#g' ./temp-yaml/*.yaml"
         sh "cat ./temp-yaml/1.initialization.yaml"
