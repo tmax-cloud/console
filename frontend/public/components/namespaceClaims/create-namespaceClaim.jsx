@@ -3,10 +3,9 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { k8sCreate, k8sUpdate, K8sResourceKind } from '../../module/k8s';
+import { k8sCreate, k8sUpdate } from '../../module/k8s';
 import { ButtonBar, history, kindObj, SelectorInput } from '../utils';
 import { useTranslation } from 'react-i18next';
-import { formatNamespacedRouteForResource } from '../../ui/ui-actions';
 import { SelectKeyValueEditor } from '../utils/select-key-value-editor';
 
 const Section = ({ label, children, isRequired, paddingTop }) => {
@@ -51,6 +50,10 @@ class NamespaceClaimFormComponent extends React.Component {
       type: 'form',
       quota: [['', '']],
       isDuplicated: false,
+      inputError: {
+        name: null,
+        resourceName: null,
+      },
     };
     this.onResourceNameChanged = this.onResourceNameChanged.bind(this);
     this.onNameChanged = this.onNameChanged.bind(this);
@@ -71,7 +74,6 @@ class NamespaceClaimFormComponent extends React.Component {
   }
   onLabelChanged(event) {
     let namespaceclaim = { ...this.state.namespaceclaim };
-    namespaceclaim.metadata.labels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
@@ -91,11 +93,58 @@ class NamespaceClaimFormComponent extends React.Component {
       isDuplicated: quota.isDuplicated,
     });
   }
+  isRequiredFilled = (k8sResource, item, element) => {
+    console.log('isRequiredFilled', k8sResource, item, element);
+    const { t } = this.props;
+    if (k8sResource.metadata[item] === '') {
+      switch (item) {
+        case 'name':
+          this.setState({ inputError: { name: t(`VALIDATION:EMPTY-${element}`, { something: t(`CONTENT:NAME`) }) } });
+          return false;
+      }
+    } else if (k8sResource[item] === '') {
+      this.setState({ inputError: { resourceName: t(`VALIDATION:EMPTY-${element}`, { something: t(`CONTENT:RESOURCENAME`) }) } });
+      return false;
+    } else {
+      this.setState({
+        inputError: {
+          [item]: null,
+        },
+      });
+      return true;
+    }
+  };
+  onFocusName = () => {
+    this.setState({
+      inputError: {
+        name: null,
+      },
+    });
+  };
+
+  onFocusResourceName = () => {
+    this.setState({
+      inputError: {
+        resourceName: null,
+      },
+    });
+  };
+
   save(e) {
     e.preventDefault();
     const { kind, metadata } = this.state.namespaceclaim;
     this.setState({ inProgress: true });
     const newNamespaceclaim = _.assign({}, this.state.namespaceclaim);
+
+    if (!this.isRequiredFilled(newNamespaceclaim, 'name', 'INPUT') || !this.isRequiredFilled(newNamespaceclaim, 'resourceName', 'INPUT')) {
+      this.setState({ inProgress: false });
+      return;
+    }
+
+    if (this.state.isDuplicated) {
+      this.setState({ inProgress: false });
+      return;
+    }
 
     // quota 데이터 가공
     let quota = {};
@@ -159,7 +208,8 @@ class NamespaceClaimFormComponent extends React.Component {
           <p className="co-m-pane__explanation">{t('STRING:NAMESPACECLAIM-CREATE-0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.namespaceclaim.metadata.name} id="namespace-claim-name" required />
+              <input className="form-control" type="text" onChange={this.onNameChanged} onFocus={this.onFocusName} value={this.state.namespaceclaim.metadata.name} id="namespace-claim-name" />
+              {this.state.inputError.name && <p className="cos-error-title">{this.state.inputError.name}</p>}
             </Section>
             <Section label={t('CONTENT:LABELS')} isRequired={false}>
               <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
@@ -168,7 +218,8 @@ class NamespaceClaimFormComponent extends React.Component {
               </div>
             </Section>
             <Section label={t('CONTENT:RESOURCENAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onResourceNameChanged} value={this.state.namespaceclaim.resourceName} id="namespace-claim-resource-name" required />
+              <input className="form-control" type="text" onChange={this.onResourceNameChanged} value={this.state.namespaceclaim.resourceName} onFocus={this.onFocusResourceName} id="namespace-claim-resource-name" />
+              {this.state.inputError.resourceName && <p className="cos-error-title">{this.state.inputError.resourceName}</p>}
             </Section>
             <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
               <SelectKeyValueEditor desc={t('STRING:NAMESPACECLAIM-CREATE-1')} t={t} anotherDesc={t('STRING:RESOURCEQUOTA-CREATE-3')} options={resourceQuotaClaimOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />

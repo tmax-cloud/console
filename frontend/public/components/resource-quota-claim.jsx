@@ -50,22 +50,6 @@ const ResourceQuotaClaimRow = () =>
     );
   };
 
-// const DetailsForKind = kind =>
-//   function DetailsForKind_({ obj }) {
-//     return (
-//       <React.Fragment>
-//         <div className="co-m-pane__body">
-//           <SectionHeading text={`${kindForReference(kind)} Overview`} />
-//           <ResourceSummary
-//             resource={obj}
-//             podSelector="spec.podSelector"
-//             showNodeSelector={false}
-//           />
-//         </div>
-//       </React.Fragment>
-//     );
-//   };
-
 const Details = ({ obj: resourcequotaclaim }) => {
   const { t } = useTranslation();
   return (
@@ -86,12 +70,6 @@ const Details = ({ obj: resourcequotaclaim }) => {
               <dd>{resourcequotaclaim.status && resourcequotaclaim.status.status}</dd>
               {resourcequotaclaim.status && resourcequotaclaim.status.reason && <dt>{t('CONTENT:REASON')}</dt>}
               {resourcequotaclaim.status && resourcequotaclaim.status.reason && <dd>{resourcequotaclaim.status.reason}</dd>}
-              {/* {activeDeadlineSeconds && (
-                <React.Fragment>
-                  <dt>Active Deadline</dt>
-                  <dd>{formatDuration(activeDeadlineSeconds * 1000)}</dd>
-                </React.Fragment>
-              )} */}
             </dl>
           </div>
         </div>
@@ -116,9 +94,9 @@ export const ResourceQuotaClaimsPage = props => {
   };
   const createProps = {
     items: createItems,
-    createLink: type => `/k8s/ns/${props.namespace || 'default'}/resourcequotaclaims/new${type !== 'yaml' ? '/' + type : ''}`,
+    createLink: type => (type === 'yaml' ? `/k8s/ns/${props.namespace || 'default'}/resourcequotaclaims/new` : '/k8s/cluster/resourcequotaclaims/new/form'),
   };
-  return <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" createProps={createProps}{...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
+  return <ListPage {...props} ListComponent={ResourceQuotaClaimList} canCreate={true} kind="ResourceQuotaClaim" createProps={createProps} {...props} createButtonText={t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(props.kind, t) })} />;
 };
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 

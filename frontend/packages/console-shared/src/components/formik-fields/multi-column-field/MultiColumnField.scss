@@ -6,7 +6,7 @@
     // max-height: var(--pf-global--spacer--xl);
     margin-right: 24px;
     // margin-bottom: 24px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     max-height: 32px;
   }
 
@@ -21,6 +21,9 @@
   &__col--left-button {
     div {
       float: left;
+      div {
+        float: none;
+      };
     }
   }
 

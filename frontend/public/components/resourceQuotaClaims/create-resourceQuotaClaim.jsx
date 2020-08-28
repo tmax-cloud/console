@@ -30,6 +30,7 @@ class ResourceQuotaClaimFormComponent extends React.Component {
       kind: 'ResourceQuotaClaim',
       metadata: {
         name: '',
+        namespace: '',
         labels: {
           handled: 'f',
         },
@@ -47,6 +48,11 @@ class ResourceQuotaClaimFormComponent extends React.Component {
       type: 'form',
       quota: [['', '']],
       isDuplicated: false,
+      inputError: {
+        name: null,
+        namespace: null,
+        resourceName: null,
+      },
     };
     this.onResourceNameChanged = this.onResourceNameChanged.bind(this);
     this.onNameChanged = this.onNameChanged.bind(this);
@@ -55,7 +61,6 @@ class ResourceQuotaClaimFormComponent extends React.Component {
     this._updateQuota = this._updateQuota.bind(this);
     this.save = this.save.bind(this);
   }
-
   onResourceNameChanged(event) {
     let resourceQuotaClaim = { ...this.state.resourceQuotaClaim };
     resourceQuotaClaim.resourceName = String(event.target.value);
@@ -73,7 +78,6 @@ class ResourceQuotaClaimFormComponent extends React.Component {
   }
   onLabelChanged(event) {
     let resourceQuotaClaim = { ...this.state.resourceQuotaClaim };
-    resourceQuotaClaim.metadata.labels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
@@ -93,11 +97,71 @@ class ResourceQuotaClaimFormComponent extends React.Component {
       isDuplicated: quota.isDuplicated,
     });
   }
+
+  isRequiredFilled = (k8sResource, item, element) => {
+    console.log('isRequiredFilled', k8sResource, item, element);
+    const { t } = this.props;
+    if (k8sResource.metadata[item] === '') {
+      switch (item) {
+        case 'name':
+          this.setState({ inputError: { name: t(`VALIDATION:EMPTY-${element}`, { something: t(`CONTENT:NAME`) }) } });
+          return false;
+        case 'namespace':
+          this.setState({ inputError: { namespace: t(`VALIDATION:EMPTY-${element}`, { something: t(`CONTENT:NAMESPACE`) }) } });
+          return false;
+      }
+    } else if (k8sResource[item] === '') {
+      this.setState({ inputError: { resourceName: t(`VALIDATION:EMPTY-${element}`, { something: t(`CONTENT:RESOURCENAME`) }) } });
+      return false;
+    } else {
+      this.setState({
+        inputError: {
+          [item]: null,
+        },
+      });
+      return true;
+    }
+  };
+
+  onFocusName = () => {
+    this.setState({
+      inputError: {
+        name: null,
+      },
+    });
+  };
+
+  onFocusNamespace = () => {
+    this.setState({
+      inputError: {
+        namespace: null,
+      },
+    });
+  };
+
+  onFocusResourceName = () => {
+    this.setState({
+      inputError: {
+        resourceName: null,
+      },
+    });
+  };
+
   save(e) {
     e.preventDefault();
     const { kind, metadata } = this.state.resourceQuotaClaim;
     this.setState({ inProgress: true });
     const newResourceQuotaClaim = _.assign({}, this.state.resourceQuotaClaim);
+
+    if (!this.isRequiredFilled(newResourceQuotaClaim, 'name', 'INPUT') || !this.isRequiredFilled(newResourceQuotaClaim, 'namespace', 'SELECT') || !this.isRequiredFilled(newResourceQuotaClaim, 'resourceName', 'INPUT')) {
+      this.setState({ inProgress: false });
+      return;
+    }
+
+    if (this.state.isDuplicated) {
+      this.setState({ inProgress: false });
+      return;
+    }
 
     // quota 데이터 가공
     let quota = {};
@@ -160,10 +224,12 @@ class ResourceQuotaClaimFormComponent extends React.Component {
           <p className="co-m-pane__explanation">{t('STRING:RESOURCEQUOTACLAIM-CREATE-0')}</p>
           <fieldset disabled={!this.props.isCreate}>
             <Section label={t('CONTENT:NAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onNameChanged} value={this.state.resourceQuotaClaim.metadata.name} id="resource-quota-claim-name" required />
+              <input className="form-control" type="text" onChange={this.onNameChanged} onFocus={this.onFocusName} value={this.state.resourceQuotaClaim.metadata.name} id="resource-quota-claim-name" />
+              {this.state.inputError.name && <p className="cos-error-title">{this.state.inputError.name}</p>}
             </Section>
             <Section label={t('CONTENT:NAMESPACE')} isRequired={true}>
-              <NsDropdown id="resource-quota-claim-namespace" t={t} onChange={this.onNamespaceChanged} />
+              <NsDropdown id="resource-quota-claim-namespace" t={t} onChange={this.onNamespaceChanged} onFocus={this.onFocusNamespace} />
+              {this.state.inputError.namespace && <p className="cos-error-title">{this.state.inputError.namespace}</p>}
             </Section>
             <Section label={t('CONTENT:LABELS')} isRequired={false}>
               <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
@@ -172,7 +238,8 @@ class ResourceQuotaClaimFormComponent extends React.Component {
               </div>
             </Section>
             <Section label={t('CONTENT:RESOURCENAME')} isRequired={true}>
-              <input className="form-control" type="text" onChange={this.onResourceNameChanged} value={this.state.resourceQuotaClaim.resourceName} id="resource-quota-claim-resource-name" required />
+              <input className="form-control" type="text" onChange={this.onResourceNameChanged} value={this.state.resourceQuotaClaim.resourceName} onFocus={this.onFocusResourceName} id="resource-quota-claim-resource-name" />
+              {this.state.inputError.resourceName && <p className="cos-error-title">{this.state.inputError.resourceName}</p>}
             </Section>
             <Section label={t('CONTENT:NAMESPACERESOURCEQUOTA')} isRequired={false} paddingTop={'5px'}>
               <SelectKeyValueEditor desc={t('STRING:RESOURCEQUOTA-CREATE-2')} t={t} anotherDesc={t('STRING:RESOURCEQUOTA-CREATE-3')} options={resourceQuotaClaimOptions} keyValuePairs={this.state.quota} keyString="resourcetype" valueString="value" updateParentData={this._updateQuota} isDuplicated={this.state.isDuplicated} />
