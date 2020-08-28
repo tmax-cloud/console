@@ -38,7 +38,7 @@ spec:
         - --keycloak-realm=tmax
         - --keycloak-auth-url=https://172.22.6.11/auth
         - --keycloak-client-id=hypercloud4        
-        image: tmaxcloudck/hypercloud-console:4.1.3.1
+        image: tmaxcloudck/hypercloud-console:4.1.3.2
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - mountPath: /var/https-cert
