@@ -73,7 +73,6 @@ class ResourceQuotaClaimFormComponent extends React.Component {
   }
   onLabelChanged(event) {
     let resourceQuotaClaim = { ...this.state.resourceQuotaClaim };
-    resourceQuotaClaim.metadata.labels = {};
     if (event.length !== 0) {
       event.forEach(item => {
         if (item.split('=')[1] === undefined) {
