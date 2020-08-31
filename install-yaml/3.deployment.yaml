@@ -32,7 +32,7 @@ spec:
         - --kiali-endpoint=http://kiali.istio-system.svc:20001/api/kiali
         - --jaeger-endpoint=http://tracing.istio-system.svc:80/api/jaeger
         - --approval-endpoint=http://approval-proxy-server.approval-system.svc:80/approve
-        - --kubeflow-endpoint=http://argo-ui.kubeflow.svc:80/
+        - --kubeflow-endpoint=http://istio-ingressgateway.istio-system.svc:80/
         - --vnc-endpoint=http://virtvnc.kubevirt.svc:8001/
         - --hyperauth-endpoint=http://hyperauth.hyperauth.svc:8080/
         - --keycloak-realm=@@REALM@@

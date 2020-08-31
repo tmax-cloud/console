@@ -428,11 +428,12 @@ func (s *Server) HTTPHandler() http.Handler {
 
 	if s.HyperflowProxyConfig != nil {
 		hyperflowProxyAPIPath := hyperflowEndpoint
-		hyperflowProxy := httputil.NewSingleHostReverseProxy(s.HyperflowProxyConfig.Endpoint)
+		// hyperflowProxy := httputil.NewSingleHostReverseProxy(s.HyperflowProxyConfig.Endpoint)
+		hyperflowProxy := proxy.NewProxyCloud(s.HyperflowProxyConfig)
 		handle(hyperflowProxyAPIPath,
 			http.StripPrefix(s.BaseURL.Path,
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					hyperflowProxy.ServeHTTP(w, r)
+					hyperflowProxy.ServeHTTPCloud(w, r)
 				})),
 		)
 	}
