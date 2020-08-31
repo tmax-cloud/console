@@ -79,8 +79,7 @@ class ServiceAccountFormComponent extends React.Component {
             </Helmet >
             <form className="co-m-pane__body-group form-group" onSubmit={this.save}>
                 <h1 className="co-m-pane__heading">{t('ADDITIONAL:CREATEBUTTON', { something: ResourcePlural(this.state.serviceAccount.kind, t) })}</h1>
-                <p className="co-m-pane__explanation">Represents an identity for processes that run in a pod.</p>
-
+                <p className="co-m-pane__explanation">{t('STRING:SERVICEACCOUNT-CREATE_0')}</p>
                 <fieldset disabled={!this.props.isCreate}>
 
                     <Section label={t('CONTENT:NAME')} isRequired={true}>

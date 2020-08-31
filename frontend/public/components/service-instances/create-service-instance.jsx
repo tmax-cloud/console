@@ -253,13 +253,12 @@ const withServiceInstanceForm = SubForm =>
       e.preventDefault();
       const { kind } = this.state.serviceInstance;
       const newServiceInstance = _.cloneDeep(this.state.serviceInstance);
-      const newNamespaceInstance;
-      const instanceType;
 
       if(this.state.serviceClass==="Cluster"){
         newServiceInstance.spec.clusterServiceClassName = this.state.selectedClass.name;
         newServiceInstance.spec.clusterServicePlanName = this.state.selectedPlan.name;
-
+        newServiceInstance.metadata.namespace = this.state.namespace;
+        
         const ko = kindObj(kind);
         //     if (this.state.serviceInstance.metadata.name) {
         this.setState({ inProgress: true });
@@ -274,7 +273,7 @@ const withServiceInstanceForm = SubForm =>
         );
       }
       else {
-        newNamespaceInstance = _.cloneDeep(this.state.NamespaceServiceInstance);
+        const newNamespaceInstance = _.cloneDeep(this.state.NamespaceServiceInstance);
         newNamespaceInstance.metadata = newServiceInstance.metadata;
         newNamespaceInstance.metadata.namespace = this.state.namespace;
         newNamespaceInstance.spec.parameters = newServiceInstance.spec.parameters;
@@ -340,7 +339,7 @@ const withServiceInstanceForm = SubForm =>
         );
       };
       return (
-        <div className="rbac-edit-binding co-m-pane__body">
+        <div className="co-m-pane__body">
           <Helmet>
             <title>{title}</title>
           </Helmet>
@@ -352,7 +351,7 @@ const withServiceInstanceForm = SubForm =>
             <div className="separator"></div>
             {/* stepper */}
             {currentStep === 0 && (
-              <div>
+              <div className="rbac-edit-binding">
                 <Section label={'서비스 클래스 분류'}>
                   <form>
                     <label className="radio-inline" style={{ marginRight: '50px' }}>
@@ -367,7 +366,7 @@ const withServiceInstanceForm = SubForm =>
                 </Section>
                 {this.state.serviceClass === "Namespace" && (
                   <Section label={t('CONTENT:NAMESPACE')}>
-                    <NsDropdown id="role-namespace" t={t} onChange={this.onNamespaceChanged} />
+                    <NsDropdown id="namespace" t={t} defaultValue={this.state.namespace} onChange={this.onNamespaceChanged} />
                     <p style={{color: '#777'}}>{"접근 권한이 있는 네임스페이스에서 서비스 클래스를 선택합니다."}</p>
                   </Section>
                 )}
@@ -423,11 +422,18 @@ const withServiceInstanceForm = SubForm =>
             {currentStep === 2 && (
               <form onSubmit={this.save}>
                 <Section label={t('RESOURCE:SERVICEINSTANCE')}>
-                  <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
-                    {t('CONTENT:NAME')}
-                  </label>
-                  <input className="form-control" type="text" onChange={this.onNameChanged} id="application-name" required />
-                  <p className="help-block" id="secret-name-help"></p>
+                  <div className = "registry-edit " >
+                    <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                      {t('CONTENT:NAME')}
+                    </label>
+                    <input className="form-control" type="text" onChange={this.onNameChanged} id="application-name" required />
+                    <p className="help-block" id="secret-name-help"></p>
+                    <label htmlFor="role-binding-name" className="rbac-edit-binding__input-label">
+                      {t('CONTENT:NAMESPACE')}
+                    </label >
+                    <NsDropdown id="namespace" fixed={this.state.serviceClass==="Namespace"} t={t}
+                    selectedKey={this.state.namespace} t={t} onChange={this.onNamespaceChanged} />
+                  </div>
                 </Section>
                 <div className="separator"></div>
                 {paramList.length > 0 && (
@@ -441,13 +447,13 @@ const withServiceInstanceForm = SubForm =>
                             <div className={'col-xs-2 form-group ' + (isRequired ? 'required' : '')}>
                               <div className="control-label">{parameter.displayName}</div>
                             </div>
-                            <div className="col-xs-10" id={parameter.name}>
+                            <div className="col-xs-5" id={parameter.name}>
                               <input onChange={this.onParamValueChanged} className="form-control" type="text" placeholder={defaultValue} id={parameter.name} required={isRequired} />
                             </div>
                           </div>
                           <div className="row">
                             <div className="col-xs-2" />
-                            <p className="col-xs-10 co-m-pane__explanation">{parameter.description}</p>
+                            <p className="col-xs-10" style={{color: '#777'}}>{parameter.description}</p>
                           </div>
                         </div>
                       );
@@ -455,10 +461,12 @@ const withServiceInstanceForm = SubForm =>
                   </Section>
                 )}
                 <div className="separator"></div>
-                <Section label={t('CONTENT:LABELS')}>
-                  <SelectorInput labelClassName="co-text-namespace" onChange={this.onLabelChanged} tags={[]} />
-                  <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
-                    <p>{t('VALIDATION:LABEL_FORM')}</p>
+                <Section label={t('CONTENT:LABELS')} isRequired={false}>
+                  <div className = "registry-edit " >
+                    <SelectorInput desc={t('STRING:RESOURCEQUOTA-CREATE-1')} isFormControl={true} labelClassName="co-text-namespace" tags={[]} onChange={this.onLabelChanged} />
+                    <div id="labelErrMsg" style={{ display: 'none', color: 'red' }}>
+                      <p>{t('VALIDATION:LABEL_FORM')}</p>
+                    </div>
                   </div>
                 </Section>
                 <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
