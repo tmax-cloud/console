@@ -5,6 +5,7 @@ import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
 import { getActivePerspective, getActiveCluster } from '../../actions/ui';
 import { getId, getUserGroup } from '../../hypercloud/auth';
+import { kindToSchemaPath } from '../hypercloud/k8s/kind-to-schema-path.ts'
 
 /** @type {(model: K8sKind) => string} */
 const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
@@ -166,6 +167,13 @@ export const k8sPatch = (kind, resource, data, opts = {}) => {
     patches,
   );
 };
+
+export const k8sCreateSchema = (kind) => {
+  const directory = kindToSchemaPath.get(kind)?.['directory'];
+  const file = kindToSchemaPath.get(kind)?.['file'];
+  const schemaUrl = `/api/resource/${directory}/${file}`;
+  return coFetchJSON(`${schemaUrl}`, 'GET');
+}
 
 export const k8sPatchByName = (kind, name, namespace, data, opts = {}) => k8sPatch(kind, { metadata: { name, namespace } }, data, opts);
 

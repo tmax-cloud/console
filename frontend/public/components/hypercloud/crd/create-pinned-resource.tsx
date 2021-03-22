@@ -17,29 +17,22 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { schemaTemplates } from '../../../models/hypercloud/structural-schema-template';
 import { pluralToKind } from '../form';
+import { k8sCreateSchema } from '@console/internal/module/k8s/resource.js';
 // eslint-disable-next-line @typescript-eslint/camelcase
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefinition, initialEditorType, loaded, loadError, match, model, activePerspective }) => {
   if (!model) {
     return null;
   }
-  const template = schemaTemplates.getIn([referenceForModel(model), 'default']);
-  const data = {
-    spec: {
-      version: '',
-      group: '',
-      names: {
-        kind: '',
-        singular: '',
-        plural: '',
-        listKind: '',
-      },
-    },
-  };
+  const [template, setTemplate] = React.useState({});
+  React.useEffect(() => {
+    (async function getSchema() {
+      await k8sCreateSchema(model.kind).then(data => setTemplate(data));
+    })();
+  }, []);
+
   const [helpText, setHelpText] = React.useState(FORM_HELP_TEXT);
-  // const next = `${resourcePathFromModel(CustomResourceDefinitionModel, match.params.appName, match.params.ns)}/${model.plural}.${model.apiGroup}`;
   const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
   let definition;
 
@@ -50,7 +43,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
   const [schema, FormComponent] = React.useMemo(() => {
     const baseSchema = customResourceDefinition ? definition?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema6) : template;
     return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
-  }, [definition, model]);
+  }, [template, definition, model]);
 
   const sample = React.useMemo<K8sResourceKind>(() => exampleForModel(definition, model), [definition, model]);
 
@@ -61,7 +54,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
   }, []);
 
   return (
-    <StatusBox loaded={loaded} loadError={loadError} data={customResourceDefinition || data}>
+    <StatusBox loaded={loaded} loadError={loadError} data={customResourceDefinition || template}>
       {loaded || !customResourceDefinition ? (
         <>
           <div className="co-create-operand__header">
