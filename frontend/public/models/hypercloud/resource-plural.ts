@@ -210,13 +210,13 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_76',
   },
   ClusterRole: {
-    labelPlural: 'MSG_DETAILS_TABDETAILS_DETAILS_124',
+    labelPlural: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_124',
   },
   RoleBindingClaim: {
     labelPlural: 'COMMON:MSG_LNB_MENU_101',
   },
   ClusterRoleBinding: {
-    labelPlural: 'MSG_DETAILS_TABDETAILS_DETAILS_123',
+    labelPlural: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_123',
   },
   ServiceAccount: {
     labelPlural: 'COMMON:MSG_LNB_MENU_74',
