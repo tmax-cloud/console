@@ -4,7 +4,10 @@ import { match as RMatch } from 'react-router';
 import { useFormContext, Controller } from 'react-hook-form';
 import { WithCommonForm } from '../create-form';
 import { Section } from '../../utils/section';
+// import { TextInput } from '../../utils/text-input';
 import { SelectorInput } from '../../../utils';
+import { ModalLauncher } from '../utils/modal-launcher';
+import { InputResourceModal } from './input-resource-modal';
 
 // const allow = 'allow';
 // const deny = 'deny';
@@ -28,14 +31,16 @@ const taskFormFactory = params => {
 };
 
 const CreateTaskComponent: React.FC<TaskFormProps> = props => {
-  const { control } = useFormContext();
+  const methods = useFormContext();
   return (
     <>
       <Section label="Labels" id="label" description="이것은 Label입니다.">
-        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
       </Section>
       <Section label="Input Resource" id="inputResource" description="이 태스크와 연결된 인풋 리소스가 없습니다.">
-        모달
+        <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: 'Input Resource', children: <InputResourceModal methods={methods} /> })}>
+          + 인풋 리소스 추가
+        </span>
       </Section>
     </>
   );

@@ -20,6 +20,7 @@
   padding: 0;
   @include scroll-shadows-vertical;
   -webkit-overflow-scrolling: touch;
+  background-color: var(--pf-global--BackgroundColor--100);
 
   &.unset-overflow {
     overflow-y: unset;
@@ -148,4 +149,13 @@ ul {
 
 .approval-dropdown--long-bottom {
   margin-bottom: 75px;
+}
+
+.open-modal_text {
+  pointer-events: all;
+  color: #06c;
+}
+.open-modal_text:hover {
+  cursor: pointer;
+  color: #06c;
 }

@@ -31,7 +31,6 @@ const DropDownRow = React.memo((props) => {
 });
 
 const Dropdown_ = (props) => {
-  const { register, unregister, setValue, watch } = useFormContext();
 
   const {
     name,
@@ -43,8 +42,10 @@ const Dropdown_ = (props) => {
     titlePrefix,
     describedBy,
     disabled,
-    required
+    required,
+    methods
   } = props;
+  const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
   const selectedKey = watch(name);
 
@@ -259,6 +260,7 @@ Dropdown.propTypes = {
   textFilter: PropTypes.string,
   title: PropTypes.node,
   disabled: PropTypes.bool,
+  methods?: PropTypes.any
 };
 
 const containerLabel = (container) => (
