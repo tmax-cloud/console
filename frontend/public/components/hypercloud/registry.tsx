@@ -185,10 +185,10 @@ const registryCreateAction = (history, item) => {
 export const RegistriesPage = withRouter(props => {
   const { t } = useTranslation();
 
-  const createItems = {
-    generic: 'Create Registry',
-    scan: 'Image Scan Request',
-  };
+  const createItems = React.useMemo(() => ({
+    generic: t('COMMON:MSG_LNB_MENU_188'),
+    scan: t('COMMON:MSG_LNB_MENU_174')
+  }), [t]);
 
   const createProps = {
     items: createItems,
