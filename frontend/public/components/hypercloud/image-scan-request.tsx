@@ -87,25 +87,35 @@ export const ImageScanRequestDetailsList: React.FC<ImageScanRequestDetailsListPr
     });
   });
 
+  const getImageResult = status => {
+    if (status === 'Pending' || !status) {
+      return '이미지 스캔대기 중입니다.';
+    } else if (status === 'Scanning') {
+      return '이미지를 스캔 중입니다.';
+    }
+  };
+
   return (
     <dl className="co-m-pane__details">
       <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_3')}</dt>
       <dd>
         <ImageScanRequestStatus result={ds?.status?.status} />
       </dd>
-      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_5')}</dt>
-      <dd style={{ display: 'flex', flexDirection: 'column' }}>{imageResult}</dd>
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_42')}</dt>
-      <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds?.status?.message}</dd>
-      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_21')}</dt>
-      <dd style={{ display: 'flex', flexDirection: 'column' }}>
-        {_.keys(summary).map(cur => {
-          return <span>{`${cur}: ${summary[cur]}`}</span>;
-        })}
-      </dd>
+      <dd style={{ display: 'flex', flexDirection: 'column' }}>{getImageResult(ds?.status?.status)}</dd>
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_5')}</dt>
+      <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds?.spec?.scanTargets.map(cur => `${cur?.registryUrl}/${cur?.images[0]}`)}</dd>
+      {ds?.status?.status === 'Success' && <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_21')}</dt>}
+      {ds?.status?.status === 'Success' && (
+        <dd style={{ display: 'flex', flexDirection: 'column' }}>
+          {_.keys(summary).map(cur => {
+            return <span>{`${cur}: ${summary[cur]}`}</span>;
+          })}
+        </dd>
+      )}
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_15')}</dt>
       <dd>{ds?.spec?.insecure ? '확인하지 않음' : '확인함'}</dd>
-      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_43')}</dt>
+      {ds?.spec?.maxFixable && <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_43')}</dt>}
       <dd>{ds?.spec?.maxFixable}</dd>
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_44')}</dt>
       <dd>{ds?.spec?.sendReport ? '전송함' : '전송 하지 않음'}</dd>
