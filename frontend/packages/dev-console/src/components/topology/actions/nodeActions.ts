@@ -12,5 +12,5 @@ export const nodeActions = (node: TopologyDataObject): KebabOption[] => {
   const resourceKind = modelFor(referenceFor(contextMenuResource));
   const menuActions = [...Kebab.getExtensionsActionsForKind(resourceKind), ...Kebab.factory.common];
 
-  return _.map(menuActions, (a) => a(resourceKind, contextMenuResource));
+  return _.map(menuActions, a => a(resourceKind, contextMenuResource));
 };

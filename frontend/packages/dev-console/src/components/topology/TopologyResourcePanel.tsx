@@ -23,15 +23,7 @@ const TopologyResourcePanel: React.FC<TopologyResourcePanelProps> = ({ item }) =
     customActions = [ModifyApplication];
   }
 
-  return (
-    resourceItemToShowOnSideBar && (
-      <ResourceOverviewPage
-        item={resourceItemToShowOnSideBar}
-        kind={resourceItemToShowOnSideBar.obj.kind}
-        customActions={customActions}
-      />
-    )
-  );
+  return resourceItemToShowOnSideBar && <ResourceOverviewPage item={resourceItemToShowOnSideBar} kind={resourceItemToShowOnSideBar.obj.kind} customActions={customActions} />;
 };
 
 export default TopologyResourcePanel;

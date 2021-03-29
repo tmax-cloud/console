@@ -2,20 +2,10 @@ import { KebabOption } from '@console/internal/components/utils/kebab';
 import { modelFor, referenceFor } from '@console/internal/module/k8s';
 import { asAccessReview } from '@console/internal/components/utils';
 import { Edge, Node } from '@console/topology';
-import {
-  TYPE_EVENT_SOURCE,
-  TYPE_EVENT_SOURCE_LINK,
-  TYPE_KNATIVE_REVISION,
-  TYPE_KNATIVE_SERVICE,
-  TYPE_REVISION_TRAFFIC,
-} from '@console/knative-plugin/src/topology/const';
+import { TYPE_EVENT_SOURCE, TYPE_EVENT_SOURCE_LINK, TYPE_KNATIVE_REVISION, TYPE_KNATIVE_SERVICE, TYPE_REVISION_TRAFFIC } from '@console/knative-plugin/src/topology/const';
 import { getTopologyResourceObject } from '../topology-utils';
 import { removeConnection } from '../components/removeConnection';
-import {
-  TYPE_CONNECTS_TO,
-  TYPE_SERVICE_BINDING,
-  TYPE_TRAFFIC_CONNECTOR,
-} from '../components/const';
+import { TYPE_CONNECTS_TO, TYPE_SERVICE_BINDING, TYPE_TRAFFIC_CONNECTOR } from '../components/const';
 import { moveConnectionModal } from '../components/MoveConnectionModal';
 
 const moveConnection = (edge: Edge, availableTargets: Node[]) => {
@@ -49,10 +39,10 @@ export const edgeActions = (edge: Edge, nodes: Node[]): KebabOption[] => {
   const currentTargets = edge
     .getSource()
     .getSourceEdges()
-    .map((e) => e.getTarget().getId());
+    .map(e => e.getTarget().getId());
 
   const availableTargets = nodes
-    .filter((n) => {
+    .filter(n => {
       if (n.getId() === edge.getSource().getId()) {
         return false;
       }

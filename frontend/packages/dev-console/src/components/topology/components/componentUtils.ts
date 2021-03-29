@@ -2,25 +2,7 @@ import * as React from 'react';
 import { action } from 'mobx';
 import { K8sResourceKind } from '@console/internal/module/k8s';
 import { errorModal } from '@console/internal/components/modals';
-import {
-  Modifiers,
-  Edge,
-  GraphElement,
-  isEdge,
-  isNode,
-  Node,
-  Graph,
-  DragSourceSpec,
-  DragObjectWithType,
-  DropTargetSpec,
-  DropTargetMonitor,
-  DragSpecOperationType,
-  CREATE_CONNECTOR_DROP_TYPE,
-  CREATE_CONNECTOR_OPERATION,
-  withContextMenu as withTopologyContextMenu,
-  isGraph,
-  withDndDrop,
-} from '@console/topology';
+import { Modifiers, Edge, GraphElement, isEdge, isNode, Node, Graph, DragSourceSpec, DragObjectWithType, DropTargetSpec, DropTargetMonitor, DragSpecOperationType, CREATE_CONNECTOR_DROP_TYPE, CREATE_CONNECTOR_OPERATION, withContextMenu as withTopologyContextMenu, isGraph, withDndDrop } from '@console/topology';
 import { createConnection } from './createConnection';
 import { removeConnection } from './removeConnection';
 import { moveNodeToGroup } from './moveNodeToGroup';
@@ -73,7 +55,7 @@ const canDropEdgeOnNode = (operation: string, edge: Edge, node: Node): boolean =
     return true;
   }
 
-  return !node.getTargetEdges().find((e) => e.getSource() === edge.getSource());
+  return !node.getTargetEdges().find(e => e.getSource() === edge.getSource());
 };
 
 const highlightNode = (monitor: DropTargetMonitor, element: Node): boolean => {
@@ -88,13 +70,11 @@ const highlightNode = (monitor: DropTargetMonitor, element: Node): boolean => {
       !monitor
         .getItem()
         .getSourceEdges()
-        .find((e) => e.getTarget() === element)
+        .find(e => e.getTarget() === element)
     );
   }
 
-  return (
-    operation.canDropOnNode && operation.canDropOnNode(operation.type, monitor.getItem(), element)
-  );
+  return operation.canDropOnNode && operation.canDropOnNode(operation.type, monitor.getItem(), element);
 };
 
 const nodeDragSourceSpec = (
@@ -119,7 +99,7 @@ const nodeDragSourceSpec = (
         }
       : undefined;
   },
-  canCancel: (monitor) => monitor.getOperation()?.type === REGROUP_OPERATION,
+  canCancel: monitor => monitor.getOperation()?.type === REGROUP_OPERATION,
   begin: (monitor, props): DragNodeObject => {
     return {
       element: props.element,
@@ -146,7 +126,7 @@ const nodeDragSourceSpec = (
     }
     return undefined;
   },
-  collect: (monitor) => ({
+  collect: monitor => ({
     dragging: monitor.isDragging(),
     regrouping: monitor.getOperation()?.type === REGROUP_OPERATION,
   }),
@@ -165,12 +145,7 @@ const nodesEdgeIsDragging = (monitor, props) => {
   return false;
 };
 
-const nodeDropTargetSpec: DropTargetSpec<
-  GraphElement,
-  any,
-  { canDrop: boolean; dropTarget: boolean; edgeDragging: boolean },
-  NodeComponentProps
-> = {
+const nodeDropTargetSpec: DropTargetSpec<GraphElement, any, { canDrop: boolean; dropTarget: boolean; edgeDragging: boolean }, NodeComponentProps> = {
   accept: [EDGE_DRAG_TYPE, CREATE_CONNECTOR_DROP_TYPE],
   canDrop: (item, monitor, props) => {
     if (isEdge(item)) {
@@ -179,7 +154,7 @@ const nodeDropTargetSpec: DropTargetSpec<
     if (item === props.element) {
       return false;
     }
-    return !props.element.getTargetEdges().find((e) => e.getSource() === item);
+    return !props.element.getTargetEdges().find(e => e.getSource() === item);
   },
   collect: (monitor, props) => ({
     canDrop: highlightNode(monitor, props.element),
@@ -188,12 +163,7 @@ const nodeDropTargetSpec: DropTargetSpec<
   }),
 };
 
-const graphDropTargetSpec: DropTargetSpec<
-  DragNodeObject,
-  any,
-  { dragEditInProgress: boolean },
-  GraphComponentProps
-> = {
+const graphDropTargetSpec: DropTargetSpec<DragNodeObject, any, { dragEditInProgress: boolean }, GraphComponentProps> = {
   accept: [NODE_DRAG_TYPE, EDGE_DRAG_TYPE, CREATE_CONNECTOR_DROP_TYPE],
   hitTest: () => true,
   canDrop: (item, monitor, props) => {
@@ -206,14 +176,10 @@ const graphDropTargetSpec: DropTargetSpec<
         monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE)
     );
   },
-  collect: (monitor) => {
+  collect: monitor => {
     const operation = monitor.getOperation() as EditableDragOperationType;
-    const dragEditInProgress =
-      monitor.isDragging() && (operation?.type === CREATE_CONNECTOR_OPERATION || operation?.edit);
-    const dragCreate =
-      dragEditInProgress &&
-      (monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE ||
-        monitor.getItemType() === MOVE_CONNECTOR_DROP_TYPE);
+    const dragEditInProgress = monitor.isDragging() && (operation?.type === CREATE_CONNECTOR_OPERATION || operation?.edit);
+    const dragCreate = dragEditInProgress && (monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE || monitor.getItemType() === MOVE_CONNECTOR_DROP_TYPE);
     return {
       dragEditInProgress,
       dragCreate,
@@ -223,48 +189,21 @@ const graphDropTargetSpec: DropTargetSpec<
   dropHint: 'create',
 };
 
-const applicationGroupDropTargetSpec: DropTargetSpec<
-  any,
-  any,
-  { droppable: boolean; dropTarget: boolean; canDrop: boolean },
-  any
-> = {
+const applicationGroupDropTargetSpec: DropTargetSpec<any, any, { droppable: boolean; dropTarget: boolean; canDrop: boolean }, any> = {
   accept: [NODE_DRAG_TYPE, EDGE_DRAG_TYPE, CREATE_CONNECTOR_DROP_TYPE],
-  canDrop: (item, monitor) =>
-    monitor.isOver({ shallow: monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE }) &&
-    (monitor.getOperation()?.type === REGROUP_OPERATION ||
-      monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE),
-  collect: (monitor) => {
+  canDrop: (item, monitor) => monitor.isOver({ shallow: monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE }) && (monitor.getOperation()?.type === REGROUP_OPERATION || monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE),
+  collect: monitor => {
     return {
       droppable: monitor.isDragging() && monitor.getOperation()?.type === REGROUP_OPERATION,
       dropTarget: monitor.isOver({ shallow: monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE }),
-      canDrop:
-        monitor.isDragging() &&
-        (monitor.getOperation()?.type === REGROUP_OPERATION ||
-          monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE),
+      canDrop: monitor.isDragging() && (monitor.getOperation()?.type === REGROUP_OPERATION || monitor.getItemType() === CREATE_CONNECTOR_DROP_TYPE),
       dragRegroupable: monitor.isDragging() && monitor.getItem()?.allowRegroup,
     };
   },
   dropHint: 'create',
 };
 
-const edgeDragSourceSpec = (
-  type: string,
-  serviceBinding: boolean,
-  callback: (
-    sourceNode: Node,
-    targetNode: Node,
-    replaceTargetNode?: Node,
-    serviceBindingFlag?: boolean,
-  ) => Promise<K8sResourceKind[] | K8sResourceKind>,
-  failureTitle: string = 'Error moving connection',
-): DragSourceSpec<
-  DragObjectWithType,
-  DragSpecOperationType<EditableDragOperationType>,
-  Node,
-  { dragging: boolean },
-  EdgeComponentProps
-> => ({
+const edgeDragSourceSpec = (type: string, serviceBinding: boolean, callback: (sourceNode: Node, targetNode: Node, replaceTargetNode?: Node, serviceBindingFlag?: boolean) => Promise<K8sResourceKind[] | K8sResourceKind>, failureTitle: string = 'Error moving connection'): DragSourceSpec<DragObjectWithType, DragSpecOperationType<EditableDragOperationType>, Node, { dragging: boolean }, EdgeComponentProps> => ({
   item: { type: EDGE_DRAG_TYPE },
   operation: { type: MOVE_CONNECTOR_OPERATION, edit: true, canDropOnNode: canDropEdgeOnNode },
   begin: (monitor, props) => {
@@ -276,22 +215,13 @@ const edgeDragSourceSpec = (
   },
   end: (dropResult, monitor, props) => {
     props.element.setEndPoint();
-    if (
-      monitor.didDrop() &&
-      dropResult &&
-      canDropEdgeOnNode(monitor.getOperation()?.type, props.element, dropResult)
-    ) {
-      callback(
-        props.element.getSource(),
-        dropResult,
-        props.element.getTarget(),
-        serviceBinding,
-      ).catch((error) => {
+    if (monitor.didDrop() && dropResult && canDropEdgeOnNode(monitor.getOperation()?.type, props.element, dropResult)) {
+      callback(props.element.getSource(), dropResult, props.element.getTarget(), serviceBinding).catch(error => {
         errorModal({ title: failureTitle, error: error.message, showIcon: true });
       });
     }
   },
-  collect: (monitor) => ({
+  collect: monitor => ({
     dragging: monitor.isDragging(),
   }),
 });
@@ -308,17 +238,10 @@ const withNoDrop = () => {
 };
 
 const withContextMenu = <E extends GraphElement>(actions: (element: E) => React.ReactElement[]) => {
-  return withTopologyContextMenu(
-    actions,
-    document.getElementById('popper-container'),
-    'odc-topology-context-menu',
-  );
+  return withTopologyContextMenu(actions, document.getElementById('popper-container'), 'odc-topology-context-menu');
 };
 
-const createConnectorCallback = (serviceBinding: boolean) => (
-  source: Node,
-  target: Node | Graph,
-): React.ReactElement[] | null => {
+const createConnectorCallback = (serviceBinding: boolean) => (source: Node, target: Node | Graph): React.ReactElement[] | null => {
   if (source === target) {
     return null;
   }
@@ -329,38 +252,17 @@ const createConnectorCallback = (serviceBinding: boolean) => (
   if (target.isGroup()) {
     return groupContextMenu(target, source);
   }
-  createConnection(source, target, null, serviceBinding).catch((error) => {
+  createConnection(source, target, null, serviceBinding).catch(error => {
     errorModal({ title: 'Error creating connection', error: error.message });
   });
   return null;
 };
 
 const removeConnectorCallback = (edge: Edge): void => {
-  removeConnection(edge).catch((error) => {
+  removeConnection(edge).catch(error => {
     errorModal({ title: 'Error removing connection', error: error.message });
   });
   return null;
 };
 
-export {
-  GraphComponentProps,
-  NodeComponentProps,
-  EdgeComponentProps,
-  EditableDragOperationType,
-  DragNodeObject,
-  nodesEdgeIsDragging,
-  nodeDragSourceSpec,
-  nodeDropTargetSpec,
-  graphDropTargetSpec,
-  applicationGroupDropTargetSpec,
-  edgeDragSourceSpec,
-  noDropTargetSpec,
-  createConnectorCallback,
-  removeConnectorCallback,
-  REGROUP_OPERATION,
-  MOVE_CONNECTOR_DROP_TYPE,
-  NODE_DRAG_TYPE,
-  EDGE_DRAG_TYPE,
-  withNoDrop,
-  withContextMenu,
-};
+export { GraphComponentProps, NodeComponentProps, EdgeComponentProps, EditableDragOperationType, DragNodeObject, nodesEdgeIsDragging, nodeDragSourceSpec, nodeDropTargetSpec, graphDropTargetSpec, applicationGroupDropTargetSpec, edgeDragSourceSpec, noDropTargetSpec, createConnectorCallback, removeConnectorCallback, REGROUP_OPERATION, MOVE_CONNECTOR_DROP_TYPE, NODE_DRAG_TYPE, EDGE_DRAG_TYPE, withNoDrop, withContextMenu };

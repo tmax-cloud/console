@@ -4,48 +4,20 @@ import { action } from 'mobx';
 import { connect } from 'react-redux';
 import { Button, ToolbarItem, Tooltip } from '@patternfly/react-core';
 import { TopologyIcon } from '@patternfly/react-icons';
-import {
-  TopologyView,
-  TopologyControlBar,
-  createTopologyControlButtons,
-  defaultControlButtonsOptions,
-} from '@patternfly/react-topology';
-import {
-  Visualization,
-  VisualizationSurface,
-  isNode,
-  isEdge,
-  BaseEdge,
-  Model,
-  SELECTION_EVENT,
-  SelectionEventListener,
-  GROUPS_LAYER,
-  TOP_LAYER,
-  BOTTOM_LAYER,
-  DEFAULT_LAYER,
-} from '@console/topology';
+import { TopologyView, TopologyControlBar, createTopologyControlButtons, defaultControlButtonsOptions } from '@patternfly/react-topology';
+import { Visualization, VisualizationSurface, isNode, isEdge, BaseEdge, Model, SELECTION_EVENT, SelectionEventListener, GROUPS_LAYER, TOP_LAYER, BOTTOM_LAYER, DEFAULT_LAYER } from '@console/topology';
 import { RootState } from '@console/internal/redux';
 import { getActiveApplication } from '@console/internal/reducers/ui';
 import { selectOverviewDetailsTab } from '@console/internal/actions/ui';
 import { getEventSourceStatus } from '@console/knative-plugin/src/topology/knative-topology-utils';
-import {
-  getQueryArgument,
-  setQueryArgument,
-  removeQueryArgument,
-} from '@console/internal/components/utils';
+import { getQueryArgument, setQueryArgument, removeQueryArgument } from '@console/internal/components/utils';
 import KnativeComponentFactory from '@console/knative-plugin/src/topology/components/knativeComponentFactory';
 import { KubevirtComponentFactory } from '@console/kubevirt-plugin/src/topology/components/kubevirtComponentFactory';
 import { TYPE_VIRTUAL_MACHINE } from '@console/kubevirt-plugin/src/topology/components/const';
 import TopologyVmPanel from '@console/kubevirt-plugin/src/topology/TopologyVmPanel';
 import { useAddToProjectAccess } from '../../utils/useAddToProjectAccess';
 import TopologySideBar from './TopologySideBar';
-import {
-  GraphData,
-  TopologyDataModel,
-  TopologyDataObject,
-  SHOW_GROUPING_HINT_EVENT,
-  ShowGroupingHintEventListener,
-} from './topology-types';
+import { GraphData, TopologyDataModel, TopologyDataObject, SHOW_GROUPING_HINT_EVENT, ShowGroupingHintEventListener } from './topology-types';
 import TopologyResourcePanel from './TopologyResourcePanel';
 import TopologyApplicationPanel from './application-panel/TopologyApplicationPanel';
 import ConnectedTopologyEdgePanel from './TopologyEdgePanel';
@@ -53,13 +25,7 @@ import { topologyModelFromDataModel } from './data-transforms/topology-model';
 import { layoutFactory, COLA_LAYOUT, COLA_FORCE_LAYOUT } from './layouts/layoutFactory';
 import { TYPE_APPLICATION_GROUP, ComponentFactory } from './components';
 import TopologyFilterBar from './filters/TopologyFilterBar';
-import {
-  getTopologyFilters,
-  getTopologySearchQuery,
-  TopologyFilters,
-  TOPOLOGY_SEARCH_FILTER_KEY,
-  FILTER_ACTIVE_CLASS,
-} from './filters';
+import { getTopologyFilters, getTopologySearchQuery, TopologyFilters, TOPOLOGY_SEARCH_FILTER_KEY, FILTER_ACTIVE_CLASS } from './filters';
 import TopologyHelmReleasePanel from './helm/TopologyHelmReleasePanel';
 import { TYPE_HELM_RELEASE, TYPE_HELM_WORKLOAD } from './helm/components/const';
 import { HelmComponentFactory } from './helm/components/helmComponentFactory';
@@ -95,15 +61,7 @@ const graphModel: Model = {
 
 type ComponentProps = TopologyProps & StateProps & DispatchProps;
 
-const Topology: React.FC<ComponentProps> = ({
-  data,
-  filters,
-  application,
-  namespace,
-  serviceBinding,
-  eventSourceEnabled,
-  onSelectTab,
-}) => {
+const Topology: React.FC<ComponentProps> = ({ data, filters, application, namespace, serviceBinding, eventSourceEnabled, onSelectTab }) => {
   const visRef = React.useRef<Visualization | null>(null);
   const applicationRef = React.useRef<string>(null);
   const componentFactoryRef = React.useRef<ComponentFactory | null>(null);
@@ -153,12 +111,9 @@ const Topology: React.FC<ComponentProps> = ({
         ids.length > 0 ? setQueryArgument('selectId', ids[0]) : removeQueryArgument('selectId');
       }
     });
-    visRef.current.addEventListener<ShowGroupingHintEventListener>(
-      SHOW_GROUPING_HINT_EVENT,
-      (element, hint) => {
-        setDragHint(hint);
-      },
-    );
+    visRef.current.addEventListener<ShowGroupingHintEventListener>(SHOW_GROUPING_HINT_EVENT, (element, hint) => {
+      setDragHint(hint);
+    });
     visRef.current.fromModel(graphModel);
   }
 
@@ -207,14 +162,10 @@ const Topology: React.FC<ComponentProps> = ({
     if (selectedIds.length > 0) {
       const selectedEntity = visRef.current.getElementById(selectedIds[0]);
       if (selectedEntity) {
-        const visibleEntity = isNode(selectedEntity)
-          ? selectedEntity
-          : (selectedEntity as BaseEdge).getSource();
+        const visibleEntity = isNode(selectedEntity) ? selectedEntity : (selectedEntity as BaseEdge).getSource();
         resizeTimeout = setTimeout(
           action(() => {
-            visRef.current
-              .getGraph()
-              .panIntoView(visibleEntity, { offset: 20, minimumVisible: 40 });
+            visRef.current.getGraph().panIntoView(visibleEntity, { offset: 20, minimumVisible: 40 });
             resizeTimeout = null;
           }),
           500,
@@ -234,7 +185,7 @@ const Topology: React.FC<ComponentProps> = ({
     })();
   }, [layout]);
 
-  const onSearchChange = (searchQuery) => {
+  const onSearchChange = searchQuery => {
     if (searchQuery.length > 0) {
       setQueryArgument(TOPOLOGY_SEARCH_FILTER_KEY, searchQuery);
       document.body.classList.add(FILTER_ACTIVE_CLASS);
@@ -287,8 +238,7 @@ const Topology: React.FC<ComponentProps> = ({
                 variant="tertiary"
                 onClick={() => setLayout(COLA_LAYOUT)}
               >
-                <TopologyIcon className="odc-topology__layout-button__icon" />1
-                <span className="sr-only">Layout 1</span>
+                <TopologyIcon className="odc-topology__layout-button__icon" />1<span className="sr-only">Layout 1</span>
               </Button>
             </ToolbarItem>
           </Tooltip>
@@ -301,8 +251,7 @@ const Topology: React.FC<ComponentProps> = ({
                 variant="tertiary"
                 onClick={() => setLayout(COLA_FORCE_LAYOUT)}
               >
-                <TopologyIcon className="odc-topology__layout-button__icon" />2
-                <span className="sr-only">Layout 2</span>
+                <TopologyIcon className="odc-topology__layout-button__icon" />2<span className="sr-only">Layout 2</span>
               </Button>
             </ToolbarItem>
           </Tooltip>
@@ -349,8 +298,7 @@ const Topology: React.FC<ComponentProps> = ({
   };
 
   const renderSideBar = () => {
-    const selectedEntity =
-      selectedIds.length === 0 ? null : visRef.current.getElementById(selectedIds[0]);
+    const selectedEntity = selectedIds.length === 0 ? null : visRef.current.getElementById(selectedIds[0]);
     const details = selectedItemDetails();
     if (!selectedEntity || !details) {
       return null;
@@ -370,14 +318,7 @@ const Topology: React.FC<ComponentProps> = ({
   const sideBar = renderSideBar();
 
   return (
-    <TopologyView
-      viewToolbar={
-        <TopologyFilterBar visualization={visRef.current} onSearchChange={onSearchChange} />
-      }
-      controlBar={renderControlBar()}
-      sideBar={sideBar}
-      sideBarOpen={!!sideBar}
-    >
+    <TopologyView viewToolbar={<TopologyFilterBar visualization={visRef.current} onSearchChange={onSearchChange} />} controlBar={renderControlBar()} sideBar={sideBar} sideBarOpen={!!sideBar}>
       <VisualizationSurface visualization={visRef.current} state={{ selectedIds }} />
       {dragHint && <div className="odc-topology__hint-container">{dragHint}</div>}
     </TopologyView>
@@ -394,10 +335,7 @@ const TopologyStateToProps = (state: RootState): StateProps => {
 };
 
 const TopologyDispatchToProps = (dispatch): DispatchProps => ({
-  onSelectTab: (name) => dispatch(selectOverviewDetailsTab(name)),
+  onSelectTab: name => dispatch(selectOverviewDetailsTab(name)),
 });
 
-export default connect<StateProps, DispatchProps, TopologyProps>(
-  TopologyStateToProps,
-  TopologyDispatchToProps,
-)(Topology);
+export default connect<StateProps, DispatchProps, TopologyProps>(TopologyStateToProps, TopologyDispatchToProps)(Topology);

@@ -12,25 +12,12 @@ export interface SvgDropShadowFilterProps {
   floodColor?: string;
 }
 
-const SvgDropShadowFilter: React.FC<SvgDropShadowFilterProps> = ({
-  id,
-  dx = 0,
-  dy = 1,
-  stdDeviation = 2,
-  floodColor = '#030303',
-  floodOpacity = 0.2,
-}) => {
+const SvgDropShadowFilter: React.FC<SvgDropShadowFilterProps> = ({ id, dx = 0, dy = 1, stdDeviation = 2, floodColor = '#030303', floodOpacity = 0.2 }) => {
   if (window.navigator.userAgent.includes('Edge')) {
     // feDropShadow is not supported by Edge
     return (
       <SVGDefs id={id}>
-        <filter
-          id={id}
-          x={`-${stdDeviation * 12.5}%`}
-          y={`-${stdDeviation * 12.5}%`}
-          width={`${100 + stdDeviation * 25}%`}
-          height={`${100 + stdDeviation * 25}%`}
-        >
+        <filter id={id} x={`-${stdDeviation * 12.5}%`} y={`-${stdDeviation * 12.5}%`} width={`${100 + stdDeviation * 25}%`} height={`${100 + stdDeviation * 25}%`}>
           <feGaussianBlur in="SourceAlpha" stdDeviation={stdDeviation} />
           <feOffset dx={dx} dy={dy} result="offsetblur" />
           <feFlood floodColor={floodColor} floodOpacity={floodOpacity} />
@@ -46,20 +33,8 @@ const SvgDropShadowFilter: React.FC<SvgDropShadowFilterProps> = ({
 
   return (
     <SVGDefs id={id}>
-      <filter
-        id={id}
-        x={`-${stdDeviation * 12.5}%`}
-        y={`-${stdDeviation * 12.5}%`}
-        width={`${100 + stdDeviation * 25}%`}
-        height={`${100 + stdDeviation * 25}%`}
-      >
-        <feDropShadow
-          dx={dx}
-          dy={dy}
-          stdDeviation={stdDeviation}
-          floodColor={floodColor}
-          floodOpacity={floodOpacity}
-        />
+      <filter id={id} x={`-${stdDeviation * 12.5}%`} y={`-${stdDeviation * 12.5}%`} width={`${100 + stdDeviation * 25}%`} height={`${100 + stdDeviation * 25}%`}>
+        <feDropShadow dx={dx} dy={dy} stdDeviation={stdDeviation} floodColor={floodColor} floodOpacity={floodOpacity} />
       </filter>
     </SVGDefs>
   );

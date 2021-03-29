@@ -14,21 +14,12 @@ export type ApplicationGroupResourceProps = {
   group: string;
 };
 
-const ApplicationGroupResource: React.FC<ApplicationGroupResourceProps> = ({
-  title,
-  resourcesData,
-  group,
-}) =>
+const ApplicationGroupResource: React.FC<ApplicationGroupResourceProps> = ({ title, resourcesData, group }) =>
   !_.isEmpty(resourcesData) ? (
     <div className="overview__sidebar-pane-body">
       <SidebarSectionHeading text={title}>
         {_.size(resourcesData) > MAX_RESOURCES && (
-          <Link
-            className="sidebar__section-view-all"
-            to={`/search/ns/${getActiveNamespace()}?kind=${referenceFor(
-              resourcesData[0],
-            )}&q=${encodeURIComponent(`app.kubernetes.io/part-of=${group}`)}`}
-          >
+          <Link className="sidebar__section-view-all" to={`/search/ns/${getActiveNamespace()}?kind=${referenceFor(resourcesData[0])}&q=${encodeURIComponent(`app.kubernetes.io/part-of=${group}`)}`}>
             {`View all (${_.size(resourcesData)})`}
           </Link>
         )}

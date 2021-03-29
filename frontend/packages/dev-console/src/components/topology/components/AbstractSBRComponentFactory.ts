@@ -1,9 +1,6 @@
 import { createConnectorCallback } from './componentUtils';
 import { CreateConnector } from './edges';
-import {
-  ComponentFactory as TopologyComponentFactory,
-  withCreateConnector,
-} from '@console/topology';
+import { ComponentFactory as TopologyComponentFactory, withCreateConnector } from '@console/topology';
 
 abstract class AbstractSBRComponentFactory {
   protected hasServiceBinding: boolean;
@@ -16,8 +13,7 @@ abstract class AbstractSBRComponentFactory {
     this.hasServiceBinding = value;
   }
 
-  public withAddResourceConnector = () =>
-    withCreateConnector(createConnectorCallback(this.hasServiceBinding), CreateConnector);
+  public withAddResourceConnector = () => withCreateConnector(createConnectorCallback(this.hasServiceBinding), CreateConnector);
 
   abstract getFactory(): TopologyComponentFactory;
 }

@@ -45,24 +45,12 @@ export interface TopologyDataControllerProps extends StateProps {
   render(RenderProps): React.ReactElement;
 }
 
-const Controller: React.FC<ControllerProps> = ({
-  render,
-  resources,
-  loaded,
-  loadError,
-  utils,
-  namespace,
-  serviceBinding,
-  trafficData,
-}) => {
+const Controller: React.FC<ControllerProps> = ({ render, resources, loaded, loadError, utils, namespace, serviceBinding, trafficData }) => {
   const secretCount = React.useRef<number>(-1);
   const [helmResourcesMap, setHelmResourcesMap] = React.useState<HelmReleaseResourcesMap>(null);
   React.useEffect(() => {
     const count = resources?.secrets?.data?.length ?? 0;
-    if (
-      (resources.secrets?.loaded && count !== secretCount.current) ||
-      resources.secrets?.loadError
-    ) {
+    if ((resources.secrets?.loaded && count !== secretCount.current) || resources.secrets?.loadError) {
       secretCount.current = count;
       if (count === 0) {
         setHelmResourcesMap({});
@@ -70,12 +58,12 @@ const Controller: React.FC<ControllerProps> = ({
       }
 
       fetchHelmReleases(namespace)
-        .then((releases) => {
+        .then(releases => {
           setHelmResourcesMap(
             releases.reduce((acc, release) => {
               try {
                 const manifestResources: K8sResourceKind[] = safeLoadAll(release.manifest);
-                manifestResources.forEach((resource) => {
+                manifestResources.forEach(resource => {
                   const resourceKindName = getHelmReleaseKey(resource);
                   if (!acc.hasOwnProperty(resourceKindName)) {
                     acc[resourceKindName] = {
@@ -106,19 +94,11 @@ const Controller: React.FC<ControllerProps> = ({
     loadError,
     namespace,
     serviceBinding,
-    data:
-      loaded && helmResourcesMap
-        ? transformTopologyData(resources, allowedResources, utils, trafficData, helmResourcesMap)
-        : null,
+    data: loaded && helmResourcesMap ? transformTopologyData(resources, allowedResources, utils, trafficData, helmResourcesMap) : null,
   });
 };
 
-export const TopologyDataController: React.FC<TopologyDataControllerProps> = ({
-  match,
-  render,
-  resourceList,
-  serviceBinding,
-}) => {
+export const TopologyDataController: React.FC<TopologyDataControllerProps> = ({ match, render, resourceList, serviceBinding }) => {
   const namespace = match.params.name;
   const { resources, utils } = getResourceList(namespace, resourceList);
   if (serviceBinding) {
@@ -133,20 +113,13 @@ export const TopologyDataController: React.FC<TopologyDataControllerProps> = ({
 
   return (
     <Firehose resources={resources}>
-      <Controller
-        render={render}
-        utils={utils}
-        serviceBinding={serviceBinding}
-        namespace={namespace}
-      />
+      <Controller render={render} utils={utils} serviceBinding={serviceBinding} namespace={namespace} />
     </Firehose>
   );
 };
 
 const DataControllerStateToProps = (state: RootState) => {
-  const resourceList = plugins.registry
-    .getOverviewCRDs()
-    .filter((resource) => state.FLAGS.get(resource.properties.required));
+  const resourceList = plugins.registry.getOverviewCRDs().filter(resource => state.FLAGS.get(resource.properties.required));
   return {
     resourceList,
     serviceBinding: getServiceBindingStatus(state),

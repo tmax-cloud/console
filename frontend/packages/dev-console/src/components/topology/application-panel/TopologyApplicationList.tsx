@@ -7,12 +7,10 @@ export type TopologyApplicationResourceListProps = {
   resources: K8sResourceKind[];
 };
 
-const TopologyApplicationResourceList: React.FC<TopologyApplicationResourceListProps> = ({
-  resources,
-}) => {
+const TopologyApplicationResourceList: React.FC<TopologyApplicationResourceListProps> = ({ resources }) => {
   return (
     <ul className="list-group">
-      {_.map(resources, (resource) => {
+      {_.map(resources, resource => {
         const {
           metadata: { name, namespace, uid },
         } = resource;

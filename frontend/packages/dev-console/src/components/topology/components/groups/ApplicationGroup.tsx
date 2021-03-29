@@ -1,23 +1,7 @@
 import * as React from 'react';
 import { polygonHull } from 'd3-polygon';
 import * as _ from 'lodash';
-import {
-  Layer,
-  Node,
-  PointTuple,
-  NodeShape,
-  NodeStyle,
-  maxPadding,
-  observer,
-  useCombineRefs,
-  useHover,
-  useDragNode,
-  WithDndDropProps,
-  WithSelectionProps,
-  WithContextMenuProps,
-  createSvgIdUrl,
-  hullPath,
-} from '@console/topology';
+import { Layer, Node, PointTuple, NodeShape, NodeStyle, maxPadding, observer, useCombineRefs, useHover, useDragNode, WithDndDropProps, WithSelectionProps, WithContextMenuProps, createSvgIdUrl, hullPath } from '@console/topology';
 import * as classNames from 'classnames';
 import { useDisplayFilters, useSearchFilter } from '../../filters';
 import SvgBoxedText from '../../../svg/SvgBoxedText';
@@ -42,7 +26,7 @@ export function computeLabelLocation(points: PointWithSize[]): PointWithSize {
   let lowPoints: PointWithSize[];
   const threshold = 5;
 
-  _.forEach(points, (p) => {
+  _.forEach(points, p => {
     const delta = !lowPoints ? Infinity : Math.round(p[1]) - Math.round(lowPoints[0][1]);
     if (delta > threshold) {
       lowPoints = [p];
@@ -51,25 +35,14 @@ export function computeLabelLocation(points: PointWithSize[]): PointWithSize {
     }
   });
   return [
-    (_.minBy(lowPoints, (p) => p[0])[0] + _.maxBy(lowPoints, (p) => p[0])[0]) / 2,
+    (_.minBy(lowPoints, p => p[0])[0] + _.maxBy(lowPoints, p => p[0])[0]) / 2,
     lowPoints[0][1],
     // use the max size value
-    _.maxBy(lowPoints, (p) => p[2])[2],
+    _.maxBy(lowPoints, p => p[2])[2],
   ];
 }
 
-const ApplicationGroup: React.FC<ApplicationGroupProps> = ({
-  element,
-  selected,
-  onSelect,
-  dndDropRef,
-  droppable,
-  canDrop,
-  dropTarget,
-  onContextMenu,
-  contextMenuOpen,
-  dragging,
-}) => {
+const ApplicationGroup: React.FC<ApplicationGroupProps> = ({ element, selected, onSelect, dndDropRef, droppable, canDrop, dropTarget, onContextMenu, contextMenuOpen, dragging }) => {
   const [hover, hoverRef] = useHover();
   const [labelHover, labelHoverRef] = useHover();
   const labelLocation = React.useRef<PointWithSize>();
@@ -86,12 +59,12 @@ const ApplicationGroup: React.FC<ApplicationGroupProps> = ({
   const hullPadding = (point: PointWithSize | PointTuple) => (point[2] || 0) + padding;
 
   if (!droppable || !pathRef.current || !labelLocation.current) {
-    const children = element.getNodes().filter((c) => c.isVisible());
+    const children = element.getNodes().filter(c => c.isVisible());
     if (children.length === 0) {
       return null;
     }
     const points: (PointWithSize | PointTuple)[] = [];
-    _.forEach(children, (c) => {
+    _.forEach(children, c => {
       if (c.getNodeShape() === NodeShape.circle) {
         const bounds = c.getBounds();
         const { width, height } = bounds;
@@ -107,8 +80,7 @@ const ApplicationGroup: React.FC<ApplicationGroupProps> = ({
         points.push([x + width, y + height, 0] as PointWithSize);
       }
     });
-    const hullPoints: (PointWithSize | PointTuple)[] =
-      points.length > 2 ? polygonHull(points as PointTuple[]) : (points as PointTuple[]);
+    const hullPoints: (PointWithSize | PointTuple)[] = points.length > 2 ? polygonHull(points as PointTuple[]) : (points as PointTuple[]);
     if (!hullPoints) {
       return null;
     }
@@ -145,28 +117,11 @@ const ApplicationGroup: React.FC<ApplicationGroupProps> = ({
             'is-filtered': filtered,
           })}
         >
-          <path
-            ref={dndDropRef}
-            className="odc-application-group__bg"
-            filter={createSvgIdUrl(
-              hover || labelHover || dragging || contextMenuOpen || dropTarget
-                ? NODE_SHADOW_FILTER_ID_HOVER
-                : NODE_SHADOW_FILTER_ID,
-            )}
-            d={pathRef.current}
-          />
+          <path ref={dndDropRef} className="odc-application-group__bg" filter={createSvgIdUrl(hover || labelHover || dragging || contextMenuOpen || dropTarget ? NODE_SHADOW_FILTER_ID_HOVER : NODE_SHADOW_FILTER_ID)} d={pathRef.current} />
         </g>
       </Layer>
       {showLabels && (
-        <SvgBoxedText
-          className="odc-application-group__label"
-          kind="application"
-          x={labelLocation.current[0]}
-          y={labelLocation.current[1] + hullPadding(labelLocation.current) + 24}
-          paddingX={8}
-          paddingY={5}
-          dragRef={dragLabelRef}
-        >
+        <SvgBoxedText className="odc-application-group__label" kind="application" x={labelLocation.current[0]} y={labelLocation.current[1] + hullPadding(labelLocation.current) + 24} paddingX={8} paddingY={5} dragRef={dragLabelRef}>
           {element.getLabel()}
         </SvgBoxedText>
       )}

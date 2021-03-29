@@ -5,12 +5,7 @@ import { CaretDownIcon } from '@patternfly/react-icons';
 import { Formik, FormikProps, FormikValues } from 'formik';
 import { K8sResourceKind } from '@console/internal/module/k8s';
 import { PromiseComponent, ResourceIcon } from '@console/internal/components/utils';
-import {
-  createModalLauncher,
-  ModalTitle,
-  ModalBody,
-  ModalSubmitFooter,
-} from '@console/internal/components/factory/modal';
+import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/factory/modal';
 import { Edge, Node } from '@console/topology';
 import FormSection from '../../import/section/FormSection';
 import { TYPE_EVENT_SOURCE_LINK } from '@console/knative-plugin/src/topology/const';
@@ -44,15 +39,7 @@ const nodeItem = (node: Node) => (
   </span>
 );
 
-const MoveConnectionForm: React.FC<FormikProps<FormikValues> & MoveConnectionModalProps> = ({
-  handleSubmit,
-  isSubmitting,
-  cancel,
-  values,
-  edge,
-  availableTargets,
-  status,
-}) => {
+const MoveConnectionForm: React.FC<FormikProps<FormikValues> & MoveConnectionModalProps> = ({ handleSubmit, isSubmitting, cancel, values, edge, availableTargets, status }) => {
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const isDirty = values.target.getId() !== edge.getTarget().getId();
 
@@ -100,21 +87,12 @@ const MoveConnectionForm: React.FC<FormikProps<FormikValues> & MoveConnectionMod
           </FormGroup>
         </FormSection>
       </ModalBody>
-      <ModalSubmitFooter
-        submitText="Move"
-        submitDisabled={!isDirty}
-        cancel={cancel}
-        inProgress={isSubmitting}
-        errorMessage={status && status.submitError}
-      />
+      <ModalSubmitFooter submitText="Move" submitDisabled={!isDirty} cancel={cancel} inProgress={isSubmitting} errorMessage={status && status.submitError} />
     </form>
   );
 };
 
-class MoveConnectionModal extends PromiseComponent<
-  MoveConnectionModalProps & StateProps,
-  MoveConnectionModalState
-> {
+class MoveConnectionModal extends PromiseComponent<MoveConnectionModalProps & StateProps, MoveConnectionModalState> {
   private onSubmit = (newTarget: Node): Promise<K8sResourceKind[] | K8sResourceKind> => {
     const { edge, serviceBinding } = this.props;
     switch (edge.getType()) {
@@ -137,7 +115,7 @@ class MoveConnectionModal extends PromiseComponent<
         actions.setSubmitting(false);
         close();
       })
-      .catch((err) => {
+      .catch(err => {
         actions.setSubmitting(false);
         actions.setStatus({ submitError: err });
       });
@@ -148,13 +126,7 @@ class MoveConnectionModal extends PromiseComponent<
     const initialValues = {
       target: edge.getTarget(),
     };
-    return (
-      <Formik
-        initialValues={initialValues}
-        onSubmit={this.handleSubmit}
-        render={(formProps) => <MoveConnectionForm {...formProps} {...this.props} />}
-      />
-    );
+    return <Formik initialValues={initialValues} onSubmit={this.handleSubmit} render={formProps => <MoveConnectionForm {...formProps} {...this.props} />} />;
   }
 }
 
@@ -166,6 +138,4 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const ConnectedMoveConnectionModal = connect(mapStateToProps)(MoveConnectionModal);
 
-export const moveConnectionModal = createModalLauncher((props: MoveConnectionModalProps) => (
-  <ConnectedMoveConnectionModal {...props} />
-));
+export const moveConnectionModal = createModalLauncher((props: MoveConnectionModalProps) => <ConnectedMoveConnectionModal {...props} />);

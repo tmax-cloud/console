@@ -7,10 +7,7 @@ type TopologyHelmReleaseResourceItemProps = {
   releaseNamespace: string;
 };
 
-const TopologyHelmReleaseResourceItem: React.FC<TopologyHelmReleaseResourceItemProps> = ({
-  item,
-  releaseNamespace,
-}) => {
+const TopologyHelmReleaseResourceItem: React.FC<TopologyHelmReleaseResourceItemProps> = ({ item, releaseNamespace }) => {
   const {
     metadata: { name, namespace },
   } = item;

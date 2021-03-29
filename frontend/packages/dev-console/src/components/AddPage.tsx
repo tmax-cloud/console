@@ -29,8 +29,7 @@ interface EmptyStateLoaderProps {
   loadError?: string;
 }
 
-const handleProjectCreate = (project: K8sResourceKind) =>
-  history.push(`/add/ns/${project.metadata.name}`);
+const handleProjectCreate = (project: K8sResourceKind) => history.push(`/add/ns/${project.metadata.name}`);
 
 const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, loadError }) => {
   const [noWorkloads, setNoWorkloads] = React.useState(false);
@@ -42,13 +41,7 @@ const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, 
 
   React.useEffect(() => {
     if (loaded) {
-      setNoWorkloads(
-        _.isEmpty(daemonSets) &&
-          _.isEmpty(deploymentConfigs) &&
-          _.isEmpty(deployments) &&
-          _.isEmpty(statefulSets) &&
-          _.isEmpty(knativeService),
-      );
+      setNoWorkloads(_.isEmpty(daemonSets) && _.isEmpty(deploymentConfigs) && _.isEmpty(deployments) && _.isEmpty(statefulSets) && _.isEmpty(knativeService));
     } else if (loadError) {
       setNoWorkloads(false);
     }
@@ -58,10 +51,7 @@ const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, 
       title="Add"
       hintBlock={
         <HintBlock title="No workloads found">
-          <p>
-            To add content to your project, create an application, component or service using one of
-            these options.
-          </p>
+          <p>To add content to your project, create an application, component or service using one of these options.</p>
         </HintBlock>
       }
     />
@@ -126,13 +116,7 @@ const AddPage: React.FC<AddPageProps> = ({ match }) => {
       </Helmet>
       <NamespacedPage>
         <Firehose resources={[{ kind: 'Project', prop: 'projects', isList: true }]}>
-          <ProjectsExistWrapper title="Add">
-            {namespace ? (
-              <RenderEmptyState namespace={namespace} />
-            ) : (
-              <CreateProjectListPage onCreate={handleProjectCreate} title="Add" />
-            )}
-          </ProjectsExistWrapper>
+          <ProjectsExistWrapper title="Add">{namespace ? <RenderEmptyState namespace={namespace} /> : <CreateProjectListPage onCreate={handleProjectCreate} title="Add" />}</ProjectsExistWrapper>
         </Firehose>
       </NamespacedPage>
     </>
