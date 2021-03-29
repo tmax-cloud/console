@@ -56,6 +56,7 @@ import {
   ImageSignRequestModel,
   ImageScanRequestModel,
   SignerPolicyModel,
+  ImageReplicateModel,
   IntegrationConfigModel,
   IntegrationJobModel,
   ClusterClaimModel,
@@ -124,7 +125,9 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(ImageSignerModel), () => import('./image-signer' /* webpackChunkName: "image-signer" */).then(m => m.ImageSignersDetailsPage))
   .set(referenceForModel(ImageSignRequestModel), () => import('./image-sign-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageSignRequestsDetailsPage))
   .set(referenceForModel(SignerPolicyModel), () => import('./signer-policy' /* webpackChunkName: "image-sign-request" */).then(m => m.SignerPoliciesDetailsPage))
-  .set(referenceForModel(ImageScanRequestModel), () => import('./image-scan-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageScanRequestsDetailsPage));
+  .set(referenceForModel(ImageScanRequestModel), () => import('./image-scan-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageScanRequestsDetailsPage))
+  .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesDetailsPage));
+
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -184,4 +187,5 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(ImageSignerModel), () => import('./image-signer' /* webpackChunkName: "image-signer" */).then(m => m.ImageSignersPage))
   .set(referenceForModel(ImageSignRequestModel), () => import('./image-sign-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageSignRequestsPage))
   .set(referenceForModel(SignerPolicyModel), () => import('./signer-policy' /* webpackChunkName: "image-sign-request" */).then(m => m.SignerPoliciesPage))
-  .set(referenceForModel(ImageScanRequestModel), () => import('./image-scan-request' /* webpackChunkName: "image-scan-request" */).then(m => m.ImageScanRequestsPage));
+  .set(referenceForModel(ImageScanRequestModel), () => import('./image-scan-request' /* webpackChunkName: "image-scan-request" */).then(m => m.ImageScanRequestsPage))
+  .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesPage));
