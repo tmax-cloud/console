@@ -7,10 +7,7 @@ const fuzzyCaseInsensitive = (a: string, b: string): boolean => fuzzy(toLower(a)
 
 const useSearchFilter = (text: string): [boolean, string] => {
   const searchQuery = getTopologySearchQuery();
-  const filtered = React.useMemo(() => fuzzyCaseInsensitive(searchQuery, text), [
-    searchQuery,
-    text,
-  ]);
+  const filtered = React.useMemo(() => fuzzyCaseInsensitive(searchQuery, text), [searchQuery, text]);
   return [filtered && !!searchQuery, searchQuery];
 };
 

@@ -14,12 +14,7 @@ type ResourceKindsInfoProps = {
   height: number;
 };
 
-const ResourceKindsInfo: React.FC<ResourceKindsInfoProps> = ({
-  groupResources,
-  emptyValue,
-  width,
-  height,
-}) => {
+const ResourceKindsInfo: React.FC<ResourceKindsInfoProps> = ({ groupResources, emptyValue, width, height }) => {
   const resourcesData = {};
   _.forEach(groupResources, (res: TopologyDataObject) => {
     const a = getTopologyResourceObject(res);
@@ -42,7 +37,7 @@ const ResourceKindsInfo: React.FC<ResourceKindsInfoProps> = ({
       <div className="odc-resource-kinds-info">
         <table className="odc-resource-kinds-info__table">
           <tbody className="odc-resource-kinds-info__body">
-            {resourceTypes.map((key) => {
+            {resourceTypes.map(key => {
               const kindObj = modelFor(referenceFor(resourcesData[key][0]));
               return (
                 <tr key={key} className="odc-resource-kinds-info__row">
@@ -50,9 +45,7 @@ const ResourceKindsInfo: React.FC<ResourceKindsInfoProps> = ({
                   <td className="odc-resource-kinds-info__resource-icon">
                     <ResourceIcon kind={kindObj.crd ? referenceForModel(kindObj) : kindObj.kind} />
                   </td>
-                  <td className="odc-resource-kinds-info__kind">
-                    {resourcesData[key].length > 1 ? kindObj.labelPlural : kindObj.label}
-                  </td>
+                  <td className="odc-resource-kinds-info__kind">{resourcesData[key].length > 1 ? kindObj.labelPlural : kindObj.label}</td>
                 </tr>
               );
             })}

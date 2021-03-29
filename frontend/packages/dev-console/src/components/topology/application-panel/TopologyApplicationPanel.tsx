@@ -9,10 +9,7 @@ export type TopologyApplicationPanelProps = {
   application: TopologyApplicationObject;
 };
 
-const TopologyApplicationPanel: React.FC<TopologyApplicationPanelProps> = ({
-  graphData,
-  application,
-}) => (
+const TopologyApplicationPanel: React.FC<TopologyApplicationPanelProps> = ({ graphData, application }) => (
   <div className="overview__sidebar-pane resource-overview">
     <div className="overview__sidebar-pane-head resource-overview__heading">
       <h1 className="co-m-pane__heading">

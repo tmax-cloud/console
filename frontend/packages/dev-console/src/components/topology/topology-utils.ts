@@ -3,13 +3,7 @@ import { K8sResourceKind, modelFor, referenceFor } from '@console/internal/modul
 import { RootState } from '@console/internal/redux';
 import { getRouteWebURL } from '@console/internal/components/routes';
 import { OverviewItem } from '@console/shared';
-import {
-  createResourceConnection,
-  updateResourceApplication,
-  removeResourceConnection,
-  createServiceBinding,
-  removeServiceBinding,
-} from '../../utils/application-utils';
+import { createResourceConnection, updateResourceApplication, removeResourceConnection, createServiceBinding, removeServiceBinding } from '../../utils/application-utils';
 import { TopologyDataObject } from './topology-types';
 import { TYPE_OPERATOR_BACKED_SERVICE } from './operators/components/const';
 import { HelmReleaseResourcesMap } from '../helm/helm-types';
@@ -17,22 +11,17 @@ import { ALLOW_SERVICE_BINDING } from '../../const';
 
 export const allowedResources = ['deployments', 'deploymentConfigs', 'daemonSets', 'statefulSets'];
 
-export const getServiceBindingStatus = ({ FLAGS }: RootState): boolean =>
-  FLAGS.get(ALLOW_SERVICE_BINDING);
+export const getServiceBindingStatus = ({ FLAGS }: RootState): boolean => FLAGS.get(ALLOW_SERVICE_BINDING);
 
-export const getCheURL = (consoleLinks: K8sResourceKind[]) =>
-  _.get(_.find(consoleLinks, ['metadata.name', 'che']), 'spec.href', '');
+export const getCheURL = (consoleLinks: K8sResourceKind[]) => _.get(_.find(consoleLinks, ['metadata.name', 'che']), 'spec.href', '');
 
 export const getEditURL = (gitURL: string, cheURL: string) => {
   return gitURL && cheURL ? `${cheURL}/f?url=${gitURL}&policies.create=peruser` : gitURL;
 };
 
-export const getHelmReleaseKey = (resource) => `${resource.kind}---${resource.metadata.name}`;
+export const getHelmReleaseKey = resource => `${resource.kind}---${resource.metadata.name}`;
 
-export const isHelmReleaseNode = (
-  obj: K8sResourceKind,
-  helmResourcesMap: HelmReleaseResourcesMap,
-): boolean => {
+export const isHelmReleaseNode = (obj: K8sResourceKind, helmResourcesMap: HelmReleaseResourcesMap): boolean => {
   if (helmResourcesMap) {
     return helmResourcesMap.hasOwnProperty(getHelmReleaseKey(obj));
   }
@@ -40,23 +29,19 @@ export const isHelmReleaseNode = (
 };
 
 export const getKialiLink = (consoleLinks: K8sResourceKind[], namespace: string): string => {
-  const kialiLink = _.find(consoleLinks, ['metadata.name', `kiali-namespace-${namespace}`])?.spec
-    ?.href;
+  const kialiLink = _.find(consoleLinks, ['metadata.name', `kiali-namespace-${namespace}`])?.spec?.href;
   return kialiLink || '';
 };
 
 /**
  * filter data based on the active application
  */
-export const filterBasedOnActiveApplication = (
-  data: K8sResourceKind[],
-  application: string,
-): K8sResourceKind[] => {
+export const filterBasedOnActiveApplication = (data: K8sResourceKind[], application: string): K8sResourceKind[] => {
   const PART_OF = 'app.kubernetes.io/part-of';
   if (!application) {
     return data;
   }
-  return data.filter((dc) => {
+  return data.filter(dc => {
     return _.get(dc, ['metadata', 'labels', PART_OF]) === application;
   });
 };
@@ -92,10 +77,7 @@ export const getTopologyResourceObject = (topologyObject: TopologyDataObject): K
   return _.get(topologyObject, ['resources', 'obj']);
 };
 
-export const updateTopologyResourceApplication = (
-  item: TopologyDataObject,
-  application: string,
-): Promise<any> => {
+export const updateTopologyResourceApplication = (item: TopologyDataObject, application: string): Promise<any> => {
   if (!item || !_.size(item.resources)) {
     return Promise.reject();
   }
@@ -106,7 +88,7 @@ export const updateTopologyResourceApplication = (
   resources.push(getTopologyResourceObject(item));
 
   if (item.type === TYPE_OPERATOR_BACKED_SERVICE) {
-    _.forEach(item.groupResources, (groupResource) => {
+    _.forEach(item.groupResources, groupResource => {
       resources.push(getTopologyResourceObject(groupResource));
     });
   }
@@ -114,9 +96,7 @@ export const updateTopologyResourceApplication = (
   for (const resource of resources) {
     const resourceKind = modelFor(referenceFor(resource));
     if (!resourceKind) {
-      return Promise.reject(
-        new Error(`Unable to update application, invalid resource type: ${resource.kind}`),
-      );
+      return Promise.reject(new Error(`Unable to update application, invalid resource type: ${resource.kind}`));
     }
     updates.push(updateResourceApplication(resourceKind, resource, application));
   }
@@ -124,12 +104,7 @@ export const updateTopologyResourceApplication = (
   return Promise.all(updates);
 };
 
-export const createTopologyResourceConnection = (
-  source: TopologyDataObject,
-  target: TopologyDataObject,
-  replaceTarget: TopologyDataObject = null,
-  serviceBindingFlag: boolean,
-): Promise<K8sResourceKind[] | K8sResourceKind> => {
+export const createTopologyResourceConnection = (source: TopologyDataObject, target: TopologyDataObject, replaceTarget: TopologyDataObject = null, serviceBindingFlag: boolean): Promise<K8sResourceKind[] | K8sResourceKind> => {
   if (!source || !target || source === target) {
     return Promise.reject(new Error('Can not create a connection from a node to itself.'));
   }
@@ -158,12 +133,7 @@ export const createTopologyResourceConnection = (
   return createResourceConnection(sourceObj, targetObj, replaceTargetObj);
 };
 
-export const removeTopologyResourceConnection = (
-  source: TopologyDataObject,
-  target: TopologyDataObject,
-  sbr: K8sResourceKind,
-  edgeType: string,
-): Promise<any> => {
+export const removeTopologyResourceConnection = (source: TopologyDataObject, target: TopologyDataObject, sbr: K8sResourceKind, edgeType: string): Promise<any> => {
   if (!source || !target) {
     return Promise.reject();
   }

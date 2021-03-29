@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  navFactory,
-  ResourceIcon,
-  SimpleTabNav,
-  StatusBox,
-  ActionsMenu,
-} from '@console/internal/components/utils';
+import { navFactory, ResourceIcon, SimpleTabNav, StatusBox, ActionsMenu } from '@console/internal/components/utils';
 import * as UIActions from '@console/internal/actions/ui';
 import { Node } from '@console/topology';
 import HelmReleaseOverview from '../../helm/details/overview/HelmReleaseOverview';
@@ -28,7 +22,7 @@ const stateToProps = ({ UI }): PropsFromState => ({
 });
 
 const dispatchToProps = (dispatch): PropsFromDispatch => ({
-  onClickTab: (name) => dispatch(UIActions.selectOverviewDetailsTab(name)),
+  onClickTab: name => dispatch(UIActions.selectOverviewDetailsTab(name)),
 });
 
 type OwnProps = {
@@ -37,32 +31,15 @@ type OwnProps = {
 
 type TopologyHelmReleasePanelProps = PropsFromState & PropsFromDispatch & OwnProps;
 
-export const ConnectedTopologyHelmReleasePanel: React.FC<TopologyHelmReleasePanelProps> = ({
-  helmRelease,
-  selectedDetailsTab,
-  onClickTab,
-}: TopologyHelmReleasePanelProps) => {
+export const ConnectedTopologyHelmReleasePanel: React.FC<TopologyHelmReleasePanelProps> = ({ helmRelease, selectedDetailsTab, onClickTab }: TopologyHelmReleasePanelProps) => {
   const secret = helmRelease.getData().resources.obj;
   const { manifestResources, releaseNotes } = helmRelease.getData().data;
   const name = helmRelease.getLabel();
   const { namespace } = helmRelease.getData().groupResources[0].resources.obj.metadata;
 
-  const detailsComponent = !secret
-    ? () => (
-        <StatusBox
-          loaded
-          loadError={{ message: `Unable to find resource for ${helmRelease.getLabel()}` }}
-        />
-      )
-    : navFactory.details(HelmReleaseOverview).component;
+  const detailsComponent = !secret ? () => <StatusBox loaded loadError={{ message: `Unable to find resource for ${helmRelease.getLabel()}` }} /> : navFactory.details(HelmReleaseOverview).component;
 
-  const resourcesComponent = () =>
-    manifestResources ? (
-      <TopologyHelmReleaseResourcesPanel
-        manifestResources={manifestResources}
-        releaseNamespace={namespace}
-      />
-    ) : null;
+  const resourcesComponent = () => (manifestResources ? <TopologyHelmReleaseResourcesPanel manifestResources={manifestResources} releaseNamespace={namespace} /> : null);
 
   const releaseNotesComponent = () => <TopologyHelmReleaseNotesPanel releaseNotes={releaseNotes} />;
 
@@ -74,10 +51,7 @@ export const ConnectedTopologyHelmReleasePanel: React.FC<TopologyHelmReleasePane
           <div className="co-m-pane__name co-resource-item">
             <ResourceIcon className="co-m-resource-icon--lg" kind="HelmRelease" />
             {name && (
-              <Link
-                to={`/helm-releases/ns/${namespace}/release/${name}`}
-                className="co-resource-item__resource-name"
-              >
+              <Link to={`/helm-releases/ns/${namespace}/release/${name}`} className="co-resource-item__resource-name">
                 {name}
               </Link>
             )}
@@ -104,13 +78,6 @@ export const ConnectedTopologyHelmReleasePanel: React.FC<TopologyHelmReleasePane
   );
 };
 
-const TopologyHelmReleasePanel = connect<
-  PropsFromState,
-  PropsFromDispatch,
-  TopologyHelmReleasePanelProps
->(
-  stateToProps,
-  dispatchToProps,
-)(ConnectedTopologyHelmReleasePanel);
+const TopologyHelmReleasePanel = connect<PropsFromState, PropsFromDispatch, TopologyHelmReleasePanelProps>(stateToProps, dispatchToProps)(ConnectedTopologyHelmReleasePanel);
 
 export default TopologyHelmReleasePanel;

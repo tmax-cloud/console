@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Node,
-  observer,
-  WithSelectionProps,
-  WithDndDropProps,
-  WithContextMenuProps,
-} from '@console/topology';
+import { Node, observer, WithSelectionProps, WithDndDropProps, WithContextMenuProps } from '@console/topology';
 import { modelFor, referenceFor } from '@console/internal/module/k8s';
 import { useAccessReview } from '@console/internal/components/utils';
 import { getTopologyResourceObject } from '../../topology-utils';
@@ -20,9 +14,7 @@ export type OperatorBackedServiceProps = {
   WithContextMenuProps &
   WithDndDropProps;
 
-const OperatorBackedService: React.FC<OperatorBackedServiceProps> = (
-  props: OperatorBackedServiceProps,
-) => {
+const OperatorBackedService: React.FC<OperatorBackedServiceProps> = (props: OperatorBackedServiceProps) => {
   const resourceObj = getTopologyResourceObject(props.element.getData());
   const resourceModel = modelFor(referenceFor(resourceObj));
   const editAccess = useAccessReview({

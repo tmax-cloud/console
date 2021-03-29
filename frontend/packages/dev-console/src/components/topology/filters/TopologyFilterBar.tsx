@@ -33,12 +33,7 @@ type MergeProps = {
 
 type TopologyFilterBarProps = MergeProps;
 
-const TopologyFilterBar: React.FC<TopologyFilterBarProps> = ({
-  filters: { display },
-  onDisplayFiltersChange,
-  onSearchChange,
-  visualization,
-}) => {
+const TopologyFilterBar: React.FC<TopologyFilterBarProps> = ({ filters: { display }, onDisplayFiltersChange, onSearchChange, visualization }) => {
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -47,7 +42,7 @@ const TopologyFilterBar: React.FC<TopologyFilterBarProps> = ({
   }, []);
 
   const onTextFilterChange = React.useCallback(
-    (text) => {
+    text => {
       const query = text?.trim();
       setSearchQuery(query);
       onSearchChange(query);
@@ -64,12 +59,7 @@ const TopologyFilterBar: React.FC<TopologyFilterBarProps> = ({
       </ToolbarGroup>
       <ToolbarGroup className="odc-topology-filter-bar__search">
         <ToolbarItem>
-          <TextFilter
-            placeholder="Find by name..."
-            value={searchQuery}
-            autoFocus
-            onChange={onTextFilterChange}
-          />
+          <TextFilter placeholder="Find by name..." value={searchQuery} autoFocus onChange={onTextFilterChange} />
         </ToolbarItem>
         <ToolbarItem>
           <Popover
@@ -105,11 +95,7 @@ const dispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   },
 });
 
-const mergeProps = (
-  { filters }: StateProps,
-  { onFiltersChange }: DispatchProps,
-  { visualization, onSearchChange }: OwnProps,
-): MergeProps => ({
+const mergeProps = ({ filters }: StateProps, { onFiltersChange }: DispatchProps, { visualization, onSearchChange }: OwnProps): MergeProps => ({
   filters,
   onDisplayFiltersChange: (display: DisplayFilters) => {
     onFiltersChange({ ...filters, display });
@@ -118,8 +104,4 @@ const mergeProps = (
   visualization,
 });
 
-export default connect<StateProps, DispatchProps, OwnProps, MergeProps>(
-  mapStateToProps,
-  dispatchToProps,
-  mergeProps,
-)(TopologyFilterBar);
+export default connect<StateProps, DispatchProps, OwnProps, MergeProps>(mapStateToProps, dispatchToProps, mergeProps)(TopologyFilterBar);

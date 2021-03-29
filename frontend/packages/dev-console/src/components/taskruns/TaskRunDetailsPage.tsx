@@ -3,10 +3,5 @@ import { DetailsPage, DetailsPageProps } from '@console/internal/components/fact
 import { navFactory, viewYamlComponent } from '@console/internal/components/utils';
 import TaskRunDetails from './TaskRunDetails';
 
-const TaskRunDetailsPage: React.FC<DetailsPageProps> = (props) => (
-  <DetailsPage
-    {...props}
-    pages={[navFactory.details(TaskRunDetails), navFactory.editYaml(viewYamlComponent)]}
-  />
-);
+const TaskRunDetailsPage: React.FC<DetailsPageProps> = props => <DetailsPage {...props} pages={[navFactory.details(TaskRunDetails), navFactory.editYaml(viewYamlComponent)]} />;
 export default TaskRunDetailsPage;

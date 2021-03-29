@@ -27,11 +27,7 @@ const handleNamespaceChange = (newNamespace: string): void => {
   }
 };
 
-export const PageContents: React.FC<MonitoringPageProps> = ({
-  noProjectsAvailable,
-  match,
-  ...props
-}) => {
+export const PageContents: React.FC<MonitoringPageProps> = ({ noProjectsAvailable, match, ...props }) => {
   const activeNamespace = match.params.ns;
 
   const canListRoleBindings = useAccessReview({
@@ -84,16 +80,12 @@ export const PageContents: React.FC<MonitoringPageProps> = ({
 
 const PageContentsWithStartGuide = withStartGuide(PageContents);
 
-export const ProjectDetailsPage: React.FC<MonitoringPageProps> = (props) => (
+export const ProjectDetailsPage: React.FC<MonitoringPageProps> = props => (
   <>
     <Helmet>
       <title>Project Details</title>
     </Helmet>
-    <NamespacedPage
-      hideApplications
-      variant={NamespacedPageVariants.light}
-      onNamespaceChange={handleNamespaceChange}
-    >
+    <NamespacedPage hideApplications variant={NamespacedPageVariants.light} onNamespaceChange={handleNamespaceChange}>
       <PageContentsWithStartGuide {...props} />
     </NamespacedPage>
   </>

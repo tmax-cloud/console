@@ -8,10 +8,7 @@ type TopologyHelmReleaseResourcesPanelProps = {
   releaseNamespace: string;
 };
 
-const TopologyHelmReleaseResourcesPanel: React.SFC<TopologyHelmReleaseResourcesPanelProps> = ({
-  manifestResources,
-  releaseNamespace,
-}) => {
+const TopologyHelmReleaseResourcesPanel: React.SFC<TopologyHelmReleaseResourcesPanelProps> = ({ manifestResources, releaseNamespace }) => {
   const kinds = manifestResources
     .reduce((resourceKinds, resource) => {
       const kind = referenceFor(resource);
@@ -24,15 +21,12 @@ const TopologyHelmReleaseResourcesPanel: React.SFC<TopologyHelmReleaseResourcesP
 
   const resourceLists = kinds.reduce((lists, kind) => {
     const model = modelFor(kind);
-    const resources = manifestResources.filter((resource) => resource.kind === model.kind);
+    const resources = manifestResources.filter(resource => resource.kind === model.kind);
     if (resources.length) {
       lists.push(
         <div key={model.kind}>
           <SidebarSectionHeading text={model.labelPlural} />
-          <TopologyHelmReleaseResourceList
-            resources={resources}
-            releaseNamespace={releaseNamespace}
-          />
+          <TopologyHelmReleaseResourceList resources={resources} releaseNamespace={releaseNamespace} />
         </div>,
       );
     }

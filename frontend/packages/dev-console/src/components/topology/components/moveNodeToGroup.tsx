@@ -13,8 +13,7 @@ export const moveNodeToGroup = (node: Node, targetGroup: Node): Promise<void> =>
     const title = targetGroup ? 'Move Component Node' : 'Remove Component Node from Application';
     const message = (
       <>
-        Are you sure you want to {targetGroup ? 'move' : 'remove'}{' '}
-        <strong>{node.getLabel()}</strong> from {sourceGroup.getLabel()}
+        Are you sure you want to {targetGroup ? 'move' : 'remove'} <strong>{node.getLabel()}</strong> from {sourceGroup.getLabel()}
         {targetGroup ? ` to ${targetGroup.getLabel()}` : ''}?
       </>
     );
@@ -32,12 +31,9 @@ export const moveNodeToGroup = (node: Node, targetGroup: Node): Promise<void> =>
           reject();
         },
         executeFn: () => {
-          return updateTopologyResourceApplication(
-            node.getData(),
-            targetGroup ? targetGroup.getLabel() : null,
-          )
+          return updateTopologyResourceApplication(node.getData(), targetGroup ? targetGroup.getLabel() : null)
             .then(resolve)
-            .catch((err) => {
+            .catch(err => {
               const error = err.message;
               errorModal({ error });
               reject(err);
@@ -47,7 +43,7 @@ export const moveNodeToGroup = (node: Node, targetGroup: Node): Promise<void> =>
     });
   }
 
-  return updateTopologyResourceApplication(node.getData(), targetGroup.getLabel()).catch((err) => {
+  return updateTopologyResourceApplication(node.getData(), targetGroup.getLabel()).catch(err => {
     const error = err.message;
     errorModal({ error });
   });

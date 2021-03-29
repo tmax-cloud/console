@@ -1,25 +1,14 @@
 import { NodeModel, EdgeModel } from '@console/topology';
 import { TopologyFilters as Filters } from '../filters';
-import {
-  TopologyDataModel as DataModel,
-  TopologyDataObject,
-  Node,
-  Group,
-  Edge,
-} from '../topology-types';
-import {
-  TYPE_HELM_RELEASE,
-  HELM_GROUP_WIDTH,
-  HELM_GROUP_HEIGHT,
-  HELM_GROUP_PADDING,
-} from './components/const';
+import { TopologyDataModel as DataModel, TopologyDataObject, Node, Group, Edge } from '../topology-types';
+import { TYPE_HELM_RELEASE, HELM_GROUP_WIDTH, HELM_GROUP_HEIGHT, HELM_GROUP_PADDING } from './components/const';
 import { dataObjectFromModel } from '../data-transforms/transform-utils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getHelmGroupModel = (d: Group, model: DataModel, filters: Filters): NodeModel => {
   if (d.type === TYPE_HELM_RELEASE) {
     const data: TopologyDataObject = model.topology[d.id] || dataObjectFromModel(d);
-    data.groupResources = d.nodes.map((id) => model.topology[id]);
+    data.groupResources = d.nodes.map(id => model.topology[id]);
 
     return {
       width: HELM_GROUP_WIDTH,

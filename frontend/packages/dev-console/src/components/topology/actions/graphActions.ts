@@ -7,21 +7,14 @@ import { GraphData } from '../topology-types';
 
 export const graphActions = (graphData: GraphData, connectorSource?: Node) => {
   let resourceMenu = connectorSource ? addResourceMenuWithoutCatalog : addResourceMenu;
-  const isKnativeService =
-    connectorSource?.getData()?.data?.kind === referenceForModel(ServiceModel);
+  const isKnativeService = connectorSource?.getData()?.data?.kind === referenceForModel(ServiceModel);
   if (isKnativeService && graphData.eventSourceEnabled) {
     resourceMenu = [...addResourceMenuWithoutCatalog, addEventSource];
   }
   return _.reduce(
     resourceMenu,
     (menuItems, menuItem) => {
-      const item = menuItem(
-        null,
-        graphData.namespace,
-        false,
-        connectorSource?.getData()?.resources?.obj,
-        graphData.createResourceAccess,
-      );
+      const item = menuItem(null, graphData.namespace, false, connectorSource?.getData()?.resources?.obj, graphData.createResourceAccess);
       if (item) {
         menuItems.push(item);
       }

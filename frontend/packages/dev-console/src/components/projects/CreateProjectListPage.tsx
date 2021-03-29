@@ -9,11 +9,7 @@ export interface CreateProjectListPageProps extends ProjectListPageProps {
   title: string;
 }
 
-const CreateProjectListPage: React.FC<CreateProjectListPageProps> = ({
-  onCreate,
-  title,
-  ...props
-}) => {
+const CreateProjectListPage: React.FC<CreateProjectListPageProps> = ({ onCreate, title, ...props }) => {
   const openProjectModal = () => createProjectModal({ blocking: true, onSubmit: onCreate });
 
   return (
