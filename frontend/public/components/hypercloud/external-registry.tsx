@@ -176,17 +176,17 @@ const registryCreateAction = (history, item) => {
 }
 
 export const ExternalRegistriesPage = withRouter(props => {
-  const createItems = {
-    generic: 'Create External Registry',
-    scan: 'Image Scan Request',
-  }
+  const { t } = useTranslation();
+
+  const createItems = React.useMemo(() => ({
+    generic: t('COMMON:MSG_LNB_MENU_190'),
+    scan: t('COMMON:MSG_LNB_MENU_174')
+  }), [t]);
 
   const createProps = {
     items: createItems,
     action: registryCreateAction.bind(null, props.history)
   }
-
-  const { t } = useTranslation();
 
   return <ListPage canCreate={true} createProps={createProps} ListComponent={ExternalRegistries} rowFilters={filters.bind(null, t)()} kind={kind} {...props} />;
 });
