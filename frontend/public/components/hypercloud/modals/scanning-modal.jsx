@@ -15,6 +15,8 @@ import { modelFor } from '../../../module/k8s/k8s-models';
 import { NamespaceModel } from '@console/internal/models';
 import { withRouter } from 'react-router-dom';
 import { oidcClientIDInput } from 'integration-tests/views/oauth.view';
+import { ResourceLabelPlural } from '../../../models/hypercloud/resource-plural';
+import { withTranslation } from 'react-i18next';
 
 class BaseScanningModal extends PromiseComponent {
     constructor(props) {
@@ -207,16 +209,16 @@ class BaseScanningModal extends PromiseComponent {
     };
 
     render() {
-        const { kind, showNs, resource, message, modelKind } = this.props;
+        const { kind, showNs, resource, message, modelKind, t } = this.props;
         const { selected, resources } = this.state;
 
-        const label = kind || modelKind?.kind || resource?.kind;
+        const label = ResourceLabelPlural({ kind: kind || modelKind?.kind || resource?.kind }, t);
 
         const name = resource?.metadata?.name || resource?.version;
 
         return (
             <form onSubmit={this._submit} name="form" className="modal-content">
-                <ModalTitle>Image Scan Request Creation</ModalTitle>
+                <ModalTitle>{t('COMMON:MSG_COMMON_ACTIONBUTTON_20')}</ModalTitle>
                 <ModalBody unsetOverflow={true}>
                     <div className="row co-m-form-row">
                         <div className="col-sm-12">
@@ -266,6 +268,4 @@ class BaseScanningModal extends PromiseComponent {
     }
 };
 
-export const scanningModal = createModalLauncher((props) => (
-    <BaseScanningModal {...props} />
-));
+export const scanningModal = createModalLauncher(withTranslation()(BaseScanningModal));

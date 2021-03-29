@@ -57,6 +57,7 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
   const [isExpanded, setExpanded] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(false);
   const [searchKey, setSearchKey] = React.useState('');
+  const [inProgress, setProgress] = React.useState(false);
 
   const members = _.map(props.existMembers, (value, key) => key);
   const groups = _.map(props.existGroups, (value, key) => key);
@@ -110,12 +111,15 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     // Append to an existing array, but handle the special case when the array is null.
-    coFetchJSON(`/api/multi-hypercloud/cluster/${props.clusterName}/member_invitation/${type}/${type === 'user' ? selectedMember.email : selectedMember.name}?userId=${getId()}${getUserGroup()}&remoteRole=${role}&memberName=chosangwon`, 'POST')
+    setProgress(true);
+    coFetchJSON(`/api/multi-hypercloud/cluster/${props.clusterName}/member_invitation/${type}/${type === 'user' ? selectedMember.email : selectedMember.name}?userId=${getId()}${getUserGroup()}&remoteRole=${role}${type === 'user' ? `&memberName=${selectedMember.name}` : ''}`, 'POST')
       .then((res) => {
+        setProgress(false);
         props.close();
       })
       .catch((err) => {
         clearSelection();
+        setProgress(false);
         setError(err);
       });
   };
@@ -170,7 +174,11 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
                 </Select>}
             </div>
             <div>
-              {type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1') : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2')}
+              {type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1').split('\n').map( line => {
+            return (<span>{line}<br/></span>)
+          }) : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2').split('\n').map( line => {
+            return (<span>{line}<br/></span>)
+          })}
             </div>
           </div>
         </Section>
@@ -185,7 +193,7 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
       </ModalBody>
       <ModalSubmitFooter
         errorMessage={errorMsg}
-        inProgress={props.inProgress}
+        inProgress={inProgress}
         submitText={t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_3')}
         cancelText={t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_2')}
         cancel={props.cancel}

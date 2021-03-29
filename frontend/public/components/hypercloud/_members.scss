@@ -43,6 +43,11 @@
       .pf-c-select__toggle-button {
         display: none;
       }
+
+      .pf-c-select__menu {
+        max-height: 320px;
+        overflow-x: auto;
+      }
   
       .pf-c-select__menu-item {
         height: 60px;

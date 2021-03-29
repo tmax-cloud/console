@@ -17,25 +17,6 @@ const ownerData = (owner, t?: TFunction) => [
   }
 ];
 
-const testData: ITableRow[] = [
-  {
-    cells: ['qwer', 'qwer@tmax.co.kr', 'admin'],
-    obj: { name: 'qwer', email: 'qwer@tmax.co.kr', role: 'admin', type: 'user' }
-  },
-  {
-    cells: ['as as as', 'asdf@tmax.co.kr', 'developer'],
-    obj: { name: 'as as as', email: 'asdf@tmax.co.kr', role: 'developer', type: 'user' }
-  },
-  {
-    cells: [<><UsersIcon className='hc-member__group-icon' />a123 346jso</>, '', 'guest'],
-    obj: { name: 'a123 346jso', email: '', role: 'guest', type: 'group' }
-  },
-  {
-    cells: [<><UsersIcon className='hc-member__group-icon' />pojgjdrk82347598 fhsuih103 fahsjk</>, '', 'developer'],
-    obj: { name: 'pojgjdrk82347598 fhsuih103 fahsjk', email: '', role: 'developer', type: 'group' }
-  },
-];
-
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), /*Kebab.columnClass*/];
 
 const MemberTableRows = (members, isUser): ITableRow[] => {
@@ -43,7 +24,7 @@ const MemberTableRows = (members, isUser): ITableRow[] => {
   _.forEach(members, (role, name) => {
     const member = { name: name, role: role, type: isUser ? 'user' : 'group', email: isUser ? name : '' };
     data.push({
-      cells: [member.name, member.email, member.role],
+      cells: [isUser ? member.name : <><UsersIcon className='hc-member__group-icon' />{member.name}</>, member.email, member.role],
       obj: member
     });
   });
@@ -99,7 +80,7 @@ export const UsersTable = (props) => {
   }
 
   React.useEffect(() => {
-    sortRows(sortBy, _.concat(testData, MemberTableRows(users, true), MemberTableRows(groups, false)));
+    sortRows(sortBy, _.concat(MemberTableRows(users, true), MemberTableRows(groups, false)));
   }, [users, groups]);
 
   React.useEffect(()=> {
