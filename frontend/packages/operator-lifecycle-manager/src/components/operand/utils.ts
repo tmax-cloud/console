@@ -89,7 +89,7 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
       jsonSchema.anyOf.every(cur => {
         if (isArray(cur?.['type'])) {
           return cur['type'][0] === 'string' || cur['type'][0] === 'number' || cur['type'][0] === 'null' || cur['type'][0] === 'integer';
-        } else if (cur?.['type']){
+        } else if (cur?.['type']) {
           return cur['type'] === 'string' || cur['type'] === 'number' || cur['type'] === 'null' || cur['type'] === 'integer';
         }
       })
@@ -104,7 +104,7 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
       jsonSchema.oneOf.every(cur => {
         if (isArray(cur?.['type'])) {
           return cur['type'][0] === 'string' || cur['type'][0] === 'number' || cur['type'][0] === 'null' || cur['type'][0] === 'integer';
-        } else if (cur?.['type']){
+        } else if (cur?.['type']) {
           return cur['type'] === 'string' || cur['type'] === 'number' || cur['type'] === 'null' || cur['type'] === 'integer';
         }
       })
@@ -119,7 +119,7 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
       jsonSchema.allOf.every(cur => {
         if (isArray(cur?.['type'])) {
           return cur['type'][0] === 'string' || cur['type'][0] === 'number' || cur['type'][0] === 'null' || cur['type'][0] === 'integer';
-        } else if (cur?.['type']){
+        } else if (cur?.['type']) {
           return cur['type'] === 'string' || cur['type'] === 'number' || cur['type'] === 'null' || cur['type'] === 'integer';
         }
       })
@@ -394,7 +394,8 @@ export const descriptorsToUISchema = (descriptors: Descriptor<SpecCapability>[],
     },
     Immutable.Map(),
   ).toJS();
-  return _.merge(uiSchemaFromDescriptors, getJSONSchemaOrder(jsonSchema, uiSchemaFromDescriptors)); // schema 우선순위 정렬 로직
+  // return _.merge(uiSchemaFromDescriptors, getJSONSchemaOrder(jsonSchema, uiSchemaFromDescriptors)); // schema 우선순위 정렬 로직
+  return _.merge(jsonSchema, uiSchemaFromDescriptors);
 };
 
 // Use jsonSchema, descriptors, and some defaults to generate a uiSchema

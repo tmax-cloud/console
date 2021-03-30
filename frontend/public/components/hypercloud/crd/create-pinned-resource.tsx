@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
-import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, nameForModel, CustomResourceDefinitionKind, definitionFor, referenceForModel } from '@console/internal/module/k8s';
-import { CustomResourceDefinitionModel } from '@console/internal/models';
-import { Firehose } from '@console/internal/components/utils/firehose';
+import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, CustomResourceDefinitionKind, definitionFor, referenceForModel } from '@console/internal/module/k8s';
+// import { CustomResourceDefinitionModel } from '@console/internal/models';
+// import { Firehose } from '@console/internal/components/utils/firehose';
 import { StatusBox, FirehoseResult, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
@@ -18,18 +18,46 @@ import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
 import { pluralToKind } from '../form';
-import { k8sCreateSchema } from '@console/internal/module/k8s/resource.js';
+import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
+// import { k8sCreateSchema } from '@console/internal/module/k8s/resource.js';
+// import { safeDump } from 'js-yaml';
 // eslint-disable-next-line @typescript-eslint/camelcase
 
-export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefinition, initialEditorType, loaded, loadError, match, model, activePerspective }) => {
+export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefinition, initialEditorType, loadError, match, model, activePerspective }) => {
   if (!model) {
     return null;
   }
-  const [template, setTemplate] = React.useState({});
+  const [loaded, setLoaded] = React.useState(false);
+  const [template, setTemplate] = React.useState({} as any);
+  // const [yaml, setYaml] = React.useState('');
+  // React.useEffect(() => {
+  //   (async function getSchema() {
+  //     await k8sCreateSchema(model.kind).then(data => setTemplate(data));
+  //   })();
+  // }, []);
+
   React.useEffect(() => {
-    (async function getSchema() {
-      await k8sCreateSchema(model.kind).then(data => setTemplate(data));
-    })();
+    console.log('model: ', model);
+    let type = pluralToKind.get(model.plural)['type'];
+    let url;
+    if (type === 'CustomResourceDefinition') {
+      url = `${document.location.origin}/api/kubernetes/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+    } else {
+      const directory = kindToSchemaPath.get(model.kind)?.['directory'];
+      const file = kindToSchemaPath.get(model.kind)?.['file'];
+      url = `${document.location.origin}/api/resource/${directory}/${file}`;
+    }
+    const xhrTest = new XMLHttpRequest();
+    xhrTest.open('GET', url);
+    xhrTest.onreadystatechange = function() {
+      if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
+        let template = xhrTest.response;
+        template = JSON.parse(template);
+        setTemplate(template);
+        setLoaded(true);
+      }
+    };
+    xhrTest.send();
   }, []);
 
   const [helpText, setHelpText] = React.useState(FORM_HELP_TEXT);
@@ -41,7 +69,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
   }
 
   const [schema, FormComponent] = React.useMemo(() => {
-    const baseSchema = customResourceDefinition ? definition?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema6) : template;
+    const baseSchema = customResourceDefinition ? definition?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema6) : template?.spec?.validation?.openAPIV3Schema ?? template;
     return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
   }, [template, definition, model]);
 
@@ -93,28 +121,28 @@ const stateToProps = (state: RootState, props: Omit<CreateDefaultPageProps, 'mod
 };
 
 export const CreateDefaultPage = connect(stateToProps)((props: CreateDefaultPageProps) => {
-  const type = pluralToKind.get(props.match.params.plural)['type'];
-  const resources =
-    type === 'CustomResourceDefinition' && props.model
-      ? [
-          {
-            kind: CustomResourceDefinitionModel.kind,
-            isList: false,
-            name: nameForModel(props.model),
-            prop: 'customResourceDefinition',
-            optional: true,
-          },
-        ]
-      : [];
+  // const type = pluralToKind.get(props.match.params.plural)['type'];
+  // const resources =
+  //   type === 'CustomResourceDefinition' && props.model
+  //     ? [
+  //         {
+  //           kind: CustomResourceDefinitionModel.kind,
+  //           isList: false,
+  //           name: nameForModel(props.model),
+  //           prop: 'customResourceDefinition',
+  //           optional: true,
+  //         },
+  //       ]
+  //     : [];
   return (
     <>
       <Helmet>
         <title>{`Create ${kindForReference(props.match.params.plural)}`}</title>
       </Helmet>
-      <Firehose resources={resources}>
-        {/* FIXME(alecmerdler): Hack because `Firehose` injects props without TypeScript knowing about it */}
-        <CreateDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} />
-      </Firehose>
+      {/* <Firehose resources={resources}> */}
+      {/* FIXME(alecmerdler): Hack because `Firehose` injects props without TypeScript knowing about it */}
+      <CreateDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} />
+      {/* </Firehose> */}
     </>
   );
 });
