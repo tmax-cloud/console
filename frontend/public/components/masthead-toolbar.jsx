@@ -447,6 +447,13 @@ class MastheadToolbarContents_ extends React.Component {
       <>
         <Toolbar>
           <ToolbarGroup className="hidden-xs">
+             <ToolbarItem>
+              <Tooltip content="Add" position={TooltipPosition.bottom}>
+                <Link to="/add" className="pf-c-button pf-m-plain" aria-label="Add">
+                  <PlusCircleIcon />
+                </Link>
+              </Tooltip>
+            </ToolbarItem>
             <ToolbarItem>
               <ClockIcon />
             </ToolbarItem>

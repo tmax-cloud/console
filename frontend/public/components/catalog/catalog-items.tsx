@@ -53,6 +53,7 @@ type TypeFilters = {
   ImageStream: FilterItem;
   Template: FilterItem;
   ClusterServiceClass: FilterItem;
+  ServiceClass: FilterItem;
 };
 
 type CapabilityFilters = {
@@ -180,8 +181,13 @@ const getAvailableFilters = (initialFilters): PageFilters => {
       active: false,
     },
     ClusterServiceClass: {
-      label: 'Service Class',
+      label: 'Cluster Service Class',
       value: 'ClusterServiceClass',
+      active: false,
+    },
+    ServiceClass: {
+      label: 'Service Class',
+      value: 'ServiceClass',
       active: false,
     },
   };
@@ -312,7 +318,7 @@ export class CatalogTileViewPage extends React.Component<CatalogTileViewPageProp
         title={tileName}
         badges={[
           <CatalogTileBadge key="type">
-            <Badge isRead>{filter.label}</Badge>
+            <Badge isRead>{filter?.label}</Badge>
           </CatalogTileBadge>,
         ]}
         {...this.getIconProps(item)}

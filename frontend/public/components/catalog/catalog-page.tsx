@@ -12,7 +12,7 @@ import { connectToFlags, flagPending, FlagsObject } from '../../reducers/feature
 import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, ExternalLink } from '../utils';
 import { getAnnotationTags, getMostRecentBuilderTag, isBuilder } from '../image-stream';
 import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon } from './catalog-item-icon';
-import { ClusterServiceClassModel, TemplateModel } from '../../models';
+import { ClusterServiceClassModel, TemplateModel, ServiceClassModel } from '../../models';
 import * as plugins from '../../plugins';
 import { coFetch, coFetchJSON } from '../../co-fetch';
 
@@ -25,8 +25,8 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
   }
 
   componentDidUpdate(prevProps) {
-    const { clusterServiceClasses, templateMetadata, projectTemplateMetadata, imageStreams, helmCharts, namespace, loaded } = this.props;
-    if ((!prevProps.loaded && loaded) || !_.isEqual(namespace, prevProps.namespace) || !_.isEqual(clusterServiceClasses, prevProps.clusterServiceClasses) || !_.isEqual(templateMetadata, prevProps.templateMetadata) || !_.isEqual(projectTemplateMetadata, prevProps.projectTemplateMetadata) || !_.isEqual(imageStreams, prevProps.imageStreams) || !_.isEqual(helmCharts, prevProps.helmCharts)) {
+    const { serviceClasses, clusterServiceClasses, templateMetadata, projectTemplateMetadata, imageStreams, helmCharts, namespace, loaded } = this.props;
+    if ((!prevProps.loaded && loaded) || !_.isEqual(namespace, prevProps.namespace) || !_.isEqual(serviceClasses, prevProps.serviceClasses) || !_.isEqual(clusterServiceClasses, prevProps.clusterServiceClasses) || !_.isEqual(templateMetadata, prevProps.templateMetadata) || !_.isEqual(projectTemplateMetadata, prevProps.projectTemplateMetadata) || !_.isEqual(imageStreams, prevProps.imageStreams) || !_.isEqual(helmCharts, prevProps.helmCharts)) {
       const items = this.getItems();
       this.setState({ items });
     }
@@ -40,7 +40,8 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
         .map(({ properties }) => properties.normalize(_.get(this.props, [referenceForModel(properties.model), 'data']))),
     ) as Item[];
 
-    const { clusterServiceClasses, imageStreams, templateMetadata, projectTemplateMetadata, helmCharts, loaded } = this.props;
+    const { serviceClasses, clusterServiceClasses, imageStreams, templateMetadata, projectTemplateMetadata, helmCharts, loaded } = this.props;
+    let serviceClassItems: Item[] = [];
     let clusterServiceClassItems: Item[] = [];
     let imageStreamItems: Item[] = [];
     let templateItems: Item[] = [];
@@ -49,6 +50,10 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
 
     if (!loaded) {
       return [];
+    }
+
+    if (serviceClasses) {
+      serviceClassItems = this.normalizeServiceClasses(serviceClasses.data);
     }
 
     if (clusterServiceClasses) {
@@ -73,38 +78,72 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
       helmChartItems = this.normalizeHelmCharts(helmCharts);
     }
 
-    const items: Item[] = [...clusterServiceClassItems, ...imageStreamItems, ...templateItems, ...extensionItems, ...projectTemplateItems, ...helmChartItems];
+    const items: Item[] = [...serviceClassItems, ...clusterServiceClassItems, ...imageStreamItems, ...templateItems, ...extensionItems, ...projectTemplateItems, ...helmChartItems];
 
     return _.sortBy(items, 'tileName');
   }
 
-  normalizeClusterServiceClasses(serviceClasses: K8sResourceKind[]) {
-    const { namespace = '' } = this.props;
+  normalizeServiceClasses(serviceClasses: K8sResourceKind[]) {
+    // TODO : namespace가 없을 경우(all-namespace로 선택된 경우) 일단 default로 namespace설정되게 해놨는데 어떻게 처리할지 정해지면 수정하기
+    const { namespace = 'default' } = this.props;
     return _.reduce(
       serviceClasses,
       (acc, serviceClass) => {
-        // Prefer native templates to template-service-broker service classes.
-        if (serviceClass.status.removedFromBrokerCatalog || serviceClass.spec.clusterServiceBrokerName === 'template-service-broker') {
-          return acc;
-        }
-
         const iconClass = getServiceClassIcon(serviceClass);
         const tileImgUrl = getServiceClassImage(serviceClass);
 
+        // TODO : service class를 사용한 service instance 기획이 나오면 해당 페이지로 이동시켜주도록 href 수정하기
         acc.push({
           obj: serviceClass,
-          kind: 'ClusterServiceClass',
+          kind: 'ServiceClass',
           tileName: serviceClassDisplayName(serviceClass),
           tileIconClass: tileImgUrl ? null : iconClass,
-          tileImgUrl,
+          tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
           tileDescription: serviceClass.spec.description,
           tileProvider: _.get(serviceClass, 'spec.externalMetadata.providerDisplayName'),
           tags: serviceClass.spec.tags,
           createLabel: 'Create Service Instance',
-          href: `/catalog/create-service-instance?cluster-service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
+          // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
+          href: `/k8s/ns/${namespace}/serviceinstances/~new`,
           supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
           longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
-          documentationUrl: _.get(serviceClass, 'spec.externalMetadata.documentationUrl'),
+          documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
+        });
+        return acc;
+      },
+      [] as Item[],
+    );
+  }
+
+  normalizeClusterServiceClasses(clusterServiceClasses: K8sResourceKind[]) {
+    return _.reduce(
+      clusterServiceClasses,
+      (acc, clusterServiceClass) => {
+        // Prefer native templates to template-service-broker service classes.
+        // if (serviceClass.status.removedFromBrokerCatalog || serviceClass.spec.clusterServiceBrokerName === 'template-service-broker') {
+        //   return acc;
+        // }
+
+        const iconClass = getServiceClassIcon(clusterServiceClass);
+        const tileImgUrl = getServiceClassImage(clusterServiceClass);
+
+        // TODO : service class를 사용한 service instance 기획이 나오면 해당 페이지로 이동시켜주도록 href 수정하기
+        // 지금은 cluster service class 선택하고 create 누르면 default네임스페이스의 서비스인스턴스생성 페이지로 이동하게 해놓음
+        acc.push({
+          obj: clusterServiceClass,
+          kind: 'ClusterServiceClass',
+          tileName: serviceClassDisplayName(clusterServiceClass),
+          tileIconClass: tileImgUrl ? null : iconClass,
+          tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
+          tileDescription: clusterServiceClass.spec.description,
+          tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
+          tags: clusterServiceClass.spec.tags,
+          createLabel: 'Create Service Instance',
+          // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
+          href: `/k8s/ns/default/serviceinstances/~new`,
+          supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
+          longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
+          documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.documentationUrl'),
         });
         return acc;
       },
@@ -343,6 +382,15 @@ export const Catalog = connectToFlags<CatalogProps>(
           },
         ]
       : []),
+    ...[
+      {
+        isList: true,
+        kind: referenceForModel(ServiceClassModel),
+        namespaced: true,
+        namespace,
+        prop: 'serviceClasses',
+      },
+    ],
     ...(openshiftFlag
       ? [
           {
@@ -393,6 +441,7 @@ export const CatalogPage = withStartGuide(({ match, noProjectsAvailable }) => {
 });
 
 export type CatalogListPageProps = {
+  serviceClasses?: FirehoseResult<K8sResourceKind[]>;
   clusterServiceClasses?: FirehoseResult<K8sResourceKind[]>;
   imageStreams?: FirehoseResult<K8sResourceKind[]>;
   templateMetadata?: PartialObjectMetadata[];
