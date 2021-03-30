@@ -13,14 +13,11 @@ import { K8sResourceKind } from '../../../../module/k8s';
 import { ClusterDashboardContext } from './context';
 
 const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
-const leftCards = [{ Card: DetailsCard }, { Card: InventoryCard }];
-const rightCards = [{ Card: ActivityCard }];
+const leftCards = [{ Card: DetailsCard }];
+const rightCards = [{ Card: InventoryCard }, { Card: ActivityCard }];
 
 export const ClusterDashboard: React.FC<{}> = () => {
-  const [infrastructure, infrastructureLoaded, infrastructureError] = useK8sGet<K8sResourceKind>(
-    InfrastructureModel,
-    'cluster',
-  );
+  const [infrastructure, infrastructureLoaded, infrastructureError] = useK8sGet<K8sResourceKind>(InfrastructureModel, 'cluster');
 
   const context = {
     infrastructure,

@@ -4,7 +4,7 @@ import { CogsIcon } from '@patternfly/react-icons';
 import { FLAGS } from '@console/shared/src/constants';
 import { FLAG_DEVWORKSPACE } from './consts';
 import { Plugin, Perspective, ModelFeatureFlag, ModelDefinition, DashboardsOverviewResourceActivity, DashboardsOverviewHealthURLSubsystem, DashboardsOverviewHealthPrometheusSubsystem, DashboardsOverviewInventoryItem, DashboardsOverviewHealthOperator, ReduxReducer } from '@console/plugin-sdk';
-import { ClusterVersionModel, NodeModel, PodModel, StorageClassModel, PersistentVolumeClaimModel, ClusterOperatorModel } from '@console/internal/models';
+import { ClusterVersionModel, NodeModel, PodModel, PersistentVolumeClaimModel, ClusterOperatorModel, NamespaceClaimModel, ServiceModel, ResourceQuotaClaimModel } from '@console/internal/models';
 import { referenceForModel, ClusterOperator } from '@console/internal/module/k8s';
 import { getNodeStatusGroups, getPodStatusGroups, getPVCStatusGroups } from '@console/shared/src/components/dashboard/inventory-card/utils';
 import { fetchK8sHealth, getK8sHealthState, getControlPlaneHealth, getClusterOperatorHealthStatus } from './components/dashboards-page/status';
@@ -103,7 +103,8 @@ const plugin: Plugin<ConsumedExtensions> = [
   {
     type: 'Dashboards/Overview/Inventory/Item',
     properties: {
-      model: StorageClassModel,
+      model: ServiceModel,
+      useAbbr: true,
     },
   },
   {
@@ -114,6 +115,27 @@ const plugin: Plugin<ConsumedExtensions> = [
       useAbbr: true,
     },
   },
+  {
+    type: 'Dashboards/Overview/Inventory/Item',
+    properties: {
+      model: NamespaceClaimModel,
+      useAbbr: true,
+    },
+  },
+  {
+    type: 'Dashboards/Overview/Inventory/Item',
+    properties: {
+      model: ResourceQuotaClaimModel,
+      useAbbr: true,
+    },
+  },
+  // {
+  //   type: 'Dashboards/Overview/Inventory/Item',
+  //   properties: {
+  //     model: StorageClassModel,
+  //   },
+  // },
+
   {
     type: 'Dashboards/Overview/Health/Operator',
     properties: {
