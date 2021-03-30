@@ -1,18 +1,7 @@
 import { NodeModel, EdgeModel } from '@console/topology';
 import { TopologyFilters as Filters } from '../filters';
-import {
-  TopologyDataModel as DataModel,
-  TopologyDataObject,
-  Node,
-  Group,
-  Edge,
-} from '../topology-types';
-import {
-  TYPE_OPERATOR_BACKED_SERVICE,
-  OPERATOR_GROUP_WIDTH,
-  OPERATOR_GROUP_HEIGHT,
-  OPERATOR_GROUP_PADDING,
-} from './components/const';
+import { TopologyDataModel as DataModel, TopologyDataObject, Node, Group, Edge } from '../topology-types';
+import { TYPE_OPERATOR_BACKED_SERVICE, OPERATOR_GROUP_WIDTH, OPERATOR_GROUP_HEIGHT, OPERATOR_GROUP_PADDING } from './components/const';
 import { dataObjectFromModel } from '../data-transforms/transform-utils';
 import { NodeShape } from '@console/topology/src/types';
 
@@ -25,7 +14,7 @@ export const getOperatorGroupModel = (d: Group, model: DataModel, filters: Filte
 export const getOperatorNodeModel = (d: Node, model: DataModel, filters: Filters): NodeModel => {
   if (d.type === TYPE_OPERATOR_BACKED_SERVICE) {
     const data: TopologyDataObject = model.topology[d.id] || dataObjectFromModel(d);
-    data.groupResources = d.children && d.children.map((id) => model.topology[id]);
+    data.groupResources = d.children && d.children.map(id => model.topology[id]);
     return {
       width: OPERATOR_GROUP_WIDTH,
       height: OPERATOR_GROUP_HEIGHT,
@@ -34,8 +23,7 @@ export const getOperatorNodeModel = (d: Node, model: DataModel, filters: Filters
       label: model.topology[d.id].name,
       data,
       visible: true,
-      collapsed:
-        filters && d.type === TYPE_OPERATOR_BACKED_SERVICE && !filters.display.operatorGrouping,
+      collapsed: filters && d.type === TYPE_OPERATOR_BACKED_SERVICE && !filters.display.operatorGrouping,
       children: d.children,
       group: true,
       shape: NodeShape.rect,

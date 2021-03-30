@@ -9,10 +9,7 @@ import { ModifyApplication } from '../../../actions/modify-application';
 import { TopologyDataObject } from '../topology-types';
 import { getTopologyResourceObject } from '../topology-utils';
 
-export const workloadActions = (
-  workload: TopologyDataObject,
-  allowRegroup: boolean = true,
-): KebabOption[] => {
+export const workloadActions = (workload: TopologyDataObject, allowRegroup: boolean = true): KebabOption[] => {
   const contextMenuResource = getTopologyResourceObject(workload);
   if (!contextMenuResource) {
     return null;
@@ -39,7 +36,5 @@ export const workloadActions = (
       break;
   }
 
-  return _.map(menuActions, (a) =>
-    a(modelFor(referenceFor(contextMenuResource)), contextMenuResource),
-  );
+  return _.map(menuActions, a => a(modelFor(referenceFor(contextMenuResource)), contextMenuResource));
 };

@@ -23,25 +23,9 @@ const ObservedAggregateEdge: React.FC<AggregateEdgeProps> = ({ element }) => {
           'is-hover': hover,
         })}
       >
-        <line
-          x1={startPoint.x}
-          y1={startPoint.y}
-          x2={endPoint.x}
-          y2={endPoint.y}
-          strokeWidth={10}
-          stroke="transparent"
-        />
-        <line
-          className="odc-base-edge__link"
-          x1={startPoint.x}
-          y1={startPoint.y}
-          x2={endPoint.x}
-          y2={endPoint.y}
-        />
-        {!bidirectional &&
-          (!element.getSource().isCollapsed() || !element.getTarget().isCollapsed()) && (
-            <EdgeConnectorArrow edge={element} />
-          )}
+        <line x1={startPoint.x} y1={startPoint.y} x2={endPoint.x} y2={endPoint.y} strokeWidth={10} stroke="transparent" />
+        <line className="odc-base-edge__link" x1={startPoint.x} y1={startPoint.y} x2={endPoint.x} y2={endPoint.y} />
+        {!bidirectional && (!element.getSource().isCollapsed() || !element.getTarget().isCollapsed()) && <EdgeConnectorArrow edge={element} />}
       </g>
     </Layer>
   );

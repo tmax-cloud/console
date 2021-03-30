@@ -6,9 +6,7 @@ type TopologyHelmReleaseNotesPanelProps = {
   releaseNotes: string;
 };
 
-const TopologyHelmReleaseNotesPanel: React.SFC<TopologyHelmReleaseNotesPanelProps> = ({
-  releaseNotes,
-}) =>
+const TopologyHelmReleaseNotesPanel: React.SFC<TopologyHelmReleaseNotesPanelProps> = ({ releaseNotes }) =>
   releaseNotes ? (
     <div className="overview__sidebar-pane-body">
       <SyncMarkdownView content={releaseNotes} />

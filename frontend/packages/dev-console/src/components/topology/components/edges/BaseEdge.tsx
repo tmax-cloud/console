@@ -2,14 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { referenceFor, modelFor } from '@console/internal/module/k8s';
 import { useAccessReview } from '@console/internal/components/utils';
-import {
-  Layer,
-  Edge,
-  WithRemoveConnectorProps,
-  observer,
-  useHover,
-  useSelection,
-} from '@console/topology';
+import { Layer, Edge, WithRemoveConnectorProps, observer, useHover, useSelection } from '@console/topology';
 import { getTopologyResourceObject } from '../../topology-utils';
 import './BaseEdge.scss';
 
@@ -19,14 +12,7 @@ type BaseEdgeProps = {
   className?: string;
 } & WithRemoveConnectorProps;
 
-const ObservedBaseEdge: React.FC<BaseEdgeProps> = ({
-  element,
-  dragging,
-  onShowRemoveConnector,
-  onHideRemoveConnector,
-  children,
-  className,
-}) => {
+const ObservedBaseEdge: React.FC<BaseEdgeProps> = ({ element, dragging, onShowRemoveConnector, onHideRemoveConnector, children, className }) => {
   const [hover, hoverRef] = useHover();
   const [selected, onSelect] = useSelection(false, true);
   const startPoint = element.getStartPoint();
@@ -64,21 +50,8 @@ const ObservedBaseEdge: React.FC<BaseEdgeProps> = ({
         })}
         onClick={onSelect}
       >
-        <line
-          x1={startPoint.x}
-          y1={startPoint.y}
-          x2={endPoint.x}
-          y2={endPoint.y}
-          strokeWidth={10}
-          stroke="transparent"
-        />
-        <line
-          className="odc-base-edge__link"
-          x1={startPoint.x}
-          y1={startPoint.y}
-          x2={endPoint.x}
-          y2={endPoint.y}
-        />
+        <line x1={startPoint.x} y1={startPoint.y} x2={endPoint.x} y2={endPoint.y} strokeWidth={10} stroke="transparent" />
+        <line className="odc-base-edge__link" x1={startPoint.x} y1={startPoint.y} x2={endPoint.x} y2={endPoint.y} />
         {children}
       </g>
     </Layer>

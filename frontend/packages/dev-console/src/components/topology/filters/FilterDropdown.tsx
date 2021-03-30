@@ -9,7 +9,7 @@ type FilterDropdownProps = {
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ filters, onChange }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const selected = Object.keys(filters).filter((key) => filters[key]);
+  const selected = Object.keys(filters).filter(key => filters[key]);
 
   const onToggle = (open: boolean): void => setIsOpen(open);
   const onSelect = (e: React.MouseEvent, key: string) => {
@@ -17,7 +17,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filters, onChange }) =>
   };
   const showOptions = (
     <SelectGroup label="Show">
-      {Object.keys(ShowFiltersKeyValue).map((key) => (
+      {Object.keys(ShowFiltersKeyValue).map(key => (
         <SelectOption key={key} value={key}>
           {ShowFiltersKeyValue[key]}
         </SelectOption>
@@ -26,7 +26,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filters, onChange }) =>
   );
   const expandOptions = (
     <SelectGroup label="Expand">
-      {Object.keys(ExpandFiltersKeyValue).map((key) => (
+      {Object.keys(ExpandFiltersKeyValue).map(key => (
         <SelectOption key={key} value={key}>
           {ExpandFiltersKeyValue[key]}
         </SelectOption>
@@ -35,16 +35,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filters, onChange }) =>
   );
 
   return (
-    <Select
-      className="odc-filter-dropdown__select"
-      variant={SelectVariant.checkbox}
-      onToggle={onToggle}
-      selections={selected}
-      isExpanded={isOpen}
-      onSelect={onSelect}
-      placeholderText="Display Options"
-      isGrouped
-    >
+    <Select className="odc-filter-dropdown__select" variant={SelectVariant.checkbox} onToggle={onToggle} selections={selected} isExpanded={isOpen} onSelect={onSelect} placeholderText="Display Options" isGrouped>
       {showOptions}
       {expandOptions}
     </Select>

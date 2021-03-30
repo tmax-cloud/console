@@ -1,19 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import {
-  Node,
-  useAnchor,
-  EllipseAnchor,
-  WithCreateConnectorProps,
-  WithDndDropProps,
-  WithDragNodeProps,
-  WithSelectionProps,
-  WithContextMenuProps,
-  useCombineRefs,
-  useHover,
-  observer,
-  createSvgIdUrl,
-} from '@console/topology';
+import { Node, useAnchor, EllipseAnchor, WithCreateConnectorProps, WithDndDropProps, WithDragNodeProps, WithSelectionProps, WithContextMenuProps, useCombineRefs, useHover, observer, createSvgIdUrl } from '@console/topology';
 import { modelFor, referenceFor } from '@console/internal/module/k8s';
 import { useAccessReview } from '@console/internal/components/utils';
 import SvgBoxedText from '../../../svg/SvgBoxedText';
@@ -42,28 +29,7 @@ export type BaseNodeProps = {
   WithContextMenuProps &
   WithCreateConnectorProps;
 
-const ObservedBaseNode: React.FC<BaseNodeProps> = ({
-  className,
-  outerRadius,
-  innerRadius,
-  icon,
-  kind,
-  element,
-  selected,
-  onSelect,
-  children,
-  attachments,
-  dragNodeRef,
-  dndDropRef,
-  canDrop,
-  dragging,
-  edgeDragging,
-  dropTarget,
-  onHideCreateConnector,
-  onShowCreateConnector,
-  onContextMenu,
-  contextMenuOpen,
-}) => {
+const ObservedBaseNode: React.FC<BaseNodeProps> = ({ className, outerRadius, innerRadius, icon, kind, element, selected, onSelect, children, attachments, dragNodeRef, dndDropRef, canDrop, dragging, edgeDragging, dropTarget, onHideCreateConnector, onShowCreateConnector, onContextMenu, contextMenuOpen }) => {
   const [hover, hoverRef] = useHover();
   useAnchor(EllipseAnchor);
   const { width, height } = element.getDimensions();
@@ -106,42 +72,11 @@ const ObservedBaseNode: React.FC<BaseNodeProps> = ({
       })}
     >
       <NodeShadows />
-      <g
-        data-test-id="base-node-handler"
-        onClick={onSelect}
-        onContextMenu={editAccess ? onContextMenu : null}
-        ref={refs}
-      >
-        <circle
-          className="odc-base-node__bg"
-          ref={dndDropRef}
-          cx={cx}
-          cy={cy}
-          r={outerRadius}
-          filter={createSvgIdUrl(
-            hover || dragging || edgeDragging || dropTarget || contextMenuOpen
-              ? NODE_SHADOW_FILTER_ID_HOVER
-              : NODE_SHADOW_FILTER_ID,
-          )}
-        />
-        {icon && (
-          <image
-            x={cx - iconRadius}
-            y={cy - iconRadius}
-            width={iconRadius * 2}
-            height={iconRadius * 2}
-            xlinkHref={icon}
-          />
-        )}
+      <g data-test-id="base-node-handler" onClick={onSelect} onContextMenu={editAccess ? onContextMenu : null} ref={refs}>
+        <circle className="odc-base-node__bg" ref={dndDropRef} cx={cx} cy={cy} r={outerRadius} filter={createSvgIdUrl(hover || dragging || edgeDragging || dropTarget || contextMenuOpen ? NODE_SHADOW_FILTER_ID_HOVER : NODE_SHADOW_FILTER_ID)} />
+        {icon && <image x={cx - iconRadius} y={cy - iconRadius} width={iconRadius * 2} height={iconRadius * 2} xlinkHref={icon} />}
         {showLabels && (kind || element.getLabel()) && (
-          <SvgBoxedText
-            className="odc-base-node__label"
-            x={cx}
-            y={cy + outerRadius + 24}
-            paddingX={8}
-            paddingY={4}
-            kind={kind}
-          >
+          <SvgBoxedText className="odc-base-node__label" x={cx} y={cy + outerRadius + 24} paddingX={8} paddingY={4} kind={kind}>
             {element.getLabel()}
           </SvgBoxedText>
         )}

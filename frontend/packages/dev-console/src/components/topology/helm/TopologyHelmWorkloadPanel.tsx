@@ -9,14 +9,7 @@ export type TopologyResourcePanelProps = {
 const TopologyHelmWorkloadPanel: React.FC<TopologyResourcePanelProps> = ({ item }) => {
   const resourceItemToShowOnSideBar = item && item.resources;
 
-  return (
-    resourceItemToShowOnSideBar && (
-      <ResourceOverviewPage
-        item={resourceItemToShowOnSideBar}
-        kind={resourceItemToShowOnSideBar.obj.kind}
-      />
-    )
-  );
+  return resourceItemToShowOnSideBar && <ResourceOverviewPage item={resourceItemToShowOnSideBar} kind={resourceItemToShowOnSideBar.obj.kind} />;
 };
 
 export default TopologyHelmWorkloadPanel;

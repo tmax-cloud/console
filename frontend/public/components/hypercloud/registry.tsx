@@ -106,6 +106,9 @@ export const RegistryDetailsList: React.FC<RegistryDetailsListProps> = ({ ds }) 
       <DetailsItem label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_29')} obj={ds} path="status.capacity">
         {ds.status.capacity}
       </DetailsItem>
+      <DetailsItem label={t('SINGLE:MSG_IMAGEREGISTRIES_IMAGEREGISTRYDETAILS_TABDETAILS_1')} obj={ds} path="status.serverURL">
+        {ds.status.serverURL}
+      </DetailsItem>
     </dl>
   );
 };
@@ -132,7 +135,7 @@ const RegistryDetails: React.FC<RegistryDetailsProps> = ({ obj: registry }) => {
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 
@@ -145,9 +148,9 @@ const registryStatusReducer = (registry: any): string => {
   return registry?.status?.phase;
 };
 
-const filters = [
+const filters = t => [
   {
-    filterGroupName: 'Status',
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'registry-status',
     reducer: registryStatusReducer,
     items: [
@@ -185,26 +188,17 @@ const registryCreateAction = (history, item) => {
 export const RegistriesPage = withRouter(props => {
   const { t } = useTranslation();
 
-  const createItems = {
-    generic: 'Create Registry',
-    scan: 'Image Scan Request',
-  };
+  const createItems = React.useMemo(() => ({
+    generic: t('COMMON:MSG_LNB_MENU_188'),
+    scan: t('COMMON:MSG_LNB_MENU_174')
+  }), [t]);
 
   const createProps = {
     items: createItems,
     action: registryCreateAction.bind(null, props.history),
   };
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_71')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_71') })}
-    canCreate={true}
-    createProps={createProps}
-    ListComponent={Registries}
-    rowFilters={filters}
-    kind={kind}
-    {...props}
-  />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_187')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_187') })} canCreate={true} createProps={createProps} ListComponent={Registries} rowFilters={filters.bind(null, t)()} kind={kind} {...props} />;
 });
 
 const RepositoriesTab: React.FC<RepositoriesTabProps> = ({ obj }) => {

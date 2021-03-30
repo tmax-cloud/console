@@ -11,12 +11,7 @@ type CreateConnectorProps = {
   dragging?: boolean;
 };
 
-const CreateConnector: React.FC<CreateConnectorProps> = ({
-  startPoint,
-  endPoint,
-  dragging,
-  hints,
-}) => {
+const CreateConnector: React.FC<CreateConnectorProps> = ({ startPoint, endPoint, dragging, hints }) => {
   const [hover, setHover] = React.useState(false);
   const unsetHandle = React.useRef<number>();
 
@@ -32,16 +27,7 @@ const CreateConnector: React.FC<CreateConnectorProps> = ({
   }, [endPoint.x, endPoint.y, dragging]);
 
   const classes = classNames('odc-create-connector', { 'is-dragging': dragging });
-  return (
-    <DefaultCreateConnector
-      className={classes}
-      startPoint={startPoint}
-      endPoint={endPoint}
-      dragging={dragging}
-      hints={hints}
-      tipContents={hover && dragging ? 'Add Resources' : null}
-    />
-  );
+  return <DefaultCreateConnector className={classes} startPoint={startPoint} endPoint={endPoint} dragging={dragging} hints={hints} tipContents={hover && dragging ? 'Add Resources' : null} />;
 };
 
 export { CreateConnector };

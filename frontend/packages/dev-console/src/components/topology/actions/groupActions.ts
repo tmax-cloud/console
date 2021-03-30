@@ -10,10 +10,7 @@ import { getTopologyResourceObject } from '../topology-utils';
 import { deleteResourceModal } from '../../modals';
 import { cleanUpWorkload } from '../../../utils/application-utils';
 
-export const getGroupComponents = (
-  groupId: string,
-  topology: TopologyDataMap,
-): TopologyApplicationObject => {
+export const getGroupComponents = (groupId: string, topology: TopologyDataMap): TopologyApplicationObject => {
   return _.values(topology).reduce(
     (acc, val) => {
       const dc = getTopologyResourceObject(val);
@@ -30,9 +27,7 @@ const deleteGroup = (application: TopologyApplicationObject) => {
   // accessReview needs a resource but group is not a k8s resource,
   // so currently picking the first resource to do the rbac checks (might change in future)
   const primaryResource = _.get(application.resources[0], ['resources', 'obj']);
-  const resourceModel = modelFor(primaryResource.kind)
-    ? modelFor(primaryResource.kind)
-    : modelFor(referenceFor(primaryResource));
+  const resourceModel = modelFor(primaryResource.kind) ? modelFor(primaryResource.kind) : modelFor(referenceFor(primaryResource));
   return {
     label: 'Delete Application',
     callback: () => {
@@ -42,7 +37,7 @@ const deleteGroup = (application: TopologyApplicationObject) => {
         resourceName: application.name,
         resourceType: 'Application',
         onSubmit: () => {
-          application.resources.forEach((workload) => {
+          application.resources.forEach(workload => {
             const resource = _.get(workload, ['resources', 'obj']);
             reqs.push(cleanUpWorkload(resource, workload));
           });
@@ -54,15 +49,10 @@ const deleteGroup = (application: TopologyApplicationObject) => {
   };
 };
 
-const addResourcesMenu = (
-  graphData: GraphData,
-  application: TopologyApplicationObject,
-  connectorSource?: Node,
-) => {
+const addResourcesMenu = (graphData: GraphData, application: TopologyApplicationObject, connectorSource?: Node) => {
   const primaryResource = application.resources[0]?.resources?.obj;
   const connectorSourceObj = connectorSource?.getData()?.resources?.obj || {};
-  const isKnativeService =
-    connectorSource?.getData()?.data?.kind === referenceForModel(ServiceModel);
+  const isKnativeService = connectorSource?.getData()?.data?.kind === referenceForModel(ServiceModel);
   let resourceMenu = addResourceMenuWithoutCatalog;
   if (isKnativeService && graphData.eventSourceEnabled) {
     resourceMenu = [...addResourceMenuWithoutCatalog, addEventSource];
@@ -70,13 +60,7 @@ const addResourcesMenu = (
   return _.reduce(
     resourceMenu,
     (menuItems, menuItem) => {
-      const item = menuItem(
-        primaryResource,
-        application.resources[0]?.resources?.obj.metadata.namespace,
-        true,
-        connectorSourceObj,
-        graphData.createResourceAccess,
-      );
+      const item = menuItem(primaryResource, application.resources[0]?.resources?.obj.metadata.namespace, true, connectorSourceObj, graphData.createResourceAccess);
       if (item) {
         menuItems.push(item);
       }
@@ -86,11 +70,7 @@ const addResourcesMenu = (
   );
 };
 
-export const groupActions = (
-  graphData: GraphData,
-  application: TopologyApplicationObject,
-  connectorSource?: Node,
-): KebabOption[] => {
+export const groupActions = (graphData: GraphData, application: TopologyApplicationObject, connectorSource?: Node): KebabOption[] => {
   const addItems = addResourcesMenu(graphData, application, connectorSource);
   return !connectorSource ? [deleteGroup(application), ...addItems] : addItems;
 };

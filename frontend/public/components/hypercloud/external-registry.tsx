@@ -138,9 +138,9 @@ const registryStatusReducer = (externalRegistry: any): string => {
   return externalRegistry.status.state;
 };
 
-const filters = [
+const filters = (t) => [
   {
-    filterGroupName: 'Status',
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'registry-status',
     reducer: registryStatusReducer,
     items: [
@@ -176,17 +176,19 @@ const registryCreateAction = (history, item) => {
 }
 
 export const ExternalRegistriesPage = withRouter(props => {
-  const createItems = {
-    generic: 'Create External Registry',
-    scan: 'Image Scan Request',
-  }
+  const { t } = useTranslation();
+
+  const createItems = React.useMemo(() => ({
+    generic: t('COMMON:MSG_LNB_MENU_190'),
+    scan: t('COMMON:MSG_LNB_MENU_174')
+  }), [t]);
 
   const createProps = {
     items: createItems,
     action: registryCreateAction.bind(null, props.history)
   }
 
-  return <ListPage canCreate={true} createProps={createProps} ListComponent={ExternalRegistries} rowFilters={filters} kind={kind} {...props} />;
+  return <ListPage canCreate={true} createProps={createProps} ListComponent={ExternalRegistries} rowFilters={filters.bind(null, t)()} kind={kind} {...props} />;
 });
 
 const RepositoriesTab: React.FC<RepositoriesTabProps> = ({ obj }) => {

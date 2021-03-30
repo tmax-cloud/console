@@ -20,10 +20,7 @@ function getKindStringAndAbbreviation(kind: string) {
   return { kindStr, kindAbbr, kindColor };
 }
 
-const ForwardSvgResourceIcon: React.FC<ResourceIconProps> = (
-  { kind, x, y, leftJustified },
-  iconRef,
-) => {
+const ForwardSvgResourceIcon: React.FC<ResourceIconProps> = ({ kind, x, y, leftJustified }, iconRef) => {
   const { kindAbbr, kindStr, kindColor } = getKindStringAndAbbreviation(kind);
   const [textSize, textRef] = useSize([]);
 
@@ -38,18 +35,7 @@ const ForwardSvgResourceIcon: React.FC<ResourceIconProps> = (
     paddingX = height / 2;
     paddingY = height / 14;
     height += paddingY * 2;
-    rect = (
-      <rect
-        fill={kindColor}
-        ref={iconRef}
-        x={x - (leftJustified ? 0 : paddingX + width / 2)}
-        width={textSize.width + paddingX * 2}
-        y={y - (leftJustified ? 0 : paddingY + textSize.height / 2)}
-        height={height}
-        rx={height / 2}
-        ry={height / 2}
-      />
-    );
+    rect = <rect fill={kindColor} ref={iconRef} x={x - (leftJustified ? 0 : paddingX + width / 2)} width={textSize.width + paddingX * 2} y={y - (leftJustified ? 0 : paddingY + textSize.height / 2)} height={height} rx={height / 2} ry={height / 2} />;
   }
 
   return (
@@ -60,13 +46,7 @@ const ForwardSvgResourceIcon: React.FC<ResourceIconProps> = (
     >
       {rect}
       <title>{kindStr}</title>
-      <text
-        ref={textRef}
-        x={x + (leftJustified ? paddingX + width / 2 : 0)}
-        y={y + (leftJustified ? (paddingY + height) / 2 : 0)}
-        textAnchor="middle"
-        dy="0.35em"
-      >
+      <text ref={textRef} x={x + (leftJustified ? paddingX + width / 2 : 0)} y={y + (leftJustified ? (paddingY + height) / 2 : 0)} textAnchor="middle" dy="0.35em">
         {kindAbbr}
       </text>
     </g>
