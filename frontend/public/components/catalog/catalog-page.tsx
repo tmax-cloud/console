@@ -6,34 +6,12 @@ import { safeLoad } from 'js-yaml';
 import { PropertyItem } from '@patternfly/react-catalog-view-extension';
 import { ANNOTATIONS, FLAGS, APIError } from '@console/shared';
 import { CatalogTileViewPage, Item } from './catalog-items';
-import {
-  k8sListPartialMetadata,
-  referenceForModel,
-  serviceClassDisplayName,
-  K8sResourceCommon,
-  K8sResourceKind,
-  PartialObjectMetadata,
-  TemplateKind,
-} from '../../module/k8s';
+import { k8sListPartialMetadata, referenceForModel, serviceClassDisplayName, K8sResourceCommon, K8sResourceKind, PartialObjectMetadata, TemplateKind } from '../../module/k8s';
 import { withStartGuide } from '../start-guide';
 import { connectToFlags, flagPending, FlagsObject } from '../../reducers/features';
-import {
-  Firehose,
-  LoadError,
-  PageHeading,
-  skeletonCatalog,
-  StatusBox,
-  FirehoseResult,
-  ExternalLink,
-} from '../utils';
+import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, ExternalLink } from '../utils';
 import { getAnnotationTags, getMostRecentBuilderTag, isBuilder } from '../image-stream';
-import {
-  getImageForIconClass,
-  getImageStreamIcon,
-  getServiceClassIcon,
-  getServiceClassImage,
-  getTemplateIcon,
-} from './catalog-item-icon';
+import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon } from './catalog-item-icon';
 import { ClusterServiceClassModel, TemplateModel } from '../../models';
 import * as plugins from '../../plugins';
 import { coFetch, coFetchJSON } from '../../co-fetch';
@@ -47,24 +25,8 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      clusterServiceClasses,
-      templateMetadata,
-      projectTemplateMetadata,
-      imageStreams,
-      helmCharts,
-      namespace,
-      loaded,
-    } = this.props;
-    if (
-      (!prevProps.loaded && loaded) ||
-      !_.isEqual(namespace, prevProps.namespace) ||
-      !_.isEqual(clusterServiceClasses, prevProps.clusterServiceClasses) ||
-      !_.isEqual(templateMetadata, prevProps.templateMetadata) ||
-      !_.isEqual(projectTemplateMetadata, prevProps.projectTemplateMetadata) ||
-      !_.isEqual(imageStreams, prevProps.imageStreams) ||
-      !_.isEqual(helmCharts, prevProps.helmCharts)
-    ) {
+    const { clusterServiceClasses, templateMetadata, projectTemplateMetadata, imageStreams, helmCharts, namespace, loaded } = this.props;
+    if ((!prevProps.loaded && loaded) || !_.isEqual(namespace, prevProps.namespace) || !_.isEqual(clusterServiceClasses, prevProps.clusterServiceClasses) || !_.isEqual(templateMetadata, prevProps.templateMetadata) || !_.isEqual(projectTemplateMetadata, prevProps.projectTemplateMetadata) || !_.isEqual(imageStreams, prevProps.imageStreams) || !_.isEqual(helmCharts, prevProps.helmCharts)) {
       const items = this.getItems();
       this.setState({ items });
     }
@@ -75,19 +37,10 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
       plugins.registry
         .getDevCatalogModels()
         .filter(({ properties }) => _.get(this.props, referenceForModel(properties.model)))
-        .map(({ properties }) =>
-          properties.normalize(_.get(this.props, [referenceForModel(properties.model), 'data'])),
-        ),
+        .map(({ properties }) => properties.normalize(_.get(this.props, [referenceForModel(properties.model), 'data']))),
     ) as Item[];
 
-    const {
-      clusterServiceClasses,
-      imageStreams,
-      templateMetadata,
-      projectTemplateMetadata,
-      helmCharts,
-      loaded,
-    } = this.props;
+    const { clusterServiceClasses, imageStreams, templateMetadata, projectTemplateMetadata, helmCharts, loaded } = this.props;
     let clusterServiceClassItems: Item[] = [];
     let imageStreamItems: Item[] = [];
     let templateItems: Item[] = [];
@@ -120,14 +73,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
       helmChartItems = this.normalizeHelmCharts(helmCharts);
     }
 
-    const items: Item[] = [
-      ...clusterServiceClassItems,
-      ...imageStreamItems,
-      ...templateItems,
-      ...extensionItems,
-      ...projectTemplateItems,
-      ...helmChartItems,
-    ];
+    const items: Item[] = [...clusterServiceClassItems, ...imageStreamItems, ...templateItems, ...extensionItems, ...projectTemplateItems, ...helmChartItems];
 
     return _.sortBy(items, 'tileName');
   }
@@ -138,10 +84,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
       serviceClasses,
       (acc, serviceClass) => {
         // Prefer native templates to template-service-broker service classes.
-        if (
-          serviceClass.status.removedFromBrokerCatalog ||
-          serviceClass.spec.clusterServiceBrokerName === 'template-service-broker'
-        ) {
+        if (serviceClass.status.removedFromBrokerCatalog || serviceClass.spec.clusterServiceBrokerName === 'template-service-broker') {
           return acc;
         }
 
@@ -193,8 +136,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
           tileProvider: annotations[ANNOTATIONS.providerDisplayName],
           documentationUrl: annotations[ANNOTATIONS.documentationURL],
           supportUrl: annotations[ANNOTATIONS.supportURL],
-          href: `/catalog/instantiate-template?template=${name}&template-ns=${namespace}&preselected-ns=${this
-            .props.namespace || ''}`,
+          href: `/catalog/instantiate-template?template=${name}&template-ns=${namespace}&preselected-ns=${this.props.namespace || ''}`,
         });
         return acc;
       },
@@ -224,14 +166,14 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
             } catch {
               return null;
             }
-            const readmeFile = chartData?.files?.find((file) => file.name === 'README.md');
+            const readmeFile = chartData?.files?.find(file => file.name === 'README.md');
             const readmeData = readmeFile?.data && atob(readmeFile?.data);
             return readmeData && `## README\n${readmeData}`;
           };
 
           const maintainers = chart.maintainers?.length > 0 && (
             <>
-              {chart.maintainers?.map((maintainer) => (
+              {chart.maintainers?.map(maintainer => (
                 <>
                   {maintainer.name}
                   <br />
@@ -242,9 +184,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
             </>
           );
 
-          const homePage = chart.home && (
-            <ExternalLink href={chart.home} additionalClassName="co-break-all" text={chart.home} />
-          );
+          const homePage = chart.home && <ExternalLink href={chart.home} additionalClassName="co-break-all" text={chart.home} />;
 
           const customProperties = (
             <>
@@ -282,12 +222,11 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
 
   normalizeImageStreams(imageStreams: K8sResourceKind[]): Item[] {
     const builderimageStreams = _.filter(imageStreams, isBuilder);
-    return _.map(builderimageStreams, (imageStream) => {
+    return _.map(builderimageStreams, imageStream => {
       const { namespace: currentNamespace = '' } = this.props;
       const { name, namespace } = imageStream.metadata;
       const tag = getMostRecentBuilderTag(imageStream);
-      const tileName =
-        _.get(imageStream, ['metadata', 'annotations', ANNOTATIONS.displayName]) || name;
+      const tileName = _.get(imageStream, ['metadata', 'annotations', ANNOTATIONS.displayName]) || name;
       const iconClass = getImageStreamIcon(tag);
       const tileImgUrl = getImageForIconClass(iconClass);
       const tileIconClass = tileImgUrl ? null : iconClass;
@@ -319,13 +258,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
     const { items } = this.state;
 
     return (
-      <StatusBox
-        skeleton={skeletonCatalog}
-        data={items}
-        loaded={loaded}
-        loadError={loadError}
-        label="Resources"
-      >
+      <StatusBox skeleton={skeletonCatalog} data={items} loaded={loaded} loadError={loadError} label="Resources">
         <CatalogTileViewPage items={items} />
       </StatusBox>
     );
@@ -336,15 +269,13 @@ export const Catalog = connectToFlags<CatalogProps>(
   FLAGS.OPENSHIFT,
   FLAGS.SERVICE_CATALOG,
   ...plugins.registry.getDevCatalogModels().map(({ properties }) => properties.flag),
-)((props) => {
+)(props => {
   const { flags, mock, namespace } = props;
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   const serviceCatalogFlag = flags[FLAGS.SERVICE_CATALOG];
   const [templateMetadata, setTemplateMetadata] = React.useState<K8sResourceCommon>();
   const [templateError, setTemplateError] = React.useState<APIError>();
-  const [projectTemplateMetadata, setProjectTemplateMetadata] = React.useState<K8sResourceCommon[]>(
-    null,
-  );
+  const [projectTemplateMetadata, setProjectTemplateMetadata] = React.useState<K8sResourceCommon[]>(null);
   const [projectTemplateError, setProjectTemplateError] = React.useState<APIError>();
   const [helmCharts, setHelmCharts] = React.useState<HelmChartEntries>();
 
@@ -358,7 +289,7 @@ export const Catalog = connectToFlags<CatalogProps>(
       return;
     }
     k8sListPartialMetadata(TemplateModel, { ns: 'openshift' })
-      .then((metadata) => {
+      .then(metadata => {
         setTemplateMetadata(metadata);
         setTemplateError(null);
       })
@@ -376,7 +307,7 @@ export const Catalog = connectToFlags<CatalogProps>(
       setProjectTemplateError(null);
     } else {
       k8sListPartialMetadata(TemplateModel, { ns: namespace })
-        .then((metadata) => {
+        .then(metadata => {
           setProjectTemplateMetadata(metadata);
           setProjectTemplateError(null);
         })
@@ -385,7 +316,7 @@ export const Catalog = connectToFlags<CatalogProps>(
   }, [loadTemplates, namespace]);
 
   React.useEffect(() => {
-    coFetch('/api/helm/charts/index.yaml').then(async (res) => {
+    coFetch('/api/helm/charts/index.yaml').then(async res => {
       const yaml = await res.text();
       const json = safeLoad(yaml);
       setHelmCharts(json.entries);
@@ -394,16 +325,10 @@ export const Catalog = connectToFlags<CatalogProps>(
 
   const error = templateError || projectTemplateError;
   if (error) {
-    return (
-      <LoadError
-        message={error.message}
-        label="Templates"
-        className="loading-box loading-box__errored"
-      />
-    );
+    return <LoadError message={error.message} label="Templates" className="loading-box loading-box__errored" />;
   }
 
-  if (_.some(flags, (flag) => flagPending(flag))) {
+  if (_.some(flags, flag => flagPending(flag))) {
     return null;
   }
 
@@ -443,13 +368,7 @@ export const Catalog = connectToFlags<CatalogProps>(
   return (
     <div className="co-catalog__body">
       <Firehose resources={mock ? [] : resources}>
-        <CatalogListPage
-          namespace={namespace}
-          templateMetadata={templateMetadata}
-          projectTemplateMetadata={projectTemplateMetadata}
-          helmCharts={helmCharts}
-          {...(props as any)}
-        />
+        <CatalogListPage namespace={namespace} templateMetadata={templateMetadata} projectTemplateMetadata={projectTemplateMetadata} helmCharts={helmCharts} {...(props as any)} />
       </Firehose>
     </div>
   );
@@ -465,11 +384,7 @@ export const CatalogPage = withStartGuide(({ match, noProjectsAvailable }) => {
       <div className="co-m-page__body">
         <div className="co-catalog">
           <PageHeading title="Developer Catalog" />
-          <p className="co-catalog-page__description">
-            Add shared apps, services, or source-to-image builders to your project from the
-            Developer Catalog. Cluster admins can install additional apps which will show up here
-            automatically.
-          </p>
+          <p className="co-catalog-page__description">Add shared apps, services, or source-to-image builders to your project from the Developer Catalog. Cluster admins can install additional apps which will show up here automatically.</p>
           <Catalog namespace={namespace} mock={noProjectsAvailable} />
         </div>
       </div>
