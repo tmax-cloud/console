@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import { CodeIcon, BoltIcon, DatabaseIcon, CatalogIcon } from '@patternfly/react-icons';
+// import { CodeIcon, BoltIcon, DatabaseIcon, CatalogIcon } from '@patternfly/react-icons';
+import { CodeIcon, CatalogIcon } from '@patternfly/react-icons';
 import {
   Plugin,
   ModelDefinition,
@@ -882,26 +883,26 @@ const plugin: Plugin<ConsumedExtensions> = [
       icon: <CatalogIcon />,
     },
   },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'dev-catalog-databases',
-      url: '/catalog?category=databases',
-      label: 'Database',
-      description: 'Browse the catalog to discover database services to add to your application',
-      icon: <DatabaseIcon />,
-    },
-  },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'operator-backed',
-      url: '/catalog?kind=%5B"ClusterServiceVersion"%5D',
-      label: 'Operator Backed',
-      description: 'Browse the catalog to discover and deploy operator managed services',
-      icon: <BoltIcon />,
-    },
-  },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'dev-catalog-databases',
+  //     url: '/catalog?category=databases',
+  //     label: 'Database',
+  //     description: 'Browse the catalog to discover database services to add to your application',
+  //     icon: <DatabaseIcon />,
+  //   },
+  // },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'operator-backed',
+  //     url: '/catalog?kind=%5B"ClusterServiceVersion"%5D',
+  //     label: 'Operator Backed',
+  //     description: 'Browse the catalog to discover and deploy operator managed services',
+  //     icon: <BoltIcon />,
+  //   },
+  // },
   {
     type: 'AddAction',
     properties: {

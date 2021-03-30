@@ -2,13 +2,13 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { Helmet } from 'react-helmet';
 import { match as RMatch } from 'react-router';
-import { history, Firehose, FirehoseResource, HintBlock } from '@console/internal/components/utils';
+import { Firehose, FirehoseResource, HintBlock, PageHeading } from '@console/internal/components/utils';
 import { K8sResourceKind, referenceForModel } from '@console/internal/module/k8s';
 import { ServiceModel } from '@console/knative-plugin';
 import ODCEmptyState from './EmptyState';
 import NamespacedPage from './NamespacedPage';
 import ProjectsExistWrapper from './ProjectsExistWrapper';
-import CreateProjectListPage from './projects/CreateProjectListPage';
+// import CreateProjectListPage from './projects/CreateProjectListPage';
 
 export interface AddPageProps {
   match: RMatch<{
@@ -29,7 +29,7 @@ interface EmptyStateLoaderProps {
   loadError?: string;
 }
 
-const handleProjectCreate = (project: K8sResourceKind) => history.push(`/add/ns/${project.metadata.name}`);
+// const handleProjectCreate = (project: K8sResourceKind) => history.push(`/add/ns/${project.metadata.name}`);
 
 const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, loadError }) => {
   const [noWorkloads, setNoWorkloads] = React.useState(false);
@@ -106,7 +106,18 @@ const RenderEmptyState = ({ namespace }) => {
   );
 };
 
-const AddPage: React.FC<AddPageProps> = ({ match }) => {
+const SelectNamespacePage = () => {
+  return (
+    <>
+      <div className="odc-empty-state__title">
+        <PageHeading title="Select a namespace" />
+        <div className="co-catalog-page__description odc-empty-state__hint-block">To add a resource, select a namespace first.</div>
+      </div>
+    </>
+  );
+};
+
+export const AddPage: React.FC<AddPageProps> = ({ match }) => {
   const namespace = match.params.ns;
 
   return (
@@ -115,8 +126,8 @@ const AddPage: React.FC<AddPageProps> = ({ match }) => {
         <title>+Add</title>
       </Helmet>
       <NamespacedPage>
-        <Firehose resources={[{ kind: 'Project', prop: 'projects', isList: true }]}>
-          <ProjectsExistWrapper title="Add">{namespace ? <RenderEmptyState namespace={namespace} /> : <CreateProjectListPage onCreate={handleProjectCreate} title="Add" />}</ProjectsExistWrapper>
+        <Firehose resources={[{ kind: 'Namespace', prop: 'projects', isList: true }]}>
+          <ProjectsExistWrapper title="Add">{namespace ? <RenderEmptyState namespace={namespace} /> : <SelectNamespacePage />}</ProjectsExistWrapper>
         </Firehose>
       </NamespacedPage>
     </>
