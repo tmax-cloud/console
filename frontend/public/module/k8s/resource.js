@@ -8,7 +8,7 @@ import { getId, getUserGroup } from '../../hypercloud/auth';
 import { kindToSchemaPath } from '../hypercloud/k8s/kind-to-schema-path.ts'
 
 /** @type {(model: K8sKind) => string} */
-const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
+export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
 => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
