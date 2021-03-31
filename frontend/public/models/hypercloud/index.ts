@@ -49,6 +49,19 @@ export const SignerPolicyModel: K8sKind = {
   plural: 'signerpolicies',
 };
 
+export const ImageReplicateModel: K8sKind = {
+  kind: 'ImageReplicate',
+  label: 'Image Replicate',
+  labelPlural: 'Image Replicates',
+  apiGroup: 'tmax.io',
+  apiVersion: 'v1',
+  abbr: 'IR',
+  namespaced: true,
+  crd: false,
+  id: 'imagereplicate',
+  plural: 'imagereplicates',
+};
+
 export const PodSecurityPolicyModel: K8sKind = {
   kind: 'PodSecurityPolicy',
   namespaced: false,
