@@ -10,6 +10,7 @@ import { BindingName, BindingsList, RulesList } from './index';
 import { DetailsPage, MultiListPage, TextFilter, Table, TableRow, TableData } from '../factory';
 import { Kebab, SectionHeading, MsgBox, navFactory, ResourceKebab, ResourceLink, Timestamp } from '../utils';
 import { useTranslation, withTranslation } from 'react-i18next';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const isSystemRole = role => _.startsWith(role.metadata.name, 'system:');
 
@@ -195,7 +196,7 @@ export const BindingsForRolePage = props => {
   return (
     <MultiListPage
       canCreate={true}
-      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: 'Binding' })}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_DETAILS_TABDETAILS_ROLEBINDINGS_3') })}
       createProps={{
         to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/~new?rolekind=${kind}&rolename=${name}`,
       }}
@@ -261,7 +262,7 @@ export const RolesPage = ({ namespace, mock, showTitle }) => {
       showTitle={showTitle}
       namespace={namespace}
       createAccessReview={accessReview}
-      createButtonText="Create Role"
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(RoleModel, t) })}
       createProps={{ to: `/k8s/ns/${createNS}/roles/~new` }}
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       resources={[
