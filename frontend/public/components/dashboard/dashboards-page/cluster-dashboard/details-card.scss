@@ -6,6 +6,11 @@
 .details-card__popup-style {
   color: #808080;
 }
+.details-card__body-style {
+  max-height: 900px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .details-card__head-style {
   display: flex;
   justify-content: space-between;

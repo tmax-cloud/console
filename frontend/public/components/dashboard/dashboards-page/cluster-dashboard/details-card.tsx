@@ -170,7 +170,7 @@ export const DetailsCard_ = connect(mapStateToProps)(({ watchK8sResource, stopWa
         {/* <DashboardCardLink to="/settings/cluster/">View settings</DashboardCardLink> */}
       </DashboardCardHeader>
       <DetailsSubHeader hcVersion={hcVersion} />
-      <DashboardCardBody isLoading={flagPending(openshiftFlag)}>
+      <DashboardCardBody isLoading={flagPending(openshiftFlag)} className={classNames('details-card__body-style')}>
         <DetailsBody>
           {openshiftFlag ? (
             <>
