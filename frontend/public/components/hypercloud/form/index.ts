@@ -42,7 +42,7 @@ export const pluralToKind = new Map([
   ['clustertasks', { kind: 'ClusterTask', type: 'CustomResourceDefinition' }],
   ['taskruns', { kind: 'TaskRun', type: 'CustomResourceDefinition' }],
   ['pipelines', { kind: 'Pipeline', type: 'CustomResourceDefinition' }],
-  ['pipelineruns', { kind: 'PipelineRun', type: 'CustomResourceDefinition' }],
+  ['pipelineruns', { kind: 'PipelineRun', type: 'CustomResourceDefinition', createType: 'manual' }],
   ['approvals', { kind: 'Approval', type: 'CustomResourceDefinition' }],
   ['pipelineresources', { kind: 'PipelineResource', type: 'CustomResourceDefinition' }],
   ['integrationconfigs', { kind: 'IntegrationConfig', type: 'CustomResourceDefinition' }],
