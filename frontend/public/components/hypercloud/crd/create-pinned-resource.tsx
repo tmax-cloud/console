@@ -19,6 +19,7 @@ import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/ope
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
 import { pluralToKind } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
+import { getAccessToken } from '../../../hypercloud/auth';
 // import { k8sCreateSchema } from '@console/internal/module/k8s/resource.js';
 // import { safeDump } from 'js-yaml';
 // eslint-disable-next-line @typescript-eslint/camelcase
@@ -40,18 +41,16 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
     console.log('model: ', model);
     let type = pluralToKind.get(model.plural)['type'];
     let url;
-    let isReleaseMode = window.SERVER_FLAGS['releaseModeFlag'];
-    let kubeProxy = isReleaseMode ? '' : '/api/kubernetes';
-    let resourceProxy = isReleaseMode ? '' : '/api/resource';
     if (type === 'CustomResourceDefinition') {
-      url = `${document.location.origin}${kubeProxy}/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+      url = `${document.location.origin}/api/kubernetes/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
     } else {
       const directory = kindToSchemaPath.get(model.kind)?.['directory'];
       const file = kindToSchemaPath.get(model.kind)?.['file'];
-      url = `${document.location.origin}${resourceProxy}/${directory}/${file}`;
+      url = `${document.location.origin}/api/resource/${directory}/${file}`;
     }
     const xhrTest = new XMLHttpRequest();
     xhrTest.open('GET', url);
+    xhrTest.setRequestHeader('Authorization', `Bearer ${getAccessToken()}`);
     xhrTest.onreadystatechange = function() {
       if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
         let template = xhrTest.response;
