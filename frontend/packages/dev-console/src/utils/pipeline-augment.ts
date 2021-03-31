@@ -176,6 +176,8 @@ export interface PipelineRun extends K8sResourceKind {
     completionTime?: string;
     taskRuns?: TaskRuns;
     runs?: TaskRuns; 
+    phase?: string;
+    nodes?: any;
   };
 }
 

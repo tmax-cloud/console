@@ -16,6 +16,7 @@ export enum NodeType {
   TASK_LIST_NODE = 'task-list',
   BUILDER_NODE = 'builder',
   INVALID_TASK_LIST_NODE = 'invalid-task-list',
+  WORKFLOW_NODE = 'workflow'
 }
 export enum DrawDesign {
   INTEGRAL_SHAPE = 'integral-shape',
