@@ -114,11 +114,11 @@ export const ImageScanRequestDetailsList: React.FC<ImageScanRequestDetailsListPr
         </dd>
       )}
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_15')}</dt>
-      <dd>{ds?.spec?.insecure ? '확인하지 않음' : '확인함'}</dd>
+      <dd>{ds?.spec?.insecure ? t('COMMON:MSG_DETAILS_TABDETAILS_46') : t('COMMON:MSG_DETAILS_TABDETAILS_45')}</dd>
       {ds?.spec?.maxFixable && <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_43')}</dt>}
       <dd>{ds?.spec?.maxFixable}</dd>
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_44')}</dt>
-      <dd>{ds?.spec?.sendReport ? '전송함' : '전송 하지 않음'}</dd>
+      <dd>{ds?.spec?.sendReport ? t('COMMON:MSG_DETAILS_TABDETAILS_47') : t('COMMON:MSG_DETAILS_TABDETAILS_48')}</dd>
       {/* <DetailsItem label="Summary" obj={ds} path="status.summary" /> */}
     </dl>
   );

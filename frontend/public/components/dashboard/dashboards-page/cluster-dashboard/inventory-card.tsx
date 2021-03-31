@@ -7,11 +7,14 @@ import { ResourceInventoryItem, StatusGroupMapper } from '@console/shared/src/co
 import { DashboardItemProps, withDashboardResources } from '../../with-dashboard-resources';
 import { K8sKind, referenceForModel, K8sResourceCommon } from '../../../../module/k8s';
 import { AsyncComponent } from '../../../utils';
-import { useExtensions, DashboardsOverviewInventoryItem, DashboardsOverviewInventoryItemReplacement, isDashboardsOverviewInventoryItem, isDashboardsOverviewInventoryItemReplacement, LazyLoader } from '@console/plugin-sdk';
+import { useExtensions, DashboardsOverviewInventoryItem, isDashboardsOverviewInventoryItem, LazyLoader } from '@console/plugin-sdk';
 import { useK8sWatchResource, useK8sWatchResources, WatchK8sResources } from '../../../utils/k8s-watch-hook';
 import { useTranslation } from 'react-i18next';
+// import { find } from 'lodash';
+import { NamespaceClaimModel, ResourceQuotaClaimModel } from '../../../../models/hypercloud';
+import { NodeModel, PersistentVolumeClaimModel, PodModel, ServiceModel } from '../../../../models';
 
-const mergeItems = (items: DashboardsOverviewInventoryItem[], replacements: DashboardsOverviewInventoryItemReplacement[]) => items.map(item => replacements.find(r => r.properties.model === item.properties.model) || item);
+import * as classNames from 'classnames';
 
 const getFirehoseResource = (model: K8sKind) => ({
   isList: true,
@@ -47,22 +50,39 @@ const ClusterInventoryItem = withDashboardResources<ClusterInventoryItemProps>(
   }),
 );
 
+const splitItems = (items: DashboardsOverviewInventoryItem[]) => {
+  const RESOURCE_KINDS = [NodeModel.kind, PodModel.kind, ServiceModel.kind, PersistentVolumeClaimModel.kind];
+  const CLAIM_KINDS = [NamespaceClaimModel.kind, ResourceQuotaClaimModel.kind];
+  const resourceItems = items.filter(item => RESOURCE_KINDS.includes(item.properties.model.kind));
+  const claimItems = items.filter(item => CLAIM_KINDS.includes(item.properties.model.kind));
+  return { resourceItems, claimItems };
+};
+
+const RCCard: React.FC<RCCardProps> = React.memo(({ rcItems }) => {
+  return (
+    <div>
+      {rcItems.map(item => (
+        <ClusterInventoryItem key={item.properties.model.kind} model={item.properties.model} mapper={item.properties.mapper} additionalResources={item.properties.additionalResources} useAbbr={item.properties.useAbbr} expandedComponent={item.properties.expandedComponent} />
+      ))}
+    </div>
+  );
+});
+
 export const InventoryCard = () => {
   const itemExtensions = useExtensions<DashboardsOverviewInventoryItem>(isDashboardsOverviewInventoryItem);
-
-  const replacementExtensions = useExtensions<DashboardsOverviewInventoryItemReplacement>(isDashboardsOverviewInventoryItemReplacement);
-
-  const mergedItems = React.useMemo(() => mergeItems(itemExtensions, replacementExtensions), [itemExtensions, replacementExtensions]);
+  const { resourceItems, claimItems } = React.useMemo(() => splitItems(itemExtensions), [itemExtensions]);
   const { t } = useTranslation();
+
   return (
     <DashboardCard data-test-id="inventory-card">
       <DashboardCardHeader>
-        <DashboardCardTitle>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERINVENTORY_1')}</DashboardCardTitle>
+        <DashboardCardTitle>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDRESOURCES_TITLE_1')}</DashboardCardTitle>
       </DashboardCardHeader>
       <DashboardCardBody>
-        {mergedItems.map(item => (
-          <ClusterInventoryItem key={item.properties.model.kind} model={item.properties.model} mapper={item.properties.mapper} additionalResources={item.properties.additionalResources} useAbbr={item.properties.useAbbr} expandedComponent={item.properties.expandedComponent} />
-        ))}
+        <RCCard rcItems={resourceItems} />
+        <div className={classNames('co-status-card__alerts-body', 'co-dashboard-card__body--top-margin')}>
+          <RCCard rcItems={claimItems} />
+        </div>
       </DashboardCardBody>
     </DashboardCard>
   );
@@ -74,4 +94,9 @@ type ClusterInventoryItemProps = DashboardItemProps & {
   useAbbr?: boolean;
   additionalResources?: WatchK8sResources<any>;
   expandedComponent?: LazyLoader;
+};
+
+type RCCardProps = {
+  // rcItems: ExtensionWithMetadata[];
+  rcItems: any;
 };

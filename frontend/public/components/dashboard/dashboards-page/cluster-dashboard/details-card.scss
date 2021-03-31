@@ -1,0 +1,24 @@
+.details-card__popup-subtitle {
+  font-size: 110%;
+  font-weight: bold;
+  padding-top: 10px;
+}
+.details-card__popup-style {
+  color: #808080;
+}
+.details-card__body-style {
+  max-height: 900px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.details-card__head-style {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 10px;
+}
+.details-card__body-icon {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}

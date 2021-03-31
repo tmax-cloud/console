@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
 import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, CustomResourceDefinitionKind, definitionFor, referenceForModel } from '@console/internal/module/k8s';
-// import { CustomResourceDefinitionModel } from '@console/internal/models';
+import { CustomResourceDefinitionModel } from '@console/internal/models';
 // import { Firehose } from '@console/internal/components/utils/firehose';
 import { StatusBox, FirehoseResult, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
@@ -19,7 +19,8 @@ import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/ope
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
 import { pluralToKind } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
-// import { k8sCreateSchema } from '@console/internal/module/k8s/resource.js';
+import { getAccessToken } from '../../../hypercloud/auth';
+import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 // import { safeDump } from 'js-yaml';
 // eslint-disable-next-line @typescript-eslint/camelcase
 
@@ -41,7 +42,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
     let type = pluralToKind.get(model.plural)['type'];
     let url;
     if (type === 'CustomResourceDefinition') {
-      url = `${document.location.origin}/api/kubernetes/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+      url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
+      url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
     } else {
       const directory = kindToSchemaPath.get(model.kind)?.['directory'];
       const file = kindToSchemaPath.get(model.kind)?.['file'];
@@ -49,6 +51,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
     }
     const xhrTest = new XMLHttpRequest();
     xhrTest.open('GET', url);
+    xhrTest.setRequestHeader('Authorization', `Bearer ${getAccessToken()}`);
     xhrTest.onreadystatechange = function() {
       if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
         let template = xhrTest.response;

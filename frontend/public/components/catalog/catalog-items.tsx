@@ -3,11 +3,7 @@ import * as _ from 'lodash-es';
 import { Link } from 'react-router-dom';
 import * as catalogImg from '../../imgs/logos/catalog-icon.svg';
 import { Badge, Modal } from '@patternfly/react-core';
-import {
-  CatalogItemHeader,
-  CatalogTile,
-  CatalogTileBadge,
-} from '@patternfly/react-catalog-view-extension';
+import { CatalogItemHeader, CatalogTile, CatalogTileBadge } from '@patternfly/react-catalog-view-extension';
 
 import { DEV_CATALOG_FILTER_KEY as filterKey } from '@console/shared';
 import { history } from '../utils/router';
@@ -57,6 +53,7 @@ type TypeFilters = {
   ImageStream: FilterItem;
   Template: FilterItem;
   ClusterServiceClass: FilterItem;
+  ServiceClass: FilterItem;
 };
 
 type CapabilityFilters = {
@@ -72,10 +69,7 @@ type PageFilters = {
   capabilityLevel: CapabilityFilters;
 };
 
-export const catalogCategories: Record<
-  string,
-  Record<string, string | Record<string, string | Record<string, any>>>
-> = {
+export const catalogCategories: Record<string, Record<string, string | Record<string, string | Record<string, any>>>> = {
   languages: {
     id: 'languages',
     label: 'Languages',
@@ -157,9 +151,7 @@ export const catalogCategories: Record<
   },
 };
 
-const pageDescription =
-  'Add shared apps, services, or source-to-image builders to your project from the Developer ' +
-  'Catalog. Cluster admins can install additional apps which will show up here automatically.';
+const pageDescription = 'Add shared apps, services, or source-to-image builders to your project from the Developer ' + 'Catalog. Cluster admins can install additional apps which will show up here automatically.';
 
 // Filter property white list
 const filterGroups = ['kind'];
@@ -189,8 +181,13 @@ const getAvailableFilters = (initialFilters): PageFilters => {
       active: false,
     },
     ClusterServiceClass: {
-      label: 'Service Class',
+      label: 'Cluster Service Class',
       value: 'ClusterServiceClass',
+      active: false,
+    },
+    ServiceClass: {
+      label: 'Service Class',
+      value: 'ServiceClass',
       active: false,
     },
   };
@@ -216,11 +213,7 @@ const keywordCompare = (filterString: string, item: Item): boolean => {
     return false;
   }
 
-  return (
-    item.tileName.toLowerCase().includes(filterString) ||
-    (item.tileDescription && item.tileDescription.toLowerCase().includes(filterString)) ||
-    (item.tags && item.tags.includes(filterString))
-  );
+  return item.tileName.toLowerCase().includes(filterString) || (item.tileDescription && item.tileDescription.toLowerCase().includes(filterString)) || (item.tags && item.tags.includes(filterString));
 };
 
 const setURLParams = (params): void => {
@@ -232,15 +225,15 @@ const setURLParams = (params): void => {
 
 const sortByOperators = (items: Record<string, Item[]>): Record<string, Item[]> => {
   const sortedItemsByOperators = {};
-  _.forEach(Object.keys(items).sort(), (key) => (sortedItemsByOperators[key] = items[key]));
+  _.forEach(Object.keys(items).sort(), key => (sortedItemsByOperators[key] = items[key]));
   return sortedItemsByOperators;
 };
 
 export const groupItems = (items: Item[], groupBy: string): Item[] | Record<string, Item[]> => {
   if (groupBy === GroupByTypes.Operator) {
-    const installedOperators = _.filter(items, (item) => item.kind === 'InstalledOperator');
-    const nonOperators = _.filter(items, (item) => item.kind !== 'InstalledOperator');
-    let groupedOperators = _.groupBy(installedOperators, (item) => item.obj.csv.spec.displayName);
+    const installedOperators = _.filter(items, item => item.kind === 'InstalledOperator');
+    const nonOperators = _.filter(items, item => item.kind !== 'InstalledOperator');
+    let groupedOperators = _.groupBy(installedOperators, item => item.obj.csv.spec.displayName);
     groupedOperators = sortByOperators(groupedOperators);
     const groupAllItems = { ...groupedOperators, 'Non Operators': nonOperators };
     return groupAllItems;
@@ -248,10 +241,7 @@ export const groupItems = (items: Item[], groupBy: string): Item[] | Record<stri
   return items;
 };
 
-export class CatalogTileViewPage extends React.Component<
-  CatalogTileViewPageProps,
-  CatalogTileViewPageState
-> {
+export class CatalogTileViewPage extends React.Component<CatalogTileViewPageProps, CatalogTileViewPageState> {
   static displayName = `CatalogTileViewPage`;
 
   constructor(props) {
@@ -264,8 +254,7 @@ export class CatalogTileViewPage extends React.Component<
     const { items } = this.props;
     const searchParams = new URLSearchParams(window.location.search);
     const detailsItemID = searchParams.get('details-item');
-    const detailsItem =
-      detailsItemID && _.find(items, (item) => detailsItemID === _.get(item, 'obj.metadata.uid'));
+    const detailsItem = detailsItemID && _.find(items, item => detailsItemID === _.get(item, 'obj.metadata.uid'));
     this.setState({ detailsItem });
   }
 
@@ -292,9 +281,7 @@ export class CatalogTileViewPage extends React.Component<
       <>
         <TileViewPage
           items={items}
-          itemsSorter={(itemsToSort) =>
-            _.sortBy(itemsToSort, ({ tileName }) => tileName.toLowerCase())
-          }
+          itemsSorter={itemsToSort => _.sortBy(itemsToSort, ({ tileName }) => tileName.toLowerCase())}
           getAvailableCategories={() => catalogCategories}
           // TODO(alecmerdler): Dynamic filters for each Operator and its provided APIs
           getAvailableFilters={getAvailableFilters}
@@ -331,7 +318,7 @@ export class CatalogTileViewPage extends React.Component<
         title={tileName}
         badges={[
           <CatalogTileBadge key="type">
-            <Badge isRead>{filter.label}</Badge>
+            <Badge isRead>{filter?.label}</Badge>
           </CatalogTileBadge>,
         ]}
         {...this.getIconProps(item)}
@@ -351,19 +338,9 @@ export class CatalogTileViewPage extends React.Component<
         className="co-catalog-page__overlay co-catalog-page__overlay--right"
         header={
           <>
-            <CatalogItemHeader
-              title={detailsItem.tileName}
-              vendor={detailsItem.tileProvider ? `Provided by ${detailsItem.tileProvider}` : null}
-              {...this.getIconProps(detailsItem)}
-            />
+            <CatalogItemHeader title={detailsItem.tileName} vendor={detailsItem.tileProvider ? `Provided by ${detailsItem.tileProvider}` : null} {...this.getIconProps(detailsItem)} />
             <div className="co-catalog-page__overlay-actions">
-              <Link
-                className="pf-c-button pf-m-primary co-catalog-page__overlay-action"
-                to={detailsItem.href}
-                role="button"
-                title={detailsItem.createLabel}
-                onClick={this.closeOverlay}
-              >
+              <Link className="pf-c-button pf-m-primary co-catalog-page__overlay-action" to={detailsItem.href} role="button" title={detailsItem.createLabel} onClick={this.closeOverlay}>
                 {detailsItem.createLabel}
               </Link>
             </div>

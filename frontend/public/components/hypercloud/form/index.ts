@@ -78,6 +78,7 @@ export const pluralToKind = new Map([
   ['imagesigners', { kind: 'ImageSigner', type: 'CustomResourceDefinition' }],
   ['imagesignrequests', { kind: 'ImageSignRequest', type: 'CustomResourceDefinition' }],
   ['imagescanrequests', { kind: 'ImageScanRequest', type: 'CustomResourceDefinition' }],
+  ['imagereplicates', { kind: "ImageReplicate", type: 'CustomResourceDefinition'}],
   ['signerpolicies', { kind: 'SignerPolicy', type: 'CustomResourceDefinition' }],
   ['notebooks', { kind: 'Notebook', type: 'CustomResourceDefinition' }],
   ['experiments', { kind: 'Experiment', type: 'CustomResourceDefinition' }],

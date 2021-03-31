@@ -11,24 +11,10 @@ import { OAuthModel, UserModel } from '../models';
 import { K8sKind, referenceForModel, UserKind } from '../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
 import { RoleBindingsPage } from './RBAC';
-import {
-  Kebab,
-  KebabAction,
-  MsgBox,
-  navFactory,
-  ResourceKebab,
-  ResourceLink,
-  ResourceSummary,
-  SectionHeading,
-  resourcePathFromModel,
-} from './utils';
+import { Kebab, KebabAction, MsgBox, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, resourcePathFromModel } from './utils';
+import { useTranslation } from 'react-i18next';
 
-const tableColumnClasses = [
-  classNames('col-sm-4', 'col-xs-6'),
-  classNames('col-sm-4', 'col-xs-6'),
-  classNames('col-sm-4', 'hidden-xs'),
-  Kebab.columnClass,
-];
+const tableColumnClasses = [classNames('col-sm-4', 'col-xs-6'), classNames('col-sm-4', 'col-xs-6'), classNames('col-sm-4', 'hidden-xs'), Kebab.columnClass];
 
 const UserTableHeader = () => {
   return [
@@ -58,21 +44,13 @@ const UserTableHeader = () => {
 };
 UserTableHeader.displayName = 'UserTableHeader';
 
-const UserKebab_: React.FC<UserKebabProps & UserKebabDispatchProps> = ({
-  user,
-  startImpersonate,
-}) => {
+const UserKebab_: React.FC<UserKebabProps & UserKebabDispatchProps> = ({ user, startImpersonate }) => {
+  const { t } = useTranslation();
   const impersonateAction: KebabAction = (kind: K8sKind, obj: UserKind) => ({
-    label: `Impersonate User "${obj.metadata.name}"`,
+    label: t(`COMMON:MSG_MAIN_ACTIONBUTTON_18, {0: ${obj.metadata.name}"}`),
     callback: () => startImpersonate('User', obj.metadata.name),
   });
-  return (
-    <ResourceKebab
-      actions={[impersonateAction, ...Kebab.factory.common]}
-      kind={referenceForModel(UserModel)}
-      resource={user}
-    />
-  );
+  return <ResourceKebab actions={[impersonateAction, ...Kebab.factory.common]} kind={referenceForModel(UserModel)} resource={user} />;
 };
 
 const UserKebab = connect<{}, UserKebabDispatchProps, UserKebabProps>(null, {
@@ -112,37 +90,11 @@ const noDataDetail = (
 );
 const NoDataEmptyMsg = () => <MsgBox title="No Users Found" detail={noDataDetail} />;
 
-export const UserList: React.FC = (props) => (
-  <Table
-    {...props}
-    aria-label="Users"
-    Header={UserTableHeader}
-    Row={UserTableRow}
-    EmptyMsg={EmptyMsg}
-    NoDataEmptyMsg={NoDataEmptyMsg}
-    virtualize
-  />
-);
+export const UserList: React.FC = props => <Table {...props} aria-label="Users" Header={UserTableHeader} Row={UserTableRow} EmptyMsg={EmptyMsg} NoDataEmptyMsg={NoDataEmptyMsg} virtualize />;
 
-export const UserPage: React.FC<UserPageProps> = (props) => (
-  <ListPage
-    {...props}
-    title="Users"
-    helpText={
-      <p className="co-help-text">Users are automatically added the first time they log&nbsp;in.</p>
-    }
-    kind={referenceForModel(UserModel)}
-    ListComponent={UserList}
-    canCreate={false}
-  />
-);
+export const UserPage: React.FC<UserPageProps> = props => <ListPage {...props} title="Users" helpText={<p className="co-help-text">Users are automatically added the first time they log&nbsp;in.</p>} kind={referenceForModel(UserModel)} ListComponent={UserList} canCreate={false} />;
 
-const RoleBindingsTab: React.FC<RoleBindingsTabProps> = ({ obj }) => (
-  <RoleBindingsPage
-    showTitle={false}
-    staticFilters={[{ 'role-binding-user': obj.metadata.name }]}
-  />
-);
+const RoleBindingsTab: React.FC<RoleBindingsTabProps> = ({ obj }) => <RoleBindingsPage showTitle={false} staticFilters={[{ 'role-binding-user': obj.metadata.name }]} />;
 
 const UserDetails: React.FC<UserDetailsProps> = ({ obj }) => {
   return (
@@ -170,26 +122,12 @@ type UserKebabProps = {
   user: UserKind;
 };
 
-const UserDetailsPage_: React.FC<UserDetailsPageProps & UserKebabDispatchProps> = ({
-  startImpersonate,
-  ...props
-}) => {
+const UserDetailsPage_: React.FC<UserDetailsPageProps & UserKebabDispatchProps> = ({ startImpersonate, ...props }) => {
   const impersonateAction: KebabAction = (kind: K8sKind, obj: UserKind) => ({
     label: `Impersonate User "${obj.metadata.name}"`,
     callback: () => startImpersonate('User', obj.metadata.name),
   });
-  return (
-    <DetailsPage
-      {...props}
-      kind={referenceForModel(UserModel)}
-      menuActions={[impersonateAction, ...Kebab.factory.common]}
-      pages={[
-        navFactory.details(UserDetails),
-        navFactory.editYaml(),
-        navFactory.roles(RoleBindingsTab),
-      ]}
-    />
-  );
+  return <DetailsPage {...props} kind={referenceForModel(UserModel)} menuActions={[impersonateAction, ...Kebab.factory.common]} pages={[navFactory.details(UserDetails), navFactory.editYaml(), navFactory.roles(RoleBindingsTab)]} />;
 };
 
 export const UserDetailsPage = connect<{}, UserKebabDispatchProps, UserDetailsPageProps>(null, {

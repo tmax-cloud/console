@@ -242,6 +242,10 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_96',
     label: 'COMMON:MSG_LNB_MENU_175',
   },
+  ImageScanRequest: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_95',
+    label: 'COMMON:MSG_LNB_MENU_174',
+  },
   Namespace: {
     labelPlural: 'COMMON:MSG_LNB_MENU_3',
     label: 'COMMON:MSG_LNB_MENU_106',
@@ -280,6 +284,7 @@ export const ResourceStringKeyMap = {
   },
   ClusterRole: {
     labelPlural: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_124',
+    label: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_124',
   },
   RoleBindingClaim: {
     labelPlural: 'COMMON:MSG_LNB_MENU_101',
@@ -287,6 +292,7 @@ export const ResourceStringKeyMap = {
   },
   ClusterRoleBinding: {
     labelPlural: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_123',
+    label: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_123',
   },
   ServiceAccount: {
     labelPlural: 'COMMON:MSG_LNB_MENU_74',

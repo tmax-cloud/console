@@ -16,6 +16,7 @@ import { ButtonBar, Kebab, Firehose, ListDropdown, MsgBox, NsDropdown, ResourceK
 import { isSystemRole } from './index';
 import { connectToFlags, flagPending } from '../../reducers/features';
 import { useTranslation } from 'react-i18next';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
 // Split each binding into one row per subject
@@ -48,6 +49,8 @@ export const flatten = resources =>
 const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
   const subject = subjects[subjectIndex];
 
+  const { t } = useTranslation();
+
   const actions = [
     (kind, obj) => ({
       label: `Duplicate ${kind.label}`,
@@ -57,7 +60,7 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
       accessReview: _.get(obj, 'metadata.namespace') ? null : { group: kind.apiGroup, resource: kind.plural, verb: 'create' },
     }),
     (kind, obj) => ({
-      label: `Edit ${kind.label} Subject`,
+      label: t('COMMON:MSG_MAIN_ACTIONBUTTON_39', { 0: ResourceLabel(kind, t) }),
       href: `${resourceObjPath(obj, kind.kind)}/edit?subjectIndex=${subjectIndex}`,
       accessReview: {
         group: kind.apiGroup,
@@ -70,12 +73,12 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
     subjects.length === 1
       ? Kebab.factory.Delete
       : (kind, binding) => ({
-          label: `Delete ${kind.label} Subject`,
+          label: t('COMMON:MSG_MAIN_ACTIONBUTTON_40', { 0: ResourceLabel(kind, t) }),
           callback: () =>
             confirmModal({
-              title: `Delete ${kind.label} Subject`,
-              message: `Are you sure you want to delete subject ${subject.name} of type ${subject.kind}?`,
-              btnText: 'Delete Subject',
+              title: t('COMMON:MSG_MAIN_ACTIONBUTTON_40', { 0: ResourceLabel(kind, t) }),
+              message: t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_2', { 0: subject.name, 1: ResourceLabel(modelFor(subject.kind), t) }),
+              btnText: t('COMMON:MSG_MAIN_ACTIONBUTTON_41'),
               executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
             }),
           accessReview: {
@@ -90,7 +93,8 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
     actions.unshift(() => ({
-      label: `Impersonate ${subject.kind} "${subject.name}"`,
+      label: t('COMMON:MSG_MAIN_ACTIONBUTTON_42', { 0: subject.kind, 1: subject.name }),
+      // label: `Impersonate ${subject.kind} "${subject.name}"`,
       callback: () => startImpersonate(subject.kind, subject.name),
     }));
   }

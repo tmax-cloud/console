@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 const KubeConfigify = (t, kind, sa) => {
   return {
-    label: 'Download kubeconfig file',
+    label: t('COMMON:MSG_MAIN_ACTIONBUTTON_36'),
     weight: 200,
     callback: () => {
       const name = sa.metadata.name;

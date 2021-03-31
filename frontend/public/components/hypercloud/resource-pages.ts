@@ -56,6 +56,7 @@ import {
   ImageSignRequestModel,
   ImageScanRequestModel,
   SignerPolicyModel,
+  ImageReplicateModel,
   IntegrationConfigModel,
   IntegrationJobModel,
   ClusterClaimModel,
@@ -139,7 +140,8 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(PyTorchJobModel), () => import('./training-job' /* webpackChunkName: "training-job" */).then(m => m.TrainingJobsDetailsPage))
   .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "inference-service" */).then(m => m.InferenceServicesDetailsPage))
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "workflow" */).then(m => m.WorkflowsDetailsPage))
-  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesDetailsPage));
+  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesDetailsPage))
+  .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesDetailsPage));
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -205,4 +207,5 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(TrainingJobModel), () => import('./training-job' /* webpackChunkName: "training-job" */).then(m => m.TrainingJobsPage))
   .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "inference-service" */).then(m => m.InferenceServicesPage))
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "workflow" */).then(m => m.WorkflowsPage))
-  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesPage));
+  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesPage))
+  .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesPage));

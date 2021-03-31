@@ -20,10 +20,13 @@ const { common } = Kebab.factory;
 
 const crdInstancesPath = (crd: CustomResourceDefinitionKind) => (_.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${referenceForCRD(crd)}` : `/k8s/cluster/${referenceForCRD(crd)}`);
 
-const instances = (kind: K8sKind, obj: CustomResourceDefinitionKind) => ({
-  label: 'View Instances',
-  href: crdInstancesPath(obj),
-});
+const instances = (kind: K8sKind, obj: CustomResourceDefinitionKind) => {
+  const { t } = useTranslation();
+  return {
+    label: t('COMMON:MSG_MAIN_ACTIONBUTTON_38'),
+    href: crdInstancesPath(obj),
+  };
+};
 
 const menuActions: KebabAction[] = [instances, ...Kebab.getExtensionsActionsForKind(CustomResourceDefinitionModel), ...common];
 

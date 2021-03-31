@@ -8,7 +8,7 @@ import { getId, getUserGroup } from '../../hypercloud/auth';
 import { kindToSchemaPath } from '../hypercloud/k8s/kind-to-schema-path.ts'
 
 /** @type {(model: K8sKind) => string} */
-const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
+export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
 => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
@@ -140,8 +140,11 @@ export const k8sUpdateApproval = (kind, resource, approval, data, method = 'PUT'
   }
 }
 
-export const k8sUpdateClaim = (kind, clusterClaim, admit, reason) => {
-  const url = resourceClusterURL(kind) + `&clusterClaim=${clusterClaim}&admit=${admit}&reason=${reason}`;
+export const k8sUpdateClaim = (kind, clusterClaim, admit, reason, userName) => {
+
+  const resourceClusterURL = `api/multi-hypercloud/clusterclaim/${clusterClaim}?userId=${getId()}${getUserGroup()}`;
+
+  const url = resourceClusterURL + `&admit=${admit}&reason=${reason}&userName=${userName}`;
 
   return coFetchJSON.put(url);
 }

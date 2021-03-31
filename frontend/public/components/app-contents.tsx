@@ -153,6 +153,9 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <Route path="/search/all-namespaces" exact component={NamespaceFromURL(SearchPage)} />
           <Route path="/search/ns/:ns" exact component={NamespaceFromURL(SearchPage)} />
           <Route path="/search" exact component={NamespaceRedirect} />
+          <LazyRoute path="/add/all-namespaces" exact loader={() => import('../../packages/dev-console/src/components/AddPage' /* webpackChunkName: "import-yaml" */).then(m => NamespaceFromURL(m.AddPage))} />
+          <LazyRoute path="/add/ns/:ns" exact loader={() => import('../../packages/dev-console/src/components/AddPage' /* webpackChunkName: "import-yaml" */).then(m => NamespaceFromURL(m.AddPage))} />
+          <Route path="/add" exact component={NamespaceRedirect} />
           <Route path="/welcome" exact component={WelcomePage} />
 
           <LazyRoute path="/kiali/all-namespaces" exact loader={() => import('./hypercloud/kiali' /* webpackChunkName: "kiali" */).then(m => NamespaceFromURL(m.KialiPage))} />

@@ -6,19 +6,23 @@ import { makeNodeSchedulable } from '../../k8s/requests/nodes';
 import { createConfigureUnschedulableModal } from './modals';
 import { NodeModel } from '@console/internal/models';
 import { deleteModal } from '@console/internal/components/modals/delete-modal';
+import { useTranslation } from 'react-i18next';
 
-export const MarkAsUnschedulable: KebabAction = (kind: K8sKind, obj: NodeKind) => ({
-  label: 'Mark as Unschedulable',
-  hidden: isNodeUnschedulable(obj),
-  callback: () => createConfigureUnschedulableModal({ resource: obj }),
-  accessReview: {
-    group: kind.apiGroup,
-    resource: kind.plural,
-    name: obj.metadata.name,
-    namespace: obj.metadata.namespace,
-    verb: 'patch',
-  },
-});
+export const MarkAsUnschedulable: KebabAction = (kind: K8sKind, obj: NodeKind) => {
+  const { t } = useTranslation();
+  return {
+    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_49'),
+    hidden: isNodeUnschedulable(obj),
+    callback: () => createConfigureUnschedulableModal({ resource: obj }),
+    accessReview: {
+      group: kind.apiGroup,
+      resource: kind.plural,
+      name: obj.metadata.name,
+      namespace: obj.metadata.namespace,
+      verb: 'patch',
+    },
+  };
+};
 
 export const MarkAsSchedulable: KebabAction = (
   kind: K8sKind,
@@ -39,18 +43,11 @@ export const MarkAsSchedulable: KebabAction = (
 });
 
 export const Delete: KebabAction = (kindObj: K8sKind, node: NodeKind) => {
-  const message = (
-    <p>
-      This action cannot be undone. Deleting a node will instruct Kubernetes that the node is down
-      or unrecoverable and delete all pods scheduled to that node. If the node is still running but
-      unresponsive and the node is deleted, stateful workloads and persistent volumes may suffer
-      corruption or data loss. Only delete a node that you have confirmed is completely stopped and
-      cannot be restored.
-    </p>
-  );
+  const { t } = useTranslation();
+  const message = <p>{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_4')}</p>;
 
   return {
-    label: 'Delete Node',
+    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_51'),
     callback: () =>
       deleteModal({
         kind: kindObj,
@@ -62,11 +59,4 @@ export const Delete: KebabAction = (kindObj: K8sKind, node: NodeKind) => {
 };
 
 const { ModifyLabels, ModifyAnnotations, Edit } = Kebab.factory;
-export const menuActions = [
-  MarkAsSchedulable,
-  MarkAsUnschedulable,
-  ModifyLabels,
-  ModifyAnnotations,
-  Edit,
-  Delete,
-];
+export const menuActions = [MarkAsSchedulable, MarkAsUnschedulable, ModifyLabels, ModifyAnnotations, Edit, Delete];
