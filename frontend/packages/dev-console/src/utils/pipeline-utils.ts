@@ -50,6 +50,8 @@ export interface PipelineVisualizationTaskItem {
   params?: object;
   runAfter?: string[];
   taskRef: PipelineTaskRef;
+  status?: any;
+  isTemplate?: boolean;
 }
 
 export const TaskStatusClassNameMap = {

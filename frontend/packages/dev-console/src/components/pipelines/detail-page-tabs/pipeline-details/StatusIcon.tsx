@@ -56,3 +56,20 @@ export const ColoredStatusIcon: React.FC<StatusIconProps> = ({ status, ...others
     </div>
   );
 };
+
+export const ColoredStatusIconWorkFlow: React.FC<StatusIconProps> = ({
+  status,
+  ...others
+}) => {
+  return (
+    <div
+      style={{
+        color: status
+          ? getRunStatusColor(status).pftoken.value
+          : getRunStatusColor(runStatus.Cancelled).pftoken.value
+      }}
+    >
+      <StatusIcon status={status} {...others} />
+    </div>
+  );
+};

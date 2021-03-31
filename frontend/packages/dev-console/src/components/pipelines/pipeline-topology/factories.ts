@@ -13,6 +13,7 @@ import SpacerNode from './SpacerNode';
 import TaskNode from './TaskNode';
 import TaskEdge from './TaskEdge';
 import TaskListNode from './TaskListNode';
+import WorkflowNode from './WorkflowNode';
 import { getLayoutData } from './utils';
 
 export const componentFactory: ComponentFactory = (kind: ModelKind, type: string) => {
@@ -25,6 +26,8 @@ export const componentFactory: ComponentFactory = (kind: ModelKind, type: string
       switch (type) {
         case NodeType.TASK_NODE:
           return TaskNode;
+          case NodeType.WORKFLOW_NODE:
+            return WorkflowNode;
         case NodeType.SPACER_NODE:
           return SpacerNode;
         case NodeType.TASK_LIST_NODE:

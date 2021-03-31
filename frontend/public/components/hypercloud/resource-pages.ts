@@ -60,7 +60,15 @@ import {
   IntegrationConfigModel,
   IntegrationJobModel,
   ClusterClaimModel,
-  RepositoryModel
+  RepositoryModel,
+  NotebookModel,
+  ExperimentModel,
+  TrainingJobModel,
+  TFJobModel,
+  PyTorchJobModel,
+  InferenceServiceModel,
+  WorkflowModel,
+  WorkflowTemplateModel
 } from '../../models';
 
 type ResourceMapKey = GroupVersionKind | string;
@@ -126,8 +134,14 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(ImageSignRequestModel), () => import('./image-sign-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageSignRequestsDetailsPage))
   .set(referenceForModel(SignerPolicyModel), () => import('./signer-policy' /* webpackChunkName: "image-sign-request" */).then(m => m.SignerPoliciesDetailsPage))
   .set(referenceForModel(ImageScanRequestModel), () => import('./image-scan-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageScanRequestsDetailsPage))
+  .set(referenceForModel(NotebookModel), () => import('./notebook' /* webpackChunkName: "notebook" */).then(m => m.NotebooksDetailsPage))
+  .set(referenceForModel(ExperimentModel), () => import('./experiment' /* webpackChunkName: "experiment" */).then(m => m.ExperimentsDetailsPage))
+  .set(referenceForModel(TFJobModel), () => import('./training-job' /* webpackChunkName: "training-job" */).then(m => m.TrainingJobsDetailsPage))
+  .set(referenceForModel(PyTorchJobModel), () => import('./training-job' /* webpackChunkName: "training-job" */).then(m => m.TrainingJobsDetailsPage))
+  .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "inference-service" */).then(m => m.InferenceServicesDetailsPage))
+  .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "workflow" */).then(m => m.WorkflowsDetailsPage))
+  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesDetailsPage))
   .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesDetailsPage));
-
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -188,4 +202,10 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(ImageSignRequestModel), () => import('./image-sign-request' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageSignRequestsPage))
   .set(referenceForModel(SignerPolicyModel), () => import('./signer-policy' /* webpackChunkName: "image-sign-request" */).then(m => m.SignerPoliciesPage))
   .set(referenceForModel(ImageScanRequestModel), () => import('./image-scan-request' /* webpackChunkName: "image-scan-request" */).then(m => m.ImageScanRequestsPage))
+  .set(referenceForModel(NotebookModel), () => import('./notebook' /* webpackChunkName: "notebook" */).then(m => m.NotebooksPage))
+  .set(referenceForModel(ExperimentModel), () => import('./experiment' /* webpackChunkName: "experiment" */).then(m => m.ExperimentsPage))
+  .set(referenceForModel(TrainingJobModel), () => import('./training-job' /* webpackChunkName: "training-job" */).then(m => m.TrainingJobsPage))
+  .set(referenceForModel(InferenceServiceModel), () => import('./inference-service' /* webpackChunkName: "inference-service" */).then(m => m.InferenceServicesPage))
+  .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "workflow" */).then(m => m.WorkflowsPage))
+  .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesPage))
   .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesPage));
