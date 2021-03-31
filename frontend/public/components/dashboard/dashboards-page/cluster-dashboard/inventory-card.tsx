@@ -7,16 +7,14 @@ import { ResourceInventoryItem, StatusGroupMapper } from '@console/shared/src/co
 import { DashboardItemProps, withDashboardResources } from '../../with-dashboard-resources';
 import { K8sKind, referenceForModel, K8sResourceCommon } from '../../../../module/k8s';
 import { AsyncComponent } from '../../../utils';
-import { useExtensions, DashboardsOverviewInventoryItem, DashboardsOverviewInventoryItemReplacement, isDashboardsOverviewInventoryItem, isDashboardsOverviewInventoryItemReplacement, LazyLoader, ExtensionWithMetadata } from '@console/plugin-sdk';
+import { useExtensions, DashboardsOverviewInventoryItem, isDashboardsOverviewInventoryItem, LazyLoader } from '@console/plugin-sdk';
 import { useK8sWatchResource, useK8sWatchResources, WatchK8sResources } from '../../../utils/k8s-watch-hook';
 import { useTranslation } from 'react-i18next';
 // import { find } from 'lodash';
 import { NamespaceClaimModel, ResourceQuotaClaimModel } from '../../../../models/hypercloud';
 import { NodeModel, PersistentVolumeClaimModel, PodModel, ServiceModel } from '../../../../models';
-import { itemsAreVisible } from 'integration-tests/views/overview.view';
-import * as classNames from 'classnames';
 
-const mergeItems = (items: DashboardsOverviewInventoryItem[], replacements: DashboardsOverviewInventoryItemReplacement[]) => items.map(item => replacements.find(r => r.properties.model === item.properties.model) || item);
+import * as classNames from 'classnames';
 
 const getFirehoseResource = (model: K8sKind) => ({
   isList: true,
