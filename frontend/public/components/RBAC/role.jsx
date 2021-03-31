@@ -17,20 +17,6 @@ export const isSystemRole = role => _.startsWith(role.metadata.name, 'system:');
 
 export const roleKind = role => (role.metadata.namespace ? 'Role' : 'ClusterRole');
 
-const menuActions = [
-  // This page is temporarily disabled until we update the safe resources list.
-  // (kind, role) => ({
-  //   label: 'Add Rule',
-  //   href: addHref(role.metadata.name, role.metadata.namespace),
-  // }),
-  (kind, role) => ({
-    label: 'Add Role Binding',
-    href: `/k8s/cluster/rolebindings/~new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
-  }),
-  Kebab.factory.Edit,
-  Kebab.factory.Delete,
-];
-
 const roleColumnClasses = [classNames('col-xs-6'), classNames('col-xs-6'), Kebab.columnClass];
 
 const RolesTableHeader = t => {
@@ -52,7 +38,21 @@ const RolesTableHeader = t => {
 };
 RolesTableHeader.displayName = 'RolesTableHeader';
 
-const RolesTableRow = ({ obj: role, index, key, style }) => {
+const RolesTableRow = (t, { obj: role, index, key, style }) => {
+  const menuActions = [
+    // This page is temporarily disabled until we update the safe resources list.
+    // (kind, role) => ({
+    //   label: 'Add Rule',
+    //   href: addHref(role.metadata.name, role.metadata.namespace),
+    // }),
+    (kind, role) => ({
+      label: roleKind(role) === 'Role' ? t('COMMON:MSG_COMMON_ACTIONBUTTON_52') : t('COMMON:MSG_COMMON_ACTIONBUTTON_52'),
+      href: `/k8s/cluster/rolebindings/~new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
+    }),
+    Kebab.factory.Edit,
+    Kebab.factory.Delete,
+  ];
+  console.log(roleKind(role));
   return (
     <TableRow id={role.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={roleColumnClasses[0]}>
@@ -210,7 +210,23 @@ export const BindingsForRolePage = props => {
   );
 };
 
-export const RolesDetailsPage = props => <DetailsPage {...props} pages={[navFactory.details(withTranslation()(Details)), navFactory.editYaml(), { href: 'bindings', name: 'Role Bindings', component: BindingsForRolePage }]} menuActions={menuActions} />;
+export const RolesDetailsPage = props => {
+  const { t } = useTranslation();
+  const menuActions = [
+    // This page is temporarily disabled until we update the safe resources list.
+    // (kind, role) => ({
+    //   label: 'Add Rule',
+    //   href: addHref(role.metadata.name, role.metadata.namespace),
+    // }),
+    (kind, role) => ({
+      label: t('COMMON:MSG_COMMON_ACTIONBUTTON_52'),
+      href: `/k8s/cluster/rolebindings/~new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
+    }),
+    Kebab.factory.Edit,
+    Kebab.factory.Delete,
+  ];
+  return <DetailsPage {...props} pages={[navFactory.details(withTranslation()(Details)), navFactory.editYaml(), { href: 'bindings', name: t('COMMON:MSG_DETAILS_TAB_14'), component: BindingsForRolePage }]} menuActions={menuActions} />;
+};
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
 
@@ -218,7 +234,7 @@ const EmptyMsg = () => <MsgBox title="No Roles Found" detail="Roles grant access
 
 const RolesList = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Roles" EmptyMsg={EmptyMsg} Header={RolesTableHeader.bind(null, t)} Row={RolesTableRow} virtualize />;
+  return <Table {...props} aria-label="Roles" EmptyMsg={EmptyMsg} Header={RolesTableHeader.bind(null, t)} Row={RolesTableRow.bind(null, t)} virtualize />;
 };
 
 export const roleType = role => {
