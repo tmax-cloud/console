@@ -79,4 +79,12 @@ export const pluralToKind = new Map([
   ['imagesignrequests', { kind: 'ImageSignRequest', type: 'CustomResourceDefinition' }],
   ['imagescanrequests', { kind: 'ImageScanRequest', type: 'CustomResourceDefinition' }],
   ['signerpolicies', { kind: 'SignerPolicy', type: 'CustomResourceDefinition' }],
+  ['notebooks', { kind: 'Notebook', type: 'CustomResourceDefinition' }],
+  ['experiments', { kind: 'Experiment', type: 'CustomResourceDefinition' }],
+  ['trainingjobs', { kind: 'TrainingJob', type: 'CustomResourceDefinition' }],
+  ['tfjobs', { kind: 'TFJob', type: 'CustomResourceDefinition' }],
+  ['pytorchjobs', { kind: 'PyTorchJob', type: 'CustomResourceDefinition' }],
+  ['inferenceservices', { kind: 'InferenceService', type: 'CustomResourceDefinition' }],
+  ['workflowtemplates', { kind: 'WorkflowTemplate', type: 'CustomResourceDefinition' }],
+  ['workflows', { kind: 'Workflow', type: 'CustomResourceDefinition' }],
 ]);

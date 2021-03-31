@@ -1,0 +1,218 @@
+import * as React from 'react';
+import * as classNames from 'classnames';
+import { sortable } from '@patternfly/react-table';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
+
+import { K8sResourceKind } from '../../module/k8s';
+import { DetailsPage, MultiListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { TrainingJobModel } from '../../models';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import * as _ from 'lodash';
+
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainingJobModel), ...Kebab.factory.common];
+
+export const tjKind = tj => {
+  return tj.kind === 'PyTorchJob' ? 'pytorchjob' : 'tfjob';
+};
+
+const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
+
+const tjPhase = tj => {
+  let len = tj.status.conditions.length;
+  for (let i = len - 1; i >= 0; i--) {
+    if (tj.status.conditions[i].status) {
+      return tj.status.conditions[i].type;
+    }
+  }
+};
+
+const TJStatus = ({ tj }) => {
+  const phase = tjPhase(tj);
+  if (!phase) {
+    return '-';
+  }
+
+  switch (phase) {
+    case 'Running':
+      return (
+        <span className="text-muted">
+          <i className="fa fa-hourglass-half" aria-hidden="true"></i> Running
+        </span>
+      );
+    case 'Restarting':
+      return (
+        <span className="text-muted">
+          <i className="fa fa-hourglass-half" aria-hidden="true"></i> Restarting
+        </span>
+      );
+    case 'Created':
+      return (
+        <span className="pvc-bound">
+          <i className="fa fa-check" aria-hidden="true"></i> Created
+        </span>
+      );
+    case 'Succeeded':
+      return (
+        <span className="pvc-bound">
+          <i className="fa fa-check" aria-hidden="true"></i> Succeeded
+        </span>
+      );
+    case 'Failed':
+      return (
+        <span className="pvc-lost">
+          <i className="fa fa-minus-circle" aria-hidden="true"></i> Failed
+        </span>
+      );
+    default:
+      return phase;
+  }
+};
+
+const TJComposition = ({ tj }) => {
+  const specs = Object.entries(tj.spec);
+  const keys = Object.keys(specs[0][1]);
+  let str = '';
+  for (let i = 0; i < keys.length; i++) {
+    str += `${keys[i]} ${specs[0][1][keys[i]].replicas}`;
+    if (i !== keys.length - 1) {
+      str += ', ';
+    }
+  }
+
+  return <span className="pvc-lost">{str}</span>;
+};
+
+const TrainingJobTableHeader = (t?: TFunction) => {
+  return [
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      sortField: 'metadata.name',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[0] },
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      sortField: 'metadata.namespace',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[1] },
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
+      sortFunc: 'tjPhase',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[2] },
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      sortFunc: 'tjComposition',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[3] },
+    },
+    {
+      title: '',
+      props: { className: tableColumnClasses[4] },
+    },
+  ];
+};
+TrainingJobTableHeader.displayName = 'TrainingJobTableHeader';
+
+const TrainingJobTableRow: RowFunction<K8sResourceKind> = ({ obj: tj, index, key, style }) => {
+  return (
+    <TableRow id={tj.metadata.uid} index={index} trKey={key} style={style}>
+      <TableData className={tableColumnClasses[0]}>
+        <ResourceLink kind={tj.kind} name={tj.metadata.name} namespace={tj.metadata.namespace} title={tj.metadata.uid} />
+      </TableData>
+      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
+        <ResourceLink kind="Namespace" name={tj.metadata.namespace} title={tj.metadata.namespace} />
+      </TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <TJStatus tj={tj} />
+      </TableData>
+      <TableData className={tableColumnClasses[3]}>
+        <TJComposition tj={tj} />
+      </TableData>
+      <TableData className={tableColumnClasses[4]}>
+        <ResourceKebab actions={menuActions} kind={tj.kind} resource={tj} />
+      </TableData>
+    </TableRow>
+  );
+};
+
+const TrainingJobDetails: React.FC<TrainingJobDetailsProps> = ({ obj: tj }) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(tj, t) })} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={tj} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+const { details, editYaml } = navFactory;
+export const TrainingJobs: React.FC = props => {
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="TrainingJobs" Header={TrainingJobTableHeader.bind(null, t)} Row={TrainingJobTableRow} virtualize />;
+}
+
+export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
+  const { t } = useTranslation();
+
+  const createItems = {
+    tfjob: t('TF Job'),
+    pytorchjob: t('PyTorch Job'),
+  };
+
+  const createProps = {
+    items: createItems,
+    createLink: type => `/k8s/ns/${props.namespace || 'default'}/${type}s/~new`,
+  };
+
+  return (<MultiListPage
+    showTitle
+    title='Training Jobs'
+    canCreate={true}
+    ListComponent={TrainingJobs}
+    createProps={createProps}
+    flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
+    resources={[
+      { kind: 'TFJob', namespaced: true, optional: true },
+      { kind: 'PyTorchJob', namespaced: true, optional: true },
+    ]}
+    rowFilters={[
+      {
+        type: 'trainingjob-kind',
+        selected: ['tfjob', 'pytorchjob'],
+        reducer: tjKind,
+        items: [
+          { id: 'tfjob', title: 'TF Job' },
+          { id: 'pytorchjob', title: 'Pytorch Job' },
+        ],
+      },
+    ]} {...props} />
+  );
+}
+
+export const TrainingJobsDetailsPage: React.FC<TrainingJobsDetailsPageProps> = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(TrainingJobDetails)), editYaml()]} />;
+
+type TrainingJobDetailsProps = {
+  obj: K8sResourceKind;
+};
+
+type TrainingJobsPageProps = {
+  showTitle?: boolean;
+  namespace?: string;
+  selector?: any;
+};
+
+type TrainingJobsDetailsPageProps = {
+  match: any;
+  kind: string;
+};
