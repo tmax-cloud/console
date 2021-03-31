@@ -22,7 +22,7 @@ const NamespacedPage: React.FC<NamespacedPageProps> = ({
   children,
   disabled,
   onNamespaceChange,
-  hideApplications = false,
+  hideApplications = true,
   variant = NamespacedPageVariants.default,
   toolbar,
 }) => (
