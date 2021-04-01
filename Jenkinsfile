@@ -1,4 +1,8 @@
 pipeline {
+  triggers {
+    // trigger at 9:00 every Thursday 
+    cron('0 9 * * 4') 
+  }
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','IMAGE','HOTFIX'], description: 'Select the mode you want to act')
     choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
@@ -77,9 +81,23 @@ pipeline {
     stage('Git') {
       steps {
         git branch: "${BRANCH}", credentialsId: 'jinsoo-youn', url: 'https://github.com/tmax-cloud/hypercloud-console5.0.git'
-        sh '''
+        sh """
         git branch
-        '''
+        git pull origin HEAD:${BRANCH}
+        """
+        sh """
+        
+        """
+        withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
+          sh """
+            git config --global user.name ${username}
+            git config --global user.email jinsoo_youn@tmax.co.kr
+            git config --global credential.username ${username}
+            git config --global credential.helper "!echo password=${password}; echo"          
+          """        
+          sh "git tag test-jenkins-jinsoo"
+          sh "git push origin HEAD:${BRANCH} --tags"
+        }
       }
     }
 
@@ -169,7 +187,7 @@ pipeline {
       }
       steps {
         emailext (
-          to: 'cqa1@tmax.co.kr, ck2_lab@tmax.co.kr, ck3_lab@tmax.co.kr, ck2_1@tmax.co.kr, cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
+          to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
           body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
