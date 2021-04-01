@@ -1,6 +1,6 @@
 pipeline {
   parameters {
-    choice(name: 'BUILD_MODE', choices:['PATCH','IMAGE','HOTFIX'], description: 'Select the mode you want to act')
+    choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
     choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
     
     // //VESION 
@@ -99,7 +99,7 @@ pipeline {
           if (BUILD_MODE == 'PATCH') {
             PATCH_VER++
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-          } if else (BUILD_MODE == 'HOTFIX') {
+          } else if (BUILD_MODE == 'HOTFIX') {
             HOTFIX_VER++
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
@@ -165,11 +165,13 @@ pipeline {
       steps {
         script {
           if (BUILD_MODE == 'PATCH') {
-            TEMP = (("${params.PATCH_VER}" as int) -1).toString()
-            PRE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${TEMP}.${params.HOTFIX_VER}"
+            // TEMP = (("${params.PATCH_VER}" as int) -1).toString()
+            PATCH_VER--
+            PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
-            TEMP = (("${params.HOTFIX_VER}" as int) -1).toString()
-            PRE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${TEMP}"
+            // TEMP = (("${params.HOTFIX_VER}" as int) -1).toString()
+            HOTFIX_VER--
+            PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
         withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
