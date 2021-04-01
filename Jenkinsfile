@@ -1,8 +1,4 @@
 pipeline {
-  triggers {
-    // trigger at 9:00 every Thursday 
-    cron('0 9 * * 4') 
-  }
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','IMAGE','HOTFIX'], description: 'Select the mode you want to act')
     choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
@@ -20,6 +16,14 @@ pipeline {
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
     string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
     string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')    
+  }
+  triggers {
+    // ref https://plugins.jenkins.io/parameterized-scheduler/
+    // trigger at 9:00 every Thursday 
+    parameterizedCron('''
+    0 9 * * 4 %BUILD_MODE=PATCH;DEPLOY=ck2-1;PATCH_VER=Regular;HOTFIX_VER=0
+    ''')
+    
   }
   environment { 
     BRANCH = "hc-dev-v5.0"
@@ -85,9 +89,13 @@ pipeline {
         git branch
         git pull origin HEAD:${BRANCH}
         """
-        sh """
-        
-        """
+         script {
+          if ((BUILD_MODE == 'PATCH') && (params.PATCH_VER == 'Regular')) {
+            PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
+            PATCH_VER++
+            VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${PATCH_VER}.${params.HOTFIX_VER}"
+          }
+        }
         withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
           sh """
             git config --global user.name ${username}
@@ -95,8 +103,15 @@ pipeline {
             git config --global credential.username ${username}
             git config --global credential.helper "!echo password=${password}; echo"          
           """        
-          sh "git tag test-jenkins-jinsoo"
-          sh "git push origin HEAD:${BRANCH} --tags"
+          sh """
+          git tag ${VER}
+          git push origin HEAD:${BRANCH} --tags
+          echo "Console Version History" > ./CHANGELOG/tag.txt
+          git tag --list "5.1.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
+          git add -A
+          git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
+          git push origin HEAD:${BRANCH}
+          """
         }
       }
     }
@@ -157,9 +172,9 @@ pipeline {
             git config --global credential.helper "!echo password=${password}; echo"          
           """
         //   sh "git tag ${PRE_VER}"
-          sh "git pull origin HEAD:${BRANCH}"
-          sh "git tag ${VER}"
-          sh "git push origin HEAD:${BRANCH} --tags"    
+          // sh "git pull origin HEAD:${BRANCH}"
+          // sh "git tag ${VER}"
+          // sh "git push origin HEAD:${BRANCH} --tags"    
           // Creat CHANGELOG-${VER}.md
           sh """
             echo '# hypercloud-console patch note' > ./CHANGELOG/CHANGELOG-${VER}.md
@@ -172,7 +187,7 @@ pipeline {
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh "git add -A"
-          sh "git commit -m 'build ${PRODUCT}_${VER}' "
+          sh "git commit -m '[FEAT] BUILD ${PRODUCT}_${VER}' "
           sh "git push origin HEAD:${BRANCH}"        
         }
       }
@@ -203,7 +218,7 @@ pipeline {
     success {
       sh "echo SUCCESSFUL"
       emailext (
-        to: "yjs890403@gmail.com",
+        to: "jinsoo_youn@tmax.co.kr",
         subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
         body:  """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
             <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
@@ -213,7 +228,7 @@ pipeline {
     failure {
       sh "echo FAILED"
       emailext (
-        to: "yjs890403@gmail.com",
+        to: "jinsoo_youn@tmax.co.kr",
         subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
         body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
           <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
