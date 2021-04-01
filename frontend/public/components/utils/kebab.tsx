@@ -326,6 +326,17 @@ const kebabFactory: KebabFactory = {
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
+  Connect: (kind, obj) => {
+    const { t } = useTranslation();
+    return {
+      label: t('Connect'),
+      callback: () => {
+        let url = `/api/kubeflow/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+        window.open(url);
+      },
+      accessReview: asAccessReview(kind, obj, 'patch'),
+    };
+  }
 };
 
 // The common menu actions that most resource share

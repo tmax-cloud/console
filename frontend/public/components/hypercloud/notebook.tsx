@@ -10,7 +10,7 @@ import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab
 import { NotebookModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common];
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
 const kind = NotebookModel.kind;
 
