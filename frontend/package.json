@@ -76,7 +76,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "@hookform/devtools": "^2.2.1",
     "@patternfly/patternfly": "2.71.5",
     "@patternfly/react-catalog-view-extension": "1.4.58",
     "@patternfly/react-charts": "5.3.19",
@@ -151,6 +150,7 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.7",
+    "@hookform/devtools": "^2.2.1",
     "@types/enzyme": "3.10.x",
     "@types/glob": "7.x",
     "@types/immutable": "3.x",
