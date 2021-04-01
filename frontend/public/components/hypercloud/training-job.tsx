@@ -122,7 +122,7 @@ const TrainingJobTableRow: RowFunction<K8sResourceKind> = ({ obj: tj, index, key
   return (
     <TableRow id={tj.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={tj.kind} name={tj.metadata.name} namespace={tj.metadata.namespace} title={tj.metadata.uid} />
+        <ResourceLink kind={tjKind(tj)} name={tj.metadata.name} namespace={tj.metadata.namespace} title={tj.metadata.uid} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={tj.metadata.namespace} title={tj.metadata.namespace} />
@@ -134,7 +134,7 @@ const TrainingJobTableRow: RowFunction<K8sResourceKind> = ({ obj: tj, index, key
         <TJComposition tj={tj} />
       </TableData>
       <TableData className={tableColumnClasses[4]}>
-        <ResourceKebab actions={menuActions} kind={tj.kind} resource={tj} />
+        <ResourceKebab actions={menuActions} kind={tjKind(tj)} resource={tj} />
       </TableData>
     </TableRow>
   );
@@ -180,6 +180,8 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
     title='Training Jobs'
     canCreate={true}
     ListComponent={TrainingJobs}
+    namespace={props.namespace}
+    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(TrainingJobModel, t) })}
     createProps={createProps}
     flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
     resources={[
@@ -188,8 +190,8 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
     ]}
     rowFilters={[
       {
+        filterGroupName: 'Training Job',
         type: 'trainingjob-kind',
-        selected: ['tfjob', 'pytorchjob'],
         reducer: tjKind,
         items: [
           { id: 'tfjob', title: 'TF Job' },

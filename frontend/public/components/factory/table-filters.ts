@@ -83,6 +83,8 @@ export const tableFilters: TableFilterMap = {
 
   'silence-state': (filter, silence) => filter.selected.has(silenceState(silence)),
 
+  'trainingjob-kind': (filter, tj) => filter.selected.has(tj.kind === 'PyTorchJob' ? 'pytorchjob' : 'tfjob') || filter.selected.size === 0,
+
   // Filter role by role kind
   'role-kind': (filter, role) => filter.selected.has(roleType(role)) || filter.selected.size === 0,
 
