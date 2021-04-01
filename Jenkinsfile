@@ -3,11 +3,11 @@ pipeline {
     choice(name: 'BUILD_MODE', choices:['PATCH','IMAGE','HOTFIX'], description: 'Select the mode you want to act')
     choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
     
-    //VESION 
-    string(name: 'MAJOR_VER', defaultValue: '5', description: 'major version')
-    string(name: 'MINOR_VER', defaultValue: '1', description: 'minor version')
-    string(name: 'PATCH_VER', defaultValue: '0', description: 'patch version')
-    string(name: 'HOTFIX_VER', defaultValue: '0', description: 'hotfix version')
+    // //VESION 
+    // string(name: 'MAJOR_VER', defaultValue: '5', description: 'major version')
+    // string(name: 'MINOR_VER', defaultValue: '1', description: 'minor version')
+    // string(name: 'PATCH_VER', defaultValue: '0', description: 'patch version')
+    // string(name: 'HOTFIX_VER', defaultValue: '0', description: 'hotfix version')
     
     // string(name: 'OPERATOR_VER', defaultValue: '5.1.0.1', description: 'Console Operator Version')
     // string(name: 'CONSOLE_VER', defaultValue: '0.0.0.2', description: 'Console version')
@@ -21,7 +21,7 @@ pipeline {
     // ref https://plugins.jenkins.io/parameterized-scheduler/
     // trigger at 9:00 every Thursday 
     parameterizedCron('''
-    0 9 * * 4 %BUILD_MODE=PATCH;DEPLOY=ck2-1;PATCH_VER=Regular;HOTFIX_VER=0
+    0 9 * * 4 %BUILD_MODE=PATCH
     ''')
     
   }
@@ -32,10 +32,14 @@ pipeline {
 
     DOCKER_REGISTRY="tmaxcloudck"
     PRODUCT = "hypercloud-console"
-    VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}"
+    MAJOR_VER="5"
+    MINOR_VER="1"
+    PATCH_VER="0"
+    HOTFIX_VER="0"
+    VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
 
-    OPERATOR_VER = "5.1.0.1"
-    CONSOLE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}"
+    // OPERATOR_VER = "5.1.0.1" // fixed at 5.1.0.1
+    // CONSOLE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}" 
     KEYCLOAK = "${params.KEYCLOAK}"
     REALM = "${params.REALM}"
     CLIENTID = "${params.CLIENTID}"
@@ -90,10 +94,14 @@ pipeline {
         git pull origin HEAD:${BRANCH}
         """
          script {
-          if ((BUILD_MODE == 'PATCH') && (params.PATCH_VER == 'Regular')) {
             PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
+            HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
+          if (BUILD_MODE == 'PATCH') {
             PATCH_VER++
-            VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${PATCH_VER}.${params.HOTFIX_VER}"
+            VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
+          } if else (BUILD_MODE == 'HOTFIX') {
+            HOTFIX_VER++
+            VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
         withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
@@ -170,11 +178,7 @@ pipeline {
             git config --global user.email jinsoo_youn@tmax.co.kr
             git config --global credential.username ${username}
             git config --global credential.helper "!echo password=${password}; echo"          
-          """
-        //   sh "git tag ${PRE_VER}"
-          // sh "git pull origin HEAD:${BRANCH}"
-          // sh "git tag ${VER}"
-          // sh "git push origin HEAD:${BRANCH} --tags"    
+          """ 
           // Creat CHANGELOG-${VER}.md
           sh """
             echo '# hypercloud-console patch note' > ./CHANGELOG/CHANGELOG-${VER}.md
