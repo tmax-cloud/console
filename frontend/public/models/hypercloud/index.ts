@@ -21,7 +21,7 @@ export const ClusterManagerModel: K8sKind = {
   abbr: 'CM',
   kind: 'ClusterManager',
   id: 'clustermanager',
-  namespaced: false,
+  namespaced: true,
 };
 
 export const ClusterClaimModel: K8sKind = {
@@ -33,7 +33,7 @@ export const ClusterClaimModel: K8sKind = {
   abbr: 'CC',
   kind: 'ClusterClaim',
   id: 'clusterclaim',
-  namespaced: false,
+  namespaced: true,
 };
 
 export const SignerPolicyModel: K8sKind = {
