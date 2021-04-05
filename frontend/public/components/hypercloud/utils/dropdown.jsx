@@ -202,10 +202,10 @@ const Dropdown_ = (props) => {
   _.each(items, (v, k) => addItem(k, v));
 
   return (
-    <div className={className} ref={dropdownElement} style={props.style}>
+    <div className={className} ref={dropdownElement} style={...props.style}>
       <div
         className={classNames(
-          { 'dropdown pf-c-dropdown': true, 'pf-m-expanded': active },
+          { 'dropdown pf-c-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
           dropDownClassName,
         )}
       >

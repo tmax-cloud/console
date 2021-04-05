@@ -3,18 +3,14 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@
 // import { useFormContext } from 'react-hook-form';
 
 export const _ModalLauncher = props => {
-  const { inProgress, errorMessage, title, children, cancel } = props;
-
-  // const submit = e => {
-  //   e.preventDefault();
-  // };
+  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText } = props;
 
   return (
-    <>
+    <form onSubmit={handleMethod.bind(null, cancel, index)}>
       <ModalTitle>{title}</ModalTitle>
       <ModalBody>{children}</ModalBody>
-      <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText="추가" cancel={cancel} />
-    </>
+      <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={submitText} cancel={cancel} />
+    </form>
   );
 };
 

@@ -3,32 +3,30 @@ import { Section } from '../../utils/section';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 
-export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods, inputResource }) => {
+export const OutputResourceModal: React.FC<OutputResourceModalProps> = ({ methods, outputResource }) => {
   const typeItems = {
     Git: 'Git',
     Image: 'Image',
   };
-  let target = document.getElementById('input-resource-list');
+  let target = document.getElementById('output-resource-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
   let template;
   if (modalType === 'modify') {
     let list = target.childNodes;
     list.forEach((cur, idx) => {
       if (cur['dataset']['modify'] === 'true') {
-        template = inputResource[idx];
+        template = outputResource[idx];
       }
     });
   }
   const [option, setOption] = React.useState(template?.option);
 
-  console.log(inputResource);
-
   return (
     <>
-      <Section label="Name" id="inputresource_name" isRequired={true}>
+      <Section label="Name" id="outputresource_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="Type" id="inputresource-type" isRequired={true}>
+      <Section label="Type" id="outputresource-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
@@ -40,7 +38,7 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
           itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
         />
       </Section>
-      <Section label="Resource Path" id="inputresource_path">
+      <Section label="Resource Path" id="outputresource_path">
         <TextInput id="path" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.path : ''} />
       </Section>
       <label>
@@ -60,7 +58,7 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
   );
 };
 
-type InputResourceModalProps = {
+type OutputResourceModalProps = {
   methods: any;
-  inputResource: any;
+  outputResource: any;
 };
