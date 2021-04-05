@@ -28,6 +28,7 @@ const MasterNav = () => (
           <HrefLink href="/kibana" name="Kibana" /> */}
           <NewTabLink name={t('COMMON:MSG_LNB_MENU_98')} type="grafana" />
           <NewTabLink name={t('COMMON:MSG_LNB_MENU_99')} type="kibana" />
+          <NewTabLink name="Managed GitLab" type="git" />
         </NavSection>
         <NavSection title="Operators" />
         <NavSection title={t('COMMON:MSG_LNB_MENU_10')}>
@@ -94,12 +95,12 @@ const MasterNav = () => (
           <ResourceNSLink resource="integrationconfigs" name={t('COMMON:MSG_LNB_MENU_183')} />
         </NavSection>
         <NavSection title="AI DevOps">
-          <ResourceNSLink resource="notebooks" name='Notebook' />
-          <ResourceNSLink resource="experiments" name='Experiment' />
-          <ResourceNSLink resource="trainingjobs" name='TrainingJob' />
-          <ResourceNSLink resource="inferenceservices" name='InferenceService' />
-          <ResourceNSLink resource="workflowtemplates" name='WorkflowTemplate' />
-          <ResourceNSLink resource="workflows" name='Workflow' />
+          <ResourceNSLink resource="notebooks" name="Notebook" />
+          <ResourceNSLink resource="experiments" name="Experiment" />
+          <ResourceNSLink resource="trainingjobs" name="TrainingJob" />
+          <ResourceNSLink resource="inferenceservices" name="InferenceService" />
+          <ResourceNSLink resource="workflowtemplates" name="WorkflowTemplate" />
+          <ResourceNSLink resource="workflows" name="Workflow" />
         </NavSection>
         <NavSection title={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_3')}>
           <ResourceNSLink resource="registries" name={t('COMMON:MSG_LNB_MENU_187')} />
