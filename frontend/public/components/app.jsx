@@ -180,7 +180,7 @@ keycloak
       <div className="co-m-pane__body">
         <h1 className="co-m-pane__heading co-m-pane__heading--center">Oh no! Something went wrong.</h1>
         <label htmlFor="description">Description: </label>
-        <p>{!!error ? error.message : 'Failed to initialize keycloak'}</p>
+        <p>{!!error ? error.stack : 'Failed to initialize keycloak'}</p>
       </div>,
       document.getElementById('app'),
     );
