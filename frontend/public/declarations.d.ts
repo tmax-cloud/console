@@ -41,6 +41,7 @@ declare interface Window {
     McMode: boolean;
     KeycloakAuthURL: string;
     KeycloakRealm: string;
+    gitlabURL: string;
   };
   windowError?: boolean | string;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: Function;
