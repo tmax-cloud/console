@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
 import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, CustomResourceDefinitionKind, definitionFor, referenceForModel } from '@console/internal/module/k8s';
-import { CustomResourceDefinitionModel } from '@console/internal/models';
+import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel } from '@console/internal/models';
 // import { Firehose } from '@console/internal/components/utils/firehose';
 import { StatusBox, FirehoseResult, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
@@ -25,7 +25,7 @@ import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 // eslint-disable-next-line @typescript-eslint/camelcase
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
-const OnlyYamlEditorKinds = ['Secret', 'Template', 'ClusterTemplate'];
+const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefinition, initialEditorType, loadError, match, model, activePerspective }) => {
   if (!model) {
