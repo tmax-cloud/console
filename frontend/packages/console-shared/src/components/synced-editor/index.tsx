@@ -24,16 +24,7 @@ export const YAML_TO_JS_OPTIONS = {
 //
 //  This means that when switching from YAML to Form, you can lose changes if the YAML editor contains unparsable YAML
 //  TODO Add an extra step when switching from yaml to form to warn user if they are about to lose changes.
-export const SyncedEditor: React.FC<SyncedEditorProps> = ({
-  context = {},
-  FormEditor,
-  initialType = EditorType.Form,
-  initialData = {},
-  onChangeEditorType = _.noop,
-  onChange = _.noop,
-  prune,
-  YAMLEditor,
-}) => {
+export const SyncedEditor: React.FC<SyncedEditorProps> = ({ context = {}, FormEditor, initialType = EditorType.Form, initialData = {}, onChangeEditorType = _.noop, onChange = _.noop, prune, YAMLEditor, supplyEditorToggle = true }) => {
   const { formContext, yamlContext } = context;
   const [formData, setFormData] = React.useState<K8sResourceKind>(initialData);
   const [yaml, setYAML] = React.useState(safeJSToYAML(initialData));
@@ -50,7 +41,7 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({
 
   const handleYAMLChange = (newYAML: string = '') => {
     asyncYAMLToJS(newYAML)
-      .then((js) => {
+      .then(js => {
         setSafeToSwitch(true);
         handleFormDataChange(js);
       })
@@ -85,7 +76,7 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({
     setYAMLWarning(false);
   };
 
-  const onChangeType = (newType) => {
+  const onChangeType = newType => {
     switch (newType) {
       case EditorType.YAML:
         handleToggleToYAML();
@@ -100,14 +91,9 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({
 
   return (
     <>
-      <EditorToggle value={type} onChange={onChangeType} />
+      {supplyEditorToggle ? <EditorToggle value={type} onChange={onChangeType} /> : null}
       {yamlWarning && (
-        <Alert
-          className="co-synced-editor__yaml-warning"
-          variant="danger"
-          isInline
-          title="Invalid YAML cannot be persisted"
-        >
+        <Alert className="co-synced-editor__yaml-warning" variant="danger" isInline title="Invalid YAML cannot be persisted">
           <p>Switching to Form View will delete any invalid YAML.</p>
           <Button variant="danger" onClick={onClickYAMLWarningConfirm}>
             Switch and Delete
@@ -118,16 +104,7 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({
           </Button>
         </Alert>
       )}
-      {type === EditorType.Form ? (
-        <FormEditor
-          formData={formData}
-          onChange={handleFormDataChange}
-          prune={prune}
-          {...formContext}
-        />
-      ) : (
-        <YAMLEditor initialYAML={yaml} onChange={handleYAMLChange} {...yamlContext} />
-      )}
+      {type === EditorType.Form ? <FormEditor formData={formData} onChange={handleFormDataChange} prune={prune} {...formContext} /> : <YAMLEditor initialYAML={yaml} onChange={handleYAMLChange} {...yamlContext} />}
     </>
   );
 };
@@ -144,4 +121,5 @@ type SyncedEditorProps = {
   onChange?: (data: K8sResourceKind) => void;
   prune?: (data: any) => any;
   YAMLEditor: React.FC<any>;
+  supplyEditorToggle?: boolean;
 };
