@@ -17,7 +17,7 @@ export const ModalList = props => {
                   id={`item-modify-${index}`}
                   onClick={e => {
                     e.target['parentNode']['dataset'].modify = true;
-                    return ModalLauncher({ inProgress: false, index: index, title: title, handleMethod: onModify, children: children, submitText: '수정' });
+                    return ModalLauncher({ inProgress: false, index: index, title: title, id: id, handleMethod: onModify, children: children, submitText: '수정' });
                   }}
                 >
                   Modify

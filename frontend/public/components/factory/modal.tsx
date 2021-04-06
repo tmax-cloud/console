@@ -11,9 +11,9 @@ import store from '../../redux';
 import { ButtonBar } from '../utils/button-bar';
 import { history } from '../utils/router';
 
-export const createModal: CreateModal = (getModalContainer) => {
+export const createModal: CreateModal = getModalContainer => {
   const modalContainer = document.getElementById('modal-container');
-  const result = new Promise((resolve) => {
+  const result = new Promise(resolve => {
     const closeModal = (e?: React.SyntheticEvent) => {
       if (e && e.stopPropagation) {
         e.stopPropagation();
@@ -27,8 +27,8 @@ export const createModal: CreateModal = (getModalContainer) => {
   return { result };
 };
 
-export const createModalLauncher: CreateModalLauncher = (Component) => (props) => {
-  const getModalContainer: GetModalContainer = (onClose) => {
+export const createModalLauncher: CreateModalLauncher = Component => props => {
+  const getModalContainer: GetModalContainer = onClose => {
     const _handleClose = (e: React.SyntheticEvent) => {
       onClose && onClose(e);
       props.close && props.close();
@@ -41,19 +41,8 @@ export const createModalLauncher: CreateModalLauncher = (Component) => (props) =
     return (
       <Provider store={store}>
         <Router {...{ history, basename: window.SERVER_FLAGS.basePath }}>
-          <Modal
-            isOpen={true}
-            contentLabel="Modal"
-            onRequestClose={_handleClose}
-            className={classNames('modal-dialog', props.modalClassName)}
-            overlayClassName="co-overlay"
-            shouldCloseOnOverlayClick={!props.blocking}
-          >
-            <Component
-              {...(_.omit(props, 'blocking', 'modalClassName') as any)}
-              cancel={_handleCancel}
-              close={_handleClose}
-            />
+          <Modal isOpen={true} contentLabel="Modal" onRequestClose={_handleClose} className={classNames('modal-dialog', props.modalClassName)} overlayClassName="co-overlay" shouldCloseOnOverlayClick={!props.blocking}>
+            <Component {...(_.omit(props, 'blocking', 'modalClassName') as any)} cancel={_handleCancel} close={_handleClose} />
           </Modal>
         </Router>
       </Provider>
@@ -62,10 +51,7 @@ export const createModalLauncher: CreateModalLauncher = (Component) => (props) =
   return createModal(getModalContainer);
 };
 
-export const ModalTitle: React.SFC<ModalTitleProps> = React.memo(({
-  children,
-  className = 'modal-header',
-}) => (
+export const ModalTitle: React.SFC<ModalTitleProps> = React.memo(({ children, className = 'modal-header' }) => (
   <div className={className}>
     <h1 className="pf-c-title pf-m-2xl" data-test-id="modal-title">
       {children}
@@ -74,55 +60,32 @@ export const ModalTitle: React.SFC<ModalTitleProps> = React.memo(({
 ));
 
 export const ModalBody: React.SFC<ModalBodyProps> = ({ children, unsetOverflow = false }) => (
-  <div className={unsetOverflow ? classNames("modal-body", 'unset-overflow') : 'modal-body'}>
+  <div className={unsetOverflow ? classNames('modal-body', 'unset-overflow') : 'modal-body'}>
     <div className="modal-body-content">
       <div className="modal-body-inner-shadow-covers">{children}</div>
     </div>
   </div>
 );
 
-export const ModalFooter: React.SFC<ModalFooterProps> = ({
-  message,
-  errorMessage,
-  inProgress,
-  children,
-}) => {
+export const ModalFooter: React.SFC<ModalFooterProps> = ({ message, errorMessage, inProgress, children }) => {
   return (
-    <ButtonBar
-      className="modal-footer"
-      errorMessage={errorMessage}
-      infoMessage={message}
-      inProgress={inProgress}
-    >
+    <ButtonBar className="modal-footer" errorMessage={errorMessage} infoMessage={message} inProgress={inProgress}>
       {children}
     </ButtonBar>
   );
 };
 
-export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({
-  message,
-  errorMessage,
-  inProgress,
-  cancel,
-  submitText,
-  cancelText,
-  submitDisabled,
-  submitDanger,
-}) => {
-  const onCancelClick = (e) => {
+export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({ message, errorMessage, inProgress, cancel, submitText, cancelText, submitDisabled, submitDanger, onCancel }) => {
+  const onCancelClick = e => {
     e.stopPropagation();
+    onCancel();
     cancel(e);
   };
 
   return (
     <ModalFooter inProgress={inProgress} errorMessage={errorMessage} message={message}>
       <ActionGroup className="pf-c-form pf-c-form__actions--right pf-c-form__group--no-top-margin">
-        <Button
-          type="button"
-          variant="secondary"
-          data-test-id="modal-cancel-action"
-          onClick={onCancelClick}
-        >
+        <Button type="button" variant="secondary" data-test-id="modal-cancel-action" onClick={onCancelClick}>
           {cancelText || 'Cancel'}
         </Button>
         {submitDanger ? (
@@ -130,10 +93,10 @@ export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({
             {submitText}
           </Button>
         ) : (
-            <Button type="submit" variant="primary" isDisabled={submitDisabled} id="confirm-action">
-              {submitText}
-            </Button>
-          )}
+          <Button type="submit" variant="primary" isDisabled={submitDisabled} id="confirm-action">
+            {submitText}
+          </Button>
+        )}
       </ActionGroup>
     </ModalFooter>
   );
@@ -177,8 +140,8 @@ export type ModalSubmitFooterProps = {
   submitText: React.ReactNode;
   submitDisabled?: boolean;
   submitDanger?: boolean;
+  onCancel?: any;
+  id?: string;
 };
 
-export type CreateModalLauncher = <P extends ModalComponentProps>(
-  C: React.ComponentType<P>,
-) => (props: P & CreateModalLauncherProps) => { result: Promise<{}> };
+export type CreateModalLauncher = <P extends ModalComponentProps>(C: React.ComponentType<P>) => (props: P & CreateModalLauncherProps) => { result: Promise<{}> };

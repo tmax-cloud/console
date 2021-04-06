@@ -3,13 +3,20 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@
 // import { useFormContext } from 'react-hook-form';
 
 export const _ModalLauncher = props => {
-  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText } = props;
-
+  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id } = props;
+  const onCancel = () => {
+    let list = document.getElementById(`${id}-list`).childNodes;
+    list.forEach(cur => {
+      if (cur['dataset']['modify'] === 'true') {
+        cur['dataset']['modify'] = false;
+      }
+    });
+  };
   return (
     <form onSubmit={handleMethod.bind(null, cancel, index)}>
       <ModalTitle>{title}</ModalTitle>
       <ModalBody>{children}</ModalBody>
-      <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={submitText} cancel={cancel} />
+      <ModalSubmitFooter errorMessage={errorMessage} id="uId" inProgress={inProgress} onCancel={onCancel} submitText={submitText} cancel={cancel} />
     </form>
   );
 };
