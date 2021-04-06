@@ -7,18 +7,22 @@ import { getActivePerspective, getActiveCluster } from '../../actions/ui';
 import { getId, getUserGroup } from '../../hypercloud/auth';
 import { kindToSchemaPath } from '../hypercloud/k8s/kind-to-schema-path.ts'
 
+export const getDynamicProxyPath = (cluster) => {
+  if (window.SERVER_FLAGS.McMode && getActivePerspective() == 'hc') {
+    return `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
+  } else if (cluster) {
+    return `${window.SERVER_FLAGS.basePath}api/${cluster}`;
+  } else {
+    return k8sBasePath;
+  }
+};
+
 /** @type {(model: K8sKind) => string} */
 export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
 => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
-  let p = k8sBasePath;
-
-  if (window.SERVER_FLAGS.McMode && getActivePerspective() == 'hc') {
-    p = `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
-  } else if (cluster) {
-    p = `${window.SERVER_FLAGS.basePath}api/${cluster}`;
-  }
+  let p = getDynamicProxyPath(cluster);
 
   if (isLegacy) {
     p += '/api/';

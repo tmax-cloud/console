@@ -7,8 +7,8 @@ export const BUILDER_NODE_ADD_RADIUS = 9;
 export const BUILDER_NODE_ERROR_RADIUS = 9;
 export const BUILDER_NODE_ADD_PADDING = 4;
 
-export const NODE_WIDTH = 120;
-export const NODE_HEIGHT = 30;
+export const NODE_WIDTH = 143;
+export const NODE_HEIGHT = 38;
 
 export enum NodeType {
   TASK_NODE = 'task',
