@@ -15,6 +15,7 @@ export const getQN: (obj: K8sResourceKind) => string = ({ metadata: { name, name
   (namespace ? `(${namespace})-` : '') + name;
 
 export const k8sBasePath = `${window.SERVER_FLAGS.basePath}api/kubernetes`;
+export const multiClusterBasePath = `${window.SERVER_FLAGS.basePath}api/multi-hypercloud`;
 
 // TODO(alecmerdler): Replace all manual string building with this function
 export const referenceForGroupVersionKind = (group: string) => (version: string) => (

@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, TextInput } from '@patternfly/react-core';
+import { Tooltip, Button, TextInput } from '@patternfly/react-core';
 
 import { withFallback } from '@console/shared/src/components/error/error-boundary';
 import { useDocumentListener, KEYBOARD_SHORTCUTS } from '@console/shared';
@@ -158,6 +158,12 @@ export const FireMan_ = connect(null, { filterList })(
               <Dropdown buttonClassName="pf-m-primary" id="item-create" menuClassName={classNames({ 'pf-m-align-right-on-md': title })} title={createButtonText} noSelection items={createProps.items} onChange={this.runOrNavigate} />
             </div>
           );
+        } else if (createProps.unclickableMsg) {
+          createLink = (
+            <Tooltip content={createProps.unclickableMsg}>
+              <Button style={{ cursor: 'no-drop' }}>{createButtonText}</Button>
+            </Tooltip>
+          );
         } else {
           createLink = (
             <div className="co-m-primary-action">
@@ -255,7 +261,10 @@ export const ListPage = withFallback(props => {
   const title = props.title || labelPlural;
   const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
 
+  const isNSSelected = !namespaced || namespace;
+
   let href = namespaced ? `/k8s/ns/${usedNamespace || 'default'}/${plural}/~new` : `/k8s/cluster/${plural}/~new`;
+
   if (ko.crd) {
     try {
       const ref = referenceForModel(ko);
@@ -265,7 +274,8 @@ export const ListPage = withFallback(props => {
     }
   }
 
-  createProps = createProps || (createHandler ? { onClick: createHandler } : { to: href });
+  createProps = createProps || (isNSSelected ? (createHandler ? { onClick: createHandler } : { to: href }) : { unclickableMsg: t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') });
+
   const createAccessReview = skipAccessReview ? null : { model: ko, namespace: usedNamespace };
   const resources = [
     {

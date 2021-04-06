@@ -15,9 +15,9 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_2') : 'Multi-Cluster',
         icon: <CogsIcon />,
         default: true,
-        getLandingPageURL: flags => '/k8s/cluster/clustermanagers',
-        getK8sLandingPageURL: flags => '/k8s/cluster/clustermanagers',
-        getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+        getLandingPageURL: flags => '/k8s/all-namespaces/clustermanagers',
+        getK8sLandingPageURL: flags => '/k8s/all-namespaces/clustermanagers',
+        getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
       },
     },
     {
