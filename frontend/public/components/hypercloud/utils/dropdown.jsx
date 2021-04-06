@@ -43,11 +43,12 @@ const Dropdown_ = (props) => {
     describedBy,
     disabled,
     required,
-    methods
+    methods,
+    defaultValue
   } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
-  const selectedKey = watch(name);
+  const selectedKey = watch(name, defaultValue);
 
   const [title, setTitle] = React.useState(_.get(props.items, selectedKey, props.title));
   const [active, setActive] = React.useState(!!props.active);
@@ -259,6 +260,7 @@ Dropdown.propTypes = {
   spacerBefore: PropTypes.instanceOf(Set),
   textFilter: PropTypes.string,
   title: PropTypes.node,
+  defaultValue?: PropTypes.string,
   disabled: PropTypes.bool,
   methods?: PropTypes.any
 };
