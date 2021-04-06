@@ -104,7 +104,7 @@ const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, k
   return (
     <TableRow id={cluster.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.fakeMetadata.fakename} title={cluster.metadata.uid} />
+        <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.fakeMetadata.fakename} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
       <TableData className={classNames(tableColumnClasses[2])}>{cluster.spec.provider ? '생성' : '등록'}</TableData>
