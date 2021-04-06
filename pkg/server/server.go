@@ -97,6 +97,9 @@ type jsGlobals struct {
 	McModeOperator bool   `json:mcModeOperator`
 
 	ReleaseModeFlag bool `json:"releaseModeFlag"`
+
+	// gitalb 화면 url -> ui 에서 사용
+	GitlabURL string `json:"gitlabURL"`
 }
 
 type Server struct {
@@ -156,6 +159,10 @@ type Server struct {
 
 	// console mode
 	ReleaseModeFlag bool
+
+	// gitlab url
+	// gitalb 화면 url -> ui 에서 사용
+	GitlabURL string
 }
 
 func (s *Server) authDisabled() bool {
@@ -593,6 +600,7 @@ func (s *Server) indexHandler(w http.ResponseWriter, r *http.Request) {
 		McModeOperator: s.McModeOperator,
 
 		ReleaseModeFlag: s.ReleaseModeFlag,
+		GitlabURL:       s.GitlabURL,
 	}
 
 	// if !s.authDisabled() {

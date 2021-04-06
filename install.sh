@@ -15,7 +15,7 @@ KIBANA="kibana.kube-logging.svc.cluster.local:5601"
 # GET ENV 
 # image version 
 # OPERATOR_VER=$OPERATOR_VER  # OPERATOR_VER="latest"
-CONSOLE_VER=$CONSOLE_VER    # CONSOLE_VER="0.5.1.32"
+CONSOLE_VER=$VER    # CONSOLE_VER="0.5.1.32"
 # Necessary to auth 
 REALM=$REALM                # REALM="tmax"
 KEYCLOAK=$KEYCLOAK          # KEYCLOAK="hyperauth.org"

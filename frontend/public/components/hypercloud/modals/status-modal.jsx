@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import { switchPerspective } from 'packages/dev-console/integration-tests/views/dev-perspective.view';
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
-import { NamespaceClaimModel, ResourceQuotaClaimModel } from '../../../models';
+import { NamespaceClaimModel, ResourceQuotaClaimModel, CatalogServiceClaimModel } from '../../../models';
 import { k8sUpdateApproval, referenceForModel } from '../../../module/k8s';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
@@ -54,6 +54,12 @@ class BaseStatusModal extends PromiseComponent {
           ],
           'PATCH',
         );
+        this.handlePromise(promise).then(this.successSubmit);
+        break;
+      }
+      case CatalogServiceClaimModel.kind: {
+        const stat = this.state.status === 'Approved' ? 'Approve' : 'Reject';
+        const promise = k8sUpdateApproval(kind, resource, 'status', [{ op: 'replace', path: '/status/status', value: stat }], 'PATCH');
         this.handlePromise(promise).then(this.successSubmit);
         break;
       }

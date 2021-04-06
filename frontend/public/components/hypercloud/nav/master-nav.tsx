@@ -28,6 +28,7 @@ const MasterNav = () => (
           <HrefLink href="/kibana" name="Kibana" /> */}
           <NewTabLink name={t('COMMON:MSG_LNB_MENU_98')} type="grafana" />
           <NewTabLink name={t('COMMON:MSG_LNB_MENU_99')} type="kibana" />
+          <NewTabLink name="Managed GitLab" type="git" />
         </NavSection>
         <NavSection title="Operators" />
         <NavSection title={t('COMMON:MSG_LNB_MENU_10')}>
@@ -93,14 +94,14 @@ const MasterNav = () => (
           <ResourceNSLink resource="integrationjobs" name={t('COMMON:MSG_LNB_MENU_185')} />
           <ResourceNSLink resource="integrationconfigs" name={t('COMMON:MSG_LNB_MENU_183')} />
         </NavSection>
-        {/* <NavSection title="AI DevOps">
-          <ResourceNSLink resource="notebooks" name='Notebook' />
-          <ResourceNSLink resource="experiments" name='Experiment' />
-          <ResourceNSLink resource="trainingjobs" name='TrainingJob' />
-          <ResourceNSLink resource="inferenceservices" name='InferenceService' />
-          <ResourceNSLink resource="workflowtemplates" name='WorkflowTemplate' />
-          <ResourceNSLink resource="workflows" name='Workflow' />
-        </NavSection> */}
+        <NavSection title="AI DevOps">
+          <ResourceNSLink resource="notebooks" name="Notebook" />
+          <ResourceNSLink resource="experiments" name="Experiment" />
+          <ResourceNSLink resource="trainingjobs" name="TrainingJob" />
+          <ResourceNSLink resource="inferenceservices" name="InferenceService" />
+          <ResourceNSLink resource="workflowtemplates" name="WorkflowTemplate" />
+          <ResourceNSLink resource="workflows" name="Workflow" />
+        </NavSection>
         <NavSection title={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_3')}>
           <ResourceNSLink resource="registries" name={t('COMMON:MSG_LNB_MENU_187')} />
           <ResourceNSLink resource="externalregistries" name={t('COMMON:MSG_LNB_MENU_189')} />
@@ -108,7 +109,7 @@ const MasterNav = () => (
           <ResourceNSLink resource="imagesignrequests" name={t('COMMON:MSG_LNB_MENU_92')} />
           <ResourceNSLink resource="imagescanrequests" name={t('COMMON:MSG_LNB_MENU_95')} />
           <ResourceNSLink resource="signerpolicies" name={t('COMMON:MSG_LNB_MENU_96')} />
-          {/* <ResourceNSLink resource="imagetransfers" name="Image Transfer" /> */}
+          <ResourceNSLink resource="imagereplicates" name={t('COMMON:MSG_LNB_MENU_93')} />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_79')}>
           <ResourceClusterLink resource="namespaces" name={t('COMMON:MSG_LNB_MENU_3')} />

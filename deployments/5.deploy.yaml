@@ -39,6 +39,7 @@ spec:
         - --mc-mode=@@MC_MODE@@
         - --kiali-endpoint=https://@@KIALI@@/api/kiali/
         - --kibana-endpoint=https://@@KIBANA@@/api/kibana/
+        - --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/
         image: tmaxcloudck/hypercloud-console:@@CONSOLE_VER@@
         imagePullPolicy: Always
         name: console
