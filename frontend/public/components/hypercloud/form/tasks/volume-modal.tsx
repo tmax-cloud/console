@@ -54,15 +54,6 @@ export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => 
           <TextInput id="secret" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.secret : ''} />
         </Section>
       )}
-      <button
-        onClick={e => {
-          e.preventDefault();
-          console.log('watchType', type);
-          return false;
-        }}
-      >
-        보여줘
-      </button>
     </>
   );
 };

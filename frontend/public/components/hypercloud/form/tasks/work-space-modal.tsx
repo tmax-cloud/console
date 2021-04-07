@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Section } from '../../utils/section';
-import { useWatch } from 'react-hook-form';
 import { RadioGroup } from '../../utils/radio';
 import { TextInput } from '../../utils/text-input';
 
@@ -16,16 +15,17 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
       value: 'readOnly',
     },
   ];
+  let template;
+
+  //modify 기능 용
   let target = document.getElementById('work-space-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
-  let template;
-  let index;
   if (modalType === 'modify') {
     let list = target.childNodes;
     list.forEach((cur, idx) => {
       if (cur['dataset']['modify'] === 'true') {
         template = workSpace[idx];
-        index = idx;
+        // index = idx;
       }
     });
   }

@@ -5,12 +5,16 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@
 export const _ModalLauncher = props => {
   const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id } = props;
   const onCancel = () => {
-    let list = document.getElementById(`${id}-list`).childNodes;
-    list.forEach(cur => {
-      if (cur['dataset']['modify'] === 'true') {
-        cur['dataset']['modify'] = false;
-      }
-    });
+    // 수정일 경우에만 타는 로직
+    let isModify = document.getElementById(`${id}-list`) ? true : false;
+    if (isModify) {
+      let list = document.getElementById(`${id}-list`).childNodes;
+      list.forEach(cur => {
+        if (cur['dataset']['modify'] === 'true') {
+          cur['dataset']['modify'] = false;
+        }
+      });
+    }
   };
   return (
     <form onSubmit={handleMethod.bind(null, cancel, index)}>

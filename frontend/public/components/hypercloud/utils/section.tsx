@@ -19,9 +19,11 @@ export const Section: React.FC<SectionProps> = ({ id, label, description, childr
   let result = CombineNodes(id, label, description, children, isRequired);
   return (
     <div className="form-group">
-      <label className={'control-label ' + (isRequired ? 'co-required' : '')} htmlFor={id}>
-        {label}
-      </label>
+      {label && (
+        <label className={'control-label ' + (isRequired ? 'co-required' : '')} htmlFor={id}>
+          {label}
+        </label>
+      )}
       <div className="row">{result}</div>
     </div>
   );
