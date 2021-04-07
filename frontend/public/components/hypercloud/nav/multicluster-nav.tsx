@@ -2,9 +2,10 @@ import * as React from 'react';
 import { NavItemSeparator, NavGroup } from '@patternfly/react-core';
 // import { referenceForModel } from '../../module/k8s';
 // import { ExternalLink, HrefLink, ResourceNSLink, ResourceClusterLink } from './items';
-import { ResourceClusterLink } from '../../nav/items';
+import { ResourceNSLink, ResourceClusterLink } from '../../nav/items';
 import { NavSection } from '../../nav/section';
 import { Translation } from 'react-i18next';
+// import { ALL_NAMESPACES_KEY } from '../../../../packages/console-shared/src/constants/common';
 
 type SeparatorProps = {
   name: string;
@@ -17,8 +18,14 @@ const MulticlusterNav = () => (
   <Translation>
     {t => (
       <>
-        <ResourceClusterLink resource="clusterclaims" name={t('COMMON:MSG_LNB_MENU_105')} />
-        <ResourceClusterLink resource="clustermanagers" name={t('COMMON:MSG_LNB_MENU_84')} />
+        <NavSection title={t('COMMON:MSG_LNB_MENU_105')}>
+          <ResourceNSLink resource="clusterclaims" name={t('COMMON:MSG_LNB_MENU_105')} />
+        </NavSection>
+
+        <NavSection title={t('COMMON:MSG_LNB_MENU_84')}>
+          <ResourceNSLink resource="clustermanagers" name={t('COMMON:MSG_LNB_MENU_84')} />
+        </NavSection>
+
         {/* <ResourceClusterLink resource="clustergroups" name="Cluster Groups" /> */}
         <NavSection title={t('COMMON:MSG_LNB_MENU_86')}>
           <NavGroup title="Workloads">
