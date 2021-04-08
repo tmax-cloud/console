@@ -2,15 +2,6 @@ pipeline {
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
     choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
-    
-    // //VESION 
-    // string(name: 'MAJOR_VER', defaultValue: '5', description: 'major version')
-    // string(name: 'MINOR_VER', defaultValue: '1', description: 'minor version')
-    // string(name: 'PATCH_VER', defaultValue: '0', description: 'patch version')
-    // string(name: 'HOTFIX_VER', defaultValue: '0', description: 'hotfix version')
-    
-    // string(name: 'OPERATOR_VER', defaultValue: '5.1.0.1', description: 'Console Operator Version')
-    // string(name: 'CONSOLE_VER', defaultValue: '0.0.0.2', description: 'Console version')
 
     string(name: 'KEYCLOAK', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
@@ -39,7 +30,6 @@ pipeline {
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
 
     // OPERATOR_VER = "5.1.0.1" // fixed at 5.1.0.1
-    // CONSOLE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}" 
     KEYCLOAK = "${params.KEYCLOAK}"
     REALM = "${params.REALM}"
     CLIENTID = "${params.CLIENTID}"
@@ -98,6 +88,7 @@ pipeline {
             HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
           if (BUILD_MODE == 'PATCH') {
             PATCH_VER++
+            HOTFIX_VER = "0"
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
             HOTFIX_VER++
@@ -167,6 +158,7 @@ pipeline {
           if (BUILD_MODE == 'PATCH') {
             // TEMP = (("${params.PATCH_VER}" as int) -1).toString()
             PATCH_VER--
+            HOTFIX_VER = "0"
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
             // TEMP = (("${params.HOTFIX_VER}" as int) -1).toString()
