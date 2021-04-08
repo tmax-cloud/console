@@ -36,6 +36,7 @@ export const OutputResourceModal: React.FC<OutputResourceModalProps> = ({ method
           style={{ display: 'block' }}
           buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
           itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+          defaultValue={modalType === 'modify' ? template.type : ''}
         />
       </Section>
       <Section label="Resource Path" id="outputresource_path">

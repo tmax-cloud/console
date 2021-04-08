@@ -224,7 +224,7 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
         {
           href: 'access',
           name: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1'),
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" />,
+          component: pageProps => <MembersPage clusterName={pageProps.obj.metadata.name} namespace={pageProps.obj.metadata.namespace} owner={pageProps.obj.metadata.annotations.owner} title="Members" />,
         },
       ]}
     />

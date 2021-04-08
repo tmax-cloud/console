@@ -33,12 +33,12 @@ const roleItems = (t?: TFunction) => [
 
 
 export const ModifyMemberModal = withHandlePromise((props: ModifyMemberModalProps) => {
-  const [role, setRole] = React.useState(props.member.role);
+  const [role, setRole] = React.useState(props.member.Role);
   const [errorMsg, setError] = React.useState('')
 
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    coFetchJSON(`/api/multi-hypercloud/cluster/${props.clusterName}/update_role/${props.member.type}/${props.member.type === 'user' ? props.member.email : props.member.name}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'PUT')
+    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/update_role/${props.member.Attribute}/${props.member.Attribute === 'user' ? props.member.MemberId : props.member.MemberName}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'PUT')
       .then((res) => {
         props.close();
       })
@@ -71,12 +71,17 @@ export const ModifyMemberModal = withHandlePromise((props: ModifyMemberModalProp
 export const modifyMemberModal = createModalLauncher(ModifyMemberModal);
 
 export type ModifyMemberModalProps = {
-  clusterName: string;
   member: {
-    name: string,
-    role: string,
-    type: 'user' | 'group',
-    email: string
+    Id?: number,
+    Namespace?: string,
+    Cluster?: string,
+    MemberId: string,
+    MemberName: string,
+    Attribute: "group" | "user",
+    Role: "guest" | "developer" | "admin",
+    Status?: "invited" | "owner",
+    CreatedTime?: string,
+    UpdatedTime?: string
   };
 } & ModalComponentProps &
   HandlePromiseProps;

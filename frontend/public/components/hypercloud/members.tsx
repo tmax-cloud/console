@@ -8,23 +8,23 @@ import { Table, TableHeader, TableBody, sortable, SortByDirection, IRow } from '
 import { CaretDownIcon, UsersIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from "i18next";
-import { getId } from '../../hypercloud/auth';
+import { getId, getUserGroup } from '../../hypercloud/auth';
+import { coFetchJSON } from "../../co-fetch";
 
 const ownerData = (owner, t?: TFunction) => [
   {
-    cells: [`${owner} (${t('MULTI:MSG_MULTI_CLUSTERS_MAILFORM_7')})`, '', 'admin'],
-    obj: { name: owner, email: '', role: 'admin', type: 'owner' }
+    cells: [`${owner.MemberName} (${t('MULTI:MSG_MULTI_CLUSTERS_MAILFORM_7')})`, owner.MemberId, 'admin'],
+    obj: owner
   }
 ];
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), /*Kebab.columnClass*/];
 
-const MemberTableRows = (members, isUser): ITableRow[] => {
+const MemberTableRows = (members): ITableRow[] => {
   const data = [];
-  _.forEach(members, (role, name) => {
-    const member = { name: name, role: role, type: isUser ? 'user' : 'group', email: isUser ? name : '' };
+  _.forEach(members, (member) => {
     data.push({
-      cells: [isUser ? member.name : <><UsersIcon className='hc-member__group-icon' />{member.name}</>, member.email, member.role],
+      cells: [member.Attribute === 'user' ? member.MemberName : <><UsersIcon className='hc-member__group-icon' />{member.MemberName}</>, member.MemberId, member.Role],
       obj: member
     });
   });
@@ -37,19 +37,19 @@ const MemberTableHeader = (t?: TFunction) => {
       title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_TABLEHEADER_2'),
       transforms: [sortable],
       props: { className: tableColumnClasses[0] },
-      data: 'name'
+      data: 'MemberName'
     },
     {
       title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_TABLEHEADER_1'),
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
-      data: 'email'
+      data: 'MemberId'
     },
     {
       title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_TABLEHEADER_3'),
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
-      data: 'role'
+      data: 'Role'
     },
     /* {
       title: '',
@@ -60,13 +60,13 @@ const MemberTableHeader = (t?: TFunction) => {
 MemberTableHeader.displayName = 'UserTableHeader';
 
 export const UsersTable = (props) => {
-  const { clusterName, isOwner, owner, users, groups, heading, searchType, searchKey } = props;
+  const { clusterName, isOwner, owner, members, heading, searchType, searchKey } = props;
   
   const { t } = useTranslation();
   const ownerRow = ownerData.bind(null, owner, t)();
 
   const [rows, setRows] = React.useState([]);
-  const [sortBy, setSortBy] = React.useState({ index: 0, sortField: 'name', direction: SortByDirection.asc });
+  const [sortBy, setSortBy] = React.useState({ index: 0, sortField: 'MemberName', direction: SortByDirection.asc });
   const [filteredRows, setFilteredRows] = React.useState([]);
 
   const sortRows = ({sortField, direction}, rows) => {
@@ -80,8 +80,8 @@ export const UsersTable = (props) => {
   }
 
   React.useEffect(() => {
-    sortRows(sortBy, _.concat(MemberTableRows(users, true), MemberTableRows(groups, false)));
-  }, [users, groups]);
+    sortRows(sortBy, MemberTableRows(members));
+  }, [members]);
 
   React.useEffect(()=> {
     const filteredResult = rows.filter(row => fuzzy(_.toLower(searchKey), _.toLower(row.obj[searchType])));
@@ -99,7 +99,7 @@ export const UsersTable = (props) => {
   };
 
   const actionResolver = (t: TFunction, rowData, { rowIndex }) => {
-    if (rowData.obj.type === 'owner') {
+    if (rowData.obj.Status === 'owner') {
       return null;
     }
 
@@ -107,13 +107,13 @@ export const UsersTable = (props) => {
       {
         title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_ACTIONBUTTON_1'),
         onClick: (event, rowId, rowData, extra) => {
-          modifyMemberModal({ clusterName, modalClassName: 'modal-lg', member: rowData.obj })
+          modifyMemberModal({ modalClassName: 'modal-lg', member: rowData.obj })
         }
       },
       {
         title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_ACTIONBUTTON_2'),
         onClick: (event, rowId, rowData, extra) => {
-          removeMemberModal({ clusterName, modalClassName: 'modal-lg', member: rowData.obj })
+          removeMemberModal({ modalClassName: 'modal-lg', member: rowData.obj })
         }
       }
     ];
@@ -144,7 +144,19 @@ export const removeMemberModal = (props) =>
   import('./modals/remove-member-modal' /* webpackChunkName: "remove-member-modal" */).then((m) => m.removeMemberModal(props));
 
 export const MembersPage = (props) => {
-  const [searchType, setSearchType] = React.useState('name');
+  const defaultOwnerData =
+  {
+    Cluster: props.clusterName,
+    MemberId: props.owner,
+    MemberName: "",
+    Attribute: "user",
+    Role: "admin",
+    Status: "owner"
+  };
+
+  const [owner, setOwner] = React.useState(defaultOwnerData);
+  const [members, setMembers] = React.useState([]);
+  const [searchType, setSearchType] = React.useState('MemberName');
   const [searchKey, setSearchKey] = React.useState('');
   const [isOpen, setOpen] = React.useState(false);
 
@@ -160,15 +172,28 @@ export const MembersPage = (props) => {
   };
 
   const dropdownItems = (t?: TFunction) => [
-    <DropdownItem key="name" id="name" component="button">
+    <DropdownItem key="name" id="MemberName" component="button">
       {t('Name')}
     </DropdownItem>,
-    <DropdownItem key="email" id="email" component="button">
+    <DropdownItem key="email" id="MemberId" component="button">
       {t('Email')}
     </DropdownItem>,
   ];
 
-  const isOwner = props.resource.status.owner ? Object.keys(props.resource.status.owner)[0] === getId() : props.resource.metadata.annotations.owner === getId();
+  React.useEffect(()=>{
+    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member?userId=${getId()}${getUserGroup()}`, 'GET')
+      .then((res) => {
+        let idx = _.findIndex(res, (mem: RowMemberData)=>mem.Status === "owner");
+        setOwner(res[idx]);
+        res.splice(idx, 1)
+        setMembers(res);
+      })
+      .catch((err) => {
+        console.log("Fail to get member list. " + err)
+      });
+  }, []);
+
+  const isOwner = props.owner === getId();
   const { t } = useTranslation();
   return (
     <>
@@ -177,26 +202,25 @@ export const MembersPage = (props) => {
           onSelect={onSelect}
           toggle={
             <DropdownToggle id="toggle-id" onToggle={onToggle} iconComponent={CaretDownIcon}>
-              {searchType === 'email' ? t('Email') : t('Name')}
+              {searchType === 'MemberId' ? t('Email') : t('Name')}
             </DropdownToggle>}
           isOpen={isOpen}
           dropdownItems={dropdownItems.bind(null, t)()}
         />
-        <TextInput className='hc-members__search' value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'email' ? t('search by email'): t('search by name')}></TextInput>
+        <TextInput className='hc-members__search' value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'MemberId' ? t('search by email'): t('search by name')}></TextInput>
         {isOwner &&
           <div className="co-m-primary-action">
-            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ clusterName: props.resource.metadata.name, modalClassName: 'modal-lg', existMembers: props.resource.status.members, existGroups: props.resource.status.groups })}>
+            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ clusterName: props.clusterName, modalClassName: 'modal-lg', existMembers: members })}>
               {t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_1')}
             </Button>
           </div>}
       </div>
       <div className="hc-members__body">
         <UsersTable
-          clusterName={props.resource.metadata.name}
+          clusterName={props.clusterName}
           isOwner={isOwner}
-          owner={props.resource.status.owner ?? props.resource.metadata.annotations.owner}
-          users={props.resource.status.members}
-          groups={props.resource.status.groups} 
+          owner={owner}
+          members={members}
           searchType={searchType}
           searchKey={searchKey} />
       </div>
@@ -205,10 +229,16 @@ export const MembersPage = (props) => {
 }
 
 export type RowMemberData = {
-  name: string,
-  role: string,
-  type: 'owner' | 'user' | 'group',
-  email: string
+  Id?: number,
+  Namespace?: string,
+  Cluster?: string,
+  MemberId: string,
+  MemberName: string,
+  Attribute: "group" | "user",
+  Role: "guest" | "developer" | "admin",
+  Status?: "invited" | "owner",
+  CreatedTime?: string,
+  UpdatedTime?: string
 };
 
 export interface ITableRow extends IRow {

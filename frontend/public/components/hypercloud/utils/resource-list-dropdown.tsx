@@ -153,7 +153,7 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
 
   const allItems = new Set<string>(resourceList.map(resource => resource.metadata.uid));
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     props.onSelectedItemChange?.(selectedItems);
   }, [selectedItems]);
 
@@ -190,7 +190,7 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
   };
 
   return (
-    <DataToolbar id="search-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={`Clear all ${props.resourceType}`}>
+    <DataToolbar id="search-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={props.clearFiltersButtonText ?? `Clear all ${props.resourceType}`}>
       <DataToolbarContent>
         <DataToolbarItem>
           <DataToolbarFilter
@@ -237,6 +237,7 @@ export type ResourceListDropdownWithDataToolbarProps = {
   autocompleteFilter?: (text: any, item: any) => any;
   onSelectedItemChange?: (items: Set<string>) => any;
   useHookForm?: boolean;
+  clearFiltersButtonText?: string;
 };
 
 ResourceListDropdownWithDataToolbar.defaultProps = {

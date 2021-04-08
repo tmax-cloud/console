@@ -19,7 +19,7 @@ export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProp
 
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault(); ///cluster/cho/remove_member/group/ck1-3?userId=kubernetes-admin&userGroup=hypercloud5
-    coFetchJSON(`/api/multi-hypercloud/cluster/${props.clusterName}/remove_member/${props.member.type}/${props.member.type === 'user' ? props.member.email : props.member.name}?userId=${getId()}${getUserGroup()}`, 'POST')
+    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/remove_member/${props.member.Attribute}/${props.member.Attribute === 'user' ? props.member.MemberId : props.member.MemberName}?userId=${getId()}${getUserGroup()}`, 'POST')
       .then((res) => {
         props.close();
       })
@@ -38,7 +38,7 @@ export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProp
       </ModalTitle>
       <ModalBody className="modal-body">
         <div>
-          {t('MULTI:MSG_MULTI_CLUSTERS_DELETEPEPLEPOPUP_MAINMESSAGE_1', { 0: props.member.email.length > 0 ? `${props.member.name}(${props.member.email})` : props.member.name, 1: props.clusterName })}
+          {t('MULTI:MSG_MULTI_CLUSTERS_DELETEPEPLEPOPUP_MAINMESSAGE_1', { 0: props.member.MemberId.length > 0 ? `${props.member.MemberName}(${props.member.MemberId})` : props.member.MemberName, 1: props.member.Cluster })}
         </div>
       </ModalBody>
       <ModalSubmitFooter errorMessage={errorMsg} inProgress={props.inProgress} submitText={t('MULTI:MSG_MULTI_CLUSTERS_DELETEACCESSMEMBER_2')} cancelText={t('MULTI:MSG_MULTI_CLUSTERS_DELETEACCESSMEMBER_1')} cancel={props.cancel} />
@@ -49,12 +49,17 @@ export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProp
 export const removeMemberModal = createModalLauncher(RemoveMemberModal);
 
 export type RemoveMemberModalProps = {
-  clusterName: string;
   member: {
-    name: string,
-    role: string,
-    type: 'user' | 'group',
-    email: string
+    Id?: number,
+    Namespace?: string,
+    Cluster?: string,
+    MemberId: string,
+    MemberName: string,
+    Attribute: "group" | "user",
+    Role: "guest" | "developer" | "admin",
+    Status?: "invited" | "owner",
+    CreatedTime?: string,
+    UpdatedTime?: string
   };
 } & ModalComponentProps &
   HandlePromiseProps;
