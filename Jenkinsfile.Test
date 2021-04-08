@@ -18,7 +18,7 @@ pipeline {
     string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')    
   }
   environment { 
-    BRANCH = "dev/jinsoo"
+    BRANCH = "hc-dev-v5.0"
     BUILD_MODE = "${params.BUILD_MODE}"
     DEPLOY = "${params.DEPLOY}"
 
@@ -26,8 +26,8 @@ pipeline {
     PRODUCT = "hypercloud-console"
     VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}"
 
-    // OPERATOR_VER = "${params.OPERATOR_VER}"
-    // CONSOLE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}"
+    OPERATOR_VER = "5.1.0.1"
+    CONSOLE_VER = "${params.MAJOR_VER}.${params.MINOR_VER}.${params.PATCH_VER}.${params.HOTFIX_VER}"
     KEYCLOAK = "${params.KEYCLOAK}"
     REALM = "${params.REALM}"
     CLIENTID = "${params.CLIENTID}"
@@ -138,7 +138,7 @@ pipeline {
             git config --global credential.username ${username}
             git config --global credential.helper "!echo password=${password}; echo"          
           """
-          sh "git tag ${PRE_VER}"
+        //   sh "git tag ${PRE_VER}"
           sh "git tag ${VER}"
           sh "git push origin HEAD:${BRANCH} --tags"    
           // Creat CHANGELOG-${VER}.md
@@ -149,7 +149,7 @@ pipeline {
             date '+%F  %r' >> ./CHANGELOG/CHANGELOG-${VER}.md
             git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
             --pretty=format:\"- %s (%cn) %n    Message: %b\" \
-            --simplify-merges ${PRE_VER}..${VER} \
+            --simplify-merges hypercloud-console_0.5.0.3..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh "git add -A"
@@ -168,7 +168,7 @@ pipeline {
       }
       steps {
         emailext (
-          to: 'yjs890403@gmail.com',
+          to: 'cqa1@tmax.co.kr, ck2_lab@tmax.co.kr, ck3_lab@tmax.co.kr, ck2_1@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
           body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
