@@ -18,24 +18,11 @@ export const getDynamicProxyPath = (cluster) => {
 };
 
 /** @type {(model: K8sKind) => string} */
-<<<<<<< HEAD
 export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
 => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
   let p = getDynamicProxyPath(cluster);
-=======
-const getK8sAPIPath = ({ apiGroup = 'core', apiVersion, kind}, cluster)
-=> {
-  const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
-  let p = k8sBasePath;
-
-  if (window.SERVER_FLAGS.McMode && getActivePerspective() == 'hc') {
-    p = `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
-  } else if (cluster) {
-    p = `${window.SERVER_FLAGS.basePath}api/${cluster}`;
-  }
->>>>>>> [feat][patch] 멀티 클러스터 콘솔 환경 네임스페이스 추가
 
   if (isLegacy) {
     p += '/api/';
