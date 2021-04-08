@@ -60,7 +60,7 @@ const MemberTableHeader = (t?: TFunction) => {
 MemberTableHeader.displayName = 'UserTableHeader';
 
 export const UsersTable = (props) => {
-  const { clusterName, isOwner, owner, members, heading, searchType, searchKey } = props;
+  const { isOwner, owner, members, heading, searchType, searchKey } = props;
   
   const { t } = useTranslation();
   const ownerRow = ownerData.bind(null, owner, t)();
