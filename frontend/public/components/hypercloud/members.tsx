@@ -61,7 +61,7 @@ MemberTableHeader.displayName = 'UserTableHeader';
 
 export const UsersTable = (props) => {
   const { isOwner, owner, members, heading, searchType, searchKey } = props;
-  
+
   const { t } = useTranslation();
   const ownerRow = ownerData.bind(null, owner, t)();
 
@@ -69,7 +69,7 @@ export const UsersTable = (props) => {
   const [sortBy, setSortBy] = React.useState({ index: 0, sortField: 'MemberName', direction: SortByDirection.asc });
   const [filteredRows, setFilteredRows] = React.useState([]);
 
-  const sortRows = ({sortField, direction}, rows) => {
+  const sortRows = ({ sortField, direction }, rows) => {
     const sortedRows = rows.sort((a, b) => {
       const compA = typeof a.obj[sortField] === 'string' ? (a.obj[sortField] as string).toLowerCase() : a.obj[sortField],
         compB = typeof b.obj[sortField] === 'string' ? (b.obj[sortField] as string).toLowerCase() : b.obj[sortField];
@@ -83,7 +83,7 @@ export const UsersTable = (props) => {
     sortRows(sortBy, MemberTableRows(members));
   }, [members]);
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     const filteredResult = rows.filter(row => fuzzy(_.toLower(searchKey), _.toLower(row.obj[searchType])));
     setFilteredRows(filteredResult);
   }, [rows, searchType, searchKey]);
@@ -180,10 +180,10 @@ export const MembersPage = (props) => {
     </DropdownItem>,
   ];
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member?userId=${getId()}${getUserGroup()}`, 'GET')
       .then((res) => {
-        let idx = _.findIndex(res, (mem: RowMemberData)=>mem.Status === "owner");
+        let idx = _.findIndex(res, (mem: RowMemberData) => mem.Status === "owner");
         setOwner(res[idx]);
         res.splice(idx, 1)
         setMembers(res);
@@ -207,7 +207,7 @@ export const MembersPage = (props) => {
           isOpen={isOpen}
           dropdownItems={dropdownItems.bind(null, t)()}
         />
-        <TextInput className='hc-members__search' value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'MemberId' ? t('search by email'): t('search by name')}></TextInput>
+        <TextInput className='hc-members__search' value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'MemberId' ? t('search by email') : t('search by name')}></TextInput>
         {isOwner &&
           <div className="co-m-primary-action">
             <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ clusterName: props.clusterName, modalClassName: 'modal-lg', existMembers: members })}>

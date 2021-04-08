@@ -97,11 +97,11 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
               />
             </div>
             <div>
-              {type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1').split('\n').map( line => {
-            return (<span>{line}<br/></span>)
-          }) : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2').split('\n').map( line => {
-            return (<span>{line}<br/></span>)
-          })}
+              {type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1').split('\n').map(line => {
+                return (<span>{line}<br /></span>)
+              }) : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2').split('\n').map(line => {
+                return (<span>{line}<br /></span>)
+              })}
             </div>
           </div>
         </Section>

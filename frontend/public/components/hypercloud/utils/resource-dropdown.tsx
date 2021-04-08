@@ -41,7 +41,7 @@ const ResourceDropdownInner: React.FC<ResourceDropdownInnerProps> = (props) => {
     <Dropdown
       name={props.name}
       items={rows}
-      title={props.loaded && !_.isEmpty(rows) ? 
+      title={props.loaded && !_.isEmpty(rows) ?
         props.placeholder : <LoadingInline />}
       className={classNames('hc-resource-dropdown-wrapper', props.className)}
       dropDownClassName={classNames('hc-resource-dropdown', props.dropDownClassName)}
@@ -69,7 +69,7 @@ export const ResourceDropdown: React.FC<ResourceDropdownProps> = ({ name, resour
     <Firehose resources={resources}>
       <ResourceDropdownInner
         name={name}
-        kinds={resources.map(res=>res.kind)}
+        kinds={resources.map(res => res.kind)}
         {...props}
       />
     </Firehose>
