@@ -8,13 +8,12 @@ import {
   ModalTitle,
   createModalLauncher,
 } from '../../factory/modal';
-import { HandlePromiseProps, withHandlePromise, Loading } from '../../utils';
+import { HandlePromiseProps, withHandlePromise } from '../../utils';
 import { Section } from '../utils/section';
 import { RadioGroup } from '@console/internal/components/radio';
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+import { TextInput } from '@patternfly/react-core';
 import { coFetchJSON } from '../../../co-fetch';
 import { getId, getUserGroup } from '../../../hypercloud/auth';
-import { UsersIcon, TimesIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
@@ -44,75 +43,26 @@ const roleItems = (t?: TFunction) => [
   },
 ];
 
-const getRowMemberData = (members) => (
-  members.map(member => Array.isArray(member) ? { email: member[0], name: member[1] } : { name: member })
-);
-
 export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProps) => {
   const [type, setType] = React.useState('user');
   const [role, setRole] = React.useState('admin');
   const [errorMsg, setError] = React.useState('');
-  const [memberList, setMemberList] = React.useState(null);
-  const [selectedMember, setMember] = React.useState({name:'', email:''});
-  const [isExpanded, setExpanded] = React.useState(false);
-  const [isDisabled, setDisabled] = React.useState(false);
-  const [searchKey, setSearchKey] = React.useState('');
+  const [selectedMember, selectMember] = React.useState('');
   const [inProgress, setProgress] = React.useState(false);
 
-  const members = _.map(props.existMembers, (value, key) => key);
-  const groups = _.map(props.existGroups, (value, key) => key);
-  const membersUrl = members.reduce((acc, curr) => acc + `&except=${curr}`, `${window.SERVER_FLAGS.KeycloakAuthURL}realms/${window.SERVER_FLAGS.KeycloakRealm}/user/list?`)
-  const groupsUrl = groups.reduce((acc, curr) => acc + `&except=${curr}`, `${window.SERVER_FLAGS.KeycloakAuthURL}realms/${window.SERVER_FLAGS.KeycloakRealm}/group/list?exceptDefault=true`)
-
   React.useEffect(() => {
-    const url = type === 'user' ? membersUrl : groupsUrl
-    coFetchJSON(url)
-      .then((res) => {
-        let formattedMembers = getRowMemberData(res);
-        setMemberList(formattedMembers);
-      })
-      .catch((err) => {
-        setError(`Fail to get member list. ` + err);
-      });
+    clearSelection();
   }, [type]);
 
-  const onToggle = (isExpanded) => {
-    if (!isDisabled) setExpanded(isExpanded);
-  }
-
-  const onSelect = (event, selection, isPlaceholder) => {
-    if (isPlaceholder) clearSelection();
-    else {
-      setMember(JSON.parse(selection));
-      setExpanded(false);
-      setDisabled(true);
-    }
-  };
-
   const clearSelection = () => {
-    setMember({name:'', email:''});
-    setDisabled(false);
-  };
-
-  const customFilter = (e) => {
-    const url = type === 'user' ? membersUrl : groupsUrl
-    setMemberList(null);
-    setSearchKey(e.target.value);
-    coFetchJSON(`${url}&startsWith=${e.target.value}`)
-      .then((res) => {
-        setMemberList(getRowMemberData(res));
-      })
-      .catch((err) => {
-        setError(`Fail to get member list. ` + err);
-      });
-    return [];
+    selectMember('');
   };
 
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     // Append to an existing array, but handle the special case when the array is null.
     setProgress(true);
-    coFetchJSON(`/api/multi-hypercloud/cluster/${props.clusterName}/member_invitation/${type}/${type === 'user' ? selectedMember.email : selectedMember.name}?userId=${getId()}${getUserGroup()}&remoteRole=${role}${type === 'user' ? `&memberName=${selectedMember.name}` : ''}`, 'POST')
+    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member_invitation/${type}/${selectedMember}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'POST')
       .then((res) => {
         setProgress(false);
         props.close();
@@ -139,46 +89,19 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
               inline
             />
             <div className='hc-invite-modal__members'>
-              {isDisabled ?
-                <div className='hc-invite-modal__selectedMember'>
-                  <span className='hc-invite-modal__selectedMember__name'>{type === 'group' && <UsersIcon className='hc-member__group-icon' />}{selectedMember.name}<TimesIcon onClick={clearSelection} className='hc-member__close-icon' /></span>
-                  <span className='hc-invite-modal__selectedMember__email'>{selectedMember.email}</span>
-                </div> :
-                <Select
-                  variant={SelectVariant.typeahead}
-                  ariaLabelTypeAhead='Select a state'
-                  onToggle={onToggle}
-                  onSelect={onSelect}
-                  onClear={clearSelection}
-                  onFilter={customFilter}
-                  selections={type === 'user' ? selectedMember.email : selectedMember.name}
-                  isExpanded={isExpanded}
-                  ariaLabelledBy='typeahead-select'
-                  placeholderText='Select a state'
-                  className='hc-invite-modal__search-list'
-                  noResultsFoundText={t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SEARCHBAR_2', { 0: '' })}
-                >
-                  {memberList ?
-                    memberList.length > 0 ?
-                      memberList.map((member, index) => {
-                        const key = type === 'user' ? member.email : member.name
-                        return <SelectOption id={key} value={JSON.stringify(member)}>
-                          <div className='hc-invite-modal__member-item'>
-                            <span>{type === 'group' && <UsersIcon className='hc-member__group-icon' />}{member.name}</span>
-                            <span>{member.email}</span>
-                          </div>
-                        </SelectOption>
-                      })
-                      : <div>{t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SEARCHBAR_2', { 0: searchKey })}</div>
-                    : <Loading />}
-                </Select>}
+              <TextInput
+                type="text"
+                name="selected-member"
+                value={selectedMember}
+                onChange={selectMember}
+              />
             </div>
             <div>
-              {type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1').split('\n').map( line => {
-            return (<span>{line}<br/></span>)
-          }) : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2').split('\n').map( line => {
-            return (<span>{line}<br/></span>)
-          })}
+              {type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1').split('\n').map(line => {
+                return (<span>{line}<br /></span>)
+              }) : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2').split('\n').map(line => {
+                return (<span>{line}<br /></span>)
+              })}
             </div>
           </div>
         </Section>
@@ -206,6 +129,7 @@ export const inviteMemberModal = createModalLauncher(InviteMemberModal);
 
 export type InviteMemberModalProps = {
   clusterName: string;
+  namespace: string;
   type: string;
   existMembers: string[];
   existGroups: string[];

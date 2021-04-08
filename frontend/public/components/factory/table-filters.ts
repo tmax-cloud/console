@@ -22,7 +22,7 @@ import {
   alertState,
   silenceState,
 } from '../../reducers/monitoring';
-import { pipelineRunFilterReducer } from '../hypercloud/utils/pipeline-filter-reducer';
+import { pipelineRunFilterReducer } from '../../../packages/dev-console/src/utils/pipeline-filter-reducer';
 
 export const fuzzyCaseInsensitive = (a: string, b: string): boolean =>
   fuzzy(_.toLower(a), _.toLower(b));
