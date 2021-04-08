@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Firehose } from '@console/internal/components/utils';
-import { referenceForModel } from '@console/internal/module/k8s';
 import { PipelineRun, Pipeline } from '../../../utils/pipeline-augment';
 import { PipelineModel } from '../../../models';
 import { PipelineBars } from './PipelineBars';
@@ -20,7 +19,7 @@ export const PipelineTaskStatus: React.FC<PipelineTaskStatusProps> = ({
         {
           name: pipelinerun.spec.pipelineRef.name,
           namespace: pipelinerun.metadata.namespace,
-          kind: referenceForModel(PipelineModel),
+          kind: PipelineModel.kind,
           isList: false,
           prop: 'pipeline',
         },
