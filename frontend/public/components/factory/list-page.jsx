@@ -16,6 +16,7 @@ import { Dropdown, Firehose, history, inject, kindObj, makeQuery, makeReduxID, P
 import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
+import './list-page.scss';
 
 /** @type {React.SFC<{disabled?: boolean, label?: string, onChange: (value: string) => void;, defaultValue?: string, value?: string, placeholder?: string, autoFocus?: boolean, onFocus?:any, name?:string, id?: string, onKeyDown?: any, parentClassName?: string }}>} */
 export const TextFilter = props => {
@@ -158,12 +159,6 @@ export const FireMan_ = connect(null, { filterList })(
               <Dropdown buttonClassName="pf-m-primary" id="item-create" menuClassName={classNames({ 'pf-m-align-right-on-md': title })} title={createButtonText} noSelection items={createProps.items} onChange={this.runOrNavigate} />
             </div>
           );
-        } else if (createProps.unclickableMsg) {
-          createLink = (
-            <Tooltip content={createProps.unclickableMsg}>
-              <Button style={{ cursor: 'no-drop' }}>{createButtonText}</Button>
-            </Tooltip>
-          );
         } else {
           createLink = (
             <div className="co-m-primary-action">
@@ -195,7 +190,13 @@ export const FireMan_ = connect(null, { filterList })(
                   'co-m-pane__createLink--no-title': !title,
                 })}
               >
-                {createLink}
+                {createProps.unclickableMsg ? (
+                  <Tooltip content={createProps.unclickableMsg}>
+                    <div className={classNames('list-page__button-nonclickable')}>{createLink}</div>
+                  </Tooltip>
+                ) : (
+                  <>{createLink}</>
+                )}
               </div>
             )}
             {!title && badge && <div>{badge}</div>}
@@ -274,7 +275,11 @@ export const ListPage = withFallback(props => {
     }
   }
 
-  createProps = createProps || (isNSSelected ? (createHandler ? { onClick: createHandler } : { to: href }) : { unclickableMsg: t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') });
+  createProps = createProps || (createHandler ? { onClick: createHandler } : { to: href });
+
+  if (!isNSSelected) {
+    createProps = { ...createProps, unclickableMsg: t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') };
+  }
 
   const createAccessReview = skipAccessReview ? null : { model: ko, namespace: usedNamespace };
   const resources = [

@@ -1,0 +1,10 @@
+.list-page__button-nonclickable {
+  cursor: no-drop;
+  button {
+    cursor: no-drop;
+    pointer-events: none;
+  }
+  a {
+    pointer-events: none;
+  }
+}
