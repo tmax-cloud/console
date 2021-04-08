@@ -175,7 +175,7 @@ func main() {
 	// gitlab flag 추가 2021/04/05
 	// 깃랩 주소 획득용, UI 개발자 소민진 연구원, 서버 담당자 김성현 연구원
 	// 깃랩 주소 URL 필요, 변경 가능한 주소이므로 console 설치 시 default 하게 입력해야 함
-	fGitlabURL := fs.String("managed-gitlab-url", "http://0.0.0.0", "gitlab url")
+	fGitlabURL := fs.String("managed-gitlab-url", "http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/", "gitlab url")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
