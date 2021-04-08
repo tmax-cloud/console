@@ -78,7 +78,7 @@ export const ModalFooter: React.SFC<ModalFooterProps> = ({ message, errorMessage
 export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({ message, errorMessage, inProgress, cancel, submitText, cancelText, submitDisabled, submitDanger, onCancel }) => {
   const onCancelClick = e => {
     e.stopPropagation();
-    onCancel();
+    onCancel?.();
     cancel(e);
   };
 
