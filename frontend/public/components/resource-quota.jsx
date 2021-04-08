@@ -5,7 +5,7 @@ import { sortable } from '@patternfly/react-table';
 import { OutlinedCircleIcon, ResourcesAlmostEmptyIcon, ResourcesAlmostFullIcon, ResourcesFullIcon, UnknownIcon } from '@patternfly/react-icons';
 
 import { FLAGS, YellowExclamationTriangleIcon } from '@console/shared';
-import { DetailsPage, MultiListPage, Table, TableRow, TableData } from './factory';
+import { ListPage, DetailsPage, MultiListPage, Table, TableRow, TableData } from './factory';
 import { Kebab, SectionHeading, navFactory, ResourceKebab, ResourceLink, ResourceSummary, convertToBaseValue, FieldLevelHelp } from './utils';
 import { connectToFlags, flagPending } from '../reducers/features';
 import { GaugeChart } from './graphs/gauge';
@@ -13,7 +13,7 @@ import { LoadingBox } from './utils/status-box';
 import { referenceForModel } from '../module/k8s';
 import { ResourceQuotaModel, ClusterResourceQuotaModel } from '../models';
 import { useTranslation } from 'react-i18next';
-import {ResourceLabel} from '../models/hypercloud/resource-plural'
+import { ResourceLabel } from '../models/hypercloud/resource-plural';
 
 const { common } = Kebab.factory;
 const resourceQuotaMenuActions = [...Kebab.getExtensionsActionsForKind(ResourceQuotaModel), ...common];
@@ -295,10 +295,11 @@ export const quotaType = quota => {
 // Split each resource quota into one row per subject
 export const flatten = resources => _.flatMap(resources, resource => _.compact(resource.data));
 
-export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(({ namespace, flags, mock }) => {
+export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(props => {
   const { t } = useTranslation();
   const resources = [{ kind: 'ResourceQuota', namespaced: true }];
   let rowFilters;
+  const flags = props.flags;
 
   if (flagPending(flags[FLAGS.OPENSHIFT])) {
     return <LoadingBox />;
@@ -321,12 +322,8 @@ export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(({ namespace, 
       },
     ];
   }
-  const createNS = namespace || 'default';
-  const accessReview = {
-    model: ResourceQuotaModel,
-    namespace: createNS,
-  };
-  return <MultiListPage canCreate={true} createAccessReview={accessReview} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', {0:ResourceLabel(ResourceQuotaModel, t)})} createProps={{ to: `/k8s/ns/${createNS}/resourcequotas/~new` }} ListComponent={ResourceQuotasList} resources={resources} label="Resource Quotas" namespace={namespace} flatten={flatten} title={t('COMMON:MSG_LNB_MENU_80')} rowFilters={rowFilters} mock={mock} />;
+
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_80')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(ResourceQuotaModel, t) })} canCreate={true} ListComponent={ResourceQuotasList} kind="ResourceQuota" {...props} />;
 });
 
 export const ResourceQuotasDetailsPage = props => <DetailsPage {...props} menuActions={resourceQuotaMenuActions} pages={[navFactory.details(Details), navFactory.editYaml()]} />;
