@@ -164,6 +164,14 @@ const Dropdown_ = (props) => {
     }
   }, [name, register, unregister]);
 
+  React.useEffect(() => {
+    props.title && setTitle(props.title);
+  }, [props.title]);
+
+  React.useEffect(() => {
+    setItems(props.items);
+  }, [props.items]);
+
   const spacerBefore = props.spacerBefore || new Set();
   const headerBefore = props.headerBefore || {};
   const rows = [];
