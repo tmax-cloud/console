@@ -180,11 +180,11 @@ export const k8sUpdateApproval = (kind, resource, approval, data, method = 'PUT'
   }
 }
 
-export const k8sUpdateClaim = (kind, clusterClaim, admit, reason, userName) => {
+export const k8sUpdateClaim = (kind, clusterClaim, admit, reason, userName, nameSpace) => {
 
-  const resourceClusterURL = `api/multi-hypercloud/clusterclaim/${clusterClaim}?userId=${getId()}${getUserGroup()}`;
+  const resourceClusterURL = `api/multi-hypercloud/namespaces/${nameSpace}/clusterclaims/${clusterClaim}?userId=${getId()}${getUserGroup()}`;
 
-  const url = resourceClusterURL + `&admit=${admit}&reason=${reason}&userName=${userName}`;
+  const url = resourceClusterURL + `&admit=${admit}&reason=${reason}&userName=${userName}&memberName=cho`;
 
   return coFetchJSON.put(url);
 }
