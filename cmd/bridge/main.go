@@ -177,6 +177,9 @@ func main() {
 	// 깃랩 주소 URL 필요, 변경 가능한 주소이므로 console 설치 시 default 하게 입력해야 함
 	fGitlabURL := fs.String("managed-gitlab-url", "http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/", "gitlab url")
 
+	// kubeflow proxy 추가 // 윤진수
+	fkubeflowEndpoint := fs.String("kubeflow-endpoint", "http://istio-ingressgateway.istio-system.svc/api/kubeflow/", "URL of the KIALI Portal")
+
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -515,6 +518,12 @@ func main() {
 		},
 		Endpoint: kibanaEndpoint,
 		Origin:   "http://localhost",
+	}
+	kubeflowEndpoint := bridge.ValidateFlagIsURL("kubeflow-endpoint", *fkubeflowEndpoint)
+	srv.KubeflowProxyConfig = &hproxy.Config{
+		HeaderBlacklist: []string{"X-CSRFToken"},
+		Endpoint:        kubeflowEndpoint,
+		Origin:          "http://localhost",
 	}
 
 	// Add hproxy.config
