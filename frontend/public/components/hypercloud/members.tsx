@@ -63,7 +63,7 @@ export const UsersTable = (props) => {
   const { isOwner, owner, members, heading, searchType, searchKey } = props;
 
   const { t } = useTranslation();
-  const ownerRow = ownerData.bind(null, owner, t)();
+  const ownerRow = owner ? ownerData.bind(null, owner, t)() : [];
 
   const [rows, setRows] = React.useState([]);
   const [sortBy, setSortBy] = React.useState({ index: 0, sortField: 'MemberName', direction: SortByDirection.asc });
@@ -184,7 +184,7 @@ export const MembersPage = (props) => {
     coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member?userId=${getId()}${getUserGroup()}`, 'GET')
       .then((res) => {
         let idx = _.findIndex(res, (mem: RowMemberData) => mem.Status === "owner");
-        setOwner(res[idx]);
+        idx >= 0 && setOwner(res[idx]);
         res.splice(idx, 1)
         setMembers(res);
       })
