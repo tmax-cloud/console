@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-// import { Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import * as Modal from 'react-modal';
 import { Router } from 'react-router-dom';
 import * as classNames from 'classnames';
 import * as _ from 'lodash-es';
 import { ActionGroup, Button } from '@patternfly/react-core';
 
-// import store from '../../redux';
+import store from '../../../redux';
 import { ButtonBar } from '../../utils/button-bar';
 import { history } from '../../utils/router';
 
@@ -39,11 +39,13 @@ export const createModalLauncher: CreateModalLauncher = Component => props => {
     };
 
     return (
-      <Router {...{ history, basename: window.SERVER_FLAGS.basePath }}>
-        <Modal isOpen={true} contentLabel="Modal" onRequestClose={_handleClose} className={classNames('modal-dialog', props.modalClassName)} overlayClassName="co-overlay" shouldCloseOnOverlayClick={!props.blocking}>
-          <Component {...(_.omit(props, 'blocking', 'modalClassName') as any)} cancel={_handleCancel} close={_handleClose} />
-        </Modal>
-      </Router>
+      <Provider store={store}>
+        <Router {...{ history, basename: window.SERVER_FLAGS.basePath }}>
+          <Modal isOpen={true} contentLabel="Modal" onRequestClose={_handleClose} className={classNames('modal-dialog', props.modalClassName)} overlayClassName="co-overlay" shouldCloseOnOverlayClick={!props.blocking}>
+            <Component {...(_.omit(props, 'blocking', 'modalClassName') as any)} cancel={_handleCancel} close={_handleClose} />
+          </Modal>
+        </Router>
+      </Provider>
     );
   };
   return createModal(getModalContainer);
@@ -60,7 +62,7 @@ export const ModalTitle: React.SFC<ModalTitleProps> = React.memo(({ children, cl
 export const ModalBody: React.SFC<ModalBodyProps> = ({ children, unsetOverflow = false }) => (
   <div className={unsetOverflow ? classNames('modal-body', 'unset-overflow') : 'modal-body'}>
     <div className="modal-body-content">
-      <div className="">{children}</div>
+      <div className="modal-body-inner-shadow-covers">{children}</div>
     </div>
   </div>
 );
@@ -73,9 +75,10 @@ export const ModalFooter: React.SFC<ModalFooterProps> = ({ message, errorMessage
   );
 };
 
-export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({ message, errorMessage, inProgress, cancel, submitText, cancelText, submitDisabled, submitDanger }) => {
+export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({ message, errorMessage, inProgress, cancel, submitText, cancelText, submitDisabled, submitDanger, onCancel }) => {
   const onCancelClick = e => {
     e.stopPropagation();
+    onCancel();
     cancel(e);
   };
 
@@ -137,6 +140,8 @@ export type ModalSubmitFooterProps = {
   submitText: React.ReactNode;
   submitDisabled?: boolean;
   submitDanger?: boolean;
+  onCancel?: any;
+  id?: string;
 };
 
 export type CreateModalLauncher = <P extends ModalComponentProps>(C: React.ComponentType<P>) => (props: P & CreateModalLauncherProps) => { result: Promise<{}> };
