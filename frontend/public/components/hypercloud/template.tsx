@@ -66,8 +66,8 @@ type TemplateDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editYaml } = navFactory;
-const TemplatesDetailsPage: React.FC<TemplatesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={templateMenuActions} pages={[details(TemplateDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const TemplatesDetailsPage: React.FC<TemplatesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={templateMenuActions} pages={[details(TemplateDetails), editResource()]} />;
 TemplatesDetailsPage.displayName = 'TemplatesDetailsPage';
 
 const tableColumnClasses = [

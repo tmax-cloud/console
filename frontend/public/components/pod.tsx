@@ -371,7 +371,7 @@ export const PodsDetailsPage: React.FC<PodDetailsPageProps> = props => {
       menuActions={menuActions}
       pages={[
         navFactory.details(Details),
-        navFactory.editYaml(),
+        navFactory.editResource(),
         navFactory.envEditor(PodEnvironmentComponent),
         navFactory.logs(PodLogs),
         navFactory.events(ResourceEventStream),

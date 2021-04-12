@@ -11,6 +11,7 @@ import { AsyncComponent } from './async';
 import { K8sResourceKind, K8sResourceCommon } from '../../module/k8s';
 import { referenceForModel, referenceFor } from '../../module/k8s/k8s';
 import { useExtensions, HorizontalNavTab, isHorizontalNavTab } from '@console/plugin-sdk';
+import { EditDefaultPage } from '../hypercloud/crd/edit-resource';
 import { useTranslation } from 'react-i18next';
 
 const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
@@ -62,6 +63,11 @@ export const navFactory: NavFactory = {
   logs: component => ({
     href: 'logs',
     name: '로그',
+    component,
+  }),
+  editResource: (component = EditDefaultPage) => ({
+    href: 'edit',
+    name: 'Edit',
     component,
   }),
   editYaml: (component = editYamlComponent) => ({
