@@ -192,10 +192,6 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/k8s/ns/:ns/pipelines/~new" exact loader={() => import('../../packages/dev-console/src/components/pipelines/pipeline-builder' /* webpackChunkName: "PipelineBuilderPage" */).then(m => m.PipelineBuilderPage)} kind="Pipeline" />
           <LazyRoute path="/k8s/ns/:ns/:plural/~new/" exact />
           <LazyRoute path="/k8s/cluster/:plural/~new/" exact />
-          {/* <LazyRoute path="/k8s/ns/:ns/:plural/~new" kind="CustomResourceDefinition" exact loader={() => import('./hypercloud/crd/create-pinned-resource').then(m => m.CreateDefaultPage)} />
-          <LazyRoute path="/k8s/cluster/:plural/~new" kind="CustomResourceDefinition" exact loader={() => import('./hypercloud/crd/create-pinned-resource').then(m => m.CreateDefaultPage)} />
-          <LazyRoute path="/k8s/ns/:ns/customresourcedefinitions/:plural/~new" kind="CustomResourceDefinition" exact loader={() => import('./hypercloud/crd/create-custom-resource-definition').then(m => m.CreateCRDPage)} />
-          <LazyRoute path="/k8s/cluster/customresourcedefinitions/:plural/~new" kind="CustomResourceDefinition" exact loader={() => import('./hypercloud/crd/create-custom-resource-definition').then(m => m.CreateCRDPage)} /> */}
           <LazyRoute path="/k8s/ns/:ns/routes/~new/form" exact kind="Route" loader={() => import('./routes/create-route' /* webpackChunkName: "create-route" */).then(m => m.CreateRoute)} />
           <LazyRoute path="/k8s/ns/:ns/persistentvolumeclaims/~new/form" exact kind="PersistentVolumeClaim" loader={() => import('./storage/create-pvc' /* webpackChunkName: "create-pvc" */).then(m => m.CreatePVC)} />
           <LazyRoute path="/monitoring/alertmanagerconfig/receivers/~new" exact loader={() => import('./monitoring/receiver-forms/alert-manager-receiver-forms' /* webpackChunkName: "receiver-forms" */).then(m => m.CreateReceiver)} />
