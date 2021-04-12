@@ -226,21 +226,32 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           showAll={false}
           title="select Resources" // 드롭다운 title 지정
           autocompletePlaceholder="search by name"
-          type="multiple" // type: single / multiple
+          placeholder="Resource Dropdown" // *single에서만 사용 가능
+          type="single" // 필수 type: single / multiple
         />
-        <ResourceListDropdownWithDataToolbar
+        <ResourceListDropdown
+          name="RLD-multiple"
+          resourceList={ClusterResourceList} // 필수
+          onChange={updateSelectedClusterItems} // '아이템' 선택될 때마다 호출됨
+          resourceType="Cluster and Cluster Claim" 
+          autocompletePlaceholder="search by name"
+          type="multiple" // 필수 type: single / multiple
+          useHookForm
+        />
+        <ResourceListDropdownWithDataToolbar // react hook form 사용하지 않는 예시
           resourceList={ClusterResourceList} // 필수
           showAll={true} // 드롭다운에 all resource 라는 항목이 생긴다.
           resourceType="Cluster and Cluster Claim" // title, placeholder, all resources, chip group 에 적용되는 문구 (title, placeholder는 직접 지정하는 것의 우선순위가 더 높음)
           autocompletePlaceholder="search by name" // 검색란 placeholder
-          onSelectedItemChange={onSelectedItemChange} // 선택된 아이템 리스트 변동될 때마다 호출되는 함수
+          onSelectedItemChange={onSelectedItemChange} // 선택된 아이템 '리스트' 변동될 때마다 호출되는 함수
         />
-        <ResourceListDropdownWithDataToolbar
+        <ResourceListDropdownWithDataToolbar // react hook form 사용하는 예시
           name="ResourceListDropdownWithDataToolbar1"
           resourceList={ClusterResourceList} // 필수
           showAll={false}
           title="select Resources" // 드롭다운 title 지정
           resourceType="Cluster and Cluster Claim"
+          useHookForm
         />
       </Section>
       <Section id="numberspinner" label="Number Spinner">

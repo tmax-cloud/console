@@ -8,15 +8,38 @@ import { useFormContext } from 'react-hook-form';
 import { Dropdown, ResourceIcon } from '../../utils';
 import {
   K8sResourceKind,
-  K8sResourceKindReference,
 } from '../../../module/k8s';
 import { Badge, Checkbox, DataToolbar, DataToolbarContent, DataToolbarFilter, DataToolbarItem, DataToolbarChip } from '@patternfly/react-core';
+
+const autocompleteFilter = (text, item) => {
+  const { resource } = item.props;
+  if (!resource) {
+    return false;
+  }
+
+  return fuzzy(_.toLower(text), _.toLower(resource.fakeMetadata?.fakename ?? resource.metadata.name));
+};
 
 export type HCK8sResourceKind = K8sResourceKind & {
   fakeMetadata?: any;
 };
 
-const DropdownItem: React.SFC<DropdownItemProps> = ({ resource, checked }) => (
+const DropdownItem: React.SFC<DropdownItemProps> = ({ resource }) => (
+  <>
+    <span className={'co-resource-item'}>
+      <span className="co-resource-icon--fixed-width">
+        <ResourceIcon kind={resource.kind} />
+      </span>
+      <span className="co-resource-item__resource-name">
+        <span>
+          {resource.fakeMetadata?.fakename ?? resource.metadata.name}
+        </span>
+      </span>
+    </span>
+  </>
+);
+
+const DropdownItemWithCheckbox: React.SFC<DropdownItemWithCheckboxProps> = ({ resource, checked }) => (
   <>
     <span className={'co-resource-item'}>
       <Checkbox
@@ -38,41 +61,56 @@ const DropdownItem: React.SFC<DropdownItemProps> = ({ resource, checked }) => (
 
 type DropdownItemProps = {
   resource: HCK8sResourceKind;
-  checked?: boolean;
 };
 
-export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props) => {
-  const { name, required, resourceList, onChange, showAll, className, type, useHookForm } = props;
+type DropdownItemWithCheckboxProps = DropdownItemProps & {
+  checked: boolean;
+}
 
-  const selected = name ? props.selected : props.selected;
+export const SingleResourceListDropdown: React.SFC<BaseResourceListDropdown & SingleResourceDropdownProps & { selected: string; onChange: (value: string) => void; }> = (props) => {
+  const { resourceList, onChange, className, selected } = props;
+  const isSelected = !!selected;
 
-  if (useHookForm && name) {
-    const { register, unregister, setValue } = useFormContext();
+  // Create dropdown items for each resource.
+  const items = OrderedMap(
+    _.map(resourceList, (resource) => [
+      resource.metadata.name,
+      <DropdownItem resource={resource} />
+    ]
+    )).toJS() as { [s: string]: JSX.Element };
 
-    React.useEffect(() => {
-      setValue(name, selected);
-      
-    }, [selected]);
+  const autocompletePlaceholder = props.autocompletePlaceholder ?? "Select Resource";
+  const placeholder = props.placeholder ?? props.resourceType;
 
-    React.useEffect(() => {
-      register({ name }, { required });
-  
-      return () => {
-        unregister(name);
+  return (
+    <Dropdown
+      menuClassName="dropdown-menu--text-wrap"
+      className={classNames('co-type-selector', className)}
+      items={items}
+      title={
+        props.title ??
+        (isSelected ? items[selected] : placeholder)
       }
-    }, [name, register, unregister]);
-  }
+      onChange={onChange}
+      autocompleteFilter={props.autocompleteFilter ?? autocompleteFilter}
+      autocompletePlaceholder={autocompletePlaceholder}
+      type='single'
+    />
+  );
+};
+
+export const MultipleResourceListDropdown: React.SFC<BaseResourceListDropdown & MultipleResourceDropdownProps & { selected: Set<string>; onChange: (value: string) => void; }> = (props) => {
+  const { resourceList, onChange, className, selected, showAll, resourceType } = props;
+  const selectedSize = selected.size;
 
   const isSelected = (uid: string) => {
-    return _.includes(selected, 'All') || _.includes(selected, uid);
+    return selected.has('All') || selected.has(uid);
   };
   // Create dropdown items for each resource.
   const items = OrderedMap(
     _.map(resourceList, (resource) => [
-      resource.metadata.uid,
-      <DropdownItem
-        resource={resource}
-        checked={isSelected(resource.metadata.uid)} />
+      resource.metadata.name,
+      <DropdownItemWithCheckbox resource={resource} checked={isSelected(resource.metadata.uid)} />
     ]
     ));
   // Add an "All" item to the top if `showAll`.
@@ -85,7 +123,7 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
             <span className="co-resource-icon--fixed-width">
               <ResourceIcon kind="All" />
             </span>
-            <span className="co-resource-item__resource-name">{`All ${props.resourceType}`}</span>
+            <span className="co-resource-item__resource-name">{`All ${resourceType}`}</span>
           </span>
         </>
       ),
@@ -93,16 +131,7 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
     : items
   ).toJS() as { [s: string]: JSX.Element };
 
-  const autocompleteFilter = (text, item) => {
-    const { resource } = item.props;
-    if (!resource) {
-      return false;
-    }
-
-    return fuzzy(_.toLower(text), _.toLower(resource.fakeMetadata?.fakename ?? resource.metadata.name));
-  };
-
-  const autocompletePlaceholder = props.autocompletePlaceholder ?? "Select Resource";
+  const autocompletePlaceholder = props.autocompletePlaceholder ?? "Select Resources";
 
   return (
     <Dropdown
@@ -114,40 +143,147 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
         <div key="title-resource">
           {`${props.resourceType} `}
           <Badge isRead>
-            {selected.length === 1 && selected[0] === 'All' ? 'All' : selected.length}
+            {selected?.has('All') ? 'All' : selectedSize}
           </Badge>
         </div>
       }
       onChange={onChange}
-      autocompleteFilter={autocompleteFilter}
-      autocompletePlaceholder={props.autocompleteFilter ?? autocompletePlaceholder}
-      type={type}
+      autocompleteFilter={props.autocompleteFilter ?? autocompleteFilter}
+      autocompletePlaceholder={autocompletePlaceholder}
+      type='multiple'
     />
   );
 };
 
-export type ResourceListDropdownProps = {
+export interface ResourceDropdownCommon {
   name?: string;
   required?: boolean;
-  resourceList: HCK8sResourceKind[];
-  selected: K8sResourceKindReference[];
-  onChange: (value: string) => void;
-  className?: string;
-  showAll?: boolean;
-  type?: string;
+  onChange?: (value: string) => void;
   title?: string | JSX.Element;
   resourceType?: string;
   autocompletePlaceholder?: string;
   autocompleteFilter?: (text: any, item: any) => any;
   useHookForm?: boolean;
+  className?: string;
+  dropDownClassName?: string;
+  menuClassName?: string;
+  buttonClassName?: string;
+  type: 'single' | 'multiple';
+  methods?: any;
+}
+
+export interface BaseResourceListDropdown extends ResourceDropdownCommon {
+  resourceList: HCK8sResourceKind[];
+}
+
+export interface SingleResourceDropdownProps extends ResourceDropdownCommon {
+  type: 'single';
+  placeholder?: string | JSX.Element;
+  defaultValue?: string;
+}
+
+export interface MultipleResourceDropdownProps extends ResourceDropdownCommon {
+  type: 'multiple';
+  showAll?: boolean;
+  defaultValue?: string[];
+}
+
+export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props) => {
+  const { name, required, methods, useHookForm } = props;
+  const { register, unregister, setValue, watch } = methods ? methods : useHookForm ? useFormContext() : { register: null, unregister: null, setValue: null, watch: null };
+
+  if (useHookForm || methods) {
+    React.useEffect(() => {
+      register({ name }, { required });
+
+      return () => {
+        unregister(name);
+      }
+    }, [name, register, unregister]);
+  }
+
+  switch (props.type) {
+    case 'multiple':
+      const { resourceList } = props;
+      const [selectedItems, setSelectedItems] = React.useState(new Set<string>(watch?.(name, props.defaultValue) ?? []));
+      const [selectedItemSize, setSelectedItemSize] = React.useState(selectedItems.size);
+      const resourceListLength = resourceList.length;
+      const allItems = new Set<string>(resourceList.map(resource => resource.metadata.uid));
+
+      const selectAllItems = () => {
+        setSelectedItems(new Set(['All']));
+        setValue?.(name, [...allItems]);
+        setSelectedItemSize(resourceListLength);
+      }
+
+      const clearAll = () => {
+        setSelectedItems(new Set([]));
+        setValue?.(name, []);
+        setSelectedItemSize(0);
+      };
+
+      const updateSelectedItems = (selection: string) => {
+        if (selection === 'All') {
+          selectedItems.has(selection) ? clearAll() : selectAllItems();
+        } else {
+          if (selectedItems.has('All')) {
+            const updateItems = new Set(allItems);
+            updateItems.delete(selection);
+            setSelectedItems(updateItems);
+            setValue?.(name, [...updateItems]);
+            setSelectedItemSize(resourceListLength - 1);
+          } else {
+            const updateItems = new Set(selectedItems);
+            let updateItemSize = selectedItemSize;
+            if (updateItems.has(selection)) {
+              updateItems.delete(selection)
+              updateItemSize--;
+            } else {
+              updateItems.add(selection);
+              updateItemSize++;
+            }
+            updateItemSize === resourceListLength ? selectAllItems() : setSelectedItems(updateItems);
+            setSelectedItemSize(updateItemSize);
+            setValue?.(name, [...updateItems]);
+          }
+        }
+        props.onChange?.(selection);
+      };
+
+      return (
+        <MultipleResourceListDropdown
+          {...props}
+          selected={selectedItems}
+          onChange={updateSelectedItems}
+        />);
+
+    case 'single':
+      const [selectedItem, setSelectedItem] = React.useState(watch?.(name, props.defaultValue) ?? '');
+
+      const updateSelectedItem = (selection: string) => {
+        setSelectedItem(selection);
+        setValue?.(name, selection);
+        props.onChange?.(selection);
+      };
+
+      return (
+        <SingleResourceListDropdown
+          {...props}
+          selected={selectedItem}
+          onChange={updateSelectedItem}
+        />);
+  }
 };
 
+export type ResourceListDropdownProps = BaseResourceListDropdown & (SingleResourceDropdownProps | MultipleResourceDropdownProps);
+
 ResourceListDropdown.defaultProps = {
-  resourceType: "Resources",
+  resourceType: 'Resources',
+  type: 'single',
   useHookForm: false,
 };
 
-const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDataToolbarProps> = (props, ref) => {
+export const ResourceListDropdownWithDataToolbar: React.SFC<ResourceListDropdownWithDataToolbarProps> = (props) => {
   const { resourceList } = props;
   const [selectedItems, setSelectedItems] = React.useState(new Set<string>([]));
 
@@ -159,7 +295,7 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
 
   const updateSelectedItems = (selection: string) => {
     if (selection === 'All') {
-      selectedItems.has(selection) ? clearSelectedItems() : selectAllItems();
+      selectedItems.has(selection) ? clearAll() : selectAllItems();
     } else {
       if (selectedItems.has('All')) {
         const updateItems = new Set(allItems);
@@ -171,6 +307,7 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
         updateItems.size === resourceList.length ? selectAllItems() : setSelectedItems(updateItems);
       }
     }
+    props.onChange?.(selection);
   };
 
   const updateNewItems = (filter: string, { key }: DataToolbarChip) => {
@@ -181,12 +318,8 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
     setSelectedItems(new Set(['All']));
   }
 
-  const clearSelectedItems = () => {
-    setSelectedItems(new Set([]));
-  };
-
   const clearAll = () => {
-    clearSelectedItems();
+    setSelectedItems(new Set([]));
   };
 
   return (
@@ -194,7 +327,7 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
       <DataToolbarContent>
         <DataToolbarItem>
           <DataToolbarFilter
-            deleteChipGroup={clearSelectedItems}
+            deleteChipGroup={clearAll}
             chips={[...selectedItems].map(uid => {
               const item = resourceList.find(i => i.metadata.uid === uid);
               return {
@@ -210,20 +343,18 @@ const ResourceListDropdownWithDataToolbar_: React.SFC<ResourceListDropdownWithDa
             deleteChip={updateNewItems}
             categoryName={props.resourceType}
           >
-            <ResourceListDropdown
+            <MultipleResourceListDropdown
+              {...props}
               resourceList={resourceList}
-              selected={[...selectedItems]}
+              selected={selectedItems}
               onChange={updateSelectedItems}
               type="multiple"
-              {...props}
             />
           </DataToolbarFilter>
         </DataToolbarItem>
       </DataToolbarContent>
     </DataToolbar>)
 };
-
-export const ResourceListDropdownWithDataToolbar = React.forwardRef(ResourceListDropdownWithDataToolbar_);
 
 export type ResourceListDropdownWithDataToolbarProps = {
   name?: string;
@@ -235,6 +366,7 @@ export type ResourceListDropdownWithDataToolbarProps = {
   resourceType?: string;
   autocompletePlaceholder?: string;
   autocompleteFilter?: (text: any, item: any) => any;
+  onChange?: (item: string) => any;
   onSelectedItemChange?: (items: Set<string>) => any;
   useHookForm?: boolean;
   clearFiltersButtonText?: string;
