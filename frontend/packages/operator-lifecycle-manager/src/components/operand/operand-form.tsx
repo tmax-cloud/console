@@ -1,5 +1,5 @@
 import { JSONSchema6 } from 'json-schema';
-import { k8sCreate, K8sKind, K8sResourceKind } from '@console/internal/module/k8s';
+import { k8sCreate, k8sUpdate, K8sKind, K8sResourceKind } from '@console/internal/module/k8s';
 import { history, useScrollToTopOnMount } from '@console/internal/components/utils';
 import * as _ from 'lodash';
 import * as React from 'react';
@@ -8,7 +8,7 @@ import { ClusterServiceVersionLogo } from '../index';
 import { DynamicForm } from '@console/shared/src/components/dynamic-form';
 import { getUISchema } from './utils';
 
-export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, model, next, onChange, providedAPI, prune, schema }) => {
+export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, model, next, onChange, providedAPI, prune, schema, create }) => {
   const [errors, setErrors] = React.useState<string[]>([]);
   // const [formData, setFormData] = React.useState(initialData);
 
@@ -24,14 +24,23 @@ export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, 
   };
 
   const handleSubmit = ({ formData: submitFormData }) => {
-    k8sCreate(model, processFormData(submitFormData))
-      .then(() => {
-        if (next) {
-          next += `/${submitFormData.metadata.name}`;
-          history.push(next);
-        }
-      })
-      .catch(e => setErrors([e.message]));
+    create
+      ? k8sCreate(model, processFormData(submitFormData))
+          .then(() => {
+            if (next) {
+              next += `/${submitFormData.metadata.name}`;
+              history.push(next);
+            }
+          })
+          .catch(e => setErrors([e.message]))
+      : k8sUpdate(model, processFormData(submitFormData))
+          .then(() => {
+            if (next) {
+              next += `/${submitFormData.metadata.name}`;
+              history.push(next);
+            }
+          })
+          .catch(e => setErrors([e.message]));
   };
 
   const uiSchema = React.useMemo(() => getUISchema(schema, providedAPI), [schema, providedAPI]);
@@ -50,7 +59,7 @@ export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, 
           )}
         </div>
         <div className="col-md-12 col-md-pull-0 col-lg-11 col-lg-pull-1">
-          <DynamicForm noValidate errors={errors} formContext={{ namespace: match.params.ns }} uiSchema={uiSchema} formData={formData} onChange={onChange} onError={setErrors} onSubmit={handleSubmit} schema={schema} />
+          <DynamicForm noValidate errors={errors} formContext={{ namespace: match.params.ns }} uiSchema={uiSchema} formData={formData} onChange={onChange} onError={setErrors} onSubmit={handleSubmit} schema={schema} create={create} />
         </div>
       </div>
     </div>
@@ -69,4 +78,5 @@ export type OperandFormProps = {
   providedAPI: ProvidedAPI;
   prune?: (data: any) => any;
   schema: JSONSchema6;
+  create?: boolean;
 };

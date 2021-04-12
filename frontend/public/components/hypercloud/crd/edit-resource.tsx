@@ -25,10 +25,11 @@ import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
 
-export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefinition, initialEditorType, loadError, match, model, activePerspective, obj }) => {
+export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefinition, initialEditorType, loadError, match, model, activePerspective, obj, create }) => {
   if (!model) {
     return null;
   }
+  console.log(create);
 
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
@@ -44,8 +45,8 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefiniti
       <>
         <SyncedEditor
           context={{
-            formContext: {},
-            yamlContext: { next, match },
+            formContext: { create },
+            yamlContext: { next, match, create },
           }}
           initialData={sample}
           initialType={EditorType.YAML}
@@ -110,8 +111,8 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefiniti
           <>
             <SyncedEditor
               context={{
-                formContext: { match, model, next, schema },
-                yamlContext: { next, match },
+                formContext: { match, model, next, schema, create },
+                yamlContext: { next, match, create },
               }}
               FormEditor={FormComponent}
               initialData={sample}
@@ -143,7 +144,7 @@ export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProp
       <Helmet>
         <title>{`Edit ${kindForReference(props.match.params.plural)}`}</title>
       </Helmet>
-      <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} />
+      <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />
     </>
   );
 });
@@ -157,6 +158,7 @@ export type EditDefaultProps = {
   match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
   obj?: K8sResourceKind;
+  create: boolean;
 };
 
 export type EditDefaultPageProps = {

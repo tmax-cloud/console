@@ -103,7 +103,7 @@ export const ImageSignRequestDetailsList: React.FC<ImageSignRequestDetailsListPr
       <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_SIGNERS_1')}`} obj={ds} path="spec.signer" />
     </dl>
   );
-}
+};
 
 const ImageSignRequestDetails: React.FC<ImageSignRequestDetailsProps> = ({ obj: signrequest }) => {
   const { t } = useTranslation();
@@ -122,9 +122,9 @@ const ImageSignRequestDetails: React.FC<ImageSignRequestDetailsProps> = ({ obj: 
       </div>
     </>
   );
-}
+};
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const ImageSignRequests: React.FC = props => {
   const { t } = useTranslation();
@@ -134,17 +134,10 @@ export const ImageSignRequests: React.FC = props => {
 export const ImageSignRequestsPage: React.FC<ImageSignRequestsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_92')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_92') })}
-    canCreate={true}
-    ListComponent={ImageSignRequests}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_92')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_92') })} canCreate={true} ListComponent={ImageSignRequests} kind={kind} {...props} />;
+};
 
-export const ImageSignRequestsDetailsPage: React.FC<ImageSignRequestsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageSignRequestDetails)), editYaml()]} />;
+export const ImageSignRequestsDetailsPage: React.FC<ImageSignRequestsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageSignRequestDetails)), editResource()]} />;
 
 type ImageSignRequestDetailsListProps = {
   ds: K8sResourceKind;

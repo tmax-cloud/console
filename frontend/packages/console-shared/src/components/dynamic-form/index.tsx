@@ -8,9 +8,11 @@ import defaultFields from './fields';
 import { FieldTemplate as DefaultFieldTemplate, ObjectFieldTemplate as DefaultObjectFieldTemplate, ArrayFieldTemplate as DefaultArrayFieldTemplate, ErrorTemplate as DefaultErrorTemplate } from './templates';
 import { K8S_UI_SCHEMA } from './const';
 import { getSchemaErrors } from './utils';
+import { useTranslation } from 'react-i18next';
 import './styles.scss';
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, formData = {}, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {} }) => {
+export const DynamicForm: React.FC<DynamicFormProps> = ({ ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, formData = {}, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {}, create = true }) => {
+  const { t } = useTranslation();
   const schemaErrors = getSchemaErrors(schema);
   // IF the top level schema is unsupported, don't render a form at all.
   if (schemaErrors.length) {
@@ -46,10 +48,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ ArrayFieldTemplate = D
           <div style={{ paddingBottom: '30px' }}>
             <ActionGroup className="pf-c-form">
               <Button type="submit" variant="primary">
-                Create
+                {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
               </Button>
               <Button onClick={history.goBack} variant="secondary">
-                Cancel
+                {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
               </Button>
             </ActionGroup>
           </div>
@@ -62,6 +64,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ ArrayFieldTemplate = D
 type DynamicFormProps = FormProps<any> & {
   errors?: string[];
   ErrorTemplate?: React.FC<{ errors: string[] }>;
+  create?: boolean;
 };
 
 export * from './types';

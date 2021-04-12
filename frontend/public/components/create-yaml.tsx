@@ -4,25 +4,12 @@ import { yamlTemplates } from '../models/yaml-templates';
 import { connectToPlural } from '../kinds';
 import { AsyncComponent } from './utils/async';
 import { Firehose, LoadingBox } from './utils';
-import {
-  K8sKind,
-  apiVersionForModel,
-  referenceForModel,
-  K8sResourceKindReference,
-  K8sResourceKind,
-} from '../module/k8s';
+import { K8sKind, apiVersionForModel, referenceForModel, K8sResourceKindReference, K8sResourceKind } from '../module/k8s';
 import { ErrorPage404 } from './error';
 import { safeYAMLToJS } from '@console/shared/src/utils/yaml';
 
 export const CreateYAML = connectToPlural((props: CreateYAMLProps) => {
-  const {
-    match,
-    kindsInFlight,
-    kindObj,
-    hideHeader = false,
-    onChange = () => null,
-    resourceObjPath,
-  } = props;
+  const { create = true, match, kindsInFlight, kindObj, hideHeader = false, onChange = () => null, resourceObjPath } = props;
   const { params } = match;
 
   if (!kindObj) {
@@ -33,10 +20,7 @@ export const CreateYAML = connectToPlural((props: CreateYAMLProps) => {
   }
 
   const namespace = params.ns || 'default';
-  const template =
-    props.template ||
-    yamlTemplates.getIn([referenceForModel(kindObj), 'default']) ||
-    yamlTemplates.getIn(['DEFAULT', 'default']);
+  const template = props.template || yamlTemplates.getIn([referenceForModel(kindObj), 'default']) || yamlTemplates.getIn(['DEFAULT', 'default']);
 
   const obj = safeYAMLToJS(template);
   obj.kind = kindObj.kind;
@@ -48,33 +32,15 @@ export const CreateYAML = connectToPlural((props: CreateYAMLProps) => {
     obj.apiVersion = apiVersionForModel(kindObj);
     obj.spec = obj.spec || {};
   }
-  const header = `Create ${kindObj.label}`;
+  const header = create ? `Create ${kindObj.label}` : `Edit ${kindObj.label}`;
 
   // TODO: if someone edits namespace, we'll redirect to old namespace
 
-  return (
-    <AsyncComponent
-      loader={() => import('./droppable-edit-yaml').then((c) => c.DroppableEditYAML)}
-      obj={obj}
-      create={true}
-      kind={kindObj.kind}
-      header={header}
-      hideHeader={hideHeader}
-      resourceObjPath={resourceObjPath}
-      onChange={onChange}
-    />
-  );
+  return <AsyncComponent loader={() => import('./droppable-edit-yaml').then(c => c.DroppableEditYAML)} obj={obj} create={create} kind={kindObj.kind} header={header} hideHeader={hideHeader} resourceObjPath={resourceObjPath} onChange={onChange} />;
 });
 
-export const EditYAMLPage: React.SFC<EditYAMLPageProps> = (props) => {
-  const Wrapper = (wrapperProps) => (
-    <AsyncComponent
-      {...wrapperProps}
-      obj={wrapperProps.obj.data}
-      loader={() => import('./edit-yaml').then((c) => c.EditYAML)}
-      create={false}
-    />
-  );
+export const EditYAMLPage: React.SFC<EditYAMLPageProps> = props => {
+  const Wrapper = wrapperProps => <AsyncComponent {...wrapperProps} obj={wrapperProps.obj.data} loader={() => import('./edit-yaml').then(c => c.EditYAML)} create={false} />;
   return (
     <Firehose
       resources={[
@@ -102,6 +68,7 @@ export type CreateYAMLProps = {
   hideHeader?: boolean;
   resourceObjPath?: (obj: K8sResourceKind, kind: K8sResourceKindReference) => string;
   onChange?: (yaml: string) => any;
+  create?: boolean;
 };
 
 export type EditYAMLPageProps = {

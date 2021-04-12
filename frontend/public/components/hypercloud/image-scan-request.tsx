@@ -198,7 +198,7 @@ const ImageScanRequestDetails: React.FC<ImageScanRequestDetailsProps> = ({ obj: 
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const ImageScanRequests: React.FC = props => {
   const { t } = useTranslation();
@@ -212,7 +212,7 @@ export const ImageScanRequestsPage: React.FC<ImageScanRequestsPageProps> = props
   return <ListPage title={t('COMMON:MSG_LNB_MENU_95')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_95') })} canCreate={true} ListComponent={ImageScanRequests} kind={kind} {...props} />;
 };
 
-export const ImageScanRequestsDetailsPage: React.FC<ImageScanRequestsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageScanRequestDetails)), editYaml()]} />;
+export const ImageScanRequestsDetailsPage: React.FC<ImageScanRequestsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageScanRequestDetails)), editResource()]} />;
 
 type ImageScanRequestDetailsListProps = {
   ds: K8sResourceKind;
