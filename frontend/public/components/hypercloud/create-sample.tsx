@@ -8,6 +8,7 @@ import { RadioGroup } from './utils/radio';
 import { Section } from './utils/section';
 import { InputSelectBox } from './utils/inputSelectBox';
 import { Dropdown, ContainerDropdown } from './utils/dropdown';
+import { ResourceDropdown } from './utils/resource-dropdown';
 import { ResourceListDropdown, ResourceListDropdownWithDataToolbar } from './utils/resource-list-dropdown';
 import { KeyValueListEditor } from './utils/key-value-list-editor';
 import { TagsLabel } from './utils/tags-label';
@@ -202,6 +203,19 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           name="containerDropdown1"
           containers={containers} // (필수)
           initContainers={initContainers}
+        />
+      </Section>
+      <Section id="resourcedropdown" label="Resource Dropdown">
+      <ResourceDropdown
+          name="resourceDropdown-deployment-single"
+          placeholder="select one deployment"
+          resources={[
+            {
+              kind: 'Deployment',
+              namespace: 'catalog', // 옵션
+              prop: 'deployment',
+            },
+          ]}
         />
       </Section>
       <Section id="resourcelistdropdown" label="Resource List Dropdown">

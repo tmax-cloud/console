@@ -51,6 +51,7 @@ const (
 	hypercloudServerEndpoint      = "/api/hypercloud/"
 	multiHypercloudServerEndpoint = "/api/multi-hypercloud/"
 	kibanaEndpoint                = "/api/kibana/"
+	kubeflowEndpoint              = "/api/kubeflow/"
 )
 
 var (
@@ -152,6 +153,7 @@ type Server struct {
 	HypercloudServerProxyConfig      *hproxy.Config
 	MultiHypercloudServerProxyConfig *hproxy.Config
 	KibanaProxyConfig                *hproxy.Config
+	KubeflowProxyConfig              *hproxy.Config
 
 	McMode         bool
 	McModeFile     string
@@ -203,6 +205,10 @@ func (s *Server) multiHypercloudServerEnable() bool {
 
 func (s *Server) kibanaEnable() bool {
 	return s.KibanaProxyConfig != nil
+}
+
+func (s *Server) KubeflowEnable() bool {
+	return s.KubeflowProxyConfig != nil
 }
 
 func (s *Server) HTTPHandler() http.Handler {
@@ -508,6 +514,18 @@ func (s *Server) HTTPHandler() http.Handler {
 			authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
 				r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
 				kibanaProxy.ServeHTTP(w, r)
+			})),
+		)
+	}
+
+	if s.KubeflowEnable() {
+		kubeflowAPIPath := kubeflowEndpoint
+		kubeflowProxy := hproxy.NewProxy(s.KubeflowProxyConfig)
+		handle(kubeflowAPIPath, http.StripPrefix(
+			proxy.SingleJoiningSlash(s.BaseURL.Path, kubeflowAPIPath),
+			authHandlerWithUser(func(user *auth.User, w http.ResponseWriter, r *http.Request) {
+				r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.Token))
+				kubeflowProxy.ServeHTTP(w, r)
 			})),
 		)
 	}

@@ -9,11 +9,11 @@ import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceLink, R
 import { PipelineModel, TaskModel, ClusterTaskModel } from '../../models';
 import PipelineVisualization from '../../../packages/dev-console/src/components/pipelines/detail-page-tabs/pipeline-details/PipelineVisualization';
 import DynamicResourceLinkList from '../../../packages/dev-console/src/components/pipelines/resource-overview/DynamicResourceLinkList';
-import { Pipeline } from './utils/pipeline-augment';
+import { Pipeline } from '../../../packages/dev-console/src/utils/pipeline-augment';
 import { PipelineForm, PipelineParametersForm, PipelineResourcesForm, parametersValidationSchema, resourcesValidationSchema } from '../../../packages/dev-console/src/components/pipelines/detail-page-tabs';
 import { addTrigger } from '../../../packages/dev-console/src/utils/pipeline-actions';
 import { PipelineRunsPage } from './pipeline-run';
-import PipelineRowKebabActions from './pipelines/pipeline-row-kebab-actions';
+import PipelineRowKebabActions from '../../../packages/dev-console/src/components/pipelines/list-page/PipelineRowKebabActions';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';

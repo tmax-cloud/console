@@ -1,0 +1,18 @@
+.hc-resource-dropdown-wrapper {
+  .hc-resource-dropdown {
+    .hc-resource-dropdown-button {
+      min-width: 150px;
+    }
+
+    .hc-resource-dropdown-menu {
+      max-height: 366px;
+      max-width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      hc-resource-item {
+        display: flex;
+      }
+    }
+  }
+}

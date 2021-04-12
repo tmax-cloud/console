@@ -26,6 +26,7 @@ MHC_PORT='32237'
 KIBANA_PORT='32496'
 # kubectl get ingress -n istio-system 
 KIALI='kiali.istio-system.220.90.208.239.nip.io'
+KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트 
 
 ./bin/bridge \
     --listen=https://$myIP:9000 \
@@ -49,6 +50,7 @@ KIALI='kiali.istio-system.220.90.208.239.nip.io'
     --hypercloud-endpoint=https://$k8sIP:$HC_PORT/ \
     --multi-hypercloud-endpoint=https://$k8sIP:$MHC_PORT/ \
     --kibana-endpoint=https://$k8sIP:$KIBANA_PORT/api/kibana/ \
+    --kubeflow-endpoint=http://172.23.4.113/api/kubeflow/ \
     --user-auth=hypercloud \
     --k8s-auth=hypercloud \
     --mc-mode=true \

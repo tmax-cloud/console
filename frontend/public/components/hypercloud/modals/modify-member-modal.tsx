@@ -38,7 +38,7 @@ export const ModifyMemberModal = withHandlePromise((props: ModifyMemberModalProp
 
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/update_role/${props.member.Attribute}/${props.member.Attribute === 'user' ? props.member.MemberId : props.member.MemberName}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'PUT')
+    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/update_role/${props.member.Attribute}/${props.member.MemberId}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'PUT')
       .then((res) => {
         props.close();
       })
