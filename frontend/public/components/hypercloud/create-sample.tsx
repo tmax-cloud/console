@@ -91,12 +91,10 @@ const sampleFormFactory = params => {
 
 const CreateSampleComponent: React.FC<SampleFormProps> = props => {
   const { control } = useFormContext();
-  const [selectedClusterItems, setSelectedClusterItems] = React.useState(new Set<string>([]));
 
   const updateSelectedClusterItems = (selection: string) => { // selection: {resource}.metadata.uid | 'All'
-    const updateItems = _.cloneDeep(selectedClusterItems);
-    updateItems.has(selection) ? updateItems.delete(selection) : updateItems.add(selection);
-    setSelectedClusterItems(updateItems);
+    //Do Something
+    console.log('updateSelectedClusterItems: ', selection)
   };
 
   const onSelectedItemChange = (items: Set<string>) => {
@@ -206,41 +204,64 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
         />
       </Section>
       <Section id="resourcedropdown" label="Resource Dropdown">
-      <ResourceDropdown
-          name="resourceDropdown-deployment-single"
+        <ResourceDropdown
+          name="RD-single"
           placeholder="select one deployment"
           resources={[
             {
               kind: 'Deployment',
               namespace: 'catalog', // 옵션
-              prop: 'deployment',
+              prop: 'deployment'
             },
           ]}
+          type='single'
+          useHookForm
+        />
+        <ResourceDropdown
+          name="RD-multiple"
+          resources={[
+            {
+              kind: 'Pod',
+              namespace: 'default', // 옵션
+              prop: 'pod',
+            },
+          ]}
+          defaultValue={["new-pipeline-test-shtehy-sum-params-qkg57-pod-l47lv"]} // 옵션
+          type='multiple'
+          showAll={true}
+          useHookForm
         />
       </Section>
       <Section id="resourcelistdropdown" label="Resource List Dropdown">
         <ResourceListDropdown
           resourceList={ClusterResourceList} // 필수
-          selected={[...selectedClusterItems]} // 필수
-          onChange={updateSelectedClusterItems} // 필수
-          showAll={false}
-          title="select Resources" // 드롭다운 title 지정
           autocompletePlaceholder="search by name"
-          type="multiple" // type: single / multiple
+          placeholder="Resource Dropdown" // *single에서만 사용 가능
+          type="single" // 필수 type: single / multiple
         />
-        <ResourceListDropdownWithDataToolbar
+        <ResourceListDropdown
+          name="RLD-multiple"
+          resourceList={ClusterResourceList} // 필수
+          onChange={updateSelectedClusterItems} // '아이템' 선택될 때마다 호출됨
+          resourceType="Cluster and Cluster Claim" 
+          autocompletePlaceholder="search by name"
+          type="multiple" // 필수 type: single / multiple
+          useHookForm
+        />
+        <ResourceListDropdownWithDataToolbar // react hook form 사용하지 않는 예시
           resourceList={ClusterResourceList} // 필수
           showAll={true} // 드롭다운에 all resource 라는 항목이 생긴다.
           resourceType="Cluster and Cluster Claim" // title, placeholder, all resources, chip group 에 적용되는 문구 (title, placeholder는 직접 지정하는 것의 우선순위가 더 높음)
           autocompletePlaceholder="search by name" // 검색란 placeholder
-          onSelectedItemChange={onSelectedItemChange} // 선택된 아이템 리스트 변동될 때마다 호출되는 함수
+          onSelectedItemChange={onSelectedItemChange} // 선택된 아이템 '리스트' 변동될 때마다 호출되는 함수
         />
-        <ResourceListDropdownWithDataToolbar
+        <ResourceListDropdownWithDataToolbar // react hook form 사용하는 예시
           name="ResourceListDropdownWithDataToolbar1"
           resourceList={ClusterResourceList} // 필수
           showAll={false}
           title="select Resources" // 드롭다운 title 지정
           resourceType="Cluster and Cluster Claim"
+          useHookForm
         />
       </Section>
       <Section id="numberspinner" label="Number Spinner">

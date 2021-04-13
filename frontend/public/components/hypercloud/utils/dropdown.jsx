@@ -49,6 +49,8 @@ const Dropdown_ = (props) => {
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
   const selectedKey = watch(name, defaultValue);
+  /* defaultValue를 쓰는 경우(ex.모달)에 getVaule를 해보면 form이 비어있는 경우가 있음. 초기값 세팅을 해줌. */
+  defaultValue && setValue(name, selectedKey);
 
   const [title, setTitle] = React.useState(_.get(props.items, selectedKey, props.title));
   const [active, setActive] = React.useState(!!props.active);
@@ -81,6 +83,7 @@ const Dropdown_ = (props) => {
     e.stopPropagation();
 
     setValue(name, selected);
+    setKeyboardHoverKey(selected);
 
     const newTitle = items[selected];
     setTitle(newTitle);
@@ -153,6 +156,7 @@ const Dropdown_ = (props) => {
     const newKey = keys[index];
     setKeyboardHoverKey(newKey);
     e.stopPropagation();
+    e.preventDefault(); // 키보드 사용시 화면 스크롤되지 않도록 처리
   }
 
   React.useEffect(() => {
@@ -165,7 +169,7 @@ const Dropdown_ = (props) => {
   }, [name, register, unregister]);
 
   React.useEffect(() => {
-    props.title && setTitle(props.title);
+    !selectedKey && props.title && setTitle(props.title);
   }, [props.title]);
 
   React.useEffect(() => {
