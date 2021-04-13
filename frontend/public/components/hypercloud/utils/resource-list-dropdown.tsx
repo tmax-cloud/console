@@ -202,9 +202,14 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
     }, [name, register, unregister]);
   }
 
+  const defaultValue = watch?.(name, props.defaultValue);
+  React.useEffect(() => {
+    props.defaultValue && setValue?.(name, defaultValue);
+  }, [props.defaultValue]);
+
   if (props.type === 'multiple') {
     const { resourceList } = props;
-    const [selectedItems, setSelectedItems] = React.useState(new Set<string>(watch?.(name, props.defaultValue) ?? []));
+    const [selectedItems, setSelectedItems] = React.useState(new Set<string>(defaultValue ?? []));
     const [selectedItemSize, setSelectedItemSize] = React.useState(selectedItems.size);
     const resourceListLength = resourceList.length;
     const allItems = new Set<string>(resourceList.map(resource => resource.metadata.name));
@@ -256,7 +261,7 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
         onChange={updateSelectedItems}
       />);
   } else {
-    const [selectedItem, setSelectedItem] = React.useState(watch?.(name, props.defaultValue) ?? '');
+    const [selectedItem, setSelectedItem] = React.useState(defaultValue ?? '');
 
     const updateSelectedItem = (selection: string) => {
       setSelectedItem(selection);
