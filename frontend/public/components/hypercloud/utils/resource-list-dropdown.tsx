@@ -44,7 +44,7 @@ const DropdownItemWithCheckbox: React.SFC<DropdownItemWithCheckboxProps> = ({ re
     <span className={'co-resource-item'}>
       <Checkbox
         tabIndex={-1}
-        id={`${resource.metadata.uid}:checkbox`}
+        id={`${resource.metadata.name}:checkbox`}
         checked={checked}
       />
       <span className="co-resource-icon--fixed-width">
@@ -103,14 +103,14 @@ export const MultipleResourceListDropdown: React.SFC<BaseResourceListDropdown & 
   const { resourceList, onChange, className, selected, showAll, resourceType } = props;
   const selectedSize = selected.size;
 
-  const isSelected = (uid: string) => {
-    return selected.has('All') || selected.has(uid);
+  const isSelected = (name: string) => {
+    return selected.has('All') || selected.has(name);
   };
   // Create dropdown items for each resource.
   const items = OrderedMap(
     _.map(resourceList, (resource) => [
       resource.metadata.name,
-      <DropdownItemWithCheckbox resource={resource} checked={isSelected(resource.metadata.uid)} />
+      <DropdownItemWithCheckbox resource={resource} checked={isSelected(resource.metadata.name)} />
     ]
     ));
   // Add an "All" item to the top if `showAll`.
@@ -208,7 +208,7 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
       const [selectedItems, setSelectedItems] = React.useState(new Set<string>(watch?.(name, props.defaultValue) ?? []));
       const [selectedItemSize, setSelectedItemSize] = React.useState(selectedItems.size);
       const resourceListLength = resourceList.length;
-      const allItems = new Set<string>(resourceList.map(resource => resource.metadata.uid));
+      const allItems = new Set<string>(resourceList.map(resource => resource.metadata.name));
 
       const selectAllItems = () => {
         setSelectedItems(new Set(['All']));
@@ -287,7 +287,7 @@ export const ResourceListDropdownWithDataToolbar: React.SFC<ResourceListDropdown
   const { resourceList } = props;
   const [selectedItems, setSelectedItems] = React.useState(new Set<string>([]));
 
-  const allItems = new Set<string>(resourceList.map(resource => resource.metadata.uid));
+  const allItems = new Set<string>(resourceList.map(resource => resource.metadata.name));
 
   React.useEffect(() => {
     props.onSelectedItemChange?.(selectedItems);
@@ -328,14 +328,14 @@ export const ResourceListDropdownWithDataToolbar: React.SFC<ResourceListDropdown
         <DataToolbarItem>
           <DataToolbarFilter
             deleteChipGroup={clearAll}
-            chips={[...selectedItems].map(uid => {
-              const item = resourceList.find(i => i.metadata.uid === uid);
+            chips={[...selectedItems].map(name => {
+              const item = resourceList.find(i => i.metadata.name === name);
               return {
-                key: uid,
+                key: name,
                 node: (
                   <>
-                    <ResourceIcon kind={item?.kind ?? uid} />
-                    {item?.fakeMetadata?.fakename ?? item?.metadata.name ?? uid}
+                    <ResourceIcon kind={item?.kind ?? name} />
+                    {item?.fakeMetadata?.fakename ?? item?.metadata.name ?? name}
                   </>
                 ),
               }
