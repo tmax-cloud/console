@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
-import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, CustomResourceDefinitionKind, definitionFor, referenceForModel } from '@console/internal/module/k8s';
+import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel } from '@console/internal/module/k8s';
 import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel } from '@console/internal/models';
-// import { Firehose } from '@console/internal/components/utils/firehose';
 import { StatusBox, FirehoseResult, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
@@ -22,12 +21,11 @@ import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-t
 import { getAccessToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 // import { safeDump } from 'js-yaml';
-// eslint-disable-next-line @typescript-eslint/camelcase
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
 
-export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefinition, initialEditorType, loadError, match, model, activePerspective }) => {
+export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective }) => {
   if (!model) {
     return null;
   }
@@ -35,10 +33,6 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
-
-    if (customResourceDefinition) {
-      definition = customResourceDefinition.data;
-    }
 
     const sample = React.useMemo<K8sResourceKind>(() => exampleForModel(definition, model), [definition, model]);
 
@@ -66,12 +60,6 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
   } else {
     const [loaded, setLoaded] = React.useState(false);
     const [template, setTemplate] = React.useState({} as any);
-    // const [yaml, setYaml] = React.useState('');
-    // React.useEffect(() => {
-    //   (async function getSchema() {
-    //     await k8sCreateSchema(model.kind).then(data => setTemplate(data));
-    //   })();
-    // }, []);
 
     React.useEffect(() => {
       console.log('model: ', model);
@@ -103,12 +91,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
 
-    if (customResourceDefinition) {
-      definition = customResourceDefinition.data;
-    }
-
     const [schema, FormComponent] = React.useMemo(() => {
-      const baseSchema = customResourceDefinition ? definition?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema6) : template?.spec?.validation?.openAPIV3Schema ?? template;
+      const baseSchema = (template?.spec?.versions?.[0]?.schema?.openAPIV3Schema as JSONSchema6) ?? (template?.spec?.validation?.openAPIV3Schema as JSONSchema6) ?? template;
       return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
     }, [template, definition, model]);
 
@@ -121,8 +105,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ customResourceDefi
     }, []);
 
     return (
-      <StatusBox loaded={loaded} loadError={loadError} data={customResourceDefinition || template}>
-        {loaded || !customResourceDefinition ? (
+      <StatusBox loaded={loaded} loadError={loadError} data={template}>
+        {loaded ? (
           <>
             <div className="co-create-operand__header">
               <div className="co-create-operand__header-buttons">
@@ -161,35 +145,18 @@ const stateToProps = (state: RootState, props: Omit<CreateDefaultPageProps, 'mod
 };
 
 export const CreateDefaultPage = connect(stateToProps)((props: CreateDefaultPageProps) => {
-  // const type = pluralToKind.get(props.match.params.plural)['type'];
-  // const resources =
-  //   type === 'CustomResourceDefinition' && props.model
-  //     ? [
-  //         {
-  //           kind: CustomResourceDefinitionModel.kind,
-  //           isList: false,
-  //           name: nameForModel(props.model),
-  //           prop: 'customResourceDefinition',
-  //           optional: true,
-  //         },
-  //       ]
-  //     : [];
   return (
     <>
       <Helmet>
         <title>{`Create ${kindForReference(props.match.params.plural)}`}</title>
       </Helmet>
-      {/* <Firehose resources={resources}> */}
-      {/* FIXME(alecmerdler): Hack because `Firehose` injects props without TypeScript knowing about it */}
       <CreateDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} />
-      {/* </Firehose> */}
     </>
   );
 });
 
 export type CreateDefaultProps = {
   activePerspective: string;
-  customResourceDefinition?: FirehoseResult<CustomResourceDefinitionKind>;
   initialEditorType: EditorType;
   loaded: boolean;
   loadError?: any;
