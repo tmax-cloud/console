@@ -35,7 +35,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   };
 
   const parameterListHeaderFragment = <></>;
-  const parameterListItemRenderer = (register, item, index, ListActions, ListDefaultIcons) => (
+  const parameterListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
         <TextInput id={`parameterList${index}.parameter`} inputClassName="col-md-12" methods={methods} placeholder={'-c'} />
@@ -56,7 +56,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     </div>
   );
   const envListHeaderFragment = <></>;
-  const envListItemRenderer = (register, item, index, ListActions, ListDefaultIcons) => (
+  const envListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
         <TextInput id={`envList${index}.envKey`} inputClassName="col-md-6" methods={methods} placeholder={'키'} />

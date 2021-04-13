@@ -15,7 +15,7 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
     </div>
   );
 
-  const DefaultListItemRenderer = (register, item, index, ListActions, ListDefaultIcons) => {
+  const DefaultListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
     return (
       <div className="row" key={item.id}>
         <div className="col-xs-4 pairs-list__name-field">
@@ -58,7 +58,7 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
     deleteIcon: deleteIcon,
   };
 
-  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(register, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, item, index, ListActions, ListDefaultIcons));
+  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(register, name, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
 
   return (
     <div>

@@ -133,7 +133,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     </div>
   );
 
-  const listItemRenderer = (register, item, index, ListActions, ListDefaultIcons) => (
+  const listItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-4 pairs-list__name-field">
         <input ref={register()} className="pf-c-form-control" name={`metadata.numList[${index}].name`} defaultValue={item.name}></input>
