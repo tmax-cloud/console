@@ -202,76 +202,74 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
     }, [name, register, unregister]);
   }
 
-  switch (props.type) {
-    case 'multiple':
-      const { resourceList } = props;
-      const [selectedItems, setSelectedItems] = React.useState(new Set<string>(watch?.(name, props.defaultValue) ?? []));
-      const [selectedItemSize, setSelectedItemSize] = React.useState(selectedItems.size);
-      const resourceListLength = resourceList.length;
-      const allItems = new Set<string>(resourceList.map(resource => resource.metadata.name));
+  if (props.type === 'multiple') {
+    const { resourceList } = props;
+    const [selectedItems, setSelectedItems] = React.useState(new Set<string>(watch?.(name, props.defaultValue) ?? []));
+    const [selectedItemSize, setSelectedItemSize] = React.useState(selectedItems.size);
+    const resourceListLength = resourceList.length;
+    const allItems = new Set<string>(resourceList.map(resource => resource.metadata.name));
 
-      const selectAllItems = () => {
-        setSelectedItems(new Set(['All']));
-        setValue?.(name, [...allItems]);
-        setSelectedItemSize(resourceListLength);
-      }
+    const selectAllItems = () => {
+      setSelectedItems(new Set(['All']));
+      setValue?.(name, [...allItems]);
+      setSelectedItemSize(resourceListLength);
+    }
 
-      const clearAll = () => {
-        setSelectedItems(new Set([]));
-        setValue?.(name, []);
-        setSelectedItemSize(0);
-      };
+    const clearAll = () => {
+      setSelectedItems(new Set([]));
+      setValue?.(name, []);
+      setSelectedItemSize(0);
+    };
 
-      const updateSelectedItems = (selection: string) => {
-        if (selection === 'All') {
-          selectedItems.has(selection) ? clearAll() : selectAllItems();
+    const updateSelectedItems = (selection: string) => {
+      if (selection === 'All') {
+        selectedItems.has(selection) ? clearAll() : selectAllItems();
+      } else {
+        if (selectedItems.has('All')) {
+          const updateItems = new Set(allItems);
+          updateItems.delete(selection);
+          setSelectedItems(updateItems);
+          setValue?.(name, [...updateItems]);
+          setSelectedItemSize(resourceListLength - 1);
         } else {
-          if (selectedItems.has('All')) {
-            const updateItems = new Set(allItems);
-            updateItems.delete(selection);
-            setSelectedItems(updateItems);
-            setValue?.(name, [...updateItems]);
-            setSelectedItemSize(resourceListLength - 1);
+          const updateItems = new Set(selectedItems);
+          let updateItemSize = selectedItemSize;
+          if (updateItems.has(selection)) {
+            updateItems.delete(selection)
+            updateItemSize--;
           } else {
-            const updateItems = new Set(selectedItems);
-            let updateItemSize = selectedItemSize;
-            if (updateItems.has(selection)) {
-              updateItems.delete(selection)
-              updateItemSize--;
-            } else {
-              updateItems.add(selection);
-              updateItemSize++;
-            }
-            updateItemSize === resourceListLength ? selectAllItems() : setSelectedItems(updateItems);
-            setSelectedItemSize(updateItemSize);
-            setValue?.(name, [...updateItems]);
+            updateItems.add(selection);
+            updateItemSize++;
           }
+          updateItemSize === resourceListLength ? selectAllItems() : setSelectedItems(updateItems);
+          setSelectedItemSize(updateItemSize);
+          setValue?.(name, [...updateItems]);
         }
-        props.onChange?.(selection);
-      };
+      }
+      props.onChange?.(selection);
+    };
 
-      return (
-        <MultipleResourceListDropdown
-          {...props}
-          selected={selectedItems}
-          onChange={updateSelectedItems}
-        />);
+    return (
+      <MultipleResourceListDropdown
+        {...props}
+        selected={selectedItems}
+        onChange={updateSelectedItems}
+      />);
+  } else {
+    const [selectedItem, setSelectedItem] = React.useState(watch?.(name, props.defaultValue) ?? '');
 
-    case 'single':
-      const [selectedItem, setSelectedItem] = React.useState(watch?.(name, props.defaultValue) ?? '');
+    const updateSelectedItem = (selection: string) => {
+      setSelectedItem(selection);
+      setValue?.(name, selection);
+      props.onChange?.(selection);
+    };
 
-      const updateSelectedItem = (selection: string) => {
-        setSelectedItem(selection);
-        setValue?.(name, selection);
-        props.onChange?.(selection);
-      };
-
-      return (
-        <SingleResourceListDropdown
-          {...props}
-          selected={selectedItem}
-          onChange={updateSelectedItem}
-        />);
+    return (
+      <SingleResourceListDropdown
+        {...props}
+        selected={selectedItem}
+        onChange={updateSelectedItem}
+      />);
   }
 };
 
