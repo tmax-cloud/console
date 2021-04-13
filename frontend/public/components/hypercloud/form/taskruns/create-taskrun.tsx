@@ -9,7 +9,7 @@ import { Section } from '../../utils/section';
 import { ListView } from '../../utils/list-view';
 import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { k8sGet } from '../../../../module/k8s';
-import { TaskModel, PipelineResourceModel, ServiceAccountModel } from '../../../../models';
+import { TaskModel, PipelineResourceModel, ServiceAccountModel, TaskRunModel } from '../../../../models';
 import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
@@ -210,12 +210,24 @@ export const CreateTaskRun: React.FC<CreateTaskRunProps> = ({ match: { params },
   const formComponent = taskRunFormFactory(params);
   const TaskRunFormComponent = formComponent;
 
-  return <TaskRunFormComponent fixed={{}} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+  return <TaskRunFormComponent fixed={{ apiVersion: `${TaskRunModel.apiGroup}/${TaskRunModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+};
+
+const changeTimeoutFormat = timeout => {
+  timeout = Number(timeout);
+  if (timeout == 0) {
+    return 0;
+  }
+  if (timeout >= 60) {
+    return `${(timeout - (timeout % 60)) / 60}h${timeout % 60}m`;
+  } else return `${timeout}m`;
 };
 
 export const onSubmitCallback = data => {
   let params = _.cloneDeep(data.params);
+  const formattedTimeout = changeTimeoutFormat(data.spec.timeout);
   delete data.params;
+  delete data.spec.timeout;
   const prettyParams = params?.map(param => {
     if (Array.isArray(param.value)) {
       const valueList = param.value.map(obj => {
@@ -226,14 +238,14 @@ export const onSubmitCallback = data => {
       return { name: param.name, value: param.value };
     }
   });
-  data = _.defaultsDeep(data, { spec: { params: prettyParams } });
-  console.log('data? ', data);
+  data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { params: prettyParams, timeout: formattedTimeout } });
+  // console.log('data? ', data);
   return data;
 };
 
 type CreateTaskRunProps = {
   match: RMatch<{
-    type?: string;
+    ns?: string;
   }>;
   kind: string;
   fixed: object;
