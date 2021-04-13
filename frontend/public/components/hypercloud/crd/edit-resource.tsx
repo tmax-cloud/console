@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
-import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, CustomResourceDefinitionKind, definitionFor, referenceForModel } from '@console/internal/module/k8s';
+import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel } from '@console/internal/module/k8s';
 import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel } from '@console/internal/models';
-import { StatusBox, FirehoseResult, resourcePathFromModel } from '@console/internal/components/utils';
+import { StatusBox, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
 import { getActivePerspective } from '@console/internal/reducers/ui';
@@ -19,27 +19,17 @@ import { pluralToKind } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getAccessToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
-// import { safeDump } from 'js-yaml';
-// eslint-disable-next-line @typescript-eslint/camelcase
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
 
-export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefinition, initialEditorType, loadError, match, model, activePerspective, obj, create }) => {
+export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, obj, create }) => {
   if (!model) {
     return null;
   }
-  console.log(create);
 
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
-    // let definition;
-
-    // if (customResourceDefinition) {
-    //   definition = customResourceDefinition.data;
-    // }
-
-    // const sample = React.useMemo<K8sResourceKind>(() => exampleForModel(definition, model), [definition, model]);
     const sample = obj;
     return (
       <>
@@ -61,7 +51,6 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefiniti
     const [template, setTemplate] = React.useState({} as any);
 
     React.useEffect(() => {
-      console.log('model: ', model);
       let type = pluralToKind.get(model.plural)['type'];
       let url;
       if (type === 'CustomResourceDefinition') {
@@ -90,12 +79,8 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefiniti
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
 
-    if (customResourceDefinition) {
-      definition = customResourceDefinition.data;
-    }
-
     const [schema, FormComponent] = React.useMemo(() => {
-      const baseSchema = customResourceDefinition ? definition?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema6) : template?.spec?.validation?.openAPIV3Schema ?? template;
+      const baseSchema = (template?.spec?.versions?.[0]?.schema?.openAPIV3Schema as JSONSchema6) ?? (template?.spec?.validation?.openAPIV3Schema as JSONSchema6) ?? template;
       return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
     }, [template, definition, model]);
     const sample = obj;
@@ -106,8 +91,8 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ customResourceDefiniti
     }, []);
 
     return (
-      <StatusBox loaded={loaded} loadError={loadError} data={customResourceDefinition || template}>
-        {loaded || !customResourceDefinition ? (
+      <StatusBox loaded={loaded} loadError={loadError} data={template}>
+        {loaded ? (
           <>
             <SyncedEditor
               context={{
@@ -151,7 +136,6 @@ export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProp
 
 export type EditDefaultProps = {
   activePerspective: string;
-  customResourceDefinition?: FirehoseResult<CustomResourceDefinitionKind>;
   initialEditorType: EditorType;
   loaded: boolean;
   loadError?: any;
