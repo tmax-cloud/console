@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/hypercloud/factory';
+import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/hypercloud/factory/modal';
 // import { useFormContext } from 'react-hook-form';
 
 export const _ModalLauncher = props => {

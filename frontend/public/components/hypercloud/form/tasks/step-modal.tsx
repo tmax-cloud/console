@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Section } from '../../utils/section';
 import { RadioGroup } from '../../utils/radio';
-// import { ResourceListDropdown } from './utils/resource-list-dropdown';
+import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { ListView } from '../../utils/list-view';
@@ -96,8 +96,8 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   // radio toggle용
   const imageToggle = useWatch({
     control: methods.control,
-    name: 'image-toggle',
-    defaultValue: template ? template.type : 'registry',
+    name: 'imageToggle',
+    defaultValue: template ? template.imageToggle : 'registry',
   });
 
   return (
@@ -114,7 +114,26 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           initValue={imageToggle}
         />
       </Section>
-      {imageToggle === 'registry' && <p>레지스트리</p>}
+      {imageToggle === 'registry' && (
+        <>
+          <Section id="resourcelistdropdown" label="이미지 레지스트리">
+            <ResourceDropdown
+              name="registryRegistry"
+              placeholder="이미지 레지스트리 선택"
+              methods={methods}
+              defaultValue={modalType === 'modify' ? template.registryRegistry : ''}
+              resources={[
+                {
+                  kind: 'Registry',
+                  prop: 'deployment',
+                },
+              ]}
+              type="single"
+              useHookForm
+            />
+          </Section>
+        </>
+      )}
       {imageToggle === 'manual' && (
         <>
           <Section label="" id="step-manual-image">
@@ -150,17 +169,6 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           </>
         )}
       </Section>
-      {/* <Section id="resourcelistdropdown" label="Resource List Dropdown">
-        <ResourceListDropdown
-          resourceList={ClusterResourceList} // 필수
-          selected={[...selectedClusterItems]} // 필수
-          onChange={updateSelectedClusterItems} // 필수
-          showAll={false}
-          title="select Resources" // 드롭다운 title 지정
-          autocompletePlaceholder="search by name"
-          type="single" // type: single / multiple
-        />
-      </Section> */}
       {/* <Section label="Type" id="step-type" isRequired={true}>
         <Dropdown
           name="type"

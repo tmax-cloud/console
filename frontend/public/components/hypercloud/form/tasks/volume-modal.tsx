@@ -47,7 +47,7 @@ export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => 
       </Section>
       {type === 'configMap' && (
         <Section label="컨피그 맵" id="volume-config-map" isRequired={true}>
-          <TextInput id="config_map" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.configMap : ''} />
+          <TextInput id="configMap" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.configMap : ''} />
         </Section>
       )}
       {type === 'secret' && (
