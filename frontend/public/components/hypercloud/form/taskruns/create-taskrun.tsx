@@ -19,7 +19,7 @@ const defaultValues = {
     name: 'example-name',
   },
 };
-
+let defaultArrayLength = 0;
 const taskRunFormFactory = params => {
   return WithCommonForm(CreateTaskRunComponent, params, defaultValues);
 };
@@ -31,17 +31,19 @@ const paramItemRenderer = (register, name, item, index, ListActions, ListDefault
         <input ref={register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
       </div>
       <div className="col-xs-1 pairs-list__action">
-        <Button
-          type="button"
-          data-test-id="pairs-list__delete-btn"
-          className="pairs-list__span-btns"
-          onClick={() => {
-            ListActions.remove(index);
-          }}
-          variant="plain"
-        >
-          {ListDefaultIcons.deleteIcon}
-        </Button>
+        {defaultArrayLength > index ? null : (
+          <Button
+            type="button"
+            data-test-id="pairs-list__delete-btn"
+            className="pairs-list__span-btns"
+            onClick={() => {
+              ListActions.remove(index);
+            }}
+            variant="plain"
+          >
+            {ListDefaultIcons.deleteIcon}
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -83,7 +85,8 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
 
     const paramValueListData = task.spec?.params?.map(param => {
       if (param.type === 'array') {
-        const valueList = param.default.map(value => {
+        defaultArrayLength = param.default?.length;
+        const valueList = param.default?.map(value => {
           return {
             value: value,
           };
@@ -108,7 +111,6 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         required: !!param.default,
       };
     });
-
     setParamList(paramsData || []);
 
     const workspacesData = task.spec?.workspaces?.map(workspace => {
@@ -124,8 +126,8 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     return (
       <Section label={`${item.name} (${item.type})`} id={`input_${index}`} key={`input_${index}`} isRequired={item.required} description={item.description}>
         <>
-          <input ref={methods.register} type="hidden" id={`spec.resources.inputs[${index}].name`} name={`spec.resources.inputs[${index}].name`} value={item.name} />
-          <ResourceDropdown name={`spec.resources.inputs[${index}].resourceRef.name`} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} resources={[{ kind: PipelineResourceModel.kind, namespace: namespace, prop: 'pipelineresource' }]} type="single" useHookForm />
+          {/* <input ref={methods.register} type="hidden" id={`spec.resources.inputs[${index}].name`} name={`spec.resources.inputs[${index}].name`} value={item.name} /> */}
+          <ResourceDropdown name={`spec.resources.inputs.${item.name}.resourceRef.name`} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} resources={[{ kind: PipelineResourceModel.kind, namespace: namespace, prop: 'pipelineresource' }]} type="single" useHookForm />
         </>
       </Section>
     );
@@ -135,17 +137,18 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     return (
       <Section label={`${item.name} (${item.type})`} id={`output_${index}`} key={`output_${index}`} isRequired={item.required} description={item.description}>
         <>
-          <input ref={methods.register} type="hidden" id={`spec.resources.outputs[${index}].name`} name={`spec.resources.outputs[${index}].name`} value={item.name} />
-          <ResourceDropdown name={`spec.resources.outputs[${index}].resourceRef.name`} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} resources={[{ kind: PipelineResourceModel.kind, namespace: namespace, prop: 'pipelineresource' }]} type="single" useHookForm />
+          {/* <input ref={methods.register} type="hidden" id={`spec.resources.outputs[${index}].name`} name={`spec.resources.outputs[${index}].name`} value={item.name} /> */}
+          <ResourceDropdown name={`spec.resources.outputs.${item.name}.resourceRef.name`} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} resources={[{ kind: PipelineResourceModel.kind, namespace: namespace, prop: 'pipelineresource' }]} type="single" useHookForm />
         </>
       </Section>
     );
   });
 
+  // MEMO : ListView는 name에 민감해서 ListView와 item renderer의 item들의 이름은 고정시키고 name부분은 hidden input으로 넣어둠.
   const params = paramList.map((item, index) => {
     if (item.type === 'array') {
       return (
-        <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`}>
+        <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description}>
           <>
             <input ref={methods.register} type="hidden" id={`params[${index}].name`} name={`params[${index}].name`} value={item.name} />
             <ListView name={`params[${index}].value`} methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} />
@@ -154,7 +157,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
       );
     } else {
       return (
-        <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`}>
+        <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description}>
           <>
             <input ref={methods.register} type="hidden" id={`params[${index}].name`} name={`params[${index}].name`} value={item.name} />
             <input ref={methods.register} className="pf-c-form-control" id={`params[${index}].value`} name={`params[${index}].value`} defaultValue={item.value} />
@@ -225,10 +228,27 @@ const changeTimeoutFormat = timeout => {
 
 export const onSubmitCallback = data => {
   let params = _.cloneDeep(data.params);
-  const formattedTimeout = changeTimeoutFormat(data.spec.timeout);
-  delete data.params;
-  delete data.spec.timeout;
-  const prettyParams = params?.map(param => {
+  const formattedTimeout = changeTimeoutFormat(data.spec?.timeout);
+  const inputs = data.spec?.resources?.inputs;
+  let formattedInputs = [];
+  for (const inputName in inputs) {
+    const inputObj = {
+      name: inputName,
+      ...inputs[inputName],
+    };
+    formattedInputs.push(inputObj);
+  }
+  const outputs = data.spec?.resources?.outputs;
+  let formattedOutputs = [];
+  for (const outputName in outputs) {
+    const outputObj = {
+      name: outputName,
+      ...outputs[outputName],
+    };
+    formattedOutputs.push(outputObj);
+  }
+
+  const formattedParams = params?.map(param => {
     if (Array.isArray(param.value)) {
       const valueList = param.value.map(obj => {
         return obj.value;
@@ -238,7 +258,11 @@ export const onSubmitCallback = data => {
       return { name: param.name, value: param.value };
     }
   });
-  data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { params: prettyParams, timeout: formattedTimeout } });
+  delete data.spec?.resources?.inputs;
+  delete data.spec?.resources?.outputs;
+  delete data.params;
+  delete data.spec?.timeout;
+  data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } });
   // console.log('data? ', data);
   return data;
 };
