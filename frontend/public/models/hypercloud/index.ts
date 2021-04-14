@@ -876,3 +876,15 @@ export const WorkflowModel: K8sKind = {
   id: 'workflow',
   crd: false,
 };
+
+export const TFApplyClaimModel: K8sKind = {
+  kind: 'TFApplyClaim',
+  label: 'Terraform Apply Claim',
+  labelPlural: 'Terraform Apply Claims',
+  apiGroup: 'claim.tmax.io',
+  apiVersion: 'v1alpha1',
+  abbr: 'TFC',
+  namespaced: true,
+  id: 'tfapplyclaim',
+  plural: 'tfapplyclaims',
+};
