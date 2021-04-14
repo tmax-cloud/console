@@ -29,6 +29,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
       }
     });
   }
+  const defaultAccessMode = modalType === 'modify' ? template?.accessMode : 'readWrite';
   const [option, setOption] = React.useState(template?.option);
 
   return (
@@ -48,6 +49,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
           name="accessMode" // 서버에 보낼 데이터에서의 path (필수)
           items={accessModeItem} // [{title: '', value: ''}] (필수)
           inline={true} // inline속성 먹일거면 true, 아니면 빼면 됨 (선택)
+          initValue={defaultAccessMode}
         />
       </Section>
       <label>

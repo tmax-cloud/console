@@ -213,7 +213,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     let data = methods.getValues(); // modal에서 입력받은 data
     let currWorkSpace = workSpace.map((cur, idx) => {
       if (idx === index) {
-        return { name: data.name, path: data.path, type: data.type, option: data.option };
+        return { name: data.name, description: data.description, path: data.path, accessMode: data.accessMode, option: data.option };
       }
       return cur;
     });
@@ -230,7 +230,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       currVolume['secret'] = data['secret'];
       delete currVolume['configMap'];
     } else if (currVolume.type === 'configMap') {
-      currVolume['configMap'] = data['config_map'];
+      currVolume['configMap'] = data['configMap'];
       delete currVolume['secret'];
     }
     setVolume(() => {
@@ -264,7 +264,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
           volume['secret'] = data.secret;
           delete volume['configMap'];
         } else if (volume.type === 'configMap') {
-          volume['configMap'] = data['config_map'];
+          volume['configMap'] = data['configMap'];
           delete volume['secret'];
         }
         return volume;
@@ -279,7 +279,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const onAddStep = (cancel, index, e: React.SyntheticEvent) => {
     e.preventDefault();
     let data = methods.getValues(); // modal에서 입력받은 data
-    let currStep = { name: data.name, manualImage: data.manualImage, manualCommand: data.manualCommand };
+    let currStep = { name: data.name, imageToggle: data.imageToggle, registryRegistry: data.registryRegistry, registryImage: data.registryImage, registryTag: data.registryTag, manualImage: data.manualImage, manualCommand: data.manualCommand, parameterList: data.parameterList, envList: data.envList };
     setStep(() => {
       return [...step, currStep];
     }); // state 최신화
@@ -298,7 +298,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     let data = methods.getValues(); // modal에서 입력받은 data
     let currStep = step.map((cur, idx) => {
       if (idx === index) {
-        return { name: data.name, path: data.path, type: data.type, option: data.option };
+        return { name: data.name, imageToggle: data.imageToggle, registryRegistry: data.registryRegistry, registryImage: data.registryImage, registryTag: data.registryTag, manualImage: data.manualImage, manualCommand: data.manualCommand, parameterList: data.parameterList, envList: data.envList };
       }
       return cur;
     });

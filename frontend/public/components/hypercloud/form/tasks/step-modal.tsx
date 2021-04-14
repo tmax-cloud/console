@@ -108,9 +108,10 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       <Section label="이미지" id="step-image-toggle">
         <RadioGroup
           methods={methods}
-          name="image-toggle" // 서버에 보낼 데이터에서의 path (필수)
+          name="imageToggle" // 서버에 보낼 데이터에서의 path (필수)
           items={ImageRadioList} // [{title: '', value: ''}] (필수)
           inline={true} // inline속성 먹일거면 true, 아니면 빼면 됨 (선택)
+          initValue={imageToggle}
         />
       </Section>
       {imageToggle === 'registry' && <p>레지스트리</p>}
