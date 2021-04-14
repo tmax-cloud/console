@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { connect } from 'react-redux';
-import { BellIcon, EllipsisVIcon, PlusCircleIcon, QuestionCircleIcon, ClockIcon, GlobeAmericasIcon, AngleDownIcon } from '@patternfly/react-icons';
+import { BellIcon, EllipsisVIcon, PlusCircleIcon, QuestionCircleIcon, ClockIcon, GlobeAmericasIcon, AngleDownIcon,UserIcon } from '@patternfly/react-icons';
 import { ApplicationLauncher, ApplicationLauncherGroup, ApplicationLauncherItem, ApplicationLauncherSeparator, NotificationBadge, Toolbar, ToolbarGroup, ToolbarItem, TooltipPosition, Tooltip, Button, Badge } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import { FLAGS, YellowExclamationTriangleIcon } from '@console/shared';
@@ -20,7 +20,7 @@ import { ExpTimer } from './hypercloud/exp-timer';
 import { setAccessToken } from '../hypercloud/auth';
 import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
-
+import { HyperCloudManualLink } from './utils';
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
     <ToolbarItem className={className}>
@@ -74,6 +74,10 @@ class MastheadToolbarContents_ extends React.Component {
 
   _getImportYAMLPath() {
     return formatNamespacedRouteForResource('import', this.props.activeNamespace);
+  }
+
+  _getManualPath() {
+    return 'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20200918-000001/4.1-ko/welcome/overview_sub/index.html';
   }
 
   _updateUser() {
@@ -336,7 +340,7 @@ class MastheadToolbarContents_ extends React.Component {
       //   ],
       // });
 
-      return <ApplicationLauncher aria-label="Utility menu" className="co-app-launcher" onSelect={this._onKebabDropdownSelect} onToggle={this._onKebabDropdownToggle} isOpen={isKebabDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={<EllipsisVIcon />} isGrouped />;
+      return <ApplicationLauncher aria-label="Utility menu" className="co-app-launcher" onSelect={this._onKebabDropdownSelect} onToggle={this._onKebabDropdownToggle} isOpen={isKebabDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={<EllipsisVIcon color="white"/>} isGrouped />;
     }
 
     if (_.isEmpty(actions)) {
@@ -345,8 +349,9 @@ class MastheadToolbarContents_ extends React.Component {
 
     const userToggle = (
       <span className="pf-c-dropdown__toggle">
+        <UserIcon color="white"/>
         <span className="co-username">{username}</span>
-        <AngleDownIcon className="pf-c-dropdown__toggle-icon" />
+        <AngleDownIcon className="pf-c-dropdown__toggle-icon" color="#757575"/>
       </span>
     );
 
@@ -395,7 +400,7 @@ class MastheadToolbarContents_ extends React.Component {
         actions: [],
       });
 
-      return <ApplicationLauncher aria-label="Utility menu" className="co-app-launcher" onSelect={this._onKebabDropdownSelect} onToggle={this._onKebabDropdownToggle} isOpen={isKebabDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={<EllipsisVIcon />} isGrouped />;
+      return <ApplicationLauncher aria-label="Utility menu" className="co-app-launcher" onSelect={this._onKebabDropdownSelect} onToggle={this._onKebabDropdownToggle} isOpen={isKebabDropdownOpen} items={this._renderApplicationItems(actions)} position="right" toggleIcon={<EllipsisVIcon color="white" />} isGrouped />;
     }
 
     if (_.isEmpty(actions)) {
@@ -405,9 +410,9 @@ class MastheadToolbarContents_ extends React.Component {
     const languageToggle = (
       <span className="pf-c-dropdown__toggle">
         {/* i18n 키값 요청 후 적용하기 - 현재 선택된 언어를 표현하는 키값 - 한국어, 영어 */}
-        <GlobeAmericasIcon />
+        <GlobeAmericasIcon color="white"/>
         <span className="co-username">Language</span>
-        <AngleDownIcon className="pf-c-dropdown__toggle-icon" />
+        <AngleDownIcon className="pf-c-dropdown__toggle-icon" color="#757575"/>
       </span>
     );
 
@@ -447,13 +452,6 @@ class MastheadToolbarContents_ extends React.Component {
       <>
         <Toolbar>
           <ToolbarGroup className="hidden-xs">
-             <ToolbarItem>
-              <Tooltip content="Add" position={TooltipPosition.bottom}>
-                <Link to="/add" className="pf-c-button pf-m-plain" aria-label="Add">
-                  <PlusCircleIcon />
-                </Link>
-              </Tooltip>
-            </ToolbarItem>
             <ToolbarItem>
               <ClockIcon />
             </ToolbarItem>
@@ -477,38 +475,40 @@ class MastheadToolbarContents_ extends React.Component {
                 {t('COMMON:MSG_GNB_SESSION_1')}
               </Badge>
             </ToolbarItem>
-            {/* desktop -- (system status button) */}
             <SystemStatusButton statuspageData={statuspageData} />
-            {/* desktop -- (application launcher dropdown), import yaml, help dropdown [documentation, about] */}
-            <ToolbarItem>
-              <div className="co-masthead__line"></div>
-            </ToolbarItem>
-            {/* desktop -- (user dropdown [logout]) */}
+
             <ToolbarItem className="hidden-xs">{this._renderLanguageMenu(false)}</ToolbarItem>
+            
             <ToolbarItem>
               <div className="co-masthead__line"></div>
             </ToolbarItem>{' '}
-            {/* desktop -- (notification drawer button) */
-            alertAccess && (
+
+            {alertAccess && (
               <ToolbarItem>
                 <NotificationBadge aria-label="Notification Drawer" onClick={drawerToggle} isRead={notificationsRead}>
                   <BellIcon />
                 </NotificationBadge>
               </ToolbarItem>
             )}
-            {/* <ToolbarItem>
+
+            <ToolbarItem>
               <Tooltip content="Import YAML" position={TooltipPosition.bottom}>
                 <Link to={this._getImportYAMLPath()} className="pf-c-button pf-m-plain" aria-label="Import YAML">
                   <PlusCircleIcon className="co-masthead-icon" />
                 </Link>
               </Tooltip>
-            </ToolbarItem> */}
+            </ToolbarItem>
+
             <CloudShellMastheadButton />
-            {/* TODO: 매뉴얼 완료 후 매뉴얼로 이동하는 링크 추가하기 */}
-            {/* <ToolbarItem className="co-masthead-icon__button">
-              <QuestionCircleIcon />
-            </ToolbarItem> */}
+            {/* TODO: 매뉴얼 5.0버전으로 바꿔야함 */}
+            <ToolbarItem className="co-masthead-icon__button">
+              <Tooltip content="Manual" position={TooltipPosition.bottom}>
+                <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20200918-000001/4.1-ko/welcome/overview_sub/index.html" target="_blank">
+                <QuestionCircleIcon className="co-masthead-icon" color="white"/></a>
+              </Tooltip>
+            </ToolbarItem>
           </ToolbarGroup>
+
           <ToolbarGroup>
             {/* mobile -- (notification drawer button) */
             // 기능 추가되면 완성하기

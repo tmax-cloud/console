@@ -203,7 +203,6 @@ h6 {
     top: 0;
     color: black !important;
     background-color: white;
-    border-bottom: 1px solid #c5c7c8;
   }
 
   &__header-brand-link {
@@ -230,14 +229,17 @@ h6 {
     .pf-c-notification-badge {
       color: black;
     }
+    .pf-l-toolbar {
+      color:white;
+    }
     .pf-l-toolbar__group:not(:last-child) {
-      margin-right: 20px;
+      margin-right: 10px;
     }
     .pf-l-toolbar__item > nav {
-      padding: 0px 10px;
+      padding: 0px 5px;
     }
     .pf-l-toolbar__item > button {
-      padding: 0px 10px;
+      padding: 0px 5px;
     }
   }
 
@@ -268,7 +270,7 @@ h6 {
   }
 
   .pf-c-page__sidebar {
-    background-color: #28384f;
+    background-color: #31475E;
     --pf-c-page__sidebar--Transition: all 100ms ease;
   }
 }
@@ -532,11 +534,11 @@ button.pf-c-dropdown__menu-item.hover {
   background-color: #435775 !important;
 }
 
-.pf-c-page__header-brand {
-  height: 100%;
-  width: 290px;
-  background-color: #28384f;
+.pf-c-page__header {
+  width: auto;
+  background-color: #31475E;
   background-image: url('../imgs/gnb_logo_bg_mint.png');
+  background-repeat: no-repeat;
 }
 
 .pf-c-nav__simple-list .pf-c-nav__link.pf-m-hover,
