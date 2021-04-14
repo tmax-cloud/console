@@ -41,7 +41,7 @@ export const createModalLauncher: CreateModalLauncher = Component => props => {
     return (
       <Provider store={store}>
         <Router {...{ history, basename: window.SERVER_FLAGS.basePath }}>
-          <Modal isOpen={true} contentLabel="Modal" onRequestClose={_handleClose} className={classNames('modal-dialog', props.modalClassName)} overlayClassName="co-overlay" shouldCloseOnOverlayClick={!props.blocking}>
+          <Modal isOpen={true} contentLabel="Modal" onRequestClose={_handleClose} className={classNames('modal-dialog', props.modalClassName)} overlayClassName="co-overlay" shouldCloseOnOverlayClick={false}>
             <Component {...(_.omit(props, 'blocking', 'modalClassName') as any)} cancel={_handleCancel} close={_handleClose} />
           </Modal>
         </Router>
