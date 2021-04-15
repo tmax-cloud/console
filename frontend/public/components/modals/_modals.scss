@@ -16,7 +16,8 @@
   flex: 1 1 auto;
   flex-direction: column;
   height: 100%;
-  overflow-y: auto;
+  // overflow-y: auto; // dropdown menu가 넘치게 되면 가려지고 스크롤이 생김... 문제 생기면 다시 봐야할듯
+  // height이 100%면 사실 overflow 생길 일도 없을 거 같음..
   padding: 0;
   @include scroll-shadows-vertical;
   -webkit-overflow-scrolling: touch;
