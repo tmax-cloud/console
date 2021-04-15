@@ -65,7 +65,8 @@ InferenceServiceTableHeader.displayName = 'InferenceServiceTableHeader';
 
 const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, index, key, style }) => {
   const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt'];
-  let framework = frameworkList.includes(Object.keys(isvc.spec.default.predictor)[0]) ? Object.keys(isvc.spec.default.predictor)[0] : Object.keys(isvc.spec.default.predictor)[1];
+  console.log(Object.keys(isvc.spec.predictor)[0]);
+  let framework = frameworkList.includes(Object.keys(isvc.spec.predictor)[0]) ? Object.keys(isvc.spec.predictor)[0] : Object.keys(isvc.spec.predictor)[1];
   return (
     <TableRow id={isvc.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -74,21 +75,11 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={isvc.metadata.namespace} title={isvc.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        {framework}
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {isvc.spec.default.predictor[framework]?.storageUri}
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        {isvc.status.url}
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        {isvc.status.canary && Object.keys(isvc.status.canary).length === 0 ? 'N' : 'Y'}
-      </TableData>
-      <TableData className={tableColumnClasses[6]}>
-        {isvc.status.conditions.length ? isvc.status.conditions[isvc.status.conditions.length - 1].status : ''}
-      </TableData>
+      <TableData className={tableColumnClasses[2]}>{framework}</TableData>
+      <TableData className={tableColumnClasses[3]}>{isvc.spec.predictor[framework]?.storageUri}</TableData>
+      <TableData className={tableColumnClasses[4]}>{isvc.status.url}</TableData>
+      <TableData className={tableColumnClasses[5]}>{isvc.status.canary && Object.keys(isvc.status.canary).length === 0 ? 'N' : 'Y'}</TableData>
+      <TableData className={tableColumnClasses[6]}>{isvc.status.conditions.length ? isvc.status.conditions[isvc.status.conditions.length - 1].status : ''}</TableData>
       <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={isvc} />
       </TableData>
@@ -101,7 +92,7 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })}/>
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={isvc} />
@@ -110,13 +101,13 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 export const InferenceServices: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="InferenceServices" Header={InferenceServiceTableHeader.bind(null, t)} Row={InferenceServiceTableRow} virtualize />;
-}
+};
 
 export const InferenceServicesPage: React.FC<InferenceServicesPageProps> = props => <ListPage canCreate={true} ListComponent={InferenceServices} kind={kind} {...props} />;
 
