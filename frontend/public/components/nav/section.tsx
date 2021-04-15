@@ -3,23 +3,14 @@ import { connect } from 'react-redux';
 import * as _ from 'lodash-es';
 import { NavExpandable } from '@patternfly/react-core';
 
-import {
-  withExtensions,
-  NavItem,
-  Perspective,
-  isNavItem,
-  isPerspective,
-} from '@console/plugin-sdk';
+import { withExtensions, NavItem, Perspective, isNavItem, isPerspective } from '@console/plugin-sdk';
 import { RootState } from '../../redux';
 import { featureReducerName, flagPending, FeatureState } from '../../reducers/features';
 import { stripBasePath } from '../utils';
 import { stripNS, createLink } from './items';
 import { getActivePerspective } from '../../reducers/ui';
 
-const navSectionStateToProps = (
-  state: RootState,
-  { required }: NavSectionProps,
-): NavSectionStateProps => {
+const navSectionStateToProps = (state: RootState, { required }: NavSectionProps): NavSectionStateProps => {
   const flags = state[featureReducerName];
   const canRender = required ? flags.get(required) : true;
 
@@ -32,12 +23,8 @@ const navSectionStateToProps = (
   };
 };
 
-const mergePluginChild = (
-  Children: React.ReactElement[],
-  pluginChild: React.ReactElement,
-  mergeBefore?: string,
-) => {
-  const index = Children.findIndex((c) => c.props.name === mergeBefore);
+const mergePluginChild = (Children: React.ReactElement[], pluginChild: React.ReactElement, mergeBefore?: string) => {
+  const index = Children.findIndex(c => c.props.name === mergeBefore);
   if (index >= 0) {
     Children.splice(index, 0, pluginChild);
   } else {
@@ -90,7 +77,7 @@ export const NavSection = connect(navSectionStateToProps)(
 
         //current bug? - we should be checking if children is a single item or .filter is undefined
         return (children as any[])
-          .filter((c) => {
+          .filter(c => {
             if (!c) {
               return false;
             }
@@ -102,7 +89,7 @@ export const NavSection = connect(navSectionStateToProps)(
             }
             return c.type.isActive && c.type.isActive(c.props, resourcePath, activeNamespace);
           })
-          .map((c) => `${c.props.id}-${c.props.name}`)[0];
+          .map(c => `${c.props.id}-${c.props.name}`)[0];
       }
 
       componentDidUpdate(prevProps, prevState) {
@@ -129,7 +116,7 @@ export const NavSection = connect(navSectionStateToProps)(
         //   defaultPerspective && perspective === defaultPerspective.properties.id;
 
         return navItemExtensions.filter(
-          (item) =>
+          item =>
             // check if the item is contributed to the current perspective,
             // or if no perspective specified, are we in the default perspective
             // (item.properties.perspective === perspective ||
@@ -148,10 +135,7 @@ export const NavSection = connect(navSectionStateToProps)(
         const { name, required, disallowed, id } = c.props;
 
         const requiredArray = required ? _.castArray(required) : [];
-        const requirementMissing = _.some(
-          requiredArray,
-          (flag) => flag && (flagPending(flags.get(flag)) || !flags.get(flag)),
-        );
+        const requirementMissing = _.some(requiredArray, flag => flag && (flagPending(flags.get(flag)) || !flags.get(flag)));
         if (requirementMissing) {
           return null;
         }
@@ -171,7 +155,7 @@ export const NavSection = connect(navSectionStateToProps)(
         const { title, children, perspective } = this.props;
         const Children = React.Children.map(children, this.mapChild) || [];
 
-        this.getNavItemExtensions(perspective, title).forEach((item) => {
+        this.getNavItemExtensions(perspective, title).forEach(item => {
           const pluginChild = this.mapChild(createLink(item));
           if (pluginChild) {
             mergePluginChild(Children, pluginChild, item.properties.mergeBefore);
@@ -186,18 +170,16 @@ export const NavSection = connect(navSectionStateToProps)(
           return null;
         }
 
-        const { title } = this.props;
+        const { title, isSingleChild } = this.props;
         const { isOpen, activeChild } = this.state;
         const isActive = !!activeChild;
         const children = this.getChildren();
 
+        if (isSingleChild) {
+          return children.length > 0 ? <> {children} </> : null;
+        }
         return children.length > 0 ? (
-          <NavExpandable
-            title={title}
-            isActive={isActive}
-            isExpanded={isOpen}
-            onExpand={this.toggle}
-          >
+          <NavExpandable title={title} isActive={isActive} isExpanded={isOpen} onExpand={this.toggle}>
             {children}
           </NavExpandable>
         ) : null;
@@ -206,17 +188,7 @@ export const NavSection = connect(navSectionStateToProps)(
   ),
 );
 
-export type NavSectionTitle =
-  | 'Administration'
-  | 'Builds'
-  | 'Compute'
-  | 'Home'
-  | 'Monitoring'
-  | 'Networking'
-  | 'Operators'
-  | 'Service Catalog'
-  | 'Storage'
-  | 'Workloads';
+export type NavSectionTitle = 'Administration' | 'Builds' | 'Compute' | 'Home' | 'Monitoring' | 'Networking' | 'Operators' | 'Service Catalog' | 'Storage' | 'Workloads';
 
 type NavSectionStateProps = {
   flags?: FeatureState;
@@ -235,6 +207,7 @@ type NavSectionExtensionProps = {
 type NavSectionProps = {
   title: NavSectionTitle | string;
   required?: string;
+  isSingleChild?: boolean;
 };
 
 type Props = NavSectionProps & NavSectionStateProps & NavSectionExtensionProps;

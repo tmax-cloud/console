@@ -1,0 +1,51 @@
+.tfac-logs {
+  //   margin-left: 30px;
+  //   margin-right: 30px;
+
+  &__extra-space {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    vertical-align: middle;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+  &__rawlogs {
+    width: 1570px;
+    height: 560px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+  &__status {
+    // width: 50%;
+    display: grid;
+    grid-template-columns: 50% 10%;
+    height: 560px;
+    margin-left: 30px;
+    margin-right: 30px;
+
+    &__spec {
+      padding-left: 10%;
+
+      &__title {
+        text-align: center;
+        font-weight: bold;
+      }
+
+      &__num {
+        padding-top: 10%;
+        display: grid;
+        grid-template-columns: 33% 33% 33%;
+        text-align: center;
+      }
+    }
+  }
+}
+.tfac-logs__text-padding {
+  flex: 1;
+  padding-left: var(--pf-global--spacer--xl);
+  padding-right: var(--pf-global--spacer--xl);
+  white-space: pre-wrap;
+}
