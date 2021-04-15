@@ -4,7 +4,7 @@ import * as _ from 'lodash-es';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText, defaultValues }) => {
-  const { control, register, getValues } = methods ? methods : useFormContext();
+  const { control, register, getValues, setValue } = methods ? methods : useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: name });
 
   const DefaultListHeaderFragment = (
@@ -17,7 +17,8 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
 
   React.useEffect(() => {
     if (!!defaultValues) {
-      methods.setValue(name, defaultValues);
+      // MEMO : name에 []이 들어가있으면 setValue 에러남. test[0].values 대신 test.0.values 형식으로 들어가있어야됨
+      setValue(name, defaultValues);
     }
   }, [defaultValues]);
 

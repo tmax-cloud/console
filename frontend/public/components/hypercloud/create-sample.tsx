@@ -65,24 +65,24 @@ const defaultValues = {
 
 const ClusterResourceList = [
   {
-    "kind": "ClusterManager",
-    "apiVersion": "cluster.tmax.io/v1alpha1",
-    "metadata": {
-      "name": "jmc-zgw2v",
-      "uid": "1a482d7d-ac35-46d3-8496-a94688fc6d0e",
+    kind: 'ClusterManager',
+    apiVersion: 'cluster.tmax.io/v1alpha1',
+    metadata: {
+      name: 'jmc-zgw2v',
+      uid: '1a482d7d-ac35-46d3-8496-a94688fc6d0e',
     },
-    "fakeMetadata": {
-      "fakename": "jmc"
+    fakeMetadata: {
+      fakename: 'jmc',
     },
   },
   {
-    "kind": "ClusterClaim",
-    "apiVersion": "cluster.tmax.io/v1alpha1",
-    "metadata": {
-      "name": "example",
-      "uid": "436b6e22-748e-4e04-aea5-156f2ed35fa0",
+    kind: 'ClusterClaim',
+    apiVersion: 'cluster.tmax.io/v1alpha1',
+    metadata: {
+      name: 'example',
+      uid: '436b6e22-748e-4e04-aea5-156f2ed35fa0',
     },
-  }
+  },
 ];
 
 const sampleFormFactory = params => {
@@ -90,16 +90,17 @@ const sampleFormFactory = params => {
 };
 
 const CreateSampleComponent: React.FC<SampleFormProps> = props => {
-  const { control } = useFormContext();
+  const methods = useFormContext();
 
-  const updateSelectedClusterItems = (selection: string) => { // selection: {resource}.metadata.uid | 'All'
+  const updateSelectedClusterItems = (selection: string) => {
+    // selection: {resource}.metadata.uid | 'All'
     //Do Something
-    console.log('updateSelectedClusterItems: ', selection)
+    console.log('updateSelectedClusterItems: ', selection);
   };
 
   const onSelectedItemChange = (items: Set<string>) => {
     //DO Something
-    console.log("hi")
+    console.log('hi');
   };
 
   const resources = [
@@ -136,10 +137,10 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
   const listItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-4 pairs-list__name-field">
-        <input ref={register()} className="pf-c-form-control" name={`metadata.numList[${index}].name`} defaultValue={item.name}></input>
+        <input ref={register()} className="pf-c-form-control" name={`metadata.spinnerNumList[${index}].name`} defaultValue={item.name}></input>
       </div>
       <div className="col-xs-4 pairs-list__value-field">
-        <NumberSpinner initialValue={item.number} min={-15} max={15} name={`metadata.numList[${index}].number`} />
+        <NumberSpinner initialValue={item.number} min={-15} max={15} name={`metadata.spinnerNumList[${index}].number`} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
@@ -160,7 +161,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
   return (
     <div>
       <Section label="Labels" id="label" description="이것은 Label입니다.">
-        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
       </Section>
       <Section id="resources" label="Radio Group">
         <RadioGroup
@@ -175,7 +176,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
       <Section id="section" label="Grid Section" isRequired={true}>
         {/* sample로 각각다른 3개 node 넣어봄. 1,2,3,4 개 일 경우 다 정상동작 하는 것 확인.*/}
         <Section id="label" label="Label (for Section)">
-          <Controller name="metadata.section.label" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
+          <Controller name="metadata.section.label" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
         </Section>
         <Section id="cpu" label="Input Selectbox (for Section)">
           <InputSelectBox textName="spec.section.cpu" id="cpu" dropdownName="spec.section.cpuRange" selectedKey="Mi" items={dropdownUnits} />
@@ -211,10 +212,10 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
             {
               kind: 'Deployment',
               namespace: 'catalog', // 옵션
-              prop: 'deployment'
+              prop: 'deployment',
             },
           ]}
-          type='single'
+          type="single"
           useHookForm
         />
         <ResourceDropdown
@@ -226,8 +227,8 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
               prop: 'pod',
             },
           ]}
-          defaultValue={["new-pipeline-test-shtehy-sum-params-qkg57-pod-l47lv"]} // 옵션
-          type='multiple'
+          defaultValue={['new-pipeline-test-shtehy-sum-params-qkg57-pod-l47lv']} // 옵션
+          type="multiple"
           showAll={true}
           useHookForm
         />
@@ -243,7 +244,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           name="RLD-multiple"
           resourceList={ClusterResourceList} // 필수
           onChange={updateSelectedClusterItems} // '아이템' 선택될 때마다 호출됨
-          resourceType="Cluster and Cluster Claim" 
+          resourceType="Cluster and Cluster Claim"
           autocompletePlaceholder="search by name"
           type="multiple" // 필수 type: single / multiple
           useHookForm
@@ -288,7 +289,24 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
         <ListView name="metadata.keyValueList" addButtonText="Add Key/Value" />
       </Section>
       <Section id="listviewsection2" label="Customized List View">
-        <ListView name="metadata.numList" addButtonText="Add Name/Num" headerFragment={listHeaderFragment} itemRenderer={listItemRenderer} defaultItem={{ name: '', number: 0 }} />
+        <ListView
+          name="numberspinnerListView"
+          addButtonText="Add Name/Num"
+          headerFragment={listHeaderFragment}
+          itemRenderer={listItemRenderer}
+          defaultItem={{ name: '', number: 0 }}
+          methods={methods}
+          defaultValues={[
+            {
+              name: 'Item1',
+              number: 3,
+            },
+            {
+              name: 'Item2',
+              number: 5,
+            },
+          ]}
+        />
       </Section>
     </div>
   );
