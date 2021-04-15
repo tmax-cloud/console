@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import { switchPerspective } from 'packages/dev-console/integration-tests/views/dev-perspective.view';
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
-import { NamespaceClaimModel, ResourceQuotaClaimModel, CatalogServiceClaimModel } from '../../../models';
+import { NamespaceClaimModel, ResourceQuotaClaimModel, CatalogServiceClaimModel, RoleBindingClaimModel } from '../../../models';
 import { k8sUpdateApproval, referenceForModel } from '../../../module/k8s';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
@@ -41,6 +41,7 @@ class BaseStatusModal extends PromiseComponent {
 
     const { kind, path, resource } = this.props;
     switch (kind.kind) {
+      case RoleBindingClaimModel.kind:
       case ResourceQuotaClaimModel.kind:
       case NamespaceClaimModel.kind: {
         const stat = this.state.status === 'Approved' ? 'Success' : 'Reject';
