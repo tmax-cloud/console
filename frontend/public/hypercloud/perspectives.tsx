@@ -42,5 +42,17 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
       },
     },
+    {
+      type: 'Perspective',
+      properties: {
+        id: 'developer',
+        // name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_1') : 'Developer',
+        name:'Developer',
+        icon: <CogsIcon />,
+        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
+        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
+        getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+      },
+    },
   ];
 };
