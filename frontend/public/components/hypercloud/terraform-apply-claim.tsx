@@ -18,7 +18,7 @@ import './terraform-apply-claim.scss';
 // import { MultiStreamLogs } from './test-PipelineRunDetailsPage';
 
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
-import '/home/syoh/console/frontend/packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
+import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
 
