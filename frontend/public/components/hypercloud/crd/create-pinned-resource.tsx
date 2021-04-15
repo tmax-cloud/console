@@ -25,7 +25,7 @@ import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
 
-export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective }) => {
+export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
   if (!model) {
     return null;
   }
@@ -46,8 +46,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
         </div>
         <SyncedEditor
           context={{
-            formContext: {},
-            yamlContext: { next, match },
+            formContext: { create },
+            yamlContext: { next, match, create },
           }}
           initialData={sample}
           initialType={EditorType.YAML}
@@ -117,8 +117,8 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
             </div>
             <SyncedEditor
               context={{
-                formContext: { match, model, next, schema },
-                yamlContext: { next, match },
+                formContext: { match, model, next, schema, create },
+                yamlContext: { next, match, create },
               }}
               FormEditor={FormComponent}
               initialData={sample}
@@ -150,7 +150,7 @@ export const CreateDefaultPage = connect(stateToProps)((props: CreateDefaultPage
       <Helmet>
         <title>{`Create ${kindForReference(props.match.params.plural)}`}</title>
       </Helmet>
-      <CreateDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} />
+      <CreateDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={true} />
     </>
   );
 });
