@@ -841,7 +841,7 @@ export const PyTorchJobModel: K8sKind = {
 export const InferenceServiceModel: K8sKind = {
   label: 'Inference Service',
   labelPlural: 'Inference Services',
-  apiVersion: 'v1alpha2',
+  apiVersion: 'v1beta1',
   apiGroup: 'serving.kubeflow.org',
   plural: 'inferenceservices',
   abbr: 'ISVC',
