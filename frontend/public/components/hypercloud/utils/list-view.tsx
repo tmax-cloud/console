@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
-export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText }) => {
+export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText, defaultValues }) => {
   const { control, register, getValues } = methods ? methods : useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: name });
 
@@ -14,6 +14,12 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
       <div className="col-xs-1 co-empty__header" />
     </div>
   );
+
+  React.useEffect(() => {
+    if (!!defaultValues) {
+      methods.setValue(name, defaultValues);
+    }
+  }, [defaultValues]);
 
   const DefaultListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
     return (
@@ -89,4 +95,5 @@ type ListViewProps = {
   headerFragment?: JSX.Element;
   addButtonText?: string;
   methods?: any;
+  defaultValues?: object[];
 };
