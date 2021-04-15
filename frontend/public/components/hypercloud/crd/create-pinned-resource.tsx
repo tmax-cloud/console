@@ -162,6 +162,7 @@ export type CreateDefaultProps = {
   loadError?: any;
   match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
+  create: boolean;
 };
 
 export type CreateDefaultPageProps = {
