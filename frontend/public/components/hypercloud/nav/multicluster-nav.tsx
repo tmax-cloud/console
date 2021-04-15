@@ -18,12 +18,14 @@ const MulticlusterNav = () => (
   <Translation>
     {t => (
       <>
-        <NavSection title={t('COMMON:MSG_LNB_MENU_105')}>
+        <NavSection title={t('COMMON:MSG_LNB_MENU_105')} isSingleChild={true}>
           <ResourceNSLink resource="clusterclaims" name={t('COMMON:MSG_LNB_MENU_105')} />
         </NavSection>
-
-        <NavSection title={t('COMMON:MSG_LNB_MENU_84')}>
+        <NavSection title={t('COMMON:MSG_LNB_MENU_84')} isSingleChild={true}>
           <ResourceNSLink resource="clustermanagers" name={t('COMMON:MSG_LNB_MENU_84')} />
+        </NavSection>
+        <NavSection title={t('테라폼 클레임')} isSingleChild={true}>
+          <ResourceNSLink resource="tfapplyclaims" name={t('테라폼 클레임')} />
         </NavSection>
 
         {/* <ResourceClusterLink resource="clustergroups" name="Cluster Groups" /> */}

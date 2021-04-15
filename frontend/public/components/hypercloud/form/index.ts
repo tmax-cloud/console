@@ -88,4 +88,5 @@ export const pluralToKind = new Map([
   ['inferenceservices', { kind: 'InferenceService', type: 'CustomResourceDefinition' }],
   ['workflowtemplates', { kind: 'WorkflowTemplate', type: 'CustomResourceDefinition' }],
   ['workflows', { kind: 'Workflow', type: 'CustomResourceDefinition' }],
+  ['tfapplyclaims', { kind: 'TFApplyClaim', type: 'CustomResourceDefinition' }],
 ]);
