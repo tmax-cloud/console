@@ -262,8 +262,6 @@ export const ListPage = withFallback(props => {
   const title = props.title || labelPlural;
   const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
 
-  const isNSSelected = !namespaced || namespace;
-
   let href = namespaced ? `/k8s/ns/${usedNamespace || 'default'}/${plural}/~new` : `/k8s/cluster/${plural}/~new`;
 
   if (ko.crd) {
@@ -277,7 +275,6 @@ export const ListPage = withFallback(props => {
 
   createProps = createProps || (createHandler ? { onClick: createHandler } : { to: href });
 
-  const unclickableMsg = !isNSSelected ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
   const createAccessReview = skipAccessReview ? null : { model: ko, namespace: usedNamespace };
   const resources = [
     {
@@ -325,17 +322,19 @@ export const ListPage = withFallback(props => {
       badge={badge}
       hideToolbar={hideToolbar}
       hideLabelFilter={hideLabelFilter}
-      unclickableMsg={unclickableMsg}
     />
   );
 }, ErrorBoundaryFallback);
 
 ListPage.displayName = 'ListPage';
 
-/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any> unclickableMsg?: string} */
+/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any>} */
 export const MultiListPage = props => {
-  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, unclickableMsg } = props;
+  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter } = props;
 
+  const { t } = useTranslation();
+  const isNSSelected = !props.resources?.[0]?.namespaced || namespace;
+  const unclickableMsg = !isNSSelected ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
   const resources = _.map(props.resources, r => ({
     ...r,
     isList: r.isList !== undefined ? r.isList : true,
