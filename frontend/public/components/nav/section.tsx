@@ -170,12 +170,12 @@ export const NavSection = connect(navSectionStateToProps)(
           return null;
         }
 
-        const { title, withoutSection } = this.props;
+        const { title, isSingleChild } = this.props;
         const { isOpen, activeChild } = this.state;
         const isActive = !!activeChild;
         const children = this.getChildren();
 
-        if (withoutSection) {
+        if (isSingleChild) {
           return children.length > 0 ? <> {children} </> : null;
         }
         return children.length > 0 ? (
@@ -207,7 +207,7 @@ type NavSectionExtensionProps = {
 type NavSectionProps = {
   title: NavSectionTitle | string;
   required?: string;
-  withoutSection?: boolean;
+  isSingleChild?: boolean;
 };
 
 type Props = NavSectionProps & NavSectionStateProps & NavSectionExtensionProps;
