@@ -6,7 +6,7 @@ import * as classNames from 'classnames';
 import { ActionGroup, Button } from '@patternfly/react-core';
 import { sortable } from '@patternfly/react-table';
 import { FLAGS } from '@console/shared/src/constants';
-import { ClusterRoleBindingModel } from '../../models';
+import { ClusterRoleBindingModel, RoleBindingModel } from '../../models';
 import { getQN, k8sCreate, k8sPatch, referenceFor } from '../../module/k8s';
 import * as UIActions from '../../actions/ui';
 import { MultiListPage, Table, TableRow, TableData } from '../factory';
@@ -226,7 +226,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
   return (
     <MultiListPage
       canCreate={!mock}
-      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_DETAILS_TABDETAILS_ROLEBINDINGS_3') })}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(RoleBindingModel, t) })}
       createProps={{
         to: createPath,
       }}
