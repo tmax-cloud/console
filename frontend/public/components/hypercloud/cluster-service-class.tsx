@@ -57,7 +57,7 @@ const ClusterServicePlanTab: React.FC<ClusterServicePlansTabProps> = ({ obj }) =
   return <ClusterServicePlansPage showTitle={false} canCreate={false} selector={selector} />;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 const ClusterServiceClassesDetailsPage: React.FC<ClusterServiceClassesDetailsPageProps> = props => {
   return (
     <DetailsPage
@@ -65,7 +65,7 @@ const ClusterServiceClassesDetailsPage: React.FC<ClusterServiceClassesDetailsPag
       kind={kind}
       pages={[
         details(ClusterServiceClassDetails),
-        editYaml(),
+        editResource(),
         {
           href: 'clusterserviceplan',
           name: 'Cluster Service Plan',
