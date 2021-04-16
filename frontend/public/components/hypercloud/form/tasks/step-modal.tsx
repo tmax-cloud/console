@@ -7,6 +7,8 @@ import { TextInput } from '../../utils/text-input';
 import { ListView } from '../../utils/list-view';
 import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
+import { modelFor, k8sList } from '@console/internal/module/k8s';
+import { makeQuery } from '../../../utils/k8s-watcher';
 
 export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const ImageRadioList = [
@@ -20,6 +22,9 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       value: 'manual',
     },
   ];
+
+  const [imageList, setImageList] = React.useState({});
+  const [imageTagList, setImageTagList] = React.useState({});
 
   let volumeItems = {};
   // volume 있는지 여부
@@ -99,6 +104,47 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     name: 'imageToggle',
     defaultValue: template ? template.imageToggle : 'registry',
   });
+  const imageRegistry = useWatch({
+    control: methods.control,
+    name: 'registryRegistry',
+    defaultValue: false,
+  });
+  const image = useWatch({
+    control: methods.control,
+    name: 'registryImage',
+    defaultValue: false,
+  });
+
+  // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
+  React.useEffect(() => {
+    const ko = modelFor('Repository');
+    let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
+    k8sList(ko, query)
+      .then(reponse => reponse)
+      .then(data => {
+        let imageItems = {};
+        data.forEach(cur => {
+          imageItems[cur.spec.name] = cur.spec.name;
+        });
+        setImageList(imageItems);
+      });
+  }, [imageRegistry]);
+
+  // Image 선택되면 ImageTag Dropdown 메뉴 채워주기
+  React.useEffect(() => {
+    const ko = modelFor('Repository');
+    let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
+    k8sList(ko, query)
+      .then(reponse => reponse)
+      .then(data => {
+        let imageTagItems = {};
+        let curImage = data.filter(cur => image === cur.spec.name)[0];
+        curImage.spec.versions.forEach(cur => {
+          imageTagItems[cur.version] = cur.version;
+        });
+        setImageTagList(imageTagItems);
+      });
+  }, [image]);
 
   return (
     <>
@@ -116,7 +162,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </Section>
       {imageToggle === 'registry' && (
         <>
-          <Section id="resourcelistdropdown" label="이미지 레지스트리">
+          <Section id="registrydropdown" label="이미지 레지스트리">
             <ResourceDropdown
               name="registryRegistry"
               placeholder="이미지 레지스트리 선택"
@@ -130,6 +176,30 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
               ]}
               type="single"
               useHookForm
+            />
+          </Section>
+          <Section id="imagedropdown" label="이미지">
+            <Dropdown
+              name="registryImage"
+              className="btn-group"
+              title="이미지 선택" // 드롭다운 title 지정
+              methods={methods}
+              items={imageList} // (필수)
+              style={{ display: 'block' }}
+              buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
+              itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+            />
+          </Section>
+          <Section id="imagetagdropdown" label="이미지 태그">
+            <Dropdown
+              name="registryImageTag"
+              className="btn-group"
+              title="이미지 선택" // 드롭다운 title 지정
+              methods={methods}
+              items={imageTagList} // (필수)
+              style={{ display: 'block' }}
+              buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
+              itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
             />
           </Section>
         </>
