@@ -640,7 +640,7 @@ export const ProjectsDetailsPage = props => (
         name: 'Details',
         component: NamespaceDetails,
       },
-      navFactory.editYaml(),
+      navFactory.editResource(),
       navFactory.workloads(Overview),
       navFactory.roles(RolesPage),
     ]}
