@@ -120,8 +120,8 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
 };
 NamespaceClaimsDetails.displayName = 'NamespaceClaimsDetails';
 
-const { details, editYaml } = navFactory;
-export const NamespaceClaimsDetailsPage: React.FC<NamespaceClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} pages={[details(NamespaceClaimsDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+export const NamespaceClaimsDetailsPage: React.FC<NamespaceClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} pages={[details(NamespaceClaimsDetails), editResource()]} />;
 NamespaceClaimsDetailsPage.displayName = 'NamespaceClaimsDetailsPage';
 
 type NamespaceClaimDetailsProps = {

@@ -116,8 +116,8 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
 };
 ResourceQuotaClaimsDetails.displayName = 'ResourceQuotaClaimsDetails';
 
-const { details, editYaml } = navFactory;
-export const ResourceQuotaClaimsDetailsPage: React.FC<ResourceQuotaClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'ResourceQuotaClaim'} menuActions={menuActions} pages={[details(ResourceQuotaClaimsDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+export const ResourceQuotaClaimsDetailsPage: React.FC<ResourceQuotaClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'ResourceQuotaClaim'} menuActions={menuActions} pages={[details(ResourceQuotaClaimsDetails), editResource()]} />;
 ResourceQuotaClaimsDetailsPage.displayName = 'ResourceQuotaClaimsDetailsPage';
 
 type ResourceQuotaClaimDetailsProps = {
