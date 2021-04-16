@@ -20,7 +20,7 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
       // MEMO : name에 []이 들어가있으면 setValue 에러남. test[0].values 대신 test.0.values 형식으로 들어가있어야됨
       setValue(name, defaultValues);
     }
-  }, [defaultValues]);
+  }, [name]);
 
   const DefaultListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
     return (
