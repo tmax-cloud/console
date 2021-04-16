@@ -19,7 +19,7 @@ const ClusterServiceBrokerDetails: React.FC<ClusterServiceBrokerDetailsProps> = 
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', {0: ResourceLabel(clusterServiceBroker, t)})} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterServiceBroker, t) })} />
         <div className="row">
           <div className="col-md-6">
             <ResourceSummary resource={clusterServiceBroker} showPodSelector showNodeSelector></ResourceSummary>
@@ -43,8 +43,8 @@ type ClusterServiceBrokerDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editYaml } = navFactory;
-const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editResource()]} />;
 ClusterServiceBrokersDetailsPage.displayName = 'ClusterServiceBrokersDetailsPage';
 
 const tableColumnClasses = ['', '', '', '', ''];

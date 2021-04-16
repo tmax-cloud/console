@@ -46,8 +46,8 @@ type ServiceBrokerDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editYaml } = navFactory;
-const ServiceBrokersDetailsPage: React.FC<ServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceBrokerMenuActions} pages={[details(ServiceBrokerDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const ServiceBrokersDetailsPage: React.FC<ServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceBrokerMenuActions} pages={[details(ServiceBrokerDetails), editResource()]} />;
 ServiceBrokersDetailsPage.displayName = 'ServiceBrokersDetailsPage';
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), Kebab.columnClass];

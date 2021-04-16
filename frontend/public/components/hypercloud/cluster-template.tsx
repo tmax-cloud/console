@@ -44,7 +44,7 @@ const ClusterTemplateDetails: React.FC<ClusterTemplateDetailsProps> = ({ obj: cl
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', {0: ResourceLabel(clusterTemplate, t)})} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterTemplate, t) })} />
         <div className="row">
           <div className="col-md-6">
             <ResourceSummary resource={clusterTemplate} showPodSelector showOwner={false}></ResourceSummary>
@@ -65,8 +65,8 @@ type ClusterTemplateDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editYaml } = navFactory;
-const ClusterTemplatesDetailsPage: React.FC<ClusterTemplatesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterTemplateMenuActions} pages={[details(ClusterTemplateDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const ClusterTemplatesDetailsPage: React.FC<ClusterTemplatesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterTemplateMenuActions} pages={[details(ClusterTemplateDetails), editResource()]} />;
 ClusterTemplatesDetailsPage.displayName = 'ClusterTemplatesDetailsPage';
 
 const tableColumnClasses = [

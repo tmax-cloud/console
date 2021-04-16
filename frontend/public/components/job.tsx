@@ -168,8 +168,8 @@ const JobDetails: React.FC<JobsDetailsProps> = ({ obj: job }) => {
 
 const JobPods: React.FC<JobPodsProps> = props => <PodsComponent {...props} customData={{ showNodes: true }} />;
 
-const { details, pods, editYaml, events } = navFactory;
-const JobsDetailsPage: React.FC<JobsDetailsPageProps> = props => <DetailsPage {...props} getResourceStatus={jobStatus} kind={kind} menuActions={menuActions} pages={[details(JobDetails), editYaml(), pods(JobPods), events(ResourceEventStream)]} />;
+const { details, pods, editResource, events } = navFactory;
+const JobsDetailsPage: React.FC<JobsDetailsPageProps> = props => <DetailsPage {...props} getResourceStatus={jobStatus} kind={kind} menuActions={menuActions} pages={[details(JobDetails), editResource(), pods(JobPods), events(ResourceEventStream)]} />;
 const JobsList: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label={JobModel.labelPlural} Header={JobTableHeader.bind(null, t)} Row={JobTableRow} virtualize />;

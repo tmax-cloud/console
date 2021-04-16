@@ -48,7 +48,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
     <>
       <div className="co-p-has-sidebar">
         <div className="co-m-pane__body">
-          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', {0: ResourceLabel(serviceInstance, t)})} />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceInstance, t) })} />
           <div className="row">
             <div className="col-md-6">
               <ResourceSummary resource={serviceInstance} showPodSelector showNodeSelector></ResourceSummary>
@@ -98,8 +98,8 @@ type ServiceInstanceDetailsProps = {
   match?: any;
 };
 
-const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} pages={[details(ServiceInstanceDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} pages={[details(ServiceInstanceDetails), editResource()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [

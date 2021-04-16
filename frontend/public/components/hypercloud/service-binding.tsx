@@ -48,8 +48,8 @@ type ServiceBindingDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editYaml } = navFactory;
-const ServiceBindingsDetailsPage: React.FC<ServiceBindingsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceBindingMenuActions} pages={[details(ServiceBindingDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const ServiceBindingsDetailsPage: React.FC<ServiceBindingsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceBindingMenuActions} pages={[details(ServiceBindingDetails), editResource()]} />;
 ServiceBindingsDetailsPage.displayName = 'ServiceBindingsDetailsPage';
 
 const tableColumnClasses = [

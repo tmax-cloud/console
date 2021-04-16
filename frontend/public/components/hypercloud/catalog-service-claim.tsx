@@ -45,8 +45,8 @@ type CatalogServiceClaimDetailsProps = {
   obj: CatalogServiceClaimKind;
 };
 
-const { details, editYaml } = navFactory;
-const CatalogServiceClaimsDetailsPage: React.FC<CatalogServiceClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={catalogServiceClaimMenuActions} pages={[details(CatalogServiceClaimDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+const CatalogServiceClaimsDetailsPage: React.FC<CatalogServiceClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={catalogServiceClaimMenuActions} pages={[details(CatalogServiceClaimDetails), editResource()]} />;
 CatalogServiceClaimsDetailsPage.displayName = 'CatalogServiceClaimsDetailsPage';
 
 const tableColumnClasses = [
