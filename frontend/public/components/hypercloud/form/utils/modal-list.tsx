@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ModalLauncher } from './';
 
 export const ModalList = props => {
-  const { onModify, onRemove, list, description, title, children, id } = props;
+  const { handleMethod, onRemove, list, description, title, children, id } = props;
   let uId = id + '-list';
   return (
     <>
@@ -17,7 +17,7 @@ export const ModalList = props => {
                   id={`item-modify-${index}`}
                   onClick={e => {
                     e.target['parentNode']['dataset'].modify = true;
-                    return ModalLauncher({ inProgress: false, index: index, title: title, id: id, handleMethod: onModify, children: children, submitText: '수정' });
+                    return ModalLauncher({ inProgress: false, index: index, title: title, id: id, handleMethod: handleMethod, children: children, submitText: '수정' });
                   }}
                 >
                   Modify
