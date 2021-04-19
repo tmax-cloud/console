@@ -43,8 +43,8 @@ type ServiceClassDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editYaml } = navFactory;
-const ServiceClassesDetailsPage: React.FC<ServiceClassesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editYaml(), { href: 'serviceplans', name: 'Service Plan', component: ServicePlansPage }]} />;
+const { details, editResource } = navFactory;
+const ServiceClassesDetailsPage: React.FC<ServiceClassesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editResource(), { href: 'serviceplans', name: 'Service Plan', component: ServicePlansPage }]} />;
 ServiceClassesDetailsPage.displayName = 'ServiceClassesDetailsPage';
 
 const tableColumnClasses = [

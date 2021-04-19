@@ -202,7 +202,7 @@ const ImageReplicateDetails: React.FC<ImageReplicateDetailsProps> = ({ obj: imag
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 ImageReplicateTableHeader.displayName = 'ImageReplicateTableHeader';
 
@@ -218,7 +218,7 @@ export const ImageReplicatesPage: React.FC<ImageReplicatesPageProps> = props => 
   return <ListPage title={t('COMMON:MSG_LNB_MENU_93')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_93') })} canCreate={true} ListComponent={ImageReplicates} kind={kind} {...props} />;
 };
 
-export const ImageReplicatesDetailsPage: React.FC<ImageReplicatesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageReplicateDetails)), editYaml()]} />;
+export const ImageReplicatesDetailsPage: React.FC<ImageReplicatesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageReplicateDetails)), editResource()]} />;
 
 type ImageReplicateDetailsListProps = {
   ds: K8sResourceKind;

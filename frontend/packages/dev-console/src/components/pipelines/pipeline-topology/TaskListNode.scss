@@ -12,6 +12,7 @@
   &__trigger {
     padding: var(--pf-global--spacer--xs) var(--pf-global--spacer--md);
     width: 100%;
+    height: 38px !important;
   }
   &__list-items {
     max-height: 350px;

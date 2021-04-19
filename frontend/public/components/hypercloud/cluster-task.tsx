@@ -18,7 +18,6 @@ const kind = ClusterTaskModel.kind;
 const tableColumnClasses = [
   classNames('col-xs-6', 'col-sm-4'),
   classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-sm-4', 'hidden-xs'),
   Kebab.columnClass,
 ];
 
@@ -32,20 +31,14 @@ const ClusterTaskTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
-      sortField: 'metadata.namespace',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
       title: '',
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[2] },
     },
   ];
 };
@@ -59,13 +52,10 @@ const ClusterTaskTableRow: RowFunction<K8sResourceKind> = ({ obj: clusterTask, i
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={clusterTask.metadata.name} namespace={clusterTask.metadata.namespace} title={clusterTask.metadata.uid} />
       </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={clusterTask.metadata.namespace} title={clusterTask.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
+      <TableData className={tableColumnClasses[1]}>
         <Timestamp timestamp={clusterTask.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
+      <TableData className={tableColumnClasses[2]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={clusterTask} />
       </TableData>
     </TableRow>

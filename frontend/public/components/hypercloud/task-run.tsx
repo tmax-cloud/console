@@ -90,7 +90,7 @@ const TaskRunDetails: React.FC<TaskRunDetailsProps> = ({ obj: taskRun }) => {
   );
 }
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const TaskRuns: React.FC = props => {
   const { t } = useTranslation();
@@ -111,7 +111,7 @@ export const TaskRunsPage: React.FC<TaskRunsPageProps> = props => {
   />;
 }
 
-export const TaskRunsDetailsPage: React.FC<TaskRunsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskRunDetails)), editYaml()]} />;
+export const TaskRunsDetailsPage: React.FC<TaskRunsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskRunDetails)), editResource()]} />;
 
 type TaskRunsPageProps = {
   showTitle?: boolean;
