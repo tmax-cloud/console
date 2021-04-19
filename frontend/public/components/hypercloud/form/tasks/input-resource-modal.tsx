@@ -5,8 +5,8 @@ import { TextInput } from '../../utils/text-input';
 
 export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods, inputResource }) => {
   const typeItems = {
-    Git: 'Git',
-    Image: 'Image',
+    git: 'Git',
+    image: 'Image',
   };
   let target = document.getElementById('input-resource-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
