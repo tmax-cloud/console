@@ -5,18 +5,14 @@ import { useTranslation } from 'react-i18next';
 
 const healthChecksAdded = (resource: K8sResourceKind): boolean => {
   const containers = resource?.spec?.template?.spec?.containers;
-  return _.every(
-    containers,
-    (container) => container.readinessProbe || container.livenessProbe || container.startupProbe,
-  );
+  return _.every(containers, container => container.readinessProbe || container.livenessProbe || container.startupProbe);
 };
 
 const healthChecksUrl = (model: K8sKind, obj: K8sResourceKind): string => {
   const {
-    kind,
     metadata: { name, namespace },
   } = obj;
-  const resourceKind = model.crd ? referenceFor(obj) : kind;
+  const resourceKind = model.crd ? referenceFor(obj) : model.kind; // obj에도 kind가 있을 텐데 안나와서 일단 바꿈.
   const containers = obj?.spec?.template?.spec?.containers;
   const containerName = containers?.[0]?.name;
   return `/k8s/ns/${namespace}/${resourceKind}/${name}/containers/${containerName}/health-checks`;
