@@ -22,6 +22,7 @@ GRAFANA_PORT='3000'
 # kubectl get svc -n hypercloud5-system hypercloud5-api-server-service 
 HC_PORT='32237'
 MHC_PORT='32237'
+WEBHOOK_PORT='32237'
 # kubectl get svc -n efk opendistro-kibana
 KIBANA_PORT='32496'
 # kubectl get ingress -n istio-system 
@@ -39,7 +40,7 @@ KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트
     --k8s-endpoint=https://$k8sIP:6443 \
     --hypercloud-endpoint=https://$k8sIP:$HC_PORT/ \
     --multi-hypercloud-endpoint=https://$k8sIP:$MHC_PORT/ \
-    --webhook-endpoint=https://$k8sIP:32440/ \
+    --webhook-endpoint=https://$k8sIP:$WEBHOOK_PORT/ \
     --prometheus-endpoint=http://$k8sIP:$PROM_PORT/api \
     --alertmanager-endpoint=http://$k8sIP:$PROM_PORT/api \
     --grafana-endpoint=http://$k8sIP:$GRAFANA_PORT/api/grafana/ \
@@ -47,7 +48,7 @@ KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트
     --kibana-endpoint=https://$k8sIP:$KIBANA_PORT/api/kibana/ \
     --kubeflow-endpoint=http://172.23.4.113/api/kubeflow/ \
     --mc-mode=true \
-    --release-mode=false \
+    --release-mode=true \
     --public-dir=./frontend/public/dist \
     --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/ \
 
