@@ -104,12 +104,8 @@ pipeline {
           """        
           sh """
           git tag ${VER}
-          git push origin HEAD:${BRANCH} --tags
           echo "Console Version History" > ./CHANGELOG/tag.txt
           git tag --list "5.1.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
-          git add -A
-          git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
-          git push origin HEAD:${BRANCH}
           """
         }
       }
@@ -140,9 +136,8 @@ pipeline {
       steps {
         container('kubectl') {
           withKubeConfig([credentialsId: "${DEPLOY}"]) {
-          //   sh "export VER=${VER}"
           sh "echo ${VER}"
-          sh "./install.sh"
+          sh "./install.sh ${VER}"
           }
         }
       }
@@ -186,9 +181,6 @@ pipeline {
             --simplify-merges ${PRE_VER}..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
-          sh "git add -A"
-          sh "git commit -m '[FEAT] BUILD ${PRODUCT}_${VER}' "
-          sh "git push origin HEAD:${BRANCH}"        
         }
       }
     }
@@ -201,6 +193,14 @@ pipeline {
         }
       }
       steps {
+        withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {
+          sh """
+            git push origin HEAD:${BRANCH} --tags
+            git add -A
+            git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
+            git push origin HEAD:${BRANCH}
+          """        
+        }
         emailext (
           to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
