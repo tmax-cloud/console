@@ -280,6 +280,9 @@ func (c *Console) Gateway() http.Handler {
 	}
 	staticHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/"), http.FileServer(http.Dir(c.PublicDir)))
 	handle("/static/", gzipHandler(staticHandler))
+	k8sApiHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/"), http.FileServer(http.Dir("./api")))
+	handle("/api/resource/", gzipHandler(securityHeadersMiddleware(k8sApiHandler)))
+
 	r.PathPrefix(c.BaseURL.Path).HandlerFunc(c.indexHandler)
 	r.PathPrefix("/api/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
@@ -294,7 +297,8 @@ func (c *Console) Server() http.Handler {
 	r := mux.NewRouter()
 	staticHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/"), http.FileServer(http.Dir(c.PublicDir)))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/")).Handler(gzipHandler(staticHandler))
-
+	k8sApiHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/"), http.FileServer(http.Dir("./api")))
+	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/")).Handler(gzipHandler(securityHeadersMiddleware(k8sApiHandler)))
 	r.PathPrefix(c.BaseURL.Path).HandlerFunc(c.indexHandler)
 
 	r.PathPrefix("/api/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
