@@ -16,7 +16,8 @@ KUBEFLOW="0.0.0.0"
 # GET ENV 
 # image version 
 # OPERATOR_VER=$OPERATOR_VER  # OPERATOR_VER="latest"
-CONSOLE_VER=${VER}    # CONSOLE_VER="0.5.1.32"
+CONSOLE_VER=$(VER)    # CONSOLE_VER="0.5.1.32"
+echo ${CONSOLE_VER}
 # Necessary to auth 
 REALM=$REALM                # REALM="tmax"
 KEYCLOAK=$KEYCLOAK          # KEYCLOAK="hyperauth.org"
