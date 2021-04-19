@@ -118,18 +118,6 @@ pipeline {
     stage('Build') {
       steps{
         container('docker'){
-          script {
-            PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
-            HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
-            if (BUILD_MODE == 'PATCH') {
-              PATCH_VER++
-              HOTFIX_VER = "0"
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            } else if (BUILD_MODE == 'HOTFIX') {
-              HOTFIX_VER++
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            }
-          }
           withCredentials([usernamePassword(
             credentialsId: 'tmaxcloudck',
             usernameVariable: 'DOCKER_USER',
@@ -151,20 +139,9 @@ pipeline {
       }
       steps {
         container('kubectl') {
-          script {
-            PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
-            HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
-            if (BUILD_MODE == 'PATCH') {
-              PATCH_VER++
-              HOTFIX_VER = "0"
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            } else if (BUILD_MODE == 'HOTFIX') {
-              HOTFIX_VER++
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            }
-          }
           withKubeConfig([credentialsId: "${DEPLOY}"]) {
-        //   sh "export VER=${VER}"
+          //   sh "export VER=${VER}"
+          sh "echo ${VER}"
           sh "./install.sh"
           }
         }
