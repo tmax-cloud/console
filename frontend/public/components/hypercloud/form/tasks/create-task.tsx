@@ -24,9 +24,20 @@ const taskFormFactory = params => {
   return WithCommonForm(CreateTaskComponent, params, defaultValues);
 };
 
+function useInitModal(methods, curState, path) {
+  const { register, setValue } = methods;
+  React.useEffect(() => {
+    register(path);
+  }, [register]);
+  React.useMemo(() => {
+    setValue(path, curState);
+  }, [curState]);
+}
+
 const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const methods = useFormContext();
-  const { control, register, setValue } = methods;
+  const { control } = methods;
+
   const [inputResource, setInputResource] = React.useState([]);
   const [outputResource, setOutputResource] = React.useState([]);
   const [taskParameter, setTaskParameter] = React.useState([]);
@@ -34,38 +45,12 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const [volume, setVolume] = React.useState([]);
   const [step, setStep] = React.useState([]);
 
-  React.useEffect(() => {
-    register('spec.resources.inputs');
-    register('spec.resources.outputs');
-    register('spec.params');
-    register('spec.workspaces');
-    register('spec.volumes');
-    register('spec.steps');
-  }, [register]);
-
-  React.useMemo(() => {
-    setValue('spec.resources.inputs', inputResource);
-  }, [inputResource]);
-
-  React.useMemo(() => {
-    setValue('spec.resources.outputs', outputResource);
-  }, [outputResource]);
-
-  React.useMemo(() => {
-    setValue('spec.params', taskParameter);
-  }, [taskParameter]);
-
-  React.useMemo(() => {
-    setValue('spec.workspaces', workSpace);
-  }, [workSpace]);
-
-  React.useMemo(() => {
-    setValue('spec.volumes', volume);
-  }, [volume]);
-
-  React.useMemo(() => {
-    setValue('spec.steps', step);
-  }, [step]);
+  useInitModal(methods, inputResource, 'spec.resources.inputs');
+  useInitModal(methods, outputResource, 'spec.resources.outputs');
+  useInitModal(methods, taskParameter, 'spec.params');
+  useInitModal(methods, workSpace, 'spec.workspaces');
+  useInitModal(methods, volume, 'spec.volumes');
+  useInitModal(methods, step, 'spec.steps');
 
   // INPUT RESOURCE
   const onAddInputResource = (cancel, index, e: React.SyntheticEvent) => {
