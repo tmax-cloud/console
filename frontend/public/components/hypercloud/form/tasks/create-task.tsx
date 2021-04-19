@@ -367,7 +367,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
 export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, kind }) => {
   const formComponent = taskFormFactory(params);
   const TaskFormComponent = formComponent;
-  return <TaskFormComponent fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+  return <TaskFormComponent fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: params } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 export const onSubmitCallback = data => {
