@@ -29,7 +29,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   let volumeItems = {};
   // volume 있는지 여부
   let isVolumeExist = () => {
-    let volumeList = methods.getValues('volume');
+    let volumeList = methods.getValues('spec.volumes');
     if (volumeList?.length > 0) {
       volumeList.forEach(cur => {
         volumeItems[cur.name] = cur.name;
@@ -38,12 +38,10 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     }
     return false;
   };
-
-  const parameterListHeaderFragment = <></>;
-  const parameterListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const commandListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
-        <TextInput id={`parameterList${index}.parameter`} inputClassName="col-md-12" methods={methods} placeholder={'-c'} />
+        <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'/bin/sh'} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
@@ -60,13 +58,32 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
-  const envListHeaderFragment = <></>;
+  const parameterListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+    <div className="row" key={item.id}>
+      <div className="col-xs-11 pairs-list__value-field">
+        <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'-c'} />
+      </div>
+      <div className="col-xs-1 pairs-list__action">
+        <Button
+          type="button"
+          data-test-id="pairs-list__delete-btn"
+          className="pairs-list__span-btns"
+          onClick={() => {
+            ListActions.remove(index);
+          }}
+          variant="plain"
+        >
+          {ListDefaultIcons.deleteIcon}
+        </Button>
+      </div>
+    </div>
+  );
   const envListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
-        <TextInput id={`envList${index}.envKey`} inputClassName="col-md-6" methods={methods} placeholder={'키'} />
+        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} placeholder={'키'} />
         <span style={{ margin: '0 5px' }}>=</span>
-        <TextInput id={`envList${index}.envValue`} inputClassName="col-md-6" methods={methods} placeholder={'값'} />
+        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} placeholder={'값'} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
@@ -122,6 +139,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     k8sList(ko, query)
       .then(reponse => reponse)
       .then(data => {
+        if (data.length === 0) return;
         let imageItems = {};
         data.forEach(cur => {
           imageItems[cur.spec.name] = cur.spec.name;
@@ -137,6 +155,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     k8sList(ko, query)
       .then(reponse => reponse)
       .then(data => {
+        if (data.length === 0) return;
         let imageTagItems = {};
         let curImage = data.filter(cur => image === cur.spec.name)[0];
         curImage.spec.versions.forEach(cur => {
@@ -207,18 +226,18 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       {imageToggle === 'manual' && (
         <>
           <Section label="" id="step-manual-image">
-            <TextInput id="manualImage" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.manualImage : ''} />
+            <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
           </Section>
-          <Section label="커맨드" id="step-manual-command">
-            <TextInput id="manualCommand" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.manualCommand : ''} />
+          <Section label="커맨드" id="step-command">
+            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
           </Section>
         </>
       )}
       <Section label="인수" id="step-parameter">
-        <ListView name="parameterList" methods={methods} addButtonText="추가" headerFragment={parameterListHeaderFragment} itemRenderer={parameterListItemRenderer} defaultItem={{ parameter: '' }} />
+        <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
       </Section>
       <Section label="환경 변수" id="step-parameter">
-        <ListView name="envList" methods={methods} addButtonText="추가" headerFragment={envListHeaderFragment} itemRenderer={envListItemRenderer} defaultItem={{ envKey: '', envValue: '' }} />
+        <ListView name="env" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? template.env : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>
       <Section label="마운트 경로" id="step-mountPath">
         {!isVolumeExist() ? (

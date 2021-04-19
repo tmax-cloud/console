@@ -19,7 +19,7 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
       }
     });
   }
-  const [option, setOption] = React.useState(template?.option);
+  const [option, setOption] = React.useState(template?.optional);
 
   console.log(inputResource);
 
@@ -42,11 +42,11 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
         />
       </Section>
       <Section label="Resource Path" id="inputresource_path">
-        <TextInput id="path" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.path : ''} />
+        <TextInput id="targetPath" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.targetPath : ''} />
       </Section>
       <label>
         <input
-          name="option"
+          name="optional"
           type="checkbox"
           ref={methods.register()}
           checked={option}

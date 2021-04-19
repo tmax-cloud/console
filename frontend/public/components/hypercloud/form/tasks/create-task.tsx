@@ -13,6 +13,7 @@ import { TaskParameterModal } from './task-parameter-modal';
 import { WorkSpaceModal } from './work-space-modal';
 import { VolumeModal } from './volume-modal';
 import { StepModal } from './step-modal';
+import { TaskModel } from '../../../../models';
 const defaultValues = {
   metadata: {
     name: 'example-name',
@@ -34,43 +35,43 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const [step, setStep] = React.useState([]);
 
   React.useEffect(() => {
-    register('input_resource');
-    register('output_resource');
-    register('task_parameter');
-    register('work_space');
-    register('volume');
-    register('step');
+    register('spec.resources.inputs');
+    register('spec.resources.outputs');
+    register('spec.params');
+    register('spec.workspaces');
+    register('spec.volumes');
+    register('spec.steps');
   }, [register]);
 
   React.useMemo(() => {
-    setValue('input_resource', inputResource);
+    setValue('spec.resources.inputs', inputResource);
   }, [inputResource]);
 
   React.useMemo(() => {
-    setValue('output_resource', outputResource);
+    setValue('spec.resources.outputs', outputResource);
   }, [outputResource]);
 
   React.useMemo(() => {
-    setValue('task_parameter', taskParameter);
+    setValue('spec.params', taskParameter);
   }, [taskParameter]);
 
   React.useMemo(() => {
-    setValue('work_space', workSpace);
+    setValue('spec.workspaces', workSpace);
   }, [workSpace]);
 
   React.useMemo(() => {
-    setValue('volume', volume);
+    setValue('spec.volumes', volume);
   }, [volume]);
 
   React.useMemo(() => {
-    setValue('step', step);
+    setValue('spec.steps', step);
   }, [step]);
 
   // INPUT RESOURCE
   const onAddInputResource = (cancel, index, e: React.SyntheticEvent) => {
     e.preventDefault();
     let data = methods.getValues(); // modal에서 입력받은 data
-    let currInputResource = { name: data.name, path: data.path, type: data.type, option: data.option };
+    let currInputResource = { name: data.name, targetPath: data.targetPath, type: data.type, optional: data.optional };
     setInputResource(() => {
       return [...inputResource, currInputResource];
     }); // state 최신화
@@ -96,7 +97,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     let data = methods.getValues(); // modal에서 입력받은 data
     let currInputResource = inputResource.map((cur, idx) => {
       if (idx === index) {
-        return { name: data.name, path: data.path, type: data.type, option: data.option };
+        return { name: data.name, targetPath: data.targetPath, type: data.type, optional: data.optional };
       }
       return cur;
     });
@@ -108,7 +109,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const onAddOutputResource = (cancel, index, e: React.SyntheticEvent) => {
     e.preventDefault();
     let data = methods.getValues(); // modal에서 입력받은 data
-    let currOutputResource = { name: data.name, path: data.path, type: data.type, option: data.option };
+    let currOutputResource = { name: data.name, targetPath: data.targetPath, type: data.type, optional: data.optional };
     setOutputResource(() => {
       return [...outputResource, currOutputResource];
     }); // state 최신화
@@ -135,7 +136,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     let data = methods.getValues(); // modal에서 입력받은 data
     let currOutputResource = outputResource.map((cur, idx) => {
       if (idx === index) {
-        return { name: data.name, path: data.path, type: data.type, option: data.option };
+        return { name: data.name, targetPath: data.targetPath, type: data.type, optional: data.optional };
       }
       return cur;
     });
@@ -186,7 +187,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const onAddWorkSpace = (cancel, index, e: React.SyntheticEvent) => {
     e.preventDefault();
     let data = methods.getValues(); // modal에서 입력받은 data
-    let currWorkSpace = { name: data.name, description: data.description, path: data.path, accessMode: data.accessMode, option: data.option };
+    let currWorkSpace = { name: data.name, description: data.description, mountPath: data.mountPath, accessMode: data.accessMode, optional: data.optional };
     setWorkSpace(() => {
       return [...workSpace, currWorkSpace];
     }); // state 최신화
@@ -213,7 +214,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     let data = methods.getValues(); // modal에서 입력받은 data
     let currWorkSpace = workSpace.map((cur, idx) => {
       if (idx === index) {
-        return { name: data.name, description: data.description, path: data.path, accessMode: data.accessMode, option: data.option };
+        return { name: data.name, description: data.description, mountPath: data.mountPath, accessMode: data.accessMode, optional: data.optional };
       }
       return cur;
     });
@@ -279,7 +280,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const onAddStep = (cancel, index, e: React.SyntheticEvent) => {
     e.preventDefault();
     let data = methods.getValues(); // modal에서 입력받은 data
-    let currStep = { name: data.name, imageToggle: data.imageToggle, registryRegistry: data.registryRegistry, registryImage: data.registryImage, registryTag: data.registryTag, manualImage: data.manualImage, manualCommand: data.manualCommand, parameterList: data.parameterList, envList: data.envList };
+    let currStep = { name: data.name, imageToggle: data.imageToggle, registryRegistry: data.registryRegistry, registryImage: data.registryImage, registryTag: data.registryTag, image: data.image, command: data.command, args: data.args, env: data.env };
     setStep(() => {
       return [...step, currStep];
     }); // state 최신화
@@ -298,7 +299,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     let data = methods.getValues(); // modal에서 입력받은 data
     let currStep = step.map((cur, idx) => {
       if (idx === index) {
-        return { name: data.name, imageToggle: data.imageToggle, registryRegistry: data.registryRegistry, registryImage: data.registryImage, registryTag: data.registryTag, manualImage: data.manualImage, manualCommand: data.manualCommand, parameterList: data.parameterList, envList: data.envList };
+        return { name: data.name, imageToggle: data.imageToggle, registryRegistry: data.registryRegistry, registryImage: data.registryImage, registryTag: data.registryTag, image: data.image, command: data.command, args: data.args, env: data.env };
       }
       return cur;
     });
@@ -359,25 +360,63 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
           </span>
         </>
       </Section>
-      {/* <button type="button" onClick={() => console.log(methods.getValues())}>
-        {' '}
-        data 보기
-      </button>
-      {JSON.stringify(methods.formState.dirtyFields)} */}
     </>
   );
 };
 
-export const CreateTask: React.FC<CreateTaskProps> = props => {
-  const formComponent = taskFormFactory(props.match.params);
+export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, kind }) => {
+  const formComponent = taskFormFactory(params);
   const TaskFormComponent = formComponent;
-  return <TaskFormComponent fixed={{}} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+  return <TaskFormComponent fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 export const onSubmitCallback = data => {
   let labels = SelectorInput.objectify(data.metadata.labels);
   delete data.metadata.labels;
   data = _.defaultsDeep(data, { metadata: { labels: labels } });
+  // apiVersion, kind
+  data.kind = TaskModel.kind;
+  data.apiVersion = `${TaskModel.apiGroup}/${TaskModel.apiVersion}`;
+  // workspace
+  data.spec.workspaces = data?.spec?.workspaces?.map(cur => {
+    if (cur.accessMode === 'readOnly') {
+      return { ...cur, readOnly: true };
+    } else {
+      return { ...cur, readOnly: false };
+    }
+  });
+  // volume
+  data.spec.volumes = data?.spec?.volumes?.map(cur => {
+    if (cur.type === 'emptyDir') {
+      return { emptyDir: {} };
+    } else if (cur.type === 'configMap') {
+      return {
+        configMap: {
+          name: cur?.name,
+        },
+      };
+    } else if (cur.type === 'secret') {
+      return {
+        secret: {
+          secretName: cur?.name,
+        },
+      };
+    }
+  });
+  // step
+  data.spec.steps = data?.spec?.steps?.map((cur, idx) => {
+    // command
+    cur.command = cur?.command?.map(curCommand => curCommand?.value);
+    //args
+    cur.args = cur?.args?.map(curArg => curArg?.value);
+    //env
+    cur.env = cur?.env?.map(curEnv => ({ name: curEnv?.envKey, value: curEnv?.envValue }));
+
+    delete data.spec.steps[idx].imageToggle;
+    return cur;
+  });
+
+  console.log(data);
   return data;
 };
 
@@ -385,6 +424,7 @@ type CreateTaskProps = {
   match: RMatch<{
     type?: string;
   }>;
+  kind: string;
   fixed: object;
   explanation: string;
   titleVerb: string;

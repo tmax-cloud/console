@@ -36,7 +36,7 @@ export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => 
         <Dropdown
           name="type"
           className="btn-group"
-          title="빈 디렉토리" // 드롭다운 title 지정
+          title="볼륨 선택" // 드롭다운 title 지정
           methods={methods}
           items={typeItems} // (필수)
           style={{ display: 'block' }}

@@ -30,7 +30,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
     });
   }
   const defaultAccessMode = modalType === 'modify' ? template?.accessMode : 'readWrite';
-  const [option, setOption] = React.useState(template?.option);
+  const [option, setOption] = React.useState(template?.optional);
 
   return (
     <>
@@ -40,8 +40,8 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
       <Section label="Description" id="workspace_desc">
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
-      <Section label="마운트 경로" id="workspace_path">
-        <TextInput id="path" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.path : ''} />
+      <Section label="마운트 경로" id="workspace_mountPath">
+        <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
       </Section>
       <Section label="접근 모드" id="workspace_access">
         <RadioGroup
@@ -54,7 +54,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
       </Section>
       <label>
         <input
-          name="option"
+          name="optional"
           type="checkbox"
           ref={methods.register()}
           checked={option}
