@@ -49,8 +49,15 @@ const Dropdown_ = (props) => {
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
   const selectedKey = watch(name, defaultValue);
-  /* defaultValue를 쓰는 경우(ex.모달)에 getVaule를 해보면 form이 비어있는 경우가 있음. 초기값 세팅을 해줌. */
-  defaultValue && setValue(name, selectedKey);
+
+  
+  React.useEffect(() => {
+    if (!!defaultValue) {
+      /* defaultValue를 쓰는 경우(ex.모달)에 getVaule를 해보면 form이 비어있는 경우가 있음. 초기값 세팅을 해줌. */
+      defaultValue && setValue(name, selectedKey);
+    }
+  }, [name]);
+
 
   const [title, setTitle] = React.useState(_.get(props.items, selectedKey, props.title));
   const [active, setActive] = React.useState(!!props.active);
