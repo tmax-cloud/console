@@ -65,7 +65,7 @@ sed -i "s%@@MC_MODE@@%${MC_MODE}%g" ${deploy_temp}
 
 sed -i "s%@@KIALI@@%${KIALI}%g" ${deploy_temp}
 sed -i "s%@@KIBANA@@%${KIBANA}%g" ${deploy_temp}
-sed -i "s%@@KIBANA@@%${KUBEFLOW}%g" ${deploy_temp}
+sed -i "s%@@KUBEFLOW@@%${KUBEFLOW}%g" ${deploy_temp}
 
 echo "==============================================================="
 echo "STEP 2. Install console"
