@@ -1,0 +1,31 @@
+apiVersion: console.hypercloud.io/v1beta1
+kind: ConsoleConfig
+consoleInfo:
+  listen: https://172.18.116.146:9000
+  baseAddress: "https://172.18.116.146:9000"
+  basePath: "/"
+  certFile: "tls/tls.crt"
+  keyFile: "tls/tls.key"
+  redirectPort: 0
+authInfo:
+  keycloakClientId: ck-integration-hypercloud5
+  keycloakRealm: tmax
+  keycloakAuthURL: https://hyperauth.org/auth/
+  keycloakUseHiddenIframe: false
+clusterInfo:
+  k8sEndpoint: "https://192.168.6.171:6443"
+  hypercloudEndpoint: "https://192.168.6.171:32237"
+  multiHypercloudEndpoint: "https://192.168.6.171:32237"
+  webhookEndpoint: "https://192.168.6.171:32237"
+  grafanaEndpoint: "http://172.23.4.207:3000/api/grafana" 
+  alertmanagerEndpoint: "http://192.168.6.171:30714/api"
+  prometheusEndpoint: "http://192.168.6.171:30714/api"
+  kialiEndpoint: "http://0.0.0.0/api/kiali"
+  kubeflowEndpoint: "http://0.0.0.0/api/kubeflow"
+  gitlabURL: "http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/"
+appInfo: 
+  mcMode: true
+  releaseMode: true
+  publicDir: "./frontend/public/dist"
+  
+  

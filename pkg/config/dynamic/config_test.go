@@ -17,7 +17,9 @@ func TestYaml(t *testing.T) {
 
 	cfg := &Configuration{}
 	err = yaml.Unmarshal(yamlFile, cfg)
-
+	if err != nil {
+		log.Println("failed to unmarshale config file.")
+	}
 	log.Printf("test %v", cfg)
 	// log.Fatal(cfg)
 	cfgCopy := cfg

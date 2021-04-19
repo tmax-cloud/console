@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 set -e 
-DOCKER_REGISTRY="tmaxcloudck"
-PRODUCT="hypercloud-console"
-MAJOR_VERSION="0"
-MINOR_VERSION="5"
+DOCKER_REGISTRY="jinsnow"
+PRODUCT="console"
+MAJOR_VERSION="5"
+MINOR_VERSION="1"
 PATCH_VERSION="0"
 HOTFIX_VERSION="0"
 

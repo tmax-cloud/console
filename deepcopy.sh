@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-HACK_DIR="$( cd "$( dirname "${0}" )" && pwd -P)"; export HACK_DIR
-# REPO_ROOT=${HACK_DIR}/..
+deepcopy-gen -v 2 -h boilerplate.txt --bounding-dirs . -i console/pkg/api/v1 -O generated_deepcopy
 
-# rm -rf "${REPO_ROOT}"/vendor
-# go mod vendor
-# chmod +x "${REPO_ROOT}"/vendor/k8s.io/code-generator/*.sh
+mv console/pkg/api/v1/generated_deepcopy.go ./pkg/api/v1
 
-deepcopy-gen \
---input-dirs /home/jinsoo/hypercloud-console5.0/pkg/config/dynamic \
---output-package github.com/openshift/console \
--O zz_generated.deepcopy --go-header-file "${HACK_DIR}"/boilerplate.go.tmpl
-
-# cp -r "${REPO_ROOT}"/"${TRAEFIK_MODULE_VERSION:?}"/* "${REPO_ROOT}"; rm -rf "${REPO_ROOT}"/"${TRAEFIK_MODULE_VERSION:?}"
-
-# rm -rf "${REPO_ROOT}"/vendor
+rm -rf console

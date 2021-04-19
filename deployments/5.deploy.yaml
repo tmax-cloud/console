@@ -27,7 +27,7 @@ spec:
         - mountPath: /var/tmp/configs
           name: dynamic-config        
       - command:  
-        - /opt/bridge/bin/bridge
+        - /opt/bridge/bin/console
         - --public-dir=/opt/bridge/static
         - --listen=https://0.0.0.0:6443
         - --base-address=https://0.0.0.0:6443
@@ -39,6 +39,7 @@ spec:
         - --mc-mode=@@MC_MODE@@
         - --kiali-endpoint=https://@@KIALI@@/api/kiali/
         - --kibana-endpoint=https://@@KIBANA@@/api/kibana/
+        - --kubeflow-endpoint=http://@KUBEFLOW@/api/kubeflow/ 
         - --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/
         image: tmaxcloudck/hypercloud-console:@@CONSOLE_VER@@
         imagePullPolicy: Always

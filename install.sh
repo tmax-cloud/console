@@ -11,6 +11,7 @@ svc_temp="$temp_Dir/4.svc-lb.yaml"
 deploy_temp="$temp_Dir/5.deploy.yaml"
 # KIBANA="opendistro-kibana.efk.svc.cluster.local:5601"
 KIBANA="kibana.kube-logging.svc.cluster.local:5601"
+KUBEFLOW="0.0.0.0"
 
 # GET ENV 
 # image version 
@@ -55,6 +56,7 @@ sed -i "s%@@MC_MODE@@%${MC_MODE}%g" ${deploy_temp}
 
 sed -i "s%@@KIALI@@%${KIALI}%g" ${deploy_temp}
 sed -i "s%@@KIBANA@@%${KIBANA}%g" ${deploy_temp}
+sed -i "s%@@KIBANA@@%${KUBEFLOW}%g" ${deploy_temp}
 
 echo "==============================================================="
 echo "STEP 2. Install console"

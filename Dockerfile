@@ -8,7 +8,7 @@ RUN ./build.sh
 FROM openshift/origin-base
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
-COPY --from=build /go/src/github.com/openshift/console/bin/bridge /opt/bridge/bin/bridge
+COPY --from=build /go/src/github.com/openshift/console/bin/console /opt/bridge/bin/console
 RUN mkdir -p /opt/bridge/api/
 COPY --from=build /go/src/github.com/openshift/console/api /opt/bridge/api
 RUN mkdir -p /opt/bridge/configs/ 
@@ -21,6 +21,6 @@ LABEL io.k8s.display-name="Hypercloud Console" \
       maintainer="Jinsoo Youn <jinsoo_youn@tmax.co.kr>"
 
 # doesn't require a root user.
-# USER 1001:1001
+USER 1001:1001
 
-CMD [ "/opt/bridge/bin/bridge", "--public-dir=/opt/bridge/static" ]
+CMD [ "/opt/bridge/bin/console", "gateway --public-dir=/opt/bridge/static" ]

@@ -278,7 +278,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "azureDisk": {
           "description": "AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
@@ -309,7 +310,8 @@
               "type": ["boolean", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "azureFile": {
           "description": "AzureFile represents an Azure File Service mount on the host and bind mount to the pod.",
@@ -329,7 +331,8 @@
             },
             "shareName": { "description": "Share Name", "type": "string" }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "capacity": {
           "description": "A description of the persistent volume's resources and capacity. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
@@ -343,7 +346,7 @@
           "required": ["monitors"],
           "properties": {
             "monitors": {
-              "description": "Required: Monitors is a collection of Ceph monitors More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it",
+              "description": "Required: Monitors is a collection of Ceph monitors More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it",
               "type": "array",
               "items": { "type": ["string", "null"] }
             },
@@ -352,11 +355,11 @@
               "type": ["string", "null"]
             },
             "readOnly": {
-              "description": "Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it",
+              "description": "Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it",
               "type": ["boolean", "null"]
             },
             "secretFile": {
-              "description": "Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it",
+              "description": "Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it",
               "type": ["string", "null"]
             },
             "secretRef": {
@@ -374,22 +377,23 @@
               "additionalProperties": false
             },
             "user": {
-              "description": "Optional: User is the rados user name, default is admin More info: https://releases.k8s.io/HEAD/examples/volumes/cephfs/README.md#how-to-use-it",
+              "description": "Optional: User is the rados user name, default is admin More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it",
               "type": ["string", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "cinder": {
           "description": "Represents a cinder volume resource in Openstack. A Cinder volume must exist before mounting to a container. The volume must also be in the same region as the kubelet. Cinder volumes support ownership management and SELinux relabeling.",
           "required": ["volumeID"],
           "properties": {
             "fsType": {
-              "description": "Filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: \"ext4\", \"xfs\", \"ntfs\". Implicitly inferred to be \"ext4\" if unspecified. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md",
+              "description": "Filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: \"ext4\", \"xfs\", \"ntfs\". Implicitly inferred to be \"ext4\" if unspecified. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
               "type": ["string", "null"]
             },
             "readOnly": {
-              "description": "Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md",
+              "description": "Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
               "type": ["boolean", "null"]
             },
             "secretRef": {
@@ -407,11 +411,12 @@
               "additionalProperties": false
             },
             "volumeID": {
-              "description": "volume id used to identify the volume in cinder More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md",
+              "description": "volume id used to identify the volume in cinder More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "claimRef": {
           "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
@@ -425,7 +430,7 @@
               "type": ["string", "null"]
             },
             "kind": {
-              "description": "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+              "description": "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
               "type": ["string", "null"]
             },
             "name": {
@@ -437,7 +442,7 @@
               "type": ["string", "null"]
             },
             "resourceVersion": {
-              "description": "Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency",
+              "description": "Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
               "type": ["string", "null"]
             },
             "uid": {
@@ -515,7 +520,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "fc": {
           "description": "Represents a Fibre Channel volume. Fibre Channel volumes can only be mounted as read/write once. Fibre Channel volumes support ownership management and SELinux relabeling.",
@@ -544,7 +550,8 @@
               "items": { "type": ["string", "null"] }
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "flexVolume": {
           "description": "FlexPersistentVolumeSource represents a generic persistent volume resource that is provisioned/attached using an exec based plugin.",
@@ -582,7 +589,8 @@
               "additionalProperties": false
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "flocker": {
           "description": "Represents a Flocker volume mounted by the Flocker agent. One and only one of datasetName and datasetUUID should be set. Flocker volumes do not support ownership management or SELinux relabeling.",
@@ -620,26 +628,28 @@
               "type": ["boolean", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "glusterfs": {
           "description": "Represents a Glusterfs mount that lasts the lifetime of a pod. Glusterfs volumes do not support ownership management or SELinux relabeling.",
           "required": ["endpoints", "path"],
           "properties": {
             "endpoints": {
-              "description": "EndpointsName is the endpoint name that details Glusterfs topology. More info: https://releases.k8s.io/HEAD/examples/volumes/glusterfs/README.md#create-a-pod",
+              "description": "EndpointsName is the endpoint name that details Glusterfs topology. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod",
               "type": "string"
             },
             "path": {
-              "description": "Path is the Glusterfs volume path. More info: https://releases.k8s.io/HEAD/examples/volumes/glusterfs/README.md#create-a-pod",
+              "description": "Path is the Glusterfs volume path. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod",
               "type": "string"
             },
             "readOnly": {
-              "description": "ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions. Defaults to false. More info: https://releases.k8s.io/HEAD/examples/volumes/glusterfs/README.md#create-a-pod",
+              "description": "ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions. Defaults to false. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod",
               "type": ["boolean", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "hostPath": {
           "description": "Represents a host path mapped into a pod. Host path volumes do not support ownership management or SELinux relabeling.",
@@ -662,11 +672,11 @@
           "properties": {
             "chapAuthDiscovery": {
               "description": "whether support iSCSI Discovery CHAP authentication",
-              "type": "boolean"
+              "type": ["boolean", "null"]
             },
             "chapAuthSession": {
               "description": "whether support iSCSI Session CHAP authentication",
-              "type": "boolean"
+              "type": ["boolean", "null"]
             },
             "fsType": {
               "description": "Filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: \"ext4\", \"xfs\", \"ntfs\". Implicitly inferred to be \"ext4\" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi",
@@ -717,7 +727,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "local": {
           "description": "Local represents directly-attached storage with node affinity (Beta feature)",
@@ -752,7 +763,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "nodeAffinity": {
           "description": "VolumeNodeAffinity defines constraints that limit what nodes this volume can be accessed from.",
@@ -861,7 +873,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "quobyte": {
           "description": "Represents a Quobyte mount that lasts the lifetime of a pod. Quobyte volumes do not support ownership management or SELinux relabeling.",
@@ -888,7 +901,8 @@
               "type": "string"
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "rbd": {
           "description": "Represents a Rados Block Device mount that lasts the lifetime of a pod. RBD volumes support ownership management and SELinux relabeling.",
@@ -899,24 +913,24 @@
               "type": ["string", "null"]
             },
             "image": {
-              "description": "The rados image name. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it",
+              "description": "The rados image name. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
               "type": "string"
             },
             "keyring": {
-              "description": "Keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it",
+              "description": "Keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
               "type": ["string", "null"]
             },
             "monitors": {
-              "description": "A collection of Ceph monitors. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it",
+              "description": "A collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
               "type": "array",
               "items": { "type": ["string", "null"] }
             },
             "pool": {
-              "description": "The rados pool name. Default is rbd. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it",
+              "description": "The rados pool name. Default is rbd. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
               "type": ["string", "null"]
             },
             "readOnly": {
-              "description": "ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it",
+              "description": "ReadOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
               "type": ["boolean", "null"]
             },
             "secretRef": {
@@ -934,11 +948,12 @@
               "additionalProperties": false
             },
             "user": {
-              "description": "The rados user name. Default is admin. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md#how-to-use-it",
+              "description": "The rados user name. Default is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
               "type": ["string", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "scaleIO": {
           "description": "ScaleIOPersistentVolumeSource represents a persistent ScaleIO volume",
@@ -976,7 +991,7 @@
             },
             "sslEnabled": {
               "description": "Flag to enable/disable SSL communication with Gateway, default false",
-              "type": "boolean"
+              "type": ["boolean", "null"]
             },
             "storageMode": {
               "description": "Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.",
@@ -995,7 +1010,8 @@
               "type": ["string", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "storageClassName": {
           "description": "Name of StorageClass to which this persistent volume belongs. Empty value means that this volume does not belong to any StorageClass.",
@@ -1055,7 +1071,8 @@
               "type": ["string", "null"]
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "type": "object"
         },
         "volumeMode": {
           "description": "volumeMode defines if a volume is intended to be used with a formatted filesystem or to remain in raw block state. Value of Filesystem is implied when not included in spec. This is an alpha feature and may change in the future.",
