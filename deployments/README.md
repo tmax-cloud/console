@@ -4,13 +4,13 @@
 ## 구성 요소
 * hypercloud-console ([tmaxcloudck/hypercloud-console](https://hub.docker.com/r/tmaxcloudck/hypercloud-console/tags))
 * console-operator ([tmaxcloudck/console-operator](https://hub.docker.com/r/tmaxcloudck/console-operator/tags))
-* 가이드 작성 시점(2021/03/10) 최신 버전은 아래와 같습니다. 
-    * hypercloud-console:0.5.1.32
+* 가이드 작성 시점(2021/04/20) 최신 버전은 아래와 같습니다. 
+    * hypercloud-console:5.1.4.3
     * console-operator:5.1.0.1
 
 ## Prerequisites
 * Kubernetes, HyperCloud5 Operator, hyperauth (Keycloak), Grafana, Prometheus가 설치되어 있어야 합니다.
-* 온전한 화면을 위해 추가로 Istio(Kiali, Jaeger), kibana 설치가 추가로 필요합니다. 
+* 온전한 화면을 위해 추가로 Istio(Kiali, Jaeger), kibana, kubeflow, gitlab 설치가 추가로 필요합니다. 
 * 설치에 필요한 모듈이 없을 시 설치 가이드 Step에 해당 주소는 0.0.0.0으로 기입합니다. 
 * Kubernetes에 Public IP 여유분이 최소한 1개 있어야 합니다.
 
@@ -22,7 +22,7 @@
 	  ```bash
 	  mkdir -p ~/console-install
       export CONSOLE_HOME=~/console-install 
-      export CONSOLE_VERSION=0.5.1.30
+      export CONSOLE_VERSION=5.1.4.3
       export OPERATOR_VERSION=5.1.0.1
       cd $CONSOLE_HOME
 	  ```
@@ -49,14 +49,21 @@
 	  ```
 
 ## 설치 가이드
-1. [CRD 생성](#step-1-CRD-생성)
-2. [Namespace, ServiceAccount, ClusterRole, ClusterRoleBinding 생성](#step-2-namespace-serviceaccount-clusterrole-clusterrolebinding-생성)
-3. [Secret (TLS) 생성](#step-3-Job으로-Secret-TLS-생성)
-4. [Service (Load Balancer) 생성](#step-4-service-load-balancer-생성)
-5. [Deployment (with Pod Template) 생성](#step-5-deployment-with-pod-template-생성)
-6. [동작 확인](#step-5-동작-확인)
-7. [번외. 쉘 스크립 이용](#쉘-스크립트로-설치)
-8. [삭제 가이드](#삭제-가이드)
+- [Console 설치 가이드](#console-설치-가이드)
+  - [구성 요소](#구성-요소)
+  - [Prerequisites](#prerequisites)
+  - [폐쇄망 구축 가이드](#폐쇄망-구축-가이드)
+  - [설치 가이드](#설치-가이드)
+  - [설치 yaml 파일](#설치-yaml-파일)
+  - [Step 1. CRD 생성](#step-1-crd-생성)
+  - [Step 2. Namespace, ServiceAccount, ClusterRole, ClusterRoleBinding 생성](#step-2-namespace-serviceaccount-clusterrole-clusterrolebinding-생성)
+  - [Step 3. Job으로 Secret (TLS) 생성](#step-3-job으로-secret-tls-생성)
+  - [Step 4. Service (Load Balancer) 생성](#step-4-service-load-balancer-생성)
+  - [Step 5. Deployment (with Pod Template) 생성](#step-5-deployment-with-pod-template-생성)
+  - [Step 6. 동작 확인](#step-6-동작-확인)
+  - [쉘 스크립트로 설치](#쉘-스크립트로-설치)
+  - [삭제 가이드](#삭제-가이드)
+  - [설치 리소스 제거](#설치-리소스-제거)
 
 ## 설치 yaml 파일 
 - 설치에 필요한 yaml 파일들은 deployments 폴더에 있습니다.
@@ -100,6 +107,10 @@
     | `@@KEYCLOAK@@` | `kubectl get svc -n hyperauth hyperauth` 에서 EXTERNAL-IP 확인하여 입력 | `10.x.x.x` |
     | `@@CLIENTID@@` | hyperauth이용하여 로그인 시 필요한 client 정보 입력 | `hypercloud5` | 
     | `@@MC_MODE@@` | Multi Cluster 모드로 설치하려는 경우 `true` 입력 (아닌 경우 행 삭제) | `true` |
+    | `@@KIALI@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
+    | `@@KIBANA@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
+    | `@@KUBEFLOW@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
+    | `@@GITLAB@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
     | `@@CONSOLE_VER@@` | hypercloud-console 이미지 태그 입력 | `0.5.x.x` |
     
     * `kubectl apply -f 5.deploy.yaml` 을 실행합니다.
@@ -125,7 +136,7 @@
     1. 쉘 스크립트 실행 시 필요한 변수 값들을 설정한다. (변수 값 설명은 [Deployment (with Pod Template) 생성](#step-5-deployment-with-pod-template-생성) 참고)
         ```sh
         export OPERATOR_VER=5.1.x.x
-        export CONSOLE_VER=0.5.x.x
+        export CONSOLE_VER=5.1.x.x
         export REALM=tmax
         export KEYCLOAK=hyperauth.org
         export CLIENTID=hypercloud5

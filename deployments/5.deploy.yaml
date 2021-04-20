@@ -21,7 +21,7 @@ spec:
         - /manager
         args:
         - --pwd=/var/tmp/configs/
-        image: tmaxcloudck/console-operator:5.1.0.1
+        image: tmaxcloudck/console-operator:@@OPERATOR_VER@@
         name: manager
         volumeMounts: 
         - mountPath: /var/tmp/configs
@@ -41,7 +41,7 @@ spec:
         - --kiali-endpoint=https://@@KIALI@@/api/kiali/
         - --kibana-endpoint=https://@@KIBANA@@/api/kibana/
         - --kubeflow-endpoint=http://@KUBEFLOW@/api/kubeflow/ 
-        - --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/
+        - --managed-gitlab-url=http://@@GITLAB@@/
         image: tmaxcloudck/hypercloud-console:@@CONSOLE_VER@@
         imagePullPolicy: Always
         name: console
