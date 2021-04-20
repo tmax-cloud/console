@@ -13,7 +13,7 @@ import { WSFactory } from '../module/ws-factory';
 import { resourceURL } from '../module/k8s';
 import { PodModel } from '../models';
 
-const nameWithIcon = (name) => (
+const nameWithIcon = name => (
   <span>
     <span className="co-icon-space-r">
       <ResourceIcon kind="Container" />
@@ -28,8 +28,7 @@ const nameWithIcon = (name) => (
 // The server only reads from STDIN, writes to the other three.
 // see also: https://github.com/kubernetes/kubernetes/pull/13885
 
-const NO_SH =
-  'starting container process caused "exec: \\"sh\\": executable file not found in $PATH"';
+const NO_SH = 'starting container process caused "exec: \\"sh\\": executable file not found in $PATH"';
 
 export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
   class PodExec extends React.PureComponent {
@@ -42,8 +41,8 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
       };
       this.terminal = React.createRef();
       this.onResize = (rows, cols) => this.onResize_(rows, cols);
-      this.onData = (d) => this.onData_(d);
-      this.onChangeContainer = (index) => this.onChangeContainer_(index);
+      this.onData = d => this.onData_(d);
+      this.onChangeContainer = index => this.onChangeContainer_(index);
     }
 
     connect_() {
@@ -61,9 +60,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
           stderr: 1,
           tty: 1,
           container: activeContainer,
-          command: ['sh', '-i', '-c', 'TERM=xterm sh']
-            .map((c) => encodeURIComponent(c))
-            .join('&command='),
+          command: ['sh', '-i', '-c', 'TERM=xterm sh'].map(c => encodeURIComponent(c)).join('&command='),
         },
       };
 
@@ -84,15 +81,13 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
         jsonParse: false,
         subprotocols,
       })
-        .onmessage((raw) => {
+        .onmessage(raw => {
           const { current } = this.terminal;
           // error channel
           if (raw[0] === '3') {
             if (previous.includes(NO_SH)) {
               current.reset();
-              current.onConnectionClosed(
-                `This container doesn't have a /bin/sh shell. Try specifying your command in a terminal with:\r\n\r\n ${usedClient} -n ${metadata.namespace} exec ${metadata.name} -ti <command>`,
-              );
+              current.onConnectionClosed(`This container doesn't have a /bin/sh shell. Try specifying your command in a terminal with:\r\n\r\n ${usedClient} -n ${metadata.namespace} exec ${metadata.name} -ti <command>`);
               this.ws.destroy();
               previous = '';
               return;
@@ -108,7 +103,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
           previous = '';
           this.setState({ open: true, error: null });
         })
-        .onclose((evt) => {
+        .onclose(evt => {
           if (!evt || evt.wasClean === true) {
             return;
           }
@@ -117,7 +112,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
           this.terminal.current && this.terminal.current.onConnectionClosed(error);
           this.ws.destroy();
         }) // eslint-disable-next-line no-console
-        .onerror((evt) => console.error(`WS error?! ${evt}`));
+        .onerror(evt => console.error(`WS error?! ${evt}`));
     }
 
     componentDidMount() {
@@ -130,7 +125,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-      const containers = _.get(nextProps.obj, 'spec.containers', []).map((n) => n.name);
+      const containers = _.get(nextProps.obj, 'spec.containers', []).map(n => n.name);
       if (_.isEqual(containers, prevState.containers)) {
         return null;
       }
@@ -184,22 +179,13 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
             <div className="co-toolbar__group co-toolbar__group--left">
               <div className="co-toolbar__item">Connecting to</div>
               <div className="co-toolbar__item">
-                <Dropdown
-                  className="btn-group"
-                  items={_.mapValues(containers, nameWithIcon)}
-                  title={nameWithIcon(activeContainer || <LoadingInline />)}
-                  onChange={this.onChangeContainer}
-                />
+                <Dropdown className="btn-group" items={_.mapValues(containers, nameWithIcon)} title={nameWithIcon(activeContainer || <LoadingInline />)} onChange={this.onChangeContainer} />
               </div>
             </div>
             {!error && (
               <div className="co-toolbar__group co-toolbar__group--right">
                 <div className="co-toolbar__item">
-                  <Button
-                    variant="link"
-                    className="pf-m-link--align-right"
-                    onClick={() => this.setFullscreen(true)}
-                  >
+                  <Button variant="link" className="pf-m-link--align-right" onClick={() => this.setFullscreen(true)}>
                     <ExpandIcon className="co-icon-space-r" />
                     Expand
                   </Button>
