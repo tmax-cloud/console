@@ -15,6 +15,7 @@ import * as screenfull from 'screenfull';
 import { k8sGet, k8sList } from '@console/internal/module/k8s';
 import { ConsoleExternalLogLinkModel, ProjectModel } from '@console/internal/models';
 import { connectToFlags } from '../../reducers/features';
+import { useTranslation } from 'react-i18next';
 
 export const STREAM_EOF = 'eof';
 export const STREAM_LOADING = 'loading';
@@ -25,14 +26,6 @@ export const LOG_SOURCE_RESTARTING = 'restarting';
 export const LOG_SOURCE_RUNNING = 'running';
 export const LOG_SOURCE_TERMINATED = 'terminated';
 export const LOG_SOURCE_WAITING = 'waiting';
-
-// Messages to display for corresponding log status
-const streamStatusMessages = {
-  [STREAM_EOF]: 'Log stream ended.',
-  [STREAM_LOADING]: 'Loading log...',
-  [STREAM_PAUSED]: 'Log stream paused.',
-  [STREAM_ACTIVE]: 'Log streaming...',
-};
 
 const replaceVariables = (template, values) => {
   return _.reduce(
@@ -48,18 +41,17 @@ const replaceVariables = (template, values) => {
 };
 
 // Component for log stream controls
-export const LogControls = ({
-  dropdown,
-  onDownload,
-  toggleFullscreen,
-  isFullscreen,
-  status,
-  toggleStreaming,
-  resource,
-  containerName,
-  podLogLinks,
-  namespaceUID,
-}) => {
+export const LogControls = ({ dropdown, onDownload, toggleFullscreen, isFullscreen, status, toggleStreaming, resource, containerName, podLogLinks, namespaceUID }) => {
+  const { t } = useTranslation();
+  // Messages to display for corresponding log status
+  const streamStatusMessages = {
+    [STREAM_EOF]: t('COMMON:MSG_DETAILS_TABLOGS_9'),
+    [STREAM_LOADING]: t('COMMON:MSG_DETAILS_TABLOGS_7'),
+    [STREAM_PAUSED]: t('COMMON:MSG_DETAILS_TABLOGS_10'),
+    [STREAM_ACTIVE]: t('COMMON:MSG_DETAILS_TABLOGS_11'),
+  };
+
+  // MJ : 'Collapse' 스트링 나오면 적용하기
   return (
     <div className="co-toolbar">
       <div className="co-toolbar__group co-toolbar__group--left">
@@ -70,16 +62,14 @@ export const LogControls = ({
               &nbsp;
             </>
           )}
-          {[STREAM_ACTIVE, STREAM_PAUSED].includes(status) && (
-            <TogglePlay active={status === STREAM_ACTIVE} onClick={toggleStreaming} />
-          )}
+          {[STREAM_ACTIVE, STREAM_PAUSED].includes(status) && <TogglePlay active={status === STREAM_ACTIVE} onClick={toggleStreaming} />}
           {streamStatusMessages[status]}
         </div>
         {dropdown && <div className="co-toolbar__item">{dropdown}</div>}
       </div>
       <div className="co-toolbar__group co-toolbar__group--right">
         {!_.isEmpty(podLogLinks) &&
-          _.map(_.sortBy(podLogLinks, 'metadata.name'), (link) => {
+          _.map(_.sortBy(podLogLinks, 'metadata.name'), link => {
             const namespace = resource.metadata.namespace;
             const namespaceFilter = link.spec.namespaceFilter;
             if (namespaceFilter) {
@@ -113,7 +103,7 @@ export const LogControls = ({
           })}
         <Button variant="link" isInline onClick={onDownload}>
           <DownloadIcon className="co-icon-space-r" />
-          Download
+          {t('COMMON:MSG_DETAILS_TABLOGS_1')}
         </Button>
         {screenfull.enabled && (
           <>
@@ -129,7 +119,7 @@ export const LogControls = ({
               ) : (
                 <>
                   <ExpandIcon className="co-icon-space-r" />
-                  Expand
+                  {t('COMMON:MSG_DETAILS_TABLOGS_2')}
                 </>
               )}
             </Button>
@@ -185,10 +175,7 @@ class ResourceLog_ extends React.Component {
       const newState = {};
       newState.resourceStatus = nextProps.resourceStatus;
       // Container changed from non-running to running state, so currently displayed logs are stale
-      if (
-        prevState.resourceStatus === LOG_SOURCE_RESTARTING &&
-        newState.resourceStatus !== LOG_SOURCE_RESTARTING
-      ) {
+      if (prevState.resourceStatus === LOG_SOURCE_RESTARTING && newState.resourceStatus !== LOG_SOURCE_RESTARTING) {
         newState.stale = true;
       }
       return newState;
@@ -197,17 +184,14 @@ class ResourceLog_ extends React.Component {
   }
 
   fetchLogLinks() {
-    const promises = [
-      k8sList(ConsoleExternalLogLinkModel),
-      k8sGet(ProjectModel, this.props.resource.metadata.namespace),
-    ];
+    const promises = [k8sList(ConsoleExternalLogLinkModel), k8sGet(ProjectModel, this.props.resource.metadata.namespace)];
     Promise.all(promises)
       .then(([podLogLinks, project]) => {
         // Project UID and namespace UID are the same value. Use the projects
         // API since normal OpenShift users can list projects.
         this.setState({ podLogLinks, namespaceUID: project.metadata.uid });
       })
-      .catch((e) => this.setState({ error: e }));
+      .catch(e => this.setState({ error: e }));
   }
 
   componentDidMount() {
@@ -227,9 +211,7 @@ class ResourceLog_ extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const containerChanged = prevProps.containerName !== this.props.containerName;
-    const resourceStarted =
-      prevState.resourceStatus === LOG_SOURCE_WAITING &&
-      this.state.resourceStatus !== LOG_SOURCE_WAITING;
+    const resourceStarted = prevState.resourceStatus === LOG_SOURCE_WAITING && this.state.resourceStatus !== LOG_SOURCE_WAITING;
 
     // Container changed or transitioned out of waiting state
     if (containerChanged || resourceStarted) {
@@ -341,11 +323,7 @@ class ResourceLog_ extends React.Component {
 
   // Initialize websocket connection and wire up handlers
   _wsInit({ resource, containerName, bufferSize }) {
-    if (
-      [LOG_SOURCE_RUNNING, LOG_SOURCE_TERMINATED, LOG_SOURCE_RESTARTING].includes(
-        this.state.resourceStatus,
-      )
-    ) {
+    if ([LOG_SOURCE_RUNNING, LOG_SOURCE_TERMINATED, LOG_SOURCE_RESTARTING].includes(this.state.resourceStatus)) {
       const urlOpts = {
         ns: resource.metadata.namespace,
         name: resource.metadata.name,
@@ -373,62 +351,16 @@ class ResourceLog_ extends React.Component {
 
   render() {
     const { resource, containerName, dropdown, bufferSize } = this.props;
-    const {
-      error,
-      lines,
-      linesBehind,
-      stale,
-      status,
-      isFullscreen,
-      podLogLinks,
-      namespaceUID,
-    } = this.state;
+    const { error, lines, linesBehind, stale, status, isFullscreen, podLogLinks, namespaceUID } = this.state;
     const bufferFull = lines.length === bufferSize;
 
     return (
       <>
-        {error && (
-          <Alert
-            isInline
-            className="co-alert"
-            variant="danger"
-            title="An error occurred while retrieving the requested logs."
-            action={<AlertActionLink onClick={this._restartStream}>Retry</AlertActionLink>}
-          />
-        )}
-        {stale && (
-          <Alert
-            isInline
-            className="co-alert"
-            variant="info"
-            title={`The logs for this ${resource.kind} may be stale.`}
-            action={<AlertActionLink onClick={this._restartStream}>Refresh</AlertActionLink>}
-          />
-        )}
-        <div
-          ref={this._resourceLogRef}
-          className={classNames('resource-log', { 'resource-log--fullscreen': isFullscreen })}
-        >
-          <LogControls
-            dropdown={dropdown}
-            isFullscreen={isFullscreen}
-            onDownload={this._download}
-            status={status}
-            toggleFullscreen={this._toggleFullscreen}
-            toggleStreaming={this._toggleStreaming}
-            resource={resource}
-            containerName={containerName}
-            podLogLinks={podLogLinks}
-            namespaceUID={namespaceUID}
-          />
-          <LogWindow
-            lines={lines}
-            linesBehind={linesBehind}
-            bufferFull={bufferFull}
-            isFullscreen={isFullscreen}
-            status={status}
-            updateStatus={this._updateStatus}
-          />
+        {error && <Alert isInline className="co-alert" variant="danger" title="An error occurred while retrieving the requested logs." action={<AlertActionLink onClick={this._restartStream}>Retry</AlertActionLink>} />}
+        {stale && <Alert isInline className="co-alert" variant="info" title={`The logs for this ${resource.kind} may be stale.`} action={<AlertActionLink onClick={this._restartStream}>Refresh</AlertActionLink>} />}
+        <div ref={this._resourceLogRef} className={classNames('resource-log', { 'resource-log--fullscreen': isFullscreen })}>
+          <LogControls dropdown={dropdown} isFullscreen={isFullscreen} onDownload={this._download} status={status} toggleFullscreen={this._toggleFullscreen} toggleStreaming={this._toggleStreaming} resource={resource} containerName={containerName} podLogLinks={podLogLinks} namespaceUID={namespaceUID} />
+          <LogWindow lines={lines} linesBehind={linesBehind} bufferFull={bufferFull} isFullscreen={isFullscreen} status={status} updateStatus={this._updateStatus} />
         </div>
       </>
     );

@@ -104,12 +104,8 @@ pipeline {
           """        
           sh """
           git tag ${VER}
-          git push origin HEAD:${BRANCH} --tags
           echo "Console Version History" > ./CHANGELOG/tag.txt
           git tag --list "5.1.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
-          git add -A
-          git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
-          git push origin HEAD:${BRANCH}
           """
         }
       }
@@ -118,18 +114,6 @@ pipeline {
     stage('Build') {
       steps{
         container('docker'){
-          script {
-            PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
-            HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
-            if (BUILD_MODE == 'PATCH') {
-              PATCH_VER++
-              HOTFIX_VER = "0"
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            } else if (BUILD_MODE == 'HOTFIX') {
-              HOTFIX_VER++
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            }
-          }
           withCredentials([usernamePassword(
             credentialsId: 'tmaxcloudck',
             usernameVariable: 'DOCKER_USER',
@@ -151,21 +135,9 @@ pipeline {
       }
       steps {
         container('kubectl') {
-          script {
-            PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
-            HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
-            if (BUILD_MODE == 'PATCH') {
-              PATCH_VER++
-              HOTFIX_VER = "0"
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            } else if (BUILD_MODE == 'HOTFIX') {
-              HOTFIX_VER++
-              VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
-            }
-          }
           withKubeConfig([credentialsId: "${DEPLOY}"]) {
-        //   sh "export VER=${VER}"
-          sh "./install.sh"
+          sh "echo ${VER}"
+          sh "./install.sh ${VER}"
           }
         }
       }
@@ -209,9 +181,6 @@ pipeline {
             --simplify-merges ${PRE_VER}..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
-          sh "git add -A"
-          sh "git commit -m '[FEAT] BUILD ${PRODUCT}_${VER}' "
-          sh "git push origin HEAD:${BRANCH}"        
         }
       }
     }
@@ -224,6 +193,14 @@ pipeline {
         }
       }
       steps {
+        withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {
+          sh """
+            git push origin HEAD:${BRANCH} --tags
+            git add -A
+            git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
+            git push origin HEAD:${BRANCH}
+          """        
+        }
         emailext (
           to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
