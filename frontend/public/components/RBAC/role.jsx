@@ -263,7 +263,7 @@ export const RolesPage = ({ namespace, mock, showTitle }) => {
       namespace={namespace}
       createAccessReview={accessReview}
       createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(RoleModel, t) })}
-      createProps={{ to: `/k8s/ns/${createNS}/roles/~new` }}
+      createProps={{ to: `/k8s/cluster/roles/~new` }}
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       resources={[
         { kind: 'Role', namespaced: true, optional: mock },
