@@ -4,6 +4,7 @@ import * as React from 'react';
 const Node = ({ className, children, description }) => (
   <div className={className}>
     <div>{children}</div>
+    <div className="row" />
     <p className="help-block">{description}</p>
   </div>
 );
