@@ -25,10 +25,7 @@ export const NameValueEditor = withDragDropContext(
     _append() {
       const { updateParentData, nameValuePairs, nameValueId } = this.props;
 
-      updateParentData(
-        { nameValuePairs: nameValuePairs.concat([['', '', nameValuePairs.length]]) },
-        nameValueId,
-      );
+      updateParentData({ nameValuePairs: nameValuePairs.concat([['', '', nameValuePairs.length]]) }, nameValueId);
     }
 
     _appendConfigMapOrSecret() {
@@ -36,9 +33,7 @@ export const NameValueEditor = withDragDropContext(
       const configMapSecretKeyRef = { name: '', key: '' };
       updateParentData(
         {
-          nameValuePairs: nameValuePairs.concat([
-            ['', { configMapSecretKeyRef }, nameValuePairs.length],
-          ]),
+          nameValuePairs: nameValuePairs.concat([['', { configMapSecretKeyRef }, nameValuePairs.length]]),
         },
         nameValueId,
       );
@@ -50,19 +45,14 @@ export const NameValueEditor = withDragDropContext(
       nameValuePairs.splice(i, 1);
       nameValuePairs.forEach((values, index) => (values[2] = index)); // update the indices in order.
 
-      updateParentData(
-        { nameValuePairs: nameValuePairs.length ? nameValuePairs : [['', '', 0]] },
-        nameValueId,
-      );
+      updateParentData({ nameValuePairs: nameValuePairs.length ? nameValuePairs : [['', '', 0]] }, nameValueId);
     }
 
     _change(e, i, type) {
       const { updateParentData, nameValueId } = this.props;
       const nameValuePairs = _.cloneDeep(this.props.nameValuePairs);
 
-      nameValuePairs[i][
-        type === NameValueEditorPair.Name ? NameValueEditorPair.Name : NameValueEditorPair.Value
-      ] = e.target.value;
+      nameValuePairs[i][type === NameValueEditorPair.Name ? NameValueEditorPair.Name : NameValueEditorPair.Value] = e.target.value;
       updateParentData({ nameValuePairs }, nameValueId);
     }
 
@@ -77,42 +67,12 @@ export const NameValueEditor = withDragDropContext(
     }
 
     render() {
-      const {
-        nameString,
-        valueString,
-        addString,
-        addSecondString,
-        nameValuePairs,
-        allowSorting,
-        readOnly,
-        nameValueId,
-        configMaps,
-        secrets,
-        addConfigMapSecret,
-      } = this.props;
+      const { nameString, valueString, addString, addSecondString, nameValuePairs, allowSorting, readOnly, nameValueId, configMaps, secrets, addConfigMapSecret } = this.props;
       const pairElems = nameValuePairs.map((pair, i) => {
         const key = _.get(pair, [NameValueEditorPair.Index], i);
-        const isEmpty = nameValuePairs.length === 1 && nameValuePairs[0].every((value) => !value);
+        const isEmpty = nameValuePairs.length === 1 && nameValuePairs[0].every(value => !value);
 
-        return (
-          <PairElement
-            onChange={this._change}
-            index={i}
-            nameString={nameString}
-            valueString={valueString}
-            allowSorting={allowSorting}
-            readOnly={readOnly}
-            pair={pair}
-            key={key}
-            onRemove={this._remove}
-            onMove={this._move}
-            rowSourceId={nameValueId}
-            configMaps={configMaps}
-            secrets={secrets}
-            isEmpty={isEmpty}
-            disableReorder={nameValuePairs.length === 1}
-          />
-        );
+        return <PairElement onChange={this._change} index={i} nameString={nameString} valueString={valueString} allowSorting={allowSorting} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} onMove={this._move} rowSourceId={nameValueId} configMaps={configMaps} secrets={secrets} isEmpty={isEmpty} disableReorder={nameValuePairs.length === 1} />;
       });
       return (
         <>
@@ -127,31 +87,14 @@ export const NameValueEditor = withDragDropContext(
             <div className="col-xs-12">
               {readOnly ? null : (
                 <div className="co-toolbar__group co-toolbar__group--left">
-                  <Button
-                    className="pf-m-link--align-left"
-                    data-test-id="pairs-list__add-btn"
-                    onClick={this._append}
-                    type="button"
-                    variant="link"
-                  >
-                    <PlusCircleIcon
-                      data-test-id="pairs-list__add-icon"
-                      className="co-icon-space-r"
-                    />
+                  <Button className="pf-m-link--align-left" data-test-id="pairs-list__add-btn" onClick={this._append} type="button" variant="link">
+                    <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
                     {addString}
                   </Button>
                   {addConfigMapSecret && (
                     <>
-                      <Button
-                        className="pf-m-link--align-left"
-                        onClick={this._appendConfigMapOrSecret}
-                        type="button"
-                        variant="link"
-                      >
-                        <PlusCircleIcon
-                          data-test-id="pairs-list__add-icon"
-                          className="co-icon-space-r"
-                        />
+                      <Button className="pf-m-link--align-left" onClick={this._appendConfigMapOrSecret} type="button" variant="link">
+                        <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
                         {addSecondString}
                       </Button>
                     </>
@@ -173,15 +116,7 @@ NameValueEditor.propTypes = {
   allowSorting: PropTypes.bool,
   readOnly: PropTypes.bool,
   nameValueId: PropTypes.number,
-  nameValuePairs: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
-      PropTypes.arrayOf(
-        PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]),
-      ),
-    ]),
-  ).isRequired,
+  nameValuePairs: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]))])).isRequired,
   updateParentData: PropTypes.func.isRequired,
   configMaps: PropTypes.object,
   secrets: PropTypes.object,
@@ -215,9 +150,7 @@ export const EnvFromEditor = withDragDropContext(
       const configMapSecretRef = { name: '', key: '' };
       updateParentData(
         {
-          nameValuePairs: nameValuePairs.concat([
-            ['', { configMapSecretRef }, nameValuePairs.length],
-          ]),
+          nameValuePairs: nameValuePairs.concat([['', { configMapSecretRef }, nameValuePairs.length]]),
         },
         nameValueId,
         EnvType.ENV_FROM,
@@ -230,18 +163,13 @@ export const EnvFromEditor = withDragDropContext(
       nameValuePairs.splice(i, 1);
       const configMapSecretRef = { name: '', key: '' };
 
-      updateParentData(
-        { nameValuePairs: nameValuePairs.length ? nameValuePairs : [['', { configMapSecretRef }]] },
-        nameValueId,
-        EnvType.ENV_FROM,
-      );
+      updateParentData({ nameValuePairs: nameValuePairs.length ? nameValuePairs : [['', { configMapSecretRef }]] }, nameValueId, EnvType.ENV_FROM);
     }
 
     _change(e, i, type) {
       const { updateParentData, nameValueId } = this.props;
       const nameValuePairs = _.cloneDeep(this.props.nameValuePairs);
-      nameValuePairs[i][type === EnvFromPair.Prefix ? EnvFromPair.Prefix : EnvFromPair.Resource] =
-        e.target.value;
+      nameValuePairs[i][type === EnvFromPair.Prefix ? EnvFromPair.Prefix : EnvFromPair.Resource] = e.target.value;
       updateParentData({ nameValuePairs }, nameValueId, EnvType.ENV_FROM);
     }
 
@@ -256,40 +184,11 @@ export const EnvFromEditor = withDragDropContext(
     }
 
     render() {
-      const {
-        nameValuePairs,
-        readOnly,
-        nameValueId,
-        configMaps,
-        secrets,
-        serviceAccounts,
-        firstTitle,
-        secondTitle,
-        addButtonDisabled,
-        addButtonLabel,
-        nameString,
-        valueString,
-      } = this.props;
+      const { nameValuePairs, readOnly, nameValueId, configMaps, secrets, serviceAccounts, firstTitle, secondTitle, addButtonDisabled, addButtonLabel, nameString, valueString } = this.props;
       const pairElems = nameValuePairs.map((pair, i) => {
         const key = _.get(pair, [EnvFromPair.Index], i);
 
-        return (
-          <EnvFromPairElement
-            onChange={this._change}
-            index={i}
-            nameString={nameString}
-            valueString={valueString}
-            readOnly={readOnly}
-            pair={pair}
-            key={key}
-            onRemove={this._remove}
-            onMove={this._move}
-            rowSourceId={nameValueId}
-            configMaps={configMaps}
-            secrets={secrets}
-            serviceAccounts={serviceAccounts}
-          />
-        );
+        return <EnvFromPairElement onChange={this._change} index={i} nameString={nameString} valueString={valueString} readOnly={readOnly} pair={pair} key={key} onRemove={this._remove} onMove={this._move} rowSourceId={nameValueId} configMaps={configMaps} secrets={secrets} serviceAccounts={serviceAccounts} />;
       });
 
       return (
@@ -304,13 +203,7 @@ export const EnvFromEditor = withDragDropContext(
           <div className="row">
             <div className="col-xs-12">
               {!readOnly && (
-                <Button
-                  className="pf-m-link--align-left"
-                  onClick={this._append}
-                  type="button"
-                  variant="link"
-                  isDisabled={addButtonDisabled}
-                >
+                <Button className="pf-m-link--align-left" onClick={this._append} type="button" variant="link" isDisabled={addButtonDisabled}>
                   <PlusCircleIcon /> {addButtonLabel}
                 </Button>
               )}
@@ -324,15 +217,7 @@ export const EnvFromEditor = withDragDropContext(
 EnvFromEditor.propTypes = {
   readOnly: PropTypes.bool,
   nameValueId: PropTypes.number,
-  nameValuePairs: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
-      PropTypes.arrayOf(
-        PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]),
-      ),
-    ]),
-  ).isRequired,
+  nameValuePairs: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]))])).isRequired,
   updateParentData: PropTypes.func.isRequired,
   configMaps: PropTypes.object,
   secrets: PropTypes.object,
@@ -416,7 +301,7 @@ const collectSourcePair = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 });
 
-const collectTargetPair = (connect) => ({
+const collectTargetPair = connect => ({
   connectDropTarget: connect.dropTarget(),
 });
 
@@ -455,21 +340,7 @@ const PairElement = DragSource(
       }
 
       render() {
-        const {
-          isDragging,
-          connectDragSource,
-          connectDragPreview,
-          connectDropTarget,
-          nameString,
-          valueString,
-          allowSorting,
-          readOnly,
-          pair,
-          configMaps,
-          secrets,
-          isEmpty,
-          disableReorder,
-        } = this.props;
+        const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, nameString, valueString, allowSorting, readOnly, pair, configMaps, secrets, isEmpty, disableReorder } = this.props;
         const deleteIcon = (
           <>
             <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon" />
@@ -478,13 +349,7 @@ const PairElement = DragSource(
         );
         const dragButton = (
           <div>
-            <Button
-              type="button"
-              className="pairs-list__action-icon"
-              tabIndex="-1"
-              isDisabled={disableReorder}
-              variant="plain"
-            >
+            <Button type="button" className="pairs-list__action-icon" tabIndex="-1" isDisabled={disableReorder} variant="plain">
               <PficonDragdropIcon className="pairs-list__action-icon--reorder" />
             </Button>
           </div>
@@ -492,48 +357,18 @@ const PairElement = DragSource(
 
         return connectDropTarget(
           connectDragPreview(
-            <div
-              className={classNames(
-                'row',
-                isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row',
-              )}
-              ref={(node) => (this.node = node)}
-            >
-              {allowSorting && !readOnly && (
-                <div className="col-xs-1 pairs-list__action">
-                  {disableReorder ? dragButton : connectDragSource(dragButton)}
-                </div>
-              )}
+            <div className={classNames('row', isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row')} ref={node => (this.node = node)}>
+              {allowSorting && !readOnly && <div className="col-xs-1 pairs-list__action">{disableReorder ? dragButton : connectDragSource(dragButton)}</div>}
               <div className="col-xs-5 pairs-list__name-field">
-                <input
-                  type="text"
-                  className="pf-c-form-control"
-                  placeholder={nameString.toLowerCase()}
-                  value={pair[NameValueEditorPair.Name]}
-                  onChange={this._onChangeName}
-                  disabled={readOnly}
-                />
+                <input type="text" className="pf-c-form-control" placeholder={nameString.toLowerCase()} value={pair[NameValueEditorPair.Name]} onChange={this._onChangeName} disabled={readOnly} />
               </div>
               {_.isPlainObject(pair[NameValueEditorPair.Value]) ? (
                 <div className="col-xs-5 pairs-list__value-pair-field">
-                  <ValueFromPair
-                    pair={pair[NameValueEditorPair.Value]}
-                    configMaps={configMaps}
-                    secrets={secrets}
-                    onChange={this._onChangeValue}
-                    disabled={readOnly}
-                  />
+                  <ValueFromPair pair={pair[NameValueEditorPair.Value]} configMaps={configMaps} secrets={secrets} onChange={this._onChangeValue} disabled={readOnly} />
                 </div>
               ) : (
                 <div className="col-xs-5 pairs-list__value-field">
-                  <input
-                    type="text"
-                    className="pf-c-form-control"
-                    placeholder={valueString.toLowerCase()}
-                    value={pair[NameValueEditorPair.Value] || ''}
-                    onChange={this._onChangeValue}
-                    disabled={readOnly}
-                  />
+                  <input type="text" className="pf-c-form-control" placeholder={valueString.toLowerCase()} value={pair[NameValueEditorPair.Value] || ''} onChange={this._onChangeValue} disabled={readOnly} />
                 </div>
               )}
               {!readOnly && (
@@ -564,11 +399,7 @@ PairElement.propTypes = {
   valueString: PropTypes.string,
   readOnly: PropTypes.bool,
   index: PropTypes.number.isRequired,
-  pair: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number])),
-  ]),
+  pair: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]))]),
   allowSorting: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   connectDragSource: PropTypes.func,
@@ -615,18 +446,7 @@ const EnvFromPairElement = DragSource(
       }
 
       render() {
-        const {
-          isDragging,
-          connectDragSource,
-          connectDragPreview,
-          connectDropTarget,
-          valueString,
-          readOnly,
-          pair,
-          configMaps,
-          secrets,
-          serviceAccounts,
-        } = this.props;
+        const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, valueString, readOnly, pair, configMaps, secrets, serviceAccounts } = this.props;
         const deleteButton = (
           <>
             <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon" />
@@ -636,56 +456,24 @@ const EnvFromPairElement = DragSource(
 
         return connectDropTarget(
           connectDragPreview(
-            <div
-              className={classNames(
-                'row',
-                isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row',
-              )}
-              ref={(node) => (this.node = node)}
-            >
+            <div className={classNames('row', isDragging ? 'pairs-list__row-dragging' : 'pairs-list__row')} ref={node => (this.node = node)}>
               {!readOnly &&
                 connectDragSource(
                   <div className="col-xs-1 pairs-list__action">
-                    <Button
-                      type="button"
-                      className="pairs-list__action-icon"
-                      tabIndex="-1"
-                      variant="plain"
-                    >
+                    <Button type="button" className="pairs-list__action-icon" tabIndex="-1" variant="plain">
                       <PficonDragdropIcon className="pairs-list__action-icon--reorder" />
                     </Button>
                   </div>,
                 )}
               <div className="col-xs-5 pairs-list__value-pair-field">
-                <ValueFromPair
-                  pair={pair[EnvFromPair.Resource]}
-                  configMaps={configMaps}
-                  secrets={secrets}
-                  serviceAccounts={serviceAccounts}
-                  onChange={this._onChangeResource}
-                  disabled={readOnly}
-                />
+                <ValueFromPair pair={pair[EnvFromPair.Resource]} configMaps={configMaps} secrets={secrets} serviceAccounts={serviceAccounts} onChange={this._onChangeResource} disabled={readOnly} />
               </div>
               <div className="col-xs-5 pairs-list__name-field">
-                <input
-                  data-test-id="env-prefix"
-                  type="text"
-                  className="pf-c-form-control"
-                  placeholder={valueString.toLowerCase()}
-                  value={pair[EnvFromPair.Prefix]}
-                  onChange={this._onChangePrefix}
-                  disabled={readOnly}
-                />
+                <input data-test-id="env-prefix" type="text" className="pf-c-form-control" placeholder={valueString.toLowerCase()} value={pair[EnvFromPair.Prefix]} onChange={this._onChangePrefix} disabled={readOnly} />
               </div>
               {readOnly ? null : (
                 <div className="col-xs-1 pairs-list__action">
-                  <Button
-                    type="button"
-                    data-test-id="pairs-list__delete-from-btn"
-                    className="pairs-list__span-btns"
-                    onClick={this._onRemove}
-                    variant="plain"
-                  >
+                  <Button type="button" data-test-id="pairs-list__delete-from-btn" className="pairs-list__span-btns" onClick={this._onRemove} variant="plain">
                     {deleteButton}
                   </Button>
                 </div>
@@ -701,11 +489,7 @@ EnvFromPairElement.propTypes = {
   valueString: PropTypes.string,
   readOnly: PropTypes.bool,
   index: PropTypes.number.isRequired,
-  pair: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number])),
-  ]),
+  pair: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])), PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]))]),
   onChange: PropTypes.func.isRequired,
   connectDragSource: PropTypes.func,
   connectDropTarget: PropTypes.func,

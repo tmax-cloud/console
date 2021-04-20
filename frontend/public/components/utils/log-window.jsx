@@ -18,8 +18,8 @@ class LogWindow_ extends React.PureComponent {
     this._unpause = this._unpause.bind(this);
     this._handleScroll = _.throttle(this._handleScroll.bind(this), 100);
     this._handleResize = _.debounce(this._handleResize.bind(this), 50);
-    this._setScrollPane = (element) => (this.scrollPane = element);
-    this._setLogContents = (element) => (this.logContents = element);
+    this._setScrollPane = element => (this.scrollPane = element);
+    this._setLogContents = element => (this.logContents = element);
     this.state = {
       content: '',
       height: '',
@@ -43,11 +43,7 @@ class LogWindow_ extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.status !== this.props.status ||
-      prevProps.lines.length ||
-      this.props.lines.length
-    ) {
+    if (prevProps.status !== this.props.status || prevProps.lines.length || this.props.lines.length) {
       this._scrollToBottom();
     }
   }
@@ -87,11 +83,7 @@ class LogWindow_ extends React.PureComponent {
       return;
     }
 
-    const targetHeight = Math.floor(
-      window.innerHeight -
-        this.scrollPane.getBoundingClientRect().top -
-        (this.props.isFullscreen ? FULLSCREEN_FUDGE_FACTOR : FUDGE_FACTOR),
-    );
+    const targetHeight = Math.floor(window.innerHeight - this.scrollPane.getBoundingClientRect().top - (this.props.isFullscreen ? FULLSCREEN_FUDGE_FACTOR : FUDGE_FACTOR));
     this.prevScrollLeft = this.scrollPane.scrollLeft;
     this.setState({
       height: targetHeight,
@@ -114,17 +106,16 @@ class LogWindow_ extends React.PureComponent {
   }
 
   render() {
-    const { bufferFull, lines, linesBehind, status, t  } = this.props;
+    const { bufferFull, lines, linesBehind, status, t } = this.props;
     const { content, height } = this.state;
 
     // TODO maybe move these variables into state so they are only updated on changes
     const totalLineCount = pluralize(lines.length, 'line');
     const linesBehindCount = pluralize(linesBehind, 'new line');
     const headerText = bufferFull ? `last ${totalLineCount}` : totalLineCount;
-    const resumeText =
-      linesBehind > 0 ? ` Resume stream and show ${linesBehindCount}` : ' Resume stream';
+    const resumeText = linesBehind > 0 ? ` Resume stream and show ${linesBehindCount}` : ' Resume stream';
 
-      // MJ : String 발행되면 이 부분 i18n 적용하기
+    // MJ : String 발행되면 이 부분 i18n 적용하기
 
     return (
       <div className="log-window">
