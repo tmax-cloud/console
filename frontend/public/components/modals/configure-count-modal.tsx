@@ -7,11 +7,9 @@ import { NumberSpinner, withHandlePromise } from '../utils';
 
 export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModalProps) => {
   const getPath = props.path.substring(1).replace('/', '.');
-  const [value, setValue] = React.useState<number>(
-    _.get(props.resource, getPath) || props.defaultValue,
-  );
+  const [value, setValue] = React.useState<number>(_.get(props.resource, getPath) || props.defaultValue);
 
-  const submit = (e) => {
+  const submit = e => {
     e.preventDefault();
 
     const patch = [{ op: 'replace', path: props.path, value: _.toInteger(value) }];
@@ -22,7 +20,7 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
     props
       .handlePromise(k8sPatch(props.resourceKind, props.resource, patch))
       .then(props.close)
-      .catch((error) => {
+      .catch(error => {
         invalidateState(false);
         throw error;
       });
@@ -33,29 +31,16 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
       <ModalTitle>{props.title}</ModalTitle>
       <ModalBody>
         <p>{props.message}</p>
-        <NumberSpinner
-          className="pf-c-form-control"
-          value={value}
-          onChange={(e: any) => setValue(e.target.value)}
-          changeValueBy={(operation) => setValue(_.toInteger(value) + operation)}
-          autoFocus
-          required
-          min={0}
-        />
+        <NumberSpinner className="pf-c-form-control" value={value} onChange={(e: any) => setValue(e.target.value)} changeValueBy={operation => setValue(_.toInteger(value) + operation)} autoFocus required min={0} />
       </ModalBody>
-      <ModalSubmitFooter
-        errorMessage={props.errorMessage}
-        inProgress={props.inProgress}
-        submitText={props.buttonText}
-        cancel={props.cancel}
-      />
+      <ModalSubmitFooter errorMessage={props.errorMessage} inProgress={props.inProgress} submitText={props.buttonText} cancel={props.cancel} />
     </form>
   );
 });
 
 export const configureCountModal = createModalLauncher(ConfigureCountModal);
 
-export const configureReplicaCountModal = (props) => {
+export const configureReplicaCountModal = props => {
   return configureCountModal(
     _.assign(
       {},
@@ -71,7 +56,7 @@ export const configureReplicaCountModal = (props) => {
   );
 };
 
-export const configureJobParallelismModal = (props) => {
+export const configureJobParallelismModal = props => {
   return configureCountModal(
     _.defaults(
       {},
