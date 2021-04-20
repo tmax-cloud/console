@@ -1,5 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { k8sPatch, K8sResourceKind, K8sKind } from '../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
@@ -8,7 +9,13 @@ import { NumberSpinner, withHandlePromise } from '../utils';
 export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModalProps) => {
   const getPath = props.path.substring(1).replace('/', '.');
   const [value, setValue] = React.useState<number>(_.get(props.resource, getPath) || props.defaultValue);
+  let { title, message, buttonText } = props;
+  const { t } = useTranslation();
 
+  if (props.resourceKind.kind === 'Deployment') {
+    // 모달 내에서 t 사용하기 위해선 여기 밖에 없음..
+    buttonText = t('COMMON:MSG_COMMON_BUTTON_COMMIT_3');
+  }
   const submit = e => {
     e.preventDefault();
 
@@ -28,12 +35,12 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
 
   return (
     <form onSubmit={submit} name="form" className="modal-content ">
-      <ModalTitle>{props.title}</ModalTitle>
+      <ModalTitle>{title}</ModalTitle>
       <ModalBody>
-        <p>{props.message}</p>
+        <p>{message}</p>
         <NumberSpinner className="pf-c-form-control" value={value} onChange={(e: any) => setValue(e.target.value)} changeValueBy={operation => setValue(_.toInteger(value) + operation)} autoFocus required min={0} />
       </ModalBody>
-      <ModalSubmitFooter errorMessage={props.errorMessage} inProgress={props.inProgress} submitText={props.buttonText} cancel={props.cancel} />
+      <ModalSubmitFooter errorMessage={props.errorMessage} inProgress={props.inProgress} submitText={buttonText} cancel={props.cancel} />
     </form>
   );
 });
