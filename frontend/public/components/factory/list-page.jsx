@@ -189,7 +189,7 @@ export const FireMan_ = connect(null, { filterList })(
         >
           {unclickableMsg ? (
             <Tooltip content={unclickableMsg}>
-              <div className={classNames('list-page__button-nonclickable')}>{createLink}</div>
+              <div className={classNames('list-page__button-unclickable')}>{createLink}</div>
             </Tooltip>
           ) : (
             <>{createLink}</>
@@ -261,9 +261,9 @@ FireMan_.propTypes = {
   title: PropTypes.string,
 };
 
-/** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any} >} */
+/** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean} >} */
 export const ListPage = withFallback(props => {
-  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages } = props;
+  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope } = props;
   let { createProps } = props;
   const { t } = useTranslation();
   const ko = kindObj(kind);
@@ -355,19 +355,20 @@ export const ListPage = withFallback(props => {
       hideLabelFilter={hideLabelFilter}
       multiNavPages={multiNavPages}
       multiNavBaseURL={multiNavBaseURL}
+      isClusterScope={isClusterScope}
     />
   );
 }, ErrorBoundaryFallback);
 
 ListPage.displayName = 'ListPage';
 
-/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: String>} */
+/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: String>, isClusterScope?: boolean} */
 export const MultiListPage = props => {
-  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL } = props;
+  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope } = props;
 
   const { t } = useTranslation();
   const isNSSelected = !props.resources?.[0]?.namespaced || namespace;
-  const unclickableMsg = !isNSSelected ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
+  const unclickableMsg = !isNSSelected && !isClusterScope ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
   const resources = _.map(props.resources, r => ({
     ...r,
     isList: r.isList !== undefined ? r.isList : true,
