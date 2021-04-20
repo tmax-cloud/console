@@ -6,7 +6,6 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { JSON_SCHEMA_GROUP_TYPES } from './const';
 import { getUiOptions, getSchemaType } from 'react-jsonschema-form/lib/utils';
 import { ExpandCollapse } from '@console/internal/components/utils';
-import { AdditionalPropertyFields } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/additional-properties';
 import { FieldSet, FormField } from './fields';
 import { useSchemaLabel } from './utils';
 
@@ -108,38 +107,38 @@ export const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({ idSchema
   );
 };
 
-export const AdditionalFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({ idSchema, items, onAddClick, required, schema, title, uiSchema }) => {
-  const [, label] = useSchemaLabel(schema, uiSchema, title ?? 'Items');
+// export const AdditionalFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({ idSchema, items, onAddClick, required, schema, title, uiSchema }) => {
+//   const [, label] = useSchemaLabel(schema, uiSchema, title ?? 'Items');
 
-  return (
-    <FieldSet defaultLabel={label} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
-      {_.map(items ?? [], item => {
-        return (
-          <div className="co-dynamic-form__array-field-group-item" key={item.key}>
-            {item.index > 0 && <hr />}
-            {item.hasRemove && (
-              <div className="row co-dynamic-form__array-field-group-remove">
-                <Button id={`${item.key}_remove-btn`} type="button" onClick={item.onDropIndexClick(item.index)} variant="link">
-                  <MinusCircleIcon className="co-icon-space-r" />
-                  Remove {label}
-                </Button>
-              </div>
-            )}
-            <AdditionalPropertyFields data={item} onChange={item.onDropIndexClick} path={`${idSchema.$id}`}>
-              {' '}
-            </AdditionalPropertyFields>
-          </div>
-        );
-      })}
-      <div className="row">
-        <Button id={`${idSchema.$id}_add-btn`} type="button" onClick={onAddClick} variant="link">
-          <PlusCircleIcon className="co-icon-space-r" />
-          Add {label}
-        </Button>
-      </div>
-    </FieldSet>
-  );
-};
+//   return (
+//     <FieldSet defaultLabel={label} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
+//       {_.map(items ?? [], item => {
+//         return (
+//           <div className="co-dynamic-form__array-field-group-item" key={item.key}>
+//             {item.index > 0 && <hr />}
+//             {item.hasRemove && (
+//               <div className="row co-dynamic-form__array-field-group-remove">
+//                 <Button id={`${item.key}_remove-btn`} type="button" onClick={item.onDropIndexClick(item.index)} variant="link">
+//                   <MinusCircleIcon className="co-icon-space-r" />
+//                   Remove {label}
+//                 </Button>
+//               </div>
+//             )}
+//             <AdditionalPropertyFields data={item} onChange={item.onDropIndexClick} path={`${idSchema.$id}`}>
+//               {' '}
+//             </AdditionalPropertyFields>
+//           </div>
+//         );
+//       })}
+//       <div className="row">
+//         <Button id={`${idSchema.$id}_add-btn`} type="button" onClick={onAddClick} variant="link">
+//           <PlusCircleIcon className="co-icon-space-r" />
+//           Add {label}
+//         </Button>
+//       </div>
+//     </FieldSet>
+//   );
+// };
 
 export const ErrorTemplate: React.FC<{ errors: string[] }> = ({ errors }) => (
   <Alert isInline className="co-alert co-break-word co-alert--scrollable" variant="danger" title="Error">
