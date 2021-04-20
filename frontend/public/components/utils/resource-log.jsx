@@ -15,6 +15,7 @@ import * as screenfull from 'screenfull';
 import { k8sGet, k8sList } from '@console/internal/module/k8s';
 import { ConsoleExternalLogLinkModel, ProjectModel } from '@console/internal/models';
 import { connectToFlags } from '../../reducers/features';
+import { useTranslation } from 'react-i18next';
 
 export const STREAM_EOF = 'eof';
 export const STREAM_LOADING = 'loading';
@@ -25,14 +26,6 @@ export const LOG_SOURCE_RESTARTING = 'restarting';
 export const LOG_SOURCE_RUNNING = 'running';
 export const LOG_SOURCE_TERMINATED = 'terminated';
 export const LOG_SOURCE_WAITING = 'waiting';
-
-// Messages to display for corresponding log status
-const streamStatusMessages = {
-  [STREAM_EOF]: 'Log stream ended.',
-  [STREAM_LOADING]: 'Loading log...',
-  [STREAM_PAUSED]: 'Log stream paused.',
-  [STREAM_ACTIVE]: 'Log streaming...',
-};
 
 const replaceVariables = (template, values) => {
   return _.reduce(
@@ -60,6 +53,17 @@ export const LogControls = ({
   podLogLinks,
   namespaceUID,
 }) => {
+
+  const { t } = useTranslation();
+  // Messages to display for corresponding log status
+  const streamStatusMessages = {
+    [STREAM_EOF]: t('COMMON:MSG_DETAILS_TABLOGS_9'),
+    [STREAM_LOADING]: t('COMMON:MSG_DETAILS_TABLOGS_7'),
+    [STREAM_PAUSED]: t('COMMON:MSG_DETAILS_TABLOGS_10'),
+    [STREAM_ACTIVE]: t('COMMON:MSG_DETAILS_TABLOGS_11'),
+  };
+
+  // MJ : 'Collapse' 스트링 나오면 적용하기
   return (
     <div className="co-toolbar">
       <div className="co-toolbar__group co-toolbar__group--left">
@@ -113,7 +117,7 @@ export const LogControls = ({
           })}
         <Button variant="link" isInline onClick={onDownload}>
           <DownloadIcon className="co-icon-space-r" />
-          Download
+          {t('COMMON:MSG_DETAILS_TABLOGS_1')}
         </Button>
         {screenfull.enabled && (
           <>
@@ -129,7 +133,7 @@ export const LogControls = ({
               ) : (
                 <>
                   <ExpandIcon className="co-icon-space-r" />
-                  Expand
+                  {t('COMMON:MSG_DETAILS_TABLOGS_2')}
                 </>
               )}
             </Button>

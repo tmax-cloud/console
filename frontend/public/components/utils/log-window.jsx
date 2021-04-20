@@ -5,13 +5,14 @@ import { pluralize } from './';
 import { STREAM_EOF, STREAM_PAUSED, STREAM_ACTIVE } from './resource-log';
 import { OutlinedPlayCircleIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
+import { withTranslation } from 'react-i18next';
 
 // Subtracted from log window height to prevent scroll bar from appearing when resume button is shown.
 // Added fullscreen fudge factor to account for fullscreen taking log contents outside of .co-m-pane__body div
 const FUDGE_FACTOR = 105;
 const FULLSCREEN_FUDGE_FACTOR = 57;
 
-export class LogWindow extends React.PureComponent {
+class LogWindow_ extends React.PureComponent {
   constructor(props) {
     super(props);
     this._unpause = this._unpause.bind(this);
@@ -113,7 +114,7 @@ export class LogWindow extends React.PureComponent {
   }
 
   render() {
-    const { bufferFull, lines, linesBehind, status } = this.props;
+    const { bufferFull, lines, linesBehind, status, t  } = this.props;
     const { content, height } = this.state;
 
     // TODO maybe move these variables into state so they are only updated on changes
@@ -122,6 +123,8 @@ export class LogWindow extends React.PureComponent {
     const headerText = bufferFull ? `last ${totalLineCount}` : totalLineCount;
     const resumeText =
       linesBehind > 0 ? ` Resume stream and show ${linesBehindCount}` : ' Resume stream';
+
+      // MJ : String 발행되면 이 부분 i18n 적용하기
 
     return (
       <div className="log-window">
@@ -143,6 +146,8 @@ export class LogWindow extends React.PureComponent {
     );
   }
 }
+
+export const LogWindow = withTranslation()(LogWindow_);
 
 LogWindow.propTypes = {
   bufferFull: PropTypes.bool.isRequired,

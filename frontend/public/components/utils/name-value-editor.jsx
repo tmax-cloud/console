@@ -267,6 +267,8 @@ export const EnvFromEditor = withDragDropContext(
         secondTitle,
         addButtonDisabled,
         addButtonLabel,
+        nameString,
+        valueString,
       } = this.props;
       const pairElems = nameValuePairs.map((pair, i) => {
         const key = _.get(pair, [EnvFromPair.Index], i);
@@ -275,8 +277,8 @@ export const EnvFromEditor = withDragDropContext(
           <EnvFromPairElement
             onChange={this._change}
             index={i}
-            nameString="config map/secret"
-            valueString=""
+            nameString={nameString}
+            valueString={valueString}
             readOnly={readOnly}
             pair={pair}
             key={key}
@@ -338,12 +340,16 @@ EnvFromEditor.propTypes = {
   firstTitle: PropTypes.string,
   secondTitle: PropTypes.string,
   addButtonDisabled: PropTypes.bool,
+  nameString: PropTypes.string,
+  valueString: PropTypes.string,
 };
 EnvFromEditor.defaultProps = {
   readOnly: false,
   nameValueId: 0,
   firstTitle: 'Config map/secret',
   secondTitle: 'Prefix (Optional)',
+  nameString: 'config map/secret',
+  valueString: '',
   addButtonDisabled: false,
   addButtonLabel: 'Add All From Config Map or Secret',
 };
