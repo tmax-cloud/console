@@ -462,7 +462,7 @@ class EnvironmentPage_ extends PromiseComponent {
               )}
             </h3>
           )}
-          <NameValueEditorComponent nameValueId={containerIndex} nameValuePairs={envVar[EnvType.ENV]} updateParentData={this.updateEnvVars} addString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_11')} addSecondString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_12')} nameString="Name" readOnly={readOnly} allowSorting={true} configMaps={configMaps} secrets={secrets} addConfigMapSecret={addConfigMapSecret} />
+          <NameValueEditorComponent nameValueId={containerIndex} nameValuePairs={envVar[EnvType.ENV]} updateParentData={this.updateEnvVars} addString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_11')} addSecondString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_12')} nameString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_5')} valueString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_6')} readOnly={readOnly} allowSorting={true} configMaps={configMaps} secrets={secrets} addConfigMapSecret={addConfigMapSecret} />
         </div>
         {currentEnvVars.isContainerArray && (
           <div className="co-m-pane__body-group environment-buttons">
@@ -476,7 +476,7 @@ class EnvironmentPage_ extends PromiseComponent {
                 </FieldLevelHelp>
               )}
             </h3>
-            <EnvFromEditorComponent nameValueId={containerIndex} nameValuePairs={envVar[EnvType.ENV_FROM]} updateParentData={this.updateEnvVars} readOnly={readOnly} configMaps={configMaps} secrets={secrets} addButtonLabel={t('COMMON:MSG_DETAILS_TABENVIRONMENT_13')} />
+            <EnvFromEditorComponent firstTitle={t('COMMON:MSG_DETAILS_TABENVIRONMENT_8')} secondTitle={t('COMMON:MSG_DETAILS_TABENVIRONMENT_9')} nameValueId={containerIndex} nameValuePairs={envVar[EnvType.ENV_FROM]} updateParentData={this.updateEnvVars} readOnly={readOnly} configMaps={configMaps} secrets={secrets} addButtonLabel={t('COMMON:MSG_DETAILS_TABENVIRONMENT_13')} nameString={t('COMMON:MSG_DETAILS_TABENVIRONMENT_8')} />
           </div>
         )}
       </>
