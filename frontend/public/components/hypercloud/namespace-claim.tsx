@@ -83,7 +83,39 @@ export const NamespaceClaimsList: React.FC = props => {
 };
 NamespaceClaimsList.displayName = 'NamespaceClaimsList';
 
-export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} />;
+const registryStatusReducer = (nsc: any): string => {
+  return nsc?.status?.status;
+};
+
+const filters = t => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'namespace-claim-status',
+    reducer: registryStatusReducer,
+    items: [
+      { id: 'Awaiting', title: 'Awaiting' },
+      { id: 'Approved', title: 'Approved' },
+      { id: 'Rejected', title: 'Rejected' },
+      { id: 'Namespace Deleted', title: 'Namespace Deleted' },
+      { id: 'Error', title: 'Error' },
+    ],
+  },
+];
+
+export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'namespaces',
+      name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1'),
+    },
+    {
+      href: 'namespaceclaims',
+      name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
+    },
+  ];
+  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} multiNavPages={pages} rowFilters={filters.bind(null, t)()} />;
+};
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: namespaceclaims }) => {
   const { t } = useTranslation();

@@ -13,7 +13,8 @@ import { NavSection } from '../../nav/section';
 const searchStartsWith = ['search'];
 const rolesStartsWith = ['roles', 'clusterroles'];
 const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
-const quotaStartsWith = ['resourcequotas', 'clusterresourcequotas'];
+const quotaStartsWith = ['resourcequotas', 'clusterresourcequotas', 'resourcequotaclaims'];
+const namespaceStartsWith = ['namespaces', 'namespaceclaims'];
 
 const MasterNav = () => (
   <Translation>
@@ -21,6 +22,7 @@ const MasterNav = () => (
       <>
         <NavSection title={t('COMMON:MSG_LNB_MENU_1')}>
           <HrefLink href="/dashboards" activePath="/dashboards/" name={t('COMMON:MSG_LNB_MENU_90')} />
+          <ResourceClusterLink resource="namespaces" name={t('COMMON:MSG_LNB_MENU_3')} startsWith={namespaceStartsWith} />
           <HrefLink href="/search" name={t('COMMON:MSG_LNB_MENU_4')} startsWith={searchStartsWith} />
           <ResourceNSLink resource="audits" name={t('COMMON:MSG_LNB_MENU_5')} />
           <ResourceNSLink resource="events" name={t('COMMON:MSG_LNB_MENU_6')} />
@@ -112,11 +114,8 @@ const MasterNav = () => (
           <ResourceNSLink resource="imagereplicates" name={t('COMMON:MSG_LNB_MENU_93')} />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_79')}>
-          <ResourceClusterLink resource="namespaces" name={t('COMMON:MSG_LNB_MENU_3')} />
-          <ResourceClusterLink resource="namespaceclaims" name={t('COMMON:MSG_LNB_MENU_103')} />
           <ResourceNSLink resource="limitranges" name={t('COMMON:MSG_LNB_MENU_81')} />
           <ResourceNSLink resource="resourcequotas" name={t('COMMON:MSG_LNB_MENU_80')} startsWith={quotaStartsWith} />
-          <ResourceNSLink resource="resourcequotaclaims" name={t('COMMON:MSG_LNB_MENU_102')} startsWith={quotaStartsWith} />
           <ResourceClusterLink resource="customresourcedefinitions" name={t('COMMON:MSG_LNB_MENU_82')} />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_72')}>

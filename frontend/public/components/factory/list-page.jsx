@@ -17,6 +17,7 @@ import { FilterToolbar } from '../filter-toolbar';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import './list-page.scss';
+import { NavBar } from '../utils/horizontal-nav';
 
 /** @type {React.SFC<{disabled?: boolean, label?: string, onChange: (value: string) => void;, defaultValue?: string, value?: string, placeholder?: string, autoFocus?: boolean, onFocus?:any, name?:string, id?: string, onKeyDown?: any, parentClassName?: string }}>} */
 export const TextFilter = props => {
@@ -70,7 +71,7 @@ ListPageWrapper_.propTypes = {
   hideLabelFilter: PropTypes.bool,
 };
 
-/** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode unclickableMsg?: String}>*/
+/** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode, unclickableMsg?: String, multiNavBaseURL?: String}>*/
 export const FireMan_ = connect(null, { filterList })(
   class ConnectedFireMan extends React.PureComponent {
     constructor(props) {
@@ -141,7 +142,7 @@ export const FireMan_ = connect(null, { filterList })(
     };
 
     render() {
-      const { canCreate, createAccessReview, createButtonText, createProps = {}, helpText, resources, badge, title, unclickableMsg } = this.props;
+      const { canCreate, createAccessReview, createButtonText, createProps = {}, helpText, resources, badge, title, unclickableMsg, multiNavPages, baseURL, basePath } = this.props;
 
       let createLink;
       if (canCreate) {
@@ -180,27 +181,37 @@ export const FireMan_ = connect(null, { filterList })(
         // }
       }
 
+      const buttonComponent = createLink && (
+        <div
+          className={classNames('co-m-pane__createLink', {
+            'co-m-pane__createLink--no-title': !title,
+          })}
+        >
+          {unclickableMsg ? (
+            <Tooltip content={unclickableMsg}>
+              <div className={classNames('list-page__button-nonclickable')}>{createLink}</div>
+            </Tooltip>
+          ) : (
+            <>{createLink}</>
+          )}
+        </div>
+      );
+
       return (
         <>
           {/* Badge rendered from PageHeading only when title is present */}
+
           <PageHeading title={title} badge={title ? badge : null} className={classNames({ 'co-m-nav-title--row': createLink })}>
-            {createLink && (
-              <div
-                className={classNames('co-m-pane__createLink', {
-                  'co-m-pane__createLink--no-title': !title,
-                })}
-              >
-                {unclickableMsg ? (
-                  <Tooltip content={unclickableMsg}>
-                    <div className={classNames('list-page__button-nonclickable')}>{createLink}</div>
-                  </Tooltip>
-                ) : (
-                  <>{createLink}</>
-                )}
-              </div>
-            )}
+            {multiNavPages ? undefined : buttonComponent}
             {!title && badge && <div>{badge}</div>}
           </PageHeading>
+
+          {multiNavPages && (
+            <div style={{ borderTop: '1px solid #ccc', paddingBottom: '10px' }}>
+              <NavBar pages={multiNavPages} baseURL={baseURL} basePath={baseURL} />
+            </div>
+          )}
+          {multiNavPages && <div style={{ paddingLeft: '30px', paddingBottom: '10px', width: 'fit-content' }}>{buttonComponent}</div>}
           {helpText && <p className="co-m-pane__help-text co-help-text">{helpText}</p>}
           <div className="co-m-pane__body co-m-pane__body--no-top-margin">
             {inject(this.props.children, {
@@ -250,9 +261,9 @@ FireMan_.propTypes = {
   title: PropTypes.string,
 };
 
-/** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any} >} */
+/** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any} >} */
 export const ListPage = withFallback(props => {
-  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle } = props;
+  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages } = props;
   let { createProps } = props;
   const { t } = useTranslation();
   const ko = kindObj(kind);
@@ -268,6 +279,26 @@ export const ListPage = withFallback(props => {
     try {
       const ref = referenceForModel(ko);
       href = namespaced ? `/k8s/ns/${usedNamespace || 'default'}/customresourcedefinitions/${ref}/~new` : `/k8s/cluster/customresourcedefinitions/${ref}/~new`;
+    } catch (unused) {
+      /**/
+    }
+  }
+
+  let multiNavBaseURL;
+  if (namespaced) {
+    if (usedNamespace) {
+      multiNavBaseURL = `/k8s/ns/${usedNamespace}`;
+    } else {
+      multiNavBaseURL = `/k8s/all-namespaces`;
+    }
+  } else {
+    multiNavBaseURL = `/k8s/cluster`;
+  }
+
+  if (ko.crd) {
+    try {
+      const ref = referenceForModel(ko);
+      multiNavBaseURL = `${multiNavBaseURL}/customresourcedefinitions`;
     } catch (unused) {
       /**/
     }
@@ -322,15 +353,17 @@ export const ListPage = withFallback(props => {
       badge={badge}
       hideToolbar={hideToolbar}
       hideLabelFilter={hideLabelFilter}
+      multiNavPages={multiNavPages}
+      multiNavBaseURL={multiNavBaseURL}
     />
   );
 }, ErrorBoundaryFallback);
 
 ListPage.displayName = 'ListPage';
 
-/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any>} */
+/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: String>} */
 export const MultiListPage = props => {
-  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter } = props;
+  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL } = props;
 
   const { t } = useTranslation();
   const isNSSelected = !props.resources?.[0]?.namespaced || namespace;
@@ -343,7 +376,7 @@ export const MultiListPage = props => {
   }));
 
   return (
-    <FireMan_ autoFocus={autoFocus} canCreate={canCreate} createAccessReview={createAccessReview} createButtonText={createButtonText || 'Create'} createProps={createProps} filterLabel={filterLabel || 'by name'} helpText={helpText} resources={mock ? [] : resources} selectorFilterLabel="Filter by selector (app=nginx) ..." textFilter={textFilter} title={showTitle ? title : undefined} badge={badge} unclickableMsg={unclickableMsg}>
+    <FireMan_ autoFocus={autoFocus} canCreate={canCreate} createAccessReview={createAccessReview} createButtonText={createButtonText || 'Create'} createProps={createProps} filterLabel={filterLabel || 'by name'} helpText={helpText} resources={mock ? [] : resources} selectorFilterLabel="Filter by selector (app=nginx) ..." textFilter={textFilter} title={showTitle ? title : undefined} badge={badge} unclickableMsg={unclickableMsg} multiNavPages={multiNavPages} baseURL={multiNavBaseURL}>
       <Firehose resources={mock ? [] : resources}>
         <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} />
       </Firehose>

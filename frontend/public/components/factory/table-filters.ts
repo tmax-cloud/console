@@ -61,6 +61,17 @@ export const tableFilters: TableFilterMap = {
 
   'catalog-source-name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.name),
 
+  'namespace-claim-status': (results, nameSpaceClaim) => {
+    if(!results || !results.selected || !results.selected.size) {
+      return true;
+    }
+    const result = nameSpaceClaim?.status?.status;
+    const a = results.selected.has(result);
+    const b = !_.includes(results.all, result);
+    return a||b;
+    // return results.selected.has(result) || !_.includes(results.all, result);
+
+  },
   'alert-list-text': (filter, alert) => {
     if (fuzzyCaseInsensitive(filter, alert.labels?.alertname)) {
       return true;
@@ -301,6 +312,8 @@ export const tableFilters: TableFilterMap = {
     const status = getClusterOperatorStatus(operator);
     return statuses.selected.has(status) || !_.includes(statuses.all, status);
   },
+
+
 
   'template-instance-status': (statuses, instance) => {
     if (!statuses || !statuses.selected || !statuses.selected.size) {
