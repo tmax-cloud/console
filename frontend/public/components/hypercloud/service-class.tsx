@@ -26,7 +26,7 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_16')}</dt>
-              <dd>{serviceClass.spec.bindable ? 'True' : 'False'}</dd>
+              <dd>{serviceClass.spec.bindable ? t('COMMON:MSG_MAIN_TABLECONTENTS_1') : t('COMMON:MSG_MAIN_TABLECONTENTS_2')}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
               <dd>{serviceClass.spec.serviceBrokerName}</dd>
               <dt>ID</dt>
@@ -64,7 +64,7 @@ const ServiceClassTableRow = ({ obj, index, key, style }) => {
       <TableData className={classNames(tableColumnClasses[1])}>
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{obj.spec.bindable ? 'True' : 'False'}</TableData>
+      <TableData className={tableColumnClasses[2]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
       <TableData className={tableColumnClasses[3]}>
         <ResourceLink kind="ServiceBroker" name={obj.spec.serviceBrokerName} namespace={obj.metadata.namespace} title={obj.spec.serviceBrokerName} />
       </TableData>
