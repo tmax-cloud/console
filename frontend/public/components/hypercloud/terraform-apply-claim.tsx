@@ -15,7 +15,7 @@ import { Dropdown } from '../utils';
 
 // import './IR.scss';
 import './terraform-apply-claim.scss';
-// import { MultiStreamLogs } from './test-PipelineRunDetailsPage';
+// import { SimpleLogs } from './test-PipelineRunDetailsPage';
 
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
@@ -163,7 +163,7 @@ type TFLogsProps = {
   obj: any;
 };
 
-const MultiStreamLogs = ({ children }) => {
+const SimpleLogs = ({ children }) => {
   let content;
   const { t } = useTranslation();
   if (children) {
@@ -187,9 +187,9 @@ const TFApplyLogs: React.FC<TFLogsProps> = props => {
     <>
       <div className="tfac-logs__extra-space">{props.obj.status.commit}</div>
       <div className="tfac-logs__rawlogs">
-        <MultiStreamLogs>
+        <SimpleLogs>
           <div>{props.obj.status.apply}</div>
-        </MultiStreamLogs>
+        </SimpleLogs>
       </div>
     </>
   );
@@ -214,7 +214,7 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
     <>
       <div className="tfac-logs__extra-space">{items && <Dropdown items={items} onChange={__setSelectedItem} selectedKey={selectedItem} />}</div>
       <div className="tfac-logs__rawlogs">
-        <MultiStreamLogs key={selectedItem}>{props.obj.status?.plans?.[selectedItem]?.log}</MultiStreamLogs>
+        <SimpleLogs key={selectedItem}>{props.obj.status?.plans?.[selectedItem]?.log}</SimpleLogs>
       </div>
     </>
   );
@@ -225,9 +225,9 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__extra-space"></div>
       <div className="tfac-logs__rawlogs">
-        <MultiStreamLogs>
+        <SimpleLogs>
           <div>{obj.status.destroy}</div>
-        </MultiStreamLogs>
+        </SimpleLogs>
       </div>
     </>
   );
@@ -239,9 +239,9 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__extra-space"></div>
       <div className="tfac-logs__status">
-        <MultiStreamLogs>
+        <SimpleLogs>
           <div>{obj.status.state}</div>
-        </MultiStreamLogs>
+        </SimpleLogs>
         <div className="tfac-logs__status__spec">
           <div className="tfac-logs__status__spec__title">{t('변경 상태 내역')}</div>
           <div className="tfac-logs__status__spec__num">
