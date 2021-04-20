@@ -184,7 +184,7 @@
             "type": "array"
           }
         },
-        "required": ["verbs"],
+        "required": ["apiGroups", "resources", "verbs"],
         "type": ["object", "null"]
       },
       "type": ["array", "null"]
