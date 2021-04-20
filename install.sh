@@ -19,7 +19,7 @@ KUBEFLOW="0.0.0.0"
 if [ -z $1 ]; then 
 CONSOLE_VER=${VER}
 else 
-CONSOLE_VER=${1}    # CONSOLE_VER="5.1.x.x"
+CONSOLE_VER=${1}   
 fi 
 echo ${CONSOLE_VER}
 # Necessary to auth 
