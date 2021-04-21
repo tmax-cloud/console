@@ -24,7 +24,7 @@ const MemberTableRows = (members): ITableRow[] => {
   const data = [];
   _.forEach(members, (member) => {
     data.push({
-      cells: [member.Attribute === 'user' ? member.MemberName : <><UsersIcon className='hc-member__group-icon' />{member.MemberName}</>, member.MemberId, member.Role],
+      cells: [member.Attribute === 'user' ? member.MemberName : <><UsersIcon className='hc-member__group-icon' />{member.MemberName}</>, member.MemberId, member.Status==='pending'? `${member.Role}(수락 대기)`: member.Role],
       obj: member
     });
   });
@@ -99,7 +99,7 @@ export const UsersTable = (props) => {
   };
 
   const actionResolver = (t: TFunction, rowData, { rowIndex }) => {
-    if (rowData.obj.Status === 'owner') {
+    if (rowData.obj.Status === 'owner' || rowData.obj.Status === 'pending') {
       return null;
     }
 
@@ -210,7 +210,7 @@ export const MembersPage = (props) => {
         <TextInput className='hc-members__search' value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'MemberId' ? t('search by email') : t('search by name')}></TextInput>
         {isOwner &&
           <div className="co-m-primary-action">
-            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ clusterName: props.clusterName, modalClassName: 'modal-lg', existMembers: members })}>
+            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ namespace: props.namespace, clusterName: props.clusterName, modalClassName: 'modal-lg', existMembers: members })}>
               {t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_1')}
             </Button>
           </div>}
