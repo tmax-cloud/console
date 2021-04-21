@@ -143,7 +143,7 @@ const TFApplyClaimDetails: React.FC<TFApplyClaimDetailsProps> = ({ obj: tfapplyc
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 TFApplyClaimTableHeader.displayName = 'TfApplyClaimTableHeader';
 
@@ -282,7 +282,7 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
         name: '상태',
         component: TFStatusLogs,
       },
-      editYaml(),
+      editResource(),
     ]}
   />
 );
