@@ -44,7 +44,7 @@ const Dropdown_ = (props) => {
     disabled,
     required,
     methods,
-    defaultValue
+    defaultValue,
   } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
