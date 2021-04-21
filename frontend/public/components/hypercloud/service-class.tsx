@@ -25,7 +25,7 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_16')}</dt>
+              <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_83')}</dt>
               <dd>{serviceClass.spec.bindable ? t('COMMON:MSG_MAIN_TABLECONTENTS_1') : t('COMMON:MSG_MAIN_TABLECONTENTS_2')}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
               <dd>{serviceClass.spec.serviceBrokerName}</dd>
@@ -90,7 +90,7 @@ const ServiceClassTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_5'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_83'),
       sortField: 'spec.bindable',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
