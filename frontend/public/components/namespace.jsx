@@ -156,12 +156,23 @@ export const NamespacesPage = props => {
   //     // `/k8s/ns/${props.namespace || 'default'}/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   //     `/k8s/cluster/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   // };
+  const pages = [
+    {
+      href: 'namespaces',
+      name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1'),
+    },
+    {
+      href: 'namespaceclaims',
+      name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
+    },
+  ];
   return (
     <ListPage
       {...props}
       title={t('COMMON:MSG_LNB_MENU_3')}
       ListComponent={NamespacesList}
       canCreate={true}
+      multiNavPages={pages}
       // createProps={createProps}
       // createHandler={() => createNamespaceModal({ blocking: true })}
     />

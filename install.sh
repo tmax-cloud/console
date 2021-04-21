@@ -12,6 +12,8 @@ deploy_temp="$temp_Dir/5.deploy.yaml"
 # KIBANA="opendistro-kibana.efk.svc.cluster.local:5601"
 KIBANA="kibana.kube-logging.svc.cluster.local:5601"
 KUBEFLOW="0.0.0.0"
+GITLAB="gitlab-test-deploy.ck1-2.192.168.6.151.nip.io"
+OPERATOR_VER="5.1.0.1"
 
 # GET ENV 
 # image version 
@@ -54,7 +56,7 @@ echo "kibana Addr = ${KIBANA} <- default"
 rm -rf $temp_Dir
 cp -r $file_Dir $temp_Dir
 
-# sed -i "s%@@OPERATOR_VER@@%${OPERATOR_VER}%g" ${deploy_temp}
+sed -i "s%@@OPERATOR_VER@@%${OPERATOR_VER}%g" ${deploy_temp}
 sed -i "s%@@CONSOLE_VER@@%${CONSOLE_VER}%g" ${deploy_temp}
 
 sed -i "s%@@CLIENTID@@%${CLIENTID}%g" ${deploy_temp}
@@ -66,6 +68,7 @@ sed -i "s%@@MC_MODE@@%${MC_MODE}%g" ${deploy_temp}
 sed -i "s%@@KIALI@@%${KIALI}%g" ${deploy_temp}
 sed -i "s%@@KIBANA@@%${KIBANA}%g" ${deploy_temp}
 sed -i "s%@@KUBEFLOW@@%${KUBEFLOW}%g" ${deploy_temp}
+sed -i "s%@@GITLAB@@%${GITLAB}%g" ${deploy_temp}
 
 echo "==============================================================="
 echo "STEP 2. Install console"

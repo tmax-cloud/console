@@ -24,7 +24,7 @@ pipeline {
     DOCKER_REGISTRY="tmaxcloudck"
     PRODUCT = "hypercloud-console"
     MAJOR_VER="5"
-    MINOR_VER="1"
+    MINOR_VER="0"
     PATCH_VER="0"
     HOTFIX_VER="0"
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
@@ -105,7 +105,7 @@ pipeline {
           sh """
           git tag ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
-          git tag --list "5.1.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
+          git tag --list "5.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
         }
       }
@@ -136,6 +136,7 @@ pipeline {
       steps {
         container('kubectl') {
           withKubeConfig([credentialsId: "${DEPLOY}"]) {
+          //   sh "export VER=${VER}"
           sh "echo ${VER}"
           sh "./install.sh ${VER}"
           }
@@ -178,7 +179,7 @@ pipeline {
             date '+%F  %r' >> ./CHANGELOG/CHANGELOG-${VER}.md
             git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
             --pretty=format:\"- %s (%cn) %n    Message: %b\" \
-            --simplify-merges ${PRE_VER}..${VER} \
+            --simplify-merges 5.1.0.0..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
         }
@@ -205,7 +206,8 @@ pipeline {
           to: 'cqa1@tmax.co.kr, ck1@tmax.co.kr, ck2@tmax.co.kr',
           subject: "[${PRODUCT}] Release Update - ${PRODUCT}:${VER}", 
           attachmentsPattern: "**/CHANGELOG/CHANGELOG-${VER}.md",
-          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
+          body: "안녕하세요. \n\n${PRODUCT} Release Update 입니다. \n\n [필독] 타 모듈과의 버전을 맞추기위해 기존 5.1에서 5.0으로 변경했습니다. (PATCH, HOTFIX 는 기존 번호 유지)" + 
+          "\n\n 이번 패치노트에 5.1.x.x의 패치 이력까지 포함하여 CHANGELOG.md에 포함하였습니다. \n\n변경사항 파일로 첨부합니다. \n\n감사합니다.\n\n" +
                 "※ 이미지 : ${DOCKER_REGISTRY}/${PRODUCT}:${VER} \n\n※ 설치 가이드 : ${GUIDE_URL} ",
           mimeType: 'text/plain'  
         )

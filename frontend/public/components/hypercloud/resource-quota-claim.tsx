@@ -81,7 +81,20 @@ export const ResourceQuotaClaimsList: React.FC = props => {
 };
 ResourceQuotaClaimsList.displayName = 'ResourceQuotaClaimsList';
 
-export const ResourceQuotaClaimsPage: React.FC<ResourceQuotaClaimsPageProps> = props => <ListPage kind={'ResourceQuotaClaim'} canCreate={true} ListComponent={ResourceQuotaClaimsList} {...props} />;
+export const ResourceQuotaClaimsPage: React.FC<ResourceQuotaClaimsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'resourcequotas',
+      name: t('COMMON:MSG_LNB_MENU_80'),
+    },
+    {
+      href: 'resourcequotaclaims',
+      name: t('COMMON:MSG_LNB_MENU_102'),
+    },
+  ];
+  return <ListPage kind={'ResourceQuotaClaim'} canCreate={true} ListComponent={ResourceQuotaClaimsList} {...props} multiNavPages={pages} />;
+};
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ obj: resourcequotaclaims }) => {
   const { t } = useTranslation();

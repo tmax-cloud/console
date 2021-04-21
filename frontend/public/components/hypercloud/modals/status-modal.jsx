@@ -59,7 +59,7 @@ class BaseStatusModal extends PromiseComponent {
         break;
       }
       case CatalogServiceClaimModel.kind: {
-        const stat = this.state.status === 'Approved' ? 'Approve' : 'Reject';
+        const stat = this.state.status === 'Approved' ? 'Approved' : 'Rejected';
         const promise = k8sUpdateApproval(kind, resource, 'status', [{ op: 'replace', path: '/status/status', value: stat }], 'PATCH');
         this.handlePromise(promise).then(this.successSubmit);
         break;

@@ -25,10 +25,8 @@ const ClusterServiceClassDetails: React.FC<ClusterServiceClassDetailsProps> = ({
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_16')}</dt>
-              <dd>{clusterServiceClass.spec.bindable ? 'True' : 'False'}</dd>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_17')}</dt>
-              <dd>{clusterServiceClass.spec.externalName}</dd>
+              <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_83')}</dt>
+              <dd>{clusterServiceClass.spec.bindable ? t('COMMON:MSG_MAIN_TABLECONTENTS_1') : t('COMMON:MSG_MAIN_TABLECONTENTS_2')}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
               <dd>
                 <ResourceLink kind="ClusterServiceBroker" name={clusterServiceClass.spec.clusterServiceBrokerName} title={clusterServiceClass.spec.clusterServiceBrokerName} />
@@ -59,6 +57,7 @@ const ClusterServicePlanTab: React.FC<ClusterServicePlansTabProps> = ({ obj }) =
 
 const { details, editResource } = navFactory;
 const ClusterServiceClassesDetailsPage: React.FC<ClusterServiceClassesDetailsPageProps> = props => {
+  const { t } = useTranslation();
   return (
     <DetailsPage
       {...props}
@@ -68,7 +67,7 @@ const ClusterServiceClassesDetailsPage: React.FC<ClusterServiceClassesDetailsPag
         editResource(),
         {
           href: 'clusterserviceplan',
-          name: 'Cluster Service Plan',
+          name: t('COMMON:MSG_DETAILS_TAB_4'),
           component: ClusterServicePlanTab,
         },
       ]}
@@ -80,7 +79,6 @@ ClusterServiceClassesDetailsPage.displayName = 'ClusterServiceClassesDetailsPage
 const tableColumnClasses = [
   '', // NAME
   classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // BINDABLE
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // EXTERNAL NAME
   classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // CLUSTER SERVICE BROKER
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
 ];
@@ -91,12 +89,11 @@ const ClusterServiceClassTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={obj.metadata.name} title={obj.metadata.name} />
       </TableData>
-      <TableData className={tableColumnClasses[1]}>{obj.spec.bindable ? 'True' : 'False'}</TableData>
-      <TableData className={tableColumnClasses[2]}>{obj.spec.externalName}</TableData>
-      <TableData className={tableColumnClasses[3]}>
+      <TableData className={tableColumnClasses[1]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
+      <TableData className={tableColumnClasses[2]}>
         <ResourceLink kind="ClusterServiceBroker" name={obj.spec.clusterServiceBrokerName} title={obj.spec.clusterServiceBrokerName} />
       </TableData>
-      <TableData className={tableColumnClasses[4]}>
+      <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
     </TableRow>
@@ -112,28 +109,22 @@ const ClusterServiceClassTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_5'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_83'),
       sortField: 'spec.bindable',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_6'),
-      sortField: 'spec.externalName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
       title: t('COMMON:MSG_LNB_MENU_14'),
       sortField: 'spec.clusterServiceBrokerName',
       transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
+      props: { className: tableColumnClasses[3] },
     },
   ];
 };
