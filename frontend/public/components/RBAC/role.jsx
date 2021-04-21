@@ -282,6 +282,7 @@ export const RolesPage = ({ namespace, mock, showTitle }) => {
         },
       ]}
       title={t('COMMON:MSG_LNB_MENU_75')}
+      isClusterScope
     />
   );
 };
