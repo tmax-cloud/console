@@ -44,7 +44,7 @@ class BaseStatusModal extends PromiseComponent {
       case RoleBindingClaimModel.kind:
       case ResourceQuotaClaimModel.kind:
       case NamespaceClaimModel.kind: {
-        const stat = this.state.status === 'Approved' ? 'Success' : 'Reject';
+        const stat = this.state.status === 'Approved' ? 'Approved' : 'Rejected';
         const promise = k8sUpdateApproval(
           kind,
           resource,
