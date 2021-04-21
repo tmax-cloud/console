@@ -18,7 +18,7 @@ import { CheckboxGroup } from '../../utils/checkbox';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 //import { useTranslation } from 'react-i18next';
 
-const resources = [
+const kindItems = [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
     title: '네임스페이스 롤 (Role)',
@@ -32,7 +32,7 @@ const resources = [
   },
 ];
 
-let apiGroups = {};
+let apiGroupList = {};
 const coreResources = {
   '*': 'All', pods: 'pods', configmaps: 'configmaps', secrets: 'secrets', replicationcontrollers: 'replicationcontrollers', services: 'services', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', namespaces: 'namespaces', limitranges: 'limitranges', resourcequotas: 'resourcequotas', nodes: 'nodes', serviceaccounts: 'serviceaccounts'
 };
@@ -47,13 +47,13 @@ const roleFormFactory = params => {
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
 };
 const RuleItem = (props) => {
-  const { id, name, index, onDeleteClick } = props;
+  const { item, name, index, onDeleteClick } = props;
 
   const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ '*': 'All' });
   const { control } = useFormContext();
   const apiGroup = useWatch({
     control: control,
-    name: `${name}[${index}].apiGroups`,
+    name: `${name}[${index}].apiGroup`,
     defaultValue: '*',
   });
 
@@ -64,7 +64,7 @@ const RuleItem = (props) => {
     else if (apiGroup === 'Core') {
       setResourceList(coreResources);
     } else {
-      coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroups[apiGroup]}`).then(
+      coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroup]}`).then(
         data => {
           let newResourceList = { '*': 'All' };
           data.resources.forEach(resource => newResourceList[resource.name] = resource.name);
@@ -80,18 +80,18 @@ const RuleItem = (props) => {
   return (
     <>
       {index === 0 ? null : <div className='co-form-section__separator' />}
-      <div className="row" key={id}>
+      <div className="row" key={item.id}>
         <div className="col-xs-4 pairs-list__value-field">
           <Section label='API Group' id={`apigroup[${index}]`} isRequired={true}>
             <Dropdown
-              name={`${name}[${index}].apiGroups`}
-              items={apiGroups}
+              name={`${name}[${index}].apiGroup`}
+              items={apiGroupList}
               defaultValue={apiGroup}
             />
           </Section>
           <Section label='Resource' id={`resource[${index}]`} isRequired={true}>
             <Dropdown
-              name={`${name}[${index}].resources`}
+              name={`${name}[${index}].resource`}
               items={resourceList}
               defaultValue='*'
             />
@@ -120,7 +120,7 @@ const RuleItem = (props) => {
 const ruleItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
   const onDeleteClick = () => ListActions.remove(index);
 
-  return <RuleItem id={item.id} name={name} index={index as number} onDeleteClick={onDeleteClick} />
+  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} />
 };
 
 const CreateRoleComponent: React.FC<RoleFormProps> = props => {
@@ -133,7 +133,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       .then((result) => {
         let list = { '*': 'All', 'Core': 'Core' };
         result.groups.forEach(apigroup => { list[apigroup.name] = apigroup.preferredVersion.groupVersion });
-        apiGroups = list;
+        apiGroupList = list;
         setLoaded(true);
       });
   }, [])
@@ -154,7 +154,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       <Section label='롤 타입' id='roletype' isRequired>
         <RadioGroup
           name='kind'
-          items={resources}
+          items={kindItems}
           inline={false}
           initValue={kindToggle}
         />
@@ -181,7 +181,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ?
         <Section id='rules' isRequired={true}>
-          <ListView name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ value: '' }} defaultValues={[{ value: '' }]}/>
+          <ListView name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: '*', resource: '*', verbs: ['*'] }} defaultValues={[{ apiGroup: '*', resource: '*', verbs: ['*'] }]}/>
         </Section>
         : <LoadingInline />}
     </>
@@ -198,8 +198,8 @@ export const onSubmitCallback = data => {
   let apiVersion = data.kind === 'Role' ? `${RoleModel.apiGroup}/${RoleModel.apiVersion}` : `${ClusterRoleModel.apiGroup}/${ClusterRoleModel.apiVersion}`;
 
   let rules = data.rules.map((rule) => ({
-    apiGroups: rule.apiGroups === 'Core' ? [''] : rule.apiGroups && typeof rule.apiGroups === 'string' ? [rule.apiGroups] : [...rule.apiGroups ?? '*'],
-    resources: rule.resources && typeof rule.resources === 'string' ? [rule.resources] : [...rule.resources ?? '*'],
+    apiGroups: rule.apiGroup === 'Core' ? [''] : [rule.apiGroup ?? '*'],
+    resources: [rule.resource ?? '*'],
     verbs : rule.verbs ?? ['*']
   }));
 
