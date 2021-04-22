@@ -47,6 +47,7 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
         errorMessage={props.errorMessage}
         inProgress={props.inProgress}
         submitText={props.buttonText}
+        cancelText={props.cancelText || 'Cancel'}
         cancel={props.cancel}
       />
     </form>
@@ -75,6 +76,7 @@ export const configureJobParallelismModal = (props) => {
   return configureCountModal(
     _.defaults(
       {},
+      props,
       {
         defaultValue: 1,
         title: 'Edit Parallelism',
@@ -82,7 +84,6 @@ export const configureJobParallelismModal = (props) => {
         path: '/spec/parallelism',
         buttonText: 'Save',
       },
-      props,
     ),
   );
 };
@@ -90,6 +91,7 @@ export const configureJobParallelismModal = (props) => {
 export type ConfigureCountModalProps = {
   message: string;
   buttonText: string;
+  cancelText?: string;
   defaultValue: number;
   path: string;
   resource: K8sResourceKind;
