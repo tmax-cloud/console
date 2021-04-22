@@ -29,7 +29,7 @@ export const useInitModal = (methods, curState, path) => {
   React.useEffect(() => {
     register(path);
   }, [register]);
-  React.useMemo(() => {
+  React.useEffect(() => {
     setValue(path, curState);
   }, [curState]);
 };
