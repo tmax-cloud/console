@@ -53,3 +53,14 @@
 .yaml-editor .monaco-editor .margin .current-line {
   background-color: var(--pf-global--BackgroundColor--dark-200);
 }
+
+.yaml-editor .monaco-menu .action-menu-item {
+  color: #CDE0F4;
+  &:hover, &:focus, &:link, &:active {
+   color: #CDE0F4;
+  }
+}
+
+.yaml-editor .monaco-menu .keybinding {
+  color: #CDE0F4;
+}
