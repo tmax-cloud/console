@@ -23,7 +23,7 @@ const ConfigureUnschedulableModal: React.FC<ConfigureUnschedulableModalProps> = 
   const { t } = useTranslation();
   return (
     <form onSubmit={handleSubmit} name="form" className="modal-content ">
-      <ModalTitle>{t('COMMON:MSG_COMMON_ACTIONBUTTON_49')}</ModalTitle>
+      <ModalTitle>{t('COMMON:MSG_MAIN_POPUP_TITLE_2')}</ModalTitle>
       <ModalBody>{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_3')}</ModalBody>
       <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={t('COMMON:MSG_MAIN_POPUP_COMMIT_1')} cancel={cancel} />
     </form>
