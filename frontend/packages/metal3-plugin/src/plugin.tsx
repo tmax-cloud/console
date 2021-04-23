@@ -1,21 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { MaintenanceIcon } from '@patternfly/react-icons';
-import {
-  DashboardsOverviewInventoryItem,
-  Plugin,
-  HrefNavItem,
-  ResourceListPage,
-  ResourceDetailsPage,
-  RoutePage,
-  ModelFeatureFlag,
-  ModelDefinition,
-  DashboardsOverviewResourceActivity,
-  DashboardsOverviewInventoryItemReplacement,
-  DashboardsInventoryItemGroup,
-  CustomFeatureFlag,
-  ResourceTabPage,
-} from '@console/plugin-sdk';
+import { DashboardsOverviewInventoryItem, Plugin, HrefNavItem, ResourceListPage, ResourceDetailsPage, RoutePage, ModelFeatureFlag, ModelDefinition, DashboardsOverviewResourceActivity, DashboardsOverviewInventoryItemReplacement, DashboardsInventoryItemGroup, CustomFeatureFlag, ResourceTabPage } from '@console/plugin-sdk';
 import { referenceForModel } from '@console/internal/module/k8s';
 import { MachineModel, NodeModel } from '@console/internal/models';
 // TODO(jtomasek): change this to '@console/shared/src/utils' once @console/shared/src/utils modules
@@ -29,19 +15,7 @@ import { HOST_POWER_STATUS_POWERING_OFF, HOST_POWER_STATUS_POWERING_ON } from '.
 import { BareMetalHostKind } from './types';
 import { detectBaremetalPlatform, BAREMETAL_FLAG, NODE_MAINTENANCE_FLAG } from './features';
 
-type ConsumedExtensions =
-  | DashboardsOverviewInventoryItem
-  | DashboardsOverviewInventoryItemReplacement
-  | DashboardsInventoryItemGroup
-  | HrefNavItem
-  | ResourceListPage
-  | ResourceDetailsPage
-  | RoutePage
-  | ModelFeatureFlag
-  | ModelDefinition
-  | CustomFeatureFlag
-  | DashboardsOverviewResourceActivity
-  | ResourceTabPage;
+type ConsumedExtensions = DashboardsOverviewInventoryItem | DashboardsOverviewInventoryItemReplacement | DashboardsInventoryItemGroup | HrefNavItem | ResourceListPage | ResourceDetailsPage | RoutePage | ModelFeatureFlag | ModelDefinition | CustomFeatureFlag | DashboardsOverviewResourceActivity | ResourceTabPage;
 
 const METAL3_FLAG = 'METAL3';
 
@@ -78,10 +52,7 @@ const plugin: Plugin<ConsumedExtensions> = [
       section: 'Compute',
       componentProps: {
         name: 'Bare Metal Hosts',
-        href: formatNamespacedRouteForResource(
-          referenceForModel(BareMetalHostModel),
-          'openshift-machine-api',
-        ),
+        href: formatNamespacedRouteForResource(referenceForModel(BareMetalHostModel), 'openshift-machine-api'),
       },
       mergeBefore: 'ComputeSeparator',
     },
@@ -93,20 +64,14 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'Page/Resource/List',
     properties: {
       model: BareMetalHostModel,
-      loader: () =>
-        import(
-          './components/baremetal-hosts/BareMetalHostsPage' /* webpackChunkName: "metal3-baremetalhosts" */
-        ).then((m) => m.default),
+      loader: () => import('./components/baremetal-hosts/BareMetalHostsPage' /* webpackChunkName: "metal3-baremetalhosts" */).then(m => m.default),
     },
   },
   {
     type: 'Page/Resource/Details',
     properties: {
       model: BareMetalHostModel,
-      loader: () =>
-        import(
-          './components/baremetal-hosts/BareMetalHostDetailsPage' /* webpackChunkName: "metal3-baremetalhost" */
-        ).then((m) => m.default),
+      loader: () => import('./components/baremetal-hosts/BareMetalHostDetailsPage' /* webpackChunkName: "metal3-baremetalhost" */).then(m => m.default),
     },
   },
   {
@@ -114,10 +79,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     properties: {
       exact: true,
       path: `/k8s/ns/:ns/${referenceForModel(BareMetalHostModel)}/~new/form`,
-      loader: () =>
-        import(
-          './components/baremetal-hosts/add-baremetal-host/AddBareMetalHostPage' /* webpackChunkName: "metal3-baremetalhost" */
-        ).then((m) => m.default),
+      loader: () => import('./components/baremetal-hosts/add-baremetal-host/AddBareMetalHostPage' /* webpackChunkName: "metal3-baremetalhost" */).then(m => m.default),
       required: [BAREMETAL_FLAG, METAL3_FLAG],
     },
   },
@@ -126,10 +88,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     properties: {
       exact: true,
       path: `/k8s/ns/:ns/${referenceForModel(BareMetalHostModel)}/:name/edit`,
-      loader: () =>
-        import(
-          './components/baremetal-hosts/add-baremetal-host/AddBareMetalHostPage' /* webpackChunkName: "metal3-baremetalhost" */
-        ).then((m) => m.default),
+      loader: () => import('./components/baremetal-hosts/add-baremetal-host/AddBareMetalHostPage' /* webpackChunkName: "metal3-baremetalhost" */).then(m => m.default),
       required: [BAREMETAL_FLAG, METAL3_FLAG],
     },
   },
@@ -175,29 +134,23 @@ const plugin: Plugin<ConsumedExtensions> = [
       required: [BAREMETAL_FLAG, METAL3_FLAG],
     },
   },
-  {
-    type: 'Page/Route',
-    properties: {
-      exact: true,
-      path: ['/k8s/cluster/nodes/'],
-      loader: () =>
-        import(
-          './components/baremetal-nodes/BareMetalNodesPage' /* webpackChunkName: "node" */
-        ).then((m) => m.default),
-      required: [BAREMETAL_FLAG, METAL3_FLAG],
-    },
-  },
-  {
-    type: 'Page/Route',
-    properties: {
-      path: ['/k8s/cluster/nodes/:name'],
-      loader: () =>
-        import(
-          './components/baremetal-nodes/BareMetalNodeDetailsPage' /* webpackChunkName: "node" */
-        ).then((m) => m.default),
-      required: [BAREMETAL_FLAG, METAL3_FLAG],
-    },
-  },
+  // {
+  //   type: 'Page/Route',
+  //   properties: {
+  //     exact: true,
+  //     path: ['/k8s/cluster/nodes/'],
+  //     loader: () => import('./components/baremetal-nodes/BareMetalNodesPage' /* webpackChunkName: "node" */).then(m => m.default),
+  //     required: [BAREMETAL_FLAG, METAL3_FLAG],
+  //   },
+  // },
+  // {
+  //   type: 'Page/Route',
+  //   properties: {
+  //     path: ['/k8s/cluster/nodes/:name'],
+  //     loader: () => import('./components/baremetal-nodes/BareMetalNodeDetailsPage' /* webpackChunkName: "node" */).then(m => m.default),
+  //     required: [BAREMETAL_FLAG, METAL3_FLAG],
+  //   },
+  // },
   {
     type: 'Dashboards/Overview/Activity/Resource',
     properties: {
@@ -206,12 +159,9 @@ const plugin: Plugin<ConsumedExtensions> = [
         kind: referenceForModel(NodeMaintenanceModel),
         prop: 'maintenances',
       },
-      isActivity: (resource) => _.get(resource.status, 'phase') === 'Running',
-      getTimestamp: (resource) => new Date(resource.metadata.creationTimestamp),
-      loader: () =>
-        import(
-          './components/maintenance/MaintenanceDashboardActivity' /* webpackChunkName: "node-maintenance" */
-        ).then((m) => m.default),
+      isActivity: resource => _.get(resource.status, 'phase') === 'Running',
+      getTimestamp: resource => new Date(resource.metadata.creationTimestamp),
+      loader: () => import('./components/maintenance/MaintenanceDashboardActivity' /* webpackChunkName: "node-maintenance" */).then(m => m.default),
     },
     flags: {
       required: [BAREMETAL_FLAG, METAL3_FLAG],
@@ -232,14 +182,8 @@ const plugin: Plugin<ConsumedExtensions> = [
         prop: 'bmhs',
         isList: true,
       },
-      isActivity: (resource: BareMetalHostKind) =>
-        [HOST_POWER_STATUS_POWERING_OFF, HOST_POWER_STATUS_POWERING_ON].includes(
-          getHostPowerStatus(resource),
-        ),
-      loader: () =>
-        import(
-          './components/baremetal-hosts/dashboard/BareMetalStatusActivity' /* webpackChunkName: "metal3-powering" */
-        ).then((m) => m.default),
+      isActivity: (resource: BareMetalHostKind) => [HOST_POWER_STATUS_POWERING_OFF, HOST_POWER_STATUS_POWERING_ON].includes(getHostPowerStatus(resource)),
+      loader: () => import('./components/baremetal-hosts/dashboard/BareMetalStatusActivity' /* webpackChunkName: "metal3-powering" */).then(m => m.default),
     },
     flags: {
       required: [BAREMETAL_FLAG, METAL3_FLAG],
@@ -251,10 +195,7 @@ const plugin: Plugin<ConsumedExtensions> = [
       href: 'nics',
       model: NodeModel,
       name: 'Network Interfaces',
-      loader: () =>
-        import('./components/baremetal-nodes/NICsPage').then(
-          (m) => m.default,
-        ) /* webpackChunkName: "metal3-bmn-nics" */,
+      loader: () => import('./components/baremetal-nodes/NICsPage').then(m => m.default) /* webpackChunkName: "metal3-bmn-nics" */,
     },
     flags: {
       required: [BAREMETAL_FLAG, METAL3_FLAG],
@@ -266,10 +207,7 @@ const plugin: Plugin<ConsumedExtensions> = [
       href: 'disks',
       model: NodeModel,
       name: 'Disks',
-      loader: () =>
-        import('./components/baremetal-nodes/DisksPage').then(
-          (m) => m.default,
-        ) /* webpackChunkName: "metal3-bmn-disks" */,
+      loader: () => import('./components/baremetal-nodes/DisksPage').then(m => m.default) /* webpackChunkName: "metal3-bmn-disks" */,
     },
     flags: {
       required: [BAREMETAL_FLAG, METAL3_FLAG],
