@@ -37,7 +37,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   rowFilters.map(grp => {
     const items = grp.itemsGenerator ? grp.itemsGenerator(props, props.kind) : grp.items;
     return (
-      <DropdownGroup key={grp.filterGroupName} label={grp.filterGroupName} className="co-filter-dropdown-group">
+      <DropdownGroup key={grp.filterGroupName} label={grp.filterLabel || grp.filterGroupName} className="co-filter-dropdown-group">
         {_.map(items, item => (
           <DropdownItem data-test-row-filter={item.id} key={item.id} id={item.id} className="co-filter-dropdown__item" listItemClassName="co-filter-dropdown__list-item">
             <div className="co-filter-dropdown-item">
@@ -288,6 +288,7 @@ type FilterToolbarProps = {
 };
 
 export type RowFilter = {
+  filterLabel?: string;
   filterGroupName: string;
   type: string;
   items?: {
