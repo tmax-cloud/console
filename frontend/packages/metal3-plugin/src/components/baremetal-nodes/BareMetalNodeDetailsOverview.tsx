@@ -55,7 +55,7 @@ const BareMetalNodeDetailsOverview: React.FC<BareMetalNodeDetailsOverviewProps> 
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_113')}</dt>
             <dd>
               {canUpdate ? (
-                <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback}>
+                <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback.bind(null, t)}>
                   {pluralize(_.size(node.spec.taints), 'Taint')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
@@ -66,7 +66,7 @@ const BareMetalNodeDetailsOverview: React.FC<BareMetalNodeDetailsOverviewProps> 
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')}</dt>
             <dd>
               {canUpdate ? (
-                <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback}>
+                <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback.bind(null, t)}>
                   {pluralize(_.size(node.metadata.annotations), 'Annotation')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>

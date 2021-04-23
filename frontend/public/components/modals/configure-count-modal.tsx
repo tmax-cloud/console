@@ -1,6 +1,5 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { k8sPatch, K8sResourceKind, K8sKind } from '../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
@@ -9,13 +8,8 @@ import { NumberSpinner, withHandlePromise } from '../utils';
 export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModalProps) => {
   const getPath = props.path.substring(1).replace('/', '.');
   const [value, setValue] = React.useState<number>(_.get(props.resource, getPath) || props.defaultValue);
-  let { title, message, buttonText } = props;
-  const { t } = useTranslation();
+  let { title, message } = props;
 
-  if (props.resourceKind.kind === 'Deployment') {
-    // 모달 내에서 t 사용하기 위해선 여기 밖에 없음..
-    buttonText = t('COMMON:MSG_COMMON_BUTTON_COMMIT_3');
-  }
   const submit = e => {
     e.preventDefault();
 
@@ -43,7 +37,7 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
       <ModalSubmitFooter
         errorMessage={props.errorMessage}
         inProgress={props.inProgress}
-        submitText={buttonText}
+        submitText={props.submitText}
         cancelText={props.cancelText || 'Cancel'}
         cancel={props.cancel}
       />
@@ -62,7 +56,7 @@ export const configureReplicaCountModal = props => {
         title: 'Edit Pod Count',
         message: `${props.resourceKind.labelPlural} maintain the desired number of healthy pods.`,
         path: '/spec/replicas',
-        buttonText: 'Save',
+        submitText: 'Save',
       },
       props,
     ),
@@ -79,7 +73,7 @@ export const configureJobParallelismModal = props => {
         title: 'Edit Parallelism',
         message: `${props.resourceKind.labelPlural} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.`,
         path: '/spec/parallelism',
-        buttonText: 'Save',
+        submitText: 'Save',
       },
     ),
   );
@@ -87,7 +81,7 @@ export const configureJobParallelismModal = props => {
 
 export type ConfigureCountModalProps = {
   message: string;
-  buttonText: string;
+  submitText: string;
   cancelText?: string;
   defaultValue: number;
   path: string;

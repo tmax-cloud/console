@@ -54,7 +54,7 @@ export const TagsModal = withHandlePromise((props: TagsModalProps) => {
         />
       </ModalBody>
       <ModalSubmitFooter
-        submitText="Save"
+        submitText={props.submitText || "Save"}
         cancel={props.cancel}
         errorMessage={props.errorMessage || errorMessage}
         inProgress={props.inProgress}
@@ -67,7 +67,7 @@ export const annotationsModal = createModalLauncher((props: AnnotationsModalProp
   <TagsModal
     path="/metadata/annotations"
     tags={props.resource.metadata.annotations}
-    title="Edit Annotations"
+    title={props.title || "Edit Annotations"}
     {...props}
   />
 ));
@@ -81,10 +81,11 @@ type TagsModalProps = {
   handlePromise: <T>(promise: Promise<T>) => Promise<T>;
   inProgress: boolean;
   errorMessage: string;
+  submitText: string;
   cancel?: () => void;
   close?: () => void;
 };
 
-type AnnotationsModalProps = Omit<TagsModalProps, 'path' | 'tags' | 'title'>;
+type AnnotationsModalProps = Omit<TagsModalProps, 'path' | 'tags' >;
 
 TagsModal.displayName = 'TagsModal';
