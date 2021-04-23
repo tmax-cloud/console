@@ -41,7 +41,7 @@ spec:
         - --kiali-endpoint=https://@@KIALI@@/api/kiali/
         - --kibana-endpoint=https://@@KIBANA@@/api/kibana/
         - --kubeflow-endpoint=http://@@KUBEFLOW@@/api/kubeflow/ 
-        - --managed-gitlab-url=http://@@GITLAB@@/
+        - --managed-gitlab-url=@@GITLAB@@
         image: tmaxcloudck/hypercloud-console:@@CONSOLE_VER@@
         imagePullPolicy: Always
         name: console

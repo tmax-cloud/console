@@ -101,16 +101,14 @@
     | 문자열 | 상세내용 | 형식예시 |
     | ---- | ---- | ---- |
     | `@@OPERATOR_VER@@` | hypercloud-console 이미지 태그 입력 | `5.1.x.x` |
-    | `@@KIALI@@` | `kubectl get ingress -n istio-system kiali` 에서 ADDRESS와 PORT(S) 확인하여 입력 (포트는 `:` 왼쪽 값 사용) | `10.x.x.x:20001` |
-    | `@@KIBANA@@` | `kubectl get svc -n efk opendistro-kibana` 에서 CLUSTER-IP와 PORT(S) 확인하여 입력 (포트는 `:` 왼쪽 값 사용) | `10.x.x.x:80` |
     | `@@REALM@@` | hyperauth이용하여 로그인 시 필요한 정보 입력 | `tmax` |
     | `@@KEYCLOAK@@` | `kubectl get svc -n hyperauth hyperauth` 에서 EXTERNAL-IP 확인하여 입력 | `10.x.x.x` |
     | `@@CLIENTID@@` | hyperauth이용하여 로그인 시 필요한 client 정보 입력 | `hypercloud5` | 
     | `@@MC_MODE@@` | Multi Cluster 모드로 설치하려는 경우 `true` 입력 (아닌 경우 행 삭제) | `true` |
-    | `@@KIALI@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
-    | `@@KIBANA@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
-    | `@@KUBEFLOW@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
-    | `@@GITLAB@@` | EXTERNAL-IP 확인하여 입력 | `10.x.x.x:80` |
+    | `@@KIALI@@` | `kubectl get ingress kiali -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"` 에서 ADDRESS 확인하여 입력 (https 기본 포트사용함, 별도입력 X) | `10.x.x.x` |
+    | `@@KIBANA@@` | `kubectl get svc -n kube-logging kibana` 에서 CLUSTER-IP와 PORT(defalut 5601) 확인하여 입력 (포트는 `:` 왼쪽 값 사용) | `10.x.x.x:5601` |
+    | `@@KUBEFLOW@@` | `kubectl svc -n istio-system istio-ingressgateway` | `10.x.x.x:80` |
+    | `@@GITLAB@@` | 비고 참고 | `http://gitlab/` |
     | `@@CONSOLE_VER@@` | hypercloud-console 이미지 태그 입력 | `0.5.x.x` |
     
     * `kubectl apply -f 5.deploy.yaml` 을 실행합니다.
@@ -121,6 +119,8 @@
 	    * 5.deploy.yaml 파일에서 --mc-mode=false (default)로 설정한다. 
     * Multicluster Console을 설치하는 경우
 	    * 5.deploy.yaml 파일에서 --mc-mode=true 로 설정한다. 
+   *  GITLAB 주소 조회 
+      *  ``` kubectl -n gitlab-system exec -t $(kubectl -n gitlab-system get pod | grep gitlab | awk '{print $1}') -- cat /tmp/shared/omnibus.env 2>/dev/null | grep -oP "external_url '\K[^']*(?=')" ```
 
 
 ## Step 6. 동작 확인

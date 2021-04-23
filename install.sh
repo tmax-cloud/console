@@ -39,7 +39,8 @@ echo "==============================================================="
 echo "STEP 1. ENV Setting"
 echo "==============================================================="
 
-KIALI_IP=$(kubectl get ingress -A -o jsonpath='{.items[?(@.metadata.namespace=="istio-system")].status.loadBalancer.ingress[0].ip}')
+# KIALI_IP=$(kubectl get ingress -A -o jsonpath='{.items[?(@.metadata.namespace=="istio-system")].status.loadBalancer.ingress[0].ip}')
+KIALI_IP=$(kubectl get ingress kiali -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
 KIALI_PORT="" # default https port = 433 
 if [ -z $KIALI_IP ]; then
     echo "Cannot find Ingress KIALI_IP in istio-system. Is kiali installed on Ingress?"
@@ -51,6 +52,15 @@ KIALI=${KIALI_IP}:${KIALI_PORT}
 echo "kiali Addr = ${KIALI}"
 
 echo "kibana Addr = ${KIBANA} <- default"
+
+if [ -z $GITALB ]; then 
+    GITLAB=$(kubectl -n gitlab-system exec -t $(kubectl -n gitlab-system get pod | grep gitlab | awk '{print $1}') -- cat /tmp/shared/omnibus.env 2>/dev/null | grep -oP "external_url '\K[^']*(?=')")
+    if [ -z $GITALB ]; then 
+        echo "Failed to find GITLAB URL, so GITLAB=http://0.0.0.0"
+        GITALB="http://0.0.0.0/"
+    fi 
+    echo $GITALB
+fi
 
 # Inject ENV into yaml 
 rm -rf $temp_Dir
