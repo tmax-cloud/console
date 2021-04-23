@@ -83,7 +83,7 @@ export const NamespaceClaimsList: React.FC = props => {
 };
 NamespaceClaimsList.displayName = 'NamespaceClaimsList';
 
-const registryStatusReducer = (nsc: any): string => {
+const namespaceClaimStatusReducer = (nsc: any): string => {
   return nsc?.status?.status;
 };
 
@@ -91,7 +91,7 @@ const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'namespace-claim-status',
-    reducer: registryStatusReducer,
+    reducer: namespaceClaimStatusReducer,
     items: [
       { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Approved', title: 'Approved' },
@@ -110,7 +110,8 @@ export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => 
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1'),
     },
     {
-      href: 'namespaceclaims',
+      href: 'namespaceclaims?rowFilter-namespace-claim-status=Awaiting',
+      path: 'namespaceclaims',
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
     },
   ];

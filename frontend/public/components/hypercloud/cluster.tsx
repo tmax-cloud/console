@@ -108,7 +108,7 @@ const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, k
       </TableData>
       <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
       <TableData className={classNames(tableColumnClasses[2])}>{cluster.spec.provider ? '생성' : '등록'}</TableData>
-      <TableData className={tableColumnClasses[3]}>{cluster.status?.ready ? '준비' : '생성 중'}</TableData>
+      <TableData className={tableColumnClasses[3]}>{cluster.status?.phase}</TableData>
       <TableData className={tableColumnClasses[4]}>{cluster.spec.version}</TableData>
       <TableData className={tableColumnClasses[5]}>{`${cluster.status?.masterRun ?? 0} / ${cluster.spec?.masterNum ?? 0}`}</TableData>
       <TableData className={tableColumnClasses[6]}>{`${cluster.status?.workerRun ?? 0} / ${cluster.spec?.workerNum ?? 0}`}</TableData>
