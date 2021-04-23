@@ -331,7 +331,14 @@ export const tableFilters: TableFilterMap = {
       if (instance.status) {
         instance.status.conditions.forEach(cur => {
           if (cur.type === '') {
-            phase = cur.status;
+            switch (cur.status) {
+              case 'Success':
+                phase = 'Succeeded';
+                break;
+              default:
+                phase = cur.status;
+                break;
+            }
           }
         });
         return phase;
