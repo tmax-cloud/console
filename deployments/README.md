@@ -107,7 +107,7 @@
     | `@@MC_MODE@@` | Multi Cluster 모드로 설치하려는 경우 `true` 입력 (아닌 경우 행 삭제) | `true` |
     | `@@KIALI@@` | `kubectl get ingress kiali -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"` 에서 ADDRESS 확인하여 입력 (https 기본 포트사용함, 별도입력 X) | `10.x.x.x` |
     | `@@KIBANA@@` | `kubectl get svc -n kube-logging kibana` 에서 CLUSTER-IP와 PORT(defalut 5601) 확인하여 입력 (포트는 `:` 왼쪽 값 사용) | `10.x.x.x:5601` |
-    | `@@KUBEFLOW@@` | `kubectl svc -n istio-system istio-ingressgateway` | `10.x.x.x:80` |
+    | `@@KUBEFLOW@@` | `kubectl svc -n istio-system istio-ingressgateway`에서 CLUSTER-IP 확인하여 입력 (http 기본 포트 사용) | `10.x.x.x` |
     | `@@GITLAB@@` | 비고 참고 | `http://gitlab/` |
     | `@@CONSOLE_VER@@` | hypercloud-console 이미지 태그 입력 | `0.5.x.x` |
     
