@@ -29,7 +29,7 @@ export const useInitModal = (methods, curState, path) => {
   React.useEffect(() => {
     register(path);
   }, [register]);
-  React.useMemo(() => {
+  React.useEffect(() => {
     setValue(path, curState);
   }, [curState]);
 };
@@ -69,7 +69,7 @@ export const handleModalData = (id, objArray, curState, setState, isAddModal, me
 };
 export const removeModalData = (curState, setState, e) => {
   let removedState = curState.filter((cur, idx) => {
-    let targetIndex = Number(e.target.id.split('item-remove')[1]);
+    let targetIndex = Number(e.target.id.split('item-remove-')[1]);
     return targetIndex !== idx;
   });
   setState([...removedState]);

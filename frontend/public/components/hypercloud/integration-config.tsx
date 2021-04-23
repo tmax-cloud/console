@@ -149,7 +149,7 @@ const IntegrationConfigDetails: React.FC<IntegrationConfigDetailsProps> = ({ obj
 }
 
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const IntegrationConfigs: React.FC = props => {
   const { t } = useTranslation();
@@ -170,7 +170,7 @@ export const IntegrationConfigsPage: React.FC<IntegrationConfigsPageProps> = pro
   />;
 }
 
-export const IntegrationConfigsDetailsPage: React.FC<IntegrationConfigsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationConfigDetails)), editYaml()]} />;
+export const IntegrationConfigsDetailsPage: React.FC<IntegrationConfigsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationConfigDetails)), editResource()]} />;
 
 type IntegrationConfigDetailsListProps = {
   ds: K8sResourceKind;

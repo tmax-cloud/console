@@ -230,7 +230,7 @@ h6 {
       color: black;
     }
     .pf-l-toolbar {
-      color:white;
+      color: white;
     }
     .pf-l-toolbar__group:not(:last-child) {
       margin-right: 10px;
@@ -270,7 +270,7 @@ h6 {
   }
 
   .pf-c-page__sidebar {
-    background-color: #31475E;
+    background-color: #31475e;
     --pf-c-page__sidebar--Transition: all 100ms ease;
   }
 }
@@ -536,7 +536,7 @@ button.pf-c-dropdown__menu-item.hover {
 
 .pf-c-page__header {
   width: auto;
-  background-color: #31475E;
+  background-color: #31475e;
   background-image: url('../imgs/gnb_logo_bg_mint.png');
   background-repeat: no-repeat;
 }
@@ -607,4 +607,11 @@ button.pf-c-dropdown__menu-item.hover {
   &__content {
     padding: 0px !important;
   }
+}
+
+.modal-list button {
+  margin-left: 8px;
+}
+.modal-list li {
+  margin-top: 8px;
 }
