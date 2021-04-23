@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	v1 "console/pkg/api/v1"
 	"console/pkg/hypercloud/safe"
@@ -77,9 +78,12 @@ func (s *HttpServer) Start(ctx context.Context) {
 			// Listen on passed port number to be redirected to the console
 			redirectServer := http.NewServeMux()
 			redirectServer.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+				reqIp := strings.Split(req.Host, ":")[0]
+				redirectPort := strings.Split(listenURL.Host, ":")[1]
+				host := reqIp + redirectPort
 				redirectURL := &url.URL{
 					Scheme:   listenURL.Scheme,
-					Host:     listenURL.Host,
+					Host:     host,
 					RawQuery: req.URL.RawQuery,
 					Path:     req.URL.Path,
 				}
