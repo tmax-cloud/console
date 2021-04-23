@@ -4,7 +4,7 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 
 export const AdditionalPropertyFields: React.FC<AdditionalPropertyProps> = props => {
-  let { data, onChange } = props;
+  let { data, onChange, path } = props;
 
   const obj = data;
   const [items, setItems] = React.useState(_.keys(obj).map(cur => ({ [cur]: obj[cur] })));
@@ -18,7 +18,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyProps> = props
 
   return (
     <>
-      <Button id={`add-btn`} type="button" onClick={onAddProperty} variant="link">
+      <Button type="button" onClick={onAddProperty} variant="link">
         <PlusCircleIcon className="co-icon-space-r" />
         Add Property
       </Button>
@@ -28,13 +28,13 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyProps> = props
           <div className="col-xs-4">Value</div>
         </div>
       )}
-      {items.length > 0 && items.map((cur, idx) => <AdditionalPropertyItem key={idx} id={`property-${idx}`} index={idx} items={items} data={cur} onChange={onChange} onRemove={onRemoveProperty} />)}
+      {items.length > 0 && items.map((cur, idx) => <AdditionalPropertyItem key={idx} path={`${path}_${idx}`} index={idx} items={items} data={cur} onChange={onChange} onRemove={onRemoveProperty} />)}
     </>
   );
 };
 
 const AdditionalPropertyItem = props => {
-  const { index, items, data, onChange, onRemove } = props;
+  const { index, items, data, onChange, onRemove, path } = props;
   const [additionalKey, setKey] = React.useState(Object.keys(data)[0]);
   const [additionalValue, setValue] = React.useState(Object.values(data)[0] || ' ');
   React.useEffect(() => {
@@ -49,9 +49,10 @@ const AdditionalPropertyItem = props => {
     return onChange(result);
   }, [additionalKey, additionalValue]);
   return (
-    <div className="row co-m-form-row">
+    <div id={`${path}_field`} className="row co-m-form-row">
       <div className="col-xs-4">
         <input
+          // id={`${path}`}
           value={additionalKey}
           onChange={e => {
             const value = e.target.value;
@@ -59,7 +60,6 @@ const AdditionalPropertyItem = props => {
             console.log(value);
             items.splice(index, 1, { [value]: additionalValue });
           }}
-          id={additionalKey}
           name={additionalKey}
           type="text"
           className="pf-c-form-control"
@@ -68,20 +68,19 @@ const AdditionalPropertyItem = props => {
       </div>
       <div className="col-xs-4">
         <input
-          value={additionalValue as string}
+          // id={`${path}`}
+          value={(additionalValue as string) || ''}
           onChange={e => {
             const value = e.target.value;
             setValue(value);
-            console.log(value);
             items.splice(index, 1, { [additionalKey]: value });
           }}
-          id={'value' + additionalValue}
           type="text"
           className="pf-c-form-control"
           key={`value-${index}`}
         />
       </div>
-      <Button id={`btn-property-remove-${index}`} type="button" onClick={() => onRemove(index)} variant="link">
+      <Button type="button" onClick={() => onRemove.bind(null, index)} variant="link">
         <MinusCircleIcon className="co-icon-space-r" />
         Remove Property
       </Button>

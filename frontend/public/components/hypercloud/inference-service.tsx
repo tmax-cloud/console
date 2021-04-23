@@ -64,9 +64,13 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
 InferenceServiceTableHeader.displayName = 'InferenceServiceTableHeader';
 
 const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, index, key, style }) => {
-  const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt'];
-  console.log(Object.keys(isvc.spec.predictor)[0]);
-  let framework = frameworkList.includes(Object.keys(isvc.spec.predictor)[0]) ? Object.keys(isvc.spec.predictor)[0] : Object.keys(isvc.spec.predictor)[1];
+  const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+  let framework;
+  Object.keys(isvc.spec.predictor).forEach(curPredictor => {
+    if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+      framework = curPredictor;
+    }
+  });
   return (
     <TableRow id={isvc.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>

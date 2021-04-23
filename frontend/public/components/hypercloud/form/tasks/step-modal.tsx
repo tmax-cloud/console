@@ -23,6 +23,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     },
   ];
 
+  // const [isOpen, setIsOpen] = React.useState(false);
   const [imageList, setImageList] = React.useState({});
   const [imageTagList, setImageTagList] = React.useState({});
 
@@ -124,12 +125,12 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const imageRegistry = useWatch({
     control: methods.control,
     name: 'registryRegistry',
-    defaultValue: false,
+    defaultValue: template ? template.registryRegistry : null,
   });
   const image = useWatch({
     control: methods.control,
     name: 'registryImage',
-    defaultValue: false,
+    defaultValue: template ? template.registryImage : null,
   });
 
   // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
@@ -144,7 +145,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         data.forEach(cur => {
           imageItems[cur.spec.name] = cur.spec.name;
         });
-        setImageList(imageItems);
+        setImageList(() => imageItems);
       });
   }, [imageRegistry]);
 
@@ -161,7 +162,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         curImage.spec.versions.forEach(cur => {
           imageTagItems[cur.version] = cur.version;
         });
-        setImageTagList(imageTagItems);
+        setImageTagList(() => imageTagItems);
       });
   }, [image]);
 
@@ -186,7 +187,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
               name="registryRegistry"
               placeholder="이미지 레지스트리 선택"
               methods={methods}
-              defaultValue={modalType === 'modify' ? template.registryRegistry : ''}
+              defaultValue={modalType === 'modify' ? imageRegistry : ''}
               resources={[
                 {
                   kind: 'Registry',
@@ -203,6 +204,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
               className="btn-group"
               title="이미지 선택" // 드롭다운 title 지정
               methods={methods}
+              defaultValue={modalType === 'modify' ? image : ''}
               items={imageList} // (필수)
               style={{ display: 'block' }}
               buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
@@ -211,10 +213,11 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           </Section>
           <Section id="imagetagdropdown" label="이미지 태그">
             <Dropdown
-              name="registryImageTag"
+              name="registryTag"
               className="btn-group"
               title="이미지 선택" // 드롭다운 title 지정
               methods={methods}
+              defaultValue={modalType === 'modify' ? template.registryTag : ''}
               items={imageTagList} // (필수)
               style={{ display: 'block' }}
               buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className

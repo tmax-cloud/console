@@ -146,7 +146,7 @@ const Details = ({ obj: rq }) => {
   );
 };
 
-export const LimitRangeDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editYaml()]} />;
+export const LimitRangeDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource()]} />;
 
 export type LimitRangeProps = {
   obj: any;

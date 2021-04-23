@@ -10,6 +10,7 @@ import { ActionGroup, Button } from '@patternfly/react-core';
 import store from '../../redux';
 import { ButtonBar } from '../utils/button-bar';
 import { history } from '../utils/router';
+import { useTranslation } from 'react-i18next';
 
 export const createModal: CreateModal = getModalContainer => {
   const modalContainer = document.getElementById('modal-container');
@@ -80,12 +81,13 @@ export const ModalSubmitFooter: React.SFC<ModalSubmitFooterProps> = ({ message, 
     e.stopPropagation();
     cancel(e);
   };
+  const { t } = useTranslation();
 
   return (
     <ModalFooter inProgress={inProgress} errorMessage={errorMessage} message={message}>
       <ActionGroup className="pf-c-form pf-c-form__actions--right pf-c-form__group--no-top-margin">
         <Button type="button" variant="secondary" data-test-id="modal-cancel-action" onClick={onCancelClick}>
-          {cancelText || 'Cancel'}
+          {cancelText || t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
         </Button>
         {submitDanger ? (
           <Button type="submit" variant="danger" isDisabled={submitDisabled} id="confirm-action">

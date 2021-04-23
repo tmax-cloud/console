@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as fuzzy from 'fuzzysearch';
 // import { Link } from 'react-router-dom';
-import { RoleModel } from '../../models';
+import { RoleModel, RoleBindingModel } from '../../models';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { flatten as bindingsFlatten } from './bindings';
@@ -196,7 +196,7 @@ export const BindingsForRolePage = props => {
   return (
     <MultiListPage
       canCreate={true}
-      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_DETAILS_TABDETAILS_ROLEBINDINGS_3') })}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(RoleBindingModel, t) })}
       createProps={{
         to: `/k8s/${ns ? `ns/${ns}` : 'cluster'}/rolebindings/~new?rolekind=${kind}&rolename=${name}`,
       }}
@@ -263,7 +263,7 @@ export const RolesPage = ({ namespace, mock, showTitle }) => {
       namespace={namespace}
       createAccessReview={accessReview}
       createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(RoleModel, t) })}
-      createProps={{ to: `/k8s/ns/${createNS}/roles/~new` }}
+      createProps={{ to: `/k8s/cluster/roles/~new` }}
       flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
       resources={[
         { kind: 'Role', namespaced: true, optional: mock },
@@ -282,6 +282,7 @@ export const RolesPage = ({ namespace, mock, showTitle }) => {
         },
       ]}
       title={t('COMMON:MSG_LNB_MENU_75')}
+      isClusterScope
     />
   );
 };

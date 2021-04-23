@@ -68,14 +68,14 @@ type DropdownItemWithCheckboxProps = DropdownItemProps & {
 }
 
 export const SingleResourceListDropdown: React.SFC<BaseResourceListDropdown & SingleResourceDropdownProps & { selected: string; onChange: (value: string) => void; }> = (props) => {
-  const { resourceList, onChange, className, selected } = props;
+  const { resourceList, onChange, className, selected, kind } = props;
   const isSelected = !!selected;
 
   // Create dropdown items for each resource.
   const items = OrderedMap(
     _.map(resourceList, (resource) => [
       resource.metadata.name,
-      <DropdownItem resource={resource} />
+      <DropdownItem resource={{ kind: kind, ...resource }} />
     ]
     )).toJS() as { [s: string]: JSX.Element };
 
@@ -100,7 +100,7 @@ export const SingleResourceListDropdown: React.SFC<BaseResourceListDropdown & Si
 };
 
 export const MultipleResourceListDropdown: React.SFC<BaseResourceListDropdown & MultipleResourceDropdownProps & { selected: Set<string>; onChange: (value: string) => void; }> = (props) => {
-  const { resourceList, onChange, className, selected, showAll, resourceType } = props;
+  const { resourceList, onChange, className, selected, showAll, resourceType, kind } = props;
   const selectedSize = selected.size;
 
   const isSelected = (name: string) => {
@@ -110,7 +110,7 @@ export const MultipleResourceListDropdown: React.SFC<BaseResourceListDropdown & 
   const items = OrderedMap(
     _.map(resourceList, (resource) => [
       resource.metadata.name,
-      <DropdownItemWithCheckbox resource={resource} checked={isSelected(resource.metadata.name)} />
+      <DropdownItemWithCheckbox resource={{ kind: kind, ...resource }} checked={isSelected(resource.metadata.name)} />
     ]
     ));
   // Add an "All" item to the top if `showAll`.
@@ -174,6 +174,7 @@ export interface ResourceDropdownCommon {
 
 export interface BaseResourceListDropdown extends ResourceDropdownCommon {
   resourceList: HCK8sResourceKind[];
+  kind?: string;
 }
 
 export interface SingleResourceDropdownProps extends ResourceDropdownCommon {
