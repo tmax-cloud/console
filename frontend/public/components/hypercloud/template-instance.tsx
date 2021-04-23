@@ -22,7 +22,14 @@ const templateInstancePhase = instance => {
   if (instance.status) {
     instance.status.conditions.forEach(cur => {
       if (cur.type === '') {
-        phase = cur.status;
+        switch (cur.status) {
+          case 'Success':
+            phase = 'Succeeded';
+            break;
+          default:
+            phase = cur.status;
+            break;
+        }
       }
     });
     return phase;
@@ -194,8 +201,8 @@ const TemplateInstancesPage: React.FC<TemplateInstancesPageProps> = props => {
           type: 'template-instance-status',
           reducer: templateInstancePhase,
           items: [
-            { id: 'Success', title: t('COMMON:MSG_COMMON_FILTER_5') },
-            { id: 'Failed', title: t('COMMON:MSG_COMMON_FILTER_6') },
+            { id: 'Succeeded', title: t('COMMON:MSG_COMMON_FILTER_5') },
+            { id: 'Error', title: t('COMMON:MSG_COMMON_FILTER_9') },
           ],
         },
       ]}
