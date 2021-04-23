@@ -101,8 +101,8 @@ const RoleBindingClaimsDetails: React.FC<RoleBindingClaimDetailsProps> = ({ obj:
 };
 RoleBindingClaimsDetails.displayName = 'RoleBindingClaimsDetails';
 
-const { details, editYaml } = navFactory;
-export const RoleBindingClaimsDetailsPage: React.FC<RoleBindingClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'RoleBindingClaim'} menuActions={menuActions} pages={[details(RoleBindingClaimsDetails), editYaml()]} />;
+const { details, editResource } = navFactory;
+export const RoleBindingClaimsDetailsPage: React.FC<RoleBindingClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'RoleBindingClaim'} menuActions={menuActions} pages={[details(RoleBindingClaimsDetails), editResource()]} />;
 RoleBindingClaimsDetailsPage.displayName = 'RoleBindingClaimsDetailsPage';
 
 type RoleBindingClaimDetailsProps = {
