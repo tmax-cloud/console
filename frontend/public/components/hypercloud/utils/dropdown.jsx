@@ -58,12 +58,15 @@ const Dropdown_ = (props) => {
     }
   }, [name]);
 
-
   const [title, setTitle] = React.useState(_.get(props.items, selectedKey, props.title));
   const [active, setActive] = React.useState(!!props.active);
   const [items, setItems] = React.useState(Object.assign({}, props.items));
   const [keyboardHoverKey, setKeyboardHoverKey] = React.useState(selectedKey);
 
+  React.useEffect(()=>{
+    setValue(name, defaultValue);
+    setTitle(_.get(props.items, defaultValue, props.title));
+  }, [props.items]);
 
   const dropdownElement = React.useRef();
   const dropdownList = React.useRef();

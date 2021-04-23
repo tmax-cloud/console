@@ -77,7 +77,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfg.BasePath, "basePath", "/", "")
 	rootCmd.PersistentFlags().StringVar(&cfg.CertFile, "tls-cert-file", "./tls/tls.crt", "TLS certificate. If the certificate is signed by a certificate authority, the certFile should be the concatenation of the server's certificate followed by the CA's certificate.")
 	rootCmd.PersistentFlags().StringVar(&cfg.KeyFile, "tls-key-file", "./tls/tls.key", "The TLS certificate key.")
-	rootCmd.PersistentFlags().IntVar(&cfg.RedirectPort, "port", 0, "Port number under which the console should listen for custom hostname redirect.")
+	rootCmd.PersistentFlags().IntVar(&cfg.RedirectPort, "redirect-port", 0, "Port number under which the console should listen for custom hostname redirect.")
 	// authInfo
 	rootCmd.PersistentFlags().StringVar(&cfg.KeycloakRealm, "keycloak-realm", "", "Keycloak Realm Name")
 	rootCmd.PersistentFlags().StringVar(&cfg.KeycloakClientId, "keycloak-client-id", "", "Keycloak Client Id")

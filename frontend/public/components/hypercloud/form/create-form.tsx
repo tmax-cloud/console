@@ -18,11 +18,11 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     const title = `${props.titleVerb} ${kind || 'Sample'}`;
 
     const [inProgress] = React.useState(false); // onSubmit이나 나중에 Error관련 메서드에서 inProgress를 false로 변경해줘야함.
-    const model = kind && modelFor(kind);
 
     const onClick = methods.handleSubmit(data => {
       let inDo = _.defaultsDeep(props.fixed, data);
       inDo = props.onSubmitCallback(inDo);
+      const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind): kind && modelFor(kind);
       k8sCreate(model, inDo)
         .then(() => {
           history.push(resourceObjPath(inDo, referenceFor(model)));
@@ -42,11 +42,13 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
               <div className="co-m-pane__name">{title}</div>
             </h1>
             <p className="co-m-pane__explanation">{props.explanation}</p>
-            <fieldset>
-              <Section label="Name" id="name" isRequired={true}>
-                <input className="pf-c-form-control" id="name" name="metadata.name" ref={methods.register} />
-              </Section>
-            </fieldset>
+            {props.useDefaultForm &&
+              <fieldset>
+                <Section label="Name" id="name" isRequired={true}>
+                  <input className="pf-c-form-control" id="name" name="metadata.name" ref={methods.register} />
+                </Section>
+              </fieldset>
+            }
             <SubForm isCreate={props.isCreate} />
             <ButtonBar inProgress={inProgress}>
               <ActionGroup className="pf-c-form">
@@ -64,6 +66,11 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
       </FormProvider>
     );
   };
+
+  FormComponent.defaultProps = {
+    useDefaultForm: true
+  }
+
   return FormComponent;
 };
 
@@ -75,4 +82,5 @@ type CommonFormProps_ = {
   onSubmitCallback: Function;
   saveButtonText?: string;
   explanation?: string;
+  useDefaultForm?: boolean;
 };

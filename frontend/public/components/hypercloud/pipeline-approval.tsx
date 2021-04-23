@@ -126,7 +126,7 @@ const PipelineApprovalDetails: React.FC<PipelineApprovalDetailsProps> = ({ obj: 
 }
 
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const PipelineApprovals: React.FC = props => {
   const { t } = useTranslation();
@@ -164,7 +164,7 @@ export const PipelineApprovalsPage: React.FC<PipelineApprovalsPageProps> = props
   />;
 }
 
-export const PipelineApprovalsDetailsPage: React.FC<PipelineApprovalsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineApprovalDetails)), editYaml()]} />;
+export const PipelineApprovalsDetailsPage: React.FC<PipelineApprovalsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineApprovalDetails)), editResource()]} />;
 
 
 type PipelineApprovalDetailsListProps = {

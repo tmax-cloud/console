@@ -203,7 +203,7 @@ export const CustomResourceDefinitionsList: React.FC<CustomResourceDefinitionsLi
 };
 
 export const CustomResourceDefinitionsPage: React.FC<CustomResourceDefinitionsPageProps> = props => <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} />;
-export const CustomResourceDefinitionsDetailsPage: React.FC<CustomResourceDefinitionsDetailsPageProps> = props => <DetailsPage {...props} kind="CustomResourceDefinition" menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editYaml(), { name: 'Instances', href: 'instances', component: Instances }]} />;
+export const CustomResourceDefinitionsDetailsPage: React.FC<CustomResourceDefinitionsDetailsPageProps> = props => <DetailsPage {...props} kind="CustomResourceDefinition" menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource(), { name: 'Instances', href: 'instances', component: Instances }]} />;
 
 export type CustomResourceDefinitionsListProps = {};
 

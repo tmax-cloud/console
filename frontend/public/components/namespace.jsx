@@ -634,7 +634,7 @@ const namespaceBarStateToProps = ({ k8s }) => {
 /** @type {React.FC<{children?: ReactNode, disabled?: boolean, onNamespaceChange?: Function}>} */
 export const NamespaceBar = connect(namespaceBarStateToProps)(NamespaceBar_);
 
-export const NamespacesDetailsPage = props => <DetailsPage {...props} menuActions={nsMenuActions} pages={[navFactory.details(NamespaceDetails), navFactory.editYaml(), navFactory.roles(RolesPage)]} />;
+export const NamespacesDetailsPage = props => <DetailsPage {...props} menuActions={nsMenuActions} pages={[navFactory.details(NamespaceDetails), navFactory.editResource(), navFactory.roles(RolesPage)]} />;
 
 export const ProjectsDetailsPage = props => (
   <DetailsPage
