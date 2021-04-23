@@ -58,8 +58,8 @@ const environmentComponent = props => <EnvironmentPage obj={props.obj} rawEnvDat
 
 const ReplicaSetPods = props => <PodsComponent {...props} customData={{ showNodes: true }} />;
 
-const { details, editYaml, pods, envEditor, events } = navFactory;
-const ReplicaSetsDetailsPage = props => <DetailsPage {...props} menuActions={replicaSetMenuActions} pages={[details(Details), editYaml(), pods(ReplicaSetPods), envEditor(environmentComponent), events(ResourceEventStream)]} />;
+const { details, editResource, pods, envEditor, events } = navFactory;
+const ReplicaSetsDetailsPage = props => <DetailsPage {...props} menuActions={replicaSetMenuActions} pages={[details(Details), editResource(), pods(ReplicaSetPods), envEditor(environmentComponent), events(ResourceEventStream)]} />;
 
 const kind = 'ReplicaSet';
 

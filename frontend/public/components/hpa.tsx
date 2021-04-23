@@ -164,7 +164,7 @@ export const HorizontalPodAutoscalersDetails: React.FC<HorizontalPodAutoscalersD
   );
 };
 
-const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editYaml(), navFactory.events(ResourceEventStream)];
+const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editResource(), navFactory.events(ResourceEventStream)];
 export const HorizontalPodAutoscalersDetailsPage: React.FC<HorizontalPodAutoscalersDetailsPageProps> = props => <DetailsPage {...props} kind={HorizontalPodAutoscalersReference} menuActions={menuActions} pages={pages} />;
 HorizontalPodAutoscalersDetailsPage.displayName = 'HorizontalPodAutoscalersDetailsPage';
 

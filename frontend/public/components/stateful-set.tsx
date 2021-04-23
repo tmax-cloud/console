@@ -71,7 +71,7 @@ export const StatefulSetsPage: React.FC<StatefulSetsPageProps> = props => {
 
 const StatefulSetPods: React.FC<StatefulSetPodsProps> = props => <PodsComponent {...props} customData={{ showNodes: true }} />;
 
-const pages = [navFactory.details(StatefulSetDetails), navFactory.editYaml(), navFactory.pods(StatefulSetPods), navFactory.envEditor(EnvironmentTab), navFactory.events(ResourceEventStream)];
+const pages = [navFactory.details(StatefulSetDetails), navFactory.editResource(), navFactory.pods(StatefulSetPods), navFactory.envEditor(EnvironmentTab), navFactory.events(ResourceEventStream)];
 
 export const StatefulSetsDetailsPage: React.FC<StatefulSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={pages} />;
 
