@@ -9,6 +9,7 @@ import { rerunPipelineAndStay } from '../../../utils/pipeline-actions';
 import { PipelineRunModel } from '../../../models';
 import { usePipelineRunWithUserLabel } from '../../pipelineruns/triggered-by';
 import { getLatestRun, PipelineRun } from '../../../utils/pipeline-augment';
+import { useTranslation } from 'react-i18next';
 
 type TriggerLastRunButtonProps = {
   pipelineRuns: PipelineRun[];
@@ -21,6 +22,7 @@ const TriggerLastRunButton: React.FC<TriggerLastRunButtonProps> = ({
   namespace,
   impersonate,
 }) => {
+  const { t } = useTranslation();
   const latestRun = usePipelineRunWithUserLabel(
     getLatestRun({ data: pipelineRuns }, 'startTimestamp'),
   );
@@ -40,7 +42,7 @@ const TriggerLastRunButton: React.FC<TriggerLastRunButtonProps> = ({
     isAllowed && (
       <Button
         variant="secondary"
-        onClick={callback}
+        onClick={callback.bind(null, t)}
         isDisabled={pipelineRuns.length === 0 && !callback}
       >
         {label}

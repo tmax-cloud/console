@@ -71,7 +71,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
           {showTolerations && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_11')} obj={resource} path={tolerationsPath}>
               {canUpdate ? (
-                <Button type="button" isInline onClick={Kebab.factory.ModifyTolerations(model, resource).callback} variant="link">
+                <Button type="button" isInline onClick={Kebab.factory.ModifyTolerations(model, resource).callback.bind(null, t)} variant="link">
                   {pluralize(_.size(tolerations), 'Toleration')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
@@ -83,7 +83,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
           {showAnnotations && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')} obj={resource} path="metadata.annotations">
               {canUpdate ? (
-                <Button data-test-id="edit-annotations" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(model, resource).callback} variant="link">
+                <Button data-test-id="edit-annotations" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(model, resource).callback.bind(null, t)} variant="link">
                   {pluralize(_.size(metadata.annotations), 'Annotation')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
