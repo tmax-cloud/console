@@ -66,6 +66,11 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
       </FormProvider>
     );
   };
+
+  FormComponent.defaultProps = {
+    useDefaultForm: true
+  }
+
   return FormComponent;
 };
 
