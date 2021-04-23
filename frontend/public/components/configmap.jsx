@@ -99,6 +99,6 @@ const ConfigMapsPage = props => {
   const { t } = useTranslation();
   return <ListPage title={t('COMMON:MSG_LNB_MENU_27')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_27') })} ListComponent={ConfigMaps} canCreate={true} {...props} />;
 };
-const ConfigMapsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(ConfigMapDetails), navFactory.editYaml()]} />;
+const ConfigMapsDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(ConfigMapDetails), navFactory.editResource()]} />;
 
 export { ConfigMaps, ConfigMapsPage, ConfigMapsDetailsPage };

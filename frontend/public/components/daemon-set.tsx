@@ -134,7 +134,7 @@ const EnvironmentPage: React.FC<EnvironmentPageProps> = props => <AsyncComponent
 
 const envPath = ['spec', 'template', 'spec', 'containers'];
 const EnvironmentTab: React.FC<EnvironmentTabProps> = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec} envPath={envPath} readOnly={false} />;
-const { details, pods, editYaml, envEditor, events } = navFactory;
+const { details, pods, editResource, envEditor, events } = navFactory;
 export const DaemonSets: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Daemon Sets" Header={DaemonSetTableHeader.bind(null, t)} Row={DaemonSetTableRow} virtualize />;
@@ -147,7 +147,7 @@ export const DaemonSetsPage: React.FC<DaemonSetsPageProps> = props => {
 
 const DaemonSetPods: React.FC<DaemonSetPodsProps> = props => <PodsComponent {...props} customData={{ showNodes: true }} />;
 
-export const DaemonSetsDetailsPage: React.FC<DaemonSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(DaemonSetDetails)), editYaml(), pods(DaemonSetPods), envEditor(EnvironmentTab), events(ResourceEventStream)]} />;
+export const DaemonSetsDetailsPage: React.FC<DaemonSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(DaemonSetDetails)), editResource(), pods(DaemonSetPods), envEditor(EnvironmentTab), events(ResourceEventStream)]} />;
 
 type DaemonSetDetailsListProps = {
   ds: K8sResourceKind;
