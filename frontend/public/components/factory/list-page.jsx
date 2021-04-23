@@ -41,7 +41,7 @@ export class ListPageWrapper_ extends React.PureComponent {
   render() {
     const { flatten, ListComponent, reduxIDs, rowFilters, textFilter, hideToolbar, hideLabelFilter } = this.props;
     const data = flatten ? flatten(this.props.resources) : [];
-    const Filter = <FilterToolbar rowFilters={rowFilters} data={data} reduxIDs={reduxIDs} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} {...this.props} />;
+    const Filter = <FilterToolbar rowFilters={rowFilters} data={data} reduxIDs={reduxIDs} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedItems={['Awaiting']} {...this.props} />;
 
     return (
       <div>
