@@ -34,6 +34,7 @@ KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트
     --base-address=https://$myIP:9000 \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
+    --redirect-port=8080 \
     --keycloak-realm=tmax \
     --keycloak-auth-url=https://hyperauth.org/auth \
     --keycloak-client-id=ck-integration-hypercloud5 \

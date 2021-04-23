@@ -3,6 +3,7 @@ package hypercloud
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -71,7 +72,25 @@ func (s *HttpServer) Start(ctx context.Context) {
 	csr := s.DefaultConfig.CertFile
 	key := s.DefaultConfig.KeyFile
 
-	// RUN default server
+	if s.DefaultConfig.RedirectPort != 0 {
+		go func() {
+			// Listen on passed port number to be redirected to the console
+			redirectServer := http.NewServeMux()
+			redirectServer.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+				redirectURL := &url.URL{
+					Scheme:   listenURL.Scheme,
+					Host:     listenURL.Host,
+					RawQuery: req.URL.RawQuery,
+					Path:     req.URL.Path,
+				}
+				http.Redirect(res, req, redirectURL.String(), http.StatusMovedPermanently)
+			})
+			redirectPort := fmt.Sprintf(":%d", s.DefaultConfig.RedirectPort)
+			log.WithField("FILE", "server.go").Infof("Listening on %q for custom hostname redirect...", redirectPort)
+			log.WithField("FILE", "server.go").Fatal(http.ListenAndServe(redirectPort, redirectServer))
+		}()
+	}
+
 	go func() {
 		log.WithField("FILE", "server.go").Infof("Binding to %s...", serverHTTP.Addr)
 		if listenURL.Scheme == "https" {
