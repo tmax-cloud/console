@@ -4,15 +4,14 @@ metadata:
   name: console
   namespace: console-system
 spec:
-  externalTrafficPolicy: Local
   type: LoadBalancer
   ports:
   - name: "https"
     port: 443
     targetPort: 443
   - name: "http"
-    port: 80
-    targetPort: 80
+    port: 80 
+    targetPort: 80  
   selector:
     app: console   
     hypercloud: ui
