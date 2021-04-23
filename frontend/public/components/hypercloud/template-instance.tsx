@@ -197,12 +197,13 @@ const TemplateInstancesPage: React.FC<TemplateInstancesPageProps> = props => {
       ListComponent={TemplateInstancesList}
       rowFilters={[
         {
+          filterLabel: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           filterGroupName: 'Status',
           type: 'template-instance-status',
           reducer: templateInstancePhase,
           items: [
-            { id: 'Succeeded', title: t('COMMON:MSG_COMMON_FILTER_5') },
-            { id: 'Error', title: t('COMMON:MSG_COMMON_FILTER_9') },
+            { id: 'Succeeded', title: 'Success' },
+            { id: 'Error', title: 'Error' },
           ],
         },
       ]}
