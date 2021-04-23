@@ -80,14 +80,14 @@ func (s *HttpServer) Start(ctx context.Context) {
 			redirectServer.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
 				reqIp := strings.Split(req.Host, ":")[0]
 				redirectPort := strings.Split(listenURL.Host, ":")[1]
-				host := reqIp + redirectPort
+				host := reqIp + ":" + redirectPort
 				redirectURL := &url.URL{
 					Scheme:   listenURL.Scheme,
 					Host:     host,
 					RawQuery: req.URL.RawQuery,
 					Path:     req.URL.Path,
 				}
-				http.Redirect(res, req, redirectURL.String(), http.StatusMovedPermanently)
+				http.Redirect(res, req, redirectURL.String(), http.StatusFound)
 			})
 			redirectPort := fmt.Sprintf(":%d", s.DefaultConfig.RedirectPort)
 			log.WithField("FILE", "server.go").Infof("Listening on %q for custom hostname redirect...", redirectPort)
