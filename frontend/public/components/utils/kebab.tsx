@@ -13,8 +13,10 @@ import { AccessReviewResourceAttributes, K8sKind, K8sResourceKind, K8sResourceKi
 import { impersonateStateToProps } from '../../reducers/ui';
 import { connectToModel } from '../../kinds';
 import * as plugins from '../../plugins';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
+import * as hoistStatics from 'hoist-non-react-statics';
 
 export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] => {
   const subs: { [key: string]: KebabSubMenu } = {};
@@ -275,20 +277,25 @@ const kebabFactory: KebabFactory = {
   }),
   ModifyAnnotations: (kind, obj) => ({
     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_5',
-    callback: () =>
+    callback: (t) =>
       annotationsModal({
         kind,
         resource: obj,
         blocking: true,
+        submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
+        title: t('COMMON:MSG_MAIN_ACTIONBUTTON_5')
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyCount: (kind, obj) => ({
     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_7',
-    callback: () =>
+    callback: (t) =>
       configureReplicaCountModal({
         resourceKind: kind,
         resource: obj,
+        title: t('COMMON:MSG_MAIN_ACTIONBUTTON_7'),
+        submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
+        cancelText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_2'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -341,7 +348,6 @@ const kebabFactory: KebabFactory = {
 
 // The common menu actions that most resource share
 kebabFactory.common = [kebabFactory.ModifyLabels, kebabFactory.ModifyAnnotations, kebabFactory.Edit, kebabFactory.Delete];
-
 export const getExtensionsKebabActionsForKind = (kind: K8sKind) => {
   const extensionActions = [];
   _.forEach(plugins.registry.getKebabActions(), (getActions: any) => {
@@ -375,7 +381,8 @@ export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
   return <Kebab options={options} key={resource.metadata.uid} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
 });
 
-export class Kebab extends React.Component<any, { active: boolean }> {
+class Kebab_ extends React.Component<any, { active: boolean }> {
+
   static factory: KebabFactory = kebabFactory;
   static getExtensionsActionsForKind = getExtensionsKebabActionsForKind;
 
@@ -394,8 +401,10 @@ export class Kebab extends React.Component<any, { active: boolean }> {
   onClick = (event, option: KebabOption) => {
     event.preventDefault();
 
+    const { t } = this.props;
+
     if (option.callback) {
-      option.callback();
+      option.callback(t);
     }
 
     this.hide();
@@ -459,11 +468,13 @@ export class Kebab extends React.Component<any, { active: boolean }> {
   }
 }
 
+export const Kebab = hoistStatics(withTranslation()(Kebab_), Kebab_);
+
 export type KebabOption = {
   hidden?: boolean;
   label: string;
   href?: string;
-  callback?: () => any;
+  callback?: (t?:TFunction) => any;
   accessReview?: AccessReviewResourceAttributes;
   isDisabled?: boolean;
   tooltip?: string;

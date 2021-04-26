@@ -196,12 +196,13 @@ const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
       ListComponent={ServiceInstancesList}
       rowFilters={[
         {
+          filterLabel: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           filterGroupName: 'Status',
           type: 'service-instance-status',
           reducer: serviceInstanceStatusReducer,
           items: [
-            { id: 'Ready', title: t('COMMON:MSG_MAIN_FILTER_2') },
-            { id: 'Error', title: t('COMMON:MSG_MAIN_FILTER_3') },
+            { id: 'Ready', title: 'Ready' },
+            { id: 'Error', title: 'Error' },
           ],
         },
       ]}

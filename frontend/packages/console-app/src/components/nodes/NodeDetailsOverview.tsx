@@ -17,12 +17,14 @@ import { PencilAltIcon } from '@patternfly/react-icons';
 import { getNodeMachineNameAndNamespace, getNodeAddresses } from '@console/shared';
 import NodeIPList from './NodeIPList';
 import NodeStatus from './NodeStatus';
+import { useTranslation } from 'react-i18next';
 
 type NodeDetailsOverviewProps = {
   node: NodeKind;
 };
 
 const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
+  const { t } = useTranslation();
   const machine = getNodeMachineNameAndNamespace(node);
   const canUpdate = useAccessReview({
     group: NodeModel.apiGroup,
@@ -60,7 +62,7 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
                   variant="link"
                   type="button"
                   isInline
-                  onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback}
+                  onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback.bind(null, t)}
                 >
                   {pluralize(_.size(node.spec.taints), 'Taint')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
@@ -76,7 +78,7 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
                   variant="link"
                   type="button"
                   isInline
-                  onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback}
+                  onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback.bind(null, t)}
                 >
                   {pluralize(_.size(node.metadata.annotations), 'Annotation')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />

@@ -137,7 +137,7 @@ const ReplicaSetsTab: React.FC<ReplicaSetsTabProps> = ({ obj }) => {
   return <ReplicaSetsPage showTitle={false} namespace={namespace} selector={selector} canCreate={false} />;
 };
 
-const { details, editYaml, pods, envEditor, events } = navFactory;
+const { details, editResource, pods, envEditor, events } = navFactory;
 export const DeploymentsDetailsPage: React.FC<DeploymentsDetailsPageProps> = props => {
   const { t } = useTranslation();
   return (
@@ -147,7 +147,7 @@ export const DeploymentsDetailsPage: React.FC<DeploymentsDetailsPageProps> = pro
       menuActions={menuActions}
       pages={[
         details(DeploymentDetails),
-        editYaml(),
+        editResource(),
         {
           href: 'replicasets',
           name: t('COMMON:MSG_LNB_MENU_31'),

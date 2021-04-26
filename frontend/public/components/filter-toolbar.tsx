@@ -37,7 +37,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   rowFilters.map(grp => {
     const items = grp.itemsGenerator ? grp.itemsGenerator(props, props.kind) : grp.items;
     return (
-      <DropdownGroup key={grp.filterGroupName} label={grp.filterGroupName} className="co-filter-dropdown-group">
+      <DropdownGroup key={grp.filterGroupName} label={grp.filterLabel || grp.filterGroupName} className="co-filter-dropdown-group">
         {_.map(items, item => (
           <DropdownItem data-test-row-filter={item.id} key={item.id} id={item.id} className="co-filter-dropdown__item" listItemClassName="co-filter-dropdown__list-item">
             <div className="co-filter-dropdown-item">
@@ -195,6 +195,8 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(labelFilters) && applyFilter(labelFilters, FilterType.LABEL);
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(selectedRowFilters) && applyRowFilter(selectedRowFilters);
+    // applyRowFilter(defaultSelectedItems);
+    // setQueryParameters(defaultSelectedItems);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -282,9 +284,11 @@ type FilterToolbarProps = {
   hideLabelFilter?: boolean;
   parseAutoComplete?: any;
   kinds?: any;
+  defaultSelectedItems?: string[];
 };
 
 export type RowFilter = {
+  filterLabel?: string;
   filterGroupName: string;
   type: string;
   items?: {

@@ -81,6 +81,25 @@ export const ResourceQuotaClaimsList: React.FC = props => {
 };
 ResourceQuotaClaimsList.displayName = 'ResourceQuotaClaimsList';
 
+const resourceQuotaClaimStatusReducer = (rqc: any): string => {
+  return rqc?.status?.status;
+};
+
+const filters = t => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'resource-quota-claim-status',
+    reducer: resourceQuotaClaimStatusReducer,
+    items: [
+      { id: 'Awaiting', title: 'Awaiting' },
+      { id: 'Approved', title: 'Approved' },
+      { id: 'Rejected', title: 'Rejected' },
+      { id: 'Namespace Deleted', title: 'Namespace Deleted' },
+      { id: 'Error', title: 'Error' },
+    ],
+  },
+];
+
 export const ResourceQuotaClaimsPage: React.FC<ResourceQuotaClaimsPageProps> = props => {
   const { t } = useTranslation();
   const pages = [
@@ -89,11 +108,13 @@ export const ResourceQuotaClaimsPage: React.FC<ResourceQuotaClaimsPageProps> = p
       name: t('COMMON:MSG_LNB_MENU_80'),
     },
     {
+      // href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
       href: 'resourcequotaclaims',
+      path: 'resourcequotaclaims',
       name: t('COMMON:MSG_LNB_MENU_102'),
     },
   ];
-  return <ListPage kind={'ResourceQuotaClaim'} canCreate={true} ListComponent={ResourceQuotaClaimsList} {...props} multiNavPages={pages} />;
+  return <ListPage kind={'ResourceQuotaClaim'} canCreate={true} ListComponent={ResourceQuotaClaimsList} {...props} multiNavPages={pages} rowFilters={filters.bind(null, t)()} />;
 };
 ResourceQuotaClaimsPage.displayName = 'ResourceQuotaClaimsPage';
 const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ obj: resourcequotaclaims }) => {

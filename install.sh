@@ -12,7 +12,7 @@ deploy_temp="$temp_Dir/5.deploy.yaml"
 # KIBANA="opendistro-kibana.efk.svc.cluster.local:5601"
 KIBANA="kibana.kube-logging.svc.cluster.local:5601"
 KUBEFLOW="0.0.0.0"
-GITLAB="gitlab-test-deploy.ck1-2.192.168.6.151.nip.io"
+GITLAB="http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/"
 OPERATOR_VER="5.1.0.1"
 
 # GET ENV 
@@ -53,7 +53,7 @@ echo "kiali Addr = ${KIALI}"
 
 echo "kibana Addr = ${KIBANA} <- default"
 
-if [ -z $GITALB ]; then 
+if [ -z $GITLAB ]; then 
     GITLAB=$(kubectl -n gitlab-system exec -t $(kubectl -n gitlab-system get pod | grep gitlab | awk '{print $1}') -- cat /tmp/shared/omnibus.env 2>/dev/null | grep -oP "external_url '\K[^']*(?=')")
     if [ -z $GITALB ]; then 
         echo "Failed to find GITLAB URL, so GITLAB=http://0.0.0.0"

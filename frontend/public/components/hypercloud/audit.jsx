@@ -49,7 +49,7 @@ class Inner extends React.PureComponent {
         <div className="co-sysevent__box">
           <div className="co-sysevent__header">
             <div className="co-sysevent__subheader">
-              {objectRef.Resource}
+              {objectRef.Resource} ({objectRef.Name})
               <Timestamp timestamp={timestamp} />
             </div>
             <div

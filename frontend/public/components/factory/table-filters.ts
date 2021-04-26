@@ -66,11 +66,14 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
     const result = nameSpaceClaim?.status?.status;
-    const a = results.selected.has(result);
-    const b = !_.includes(results.all, result);
-    return a||b;
-    // return results.selected.has(result) || !_.includes(results.all, result);
-
+    return results.selected.has(result) || !_.includes(results.all, result);
+  },
+  'resource-quota-claim-status': (results, resourceQuotaClaim) => {
+    if(!results || !results.selected || !results.selected.size) {
+      return true;
+    }
+    const result = resourceQuotaClaim?.status?.status;
+    return results.selected.has(result) || !_.includes(results.all, result);
   },
   'alert-list-text': (filter, alert) => {
     if (fuzzyCaseInsensitive(filter, alert.labels?.alertname)) {
@@ -328,7 +331,14 @@ export const tableFilters: TableFilterMap = {
       if (instance.status) {
         instance.status.conditions.forEach(cur => {
           if (cur.type === '') {
-            phase = cur.status;
+            switch (cur.status) {
+              case 'Success':
+                phase = 'Succeeded';
+                break;
+              default:
+                phase = cur.status;
+                break;
+            }
           }
         });
         return phase;

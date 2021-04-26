@@ -15,6 +15,7 @@ import { ResourceEventStream } from './events';
 import { JobModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 
+// MJ : message 부분 스트링 발행되면 적용하기
 const ModifyJobParallelism: KebabAction = (kind: K8sKind, obj: JobKind) => {
   const { t } = useTranslation();
   return {
@@ -23,6 +24,9 @@ const ModifyJobParallelism: KebabAction = (kind: K8sKind, obj: JobKind) => {
       configureJobParallelismModal({
         resourceKind: kind,
         resource: obj,
+        title: t('COMMON:MSG_MAIN_ACTIONBUTTON_10'),
+        buttonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
+        cancelText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_2'),
       }),
     accessReview: {
       group: kind.apiGroup,
