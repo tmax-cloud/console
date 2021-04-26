@@ -56,7 +56,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   });
 
 const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props => {
-  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], defaultSelectedItems } = props;
+  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME] } = props;
 
   const [inputText, setInputText] = React.useState('');
   const [filterType, setFilterType] = React.useState(FilterType.NAME);
