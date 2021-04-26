@@ -4,10 +4,13 @@ import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 
 export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods, inputResource }) => {
-  const typeItems = {
-    git: 'Git',
-    image: 'Image',
-  };
+  const typeItems = React.useMemo(
+    () => ({
+      git: 'Git',
+      image: 'Image',
+    }),
+    [],
+  );
   let target = document.getElementById('input-resource-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
   let template;

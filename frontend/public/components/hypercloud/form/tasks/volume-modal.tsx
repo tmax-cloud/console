@@ -5,11 +5,14 @@ import { TextInput } from '../../utils/text-input';
 import { useWatch } from 'react-hook-form';
 
 export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => {
-  const typeItems = {
-    emptyDir: '빈 디렉토리',
-    configMap: '컨피그 맵',
-    secret: '시크릿',
-  };
+  const typeItems = React.useMemo(
+    () => ({
+      emptyDir: '빈 디렉토리',
+      configMap: '컨피그 맵',
+      secret: '시크릿',
+    }),
+    [],
+  );
   let target = document.getElementById('volume-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
   let template;

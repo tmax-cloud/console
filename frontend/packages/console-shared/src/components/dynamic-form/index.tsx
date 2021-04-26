@@ -11,8 +11,9 @@ import { getSchemaErrors } from './utils';
 import { useTranslation } from 'react-i18next';
 import './styles.scss';
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, formData = {}, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {}, create = true }) => {
+export const DynamicForm: React.FC<DynamicFormProps> = props => {
   const { t } = useTranslation();
+  const { ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, formData = {}, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {}, create = true } = props;
   const schemaErrors = getSchemaErrors(schema);
   // IF the top level schema is unsupported, don't render a form at all.
   if (schemaErrors.length) {
@@ -27,7 +28,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ ArrayFieldTemplate = D
         <Form
           className="co-dynamic-form"
           // liveValidate={true}
-          noValidate
+          noValidate={noValidate}
           ArrayFieldTemplate={ArrayFieldTemplate}
           fields={{ ...defaultFields, ...fields }}
           FieldTemplate={FieldTemplate}

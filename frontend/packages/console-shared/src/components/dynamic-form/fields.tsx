@@ -137,11 +137,14 @@ export const ResourceRequirementsField: React.FC<FieldProps> = ({ formData, idSc
     </dl>
   </FieldSet>
 );
-export const AdditionalPropertyField: React.FC<FieldProps> = ({ formData, idSchema, name, onChange, required, schema, uiSchema }) => (
-  <FieldSet defaultLabel={name || 'Resource Requirements'} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
-    <AdditionalPropertyFields data={formData} onChange={onChange} path={`${idSchema.$id}`}></AdditionalPropertyFields>
-  </FieldSet>
-);
+export const AdditionalPropertyField: React.FC<FieldProps> = props => {
+  const { formData, idSchema, name, onChange, required, schema, uiSchema } = props;
+  return (
+    <FieldSet defaultLabel={name || 'Resource Requirements'} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
+      <AdditionalPropertyFields formData={formData} onChange={affinity => onChange(affinity)} uid={idSchema.$id}></AdditionalPropertyFields>
+    </FieldSet>
+  );
+};
 
 export const DropdownField: React.FC<FieldProps> = ({ formData, idSchema, name, onChange, schema, uiSchema = {} }) => {
   const { items, title } = getUiOptions(uiSchema);

@@ -7,10 +7,13 @@ import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
 
 export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods, taskParameter }) => {
-  const typeItems = {
-    string: 'String',
-    array: 'Array',
-  };
+  const typeItems = React.useMemo(
+    () => ({
+      string: 'String',
+      array: 'Array',
+    }),
+    [],
+  );
   let target = document.getElementById('task-parameter-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
   let template;
