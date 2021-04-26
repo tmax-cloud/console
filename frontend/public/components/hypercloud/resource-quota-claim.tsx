@@ -108,7 +108,8 @@ export const ResourceQuotaClaimsPage: React.FC<ResourceQuotaClaimsPageProps> = p
       name: t('COMMON:MSG_LNB_MENU_80'),
     },
     {
-      href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
+      // href: 'resourcequotaclaims?rowFilter-resource-quota-claim-status=Awaiting',
+      href: 'resourcequotaclaims',
       path: 'resourcequotaclaims',
       name: t('COMMON:MSG_LNB_MENU_102'),
     },

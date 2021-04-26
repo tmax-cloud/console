@@ -56,7 +56,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   });
 
 const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props => {
-  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], defaultSelectedItems } = props;
+  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME] } = props;
 
   const [inputText, setInputText] = React.useState('');
   const [filterType, setFilterType] = React.useState(FilterType.NAME);
@@ -195,8 +195,8 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(labelFilters) && applyFilter(labelFilters, FilterType.LABEL);
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(selectedRowFilters) && applyRowFilter(selectedRowFilters);
-    applyRowFilter(defaultSelectedItems);
-    setQueryParameters(defaultSelectedItems);
+    // applyRowFilter(defaultSelectedItems);
+    // setQueryParameters(defaultSelectedItems);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
