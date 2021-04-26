@@ -195,8 +195,8 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(labelFilters) && applyFilter(labelFilters, FilterType.LABEL);
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(selectedRowFilters) && applyRowFilter(selectedRowFilters);
-    applyRowFilter(defaultSelectedItems);
-    setQueryParameters(defaultSelectedItems);
+    // applyRowFilter(defaultSelectedItems);
+    // setQueryParameters(defaultSelectedItems);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

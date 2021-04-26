@@ -110,8 +110,8 @@ export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => 
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1'),
     },
     {
-      href: 'namespaceclaims?rowFilter-namespace-claim-status=Awaiting',
-      path: 'namespaceclaims',
+      href: 'namespaceclaims',
+      // path: 'namespaceclaims',
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
     },
   ];
