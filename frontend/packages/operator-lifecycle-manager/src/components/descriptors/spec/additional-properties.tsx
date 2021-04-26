@@ -37,11 +37,6 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
 }) => {
   const items = Array.isArray(formData) ? formData : _.keys(formData).map(cur => ({ [cur]: formData[cur] }));
 
-  // const updateProperty = (index: number, newProperty: any): void => onChange(items.map((item, i) => (i === index ? newProperty : item)));
-
-  // const removeProperty = (index: number): void => onChange(items.filter((item, i) => i !== index));
-
-  // const addProperty = (): void => onChange([...items, {}]);
   const updateProperty = (index: number, newProperty: any): void => {
     let obj = {};
     items.forEach((cur, i) => {
@@ -63,7 +58,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
     let obj = {};
     items.forEach((cur, i) => {
       if (i !== index) {
-        obj[Object.keys(cur)[0]] = cur;
+        obj[Object.keys(cur)[0]] = Object.values(cur)[0];
       }
     });
     onChange(obj);
@@ -72,9 +67,9 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
   const addProperty = (): void => {
     let obj = {};
     items.forEach((cur, i) => {
-      obj[Object.keys(cur)[0]] = cur;
+      obj[Object.keys(cur)[0]] = Object.values(cur)[0];
     });
-    onChange({ ...obj, ['']: '' });
+    onChange({ ...obj, [`defaultKey_${items.length}`]: `defaultValue_${items.length}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
   };
 
   return (
