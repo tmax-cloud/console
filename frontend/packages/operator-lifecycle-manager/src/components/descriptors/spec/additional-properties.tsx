@@ -3,93 +3,114 @@ import * as _ from 'lodash';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 
-export const AdditionalPropertyFields: React.FC<AdditionalPropertyProps> = props => {
-  let { data, onChange, path } = props;
-
-  const obj = data;
-  const [items, setItems] = React.useState(_.keys(obj).map(cur => ({ [cur]: obj[cur] })));
-
-  const onAddProperty = () => {
-    setItems(prev => items.concat({ '': '' }));
-  };
-  const onRemoveProperty = idx => {
-    setItems(items.filter((cur, index) => idx !== index));
-  };
-
+const AdditionalProperty: React.FC<AdditionalPropertyProps> = ({ property, onChange = () => {}, onClickRemove = () => {} }) => {
+  let key = '';
+  let value = '';
+  for (let propertyKey in property) {
+    key = propertyKey;
+    value = property[propertyKey];
+  }
   return (
-    <>
-      <Button type="button" onClick={onAddProperty} variant="link">
-        <PlusCircleIcon className="co-icon-space-r" />
-        Add Property
-      </Button>
-      {items.length > 0 && (
-        <div className="row" style={{ marginTop: '10px' }}>
-          <div className="col-xs-4">Key</div>
-          <div className="col-xs-4">Value</div>
-        </div>
-      )}
-      {items.length > 0 && items.map((cur, idx) => <AdditionalPropertyItem key={idx} path={`${path}_${idx}`} index={idx} items={items} data={cur} onChange={onChange} onRemove={onRemoveProperty} />)}
-    </>
-  );
-};
-
-const AdditionalPropertyItem = props => {
-  const { index, items, data, onChange, onRemove, path } = props;
-  const [additionalKey, setKey] = React.useState(Object.keys(data)[0]);
-  const [additionalValue, setValue] = React.useState(Object.values(data)[0] || ' ');
-  React.useEffect(() => {
-    setKey(Object.keys(data)[0]);
-    setValue(Object.values(data)[0]);
-  }, [data]);
-  React.useEffect(() => {
-    const result = {};
-    items.forEach(cur => {
-      result[Object.keys(cur)[0]] = Object.values(cur)[0];
-    });
-    return onChange(result);
-  }, [additionalKey, additionalValue]);
-  return (
-    <div id={`${path}_field`} className="row co-m-form-row">
-      <div className="col-xs-4">
-        <input
-          // id={`${path}`}
-          value={additionalKey}
-          onChange={e => {
-            const value = e.target.value;
-            setKey(value);
-            console.log(value);
-            items.splice(index, 1, { [value]: additionalValue });
-          }}
-          name={additionalKey}
-          type="text"
-          className="pf-c-form-control"
-          key={`key-${index}`}
-        />
+    <div className="row key-operator-value__row">
+      <div className="col-md-4 col-xs-5 key-operator-value__name-field">
+        <div className="key-operator-value__heading hidden-md hidden-lg text-secondary text-uppercase">Key</div>
+        <input type="text" className="pf-c-form-control" value={key} onChange={e => onChange({ [e.target.value]: value })} />
       </div>
-      <div className="col-xs-4">
-        <input
-          // id={`${path}`}
-          value={(additionalValue as string) || ''}
-          onChange={e => {
-            const value = e.target.value;
-            setValue(value);
-            items.splice(index, 1, { [additionalKey]: value });
-          }}
-          type="text"
-          className="pf-c-form-control"
-          key={`value-${index}`}
-        />
+      <div className="col-md-3 col-xs-5 key-operator-value__value-field key-operator-value__value-field--stacked">
+        <div className="key-operator-value__heading hidden-md hidden-lg text-secondary text-uppercase">Value</div>
+        <input className="pf-c-form-control" type="text" value={value} onChange={e => onChange({ [key]: e?.target?.value })} />
       </div>
-      <Button type="button" onClick={() => onRemove.bind(null, index)} variant="link">
-        <MinusCircleIcon className="co-icon-space-r" />
-        Remove Property
-      </Button>
+      <div className="col-xs-1 key-operator-value__action key-operator-value__action--stacked">
+        <div className="key-operator-value__heading key-operator-value__heading-button hidden-md hidden-lg" />
+        <Button type="button" onClick={onClickRemove} aria-label="Delete" className="key-operator-value__delete-button" variant="plain">
+          <MinusCircleIcon />
+        </Button>
+      </div>
     </div>
   );
 };
 
-type AdditionalPropertyProps = {
-  data: any;
-  path: string;
-  onChange: any;
+export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> = ({
+  formData,
+  onChange = () => {}, // Default to noop
+  uid = '',
+}) => {
+  const items = Array.isArray(formData) ? formData : _.keys(formData).map(cur => ({ [cur]: formData[cur] }));
+
+  // const updateProperty = (index: number, newProperty: any): void => onChange(items.map((item, i) => (i === index ? newProperty : item)));
+
+  // const removeProperty = (index: number): void => onChange(items.filter((item, i) => i !== index));
+
+  // const addProperty = (): void => onChange([...items, {}]);
+  const updateProperty = (index: number, newProperty: any): void => {
+    let obj = {};
+    items.forEach((cur, i) => {
+      if (i === index) {
+        // 여기서 key값이 변경됬는지 value값이 변경됬는지
+        if (obj[Object.keys(cur)[0]] === Object.keys(newProperty)[0]) {
+          obj[Object.keys(newProperty)[0]] = Object.values(cur)[0]; // key 바뀐거
+        } else {
+          obj[Object.keys(cur)[0]] = Object.values(newProperty)[0]; // value 바뀐거
+        }
+      } else {
+        obj[Object.keys(cur)[0]] = Object.values(cur)[0];
+      }
+    });
+    onChange(obj);
+  };
+
+  const removeProperty = (index: number): void => {
+    let obj = {};
+    items.forEach((cur, i) => {
+      if (i !== index) {
+        obj[Object.keys(cur)[0]] = cur;
+      }
+    });
+    onChange(obj);
+  };
+
+  const addProperty = (): void => {
+    let obj = {};
+    items.forEach((cur, i) => {
+      obj[Object.keys(cur)[0]] = cur;
+    });
+    onChange({ ...obj, ['']: '' });
+  };
+
+  return (
+    <>
+      <div className="row key-operator-value__heading hidden-sm hidden-xs">
+        <div className="col-md-4 text-secondary text-uppercase">Key</div>
+        <div className="col-md-3 text-secondary text-uppercase">Value</div>
+      </div>
+      {items.map((property, index) => (
+        // Have to use array index in the key bc any other unique id whould have to use editable fields.
+        <AdditionalProperty
+          // eslint-disable-next-line react/no-array-index-key
+          key={`${uid}-property-${index}`}
+          property={property}
+          onClickRemove={() => removeProperty(index)}
+          onChange={newProperty => updateProperty(index, newProperty)}
+        />
+      ))}
+      <div className="row">
+        <Button type="button" onClick={addProperty} variant="link">
+          <PlusCircleIcon className="co-icon-space-r" />
+          Add More
+        </Button>
+      </div>
+    </>
+  );
+};
+
+export type AdditionalPropertyFieldsProps = {
+  formData: any;
+  onChange?: ({}) => void;
+  uid?: string;
+};
+
+export type AdditionalPropertyProps = {
+  property: any;
+  onChange?: ({}) => void;
+  onClickRemove?: () => void;
 };
