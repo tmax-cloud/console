@@ -1,21 +1,23 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import { Map as ImmutableMap } from 'immutable';
-import { connect } from 'react-redux';
+// import { Map as ImmutableMap } from 'immutable';
+// import { connect } from 'react-redux';
 
 import DashboardCard from '@console/shared/src/components/dashboard/dashboard-card/DashboardCard';
 import DashboardCardBody from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardBody';
 import DashboardCardHeader from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardHeader';
 import DashboardCardLink from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardLink';
 import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardTitle';
-import { DashboardItemProps, withDashboardResources } from '../../with-dashboard-resources';
+import { withDashboardResources } from '../../with-dashboard-resources';
 import { EventModel } from '../../../../models';
 import { FirehoseResource, FirehoseResult } from '../../../utils';
-import { EventKind, K8sKind } from '../../../../module/k8s';
-import ActivityBody, { RecentEventsBody, OngoingActivityBody } from '@console/shared/src/components/dashboard/activity-card/ActivityBody';
-import { useExtensions, DashboardsOverviewResourceActivity, DashboardsOverviewPrometheusActivity, isDashboardsOverviewResourceActivity, isDashboardsOverviewPrometheusActivity } from '@console/plugin-sdk';
-import { uniqueResource } from './utils';
-import { PrometheusResponse } from '../../../graphs';
+// import { EventKind, K8sKind } from '../../../../module/k8s';
+import { EventKind } from '../../../../module/k8s';
+// import ActivityBody, { RecentEventsBody, OngoingActivityBody } from '@console/shared/src/components/dashboard/activity-card/ActivityBody';
+import ActivityBody, { RecentEventsBody } from '@console/shared/src/components/dashboard/activity-card/ActivityBody';
+// import { useExtensions, DashboardsOverviewResourceActivity, DashboardsOverviewPrometheusActivity, isDashboardsOverviewResourceActivity, isDashboardsOverviewPrometheusActivity } from '@console/plugin-sdk';
+// import { uniqueResource } from './utils';
+// import { PrometheusResponse } from '../../../graphs';
 import { useTranslation } from 'react-i18next';
 
 const eventsResource: FirehoseResource = { isList: true, kind: EventModel.kind, prop: 'events' };
@@ -31,9 +33,9 @@ const RecentEvent = withDashboardResources(({ watchK8sResource, stopWatchK8sReso
   return <RecentEventsBody events={resources.events as FirehoseResult<EventKind[]>} moreLink={viewEvents} />;
 });
 
-const mapStateToProps = ({ k8s }) => ({
-  models: k8s.getIn(['RESOURCES', 'models']),
-});
+// const mapStateToProps = ({ k8s }) => ({
+//   models: k8s.getIn(['RESOURCES', 'models']),
+// });
 
 // const OngoingActivity = connect(mapStateToProps)(
 //   withDashboardResources(({ watchK8sResource, stopWatchK8sResource, resources, watchPrometheus, stopWatchPrometheusQuery, prometheusResults, models }: DashboardItemProps & OngoingActivityProps) => {
