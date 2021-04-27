@@ -9,7 +9,7 @@ import { Section } from '../../utils/section';
 import { ListView } from '../../utils/list-view';
 import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { k8sGet } from '../../../../module/k8s';
-import { TaskModel, PipelineResourceModel, ServiceAccountModel, TaskRunModel } from '../../../../models';
+import { ClusterTaskModel, TaskModel, PipelineResourceModel, ServiceAccountModel, TaskRunModel } from '../../../../models';
 import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
@@ -28,7 +28,7 @@ const paramItemRenderer = (register, name, item, index, ListActions, ListDefault
   return (
     <div className="row" key={item.id}>
       <div className="col-xs-4 pairs-list__value-field">
-        <input ref={register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
+        <input id={`${name}[${index}].value`} ref={register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         {defaultArrayLength > index ? null : (
@@ -62,12 +62,12 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
 
   const selectedTask = useWatch({
     control: methods.control,
-    name: 'spec.taskRef.name',
+    name: 'taskRef.name',
     defaultValue: '',
   });
 
-  const getTaskDetails = async selectedTaskName => {
-    const task = await k8sGet(TaskModel, selectedTaskName, getActiveNamespace(store.getState()));
+  const getTaskDetails = async (taskKind, taskName) => {
+    const task = taskKind === 'Task' ? await k8sGet(TaskModel, taskName, getActiveNamespace(store.getState())) : await k8sGet(ClusterTaskModel, taskName);
 
     const inputsData = task.spec?.resources?.inputs?.map(input => {
       return {
@@ -163,7 +163,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
       paramList.map((item, index) => {
         if (item.type === 'array') {
           return (
-            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description}>
+            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={item.required}>
               <>
                 <input ref={methods.register} type="hidden" id={`params.${index}.name`} name={`params.${index}.name`} value={item.name} />
                 <ListView name={`params.${index}.value`} methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={paramValueListData[index]?.value} />
@@ -172,7 +172,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
           );
         } else {
           return (
-            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description}>
+            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={item.required}>
               <>
                 <input ref={methods.register} type="hidden" id={`params[${index}].name`} name={`params[${index}].name`} value={item.name} />
                 <input ref={methods.register} className="pf-c-form-control" id={`params[${index}].value`} name={`params[${index}].value`} defaultValue={item.value} />
@@ -199,14 +199,28 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     );
 
   React.useEffect(() => {
-    getTaskDetails(selectedTask);
+    const taskKind = selectedTask.split('~~')[0];
+    const taskName = selectedTask.split('~~')[1];
+    getTaskDetails(taskKind, taskName);
   }, [selectedTask]);
 
   return (
     <>
       <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} id="task">
-        <ResourceDropdown name="spec.taskRef.name" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} resources={[{ kind: TaskModel.kind, namespace: namespace, prop: 'task' }]} defaultValue="" methods={methods} type="single" useHookForm />
-        {/* <input ref={methods.register} name="spec.taskRef.name" /> */}
+        <ResourceDropdown
+          name="taskRef.name"
+          placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')}
+          idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
+          resources={[
+            { kind: TaskModel.kind, namespace: namespace, prop: 'task' },
+            { kind: ClusterTaskModel.kind, prop: 'clustertask' },
+          ]}
+          defaultValue=""
+          methods={methods}
+          type="single"
+          useHookForm
+        />
+        {/* <input ref={methods.register} name="taskRef.name" /> */}
       </Section>
       {selectedTask != '' ? (
         <>
@@ -245,8 +259,8 @@ export const CreateTaskRun: React.FC<CreateTaskRunProps> = ({ match: { params },
 
 const changeTimeoutFormat = timeout => {
   timeout = Number(timeout);
-  if (timeout == 0) {
-    return 0;
+  if (timeout == 0 || isNaN(timeout)) {
+    return '0';
   }
   if (timeout >= 60) {
     return `${(timeout - (timeout % 60)) / 60}h${timeout % 60}m`;
@@ -254,8 +268,17 @@ const changeTimeoutFormat = timeout => {
 };
 
 export const onSubmitCallback = data => {
-  let params = _.cloneDeep(data.params);
+  // MEMO : task name data
+  const task = data.taskRef?.name;
+  const taskKind = task.split('~~')[0];
+  const taskName = task.split('~~')[1];
+  delete data.taskRef;
+
+  // MEMO : timeout data
   const formattedTimeout = changeTimeoutFormat(data.spec?.timeout);
+  delete data.spec?.timeout;
+
+  // MEMO : inputs data
   const inputs = data.spec?.resources?.inputs;
   let formattedInputs = [];
   for (const inputName in inputs) {
@@ -265,6 +288,9 @@ export const onSubmitCallback = data => {
     };
     formattedInputs.push(inputObj);
   }
+  delete data.spec?.resources?.inputs;
+
+  // MEMO : outputs data
   const outputs = data.spec?.resources?.outputs;
   let formattedOutputs = [];
   for (const outputName in outputs) {
@@ -274,7 +300,10 @@ export const onSubmitCallback = data => {
     };
     formattedOutputs.push(outputObj);
   }
+  delete data.spec?.resources?.outputs;
 
+  // MEMO : paramters data
+  const params = _.cloneDeep(data.params);
   const formattedParams = params?.map(param => {
     if (Array.isArray(param.value)) {
       const valueList = param.value.map(obj => {
@@ -285,11 +314,9 @@ export const onSubmitCallback = data => {
       return { name: param.name, value: param.value };
     }
   });
-  delete data.spec?.resources?.inputs;
-  delete data.spec?.resources?.outputs;
   delete data.params;
-  delete data.spec?.timeout;
-  data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } });
+
+  data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { taskRef: { kind: taskKind, name: taskName }, params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } });
   // console.log('data? ', data);
   return data;
 };
