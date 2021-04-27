@@ -28,7 +28,7 @@ import './hypercloud/utils/langs/i18n';
 import { Page } from '@patternfly/react-core';
 // import Keycloak from 'keycloak-js';
 import keycloak from '../hypercloud/keycloak';
-import { setAccessToken, setId, resetLoginState } from '../hypercloud/auth';
+import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 
@@ -192,7 +192,8 @@ keycloak.onReady = function() {
 keycloak.onAuthSuccess = function() {
   console.log('[keycloak] onAuthSuccess');
 
-  setAccessToken(keycloak.idToken);
+  setIdToken(keycloak.idToken);
+  setAccessToken(keycloak.token);
   setId(keycloak.idTokenParsed.preferred_username);
 
   const startDiscovery = () => store.dispatch(watchAPIServices());
