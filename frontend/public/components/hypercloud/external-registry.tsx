@@ -76,10 +76,10 @@ const ExternalRegistryTableRow: RowFunction<K8sResourceKind> = ({ obj: externalR
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={externalRegistry.metadata.namespace} title={externalRegistry.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{externalRegistry.spec.registryUrl}</TableData>
-      <TableData className={tableColumnClasses[3]}>{externalRegistry.spec.registryType}</TableData>
+      <TableData className={tableColumnClasses[2]}>{externalRegistry.spec?.registryUrl}</TableData>
+      <TableData className={tableColumnClasses[3]}>{externalRegistry.spec?.registryType}</TableData>
       <TableData className={classNames(tableColumnClasses[4], 'co-break-word')}>
-        <Status status={externalRegistry.status.state} />
+        <Status status={externalRegistry.status?.state} />
       </TableData>
       <TableData className={tableColumnClasses[5]}>
         <Timestamp timestamp={externalRegistry.metadata.creationTimestamp} />
@@ -125,9 +125,9 @@ const ExternalRegistryDetails: React.FC<ExternalRegistryDetailsProps> = ({ obj: 
       </div>
     </>
   );
-}
+};
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const ExternalRegistries: React.FC = props => {
   const { t } = useTranslation();
@@ -138,7 +138,7 @@ const registryStatusReducer = (externalRegistry: any): string => {
   return externalRegistry.status.state;
 };
 
-const filters = (t) => [
+const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'registry-status',
@@ -173,20 +173,23 @@ const registryCreateAction = (history, item) => {
       }
       break;
   }
-}
+};
 
 export const ExternalRegistriesPage = withRouter(props => {
   const { t } = useTranslation();
 
-  const createItems = React.useMemo(() => ({
-    generic: t('COMMON:MSG_LNB_MENU_190'),
-    scan: t('COMMON:MSG_LNB_MENU_174')
-  }), [t]);
+  const createItems = React.useMemo(
+    () => ({
+      generic: t('COMMON:MSG_LNB_MENU_190'),
+      scan: t('COMMON:MSG_LNB_MENU_174'),
+    }),
+    [t],
+  );
 
   const createProps = {
     items: createItems,
-    action: registryCreateAction.bind(null, props.history)
-  }
+    action: registryCreateAction.bind(null, props.history),
+  };
 
   return <ListPage canCreate={true} createProps={createProps} ListComponent={ExternalRegistries} rowFilters={filters.bind(null, t)()} kind={kind} {...props} />;
 });
@@ -211,7 +214,7 @@ export const ExternalRegistriesDetailsPage: React.FC<ExternalRegistriesDetailsPa
     menuActions={menuActions}
     pages={[
       details(detailsPage(ExternalRegistryDetails)),
-      editYaml(),
+      editResource(),
       {
         href: 'repository',
         name: 'Repository',

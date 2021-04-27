@@ -9,7 +9,7 @@ import NodeTerminal from './NodeTerminal';
 import { menuActions } from './menu-actions';
 import NodeDashboard from './node-dashboard/NodeDashboard';
 
-const { editYaml, events, pods } = navFactory;
+const { editResource, events, pods } = navFactory;
 
 const pages = [
   {
@@ -22,10 +22,8 @@ const pages = [
     name: 'Details',
     component: NodeDetails,
   },
-  editYaml(),
-  pods(({ obj }) => (
-    <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />
-  )),
+  editResource(),
+  pods(({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />),
   events(ResourceEventStream),
   {
     href: 'terminal',
@@ -33,8 +31,6 @@ const pages = [
     component: NodeTerminal,
   },
 ];
-const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = (props) => (
-  <DetailsPage {...props} getResourceStatus={nodeStatus} menuActions={menuActions} pages={pages} />
-);
+const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = props => <DetailsPage {...props} getResourceStatus={nodeStatus} menuActions={menuActions} pages={pages} />;
 
 export default NodeDetailsPage;

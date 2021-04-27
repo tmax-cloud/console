@@ -93,30 +93,23 @@ const SignerPolicyDetails: React.FC<SignerPolicyDetailsProps> = ({ obj: signerpo
       </div>
     </>
   );
-}
+};
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const SignerPolicies: React.FC = props => {
   const { t } = useTranslation();
 
   return <Table {...props} aria-label="SignerPolicies" Header={SignerPolicyTableHeader.bind(null, t)} Row={SignerPolicyTableRow} virtualize />;
-}
+};
 
 export const SignerPoliciesPage: React.FC<SignerPoliciesPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_96')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_96') })}
-    canCreate={true}
-    ListComponent={SignerPolicies}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_96')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_96') })} canCreate={true} ListComponent={SignerPolicies} kind={kind} {...props} />;
+};
 
-export const SignerPoliciesDetailsPage: React.FC<SignerPoliciesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(SignerPolicyDetails)), editYaml()]} />;
+export const SignerPoliciesDetailsPage: React.FC<SignerPoliciesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(SignerPolicyDetails)), editResource()]} />;
 
 type SignerPoliciesPageProps = {
   showTitle?: boolean;
