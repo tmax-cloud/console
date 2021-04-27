@@ -32,6 +32,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
   uid = '',
 }) => {
   const [items, setItems] = React.useState([]);
+  const [rowCnt, setRowCnt] = React.useState(0);
   React.useEffect(() => {
     setItems(() => {
       return Array.isArray(formData) ? formData : _.keys(formData).map(cur => ({ [cur]: formData[cur] }));
@@ -78,8 +79,9 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
     items.forEach((cur, i) => {
       obj[Object.keys(cur)[0]] = Object.values(cur)[0];
     });
-    setItems([...items, { [`defaultKey_${items.length}`]: `defaultValue_${items.length}` }]);
-    onChange({ ...obj, [`defaultKey_${items.length}`]: `defaultValue_${items.length}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
+    setRowCnt(() => rowCnt + 1);
+    setItems(() => [...items, { [`defaultKey_${rowCnt}`]: `defaultValue_${rowCnt}` }]);
+    onChange({ ...obj, [`defaultKey_${rowCnt}`]: `defaultValue_${rowCnt}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
   }, [items]);
 
   return (
