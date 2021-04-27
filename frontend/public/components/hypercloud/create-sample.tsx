@@ -217,6 +217,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           ]}
           type="single"
           useHookForm
+          idFunc={(resource)=>`${resource.metadata.uid}`} // selected 값을 custom하게 사용해야하는 경우 사용 default: metadata.name
         />
         <ResourceDropdown
           name="RD-multiple"
@@ -248,6 +249,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           autocompletePlaceholder="search by name"
           type="multiple" // 필수 type: single / multiple
           useHookForm
+          idFunc={(resource)=>`${resource.kind}~~${resource.metadata.name}`} // selected 값을 custom하게 사용해야하는 경우 사용 default: metadata.name
         />
         <ResourceListDropdownWithDataToolbar // react hook form 사용하지 않는 예시
           resourceList={ClusterResourceList} // 필수
