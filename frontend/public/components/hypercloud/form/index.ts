@@ -19,6 +19,7 @@ export const pluralToKind = new Map([
   ['namespaces', { kind: 'Namespace', type: 'VanilaObject' }],
   ['limitranges', { kind: 'LimitRange', type: 'VanilaObject' }],
   ['resourcequotas', { kind: 'ResourceQuota', type: 'VanilaObject' }],
+  ['nodes', { kind: 'Node', type: 'VanilaObject' }],
   ['roles', { kind: 'Role', type: 'VanilaObject', createType: 'manual' }],
   ['rolebindings', { kind: 'RoleBinding', type: 'VanilaObject' }],
   ['serviceaccounts', { kind: 'ServiceAccount', type: 'VanilaObject' }],

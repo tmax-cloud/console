@@ -265,9 +265,22 @@
             },
             "rule": {
               "description": "rule is the strategy that will dictate what FSGroup is used in the SecurityContext.",
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "MustRunAs",
+                "MayRunAs",
+                "RunAsAny"
+              ],
+              "enumNames": [
+                "MustRunAs",
+                "MayRunAs",
+                "RunAsAny"
+              ]
             }
           },
+          "required": [
+            "rule"
+          ],
           "type": "object"
         },
         "hostIPC": {
@@ -350,7 +363,17 @@
             },
             "rule": {
               "description": "rule is the strategy that will dictate the allowable RunAsGroup values that may be set.",
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "MustRunAs",
+                "MayRunAs",
+                "RunAsAny"
+              ],
+              "enumNames": [
+                "MustRunAs",
+                "MayRunAs",
+                "RunAsAny"
+              ]
             }
           },
           "required": [
@@ -387,7 +410,17 @@
             },
             "rule": {
               "description": "rule is the strategy that will dictate the allowable RunAsUser values that may be set.",
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "MustRunAs",
+                "MustRunAsNonRoot",
+                "RunAsAny"
+              ],
+              "enumNames": [
+                "MustRunAs",
+                "MustRunAsNonRoot",
+                "RunAsAny"
+              ]
             }
           },
           "required": [
@@ -420,7 +453,15 @@
           "properties": {
             "rule": {
               "description": "rule is the strategy that will dictate the allowable labels that may be set.",
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "MustRunAs",
+                "RunAsAny"
+              ],
+              "enumNames": [
+                "MustRunAs",
+                "RunAsAny"
+              ]
             },
             "seLinuxOptions": {
               "description": "seLinuxOptions required to run as; required for MustRunAs More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
@@ -479,9 +520,22 @@
             },
             "rule": {
               "description": "rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.",
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "MustRunAs",
+                "MayRunAs",
+                "RunAsAny"
+              ],
+              "enumNames": [
+                "MustRunAs",
+                "MayRunAs",
+                "RunAsAny"
+              ]
             }
           },
+          "required": [
+            "rule"
+          ],
           "type": "object"
         },
         "volumes": {

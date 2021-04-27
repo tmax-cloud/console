@@ -4,12 +4,8 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 
 const AdditionalProperty: React.FC<AdditionalPropertyProps> = ({ property, onChange = () => {}, onClickRemove = () => {} }) => {
-  let key = '';
-  let value = '';
-  for (let propertyKey in property) {
-    key = propertyKey;
-    value = property[propertyKey];
-  }
+  let key = Object.keys(property)[0];
+  let value = Object.values(property)[0] as string;
   return (
     <div className="row key-operator-value__row">
       <div className="col-md-4 col-xs-5 key-operator-value__name-field">
@@ -18,7 +14,7 @@ const AdditionalProperty: React.FC<AdditionalPropertyProps> = ({ property, onCha
       </div>
       <div className="col-md-3 col-xs-5 key-operator-value__value-field key-operator-value__value-field--stacked">
         <div className="key-operator-value__heading hidden-md hidden-lg text-secondary text-uppercase">Value</div>
-        <input className="pf-c-form-control" type="text" value={value} onChange={e => onChange({ [key]: e?.target?.value })} />
+        <input type="text" className="pf-c-form-control" value={value} onChange={e => onChange({ [key]: e?.target?.value })} />
       </div>
       <div className="col-xs-1 key-operator-value__action key-operator-value__action--stacked">
         <div className="key-operator-value__heading key-operator-value__heading-button hidden-md hidden-lg" />
@@ -35,42 +31,58 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
   onChange = () => {}, // Default to noop
   uid = '',
 }) => {
-  const items = Array.isArray(formData) ? formData : _.keys(formData).map(cur => ({ [cur]: formData[cur] }));
+  const [items, setItems] = React.useState([]);
+  const [rowCnt, setRowCnt] = React.useState(0);
+  React.useEffect(() => {
+    setItems(() => {
+      return Array.isArray(formData) ? formData : _.keys(formData).map(cur => ({ [cur]: formData[cur] }));
+    });
+  }, []);
 
-  const updateProperty = (index: number, newProperty: any): void => {
-    let obj = {};
-    items.forEach((cur, i) => {
-      if (i === index) {
-        // 여기서 key값이 변경됬는지 value값이 변경됬는지
-        if (obj[Object.keys(cur)[0]] === Object.keys(newProperty)[0]) {
-          obj[Object.keys(newProperty)[0]] = Object.values(cur)[0]; // key 바뀐거
+  const updateProperty = React.useCallback(
+    (index: number, newProperty: any): void => {
+      let obj = {};
+      items.forEach((cur, i) => {
+        if (i === index) {
+          // 여기서 key값이 변경됬는지 value값이 변경됬는지
+          if (Object.keys(cur)[0] === Object.keys(newProperty)[0]) {
+            obj[Object.keys(cur)[0]] = Object.values(newProperty)[0]; // value 바뀐거
+          } else {
+            obj[Object.keys(newProperty)[0]] = Object.values(cur)[0]; // key 바뀐거
+          }
         } else {
-          obj[Object.keys(cur)[0]] = Object.values(newProperty)[0]; // value 바뀐거
+          obj[Object.keys(cur)[0]] = Object.values(cur)[0];
         }
-      } else {
-        obj[Object.keys(cur)[0]] = Object.values(cur)[0];
-      }
-    });
-    onChange(obj);
-  };
+      });
+      setItems(Object.entries(obj).map(([key, value]) => ({ [key]: value })));
+      onChange(obj);
+    },
+    [items],
+  );
 
-  const removeProperty = (index: number): void => {
-    let obj = {};
-    items.forEach((cur, i) => {
-      if (i !== index) {
-        obj[Object.keys(cur)[0]] = Object.values(cur)[0];
-      }
-    });
-    onChange(obj);
-  };
+  const removeProperty = React.useCallback(
+    (index: number): void => {
+      let obj = {};
+      items.forEach((cur, i) => {
+        if (i !== index) {
+          obj[Object.keys(cur)[0]] = Object.values(cur)[0];
+        }
+      });
+      setItems(() => items.filter((cur, i) => i !== index));
+      onChange(obj);
+    },
+    [items],
+  );
 
-  const addProperty = (): void => {
+  const addProperty = React.useCallback((): void => {
     let obj = {};
     items.forEach((cur, i) => {
       obj[Object.keys(cur)[0]] = Object.values(cur)[0];
     });
-    onChange({ ...obj, [`defaultKey_${items.length}`]: `defaultValue_${items.length}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
-  };
+    setRowCnt(() => rowCnt + 1);
+    setItems(() => [...items, { [`defaultKey_${rowCnt}`]: `defaultValue_${rowCnt}` }]);
+    onChange({ ...obj, [`defaultKey_${rowCnt}`]: `defaultValue_${rowCnt}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
+  }, [items]);
 
   return (
     <>

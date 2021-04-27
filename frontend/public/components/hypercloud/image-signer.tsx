@@ -90,7 +90,7 @@ export const ImageSignerDetailsList: React.FC<ImageSignerDetailsListProps> = ({ 
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_10')} obj={imagesigner} path="spec.description" />
     </dl>
   );
-}
+};
 
 // const TargetsTable: React.FC = props => <Table {...props} aria-label="ImageSigners" Header={ImageSignerKeyTargetTableHeader} Row={ImageSignerKeyTargetTableRow} virtualize />;
 
@@ -112,7 +112,7 @@ const ImageSignerDetails: React.FC<ImageSignerDetailsProps> = ({ obj: imagesigne
       </div>
     </>
   );
-}
+};
 
 const fetchSignerKey = singerkey => {
   const url = `/api/kubernetes/apis/tmax.io/v1/signerkeys/${singerkey}`;
@@ -163,7 +163,7 @@ const SignerKeyDetails: React.FC<SignerKeyDetailsProps> = ({ obj: imagesigner })
   );
 };
 
-const { details, editYaml, signerKey } = navFactory;
+const { details, editResource, signerKey } = navFactory;
 
 export const ImageSigners: React.FC = props => {
   const { t } = useTranslation();
@@ -173,17 +173,10 @@ export const ImageSigners: React.FC = props => {
 export const ImageSignersPage: React.FC<ImageSignersPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_91')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_91') })}
-    canCreate={props.isDetailPage ? false : true}
-    ListComponent={ImageSigners}
-    kind={kind}
-    {...props}
-  />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_91')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_91') })} canCreate={props.isDetailPage ? false : true} ListComponent={ImageSigners} kind={kind} {...props} />;
 };
 
-export const ImageSignersDetailsPage: React.FC<ImageSignersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageSignerDetails)), editYaml(), signerKey(SignerKeyDetails)]} />;
+export const ImageSignersDetailsPage: React.FC<ImageSignersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ImageSignerDetails)), editResource(), signerKey(SignerKeyDetails)]} />;
 
 type ImageSignerDetailsListProps = {
   ds: K8sResourceKind;

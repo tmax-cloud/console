@@ -137,7 +137,7 @@ const RegistryDetails: React.FC<RegistryDetailsProps> = ({ obj: registry }) => {
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const Registries: React.FC = props => {
   const { t } = useTranslation();
@@ -188,10 +188,13 @@ const registryCreateAction = (history, item) => {
 export const RegistriesPage = withRouter(props => {
   const { t } = useTranslation();
 
-  const createItems = React.useMemo(() => ({
-    generic: t('COMMON:MSG_LNB_MENU_188'),
-    scan: t('COMMON:MSG_LNB_MENU_174')
-  }), [t]);
+  const createItems = React.useMemo(
+    () => ({
+      generic: t('COMMON:MSG_LNB_MENU_188'),
+      scan: t('COMMON:MSG_LNB_MENU_174'),
+    }),
+    [t],
+  );
 
   const createProps = {
     items: createItems,
@@ -225,7 +228,7 @@ export const RegistriesDetailsPage: React.FC<RegistriesDetailsPageProps> = props
     menuActions={menuActions}
     pages={[
       details(detailsPage(RegistryDetails)),
-      editYaml(),
+      editResource(),
       {
         href: 'repository',
         name: 'Repository',
