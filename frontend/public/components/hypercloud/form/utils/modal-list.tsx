@@ -15,9 +15,12 @@ export const ModalList = props => {
                 <input className="col-xs-6 text-secondary" value={`${item.name}`} disabled />
                 <button
                   type="button"
-                  id={`item-modify-${index}`}
+                  id={`item-modify-${id}-${index}`}
                   onClick={e => {
-                    e.target['parentNode']['dataset'].modify = true;
+                    let target = document.getElementById(`item-modify-${id}-${index}`).closest('li');
+                    console.log(target);
+                    target.dataset.modify = 'true';
+                    // target['dataset']['modify'] = true;
                     return ModalLauncher({ inProgress: false, index: index, title: title, id: id, handleMethod: handleMethod, children: children, submitText: '수정' });
                   }}
                 >
