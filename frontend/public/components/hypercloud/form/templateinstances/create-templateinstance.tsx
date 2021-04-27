@@ -126,9 +126,9 @@ export const CreateTemplateInstance: React.FC<CreateTemplateInstanceProps> = ({ 
 };
 
 export const onSubmitCallback = data => {
-  const template = _.cloneDeep(data.template);
-  const templateKind = template.split('~~')[0];
-  const templateName = template.split('~~')[1];
+  const template = data.template;
+  const templateKind = template?.split('~~')[0];
+  const templateName = template?.split('~~')[1];
   delete data.template;
   delete data.type;
 
