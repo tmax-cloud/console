@@ -158,6 +158,14 @@ export const onSubmitCallback = data => {
     //env
     cur.env = cur?.env?.map(curEnv => ({ name: curEnv?.envKey, value: curEnv?.envValue }));
 
+    if (cur.imageToggle === 'registry') {
+      cur.image = `${cur.registryRegistry}-${cur.registryImage}-${cur.registryTag}`;
+
+      delete data.spec.steps[idx].registryRegistry;
+      delete data.spec.steps[idx].registryImage;
+      delete data.spec.steps[idx].registryTag;
+    }
+
     delete data.spec.steps[idx].imageToggle;
     return cur;
   });
