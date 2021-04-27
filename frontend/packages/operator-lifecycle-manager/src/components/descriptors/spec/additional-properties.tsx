@@ -5,7 +5,7 @@ import { Button } from '@patternfly/react-core';
 
 const AdditionalProperty: React.FC<AdditionalPropertyProps> = ({ property, onChange = () => {}, onClickRemove = () => {} }) => {
   let key = Object.keys(property)[0];
-  let value = Object.values(property)[0] || '';
+  let value = Object.values(property)[0] as string;
   return (
     <div className="row key-operator-value__row">
       <div className="col-md-4 col-xs-5 key-operator-value__name-field">

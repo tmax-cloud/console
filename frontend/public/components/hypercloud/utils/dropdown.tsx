@@ -1,12 +1,12 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
-import * as PropTypes from 'prop-types';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { ResourceName } from '../../utils/resource-icon';
 import { useFormContext } from 'react-hook-form';
+import { usePrevious } from '@console/metal3-plugin/src/hooks';
 
-const DropDownRow = React.memo((props) => {
+const DropDownRow: React.SFC<DropdownRowProps> = React.memo((props) => {
   const {
     itemKey,
     content,
@@ -18,7 +18,7 @@ const DropDownRow = React.memo((props) => {
   return (
     <li key={itemKey}>
       <button
-        className={classNames("pf-c-dropdown__menu-item", {hover, focus: selected})}
+        className={classNames("pf-c-dropdown__menu-item", { hover, focus: selected })}
         id={`${itemKey}-link`}
         data-test-id="dropdown-menu"
         data-test-dropdown-menu={itemKey}
@@ -30,10 +30,19 @@ const DropDownRow = React.memo((props) => {
   );
 });
 
-const Dropdown_ = (props) => {
+type DropdownRowProps = {
+  itemKey: string,
+  content: React.ReactNode,
+  onClick: (selected: string, e: any) => void,
+  className?: string,
+  hover: boolean,
+  selected: boolean
+}
 
+const Dropdown_: React.SFC<DropdownProps> = (props) => {
   const {
     name,
+    items,
     ariaLabel,
     className,
     buttonClassName,
@@ -50,26 +59,29 @@ const Dropdown_ = (props) => {
 
   const selectedKey = watch(name, defaultValue);
 
-  
-  React.useEffect(() => {
-    if (!!defaultValue) {
-      /* defaultValue를 쓰는 경우(ex.모달)에 getVaule를 해보면 form이 비어있는 경우가 있음. 초기값 세팅을 해줌. */
-      defaultValue && setValue(name, selectedKey);
-    }
-  }, [name]);
-
-  const [title, setTitle] = React.useState(_.get(props.items, selectedKey, props.title));
   const [active, setActive] = React.useState(!!props.active);
-  const [items, setItems] = React.useState(Object.assign({}, props.items));
   const [keyboardHoverKey, setKeyboardHoverKey] = React.useState(selectedKey);
 
-  React.useEffect(()=>{
-    setValue(name, defaultValue);
-    setTitle(_.get(props.items, defaultValue, props.title));
-  }, [props.items]);
+  const prevItems = usePrevious(items);
 
-  const dropdownElement = React.useRef();
-  const dropdownList = React.useRef();
+  React.useEffect(() => {
+    register({ name }, { required });
+
+    return () => {
+      unregister(name);
+      window.removeEventListener('click', onWindowClick);
+    }
+  }, [name, register, unregister]);
+
+  React.useEffect(() => {
+    if (!_.isEqual(prevItems, items)) {
+      setValue(name, defaultValue);
+      setKeyboardHoverKey(defaultValue);
+    }
+  }, [props.items, defaultValue]);
+
+  const dropdownElement = React.useRef<HTMLDivElement>();
+  const dropdownList = React.useRef<HTMLUListElement>();
 
   const onWindowClick = (event) => {
     if (active) {
@@ -88,17 +100,14 @@ const Dropdown_ = (props) => {
     hide(event);
   };
 
-  const onClick = (selected, e) => {
+  const onClickItem = (selected, e) => {
     e.preventDefault();
     e.stopPropagation();
 
     setValue(name, selected);
     setKeyboardHoverKey(selected);
 
-    const newTitle = items[selected];
-    setTitle(newTitle);
-
-    hide();
+    hide(e);
   };
 
   const toggle = (e) => {
@@ -140,7 +149,7 @@ const Dropdown_ = (props) => {
 
     if (key === 'Enter') {
       if (active && items[keyboardHoverKey]) {
-        onClick(keyboardHoverKey, e);
+        onClickItem(keyboardHoverKey, e);
       }
       return;
     }
@@ -168,23 +177,6 @@ const Dropdown_ = (props) => {
     e.stopPropagation();
     e.preventDefault(); // 키보드 사용시 화면 스크롤되지 않도록 처리
   }
-
-  React.useEffect(() => {
-    register({ name }, { required });
-
-    return () => {
-      unregister(name);
-      window.removeEventListener('click', onWindowClick);
-    }
-  }, [name, register, unregister]);
-
-  React.useEffect(() => {
-    !selectedKey && props.title && setTitle(props.title);
-  }, [props.title]);
-
-  React.useEffect(() => {
-    setItems(props.items);
-  }, [props.items]);
 
   const spacerBefore = props.spacerBefore || new Set();
   const headerBefore = props.headerBefore || {};
@@ -215,7 +207,7 @@ const Dropdown_ = (props) => {
         key={key}
         itemKey={key}
         content={content}
-        onClick={onClick}
+        onClick={onClickItem}
         selected={selected}
         hover={hover}
       />,
@@ -225,7 +217,7 @@ const Dropdown_ = (props) => {
   _.each(items, (v, k) => addItem(k, v));
 
   return (
-    <div className={className} ref={dropdownElement} style={...props.style}>
+    <div className={classNames(className)} ref={dropdownElement} style={...props.style}>
       <div
         className={classNames(
           { 'dropdown pf-c-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
@@ -247,7 +239,7 @@ const Dropdown_ = (props) => {
         >
           <span className="pf-c-dropdown__toggle-text">
             {titlePrefix && `${titlePrefix}: `}
-            {title}
+            {_.get(props.items, selectedKey, props.title)}
           </span>
           <CaretDownIcon className="pf-c-dropdown__toggle-icon" />
         </button>
@@ -266,25 +258,28 @@ const Dropdown_ = (props) => {
 
 export const Dropdown = React.memo(Dropdown_);
 
-Dropdown.propTypes = {
-  actionItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      actionKey: PropTypes.string,
-      actionTitle: PropTypes.string,
-    }),
-  ),
-  className: PropTypes.string,
-  dropDownClassName: PropTypes.string,
-  headerBefore: PropTypes.objectOf(PropTypes.string),
-  items: PropTypes.object.isRequired,
-  menuClassName: PropTypes.string,
-  buttonClassName: PropTypes.string,
-  spacerBefore: PropTypes.instanceOf(Set),
-  textFilter: PropTypes.string,
-  title: PropTypes.node,
-  defaultValue?: PropTypes.string,
-  disabled: PropTypes.bool,
-  methods?: PropTypes.any
+type DropdownProps = {
+  id?: string,
+  name: string,
+  className?: string,
+  style?: any,
+  dropDownClassName?: string,
+  ariaLabel?: string,
+  headerBefore?: { [key: string]: string },
+  items: object,
+  menuClassName?: string,
+  itemClassName?: string,
+  buttonClassName?: string,
+  spacerBefore?: Set<string>,
+  textFilter?: string,
+  title?: React.ReactNode;
+  titlePrefix?: React.ReactNode;
+  defaultValue?: string,
+  describedBy?: string;
+  active?: boolean;
+  required?: boolean,
+  disabled?: boolean,
+  methods?: any
 };
 
 const containerLabel = (container) => (
@@ -292,7 +287,7 @@ const containerLabel = (container) => (
 );
 
 const getSpacer = (container) => {
-  const spacerBefore = new Set();
+  const spacerBefore = new Set<string>();
   return container ? spacerBefore.add(container.name) : spacerBefore;
 };
 
@@ -305,7 +300,7 @@ const getHeaders = (container, initContainer) => {
     : {};
 };
 
-const ContainerDropdown_ = (props) => {
+const ContainerDropdown_: React.SFC<ContainerDropdownProps> = (props) => {
   const { name, containers, initContainers } = props;
   if (_.isEmpty(containers) && _.isEmpty(initContainers)) {
     return null;
@@ -331,11 +326,21 @@ const ContainerDropdown_ = (props) => {
 
 export const ContainerDropdown = React.memo(ContainerDropdown_);
 
-ContainerDropdown.propTypes = {
-  containers: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
-  initContainers: PropTypes.object,
+
+ContainerDropdown_.defaultProps = {
+  initContainers: {},
 };
 
-ContainerDropdown.defaultProps = {
-  initContainers: {},
+type Container = {
+  [key: string]: {
+    name: string,
+    order?: number
+  }
+}
+
+type ContainerDropdownProps = {
+  name: string,
+  title?: React.ReactNode,
+  containers: Container | Container[];
+  initContainers?: Container
 };
