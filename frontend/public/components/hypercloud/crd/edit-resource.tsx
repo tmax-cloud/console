@@ -17,7 +17,7 @@ import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/ope
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
 import { pluralToKind } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
-import { getAccessToken } from '../../../hypercloud/auth';
+import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
@@ -63,7 +63,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
       }
       const xhrTest = new XMLHttpRequest();
       xhrTest.open('GET', url);
-      xhrTest.setRequestHeader('Authorization', `Bearer ${getAccessToken()}`);
+      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
       xhrTest.onreadystatechange = function() {
         if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
           let template = xhrTest.response;

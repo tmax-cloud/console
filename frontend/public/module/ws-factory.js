@@ -4,7 +4,7 @@
  *
  */
 /* eslint-disable no-console */
-import { getAccessToken } from '../hypercloud/auth';
+import { getIdToken } from '../hypercloud/auth';
 
 function createURL(host, path) {
   let url;
@@ -21,11 +21,11 @@ function createURL(host, path) {
   }
 
   if (path) {
-    if (!!getAccessToken()) {
+    if (!!getIdToken()) {
       if (path.indexOf('?') !== -1) {
-        url += path + '&token=' + getAccessToken();
+        url += path + '&token=' + getIdToken();
       } else {
-        url += path + '?token=' + getAccessToken();
+        url += path + '?token=' + getIdToken();
       }
     } else {
       url += path;
