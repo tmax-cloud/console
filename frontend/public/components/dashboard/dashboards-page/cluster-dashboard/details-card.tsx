@@ -19,7 +19,7 @@ import { clusterUpdateModal } from '../../../modals';
 import { Link } from 'react-router-dom';
 import { useK8sWatchResource, WatchK8sResource } from '../../../utils/k8s-watch-hook';
 import { ClusterDashboardContext } from './context';
-import { getAccessToken } from '../../../../hypercloud/auth';
+import { getIdToken } from '../../../../hypercloud/auth';
 import { getActivePerspective, getActiveCluster } from '../../../../actions/ui';
 import { useTranslation } from 'react-i18next';
 import * as _ from 'lodash';
@@ -145,7 +145,7 @@ export const DetailsCard_ = connect(mapStateToProps)(({ watchK8sResource, stopWa
       } else {
         url = `api/${getActiveCluster()}/version`;
         headers = new Headers();
-        headers.append('Authorization', `Bearer ${getAccessToken()}`);
+        headers.append('Authorization', `Bearer ${getIdToken()}`);
       }
       try {
         let version = await (await fetch(url)).json();
