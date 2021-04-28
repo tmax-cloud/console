@@ -18,7 +18,7 @@ import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/ope
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
 import { pluralToKind } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
-import { getIdToken } from '../../../hypercloud/auth';
+import { getAccessToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 // import { safeDump } from 'js-yaml';
 
@@ -75,7 +75,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       }
       const xhrTest = new XMLHttpRequest();
       xhrTest.open('GET', url);
-      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
+      xhrTest.setRequestHeader('Authorization', `Bearer ${getAccessToken()}`);
       xhrTest.onreadystatechange = function() {
         if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
           let template = xhrTest.response;
