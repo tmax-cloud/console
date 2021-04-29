@@ -29,6 +29,8 @@ import { getNamespaceDashboardConsoleLinks, ProjectDashboard } from './dashboard
 import { removeQueryArgument } from './utils/router';
 import { useTranslation, withTranslation } from 'react-i18next';
 
+import NamespaceOverview from './namespace-overview';
+
 const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
 const CREATE_NEW_RESOURCE = '#CREATE_RESOURCE_ACTION#';
@@ -634,7 +636,26 @@ const namespaceBarStateToProps = ({ k8s }) => {
 /** @type {React.FC<{children?: ReactNode, disabled?: boolean, onNamespaceChange?: Function}>} */
 export const NamespaceBar = connect(namespaceBarStateToProps)(NamespaceBar_);
 
-export const NamespacesDetailsPage = props => <DetailsPage {...props} menuActions={nsMenuActions} pages={[navFactory.details(NamespaceDetails), navFactory.editResource(), navFactory.roles(RolesPage)]} />;
+export const NamespacesDetailsPage = props => (
+  <DetailsPage
+    {...props}
+    menuActions={nsMenuActions}
+    pages={[
+      {
+        href: '',
+        name: 'COMMON:MSG_DETAILS_TABOVERVIEW_1',
+        component: NamespaceOverview,
+      },
+      {
+        href: 'details',
+        name: 'COMMON:MSG_DETAILS_TAB_1',
+        component: NamespaceDetails,
+      },
+      navFactory.editResource(),
+      navFactory.roles(RolesPage),
+    ]}
+  />
+);
 
 export const ProjectsDetailsPage = props => (
   <DetailsPage

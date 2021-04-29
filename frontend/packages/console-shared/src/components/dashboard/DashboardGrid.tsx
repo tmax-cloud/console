@@ -10,15 +10,11 @@ export enum GridPosition {
   RIGHT = 'RIGHT',
 }
 
-const mapCardsToGrid = (
-  cards: GridDashboardCard[] = [],
-  keyPrefix: string,
-  ignoreCardSpan: boolean = false,
-): React.ReactNode[] =>
-  cards.map(({ Card, span = 12 }, index) => (
+const mapCardsToGrid = (cards: GridDashboardCard[] = [], keyPrefix: string, ignoreCardSpan: boolean = false): React.ReactNode[] =>
+  cards.map(({ Card, span = 12, props }, index) => (
     // eslint-disable-next-line react/no-array-index-key
     <GridItem key={`${keyPrefix}-${index}`} span={ignoreCardSpan ? 12 : span}>
-      <Card />
+      <Card {...props} />
     </GridItem>
   ));
 
@@ -26,18 +22,9 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards, leftCards, rig
   const [containerRef, width] = useRefWidth();
   const smallGrid = !!containerRef.current && width <= parseInt(breakpointLG.value, 10);
 
-  const mainGridCards = React.useMemo(() => mapCardsToGrid(mainCards, 'main', smallGrid), [
-    mainCards,
-    smallGrid,
-  ]);
-  const leftGridCards = React.useMemo(() => mapCardsToGrid(leftCards, 'left', smallGrid), [
-    leftCards,
-    smallGrid,
-  ]);
-  const rightGridCards = React.useMemo(() => mapCardsToGrid(rightCards, 'right', smallGrid), [
-    rightCards,
-    smallGrid,
-  ]);
+  const mainGridCards = React.useMemo(() => mapCardsToGrid(mainCards, 'main', smallGrid), [mainCards, smallGrid]);
+  const leftGridCards = React.useMemo(() => mapCardsToGrid(leftCards, 'left', smallGrid), [leftCards, smallGrid]);
+  const rightGridCards = React.useMemo(() => mapCardsToGrid(rightCards, 'right', smallGrid), [rightCards, smallGrid]);
 
   return (
     <div ref={containerRef}>
@@ -75,6 +62,7 @@ export default DashboardGrid;
 export type GridDashboardCard = {
   Card: React.ComponentType<any>;
   span?: DashboardCardSpan;
+  props?: object;
 };
 
 type DashboardGridProps = {

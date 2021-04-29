@@ -1,0 +1,16 @@
+.detail-list {
+  &__title-wide {
+    justify-content: space-between;
+  }
+  // &__inventory_list {
+  //   div {
+  //     margin-top: 1rem;
+  //   }
+  // }
+}
+
+.detail-list__inventory-list {
+  div {
+    margin-bottom: 0.875rem;
+  }
+}

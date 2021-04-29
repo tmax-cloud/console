@@ -1,0 +1,73 @@
+import * as React from 'react';
+import Dashboard from '@console/shared/src/components/dashboard/Dashboard';
+import DashboardGrid from '@console/shared/src/components/dashboard/DashboardGrid';
+import DetailCard from './namespace-overview-cards/detail-card';
+import InventoryCard from './namespace-overview-cards/inventory-card';
+import ClaimCard from './namespace-overview-cards/claim-card';
+import StatusCard from './namespace-overview-cards/status-card';
+import { UtilizationCard } from './namespace-overview-cards/utilization-card';
+import ActivityCard from './namespace-overview-cards/activity-card';
+import ResourceQuotaCard from './namespace-overview-cards/resource-quota-card';
+
+const NamespaceOverview = props => {
+  const statusCard = {
+    Card: StatusCard,
+    props: {
+      status: props.obj.status.phase,
+    },
+  };
+  const detailCard = {
+    Card: DetailCard,
+    props: {
+      href: `${props.match.url}/details`,
+      name: props.obj.metadata.name,
+      requester: props.obj.metadata?.annotations?.creator,
+      label: props.obj.metadata?.labels?.fromClaim,
+    },
+  };
+
+  const inventoryCard = {
+    Card: InventoryCard,
+    props: {
+      namespace: props.obj.metadata.name,
+    },
+  };
+
+  const claimCard = {
+    Card: ClaimCard,
+    props: {
+      namespace: props.obj.metadata.name,
+    },
+  };
+
+  const utilizationCard = {
+    Card: UtilizationCard,
+    props: {
+      namespace: props.obj.metadata.name,
+    },
+  };
+
+  const activityCard = {
+    Card: ActivityCard,
+    props: {
+      namespace: props.obj.metadata.name,
+    },
+  };
+
+  const resourceQuotaCard = {
+    Card: ResourceQuotaCard,
+    props: {
+      namespace: props.obj.metadata.name,
+    },
+  };
+  const mainCards = [statusCard, utilizationCard, resourceQuotaCard];
+  const leftCards = [detailCard, inventoryCard];
+  const rightCards = [claimCard, activityCard];
+  return (
+    <Dashboard>
+      <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />
+    </Dashboard>
+  );
+};
+
+export default NamespaceOverview;
