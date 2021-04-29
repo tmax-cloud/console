@@ -53,7 +53,7 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   const actions = [
     (kind, obj) => ({
-      label: `Duplicate ${kind.label}`,
+      label: t('COMMON:MSG_MAIN_ACTIONBUTTON_19'),
       href: `${resourceObjPath(obj, kind.kind)}/copy?subjectIndex=${subjectIndex}`,
       // Only perform access checks when duplicating cluster role bindings.
       // It's not practical to check namespace role bindings since we don't know what namespace the user will pick in the form.
