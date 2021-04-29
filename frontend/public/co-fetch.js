@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import 'whatwg-fetch';
-import { getAccessToken } from './hypercloud/auth';
+import { getIdToken } from './hypercloud/auth';
 import { authSvc } from './module/auth';
 import store from './redux';
 import keycloak from './hypercloud/keycloak';
@@ -115,8 +115,8 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
     delete allOptions.headers['X-CSRFToken'];
   }
 
-  if (!!getAccessToken()) {
-    allOptions.headers.Authorization = 'Bearer ' + getAccessToken();
+  if (!!getIdToken()) {
+    allOptions.headers.Authorization = 'Bearer ' + getIdToken();
     const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
 
     // return fetch promise directly if timeout <= 0

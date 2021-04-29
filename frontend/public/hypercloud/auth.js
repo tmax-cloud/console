@@ -1,7 +1,3 @@
-export const getAccessToken = function() {
-  return sessionStorage.getItem('accessToken');
-};
-
 export const getId = function() {
   return sessionStorage.getItem('id');
 };
@@ -15,9 +11,22 @@ export const getUserGroup = function() {
   return result;
 };
 
-export const setAccessToken = function(at) {
-  sessionStorage.setItem('accessToken', at);
+export const setIdToken = function(token) {
+  sessionStorage.setItem('idToken', token);
   return;
+};
+
+export const getIdToken = function() {
+  return sessionStorage.getItem('idToken');
+};
+
+export const setAccessToken = function(token) {
+  sessionStorage.setItem('accessToken', token);
+  return;
+};
+
+export const getAccessToken = function() {
+  return sessionStorage.getItem('accessToken');
 };
 
 export const setId = function(id) {
@@ -32,7 +41,7 @@ export const resetLoginState = function() {
 };
 
 export const getParsedAccessToken = function() {
-  const token = getAccessToken();
+  const token = getIdToken();
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   var jsonPayload = decodeURIComponent(
