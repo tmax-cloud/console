@@ -12,7 +12,7 @@ import { TaskParameterModal } from './task-parameter-modal';
 import { WorkSpaceModal } from './work-space-modal';
 import { VolumeModal } from './volume-modal';
 import { StepModal } from './step-modal';
-import { TaskModel } from '../../../../models';
+import { ClusterTaskModel } from '../../../../models';
 
 const defaultValues = {
   metadata: {
@@ -20,11 +20,11 @@ const defaultValues = {
   },
 };
 
-const taskFormFactory = params => {
-  return WithCommonForm(CreateTaskComponent, params, defaultValues);
+const clusterTaskFormFactory = params => {
+  return WithCommonForm(CreateClusterTaskComponent, params, defaultValues);
 };
 
-const CreateTaskComponent: React.FC<TaskFormProps> = props => {
+const CreateClusterTaskComponent: React.FC<ClusterTaskFormProps> = props => {
   const methods = useFormContext();
   const { control } = methods;
 
@@ -108,10 +108,10 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   );
 };
 
-export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, kind }) => {
-  const formComponent = taskFormFactory(params);
-  const TaskFormComponent = formComponent;
-  return <TaskFormComponent fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+export const CreateClusterTask: React.FC<CreateClusterTaskProps> = ({ match: { params }, kind }) => {
+  const formComponent = clusterTaskFormFactory(params);
+  const ClusterTaskFormComponent = formComponent;
+  return <ClusterTaskFormComponent fixed={{ apiVersion: `${ClusterTaskModel.apiGroup}/${ClusterTaskModel.apiVersion}`, kind }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 export const onSubmitCallback = data => {
@@ -119,8 +119,8 @@ export const onSubmitCallback = data => {
   delete data.metadata.labels;
   data = _.defaultsDeep(data, { metadata: { labels: labels } });
   // apiVersion, kind
-  data.kind = TaskModel.kind;
-  data.apiVersion = `${TaskModel.apiGroup}/${TaskModel.apiVersion}`;
+  data.kind = ClusterTaskModel.kind;
+  data.apiVersion = `${ClusterTaskModel.apiGroup}/${ClusterTaskModel.apiVersion}`;
   // workspace
   data.spec.workspaces = data?.spec?.workspaces?.map((cur, idx) => {
     let isReadOnly = cur.accessMode === 'readOnly' ? true : false;
@@ -174,7 +174,7 @@ export const onSubmitCallback = data => {
   return data;
 };
 
-type CreateTaskProps = {
+type CreateClusterTaskProps = {
   match: RMatch<{
     type?: string;
     ns?: string;
@@ -187,7 +187,7 @@ type CreateTaskProps = {
   isCreate: boolean;
 };
 
-type TaskFormProps = {
+type ClusterTaskFormProps = {
   onChange: Function;
   stringData: {
     [key: string]: string;
