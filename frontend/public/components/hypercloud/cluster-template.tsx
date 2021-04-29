@@ -135,7 +135,7 @@ ClusterTemplatesList.displayName = 'ClusterTemplatesList';
 
 const ClusterTemplatesPage: React.FC<ClusterTemplatesPageProps> = props => {
   const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_104')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_104') })} canCreate={false} kind={kind} ListComponent={ClusterTemplatesList} {...props} />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_104')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_104') })} canCreate={true} kind={kind} ListComponent={ClusterTemplatesList} {...props} />;
 };
 ClusterTemplatesPage.displayName = 'ClusterTemplatesPage';
 
