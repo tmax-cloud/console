@@ -16,6 +16,10 @@ const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
 const leftCards = [{ Card: DetailsCard }];
 const rightCards = [{ Card: InventoryCard }, { Card: ActivityCard }];
 
+// const mainCards = [];
+// const leftCards = [];
+// const rightCards = [{ Card: ActivityCard }];
+
 export const ClusterDashboard: React.FC<{}> = () => {
   // const [infrastructure, infrastructureLoaded, infrastructureError] = useK8sGet<K8sResourceKind>(InfrastructureModel, 'cluster');
 
