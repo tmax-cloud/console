@@ -247,9 +247,6 @@
     },
     "spec": {
       "description": "NamespaceSpec describes the attributes on a Namespace.",
-      "properties": {
-        }
-      },
       "additionalProperties": false
     },
     "status": {

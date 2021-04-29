@@ -202,7 +202,7 @@ const TemplateInstancesPage: React.FC<TemplateInstancesPageProps> = props => {
           type: 'template-instance-status',
           reducer: templateInstancePhase,
           items: [
-            { id: 'Succeeded', title: 'Success' },
+            { id: 'Succeeded', title: 'Succeeded' },
             { id: 'Error', title: 'Error' },
           ],
         },
