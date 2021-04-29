@@ -207,6 +207,7 @@ export const BindingsForRolePage = props => {
       filterLabel="by role or subject"
       namespace={ns}
       flatten={bindingsFlatten}
+      isClusterScope
     />
   );
 };

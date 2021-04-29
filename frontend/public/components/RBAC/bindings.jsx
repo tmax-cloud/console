@@ -242,6 +242,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
       showTitle={showTitle}
       textFilter="role-binding"
       title={t('COMMON:MSG_LNB_MENU_76')}
+      isClusterScope
     />
   );
 };
