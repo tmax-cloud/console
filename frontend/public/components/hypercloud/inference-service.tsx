@@ -113,9 +113,34 @@ export const InferenceServices: React.FC = props => {
   return <Table {...props} aria-label="InferenceServices" Header={InferenceServiceTableHeader.bind(null, t)} Row={InferenceServiceTableRow} virtualize />;
 };
 
-export const InferenceServicesPage: React.FC<InferenceServicesPageProps> = props => <ListPage canCreate={true} ListComponent={InferenceServices} kind={kind} {...props} />;
+export const InferenceServicesPage: React.FC<InferenceServicesPageProps> = props => {
+  const { t } = useTranslation();
 
-export const InferenceServicesDetailsPage: React.FC<InferenceServicesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(InferenceServiceDetails)), editYaml()]} />;
+  return (
+    <ListPage
+      title={t('COMMON:MSG_LNB_MENU_329')}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_329') })}
+      canCreate={true}
+      ListComponent={InferenceServices}
+      kind={kind} {...props}
+    />
+  );
+};
+
+
+
+
+export const InferenceServicesDetailsPage: React.FC<InferenceServicesDetailsPageProps> = props => {
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      menuActions={menuActions}
+      pages={[details(detailsPage(InferenceServiceDetails)), editYaml()]}
+    />
+  );
+};
+
 
 type InferenceServiceDetailsProps = {
   obj: K8sResourceKind;
