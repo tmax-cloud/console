@@ -84,9 +84,6 @@ const PipelineResourceDetails: React.FC<PipelineResourceDetailsProps> = ({ obj: 
           </div>
         </div>
       </div>
-      <div className="co-m-pane__body">
-        <SectionHeading text="Containers" />
-      </div>
     </>
   );
 }

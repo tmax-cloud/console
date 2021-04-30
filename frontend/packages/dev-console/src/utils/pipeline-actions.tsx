@@ -39,7 +39,7 @@ export const triggerPipeline = (
 };
 
 export const reRunPipelineRun: KebabAction = (kind: K8sKind, pipelineRun: PipelineRun) => ({
-  label: 'Rerun',
+  label: 'COMMON:MSG_MAIN_ACTIONBUTTON_30',
   callback: () => {
     const namespace = _.get(pipelineRun, 'metadata.namespace');
     const pipelineRef = _.get(pipelineRun, 'spec.pipelineRef.name');
@@ -161,7 +161,7 @@ export const rerunPipelineRunAndRedirect: KebabAction = (
 ) => {
   return rerunPipeline(kind, pipelineRun, null, {
     onComplete: handlePipelineRunSubmit,
-    label: 'Rerun',
+    label: 'COMMON:MSG_MAIN_ACTIONBUTTON_30',
   });
 };
 

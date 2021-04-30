@@ -115,11 +115,12 @@ export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ 
       ?.filter(({ resourceRef }) => !!resourceRef)
       .map((resource) => resource.resourceRef.name) || [];
 
+  const { t } = useTranslation();
   return (
     <div className="col-sm-6 odc-pipeline-run-details__customDetails">
       {pipelineRefExists(pipelineRun) && (
         <dl>
-          <dt>Pipeline</dt>
+          <dt>{ResourceLabel(PipelineModel, t)}</dt>
           <dd>
             <ResourceLink
               kind={referenceForModel(PipelineModel)}
