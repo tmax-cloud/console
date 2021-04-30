@@ -52,11 +52,13 @@ const paramItemRenderer = (register, name, item, index, ListActions, ListDefault
 const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   const { t } = useTranslation();
   const methods = useFormContext();
-  const [inputList, setInputList] = useState([]);
-  const [outputList, setOutputList] = useState([]);
-  const [paramList, setParamList] = useState([]);
-  const [workspaceList, setWorkspaceList] = useState([]);
-  const [paramValueListData, setParamValueListData] = useState([]);
+  const [lists, setLists] = useState({
+    inputList: [],
+    outputList: [],
+    paramList: [],
+    workspaceList: [],
+    paramValueListData: [],
+  });
 
   const namespace = getActiveNamespace(store.getState());
 
@@ -67,67 +69,75 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   });
 
   const getTaskDetails = async (taskKind, taskName) => {
-    const task = taskKind === 'Task' ? await k8sGet(TaskModel, taskName, getActiveNamespace(store.getState())) : await k8sGet(ClusterTaskModel, taskName);
+    let task;
+    if (taskKind === 'Task') {
+      task = await k8sGet(TaskModel, taskName, namespace);
+    } else if (taskKind === 'ClusterTask') {
+      task = await k8sGet(ClusterTaskModel, taskName, null);
+    }
+    if (!!task) {
+      const inputsData = task.spec?.resources?.inputs?.map(input => {
+        return {
+          name: input.name,
+          required: !input.optional,
+          type: input.type,
+          description: input.description,
+        };
+      });
 
-    const inputsData = task.spec?.resources?.inputs?.map(input => {
-      return {
-        name: input.name,
-        required: !input.optional,
-        type: input.type,
-        description: input.description,
-      };
-    });
-    const outputsData = task.spec?.resources?.outputs?.map(output => {
-      return {
-        name: output.name,
-        required: !output.optional,
-        type: output.type,
-        description: output.description,
-      };
-    });
+      const outputsData = task.spec?.resources?.outputs?.map(output => {
+        return {
+          name: output.name,
+          required: !output.optional,
+          type: output.type,
+          description: output.description,
+        };
+      });
 
-    setInputList(inputsData || []);
-    setOutputList(outputsData || []);
+      const paramValueListData = task.spec?.params?.map(param => {
+        if (param.type === 'array') {
+          defaultArrayLength = param.default?.length;
+          const valueList = param.default?.map(value => {
+            return {
+              value: value,
+            };
+          });
+          return { value: valueList };
+        } else {
+          return { value: param.default };
+        }
+      });
 
-    const paramValueListData = task.spec?.params?.map(param => {
-      if (param.type === 'array') {
-        defaultArrayLength = param.default?.length;
-        const valueList = param.default?.map(value => {
-          return {
-            value: value,
-          };
-        });
-        return { value: valueList };
-      } else {
-        return { value: param.default };
-      }
-    });
+      const paramsData = task.spec?.params?.map(param => {
+        return {
+          name: param.name,
+          value: param.default,
+          description: param.description,
+          type: param.type,
+          required: !!param.default,
+        };
+      });
 
-    setParamValueListData(paramValueListData || []);
+      const workspacesData = task.spec?.workspaces?.map(workspace => {
+        return {
+          name: workspace.name,
+          description: workspace.description,
+        };
+      });
 
-    const paramsData = task.spec?.params?.map(param => {
-      return {
-        name: param.name,
-        value: param.default,
-        description: param.description,
-        type: param.type,
-        required: !!param.default,
-      };
-    });
-    setParamList(paramsData || []);
-
-    const workspacesData = task.spec?.workspaces?.map(workspace => {
-      return {
-        name: workspace.name,
-        description: workspace.description,
-      };
-    });
-    setWorkspaceList(workspacesData || []);
+      setLists({
+        inputList: inputsData || [],
+        outputList: outputsData || [],
+        paramValueListData: paramValueListData || [],
+        paramList: paramsData || [],
+        workspaceList: workspacesData || [],
+      });
+    }
   };
 
   const inputs =
-    inputList.length > 0 ? (
-      inputList.map((item, index) => {
+    lists.inputList.length > 0 ? (
+      lists.inputList.map((item, index) => {
         return (
           <Section label={`${item.name} (${item.type})`} id={`input_${index}`} key={`input_${index}`} isRequired={item.required} description={item.description}>
             <>
@@ -142,8 +152,8 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     );
 
   const outputs =
-    outputList.length > 0 ? (
-      outputList.map((item, index) => {
+    lists.outputList.length > 0 ? (
+      lists.outputList.map((item, index) => {
         return (
           <Section label={`${item.name} (${item.type})`} id={`output_${index}`} key={`output_${index}`} isRequired={item.required} description={item.description}>
             <>
@@ -159,14 +169,14 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
 
   // MEMO : ListView는 name에 민감해서 ListView와 item renderer의 item들의 이름은 고정시키고 name부분은 hidden input으로 넣어둠.
   const params =
-    paramList.length > 0 ? (
-      paramList.map((item, index) => {
+    lists.paramList.length > 0 ? (
+      lists.paramList.map((item, index) => {
         if (item.type === 'array') {
           return (
             <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={item.required}>
               <>
                 <input ref={methods.register} type="hidden" id={`params.${index}.name`} name={`params.${index}.name`} value={item.name} />
-                <ListView name={`params.${index}.value`} methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={paramValueListData[index]?.value} />
+                <ListView name={`params.${index}.value`} methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={lists.paramValueListData[index]?.value} />
               </>
             </Section>
           );
@@ -186,8 +196,8 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     );
 
   const workspaces =
-    workspaceList.length > 0 ? (
-      workspaceList.map((item, index) => {
+    lists.workspaceList.length > 0 ? (
+      lists.workspaceList.map((item, index) => {
         return (
           <Section label={item.name} description={item.description} key={index} id={`workspace_${index}_${item.name}`}>
             <></>
