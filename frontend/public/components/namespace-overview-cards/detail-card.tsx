@@ -23,13 +23,12 @@ const DetailsList = ({ name, requester, label }) => {
 
 const DetailCard = ({ href, name, requester, label }) => {
   const { t } = useTranslation();
-  const modifiedHref = href.charAt(href.length - 1) === '/' ? href.slice(0, -1) : href;
   return (
     <DashboardCard>
       <DashboardCardHeader>
         <DashboardCardTitle className={classNames('details-card__head-style')}>
           <div>{t('COMMON:MSG_DETAILS_TAB_1')}</div>
-          <Link to={modifiedHref}>{t('SINGLE:MSG_OVERVIEW_MAIN_POPOVEROPERATOR_ALL_1')}</Link>
+          <Link to={href}>{t('SINGLE:MSG_OVERVIEW_MAIN_POPOVEROPERATOR_ALL_1')}</Link>
         </DashboardCardTitle>
       </DashboardCardHeader>
       <DashboardCardBody className={classNames('details-card__body-style')}>

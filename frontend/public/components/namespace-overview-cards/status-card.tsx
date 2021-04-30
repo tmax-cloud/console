@@ -17,7 +17,6 @@ const StatusCard = ({ status }) => {
     <DashboardCard>
       <DashboardCardHeader>
         <DashboardCardTitle>{t('COMMON:MSG_MAIN_TABLEHEADER_3')}</DashboardCardTitle>
-        {/* <DashboardCardLink to="/settings/cluster/">View settings</DashboardCardLink> */}
       </DashboardCardHeader>
       <DashboardCardBody>
         <DetailsBody>

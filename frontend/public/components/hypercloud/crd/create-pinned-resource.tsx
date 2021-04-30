@@ -62,8 +62,7 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
     const [template, setTemplate] = React.useState({} as any);
 
     React.useEffect(() => {
-      console.log('model: ', model);
-      let type = pluralToKind.get(model.plural)['type'];
+      let type = pluralToKind.get(model.plural)?.['type'] ?? 'CustomResourceDefinition';
       let url;
       if (type === 'CustomResourceDefinition') {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
@@ -137,11 +136,17 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
 const stateToProps = (state: RootState, props: Omit<CreateDefaultPageProps, 'model'>) => {
   let plural;
   let model;
-  if (modelFor(pluralToKind.get(props.match.params.plural)['kind'])) {
+  let kind;
+  console.log(props.match.params.plural);
+  if (pluralToKind.get(props.match.params.plural)?.['kind'] && modelFor(pluralToKind.get(props.match.params.plural)?.['kind'])) {
     model = modelFor(pluralToKind.get(props.match.params.plural)['kind']);
+    kind = model.kind;
     plural = referenceForModel(model);
+  } else {
+    kind = props.match.params.plural.split('~')[2];
+    plural = props.match.params.plural;
   }
-  return { model: state.k8s.getIn(['RESOURCES', 'models', plural]) || (state.k8s.getIn(['RESOURCES', 'models', model.kind]) as K8sKind), activePerspective: getActivePerspective(state) };
+  return { model: state.k8s.getIn(['RESOURCES', 'models', plural]) || (state.k8s.getIn(['RESOURCES', 'models', kind]) as K8sKind), activePerspective: getActivePerspective(state) };
 };
 
 export const CreateDefaultPage = connect(stateToProps)((props: CreateDefaultPageProps) => {
