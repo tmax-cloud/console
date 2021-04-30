@@ -15,7 +15,7 @@ import { getPipelineRunKebabActions } from '../../../packages/dev-console/src/ut
 import { PipelineRunLogsWithActiveTask } from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs';
 import PipelineRunVisualization from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunVisualization';
 import ResourceLinkList from '../../../packages/dev-console/src/components/pipelines/resource-overview/ResourceLinkList';
-import TriggeredBySection from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/TriggeredBySection';
+//import TriggeredBySection from '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/TriggeredBySection';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
@@ -130,7 +130,7 @@ export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ 
           </dd>
         </dl>
       )}
-      <TriggeredBySection pipelineRun={pipelineRun} />
+      {/* <TriggeredBySection pipelineRun={pipelineRun} /> */}
       <br />
       <ResourceLinkList
         model={PipelineResourceModel}
