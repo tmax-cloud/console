@@ -7,12 +7,10 @@ import { useTranslation } from 'react-i18next';
 import * as classNames from 'classnames';
 import DetailsBody from '@console/shared/src/components/dashboard/details-card/DetailsBody';
 import '../../components/dashboard/dashboards-page/cluster-dashboard/details-card.scss';
-import '/home/syoh/console/frontend/public/components/namespace-overview-cards/namespace-overview.scss';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { PodModel, DeploymentModel, StatefulSetModel, PersistentVolumeClaimModel, ServiceModel, SecretModel } from '../../../public/models';
 import { resourceListPathFromModel } from '@console/internal/components/utils';
 import { resourceURL } from '../../module/k8s/resource';
-
 import './namespace-overview.scss';
 import { Link } from 'react-router-dom';
 

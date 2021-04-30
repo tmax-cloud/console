@@ -7,8 +7,6 @@ import DetailsBody from '@console/shared/src/components/dashboard/details-card/D
 import { useTranslation } from 'react-i18next';
 import { Status } from '@console/shared';
 import '../../components/dashboard/dashboards-page/cluster-dashboard/details-card.scss';
-import '/home/syoh/console/frontend/public/components/namespace-overview-cards/namespace-overview.scss';
-
 import './namespace-overview.scss';
 
 const StatusCard = ({ status }) => {
