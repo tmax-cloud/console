@@ -8,8 +8,8 @@ import * as classNames from 'classnames';
 import DetailsBody from '@console/shared/src/components/dashboard/details-card/DetailsBody';
 import DetailItem from '@console/shared/src/components/dashboard/details-card/DetailItem';
 import '../../components/dashboard/dashboards-page/cluster-dashboard/details-card.scss';
-import '/home/syoh/console/frontend/public/components/namespace-overview-cards/namespace-overview.scss';
 import { Link } from 'react-router-dom';
+
 const DetailsList = ({ name, requester, label }) => {
   const { t } = useTranslation();
   return (
