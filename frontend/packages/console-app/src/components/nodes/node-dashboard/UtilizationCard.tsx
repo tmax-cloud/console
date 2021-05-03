@@ -111,7 +111,7 @@ const UtilizationCard: React.FC = () => {
       [t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_24_1')]: '24 Hours',
     };
   }, [duration]);
-
+  console.log(queries);
   return (
     <DashboardCard data-test-id="utilization-card">
       <DashboardCardHeader>
@@ -119,11 +119,22 @@ const UtilizationCard: React.FC = () => {
         <Dropdown items={durationItems} onChange={setDuration} selectedKey={durationValues[duration]} title={duration} />
       </DashboardCardHeader>
       <UtilizationBody timestamps={timestamps}>
-        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABNODE_TABLEHEADER_3')} humanizeValue={humanizeCpuCores} utilizationQuery={queries[NodeQueries.CPU_USAGE]} totalQuery={queries[NodeQueries.CPU_TOTAL]} limitQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_LIMIT_CPU]} requestQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_REQUEST_CPU]} TopConsumerPopover={cpuPopover} duration={duration} setTimestamps={setTimestamps} setLimitReqState={setCPULimit} />
-        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABNODE_TABLEHEADER_4')} humanizeValue={humanizeBinaryBytes} utilizationQuery={queries[NodeQueries.MEMORY_USAGE]} totalQuery={queries[NodeQueries.MEMORY_TOTAL]} limitQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_LIMIT_MEMORY]} requestQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_REQUEST_MEMORY]} byteDataType={ByteDataTypes.BinaryBytes} TopConsumerPopover={memPopover} duration={duration} setLimitReqState={setMemoryLimit} />
-        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanizeValue={humanizeBinaryBytes} utilizationQuery={queries[NodeQueries.FILESYSTEM_USAGE]} totalQuery={queries[NodeQueries.FILESYSTEM_TOTAL]} byteDataType={ByteDataTypes.BinaryBytes} TopConsumerPopover={filesystemPopover} duration={duration} />
-        <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} humanizeValue={humanizeDecimalBytesPerSec} queries={multilineQueries[NodeQueries.NETWORK_UTILIZATION]} TopConsumerPopovers={networkPopovers} duration={duration} />
-        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_78')} humanizeValue={humanizeNumber} utilizationQuery={queries[NodeQueries.POD_COUNT]} duration={duration} />
+        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABNODE_TABLEHEADER_3')} humanizeValue={humanizeCpuCores} utilizationQuery={queries[NodeQueries.CPU_USAGE]} totalQuery={queries[NodeQueries.CPU_TOTAL]} limitQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_LIMIT_CPU]} requestQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_REQUEST_CPU]} TopConsumerPopover={cpuPopover} duration={durationValues[duration]} setTimestamps={setTimestamps} setLimitReqState={setCPULimit} />
+        <PrometheusUtilizationItem
+          title={t('COMMON:MSG_DETAILS_TABNODE_TABLEHEADER_4')}
+          humanizeValue={humanizeBinaryBytes}
+          utilizationQuery={queries[NodeQueries.MEMORY_USAGE]}
+          totalQuery={queries[NodeQueries.MEMORY_TOTAL]}
+          limitQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_LIMIT_MEMORY]}
+          requestQuery={resourceQuotaQueries[NodeQueries.POD_RESOURCE_REQUEST_MEMORY]}
+          byteDataType={ByteDataTypes.BinaryBytes}
+          TopConsumerPopover={memPopover}
+          duration={durationValues[duration]}
+          setLimitReqState={setMemoryLimit}
+        />
+        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanizeValue={humanizeBinaryBytes} utilizationQuery={queries[NodeQueries.FILESYSTEM_USAGE]} totalQuery={queries[NodeQueries.FILESYSTEM_TOTAL]} byteDataType={ByteDataTypes.BinaryBytes} TopConsumerPopover={filesystemPopover} duration={durationValues[duration]} />
+        <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} humanizeValue={humanizeDecimalBytesPerSec} queries={multilineQueries[NodeQueries.NETWORK_UTILIZATION]} TopConsumerPopovers={networkPopovers} duration={durationValues[duration]} />
+        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_78')} humanizeValue={humanizeNumber} utilizationQuery={queries[NodeQueries.POD_COUNT]} duration={durationValues[duration]} />
       </UtilizationBody>
     </DashboardCard>
   );

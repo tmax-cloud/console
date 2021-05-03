@@ -42,7 +42,7 @@ export enum NodeQueries {
 
 const queries = {
   [NodeQueries.CPU_USAGE]: _.template(`instance:node_cpu:rate:sum{instance='<%= ipAddress %>'}`),
-  [NodeQueries.CPU_TOTAL]: _.template(`instance:node_num_cpu:sum{instance='<%= ipAddress %>'}`),
+  [NodeQueries.CPU_TOTAL]: _.template(`count(node_cpu_seconds_total{job="node-exporter",mode="idle",instance='<%= ipAddress %>'}) by(instance)`),
   [NodeQueries.MEMORY_USAGE]: _.template(`node_memory_MemTotal_bytes{instance='<%= ipAddress %>'} - node_memory_MemAvailable_bytes{instance='<%= ipAddress %>'}`),
   [NodeQueries.MEMORY_TOTAL]: _.template(`node_memory_MemTotal_bytes{instance='<%= ipAddress %>'}`),
   [NodeQueries.POD_COUNT]: _.template(`kubelet_running_pods{instance=~'<%= podCountIp %>'}`),
@@ -158,7 +158,8 @@ export const getResourceQutoaQueries = (node: string) => ({
 // });
 export const getUtilizationQueries = (node: string, ipAddress: string) => {
   let podCountIp = ipAddress + ':10250';
-  ipAddress = ipAddress + ':9100';
+  ipAddress = ipAddress.indexOf(':') < 0 ? ipAddress + ':9100' : ipAddress;
+  console.log(queries[NodeQueries.CPU_TOTAL]({ ipAddress }));
   return {
     [NodeQueries.CPU_USAGE]: queries[NodeQueries.CPU_USAGE]({ ipAddress }),
     [NodeQueries.CPU_TOTAL]: queries[NodeQueries.CPU_TOTAL]({ ipAddress }),
