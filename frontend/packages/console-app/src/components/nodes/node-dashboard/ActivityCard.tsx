@@ -4,7 +4,8 @@ import DashboardCardHeader from '@console/shared/src/components/dashboard/dashbo
 import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardTitle';
 import DashboardCardLink from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardLink';
 import DashboardCardBody from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardBody';
-import ActivityBody, { RecentEventsBody, OngoingActivityBody } from '@console/shared/src/components/dashboard/activity-card/ActivityBody';
+import ActivityBody, { RecentEventsBody } from '@console/shared/src/components/dashboard/activity-card/ActivityBody';
+// import ActivityBody, { RecentEventsBody, OngoingActivityBody } from '@console/shared/src/components/dashboard/activity-card/ActivityBody';
 import { EventModel, NodeModel } from '@console/internal/models';
 import { EventKind, NodeKind } from '@console/internal/module/k8s';
 import { resourcePathFromModel } from '@console/internal/components/utils';
@@ -42,7 +43,7 @@ const ActivityCard: React.FC = () => {
       </DashboardCardHeader>
       <DashboardCardBody>
         <ActivityBody className="co-project-dashboard__activity-body">
-          <OngoingActivityBody loaded />
+          {/* <OngoingActivityBody loaded /> */}
           <RecentEvent node={obj} />
         </ActivityBody>
       </DashboardCardBody>
