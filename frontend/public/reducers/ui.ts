@@ -22,7 +22,7 @@ export type UIState = ImmutableMap<string, any>;
 
 export function getDefaultPerspective() {
   if(!window.SERVER_FLAGS.McMode){
-    return 'hc';
+    return 'master';
   }
 
   let activePerspective = localStorage.getItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY);

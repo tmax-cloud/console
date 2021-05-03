@@ -7,7 +7,7 @@ import { TFunction } from 'i18next';
 // TODO:  싱글 클러스터 증가시 동적 생성하는 방법 확인
 //        getK8sLandingPageURL, getImportRedirectURL 하는 상황 파악 및 수정
 export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction) => {
-  return [
+  return window.SERVER_FLAGS.McMode ? [
     {
       type: 'Perspective',
       properties: {
@@ -39,6 +39,29 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         icon: <CogsIcon />,
         getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
         getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
+        getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+      },
+    },
+    {
+      type: 'Perspective',
+      properties: {
+        id: 'developer',
+        name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') :  'Developer', // 임시. 스트링 나오면 재적용 필요
+        icon: <CogsIcon />,
+        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
+        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
+        getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+      },
+    },
+  ] : [
+    {
+      type: 'Perspective',
+      properties: {
+        id: 'master',
+        name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_3') : 'Master-Cluster',
+        icon: <CogsIcon />,
+        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
+        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
       },
     },
