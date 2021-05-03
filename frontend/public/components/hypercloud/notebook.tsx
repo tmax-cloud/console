@@ -54,7 +54,7 @@ const NotebookTableRow: RowFunction<K8sResourceKind> = ({ obj: notebook, index, 
         <ResourceLink kind="Namespace" name={notebook.metadata.namespace} title={notebook.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>
-        {notebook.spec.template.spec.containers[0].image}
+        {notebook.spec?.template.spec.containers[0].image}
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={notebook} />
