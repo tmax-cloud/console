@@ -42,7 +42,6 @@ type DropdownRowProps = {
 const Dropdown_: React.SFC<DropdownProps> = (props) => {
   const {
     name,
-    items,
     ariaLabel,
     className,
     buttonClassName,
@@ -59,10 +58,11 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
 
   const selectedKey = watch(name, defaultValue);
 
+  const [itemList, setItemList] = React.useState(props.items);
   const [active, setActive] = React.useState(!!props.active);
   const [keyboardHoverKey, setKeyboardHoverKey] = React.useState(selectedKey);
 
-  const prevItems = usePrevious(items);
+  const prevItems = usePrevious(itemList); //itemList가 바뀔 때만 prevItems 갱신하도록 의도함
 
   React.useEffect(() => {
     register({ name }, { required });
@@ -74,8 +74,9 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
   }, [name, register, unregister]);
 
   React.useEffect(() => {
-    if (!_.isEqual(prevItems, items)) {
+    if (!_.isEqual(prevItems, props.items)) {
       setValue(name, defaultValue);
+      setItemList(props.items);
       setKeyboardHoverKey(defaultValue);
     }
   }, [props.items, defaultValue]);
@@ -148,13 +149,13 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     }
 
     if (key === 'Enter') {
-      if (active && items[keyboardHoverKey]) {
+      if (active && itemList[keyboardHoverKey]) {
         onClickItem(keyboardHoverKey, e);
       }
       return;
     }
 
-    const keys = _.keys(items);
+    const keys = _.keys(itemList);
 
     let index = _.indexOf(keys, keyboardHoverKey);
 
@@ -214,7 +215,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     );
   };
 
-  _.each(items, (v, k) => addItem(k, v));
+  _.each(itemList, (v, k) => addItem(k, v));
 
   return (
     <div className={classNames(className)} ref={dropdownElement} style={...props.style}>
