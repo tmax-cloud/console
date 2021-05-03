@@ -97,24 +97,21 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({
 
   return (
     <>
-      {window.SERVER_FLAGS.McMode && (
-        <div className="oc-nav-header">
-          <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_1')}</div>
-          <Dropdown
-            isOpen={isPerspectiveDropdownOpen}
-            toggle={renderToggle(icon, name)}
-            dropdownItems={getPerspectiveItems(perspectives)}
-            data-test-id="perspective-switcher-menu"
-          />
-          {activePerspective == "hc" &&
-            <>
-              <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_2')}</div>
-              <ClusterDropdown onClusterSelected={onClusterSelected} />
-            </>
-          }
-        </div>
-      )
-      }
+      <div className="oc-nav-header">
+        <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_1')}</div>
+        <Dropdown
+          isOpen={isPerspectiveDropdownOpen}
+          toggle={renderToggle(icon, name)}
+          dropdownItems={getPerspectiveItems(perspectives)}
+          data-test-id="perspective-switcher-menu"
+        />
+        {activePerspective == "hc" &&
+          <>
+            <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_2')}</div>
+            <ClusterDropdown onClusterSelected={onClusterSelected} />
+          </>
+        }
+      </div>
     </>
   );
 };
