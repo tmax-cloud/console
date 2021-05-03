@@ -1165,6 +1165,7 @@
     "MSG_DETAILS_TABTERMINAL_9": "Expand",
     "MSG_DETAILS_TABTERMINAL_10": "Collapse",
     "MSG_DETAILS_TABTERMINAL_11": "Resume stream and show {{0}} new lines"
+    "GitLab": "Managed GitLab"
   },
   "SINGLE": {
     "MSG_SEARCH_MAIN_NORESOURCES_1": "No resources selected",

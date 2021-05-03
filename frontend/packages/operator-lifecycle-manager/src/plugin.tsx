@@ -54,30 +54,30 @@ const plugin: Plugin<ConsumedExtensions> = [
       normalize: normalizeClusterServiceVersions,
     },
   },
-  {
-    type: 'NavItem/Href',
-    properties: {
-      section: 'Operators',
-      componentProps: {
-        name: 'OperatorHub',
-        href: '/operatorhub',
-      },
-    },
-  },
-  {
-    type: 'NavItem/ResourceNS',
-    properties: {
-      section: 'Operators',
-      componentProps: {
-        name: 'Installed Operators',
-        resource: referenceForModel(models.ClusterServiceVersionModel),
-        startsWith: [
-          models.ClusterServiceVersionModel.apiGroup,
-          models.ClusterServiceVersionModel.plural,
-        ],
-      },
-    },
-  },
+  // {
+  //   type: 'NavItem/Href',
+  //   properties: {
+  //     section: 'Operators',
+  //     componentProps: {
+  //       name: 'OperatorHub',
+  //       href: '/operatorhub',
+  //     },
+  //   },
+  // },
+  // {
+  //   type: 'NavItem/ResourceNS',
+  //   properties: {
+  //     section: 'Operators',
+  //     componentProps: {
+  //       name: 'Installed Operators',
+  //       resource: referenceForModel(models.ClusterServiceVersionModel),
+  //       startsWith: [
+  //         models.ClusterServiceVersionModel.apiGroup,
+  //         models.ClusterServiceVersionModel.plural,
+  //       ],
+  //     },
+  //   },
+  // },
   {
     type: 'Page/Route',
     properties: {
