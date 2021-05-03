@@ -167,8 +167,8 @@ export const InferenceServicesPage: React.FC<InferenceServicesPageProps> = props
 
   return (
     <ListPage
-      title={t('COMMON:MSG_LNB_MENU_329')}
-      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_329') })}
+      title={t('COMMON:MSG_LNB_MENU_192')}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_192') })}
       canCreate={true}
       ListComponent={InferenceServices}
       kind={kind} {...props}
