@@ -213,7 +213,6 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     [FilterType.NAME]: t('COMMON:MSG_COMMON_SEARCH_FILTER_1'),
   };
 
-  console.log('rendering...');
   return (
     !hideToolbar && (
       <DataToolbar id="filter-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={t('COMMON:MSG_COMMON_FILTER_11')}>
