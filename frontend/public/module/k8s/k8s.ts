@@ -1,35 +1,23 @@
 import * as _ from 'lodash-es';
 
-import {
-  CustomResourceDefinitionKind,
-  GroupVersionKind,
-  K8sKind,
-  K8sResourceCommon,
-  K8sResourceKind,
-  K8sResourceKindReference,
-  OwnerReference,
-  modelFor,
-} from './index';
+import { CustomResourceDefinitionKind, GroupVersionKind, K8sKind, K8sResourceCommon, K8sResourceKind, K8sResourceKindReference, OwnerReference, modelFor } from './index';
 
-export const getQN: (obj: K8sResourceKind) => string = ({ metadata: { name, namespace } }) =>
-  (namespace ? `(${namespace})-` : '') + name;
+export const getQN: (obj: K8sResourceKind) => string = ({ metadata: { name, namespace } }) => (namespace ? `(${namespace})-` : '') + name;
 
 export const k8sBasePath = `${window.SERVER_FLAGS.basePath}api/kubernetes`;
 export const multiClusterBasePath = `${window.SERVER_FLAGS.basePath}api/multi-hypercloud`;
 
 // TODO(alecmerdler): Replace all manual string building with this function
-export const referenceForGroupVersionKind = (group: string) => (version: string) => (
-  kind: string,
-) => {
+export const referenceForGroupVersionKind = (group: string) => (version: string) => (kind: string) => {
   if (kind === 'PipelineResource' || kind === 'ClusterTask' || kind === 'Task' || kind === 'ServiceClass' || kind === 'ClusterServiceClass') {
     return kind;
   }
-  return [group, version, kind].join('~')
+  return [group, version, kind].join('~');
 };
 
-export const getGroupVersionKind = (
-  ref: GroupVersionKind | string,
-): [string, string, string] | undefined => {
+export const referenceForGroupVersionKind_ = (group: string) => (version: string) => (kind: string) => [group, version, kind].join('~');
+
+export const getGroupVersionKind = (ref: GroupVersionKind | string): [string, string, string] | undefined => {
   const parts = ref.split('~');
   if (parts.length !== 3) {
     return undefined;
@@ -46,9 +34,7 @@ export const groupVersionFor = (apiVersion: string) => ({
 
 const parseAPIVersion = (version: string) => {
   const parsed = /^v(\d+)(?:(alpha|beta)(\d+))?$/.exec(version);
-  return parsed
-    ? { majorVersion: Number(parsed[1]), qualifier: parsed[2], minorVersion: Number(parsed[3]) }
-    : null;
+  return parsed ? { majorVersion: Number(parsed[1]), qualifier: parsed[2], minorVersion: Number(parsed[3]) } : null;
 };
 
 export const apiVersionCompare = (v1: string, v2: string) => {
@@ -67,11 +53,7 @@ export const apiVersionCompare = (v1: string, v2: string) => {
     return v1.localeCompare(v2);
   }
   // Then sort on major version with no qualifiers: v3 > v1
-  if (
-    v1Parsed.majorVersion !== v2Parsed.majorVersion &&
-    !v1Parsed.qualifier &&
-    !v2Parsed.qualifier
-  ) {
+  if (v1Parsed.majorVersion !== v2Parsed.majorVersion && !v1Parsed.qualifier && !v2Parsed.qualifier) {
     return v2Parsed.majorVersion - v1Parsed.majorVersion;
   }
   // Then sort on any version with no qualifier over a qualifier: v1 > v3alpha
@@ -94,22 +76,19 @@ export const apiVersionCompare = (v1: string, v2: string) => {
 
 export const getLatestVersionForCRD = (crd: CustomResourceDefinitionKind) => {
   const sorted = crd.spec.versions
-    ?.filter((version) => version.served)
+    ?.filter(version => version.served)
     ?.map(({ name }) => name)
     ?.sort(apiVersionCompare);
   return parseAPIVersion(sorted?.[0]) ? sorted[0] : crd.spec.version;
 };
 
-export const referenceForCRD = (obj: CustomResourceDefinitionKind): GroupVersionKind =>
-  referenceForGroupVersionKind(obj.spec.group)(getLatestVersionForCRD(obj))(obj.spec.names.kind);
+export const referenceForCRD = (obj: CustomResourceDefinitionKind): GroupVersionKind => referenceForGroupVersionKind(obj.spec.group)(getLatestVersionForCRD(obj))(obj.spec.names.kind);
 
-export const referenceForOwnerRef = (ownerRef: OwnerReference): GroupVersionKind =>
-  referenceForGroupVersionKind(groupVersionFor(ownerRef.apiVersion).group)(
-    groupVersionFor(ownerRef.apiVersion).version,
-  )(ownerRef.kind);
+export const referenceForCRD_ = (obj: CustomResourceDefinitionKind): GroupVersionKind => referenceForGroupVersionKind_(obj.spec.group)(getLatestVersionForCRD(obj))(obj.spec.names.kind);
 
-export const referenceForModel = (model: K8sKind): GroupVersionKind =>
-  referenceForGroupVersionKind(model.apiGroup || 'core')(model.apiVersion)(model.kind);
+export const referenceForOwnerRef = (ownerRef: OwnerReference): GroupVersionKind => referenceForGroupVersionKind(groupVersionFor(ownerRef.apiVersion).group)(groupVersionFor(ownerRef.apiVersion).version)(ownerRef.kind);
+
+export const referenceForModel = (model: K8sKind): GroupVersionKind => referenceForGroupVersionKind(model.apiGroup || 'core')(model.apiVersion)(model.kind);
 
 export const referenceFor = ({ kind, apiVersion }: K8sResourceCommon): GroupVersionKind => {
   if (!kind) {
@@ -128,17 +107,14 @@ export const referenceFor = ({ kind, apiVersion }: K8sResourceCommon): GroupVers
   return referenceForGroupVersionKind(group)(version)(kind);
 };
 
-export const kindForReference = (ref: K8sResourceKindReference) =>
-  isGroupVersionKind(ref) ? ref.split('~')[2] : ref;
+export const kindForReference = (ref: K8sResourceKindReference) => (isGroupVersionKind(ref) ? ref.split('~')[2] : ref);
 
 export const apiGroupForReference = (ref: GroupVersionKind) => ref.split('~')[0];
 
 export const versionForReference = (ref: GroupVersionKind) => ref.split('~')[1];
 
-export const apiVersionForModel = (model: K8sKind) =>
-  _.isEmpty(model.apiGroup) ? model.apiVersion : `${model.apiGroup}/${model.apiVersion}`;
+export const apiVersionForModel = (model: K8sKind) => (_.isEmpty(model.apiGroup) ? model.apiVersion : `${model.apiGroup}/${model.apiVersion}`);
 
-export const apiVersionForReference = (ref: GroupVersionKind) =>
-  isGroupVersionKind(ref) ? `${ref.split('~')[0]}/${ref.split('~')[1]}` : ref;
+export const apiVersionForReference = (ref: GroupVersionKind) => (isGroupVersionKind(ref) ? `${ref.split('~')[0]}/${ref.split('~')[1]}` : ref);
 
 export const nameForModel = (model: K8sKind) => [model.plural, model.apiGroup].join('.');
