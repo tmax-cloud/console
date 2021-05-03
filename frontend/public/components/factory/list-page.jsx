@@ -368,8 +368,10 @@ export const MultiListPage = props => {
   const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope } = props;
 
   const { t } = useTranslation();
+
   const isNSSelected = !props.resources?.[0]?.namespaced || namespace;
-  const unclickableMsg = !isNSSelected && !isClusterScope ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
+  let unclickableMsg = !isNSSelected && !isClusterScope ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
+  unclickableMsg = window.location.pathname.startsWith('/k8s/cluster/customresourcedefinitions') ? undefined : unclickableMsg;
   const resources = _.map(props.resources, r => ({
     ...r,
     isList: r.isList !== undefined ? r.isList : true,

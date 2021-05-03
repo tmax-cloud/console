@@ -3,21 +3,18 @@ import * as React from 'react';
 import { Firehose, FirehoseResult, FirehoseResource, LoadingInline } from '@console/internal/components/utils';
 import { ResourceListDropdown, SingleResourceDropdownProps, MultipleResourceDropdownProps } from './resource-list-dropdown';
 
-const ResourceDropdownWrapper_: React.FC<ResourceDropdownWrapperProps> = (props) => {
-  const getItems = (resources) => {
+const ResourceDropdownWrapper_: React.FC<ResourceDropdownWrapperProps> = props => {
+  const getItems = resources => {
     const items = [];
     _.each(resources, (resource, k) => {
       if (resource.loaded) {
         const kind = resource.kind;
-        _.each(
-          resource.data,
-          (item) => {
-            item.kind = kind;
-            items.push(item);
-          }
-        );
+        _.each(resource.data, item => {
+          item.kind = kind;
+          items.push(item);
+        });
       }
-    })
+    });
     return items;
   };
 
@@ -38,23 +35,32 @@ const ResourceDropdownWrapper_: React.FC<ResourceDropdownWrapperProps> = (props)
       resourceList={rows} // 필수
       autocompletePlaceholder="search by name"
     />
-  )
-}
+  );
+};
 
 type ResourceDropdownWrapperProps = (SingleResourceDropdownProps | MultipleResourceDropdownProps) & {
   loaded?: boolean;
   resources?: FirehoseResult[];
-}
+};
 
-export const ResourceDropdown: React.FC<ResourceDropdownProps> = ({ resources, ...props }) => {
-  resources.map((resource)=>Object.assign(resource, {isList: true}));
+const ResourceDropdown_: React.FC<ResourceDropdownProps> = ({ resources, ...props }) => {
+  const resourcesWithIsListProp = resources.map(resource => {
+    return { ...resource, isList: true };
+  });
   return (
-    <Firehose resources={resources}>
+    <Firehose resources={resourcesWithIsListProp}>
       <ResourceDropdownWrapper_ {...props} />
     </Firehose>
-  )
+  );
+};
+
+function areEqual(prevProps, nextProps) {
+  // MEMO : methods와 idFunc 속성은 매번 다르게 인식돼서 memo비교문에서 제거함
+  return _.isEqual(_.omit(prevProps, ['methods', 'idFunc']), _.omit(nextProps, ['methods', 'idFunc']));
 }
+
+export const ResourceDropdown = React.memo(ResourceDropdown_, areEqual);
 
 type ResourceDropdownProps = (SingleResourceDropdownProps | MultipleResourceDropdownProps) & {
   resources: FirehoseResource[];
-}
+};

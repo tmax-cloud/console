@@ -56,7 +56,7 @@ const DetailsModuleList: React.FC<DetailsModuleListProps> = React.memo(({ hcVers
       {_.map(hcVersion, item => (
         <div key={_.get(item, 'name')} className={classNames('details-card__head-style')}>
           <div>
-            <DetailItem title={_.get(item, 'name')} error={!!hcVersionError || (item && !_.get(item, 'version'))} isLoading={!item} valueClassName="co-select-to-copy">
+            <DetailItem title={_.get(item, 'name')} error={!!hcVersionError || (item && !_.get(item, 'version'))} isLoading={!item}>
               {_.get(item, 'version')}
             </DetailItem>
           </div>
