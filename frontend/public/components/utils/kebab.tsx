@@ -17,6 +17,7 @@ import { useTranslation, withTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 import * as hoistStatics from 'hoist-non-react-statics';
+import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 
 export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] => {
   const subs: { [key: string]: KebabSubMenu } = {};
@@ -277,23 +278,24 @@ const kebabFactory: KebabFactory = {
   }),
   ModifyAnnotations: (kind, obj) => ({
     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_5',
-    callback: (t) =>
+    callback: t =>
       annotationsModal({
         kind,
         resource: obj,
         blocking: true,
         submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
-        title: t('COMMON:MSG_MAIN_ACTIONBUTTON_5')
+        title: t('COMMON:MSG_MAIN_ACTIONBUTTON_5'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyCount: (kind, obj) => ({
     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_7',
-    callback: (t) =>
+    callback: t =>
       configureReplicaCountModal({
         resourceKind: kind,
         resource: obj,
         title: t('COMMON:MSG_MAIN_ACTIONBUTTON_7'),
+        message: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITPODCOUNT_2', { 0: ResourceLabel(kind, t) }),
         submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
         cancelText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_2'),
       }),
@@ -382,7 +384,6 @@ export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
 });
 
 class Kebab_ extends React.Component<any, { active: boolean }> {
-
   static factory: KebabFactory = kebabFactory;
   static getExtensionsActionsForKind = getExtensionsKebabActionsForKind;
 
@@ -474,7 +475,7 @@ export type KebabOption = {
   hidden?: boolean;
   label: string;
   href?: string;
-  callback?: (t?:TFunction) => any;
+  callback?: (t?: TFunction) => any;
   accessReview?: AccessReviewResourceAttributes;
   isDisabled?: boolean;
   tooltip?: string;
