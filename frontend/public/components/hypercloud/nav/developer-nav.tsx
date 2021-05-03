@@ -47,12 +47,12 @@ const DeveloperNav = () => (
           <ResourceNSLink resource="integrationconfigs" name={t('COMMON:MSG_LNB_MENU_183')} />
         </NavSection>
         <NavSection title="AI DevOps">
-          <ResourceNSLink resource="notebooks" name="Notebook" />
-          <ResourceNSLink resource="experiments" name="Experiment" />
-          <ResourceNSLink resource="trainingjobs" name="TrainingJob" />
-          <ResourceNSLink resource="inferenceservices" name="InferenceService" />
-          <ResourceNSLink resource="workflowtemplates" name="WorkflowTemplate" />
-          <ResourceNSLink resource="workflows" name="Workflow" />
+          <ResourceNSLink resource="notebooks" name={t('COMMON:MSG_LNB_MENU_326')} />
+          <ResourceNSLink resource="experiments" name={t('COMMON:MSG_LNB_MENU_327')} />
+          <ResourceNSLink resource="trainingjobs" name={t('COMMON:MSG_LNB_MENU_328')} />
+          <ResourceNSLink resource="inferenceservices" name={t('COMMON:MSG_LNB_MENU_329')} />
+          <ResourceNSLink resource="workflowtemplates" name={t('COMMON:MSG_LNB_MENU_330')} />
+          <ResourceNSLink resource="workflows" name={t('COMMON:MSG_LNB_MENU_331')} />
         </NavSection>
         <NavSection title={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_3')}>
           <ResourceNSLink resource="registries" name={t('COMMON:MSG_LNB_MENU_187')} />

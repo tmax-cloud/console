@@ -1,12 +1,14 @@
+import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
+import { Status } from '@console/shared';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { InferenceServiceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
@@ -15,6 +17,23 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 const kind = InferenceServiceModel.kind;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
+
+const InferenceServicePhase = instance => {
+  let phase = '';
+  if (instance.status) {
+    instance.status.conditions.forEach(cur => {
+      if (cur.type === 'ready') {
+        if (cur.status === 'True') {
+          phase = 'Ready';
+        } else {
+          phase = 'UnReady';
+        }
+      }
+    });
+    return phase;
+  }
+};
+
 
 const InferenceServiceTableHeader = (t?: TFunction) => {
   return [
@@ -91,6 +110,27 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
   );
 };
 
+export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListProps> = ({ ds }) => {
+  const { t } = useTranslation();
+
+  const readyCondition = ds.status.conditions.find(obj => _.lowerCase(obj.type) === 'ready');
+  const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
+  const phase = InferenceServicePhase(ds);
+
+  return (
+    <dl className="co-m-pane__details">
+      <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_109')}`} obj={ds} path="status.transitionTime">
+        {time}
+      </DetailsItem>
+      <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
+        <Status status={phase} />
+      </DetailsItem>
+    </dl>
+  );
+}
+
+
+
 const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: isvc }) => {
   const { t } = useTranslation();
   return (
@@ -101,6 +141,15 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
           <div className="col-lg-6">
             <ResourceSummary resource={isvc} />
           </div>
+          <div className="col-lg-6">
+            <InferenceServiceDetailsList ds={isvc} />
+          </div>
+        </div>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text="Models" />
+        <div className="row">
+          
         </div>
       </div>
     </>
@@ -141,6 +190,10 @@ export const InferenceServicesDetailsPage: React.FC<InferenceServicesDetailsPage
   );
 };
 
+
+type InferenceServiceDetailsListProps = {
+  ds: K8sResourceKind;
+};
 
 type InferenceServiceDetailsProps = {
   obj: K8sResourceKind;
