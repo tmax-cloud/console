@@ -7,10 +7,14 @@ import { DetailsCard } from './details-card';
 import { InventoryCard } from './inventory-card';
 import { UtilizationCard } from './utilization-card';
 import { ActivityCard } from './activity-card';
+import { AccessDenied } from '../../../utils';
 // import { useK8sGet } from '../../../utils/k8s-get-hook';
 // import { InfrastructureModel } from '../../../../models';
 // import { K8sResourceKind } from '../../../../module/k8s';
 // import { ClusterDashboardContext } from './context';
+import { k8sCreate } from '@console/internal/module/k8s';
+import { SelfSubjectAccessReviewModel } from '../../../../models';
+import { useTranslation } from 'react-i18next';
 
 const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
 const leftCards = [{ Card: DetailsCard }];
@@ -29,11 +33,29 @@ export const ClusterDashboard: React.FC<{}> = () => {
   //   infrastructureError,
   // };
 
+  const { t } = useTranslation();
+
+  const [response, setResponse] = React.useState(``);
+  const payload = {
+    spec: {
+      resourceAttributes: {
+        resource: 'namespaces',
+        verb: 'list',
+      },
+    },
+    metadata: {},
+  };
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      let res = await k8sCreate(SelfSubjectAccessReviewModel, payload);
+      setResponse(res.status.allowed);
+    };
+    checkAuth();
+  }, []);
+
   return (
     // <ClusterDashboardContext.Provider value={context}>
-    <Dashboard>
-      <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />
-    </Dashboard>
+    <Dashboard>{response === `true` ? <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} /> : <AccessDenied message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_27')} />}</Dashboard>
     // </ClusterDashboardContext.Provider>
   );
 };
