@@ -1,8 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Button } from '@patternfly/react-core';
-import { ArrowCircleUpIcon, InProgressIcon } from '@patternfly/react-icons';
-import { FLAGS, getInfrastructureAPIURL, getInfrastructurePlatform } from '@console/shared';
 import DashboardCard from '@console/shared/src/components/dashboard/dashboard-card/DashboardCard';
 import DashboardCardBody from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardBody';
 import DashboardCardHeader from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardHeader';
@@ -10,15 +6,6 @@ import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboa
 import DetailsBody from '@console/shared/src/components/dashboard/details-card/DetailsBody';
 import DetailItem from '@console/shared/src/components/dashboard/details-card/DetailItem';
 import { DashboardItemProps, withDashboardResources } from '../../with-dashboard-resources';
-import { ClusterVersionModel } from '../../../../models';
-import { referenceForModel, getOpenShiftVersion, ClusterVersionKind, getClusterID, getDesiredClusterVersion, getLastCompletedUpdate, getClusterUpdateStatus, getClusterVersionChannel, ClusterUpdateStatus, getOCMLink } from '../../../../module/k8s';
-import { flagPending, featureReducerName } from '../../../../reducers/features';
-import { ExternalLink } from '../../../utils';
-import { RootState } from '../../../../redux';
-import { clusterUpdateModal } from '../../../modals';
-import { Link } from 'react-router-dom';
-import { useK8sWatchResource, WatchK8sResource } from '../../../utils/k8s-watch-hook';
-import { ClusterDashboardContext } from './context';
 import { getIdToken } from '../../../../hypercloud/auth';
 import { getActivePerspective, getActiveCluster } from '../../../../actions/ui';
 import { useTranslation } from 'react-i18next';
@@ -28,51 +15,6 @@ import './details-card.scss';
 
 import { GreenCheckCircleIcon, RedExclamationCircleIcon } from '../../../../../../frontend/packages/console-shared/src/components/status/icons';
 import { DashboardCardPopupLink } from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardLink';
-
-const ClusterVersion: React.FC<ClusterVersionProps> = ({ cv }) => {
-  const desiredVersion = getDesiredClusterVersion(cv);
-  const lastVersion = getLastCompletedUpdate(cv);
-  const status = getClusterUpdateStatus(cv);
-
-  switch (status) {
-    case ClusterUpdateStatus.Updating:
-      return (
-        <>
-          <span className="co-select-to-copy">{desiredVersion}</span>
-          <div>
-            <Link to="/settings/cluster/">
-              <InProgressIcon className="co-icon-and-text__icon" />
-              Updating
-            </Link>
-          </div>
-        </>
-      );
-    case ClusterUpdateStatus.UpdatesAvailable:
-      return (
-        <>
-          <span className="co-select-to-copy">{desiredVersion}</span>
-          <div>
-            <Button variant="link" className="btn-link--no-btn-default-values" onClick={() => clusterUpdateModal({ cv })} icon={<ArrowCircleUpIcon />} isInline>
-              Update
-            </Button>
-          </div>
-        </>
-      );
-    default:
-      return lastVersion ? <span className="co-select-to-copy">{lastVersion}</span> : <span className="text-secondary">Not available</span>;
-  }
-};
-
-const clusterVersionResource: WatchK8sResource = {
-  kind: referenceForModel(ClusterVersionModel),
-  namespaced: false,
-  name: 'version',
-  isList: false,
-};
-
-const mapStateToProps = (state: RootState) => ({
-  openshiftFlag: state[featureReducerName].get(FLAGS.OPENSHIFT),
-});
 
 const ModuleStatus = ({ status }) => {
   switch (status) {
@@ -127,16 +69,11 @@ const DetailsModuleList: React.FC<DetailsModuleListProps> = React.memo(({ hcVers
   );
 });
 
-export const DetailsCard_ = connect(mapStateToProps)(({ watchK8sResource, stopWatchK8sResource, openshiftFlag }: DetailsCardProps) => {
-  const { infrastructure, infrastructureLoaded, infrastructureError } = React.useContext(ClusterDashboardContext);
-  const [hcVersion, setHcVersion] = React.useState<Response[]>();
+export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: DetailsCardProps) => {
+  const [hcVersion, setHcVersion] = React.useState<Response[]>([]);
   const [hcVersionError, setHcVersionError] = React.useState();
   const { t } = useTranslation();
-  const [clusterVersionData, clusterVersionLoaded, clusterVersionError] = useK8sWatchResource<ClusterVersionKind>(clusterVersionResource);
   React.useEffect(() => {
-    if (flagPending(openshiftFlag)) {
-      return;
-    }
     const fetchHcVersion = async () => {
       let url;
       let headers;
@@ -155,14 +92,8 @@ export const DetailsCard_ = connect(mapStateToProps)(({ watchK8sResource, stopWa
       }
     };
     fetchHcVersion();
-  }, [openshiftFlag, watchK8sResource, stopWatchK8sResource]);
+  }, [watchK8sResource, stopWatchK8sResource]);
 
-  const clusterId = getClusterID(clusterVersionData);
-  const openShiftVersion = getOpenShiftVersion(clusterVersionData);
-  const cvChannel = getClusterVersionChannel(clusterVersionData);
-
-  const infrastructurePlatform = getInfrastructurePlatform(infrastructure);
-  const infrastuctureApiUrl = getInfrastructureAPIURL(infrastructure);
   return (
     <DashboardCard data-test-id="details-card">
       <DashboardCardHeader>
@@ -170,45 +101,16 @@ export const DetailsCard_ = connect(mapStateToProps)(({ watchK8sResource, stopWa
         {/* <DashboardCardLink to="/settings/cluster/">View settings</DashboardCardLink> */}
       </DashboardCardHeader>
       <DetailsSubHeader hcVersion={hcVersion} />
-      <DashboardCardBody isLoading={flagPending(openshiftFlag)} className={classNames('details-card__body-style')}>
-        <DetailsBody>
-          {openshiftFlag ? (
-            <>
-              <DetailItem title="Cluster API address" isLoading={!infrastructureLoaded} error={!!infrastructureError || (infrastructure && !infrastuctureApiUrl)} valueClassName="co-select-to-copy">
-                {infrastuctureApiUrl}
-              </DetailItem>
-              <DetailItem title="Cluster ID" error={!!clusterVersionError || (clusterVersionLoaded && !clusterId)} isLoading={!clusterVersionLoaded}>
-                <div className="co-select-to-copy">{clusterId}</div>
-                <ExternalLink text="OpenShift Cluster Manager" href={getOCMLink(clusterId)} />
-              </DetailItem>
-              <DetailItem title="Provider" error={!!infrastructureError || (infrastructure && !infrastructurePlatform)} isLoading={!infrastructureLoaded} valueClassName="co-select-to-copy">
-                {infrastructurePlatform}
-              </DetailItem>
-              <DetailItem title="OpenShift version" error={!!clusterVersionError || (clusterVersionLoaded && !openShiftVersion)} isLoading={!clusterVersionLoaded}>
-                <ClusterVersion cv={clusterVersionData} />
-              </DetailItem>
-              <DetailItem title="Update channel" isLoading={!clusterVersionLoaded && !clusterVersionError} error={!!clusterVersionError || (clusterVersionLoaded && !cvChannel)} valueClassName="co-select-to-copy">
-                {cvChannel}
-              </DetailItem>
-            </>
-          ) : (
-            <DetailsModuleList hcVersion={hcVersion} hcVersionError={hcVersionError} />
-          )}
-        </DetailsBody>
+      <DashboardCardBody isLoading={hcVersion.length > 0 ? false : true} className={classNames('details-card__body-style')}>
+        <DetailsBody>{hcVersion.length > 0 && <DetailsModuleList hcVersion={hcVersion} hcVersionError={hcVersionError} />}</DetailsBody>
       </DashboardCardBody>
     </DashboardCard>
   );
-});
+};
 
 export const DetailsCard = withDashboardResources(DetailsCard_);
 
-type DetailsCardProps = DashboardItemProps & {
-  openshiftFlag: boolean;
-};
-
-type ClusterVersionProps = {
-  cv: ClusterVersionKind;
-};
+type DetailsCardProps = DashboardItemProps;
 
 type DetailsSubHeaderProps = {
   hcVersion: any;

@@ -236,4 +236,14 @@ const ssarCheckActions = ssarChecks.map(({ flag, resourceAttributes, after }) =>
   return fn;
 });
 
-export const detectFeatures = () => (dispatch: Dispatch) => [detectOpenShift, detectCanCreateProject, detectClusterVersion, detectUser, detectLoggingURL, detectConsoleLinks, ...ssarCheckActions, ...plugins.registry.getCustomFeatureFlags().map(ff => ff.properties.detect)].forEach(detect => detect(dispatch));
+export const detectFeatures = () => (dispatch: Dispatch) =>
+  [
+    // detectOpenShift,
+    // detectCanCreateProject,
+    // detectClusterVersion,
+    // detectUser,
+    // detectLoggingURL,
+    // detectConsoleLinks,
+    ...ssarCheckActions,
+    ...plugins.registry.getCustomFeatureFlags().map(ff => ff.properties.detect),
+  ].forEach(detect => detect(dispatch));
