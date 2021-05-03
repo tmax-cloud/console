@@ -16,7 +16,7 @@ import { PipelineRunsPage } from './pipeline-run';
 import PipelineRowKebabActions from '../../../packages/dev-console/src/components/pipelines/list-page/PipelineRowKebabActions';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = getPipelineKebabActions();
 
@@ -88,9 +88,10 @@ export const PipelineDetailsList: React.FC<PipelineDetailsListProps> = ({ ds: pi
       displayName: task.name,
     }));
 
+  const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
-      <DynamicResourceLinkList namespace={pipeline.metadata.namespace} links={taskLinks} title="Tasks" />
+      <DynamicResourceLinkList namespace={pipeline.metadata.namespace} links={taskLinks} title={ResourceLabelPlural(TaskModel, t)} />
     </dl>
   );
 };

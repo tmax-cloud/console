@@ -1164,7 +1164,8 @@
     "MSG_DETAILS_TABTERMINAL_8": "다운로드",
     "MSG_DETAILS_TABTERMINAL_9": "확장",
     "MSG_DETAILS_TABTERMINAL_10": "",
-    "MSG_DETAILS_TABTERMINAL_11": ""
+    "MSG_DETAILS_TABTERMINAL_11": "",
+    "GitLab": "깃랩"
   },
   "SINGLE": {
     "MSG_SEARCH_MAIN_NORESOURCES_1": "선택한 리소스 없음",

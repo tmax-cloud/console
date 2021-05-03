@@ -46,8 +46,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
       type: 'Perspective',
       properties: {
         id: 'developer',
-        // name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_1') : 'Developer',
-        name:'Developer',
+        name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') :  'Developer', // 임시. 스트링 나오면 재적용 필요
         icon: <CogsIcon />,
         getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
         getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),

@@ -16,8 +16,8 @@ const TriggeredBySection: React.FC<TriggeredByProps> = (props) => {
     },
   } = props;
 
-  const manualTrigger = labels[StartedByLabel.user];
-  const autoTrigger = labels[StartedByLabel.triggers];
+  const manualTrigger = labels?.[StartedByLabel.user];
+  const autoTrigger = labels?.[StartedByLabel.triggers];
 
   if (!manualTrigger && !autoTrigger) {
     return null;

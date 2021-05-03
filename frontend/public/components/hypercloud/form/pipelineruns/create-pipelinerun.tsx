@@ -128,7 +128,6 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
                   type='single'
                   useHookForm
                   placeholder='파이프라인 리소스 선택'
-                  onChange={onSelectPipeline}
                 />
               </Section>
             </ul>
