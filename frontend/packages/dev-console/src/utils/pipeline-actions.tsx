@@ -17,6 +17,7 @@ import { StartedByLabel } from '../components/pipelines/const';
 import { EventListenerModel, PipelineModel, PipelineRunModel } from '../models';
 import { Pipeline, PipelineRun } from './pipeline-augment';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
+import { ResourceStringKeyMap } from '../../../../public/models/hypercloud/resource-plural';
 
 export const handlePipelineRunSubmit = (pipelineRun: PipelineRun) => {
   history.push(
@@ -38,7 +39,7 @@ export const triggerPipeline = (
 };
 
 export const reRunPipelineRun: KebabAction = (kind: K8sKind, pipelineRun: PipelineRun) => ({
-  label: 'Rerun',
+  label: 'COMMON:MSG_MAIN_ACTIONBUTTON_30',
   callback: () => {
     const namespace = _.get(pipelineRun, 'metadata.namespace');
     const pipelineRef = _.get(pipelineRun, 'spec.pipelineRef.name');
@@ -58,7 +59,7 @@ export const reRunPipelineRun: KebabAction = (kind: K8sKind, pipelineRun: Pipeli
 });
 
 export const editPipeline: KebabAction = (kind: K8sKind, pipeline: Pipeline) => ({
-  label: 'Edit Pipeline',
+  label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
   callback: () => {
     const {
       metadata: { name, namespace },
@@ -79,7 +80,7 @@ export const startPipeline: KebabAction = (
   pipeline: Pipeline,
   onSubmit?: (pipelineRun: PipelineRun) => void,
 ) => ({
-  label: 'Start',
+  label: 'COMMON:MSG_MAIN_ACTIONBUTTON_28',
   callback: () => {
     const params = _.get(pipeline, ['spec', 'params'], []);
     const resources = _.get(pipeline, ['spec', 'resources'], []);
@@ -160,7 +161,7 @@ export const rerunPipelineRunAndRedirect: KebabAction = (
 ) => {
   return rerunPipeline(kind, pipelineRun, null, {
     onComplete: handlePipelineRunSubmit,
-    label: 'Rerun',
+    label: 'COMMON:MSG_MAIN_ACTIONBUTTON_30',
   });
 };
 

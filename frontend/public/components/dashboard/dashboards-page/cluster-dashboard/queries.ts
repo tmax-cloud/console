@@ -51,16 +51,14 @@ const top25Queries = {
 const overviewQueries = {
   [OverviewQuery.MEMORY_TOTAL]: 'sum(node_memory_MemTotal_bytes)',
   [OverviewQuery.MEMORY_UTILIZATION]: 'sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)',
+  [OverviewQuery.NETWORK_IN_UTILIZATION]: 'sum(rate(container_network_receive_bytes_total{container="POD",pod!=""}[5m]))',
+  [OverviewQuery.NETWORK_OUT_UTILIZATION]: 'sum(rate(container_network_transmit_bytes_total{container="POD",pod!=""}[5m]))',
   [OverviewQuery.NETWORK_UTILIZATION]: 'sum(instance:node_network_transmit_bytes_excluding_lo:rate1m+instance:node_network_receive_bytes_excluding_lo:rate1m)',
-  // [OverviewQuery.CPU_UTILIZATION]: 'cluster:cpu_usage_cores:sum',
   [OverviewQuery.CPU_UTILIZATION]: 'sum(sum by (cpu) (rate(node_cpu_seconds_total{job="node-exporter", mode!="idle"}[1m])))',
-  // [OverviewQuery.CPU_TOTAL]: 'sum(cluster:capacity_cpu_cores:sum)',
   [OverviewQuery.CPU_TOTAL]: 'sum(sum by (cpu) (rate(node_cpu_seconds_total{job="node-exporter"}[1m])))',
   [OverviewQuery.STORAGE_UTILIZATION]: '(sum(node_filesystem_size_bytes) - sum(node_filesystem_free_bytes))',
   [OverviewQuery.STORAGE_TOTAL]: 'sum(node_filesystem_size_bytes)',
   [OverviewQuery.POD_UTILIZATION]: 'count(kube_pod_info)',
-  [OverviewQuery.NETWORK_IN_UTILIZATION]: 'sum(rate(container_network_receive_bytes_total{container="POD",pod!=""}[5m]))',
-  [OverviewQuery.NETWORK_OUT_UTILIZATION]: 'sum(rate(container_network_transmit_bytes_total{container="POD",pod!=""}[5m]))',
 };
 
 export const utilizationQueries = {
@@ -86,6 +84,50 @@ export const multilineQueries = {
     { query: overviewQueries[OverviewQuery.NETWORK_IN_UTILIZATION], desc: 'In' },
     { query: overviewQueries[OverviewQuery.NETWORK_OUT_UTILIZATION], desc: 'Out' },
   ],
+};
+
+const namespaceQueries = (namespace: String) => {
+  return {
+    [OverviewQuery.MEMORY_TOTAL]: `sum by(namespace) (container_memory_working_set_bytes{namespace="${namespace}",container="",pod!=""})`,
+    [OverviewQuery.MEMORY_UTILIZATION]: `sum by(namespace) (container_memory_working_set_bytes{namespace="${namespace}",container="",pod!="",mode!="idle"})`,
+    [OverviewQuery.NETWORK_IN_UTILIZATION]: `sum(rate(container_network_receive_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
+    [OverviewQuery.NETWORK_OUT_UTILIZATION]: `sum(rate(container_network_transmit_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
+    [OverviewQuery.NETWORK_UTILIZATION]: '',
+    [OverviewQuery.CPU_UTILIZATION]: `namespace:container_cpu_usage:sum{namespace='${namespace}', mode!="idle"}`,
+    [OverviewQuery.CPU_TOTAL]: `namespace:container_cpu_usage:sum{namespace='${namespace}'}`,
+    [OverviewQuery.STORAGE_UTILIZATION]: '',
+    [OverviewQuery.STORAGE_TOTAL]: `sum(kube_persistentvolumeclaim_resource_requests_storage_bytes{namespace="${namespace}"})`,
+    [OverviewQuery.POD_UTILIZATION]: `count(kube_pod_info{namespace="${namespace}"})`,
+  };
+};
+
+export const namespaceUtilizationQueries = (namespace: String) => {
+  return {
+    [OverviewQuery.CPU_UTILIZATION]: {
+      utilization: namespaceQueries(namespace)[OverviewQuery.CPU_UTILIZATION],
+      // total: namespaceQueries(namespace)[OverviewQuery.CPU_TOTAL],
+    },
+    [OverviewQuery.MEMORY_UTILIZATION]: {
+      utilization: namespaceQueries(namespace)[OverviewQuery.MEMORY_UTILIZATION],
+      // total: namespaceQueries(namespace)[OverviewQuery.MEMORY_TOTAL],
+    },
+    [OverviewQuery.STORAGE_UTILIZATION]: {
+      utilization: namespaceQueries(namespace)[OverviewQuery.STORAGE_UTILIZATION],
+      total: namespaceQueries(namespace)[OverviewQuery.STORAGE_TOTAL],
+    },
+    [OverviewQuery.POD_UTILIZATION]: {
+      utilization: namespaceQueries(namespace)[OverviewQuery.POD_UTILIZATION],
+    },
+  };
+};
+
+export const namespaceMultilineQueries = (namespace: String) => {
+  return {
+    [OverviewQuery.NETWORK_UTILIZATION]: [
+      { query: namespaceQueries(namespace)[OverviewQuery.NETWORK_IN_UTILIZATION], desc: 'In' },
+      { query: namespaceQueries(namespace)[OverviewQuery.NETWORK_OUT_UTILIZATION], desc: 'Out' },
+    ],
+  };
 };
 
 export const top25ConsumerQueries = {

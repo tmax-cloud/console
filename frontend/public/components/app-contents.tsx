@@ -186,6 +186,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/grafana/ns/:ns" exact loader={() => import('./hypercloud/grafana').then(m => NamespaceFromURL(m.GrafanaPage))} /> */}
 
           {/*Create Form */}
+          <LazyRoute path="/k8s/ns/:ns/customresourcedefinitions/:plural/~new" exact />
           <LazyRoute path="/k8s/cluster/rolebindings/~new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateRoleBinding)} kind="RoleBinding" />
           <LazyRoute path="/k8s/ns/:ns/rolebindings/~new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateRoleBinding)} kind="RoleBinding" />
           <LazyRoute path="/k8s/cluster/pipelines/~new" exact loader={() => import('../../packages/dev-console/src/components/pipelines/pipeline-builder' /* webpackChunkName: "PipelineBuilderPage" */).then(m => m.PipelineBuilderPage)} kind="Pipeline" />
