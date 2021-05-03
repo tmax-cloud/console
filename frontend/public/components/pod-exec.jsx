@@ -172,7 +172,8 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
         if (error) {
           contents = <div className="text-center cos-error-title">{error}</div>;
         } else if (open) {
-          contents = <Terminal onResize={this.onResize} onData={this.onData} ref={this.terminal} />;
+          // MEMO : Terminal컴포넌트에 withTranslation 감싸면 ref에러 나서 여기서만 t를 props로 넘겨줌
+          contents = <Terminal t={t} onResize={this.onResize} onData={this.onData} ref={this.terminal} />;
         }
 
         return (
