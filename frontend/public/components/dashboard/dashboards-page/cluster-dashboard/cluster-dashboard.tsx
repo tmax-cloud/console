@@ -35,7 +35,7 @@ export const ClusterDashboard: React.FC<{}> = () => {
 
   const { t } = useTranslation();
 
-  const [response, setResponse] = React.useState(``);
+  const [response, setResponse] = React.useState();
   const payload = {
     spec: {
       resourceAttributes: {
@@ -53,9 +53,24 @@ export const ClusterDashboard: React.FC<{}> = () => {
     checkAuth();
   }, []);
 
+  const dashboard = <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} />;
+  const loading = <div></div>;
+  const error = <AccessDenied message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_27')} />;
+  let content;
+
+  if (response !== undefined) {
+    if (response === true) {
+      content = dashboard;
+    } else {
+      content = error;
+    }
+  } else {
+    content = loading;
+  }
+
   return (
     // <ClusterDashboardContext.Provider value={context}>
-    <Dashboard>{response === `true` ? <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} /> : <AccessDenied message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_27')} />}</Dashboard>
+    <Dashboard>{content}</Dashboard>
     // </ClusterDashboardContext.Provider>
   );
 };
