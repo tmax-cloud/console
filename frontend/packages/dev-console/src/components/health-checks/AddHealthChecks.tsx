@@ -4,14 +4,7 @@ import Helmet from 'react-helmet';
 import { FormikProps, FormikValues } from 'formik';
 import { Form, Button } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
-import {
-  ContainerDropdown,
-  history,
-  PageHeading,
-  ResourceLink,
-  ResourceIcon,
-  openshiftHelpBase,
-} from '@console/internal/components/utils';
+import { ContainerDropdown, history, PageHeading, ResourceLink, ResourceIcon, openshiftHelpBase } from '@console/internal/components/utils';
 import { ContainerModel } from '@console/internal/models';
 import { K8sResourceKind, referenceFor, modelFor } from '@console/internal/module/k8s';
 import { FormFooter } from '@console/shared';
@@ -19,32 +12,20 @@ import { getResourcesType } from '../edit-application/edit-application-utils';
 import HealthChecks from './HealthChecks';
 import { getHealthChecksData } from './create-health-checks-probe-utils';
 import './AddHealthChecks.scss';
+import { useTranslation } from 'react-i18next';
 
 type AddHealthChecksProps = {
   resource?: K8sResourceKind;
   currentContainer: string;
 };
 
-const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps> = ({
-  resource,
-  currentContainer,
-  handleSubmit,
-  handleReset,
-  errors,
-  status,
-  isSubmitting,
-  setFieldValue,
-  values,
-  dirty,
-}) => {
+const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps> = ({ resource, currentContainer, handleSubmit, handleReset, errors, status, isSubmitting, setFieldValue, values, dirty }) => {
   const [currentKey, setCurrentKey] = React.useState(currentContainer);
+  const { t } = useTranslation();
   const containers = resource?.spec?.template?.spec?.containers;
-  const healthCheckAdded = _.every(
-    containers,
-    (container) => container.readinessProbe || container.livenessProbe || container.startupProbe,
-  );
+  const healthCheckAdded = _.every(containers, container => container.readinessProbe || container.livenessProbe || container.startupProbe);
   const containersByKey = _.keyBy(containers, 'name');
-  const pageTitle = healthCheckAdded ? 'Edit Health Checks' : 'Add Health Checks';
+  const pageTitle = healthCheckAdded ? 'Edit Health Checks' : t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_1');
   const {
     kind,
     metadata: { name, namespace },
@@ -54,16 +35,11 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
   const isFormClean = _.every(values.healthChecks, { modified: false });
 
   const handleSelectContainer = (containerName: string) => {
-    const containerIndex = _.findIndex(resource.spec.template.spec.containers, [
-      'name',
-      containerName,
-    ]);
+    const containerIndex = _.findIndex(resource.spec.template.spec.containers, ['name', containerName]);
     setCurrentKey(containerName);
     setFieldValue('containerName', containerName);
     setFieldValue('healthChecks', getHealthChecksData(resource, containerIndex));
-    history.replace(
-      `/k8s/ns/${namespace}/${resourceKind}/${name}/containers/${containerName}/health-checks`,
-    );
+    history.replace(`/k8s/ns/${namespace}/${resourceKind}/${name}/containers/${containerName}/health-checks`);
   };
 
   return (
@@ -75,13 +51,8 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
         title={
           <>
             {pageTitle}
-            <Button
-              variant="link"
-              component="a"
-              href={`${openshiftHelpBase}applications/application-health.html`}
-              target="_blank"
-            >
-              Learn More <ExternalLinkAltIcon />
+            <Button variant="link" component="a" href={`${openshiftHelpBase}applications/application-health.html`} target="_blank">
+              {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_2')} <ExternalLinkAltIcon />
             </Button>
           </>
         }
@@ -89,23 +60,13 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
       <div className="odc-add-health-checks__body">
         <p>
           Health checks for &nbsp;
-          <ResourceLink
-            kind={referenceFor(resource)}
-            name={name}
-            namespace={namespace}
-            title={name}
-            inline
-          />
+          <ResourceLink kind={referenceFor(resource)} name={name} namespace={namespace} title={name} inline />
         </p>
         <Form onSubmit={handleSubmit}>
           <div>
             Container &nbsp;
             {_.size(containers) > 1 ? (
-              <ContainerDropdown
-                currentKey={currentKey}
-                containers={containersByKey}
-                onChange={handleSelectContainer}
-              />
+              <ContainerDropdown currentKey={currentKey} containers={containersByKey} onChange={handleSelectContainer} />
             ) : (
               <>
                 <ResourceIcon kind={ContainerModel.kind} />
@@ -114,14 +75,7 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
             )}
           </div>
           <HealthChecks resourceType={getResourcesType(resource)} />
-          <FormFooter
-            handleReset={handleReset}
-            errorMessage={status && status?.errors?.json?.message}
-            isSubmitting={isSubmitting}
-            submitLabel={healthCheckAdded ? 'Save' : 'Add'}
-            disableSubmit={isFormClean || !dirty || !_.isEmpty(errors)}
-            resetLabel="Cancel"
-          />
+          <FormFooter handleReset={handleReset} errorMessage={status && status?.errors?.json?.message} isSubmitting={isSubmitting} submitLabel={healthCheckAdded ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} disableSubmit={isFormClean || !dirty || !_.isEmpty(errors)} resetLabel={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')} />
         </Form>
       </div>
     </>

@@ -1,26 +1,25 @@
 import { HealthChecksProbeType, RequestType, HealthCheckProbe } from './health-checks-types';
+// import { useTranslation } from 'react-i18next';
 
-export const getHealthChecksProbeConfig = (probe: string) => {
+export const getHealthChecksProbeConfig = (probe: string, t) => {
+  //   const { t } = useTranslation();
   switch (probe) {
     case HealthChecksProbeType.ReadinessProbe: {
       return {
-        formTitle: 'Readiness Probe',
-        formSubtitle:
-          "A Readiness probe checks if the container is ready to handle requests. A failed readiness probe means that a container should not receive any traffic from a proxy, even if it's running.",
+        formTitle: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_4'),
+        formSubtitle: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_5'),
       };
     }
     case HealthChecksProbeType.LivenessProbe: {
       return {
-        formTitle: 'Liveness Probe',
-        formSubtitle:
-          'A Liveness probe checks if the container is still running. If the liveness probe fails the container is killed.',
+        formTitle: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_7'),
+        formSubtitle: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_8'),
       };
     }
     case HealthChecksProbeType.StartupProbe: {
       return {
-        formTitle: 'Startup Probe',
-        formSubtitle:
-          'A Startup probe checks if the application within the container is started. If the startup probe fails the container is killed.',
+        formTitle: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_10'),
+        formSubtitle: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_11'),
       };
     }
     default:
