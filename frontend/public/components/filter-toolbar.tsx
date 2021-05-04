@@ -56,7 +56,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   });
 
 const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props => {
-  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], selectedRows } = props;
+  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME] } = props;
 
   const [inputText, setInputText] = React.useState('');
   const [filterType, setFilterType] = React.useState(FilterType.NAME);
@@ -151,7 +151,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
       const rowItems = filter.itemsGenerator ? filter.itemsGenerator(props, props?.kinds) : filter.items;
       const all = _.map(rowItems, 'id');
       const recognized = _.intersection(selected, all);
-      (props.reduxIDs || []).forEach(id => props.filterList(id, filter.type, { selected: recognized, all }));
+      (props.reduxIDs || []).forEach(id => props.filterList(id, filter.type, { selected: new Set(recognized), all }));
     });
   };
 
@@ -196,8 +196,8 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(selectedRowFilters) && applyRowFilter(selectedRowFilters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    applyRowFilter(selectedRows);
-    setQueryParameters(selectedRows);
+    // applyRowFilter(selectedRows);
+    // setQueryParameters(selectedRows);
   }, []);
 
   const switchFilter = type => {
@@ -285,7 +285,7 @@ type FilterToolbarProps = {
   parseAutoComplete?: any;
   kinds?: any;
   defaultSelectedItems?: string[];
-  selectedRows?: string[];
+  // selectedRows?: string[];
 };
 
 export type RowFilter = {
@@ -300,14 +300,14 @@ export type RowFilter = {
   filter?: any;
 };
 
-const mapStateToProps = (state, props) => {
-  const { reduxIDs } = props;
-  const selected = _.map(props.rowFilters, filter => {
-    return state.k8s.getIn([reduxIDs[0], 'filters', filter?.type])?.selected;
-  });
-  const selectedRows = selected?.[0] || ['Awaiting'];
-  return { selectedRows };
-};
+// const mapStateToProps = (state, props) => {
+//   const { reduxIDs } = props;
+//   const selected = _.map(props.rowFilters, filter => {
+//     return state.k8s.getIn([reduxIDs[0], 'filters', filter?.type])?.selected;
+//   });
+//   const selectedRows = selected?.[0] || ['Awaiting'];
+//   return { selectedRows };
+// };
 
-export const FilterToolbar = withRouter(connect(mapStateToProps, { filterList })(FilterToolbar_));
+export const FilterToolbar = withRouter(connect(null, { filterList })(FilterToolbar_));
 FilterToolbar.displayName = 'FilterToolbar';

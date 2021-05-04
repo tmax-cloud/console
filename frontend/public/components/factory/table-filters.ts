@@ -56,19 +56,18 @@ export const tableFilters: TableFilterMap = {
   'catalog-source-name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.name),
 
   'namespace-claim-status': (results, nameSpaceClaim) => {
-    if (!results?.selected?.length) {
+    if (!results || !results.selected || !results.selected.size) {
       return true;
     }
     const result = nameSpaceClaim?.status?.status;
-    return results.selected.includes(result) || !_.includes(results.all, result);
-
+    return results.selected.has(result) || !_.includes(results.all, result);
   },
   'resource-quota-claim-status': (results, resourceQuotaClaim) => {
-    if (!results?.selected?.length) {
+    if (!results || !results.selected || !results.selected.size) {
       return true;
     }
     const result = resourceQuotaClaim?.status?.status;
-    return results.selected.indexOf(result) || !_.includes(results.all, result);
+    return results.selected.has(result) || !_.includes(results.all, result);
   },
   'alert-list-text': (filter, alert) => {
     if (fuzzyCaseInsensitive(filter, alert.labels?.alertname)) {

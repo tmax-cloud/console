@@ -56,7 +56,7 @@ const ResourceDropdown_: React.FC<ResourceDropdownProps> = ({ resources, ...prop
 
 function areEqual(prevProps, nextProps) {
   // MEMO : methods와 idFunc 속성은 매번 다르게 인식돼서 memo비교문에서 제거함
-  return _.isEqual(_.omit(prevProps, ['methods', 'idFunc']), _.omit(nextProps, ['methods', 'idFunc']));
+  return _.isEqual(_.omit(prevProps, ['methods', 'idFunc', 'onChange']), _.omit(nextProps, ['methods', 'idFunc', 'onChange']));
 }
 
 export const ResourceDropdown = React.memo(ResourceDropdown_, areEqual);
