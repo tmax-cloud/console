@@ -16,19 +16,20 @@ import { nodeStatus } from '../../status/node';
 import NodeRoles from './NodeRoles';
 import { menuActions } from './menu-actions';
 import NodeStatus from './NodeStatus';
+import { useTranslation } from 'react-i18next';
 
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-const NodeTableHeader = () => {
+const NodeTableHeader = t => {
   return [
     {
-      title: 'Name',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
       sortField: 'metadata.name',
       transforms: [sortable],
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'Status',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortFunc: 'nodeReadiness',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
@@ -40,19 +41,19 @@ const NodeTableHeader = () => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'Pods',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_67'),
       sortFunc: 'nodePods',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: 'Memory',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_65'),
       sortFunc: 'nodeMemory',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: 'CPU',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_64'),
       sortFunc: 'nodeCPU',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
@@ -64,7 +65,7 @@ const NodeTableHeader = () => {
       props: { className: tableColumnClasses[6] },
     },
     {
-      title: 'Created',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[7] },
@@ -132,8 +133,9 @@ type NodesTableRowProps = {
 };
 
 const NodesTable: React.FC<NodesTableProps> = React.memo(props => {
+  const { t } = useTranslation();
   const Row = React.useCallback((rowArgs: RowFunctionArgs<NodeKind>) => <NodesTableRow obj={rowArgs.obj} index={rowArgs.index} rowKey={rowArgs.key} style={rowArgs.style} />, []);
-  return <Table {...props} aria-label="Nodes" Header={NodeTableHeader} Row={Row} virtualize />;
+  return <Table {...props} aria-label="Nodes" Header={NodeTableHeader.bind(null, t)} Row={Row} virtualize />;
 });
 
 type NodesTableProps = React.ComponentProps<typeof Table> & {

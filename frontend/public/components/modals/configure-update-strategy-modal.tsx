@@ -9,7 +9,7 @@ import { pluralize, withHandlePromise } from '../utils';
 import { RadioInput } from '../radio';
 import { useTranslation } from 'react-i18next';
 
-// export const UPDATE_STRATEGY_DESCRIPTION = 'How should the pods be replaced when a new revision is created?';
+export const UPDATE_STRATEGY_DESCRIPTION = 'How should the pods be replaced when a new revision is created?';
 
 export const getNumberOrPercent = value => {
   if (typeof value === 'undefined') {
