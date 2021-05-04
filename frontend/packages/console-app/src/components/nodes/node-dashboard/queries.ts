@@ -46,8 +46,8 @@ const queries = {
   [NodeQueries.MEMORY_USAGE]: _.template(`node_memory_MemTotal_bytes{instance='<%= ipAddress %>'} - node_memory_MemAvailable_bytes{instance='<%= ipAddress %>'}`),
   [NodeQueries.MEMORY_TOTAL]: _.template(`node_memory_MemTotal_bytes{instance='<%= ipAddress %>'}`),
   [NodeQueries.POD_COUNT]: _.template(`kubelet_running_pods{instance=~'<%= podCountIp %>'}`),
-  [NodeQueries.FILESYSTEM_USAGE]: _.template(`instance:node_filesystem_usage:sum{instance='<%= ipAddress %>'}`),
-  [NodeQueries.FILESYSTEM_TOTAL]: _.template(`node_filesystem_size_bytes{instance='<%= ipAddress %>'}`),
+  [NodeQueries.FILESYSTEM_USAGE]: _.template(`sum(node_filesystem_size_bytes{instance='<%= ipAddress %>'} - node_filesystem_free_bytes{instance='<%= ipAddress %>'}) by (instance)`),
+  [NodeQueries.FILESYSTEM_TOTAL]: _.template(`sum by (instance) (node_filesystem_size_bytes{instance='<%= ipAddress %>'})`),
   [NodeQueries.NETWORK_IN_UTILIZATION]: _.template(`instance:node_network_receive_bytes:rate:sum{instance='<%= ipAddress %>'}`),
   [NodeQueries.NETWORK_OUT_UTILIZATION]: _.template(`instance:node_network_transmit_bytes:rate:sum{instance='<%= ipAddress %>'}`),
 };
