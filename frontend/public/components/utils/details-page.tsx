@@ -28,7 +28,7 @@ const getTolerationsPath = (obj: K8sResourceKind): string => {
   return obj.kind === 'Pod' ? 'spec.tolerations' : 'spec.template.spec.tolerations';
 };
 
-export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, resource, customPathName, showName = true, showOwner = true, showID = false, showPodSelector = false, showNodeSelector = false, showAnnotations = true, showTolerations = false, podSelector = 'spec.selector', nodeSelector = 'spec.template.spec.nodeSelector' }) => {
+export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, resource, customPathName, customPathId, showName = true, showOwner = true, showID = false, showDescription = false, showPodSelector = false, showNodeSelector = false, showAnnotations = true, showTolerations = false, podSelector = 'spec.selector', nodeSelector = 'spec.template.spec.nodeSelector' }) => {
   const { metadata, type } = resource;
   const reference = referenceFor(resource);
   const model = modelFor(reference);
@@ -47,7 +47,8 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
       {t => (
         <dl data-test-id="resource-summary" className="co-m-pane__details">
           {showName && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')} obj={resource} path={customPathName || 'metadata.name'} />}
-          {showID && <DetailsItem label="ID" obj={resource} path={'metadata.uid'} />}
+          {showID && <DetailsItem label="ID" obj={resource} path={customPathId || 'metadata.uid'} />}
+          {showDescription && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_10')} obj={resource} path={'spec.description'} />}
           {metadata.namespace && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')} obj={resource} path="metadata.namespace">
               <ResourceLink kind="Namespace" name={metadata.namespace} title={metadata.uid} namespace={null} />
@@ -122,6 +123,7 @@ export type ResourceSummaryProps = {
   resource: K8sResourceKind;
   showName?: boolean;
   showID?: boolean;
+  showDescription?: boolean;
   showPodSelector?: boolean;
   showNodeSelector?: boolean;
   showAnnotations?: boolean;
@@ -131,6 +133,7 @@ export type ResourceSummaryProps = {
   nodeSelector?: string;
   children?: React.ReactNode;
   customPathName?: string;
+  customPathId?: string;
 };
 
 export type ResourcePodCountProps = {
