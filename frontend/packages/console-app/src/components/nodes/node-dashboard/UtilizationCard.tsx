@@ -13,7 +13,7 @@ import { PodModel, ProjectModel } from '@console/internal/models';
 import { humanizeCpuCores, humanizeBinaryBytes, humanizeDecimalBytesPerSec, humanizeNumber, Dropdown } from '@console/internal/components/utils';
 import { PrometheusUtilizationItem, PrometheusMultilineUtilizationItem } from '@console/internal/components/dashboard/dashboards-page/cluster-dashboard/utilization-card';
 
-import { NodeQueries, getUtilizationQueries, getMultilineQueries, getTopConsumerQueries, getResourceQutoaQueries } from './queries';
+import { NodeQueries, getUtilizationQueries, getMultilineQueries, getTopConsumerQueries } from './queries';
 import { NodeDashboardContext } from './NodeDashboardContext';
 import { useTranslation } from 'react-i18next';
 const getPodConsumers = (query: string, nodeName: string) => ({
