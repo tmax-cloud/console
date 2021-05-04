@@ -493,7 +493,7 @@ class ActionsMenuDropdown extends DropdownMixin {
       event.preventDefault();
 
       if (option.callback) {
-        option.callback();
+        option.callback(t);
       }
 
       if (option.href) {

@@ -21,16 +21,18 @@ const ClusterServiceClassDetails: React.FC<ClusterServiceClassDetailsProps> = ({
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterServiceClass, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={clusterServiceClass} showPodSelector showNodeSelector></ResourceSummary>
+            <ResourceSummary resource={clusterServiceClass} showPodSelector={false} showNodeSelector={false} showAnnotations={false} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_83')}</dt>
-              <dd>{clusterServiceClass.spec.bindable ? t('COMMON:MSG_MAIN_TABLECONTENTS_1') : t('COMMON:MSG_MAIN_TABLECONTENTS_2')}</dd>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
+              <dd>{clusterServiceClass.spec.bindable ? 'Available' : 'Unavailable'}</dd>
+              <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_86')}</dt>
               <dd>
                 <ResourceLink kind="ClusterServiceBroker" name={clusterServiceClass.spec.clusterServiceBrokerName} title={clusterServiceClass.spec.clusterServiceBrokerName} />
               </dd>
+              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_36')}</dt>
+              <dd>{clusterServiceClass.metadata?.uid}</dd>
             </dl>
           </div>
         </div>
