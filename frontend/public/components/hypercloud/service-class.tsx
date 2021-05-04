@@ -21,16 +21,16 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceClass, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={serviceClass} showPodSelector showNodeSelector></ResourceSummary>
+            <ResourceSummary resource={serviceClass} showPodSelector={false} showNodeSelector={false} showAnnotations={false} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_83')}</dt>
-              <dd>{serviceClass.spec.bindable ? t('COMMON:MSG_MAIN_TABLECONTENTS_1') : t('COMMON:MSG_MAIN_TABLECONTENTS_2')}</dd>
+              <dd>{serviceClass.spec.bindable ? 'Available' : 'Unavailable'}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
               <dd>{serviceClass.spec.serviceBrokerName}</dd>
               <dt>ID</dt>
-              <dd>{serviceClass.spec.externalID}</dd>
+              <dd>{serviceClass.metadata?.uid}</dd>
             </dl>
           </div>
         </div>
@@ -44,13 +44,17 @@ type ServiceClassDetailsProps = {
 };
 
 const { details, editResource } = navFactory;
-const ServiceClassesDetailsPage: React.FC<ServiceClassesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editResource(), { href: 'serviceplans', name: 'Service Plan', component: ServicePlansPage }]} />;
+const ServiceClassesDetailsPage: React.FC<ServiceClassesDetailsPageProps> = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editResource(), { href: 'serviceplans', name: t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1'), component: ServicePlansPage }]} />;
+};
 ServiceClassesDetailsPage.displayName = 'ServiceClassesDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
   '', //NAMESPACE
   classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), //BINDABLE
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), //EXTERNAL NAME
   classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // SERVICEBROKER
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
 ];
@@ -64,11 +68,12 @@ const ServiceClassTableRow = ({ obj, index, key, style }) => {
       <TableData className={classNames(tableColumnClasses[1])}>
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
-      <TableData className={tableColumnClasses[3]}>
+      <TableData className={classNames(tableColumnClasses[2])}>{obj.spec?.externalName}</TableData>
+      <TableData className={tableColumnClasses[3]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
+      <TableData className={tableColumnClasses[4]}>
         <ResourceLink kind="ServiceBroker" name={obj.spec.serviceBrokerName} namespace={obj.metadata.namespace} title={obj.spec.serviceBrokerName} />
       </TableData>
-      <TableData className={tableColumnClasses[4]}>
+      <TableData className={tableColumnClasses[5]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
     </TableRow>
@@ -90,10 +95,16 @@ const ServiceClassTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_6'),
+      sortField: 'spec.externalName',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[2] },
+    },
+    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_83'),
       sortField: 'spec.bindable',
       transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
+      props: { className: tableColumnClasses[3] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_7'),

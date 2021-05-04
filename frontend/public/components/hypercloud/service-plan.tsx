@@ -26,7 +26,7 @@ const ServicePlanDetails: React.FC<ServicePlanDetailsProps> = ({ obj: servicePla
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_16')}</dt>
+              <dt>{t('COMMON:MSG_DETAILS_TABSERVICEPLANS_TABLEHEADER_3')}</dt>
               <dd>{servicePlan.spec.bindable ? 'True' : 'False'}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_17')}</dt>
               <dd>{servicePlan.spec.externalName}</dd>
@@ -52,8 +52,9 @@ ServicePlansDetailsPage.displayName = 'ServicePlansDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
-  '', // NAMESPACE
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // NAMESPACE
   classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // BINDABLE
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // EXTERNAL NAME
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
 ];
 
@@ -72,16 +73,22 @@ const ServicePlanTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_5'),
+      title: t('COMMON:MSG_DETAILS_TABSERVICEPLANS_TABLEHEADER_3'),
       sortField: 'spec.bindable',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_6'),
+      sortField: 'spec.externalName',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[3] },
+    },
+    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[6] },
+      props: { className: tableColumnClasses[4] },
     },
   ];
 };
@@ -98,7 +105,7 @@ const ServicePlanTableRow = (setSidebarDetails, setShowSidebar, setSidebarTitle,
         onClick={() => {
           setShowSidebar(true);
           setSidebarDetails(obj);
-          setSidebarTitle(obj.metadata.name);
+          setSidebarTitle(obj.spec?.externalName);
         }}
       >
         {name}
@@ -113,8 +120,9 @@ const ServicePlanTableRow = (setSidebarDetails, setShowSidebar, setSidebarTitle,
       <TableData className={classNames(tableColumnClasses[1])}>
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{obj.spec.bindable ? 'True' : 'False'}</TableData>
-      <TableData className={tableColumnClasses[6]}>
+      <TableData className={tableColumnClasses[2]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
+      <TableData className={tableColumnClasses[3]}>{obj.spec.externalName}</TableData>
+      <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
     </TableRow>
@@ -134,8 +142,8 @@ const ServicePlansPage: React.FC<ServicePlansPageProps> = props => {
   return (
     <>
       <div className="co-p-has-sidebar">
-        <div className="co-m-pane__body">
-          <ListPage canCreate={false} kind={kind} ListComponent={ServicePlansList} setSidebarTitle={setSidebarTitle} setShowSidebar={setShowSidebar} setSidebarDetails={setSidebarDetails} {...props} />
+        <div className="co-m-pane__body co-m-pane__body--no-top-margin">
+          <ListPage showTitle={false} canCreate={false} kind={kind} ListComponent={ServicePlansList} setSidebarTitle={setSidebarTitle} setShowSidebar={setShowSidebar} setSidebarDetails={setSidebarDetails} {...props} />
         </div>
         <ResourceSidebar
           resource={servicePlan}
@@ -146,11 +154,13 @@ const ServicePlansPage: React.FC<ServicePlansPageProps> = props => {
           }}
           title={sidebarTitle}
           isFloat={true}
+          customPathId="metadata.name"
           showName={false}
           showID={true}
-          showPodSelector={true}
-          showNodeSelector={true}
+          showPodSelector={false}
+          showNodeSelector={false}
           showOwner={false}
+          showAnnotations={false}
           showSidebar={showSidebar}
           samples={[]}
           isCreateMode={true}
