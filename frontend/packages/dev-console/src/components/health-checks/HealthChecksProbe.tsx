@@ -7,12 +7,14 @@ import ProbeForm from './ProbeForm';
 import { getHealthChecksProbeConfig, healthChecksDefaultValues } from './health-checks-probe-utils';
 import { HealthCheckProbeData } from './health-checks-types';
 import './HealthChecksProbe.scss';
+import { useTranslation } from 'react-i18next';
 
 interface HealthCheckProbeProps {
   probeType: string;
 }
 
 const HealthCheckProbe: React.FC<HealthCheckProbeProps> = ({ probeType }) => {
+  const { t } = useTranslation();
   const {
     values: { healthChecks },
     setFieldValue,
@@ -60,26 +62,17 @@ const HealthCheckProbe: React.FC<HealthCheckProbeProps> = ({ probeType }) => {
       return (
         <>
           <span className="odc-heath-check-probe__successText">
-            <GreenCheckCircleIcon /> {`${getHealthChecksProbeConfig(probeType).formTitle} Added`}
+            <GreenCheckCircleIcon /> {`${getHealthChecksProbeConfig(probeType, t).formTitle} Added`}
           </span>
-          <Button
-            className="pf-m-plain--align-left"
-            variant={ButtonVariant.plain}
-            onClick={handleDeleteProbe}
-          >
+          <Button className="pf-m-plain--align-left" variant={ButtonVariant.plain} onClick={handleDeleteProbe}>
             <MinusCircleIcon />
           </Button>
         </>
       );
     }
     return (
-      <Button
-        className="pf-m-link--align-left"
-        variant={ButtonVariant.link}
-        onClick={handleAddProbe}
-        icon={<PlusCircleIcon />}
-      >
-        {`Add ${getHealthChecksProbeConfig(probeType).formTitle}`}
+      <Button className="pf-m-link--align-left" variant={ButtonVariant.link} onClick={handleAddProbe} icon={<PlusCircleIcon />}>
+        {`Add ${getHealthChecksProbeConfig(probeType, t).formTitle}`}
       </Button>
     );
   };
@@ -87,21 +80,15 @@ const HealthCheckProbe: React.FC<HealthCheckProbeProps> = ({ probeType }) => {
   return (
     <>
       <div className="co-section-heading-tertiary odc-heath-check-probe__formTitle">
-        {getHealthChecksProbeConfig(probeType).formTitle}
+        {getHealthChecksProbeConfig(probeType, t).formTitle}
         {healthChecks?.[probeType]?.enabled && (
-          <Button
-            className="pf-m-link--align-left"
-            variant={ButtonVariant.link}
-            onClick={onEditProbe}
-          >
+          <Button className="pf-m-link--align-left" variant={ButtonVariant.link} onClick={onEditProbe}>
             &nbsp;&nbsp;
             {'Edit Probe'}
           </Button>
         )}
       </div>
-      <div className="pf-c-form__helper-text">
-        {getHealthChecksProbeConfig(probeType).formSubtitle}
-      </div>
+      <div className="pf-c-form__helper-text">{getHealthChecksProbeConfig(probeType, t).formSubtitle}</div>
       <div className="co-toolbar__group co-toolbar__group--left">{renderProbe()}</div>
     </>
   );

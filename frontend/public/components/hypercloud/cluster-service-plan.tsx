@@ -1,11 +1,16 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import { useState } from 'react';
+import { Button } from '@patternfly/react-core';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { ClusterServicePlanModel } from '../../models';
-import { K8sResourceKind } from '../../module/k8s';
+import { K8sResourceKind, modelFor } from '../../module/k8s';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
-import { navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp } from '../utils';
+import { navFactory, SectionHeading, ResourceSummary, Timestamp } from '../utils';
+import { ResourceSidebar } from '../sidebars/resource-sidebar';
 
 const kind = ClusterServicePlanModel.kind;
 
@@ -21,7 +26,7 @@ const ClusterServicePlanDetails: React.FC<ClusterServicePlanDetailsProps> = ({ o
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>BINDABLE</dt>
-              <dd>{clusterServicePlan.spec.bindable ? 'True' : 'False'}</dd>
+              <dd>{clusterServicePlan.spec.bindable ? 'Available' : 'Unavailable'}</dd>
               <dt>EXTERNAL NAME</dt>
               <dd>{clusterServicePlan.spec.externalName}</dd>
               <dt> SERVICE BROKER</dt>
@@ -46,81 +51,108 @@ ClusterServicePlansDetailsPage.displayName = 'ClusterServicePlansDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // BINDABLE
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // EXTERNAL NAME
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // CLUSTER SERVICE BROKER
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CLUSTER SERVICE CLASS
+  '', // BINDABLE
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
 ];
 
-const ClusterServicePlanTableRow = ({ obj, index, key, style }) => {
-  return (
-    <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={obj.metadata.name} title={obj.metadata.name} />
-      </TableData>
-      <TableData className={tableColumnClasses[1]}>{obj.spec.bindable ? 'True' : 'False'}</TableData>
-      <TableData className={tableColumnClasses[2]}>{obj.spec.externalName}</TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <ResourceLink kind="ClusterServiceBroker" name={obj.spec.clusterServiceBrokerName} title={obj.spec.clusterServiceBrokerName} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <ResourceLink kind="ClusterServiceClass" name={obj.spec.clusterServiceClassRef.name} title={obj.spec.clusterServiceClassRef.name} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <Timestamp timestamp={obj.metadata.creationTimestamp} />
-      </TableData>
-    </TableRow>
-  );
-};
-
-const ClusterServicePlanTableHeader = () => {
+const ClusterServicePlanTableHeader = (t?: TFunction) => {
   return [
     {
-      title: 'Name',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
       sortField: 'metadata.name',
       transforms: [sortable],
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'Bindable',
+      title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_SIDEPANEL_13'),
       sortField: 'spec.bindable',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'External Name',
-      sortField: 'spec.externalName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
-      title: 'Cluster Service Broker',
-      sortField: 'spec.clusterServiceBrokerName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
-    },
-    {
-      title: 'Cluster Service Class',
-      sortField: 'spec.clusterServiceClassRef.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
-    },
-    {
-      title: 'Created',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
+      props: { className: tableColumnClasses[2] },
     },
   ];
 };
 ClusterServicePlanTableHeader.displayName = 'ClusterServicePlanTableHeader';
 
-const ClusterServicePlansList: React.FC = props => <Table {...props} aria-label="Cluster Service Plan" Header={ClusterServicePlanTableHeader} Row={ClusterServicePlanTableRow} />;
+const ClusterServicePlanTableRow = (setSidebarDetails, setShowSidebar, setSidebarTitle, props) => {
+  const { obj, index, key, style } = props;
+  const SidebarLink = ({ name, kind, obj }) => {
+    return (
+      <Button
+        type="button"
+        variant="link"
+        isInline
+        onClick={() => {
+          setShowSidebar(true);
+          setSidebarDetails(obj);
+          setSidebarTitle(obj.spec?.externalName);
+        }}
+      >
+        {name}
+      </Button>
+    );
+  };
+
+  return (
+    <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
+      <TableData className={tableColumnClasses[0]}>
+        <SidebarLink kind={kind} name={obj.metadata.name} obj={obj} />
+      </TableData>
+      <TableData className={tableColumnClasses[1]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <Timestamp timestamp={obj.metadata.creationTimestamp} />
+      </TableData>
+    </TableRow>
+  );
+};
+const ClusterServicePlansList: React.FC<ClusterServicePlansListProps> = props => {
+  const { t } = useTranslation();
+  const { setSidebarDetails, setShowSidebar, setSidebarTitle } = props;
+  return <Table {...props} aria-label="Cluster Service Plan" Header={ClusterServicePlanTableHeader.bind(null, t)} Row={ClusterServicePlanTableRow.bind(null, setSidebarDetails, setShowSidebar, setSidebarTitle)} />;
+};
 ClusterServicePlansList.displayName = 'ClusterServicePlansList';
 
 const ClusterServicePlansPage: React.FC<ClusterServicePlansPageProps> = props => {
-  return <ListPage canCreate={true} kind={kind} ListComponent={ClusterServicePlansList} {...props} />;
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [clusterServicePlan, setSidebarDetails] = useState({});
+  const [sidebarTitle, setSidebarTitle] = useState('');
+  return (
+    <>
+      <div className="co-p-has-sidebar">
+        <div className="co-m-pane__body co-m-pane__body--no-top-margin">
+          <ListPage showTitle={false} canCreate={false} kind={kind} ListComponent={ClusterServicePlansList} setSidebarTitle={setSidebarTitle} setShowSidebar={setShowSidebar} setSidebarDetails={setSidebarDetails} {...props} />
+        </div>
+        <ResourceSidebar
+          resource={clusterServicePlan}
+          kindObj={modelFor('ClusterServicePlan')}
+          toggleSidebar={() => {
+            setShowSidebar(!showSidebar);
+            window.dispatchEvent(new Event('sidebar_toggle'));
+          }}
+          title={sidebarTitle}
+          isFloat={true}
+          customPathId="metadata.name"
+          showName={false}
+          showID={true}
+          showDescription={true}
+          showPodSelector={false}
+          showNodeSelector={false}
+          showOwner={false}
+          showAnnotations={false}
+          showSidebar={showSidebar}
+          samples={[]}
+          isCreateMode={true}
+          showDetails={true}
+          noTabsOnlyDetails={false}
+        />
+      </div>
+    </>
+  );
 };
 ClusterServicePlansPage.displayName = 'ClusterServicePlansPage';
 
@@ -132,6 +164,12 @@ type ClusterServicePlansPageProps = {
   fieldSelector?: string;
   filters?: any;
   selector?: any;
+};
+
+type ClusterServicePlansListProps = {
+  setShowSidebar: any;
+  setSidebarDetails: any;
+  setSidebarTitle: any;
 };
 
 type ClusterServicePlansDetailsPageProps = {

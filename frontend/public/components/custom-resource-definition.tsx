@@ -7,7 +7,7 @@ import { BanIcon } from '@patternfly/react-icons';
 
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
 import { AsyncComponent, DetailsItem, EmptyBox, Kebab, KebabAction, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from './utils';
-import { apiVersionCompare, CRDVersion, CustomResourceDefinitionKind, getLatestVersionForCRD, K8sKind, referenceForCRD } from '../module/k8s';
+import { apiVersionCompare, CRDVersion, CustomResourceDefinitionKind, getLatestVersionForCRD, K8sKind, referenceForCRD, referenceForCRD_ } from '../module/k8s';
 import { CustomResourceDefinitionModel } from '../models';
 import { Conditions } from './conditions';
 import { resourceListPages } from './resource-pages';
@@ -18,7 +18,8 @@ import { TFunction } from 'i18next';
 
 const { common } = Kebab.factory;
 
-const crdInstancesPath = (crd: CustomResourceDefinitionKind) => (_.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${referenceForCRD(crd)}` : `/k8s/cluster/${referenceForCRD(crd)}`);
+// TODO: replace referenceForCRD_ to referenceForCRD without side effect
+const crdInstancesPath = (crd: CustomResourceDefinitionKind) => (_.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${referenceForCRD_(crd)}` : `/k8s/cluster/${referenceForCRD_(crd)}`);
 
 const instances = (kind: K8sKind, obj: CustomResourceDefinitionKind) => {
   const { t } = useTranslation();

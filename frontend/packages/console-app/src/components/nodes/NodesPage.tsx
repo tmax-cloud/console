@@ -3,24 +3,11 @@ import * as classNames from 'classnames';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import { sortable } from '@patternfly/react-table';
-import { getName, getUID, getNodeRole } from '@console/shared';
+import { getName, getUID, getNodeRole, getNodeAddresses } from '@console/shared';
 import { NodeModel } from '@console/internal/models';
 import { NodeKind, referenceForModel } from '@console/internal/module/k8s';
-import {
-  Table,
-  TableRow,
-  TableData,
-  ListPage,
-  RowFunctionArgs,
-} from '@console/internal/components/factory';
-import {
-  Kebab,
-  ResourceKebab,
-  ResourceLink,
-  Timestamp,
-  humanizeBinaryBytes,
-  formatCores,
-} from '@console/internal/components/utils';
+import { Table, TableRow, TableData, ListPage, RowFunctionArgs } from '@console/internal/components/factory';
+import { Kebab, ResourceKebab, ResourceLink, Timestamp, humanizeBinaryBytes, formatCores } from '@console/internal/components/utils';
 import { NodeMetrics, setNodeMetrics } from '@console/internal/actions/ui';
 import { PROMETHEUS_BASE_PATH } from '@console/internal/components/graphs';
 import { coFetchJSON } from '@console/internal/co-fetch';
@@ -29,29 +16,20 @@ import { nodeStatus } from '../../status/node';
 import NodeRoles from './NodeRoles';
 import { menuActions } from './menu-actions';
 import NodeStatus from './NodeStatus';
+import { useTranslation } from 'react-i18next';
 
-const tableColumnClasses = [
-  '',
-  '',
-  '',
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'),
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'),
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'),
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'),
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'),
-  Kebab.columnClass,
-];
+const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-const NodeTableHeader = () => {
+const NodeTableHeader = t => {
   return [
     {
-      title: 'Name',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
       sortField: 'metadata.name',
       transforms: [sortable],
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'Status',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortFunc: 'nodeReadiness',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
@@ -63,19 +41,19 @@ const NodeTableHeader = () => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'Pods',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_67'),
       sortFunc: 'nodePods',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: 'Memory',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_65'),
       sortFunc: 'nodeMemory',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: 'CPU',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_64'),
       sortFunc: 'nodeCPU',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
@@ -87,7 +65,7 @@ const NodeTableHeader = () => {
       props: { className: tableColumnClasses[6] },
     },
     {
-      title: 'Created',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[7] },
@@ -108,61 +86,43 @@ type NodesRowMapFromStateProps = {
   metrics: NodeMetrics;
 };
 
-const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProps>(mapStateToProps)(
-  ({
-    obj: node,
-    index,
-    rowKey,
-    style,
-    metrics,
-  }: NodesTableRowProps & NodesRowMapFromStateProps) => {
-    const nodeName = getName(node);
-    const nodeUID = getUID(node);
-    const usedMem = metrics?.usedMemory?.[nodeName];
-    const totalMem = metrics?.totalMemory?.[nodeName];
-    const memory =
-      Number.isFinite(usedMem) && Number.isFinite(totalMem)
-        ? `${humanizeBinaryBytes(usedMem).string} / ${humanizeBinaryBytes(totalMem).string}`
-        : '-';
-    const cores = metrics?.cpu?.[nodeName];
-    const usedStrg = metrics?.usedStorage?.[nodeName];
-    const totalStrg = metrics?.totalStorage?.[nodeName];
-    const storage =
-      Number.isFinite(usedStrg) && Number.isFinite(totalStrg)
-        ? `${humanizeBinaryBytes(usedStrg).string} / ${humanizeBinaryBytes(totalStrg).string}`
-        : '-';
-    const pods = metrics?.pods?.[nodeName] ?? '-';
-    return (
-      <TableRow id={nodeUID} index={index} trKey={rowKey} style={style}>
-        <TableData className={tableColumnClasses[0]}>
-          <ResourceLink kind={referenceForModel(NodeModel)} name={nodeName} title={nodeUID} />
-        </TableData>
-        <TableData className={tableColumnClasses[1]}>
-          <NodeStatus node={node} showPopovers />
-        </TableData>
-        <TableData className={tableColumnClasses[2]}>
-          <NodeRoles node={node} />
-        </TableData>
-        <TableData className={tableColumnClasses[3]}>{pods}</TableData>
-        <TableData className={tableColumnClasses[4]}>{memory}</TableData>
-        <TableData className={tableColumnClasses[5]}>
-          {cores ? `${formatCores(cores)} cores` : '-'}
-        </TableData>
-        <TableData className={tableColumnClasses[6]}>{storage}</TableData>
-        <TableData className={tableColumnClasses[7]}>
-          <Timestamp timestamp={node.metadata.creationTimestamp} />
-        </TableData>
-        <TableData className={tableColumnClasses[8]}>
-          <ResourceKebab
-            actions={menuActions}
-            kind={referenceForModel(NodeModel)}
-            resource={node}
-          />
-        </TableData>
-      </TableRow>
-    );
-  },
-);
+const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProps>(mapStateToProps)(({ obj: node, index, rowKey, style, metrics }: NodesTableRowProps & NodesRowMapFromStateProps) => {
+  const nodeName = getName(node);
+  const nodeUID = getUID(node);
+  const nodeAddress = getNodeAddresses(node).find(addr => addr.type === 'InternalIP')?.address;
+
+  const usedMem = metrics?.usedMemory?.[`${nodeAddress}:9100`];
+  const totalMem = metrics?.totalMemory?.[`${nodeAddress}:9100`];
+  const memory = Number.isFinite(usedMem) && Number.isFinite(totalMem) ? `${humanizeBinaryBytes(usedMem).string} / ${humanizeBinaryBytes(totalMem).string}` : '-';
+  const cores = metrics?.cpu?.[`${nodeAddress}:9100`];
+  const usedStrg = metrics?.usedStorage?.[`${nodeAddress}:9100`];
+  const totalStrg = metrics?.totalStorage?.[`${nodeAddress}:9100`];
+  const storage = Number.isFinite(usedStrg) && Number.isFinite(totalStrg) ? `${humanizeBinaryBytes(usedStrg).string} / ${humanizeBinaryBytes(totalStrg).string}` : '-';
+  const pods = metrics?.pods?.[nodeName] ?? '-';
+  return (
+    <TableRow id={nodeUID} index={index} trKey={rowKey} style={style}>
+      <TableData className={tableColumnClasses[0]}>
+        <ResourceLink kind={referenceForModel(NodeModel)} name={nodeName} title={nodeUID} />
+      </TableData>
+      <TableData className={tableColumnClasses[1]}>
+        <NodeStatus node={node} showPopovers />
+      </TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <NodeRoles node={node} />
+      </TableData>
+      <TableData className={tableColumnClasses[3]}>{pods}</TableData>
+      <TableData className={tableColumnClasses[4]}>{memory}</TableData>
+      <TableData className={tableColumnClasses[5]}>{cores ? `${formatCores(cores)} cores` : '-'}</TableData>
+      <TableData className={tableColumnClasses[6]}>{storage}</TableData>
+      <TableData className={tableColumnClasses[7]}>
+        <Timestamp timestamp={node.metadata.creationTimestamp} />
+      </TableData>
+      <TableData className={tableColumnClasses[8]}>
+        <ResourceKebab actions={menuActions} kind={referenceForModel(NodeModel)} resource={node} />
+      </TableData>
+    </TableRow>
+  );
+});
 NodesTableRow.displayName = 'NodesTableRow';
 
 type NodesTableRowProps = {
@@ -172,19 +132,10 @@ type NodesTableRowProps = {
   style: object;
 };
 
-const NodesTable: React.FC<NodesTableProps> = React.memo((props) => {
-  const Row = React.useCallback(
-    (rowArgs: RowFunctionArgs<NodeKind>) => (
-      <NodesTableRow
-        obj={rowArgs.obj}
-        index={rowArgs.index}
-        rowKey={rowArgs.key}
-        style={rowArgs.style}
-      />
-    ),
-    [],
-  );
-  return <Table {...props} aria-label="Nodes" Header={NodeTableHeader} Row={Row} virtualize />;
+const NodesTable: React.FC<NodesTableProps> = React.memo(props => {
+  const { t } = useTranslation();
+  const Row = React.useCallback((rowArgs: RowFunctionArgs<NodeKind>) => <NodesTableRow obj={rowArgs.obj} index={rowArgs.index} rowKey={rowArgs.key} style={rowArgs.style} />, []);
+  return <Table {...props} aria-label="Nodes" Header={NodeTableHeader.bind(null, t)} Row={Row} virtualize />;
 });
 
 type NodesTableProps = React.ComponentProps<typeof Table> & {
@@ -242,7 +193,7 @@ const fetchNodeMetrics = (): Promise<NodeMetrics> => {
     },
     {
       key: 'pods',
-      query: 'sum by(node)(kubelet_running_pod_count)',
+      query: 'sum by(node)(kubelet_running_pods)',
     },
   ];
   const promises = metrics.map(({ key, query }) => {
@@ -258,7 +209,7 @@ const fetchNodeMetrics = (): Promise<NodeMetrics> => {
 };
 
 const mapDispatchToProps = (dispatch): MapDispatchToProps => ({
-  setNodeMetrics: (metrics) => dispatch(setNodeMetrics(metrics)),
+  setNodeMetrics: metrics => dispatch(setNodeMetrics(metrics)),
 });
 
 const showMetrics = PROMETHEUS_BASE_PATH && window.innerWidth > 1200;
@@ -273,7 +224,7 @@ const NodesPage = connect<{}, MapDispatchToProps>(
     const updateMetrics = () =>
       fetchNodeMetrics()
         .then(setMetrics)
-        .catch((e) => {
+        .catch(e => {
           // eslint-disable-next-line no-console
           console.error('Error fetching node metrics: ', e);
         });

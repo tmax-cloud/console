@@ -301,27 +301,27 @@ export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(props => {
   let rowFilters;
   const flags = props.flags;
 
-  if (flagPending(flags[FLAGS.OPENSHIFT])) {
-    return <LoadingBox />;
-  }
-  if (flags[FLAGS.OPENSHIFT]) {
-    resources.push({
-      kind: referenceForModel(ClusterResourceQuotaModel),
-      namespaced: false,
-      optional: true,
-    });
-    rowFilters = [
-      {
-        filterGroupName: 'Role',
-        type: 'role-kind',
-        reducer: quotaType,
-        items: [
-          { id: 'cluster', title: 'Cluster-wide Resource Quotas' },
-          { id: 'namespace', title: 'Namespace Resource Quotas' },
-        ],
-      },
-    ];
-  }
+  // if (flagPending(flags[FLAGS.OPENSHIFT])) {
+  //   return <LoadingBox />;
+  // }
+  // if (flags[FLAGS.OPENSHIFT]) {
+  //   resources.push({
+  //     kind: referenceForModel(ClusterResourceQuotaModel),
+  //     namespaced: false,
+  //     optional: true,
+  //   });
+  //   rowFilters = [
+  //     {
+  //       filterGroupName: 'Role',
+  //       type: 'role-kind',
+  //       reducer: quotaType,
+  //       items: [
+  //         { id: 'cluster', title: 'Cluster-wide Resource Quotas' },
+  //         { id: 'namespace', title: 'Namespace Resource Quotas' },
+  //       ],
+  //     },
+  //   ];
+  // }
 
   const pages = [
     {

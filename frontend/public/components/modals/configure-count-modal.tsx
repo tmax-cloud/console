@@ -34,13 +34,7 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
         <p>{message}</p>
         <NumberSpinner className="pf-c-form-control" value={value} onChange={(e: any) => setValue(e.target.value)} changeValueBy={operation => setValue(_.toInteger(value) + operation)} autoFocus required min={0} />
       </ModalBody>
-      <ModalSubmitFooter
-        errorMessage={props.errorMessage}
-        inProgress={props.inProgress}
-        submitText={props.submitText}
-        cancelText={props.cancelText || 'Cancel'}
-        cancel={props.cancel}
-      />
+      <ModalSubmitFooter errorMessage={props.errorMessage} inProgress={props.inProgress} submitText={props.submitText} cancelText={props.cancelText || 'Cancel'} cancel={props.cancel} />
     </form>
   );
 });
@@ -65,17 +59,13 @@ export const configureReplicaCountModal = props => {
 
 export const configureJobParallelismModal = props => {
   return configureCountModal(
-    _.defaults(
-      {},
-      props,
-      {
-        defaultValue: 1,
-        title: 'Edit Parallelism',
-        message: `${props.resourceKind.labelPlural} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.`,
-        path: '/spec/parallelism',
-        submitText: 'Save',
-      },
-    ),
+    _.defaults({}, props, {
+      defaultValue: 1,
+      title: 'Edit Parallelism',
+      message: `${props.resourceKind.labelPlural} create one or more pods and ensure that a specified number of them successfully terminate. When the specified number of completions is successfully reached, the job is complete.`,
+      path: '/spec/parallelism',
+      submitText: 'Save',
+    }),
   );
 };
 

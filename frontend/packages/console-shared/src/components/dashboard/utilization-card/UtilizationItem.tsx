@@ -55,7 +55,7 @@ export const UtilizationItem: React.FC<UtilizationItemProps> = React.memo(({ tit
     const latestData = data[data.length - 1];
     current = humanizeValue(latestData.y).string;
   }
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   let humanMax: string;
   const chartStyle = [null, null, null];

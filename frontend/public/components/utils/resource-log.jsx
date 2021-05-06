@@ -51,7 +51,6 @@ export const LogControls = ({ dropdown, onDownload, toggleFullscreen, isFullscre
     [STREAM_ACTIVE]: t('COMMON:MSG_DETAILS_TABLOGS_11'),
   };
 
-  // MJ : 'Collapse' 스트링 나오면 적용하기
   return (
     <div className="co-toolbar">
       <div className="co-toolbar__group co-toolbar__group--left">
@@ -114,12 +113,12 @@ export const LogControls = ({ dropdown, onDownload, toggleFullscreen, isFullscre
               {isFullscreen ? (
                 <>
                   <CompressIcon className="co-icon-space-r" />
-                  Collapse
+                  {t('COMMON:MSG_DETAILS_TABTERMINAL_10')}
                 </>
               ) : (
                 <>
                   <ExpandIcon className="co-icon-space-r" />
-                  {t('COMMON:MSG_DETAILS_TABLOGS_2')}
+                  {t('COMMON:MSG_DETAILS_TABTERMINAL_9')}
                 </>
               )}
             </Button>

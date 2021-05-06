@@ -123,7 +123,12 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
   if (loaded) {
     let sortBy: string | Function = 'metadata.name';
     if (currentSortField) {
-      sortBy = resource => sorts.string(_.get(resource, currentSortField, ''));
+      sortBy = resource => {
+        if (currentSortField === 'status.phase' && !!resource.metadata.deletionTimestamp) {
+          return 'Terminating';
+        }
+        return sorts.string(_.get(resource, currentSortField, ''));
+      };
     } else if (currentSortFunc && customSorts[currentSortFunc]) {
       // Sort resources by a function in the 'customSorts' prop
       sortBy = customSorts[currentSortFunc];

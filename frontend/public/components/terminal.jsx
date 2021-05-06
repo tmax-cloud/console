@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Terminal as XTerminal } from 'xterm';
+import { withTranslation } from 'react-i18next';
 import * as fit from 'xterm/lib/addons/fit/fit';
 import * as full from 'xterm/lib/addons/fullscreen/fullscreen';
 import { CompressIcon } from '@patternfly/react-icons';
@@ -17,7 +18,7 @@ export class Terminal extends React.Component {
     this.outerRef = React.createRef();
     this.isFullscreen = false;
     this.onResize = () => this.onResize_();
-    this.onDataReceived = (data) => this.terminal && this.terminal.write(data);
+    this.onDataReceived = data => this.terminal && this.terminal.write(data);
 
     this.terminal = new XTerminal(Object.assign({}, this.props.options));
     this.terminal.on('data', this.props.onData);
@@ -96,9 +97,7 @@ export class Terminal extends React.Component {
 
     // This assumes we want to fill everything below and to the right.  In full-screen, fill entire viewport
     const height = Math.floor(pageRect.bottom - (this.isFullscreen ? 0 : nodeRect.top) - padding);
-    const width = Math.floor(
-      bodyRect.width - (this.isFullscreen ? 0 : nodeRect.left) - (this.isFullscreen ? 10 : padding),
-    );
+    const width = Math.floor(bodyRect.width - (this.isFullscreen ? 0 : nodeRect.left) - (this.isFullscreen ? 10 : padding));
 
     if (height === this.state.height && width === this.state.width) {
       return;
@@ -118,17 +117,14 @@ export class Terminal extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <div ref={this.outerRef} style={this.state} className={this.props.className}>
         <div ref={this.innerRef} className="console">
           {this.isFullscreen && (
-            <Button
-              className="console-collapse-link"
-              onClick={() => this.setFullscreen(false)}
-              variant="link"
-            >
+            <Button className="console-collapse-link" onClick={() => this.setFullscreen(false)} variant="link">
               <CompressIcon className="co-icon-space-r" />
-              Collapse
+              {t('COMMON:MSG_DETAILS_TABTERMINAL_10')}
             </Button>
           )}
         </div>
