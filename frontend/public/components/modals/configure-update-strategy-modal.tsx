@@ -7,11 +7,11 @@ import { DeploymentModel } from '../../models';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
 import { pluralize, withHandlePromise } from '../utils';
 import { RadioInput } from '../radio';
+import { useTranslation } from 'react-i18next';
 
-export const UPDATE_STRATEGY_DESCRIPTION =
-  'How should the pods be replaced when a new revision is created?';
+export const UPDATE_STRATEGY_DESCRIPTION = 'How should the pods be replaced when a new revision is created?';
 
-export const getNumberOrPercent = (value) => {
+export const getNumberOrPercent = value => {
   if (typeof value === 'undefined') {
     return null;
   }
@@ -22,56 +22,44 @@ export const getNumberOrPercent = (value) => {
   return _.toInteger(value);
 };
 
-export const ConfigureUpdateStrategy: React.FC<ConfigureUpdateStrategyProps> = (props) => {
+export const ConfigureUpdateStrategy: React.FC<ConfigureUpdateStrategyProps> = props => {
+  const { t } = useTranslation();
   const { showDescription = true } = props;
   return (
     <>
       {showDescription && (
         <div className="co-m-form-row">
-          <p>{UPDATE_STRATEGY_DESCRIPTION}</p>
+          <p>{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_2')}</p>
         </div>
       )}
       <div className="row co-m-form-row">
         <div className="col-sm-12">
           <RadioInput
             name={`${props.uid || 'update-strategy'}-type`}
-            onChange={(e) => {
+            onChange={e => {
               props.onChangeStrategyType(e.target.value);
             }}
             value="RollingUpdate"
             checked={props.strategyType === 'RollingUpdate'}
-            title="RollingUpdate"
-            subTitle="(default)"
+            title={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_3')}
             autoFocus={props.strategyType === 'RollingUpdate'}
           >
             <div className="co-m-radio-desc">
-              <p className="text-muted">
-                Execute a smooth roll out of the new revision, based on the settings below
-              </p>
+              <p className="text-muted">{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_4')}</p>
 
               <div className="row co-m-form-row">
                 <div className="col-sm-3">
                   <label htmlFor="input-max-unavailable" className="control-label">
-                    Max Unavailable
+                    {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_5')}
                   </label>
                 </div>
                 <div className="co-m-form-col col-sm-9">
                   <div className="form-inline">
                     <div className="pf-c-input-group">
-                      <input
-                        disabled={props.strategyType !== 'RollingUpdate'}
-                        placeholder="25%"
-                        size={5}
-                        type="text"
-                        className="pf-c-form-control"
-                        id="input-max-unavailable"
-                        value={props.maxUnavailable}
-                        onChange={(e) => props.onChangeMaxUnavailable(e.target.value)}
-                        aria-describedby="input-max-unavailable-help"
-                      />
+                      <input disabled={props.strategyType !== 'RollingUpdate'} placeholder="25%" size={5} type="text" className="pf-c-form-control" id="input-max-unavailable" value={props.maxUnavailable} onChange={e => props.onChangeMaxUnavailable(e.target.value)} aria-describedby="input-max-unavailable-help" />
                       {props.replicas && (
                         <span className="pf-c-input-group__text">
-                          <Tooltip content="Current desired pod count">
+                          <Tooltip content={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_9')}>
                             <span>of {pluralize(props.replicas, 'pod')}</span>
                           </Tooltip>
                         </span>
@@ -79,7 +67,7 @@ export const ConfigureUpdateStrategy: React.FC<ConfigureUpdateStrategyProps> = (
                     </div>
                   </div>
                   <p className="help-block text-muted" id="input-max-unavailable-help">
-                    Number or percentage of total pods at the start of the update (optional)
+                    {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_6')}
                   </p>
                 </div>
               </div>
@@ -87,32 +75,22 @@ export const ConfigureUpdateStrategy: React.FC<ConfigureUpdateStrategyProps> = (
               <div className="row co-m-form-row">
                 <div className="col-sm-3">
                   <label htmlFor="input-max-surge" className="control-label">
-                    Max Surge
+                    {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_7')}
                   </label>
                 </div>
                 <div className="co-m-form-col col-sm-9">
                   <div className="form-inline">
                     <div className="pf-c-input-group">
-                      <input
-                        disabled={props.strategyType !== 'RollingUpdate'}
-                        placeholder="25%"
-                        size={5}
-                        type="text"
-                        className="pf-c-form-control"
-                        id="input-max-surge"
-                        value={props.maxSurge}
-                        onChange={(e) => props.onChangeMaxSurge(e.target.value)}
-                        aria-describedby="input-max-surge-help"
-                      />
+                      <input disabled={props.strategyType !== 'RollingUpdate'} placeholder="25%" size={5} type="text" className="pf-c-form-control" id="input-max-surge" value={props.maxSurge} onChange={e => props.onChangeMaxSurge(e.target.value)} aria-describedby="input-max-surge-help" />
                       <span className="pf-c-input-group__text">
-                        <Tooltip content="Current desired pod count">
-                          <span>greater than {pluralize(props.replicas, 'pod')}</span>
+                        <Tooltip content={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_9')}>
+                          <span>{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_8', { 0: props.replicas })}</span>
                         </Tooltip>
                       </span>
                     </div>
                   </div>
                   <p className="help-block text-muted" id="input-max-surge-help">
-                    Number or percentage of total pods at the start of the update (optional)
+                    {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_10')}
                   </p>
                 </div>
               </div>
@@ -123,13 +101,13 @@ export const ConfigureUpdateStrategy: React.FC<ConfigureUpdateStrategyProps> = (
         <div className="col-sm-12">
           <RadioInput
             name={`${props.uid || 'update-strategy'}-type`}
-            onChange={(e) => {
+            onChange={e => {
               props.onChangeStrategyType(e.target.value);
             }}
             value="Recreate"
             checked={props.strategyType === 'Recreate'}
-            title="Recreate"
-            desc="Shut down all existing pods before creating new ones"
+            title={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_11')}
+            desc={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_12')}
             autoFocus={props.strategyType === 'Recreate'}
           />
         </div>
@@ -138,63 +116,36 @@ export const ConfigureUpdateStrategy: React.FC<ConfigureUpdateStrategyProps> = (
   );
 };
 
-export const ConfigureUpdateStrategyModal = withHandlePromise(
-  (props: ConfigureUpdateStrategyModalProps) => {
-    const [strategyType, setStrategyType] = React.useState(
-      _.get(props.deployment.spec, 'strategy.type'),
-    );
-    const [maxUnavailable, setMaxUnavailable] = React.useState(
-      _.get(props.deployment.spec, 'strategy.rollingUpdate.maxUnavailable', '25%'),
-    );
-    const [maxSurge, setMaxSurge] = React.useState(
-      _.get(props.deployment.spec, 'strategy.rollingUpdate.maxSurge', '25%'),
-    );
+export const ConfigureUpdateStrategyModal = withHandlePromise((props: ConfigureUpdateStrategyModalProps) => {
+  const [strategyType, setStrategyType] = React.useState(_.get(props.deployment.spec, 'strategy.type'));
+  const [maxUnavailable, setMaxUnavailable] = React.useState(_.get(props.deployment.spec, 'strategy.rollingUpdate.maxUnavailable', '25%'));
+  const [maxSurge, setMaxSurge] = React.useState(_.get(props.deployment.spec, 'strategy.rollingUpdate.maxSurge', '25%'));
+  const { t } = useTranslation();
+  const submit = event => {
+    event.preventDefault();
 
-    const submit = (event) => {
-      event.preventDefault();
+    const patch: Patch = { path: '/spec/strategy/rollingUpdate', op: 'remove' };
+    if (strategyType === 'RollingUpdate') {
+      patch.value = {
+        maxUnavailable: getNumberOrPercent(maxUnavailable || '25%'),
+        maxSurge: getNumberOrPercent(maxSurge || '25%'),
+      };
+      patch.op = 'add';
+    }
 
-      const patch: Patch = { path: '/spec/strategy/rollingUpdate', op: 'remove' };
-      if (strategyType === 'RollingUpdate') {
-        patch.value = {
-          maxUnavailable: getNumberOrPercent(maxUnavailable || '25%'),
-          maxSurge: getNumberOrPercent(maxSurge || '25%'),
-        };
-        patch.op = 'add';
-      }
+    props.handlePromise(k8sPatch(DeploymentModel, props.deployment, [patch, { path: '/spec/strategy/type', value: strategyType, op: 'replace' }])).then(props.close, () => {});
+  };
 
-      props
-        .handlePromise(
-          k8sPatch(DeploymentModel, props.deployment, [
-            patch,
-            { path: '/spec/strategy/type', value: strategyType, op: 'replace' },
-          ]),
-        )
-        .then(props.close, () => {});
-    };
-
-    return (
-      <form onSubmit={submit} name="form" className="modal-content">
-        <ModalTitle>Edit Update Strategy</ModalTitle>
-        <ModalBody>
-          <ConfigureUpdateStrategy
-            strategyType={strategyType}
-            maxUnavailable={maxUnavailable}
-            maxSurge={maxSurge}
-            onChangeStrategyType={setStrategyType}
-            onChangeMaxUnavailable={setMaxUnavailable}
-            onChangeMaxSurge={setMaxSurge}
-          />
-        </ModalBody>
-        <ModalSubmitFooter
-          errorMessage={props.errorMessage}
-          inProgress={props.inProgress}
-          submitText="Save"
-          cancel={props.cancel}
-        />
-      </form>
-    );
-  },
-);
+  return (
+    <form onSubmit={submit} name="form" className="modal-content">
+      <ModalTitle>{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITUPDATESTRATEGY_1')}</ModalTitle>
+      <ModalBody>
+        <ConfigureUpdateStrategy strategyType={strategyType} maxUnavailable={maxUnavailable} maxSurge={maxSurge} onChangeStrategyType={setStrategyType} onChangeMaxUnavailable={setMaxUnavailable} onChangeMaxSurge={setMaxSurge} />
+      </ModalBody>
+      <ModalSubmitFooter errorMessage={props.errorMessage} inProgress={props.inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancel={props.cancel} />
+    </form>
+  );
+});
 
 export const configureUpdateStrategyModal = createModalLauncher(ConfigureUpdateStrategyModal);
 

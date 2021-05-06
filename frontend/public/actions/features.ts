@@ -138,44 +138,45 @@ const clearFlags = { clearSSARFlags };
 
 export type FeatureAction = Action<typeof featureActions | typeof receivedResources | typeof clearFlags>;
 
-const openshiftPath = `${k8sBasePath}/apis/apps.openshift.io/v1`;
-const detectOpenShift = dispatch =>
-  coFetchJSON(openshiftPath).then(
-    res => dispatch(setFlag(FLAGS.OPENSHIFT, _.size(res.resources) > 0)),
-    err => (_.get(err, 'response.status') === 404 ? dispatch(setFlag(FLAGS.OPENSHIFT, false)) : handleError(err, FLAGS.OPENSHIFT, dispatch, detectOpenShift)),
-  );
+// const openshiftPath = `${k8sBasePath}/apis/apps.openshift.io/v1`;
+const detectOpenShift = dispatch => dispatch(setFlag(FLAGS.OPENSHIFT, false));
+// coFetchJSON(openshiftPath).then(
+//   res => dispatch(setFlag(FLAGS.OPENSHIFT, _.size(res.resources) > 0)),
+//   err => (_.get(err, 'response.status') === 404 ? dispatch(setFlag(FLAGS.OPENSHIFT, false)) : handleError(err, FLAGS.OPENSHIFT, dispatch, detectOpenShift)),
+// );
 
-const clusterVersionPath = `${k8sBasePath}/apis/config.openshift.io/v1/clusterversions/version`;
-const detectClusterVersion = dispatch =>
-  coFetchJSON(clusterVersionPath).then(
-    (clusterVersion: ClusterVersionKind) => {
-      const hasClusterVersion = !_.isEmpty(clusterVersion);
-      dispatch(setFlag(FLAGS.CLUSTER_VERSION, hasClusterVersion));
-      dispatch(setClusterID(clusterVersion.spec.clusterID));
-    },
-    err => {
-      if (_.includes([403, 404], _.get(err, 'response.status'))) {
-        dispatch(setFlag(FLAGS.CLUSTER_VERSION, false));
-      } else {
-        handleError(err, FLAGS.CLUSTER_VERSION, dispatch, detectClusterVersion);
-      }
-    },
-  );
+// const clusterVersionPath = `${k8sBasePath}/apis/config.openshift.io/v1/clusterversions/version`;
+const detectClusterVersion = dispatch => dispatch(setFlag(FLAGS.CLUSTER_VERSION, false));
 
-const projectRequestPath = `${k8sBasePath}/apis/project.openshift.io/v1/projectrequests`;
-const detectCanCreateProject = dispatch =>
-  coFetchJSON(projectRequestPath).then(
-    res => dispatch(setFlag(FLAGS.CAN_CREATE_PROJECT, res.status === 'Success')),
-    err => {
-      const status = _.get(err, 'response.status');
-      if (status === 403) {
-        dispatch(setFlag(FLAGS.CAN_CREATE_PROJECT, false));
-        dispatch(setCreateProjectMessage(_.get(err, 'json.details.causes[0].message')));
-      } else if (!_.includes([400, 404, 500], status)) {
-        retryFlagDetection(dispatch, detectCanCreateProject);
-      }
-    },
-  );
+// coFetchJSON(clusterVersionPath).then(
+//   (clusterVersion: ClusterVersionKind) => {
+//     const hasClusterVersion = !_.isEmpty(clusterVersion);
+//     dispatch(setFlag(FLAGS.CLUSTER_VERSION, hasClusterVersion));
+//     dispatch(setClusterID(clusterVersion.spec.clusterID));
+//   },
+//   err => {
+//     if (_.includes([403, 404], _.get(err, 'response.status'))) {
+//       dispatch(setFlag(FLAGS.CLUSTER_VERSION, false));
+//     } else {
+//       handleError(err, FLAGS.CLUSTER_VERSION, dispatch, detectClusterVersion);
+//     }
+//   },
+// );
+
+// const projectRequestPath = `${k8sBasePath}/apis/project.openshift.io/v1/projectrequests`;
+const detectCanCreateProject = dispatch => dispatch(setFlag(FLAGS.CAN_CREATE_PROJECT, false));
+// coFetchJSON(projectRequestPath).then(
+//   res => dispatch(setFlag(FLAGS.CAN_CREATE_PROJECT, res.status === 'Success')),
+//   err => {
+//     const status = _.get(err, 'response.status');
+//     if (status === 403) {
+//       dispatch(setFlag(FLAGS.CAN_CREATE_PROJECT, false));
+//       dispatch(setCreateProjectMessage(_.get(err, 'json.details.causes[0].message')));
+//     } else if (!_.includes([400, 404, 500], status)) {
+//       retryFlagDetection(dispatch, detectCanCreateProject);
+//     }
+//   },
+// );
 
 const loggingConfigMapPath = `${k8sBasePath}/api/v1/namespaces/openshift-logging/configmaps/sharing-config`;
 const detectLoggingURL = dispatch =>
@@ -238,9 +239,9 @@ const ssarCheckActions = ssarChecks.map(({ flag, resourceAttributes, after }) =>
 
 export const detectFeatures = () => (dispatch: Dispatch) =>
   [
-    // detectOpenShift,
-    // detectCanCreateProject,
-    // detectClusterVersion,
+    detectOpenShift,
+    detectCanCreateProject,
+    detectClusterVersion,
     // detectUser,
     // detectLoggingURL,
     // detectConsoleLinks,

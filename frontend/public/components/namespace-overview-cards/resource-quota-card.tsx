@@ -11,52 +11,98 @@ import './namespace-overview.scss';
 import { Link } from 'react-router-dom';
 import { resourceURL } from '../../module/k8s/resource';
 import { coFetchJSON } from '@console/internal/co-fetch';
-import { ResourceQuotaModel, ClusterResourceQuotaModel } from '../../../public/models';
+import { ResourceQuotaModel, ResourceQuotaClaimModel, ClusterResourceQuotaModel, SelfSubjectAccessReviewModel } from '../../../public/models';
 import { getQuotaResourceTypes, hasComputeResources, QuotaGaugeCharts } from '../resource-quota';
 import { referenceForModel } from '../../module/k8s';
+import { k8sCreate } from '@console/internal/module/k8s';
 
-import { ResourceLink } from '../utils';
+import { ResourceLink, resourcePathFromModel } from '../utils';
 const isClusterQuota = quota => !quota.metadata.namespace;
 const quotaKind = quota => (isClusterQuota(quota) ? referenceForModel(ClusterResourceQuotaModel) : referenceForModel(ResourceQuotaModel));
 
-const ResourceQuotaCardDiagram = ({ namespace, rq }) => {
-  const resourceTypes = getQuotaResourceTypes(rq?.items?.[0]);
+const ResourceQuotaBody = ({ rq }) => {
+  const resourceTypes = getQuotaResourceTypes(rq);
   const showChartRow = hasComputeResources(resourceTypes);
 
-  return <div>{showChartRow && <QuotaGaugeCharts quota={rq} resourceTypes={resourceTypes} />}</div>;
-};
-const ResourceQuotaLink = ({ rq }) => {
-  return <ResourceLink kind={quotaKind(rq)} name={rq?.metadata?.name} namespace={rq?.metadata?.namespace} className="co-resource-item__resource-name" />;
+  return (
+    <div>
+      {showChartRow && (
+        <>
+          <div style={{ paddingTop: '1.2rem' }}>
+            <ResourceLink kind={quotaKind(rq)} name={rq?.metadata?.name} namespace={rq?.metadata?.namespace} className="co-resource-item__resource-name" />
+          </div>
+          <div>
+            <QuotaGaugeCharts quota={rq} resourceTypes={resourceTypes} />
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 const ResourceQuotaCard = ({ namespace }) => {
   const { t } = useTranslation();
 
-  const [resourceQuota, setResourceQuota] = React.useState();
+  const [resourceQuotas, setResourceQuota] = React.useState<any>();
+  const [resourceQuotaPermission, setResourceQuotaPermission] = React.useState();
   React.useEffect(() => {
-    const fetchJSON = async (url, setState) => {
+    const fetchJSON = async () => {
       try {
-        let num = await coFetchJSON(url);
-        setState(num);
+        const payload = {
+          spec: {
+            resourceAttributes: {
+              resource: 'resourcequota',
+              verb: 'create',
+            },
+          },
+          metadata: {},
+        };
+        const resourcequota = await coFetchJSON(resourceURL(ResourceQuotaModel, { ns: namespace }));
+        const permission = await k8sCreate(SelfSubjectAccessReviewModel, payload);
+
+        setResourceQuota(resourcequota);
+        setResourceQuotaPermission(permission.status.allowed);
       } catch (err) {
         console.log(err);
       }
     };
-    let url = resourceURL(ResourceQuotaModel, { ns: namespace });
-    fetchJSON(url, setResourceQuota);
+    fetchJSON();
   }, []);
+
+  // const resourceQuotaCreate = () => {
+  //   if (resourceQuotaPermission) {
+  //     return <Link to={''}>{t('COMMON:MSG_COMMON_ACTIONBUTTON_9')}</Link>;
+  //   } else {
+  //     return <Link to={''}>{t('COMMON:MSG_COMMON_ACTIONBUTTON_12')}</Link>;
+  //   }
+  // };
+  let resourceQuotaCreate, href;
+
+  if (resourceQuotaPermission === undefined) {
+    resourceQuotaCreate = <div></div>;
+  } else {
+    if (resourceQuotaPermission) {
+      href = resourcePathFromModel(ResourceQuotaModel, undefined, namespace) + '/~new';
+      resourceQuotaCreate = <Link to={href}>{t('COMMON:MSG_COMMON_ACTIONBUTTON_9')}</Link>;
+    } else {
+      href = resourcePathFromModel(ResourceQuotaClaimModel, undefined, namespace) + '/~new';
+      resourceQuotaCreate = <Link to={href}>{t('COMMON:MSG_COMMON_ACTIONBUTTON_12')}</Link>;
+    }
+  }
 
   return (
     <DashboardCard>
       <DashboardCardHeader>
         <DashboardCardTitle className={classNames('details-card__head-style')}>
           <div>{t('COMMON:MSG_DETAILS_TABRESOURCEQUOTAS_1')}</div>
-          <Link to={''}>{t('COMMON:MSG_COMMON_ACTIONBUTTON_9')}</Link>
+          {resourceQuotaCreate}
         </DashboardCardTitle>
       </DashboardCardHeader>
-      <DashboardCardBody>
-        {resourceQuota && <ResourceQuotaLink rq={resourceQuota} />}
-        {resourceQuota && <ResourceQuotaCardDiagram namespace={namespace} rq={resourceQuota} />}
-      </DashboardCardBody>
+      {resourceQuotas &&
+        _.map(resourceQuotas.items, rq => (
+          <DashboardCardBody>{<ResourceQuotaBody rq={rq} />}</DashboardCardBody>
+          // <DashboardCardBody>{rq}</DashboardCardBody>
+        ))}
+      {/* <DashboardCardBody>{resourceQuota && <ResourceQuotaBody rq={resourceQuota} />}</DashboardCardBody> */}
     </DashboardCard>
   );
 };

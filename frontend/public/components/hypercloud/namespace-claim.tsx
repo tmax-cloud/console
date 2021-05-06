@@ -34,7 +34,7 @@ const NamespaceClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'status.status',
+      sortField: 'status.status',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
@@ -115,7 +115,7 @@ export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => 
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
     },
   ];
-  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} multiNavPages={pages} rowFilters={filters.bind(null, t)()} />;
+  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: namespaceclaims }) => {
