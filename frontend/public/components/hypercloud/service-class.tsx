@@ -68,8 +68,8 @@ const ServiceClassTableRow = ({ obj, index, key, style }) => {
       <TableData className={classNames(tableColumnClasses[1])}>
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
-      <TableData className={classNames(tableColumnClasses[2])}>{obj.spec?.externalName}</TableData>
-      <TableData className={tableColumnClasses[3]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
+      <TableData className={tableColumnClasses[2]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
+      <TableData className={tableColumnClasses[3]}>{obj.spec?.externalName}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <ResourceLink kind="ServiceBroker" name={obj.spec.serviceBrokerName} namespace={obj.metadata.namespace} title={obj.spec.serviceBrokerName} />
       </TableData>
@@ -95,14 +95,14 @@ const ServiceClassTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_6'),
-      sortField: 'spec.externalName',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_83'),
+      sortField: 'spec.bindable',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_83'),
-      sortField: 'spec.bindable',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_6'),
+      sortField: 'spec.externalName',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
