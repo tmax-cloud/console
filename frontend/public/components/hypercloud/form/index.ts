@@ -87,6 +87,7 @@ export const pluralToKind = new Map([
   ['tfjobs', { kind: 'TFJob', type: 'CustomResourceDefinition' }],
   ['pytorchjobs', { kind: 'PyTorchJob', type: 'CustomResourceDefinition' }],
   ['inferenceservices', { kind: 'InferenceService', type: 'CustomResourceDefinition' }],
+  ['trainedmodels', { kind: 'TrainedModel', type: 'CustomResourceDefinition' }],
   ['workflowtemplates', { kind: 'WorkflowTemplate', type: 'CustomResourceDefinition' }],
   ['workflows', { kind: 'Workflow', type: 'CustomResourceDefinition' }],
   ['tfapplyclaims', { kind: 'TFApplyClaim', type: 'CustomResourceDefinition' }],
