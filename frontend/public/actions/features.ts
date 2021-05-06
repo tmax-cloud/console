@@ -3,13 +3,15 @@ import * as _ from 'lodash-es';
 import { ActionType as Action, action } from 'typesafe-actions';
 import { FLAGS } from '@console/shared/src/constants/common';
 import { GroupModel, SelfSubjectAccessReviewModel, UserModel } from '../models';
-import { k8sBasePath, ClusterVersionKind, k8sCreate } from '../module/k8s';
+// import { k8sBasePath, ClusterVersionKind, k8sCreate } from '../module/k8s';
+import { k8sBasePath, k8sCreate } from '../module/k8s';
 import { receivedResources } from './k8s';
 import { coFetchJSON } from '../co-fetch';
 import { MonitoringRoutes } from '../reducers/monitoring';
 import { setMonitoringURL } from './monitoring';
 import * as plugins from '../plugins';
-import { setClusterID, setCreateProjectMessage, setUser, setConsoleLinks } from './common';
+import { setUser, setConsoleLinks } from './common';
+// import { setClusterID, setCreateProjectMessage, setUser, setConsoleLinks } from './common';
 
 export enum ActionType {
   SetFlag = 'setFlag',
