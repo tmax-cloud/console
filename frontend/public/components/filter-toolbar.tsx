@@ -56,7 +56,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   });
 
 const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props => {
-  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME] } = props;
+  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], storeSelectedRows = new Set(), defaultSelectedRows = [] } = props;
 
   const [inputText, setInputText] = React.useState('');
   const [filterType, setFilterType] = React.useState(FilterType.NAME);
@@ -194,12 +194,25 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
   React.useEffect(() => {
     !_.isEmpty(labelFilters) && applyFilter(labelFilters, FilterType.LABEL);
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
-    !_.isEmpty(selectedRowFilters) && applyRowFilter(selectedRowFilters);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // applyRowFilter(selectedRows);
-    // setQueryParameters(selectedRows);
+    !_.isEmpty(defaultSelectedRows) && applyRowFilter(defaultSelectedRows);
+    if (!_.isEmpty(selectedRowFilters) || storeSelectedRows.size > 0) {
+      selectedRowFilters.map(row => storeSelectedRows.add(row));
+      applyRowFilter(Array.from(storeSelectedRows));
+      setQueryParameters(Array.from(storeSelectedRows));
+    }
+    return () => {
+      //clear filter with Awaiting
+      applyRowFilter(defaultSelectedRows);
+    };
   }, []);
 
+  React.useEffect(() => {
+    console.log(defaultSelectedRows);
+    if (_.isEmpty(selectedRowFilters) && storeSelectedRows.size > 0) {
+      applyRowFilter(Array.from(storeSelectedRows));
+      setQueryParameters(Array.from(storeSelectedRows));
+    }
+  });
   const switchFilter = type => {
     setFilterType(type);
     setInputText(nameFilter && type === FilterType.NAME ? nameFilter : '');
@@ -284,8 +297,8 @@ type FilterToolbarProps = {
   hideLabelFilter?: boolean;
   parseAutoComplete?: any;
   kinds?: any;
-  defaultSelectedItems?: string[];
-  // selectedRows?: string[];
+  storeSelectedRows?: any;
+  defaultSelectedRows?: string[];
 };
 
 export type RowFilter = {
@@ -300,14 +313,15 @@ export type RowFilter = {
   filter?: any;
 };
 
-// const mapStateToProps = (state, props) => {
-//   const { reduxIDs } = props;
-//   const selected = _.map(props.rowFilters, filter => {
-//     return state.k8s.getIn([reduxIDs[0], 'filters', filter?.type])?.selected;
-//   });
-//   const selectedRows = selected?.[0] || ['Awaiting'];
-//   return { selectedRows };
-// };
+//TODO: doesnt consider multiple filters
+const mapStateToProps = (state, props) => {
+  const id = props.reduxIDs?.[0];
+  const name = `filters`;
+  const type = props.rowFilters?.[0].type;
+  const storeSelectedRows = state.k8s.getIn([id, name, type])?.selected;
 
-export const FilterToolbar = withRouter(connect(null, { filterList })(FilterToolbar_));
+  return { storeSelectedRows };
+};
+
+export const FilterToolbar = withRouter(connect(mapStateToProps, { filterList })(FilterToolbar_));
 FilterToolbar.displayName = 'FilterToolbar';
