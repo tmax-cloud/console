@@ -15,7 +15,7 @@ import { ServicePlanModel, ClusterServicePlanModel, ServiceClassModel, ClusterSe
 /**
  * Housing both the row filter and name/label filter in the same file.
  */
-// MJ : 외부이름에 대한 string발행되면 적용하기
+// MJ : 외부이름, 외부이름으로 검색에 대한 string발행되면 적용하기
 enum FilterType {
   NAME = 'Name',
   LABEL = 'Label',
@@ -236,7 +236,16 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
   });
   const switchFilter = type => {
     setFilterType(type);
-    setInputText(nameFilter && type === FilterType.NAME ? nameFilter : '');
+    switch (type) {
+      case FilterType.NAME:
+        setInputText(nameFilter || '');
+        break;
+      case FilterType.EXTERNAL_NAME:
+        setInputText(externalNameFilter || '');
+        break;
+      default:
+        setInputText('');
+    }
   };
 
   const dropdownItems = getDropdownItems(rowFilters, selectedRowFilters, data, props);
@@ -245,6 +254,12 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
   const searchFilterTitle = {
     [FilterType.LABEL]: t('COMMON:MSG_COMMON_SEARCH_FILTER_2'),
     [FilterType.NAME]: t('COMMON:MSG_COMMON_SEARCH_FILTER_1'),
+  };
+
+  const placeHolders = {
+    [FilterType.LABEL]: 'app=frontend',
+    [FilterType.NAME]: t('COMMON:MSG_COMMON_SEARCH_PLACEHOLDER_1'),
+    [FilterType.EXTERNAL_NAME]: t('외부이름으로 검색'),
   };
 
   // MEMO : 특정 리소스 타입에서만 필요로 하는 검색기준이 있을 때
@@ -303,7 +318,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
                       showSuggestions={FilterType.LABEL === filterType}
                       textValue={inputText}
                       setTextValue={updateSearchFilter}
-                      placeholder={FilterType.LABEL === filterType ? 'app=frontend' : t('COMMON:MSG_COMMON_SEARCH_PLACEHOLDER_1')}
+                      placeholder={placeHolders[filterType]}
                       data={data}
                     />
                   </div>
