@@ -52,6 +52,7 @@ ClusterServicePlansDetailsPage.displayName = 'ClusterServicePlansDetailsPage';
 const tableColumnClasses = [
   '', // NAME
   '', // BINDABLE
+  '', // EXTERNALNAME
   classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
 ];
 
@@ -70,10 +71,16 @@ const ClusterServicePlanTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_6'),
+      sortField: 'spec.externalName',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[2] },
+    },
+    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
+      props: { className: tableColumnClasses[3] },
     },
   ];
 };
@@ -104,7 +111,8 @@ const ClusterServicePlanTableRow = (setSidebarDetails, setShowSidebar, setSideba
         <SidebarLink kind={kind} name={obj.metadata.name} obj={obj} />
       </TableData>
       <TableData className={tableColumnClasses[1]}>{obj.spec.bindable ? 'Available' : 'Unavailable'}</TableData>
-      <TableData className={tableColumnClasses[2]}>
+      <TableData className={tableColumnClasses[2]}>{obj.spec?.externalName}</TableData>
+      <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
     </TableRow>
