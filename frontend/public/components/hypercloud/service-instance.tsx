@@ -57,7 +57,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
               <dl className="co-m-pane__details">
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
                 <dd>
-                  <Status status={serviceInstance.status.lastConditionState} />
+                  <Status status={serviceInstance.status?.lastConditionState} />
                 </dd>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_19')}</dt>
                 <SidebarLink name={serviceInstance.spec.clusterServiceClassRef?.name ? serviceInstance.spec.clusterServiceClassRef?.name : serviceInstance.spec?.serviceClassExternalName} kind={serviceInstance.spec.clusterServiceClassRef?.name ? 'ClusterServiceClass' : 'ServiceClass'}></SidebarLink>
@@ -121,7 +121,7 @@ const ServiceInstanceTableRow = ({ obj, index, key, style }) => {
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <Status status={obj.status.lastConditionState} />
+        <Status status={obj.status?.lastConditionState} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>{obj.spec.clusterServicePlanExternalName ? <ResourceLink kind="ClusterServicePlan" title={obj.spec.clusterServicePlanRef?.name} name={obj.spec.clusterServicePlanRef?.name} displayName={obj.spec.clusterServicePlanExternalName} /> : <ResourceLink kind="ServicePlan" title={obj.spec.servicePlanRef?.name} name={obj.spec.servicePlanRef?.name} displayName={obj.spec.servicePlanExternalName} />}</TableData>
       <TableData className={tableColumnClasses[4]}>
@@ -182,7 +182,7 @@ const ServiceInstancesList: React.FC = props => {
 ServiceInstancesList.displayName = 'ServiceInstancesList';
 
 const serviceInstanceStatusReducer = (serviceInstance: any): string => {
-  return serviceInstance.status.lastConditionState;
+  return serviceInstance.status?.lastConditionState;
 };
 
 const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
@@ -191,6 +191,7 @@ const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
     <ListPage
       title={t('COMMON:MSG_LNB_MENU_17')}
       createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_17') })}
+      createProps={{ to: `/catalog/ns/${props.namespace}?kind=%5B"ClusterServiceClass"%2C"ServiceClass"%5D` }}
       canCreate={true}
       kind={kind}
       ListComponent={ServiceInstancesList}
@@ -214,7 +215,9 @@ ServiceInstancesPage.displayName = 'ServiceInstancesPage';
 
 export { ServiceInstancesList, ServiceInstancesPage, ServiceInstancesDetailsPage };
 
-type ServiceInstancesPageProps = {};
+type ServiceInstancesPageProps = {
+  namespace: string;
+};
 
 type ServiceInstancesDetailsPageProps = {
   match: any;

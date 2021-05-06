@@ -615,3 +615,7 @@ button.pf-c-dropdown__menu-item.hover {
 .modal-list li {
   margin-top: 8px;
 }
+
+.pf-c-wizard__nav {
+  z-index: 150 !important;
+}

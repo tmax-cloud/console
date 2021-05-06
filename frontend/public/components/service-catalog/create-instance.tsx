@@ -7,7 +7,6 @@ import { ActionGroup, Button } from '@patternfly/react-core';
 import {
   ServiceInstanceModel,
   ClusterServiceClassModel,
-  ClusterServicePlanModel,
 } from '../../models';
 import { ClusterServiceClassInfo } from '../cluster-service-class-info';
 import { ButtonBar } from '../utils/button-bar';
@@ -31,7 +30,7 @@ import {
 const PARAMETERS_SECRET_KEY = 'parameters';
 
 const getAvailablePlans = (plans: any): any[] =>
-  _.reject(plans.data, 'status.removedFromBrokerCatalog');
+  _.reject(plans?.data, 'status.removedFromBrokerCatalog');
 
 class CreateInstance extends React.Component<CreateInstanceProps, CreateInstanceState> {
   constructor(props) {
@@ -238,10 +237,10 @@ export const CreateInstancePage = (props) => {
   const resources = [
     { kind: referenceForModel(ClusterServiceClassModel), name, isList: false, prop: 'obj' },
     {
-      kind: referenceForModel(ClusterServicePlanModel),
+      kind: 'ClusterServicePlan',
       isList: true,
       prop: 'plans',
-      fieldSelector: `spec.clusterServiceClassRef.name=${name}`,
+      //fieldSelector: `spec.clusterServiceClassRef.name=${name}`,
     },
   ];
   return (
