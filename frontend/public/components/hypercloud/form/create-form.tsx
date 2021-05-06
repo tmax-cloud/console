@@ -13,7 +13,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
   const FormComponent: React.FC<CommonFormProps_> = props => {
     const methods = useForm({ defaultValues: defaultValues });
 
-    const kind = pluralToKind.get(params.plural)?.['kind'];
+    const kind = pluralToKind.get(params.plural);
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     const title = `${props.titleVerb} ${kind || 'Sample'}`;
 
@@ -22,7 +22,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     const onClick = methods.handleSubmit(data => {
       let inDo = _.defaultsDeep(props.fixed, data);
       inDo = props.onSubmitCallback(inDo);
-      const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind): kind && modelFor(kind);
+      const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
       k8sCreate(model, inDo)
         .then(() => {
           history.push(resourceObjPath(inDo, referenceFor(model)));
@@ -42,13 +42,13 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
               <div className="co-m-pane__name">{title}</div>
             </h1>
             <p className="co-m-pane__explanation">{props.explanation}</p>
-            {props.useDefaultForm &&
+            {props.useDefaultForm && (
               <fieldset>
                 <Section label="Name" id="name" isRequired={true}>
                   <input className="pf-c-form-control" id="name" name="metadata.name" ref={methods.register} />
                 </Section>
               </fieldset>
-            }
+            )}
             <SubForm isCreate={props.isCreate} />
             <ButtonBar inProgress={inProgress}>
               <ActionGroup className="pf-c-form">
@@ -68,8 +68,8 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
   };
 
   FormComponent.defaultProps = {
-    useDefaultForm: true
-  }
+    useDefaultForm: true,
+  };
 
   return FormComponent;
 };
