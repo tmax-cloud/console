@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
-import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel } from '@console/internal/module/k8s';
+import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '@console/internal/module/k8s';
 import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel } from '@console/internal/models';
 import { StatusBox, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
@@ -15,7 +15,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isCustomrResource } from '../form';
+import { pluralToKind, isCustomrResource, isCreateManual } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -129,13 +129,13 @@ const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model
 };
 
 export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProps) => {
+  const { kind } = props.model;
   return (
     <>
       <Helmet>
-        <title>{`Edit ${kindForReference(props.match.params.plural)}`}</title>
+        <title>{`Edit ${kind}`}</title>
       </Helmet>
-      <AsyncComponent loader={() => import('../../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />
-      {/* <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} /> */}
+      {isCreateManual.has(kind) ? <AsyncComponent loader={() => import('../../edit-yaml').then(c => c.EditYAML)} obj={props.obj} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
     </>
   );
 });
