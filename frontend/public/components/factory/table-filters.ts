@@ -53,6 +53,8 @@ const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
 export const tableFilters: TableFilterMap = {
   name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
 
+  'externalName': (filter, obj) => fuzzyCaseInsensitive(filter, obj.spec?.externalName),
+
   'catalog-source-name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.name),
 
   'namespace-claim-status': (results, nameSpaceClaim) => {
