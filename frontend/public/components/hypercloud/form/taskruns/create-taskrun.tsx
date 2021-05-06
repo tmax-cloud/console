@@ -31,19 +31,20 @@ const paramItemRenderer = (register, name, item, index, ListActions, ListDefault
         <input id={`${name}[${index}].value`} ref={register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
       </div>
       <div className="col-xs-1 pairs-list__action">
-        {defaultArrayLength > index ? null : (
-          <Button
-            type="button"
-            data-test-id="pairs-list__delete-btn"
-            className="pairs-list__span-btns"
-            onClick={() => {
+        <Button
+          type="button"
+          data-test-id="pairs-list__delete-btn"
+          className="pairs-list__span-btns"
+          onClick={() => {
+            const values = _.get(ListActions.getValues(), name);
+            if (!!values && values.length > defaultArrayLength) {
               ListActions.remove(index);
-            }}
-            variant="plain"
-          >
-            {ListDefaultIcons.deleteIcon}
-          </Button>
-        )}
+            }
+          }}
+          variant="plain"
+        >
+          {ListDefaultIcons.deleteIcon}
+        </Button>
       </div>
     </div>
   );
