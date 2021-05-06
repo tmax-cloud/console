@@ -88,15 +88,12 @@ export const multilineQueries = {
 
 const namespaceQueries = (namespace: String) => {
   return {
-    [OverviewQuery.MEMORY_TOTAL]: `sum by(namespace) (container_memory_working_set_bytes{namespace="${namespace}",container="",pod!=""})`,
     [OverviewQuery.MEMORY_UTILIZATION]: `sum by(namespace) (container_memory_working_set_bytes{namespace="${namespace}",container="",pod!="",mode!="idle"})`,
     [OverviewQuery.NETWORK_IN_UTILIZATION]: `sum(rate(container_network_receive_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
     [OverviewQuery.NETWORK_OUT_UTILIZATION]: `sum(rate(container_network_transmit_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
     [OverviewQuery.NETWORK_UTILIZATION]: '',
     [OverviewQuery.CPU_UTILIZATION]: `namespace:container_cpu_usage:sum{namespace='${namespace}', mode!="idle"}`,
-    [OverviewQuery.CPU_TOTAL]: `namespace:container_cpu_usage:sum{namespace='${namespace}'}`,
-    [OverviewQuery.STORAGE_UTILIZATION]: '',
-    [OverviewQuery.STORAGE_TOTAL]: `sum(kube_persistentvolumeclaim_resource_requests_storage_bytes{namespace="${namespace}"})`,
+    [OverviewQuery.STORAGE_UTILIZATION]: `sum(pod:container_fs_usage_bytes:sum{namespace='${namespace}'}) by (namespace)`,
     [OverviewQuery.POD_UTILIZATION]: `count(kube_pod_info{namespace="${namespace}"})`,
   };
 };
@@ -105,7 +102,6 @@ export const namespaceUtilizationQueries = (namespace: String) => {
   return {
     [OverviewQuery.CPU_UTILIZATION]: {
       utilization: namespaceQueries(namespace)[OverviewQuery.CPU_UTILIZATION],
-      // total: namespaceQueries(namespace)[OverviewQuery.CPU_TOTAL],
     },
     [OverviewQuery.MEMORY_UTILIZATION]: {
       utilization: namespaceQueries(namespace)[OverviewQuery.MEMORY_UTILIZATION],
@@ -113,7 +109,6 @@ export const namespaceUtilizationQueries = (namespace: String) => {
     },
     [OverviewQuery.STORAGE_UTILIZATION]: {
       utilization: namespaceQueries(namespace)[OverviewQuery.STORAGE_UTILIZATION],
-      total: namespaceQueries(namespace)[OverviewQuery.STORAGE_TOTAL],
     },
     [OverviewQuery.POD_UTILIZATION]: {
       utilization: namespaceQueries(namespace)[OverviewQuery.POD_UTILIZATION],

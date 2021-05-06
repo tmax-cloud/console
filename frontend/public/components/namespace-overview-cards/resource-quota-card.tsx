@@ -97,12 +97,7 @@ const ResourceQuotaCard = ({ namespace }) => {
           {resourceQuotaCreate}
         </DashboardCardTitle>
       </DashboardCardHeader>
-      {resourceQuotas &&
-        _.map(resourceQuotas.items, rq => (
-          <DashboardCardBody>{<ResourceQuotaBody rq={rq} />}</DashboardCardBody>
-          // <DashboardCardBody>{rq}</DashboardCardBody>
-        ))}
-      {/* <DashboardCardBody>{resourceQuota && <ResourceQuotaBody rq={resourceQuota} />}</DashboardCardBody> */}
+      {resourceQuotas && _.map(resourceQuotas.items, rq => <DashboardCardBody key={rq?.metadata?.name}>{<ResourceQuotaBody rq={rq} />}</DashboardCardBody>)}
     </DashboardCard>
   );
 };
