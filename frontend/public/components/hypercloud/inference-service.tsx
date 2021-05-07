@@ -50,30 +50,31 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:FRAMEWORK'),
+      title: t('COMMON:STATUS'),
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:STORAGEURI'),
+      title: t('COMMON:FRAMEWORK'),
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
-    },
+    },    
     {
       title: t('COMMON:URL'),
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: t('COMMON:CANARY'),
+      title: t('COMMON:MULTIMODEL'),
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
     },
     {
-      title: t('COMMON:STATUS'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[6] },
-    },
+    },    
     {
       title: '',
       props: { className: tableColumnClasses[7] },
@@ -90,6 +91,9 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       framework = curPredictor;
     }
   });
+  const timestamp = isvc.metadata.creationTimestamp;
+  //const time = timestamp.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
+  const time = timestamp;
   return (
     <TableRow id={isvc.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -98,17 +102,19 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={isvc.metadata.namespace} title={isvc.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{framework}</TableData>
-      <TableData className={tableColumnClasses[3]}>{isvc.spec.predictor[framework]?.storageUri}</TableData>
+      <TableData className={tableColumnClasses[2]}>{isvc.status.conditions.length ? isvc.status.conditions[isvc.status.conditions.length - 1].status : ''}</TableData>
+      <TableData className={tableColumnClasses[3]}>{framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{isvc.status.url}</TableData>
-      <TableData className={tableColumnClasses[5]}>{isvc.status.canary && Object.keys(isvc.status.canary).length === 0 ? 'N' : 'Y'}</TableData>
-      <TableData className={tableColumnClasses[6]}>{isvc.status.conditions.length ? isvc.status.conditions[isvc.status.conditions.length - 1].status : ''}</TableData>
+      <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'Y' : 'N'}</TableData>
+      <TableData className={tableColumnClasses[6]}>{time}</TableData>
       <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={isvc} />
       </TableData>
     </TableRow>
   );
 };
+//{isvc.status.canary && Object.keys(isvc.status.canary).length === 0 ? 'N' : 'Y'}
+//{isvc.spec.predictor[framework]?.storageUri}
 
 export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
@@ -116,6 +122,14 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
   const readyCondition = ds.status.conditions.find(obj => _.lowerCase(obj.type) === 'ready');
   const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
   const phase = InferenceServicePhase(ds);
+
+  const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+  let framework;
+  Object.keys(ds.spec.predictor).forEach(curPredictor => {
+    if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+      framework = curPredictor;
+    }
+  });
 
   return (
     <dl className="co-m-pane__details">
@@ -125,11 +139,35 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
+      <DetailsItem label={`${t('COMMON:STORAGEURI')}`} obj={ds} path="spec.predictor[framework]?.storageUri">
+        {ds.spec.predictor[framework]?.storageUri}
+      </DetailsItem>
+      <DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">        
+      <Status status={phase} />
+        </DetailsItem>
+      <DetailsItem label={`${t('COMMON:TRANSFOMER')}`} obj={ds} path="spec.transformer">
+      <Status status={phase} />
+        </DetailsItem>
+      <DetailsItem label={`${t('COMMON:EXPLAINER')}`} obj={ds} path="spec.explainer">
+        <Status status={phase} />
+      </DetailsItem>      
     </dl>
   );
 }
 
-
+//<DetailsItem label={`${t('COMMON:STORAGEURI')}`} obj={ds} path="spec.predictor[framework]?.storageUri">
+//       {ds.spec.predictor[framework]?.storageUri}
+//      </DetailsItem>
+//<DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">
+//        framework : {ds.spec.predictor[framework]}
+//        image : {ds.spec.image}
+//      </DetailsItem>
+//<DetailsItem label={`${t('COMMON:TRANSFOMER')}`} obj={ds} path="spec.transformer">
+//        {ds.spec.tranfomer}
+//      </DetailsItem>
+//      <DetailsItem label={`${t('COMMON:EXPLAINER')}`} obj={ds} path="spec.explainer">
+//        {ds.spec.explainer}
+//      </DetailsItem>  
 
 const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: isvc }) => {
   const { t } = useTranslation();
@@ -155,12 +193,59 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
     </>
   );
 };
-
+//<Table aria-label="InferenceServices" Header={ModelTableHeader.bind(null, t)} Row={ModelTableRow} virtualize />
 const { details, editYaml } = navFactory;
 export const InferenceServices: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="InferenceServices" Header={InferenceServiceTableHeader.bind(null, t)} Row={InferenceServiceTableRow} virtualize />;
 };
+/*
+const ModelTableHeader = (t?: TFunction) => {
+  return [
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      sortField: 'metadata.name',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[0] },
+    },
+    {
+      title: t('COMMON:STORAGEURI'),
+      sortField: 'metadata.namespace',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[1] },
+    },    
+    {
+      title: t('COMMON:FRAMEWORK'),
+      transforms: [sortable],
+      props: { className: tableColumnClasses[2] },
+    },    
+    {
+      title: t('COMMON:MEMORY'),
+      transforms: [sortable],
+      props: { className: tableColumnClasses[3] },
+    },    
+  ];
+};
+ModelTableHeader.displayName = 'ModelTableHeader';
+
+const ModelTableRow: RowFunction<K8sResourceKind> = ({ obj: model, index, key, style }) => {
+  const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+  let framework;
+  Object.keys(model.spec.predictor).forEach(curPredictor => {
+    if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+      framework = curPredictor;
+    }
+  });
+  return (
+    <TableRow id={model.metadata.uid} index={index} trKey={key} style={style}>
+      <TableData className={tableColumnClasses[0]}>{model.metadata.name}</TableData>
+      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>{model.spec.predictor[framework]?.storageUri}</TableData>
+      <TableData className={tableColumnClasses[2]}>{framework}</TableData>
+      <TableData className={tableColumnClasses[3]}>{"memory"}</TableData>      
+    </TableRow>
+  );
+};
+*/
 
 export const InferenceServicesPage: React.FC<InferenceServicesPageProps> = props => {
   const { t } = useTranslation();
