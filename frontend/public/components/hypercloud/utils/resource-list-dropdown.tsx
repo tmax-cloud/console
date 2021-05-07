@@ -192,7 +192,7 @@ export interface MultipleResourceDropdownProps extends ResourceDropdownCommon {
   defaultValue?: string[];
 }
 
-export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props) => {
+const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = (props) => {
   const { name, required, methods, useHookForm, idFunc } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useHookForm ? useFormContext() : { register: null, unregister: null, setValue: null, watch: null };
 
@@ -286,9 +286,16 @@ export const ResourceListDropdown: React.SFC<ResourceListDropdownProps> = (props
   }
 };
 
+function areEqual(prevProps, nextProps) {
+  // MEMO : methods와 idFunc, onChange 속성은 매번 다르게 인식돼서 memo비교문에서 제거함
+  return _.isEqual(_.omit(prevProps, ['methods', 'idFunc', 'onChange']), _.omit(nextProps, ['methods', 'idFunc', 'onChange']));
+}
+
+export const ResourceListDropdown = React.memo(ResourceListDropdown_, areEqual);
+
 export type ResourceListDropdownProps = BaseResourceListDropdown & (SingleResourceDropdownProps | MultipleResourceDropdownProps);
 
-ResourceListDropdown.defaultProps = {
+ResourceListDropdown_.defaultProps = {
   resourceType: 'Resources',
   type: 'single',
   useHookForm: false,
