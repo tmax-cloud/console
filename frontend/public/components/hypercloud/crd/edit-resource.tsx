@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
-import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel } from '@console/internal/module/k8s';
+import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '@console/internal/module/k8s';
 import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel } from '@console/internal/models';
 import { StatusBox, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
@@ -15,10 +15,11 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind } from '../form';
+import { pluralToKind, isVanillaObject, isCreateManual } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
+import { AsyncComponent } from '../../utils/async';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
@@ -51,9 +52,10 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
     const [template, setTemplate] = React.useState({} as any);
 
     React.useEffect(() => {
-      let type = pluralToKind.get(model.plural)['type'];
+      let kind = pluralToKind(model.plural);
+      const isCustomResourceType = !isVanillaObject(kind);
       let url;
-      if (type === 'CustomResourceDefinition') {
+      if (isCustomResourceType) {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
       } else {
@@ -113,23 +115,40 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
   }
 };
 
-const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model'>) => {
-  let plural;
-  let model;
-  if (modelFor(pluralToKind.get(props.match.params.plural)['kind'])) {
-    model = modelFor(pluralToKind.get(props.match.params.plural)['kind']);
-    plural = referenceForModel(model);
+// edit탭에 경우 customresourcedefinitions 경로일 경우 url params에 plural 값이 의도한 것과 다르게 들어옴.
+const getMatchedPlural = (type, spec, match) => {
+  if (type === 'customresourcedefinitions') {
+    return spec.group + '~' + spec.version + '~' + spec.names.kind;
+  } else {
+    return match.params.plural;
   }
-  return { model: state.k8s.getIn(['RESOURCES', 'models', plural]) || (state.k8s.getIn(['RESOURCES', 'models', model.kind]) as K8sKind), activePerspective: getActivePerspective(state) };
+};
+
+const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model'>) => {
+  let {
+    obj: { spec },
+    match,
+  } = props;
+  let plural = getMatchedPlural(match.params.plural, spec, match);
+  let kind = pluralToKind(plural);
+  let model = kind && modelFor(kind);
+  // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
+  if (kind && model) {
+    plural = referenceForModel(model);
+  } else {
+    kind = plural.split('~')[2];
+  }
+  return { model: (state.k8s.getIn(['RESOURCES', 'models', kind]) as K8sKind) || state.k8s.getIn(['RESOURCES', 'models', plural]), activePerspective: getActivePerspective(state) };
 };
 
 export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProps) => {
+  const { kind, plural } = props.model;
   return (
     <>
       <Helmet>
-        <title>{`Edit ${kindForReference(props.match.params.plural)}`}</title>
+        <title>{`Edit ${kind}`}</title>
       </Helmet>
-      <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />
+      {isCreateManual(kind) ? <AsyncComponent loader={() => import(`../form/${plural}/create-${kind.toLowerCase()}` /* webpackChunkName: "create-secret" */).then(m => m[`Create${kind}`])} obj={props.obj} match={props.match} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
     </>
   );
 });
@@ -139,13 +158,14 @@ export type EditDefaultProps = {
   initialEditorType: EditorType;
   loaded: boolean;
   loadError?: any;
-  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  match: RouterMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
   obj?: K8sResourceKind;
   create: boolean;
 };
 
 export type EditDefaultPageProps = {
-  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  match: RouterMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
+  obj?: K8sResourceKind;
 };

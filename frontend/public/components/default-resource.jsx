@@ -94,7 +94,7 @@ export const DefaultPage = props => <ListPage {...props} ListComponent={DefaultL
 DefaultPage.displayName = 'DefaultPage';
 
 export const DefaultDetailsPage = props => {
-  const pages = [navFactory.details(DetailsForKind(props.kind)), navFactory.editYaml()];
+  const pages = [navFactory.details(DetailsForKind(props.kind)), navFactory.editResource()];
   const menuActions = [...Kebab.getExtensionsActionsForKind(kindObj(props.kind)), ...common];
 
   return <DetailsPage {...props} menuActions={menuActions} pages={pages} />;

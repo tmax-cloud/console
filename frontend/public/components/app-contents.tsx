@@ -15,7 +15,7 @@ import * as plugins from '../plugins';
 import { getActivePerspective } from '../reducers/ui';
 import { NamespaceRedirect } from './utils/namespace-redirect';
 import { RootState } from '../redux';
-import { pluralToKind } from './hypercloud/form';
+import { pluralToKind, isCreateManual } from './hypercloud/form';
 import { getPerspectives } from '../hypercloud/perspectives';
 import { GrafanaPage } from './hypercloud/grafana';
 
@@ -83,13 +83,14 @@ const DefaultPage = connect((state: RootState) => ({
 }))(DefaultPage_);
 
 const LazyRoute = props => {
-  let { kind, loader } = props;
-  let plural = props.computedMatch.params.plural;
-  kind = pluralToKind.get(plural)?.['createType'] ? 'form' : kind;
+  const plural = props.computedMatch.params.plural;
+  const kind = pluralToKind(plural);
+  const isManual = isCreateManual(kind);
+  const url = props.computedMatch.url;
+  let loader = props.loader;
   // 생성페이지 분기
-  if (props.computedMatch.url.split('/').indexOf('~new') > 0 && !loader) {
-    if (kind === 'form') {
-      kind = pluralToKind.get(plural)['kind'];
+  if (url.split('/').indexOf('~new') > 0 && !loader) {
+    if (isManual) {
       loader = () => import(`./hypercloud/form/${plural}/create-${kind.toLowerCase()}` /* webpackChunkName: "create-secret" */).then(m => m[`Create${kind}`]);
     } else {
       loader = () => import('./hypercloud/crd/create-pinned-resource').then(m => m.CreateDefaultPage);

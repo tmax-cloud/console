@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { WithCommonForm } from '../create-form';
 import { Section } from '../../utils/section';
 import { ListView } from '../../utils/list-view';
-import { ResourceDropdown } from '../../utils/resource-dropdown';
-import { k8sGet } from '../../../../module/k8s';
+import { ResourceListDropdown } from '../../utils/resource-list-dropdown';
+import { k8sGet, k8sList } from '../../../../module/k8s';
 import { ClusterTaskModel, TaskModel, PipelineResourceModel, ServiceAccountModel, TaskRunModel } from '../../../../models';
 import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
@@ -31,19 +31,20 @@ const paramItemRenderer = (register, name, item, index, ListActions, ListDefault
         <input id={`${name}[${index}].value`} ref={register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
       </div>
       <div className="col-xs-1 pairs-list__action">
-        {defaultArrayLength > index ? null : (
-          <Button
-            type="button"
-            data-test-id="pairs-list__delete-btn"
-            className="pairs-list__span-btns"
-            onClick={() => {
+        <Button
+          type="button"
+          data-test-id="pairs-list__delete-btn"
+          className="pairs-list__span-btns"
+          onClick={() => {
+            const values = _.get(ListActions.getValues(), name);
+            if (!!values && values.length > defaultArrayLength) {
               ListActions.remove(index);
-            }}
-            variant="plain"
-          >
-            {ListDefaultIcons.deleteIcon}
-          </Button>
-        )}
+            }
+          }}
+          variant="plain"
+        >
+          {ListDefaultIcons.deleteIcon}
+        </Button>
       </div>
     </div>
   );
@@ -60,7 +61,30 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     paramValueListData: [],
   });
 
+  const [taskList, setTaskList] = useState([]);
+  const [pipelineList, setPipelineList] = useState([]);
+  const [serviceAccountList, setServiceAccountList] = useState([]);
+
   const namespace = getActiveNamespace(store.getState());
+  React.useEffect(() => {
+    let taskAndClusterTaskList = [];
+    k8sList(TaskModel, { ns: namespace }).then(list => {
+      taskAndClusterTaskList = taskAndClusterTaskList.concat(list);
+    });
+
+    k8sList(ClusterTaskModel).then(list => {
+      taskAndClusterTaskList = taskAndClusterTaskList.concat(list);
+      setTaskList(taskAndClusterTaskList);
+    });
+
+    k8sList(PipelineResourceModel, { ns: namespace }).then(list => {
+      setPipelineList(list);
+    });
+
+    k8sList(ServiceAccountModel, { ns: namespace }).then(list => {
+      setServiceAccountList(list);
+    });
+  }, []);
 
   const selectedTask = useWatch({
     control: methods.control,
@@ -141,8 +165,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         return (
           <Section label={`${item.name} (${item.type})`} id={`input_${index}`} key={`input_${index}`} isRequired={item.required} description={item.description}>
             <>
-              {/* <input ref={methods.register} type="hidden" id={`spec.resources.inputs[${index}].name`} name={`spec.resources.inputs[${index}].name`} value={item.name} /> */}
-              <ResourceDropdown name={`spec.resources.inputs.${item.name}.resourceRef.name`} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} resources={[{ kind: PipelineResourceModel.kind, namespace: namespace, prop: 'pipelineresource' }]} type="single" methods={methods} useHookForm />
+              <ResourceListDropdown name={`spec.resources.inputs.${item.name}.resourceRef.name`} type="single" resourceList={pipelineList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} useHookForm />
             </>
           </Section>
         );
@@ -157,8 +180,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         return (
           <Section label={`${item.name} (${item.type})`} id={`output_${index}`} key={`output_${index}`} isRequired={item.required} description={item.description}>
             <>
-              {/* <input ref={methods.register} type="hidden" id={`spec.resources.outputs[${index}].name`} name={`spec.resources.outputs[${index}].name`} value={item.name} /> */}
-              <ResourceDropdown name={`spec.resources.outputs.${item.name}.resourceRef.name`} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} resources={[{ kind: PipelineResourceModel.kind, namespace: namespace, prop: 'pipelineresource' }]} type="single" methods={methods} useHookForm />
+              <ResourceListDropdown name={`spec.resources.outputs.${item.name}.resourceRef.name`} type="single" resourceList={pipelineList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_8')} useHookForm />
             </>
           </Section>
         );
@@ -217,20 +239,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   return (
     <>
       <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} id="task">
-        <ResourceDropdown
-          name="taskRef.name"
-          placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')}
-          idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
-          resources={[
-            { kind: TaskModel.kind, namespace: namespace, prop: 'task' },
-            { kind: ClusterTaskModel.kind, prop: 'clustertask' },
-          ]}
-          defaultValue=""
-          methods={methods}
-          type="single"
-          useHookForm
-        />
-        {/* <input ref={methods.register} name="taskRef.name" /> */}
+        <ResourceListDropdown name="taskRef.name" type="single" resourceList={taskList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} useHookForm />
       </Section>
       {selectedTask != '' ? (
         <>
@@ -254,7 +263,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         </div>
       </Section>
       <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_14')} id="serviceaccount" description={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_16')} isRequired={true}>
-        <ResourceDropdown name="spec.serviceAccountName" methods={methods} placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_15')} resources={[{ kind: ServiceAccountModel.kind, namespace: namespace, prop: 'serviceaccount' }]} type="single" useHookForm />
+        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_15')} useHookForm />
       </Section>
     </>
   );

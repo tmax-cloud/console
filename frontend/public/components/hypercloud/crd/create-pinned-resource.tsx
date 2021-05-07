@@ -16,7 +16,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind } from '../form';
+import { pluralToKind, isVanillaObject } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -62,9 +62,10 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
     const [template, setTemplate] = React.useState({} as any);
 
     React.useEffect(() => {
-      let type = pluralToKind.get(model.plural)?.['type'] ?? 'CustomResourceDefinition';
+      let kind = pluralToKind(model.plural);
+      const isCustomResourceType = !isVanillaObject(kind);
       let url;
-      if (type === 'CustomResourceDefinition') {
+      if (isCustomResourceType) {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
       } else {
@@ -134,17 +135,14 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
 };
 
 const stateToProps = (state: RootState, props: Omit<CreateDefaultPageProps, 'model'>) => {
-  let plural;
-  let model;
-  let kind;
-  console.log(props.match.params.plural);
-  if (pluralToKind.get(props.match.params.plural)?.['kind'] && modelFor(pluralToKind.get(props.match.params.plural)?.['kind'])) {
-    model = modelFor(pluralToKind.get(props.match.params.plural)['kind']);
-    kind = model.kind;
+  let plural = props.match.params.plural;
+  let kind = pluralToKind(props.match.params.plural);
+  let model = kind && modelFor(kind);
+  // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
+  if (kind && model) {
     plural = referenceForModel(model);
   } else {
-    kind = props.match.params.plural.split('~')[2];
-    plural = props.match.params.plural;
+    kind = plural.split('~')[2];
   }
   return { model: state.k8s.getIn(['RESOURCES', 'models', plural]) || (state.k8s.getIn(['RESOURCES', 'models', kind]) as K8sKind), activePerspective: getActivePerspective(state) };
 };

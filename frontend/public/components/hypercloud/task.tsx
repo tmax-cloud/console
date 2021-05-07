@@ -15,13 +15,7 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 
 const kind = TaskModel.kind;
 
-const tableColumnClasses = [
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-sm-4', 'hidden-xs'),
-  Kebab.columnClass,
-];
-
+const tableColumnClasses = [classNames('col-xs-6', 'col-sm-4'), classNames('col-xs-6', 'col-sm-4'), classNames('col-sm-4', 'hidden-xs'), Kebab.columnClass];
 
 const TaskTableHeader = (t?: TFunction) => {
   return [
@@ -52,7 +46,6 @@ const TaskTableHeader = (t?: TFunction) => {
 
 TaskTableHeader.displayName = 'TaskTableHeader';
 
-
 const TaskTableRow: RowFunction<K8sResourceKind> = ({ obj: task, index, key, style }) => {
   return (
     <TableRow id={task.metadata.uid} index={index} trKey={key} style={style}>
@@ -72,7 +65,6 @@ const TaskTableRow: RowFunction<K8sResourceKind> = ({ obj: task, index, key, sty
   );
 };
 
-
 const TaskDetails: React.FC<TaskDetailsProps> = ({ obj: task }) => {
   const { t } = useTranslation();
 
@@ -88,31 +80,22 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({ obj: task }) => {
       </div>
     </>
   );
-}
+};
 
-
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const Tasks: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Tasks" Header={TaskTableHeader.bind(null, t)} Row={TaskTableRow} virtualize />;
-}
-
+};
 
 export const TasksPage: React.FC<TasksPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_57')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_57') })}
-    canCreate={true}
-    ListComponent={Tasks}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_57')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_57') })} canCreate={true} ListComponent={Tasks} kind={kind} {...props} />;
+};
 
-export const TasksDetailsPage: React.FC<TasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskDetails)), editYaml()]} />;
+export const TasksDetailsPage: React.FC<TasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskDetails)), editResource()]} />;
 
 type TasksPageProps = {
   showTitle?: boolean;
