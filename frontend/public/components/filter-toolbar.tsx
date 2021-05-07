@@ -228,7 +228,6 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
   }, []);
 
   React.useEffect(() => {
-    console.log(defaultSelectedRows);
     if (_.isEmpty(selectedRowFilters) && storeSelectedRows.size > 0) {
       applyRowFilter(Array.from(storeSelectedRows));
       setQueryParameters(Array.from(storeSelectedRows));

@@ -438,7 +438,7 @@ export const PodsPage = connect<{}, PodPagePropsFromDispatch, PodPageProps>(
       ListComponent={PodList}
       rowFilters={[
         {
-          filterGroupName: 'Status',
+          filterGroupName: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           type: 'pod-status',
           reducer: podPhaseFilterReducer,
           items: [
