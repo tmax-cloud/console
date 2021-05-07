@@ -22,7 +22,7 @@ const InferenceServicePhase = instance => {
   let phase = '';
   if (instance.status) {
     instance.status.conditions.forEach(cur => {
-      if (cur.type === 'ready') {
+      if (cur.type === 'Ready') {
         if (cur.status === 'True') {
           phase = 'Ready';
         } else {
@@ -84,6 +84,7 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
 InferenceServiceTableHeader.displayName = 'InferenceServiceTableHeader';
 
 const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, index, key, style }) => {
+  const phase = InferenceServicePhase(isvc);
   const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
   let framework;
   Object.keys(isvc.spec.predictor).forEach(curPredictor => {
@@ -102,7 +103,7 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={isvc.metadata.namespace} title={isvc.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{isvc.status.conditions.length ? isvc.status.conditions[isvc.status.conditions.length - 1].status : ''}</TableData>
+      <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
       <TableData className={tableColumnClasses[3]}>{framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{isvc.status.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'Y' : 'N'}</TableData>
@@ -118,9 +119,8 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
 
 export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
-
-  const readyCondition = ds.status.conditions.find(obj => _.lowerCase(obj.type) === 'ready');
-  const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
+  
+  //const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
   const phase = InferenceServicePhase(ds);
 
   const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
@@ -132,24 +132,21 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
   });
 
   return (
-    <dl className="co-m-pane__details">
-      <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_109')}`} obj={ds} path="status.transitionTime">
-        {time}
-      </DetailsItem>
+    <dl className="co-m-pane__details">      
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:STORAGEURI')}`} obj={ds} path="spec.predictor[framework]?.storageUri">
-        {ds.spec.predictor[framework]?.storageUri}
+      <DetailsItem label={`${t('COMMON:INFERENCEURL')}`} obj={ds} path="status.url">
+        {ds.status.url}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">        
-      <Status status={phase} />
-        </DetailsItem>
+        {ds.spec.predictor}
+      </DetailsItem>
       <DetailsItem label={`${t('COMMON:TRANSFOMER')}`} obj={ds} path="spec.transformer">
-      <Status status={phase} />
-        </DetailsItem>
+        {(ds.spec.transformer) ? 'Y' : 'N'}
+      </DetailsItem>
       <DetailsItem label={`${t('COMMON:EXPLAINER')}`} obj={ds} path="spec.explainer">
-        <Status status={phase} />
+        {(ds.spec.explainer) ? 'Y' : 'N'}
       </DetailsItem>      
     </dl>
   );
