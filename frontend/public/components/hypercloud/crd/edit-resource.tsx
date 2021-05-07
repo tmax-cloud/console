@@ -15,7 +15,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isCustomrResource, isCreateManual } from '../form';
+import { pluralToKind, isVanilaObject, isCreateManual } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -53,7 +53,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 
     React.useEffect(() => {
       let kind = pluralToKind.get(model.plural);
-      const isCustomrResourceType = isCustomrResource.has(kind);
+      const isCustomrResourceType = !isVanilaObject.has(kind);
       let url;
       if (isCustomrResourceType) {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
@@ -116,8 +116,12 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 };
 
 const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model'>) => {
-  let plural = props.match.params.plural;
-  let kind = pluralToKind.get(props.match.params.plural);
+  let {
+    obj: { spec },
+    match,
+  } = props;
+  let plural = match.params.plural === 'customresourcedefinitions' ? spec.group + '~' + spec.version + '~' + spec.names.kind : match.params.plural;
+  let kind = pluralToKind.get(plural);
   let model = kind && modelFor(kind);
   // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
   if (kind && model) {
@@ -125,7 +129,7 @@ const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model
   } else {
     kind = plural.split('~')[2];
   }
-  return { model: state.k8s.getIn(['RESOURCES', 'models', plural]) || (state.k8s.getIn(['RESOURCES', 'models', kind]) as K8sKind), activePerspective: getActivePerspective(state) };
+  return { model: (state.k8s.getIn(['RESOURCES', 'models', kind]) as K8sKind) || state.k8s.getIn(['RESOURCES', 'models', plural]), activePerspective: getActivePerspective(state) };
 };
 
 export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProps) => {
@@ -145,14 +149,14 @@ export type EditDefaultProps = {
   initialEditorType: EditorType;
   loaded: boolean;
   loadError?: any;
-  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  match: RouterMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
   obj?: K8sResourceKind;
   create: boolean;
 };
 
 export type EditDefaultPageProps = {
-  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  match: RouterMatch<{ name: string; appName: string; ns: string; plural: K8sResourceKindReference }>;
   model: K8sKind;
   obj?: K8sResourceKind;
 };
