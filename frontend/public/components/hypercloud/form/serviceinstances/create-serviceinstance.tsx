@@ -5,8 +5,8 @@ import { match as RMatch } from 'react-router';
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { /*ActionGroup,*/ Button, Wizard } from '@patternfly/react-core';
 import { AngleUpIcon, AngleDownIcon } from '@patternfly/react-icons';
-import { ServiceInstanceModel, ServicePlanModel, ClusterServicePlanModel } from '../../../../models';
-import { k8sCreate, k8sList, K8sResourceKind, referenceFor, /*k8sCreate, referenceFor, modelFor*/ } from '../../../../module/k8s';
+import { ServiceInstanceModel, ServicePlanModel, ClusterServicePlanModel, ClusterServiceClassModel, ServiceClassModel } from '../../../../models';
+import { k8sCreate, k8sGet, k8sList, K8sResourceKind, referenceFor, /*k8sCreate, referenceFor, modelFor*/ } from '../../../../module/k8s';
 import { Section } from '../../utils/section';
 import { history, /*resourceObjPath, ButtonBar, */LoadingInline, ResourceIcon, resourceObjPath, SelectorInput } from '../../../utils';
 import { TextInput } from '../../utils/text-input';
@@ -119,22 +119,27 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
 
 export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ match: { params }, location: { search }, kind }) => {
   const [loaded, setLoaded] = React.useState(false);
+  const [serviceClass, setServiceClass] = React.useState<K8sResourceKind>();
   const [servicePlanList, setServicePlanList] = React.useState([]);
   const [selectedPlan, setSelectedPlan] = React.useState(0);
   const [data, setData] = React.useState<K8sResourceKind>();
 
-  const { namespace, serviceClass, isClusterServiceClass } = React.useMemo(() => {
+  const { namespace, serviceClassName, isClusterServiceClass } = React.useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
     const isClusterServiceClass = searchParams.has('cluster-service-class');
-    const serviceClass = isClusterServiceClass ? searchParams.get('cluster-service-class') : searchParams.get('service-class');
-    return { namespace: params.ns, serviceClass, isClusterServiceClass };
+    const serviceClassName = isClusterServiceClass ? searchParams.get('cluster-service-class') : searchParams.get('service-class');
+    k8sGet(isClusterServiceClass ? ClusterServiceClassModel : ServiceClassModel, serviceClassName, !isClusterServiceClass && namespace)
+      .then(res =>{
+        setServiceClass(res);
+      });
+    return { namespace: params.ns, serviceClassName, isClusterServiceClass };
   }, []);
 
   React.useEffect(() => {
     k8sList(isClusterServiceClass ? ClusterServicePlanModel : ServicePlanModel, !isClusterServiceClass ? { ns: namespace } : {})
       .then(plans => {
         setServicePlanList(plans.filter(plan => {
-          return isClusterServiceClass ? plan.spec.clusterServiceClassRef.name === serviceClass : plan.spec.serviceClassRef.name === serviceClass;
+          return isClusterServiceClass ? plan.spec.clusterServiceClassRef.name === serviceClassName : plan.spec.serviceClassRef.name === serviceClassName;
         }));
         setLoaded(true);
       });
@@ -191,7 +196,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
               let apiVersion = `${ServiceInstanceModel.apiGroup}/${ServiceInstanceModel.apiVersion}`;
               let labels = SelectorInput.objectify(submitData.metadata.labels);
-              let spec = { [isClusterServiceClass ? 'clusterServicePlanExternalName' : 'servicePlanExternalName']: servicePlanList[selectedPlan].spec.externalName, [isClusterServiceClass ? 'clusterServiceClassExternalName' : 'serviceClassExternalName']: serviceClass }
+              let spec = { [isClusterServiceClass ? 'clusterServicePlanExternalName' : 'servicePlanExternalName']: servicePlanList[selectedPlan].spec.externalName, [isClusterServiceClass ? 'clusterServiceClassExternalName' : 'serviceClassExternalName']: serviceClass.spec.externalName }
 
               delete submitData.metadata.labels;
 

@@ -98,8 +98,8 @@ type ServiceInstanceDetailsProps = {
   match?: any;
 };
 
-const { details, editResource } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} pages={[details(ServiceInstanceDetails), editResource()]} />;
+const { details, editYaml } = navFactory;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} pages={[details(ServiceInstanceDetails), editYaml()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [
