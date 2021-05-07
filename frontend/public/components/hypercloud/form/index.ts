@@ -86,6 +86,7 @@ const pluralToKindMap = new Map([
   ['tfjobs', 'TFJob'],
   ['pytorchjobs', 'PyTorchJob'],
   ['inferenceservices', 'InferenceService'],
+  ['trainedmodels', 'TrainedModel'],
   ['workflowtemplates', 'WorkflowTemplate'],
   ['workflows', 'Workflow'],
   ['tfapplyclaims', 'TFApplyClaim'],

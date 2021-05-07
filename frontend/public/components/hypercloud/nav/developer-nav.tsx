@@ -51,6 +51,7 @@ const DeveloperNav = () => (
           <ResourceNSLink resource="experiments" name="Experiment" />
           <ResourceNSLink resource="trainingjobs" name={t('COMMON:MSG_LNB_MENU_68')} />
           <ResourceNSLink resource="inferenceservices" name={t('COMMON:MSG_LNB_MENU_192')} />
+          <ResourceNSLink resource="trainedmodels" name="Trained Model" />
           <ResourceNSLink resource="workflowtemplates" name={t('COMMON:MSG_LNB_MENU_69')} />
           <ResourceNSLink resource="workflows" name={t('COMMON:MSG_LNB_MENU_70')} />
         </NavSection>
