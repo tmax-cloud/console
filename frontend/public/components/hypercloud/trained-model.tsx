@@ -84,13 +84,8 @@ const TrainedModelTableHeader = (t?: TFunction) => {
 TrainedModelTableHeader.displayName = 'TrainedModelTableHeader';
 
 const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, key, style }) => {
-  const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
-  let framework;
-  Object.keys(tm.spec.predictor).forEach(curPredictor => {
-    if (frameworkList.some(curFramework => curFramework === curPredictor)) {
-      framework = curPredictor;
-    }
-  });
+  const phase = TrainedModelPhase(tm);
+
   return (
     <TableRow id={tm.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -99,11 +94,10 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={tm.metadata.namespace} title={tm.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{tm.status.conditions.length ? tm.status.conditions[tm.status.conditions.length - 1].status : ''}</TableData>
-      <TableData className={tableColumnClasses[3]}>{framework}</TableData>
+      <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
+      <TableData className={tableColumnClasses[3]}>{tm.spec.model.framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{tm.status.url}</TableData>
-      <TableData className={tableColumnClasses[5]}>{tm.spec.predictor[framework]?.storageUri}</TableData>
-      
+      <TableData className={tableColumnClasses[5]}>{tm.spec.model.storageUri}</TableData>      
       <TableData className={tableColumnClasses[6]}>{tm.metadata.creationTimestamp}</TableData>
       <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={tm} />
@@ -122,7 +116,7 @@ export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = (
         <Status status={phase} />
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:INFERENCESERVICE')}`} obj={ds} path="spec.inferenceService">
-        {ds.spec.inferenceService}
+        <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />        
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:FRAMEWORK')}`} obj={ds} path="spec.model.framework">
         {ds.spec.model.framework}
