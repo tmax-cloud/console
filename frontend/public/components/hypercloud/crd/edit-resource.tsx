@@ -115,12 +115,21 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
   }
 };
 
+// edit탭에 경우 customresourcedefinitions 경로일 경우 url params에 plural 값이 의도한 것과 다르게 들어옴.
+const getMatchedPlural = (type, spec, match) => {
+  if (type === 'customresourcedefinitions') {
+    return spec.group + '~' + spec.version + '~' + spec.names.kind;
+  } else {
+    return match.params.plural;
+  }
+};
+
 const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model'>) => {
   let {
     obj: { spec },
     match,
   } = props;
-  let plural = match.params.plural === 'customresourcedefinitions' ? spec.group + '~' + spec.version + '~' + spec.names.kind : match.params.plural;
+  let plural = getMatchedPlural(match.params.plural, spec, match);
   let kind = pluralToKind.get(plural);
   let model = kind && modelFor(kind);
   // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
