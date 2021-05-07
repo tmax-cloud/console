@@ -11,7 +11,7 @@ import { RadioInput } from '../radio';
 import { CreatePVCForm } from './create-pvc';
 import { PersistentVolumeClaimModel } from '../../models';
 import { ContainerSelector } from '../container-selector';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 const PVCDropdown: React.FC<PVCDropdownProps> = props => {
   const { t } = useTranslation();
@@ -189,6 +189,13 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
     );
   };
 
+  const ButtonTextComponent = () => (
+    <Button type="button" onClick={handleSelectContainers} variant="link" isInline>
+      {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_13_text')}
+    </Button>
+  );
+  const buttonString = <ButtonTextComponent key="buttonstring" />;
+
   const title = t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_1');
   return (
     <div className="co-m-pane__body">
@@ -247,11 +254,7 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
         </div>
         {!useContainerSelector && (
           <p>
-            The volume will be mounted into all containers. You can{' '}
-            <Button type="button" onClick={handleSelectContainers} variant="link" isInline>
-              select specific containers
-            </Button>{' '}
-            instead.
+            <Trans i18nKey="SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_13">{[buttonString]}</Trans>
           </p>
         )}
         {useContainerSelector && (
