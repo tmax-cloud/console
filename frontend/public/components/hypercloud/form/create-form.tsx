@@ -13,7 +13,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
   const FormComponent: React.FC<CommonFormProps_> = props => {
     const methods = useForm({ defaultValues: defaultValues });
 
-    const kind = pluralToKind.get(params.plural);
+    const kind = pluralToKind(params.plural);
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     const title = `${props.titleVerb} ${kind || 'Sample'}`;
 

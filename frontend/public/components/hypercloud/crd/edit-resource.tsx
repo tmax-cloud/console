@@ -15,7 +15,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isVanilaObject, isCreateManual } from '../form';
+import { pluralToKind, isVanillaObject, isCreateManual } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -52,10 +52,10 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
     const [template, setTemplate] = React.useState({} as any);
 
     React.useEffect(() => {
-      let kind = pluralToKind.get(model.plural);
-      const isCustomrResourceType = !isVanilaObject.has(kind);
+      let kind = pluralToKind(model.plural);
+      const isCustomResourceType = !isVanillaObject(kind);
       let url;
-      if (isCustomrResourceType) {
+      if (isCustomResourceType) {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
       } else {
@@ -130,7 +130,7 @@ const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model
     match,
   } = props;
   let plural = getMatchedPlural(match.params.plural, spec, match);
-  let kind = pluralToKind.get(plural);
+  let kind = pluralToKind(plural);
   let model = kind && modelFor(kind);
   // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
   if (kind && model) {
@@ -142,13 +142,13 @@ const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model
 };
 
 export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProps) => {
-  const { kind } = props.model;
+  const { kind, plural } = props.model;
   return (
     <>
       <Helmet>
         <title>{`Edit ${kind}`}</title>
       </Helmet>
-      {isCreateManual.has(kind) ? <AsyncComponent loader={() => import('../../edit-yaml').then(c => c.EditYAML)} obj={props.obj} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
+      {isCreateManual(kind) ? <AsyncComponent loader={() => import(`../form/${plural}/create-${kind.toLowerCase()}` /* webpackChunkName: "create-secret" */).then(m => m[`Create${kind}`])} obj={props.obj} match={props.match} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
     </>
   );
 });

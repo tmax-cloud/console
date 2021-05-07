@@ -84,8 +84,8 @@ const DefaultPage = connect((state: RootState) => ({
 
 const LazyRoute = props => {
   const plural = props.computedMatch.params.plural;
-  const kind = pluralToKind.get(plural);
-  const isManual = isCreateManual.has(kind);
+  const kind = pluralToKind(plural);
+  const isManual = isCreateManual(kind);
   const url = props.computedMatch.url;
   let loader = props.loader;
   // 생성페이지 분기
