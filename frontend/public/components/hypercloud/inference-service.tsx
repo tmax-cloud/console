@@ -140,7 +140,7 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
         {ds.status.url}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">        
-        {ds.spec.predictor}
+        {framework}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:TRANSFOMER')}`} obj={ds} path="spec.transformer">
         {(ds.spec.transformer) ? 'Y' : 'N'}
@@ -168,27 +168,53 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
 
 const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: isvc }) => {
   const { t } = useTranslation();
-  return (
-    <>
-      <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
-        <div className="row">
-          <div className="col-lg-6">
-            <ResourceSummary resource={isvc} />
-          </div>
-          <div className="col-lg-6">
-            <InferenceServiceDetailsList ds={isvc} />
+  const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+  let framework;
+  Object.keys(isvc.spec.predictor).forEach(curPredictor => {
+    if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+      framework = curPredictor;
+    }
+  });
+  if (isvc.spec.predictor[framework]?.storageUri) {
+    return (
+      <>
+        <div className="co-m-pane__body">
+          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
+          <div className="row">
+            <div className="col-lg-6">
+              <ResourceSummary resource={isvc} />
+            </div>
+            <div className="col-lg-6">
+              <InferenceServiceDetailsList ds={isvc} />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="co-m-pane__body">
-        <SectionHeading text="Models" />
-        <div className="row">
-          
+        <div className="co-m-pane__body">          
+            <SectionHeading text="Models" />
+            <div className="row">
+
+            </div>          
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
+  else {
+    return (
+      <>
+        <div className="co-m-pane__body">
+          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
+          <div className="row">
+            <div className="col-lg-6">
+              <ResourceSummary resource={isvc} />
+            </div>
+            <div className="col-lg-6">
+              <InferenceServiceDetailsList ds={isvc} />
+            </div>
+          </div>
+        </div>        
+      </>
+    );
+  }  
 };
 //<Table aria-label="InferenceServices" Header={ModelTableHeader.bind(null, t)} Row={ModelTableRow} virtualize />
 const { details, editYaml } = navFactory;
