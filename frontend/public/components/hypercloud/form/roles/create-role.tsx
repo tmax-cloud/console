@@ -118,7 +118,13 @@ const RuleItem = (props) => {
 };
 
 const ruleItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
-  const onDeleteClick = () => ListActions.remove(index);
+  const onDeleteClick = () => {
+    const values = _.get(ListActions.getValues(), name);
+    if (!!values && values.length > 1) {
+      ListActions.remove(index);
+    }
+  }
+
 
   return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} />
 };
