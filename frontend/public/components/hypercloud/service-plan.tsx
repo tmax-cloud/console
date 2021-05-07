@@ -179,7 +179,9 @@ type ServicePlansListProps = {
   setSidebarDetails: any;
   setSidebarTitle: any;
 };
-type ServicePlansPageProps = {};
+type ServicePlansPageProps = {
+  selector?: any;
+};
 
 type ServicePlansDetailsPageProps = {
   match: any;

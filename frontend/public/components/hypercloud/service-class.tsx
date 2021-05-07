@@ -43,10 +43,22 @@ type ServiceClassDetailsProps = {
   obj: K8sResourceKind;
 };
 
+const ServicePlansTab: React.FC<ServicePlansTabProps> = ({ obj }) => {
+  const serviceClassRef = obj.spec?.externalMetadata?.serviceClassRefName;
+
+  const selector = {
+    matchLabels: {
+      'servicecatalog.k8s.io/spec.serviceClassRef.name': serviceClassRef,
+    },
+  };
+
+  return <ServicePlansPage selector={selector} />;
+};
+
 const { details, editResource } = navFactory;
 const ServiceClassesDetailsPage: React.FC<ServiceClassesDetailsPageProps> = props => {
   const { t } = useTranslation();
-  return <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editResource(), { href: 'serviceplans', name: t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1'), component: ServicePlansPage }]} />;
+  return <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editResource(), { href: 'serviceplans', name: t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1'), component: ServicePlansTab }]} />;
 };
 ServiceClassesDetailsPage.displayName = 'ServiceClassesDetailsPage';
 
@@ -140,4 +152,8 @@ type ServiceClassesPageProps = {};
 
 type ServiceClassesDetailsPageProps = {
   match: any;
+};
+
+type ServicePlansTabProps = {
+  obj: K8sResourceKind;
 };
