@@ -14,8 +14,6 @@ const { common } = Kebab.factory;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-export const menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
-
 const kind = 'NamespaceClaim';
 
 const NamespaceClaimTableHeader = (t?: TFunction) => {
@@ -58,7 +56,16 @@ const NamespaceClaimTableHeader = (t?: TFunction) => {
 };
 NamespaceClaimTableHeader.displayName = 'NamespaceClaimTableHeader';
 
+const unmodifiableStatus = new Set(['Approved', 'Namespace Deleted']);
+const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
 const NamespaceClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: namespaceclaims, index, key, style }) => {
+  let menuActions: any[];
+
+  if (isUnmodifiable(namespaceclaims?.status?.status)) {
+    menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common];
+  } else {
+    menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
+  }
   return (
     <TableRow id={namespaceclaims.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -154,7 +161,17 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
 NamespaceClaimsDetails.displayName = 'NamespaceClaimsDetails';
 
 const { details, editResource } = navFactory;
-export const NamespaceClaimsDetailsPage: React.FC<NamespaceClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} pages={[details(NamespaceClaimsDetails), editResource()]} />;
+export const NamespaceClaimsDetailsPage: React.FC<NamespaceClaimsDetailsPageProps> = props => {
+  let menuActions: any[];
+  const [status, setStatus] = React.useState();
+
+  if (isUnmodifiable(status)) {
+    menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common];
+  } else {
+    menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
+  }
+  return <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} setStatus4MenuActions={setStatus} pages={[details(NamespaceClaimsDetails), editResource()]} />;
+};
 NamespaceClaimsDetailsPage.displayName = 'NamespaceClaimsDetailsPage';
 
 type NamespaceClaimDetailsProps = {

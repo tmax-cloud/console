@@ -4,23 +4,8 @@ import * as _ from 'lodash-es';
 import { getBadgeFromType } from '@console/shared';
 import { useExtensions, ResourceTabPage, isResourceTabPage } from '@console/plugin-sdk';
 import { withFallback } from '@console/shared/src/components/error/error-boundary';
-import {
-  Firehose,
-  HorizontalNav,
-  PageHeading,
-  FirehoseResource,
-  KebabOptionsCreator,
-  Page,
-  AsyncComponent,
-  PageComponentProps,
-} from '../utils';
-import {
-  K8sResourceKindReference,
-  K8sResourceKind,
-  K8sKind,
-  referenceForModel,
-  referenceFor,
-} from '../../module/k8s';
+import { Firehose, HorizontalNav, PageHeading, FirehoseResource, KebabOptionsCreator, Page, AsyncComponent, PageComponentProps } from '../utils';
+import { K8sResourceKindReference, K8sResourceKind, K8sKind, referenceForModel, referenceFor } from '../../module/k8s';
 import { ErrorBoundaryFallback } from '../error';
 import { breadcrumbsForDetailsPage } from '../utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
@@ -28,24 +13,18 @@ import { useTranslation } from 'react-i18next';
 export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...props }) => {
   const resourceKeys = _.map(props.resources, 'prop');
 
-  const renderAsyncComponent = (page: ResourceTabPage, cProps: PageComponentProps) => (
-    <AsyncComponent loader={page.properties.loader} {...cProps} />
-  );
+  const renderAsyncComponent = (page: ResourceTabPage, cProps: PageComponentProps) => <AsyncComponent loader={page.properties.loader} {...cProps} />;
 
   const resourcePageExtensions = useExtensions<ResourceTabPage>(isResourceTabPage);
 
   const pluginPages = React.useMemo(
     () =>
       resourcePageExtensions
-        .filter(
-          (p) =>
-            referenceForModel(p.properties.model) ===
-            (props.kindObj ? referenceFor(props.kindObj) : props.kind),
-        )
-        .map((p) => ({
+        .filter(p => referenceForModel(p.properties.model) === (props.kindObj ? referenceFor(props.kindObj) : props.kind))
+        .map(p => ({
           href: p.properties.href,
           name: p.properties.name,
-          component: (cProps) => renderAsyncComponent(p, cProps),
+          component: cProps => renderAsyncComponent(p, cProps),
         })),
     [resourcePageExtensions, props],
   );
@@ -74,11 +53,7 @@ export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...prop
         menuActions={props.menuActions}
         buttonActions={props.buttonActions}
         kind={props.customKind || props.kind}
-        breadcrumbsFor={
-          props.breadcrumbsFor
-            ? props.breadcrumbsFor
-            : breadcrumbsForDetailsPage.bind(null, props.kindObj, props.match, t)()
-        }
+        breadcrumbsFor={props.breadcrumbsFor ? props.breadcrumbsFor : breadcrumbsForDetailsPage.bind(null, props.kindObj, props.match, t)()}
         resourceKeys={resourceKeys}
         getResourceStatus={props.getResourceStatus}
         customData={props.customData}
@@ -87,15 +62,7 @@ export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...prop
       >
         {props.children}
       </PageHeading>
-      <HorizontalNav
-        pages={allPages}
-        pagesFor={props.pagesFor}
-        className={`co-m-${_.get(props.kind, 'kind', props.kind)}`}
-        match={props.match}
-        label={props.label || (props.kind as any).label}
-        resourceKeys={resourceKeys}
-        customData={props.customData}
-      />
+      <HorizontalNav pages={allPages} pagesFor={props.pagesFor} className={`co-m-${_.get(props.kind, 'kind', props.kind)}`} match={props.match} label={props.label || (props.kind as any).label} resourceKeys={resourceKeys} customData={props.customData} setStatus4MenuActions={props.setStatus4MenuActions} />
     </Firehose>
   );
 }, ErrorBoundaryFallback);
@@ -121,6 +88,7 @@ export type DetailsPageProps = {
   getResourceStatus?: (resource: K8sResourceKind) => string;
   children?: React.ReactNode;
   customKind?: string;
+  setStatus4MenuActions?: any;
 };
 
 DetailsPage.displayName = 'DetailsPage';
