@@ -47,14 +47,13 @@ const roleFormFactory = params => {
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
 };
 const RuleItem = (props) => {
-  const { item, name, index, onDeleteClick } = props;
+  const { item, name, index, onDeleteClick, methods } = props;
 
   const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ '*': 'All' });
-  const { control } = useFormContext();
-  const apiGroup = useWatch({
+  const { control, register } = methods;
+  const apiGroup = useWatch<string>({
     control: control,
     name: `${name}[${index}].apiGroup`,
-    defaultValue: '*',
   });
 
   React.useEffect(() => {
@@ -86,18 +85,22 @@ const RuleItem = (props) => {
             <Dropdown
               name={`${name}[${index}].apiGroup`}
               items={apiGroupList}
-              defaultValue={apiGroup}
+              defaultValue={item.apiGroup}
+              methods={methods}
+              {...register(`${name}[${index}].apiGroup`)}
             />
           </Section>
           <Section label='Resource' id={`resource[${index}]`} isRequired={true}>
             <Dropdown
               name={`${name}[${index}].resource`}
               items={resourceList}
-              defaultValue='*'
+              defaultValue={item.resource}
+              methods={methods}
+              {...register(`${name}[${index}].resource`)}
             />
           </Section>
           <Section label='Verb' id={`verb[${index}]`} isRequired={true}>
-            <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={['*']} />
+            <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...register(`${name}[${index}].verbs`)} />
           </Section>
         </div>
         <div className="col-xs-1 pairs-list__action">
@@ -117,7 +120,7 @@ const RuleItem = (props) => {
   );
 };
 
-const ruleItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
+const ruleItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
   const onDeleteClick = () => {
     const values = _.get(ListActions.getValues(), name);
     if (!!values && values.length > 1) {
@@ -125,8 +128,7 @@ const ruleItemRenderer = (register, name, item, index, ListActions, ListDefaultI
     }
   }
 
-
-  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} />
+  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} methods={methods} />
 };
 
 const CreateRoleComponent: React.FC<RoleFormProps> = props => {
@@ -144,10 +146,10 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       });
   }, [])
 
-  const { control } = useFormContext();
+  const methods = useFormContext();
 
   const kindToggle = useWatch({
-    control: control,
+    control: methods.control,
     name: 'kind',
     defaultValue: 'Role',
   });
@@ -169,7 +171,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       <div className='co-form-section__separator' />
 
       <Section label='롤 이름' id='name' isRequired={true}>
-        <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue='role-example' />
+        <TextInput inputClassName='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue='role-example' />
       </Section>
 
       {kindToggle === "Role" &&
@@ -187,7 +189,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ?
         <Section id='rules' isRequired={true}>
-          <ListView name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: '*', resource: '*', verbs: ['*'] }} defaultValues={[{ apiGroup: '*', resource: '*', verbs: ['*'] }]}/>
+          <ListView methods={methods} name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: '*', resource: '*', verbs: ['*'] }} defaultValues={[{ apiGroup: '*', resource: '*', verbs: ['*'] }]} />
         </Section>
         : <LoadingInline />}
     </>
@@ -206,7 +208,7 @@ export const onSubmitCallback = data => {
   let rules = data.rules.map((rule) => ({
     apiGroups: rule.apiGroup === 'Core' ? [''] : [rule.apiGroup ?? '*'],
     resources: [rule.resource ?? '*'],
-    verbs : rule.verbs ?? ['*']
+    verbs: rule.verbs ?? ['*']
   }));
 
   delete data.apiVersion;
