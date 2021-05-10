@@ -194,7 +194,7 @@
     "MSG_LNB_MENU_80": "Resource Quotas",
     "MSG_LNB_MENU_81": "Limit Ranges",
     "MSG_LNB_MENU_82": "Custom Resource Definitions",
-    "MSG_LNB_MENU_83": "Menu Settings",    
+    "MSG_LNB_MENU_83": "Menu Settings",
     "MSG_NNB__1": "Select Namespace...",
     "MSG_MAIN_CREATEBUTTON_1": "Create {{0}}",
     "MSG_MAIN_ACTIONBUTTON_1": "Actions",
@@ -1165,7 +1165,9 @@
     "MSG_DETAILS_TABTERMINAL_9": "Expand",
     "MSG_DETAILS_TABTERMINAL_10": "Collapse",
     "MSG_DETAILS_TABTERMINAL_11": "Resume stream and show {{0}} new lines",
-    "GitLab": "Managed GitLab"
+    "GitLab": "Managed GitLab",
+    "MSG_DETAILS_TABSERVICEPLANS_TABLEHEADER_5": "External Name",
+    "MSG_DETAILS_TABDETAILS_67": "External Name"
   },
   "SINGLE": {
     "MSG_SEARCH_MAIN_NORESOURCES_1": "No resources selected",
