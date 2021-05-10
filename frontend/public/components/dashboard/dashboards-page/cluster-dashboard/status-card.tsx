@@ -3,26 +3,16 @@ import * as _ from 'lodash-es';
 import { connect } from 'react-redux';
 import { Map as ImmutableMap } from 'immutable';
 import { useExtensions, DashboardsOverviewHealthSubsystem, DashboardsOverviewHealthPrometheusSubsystem, isDashboardsOverviewHealthSubsystem, isDashboardsOverviewHealthURLSubsystem, DashboardsOverviewHealthURLSubsystem, isDashboardsOverviewHealthPrometheusSubsystem, isDashboardsOverviewHealthResourceSubsystem, isDashboardsOverviewHealthOperator } from '@console/plugin-sdk';
-import { ArrowCircleUpIcon } from '@patternfly/react-icons';
-import { Gallery, GalleryItem, Button } from '@patternfly/react-core';
-import { FLAGS, getInfrastructurePlatform } from '@console/shared';
+import { Gallery, GalleryItem } from '@patternfly/react-core';
+import { getInfrastructurePlatform } from '@console/shared';
 import DashboardCard from '@console/shared/src/components/dashboard/dashboard-card/DashboardCard';
 import DashboardCardBody from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardBody';
 import DashboardCardHeader from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardHeader';
-import DashboardCardLink from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardLink';
 import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardTitle';
-import AlertsBody from '@console/shared/src/components/dashboard/status-card/AlertsBody';
 import HealthBody from '@console/shared/src/components/dashboard/status-card/HealthBody';
-import { withDashboardResources } from '../../with-dashboard-resources';
-import AlertItem, { StatusItem } from '@console/shared/src/components/dashboard/status-card/AlertItem';
-import { alertURL } from '../../../monitoring';
-import { ClusterVersionKind, referenceForModel, hasAvailableUpdates, K8sKind } from '../../../../module/k8s';
-import { ClusterVersionModel } from '../../../../models';
-import { clusterUpdateModal } from '../../../modals/cluster-update-modal';
+import { K8sKind } from '../../../../module/k8s';
 import { RootState } from '../../../../redux';
 import { OperatorHealthItem, PrometheusHealthItem, URLHealthItem, ResourceHealthItem } from './health-item';
-import { WatchK8sResource, useK8sWatchResource } from '../../../utils/k8s-watch-hook';
-import { useFlag } from '@console/shared/src/hooks/flag';
 import { ClusterDashboardContext } from './context';
 import { useTranslation } from 'react-i18next';
 
@@ -34,13 +24,6 @@ const filterSubsystems = (subsystems: DashboardsOverviewHealthSubsystem[], k8sMo
     }
     return true;
   });
-
-const cvResource: WatchK8sResource = {
-  kind: referenceForModel(ClusterVersionModel),
-  namespaced: false,
-  name: 'version',
-  isList: false,
-};
 
 const mapStateToProps = (state: RootState) => ({
   k8sModels: state.k8s.getIn(['RESOURCES', 'models']),
