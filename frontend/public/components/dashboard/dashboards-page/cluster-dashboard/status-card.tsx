@@ -42,37 +42,6 @@ const cvResource: WatchK8sResource = {
   isList: false,
 };
 
-const ClusterAlerts = withDashboardResources(({ watchAlerts, stopWatchAlerts, notificationAlerts }) => {
-  const hasCVResource = useFlag(FLAGS.CLUSTER_VERSION);
-  const [cv, cvLoaded] = useK8sWatchResource<ClusterVersionKind>(hasCVResource ? cvResource : ({} as WatchK8sResource));
-  React.useEffect(() => {
-    watchAlerts();
-    return stopWatchAlerts;
-  }, [watchAlerts, stopWatchAlerts]);
-
-  const { data: alerts, loaded: alertsLoaded, loadError: alertsResponseError } = notificationAlerts || {};
-
-  const UpdateIcon = React.useCallback(() => <ArrowCircleUpIcon className="update-pending" />, []);
-
-  const items: React.ReactNode[] = [];
-
-  if (hasCVResource && cvLoaded && hasAvailableUpdates(cv)) {
-    items.push(
-      <StatusItem Icon={UpdateIcon} message="A cluster version update is available">
-        <Button variant="link" onClick={() => clusterUpdateModal({ cv })} isInline>
-          View details
-        </Button>
-      </StatusItem>,
-    );
-  }
-
-  if (alertsLoaded && !_.isEmpty(alerts)) {
-    items.push(...alerts.map(alert => <AlertItem key={alertURL(alert, alert.rule.id)} alert={alert} />));
-  }
-
-  return <AlertsBody error={!_.isEmpty(alertsResponseError)}>{items}</AlertsBody>;
-});
-
 const mapStateToProps = (state: RootState) => ({
   k8sModels: state.k8s.getIn(['RESOURCES', 'models']),
 });
@@ -95,7 +64,7 @@ export const StatusCard = connect<StatusCardProps>(mapStateToProps)(({ k8sModels
       });
     } else if (isDashboardsOverviewHealthPrometheusSubsystem(subsystem)) {
       const { disallowedProviders } = subsystem.properties;
-      const subsystemItem = {...subsystem.properties, title: t('SINGLE:MSG_OVERVIEW_MAIN_CARDSTATUS_CONTROLPLANE_1'), popupTitle: t('SINGLE:MSG_OVERVIEW_MAIN_POPOVERCONTROLPLANE_TITLE_1')};
+      const subsystemItem = { ...subsystem.properties, title: t('SINGLE:MSG_OVERVIEW_MAIN_CARDSTATUS_CONTROLPLANE_1'), popupTitle: t('SINGLE:MSG_OVERVIEW_MAIN_POPOVERCONTROLPLANE_TITLE_1') };
       if (disallowedProviders?.length && (!infrastructureLoaded || disallowedProviders.includes(getInfrastructurePlatform(infrastructure)))) {
         return;
       }
@@ -122,7 +91,6 @@ export const StatusCard = connect<StatusCardProps>(mapStateToProps)(({ k8sModels
     <DashboardCard gradient data-test-id="status-card">
       <DashboardCardHeader>
         <DashboardCardTitle>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDSTATUS_TITLE_1')}</DashboardCardTitle>
-        <DashboardCardLink to="/monitoring/alerts">View alerts</DashboardCardLink>
       </DashboardCardHeader>
       <DashboardCardBody>
         <HealthBody>
@@ -132,7 +100,6 @@ export const StatusCard = connect<StatusCardProps>(mapStateToProps)(({ k8sModels
             })}
           </Gallery>
         </HealthBody>
-        <ClusterAlerts />
       </DashboardCardBody>
     </DashboardCard>
   );
