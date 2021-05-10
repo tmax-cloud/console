@@ -134,10 +134,10 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     </div>
   );
 
-  const listItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const listItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-4 pairs-list__name-field">
-        <input ref={register()} className="pf-c-form-control" name={`metadata.spinnerNumList[${index}].name`} defaultValue={item.name}></input>
+        <input ref={methods.register()} className="pf-c-form-control" name={`metadata.spinnerNumList[${index}].name`} defaultValue={item.name}></input>
       </div>
       <div className="col-xs-4 pairs-list__value-field">
         <NumberSpinner initialValue={item.number} min={-15} max={15} name={`metadata.spinnerNumList[${index}].number`} />
