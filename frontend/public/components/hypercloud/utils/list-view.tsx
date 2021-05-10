@@ -65,7 +65,7 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
     deleteIcon: deleteIcon,
   };
 
-  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(register, name, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
+  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(methods, name, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
 
   return (
     <div>

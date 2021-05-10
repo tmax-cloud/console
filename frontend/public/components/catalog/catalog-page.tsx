@@ -104,7 +104,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
           tags: serviceClass.spec.tags,
           createLabel: 'Create Service Instance',
           // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
-          href: `/k8s/ns/${namespace}/serviceinstances/~new`,
+          href: `/k8s/ns/${namespace}/serviceinstances/~new?service-class=${serviceClass.metadata.name}`,
           supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
           longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
           documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
@@ -116,6 +116,8 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
   }
 
   normalizeClusterServiceClasses(clusterServiceClasses: K8sResourceKind[]) {
+    // TODO : namespace가 없을 경우(all-namespace로 선택된 경우) 일단 default로 namespace설정되게 해놨는데 어떻게 처리할지 정해지면 수정하기
+    const { namespace = 'default' } = this.props;
     return _.reduce(
       clusterServiceClasses,
       (acc, clusterServiceClass) => {
@@ -140,7 +142,7 @@ export class CatalogListPage extends React.Component<CatalogListPageProps, Catal
           tags: clusterServiceClass.spec.tags,
           createLabel: 'Create Service Instance',
           // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
-          href: `/k8s/ns/default/serviceinstances/~new`,
+          href: `/k8s/ns/${namespace}/serviceinstances/~new?cluster-service-class=${clusterServiceClass.metadata.name}`,
           supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
           longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
           documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.documentationUrl'),
@@ -310,6 +312,7 @@ export const Catalog = connectToFlags<CatalogProps>(
   ...plugins.registry.getDevCatalogModels().map(({ properties }) => properties.flag),
 )(props => {
   const { flags, mock, namespace } = props;
+  flags[FLAGS.OPENSHIFT] = false; // MEMO: 임시처리...
   const openshiftFlag = flags[FLAGS.OPENSHIFT];
   const serviceCatalogFlag = flags[FLAGS.SERVICE_CATALOG];
   const [templateMetadata, setTemplateMetadata] = React.useState<K8sResourceCommon>();

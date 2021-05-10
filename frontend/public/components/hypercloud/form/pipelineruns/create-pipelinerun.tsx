@@ -26,7 +26,7 @@ const pipelineRunFormFactory = params => {
   return WithCommonForm(CreatePipelineRunComponent, params, defaultValues);
 };
 
-const paramItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
+const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
   return (
     <div className='row' key={item.id}>
       <div className='col-xs-4 pairs-list__value-field'>

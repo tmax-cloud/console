@@ -23,7 +23,7 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
     });
   }
 
-  const defaultListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const defaultListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
         <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'-c'} />
