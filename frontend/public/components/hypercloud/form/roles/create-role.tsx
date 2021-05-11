@@ -50,7 +50,7 @@ const RuleItem = (props) => {
   const { item, name, index, onDeleteClick, methods } = props;
 
   const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ '*': 'All' });
-  const { control, register } = methods;
+  const { control, register, getValues, setValue } = methods;
   const apiGroup = useWatch<string>({
     control: control,
     name: `${name}[${index}].apiGroup`,
@@ -76,6 +76,18 @@ const RuleItem = (props) => {
     }
   }, [apiGroup]);
 
+  /* MEMO: 컴포넌트 내부적으로는 props/state 변화가 없기 때문에 register, setValue할 타이밍이 없어서 initValue 로직을 여기에 추가함.
+   * useFieldArray item이 변화하면 form에서 다 삭제 후 다시 set하는데(컴포넌트는 다시 그리지 않는 것 같음), input 태그엔 ref를 달면 자체적으로 다시 set해주는 것으로 보임.
+   * Dropdown, CheckboxGroup 에 ref를 달아서 initValue 로직을 대체해주면 좋을 것 같음. */
+  const initValue = (name, defaultValue) => {
+    const isRegistered = _.get(getValues(), name);
+
+    if(!isRegistered){
+      register(name);
+      setValue(name, defaultValue);
+    }
+  }
+
   return (
     <>
       {index === 0 ? null : <div className='co-form-section__separator' />}
@@ -87,7 +99,7 @@ const RuleItem = (props) => {
               items={apiGroupList}
               defaultValue={item.apiGroup}
               methods={methods}
-              {...register(`${name}[${index}].apiGroup`)}
+              {...initValue(`${name}[${index}].apiGroup`, item.apiGroup)}
             />
           </Section>
           <Section label='Resource' id={`resource[${index}]`} isRequired={true}>
@@ -96,11 +108,11 @@ const RuleItem = (props) => {
               items={resourceList}
               defaultValue={item.resource}
               methods={methods}
-              {...register(`${name}[${index}].resource`)}
+              {...initValue(`${name}[${index}].resource`, item.resource)}
             />
           </Section>
           <Section label='Verb' id={`verb[${index}]`} isRequired={true}>
-            <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...register(`${name}[${index}].verbs`)} />
+            <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...initValue(`${name}[${index}].verbs`, item.verbs)} />
           </Section>
         </div>
         <div className="col-xs-1 pairs-list__action">
