@@ -75,12 +75,17 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
 
   React.useEffect(() => {
     if (!_.isEqual(prevItems, props.items)) {
-      setValue(name, defaultValue);
       setItemList(props.items);
+      setValue(name, defaultValue);
       setKeyboardHoverKey(defaultValue);
     }
-  }, [props.items, defaultValue]);
+  }, [props.items]);
 
+  React.useEffect(() => {
+    setValue(name, defaultValue);
+    setKeyboardHoverKey(defaultValue);
+  }, [defaultValue]);
+  
   const dropdownElement = React.useRef<HTMLDivElement>();
   const dropdownList = React.useRef<HTMLUListElement>();
 
@@ -240,7 +245,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
         >
           <span className="pf-c-dropdown__toggle-text">
             {titlePrefix && `${titlePrefix}: `}
-            {_.get(props.items, selectedKey, props.title)}
+            {_.get(props.items, selectedKey ?? defaultValue, props.title)}
           </span>
           <CaretDownIcon className="pf-c-dropdown__toggle-icon" />
         </button>
