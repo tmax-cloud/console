@@ -87,6 +87,7 @@
     "@patternfly/react-virtualized-extension": "1.4.59",
     "@react-keycloak/web": "3.4.0",
     "abort-controller": "3.0.0",
+    "ansi-to-html": "^0.6.14",
     "classnames": "2.x",
     "core-js": "2.x",
     "d3": "^5.9.2",
@@ -150,8 +151,8 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.7",
     "@hookform/devtools": "^2.2.1",
+    "@types/classnames": "^2.2.7",
     "@types/enzyme": "3.10.x",
     "@types/glob": "7.x",
     "@types/immutable": "3.x",

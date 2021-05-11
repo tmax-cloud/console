@@ -39,7 +39,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     }
     return false;
   };
-  const commandListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const commandListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
         <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'/bin/sh'} />
@@ -59,7 +59,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
-  const parameterListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const parameterListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
         <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'-c'} />
@@ -79,7 +79,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
-  const envListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
         <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} placeholder={'키'} />

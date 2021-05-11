@@ -8,6 +8,7 @@ import { Kebab } from './kebab';
 import { LabelList } from './label-list';
 import { OwnerReferences } from './owner-references';
 import { ResourceLink } from './resource-link';
+import { ClusterServicePlanModel } from '../../models';
 import { Selector } from './selector';
 import { Timestamp } from './timestamp';
 import { useAccessReview } from './rbac';
@@ -28,12 +29,22 @@ const getTolerationsPath = (obj: K8sResourceKind): string => {
   return obj.kind === 'Pod' ? 'spec.tolerations' : 'spec.template.spec.tolerations';
 };
 
+const getDescriptionStringKey = (obj: K8sResourceKind): string => {
+  switch (obj.kind) {
+    case ClusterServicePlanModel.kind:
+      return 'COMMON:MSG_DETAILS_TABSERVICEPLANS_DETAILS_SIDEPANEL_14';
+    default:
+      return 'COMMON:MSG_DETAILS_TABDETAILS_10';
+  }
+};
+
 export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, resource, customPathName, customPathId, showName = true, showOwner = true, showID = false, showDescription = false, showPodSelector = false, showNodeSelector = false, showAnnotations = true, showTolerations = false, podSelector = 'spec.selector', nodeSelector = 'spec.template.spec.nodeSelector' }) => {
   const { metadata, type } = resource;
   const reference = referenceFor(resource);
   const model = modelFor(reference);
   const tolerationsPath = getTolerationsPath(resource);
   const tolerations: Toleration[] = _.get(resource, tolerationsPath);
+  const descriptionKey = getDescriptionStringKey(resource);
   const canUpdate = useAccessReview({
     group: model.apiGroup,
     resource: model.plural,
@@ -48,7 +59,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
         <dl data-test-id="resource-summary" className="co-m-pane__details">
           {showName && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')} obj={resource} path={customPathName || 'metadata.name'} />}
           {showID && <DetailsItem label="ID" obj={resource} path={customPathId || 'metadata.uid'} />}
-          {showDescription && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_10')} obj={resource} path={'spec.description'} />}
+          {showDescription && <DetailsItem label={t(descriptionKey)} obj={resource} path={'spec.description'} />}
           {metadata.namespace && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')} obj={resource} path="metadata.namespace">
               <ResourceLink kind="Namespace" name={metadata.namespace} title={metadata.uid} namespace={null} />

@@ -13,9 +13,7 @@ import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
 
-// import './IR.scss';
 import './terraform-apply-claim.scss';
-// import { SimpleLogs } from './test-PipelineRunDetailsPage';
 
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
@@ -43,7 +41,7 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
       title: t('저장소'),
       sortField: 'spec.url',
       transforms: [sortable],
-      props: { classname: tableColumnClasses[2] },
+      props: { className: tableColumnClasses[2] },
     },
 
     {
@@ -163,18 +161,23 @@ type TFLogsProps = {
   obj: any;
 };
 
-const SimpleLogs = ({ children }) => {
-  let content;
+const Convert = require('ansi-to-html');
+const convert = new Convert();
+
+const SimpleLogs = ({ content }) => {
+  let innerContent;
   const { t } = useTranslation();
-  if (children) {
-    content = <div className="tfac-logs__text-padding">{children}</div>;
+
+  if (content) {
+    innerContent = <div className="tfac-logs__text-padding" dangerouslySetInnerHTML={{ __html: convert.toHtml(content) }}></div>;
   } else {
-    content = <div className="tfac-logs__not-found">{t('No Logs Found')}</div>;
+    innerContent = <div className="tfac-logs__not-found">{t('No Logs Found')}</div>;
   }
+
   return (
     <div className="odc-multi-stream-logs">
       <div className="odc-multi-stream-logs__container">
-        <div className="odc-multi-stream-logs__container__logs">{content}</div>
+        <div className="odc-multi-stream-logs__container__logs">{innerContent}</div>
       </div>
     </div>
   );
@@ -187,9 +190,7 @@ const TFApplyLogs: React.FC<TFLogsProps> = props => {
     <>
       <div className="tfac-logs__extra-space">{props.obj.status.commit}</div>
       <div className="tfac-logs__rawlogs">
-        <SimpleLogs>
-          <div>{props.obj.status.apply}</div>
-        </SimpleLogs>
+        <SimpleLogs content={props.obj.status.apply} />
       </div>
     </>
   );
@@ -214,7 +215,7 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
     <>
       <div className="tfac-logs__extra-space">{items && <Dropdown items={items} onChange={__setSelectedItem} selectedKey={selectedItem} />}</div>
       <div className="tfac-logs__rawlogs">
-        <SimpleLogs key={selectedItem}>{props.obj.status?.plans?.[selectedItem]?.log}</SimpleLogs>
+        <SimpleLogs key={selectedItem} content={props.obj.status?.plans?.[selectedItem]?.log} />
       </div>
     </>
   );
@@ -225,9 +226,7 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__extra-space"></div>
       <div className="tfac-logs__rawlogs">
-        <SimpleLogs>
-          <div>{obj.status.destroy}</div>
-        </SimpleLogs>
+        <SimpleLogs content={obj.status.destroy} />
       </div>
     </>
   );
@@ -239,9 +238,7 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__extra-space"></div>
       <div className="tfac-logs__status">
-        <SimpleLogs>
-          <div>{obj.status.state}</div>
-        </SimpleLogs>
+        <SimpleLogs content={obj.status.state} />
         <div className="tfac-logs__status__spec">
           <div className="tfac-logs__status__spec__title">{t('변경 상태 내역')}</div>
           <div className="tfac-logs__status__spec__num">

@@ -27,10 +27,10 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_83')}</dt>
               <dd>{serviceClass.spec.bindable ? 'Available' : 'Unavailable'}</dd>
+              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_17')}</dt>
+              <dd>{serviceClass.spec?.externalName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
-              <dd>{serviceClass.spec.serviceBrokerName}</dd>
-              <dt>ID</dt>
-              <dd>{serviceClass.metadata?.uid}</dd>
+              <dd>{serviceClass.spec?.serviceBrokerName}</dd>
             </dl>
           </div>
         </div>
@@ -43,10 +43,22 @@ type ServiceClassDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editResource } = navFactory;
+const ServicePlansTab: React.FC<ServicePlansTabProps> = ({ obj }) => {
+  const serviceClassRef = obj.spec?.externalMetadata?.serviceClassRefName;
+
+  const selector = {
+    matchLabels: {
+      'servicecatalog.k8s.io/spec.serviceClassRef.name': serviceClassRef,
+    },
+  };
+
+  return <ServicePlansPage selector={selector} />;
+};
+
+const { details } = navFactory;
 const ServiceClassesDetailsPage: React.FC<ServiceClassesDetailsPageProps> = props => {
   const { t } = useTranslation();
-  return <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), editResource(), { href: 'serviceplans', name: t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1'), component: ServicePlansPage }]} />;
+  return <DetailsPage {...props} kind={kind} pages={[details(ServiceClassDetails), { href: 'serviceplans', name: t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1'), component: ServicePlansTab }]} />;
 };
 ServiceClassesDetailsPage.displayName = 'ServiceClassesDetailsPage';
 
@@ -140,4 +152,8 @@ type ServiceClassesPageProps = {};
 
 type ServiceClassesDetailsPageProps = {
   match: any;
+};
+
+type ServicePlansTabProps = {
+  obj: K8sResourceKind;
 };

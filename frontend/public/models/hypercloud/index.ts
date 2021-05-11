@@ -851,6 +851,19 @@ export const InferenceServiceModel: K8sKind = {
   crd: false,
 };
 
+export const TrainedModelModel: K8sKind = {
+  label: 'Trained Model',
+  labelPlural: 'Trained Models',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'serving.kubeflow.org',
+  plural: 'trainedmodels',
+  abbr: 'TM',
+  namespaced: true,
+  kind: 'TrainedModel',
+  id: 'trainedmodel',
+  crd: false,
+};
+
 export const WorkflowTemplateModel: K8sKind = {
   label: 'WorkflowTemplate',
   labelPlural: 'Workflow Templates',
