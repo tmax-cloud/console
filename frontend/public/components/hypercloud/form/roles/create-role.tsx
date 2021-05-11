@@ -34,7 +34,7 @@ const kindItems = [
 
 let apiGroupList = {};
 const coreResources = {
-  '*': 'All', pods: 'pods', configmaps: 'configmaps', secrets: 'secrets', replicationcontrollers: 'replicationcontrollers', services: 'services', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', namespaces: 'namespaces', limitranges: 'limitranges', resourcequotas: 'resourcequotas', nodes: 'nodes', serviceaccounts: 'serviceaccounts'
+  '*': 'All', configmaps: 'configmaps', limitranges: 'limitranges', namespaces: 'namespaces', nodes: 'nodes', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', pods: 'pods', replicationcontrollers: 'replicationcontrollers', resourcequotas: 'resourcequotas', secrets: 'secrets', serviceaccounts: 'serviceaccounts', services: 'services'
 };
 const defaultVerbs = [{ name: 'create', label: 'Create' }, { name: 'delete', label: 'Delete' }, { name: 'get', label: 'Get' }, { name: 'list', label: 'List' }, { name: 'patch', label: 'Patch' }, { name: 'update', label: 'Update' }, { name: 'watch', label: 'Watch' }]
 
@@ -42,6 +42,18 @@ const defaultValues = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
   apiGroup: '*'
 };
+
+const compareObjByName = (a, b) => {
+  const nameA = a.name.toUpperCase();
+  const nameB = b.name.toUpperCase();
+  if (nameA < nameB) {
+    return -1;
+  } else if (nameA > nameB) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 const roleFormFactory = params => {
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
@@ -66,6 +78,7 @@ const RuleItem = (props) => {
       coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroup]}`).then(
         data => {
           let newResourceList = { '*': 'All' };
+          data.resources.sort(compareObjByName)
           data.resources.forEach(resource => newResourceList[resource.name] = resource.name);
           setResourceList(newResourceList);
         },
@@ -82,7 +95,7 @@ const RuleItem = (props) => {
   const initValue = (name, defaultValue) => {
     const isRegistered = _.get(getValues(), name);
 
-    if(!isRegistered){
+    if (!isRegistered) {
       register(name);
       setValue(name, defaultValue);
     }
@@ -152,6 +165,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
     coFetchJSON('api/kubernetes/apis')
       .then((result) => {
         let list = { '*': 'All', 'Core': 'Core' };
+        result.groups.sort(compareObjByName)
         result.groups.forEach(apigroup => { list[apigroup.name] = apigroup.preferredVersion.groupVersion });
         apiGroupList = list;
         setLoaded(true);
