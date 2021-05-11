@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { match as RMatch } from 'react-router';
 import { useFormContext, Controller } from 'react-hook-form';
-import { WithCommonForm } from '../create-form';
+import { WithCommonForm, isCreatePage } from '../create-form';
 import { Section } from '../../utils/section';
 import { SelectorInput } from '../../../utils';
 import { ModalLauncher, ModalList, useInitModal, handleModalData, removeModalData } from '../utils';
@@ -14,19 +14,25 @@ import { VolumeModal } from './volume-modal';
 import { StepModal } from './step-modal';
 import { TaskModel } from '../../../../models';
 
-const defaultValues = {
+const defaultValuesTemplate = {
   metadata: {
     name: 'example-name',
   },
 };
 
-const taskFormFactory = params => {
+const taskFormFactory = (params, obj) => {
+  const defaultValues = obj || defaultValuesTemplate;
   return WithCommonForm(CreateTaskComponent, params, defaultValues);
 };
 
 const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const methods = useFormContext();
-  const { control } = methods;
+  const {
+    control,
+    control: {
+      defaultValuesRef: { current: defaultValues },
+    },
+  } = methods;
 
   const [inputResource, setInputResource] = React.useState([]);
   const [outputResource, setOutputResource] = React.useState([]);
@@ -34,6 +40,78 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   const [workSpace, setWorkSpace] = React.useState([]);
   const [volume, setVolume] = React.useState([]);
   const [step, setStep] = React.useState([]);
+
+  // 이 페이지가 처음 마운트 되었을 때 한번 되어야 함. (나중에 modal 별로 다 한거를 custom hook으로 묶어주면 좋을듯.)
+  React.useEffect(() => {
+    if (!isCreatePage(defaultValues)) {
+      if (_.has(defaultValues, 'spec.resources.inputs')) {
+        let inputResources = _.get(defaultValues, 'spec.resources.inputs');
+        setInputResource(inputResources);
+        console.log('inputResource: ', inputResources);
+      }
+      if (_.has(defaultValues, 'spec.resources.outputs')) {
+        let outputResources = _.get(defaultValues, 'spec.resources.outputs');
+        setOutputResource(outputResources);
+        console.log('outputresource: ', outputResources);
+      }
+      if (_.has(defaultValues, 'spec.params')) {
+        let paramDefaultValues = _.get(defaultValues, 'spec.params');
+        paramDefaultValues = paramDefaultValues.map(item => {
+          if (item.type === 'array') {
+            return _.assign(item, {
+              default: item.default.map(cur => {
+                return { value: cur };
+              }),
+            });
+          } else {
+            return _.assign(item, { default: item.default });
+          }
+        });
+        setTaskParameter(paramDefaultValues);
+        console.log('params: ', paramDefaultValues);
+      }
+      if (_.has(defaultValues, 'spec.workspaces')) {
+        let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
+        workSpaceDefaultValues = workSpaceDefaultValues.map(item => {
+          if (typeof workSpaceDefaultValues.readOnly != 'undefined') {
+            // 여기서 부터 다시...
+            if (item.readOnly) {
+              item.accessMode = 'readOnly';
+            } else {
+              item.accessMode = 'readWrite';
+            }
+            delete item.readOnly;
+          }
+          return item;
+        });
+        setWorkSpace(workSpaceDefaultValues);
+        console.log('workspace: ', workSpaceDefaultValues);
+      }
+      if (_.has(defaultValues, 'spec.volumes')) {
+        let volumeDefaultValues = _.get(defaultValues, 'spec.volumes');
+        volumeDefaultValues = volumeDefaultValues.map(item => {
+          let obj = {};
+          if (item.configMap) {
+            obj['type'] = 'configMap';
+            obj['name'] = item.configMap.name;
+          } else if (item.secret) {
+            obj['type'] = 'secret';
+            obj['name'] = item.secret.name;
+          } else if (item.emptyDir) {
+            obj['type'] = 'emptyDir';
+            obj['name'] = item.emptyDir.name;
+          }
+          return obj;
+        });
+        setVolume(volumeDefaultValues);
+        console.log('volume: ', volumeDefaultValues);
+      }
+      if (_.has(defaultValues, 'spec.steps')) {
+        let stepDefaultValues = _.get(defaultValues, 'spec.steps');
+        stepDefaultValues = stepDefaultValues.map(item => {});
+      }
+    }
+  }, []);
 
   // Modal Form 초기 세팅위한 Hook들 Custom Hook으로 정리
   useInitModal(methods, inputResource, 'spec.resources.inputs');
@@ -108,8 +186,8 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   );
 };
 
-export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, kind }) => {
-  const formComponent = taskFormFactory(params);
+export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, obj, kind }) => {
+  const formComponent = taskFormFactory(params, obj);
   const TaskFormComponent = formComponent;
   return <TaskFormComponent fixed={{ apiVersion: `${TaskModel.apiGroup}/${TaskModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
@@ -170,7 +248,6 @@ export const onSubmitCallback = data => {
     return cur;
   });
 
-  console.log(data);
   return data;
 };
 
@@ -185,6 +262,7 @@ type CreateTaskProps = {
   titleVerb: string;
   saveButtonText?: string;
   isCreate: boolean;
+  obj: any;
 };
 
 type TaskFormProps = {
