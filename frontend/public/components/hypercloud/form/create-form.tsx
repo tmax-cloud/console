@@ -4,10 +4,14 @@ import { Helmet } from 'react-helmet';
 import { useForm, FormProvider } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import { ActionGroup, Button } from '@patternfly/react-core';
-import { k8sCreate, referenceFor, K8sResourceKind, modelFor } from '../../../module/k8s';
+import { k8sCreate, k8sUpdate, referenceFor, K8sResourceKind, modelFor } from '../../../module/k8s';
 import { pluralToKind } from './';
 import { ButtonBar, history, resourceObjPath } from '../../utils';
 import { Section } from '../utils/section';
+
+export const isCreatePage = defaultValues => {
+  return !_.has(defaultValues, 'spec');
+};
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
   const FormComponent: React.FC<CommonFormProps_> = props => {
@@ -15,21 +19,29 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
 
     const kind = pluralToKind(params.plural);
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
-    const title = `${props.titleVerb} ${kind || 'Sample'}`;
+    const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
 
     const [inProgress] = React.useState(false); // onSubmit이나 나중에 Error관련 메서드에서 inProgress를 false로 변경해줘야함.
 
     const onClick = methods.handleSubmit(data => {
-      let inDo = _.defaultsDeep(props.fixed, data);
+      let inDo = isCreatePage(defaultValues) ?_.defaultsDeep(props.fixed, data) : _.defaultsDeep(defaultValues, data);
       inDo = props.onSubmitCallback(inDo);
       const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
-      k8sCreate(model, inDo)
-        .then(() => {
-          history.push(resourceObjPath(inDo, referenceFor(model)));
-        })
-        .catch(e => {
-          console.error(e.message);
-        });
+      isCreatePage(defaultValues) ?
+        k8sCreate(model, inDo)
+          .then(() => {
+            history.push(resourceObjPath(inDo, referenceFor(model)));
+          })
+          .catch(e => {
+            console.error(e.message);
+          }): 
+        k8sUpdate(model, inDo)
+          .then(() => {
+            history.push(resourceObjPath(inDo, referenceFor(model)));
+          })
+          .catch(e => {
+            console.error(e.message);
+          })
     });
     return (
       <FormProvider {...methods}>
@@ -53,7 +65,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
             <ButtonBar inProgress={inProgress}>
               <ActionGroup className="pf-c-form">
                 <Button type="button" variant="primary" id="save-changes" onClick={onClick}>
-                  {props.saveButtonText || 'Create'}
+                  {isCreatePage(defaultValues) ? props.saveButtonText || 'Create' : 'Save'}
                 </Button>
                 <Button type="button" variant="secondary" id="cancel" onClick={history.goBack}>
                   Cancel

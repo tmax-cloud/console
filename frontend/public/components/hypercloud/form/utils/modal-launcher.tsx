@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash-es';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/hypercloud/factory/modal';
 
 export const _ModalLauncher = props => {
@@ -26,6 +27,7 @@ export const _ModalLauncher = props => {
 
 export const useInitModal = (methods, curState, path) => {
   const { register, setValue } = methods;
+  // console.log(_.get(defaultValues, path));
   React.useEffect(() => {
     register(path);
   }, [register]);

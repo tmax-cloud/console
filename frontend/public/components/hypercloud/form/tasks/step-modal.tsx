@@ -231,11 +231,11 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           <Section label="" id="step-manual-image">
             <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
           </Section>
-          <Section label="커맨드" id="step-command">
-            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
-          </Section>
         </>
       )}
+      <Section label="커맨드" id="step-command">
+        <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
+      </Section>
       <Section label="인수" id="step-parameter">
         <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
       </Section>
