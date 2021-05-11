@@ -226,7 +226,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     <div className={classNames(className)} ref={dropdownElement} style={...props.style}>
       <div
         className={classNames(
-          { 'dropdown pf-c-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
+          { 'dropdown pf-c-dropdown hc-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
           dropDownClassName,
         )}
       >
@@ -235,7 +235,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
           aria-haspopup="true"
           aria-expanded={active}
           aria-describedby={describedBy}
-          className={classNames('pf-c-dropdown__toggle', buttonClassName)}
+          className={classNames('pf-c-dropdown__toggle hc-dropdown__button', buttonClassName)}
           data-test-id="dropdown-button"
           onClick={toggle}
           onKeyDown={onKeyDown}
@@ -252,7 +252,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
         {active && (
           <ul
             ref={dropdownList}
-            className={classNames('pf-c-dropdown__menu', menuClassName)}
+            className={classNames('pf-c-dropdown__menu hc-dropdown__menu', menuClassName)}
           >
             {rows}
           </ul>
