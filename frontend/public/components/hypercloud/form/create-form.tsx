@@ -21,7 +21,8 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
 
-    const [inProgress] = React.useState(false); // onSubmit이나 나중에 Error관련 메서드에서 inProgress를 false로 변경해줘야함.
+    const [inProgress, setProgress] = React.useState(false);
+    const [errorMessage, setError] = React.useState('');
 
     const onClick = methods.handleSubmit(data => {
       let inDo = isCreatePage(defaultValues) ?_.defaultsDeep(props.fixed, data) : _.defaultsDeep(defaultValues, data);
@@ -33,14 +34,16 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
             history.push(resourceObjPath(inDo, referenceFor(model)));
           })
           .catch(e => {
-            console.error(e.message);
+            setProgress(false);
+            setError(e.message);
           }): 
         k8sUpdate(model, inDo)
           .then(() => {
             history.push(resourceObjPath(inDo, referenceFor(model)));
           })
           .catch(e => {
-            console.error(e.message);
+            setProgress(false);
+            setError(e.message);
           })
     });
     return (
@@ -62,7 +65,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
               </fieldset>
             )}
             <SubForm isCreate={props.isCreate} />
-            <ButtonBar inProgress={inProgress}>
+            <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
               <ActionGroup className="pf-c-form">
                 <Button type="button" variant="primary" id="save-changes" onClick={onClick}>
                   {isCreatePage(defaultValues) ? props.saveButtonText || 'Create' : 'Save'}
