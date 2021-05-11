@@ -75,12 +75,17 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
 
   React.useEffect(() => {
     if (!_.isEqual(prevItems, props.items)) {
-      setValue(name, defaultValue);
       setItemList(props.items);
+      setValue(name, defaultValue);
       setKeyboardHoverKey(defaultValue);
     }
-  }, [props.items, defaultValue]);
+  }, [props.items]);
 
+  React.useEffect(() => {
+    setValue(name, defaultValue);
+    setKeyboardHoverKey(defaultValue);
+  }, [defaultValue]);
+  
   const dropdownElement = React.useRef<HTMLDivElement>();
   const dropdownList = React.useRef<HTMLUListElement>();
 
@@ -221,7 +226,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     <div className={classNames(className)} ref={dropdownElement} style={...props.style}>
       <div
         className={classNames(
-          { 'dropdown pf-c-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
+          { 'dropdown pf-c-dropdown hc-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
           dropDownClassName,
         )}
       >
@@ -230,7 +235,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
           aria-haspopup="true"
           aria-expanded={active}
           aria-describedby={describedBy}
-          className={classNames('pf-c-dropdown__toggle', buttonClassName)}
+          className={classNames('pf-c-dropdown__toggle hc-dropdown__button', buttonClassName)}
           data-test-id="dropdown-button"
           onClick={toggle}
           onKeyDown={onKeyDown}
@@ -240,14 +245,14 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
         >
           <span className="pf-c-dropdown__toggle-text">
             {titlePrefix && `${titlePrefix}: `}
-            {_.get(props.items, selectedKey, props.title)}
+            {_.get(props.items, selectedKey ?? defaultValue, props.title)}
           </span>
           <CaretDownIcon className="pf-c-dropdown__toggle-icon" />
         </button>
         {active && (
           <ul
             ref={dropdownList}
-            className={classNames('pf-c-dropdown__menu', menuClassName)}
+            className={classNames('pf-c-dropdown__menu hc-dropdown__menu', menuClassName)}
           >
             {rows}
           </ul>
