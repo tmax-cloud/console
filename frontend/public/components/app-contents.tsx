@@ -84,7 +84,7 @@ const DefaultPage = connect((state: RootState) => ({
 
 const LazyRoute = props => {
   const plural = props.computedMatch.params.plural;
-  const kind = pluralToKind(plural);
+  const kind = plural ? pluralToKind(plural) : props.kind;
   const isManual = isCreateManual(kind);
   const url = props.computedMatch.url;
   let loader = props.loader;
