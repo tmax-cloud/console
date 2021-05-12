@@ -145,9 +145,9 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
                 <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_1')}</dt>
                 <dd>{namespaceclaims?.status?.reason}</dd>
                 <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_2')}</dt>
-                <dd>{namespaceclaims?.specLimit?.limitCpu}</dd>
+                <dd>{namespaceclaims?.hard?.limitCpu}</dd>
                 <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_3')}</dt>
-                <dd>{namespaceclaims?.specLimit?.limitMemory}</dd>
+                <dd>{namespaceclaims?.hard?.limitMemory}</dd>
                 <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_4')}</dt>
                 <dd>{namespaceclaims?.resourceName}</dd>
               </dl>

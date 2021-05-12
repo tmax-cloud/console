@@ -42,7 +42,6 @@ export const DetailsCardPopup: React.FC<DetailsCardPopupProps> = React.memo(({ l
 
 const DetailsSubHeader: React.FC<DetailsSubHeaderProps> = React.memo(({ hcVersion }) => {
   const { t } = useTranslation();
-  console.log(typeof hcVersion);
   return (
     <DashboardCardHeader>
       <div className={classNames('details-card__popup-style')}>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDSOFTWARE_INSTALLATION_1')}</div>
