@@ -144,9 +144,8 @@ const ClusterServicePlansPage: React.FC<ClusterServicePlansPageProps> = props =>
           }}
           title={sidebarTitle}
           isFloat={true}
-          customPathId="metadata.name"
-          showName={false}
-          showID={true}
+          showName={true}
+          showID={false}
           showDescription={true}
           showPodSelector={false}
           showNodeSelector={false}

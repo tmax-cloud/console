@@ -29,7 +29,7 @@ const getCurrentData = (humanizeValue: Humanize, description: string, data?: Dat
 
 export const MultilineUtilizationItem: React.FC<MultilineUtilizationItemProps> = React.memo(({ title, data, dataUnits, humanizeValue, isLoading = false, queries, error, TopConsumerPopovers, byteDataType }) => {
   const current = data.map((datum, index) => getCurrentData(humanizeValue, queries[index].desc, datum, dataUnits && dataUnits[index]));
-  const chart = <AreaChart data={error ? [[]] : data} loading={!error && isLoading} query={queries[0].query} xAxis={false} humanize={humanizeValue} padding={{ top: 13, left: 70, bottom: 0, right: 0 }} height={70} byteDataType={byteDataType} />;
+  const chart = <AreaChart data={error ? [[]] : data} loading={!error && isLoading} xAxis={false} humanize={humanizeValue} padding={{ top: 13, left: 70, bottom: 0, right: 0 }} height={70} byteDataType={byteDataType} />;
   const { t } = useTranslation();
   const currentValue = current.map((curr, index) => {
     const TopConsumerPopover = TopConsumerPopovers && TopConsumerPopovers[index];
@@ -90,7 +90,7 @@ export const UtilizationItem: React.FC<UtilizationItemProps> = React.memo(({ tit
     };
   }
 
-  const chart = <AreaChart data={chartData} loading={!error && isLoading} query={query} xAxis={false} humanize={humanizeValue} padding={{ top: 13, left: 70, bottom: 0, right: 0 }} height={70} chartStyle={chartStyle} byteDataType={byteDataType} />;
+  const chart = <AreaChart data={chartData} loading={!error && isLoading} xAxis={false} humanize={humanizeValue} padding={{ top: 13, left: 70, bottom: 0, right: 0 }} height={70} chartStyle={chartStyle} byteDataType={byteDataType} />;
 
   let LimitIcon: React.ComponentType<ColoredIconProps>;
   let humanLimit: string;

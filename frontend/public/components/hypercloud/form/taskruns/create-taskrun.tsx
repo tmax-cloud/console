@@ -24,11 +24,11 @@ const taskRunFormFactory = params => {
   return WithCommonForm(CreateTaskRunComponent, params, defaultValues);
 };
 
-const paramItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
+const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
   return (
     <div className="row" key={item.id}>
       <div className="col-xs-4 pairs-list__value-field">
-        <input id={`${name}[${index}].value`} ref={register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
+        <input id={`${name}[${index}].value`} ref={methods.register()} className="pf-c-form-control" defaultValue={item.value} name={`${name}[${index}].value`} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button

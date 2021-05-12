@@ -39,7 +39,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     }
     return false;
   };
-  const commandListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const commandListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
         <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'/bin/sh'} />
@@ -59,7 +59,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
-  const parameterListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const parameterListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
         <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={methods} defaultValue={item.value} placeholder={'-c'} />
@@ -79,7 +79,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
-  const envListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => (
+  const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
         <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} placeholder={'키'} />
@@ -231,11 +231,11 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           <Section label="" id="step-manual-image">
             <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
           </Section>
-          <Section label="커맨드" id="step-command">
-            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
-          </Section>
         </>
       )}
+      <Section label="커맨드" id="step-command">
+        <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
+      </Section>
       <Section label="인수" id="step-parameter">
         <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
       </Section>

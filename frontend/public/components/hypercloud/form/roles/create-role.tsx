@@ -34,7 +34,7 @@ const kindItems = [
 
 let apiGroupList = {};
 const coreResources = {
-  '*': 'All', pods: 'pods', configmaps: 'configmaps', secrets: 'secrets', replicationcontrollers: 'replicationcontrollers', services: 'services', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', namespaces: 'namespaces', limitranges: 'limitranges', resourcequotas: 'resourcequotas', nodes: 'nodes', serviceaccounts: 'serviceaccounts'
+  '*': 'All', configmaps: 'configmaps', limitranges: 'limitranges', namespaces: 'namespaces', nodes: 'nodes', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', pods: 'pods', replicationcontrollers: 'replicationcontrollers', resourcequotas: 'resourcequotas', secrets: 'secrets', serviceaccounts: 'serviceaccounts', services: 'services'
 };
 const defaultVerbs = [{ name: 'create', label: 'Create' }, { name: 'delete', label: 'Delete' }, { name: 'get', label: 'Get' }, { name: 'list', label: 'List' }, { name: 'patch', label: 'Patch' }, { name: 'update', label: 'Update' }, { name: 'watch', label: 'Watch' }]
 
@@ -43,18 +43,29 @@ const defaultValues = {
   apiGroup: '*'
 };
 
+const compareObjByName = (a, b) => {
+  const nameA = a.name.toUpperCase();
+  const nameB = b.name.toUpperCase();
+  if (nameA < nameB) {
+    return -1;
+  } else if (nameA > nameB) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 const roleFormFactory = params => {
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
 };
 const RuleItem = (props) => {
-  const { item, name, index, onDeleteClick } = props;
+  const { item, name, index, onDeleteClick, methods } = props;
 
   const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ '*': 'All' });
-  const { control } = useFormContext();
-  const apiGroup = useWatch({
+  const { control, register, getValues, setValue } = methods;
+  const apiGroup = useWatch<string>({
     control: control,
     name: `${name}[${index}].apiGroup`,
-    defaultValue: '*',
   });
 
   React.useEffect(() => {
@@ -67,6 +78,7 @@ const RuleItem = (props) => {
       coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroup]}`).then(
         data => {
           let newResourceList = { '*': 'All' };
+          data.resources.sort(compareObjByName)
           data.resources.forEach(resource => newResourceList[resource.name] = resource.name);
           setResourceList(newResourceList);
         },
@@ -77,6 +89,18 @@ const RuleItem = (props) => {
     }
   }, [apiGroup]);
 
+  /* MEMO: 컴포넌트 내부적으로는 props/state 변화가 없기 때문에 register, setValue할 타이밍이 없어서 initValue 로직을 여기에 추가함.
+   * useFieldArray item이 변화하면 form에서 다 삭제 후 다시 set하는데(컴포넌트는 다시 그리지 않는 것 같음), input 태그엔 ref를 달면 자체적으로 다시 set해주는 것으로 보임.
+   * Dropdown, CheckboxGroup 에 ref를 달아서 initValue 로직을 대체해주면 좋을 것 같음. */
+  const initValue = (name, defaultValue) => {
+    const isRegistered = _.get(getValues(), name);
+
+    if (!isRegistered) {
+      register(name);
+      setValue(name, defaultValue);
+    }
+  }
+
   return (
     <>
       {index === 0 ? null : <div className='co-form-section__separator' />}
@@ -86,18 +110,22 @@ const RuleItem = (props) => {
             <Dropdown
               name={`${name}[${index}].apiGroup`}
               items={apiGroupList}
-              defaultValue={apiGroup}
+              defaultValue={item.apiGroup}
+              methods={methods}
+              {...initValue(`${name}[${index}].apiGroup`, item.apiGroup)}
             />
           </Section>
           <Section label='Resource' id={`resource[${index}]`} isRequired={true}>
             <Dropdown
               name={`${name}[${index}].resource`}
               items={resourceList}
-              defaultValue='*'
+              defaultValue={item.resource}
+              methods={methods}
+              {...initValue(`${name}[${index}].resource`, item.resource)}
             />
           </Section>
           <Section label='Verb' id={`verb[${index}]`} isRequired={true}>
-            <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={['*']} />
+            <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...initValue(`${name}[${index}].verbs`, item.verbs)} />
           </Section>
         </div>
         <div className="col-xs-1 pairs-list__action">
@@ -117,10 +145,15 @@ const RuleItem = (props) => {
   );
 };
 
-const ruleItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
-  const onDeleteClick = () => ListActions.remove(index);
+const ruleItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
+  const onDeleteClick = () => {
+    const values = _.get(ListActions.getValues(), name);
+    if (!!values && values.length > 1) {
+      ListActions.remove(index);
+    }
+  }
 
-  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} />
+  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} methods={methods} />
 };
 
 const CreateRoleComponent: React.FC<RoleFormProps> = props => {
@@ -132,16 +165,17 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
     coFetchJSON('api/kubernetes/apis')
       .then((result) => {
         let list = { '*': 'All', 'Core': 'Core' };
+        result.groups.sort(compareObjByName)
         result.groups.forEach(apigroup => { list[apigroup.name] = apigroup.preferredVersion.groupVersion });
         apiGroupList = list;
         setLoaded(true);
       });
   }, [])
 
-  const { control } = useFormContext();
+  const methods = useFormContext();
 
   const kindToggle = useWatch({
-    control: control,
+    control: methods.control,
     name: 'kind',
     defaultValue: 'Role',
   });
@@ -163,7 +197,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       <div className='co-form-section__separator' />
 
       <Section label='롤 이름' id='name' isRequired={true}>
-        <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue='role-example' />
+        <TextInput inputClassName='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue='role-example' />
       </Section>
 
       {kindToggle === "Role" &&
@@ -181,7 +215,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ?
         <Section id='rules' isRequired={true}>
-          <ListView name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: '*', resource: '*', verbs: ['*'] }} defaultValues={[{ apiGroup: '*', resource: '*', verbs: ['*'] }]}/>
+          <ListView methods={methods} name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: '*', resource: '*', verbs: ['*'] }} defaultValues={[{ apiGroup: '*', resource: '*', verbs: ['*'] }]} />
         </Section>
         : <LoadingInline />}
     </>
@@ -200,7 +234,7 @@ export const onSubmitCallback = data => {
   let rules = data.rules.map((rule) => ({
     apiGroups: rule.apiGroup === 'Core' ? [''] : [rule.apiGroup ?? '*'],
     resources: [rule.resource ?? '*'],
-    verbs : rule.verbs ?? ['*']
+    verbs: rule.verbs ?? ['*']
   }));
 
   delete data.apiVersion;
