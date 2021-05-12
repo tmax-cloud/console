@@ -8,11 +8,12 @@ import { Section } from '../../utils/section';
 import { SelectorInput } from '../../../utils';
 import { TextInput } from '../../utils/text-input';
 import { ResourceListDropdown } from '../../utils/resource-list-dropdown';
+import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '../../../../reducers/ui';
 import store from '../../../../redux';
 //import { useTranslation } from 'react-i18next';
 import { k8sList } from '../../../../module/k8s';
-import { NamespaceModel, ClusterRoleModel, RoleModel } from '../../../../models';
+import { NamespaceModel } from '../../../../models';
 import { RadioGroup } from '../../utils/radio';
 
 
@@ -52,18 +53,8 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
             .then((list) => setNamespaces(list));        
     }, [])
 
-    const [roles, setRoles] = React.useState([]);
+    
     const namespace = getActiveNamespace(store.getState());
-    React.useEffect(() => {
-        let roleAndClusterRoleList = [];
-        k8sList(RoleModel, { ns: namespace }).then(list => {
-            roleAndClusterRoleList = roleAndClusterRoleList.concat(list);
-        });
-        k8sList(ClusterRoleModel).then(list => {
-            roleAndClusterRoleList = roleAndClusterRoleList.concat(list);
-            setRoles(roleAndClusterRoleList);
-        })
-    }, [])
 
 
     const { control } = useFormContext();
@@ -79,12 +70,22 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
             <div className='co-form-section__separator' />
 
             <Section label='Role' id='role' isRequired={true}>
-                <ResourceListDropdown
+                <ResourceDropdown
                     name='roleRef.name'
-                    useHookForm
-                    resourceList={roles}
-                    resourceType='Role'
+                    resources={[
+                        {
+                            kind: 'Role',
+                            namespace: namespace, // 옵션
+                            prop: 'role',
+                        },
+                        {
+                            kind: 'ClusterRole',                            
+                            prop: 'clusterrole',
+                        },                        
+                    ]}
+                    useHookForm                                        
                     type='single'
+                    idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
                 />
             </Section>
 
@@ -134,20 +135,29 @@ export const onSubmitCallback = (data) => {
     let labels = SelectorInput.objectify(data.metadata.labels);
     delete data.metadata.labels;
     delete data.apiVersion;
+
     let kind = 'RoleBindingClaim';
+    
     let subjects = data.subjects;
     delete data.subjects;
-    //let subjectList = [subjects];
-    let roleRefApiGroup = '*';
-    let roleKind = 'ClusterRole';
+    
+    let roleRefApiGroup = '*';    
+
+    const roleRef = data.roleRef?.name;
+    const roleRefKind = roleRef.split('~~')[0];
+    const roleRefName = roleRef.split('~~')[1];
+    
+    delete data.roleRef.name;
+    
     let name = data.metadata.name;
+    
     data = _.defaultsDeep(data, 
         { 
             apiVersion: apiVersion, 
             kind: kind, 
             metadata: { labels: labels }, 
             subjects: [subjects], 
-            roleRef : {apiGroup: roleRefApiGroup, kind: roleKind},
+            roleRef : {name: roleRefName ,apiGroup: roleRefApiGroup, kind: roleRefKind},
             resourceName : name 
         });
     return data;
