@@ -34,7 +34,7 @@ const kindItems = [
 
 let apiGroupList = {};
 const coreResources = {
-  '*': 'All', configmaps: 'configmaps', limitranges: 'limitranges', namespaces: 'namespaces', nodes: 'nodes', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', pods: 'pods', replicationcontrollers: 'replicationcontrollers', resourcequotas: 'resourcequotas', secrets: 'secrets', serviceaccounts: 'serviceaccounts', services: 'services'
+  '*': 'All', configmaps: 'configmaps', endpoints: 'endpoints', events: 'events', limitranges: 'limitranges', namespaces: 'namespaces', nodes: 'nodes', persistentvolumeclaims: 'persistentvolumeclaims', persistentvolumes: 'persistentvolumes', pods: 'pods', replicationcontrollers: 'replicationcontrollers', resourcequotas: 'resourcequotas', secrets: 'secrets', serviceaccounts: 'serviceaccounts', services: 'services'
 };
 const defaultVerbs = [{ name: 'create', label: 'Create' }, { name: 'delete', label: 'Delete' }, { name: 'get', label: 'Get' }, { name: 'list', label: 'List' }, { name: 'patch', label: 'Patch' }, { name: 'update', label: 'Update' }, { name: 'watch', label: 'Watch' }]
 
