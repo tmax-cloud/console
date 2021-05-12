@@ -241,6 +241,7 @@ const PodGraphs = requirePrometheus(({ pod }) => {
       <div className="row">
         <div className="col-md-12 col-lg-4">
           <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_3')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} query={`sum(container_memory_working_set_bytes{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}',container='',}) BY (pod, namespace)`} />
+          {/* <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_3')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} /> */}
         </div>
         <div className="col-md-12 col-lg-4">
           <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_2')} humanize={humanizeCpuCores} namespace={pod.metadata.namespace} query={`pod:container_cpu_usage:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
