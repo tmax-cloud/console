@@ -8,7 +8,7 @@ import { TFunction } from 'i18next';
 import { Status } from '@console/shared';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { InferenceServiceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
@@ -50,22 +50,26 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:STATUS'),
+      title: 'STATUS',
+      sortField: 'phase',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:FRAMEWORK'),
+      title: 'FRAMEWORK',
+      sortField: 'framework',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:URL'),
+      title: 'URL',
+      sortField: 'isvc.status.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: t('COMMON:MULTIMODEL'),
+      title: 'MULTIMODEL',
+      sortField: 'multimodel',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
     },
@@ -91,10 +95,7 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
     if (frameworkList.some(curFramework => curFramework === curPredictor)) {
       framework = curPredictor;
     }
-  });
-  const timestamp = isvc.metadata.creationTimestamp;
-  //const time = timestamp.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
-  const time = timestamp;
+  });  
   return (
     <TableRow id={isvc.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -107,7 +108,9 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       <TableData className={tableColumnClasses[3]}>{framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{isvc.status.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'N' : 'Y'}</TableData>
-      <TableData className={tableColumnClasses[6]}>{time}</TableData>
+      <TableData className={tableColumnClasses[6]}>
+        <Timestamp timestamp={isvc.metadata.creationTimestamp} />
+      </TableData>
       <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={isvc} />
       </TableData>
@@ -136,16 +139,16 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:INFERENCEURL')}`} obj={ds} path="status.url">
+      <DetailsItem label={'INFERENCEURL'} obj={ds} path="status.url">
         {ds.status.url}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">
+      <DetailsItem label={'PREDICTOR'} obj={ds} path="spec.predictor">
         {framework}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:TRANSFOMER')}`} obj={ds} path="spec.transformer">
+      <DetailsItem label={'TRANSFOMER'} obj={ds} path="spec.transformer">
         {(ds.spec.transformer) ? 'Y' : 'N'}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:EXPLAINER')}`} obj={ds} path="spec.explainer">
+      <DetailsItem label={'EXPLAINER'} obj={ds} path="spec.explainer">
         {(ds.spec.explainer) ? 'Y' : 'N'}
       </DetailsItem>
     </dl>
