@@ -43,7 +43,7 @@ spec:
         - --kibana-endpoint=https://kibana.kube-logging.svc.cluster.local:5601/api/kibana/
         - --kubeflow-endpoint=http://0.0.0.0/api/kubeflow/ 
         - --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/
-        image: tmaxcloudck/hypercloud-console:5.0.9.3
+        image: tmaxcloudck/hypercloud-console:5.0.9.4
         imagePullPolicy: Always
         name: console
         ports:

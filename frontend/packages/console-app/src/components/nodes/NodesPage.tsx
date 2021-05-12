@@ -193,7 +193,7 @@ const fetchNodeMetrics = (): Promise<NodeMetrics> => {
     },
     {
       key: 'pods',
-      query: 'sum by(node)(kubelet_running_pods)',
+      query: 'sum by(node)(kube_pod_info)',
     },
   ];
   const promises = metrics.map(({ key, query }) => {
