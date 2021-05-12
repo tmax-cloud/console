@@ -26,7 +26,10 @@ const ClusterInventoryItem = withDashboardResources<ClusterInventoryItemProps>(
   React.memo(({ model, mapper, useAbbr, additionalResources, expandedComponent }: ClusterInventoryItemProps) => {
     const mainResource = React.useMemo(() => getFirehoseResource(model), [model]);
     const otherResources = React.useMemo(() => additionalResources || {}, [additionalResources]);
-    const [resourceData, resourceLoaded, resourceLoadError] = useK8sWatchResource<K8sResourceCommon[]>(mainResource);
+    let [resourceData, resourceLoaded, resourceLoadError] = useK8sWatchResource<K8sResourceCommon[]>(mainResource);
+    if (resourceData === null) {
+      resourceData = [];
+    }
     const resources = useK8sWatchResources(otherResources);
 
     const additionalResourcesData = {};
