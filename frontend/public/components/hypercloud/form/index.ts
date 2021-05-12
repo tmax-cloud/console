@@ -92,7 +92,7 @@ const pluralToKindMap = new Map([
   ['tfapplyclaims', 'TFApplyClaim'],
 ]);
 
-const isCreateManualSet = new Set(['Role', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource']);
+const isCreateManualSet = new Set(['Role', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBindingClaim']);
 const isVanillaObjectSet = new Set(['PodSecurityPolicy', 'Pod', 'Deployment', 'ReplicaSet', 'HorizontalPodAutoscaler', 'DaemonSet', 'StatefulSet', 'ConfigMap', 'Secret', 'Job', 'CronJob', 'Service', 'Ingress', 'NetworkPolicy', 'StorageClass', 'PersistentVolumeClaim', 'PersistentVolume', 'Namespace', 'LimitRange', 'ResourceQuota', 'Node', 'Role', 'RoleBinding', 'ServiceAccount', 'CustomResourceDefinition']);
 
 export const pluralToKind = plural => pluralToKindMap.get(plural);
