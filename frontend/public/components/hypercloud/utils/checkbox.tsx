@@ -21,6 +21,10 @@ export const CheckboxGroup: React.SFC<CheckboxGroupProps> = (props) => {
     }
   }, [name, register, unregister]);
 
+  React.useEffect(() => {
+    setValue(name, defaultValue);
+  }, [defaultValue]);
+
   const onChange = (event) => {
     let newList = new Set(selectedList);
     if (useAll && event.target.name === "*") {

@@ -143,13 +143,13 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
             <div className="col-md-6">
               <dl className="co-m-pane__details">
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
-                <dd>{resourcequotaclaims?.status?.status}</dd>
+                <dd>{resourcequotaclaims.status?.status}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_2')}</dt>
-                <dd>{resourcequotaclaims?.status?.reason}</dd>
+                <dd>{resourcequotaclaims.status?.reason}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_3')}</dt>
-                <dd>{resourcequotaclaims?.specLimit?.limitCpu}</dd>
+                <dd>{resourcequotaclaims.spec?.hard?.['limits.cpu']}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_4')}</dt>
-                <dd>{resourcequotaclaims?.specLimit?.limitMemory}</dd>
+                <dd>{resourcequotaclaims.spec?.hard?.['limits.memory']}</dd>
               </dl>
             </div>
           </div>

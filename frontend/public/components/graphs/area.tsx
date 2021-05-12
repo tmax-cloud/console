@@ -1,19 +1,6 @@
 import * as React from 'react';
-import {
-  Chart,
-  ChartArea,
-  ChartAxis,
-  ChartThemeColor,
-  ChartThemeVariant,
-  ChartVoronoiContainer,
-  getCustomTheme,
-  ChartGroup,
-  ChartTooltip,
-} from '@patternfly/react-charts';
-import {
-  global_warning_color_100 as warningColor,
-  global_danger_color_100 as dangerColor,
-} from '@patternfly/react-tokens';
+import { Chart, ChartArea, ChartAxis, ChartThemeColor, ChartThemeVariant, ChartVoronoiContainer, getCustomTheme, ChartGroup, ChartTooltip } from '@patternfly/react-charts';
+import { global_warning_color_100 as warningColor, global_danger_color_100 as dangerColor } from '@patternfly/react-tokens';
 import { processFrame, ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 import { twentyFourHourTime } from '../utils/datetime';
 import { humanizeNumber, useRefWidth, Humanize } from '../utils';
@@ -40,23 +27,7 @@ export const chartStatusColors = {
   [AreaChartStatus.WARNING]: warningColor.value,
 };
 
-export const AreaChart: React.FC<AreaChartProps> = ({
-  className,
-  data = [],
-  formatDate = twentyFourHourTime,
-  height = DEFAULT_HEIGHT,
-  humanize = humanizeNumber,
-  loading = true,
-  padding,
-  query,
-  theme = getCustomTheme(ChartThemeColor.blue, ChartThemeVariant.light, areaTheme),
-  tickCount = DEFAULT_TICK_COUNT,
-  title,
-  xAxis = true,
-  yAxis = true,
-  chartStyle,
-  byteDataType = '',
-}) => {
+export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], formatDate = twentyFourHourTime, height = DEFAULT_HEIGHT, humanize = humanizeNumber, loading = true, padding, query, theme = getCustomTheme(ChartThemeColor.blue, ChartThemeVariant.light, areaTheme), tickCount = DEFAULT_TICK_COUNT, title, xAxis = true, yAxis = true, chartStyle, byteDataType = '' }) => {
   const [containerRef, width] = useRefWidth();
   const [processedData, setProcessedData] = React.useState(data);
   const [unit, setUnit] = React.useState('');
@@ -71,13 +42,10 @@ export const AreaChart: React.FC<AreaChartProps> = ({
     }
   }, [byteDataType, data]);
 
-  const tickFormat = React.useCallback((tick) => `${humanize(tick, unit, unit).string}`, [
-    humanize,
-    unit,
-  ]);
+  const tickFormat = React.useCallback(tick => `${humanize(tick, unit, unit).string}`, [humanize, unit]);
 
   const getLabel = React.useCallback(
-    (prop) => {
+    prop => {
       const { x, y, description } = prop.datum as DataPoint<Date>;
       const value = humanize(y, unit, unit).string;
       const date = formatDate(x);
@@ -89,35 +57,15 @@ export const AreaChart: React.FC<AreaChartProps> = ({
     [humanize, unit, formatDate],
   );
 
-  const multiLine = data && data.filter((d) => !!d).length > 1;
+  const multiLine = data && data.filter(d => !!d).length > 1;
 
-  const container = (
-    <ChartVoronoiContainer
-      voronoiDimension="x"
-      labels={getLabel}
-      activateData={false}
-      labelComponent={
-        <ChartTooltip
-          centerOffset={multiLine ? { x: 0, y: -40 } : undefined}
-          pointerLength={multiLine ? 40 : undefined}
-        />
-      }
-    />
-  );
+  const container = <ChartVoronoiContainer voronoiDimension="x" labels={getLabel} activateData={false} labelComponent={<ChartTooltip centerOffset={multiLine ? { x: 0, y: -40 } : undefined} pointerLength={multiLine ? 40 : undefined} />} />;
 
   return (
     <PrometheusGraph className={className} ref={containerRef} title={title}>
       {data && data[0] && data[0].length ? (
         <PrometheusGraphLink query={query}>
-          <Chart
-            containerComponent={container}
-            domainPadding={{ y: 20 }}
-            height={height}
-            width={width}
-            theme={theme}
-            scale={{ x: 'time', y: 'linear' }}
-            padding={padding}
-          >
+          <Chart containerComponent={container} domainPadding={{ y: 20 }} height={height} width={width} theme={theme} scale={{ x: 'time', y: 'linear' }} padding={padding}>
             {xAxis && <ChartAxis tickCount={tickCount} tickFormat={formatDate} />}
             {yAxis && <ChartAxis dependentAxis tickCount={tickCount} tickFormat={tickFormat} />}
             <ChartGroup>
@@ -134,14 +82,7 @@ export const AreaChart: React.FC<AreaChartProps> = ({
   );
 };
 
-export const Area: React.FC<AreaProps> = ({
-  namespace,
-  query,
-  samples = DEFAULT_SAMPLES,
-  timeout,
-  timespan = DEFAULT_TIMESPAN,
-  ...rest
-}) => {
+export const Area: React.FC<AreaProps> = ({ namespace, query, samples = DEFAULT_SAMPLES, timeout, timespan = DEFAULT_TIMESPAN, ...rest }) => {
   const [response, , loading] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY_RANGE,
     namespace,
@@ -151,7 +92,7 @@ export const Area: React.FC<AreaProps> = ({
     timespan,
   });
   const data = getRangeVectorStats(response);
-  return <AreaChart data={[data]} loading={loading} query={query} {...rest} />;
+  return <AreaChart data={[data]} loading={loading} {...rest} />;
 };
 
 type AreaChartProps = {
