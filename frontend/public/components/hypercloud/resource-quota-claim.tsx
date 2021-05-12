@@ -147,9 +147,9 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_2')}</dt>
                 <dd>{resourcequotaclaims?.status?.reason}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_3')}</dt>
-                <dd>{resourcequotaclaims?.specLimit?.limitCpu}</dd>
+                <dd>{resourcequotaclaims?.hard?.limitCpu}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_4')}</dt>
-                <dd>{resourcequotaclaims?.specLimit?.limitMemory}</dd>
+                <dd>{resourcequotaclaims?.hard?.limitMemory}</dd>
               </dl>
             </div>
           </div>
