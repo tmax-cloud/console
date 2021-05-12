@@ -154,9 +154,8 @@ const ServicePlansPage: React.FC<ServicePlansPageProps> = props => {
           }}
           title={sidebarTitle}
           isFloat={true}
-          customPathId="metadata.name"
-          showName={false}
-          showID={true}
+          showName={true}
+          showID={false}
           showPodSelector={false}
           showNodeSelector={false}
           showOwner={false}
