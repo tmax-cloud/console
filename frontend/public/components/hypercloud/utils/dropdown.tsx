@@ -2,7 +2,6 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { CaretDownIcon } from '@patternfly/react-icons';
-import { ResourceName } from '../../utils/resource-icon';
 import { useFormContext } from 'react-hook-form';
 import { usePrevious } from '@console/metal3-plugin/src/hooks';
 
@@ -286,67 +285,4 @@ type DropdownProps = {
   required?: boolean,
   disabled?: boolean,
   methods?: any
-};
-
-const containerLabel = (container) => (
-  <ResourceName name={container ? container.name : ''} kind="Container" />
-);
-
-const getSpacer = (container) => {
-  const spacerBefore = new Set<string>();
-  return container ? spacerBefore.add(container.name) : spacerBefore;
-};
-
-const getHeaders = (container, initContainer) => {
-  return initContainer
-    ? {
-      [container.name]: 'Containers',
-      [initContainer.name]: 'Init Containers',
-    }
-    : {};
-};
-
-const ContainerDropdown_: React.SFC<ContainerDropdownProps> = (props) => {
-  const { name, containers, initContainers } = props;
-  if (_.isEmpty(containers) && _.isEmpty(initContainers)) {
-    return null;
-  }
-  const firstInitContainer = _.find(initContainers, { order: 0 });
-  const firstContainer = _.find(containers, { order: 0 });
-  const spacerBefore = getSpacer(firstInitContainer);
-  const headerBefore = getHeaders(firstContainer, firstInitContainer);
-  const dropdownItems = _.mapValues(_.merge(containers, initContainers), containerLabel);
-  const title = props.title || containerLabel(firstContainer);
-  return (
-    <Dropdown
-      name={name}
-      className="btn-group"
-      menuClassName="dropdown-menu--text-wrap"
-      headerBefore={headerBefore}
-      items={dropdownItems}
-      spacerBefore={spacerBefore}
-      title={title}
-    />
-  );
-};
-
-export const ContainerDropdown = React.memo(ContainerDropdown_);
-
-
-ContainerDropdown_.defaultProps = {
-  initContainers: {},
-};
-
-type Container = {
-  [key: string]: {
-    name: string,
-    order?: number
-  }
-}
-
-type ContainerDropdownProps = {
-  name: string,
-  title?: React.ReactNode,
-  containers: Container | Container[];
-  initContainers?: Container
 };
