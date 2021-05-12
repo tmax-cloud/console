@@ -58,7 +58,7 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
       title: t('COMMON:FRAMEWORK'),
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
-    },    
+    },
     {
       title: t('COMMON:URL'),
       transforms: [sortable],
@@ -74,7 +74,7 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[6] },
-    },    
+    },
     {
       title: '',
       props: { className: tableColumnClasses[7] },
@@ -106,7 +106,7 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
       <TableData className={tableColumnClasses[3]}>{framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{isvc.status.url}</TableData>
-      <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'Y' : 'N'}</TableData>
+      <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'N' : 'Y'}</TableData>
       <TableData className={tableColumnClasses[6]}>{time}</TableData>
       <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={isvc} />
@@ -119,7 +119,7 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
 
 export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
-  
+
   //const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
   const phase = InferenceServicePhase(ds);
 
@@ -132,14 +132,14 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
   });
 
   return (
-    <dl className="co-m-pane__details">      
+    <dl className="co-m-pane__details">
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:INFERENCEURL')}`} obj={ds} path="status.url">
         {ds.status.url}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">        
+      <DetailsItem label={`${t('COMMON:PREDICTOR')}`} obj={ds} path="spec.predictor">
         {framework}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:TRANSFOMER')}`} obj={ds} path="spec.transformer">
@@ -147,7 +147,7 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:EXPLAINER')}`} obj={ds} path="spec.explainer">
         {(ds.spec.explainer) ? 'Y' : 'N'}
-      </DetailsItem>      
+      </DetailsItem>
     </dl>
   );
 }
@@ -175,46 +175,32 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
       framework = curPredictor;
     }
   });
-  if (isvc.spec.predictor[framework]?.storageUri) {
-    return (
-      <>
-        <div className="co-m-pane__body">
-          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
-          <div className="row">
-            <div className="col-lg-6">
-              <ResourceSummary resource={isvc} />
-            </div>
-            <div className="col-lg-6">
-              <InferenceServiceDetailsList ds={isvc} />
-            </div>
-          </div>
-        </div>
-        <div className="co-m-pane__body">          
-            <SectionHeading text="Models" />
-            <div className="row">
 
-            </div>          
-        </div>
-      </>
-    );
-  }
-  else {
-    return (
-      <>
-        <div className="co-m-pane__body">
-          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
-          <div className="row">
-            <div className="col-lg-6">
-              <ResourceSummary resource={isvc} />
-            </div>
-            <div className="col-lg-6">
-              <InferenceServiceDetailsList ds={isvc} />
-            </div>
+  const multiModelToggle = (isvc.spec.predictor[framework]?.storageUri) ? false : true;
+
+  return (
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(isvc, t) })} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={isvc} />
           </div>
-        </div>        
-      </>
-    );
-  }  
+          <div className="col-lg-6">
+            <InferenceServiceDetailsList ds={isvc} />
+          </div>
+        </div>
+      </div>
+      {multiModelToggle === true &&
+        <div className="co-m-pane__body">
+          <SectionHeading text="Models" />
+          <div className="row">
+
+          </div>
+        </div>
+      }
+    </>
+  );  
 };
 //<Table aria-label="InferenceServices" Header={ModelTableHeader.bind(null, t)} Row={ModelTableRow} virtualize />
 const { details, editYaml } = navFactory;
