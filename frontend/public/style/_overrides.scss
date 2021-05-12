@@ -619,3 +619,8 @@ button.pf-c-dropdown__menu-item.hover {
 .pf-c-wizard__nav {
   z-index: 150 !important;
 }
+
+.btn-group-audit ul { 
+    overflow-y: auto;
+    max-height: 500px;
+}

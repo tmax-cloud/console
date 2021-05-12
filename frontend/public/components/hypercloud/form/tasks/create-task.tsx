@@ -59,7 +59,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
         paramDefaultValues = paramDefaultValues.map(item => {
           if (item.type === 'array') {
             return _.assign(item, {
-              default: item.default.map(cur => {
+              default: item.default?.map(cur => {
                 return { value: cur };
               }),
             });
@@ -108,7 +108,23 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
       if (_.has(defaultValues, 'spec.steps')) {
         let stepDefaultValues = _.get(defaultValues, 'spec.steps');
-        stepDefaultValues = stepDefaultValues.map(item => {});
+        stepDefaultValues = stepDefaultValues.map(item => {
+          return _.assign(item, {
+            command: item.command?.map(cur => {
+              return {value: cur};
+            }),
+            env: item.env?.map(cur=> {
+              return {
+                envKey: [cur],
+                envValue: cur
+              }
+            }),
+            args: item.args?.map(cur => {
+              return {value: cur}
+            })
+          })
+        });
+        setStep(stepDefaultValues);
       }
     }
   }, []);
@@ -239,6 +255,10 @@ export const onSubmitCallback = data => {
     if (cur.imageToggle === 'registry') {
       cur.image = `${cur.registryRegistry}-${cur.registryImage}-${cur.registryTag}`;
 
+      delete data.spec.steps[idx].registryRegistry;
+      delete data.spec.steps[idx].registryImage;
+      delete data.spec.steps[idx].registryTag;
+    } else {
       delete data.spec.steps[idx].registryRegistry;
       delete data.spec.steps[idx].registryImage;
       delete data.spec.steps[idx].registryTag;

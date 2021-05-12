@@ -1,31 +1,31 @@
 import * as React from 'react';
 import { Section } from '../../utils/section';
-import { RadioGroup } from '../../utils/radio';
-import { ResourceDropdown } from '../../utils/resource-dropdown';
+// import { RadioGroup } from '../../utils/radio';
+// import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { ListView } from '../../utils/list-view';
-import { useWatch } from 'react-hook-form';
+// import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
-import { modelFor, k8sList } from '@console/internal/module/k8s';
-import { makeQuery } from '../../../utils/k8s-watcher';
+// import { modelFor, k8sList } from '@console/internal/module/k8s';
+// import { makeQuery } from '../../../utils/k8s-watcher';
 
 export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
-  const ImageRadioList = [
-    // RadioGroup 컴포넌트에 넣어줄 items
-    {
-      title: 'Image Registry',
-      value: 'registry',
-    },
-    {
-      title: '직접 입력',
-      value: 'manual',
-    },
-  ];
+  // const ImageRadioList = [
+  //   // RadioGroup 컴포넌트에 넣어줄 items
+  //   {
+  //     title: 'Image Registry',
+  //     value: 'registry',
+  //   },
+  //   {
+  //     title: '직접 입력',
+  //     value: 'manual',
+  //   },
+  // ];
 
   // const [isOpen, setIsOpen] = React.useState(false);
-  const [imageList, setImageList] = React.useState({});
-  const [imageTagList, setImageTagList] = React.useState({});
+  // const [imageList, setImageList] = React.useState({});
+  // const [imageTagList, setImageTagList] = React.useState({});
 
   let volumeItems = {};
   // volume 있는지 여부
@@ -117,61 +117,64 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   }
 
   // radio toggle용
-  const imageToggle = useWatch({
-    control: methods.control,
-    name: 'imageToggle',
-    defaultValue: template ? template.imageToggle : 'registry',
-  });
-  const imageRegistry = useWatch({
-    control: methods.control,
-    name: 'registryRegistry',
-    defaultValue: template ? template.registryRegistry : null,
-  });
-  const image = useWatch({
-    control: methods.control,
-    name: 'registryImage',
-    defaultValue: template ? template.registryImage : null,
-  });
+  // const imageToggle = useWatch({
+  //   control: methods.control,
+  //   name: 'imageToggle',
+  //   defaultValue: template ? template.imageToggle : 'registry',
+  // });
+  // const imageRegistry = useWatch({
+  //   control: methods.control,
+  //   name: 'registryRegistry',
+  //   defaultValue: template ? template.registryRegistry : null,
+  // });
+  // const image = useWatch({
+  //   control: methods.control,
+  //   name: 'registryImage',
+  //   defaultValue: template ? template.registryImage : null,
+  // });
 
-  // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
-  React.useEffect(() => {
-    const ko = modelFor('Repository');
-    let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
-    k8sList(ko, query)
-      .then(reponse => reponse)
-      .then(data => {
-        if (data.length === 0) return;
-        let imageItems = {};
-        data.forEach(cur => {
-          imageItems[cur.spec.name] = cur.spec.name;
-        });
-        setImageList(() => imageItems);
-      });
-  }, [imageRegistry]);
+  // // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
+  // React.useEffect(() => {
+  //   const ko = modelFor('Repository');
+  //   let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
+  //   k8sList(ko, query)
+  //     .then(reponse => reponse)
+  //     .then(data => {
+  //       if (data.length === 0) return;
+  //       let imageItems = {};
+  //       data.forEach(cur => {
+  //         imageItems[cur.spec.name] = cur.spec.name;
+  //       });
+  //       setImageList(() => imageItems);
+  //     });
+  // }, [imageRegistry]);
 
-  // Image 선택되면 ImageTag Dropdown 메뉴 채워주기
-  React.useEffect(() => {
-    const ko = modelFor('Repository');
-    let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
-    k8sList(ko, query)
-      .then(reponse => reponse)
-      .then(data => {
-        if (data.length === 0) return;
-        let imageTagItems = {};
-        let curImage = data.filter(cur => image === cur.spec.name)[0];
-        curImage.spec.versions.forEach(cur => {
-          imageTagItems[cur.version] = cur.version;
-        });
-        setImageTagList(() => imageTagItems);
-      });
-  }, [image]);
+  // // Image 선택되면 ImageTag Dropdown 메뉴 채워주기
+  // React.useEffect(() => {
+  //   const ko = modelFor('Repository');
+  //   let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
+  //   k8sList(ko, query)
+  //     .then(reponse => reponse)
+  //     .then(data => {
+  //       if (data.length === 0) return;
+  //       let imageTagItems = {};
+  //       let curImage = data.filter(cur => image === cur.spec.name)[0];
+  //       curImage.spec.versions.forEach(cur => {
+  //         imageTagItems[cur.version] = cur.version;
+  //       });
+  //       setImageTagList(() => imageTagItems);
+  //     });
+  // }, [image]);
 
   return (
     <>
       <Section label="Name" id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="이미지" id="step-image-toggle">
+      <Section label="이미지" id="step-manual-image">
+          <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
+      </Section>
+      {/* <Section label="이미지" id="step-image-toggle">
         <RadioGroup
           methods={methods}
           name="imageToggle" // 서버에 보낼 데이터에서의 path (필수)
@@ -232,7 +235,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
           </Section>
         </>
-      )}
+      )} */}
       <Section label="커맨드" id="step-command">
         <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
       </Section>

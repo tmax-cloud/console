@@ -37,12 +37,12 @@ const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = prop
   const pages = [
     {
       href: '',
-      name: 'Overview',
+      name: t('COMMON:MSG_DETAILS_TABOVERVIEW_1'),
       component: NodeDashboard,
     },
     {
       href: 'details',
-      name: 'Details',
+      name: t('COMMON:MSG_DETAILS_TAB_1'),
       component: NodeDetails,
     },
     editResource(),
