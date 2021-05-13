@@ -34,10 +34,10 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
 
   return (
     <>
-      <Section label="Name" id="workspace_name" isRequired={true}>
+      <Section label="이름" id="workspace_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="Description" id="workspace_desc">
+      <Section label="설명" id="workspace_desc">
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
       <Section label="마운트 경로" id="workspace_mountPath">

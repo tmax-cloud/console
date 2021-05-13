@@ -168,7 +168,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
 
   return (
     <>
-      <Section label="Name" id="step-name" isRequired={true}>
+      <Section label="이름" id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <Section label="이미지" id="step-manual-image">
@@ -185,10 +185,10 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </Section>
       {imageToggle === 'registry' && (
         <>
-          <Section id="registrydropdown" label="이미지 레지스트리">
+          <Section id="registrydropdown" label="컨테이너 레지스트리">
             <ResourceDropdown
               name="registryRegistry"
-              placeholder="이미지 레지스트리 선택"
+              placeholder="컨테이너 레지스트리 선택"
               methods={methods}
               defaultValue={modalType === 'modify' ? imageRegistry : ''}
               resources={[

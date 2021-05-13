@@ -1,9 +1,11 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/hypercloud/factory/modal';
+import {useTranslation} from 'react-i18next'
 
 export const _ModalLauncher = props => {
   const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id } = props;
+  const {t} = useTranslation();
   const onCancel = () => {
     // 수정일 경우에만 타는 로직
     let isModify = document.getElementById(`${id}-list`) ? true : false;
@@ -20,7 +22,7 @@ export const _ModalLauncher = props => {
     <form onSubmit={handleMethod.bind(null, cancel, index)}>
       <ModalTitle>{title}</ModalTitle>
       <ModalBody>{children}</ModalBody>
-      <ModalSubmitFooter errorMessage={errorMessage} id="uId" inProgress={inProgress} onCancel={onCancel} submitText={submitText} cancel={cancel} />
+      <ModalSubmitFooter errorMessage={errorMessage} id="uId" inProgress={inProgress} onCancel={onCancel} submitText={submitText} cancelText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')} cancel={cancel} />
     </form>
   );
 };

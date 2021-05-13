@@ -147,10 +147,10 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
 
   return (
     <>
-      <Section label="Labels" id="label" description="이것은 Label입니다.">
+      <Section label="라벨" id="label">
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
       </Section>
-      <Section label="Input Resource" id="inputResource">
+      <Section label="인풋 리소스" id="inputResource">
         <>
           <ModalList list={inputResource} id="input-resource" title="Input Resource" children={<InputResourceModal methods={methods} inputResource={inputResource} />} onRemove={removeModalData.bind(null, inputResource, setInputResource)} handleMethod={handleModalData.bind(null, 'input-resource', inputResourceArr, inputResource, setInputResource, false, methods)} methods={methods} description="이 태스크와 연결된 인풋 리소스가 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: 'Input Resource', id: 'input-resource', handleMethod: handleModalData.bind(null, 'input-resource', inputResourceArr, inputResource, setInputResource, true, methods), children: <InputResourceModal methods={methods} inputResource={inputResource} />, submitText: '추가' })}>
@@ -158,7 +158,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
           </span>
         </>
       </Section>
-      <Section label="Output Resource" id="outputResource">
+      <Section label="아웃풋 리소스" id="outputResource">
         <>
           <ModalList list={outputResource} id="output-resource" title="Output Resource" children={<OutputResourceModal methods={methods} outputResource={outputResource} />} onRemove={removeModalData.bind(null, outputResource, setOutputResource)} handleMethod={handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, false, methods)} methods={methods} description="이 태스크와 연결된 아웃풋 리소스가 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: 'Out Resource', id: 'output-resource', handleMethod: handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, true, methods), children: <OutputResourceModal methods={methods} outputResource={outputResource} />, submitText: '추가' })}>
