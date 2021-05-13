@@ -31,16 +31,16 @@ spec:
             - --keycloak-client-id=@@CLIENTID@@
             - --mc-mode=@@MC_MODE@@
             - --kiali-endpoint=https://@@KIALI@@/api/kiali/
-            - --kibana-endpoint=https://@@KIBANA@@/api/kibana/
+            - --kibana-endpoint=http://@@KIBANA@@/api/kibana/
             - --kubeflow-endpoint=http://@@KUBEFLOW@@/api/kubeflow/
             - --managed-gitlab-url=@@GITLAB@@
           image: tmaxcloudck/hypercloud-console:@@CONSOLE_VER@@
           imagePullPolicy: Always
           name: console
           ports:
-            - containerPort: 6443
+            - containerPort: 443
               protocol: TCP
-            - containerPort: 8080
+            - containerPort: 80
               protocol: TCP
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
