@@ -3,9 +3,11 @@ module console
 go 1.15
 
 require (
+	github.com/auth0/go-jwt-middleware v1.0.0
 	github.com/cenkalti/backoff/v4 v4.1.0
 	github.com/eapache/channels v1.1.0
 	github.com/eapache/queue v1.1.0 // indirect
+	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/gorilla/handlers v1.5.1
