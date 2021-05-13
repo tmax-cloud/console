@@ -48,8 +48,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         id: 'developer',
         name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') :  'Developer', // 임시. 스트링 나오면 재적용 필요
         icon: <CogsIcon />,
-        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
-        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
+        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
+        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
       },
     },
@@ -71,8 +71,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         id: 'developer',
         name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') :  'Developer', // 임시. 스트링 나오면 재적용 필요
         icon: <CogsIcon />,
-        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
-        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/dashboards' : '/welcome'),
+        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
+        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
       },
     },
