@@ -4,8 +4,8 @@
 ## 구성 요소
 * hypercloud-console ([tmaxcloudck/hypercloud-console](https://hub.docker.com/r/tmaxcloudck/hypercloud-console/tags))
 * console-operator ([tmaxcloudck/console-operator](https://hub.docker.com/r/tmaxcloudck/console-operator/tags))
-* 가이드 작성 시점(2021/04/20) 최신 버전은 아래와 같습니다. 
-    * hypercloud-console:5.1.4.3
+* 가이드 작성 시점(2021/05/13) 최신 버전은 아래와 같습니다. 
+    * hypercloud-console:5.0.9.4
     * console-operator:5.1.0.1
 
 ## Prerequisites
@@ -22,7 +22,7 @@
 	  ```bash
 	  mkdir -p ~/console-install
       export CONSOLE_HOME=~/console-install 
-      export CONSOLE_VERSION=5.1.4.3
+      export CONSOLE_VERSION=5.0.9.0
       export OPERATOR_VERSION=5.1.0.1
       cd $CONSOLE_HOME
 	  ```
@@ -98,18 +98,18 @@
 * 순서 : 
     1. deployments 폴더에 [5.deploy.yaml](https://github.com/tmax-cloud/install-console/blob/5.0/deployments/5.deploy.yaml) 파일에 다음의 문자열들을 교체해줍니다.
     
-    | 문자열 | 상세내용 | 형식예시 |
-    | ---- | ---- | ---- |
-    | `@@OPERATOR_VER@@` | hypercloud-console 이미지 태그 입력 | `5.1.x.x` |
-    | `@@REALM@@` | hyperauth이용하여 로그인 시 필요한 정보 입력 | `tmax` |
-    | `@@KEYCLOAK@@` | `kubectl get svc -n hyperauth hyperauth` 에서 EXTERNAL-IP 확인하여 입력 | `10.x.x.x` |
-    | `@@CLIENTID@@` | hyperauth이용하여 로그인 시 필요한 client 정보 입력 | `hypercloud5` | 
-    | `@@MC_MODE@@` | Multi Cluster 모드로 설치하려는 경우 `true` 입력 (아닌 경우 행 삭제) | `true` |
-    | `@@KIALI@@` | `kubectl get ingress kiali -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"` 에서 ADDRESS 확인하여 입력 (https 기본 포트사용함, 별도입력 X) | `10.x.x.x` |
-    | `@@KIBANA@@` | `kubectl get svc -n kube-logging kibana` 에서 CLUSTER-IP와 PORT(defalut 5601) 확인하여 입력 (포트는 `:` 왼쪽 값 사용) | `10.x.x.x:5601` |
-    | `@@KUBEFLOW@@` | `kubectl svc -n istio-system istio-ingressgateway`에서 CLUSTER-IP 확인하여 입력 (http 기본 포트 사용) | `10.x.x.x` |
-    | `@@GITLAB@@` | 비고 참고 | `http://gitlab/` |
-    | `@@CONSOLE_VER@@` | hypercloud-console 이미지 태그 입력 | `0.5.x.x` |
+    | 문자열             | 상세내용                                                                                                                                                      | 형식예시         |
+    | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+    | `@@OPERATOR_VER@@` | hypercloud-console 이미지 태그 입력                                                                                                                           | `5.0.x.x`        |
+    | `@@REALM@@`        | hyperauth이용하여 로그인 시 필요한 정보 입력                                                                                                                  | `tmax`           |
+    | `@@KEYCLOAK@@`     | `kubectl get svc -n hyperauth hyperauth` 에서 EXTERNAL-IP 확인하여 입력                                                                                       | `10.x.x.x`       |
+    | `@@CLIENTID@@`     | hyperauth이용하여 로그인 시 필요한 client 정보 입력                                                                                                           | `hypercloud5`    |
+    | `@@MC_MODE@@`      | Multi Cluster 모드로 설치하려는 경우 `true` 입력 (아닌 경우 행 삭제)                                                                                          | `true`           |
+    | `@@KIALI@@`        | `kubectl get ingress kiali -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"` 에서 ADDRESS 확인하여 입력 (https 기본 포트사용함, 별도입력 X) | `10.x.x.x`       |
+    | `@@KIBANA@@`       | `kubectl get svc -n kube-logging kibana` 에서 CLUSTER-IP와 PORT(defalut 5601) 확인하여 입력 (포트는 `:` 왼쪽 값 사용)                                         | `10.x.x.x:5601`  |
+    | `@@KUBEFLOW@@`     | `kubectl svc -n istio-system istio-ingressgateway`에서 CLUSTER-IP 확인하여 입력 (http 기본 포트 사용)                                                         | `10.x.x.x`       |
+    | `@@GITLAB@@`       | 비고 참고                                                                                                                                                     | `http://gitlab/` |
+    | `@@CONSOLE_VER@@`  | hypercloud-console 이미지 태그 입력                                                                                                                           | `0.5.x.x`        |
     
     * `kubectl apply -f 5.deploy.yaml` 을 실행합니다.
 * 비고
@@ -136,7 +136,7 @@
     1. 쉘 스크립트 실행 시 필요한 변수 값들을 설정한다. (변수 값 설명은 [Deployment (with Pod Template) 생성](#step-5-deployment-with-pod-template-생성) 참고)
         ```sh
         export OPERATOR_VER=5.1.x.x
-        export CONSOLE_VER=5.1.x.x
+        export CONSOLE_VER=5.0.x.x
         export REALM=tmax
         export KEYCLOAK=hyperauth.org
         export CLIENTID=hypercloud5
