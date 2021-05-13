@@ -33,6 +33,7 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
     name: 'new-pipeline',
     params: [],
     resources: [],
+    workspaces: [],
     tasks: [],
     listTasks: [],
     ...(convertPipelineToBuilderForm(existingPipeline) || {}),
