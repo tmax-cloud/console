@@ -8,8 +8,10 @@ import { getName, getNamespace } from '@console/shared';
 import { SectionHeading, EmptyBox } from '@console/internal/components/utils';
 import { Button } from '@patternfly/react-core';
 import { EyeSlashIcon, EyeIcon } from '@patternfly/react-icons';
+import { useTranslation } from 'react-i18next';
 
 export const GetSecret: React.FC<GetSecretProps> = ({ obj }) => {
+  const { t } = useTranslation();
   const [reveal, setReveal] = React.useState(false);
   const [secretData, setSecretData] = React.useState([]);
 
@@ -65,18 +67,18 @@ export const GetSecret: React.FC<GetSecretProps> = ({ obj }) => {
             {reveal ? (
               <>
                 <EyeSlashIcon className="co-icon-space-r" />
-                Hide Values
+                {t('COMMON:MSG_COMMON_BUTTON_ETC_3')}
               </>
             ) : (
               <>
                 <EyeIcon className="co-icon-space-r" />
-                Reveal Values
+                {t('COMMON:MSG_COMMON_BUTTON_ETC_2')}
               </>
             )}
           </Button>
         ) : null}
       </SectionHeading>
-      {dl.length ? <dl className="secret-data">{dl}</dl> : <EmptyBox label="Data" />}
+      {dl.length ? <dl className="secret-data">{dl}</dl> : <EmptyBox label={t('COMMON:MSG_DETAILS_TABDETAILS_DATA_1')} />}
     </div>
   ) : null;
 };

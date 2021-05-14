@@ -145,17 +145,17 @@ export const secretTypeFilterReducer = secret => {
   }
 };
 
-const filters = [
-  {
-    filterGroupName: 'Type',
-    type: 'secret-type',
-    reducer: secretTypeFilterReducer,
-    items: secretTypeFilterValues.map(filterValue => ({ id: filterValue, title: filterValue })),
-  },
-];
-
 const SecretsPage = props => {
   const { t } = useTranslation();
+
+  const filters = [
+    {
+      filterGroupName: t('COMMON:MSG_DETAILS_TABDETAILS_SECRETS_TABLEHEADER_3'),
+      type: 'secret-type',
+      reducer: secretTypeFilterReducer,
+      items: secretTypeFilterValues.map(filterValue => ({ id: filterValue, title: filterValue })),
+    },
+  ];
 
   const createItems = {
     generic: t('SINGLE:MSG_SECRETS_MAIN_BUTTON_1'),
