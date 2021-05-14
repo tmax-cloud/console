@@ -3,6 +3,7 @@ import { Base64 } from 'js-base64';
 import { saveAs } from 'file-saver';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
+import { useTranslation } from 'react-i18next';
 
 import { CopyToClipboard, EmptyBox, SectionHeading } from './utils';
 
@@ -77,6 +78,7 @@ export const SecretValue: React.FC<SecretValueProps> = ({ value, reveal, encoded
 SecretValue.displayName = 'SecretValue';
 
 export const SecretData: React.FC<SecretDataProps> = ({ data, title = 'Data' }) => {
+  const { t } = useTranslation();
   const [reveal, setReveal] = React.useState(false);
 
   const dl = [];
@@ -93,7 +95,7 @@ export const SecretData: React.FC<SecretDataProps> = ({ data, title = 'Data' }) 
 
   return (
     <>
-      <SectionHeading text={title}>
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DATA_1')}>
         {dl.length ? (
           <Button
             type="button"
@@ -104,18 +106,18 @@ export const SecretData: React.FC<SecretDataProps> = ({ data, title = 'Data' }) 
             {reveal ? (
               <>
                 <EyeSlashIcon className="co-icon-space-r" />
-                Hide Values
+                {t('COMMON:MSG_COMMON_BUTTON_ETC_3')}
               </>
             ) : (
               <>
                 <EyeIcon className="co-icon-space-r" />
-                Reveal Values
+                {t('COMMON:MSG_COMMON_BUTTON_ETC_2')}
               </>
             )}
           </Button>
         ) : null}
       </SectionHeading>
-      {dl.length ? <dl className="secret-data">{dl}</dl> : <EmptyBox label="Data" />}
+      {dl.length ? <dl className="secret-data">{dl}</dl> : <EmptyBox label={t('COMMON:MSG_DETAILS_TABDETAILS_DATA_1')} />}
     </>
   );
 };
