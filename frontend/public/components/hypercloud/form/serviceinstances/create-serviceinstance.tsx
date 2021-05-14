@@ -121,14 +121,14 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   const [loaded, setLoaded] = React.useState(false);
   const [serviceClass, setServiceClass] = React.useState<K8sResourceKind>();
   const [servicePlanList, setServicePlanList] = React.useState([]);
-  const [selectedPlan, setSelectedPlan] = React.useState(0);
+  const [selectedPlan, setSelectedPlan] = React.useState(-1);
   const [data, setData] = React.useState<K8sResourceKind>();
 
   const { namespace, serviceClassName, isClusterServiceClass } = React.useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
     const isClusterServiceClass = searchParams.has('cluster-service-class');
     const serviceClassName = isClusterServiceClass ? searchParams.get('cluster-service-class') : searchParams.get('service-class');
-    k8sGet(isClusterServiceClass ? ClusterServiceClassModel : ServiceClassModel, serviceClassName, !isClusterServiceClass && namespace)
+    k8sGet(isClusterServiceClass ? ClusterServiceClassModel : ServiceClassModel, serviceClassName, !isClusterServiceClass && params.ns)
       .then(res =>{
         setServiceClass(res);
       });
@@ -138,9 +138,11 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   React.useEffect(() => {
     k8sList(isClusterServiceClass ? ClusterServicePlanModel : ServicePlanModel, !isClusterServiceClass ? { ns: namespace } : {})
       .then(plans => {
-        setServicePlanList(plans.filter(plan => {
+        const newPlanList = plans.filter(plan => {
           return isClusterServiceClass ? plan.spec.clusterServiceClassRef.name === serviceClassName : plan.spec.serviceClassRef.name === serviceClassName;
-        }));
+        });
+        setServicePlanList(newPlanList);
+        newPlanList.length > 0 && setSelectedPlan(0);
         setLoaded(true);
       });
   }, [])
@@ -150,8 +152,8 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   const title = `Create ${kind}`;
 
   const steps = [
-    { name: '서비스 플랜 선택', component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} /> },
-    { name: '서비스 인스턴스 설정', component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: 'Create' }
+    { name: '서비스 플랜 선택', component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0 },
+    { name: '서비스 인스턴스 설정', component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: 'Create', canJumpTo: selectedPlan >= 0 }
   ];
 
   return (
