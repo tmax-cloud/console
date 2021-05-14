@@ -60,6 +60,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         id: 'master',
         name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_3') : 'Master-Cluster',
         icon: <CogsIcon />,
+        default: true,
         getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
         getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
