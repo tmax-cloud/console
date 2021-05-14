@@ -624,3 +624,12 @@ button.pf-c-dropdown__menu-item.hover {
     overflow-y: auto;
     max-height: 500px;
 }
+
+.horizontal-line {
+  border-top: 1px #858585 solid;
+  margin: 20px 0;
+}
+
+.text-area {
+  resize: none;
+}

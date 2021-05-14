@@ -143,24 +143,24 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   let taskParameterArr = ['name', 'description', 'type', 'default'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
   let volumeArr = ['name', 'type'];
-  let stepArr = ['name', 'imageToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'env'];
+  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env'];
 
   return (
     <>
-      <Section label="Labels" id="label" description="이것은 Label입니다.">
+      <Section label="레이블" id="label" description="Enter를 입력하여 레이블을 추가할 수 있습니다.">
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
       </Section>
-      <Section label="Input Resource" id="inputResource">
+      <Section label="인풋 리소스" id="inputResource">
         <>
-          <ModalList list={inputResource} id="input-resource" title="Input Resource" children={<InputResourceModal methods={methods} inputResource={inputResource} />} onRemove={removeModalData.bind(null, inputResource, setInputResource)} handleMethod={handleModalData.bind(null, 'input-resource', inputResourceArr, inputResource, setInputResource, false, methods)} methods={methods} description="이 태스크와 연결된 인풋 리소스가 없습니다."></ModalList>
+          <ModalList list={inputResource} id="input-resource" title="Input Resource" children={<InputResourceModal methods={methods} inputResource={inputResource} />} onRemove={removeModalData.bind(null, inputResource, setInputResource)} handleMethod={handleModalData.bind(null, 'input-resource', inputResourceArr, inputResource, setInputResource, false, methods)} methods={methods} description="이 태스크와 추가된 인풋 리소스가 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: 'Input Resource', id: 'input-resource', handleMethod: handleModalData.bind(null, 'input-resource', inputResourceArr, inputResource, setInputResource, true, methods), children: <InputResourceModal methods={methods} inputResource={inputResource} />, submitText: '추가' })}>
             + 인풋 리소스 추가
           </span>
         </>
       </Section>
-      <Section label="Output Resource" id="outputResource">
+      <Section label="아웃풋 리소스" id="outputResource">
         <>
-          <ModalList list={outputResource} id="output-resource" title="Output Resource" children={<OutputResourceModal methods={methods} outputResource={outputResource} />} onRemove={removeModalData.bind(null, outputResource, setOutputResource)} handleMethod={handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, false, methods)} methods={methods} description="이 태스크와 연결된 아웃풋 리소스가 없습니다."></ModalList>
+          <ModalList list={outputResource} id="output-resource" title="Output Resource" children={<OutputResourceModal methods={methods} outputResource={outputResource} />} onRemove={removeModalData.bind(null, outputResource, setOutputResource)} handleMethod={handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, false, methods)} methods={methods} description="이 태스크와 추가된 아웃풋 리소스가 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: 'Out Resource', id: 'output-resource', handleMethod: handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, true, methods), children: <OutputResourceModal methods={methods} outputResource={outputResource} />, submitText: '추가' })}>
             + 아웃풋 리소스 추가
           </span>
@@ -168,7 +168,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="태스크 파라미터 구성" id="taskParamter">
         <>
-          <ModalList list={taskParameter} id="task-parameter" title="태스크 파라미터 구성" children={<TaskParameterModal methods={methods} taskParameter={taskParameter} />} onRemove={removeModalData.bind(null, taskParameter, setTaskParameter)} handleMethod={handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, false, methods)} methods={methods} description="이 태스크와 연결된 태스크 파라미터 구성이 없습니다."></ModalList>
+          <ModalList list={taskParameter} id="task-parameter" title="태스크 파라미터 구성" children={<TaskParameterModal methods={methods} taskParameter={taskParameter} />} onRemove={removeModalData.bind(null, taskParameter, setTaskParameter)} handleMethod={handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, false, methods)} methods={methods} description="이 태스크와 추가된 태스크 파라미터 구성이 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: '태스크 파라미터', id: 'task-parameter', handleMethod: handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, true, methods), children: <TaskParameterModal methods={methods} taskParameter={taskParameter} />, submitText: '추가' })}>
             + 태스크 파라미터 추가
           </span>
@@ -176,7 +176,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="워크스페이스 구성" id="workSpace">
         <>
-          <ModalList list={workSpace} id="work-space" title="워크스페이스 구성" children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, false, methods)} methods={methods} description="이 태스크와 연결된 워크스페이스 구성이 없습니다."></ModalList>
+          <ModalList list={workSpace} id="work-space" title="워크스페이스 구성" children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, false, methods)} methods={methods} description="이 태스크와 추가된 워크스페이스 구성이 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: '워크스페이스', id: 'work-space', handleMethod: handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, true, methods), children: <WorkSpaceModal methods={methods} workSpace={workSpace} />, submitText: '추가' })}>
             + 워크스페이스 추가
           </span>
@@ -184,7 +184,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="볼륨" id="volume">
         <>
-          <ModalList list={volume} id="volume" title="볼륨 구성" children={<VolumeModal methods={methods} volume={volume} />} onRemove={removeModalData.bind(null, volume, setVolume)} handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)} methods={methods} description="이 태스크와 연결된 볼륨이 없습니다."></ModalList>
+          <ModalList list={volume} id="volume" title="볼륨 구성" children={<VolumeModal methods={methods} volume={volume} />} onRemove={removeModalData.bind(null, volume, setVolume)} handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)} methods={methods} description="이 태스크와 추가된 볼륨이 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: '볼륨', id: 'volume', handleMethod: handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, true, methods), children: <VolumeModal methods={methods} volume={volume} />, submitText: '추가' })}>
             + 볼륨 추가
           </span>
@@ -192,8 +192,8 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="스텝" id="step">
         <>
-          <ModalList list={step} id="step" title="스텝 구성" children={<StepModal methods={methods} step={step} />} onRemove={removeModalData.bind(null, step, setStep)} handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)} methods={methods} description="이 태스크와 연결된 스텝이 없습니다."></ModalList>
-          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, title: '스텝', id: 'step', handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods), children: <StepModal methods={methods} step={step} />, submitText: '추가' })}>
+          <ModalList list={step} id="step" title="스텝 구성" children={<StepModal methods={methods} step={step} />} onRemove={removeModalData.bind(null, step, setStep)} handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)} methods={methods} description="이 태스크와 추가된 스텝이 없습니다."></ModalList>
+          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: {methods}, title: '스텝', id: 'step', handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods), children: <StepModal methods={methods} step={step} />, submitText: '추가' })}>
             + 스텝 추가
           </span>
         </>
@@ -263,8 +263,16 @@ export const onSubmitCallback = data => {
       delete data.spec.steps[idx].registryImage;
       delete data.spec.steps[idx].registryTag;
     }
-
     delete data.spec.steps[idx].imageToggle;
+
+    if (cur.commandTypeToggle === 'command') {
+      delete data.spec.steps[idx].script;
+    } else {
+      delete data.spec.steps[idx].command;
+      delete data.spec.steps[idx].args;
+    }
+    delete data.spec.steps[idx].commandTypeToggle;
+
     return cur;
   });
 
