@@ -156,7 +156,7 @@ export const PipelineApprovalsPage: React.FC<PipelineApprovalsPageProps> = props
   return <ListPage
     title={t('COMMON:MSG_LNB_MENU_61')}
     createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_61') })}
-    canCreate={true}
+    canCreate={false}
     ListComponent={PipelineApprovals}
     kind={kind}
     {...props}
