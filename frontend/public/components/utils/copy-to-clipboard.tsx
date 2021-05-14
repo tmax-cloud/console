@@ -3,11 +3,13 @@ import * as _ from 'lodash-es';
 import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 import { Button, Tooltip } from '@patternfly/react-core';
 import { CopyIcon } from '@patternfly/react-icons';
+import { useTranslation } from 'react-i18next';
 
 export const CopyToClipboard: React.FC<CopyToClipboardProps> = React.memo((props) => {
+  const { t } = useTranslation();
   const [copied, setCopied] = React.useState(false);
 
-  const tooltipText = copied ? 'Copied' : 'Copy to Clipboard';
+  const tooltipText = copied ? t('COMMON:MSG_DETAILS_TABSIGNERKEY_8') : t('COMMON:MSG_DETAILS_TABSIGNERKEY_7');
   const tooltipContent = [
     <span className="co-nowrap" key="nowrap">
       {tooltipText}
@@ -29,7 +31,7 @@ export const CopyToClipboard: React.FC<CopyToClipboardProps> = React.memo((props
             type="button"
           >
             <CopyIcon />
-            <span className="sr-only">Copy to Clipboard</span>
+            <span className="sr-only">{t('COMMON:MSG_DETAILS_TABSIGNERKEY_7')}</span>
           </Button>
         </CTC>
       </Tooltip>
