@@ -55,7 +55,7 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
 
   return (
     <>
-      <Section label="이름" id="taskparameter_name" isRequired={true}>
+      <Section label="태스크 파라미터 이름" id="taskparameter_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <Section label="설명" id="taskparameter_desc">

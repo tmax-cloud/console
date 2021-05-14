@@ -28,7 +28,7 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
 
   return (
     <>
-      <Section label="이름" id="inputresource_name" isRequired={true}>
+      <Section label="인풋 리소스 이름" id="inputresource_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <Section label="타입" id="inputresource-type" isRequired={true}>

@@ -8,7 +8,6 @@ import { k8sCreate, k8sUpdate, referenceFor, K8sResourceKind, modelFor } from '.
 import { pluralToKind } from './';
 import { ButtonBar, history, resourceObjPath } from '../../utils';
 import { Section } from '../utils/section';
-import {useTranslation } from 'react-i18next'
 
 export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'spec');
@@ -16,7 +15,6 @@ export const isCreatePage = defaultValues => {
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
   const FormComponent: React.FC<CommonFormProps_> = props => {
-    const {t} = useTranslation();
     const methods = useForm({ defaultValues: defaultValues });
 
     const kind = pluralToKind(params.plural);

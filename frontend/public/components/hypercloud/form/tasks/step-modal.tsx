@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Section } from '../../utils/section';
-// import { RadioGroup } from '../../utils/radio';
+import { RadioGroup } from '../../utils/radio';
 // import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
+import { TextArea } from '../../utils/text-area';
 import { ListView } from '../../utils/list-view';
-// import { useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
 // import { modelFor, k8sList } from '@console/internal/module/k8s';
 // import { makeQuery } from '../../../utils/k8s-watcher';
@@ -26,6 +27,17 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   // const [isOpen, setIsOpen] = React.useState(false);
   // const [imageList, setImageList] = React.useState({});
   // const [imageTagList, setImageTagList] = React.useState({});
+
+  const commandTypeItems = [
+    {
+      title: '커맨드/인수',
+      value: 'command'
+    },
+    {
+      title: '스크립트',
+      value: 'script'
+    }
+  ]
 
   let volumeItems = {};
   // volume 있는지 여부
@@ -115,8 +127,15 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       }
     });
   }
+  
+  // command radio toggle 용
+  const commandTypeToggle = useWatch({
+    control: methods.control,
+    name: 'commandTypeToggle',
+    defaultValue: template ? template.commandTypeToggle : 'command'
+  });
 
-  // radio toggle용
+  // image radio toggle용
   // const imageToggle = useWatch({
   //   control: methods.control,
   //   name: 'imageToggle',
@@ -166,12 +185,14 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   //     });
   // }, [image]);
 
+
   return (
     <>
-      <Section label="이름" id="step-name" isRequired={true}>
+      <Section label="스텝 이름" id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="이미지" id="step-manual-image">
+      <div className="horizontal-line" />
+      <Section label="이미지" id="step-manual-image" isRequired={true}>
           <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
       </Section>
       {/* <Section label="이미지" id="step-image-toggle">
@@ -236,12 +257,33 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           </Section>
         </>
       )} */}
-      <Section label="커맨드" id="step-command">
-        <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
+      <div className="horizontal-line" />
+      <Section label="명령어 타입" id="command-type-toggle">
+        <RadioGroup
+          methods={methods}
+          name="commandTypeToggle" // 서버에 보낼 데이터에서의 path (필수)
+          items={commandTypeItems} // [{title: '', value: ''}] (필수)
+          initValue={commandTypeToggle}
+        />
       </Section>
-      <Section label="인수" id="step-parameter">
-        <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
-      </Section>
+      {commandTypeToggle === 'command' ? (
+      <>
+        <Section label="커맨드" id="step-command">
+          <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
+        </Section>
+        <Section label="인수" id="step-parameter">
+          <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
+        </Section>
+        </>
+      ) : (
+        <>
+          <Section label="스크립트" id="step-parameter">
+            <TextArea id="script" inputClassName="col-md-12 text-area" methods={methods} defaultValue={modalType === 'modify' ? template.script : ''} />
+          </Section>
+        </>
+      )
+    }
+      <div className="horizontal-line" />
       <Section label="환경 변수" id="step-parameter">
         <ListView name="env" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? template.env : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>

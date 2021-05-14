@@ -34,7 +34,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
 
   return (
     <>
-      <Section label="이름" id="workspace_name" isRequired={true}>
+      <Section label="워크스페이스 이름" id="workspace_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <Section label="설명" id="workspace_desc">
@@ -48,7 +48,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
           methods={methods}
           name="accessMode" // 서버에 보낼 데이터에서의 path (필수)
           items={accessModeItem} // [{title: '', value: ''}] (필수)
-          inline={true} // inline속성 먹일거면 true, 아니면 빼면 됨 (선택)
+          inline={false} // inline속성 먹일거면 true, 아니면 빼면 됨 (선택)
           initValue={defaultAccessMode}
         />
       </Section>

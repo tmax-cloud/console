@@ -32,7 +32,7 @@ export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => 
 
   return (
     <>
-      <Section label="이름" id="volume-name" isRequired={true}>
+      <Section label="볼륨 이름" id="volume-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <Section label="타입" id="volume-type" isRequired={true}>
