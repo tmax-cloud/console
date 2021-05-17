@@ -12,6 +12,7 @@ import { k8sGet, k8sList } from '../../../../module/k8s';
 import { ClusterTaskModel, TaskModel, PipelineResourceModel, ServiceAccountModel, TaskRunModel } from '../../../../models';
 import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
+import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
 
 const defaultValues = {
@@ -61,22 +62,11 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
     paramValueListData: [],
   });
 
-  const [taskList, setTaskList] = useState([]);
   const [pipelineList, setPipelineList] = useState([]);
   const [serviceAccountList, setServiceAccountList] = useState([]);
 
   const namespace = getActiveNamespace(store.getState());
   React.useEffect(() => {
-    let taskAndClusterTaskList = [];
-    k8sList(TaskModel, { ns: namespace }).then(list => {
-      taskAndClusterTaskList = taskAndClusterTaskList.concat(list);
-    });
-
-    k8sList(ClusterTaskModel).then(list => {
-      taskAndClusterTaskList = taskAndClusterTaskList.concat(list);
-      setTaskList(taskAndClusterTaskList);
-    });
-
     k8sList(PipelineResourceModel, { ns: namespace }).then(list => {
       setPipelineList(list);
     });
@@ -239,7 +229,26 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
   return (
     <>
       <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} id="task">
-        <ResourceListDropdown name="taskRef.name" type="single" resourceList={taskList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')} idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} useHookForm />
+        <ResourceDropdown
+          name="taskRef.name"
+          type="single"
+          resources={[
+            {
+              kind: TaskModel.kind,
+              namespace: namespace,
+              prop: 'task',
+            },
+            {
+              kind: ClusterTaskModel.kind,
+              prop: 'clustertask',
+            },
+          ]}
+          methods={methods}
+          defaultValue=""
+          placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_5')}
+          idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
+          useHookForm
+        />
       </Section>
       {selectedTask != '' ? (
         <>
