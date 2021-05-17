@@ -173,4 +173,4 @@ const Details_ = ({ obj: np, flags }) => {
 
 const Details = connectToFlags(FLAGS.OPENSHIFT)(Details_);
 
-export const NetworkPoliciesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editYaml()]} />;
+export const NetworkPoliciesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource()]} />;
