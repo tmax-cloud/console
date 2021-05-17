@@ -159,7 +159,7 @@ const filterGroups = ['kind'];
 // initialFilters cannot be typed as it has multiple usages
 const getAvailableFilters = (initialFilters): PageFilters => {
   const filters: PageFilters = _.cloneDeep(initialFilters);
-  if (getCatalogPageType()===CatalogPageType.SERVICE_INSTANCE) {
+  if (getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE) {
     filters.kind = {
       ClusterServiceClass: {
         label: 'Cluster Service Class',
