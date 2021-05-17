@@ -924,7 +924,7 @@ export class TileViewPage extends React.Component {
                   onChange={(e) => this.onKeywordChange(e.target.value)}
                   aria-label="Filter by keyword..."
                 />
-                {groupItems && (
+                {/* {groupItems && (
                   <Dropdown
                     className="co-catalog-page__btn-group__group-by"
                     menuClassName="dropdown-menu--text-wrap"
@@ -933,7 +933,7 @@ export class TileViewPage extends React.Component {
                     titlePrefix="Group By"
                     title={groupBy}
                   />
-                )}
+                )} */}
               </div>
               <div className="co-catalog-page__num-items">{activeCategory.numItems} items</div>
             </div>
