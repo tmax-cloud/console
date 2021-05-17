@@ -228,7 +228,7 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const InferenceServices: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="InferenceServices" Header={InferenceServiceTableHeader.bind(null, t)} Row={InferenceServiceTableRow} virtualize />;
@@ -258,7 +258,7 @@ export const InferenceServicesDetailsPage: React.FC<InferenceServicesDetailsPage
       {...props}
       kind={kind}
       menuActions={menuActions}
-      pages={[details(detailsPage(InferenceServiceDetails)), editYaml()]}
+      pages={[details(detailsPage(InferenceServiceDetails)), editResource()]}
     />
   );
 };

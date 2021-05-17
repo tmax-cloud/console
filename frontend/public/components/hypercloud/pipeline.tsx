@@ -117,7 +117,7 @@ const PipelineDetails: React.FC<PipelineDetailsProps> = ({ obj: pipeline }) => {
   );
 }
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const Pipelines: React.FC = props => {
   const { t } = useTranslation();
@@ -144,7 +144,7 @@ export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props =
     menuActions={menuActions}
     pages={[
       details(detailsPage(PipelineDetails)),
-      editYaml(),
+      editResource(),
       {
         href: 'runs',
         name: 'Pipeline Runs',

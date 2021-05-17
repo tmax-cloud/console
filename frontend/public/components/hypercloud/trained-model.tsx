@@ -161,7 +161,7 @@ const TrainedModelDetails: React.FC<TrainedModelDetailsProps> = ({ obj: tm }) =>
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const TrainedModels: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="TrainedModels" Header={TrainedModelTableHeader.bind(null, t)} Row={TrainedModelTableRow} virtualize />;
@@ -190,7 +190,7 @@ export const TrainedModelsDetailsPage: React.FC<TrainedModelsDetailsPageProps> =
       {...props}
       kind={kind}
       menuActions={menuActions}
-      pages={[details(detailsPage(TrainedModelDetails)), editYaml()]}
+      pages={[details(detailsPage(TrainedModelDetails)), editResource()]}
     />
   );
 };
