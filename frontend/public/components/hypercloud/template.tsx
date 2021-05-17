@@ -48,7 +48,7 @@ const TemplateDetails: React.FC<TemplateDetailsProps> = ({ obj: template }) => {
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(template, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={template} showPodSelector showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={template} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
