@@ -11,11 +11,11 @@ import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { DetailsItem, Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-const { common } = Kebab.factory;
+const { ModifyLabels, ModifyAnnotations, Delete } = Kebab.factory;
 
 const kind = TemplateInstanceModel.kind;
 
-export const templateInstanceMenuActions = [...Kebab.getExtensionsActionsForKind(TemplateInstanceModel), ...common];
+export const templateInstanceMenuActions = [...Kebab.getExtensionsActionsForKind(TemplateInstanceModel), ModifyLabels, ModifyAnnotations, Delete];
 
 const templateInstancePhase = instance => {
   let phase = '';
@@ -95,8 +95,8 @@ type TemplateInstanceDetailsProps = {
   obj: K8sResourceKind;
 };
 
-const { details, editResource } = navFactory;
-const TemplateInstancesDetailsPage: React.FC<TemplateInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={templateInstanceMenuActions} pages={[details(TemplateInstanceDetails), editResource()]} />;
+const { details, editYaml } = navFactory;
+const TemplateInstancesDetailsPage: React.FC<TemplateInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={templateInstanceMenuActions} pages={[details(TemplateInstanceDetails), editYaml()]} />;
 TemplateInstancesDetailsPage.displayName = 'TemplateInstancesDetailsPage';
 
 const tableColumnClasses = [
