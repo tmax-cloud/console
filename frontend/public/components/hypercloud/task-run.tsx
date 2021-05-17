@@ -11,17 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TaskRunModel), ...Kebab.factory.common];
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TaskRunModel), Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Delete];
 
 const kind = TaskRunModel.kind;
 
-const tableColumnClasses = [
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-sm-4', 'hidden-xs'),
-  Kebab.columnClass,
-];
-
+const tableColumnClasses = [classNames('col-xs-6', 'col-sm-4'), classNames('col-xs-6', 'col-sm-4'), classNames('col-sm-4', 'hidden-xs'), Kebab.columnClass];
 
 const TaskRunTableHeader = (t?: TFunction) => {
   return [
@@ -52,7 +46,6 @@ const TaskRunTableHeader = (t?: TFunction) => {
 
 TaskRunTableHeader.displayName = 'TaskRunTableHeader';
 
-
 const TaskRunTableRow: RowFunction<K8sResourceKind> = ({ obj: taskRun, index, key, style }) => {
   return (
     <TableRow id={taskRun.metadata.uid} index={index} trKey={key} style={style}>
@@ -72,7 +65,6 @@ const TaskRunTableRow: RowFunction<K8sResourceKind> = ({ obj: taskRun, index, ke
   );
 };
 
-
 const TaskRunDetails: React.FC<TaskRunDetailsProps> = ({ obj: taskRun }) => {
   const { t } = useTranslation();
 
@@ -88,30 +80,22 @@ const TaskRunDetails: React.FC<TaskRunDetailsProps> = ({ obj: taskRun }) => {
       </div>
     </>
   );
-}
+};
 
-const { details, editResource } = navFactory;
+const { details, editYaml } = navFactory;
 
 export const TaskRuns: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Task Runs" Header={TaskRunTableHeader.bind(null, t)} Row={TaskRunTableRow} virtualize />;
-}
-
+};
 
 export const TaskRunsPage: React.FC<TaskRunsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_58')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_58') })}
-    canCreate={true}
-    ListComponent={TaskRuns}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_58')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_58') })} canCreate={true} ListComponent={TaskRuns} kind={kind} {...props} />;
+};
 
-export const TaskRunsDetailsPage: React.FC<TaskRunsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskRunDetails)), editResource()]} />;
+export const TaskRunsDetailsPage: React.FC<TaskRunsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(TaskRunDetails)), editYaml()]} />;
 
 type TaskRunsPageProps = {
   showTitle?: boolean;
