@@ -1,10 +1,23 @@
 package console
 
 import (
+	"console/pkg/auth"
 	"fmt"
 	"net/http"
 	"strings"
 )
+
+func (c *Console) jwtHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// c.KeycloakAuthURL
+		// c.KeycloakRealm
+		realmsPath := "realms/" + c.KeycloakRealm
+		authIssuer := singleJoiningSlash(c.KeycloakAuthURL, realmsPath)             // "https://hyperauth.org/auth/realms/tmax"
+		authJwks := singleJoiningSlash(authIssuer, "protocol/openid-connect/certs") // "https://hyperauth.org/auth/realms/tmax/protocol/openid-connect/certs"
+		jwt := auth.NewJWTMiddleware(authIssuer, authJwks)
+		jwt.HandlerWithNext(w, r, next.ServeHTTP)
+	})
+}
 
 func (c *Console) tokenHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -2,35 +2,13 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 
 import { Status } from '@console/shared';
-import {
-  ContainerLifecycle,
-  ContainerLifecycleStage,
-  ContainerPort,
-  ContainerProbe,
-  ContainerSpec,
-  ContainerStatus,
-  EnvVar,
-  PodKind,
-  ResourceList,
-  VolumeMount,
-} from '../module/k8s';
+import { ContainerLifecycle, ContainerLifecycleStage, ContainerPort, ContainerProbe, ContainerSpec, ContainerStatus, EnvVar, PodKind, ResourceList, VolumeMount } from '../module/k8s';
 import * as k8sProbe from '../module/k8s/probe';
 import { getContainerState, getContainerStatus, getPullPolicyLabel } from '../module/k8s/container';
-import {
-  Firehose,
-  HorizontalNav,
-  MsgBox,
-  NodeLink,
-  PageHeading,
-  ResourceLink,
-  ScrollToTopOnMount,
-  SectionHeading,
-  Timestamp,
-} from './utils';
+import { Firehose, HorizontalNav, MsgBox, NodeLink, PageHeading, ResourceLink, ScrollToTopOnMount, SectionHeading, Timestamp } from './utils';
 import { resourcePath } from './utils/resource-link';
 
-const formatComputeResources = (resources: ResourceList) =>
-  _.map(resources, (v, k) => `${k}: ${v}`).join(', ');
+const formatComputeResources = (resources: ResourceList) => _.map(resources, (v, k) => `${k}: ${v}`).join(', ');
 
 const getResourceRequestsValue = (container: ContainerSpec) => {
   const requests: ResourceList = _.get(container, 'resources.requests');
@@ -47,8 +25,7 @@ const Lifecycle: React.FC<LifecycleProps> = ({ lifecycle }) => {
   const postStart = _.get(fields, 'postStart.cmd');
   const preStop = _.get(fields, 'preStop.cmd');
 
-  const label = (stage: ContainerLifecycleStage) =>
-    lifecycle && k8sProbe.getLifecycleHookLabel(lifecycle, stage);
+  const label = (stage: ContainerLifecycleStage) => lifecycle && k8sProbe.getLifecycleHookLabel(lifecycle, stage);
   return (
     <div>
       {postStart && (
@@ -85,13 +62,7 @@ Probe.displayName = 'Probe';
 
 const Ports: React.FC<PortsProps> = ({ ports }) => {
   if (!ports || !ports.length) {
-    return (
-      <MsgBox
-        className="co-sysevent-stream__status-box-empty"
-        title="No ports have been exposed"
-        detail="Ports allow for traffic to enter this container"
-      />
-    );
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No ports have been exposed" detail="Ports allow for traffic to enter this container" />;
   }
 
   return (
@@ -116,13 +87,7 @@ const Ports: React.FC<PortsProps> = ({ ports }) => {
 
 const VolumeMounts: React.FC<VolumeMountProps> = ({ volumeMounts }) => {
   if (!volumeMounts || !volumeMounts.length) {
-    return (
-      <MsgBox
-        className="co-sysevent-stream__status-box-empty"
-        title="No volumes have been mounted"
-        detail="Volumes allow data to be shared as files with the pod"
-      />
-    );
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No volumes have been mounted" detail="Volumes allow data to be shared as files with the pod" />;
   }
 
   return (
@@ -139,13 +104,7 @@ const VolumeMounts: React.FC<VolumeMountProps> = ({ volumeMounts }) => {
           <tr key={v.name}>
             <td>{v.readOnly === true ? 'Read Only' : 'Read / Write'}</td>
             <td className="co-break-all co-select-to-copy">{v.name}</td>
-            <td>
-              {v.mountPath ? (
-                <div className="co-break-all co-select-to-copy">{v.mountPath}</div>
-              ) : (
-                '-'
-              )}
-            </td>
+            <td>{v.mountPath ? <div className="co-break-all co-select-to-copy">{v.mountPath}</div> : '-'}</td>
           </tr>
         ))}
       </tbody>
@@ -156,13 +115,7 @@ VolumeMounts.displayName = 'VolumeMounts';
 
 const Env: React.FC<EnvProps> = ({ env }) => {
   if (!env || !env.length) {
-    return (
-      <MsgBox
-        className="co-sysevent-stream__status-box-empty"
-        title="No variables have been set"
-        detail="An easy way to pass configuration values"
-      />
-    );
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No variables have been set" detail="An easy way to pass configuration values" />;
   }
 
   const value = (e: EnvVar) => {
@@ -214,22 +167,16 @@ const getImageNameAndTag = (image: string) => {
   return { imageName, imageTag };
 };
 
-const ContainerDetails: React.FC<ContainerDetailsProps> = (props) => {
+const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
   const pod = props.obj;
-  const container =
-    (_.find(pod.spec.containers, { name: props.match.params.name }) as ContainerSpec) ||
-    (_.find(pod.spec.initContainers, { name: props.match.params.name }) as ContainerSpec);
+  const container = (_.find(pod.spec.containers, { name: props.match.params.name }) as ContainerSpec) || (_.find(pod.spec.initContainers, { name: props.match.params.name }) as ContainerSpec);
   if (!container) {
     return null;
   }
 
-  const status: ContainerStatus =
-    getContainerStatus(pod, container.name) || ({} as ContainerStatus);
+  const status: ContainerStatus = getContainerStatus(pod, container.name) || ({} as ContainerStatus);
   const state = getContainerState(status);
-  const stateValue =
-    state.value === 'terminated' && _.isFinite(state.exitCode)
-      ? `${state.label} with exit code ${state.exitCode}`
-      : state.label;
+  const stateValue = state.value === 'terminated' && _.isFinite(state.exitCode) ? `${state.label} with exit code ${state.exitCode}` : state.label;
   const { imageName, imageTag } = getImageNameAndTag(container.image);
 
   return (
@@ -245,13 +192,7 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = (props) => {
               <Status status={stateValue} />
             </dd>
             <dt>ID</dt>
-            <dd>
-              {status.containerID ? (
-                <div className="co-break-all co-select-to-copy">{status.containerID}</div>
-              ) : (
-                '-'
-              )}
-            </dd>
+            <dd>{status.containerID ? <div className="co-break-all co-select-to-copy">{status.containerID}</div> : '-'}</dd>
             <dt>Restarts</dt>
             <dd>{status.restartCount}</dd>
             <dt>Resource Requests</dt>
@@ -280,11 +221,7 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = (props) => {
             </dd>
             <dt>Pod</dt>
             <dd>
-              <ResourceLink
-                kind="Pod"
-                name={props.match.params.podName}
-                namespace={props.match.params.ns}
-              />
+              <ResourceLink kind="Pod" name={props.match.params.podName} namespace={props.match.params.ns} />
             </dd>
           </dl>
         </div>
@@ -293,9 +230,7 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = (props) => {
           <SectionHeading text="Image Details" />
           <dl className="co-m-pane__details">
             <dt>Image</dt>
-            <dd>
-              {imageName ? <div className="co-break-all co-select-to-copy">{imageName}</div> : '-'}
-            </dd>
+            <dd>{imageName ? <div className="co-break-all co-select-to-copy">{imageName}</div> : '-'}</dd>
             <dt>Image Version/Tag</dt>
             <dd>{imageTag || '-'}</dd>
             <dt>Command</dt>
@@ -365,7 +300,7 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = (props) => {
 };
 ContainerDetails.displayName = 'ContainerDetails';
 
-export const ContainersDetailsPage: React.FC<ContainerDetailsPageProps> = (props) => (
+export const ContainersDetailsPage: React.FC<ContainerDetailsPageProps> = props => (
   <div>
     <Firehose
       resources={[
@@ -391,11 +326,7 @@ export const ContainersDetailsPage: React.FC<ContainerDetailsPageProps> = (props
           { name: 'Container Details', path: props.match.url },
         ]}
       />
-      <HorizontalNav
-        hideNav={true}
-        pages={[{ name: 'container', href: '', component: ContainerDetails }]}
-        match={props.match}
-      />
+      <HorizontalNav hideNav={true} pages={[{ name: 'container', href: '', component: ContainerDetails }]} match={props.match} />
     </Firehose>
   </div>
 );

@@ -7,7 +7,7 @@ export const OutputResourceModal: React.FC<OutputResourceModalProps> = ({ method
   const typeItems = React.useMemo(
     () => ({
       git: 'Git',
-      image: 'Image',
+      image: '이미지',
     }),
     [],
   );
@@ -26,10 +26,10 @@ export const OutputResourceModal: React.FC<OutputResourceModalProps> = ({ method
 
   return (
     <>
-      <Section label="Name" id="outputresource_name" isRequired={true}>
+      <Section label="아웃풋 리소스 이름" id="outputresource_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="Type" id="outputresource-type" isRequired={true}>
+      <Section label="타입" id="outputresource-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
@@ -42,7 +42,7 @@ export const OutputResourceModal: React.FC<OutputResourceModalProps> = ({ method
           defaultValue={modalType === 'modify' ? template.type : ''}
         />
       </Section>
-      <Section label="Resource Path" id="outputresource_path">
+      <Section label="리소스 저장 경로" id="outputresource_path">
         <TextInput id="targetPath" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.targetPath : ''} />
       </Section>
       <label>

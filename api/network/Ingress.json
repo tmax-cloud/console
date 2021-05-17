@@ -303,19 +303,9 @@
               ]
             },
             "servicePort": {
-              "oneOf": [
-                {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                {
-                  "type": [
-                    "integer",
-                    "null"
-                  ]
-                }
+              "type": [
+                "integer",
+                "null"
               ]
             }
           },
@@ -390,19 +380,9 @@
                               ]
                             },
                             "servicePort": {
-                              "oneOf": [
-                                {
-                                  "type": [
-                                    "string",
-                                    "null"
-                                  ]
-                                },
-                                {
-                                  "type": [
-                                    "integer",
-                                    "null"
-                                  ]
-                                }
+                              "type": [
+                                "integer",
+                                "null"
                               ]
                             }
                           },

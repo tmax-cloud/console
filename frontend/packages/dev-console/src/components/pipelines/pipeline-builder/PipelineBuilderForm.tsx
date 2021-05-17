@@ -4,7 +4,7 @@ import { FormikProps, FormikValues } from 'formik';
 import { Form, Stack, StackItem, TextInputTypes } from '@patternfly/react-core';
 import { InputField, FormFooter } from '@console/shared';
 import { Pipeline } from '../../../utils/pipeline-augment';
-import { PipelineParameters, PipelineResources } from '../detail-page-tabs';
+import { PipelineParameters, PipelineResources, PipelineWorkspaces } from '../detail-page-tabs';
 import { UpdateOperationType } from './const';
 import { useResourceValidation } from './hooks';
 import { removeTaskModal } from './modals';
@@ -112,6 +112,11 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
             <div>
               <h2>Resources</h2>
               <PipelineResources addLabel="Add Resources" fieldName="resources" />
+            </div>
+
+            <div>
+              <h2>Workspaces</h2>
+              <PipelineWorkspaces addLabel="Add Workspaces" fieldName="workspaces" />
             </div>
 
             <div>

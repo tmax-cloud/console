@@ -8,7 +8,7 @@ import { Kebab } from './kebab';
 import { LabelList } from './label-list';
 import { OwnerReferences } from './owner-references';
 import { ResourceLink } from './resource-link';
-import { ClusterServicePlanModel } from '../../models';
+import { ServicePlanModel, ClusterServicePlanModel } from '../../models';
 import { Selector } from './selector';
 import { Timestamp } from './timestamp';
 import { useAccessReview } from './rbac';
@@ -31,6 +31,8 @@ const getTolerationsPath = (obj: K8sResourceKind): string => {
 
 const getDescriptionStringKey = (obj: K8sResourceKind): string => {
   switch (obj.kind) {
+    case ServicePlanModel.kind:
+      return 'COMMON:MSG_DETAILS_TABSERVICEPLANS_DETAILS_SIDEPANEL_12';
     case ClusterServicePlanModel.kind:
       return 'COMMON:MSG_DETAILS_TABSERVICEPLANS_DETAILS_SIDEPANEL_14';
     default:

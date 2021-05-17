@@ -1,14 +1,6 @@
 import * as React from 'react';
-import {
-  withSecretForm,
-  ImageSecretForm,
-  SourceSecretForm,
-  SecretTypeAbstraction,
-} from '@console/internal/components/secrets/create-secret';
-import {
-  createModalLauncher,
-  ModalComponentProps,
-} from '@console/internal/components/factory/modal';
+import { withSecretForm, ImageSecretForm, SourceSecretForm, SecretTypeAbstraction } from '@console/internal/components/secrets/create-secret';
+import { createModalLauncher, ModalComponentProps } from '@console/internal/components/factory/modal';
 
 export interface CreateSecretModalProps {
   save?: (name: string) => void;
@@ -36,16 +28,7 @@ const CreateSecretModal: React.FC<Props> = ({ close, namespace, save, secretType
   };
 
   const CreateSecretForm = getSecretForm(secretType);
-  return (
-    <CreateSecretForm
-      onCancel={close}
-      onSave={handleSave}
-      fixed={{ metadata: { namespace } }}
-      secretTypeAbstraction={secretType}
-      titleVerb="Create"
-      isCreate
-    />
-  );
+  return <CreateSecretForm onCancel={close} onSave={handleSave} fixed={{ metadata: { namespace } }} secretTypeAbstraction={secretType} titleVerb="Create" isCreate />;
 };
 
 export const secretModalLauncher = createModalLauncher<Props>(CreateSecretModal);

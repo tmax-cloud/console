@@ -59,7 +59,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
             <p className="co-m-pane__explanation">{props.explanation}</p>
             {props.useDefaultForm && (
               <fieldset>
-                <Section label="Name" id="name" isRequired={true}>
+                <Section label="이름" id="name" isRequired={true}>
                   <input className="pf-c-form-control" id="name" name="metadata.name" ref={methods.register} />
                 </Section>
               </fieldset>

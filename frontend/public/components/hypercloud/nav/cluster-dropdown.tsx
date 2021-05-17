@@ -31,6 +31,7 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({
 }) => {
     const [isClusterDropdownOpen, setClusterDropdownOpen] = React.useState(false);
     const [clusters, setClusters] = React.useState([]);
+    const [loaded, setLoaded] = React.useState(false);
 
     const toggleClusterOpen = React.useCallback(() => {
         setClusterDropdownOpen(!isClusterDropdownOpen);
@@ -53,7 +54,7 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({
     );
 
     const renderClusterToggle = React.useCallback(
-        (name: string) => name ? (
+        (name: string) => loaded ? (
             <DropdownToggle
                 isOpen={isClusterDropdownOpen}
                 onToggle={toggleClusterOpen}
@@ -61,11 +62,11 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({
                 data-test-id="perspective-switcher-toggle"
             >
                 <Title size="md">
-                    {clusters.find(cl => cl.name === name)?.displayName ?? name}
+                    {name ? clusters.find(cl => cl.name === name)?.displayName ?? name : 'undefined'}
                 </Title>
             </DropdownToggle>) : <LoadingInline />
         ,
-        [isClusterDropdownOpen, toggleClusterOpen, clusters],
+        [isClusterDropdownOpen, toggleClusterOpen, clusters, loaded],
     );
 
     const getClusterItems = React.useCallback(
@@ -94,6 +95,7 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({
 
     React.useEffect(() => {
         if (clusters.length == 0 || isClusterDropdownOpen) {
+            setLoaded(false);
             coFetchJSON(`/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
             .then((result) => result.items)
             .then((res) => {
@@ -112,6 +114,7 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({
                     setActiveCluster(clusterList[0]?.name);
                 }
 
+                setLoaded(true);
             });
         }
     }, [isClusterDropdownOpen]);

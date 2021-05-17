@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/hypercloud/factory/modal';
+import {useTranslation} from 'react-i18next'
+import { useWatch } from 'react-hook-form';
 
 export const _ModalLauncher = props => {
-  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id } = props;
+  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
+  const {t} = useTranslation();
   const onCancel = () => {
     // 수정일 경우에만 타는 로직
     let isModify = document.getElementById(`${id}-list`) ? true : false;
@@ -16,11 +19,48 @@ export const _ModalLauncher = props => {
       });
     }
   };
+
+  const [submitDisabled, setSubmitDisabled] = React.useState(true);
+  const validFields = requiredFields.map(cur => useWatch({
+    control: methods.control,
+    name: cur,
+    defaultValue: ''
+  }))
+  const optionalValidFields = optionalRequiredField?.map(cur => {
+    let defaultValue;
+    if(cur === 'default') {
+      if(validFields[1] === 'array') {
+        defaultValue = '';
+      } else {
+        defaultValue = '';
+      }
+    }
+    return useWatch({
+    control: methods.control,
+    name: cur,
+    defaultValue: defaultValue
+  })})
+  React.useEffect(()=>{
+    if(optionalRequiredField?.length === 0) {
+      if( validFields.every(cur => cur.trim().length > 0)) {
+        setSubmitDisabled(false);
+      } else {
+        !submitDisabled && setSubmitDisabled(true);
+      }
+    } else {
+      if(validFields.every(cur => cur.trim().length > 0) && optionalValidCallback?.([...optionalValidFields])) {
+        setSubmitDisabled(false);
+      } else {
+        !submitDisabled && setSubmitDisabled(true);
+      }
+    }
+  }, [...validFields, ...optionalValidFields]);
+
   return (
     <form onSubmit={handleMethod.bind(null, cancel, index)}>
       <ModalTitle>{title}</ModalTitle>
       <ModalBody>{children}</ModalBody>
-      <ModalSubmitFooter errorMessage={errorMessage} id="uId" inProgress={inProgress} onCancel={onCancel} submitText={submitText} cancel={cancel} />
+      <ModalSubmitFooter errorMessage={errorMessage} submitDisabled={submitDisabled} id="uId" inProgress={inProgress} onCancel={onCancel} submitText={submitText} cancelText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')} cancel={cancel} />
     </form>
   );
 };
