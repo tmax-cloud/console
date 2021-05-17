@@ -26,7 +26,7 @@ const TrainedModelPhase = instance => {
         if (cur.status === 'True') {
           phase = 'Ready';
         } else {
-          phase = 'UnReady';
+          phase = 'Not Ready';
         }
       }
     });
