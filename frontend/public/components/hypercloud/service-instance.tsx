@@ -205,7 +205,7 @@ const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
     <ListPage
       title={t('COMMON:MSG_LNB_MENU_17')}
       createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_17') })}
-      createProps={{ to: `/catalog/ns/${props.namespace}?kind=%5B"ClusterServiceClass"%2C"ServiceClass"%5D` }}
+      createProps={{ to: `/catalog/ns/${props.namespace}/serviceinstance?kind=%5B"ClusterServiceClass"%2C"ServiceClass"%5D` }}
       canCreate={true}
       kind={kind}
       ListComponent={ServiceInstancesList}

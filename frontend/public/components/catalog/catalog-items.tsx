@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as catalogImg from '../../imgs/logos/catalog-icon.svg';
 import { Badge, Modal } from '@patternfly/react-core';
 import { CatalogItemHeader, CatalogTile, CatalogTileBadge } from '@patternfly/react-catalog-view-extension';
-
+import { getCatalogPageType, CatalogPageType } from './catalog-page';
 import { DEV_CATALOG_FILTER_KEY as filterKey } from '@console/shared';
 import { history } from '../utils/router';
 import { normalizeIconClass } from './catalog-item-icon';
@@ -48,12 +48,12 @@ export type FilterItem = {
 };
 
 type TypeFilters = {
-  ClusterServiceVersion: FilterItem;
-  HelmChart: FilterItem;
-  ImageStream: FilterItem;
-  Template: FilterItem;
-  ClusterServiceClass: FilterItem;
-  ServiceClass: FilterItem;
+  ClusterServiceVersion?: FilterItem;
+  HelmChart?: FilterItem;
+  ImageStream?: FilterItem;
+  Template?: FilterItem;
+  ClusterServiceClass?: FilterItem;
+  ServiceClass?: FilterItem;
 };
 
 type CapabilityFilters = {
@@ -159,38 +159,53 @@ const filterGroups = ['kind'];
 // initialFilters cannot be typed as it has multiple usages
 const getAvailableFilters = (initialFilters): PageFilters => {
   const filters: PageFilters = _.cloneDeep(initialFilters);
-  filters.kind = {
-    ClusterServiceVersion: {
-      label: 'Operator Backed',
-      value: 'InstalledOperator',
-      active: true,
-    },
-    HelmChart: {
-      label: 'Helm Charts',
-      value: 'HelmChart',
-      active: false,
-    },
-    ImageStream: {
-      label: 'Builder Image',
-      value: 'ImageStream',
-      active: false,
-    },
-    Template: {
-      label: 'Template',
-      value: 'Template',
-      active: false,
-    },
-    ClusterServiceClass: {
-      label: 'Cluster Service Class',
-      value: 'ClusterServiceClass',
-      active: false,
-    },
-    ServiceClass: {
-      label: 'Service Class',
-      value: 'ServiceClass',
-      active: false,
-    },
-  };
+  if (getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE) {
+    filters.kind = {
+      ClusterServiceClass: {
+        label: 'Cluster Service Class',
+        value: 'ClusterServiceClass',
+        active: false,
+      },
+      ServiceClass: {
+        label: 'Service Class',
+        value: 'ServiceClass',
+        active: false,
+      },
+    };
+  } else {
+    filters.kind = {
+      ClusterServiceVersion: {
+        label: 'Operator Backed',
+        value: 'InstalledOperator',
+        active: true,
+      },
+      HelmChart: {
+        label: 'Helm Charts',
+        value: 'HelmChart',
+        active: false,
+      },
+      ImageStream: {
+        label: 'Builder Image',
+        value: 'ImageStream',
+        active: false,
+      },
+      Template: {
+        label: 'Template',
+        value: 'Template',
+        active: false,
+      },
+      ClusterServiceClass: {
+        label: 'Cluster Service Class',
+        value: 'ClusterServiceClass',
+        active: false,
+      },
+      ServiceClass: {
+        label: 'Service Class',
+        value: 'ServiceClass',
+        active: false,
+      },
+    };
+  }
 
   return filters;
 };

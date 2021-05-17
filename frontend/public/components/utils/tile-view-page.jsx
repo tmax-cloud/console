@@ -1,25 +1,10 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as PropTypes from 'prop-types';
-import {
-  FilterSidePanel,
-  FilterSidePanelCategory,
-  FilterSidePanelCategoryItem,
-  VerticalTabs,
-  VerticalTabsTab,
-} from '@patternfly/react-catalog-view-extension';
+import { FilterSidePanel, FilterSidePanelCategory, FilterSidePanelCategoryItem, VerticalTabs, VerticalTabsTab } from '@patternfly/react-catalog-view-extension';
 import { FormControl } from 'patternfly-react';
-import {
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateSecondaryActions,
-  EmptyStateVariant,
-  Gallery,
-  GalleryItem,
-  Title,
-} from '@patternfly/react-core';
-
+import { Button, EmptyState, EmptyStateBody, EmptyStateSecondaryActions, EmptyStateVariant, Gallery, GalleryItem, Title } from '@patternfly/react-core';
+import { getCatalogType, CatalogPageType } from '../catalog/catalog-page';
 import { history } from './router';
 import { isModalOpen } from '../modals';
 import { Dropdown } from '../utils';
@@ -40,7 +25,7 @@ const filterSubcategories = (category, item) => {
       values = [values];
     }
 
-    const intersection = [category.values, values].reduce((a, b) => a.filter((c) => b.includes(c)));
+    const intersection = [category.values, values].reduce((a, b) => a.filter(c => b.includes(c)));
     if (!_.isEmpty(intersection)) {
       return [category];
     }
@@ -49,16 +34,14 @@ const filterSubcategories = (category, item) => {
   }
 
   const matchedSubcategories = [];
-  _.forOwn(category.subcategories, (subCategory) => {
+  _.forOwn(category.subcategories, subCategory => {
     let values = _.get(item, category.field);
 
     if (!Array.isArray(values)) {
       values = [values];
     }
 
-    const valuesIntersection = [subCategory.values, values].reduce((a, b) =>
-      a.filter((c) => b.includes(c)),
-    );
+    const valuesIntersection = [subCategory.values, values].reduce((a, b) => a.filter(c => b.includes(c)));
     if (!_.isEmpty(valuesIntersection)) {
       matchedSubcategories.push(subCategory, ...filterSubcategories(subCategory, item));
     }
@@ -88,7 +71,7 @@ const addItem = (item, category, subcategory = null) => {
 
 const isCategoryEmpty = ({ items }) => _.isEmpty(items);
 
-const pruneCategoriesWithNoItems = (categories) => {
+const pruneCategoriesWithNoItems = categories => {
   if (!categories) {
     return;
   }
@@ -103,17 +86,15 @@ const pruneCategoriesWithNoItems = (categories) => {
 };
 
 const processSubCategories = (category, itemsSorter) => {
-  _.forOwn(category.subcategories, (subcategory) => {
+  _.forOwn(category.subcategories, subcategory => {
     if (subcategory.items) {
       subcategory.numItems = _.size(subcategory.items);
       subcategory.items = itemsSorter(subcategory.items);
       processSubCategories(subcategory, itemsSorter);
     }
     if (category.subcategories) {
-      _.each(category.items, (item) => {
-        const included = _.find(_.keys(category.subcategories), (subcat) =>
-          _.includes(category.subcategories[subcat].items, item),
-        );
+      _.each(category.items, item => {
+        const included = _.find(_.keys(category.subcategories), subcat => _.includes(category.subcategories[subcat].items, item));
         if (!included) {
           let otherCategory = _.get(category.subcategories, 'other');
           if (!otherCategory) {
@@ -129,7 +110,7 @@ const processSubCategories = (category, itemsSorter) => {
 
 // calculate numItems per Category and subcategories, sort items
 const processCategories = (categories, itemsSorter) => {
-  _.forOwn(categories, (category) => {
+  _.forOwn(categories, category => {
     if (category.items) {
       category.numItems = _.size(category.items);
       category.items = itemsSorter(category.items);
@@ -140,12 +121,12 @@ const processCategories = (categories, itemsSorter) => {
 
 const categorize = (items, categories) => {
   // Categorize each item
-  _.each(items, (item) => {
+  _.each(items, item => {
     let itemCategorized = false;
 
-    _.each(categories, (category) => {
+    _.each(categories, category => {
       const matchedSubcategories = filterSubcategories(category, item);
-      _.each(matchedSubcategories, (subcategory) => {
+      _.each(matchedSubcategories, subcategory => {
         addItem(item, category, subcategory); // add to subcategory & main category
         itemCategorized = true;
       });
@@ -181,8 +162,8 @@ export const categorizeItems = (items, itemsSorter, initCategories) => {
   return categories;
 };
 
-const clearItemsFromCategories = (categories) => {
-  _.forOwn(categories, (category) => {
+const clearItemsFromCategories = categories => {
+  _.forOwn(categories, category => {
     category.numItems = 0;
     category.items = [];
     clearItemsFromCategories(category.subcategories);
@@ -196,7 +177,7 @@ const filterByKeyword = (items, filters, compFunction) => {
   }
 
   const filterString = keyword.value.toLowerCase();
-  return _.filter(items, (item) => compFunction(filterString, item));
+  return _.filter(items, item => compFunction(filterString, item));
 };
 
 const filterByGroup = (items, filters) => {
@@ -219,9 +200,9 @@ const filterByGroup = (items, filters) => {
           [],
         );
 
-        filtered[key] = _.filter(items, (item) => {
+        filtered[key] = _.filter(items, item => {
           if (Array.isArray(item[key])) {
-            return item[key].some((f) => values.includes(f));
+            return item[key].some(f => values.includes(f));
           }
           return values.includes(item[key]);
         });
@@ -250,9 +231,7 @@ const filterItems = (items, filters, keywordCompare) => {
 
   // Intersection of individually applied filters is all filters
   // In the case no filters are active, returns items filteredByKeyword
-  return [..._.values(filteredByGroup), filteredByKeyword].reduce((a, b) =>
-    a.filter((c) => b.includes(c)),
-  );
+  return [..._.values(filteredByGroup), filteredByKeyword].reduce((a, b) => a.filter(c => b.includes(c)));
 };
 
 const recategorizeItems = (items, itemsSorter, filters, keywordCompare, categories) => {
@@ -276,14 +255,12 @@ const hasActiveDescendant = (activeId, category) => {
     return true;
   }
 
-  return _.some(category.subcategories, (subcategory) =>
-    hasActiveDescendant(activeId, subcategory),
-  );
+  return _.some(category.subcategories, subcategory => hasActiveDescendant(activeId, subcategory));
 };
 
 const findActiveCategory = (activeId, categories) => {
   let activeCategory = null;
-  _.forOwn(categories, (category) => {
+  _.forOwn(categories, category => {
     if (activeCategory) {
       return;
     }
@@ -300,8 +277,8 @@ const findActiveCategory = (activeId, categories) => {
 const determineAvailableFilters = (initialFilters, items, filterGroups) => {
   const filters = _.cloneDeep(initialFilters);
 
-  _.each(filterGroups, (field) => {
-    _.each(items, (item) => {
+  _.each(filterGroups, field => {
+    _.each(items, item => {
       const value = item[field];
       if (value) {
         _.set(filters, [field, value], {
@@ -316,14 +293,7 @@ const determineAvailableFilters = (initialFilters, items, filterGroups) => {
   return filters;
 };
 
-const getActiveFilters = (
-  keywordFilter,
-  groupFilters,
-  activeFilters,
-  categoryFilter = null,
-  storeFilterKey = null,
-  filterRetentionPreference = null,
-) => {
+const getActiveFilters = (keywordFilter, groupFilters, activeFilters, categoryFilter = null, storeFilterKey = null, filterRetentionPreference = null) => {
   activeFilters.keyword.value = keywordFilter || '';
   activeFilters.keyword.active = !!keywordFilter;
 
@@ -333,10 +303,26 @@ const getActiveFilters = (
       const lastFilters = JSON.parse(userFilters);
       if (lastFilters) {
         if (filterRetentionPreference) {
-          _.each(filterRetentionPreference, (filterGroup) => {
+          _.each(filterRetentionPreference, filterGroup => {
             if (!groupFilters || !groupFilters[filterGroup]) {
               if (lastFilters[filterGroup]) {
-                activeFilters[filterGroup] = lastFilters[filterGroup];
+                // MEMO : ServiceInstance 생성 버튼을 통해 간 catalog/.../serviceinstance가 들어간 url의 카탈로그페이지에선 ServiceClass관련 filter만 보여져야 됨
+                if (getCatalogType() === CatalogPageType.SERVICE_INSTANCE) {
+                  activeFilters[filterGroup] = {
+                    ClusterServiceClass: {
+                      label: 'Cluster Service Class',
+                      value: 'ClusterServiceClass',
+                      active: lastFilters[filterGroup]?.ClusterServiceClass?.active || false,
+                    },
+                    ServiceClass: {
+                      label: 'Service Class',
+                      value: 'ServiceClass',
+                      active: lastFilters[filterGroup]?.ServiceClass?.active || false,
+                    },
+                  };
+                } else {
+                  _.assign(activeFilters[filterGroup], lastFilters[filterGroup]);
+                }
               }
             }
           });
@@ -350,17 +336,13 @@ const getActiveFilters = (
 
   if (categoryFilter) {
     // removing default and localstore filters if category filters are present over URL
-    _.each(_.keys(activeFilters.kind), (key) =>
-      _.set(activeFilters, ['kind', key, 'active'], false),
-    );
+    _.each(_.keys(activeFilters.kind), key => _.set(activeFilters, ['kind', key, 'active'], false));
   }
 
   _.forOwn(groupFilters, (filterValues, filterType) => {
     // removing default and localstore filters if Filters are present over URL
-    _.each(_.keys(activeFilters[filterType]), (key) =>
-      _.set(activeFilters, [filterType, key, 'active'], false),
-    );
-    _.each(filterValues, (filterValue) => {
+    _.each(_.keys(activeFilters[filterType]), key => _.set(activeFilters, [filterType, key, 'active'], false));
+    _.each(filterValues, filterValue => {
       _.set(activeFilters, [filterType, filterValue, 'active'], true);
     });
   });
@@ -385,49 +367,30 @@ const clearActiveFilters = (activeFilters, filterGroups) => {
   _.set(activeFilters, 'keyword.active', false);
 
   // Clear the group filters
-  _.each(filterGroups, (field) => {
-    _.each(_.keys(activeFilters[field]), (key) =>
-      _.set(activeFilters, [field, key, 'active'], false),
-    );
+  _.each(filterGroups, field => {
+    _.each(_.keys(activeFilters[field]), key => _.set(activeFilters, [field, key, 'active'], false));
   });
 
   return activeFilters;
 };
 
-const getFilterGroupCounts = (
-  items,
-  itemsSorter,
-  filterGroups,
-  selectedCategoryId,
-  filters,
-  categories,
-  keywordCompare,
-) => {
+const getFilterGroupCounts = (items, itemsSorter, filterGroups, selectedCategoryId, filters, categories, keywordCompare) => {
   // Filter only by keyword
   const filteredItems = filterByKeyword(items, filters, keywordCompare);
 
-  const categoriesForCounts = recategorizeItems(
-    filteredItems,
-    itemsSorter,
-    [],
-    keywordCompare,
-    categories,
-  );
+  const categoriesForCounts = recategorizeItems(filteredItems, itemsSorter, [], keywordCompare, categories);
 
   const activeCategory = findActiveCategory(selectedCategoryId, categoriesForCounts);
   const activeItems = activeCategory ? activeCategory.items : [];
   const newFilterCounts = {};
 
-  _.each(filterGroups, (filterGroup) => {
-    _.each(_.keys(filters[filterGroup]), (key) => {
-      const filterValues = [
-        _.get(filters, [filterGroup, key, 'value']),
-        ..._.get(filters, [filterGroup, key, 'synonyms'], []),
-      ];
+  _.each(filterGroups, filterGroup => {
+    _.each(_.keys(filters[filterGroup]), key => {
+      const filterValues = [_.get(filters, [filterGroup, key, 'value']), ..._.get(filters, [filterGroup, key, 'synonyms'], [])];
 
-      const matchedItems = _.filter(activeItems, (item) => {
+      const matchedItems = _.filter(activeItems, item => {
         if (Array.isArray(item[filterGroup])) {
-          return item[filterGroup].some((f) => filterValues.includes(f));
+          return item[filterGroup].some(f => filterValues.includes(f));
         }
 
         return filterValues.includes(item[filterGroup]);
@@ -440,7 +403,7 @@ const getFilterGroupCounts = (
   return newFilterCounts;
 };
 
-const setURLParams = (params) => {
+const setURLParams = params => {
   const location = window.location;
   const url = new URL(location);
   const searchParams = `?${params.toString()}${url.hash}`;
@@ -459,7 +422,7 @@ export const updateURLParams = (paramName, value) => {
   setURLParams(params);
 };
 
-const clearFilterURLParams = (selectedCategoryId) => {
+const clearFilterURLParams = selectedCategoryId => {
   const params = new URLSearchParams();
 
   if (selectedCategoryId) {
@@ -469,13 +432,7 @@ const clearFilterURLParams = (selectedCategoryId) => {
   setURLParams(params);
 };
 
-const getActiveValuesFromURL = (
-  availableFilters,
-  filterGroups,
-  groupByTypes,
-  storeFilterKey,
-  filterRetentionPreference,
-) => {
+const getActiveValuesFromURL = (availableFilters, filterGroups, groupByTypes, storeFilterKey, filterRetentionPreference) => {
   const searchParams = new URLSearchParams(window.location.search);
   const categoryParam = searchParams.get(FilterTypes.category);
   const keywordFilter = searchParams.get(FilterTypes.keyword);
@@ -486,7 +443,7 @@ const getActiveValuesFromURL = (
   }
   const groupFilters = {};
 
-  _.each(filterGroups, (filterGroup) => {
+  _.each(filterGroups, filterGroup => {
     const groupFilterParam = searchParams.get(filterGroup);
     if (!groupFilterParam) {
       return;
@@ -500,19 +457,12 @@ const getActiveValuesFromURL = (
     }
   });
 
-  const activeFilters = getActiveFilters(
-    keywordFilter,
-    groupFilters,
-    availableFilters,
-    categoryParam,
-    storeFilterKey,
-    filterRetentionPreference,
-  );
+  const activeFilters = getActiveFilters(keywordFilter, groupFilters, availableFilters, categoryParam, storeFilterKey, filterRetentionPreference);
 
   return { selectedCategoryId, activeFilters, groupBy };
 };
 
-export const getFilterSearchParam = (groupFilter) => {
+export const getFilterSearchParam = groupFilter => {
   const activeValues = _.reduce(
     _.keys(groupFilter),
     (result, typeKey) => {
@@ -554,30 +504,13 @@ export class TileViewPage extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      items,
-      filterGroups,
-      getAvailableFilters,
-      groupByTypes,
-      storeFilterKey,
-      filterRetentionPreference,
-    } = this.props;
+    const { items, filterGroups, getAvailableFilters, groupByTypes, storeFilterKey, filterRetentionPreference } = this.props;
     const { categories } = this.state;
     const availableFilters = getAvailableFilters(defaultFilters, items, filterGroups);
-    const activeValues = getActiveValuesFromURL(
-      availableFilters,
-      filterGroups,
-      groupByTypes,
-      storeFilterKey,
-      filterRetentionPreference,
-    );
+    const activeValues = getActiveValuesFromURL(availableFilters, filterGroups, groupByTypes, storeFilterKey, filterRetentionPreference);
 
     this.setState({
-      ...this.getUpdatedState(
-        categories,
-        activeValues.selectedCategoryId,
-        activeValues.activeFilters,
-      ),
+      ...this.getUpdatedState(categories, activeValues.selectedCategoryId, activeValues.activeFilters),
       groupBy: activeValues.groupBy,
     });
     this.filterByKeywordInput.focus({ preventScroll: true });
@@ -589,13 +522,7 @@ export class TileViewPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { activeFilters, selectedCategoryId, groupBy } = this.state;
-    const {
-      items,
-      itemsSorter,
-      filterGroups,
-      getAvailableCategories,
-      getAvailableFilters,
-    } = this.props;
+    const { items, itemsSorter, filterGroups, getAvailableCategories, getAvailableFilters } = this.props;
 
     if (!_.isEqual(items, prevProps.items)) {
       const availableFilters = getAvailableFilters(defaultFilters, items, filterGroups);
@@ -610,11 +537,7 @@ export class TileViewPage extends React.Component {
             return updatedFilters;
           }
           _.each(filterGroup, (filterItem, filterItemName) => {
-            updatedFilters[filterGroupName][filterItemName].active = _.get(
-              activeFilters,
-              [filterGroupName, filterItemName, 'active'],
-              false,
-            );
+            updatedFilters[filterGroupName][filterItemName].active = _.get(activeFilters, [filterGroupName, filterItemName, 'active'], false);
           });
 
           return updatedFilters;
@@ -636,27 +559,13 @@ export class TileViewPage extends React.Component {
       return;
     }
 
-    const newCategories = recategorizeItems(
-      items,
-      itemsSorter,
-      activeFilters,
-      keywordCompare,
-      categories,
-    );
+    const newCategories = recategorizeItems(items, itemsSorter, activeFilters, keywordCompare, categories);
 
     return {
       activeFilters,
       selectedCategoryId,
       categories: newCategories,
-      filterCounts: getFilterGroupCounts(
-        items,
-        itemsSorter,
-        filterGroups,
-        selectedCategoryId,
-        activeFilters,
-        newCategories,
-        keywordCompare,
-      ),
+      filterCounts: getFilterGroupCounts(items, itemsSorter, filterGroups, selectedCategoryId, activeFilters, newCategories, keywordCompare),
     };
   }
 
@@ -670,7 +579,7 @@ export class TileViewPage extends React.Component {
   storeFilters(filters) {
     if (this.props.storeFilterKey && this.props.filterRetentionPreference) {
       const storeFilters = {};
-      _.each(this.props.filterRetentionPreference, (filterGroup) => {
+      _.each(this.props.filterRetentionPreference, filterGroup => {
         if (filters[filterGroup]) {
           storeFilters[filterGroup] = filters[filterGroup];
         }
@@ -751,20 +660,10 @@ export class TileViewPage extends React.Component {
 
     const tabClasses = `text-capitalize${!numItems ? ' co-catalog-tab__empty' : ''}`;
     return (
-      <VerticalTabsTab
-        key={id}
-        title={label}
-        active={active}
-        className={tabClasses}
-        onActivate={() => this.selectCategory(id)}
-        hasActiveDescendant={hasActiveDescendant(selectedCategoryId, category)}
-        shown={shown}
-      >
+      <VerticalTabsTab key={id} title={label} active={active} className={tabClasses} onActivate={() => this.selectCategory(id)} hasActiveDescendant={hasActiveDescendant(selectedCategoryId, category)} shown={shown}>
         {subcategories && (
           <VerticalTabs restrictTabs activeTab={isActiveTab(selectedCategoryId, category)}>
-            {_.map(subcategories, (subcategory) =>
-              this.renderTabs(subcategory, selectedCategoryId),
-            )}
+            {_.map(subcategories, subcategory => this.renderTabs(subcategory, selectedCategoryId))}
           </VerticalTabs>
         )}
       </VerticalTabsTab>
@@ -777,7 +676,7 @@ export class TileViewPage extends React.Component {
 
     return (
       <VerticalTabs restrictTabs activeTab={activeTab} shown="true">
-        {_.map(categories, (category) => this.renderTabs(category, selectedCategoryId))}
+        {_.map(categories, category => this.renderTabs(category, selectedCategoryId))}
       </VerticalTabs>
     );
   }
@@ -795,24 +694,11 @@ export class TileViewPage extends React.Component {
     const { filterGroupsShowAll } = this.state;
 
     return (
-      <FilterSidePanelCategory
-        key={groupName}
-        title={filterGroupNameMap[groupName] || groupName}
-        onShowAllToggle={() => this.onShowAllToggle(groupName)}
-        showAll={_.get(filterGroupsShowAll, groupName, false)}
-        data-test-group-name={groupName}
-      >
+      <FilterSidePanelCategory key={groupName} title={filterGroupNameMap[groupName] || groupName} onShowAllToggle={() => this.onShowAllToggle(groupName)} showAll={_.get(filterGroupsShowAll, groupName, false)} data-test-group-name={groupName}>
         {_.map(filterGroup, (filter, filterName) => {
           const { label, active } = filter;
           return (
-            <FilterSidePanelCategoryItem
-              key={filterName}
-              count={_.get(filterCounts, [groupName, filterName], 0)}
-              checked={active}
-              onClick={(e) => onFilterChange(groupName, filterName, e.target.checked)}
-              title={label}
-              data-test={`${groupName}-${_.kebabCase(filterName)}`}
-            >
+            <FilterSidePanelCategoryItem key={filterName} count={_.get(filterCounts, [groupName, filterName], 0)} checked={active} onClick={e => onFilterChange(groupName, filterName, e.target.checked)} title={label} data-test={`${groupName}-${_.kebabCase(filterName)}`}>
               {label}
             </FilterSidePanelCategoryItem>
           );
@@ -833,14 +719,7 @@ export class TileViewPage extends React.Component {
           if (groupName === FilterTypes.keyword) {
             return;
           }
-          return renderFilterGroup(
-            filterGroup,
-            groupName,
-            activeFilters,
-            filterCounts,
-            this.onFilterChange,
-            this.onUpdateFilters,
-          );
+          return renderFilterGroup(filterGroup, groupName, activeFilters, filterCounts, this.onFilterChange, this.onUpdateFilters);
         })}
       </FilterSidePanel>
     );
@@ -855,11 +734,7 @@ export class TileViewPage extends React.Component {
         </Title>
         <EmptyStateBody>{emptyStateInfo}</EmptyStateBody>
         <EmptyStateSecondaryActions>
-          <Button
-            variant="link"
-            onClick={() => this.clearFilters()}
-            data-test-id="catalog-clear-filters"
-          >
+          <Button variant="link" onClick={() => this.clearFilters()} data-test-id="catalog-clear-filters">
             Clear All Filters
           </Button>
         </EmptyStateSecondaryActions>
@@ -870,10 +745,8 @@ export class TileViewPage extends React.Component {
   renderItems(items, renderTile) {
     return (
       <Gallery gutter="sm" className="co-catalog-tile-view">
-        {_.map(items, (item) => (
-          <GalleryItem key={item.uid ? `gallery-${item.uid}` : `gallery-${item.obj.metadata.uid}`}>
-            {renderTile(item)}
-          </GalleryItem>
+        {_.map(items, item => (
+          <GalleryItem key={item.uid ? `gallery-${item.uid}` : `gallery-${item.obj.metadata.uid}`}>{renderTile(item)}</GalleryItem>
         ))}
       </Gallery>
     );
@@ -914,16 +787,7 @@ export class TileViewPage extends React.Component {
             <div className="co-catalog-page__heading text-capitalize">{activeCategory.label}</div>
             <div className="co-catalog-page__filter">
               <div>
-                <FormControl
-                  className="co-catalog-page__input"
-                  type="text"
-                  inputRef={(ref) => (this.filterByKeywordInput = ref)}
-                  placeholder="Filter by keyword..."
-                  bsClass="pf-c-form-control"
-                  value={activeFilters.keyword.value}
-                  onChange={(e) => this.onKeywordChange(e.target.value)}
-                  aria-label="Filter by keyword..."
-                />
+                <FormControl className="co-catalog-page__input" type="text" inputRef={ref => (this.filterByKeywordInput = ref)} placeholder="Filter by keyword..." bsClass="pf-c-form-control" value={activeFilters.keyword.value} onChange={e => this.onKeywordChange(e.target.value)} aria-label="Filter by keyword..." />
                 {/* {groupItems && (
                   <Dropdown
                     className="co-catalog-page__btn-group__group-by"
@@ -939,13 +803,7 @@ export class TileViewPage extends React.Component {
             </div>
           </div>
 
-          {activeCategory.numItems > 0 && (
-            <div className="co-catalog-page__grid">
-              {groupItems && groupBy !== groupByTypes.None
-                ? this.renderGroupedItems(activeCategory.items, groupBy, renderTile, groupItems)
-                : this.renderItems(activeCategory.items, renderTile)}
-            </div>
-          )}
+          {activeCategory.numItems > 0 && <div className="co-catalog-page__grid">{groupItems && groupBy !== groupByTypes.None ? this.renderGroupedItems(activeCategory.items, groupBy, renderTile, groupItems) : this.renderItems(activeCategory.items, renderTile)}</div>}
           {activeCategory.numItems === 0 && this.renderEmptyState()}
         </div>
       </div>
