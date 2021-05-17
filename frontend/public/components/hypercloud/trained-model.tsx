@@ -8,7 +8,7 @@ import { TFunction } from 'i18next';
 import { Status } from '@console/shared';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TrainedModelModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
@@ -26,7 +26,7 @@ const TrainedModelPhase = instance => {
         if (cur.status === 'True') {
           phase = 'Ready';
         } else {
-          phase = 'UnReady';
+          phase = 'Not Ready';
         }
       }
     });
@@ -50,22 +50,26 @@ const TrainedModelTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {      
-      title: t('COMMON:STATUS'),
+      title: 'STATUS',
+      sortField: 'phase',
       transforms: [sortable],      
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:FRAMEWORK'),
+      title: 'FRAMEWORK',
+      sortField: 'spec.model.framework',
       transforms: [sortable],      
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:URL'),
+      title: 'URL',
+      sortField: 'status.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: t('COMMON:STORAGEURI'),
+      title: 'STORAGEURI',
+      sortField: 'spec.model.storageUri',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
     },
@@ -98,7 +102,9 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
       <TableData className={tableColumnClasses[3]}>{tm.spec.model.framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{tm.status.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{tm.spec.model.storageUri}</TableData>      
-      <TableData className={tableColumnClasses[6]}>{tm.metadata.creationTimestamp}</TableData>
+      <TableData className={tableColumnClasses[6]}>        
+        <Timestamp timestamp={tm.metadata.creationTimestamp} />
+      </TableData>
       <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={tm} />
       </TableData>
@@ -115,19 +121,19 @@ export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = (
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:INFERENCESERVICE')}`} obj={ds} path="spec.inferenceService">
+      <DetailsItem label={'INFERENCESERVICE'} obj={ds} path="spec.inferenceService">
         <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />        
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:FRAMEWORK')}`} obj={ds} path="spec.model.framework">
+      <DetailsItem label={'FRAMEWORK'} obj={ds} path="spec.model.framework">
         {ds.spec.model.framework}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:MEMORY')}`} obj={ds} path="spec.model.memory">
+      <DetailsItem label={'MEMORY'} obj={ds} path="spec.model.memory">
         {ds.spec.model.memory}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:INFERENCEURL')}`} obj={ds} path="status.url">
+      <DetailsItem label={'INFERENCEURL'} obj={ds} path="status.url">
         {ds.status.url}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:STORAGEURI')}`} obj={ds} path="spec.model.storageUri">
+      <DetailsItem label={'STORAGEURI'} obj={ds} path="spec.model.storageUri">
         {ds.spec.model.storageUri}
       </DetailsItem>
     </dl>
