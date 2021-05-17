@@ -15,11 +15,11 @@ import { ResourceSidebar } from '../sidebars/resource-sidebar';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ResourceIcon } from '../utils/resource-icon';
 
-const { common } = Kebab.factory;
+const { ModifyLabels, ModifyAnnotations, Delete } = Kebab.factory;
 
 const kind = ServiceInstanceModel.kind;
 
-export const serviceInstanceMenuActions = [...Kebab.getExtensionsActionsForKind(ServiceInstanceModel), ...common];
+export const serviceInstanceMenuActions = [...Kebab.getExtensionsActionsForKind(ServiceInstanceModel), ModifyLabels, ModifyAnnotations, Delete];
 
 const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
   const { t } = useTranslation();

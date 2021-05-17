@@ -11,16 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationJobModel), ...Kebab.factory.common];
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationJobModel), Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Delete];
 
 const kind = IntegrationJobModel.kind;
 
-const tableColumnClasses = [
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-sm-4', 'hidden-xs'),
-  Kebab.columnClass,
-];
+const tableColumnClasses = [classNames('col-xs-6', 'col-sm-4'), classNames('col-xs-6', 'col-sm-4'), classNames('col-sm-4', 'hidden-xs'), Kebab.columnClass];
 
 const IntegrationJobTableHeader = (t?: TFunction) => {
   return [
@@ -50,7 +45,6 @@ const IntegrationJobTableHeader = (t?: TFunction) => {
 };
 
 IntegrationJobTableHeader.displayName = 'IntegrationJobTableHeader';
-
 
 const IntegrationJobTableRow: RowFunction<K8sResourceKind> = ({ obj: integrationJob, index, key, style }) => {
   return (
@@ -85,29 +79,22 @@ const IntegrationJobDetails: React.FC<IntegrationJobDetailsProps> = ({ obj: inte
       </div>
     </>
   );
-}
+};
 
-const { details, editResource } = navFactory;
+const { details, editYaml } = navFactory;
 
 export const IntegrationJobs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="IntegrationJobs" Header={IntegrationJobTableHeader.bind(null, t)} Row={IntegrationJobTableRow} virtualize />;
-}
-
+};
 
 export const IntegrationJobsPage: React.FC<IntegrationJobsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('SINGLE:MSG_CI/CD_MAILFORM_REQUEST_7')}
-    canCreate={false}
-    ListComponent={IntegrationJobs}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('SINGLE:MSG_CI/CD_MAILFORM_REQUEST_7')} canCreate={false} ListComponent={IntegrationJobs} kind={kind} {...props} />;
+};
 
-export const IntegrationJobsDetailsPage: React.FC<IntegrationJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationJobDetails)), editResource()]} />;
+export const IntegrationJobsDetailsPage: React.FC<IntegrationJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationJobDetails)), editYaml()]} />;
 
 type IntegrationJobsPageProps = {
   showTitle?: boolean;
