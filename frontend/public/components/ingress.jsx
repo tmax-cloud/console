@@ -188,7 +188,7 @@ const Details = ({ obj: ingress }) => {
   );
 };
 
-const IngressesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(Details)), navFactory.editYaml()]} />;
+const IngressesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[navFactory.details(detailsPage(Details)), navFactory.editResource()]} />;
 const IngressesList = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Ingresses" Header={IngressTableHeader.bind(null, t)} Row={IngressTableRow} virtualize />;
