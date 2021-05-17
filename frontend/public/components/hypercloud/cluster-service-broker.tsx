@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import * as classNames from 'classnames';
 import { Status } from '@console/shared';
 import { sortable } from '@patternfly/react-table';
 import { ClusterServiceBrokerModel } from '../../models';
@@ -22,7 +23,7 @@ const ClusterServiceBrokerDetails: React.FC<ClusterServiceBrokerDetailsProps> = 
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterServiceBroker, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={clusterServiceBroker} showPodSelector showNodeSelector></ResourceSummary>
+            <ResourceSummary resource={clusterServiceBroker}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
@@ -47,8 +48,13 @@ const { details, editResource } = navFactory;
 const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editResource()]} />;
 ClusterServiceBrokersDetailsPage.displayName = 'ClusterServiceBrokersDetailsPage';
 
-const tableColumnClasses = ['', '', '', '', ''];
-
+const tableColumnClasses = [
+  '', // NAME
+  '', // URL
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // STATUS
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
+  Kebab.columnClass, // MENU ACTIONS
+];
 const ClusterServiceBrokerPhase = instance => {
   let phase = '';
   if (instance.status) {

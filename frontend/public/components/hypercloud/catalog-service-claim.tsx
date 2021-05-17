@@ -23,7 +23,7 @@ const CatalogServiceClaimDetails: React.FC<CatalogServiceClaimDetailsProps> = ({
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(catalogServiceClaim, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={catalogServiceClaim} showPodSelector showNodeSelector></ResourceSummary>
+            <ResourceSummary resource={catalogServiceClaim}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
