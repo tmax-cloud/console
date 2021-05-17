@@ -19,7 +19,7 @@ import {
   GalleryItem,
   Title,
 } from '@patternfly/react-core';
-
+import {getCatalogType, CatalogPageType} from '../catalog/catalog-page';
 import { history } from './router';
 import { isModalOpen } from '../modals';
 import { Dropdown } from '../utils';
@@ -336,7 +336,23 @@ const getActiveFilters = (
           _.each(filterRetentionPreference, (filterGroup) => {
             if (!groupFilters || !groupFilters[filterGroup]) {
               if (lastFilters[filterGroup]) {
-                activeFilters[filterGroup] = lastFilters[filterGroup];
+                // MEMO : ServiceInstance 생성 버튼을 통해 간 catalog/.../serviceinstance가 들어간 url의 카탈로그페이지에선 ServiceClass관련 filter만 보여져야 됨
+                if(getCatalogType()===CatalogPageType.SERVICE_INSTANCE){
+                  activeFilters[filterGroup] = {
+                    ClusterServiceClass: {
+                      label: 'Cluster Service Class',
+                      value: 'ClusterServiceClass',
+                      active: lastFilters[filterGroup]?.ClusterServiceClass?.active || false,
+                    },
+                    ServiceClass: {
+                      label: 'Service Class',
+                      value: 'ServiceClass',
+                      active: lastFilters[filterGroup]?.ServiceClass?.active || false,
+                    },
+                  }
+                } else{ 
+                  _.assign(activeFilters[filterGroup], lastFilters[filterGroup]);
+                }
               }
             }
           });
