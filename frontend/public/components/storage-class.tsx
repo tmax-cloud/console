@@ -149,7 +149,7 @@ export const StorageClassPage: React.SFC<StorageClassPageProps> = (props) => {
   );
 };
 
-const pages = [navFactory.details(detailsPage(StorageClassDetails)), navFactory.editYaml()];
+const pages = [navFactory.details(detailsPage(StorageClassDetails)), navFactory.editResource()];
 
 export const StorageClassDetailsPage: React.SFC<StorageClassDetailsPageProps> = (props) => {
   return (

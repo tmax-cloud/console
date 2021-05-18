@@ -109,6 +109,8 @@ class LogWindow_ extends React.PureComponent {
     const { bufferFull, lines, linesBehind, status, t } = this.props;
     const { content, height } = this.state;
 
+    // MJ : Resume stream부분 String발행 되면 적용하기
+     
     // TODO maybe move these variables into state so they are only updated on changes
     const totalLineCount = pluralize(lines.length, 'line');
     // const linesBehindCount = pluralize(linesBehind, 'new line');

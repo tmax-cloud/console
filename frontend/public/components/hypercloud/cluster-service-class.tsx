@@ -79,10 +79,10 @@ ClusterServiceClassesDetailsPage.displayName = 'ClusterServiceClassesDetailsPage
 
 const tableColumnClasses = [
   '', // NAME
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // BINDABLE
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // EXTERNAL NAME
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // CLUSTER SERVICE BROKER
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // BINDABLE
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // EXTERNAL NAME
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CLUSTER SERVICE BROKER
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
 ];
 
 const ClusterServiceClassTableRow = ({ obj, index, key, style }) => {
