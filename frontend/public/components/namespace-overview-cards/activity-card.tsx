@@ -25,17 +25,10 @@ const RecentEvent = withDashboardResources(({ watchK8sResource, stopWatchK8sReso
   return <RecentEventsBody events={resources.events as FirehoseResult<EventKind[]>} moreLink={viewEvents} />;
 });
 
-<<<<<<< Updated upstream
 const ActivityCard = props => {
   const { t } = useTranslation();
   eventsResource = { isList: true, kind: EventModel.kind, prop: 'events', ...props };
   viewEvents = `/k8s/ns/${props.namespace}/events`;
-=======
-const ActivityCard: React.FC<{}> = React.memo(props => {
-  const { t } = useTranslation();
-  eventsResource = { isList: true, kind: EventModel.kind, prop: 'events', ...props };
-  // viewEvents = `/k8s/ns/${props.namespace}/events`;
->>>>>>> Stashed changes
 
   return (
     <DashboardCard gradient data-test-id="activity-card">
@@ -50,10 +43,6 @@ const ActivityCard: React.FC<{}> = React.memo(props => {
       </DashboardCardBody>
     </DashboardCard>
   );
-<<<<<<< Updated upstream
 };
-=======
-});
->>>>>>> Stashed changes
 
 export default React.memo(ActivityCard);
