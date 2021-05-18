@@ -148,7 +148,7 @@ const filters = t => [
 export const PipelineApprovalsPage: React.FC<PipelineApprovalsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_61')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_61') })} canCreate={true} ListComponent={PipelineApprovals} kind={kind} {...props} rowFilters={filters.bind(null, t)()} />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_61')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_61') })} canCreate={false} ListComponent={PipelineApprovals} kind={kind} {...props} rowFilters={filters.bind(null, t)()} />;
 };
 
 export const PipelineApprovalsDetailsPage: React.FC<PipelineApprovalsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineApprovalDetails)), editResource()]} />;
