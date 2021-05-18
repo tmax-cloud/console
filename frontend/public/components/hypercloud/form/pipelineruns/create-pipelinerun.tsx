@@ -49,6 +49,36 @@ const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultI
   );
 };
 
+const ParamsListComponent = props => {
+  return props.paramList.map((cur) => (
+    <ul>
+      <Section label={cur.name} id={cur.name} description={cur.description}>
+        {cur.type === 'array' ?
+          <ListView name={`spec.params.${cur.name}.arrayValue`} addButtonText='추가' headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={cur.default.map(defaultValue => ({ value: defaultValue }))} />
+          : <TextInput id={`spec.params.${cur.name}.value`} defaultValue={cur.default} />
+        }
+      </Section>
+    </ul>
+  )
+  );
+}
+
+const ResourceListComponent = props => {
+  return props.resourceList.map((cur) => (
+    <ul>
+      <Section label={cur.name} id={cur.name}>
+        <ResourceListDropdown
+          name={`spec.resources.${cur.name}.resourceRef.name`}
+          resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)}
+          type='single'
+          useHookForm
+          placeholder='파이프라인 리소스 선택'
+        />
+      </Section>
+    </ul>
+  ))
+}
+
 const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
   const { control } = useFormContext();
 
@@ -105,33 +135,11 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
       {!_.isEmpty(paramList) &&
         <Section label='파이프라인 파라미터' id='param'>
-          {paramList.map((cur, idx) => (
-            <ul>
-              <Section label={cur.name} id={cur.name} description={cur.description}>
-                {cur.type === 'array' ?
-                  <ListView name={`spec.params.${cur.name}.arrayValue`} addButtonText='추가' headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={cur.default.map(defaultValue => ({ value: defaultValue }))} />
-                  : <TextInput id={`spec.params.${cur.name}.value`} defaultValue={cur.default} />
-                }
-              </Section>
-            </ul>
-          )
-          )}
+          <ParamsListComponent paramList={paramList} />
         </Section>}
       {!_.isEmpty(resourceList) &&
         <Section label='파이프라인 리소스' id='resource'>
-          {resourceList.map((cur, idx) => (
-            <ul>
-              <Section label={cur.name} id={cur.name}>
-                <ResourceListDropdown
-                  name={`spec.resources.${cur.name}.resourceRef.name`}
-                  resourceList={resourceRefList.filter(ref => cur.type === ref.spec.type)}
-                  type='single'
-                  useHookForm
-                  placeholder='파이프라인 리소스 선택'
-                />
-              </Section>
-            </ul>
-          ))}
+          <ResourceListComponent resourceList={resourceList} resourceRefList={resourceRefList} />
         </Section>}
 
       <div className='co-form-section__separator' />
