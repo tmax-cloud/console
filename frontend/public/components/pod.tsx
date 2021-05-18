@@ -443,15 +443,15 @@ export const PodsPage = connect<{}, PodPagePropsFromDispatch, PodPageProps>(
           type: 'pod-status',
           reducer: podPhaseFilterReducer,
           items: [
-            { id: 'Running', title: t('COMMON:MSG_COMMON_STATUS_1') },
-            { id: 'Pending', title: t('COMMON:MSG_COMMON_STATUS_2') },
-            { id: 'Terminating', title: t('COMMON:MSG_COMMON_STATUS_3') },
-            { id: 'CrashLoopBackOff', title: t('COMMON:MSG_COMMON_STATUS_4') },
+            { id: 'Running', title: 'Running' },
+            { id: 'Pending', title: 'Pending' },
+            { id: 'Terminating', title: 'Terminating' },
+            { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
             // Use title "Completed" to match what appears in the status column for the pod.
             // The pod phase is "Succeeded," but the container state is "Completed."
-            { id: 'Succeeded', title: t('COMMON:MSG_COMMON_STATUS_5') },
-            { id: 'Failed', title: t('COMMON:MSG_COMMON_STATUS_12') },
-            { id: 'Unknown', title: t('COMMON:MSG_COMMON_STATUS_6') },
+            { id: 'Succeeded', title: 'Succeeded' },
+            { id: 'Failed', title: 'Failed' },
+            { id: 'Unknown', title: 'Unknown' },
           ],
         },
       ]}
