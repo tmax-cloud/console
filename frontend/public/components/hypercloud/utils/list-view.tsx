@@ -55,10 +55,22 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
     </>
   );
 
+  // MEMO : ListView컴포넌트 안에서 ref가 없는 다른 공통컴포넌트를 사용해 itemRenderer를 구성할 때, item remove할 때 그 안에 값들의 싱크가 맞지 않는 경우가 있어서,
+  // 다시 원래 값으로 세팅해주는 함수. (임시 방안) 사용예시는 create-role.tsx 참고.
+  const registerWithInitValue = (name, defaultValue) => {
+    const isRegistered = _.get(getValues(), name);
+
+    if (!isRegistered) {
+      register(name);
+      setValue(name, defaultValue);
+    }
+  };
+
   const ListActions = {
     append: append,
     remove: remove,
     getValues: getValues,
+    registerWithInitValue: registerWithInitValue,
   };
 
   const ListDefaultIcons = {
