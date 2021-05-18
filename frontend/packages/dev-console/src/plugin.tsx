@@ -796,73 +796,73 @@ const plugin: Plugin<ConsumedExtensions> = [
       template: newClusterTaskTemplate,
     },
   },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'import-from-git',
-      url: '/import',
-      label: 'From Git',
-      description: 'Import code from your git repository to be built and deployed',
-      icon: importGitIcon,
-      accessReview: [
-        BuildConfigModel,
-        ImageStreamModel,
-        DeploymentConfigModel,
-        SecretModel,
-        RouteModel,
-        ServiceModel,
-      ].map((model) => ({
-        group: model.apiGroup || '',
-        resource: model.plural,
-        verb: 'create',
-      })),
-    },
-  },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'deploy-image',
-      url: '/deploy-image',
-      label: 'Container Image',
-      description: 'Deploy an existing image from an image registry or image stream tag',
-      iconClass: 'pficon-image',
-      accessReview: [
-        BuildConfigModel,
-        ImageStreamModel,
-        DeploymentConfigModel,
-        ImageStreamImportsModel,
-        SecretModel,
-        RouteModel,
-        ServiceModel,
-      ].map((model) => ({
-        group: model.apiGroup || '',
-        resource: model.plural,
-        verb: 'create',
-      })),
-    },
-  },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'import-from-dockerfile',
-      url: '/import?importType=docker',
-      label: 'From Dockerfile',
-      description: 'Import your Dockerfile from your git repo to be built and deployed',
-      icon: dockerfileIcon,
-      accessReview: [
-        BuildConfigModel,
-        ImageStreamModel,
-        DeploymentConfigModel,
-        SecretModel,
-        RouteModel,
-        ServiceModel,
-      ].map((model) => ({
-        group: model.apiGroup || '',
-        resource: model.plural,
-        verb: 'create',
-      })),
-    },
-  },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'import-from-git',
+  //     url: '/import',
+  //     label: 'From Git',
+  //     description: 'Import code from your git repository to be built and deployed',
+  //     icon: importGitIcon,
+  //     accessReview: [
+  //       BuildConfigModel,
+  //       ImageStreamModel,
+  //       DeploymentConfigModel,
+  //       SecretModel,
+  //       RouteModel,
+  //       ServiceModel,
+  //     ].map((model) => ({
+  //       group: model.apiGroup || '',
+  //       resource: model.plural,
+  //       verb: 'create',
+  //     })),
+  //   },
+  // },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'deploy-image',
+  //     url: '/deploy-image',
+  //     label: 'Container Image',
+  //     description: 'Deploy an existing image from an image registry or image stream tag',
+  //     iconClass: 'pficon-image',
+  //     accessReview: [
+  //       BuildConfigModel,
+  //       ImageStreamModel,
+  //       DeploymentConfigModel,
+  //       ImageStreamImportsModel,
+  //       SecretModel,
+  //       RouteModel,
+  //       ServiceModel,
+  //     ].map((model) => ({
+  //       group: model.apiGroup || '',
+  //       resource: model.plural,
+  //       verb: 'create',
+  //     })),
+  //   },
+  // },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'import-from-dockerfile',
+  //     url: '/import?importType=docker',
+  //     label: 'From Dockerfile',
+  //     description: 'Import your Dockerfile from your git repo to be built and deployed',
+  //     icon: dockerfileIcon,
+  //     accessReview: [
+  //       BuildConfigModel,
+  //       ImageStreamModel,
+  //       DeploymentConfigModel,
+  //       SecretModel,
+  //       RouteModel,
+  //       ServiceModel,
+  //     ].map((model) => ({
+  //       group: model.apiGroup || '',
+  //       resource: model.plural,
+  //       verb: 'create',
+  //     })),
+  //   },
+  // },
   {
     type: 'AddAction',
     properties: {
@@ -903,16 +903,16 @@ const plugin: Plugin<ConsumedExtensions> = [
   //     icon: <BoltIcon />,
   //   },
   // },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'helm',
-      url: '/catalog?kind=%5B"HelmChart"%5D',
-      label: 'Helm Chart',
-      description: 'Browse the catalog to discover and install Helm Charts',
-      icon: helmIcon,
-    },
-  },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'helm',
+  //     url: '/catalog?kind=%5B"HelmChart"%5D',
+  //     label: 'Helm Chart',
+  //     description: 'Browse the catalog to discover and install Helm Charts',
+  //     icon: helmIcon,
+  //   },
+  // },
   {
     type: 'AddAction',
     flags: {
