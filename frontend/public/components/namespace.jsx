@@ -479,21 +479,6 @@ const NamespaceDetails_ = ({ obj: ns, consoleLinks, customData }) => {
         {!customData?.hideHeading && <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_3') })} />}
         <NamespaceSummary ns={ns} />
       </div>
-      {ns.kind === 'Namespace' && <ResourceUsage ns={ns} />}
-      {!_.isEmpty(links) && (
-        <div className="co-m-pane__body">
-          <SectionHeading text="Launcher" />
-          <ul className="list-unstyled">
-            {_.map(_.sortBy(links, 'spec.text'), link => {
-              return (
-                <li key={link.metadata.uid}>
-                  <ExternalLink href={link.spec.href} text={link.spec.text} />
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };
