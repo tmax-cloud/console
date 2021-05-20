@@ -1,7 +1,7 @@
 pipeline {
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
-    choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
+    choice(name: 'DEPLOY', choices:['team-k8s', 'ck-k8s', 'keycloak'], description: 'Select k8s env you want to deploy the console')
 
     string(name: 'KEYCLOAK', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
@@ -40,7 +40,7 @@ pipeline {
   }
   agent {
     kubernetes {
-      cloud 'ck1-1'
+      cloud 'team-k8s'
       // yamlFile './KubernetesPod.yaml'
       yaml '''\
         apiVersion: v1
