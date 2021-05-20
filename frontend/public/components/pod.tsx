@@ -330,7 +330,7 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
       </div>
       {pod.spec.initContainers && (
         <div className="co-m-pane__body">
-          <PodContainerTable key="initContainerTable" heading="Init Containers" containers={pod.spec.initContainers} pod={pod} />
+          <PodContainerTable key="initContainerTable" heading={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_141')} containers={pod.spec.initContainers} pod={pod} />
         </div>
       )}
       <div className="co-m-pane__body">
