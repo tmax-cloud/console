@@ -5,7 +5,7 @@
 * hypercloud-console ([tmaxcloudck/hypercloud-console](https://hub.docker.com/r/tmaxcloudck/hypercloud-console/tags))
 * console-operator ([tmaxcloudck/console-operator](https://hub.docker.com/r/tmaxcloudck/console-operator/tags))
 * 가이드 작성 시점(2021/05/13) 최신 버전은 아래와 같습니다. 
-    * hypercloud-console:5.0.9.4
+    * hypercloud-console:5.0.10.0
     * console-operator:5.1.0.1
 
 ## Prerequisites
@@ -22,7 +22,7 @@
 	  ```bash
 	  mkdir -p ~/console-install
       export CONSOLE_HOME=~/console-install 
-      export CONSOLE_VERSION=5.0.9.0
+      export CONSOLE_VERSION=5.0.10.0
       export OPERATOR_VERSION=5.1.0.1
       cd $CONSOLE_HOME
 	  ```
