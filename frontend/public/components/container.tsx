@@ -185,14 +185,13 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
   const stateValue = state.value === 'terminated' && _.isFinite(state.exitCode) ? `${state.label} with exit code ${state.exitCode}` : state.label;
   const { imageName, imageTag } = getImageNameAndTag(container.image);
 
-  // MJ : MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_14 에 대한 컨테이너 키값 발행되면 그걸로 대체하기
   return (
     <div className="co-m-pane__body">
       <ScrollToTopOnMount />
 
       <div className="row">
         <div className="col-lg-4">
-          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_14') })} />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_12')} />
           <dl className="co-m-pane__details">
             <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_1')}</dt>
             <dd>
@@ -234,7 +233,7 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_1') })} />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_13')} />
           <dl className="co-m-pane__details">
             <dt>{t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_1')}</dt>
             <dd>{imageName ? <div className="co-break-all co-select-to-copy">{imageName}</div> : '-'}</dd>
