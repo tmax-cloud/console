@@ -106,7 +106,7 @@ const RuleItem = (props) => {
       {index === 0 ? null : <div className='co-form-section__separator' />}
       <div className="row" key={item.id}>
         <div className="col-xs-4 pairs-list__value-field">
-          <Section label='API Group' id={`apigroup[${index}]`} isRequired={true}>
+          <Section label='API 그룹' id={`apigroup[${index}]`} isRequired={true}>
             <Dropdown
               name={`${name}[${index}].apiGroup`}
               items={apiGroupList}
@@ -115,16 +115,17 @@ const RuleItem = (props) => {
               {...initValue(`${name}[${index}].apiGroup`, item.apiGroup)}
             />
           </Section>
-          <Section label='Resource' id={`resource[${index}]`} isRequired={true}>
+          <Section label='리소스' id={`resource[${index}]`} isRequired={true}>
             <Dropdown
               name={`${name}[${index}].resource`}
               items={resourceList}
               defaultValue={item.resource}
               methods={methods}
+              placeholder='리소스 선택'
               {...initValue(`${name}[${index}].resource`, item.resource)}
             />
           </Section>
-          <Section label='Verb' id={`verb[${index}]`} isRequired={true}>
+          <Section label='벌브' id={`verb[${index}]`} isRequired={true}>
             <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...initValue(`${name}[${index}].verbs`, item.verbs)} />
           </Section>
         </div>
@@ -201,7 +202,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       </Section>
 
       {kindToggle === "Role" &&
-        <Section label='Namespace' id='namespace' isRequired={true}>
+        <Section label='네임스페이스' id='namespace' isRequired={true}>
           <ResourceListDropdown
             name='metadata.namespace'
             useHookForm
@@ -209,6 +210,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
             kind='Namespace'
             resourceType='Namespace'
             type='single'
+            placeholder='네임스페이스 선택'
           />
         </Section>
       }
