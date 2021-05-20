@@ -205,7 +205,7 @@ export const UtilizationCard = ({ namespace }) => {
   return (
     <DashboardCard data-test-id="utilization-card">
       <DashboardCardHeader>
-        <DashboardCardTitle>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_CLUSTERUTILIZATION_1')}</DashboardCardTitle>
+        <DashboardCardTitle>{t('COMMON:MSG_DETAILS_TABDETAILS_RESOURCEQUOTADETAILS_TABLEHEADER_3')}</DashboardCardTitle>
         <Dropdown items={durationItems} onChange={setDuration} selectedKey={durationValues[duration]} title={duration} />
       </DashboardCardHeader>
       <UtilizationBody timestamps={timestamps}>

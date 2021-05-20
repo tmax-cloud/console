@@ -92,7 +92,7 @@ const namespaceQueries = (namespace: String) => {
     [OverviewQuery.NETWORK_IN_UTILIZATION]: `sum(rate(container_network_receive_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
     [OverviewQuery.NETWORK_OUT_UTILIZATION]: `sum(rate(container_network_transmit_bytes_total{container="POD",pod!="",namespace="${namespace}"}[5m]))`,
     [OverviewQuery.NETWORK_UTILIZATION]: '',
-    [OverviewQuery.CPU_UTILIZATION]: `namespace:container_cpu_usage:sum{namespace='${namespace}', mode!="idle"}`,
+    [OverviewQuery.CPU_UTILIZATION]: `sum(rate(container_cpu_usage_seconds_total{name=~".+",namespace=~"${namespace}"}[5m])) by (namespace) * 100`,
     [OverviewQuery.STORAGE_UTILIZATION]: `sum(pod:container_fs_usage_bytes:sum{namespace='${namespace}'}) by (namespace)`,
     [OverviewQuery.POD_UTILIZATION]: `count(kube_pod_info{namespace="${namespace}"})`,
   };

@@ -7,6 +7,7 @@ import * as k8sProbe from '../module/k8s/probe';
 import { getContainerState, getContainerStatus, getPullPolicyLabel } from '../module/k8s/container';
 import { Firehose, HorizontalNav, MsgBox, NodeLink, PageHeading, ResourceLink, ScrollToTopOnMount, SectionHeading, Timestamp } from './utils';
 import { resourcePath } from './utils/resource-link';
+import { useTranslation } from 'react-i18next';
 
 const formatComputeResources = (resources: ResourceList) => _.map(resources, (v, k) => `${k}: ${v}`).join(', ');
 
@@ -60,9 +61,11 @@ const Probe: React.FC<ProbeProps> = ({ probe, podIP }) => {
 };
 Probe.displayName = 'Probe';
 
+// MJ : String발행되면 적용하기
 const Ports: React.FC<PortsProps> = ({ ports }) => {
+  const { t } = useTranslation();
   if (!ports || !ports.length) {
-    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No ports have been exposed" detail="Ports allow for traffic to enter this container" />;
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title={t('COMMON:MSG_DETAILS_CONTAINER_PORTS_1')} detail={t('COMMON:MSG_DETAILS_CONTAINER_PORTS_2')} />;
   }
 
   return (
@@ -86,6 +89,7 @@ const Ports: React.FC<PortsProps> = ({ ports }) => {
 };
 
 const VolumeMounts: React.FC<VolumeMountProps> = ({ volumeMounts }) => {
+  const { t } = useTranslation();
   if (!volumeMounts || !volumeMounts.length) {
     return <MsgBox className="co-sysevent-stream__status-box-empty" title="No volumes have been mounted" detail="Volumes allow data to be shared as files with the pod" />;
   }
@@ -94,9 +98,9 @@ const VolumeMounts: React.FC<VolumeMountProps> = ({ volumeMounts }) => {
     <table className="table table--layout-fixed">
       <thead>
         <tr>
-          <th>Access</th>
-          <th>Location</th>
-          <th>Mount Path</th>
+          <th>{t('COMMON:MSG_DETAILS_CONTAINER_MOUNTEDVOLUMES_2')}</th>
+          <th>{t('COMMON:MSG_DETAILS_CONTAINER_MOUNTEDVOLUMES_3')}</th>
+          <th>{t('COMMON:MSG_DETAILS_CONTAINER_MOUNTEDVOLUMES_4')}</th>
         </tr>
       </thead>
       <tbody>
@@ -114,6 +118,7 @@ const VolumeMounts: React.FC<VolumeMountProps> = ({ volumeMounts }) => {
 VolumeMounts.displayName = 'VolumeMounts';
 
 const Env: React.FC<EnvProps> = ({ env }) => {
+  const { t } = useTranslation();
   if (!env || !env.length) {
     return <MsgBox className="co-sysevent-stream__status-box-empty" title="No variables have been set" detail="An easy way to pass configuration values" />;
   }
@@ -136,8 +141,8 @@ const Env: React.FC<EnvProps> = ({ env }) => {
     <table className="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Value</th>
+          <th>{t('COMMON:MSG_DETAILS_CONTAINER_ENVIRONMENTVARIABLES_2')}</th>
+          <th>{t('COMMON:MSG_DETAILS_CONTAINER_ENVIRONMENTVARIABLES_3')}</th>
         </tr>
       </thead>
       <tbody>
@@ -168,6 +173,7 @@ const getImageNameAndTag = (image: string) => {
 };
 
 const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
+  const { t } = useTranslation();
   const pod = props.obj;
   const container = (_.find(pod.spec.containers, { name: props.match.params.name }) as ContainerSpec) || (_.find(pod.spec.initContainers, { name: props.match.params.name }) as ContainerSpec);
   if (!container) {
@@ -185,41 +191,41 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
 
       <div className="row">
         <div className="col-lg-4">
-          <SectionHeading text="Container Details" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_12')} />
           <dl className="co-m-pane__details">
-            <dt>State</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_1')}</dt>
             <dd>
               <Status status={stateValue} />
             </dd>
-            <dt>ID</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_2')}</dt>
             <dd>{status.containerID ? <div className="co-break-all co-select-to-copy">{status.containerID}</div> : '-'}</dd>
-            <dt>Restarts</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_3')}</dt>
             <dd>{status.restartCount}</dd>
-            <dt>Resource Requests</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_4')}</dt>
             <dd>{getResourceRequestsValue(container) || '-'}</dd>
-            <dt>Resource Limits</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_5')}</dt>
             <dd>{getResourceLimitsValue(container) || '-'}</dd>
-            <dt>Lifecycle Hooks</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_6')}</dt>
             <dd>
               <Lifecycle lifecycle={container.lifecycle} />
             </dd>
-            <dt>Readiness Probe</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_7')}</dt>
             <dd>
               <Probe probe={container.readinessProbe} podIP={pod.status.podIP || '-'} />
             </dd>
-            <dt>Liveness Probe</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_8')}</dt>
             <dd>
               <Probe probe={container.livenessProbe} podIP={pod.status.podIP || '-'} />
             </dd>
-            <dt>Started</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_9')}</dt>
             <dd>
               <Timestamp timestamp={state.startedAt} />
             </dd>
-            <dt>Finished</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_10')}</dt>
             <dd>
               <Timestamp timestamp={state.finishedAt} />
             </dd>
-            <dt>Pod</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_11')}</dt>
             <dd>
               <ResourceLink kind="Pod" name={props.match.params.podName} namespace={props.match.params.ns} />
             </dd>
@@ -227,13 +233,13 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Image Details" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_DETAILS_13')} />
           <dl className="co-m-pane__details">
-            <dt>Image</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_1')}</dt>
             <dd>{imageName ? <div className="co-break-all co-select-to-copy">{imageName}</div> : '-'}</dd>
-            <dt>Image Version/Tag</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_2')}</dt>
             <dd>{imageTag || '-'}</dd>
-            <dt>Command</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_3')}</dt>
             <dd>
               {container.command ? (
                 <pre>
@@ -243,7 +249,7 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
                 <span>-</span>
               )}
             </dd>
-            <dt>Args</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_4')}</dt>
             <dd>
               {container.args ? (
                 <pre>
@@ -253,19 +259,19 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
                 <span>-</span>
               )}
             </dd>
-            <dt>Pull Policy</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_IMAGEDETAILS_5')}</dt>
             <dd>{getPullPolicyLabel(container)}</dd>
           </dl>
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Network" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_NETWORK_3')} />
           <dl className="co-m-pane__details">
-            <dt>Node</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_NETWORK_1')}</dt>
             <dd>
               <NodeLink name={pod.spec.nodeName} />
             </dd>
-            <dt>Pod IP</dt>
+            <dt>{t('COMMON:MSG_DETAILS_CONTAINER_NETWORK_2')}</dt>
             <dd>{pod.status.podIP || '-'}</dd>
           </dl>
         </div>
@@ -275,21 +281,21 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
 
       <div className="row">
         <div className="col-lg-4">
-          <SectionHeading text="Ports" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_PORTS_3')} />
           <div className="co-table-container">
             <Ports ports={container.ports} />
           </div>
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Mounted Volumes" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_MOUNTEDVOLUMES_1')} />
           <div className="co-table-container">
             <VolumeMounts volumeMounts={container.volumeMounts} />
           </div>
         </div>
 
         <div className="col-lg-4">
-          <SectionHeading text="Environment Variables" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_CONTAINER_ENVIRONMENTVARIABLES_1')} />
           <div className="co-table-container">
             <Env env={container.env} />
           </div>
@@ -300,36 +306,39 @@ const ContainerDetails: React.FC<ContainerDetailsProps> = props => {
 };
 ContainerDetails.displayName = 'ContainerDetails';
 
-export const ContainersDetailsPage: React.FC<ContainerDetailsPageProps> = props => (
-  <div>
-    <Firehose
-      resources={[
-        {
-          name: props.match.params.podName,
-          namespace: props.match.params.ns,
-          kind: 'Pod',
-          isList: false,
-          prop: 'obj',
-        },
-      ]}
-    >
-      <PageHeading
-        detail={true}
-        title={props.match.params.name}
-        kind="Container"
-        breadcrumbsFor={() => [
-          { name: 'Pods', path: `/k8s/ns/${props.match.params.ns}/pods` },
+export const ContainersDetailsPage: React.FC<ContainerDetailsPageProps> = props => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <Firehose
+        resources={[
           {
             name: props.match.params.podName,
-            path: resourcePath('Pod', props.match.params.podName, props.match.params.ns),
+            namespace: props.match.params.ns,
+            kind: 'Pod',
+            isList: false,
+            prop: 'obj',
           },
-          { name: 'Container Details', path: props.match.url },
         ]}
-      />
-      <HorizontalNav hideNav={true} pages={[{ name: 'container', href: '', component: ContainerDetails }]} match={props.match} />
-    </Firehose>
-  </div>
-);
+      >
+        <PageHeading
+          detail={true}
+          title={props.match.params.name}
+          kind="Container"
+          breadcrumbsFor={() => [
+            { name: t('COMMON:MSG_LNB_MENU_23'), path: `/k8s/ns/${props.match.params.ns}/pods` },
+            {
+              name: props.match.params.podName,
+              path: resourcePath('Pod', props.match.params.podName, props.match.params.ns),
+            },
+            { name: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_14') }), path: props.match.url },
+          ]}
+        />
+        <HorizontalNav hideNav={true} pages={[{ name: 'container', href: '', component: ContainerDetails }]} match={props.match} />
+      </Firehose>
+    </div>
+  );
+};
 ContainersDetailsPage.displayName = 'ContainersDetailsPage';
 
 type LifecycleProps = {
