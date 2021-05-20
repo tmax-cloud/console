@@ -574,13 +574,12 @@ export const ContainerDropdown = withTranslation()(
       return container ? spacerBefore.add(container.name) : spacerBefore;
     }
 
-    // MJ : String발행되면 적용하기
     getHeaders(container, initContainer) {
       const { t } = this.props;
       return initContainer
         ? {
-            [container.name]: t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1'),
-            [initContainer.name]: t('Init Containers'),
+            [container.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_5'),
+            [initContainer.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_6'),
           }
         : {};
     }

@@ -10,11 +10,9 @@ import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { Kebab, ResourceKebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-const { common } = Kebab.factory;
-
 const kind = ServiceBindingModel.kind;
 
-export const serviceBindingMenuActions = [...Kebab.getExtensionsActionsForKind(ServiceBindingModel), common[0], common[1], common[3]];
+export const serviceBindingMenuActions = [...Kebab.getExtensionsActionsForKind(ServiceBindingModel), ...Kebab.factory.common];
 
 const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: serviceBinding }) => {
   const { t } = useTranslation();

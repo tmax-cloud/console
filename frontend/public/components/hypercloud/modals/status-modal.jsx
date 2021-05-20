@@ -18,7 +18,7 @@ class BaseStatusModal extends PromiseComponent {
     super(props);
     this._submit = this._submit.bind(this);
     this._cancel = props.cancel.bind(this);
-    let status = '';
+    let status = 'Approved';
     const reason = '';
     this.state = Object.assign(this.state, {
       status,

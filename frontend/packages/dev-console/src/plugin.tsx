@@ -25,16 +25,16 @@ import { NamespaceRedirect } from '@console/internal/components/utils/namespace-
 import { FLAGS } from '@console/shared/src/constants';
 import { referenceForModel } from '@console/internal/module/k8s';
 import {
-  BuildConfigModel,
-  ImageStreamModel,
-  DeploymentConfigModel,
+  // BuildConfigModel,
+  // ImageStreamModel,
+  // DeploymentConfigModel,
   SecretModel,
-  RouteModel,
-  ServiceModel,
-  ImageStreamImportsModel,
+  // RouteModel,
+  // ServiceModel,
+  // ImageStreamImportsModel,
   ConfigMapModel,
 } from '@console/internal/models';
-import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
+// import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
 import * as models from './models';
 import { getKebabActionsForKind } from './utils/kebab-actions';
 import {
@@ -52,8 +52,8 @@ import {
 import reducer from './utils/reducer';
 import { AddAction } from './extensions/add-actions';
 import * as yamlIcon from './images/yaml.svg';
-import * as importGitIcon from './images/from-git.svg';
-import * as dockerfileIcon from './images/dockerfile.svg';
+// import * as importGitIcon from './images/from-git.svg';
+// import * as dockerfileIcon from './images/dockerfile.svg';
 import * as pipelineIcon from './images/pipeline.svg';
 
 const {
