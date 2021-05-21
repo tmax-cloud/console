@@ -8,7 +8,7 @@ import { Section } from '../../utils/section';
 import { SelectorInput } from '../../../utils';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues = {
   metadata: {
@@ -22,22 +22,22 @@ const pipelineResourceFormFactory = params => {
 
 const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = props => {
   const { control } = useFormContext();
+  const { t } = useTranslation();
 
-  const typeList = React.useMemo(() => ({ git: 'Git', image: 'Image' }), []);
+  const typeList = { git: t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_7'), image: t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_8') };
   const type = useWatch({
     control: control,
     name: 'spec.type',
     defaultValue: 'git',
   });
-  //const { t } = useTranslation();
 
   return (
     <>
-      <Section label='Labels' id='label' description='Enter를 입력하여 레이블을 추가할 수 있습니다.'>
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_2')} id='label' description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_3')}>
         <Controller name='metadata.labels' id='label' labelClassName='co-text-sample' as={SelectorInput} control={control} tags={[]} />
       </Section>
 
-      <Section label='타입' id='type'>
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id='type'>
         <Dropdown
           name='spec.type'
           items={typeList}
@@ -45,11 +45,11 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
         />
       </Section>
 
-      {type === 'git' && <Section label='리비전' id='revision'>
+      {type === 'git' && <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id='revision'>
         <TextInput inputClassName='pf-c-form-control' id='spec.revision' name='spec.revision' />
       </Section>}
 
-      <Section label='URL' id='url'>
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id='url'>
         <TextInput inputClassName='pf-c-form-control' id='spec.url' name='spec.url' />
       </Section>
 
@@ -67,8 +67,8 @@ export const onSubmitCallback = data => {
   let labels = SelectorInput.objectify(data.metadata.labels);
 
   let params = [];
-  data.spec.revision && params.push({name: 'revision', value: data.spec.revision});
-  params.push({name: 'url', value: data.spec.url});
+  data.spec.revision && params.push({ name: 'revision', value: data.spec.revision });
+  params.push({ name: 'url', value: data.spec.url });
 
   delete data.metadata.labels;
   delete data.spec.params;

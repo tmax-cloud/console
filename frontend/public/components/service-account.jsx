@@ -109,7 +109,7 @@ const ServiceAccountTableHeader = t => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_34'),
-      sortField: 'secrets',
+      sortFunc: 'numSecrets',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
