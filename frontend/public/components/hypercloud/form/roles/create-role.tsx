@@ -188,7 +188,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {kindToggle === 'Role' && (
         <Section label="네임스페이스" id="namespace" isRequired={true}>
-          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder='네임스페이스 이름 선택'/>
+          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder='네임스페이스 선택'/>
         </Section>
       )}
 
