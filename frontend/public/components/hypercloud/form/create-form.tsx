@@ -10,7 +10,6 @@ import { ButtonBar, history, resourceObjPath } from '../../utils';
 import { Section } from '../utils/section';
 
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 
 export const isCreatePage = defaultValues => {
