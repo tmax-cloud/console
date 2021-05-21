@@ -25,7 +25,7 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
       sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
@@ -63,7 +63,7 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
         <ResourceLink kind={kind} name={rolebindingclaims.metadata.name} namespace={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.uid} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.namespace} />
+        <ResourceLink kind="Namespace" name={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.namespace} linkTo={rolebindingclaims.status?.status === 'Approved'} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>{rolebindingclaims?.status?.status}</TableData>
       <TableData className={tableColumnClasses[3]}>{rolebindingclaims.resourceName}</TableData>

@@ -26,7 +26,7 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
       sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
@@ -73,7 +73,7 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
         <ResourceLink kind={kind} name={resourcequotaclaims.metadata.name} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.uid} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} />
+        <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>{resourcequotaclaims?.status?.status}</TableData>
       <TableData className={tableColumnClasses[3]}>{resourcequotaclaims.resourceName}</TableData>
