@@ -4,10 +4,13 @@ import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 
 export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods, inputResource }) => {
-  const typeItems = {
-    git: 'Git',
-    image: 'Image',
-  };
+  const typeItems = React.useMemo(
+    () => ({
+      git: 'Git',
+      image: '이미지',
+    }),
+    [],
+  );
   let target = document.getElementById('input-resource-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
   let template;
@@ -25,10 +28,10 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
 
   return (
     <>
-      <Section label="Name" id="inputresource_name" isRequired={true}>
+      <Section label="인풋 리소스 이름" id="inputresource_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="Type" id="inputresource-type" isRequired={true}>
+      <Section label="타입" id="inputresource-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
@@ -41,7 +44,7 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
           defaultValue={modalType === 'modify' ? template.type : ''}
         />
       </Section>
-      <Section label="Resource Path" id="inputresource_path">
+      <Section label="리소스 저장 경로" id="inputresource_path">
         <TextInput id="targetPath" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.targetPath : ''} />
       </Section>
       <label>
