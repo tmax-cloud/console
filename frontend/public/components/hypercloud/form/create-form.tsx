@@ -25,9 +25,10 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     const [errorMessage, setError] = React.useState('');
 
     const onClick = methods.handleSubmit(data => {
-      let inDo = isCreatePage(defaultValues) ?_.defaultsDeep(props.fixed, data) : _.defaultsDeep(defaultValues, data);
+      let inDo = isCreatePage(defaultValues) ?_.defaultsDeep(data, props.fixed) : _.defaultsDeep(defaultValues, data);
       inDo = props.onSubmitCallback(inDo);
       const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
+      setProgress(true);
       isCreatePage(defaultValues) ?
         k8sCreate(model, inDo)
           .then(() => {
