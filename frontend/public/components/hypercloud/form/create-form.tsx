@@ -9,17 +9,24 @@ import { pluralToKind } from './';
 import { ButtonBar, history, resourceObjPath } from '../../utils';
 import { Section } from '../utils/section';
 
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
+import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
+
 export const isCreatePage = defaultValues => {
   return !(_.has(defaultValues, 'spec') || _.has(defaultValues, 'status'));
 };
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
+  const { t } = useTranslation();
+
   const FormComponent: React.FC<CommonFormProps_> = props => {
     const methods = useForm({ defaultValues: defaultValues });
 
     const kind = pluralToKind(params.plural);
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
-    const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
+    //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
+    const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({kind: kind}, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({kind: kind}, t) })}`;    
 
     const [inProgress, setProgress] = React.useState(false);
     const [errorMessage, setError] = React.useState('');
