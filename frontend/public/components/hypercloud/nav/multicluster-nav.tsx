@@ -24,9 +24,9 @@ const MulticlusterNav = () => (
         <NavSection title={t('COMMON:MSG_LNB_MENU_84')} isSingleChild={true}>
           <ResourceNSLink resource="clustermanagers" name={t('COMMON:MSG_LNB_MENU_84')} />
         </NavSection>
-        <NavSection title={t('테라폼 클레임')} isSingleChild={true}>
+        {/* <NavSection title={t('테라폼 클레임')} isSingleChild={true}>
           <ResourceNSLink resource="tfapplyclaims" name={t('테라폼 클레임')} />
-        </NavSection>
+        </NavSection> */}
 
         {/* <ResourceClusterLink resource="clustergroups" name="Cluster Groups" /> */}
         <NavSection title={t('COMMON:MSG_LNB_MENU_86')}>

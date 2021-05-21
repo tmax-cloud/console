@@ -11,18 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ApprovalModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ApprovalModel), Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Delete, Kebab.factory.ModifyStatus];
 
 const kind = ApprovalModel.kind;
 
-const tableColumnClasses = [
-  '',
-  '',
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'),
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'),
-  Kebab.columnClass,
-];
-
+const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 const PipelineApprovalTableHeader = (t?: TFunction) => {
   return [
@@ -59,7 +52,6 @@ const PipelineApprovalTableHeader = (t?: TFunction) => {
 
 PipelineApprovalTableHeader.displayName = 'PipelineApprovalTableHeader';
 
-
 const PipelineApprovalTableRow: RowFunction<K8sResourceKind> = ({ obj: pipelineApproval, index, key, style }) => {
   return (
     <TableRow id={pipelineApproval.metadata.uid} index={index} trKey={key} style={style}>
@@ -85,7 +77,10 @@ const PipelineApprovalTableRow: RowFunction<K8sResourceKind> = ({ obj: pipelineA
 export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
 
-  const time = ds.status.decisionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
+  const time = ds.status.decisionTime
+    ?.replace('T', ' ')
+    .replaceAll('-', '.')
+    .replace('Z', '');
 
   return (
     <dl className="co-m-pane__details">
@@ -96,15 +91,16 @@ export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListPr
         {time}
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_19')} obj={ds} path="spec.users">
-        {ds.spec.users.map(user => <div>{user}</div>)}
+        {ds.spec.users.map(user => (
+          <div>{user}</div>
+        ))}
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_20')} obj={ds} path="status.reason">
         {ds.status.reason}
       </DetailsItem>
     </dl>
   );
-}
-
+};
 
 const PipelineApprovalDetails: React.FC<PipelineApprovalDetailsProps> = ({ obj: pipelineApproval }) => {
   const { t } = useTranslation();
@@ -123,21 +119,20 @@ const PipelineApprovalDetails: React.FC<PipelineApprovalDetailsProps> = ({ obj: 
       </div>
     </>
   );
-}
-
+};
 
 const { details, editResource } = navFactory;
 
 export const PipelineApprovals: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Pipeline Approvals" Header={PipelineApprovalTableHeader.bind(null, t)} Row={PipelineApprovalTableRow} virtualize />
+  return <Table {...props} aria-label="Pipeline Approvals" Header={PipelineApprovalTableHeader.bind(null, t)} Row={PipelineApprovalTableRow} virtualize />;
 };
 
 const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
   return pipelineApproval.status.result;
-}
+};
 
-const filters = (t) => [
+const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'pipeline-approval-status',
@@ -153,19 +148,10 @@ const filters = (t) => [
 export const PipelineApprovalsPage: React.FC<PipelineApprovalsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_61')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_61') })}
-    canCreate={true}
-    ListComponent={PipelineApprovals}
-    kind={kind}
-    {...props}
-    rowFilters={filters.bind(null, t)()}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_61')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_61') })} canCreate={false} ListComponent={PipelineApprovals} kind={kind} {...props} rowFilters={filters.bind(null, t)()} />;
+};
 
 export const PipelineApprovalsDetailsPage: React.FC<PipelineApprovalsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineApprovalDetails)), editResource()]} />;
-
 
 type PipelineApprovalDetailsListProps = {
   ds: K8sResourceKind;

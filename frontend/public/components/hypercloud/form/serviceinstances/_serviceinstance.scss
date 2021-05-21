@@ -1,0 +1,22 @@
+.hc-create-service-instance__plan-desc {
+  display: flex;
+  flex-direction: column;
+
+  .hc-create-service-instance__plan-bullets,
+  .hc-create-service-instance__plan-parameters{
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+  }
+
+  .hc-create-service-instance__plan-extra-info{
+    &__more {
+      width: fit-content;
+      margin-left: 20px;
+    }
+  }
+  
+  .hc-create-service-instance__plan-costs {
+    margin-left: 20px;
+  }
+}

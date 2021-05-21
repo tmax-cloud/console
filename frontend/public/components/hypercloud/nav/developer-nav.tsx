@@ -1,13 +1,16 @@
 import * as React from 'react';
 
 import { Translation } from 'react-i18next';
-import { ResourceNSLink, ResourceClusterLink, NewTabLink } from '../../nav/items';
+import { ResourceNSLink, ResourceClusterLink, NewTabLink, HrefLink } from '../../nav/items';
 import { NavSection } from '../../nav/section';
 
 const DeveloperNav = () => (
   <Translation>
     {t => (
       <>
+        <NavSection title='+ Add' isSingleChild={true}>
+          <HrefLink href='/add' activePath='/add/' name='+ Add' />
+        </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_10')}>
           <ResourceNSLink resource="servicebrokers" name={t('COMMON:MSG_LNB_MENU_11')} />
           <ResourceNSLink resource="serviceclasses" name={t('COMMON:MSG_LNB_MENU_12')} />
@@ -51,6 +54,7 @@ const DeveloperNav = () => (
           <ResourceNSLink resource="experiments" name="Experiment" />
           <ResourceNSLink resource="trainingjobs" name={t('COMMON:MSG_LNB_MENU_68')} />
           <ResourceNSLink resource="inferenceservices" name={t('COMMON:MSG_LNB_MENU_192')} />
+          <ResourceNSLink resource="trainedmodels" name="Trained Model" />
           <ResourceNSLink resource="workflowtemplates" name={t('COMMON:MSG_LNB_MENU_69')} />
           <ResourceNSLink resource="workflows" name={t('COMMON:MSG_LNB_MENU_70')} />
         </NavSection>

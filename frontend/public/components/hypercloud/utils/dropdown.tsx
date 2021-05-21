@@ -2,7 +2,6 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { CaretDownIcon } from '@patternfly/react-icons';
-import { ResourceName } from '../../utils/resource-icon';
 import { useFormContext } from 'react-hook-form';
 import { usePrevious } from '@console/metal3-plugin/src/hooks';
 
@@ -75,12 +74,17 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
 
   React.useEffect(() => {
     if (!_.isEqual(prevItems, props.items)) {
-      setValue(name, defaultValue);
       setItemList(props.items);
+      setValue(name, defaultValue);
       setKeyboardHoverKey(defaultValue);
     }
-  }, [props.items, defaultValue]);
+  }, [props.items]);
 
+  React.useEffect(() => {
+    setValue(name, defaultValue);
+    setKeyboardHoverKey(defaultValue);
+  }, [defaultValue]);
+  
   const dropdownElement = React.useRef<HTMLDivElement>();
   const dropdownList = React.useRef<HTMLUListElement>();
 
@@ -221,7 +225,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     <div className={classNames(className)} ref={dropdownElement} style={...props.style}>
       <div
         className={classNames(
-          { 'dropdown pf-c-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
+          { 'dropdown pf-c-dropdown hc-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
           dropDownClassName,
         )}
       >
@@ -230,7 +234,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
           aria-haspopup="true"
           aria-expanded={active}
           aria-describedby={describedBy}
-          className={classNames('pf-c-dropdown__toggle', buttonClassName)}
+          className={classNames('pf-c-dropdown__toggle hc-dropdown__button', buttonClassName)}
           data-test-id="dropdown-button"
           onClick={toggle}
           onKeyDown={onKeyDown}
@@ -240,14 +244,14 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
         >
           <span className="pf-c-dropdown__toggle-text">
             {titlePrefix && `${titlePrefix}: `}
-            {_.get(props.items, selectedKey, props.title)}
+            {_.get(props.items, selectedKey ?? defaultValue, props.title)}
           </span>
           <CaretDownIcon className="pf-c-dropdown__toggle-icon" />
         </button>
         {active && (
           <ul
             ref={dropdownList}
-            className={classNames('pf-c-dropdown__menu', menuClassName)}
+            className={classNames('pf-c-dropdown__menu hc-dropdown__menu', menuClassName)}
           >
             {rows}
           </ul>
@@ -281,67 +285,4 @@ type DropdownProps = {
   required?: boolean,
   disabled?: boolean,
   methods?: any
-};
-
-const containerLabel = (container) => (
-  <ResourceName name={container ? container.name : ''} kind="Container" />
-);
-
-const getSpacer = (container) => {
-  const spacerBefore = new Set<string>();
-  return container ? spacerBefore.add(container.name) : spacerBefore;
-};
-
-const getHeaders = (container, initContainer) => {
-  return initContainer
-    ? {
-      [container.name]: 'Containers',
-      [initContainer.name]: 'Init Containers',
-    }
-    : {};
-};
-
-const ContainerDropdown_: React.SFC<ContainerDropdownProps> = (props) => {
-  const { name, containers, initContainers } = props;
-  if (_.isEmpty(containers) && _.isEmpty(initContainers)) {
-    return null;
-  }
-  const firstInitContainer = _.find(initContainers, { order: 0 });
-  const firstContainer = _.find(containers, { order: 0 });
-  const spacerBefore = getSpacer(firstInitContainer);
-  const headerBefore = getHeaders(firstContainer, firstInitContainer);
-  const dropdownItems = _.mapValues(_.merge(containers, initContainers), containerLabel);
-  const title = props.title || containerLabel(firstContainer);
-  return (
-    <Dropdown
-      name={name}
-      className="btn-group"
-      menuClassName="dropdown-menu--text-wrap"
-      headerBefore={headerBefore}
-      items={dropdownItems}
-      spacerBefore={spacerBefore}
-      title={title}
-    />
-  );
-};
-
-export const ContainerDropdown = React.memo(ContainerDropdown_);
-
-
-ContainerDropdown_.defaultProps = {
-  initContainers: {},
-};
-
-type Container = {
-  [key: string]: {
-    name: string,
-    order?: number
-  }
-}
-
-type ContainerDropdownProps = {
-  name: string,
-  title?: React.ReactNode,
-  containers: Container | Container[];
-  initContainers?: Container
 };

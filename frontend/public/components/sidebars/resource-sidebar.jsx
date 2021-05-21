@@ -27,7 +27,7 @@ class ResourceSidebarWrapper extends React.Component {
           <Button type="button" className="co-p-has-sidebar__sidebar-close" variant="plain" aria-label="Close" onClick={toggleSidebar}>
             <CloseIcon />
           </Button>
-          <h2 className="co-p-has-sidebar__sidebar-heading text-capitalize">{label}</h2>
+          <h2 className="co-p-has-sidebar__sidebar-heading">{label}</h2>
           {children}
         </div>
       </div>

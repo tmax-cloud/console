@@ -18,22 +18,35 @@ class BaseStatusModal extends PromiseComponent {
     super(props);
     this._submit = this._submit.bind(this);
     this._cancel = props.cancel.bind(this);
-    // let status = _.get(props.resource, props.path.split('/').slice(1));
-    let status = '';
-    // if (status === 'Waiting') {
-    //   status = 'Approved';
-    // }
-    // const reason = _.get(props.resource, props.reasonPath.split('/').slice(1));
+    let status = 'Approved';
     const reason = '';
     this.state = Object.assign(this.state, {
       status,
       reason,
       isOptionsOpen: false,
+      submitDisabled: this.getButtonStateFromProps(),
     });
     this.options = [
       { value: 'Approved', disabled: false },
       { value: 'Rejected', disabled: false },
     ];
+  }
+
+  getButtonStateFromProps() {
+    const { resource } = this.props;
+    const status = resource?.status?.status;
+    switch (resource?.kind) {
+      case ResourceQuotaClaimModel.kind:
+      case RoleBindingClaimModel.kind:
+      case NamespaceClaimModel.kind:
+      case CatalogServiceClaimModel.kind: {
+        const canModifyStatus = ['Awaiting', 'Rejected', 'Reject', 'Error'];
+        return !canModifyStatus.includes(status);
+      }
+      default: {
+        return false;
+      }
+    }
   }
 
   _submit(e) {
@@ -100,7 +113,7 @@ class BaseStatusModal extends PromiseComponent {
 
   render() {
     const { kind, resource, description, message } = this.props;
-
+    const { submitDisabled } = this.state;
     return (
       <form onSubmit={this._submit} name="form" className="modal-content">
         <ModalTitle>Approval Processing</ModalTitle>
@@ -126,7 +139,7 @@ class BaseStatusModal extends PromiseComponent {
             <div className="col-sm-12">Please enter a reason.</div>
           </div>
         </ModalBody>
-        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Confirm" cancel={this._cancel} />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Confirm" cancel={this._cancel} submitDisabled={submitDisabled} />
       </form>
     );
   }

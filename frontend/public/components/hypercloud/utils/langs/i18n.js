@@ -15,11 +15,13 @@ const resource = {
     COMMON: en.COMMON,
     SINGLE: en.SINGLE,
     MULTI: en.MULTI,
+    SCHEMA: en.SCHEMA,
   },
   ko: {
     COMMON: ko.COMMON,
     SINGLE: ko.SINGLE,
     MULTI: ko.MULTI,
+    SCHEMA: ko.SCHEMA,
   },
 };
 
@@ -31,6 +33,7 @@ i18n
     debug: true,
     detection: options,
     resources: resource,
+    keySeparator: false,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },

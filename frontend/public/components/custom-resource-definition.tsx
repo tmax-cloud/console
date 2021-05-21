@@ -7,7 +7,7 @@ import { BanIcon } from '@patternfly/react-icons';
 
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
 import { AsyncComponent, DetailsItem, EmptyBox, Kebab, KebabAction, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from './utils';
-import { apiVersionCompare, CRDVersion, CustomResourceDefinitionKind, getLatestVersionForCRD, K8sKind, referenceForCRD, referenceForCRD_ } from '../module/k8s';
+import { apiVersionCompare, CRDVersion, CustomResourceDefinitionKind, getLatestVersionForCRD, K8sKind, referenceForCRD, referenceForCRD_, modelFor } from '../module/k8s';
 import { CustomResourceDefinitionModel } from '../models';
 import { Conditions } from './conditions';
 import { resourceListPages } from './resource-pages';
@@ -15,11 +15,21 @@ import { DefaultPage } from './default-resource';
 import { GreenCheckCircleIcon } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-
 const { common } = Kebab.factory;
 
 // TODO: replace referenceForCRD_ to referenceForCRD without side effect
-const crdInstancesPath = (crd: CustomResourceDefinitionKind) => (_.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${referenceForCRD_(crd)}` : `/k8s/cluster/${referenceForCRD_(crd)}`);
+const crdInstancesPath = (crd: CustomResourceDefinitionKind) => {
+  const kind = modelFor(crd.spec.names.kind);
+  if (kind === undefined) {
+    return _.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${referenceForCRD_(crd)}` : `/k8s/cluster/${referenceForCRD_(crd)}`;
+  } else {
+    if (kind.crd === true) {
+      return _.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${referenceForCRD_(crd)}` : `/k8s/cluster/${referenceForCRD_(crd)}`;
+    } else {
+      return _.get(crd, 'spec.scope') === 'Namespaced' ? `/k8s/all-namespaces/${crd.spec.names.plural}` : `/k8s/cluster/${crd.spec.names.plural}`;
+    }
+  }
+};
 
 const instances = (kind: K8sKind, obj: CustomResourceDefinitionKind) => {
   const { t } = useTranslation();
@@ -54,7 +64,7 @@ const CRDTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_54'),
+      title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_94'),
       sortField: 'spec.scope',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
@@ -75,8 +85,6 @@ const isEstablished = (conditions: any[]) => {
   const condition = _.find(conditions, c => c.type === 'Established');
   return condition && condition.status === 'True';
 };
-
-const namespaced = (crd: CustomResourceDefinitionKind) => crd.spec.scope === 'Namespaced';
 
 const Established: React.FC<{ crd: CustomResourceDefinitionKind }> = ({ crd }) => {
   return crd.status && isEstablished(crd.status.conditions) ? (
@@ -144,7 +152,8 @@ const CRDTableRow: RowFunction<CustomResourceDefinitionKind> = ({ obj: crd, inde
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>{crd.spec.group}</TableData>
       <TableData className={tableColumnClasses[2]}>{getLatestVersionForCRD(crd)}</TableData>
-      <TableData className={tableColumnClasses[3]}>{namespaced(crd) ? 'Yes' : 'No'}</TableData>
+      {/* <TableData className={tableColumnClasses[3]}>{namespaced(crd) ? 'Yes' : 'No'}</TableData> */}
+      <TableData className={tableColumnClasses[3]}>{crd.spec.scope}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Established crd={crd} />
       </TableData>
@@ -193,8 +202,20 @@ const Details: React.FC<{ obj: CustomResourceDefinitionKind }> = ({ obj: crd }) 
 };
 
 const Instances: React.FC<InstancesProps> = ({ obj, namespace }) => {
-  const crdKind = referenceForCRD(obj);
+  let crdKind;
   const componentLoader = resourceListPages.get(crdKind, () => Promise.resolve(DefaultPage));
+
+  const kind = modelFor(obj.spec.names.kind);
+  if (kind === undefined) {
+    crdKind = referenceForCRD(obj);
+  } else {
+    if (kind.crd === true) {
+      crdKind = referenceForCRD(obj);
+    } else {
+      crdKind = obj.spec.names.kind;
+    }
+  }
+
   return <AsyncComponent loader={componentLoader} namespace={namespace ? namespace : undefined} kind={crdKind} showTitle={false} autoFocus={false} />;
 };
 

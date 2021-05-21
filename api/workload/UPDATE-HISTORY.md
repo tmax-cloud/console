@@ -53,3 +53,4 @@
     - "io.k8s.api.policy.v1beta1.PodSecurityPolicySpec".fsGroup : "#/definitions/io.k8s.api.policy.v1beta1.FSGroupStrategyOptions"
         - add rule enums
     </details>
+- [Difinitions] "io.k8s.api.core.v1.PersistentVolume", "io.k8s.api.core.v1.PersistentVolumeClaim" 에서 status 제거 - IMS #260528

@@ -241,6 +241,7 @@ const PodGraphs = requirePrometheus(({ pod }) => {
       <div className="row">
         <div className="col-md-12 col-lg-4">
           <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_3')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} query={`sum(container_memory_working_set_bytes{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}',container='',}) BY (pod, namespace)`} />
+          {/* <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_3')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} /> */}
         </div>
         <div className="col-md-12 col-lg-4">
           <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_RESOURCEUSAGE_2')} humanize={humanizeCpuCores} namespace={pod.metadata.namespace} query={`pod:container_cpu_usage:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
@@ -329,7 +330,7 @@ const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
       </div>
       {pod.spec.initContainers && (
         <div className="co-m-pane__body">
-          <PodContainerTable key="initContainerTable" heading="Init Containers" containers={pod.spec.initContainers} pod={pod} />
+          <PodContainerTable key="initContainerTable" heading={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_141')} containers={pod.spec.initContainers} pod={pod} />
         </div>
       )}
       <div className="co-m-pane__body">
@@ -438,19 +439,19 @@ export const PodsPage = connect<{}, PodPagePropsFromDispatch, PodPageProps>(
       ListComponent={PodList}
       rowFilters={[
         {
-          filterGroupName: 'Status',
+          filterGroupName: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           type: 'pod-status',
           reducer: podPhaseFilterReducer,
           items: [
-            { id: 'Running', title: t('COMMON:MSG_COMMON_STATUS_1') },
-            { id: 'Pending', title: t('COMMON:MSG_COMMON_STATUS_2') },
-            { id: 'Terminating', title: t('COMMON:MSG_COMMON_STATUS_3') },
-            { id: 'CrashLoopBackOff', title: t('COMMON:MSG_COMMON_STATUS_4') },
+            { id: 'Running', title: 'Running' },
+            { id: 'Pending', title: 'Pending' },
+            { id: 'Terminating', title: 'Terminating' },
+            { id: 'CrashLoopBackOff', title: 'CrashLoopBackOff' },
             // Use title "Completed" to match what appears in the status column for the pod.
             // The pod phase is "Succeeded," but the container state is "Completed."
-            { id: 'Succeeded', title: t('COMMON:MSG_COMMON_STATUS_5') },
-            { id: 'Failed', title: t('COMMON:MSG_COMMON_STATUS_12') },
-            { id: 'Unknown', title: t('COMMON:MSG_COMMON_STATUS_6') },
+            { id: 'Succeeded', title: 'Succeeded' },
+            { id: 'Failed', title: 'Failed' },
+            { id: 'Unknown', title: 'Unknown' },
           ],
         },
       ]}

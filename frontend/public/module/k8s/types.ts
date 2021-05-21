@@ -111,7 +111,7 @@ export type K8sResourceKind = K8sResourceCommon & {
   status?: { [key: string]: any };
   type?: { [key: string]: any };
   data?: { [key: string]: any };
-  specLimit?: any;
+  hard?: any;
   resourceName?: any;
 };
 

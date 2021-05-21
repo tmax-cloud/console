@@ -47,7 +47,7 @@ const ClusterTemplateDetails: React.FC<ClusterTemplateDetailsProps> = ({ obj: cl
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterTemplate, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={clusterTemplate} showPodSelector showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={clusterTemplate} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
@@ -71,7 +71,6 @@ ClusterTemplatesDetailsPage.displayName = 'ClusterTemplatesDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
-  '', // NAMESPACE
   '', // RESOURCE SUMMARY
   '', // CREATED
   Kebab.columnClass, // MENU ACTIONS
@@ -84,12 +83,11 @@ const ClusterTemplateTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={obj.metadata.name} title={obj.metadata.name} />
       </TableData>
-      <TableData className={tableColumnClasses[1]}>all-namespace</TableData>
-      <TableData className={tableColumnClasses[2]}>{objects}</TableData>
-      <TableData className={tableColumnClasses[3]}>
+      <TableData className={tableColumnClasses[1]}>{objects}</TableData>
+      <TableData className={tableColumnClasses[2]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[4]}>
+      <TableData className={tableColumnClasses[3]}>
         <ResourceKebab actions={clusterTemplateMenuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>
@@ -105,22 +103,18 @@ const ClusterTemplateTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
-      props: { className: tableColumnClasses[1] },
-    },
-    {
       title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_104'),
-      props: { className: tableColumnClasses[2] },
+      props: { className: tableColumnClasses[1] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[2] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[4] },
+      props: { className: tableColumnClasses[3] },
     },
   ];
 };

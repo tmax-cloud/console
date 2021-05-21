@@ -5,124 +5,18 @@ import DashboardCardHeader from '@console/shared/src/components/dashboard/dashbo
 import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardTitle';
 import UtilizationItem, { TopConsumerPopoverProp, MultilineUtilizationItem, QueryWithDescription, LimitRequested } from '@console/shared/src/components/dashboard/utilization-card/UtilizationItem';
 import UtilizationBody from '@console/shared/src/components/dashboard/utilization-card/UtilizationBody';
-import ConsumerPopover from '@console/shared/src/components/dashboard/utilization-card/TopConsumerPopover';
 import { ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 import { useExtensions, DashboardsOverviewUtilizationItem, isDashboardsOverviewUtilizationItem } from '@console/plugin-sdk';
-import { PopoverPosition } from '@patternfly/react-core';
 import { DashboardItemProps, withDashboardResources } from '../dashboard/with-dashboard-resources';
 import { humanizeBinaryBytes, humanizeCpuCores, humanizeNumber, humanizeDecimalBytesPerSec } from '../utils/units';
 import { getRangeVectorStats, getInstantVectorStats } from '../graphs/utils';
 import { Dropdown } from '../utils/dropdown';
-import { OverviewQuery, namespaceUtilizationQueries, top25ConsumerQueries, namespaceMultilineQueries } from '../dashboard/dashboards-page/cluster-dashboard/queries';
-import { NodeModel, PodModel, ProjectModel } from '../../models';
+import { OverviewQuery, namespaceUtilizationQueries, namespaceMultilineQueries } from '../dashboard/dashboards-page/cluster-dashboard/queries';
 import { getPrometheusQueryResponse } from '../../actions/dashboards';
 import { Humanize } from '../utils/types';
 import { useMetricDuration, UTILIZATION_QUERY_HOUR_MAP } from '@console/shared/src/components/dashboard/duration-hook';
 import { DataPoint, PrometheusResponse } from '../graphs';
 import { useTranslation } from 'react-i18next';
-
-const cpuQueriesPopup = [
-  {
-    query: top25ConsumerQueries[OverviewQuery.PROJECTS_BY_CPU],
-    model: ProjectModel,
-    metric: 'namespace',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.PODS_BY_CPU],
-    model: PodModel,
-    metric: 'pod',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.NODES_BY_CPU],
-    model: NodeModel,
-    metric: 'instance',
-  },
-];
-
-const memQueriesPopup = [
-  {
-    query: top25ConsumerQueries[OverviewQuery.PROJECTS_BY_MEMORY],
-    model: ProjectModel,
-    metric: 'namespace',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.PODS_BY_MEMORY],
-    model: PodModel,
-    metric: 'pod',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.NODES_BY_MEMORY],
-    model: NodeModel,
-    metric: 'instance',
-  },
-];
-
-const storageQueriesPopup = [
-  {
-    query: top25ConsumerQueries[OverviewQuery.PROJECTS_BY_STORAGE],
-    model: ProjectModel,
-    metric: 'namespace',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.PODS_BY_STORAGE],
-    model: PodModel,
-    metric: 'pod',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.NODES_BY_STORAGE],
-    model: NodeModel,
-    metric: 'instance',
-  },
-];
-
-const podQueriesPopup = [
-  {
-    query: top25ConsumerQueries[OverviewQuery.PROJECTS_BY_PODS],
-    model: ProjectModel,
-    metric: 'namespace',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.NODES_BY_PODS],
-    model: NodeModel,
-    metric: 'node',
-  },
-];
-
-const networkInQueriesPopup = [
-  {
-    query: top25ConsumerQueries[OverviewQuery.PROJECTS_BY_NETWORK_IN],
-    model: ProjectModel,
-    metric: 'namespace',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.PODS_BY_NETWORK_IN],
-    model: PodModel,
-    metric: 'pod',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.NODES_BY_NETWORK_IN],
-    model: NodeModel,
-    metric: 'node',
-  },
-];
-
-const networkOutQueriesPopup = [
-  {
-    query: top25ConsumerQueries[OverviewQuery.PROJECTS_BY_NETWORK_OUT],
-    model: ProjectModel,
-    metric: 'namespace',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.PODS_BY_NETWORK_OUT],
-    model: PodModel,
-    metric: 'pod',
-  },
-  {
-    query: top25ConsumerQueries[OverviewQuery.NODES_BY_NETWORK_OUT],
-    model: NodeModel,
-    metric: 'node',
-  },
-];
 
 const mapStatsWithDesc = (stats: PrometheusResponse, description: DataPoint['description']): DataPoint[] =>
   getRangeVectorStats(stats).map(dp => {
@@ -242,32 +136,44 @@ export const UtilizationCard = ({ namespace }) => {
   const [duration, setDuration] = useMetricDuration();
 
   const cpuPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => <ConsumerPopover title="CPU" current={current} consumers={cpuQueriesPopup} humanize={humanizeCpuCores} position={PopoverPosition.top} />),
+    React.memo<TopConsumerPopoverProp>(({ current }) => {
+      return <div>{current}</div>;
+    }),
     [],
   );
 
   const memPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => <ConsumerPopover title="Memory" current={current} consumers={memQueriesPopup} humanize={humanizeBinaryBytes} position={PopoverPosition.top} />),
+    React.memo<TopConsumerPopoverProp>(({ current }) => {
+      return <div>{current}</div>;
+    }),
     [],
   );
 
   const storagePopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => <ConsumerPopover title="Filesystem" current={current} consumers={storageQueriesPopup} humanize={humanizeBinaryBytes} position={PopoverPosition.top} />),
+    React.memo<TopConsumerPopoverProp>(({ current }) => {
+      return <div>{current}</div>;
+    }),
     [],
   );
 
   const podPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => <ConsumerPopover title="Pod count" current={current} consumers={podQueriesPopup} humanize={humanizeNumber} position={PopoverPosition.top} />),
+    React.memo<TopConsumerPopoverProp>(({ current }) => {
+      return <div>{current}</div>;
+    }),
     [],
   );
 
   const networkInPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => <ConsumerPopover title="Network in" current={current} consumers={networkInQueriesPopup} humanize={humanizeDecimalBytesPerSec} position={PopoverPosition.top} />),
+    React.memo<TopConsumerPopoverProp>(({ current }) => {
+      return <div>{current}</div>;
+    }),
     [],
   );
 
   const networkOutPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => <ConsumerPopover title="Network out" current={current} consumers={networkOutQueriesPopup} humanize={humanizeDecimalBytesPerSec} position={PopoverPosition.top} />),
+    React.memo<TopConsumerPopoverProp>(({ current }) => {
+      return <div>{current}</div>;
+    }),
     [],
   );
 
@@ -299,7 +205,7 @@ export const UtilizationCard = ({ namespace }) => {
   return (
     <DashboardCard data-test-id="utilization-card">
       <DashboardCardHeader>
-        <DashboardCardTitle>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_CLUSTERUTILIZATION_1')}</DashboardCardTitle>
+        <DashboardCardTitle>{t('COMMON:MSG_DETAILS_TABDETAILS_RESOURCEQUOTADETAILS_TABLEHEADER_3')}</DashboardCardTitle>
         <Dropdown items={durationItems} onChange={setDuration} selectedKey={durationValues[duration]} title={duration} />
       </DashboardCardHeader>
       <UtilizationBody timestamps={timestamps}>

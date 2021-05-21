@@ -4,6 +4,7 @@ import {
   PipelineResource,
   PipelineResourceTask,
   PipelineTask,
+  PipelineWorkspace,
 } from '../../../utils/pipeline-augment';
 import { PipelineVisualizationTaskItem } from '../../../utils/pipeline-utils';
 import { AddNodeDirection } from '../pipeline-topology/const';
@@ -28,6 +29,7 @@ export type PipelineBuilderFormValues = PipelineBuilderTaskGrouping & {
   name: string;
   params: PipelineParam[];
   resources: PipelineResource[];
+  workspaces: PipelineWorkspace[];
 };
 
 export type PipelineBuilderFormikValues = FormikValues & PipelineBuilderFormValues;

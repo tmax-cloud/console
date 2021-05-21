@@ -1,14 +1,12 @@
-.hc-container-dropdown-wrapper {
-  .hc-container-dropdown {
-    .hc-container-dropdown-button {
-      min-width: 150px;
-    }
+.hc-dropdown {
+  .hc-dropdown-button {
+    min-width: 150px;
+  }
 
-    .hc-container-dropdown-menu {
-      max-height: 366px;
-      max-width: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
+  .hc-dropdown__menu {
+    max-height: 366px;
+    max-width: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
   }
 }

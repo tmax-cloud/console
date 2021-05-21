@@ -75,15 +75,15 @@ const UtilizationCard: React.FC = () => {
     ];
   }, [nodeIp, nodeName]);
 
-  const cpuPopover = React.useCallback((props: TopConsumerPopoverProp) => <CPUPopover {...props} title={props.current} nodeIp={nodeIp} nodeName={nodeName} />, [nodeIp, nodeName]);
+  const cpuPopover = React.useCallback(({ current }) => <div>{current}</div>, [nodeIp, nodeName]);
 
-  const memPopover = React.useCallback((props: TopConsumerPopoverProp) => <MemoryPopover {...props} title={props.current} nodeIp={nodeIp} nodeName={nodeName} />, [nodeIp, nodeName]);
+  const memPopover = React.useCallback(({ current }) => <div>{current}</div>, [nodeIp, nodeName]);
 
-  const filesystemPopover = React.useCallback(({ current }: TopConsumerPopoverProp) => <ConsumerPopover title="Filesystem" current={current} consumers={consumers[0]} humanize={humanizeBinaryBytes} position={PopoverPosition.top} />, [consumers]);
+  const filesystemPopover = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
 
-  const networkPopoverIn = React.useCallback(({ current }: TopConsumerPopoverProp) => <ConsumerPopover title="Network In" current={current} consumers={consumers[1]} humanize={humanizeDecimalBytesPerSec} position={PopoverPosition.top} />, [consumers]);
+  const networkPopoverIn = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
 
-  const networkPopoverOut = React.useCallback(({ current }: TopConsumerPopoverProp) => <ConsumerPopover title="Network Out" current={current} consumers={consumers[2]} humanize={humanizeDecimalBytesPerSec} position={PopoverPosition.top} />, [consumers]);
+  const networkPopoverOut = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
 
   const networkPopovers = React.useMemo(() => [networkPopoverIn, networkPopoverOut], [networkPopoverIn, networkPopoverOut]);
 
@@ -111,7 +111,6 @@ const UtilizationCard: React.FC = () => {
       [t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_24_1')]: '24 Hours',
     };
   }, [duration]);
-  console.log(queries);
   return (
     <DashboardCard data-test-id="utilization-card">
       <DashboardCardHeader>

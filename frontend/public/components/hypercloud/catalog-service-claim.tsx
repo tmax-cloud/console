@@ -23,7 +23,7 @@ const CatalogServiceClaimDetails: React.FC<CatalogServiceClaimDetailsProps> = ({
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(catalogServiceClaim, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={catalogServiceClaim} showPodSelector showNodeSelector></ResourceSummary>
+            <ResourceSummary resource={catalogServiceClaim}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
@@ -108,9 +108,25 @@ const CatalogServiceClaimsList: React.FC = props => {
 };
 CatalogServiceClaimsList.displayName = 'CatalogServiceClaimsList';
 
+const catalogServiceClaimStatusReducer = (csc: any): string => {
+  return csc?.status?.status;
+};
+
 const CatalogServiceClaimsPage: React.FC<CatalogServiceClaimsPageProps> = props => {
   const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_19')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_19') })} canCreate={true} kind={kind} ListComponent={CatalogServiceClaimsList} {...props} />;
+  const filters = [
+    {
+      filterGroupName: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
+      type: 'catalog-service-claim-status',
+      reducer: catalogServiceClaimStatusReducer,
+      items: [
+        { id: 'Approved', title: t('COMMON:MSG_COMMON_STATUS_10') },
+        { id: 'Rejected', title: t('COMMON:MSG_COMMON_STATUS_11') },
+        { id: 'Awaiting', title: t('COMMON:MSG_COMMON_STATUS_9') },
+      ],
+    },
+  ];
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_19')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_19') })} canCreate={true} kind={kind} ListComponent={CatalogServiceClaimsList} rowFilters={filters} {...props} />;
 };
 CatalogServiceClaimsPage.displayName = 'CatalogServiceClaimsPage';
 
