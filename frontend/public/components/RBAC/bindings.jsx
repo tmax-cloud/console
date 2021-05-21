@@ -93,7 +93,8 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
     actions.unshift(() => ({
-      label: t(subject.kind === 'User' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_18' : 'COMMON:MSG_MAIN_ACTIONBUTTON_43', { 0: subject.name }),
+      label: t(subject.kind === 'User' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_18' : 'COMMON:MSG_MAIN_ACTIONBUTTON_43', { 0: subject.name  }),
+      needTranslate: false,
       // label: `Impersonate ${subject.kind} "${subject.name}"`,
       callback: () => startImpersonate(subject.kind, subject.name),
     }));
