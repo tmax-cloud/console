@@ -8,7 +8,7 @@ import { ClusterVersionModel, NodeModel, PodModel, PersistentVolumeClaimModel, C
 import { referenceForModel, ClusterOperator } from '@console/internal/module/k8s';
 import { getNodeStatusGroups, getPodStatusGroups, getPVCStatusGroups } from '@console/shared/src/components/dashboard/inventory-card/utils';
 import { fetchK8sHealth, getK8sHealthState, getControlPlaneHealth, getClusterOperatorHealthStatus } from './components/dashboards-page/status';
-import { API_SERVERS_UP, API_SERVER_REQUESTS_SUCCESS, CONTROLLER_MANAGERS_UP, SCHEDULERS_UP } from './queries';
+import { API_SERVERS_UP, API_SERVER_REQUESTS_SUCCESS, CONTROLLER_MANAGERS_UP, SCHEDULERS_UP, ETCD_HEALTH } from './queries';
 import { getClusterUpdateTimestamp, isClusterUpdateActivity } from './components/dashboards-page/activity';
 import reducer from './redux/reducer';
 import * as models from './models';
@@ -79,7 +79,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'Dashboards/Overview/Health/Prometheus',
     properties: {
       title: 'Control Plane',
-      queries: [API_SERVERS_UP, CONTROLLER_MANAGERS_UP, SCHEDULERS_UP, API_SERVER_REQUESTS_SUCCESS],
+      queries: [API_SERVERS_UP, CONTROLLER_MANAGERS_UP, SCHEDULERS_UP, API_SERVER_REQUESTS_SUCCESS, ETCD_HEALTH],
       healthHandler: getControlPlaneHealth,
       popupComponent: () => import('./components/dashboards-page/ControlPlaneStatus' /* webpackChunkName: "console-app" */).then(m => m.default),
       popupTitle: 'Control Plane status',
