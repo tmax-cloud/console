@@ -29,35 +29,35 @@ const NamespaceOverview = props => {
   const inventoryCard = {
     Card: InventoryCard,
     props: {
-      namespace: props.obj.metadata.name,
+      namespace: props.obj.metadata?.name,
     },
   };
 
   const claimCard = {
     Card: ClaimCard,
     props: {
-      namespace: props.obj.metadata.name,
+      namespace: props.obj.metadata?.name,
     },
   };
 
   const utilizationCard = {
     Card: UtilizationCard,
     props: {
-      namespace: props.obj.metadata.name,
+      namespace: props.obj.metadata?.name,
     },
   };
 
   const activityCard = {
     Card: ActivityCard,
     props: {
-      namespace: props.obj.metadata.name,
+      namespace: props.obj.metadata?.name,
     },
   };
 
   const resourceQuotaCard = {
     Card: ResourceQuotaCard,
     props: {
-      namespace: props.obj.metadata.name,
+      namespace: props.obj.metadata?.name,
     },
   };
   const mainCards = [statusCard, utilizationCard, resourceQuotaCard];

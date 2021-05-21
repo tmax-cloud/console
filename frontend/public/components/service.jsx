@@ -217,8 +217,8 @@ const Details = ({ obj: s }) => {
   );
 };
 
-const { details, pods, editYaml } = navFactory;
-const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editYaml(), pods()]} />;
+const { details, pods, editResource } = navFactory;
+const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods()]} />;
 
 const ServicesList = props => {
   const { t } = useTranslation();

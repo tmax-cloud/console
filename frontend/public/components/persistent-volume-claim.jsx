@@ -258,7 +258,7 @@ export const PersistentVolumeClaimsDetailsPage = (props) => (
     menuActions={menuActions}
     pages={[
       navFactory.details(Details),
-      navFactory.editYaml(),
+      navFactory.editResource(),
       navFactory.events(ResourceEventStream),
     ]}
   />
