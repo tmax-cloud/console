@@ -240,23 +240,23 @@ export const onSubmitCallback = data => {
     }
   });
   // volume
-  data.spec.volumes = data?.spec?.volumes?.map(cur => {
-    if (cur.type === 'emptyDir') {
-      return { emptyDir: {} };
-    } else if (cur.type === 'configMap') {
-      return {
-        configMap: {
-          name: cur?.name,
-        },
-      };
-    } else if (cur.type === 'secret') {
-      return {
-        secret: {
-          secretName: cur?.name,
-        },
-      };
-    }
-  });
+  // data.spec.volumes = data?.spec?.volumes?.map(cur => {
+  //   if (cur.type === 'emptyDir') {
+  //     return { emptyDir: {} };
+  //   } else if (cur.type === 'configMap') {
+  //     return {
+  //       configMap: {
+  //         name: cur?.name,
+  //       },
+  //     };
+  //   } else if (cur.type === 'secret') {
+  //     return {
+  //       secret: {
+  //         secretName: cur?.name,
+  //       },
+  //     };
+  //   }
+  // });
   // step
   data.spec.steps = data?.spec?.steps?.map((cur, idx) => {
     // command
