@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { match as RMatch } from 'react-router';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { isCreatePage, WithCommonForm } from '../create-form';
+import { WithCommonForm } from '../create-form';
 import { RoleBindingClaimModel } from '../../../../models';
 import { Section } from '../../utils/section';
 import { SelectorInput } from '../../../utils';
@@ -15,8 +15,8 @@ import store from '../../../../redux';
 import { k8sList } from '../../../../module/k8s';
 import { NamespaceModel } from '../../../../models';
 import { RadioGroup } from '../../utils/radio';
-import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
+//import { useTranslation } from 'react-i18next';
+//import { TFunction } from 'i18next';
 
 const defaultValuesTemplate = {
     metadata: {
@@ -81,7 +81,7 @@ const roleBindingClaimFormFactory = (params, obj) => {
 };
 
 const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props) => {
-    const { t } = useTranslation();
+    //const { t } = useTranslation();
     console.log('CreateRoleBindingClaimComponent: ', props);
 
     const [namespaces, setNamespaces] = React.useState([]);
