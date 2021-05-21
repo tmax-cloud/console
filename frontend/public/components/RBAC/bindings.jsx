@@ -17,7 +17,6 @@ import { isSystemRole } from './index';
 import { connectToFlags, flagPending } from '../../reducers/features';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { consoleTypeSelector } from 'packages/kubevirt-plugin/integration-tests/views/consolesView';
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
 // Split each binding into one row per subject
