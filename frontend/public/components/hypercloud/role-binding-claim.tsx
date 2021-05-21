@@ -1,18 +1,21 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import { K8sResourceCommon, K8sClaimResourceKind, modelFor } from '../../module/k8s';
+import { K8sResourceCommon, K8sClaimResourceKind, modelFor, k8sGet } from '../../module/k8s';
 import { fromNow } from '@console/internal/components/utils/datetime';
 import { sortable } from '@patternfly/react-table';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { RoleBindingClaimModel } from '../../models';
 const { common } = Kebab.factory;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-export const menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, Kebab.factory.ModifyStatus];
+export const getMenuActions = (status?) => {
+  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(status !== 'Success' ? [Kebab.factory.ModifyStatus] : [])];
+}
 
 const kind = 'RoleBindingClaim';
 
@@ -57,6 +60,7 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
 RoleBindingClaimTableHeader.displayName = 'RoleBindingClaimTableHeader';
 
 const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: rolebindingclaims, index, key, style }) => {
+  const menuActions = getMenuActions(rolebindingclaims?.status?.status)
   return (
     <TableRow id={rolebindingclaims.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -102,7 +106,16 @@ const RoleBindingClaimsDetails: React.FC<RoleBindingClaimDetailsProps> = ({ obj:
 RoleBindingClaimsDetails.displayName = 'RoleBindingClaimsDetails';
 
 const { details, editResource } = navFactory;
-export const RoleBindingClaimsDetailsPage: React.FC<RoleBindingClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={'RoleBindingClaim'} menuActions={menuActions} pages={[details(RoleBindingClaimsDetails), editResource()]} />;
+export const RoleBindingClaimsDetailsPage: React.FC<RoleBindingClaimsDetailsPageProps> = props => {
+  const [menuActions, setMenuActions] = React.useState(getMenuActions());
+  React.useEffect(()=>{
+    k8sGet(RoleBindingClaimModel, props.name, props.namespace) 
+    .then(res =>{
+      setMenuActions(getMenuActions(res?.status?.status));
+    });
+  }, [props.name, props.namespace]);
+  return <DetailsPage {...props} kind={'RoleBindingClaim'} menuActions={menuActions} pages={[details(RoleBindingClaimsDetails), editResource()]} />
+};
 RoleBindingClaimsDetailsPage.displayName = 'RoleBindingClaimsDetailsPage';
 
 type RoleBindingClaimDetailsProps = {
@@ -117,4 +130,6 @@ type RoleBindingClaimsPageProps = {
 
 type RoleBindingClaimsDetailsPageProps = {
   match: any;
+  name: string;
+  namespace:string;
 };
