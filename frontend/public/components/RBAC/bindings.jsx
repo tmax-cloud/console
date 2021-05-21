@@ -394,7 +394,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
         const subject = this.getSubject();
         const { fixed, saveButtonText, t } = this.props;
         const RoleDropdown = kind === 'RoleBinding' ? NsRoleDropdown : ClusterRoleDropdown;
-        const title = t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) });
+        const title = t(this.props.titleVerb, { 0: ResourceLabel({ kind: kind }, t) });
 
         return (
           <div className="co-m-pane__body">
@@ -498,7 +498,7 @@ export const CreateRoleBinding = ({ match: { params }, location }) => {
     metadata: { namespace: params.ns },
     roleRef: { kind: roleKind, name: roleName },
   };
-  return <BaseEditRoleBinding metadata={metadata} fixed={fixed} isCreate={true} titleVerb="Create" />;
+  return <BaseEditRoleBinding metadata={metadata} fixed={fixed} isCreate={true} titleVerb='COMMON:MSG_MAIN_CREATEBUTTON_1' />;
 };
 
 const getSubjectIndex = () => {
@@ -518,12 +518,12 @@ const BindingLoadingWrapper = props => {
 
 export const EditRoleBinding = ({ match: { params }, kind }) => (
   <Firehose resources={[{ kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-    <BindingLoadingWrapper fixedKeys={['kind', 'metadata', 'roleRef']} subjectIndex={getSubjectIndex()} titleVerb="Edit" saveButtonText="Save" />
+    <BindingLoadingWrapper fixedKeys={['kind', 'metadata', 'roleRef']} subjectIndex={getSubjectIndex()} titleVerb='COMMON:MSG_MAIN_ACTIONBUTTON_15' saveButtonText="Save" />
   </Firehose>
 );
 
 export const CopyRoleBinding = ({ match: { params }, kind }) => (
   <Firehose resources={[{ kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-    <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb="Duplicate" />
+    <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb="Duplicate" /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
   </Firehose>
 );
