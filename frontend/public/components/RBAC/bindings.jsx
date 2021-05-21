@@ -17,6 +17,7 @@ import { isSystemRole } from './index';
 import { connectToFlags, flagPending } from '../../reducers/features';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { consoleTypeSelector } from 'packages/kubevirt-plugin/integration-tests/views/consolesView';
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
 // Split each binding into one row per subject
@@ -93,7 +94,8 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
     actions.unshift(() => ({
-      label: t(subject.kind === 'User' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_18' : 'COMMON:MSG_MAIN_ACTIONBUTTON_43', { 0: subject.name }),
+      label: t(subject.kind === 'User' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_18' : 'COMMON:MSG_MAIN_ACTIONBUTTON_43', { 0: subject.name  }),
+      needTranslate: false,
       // label: `Impersonate ${subject.kind} "${subject.name}"`,
       callback: () => startImpersonate(subject.kind, subject.name),
     }));
