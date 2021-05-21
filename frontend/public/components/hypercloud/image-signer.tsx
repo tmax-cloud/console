@@ -103,7 +103,7 @@ const ImageSignerDetails: React.FC<ImageSignerDetailsProps> = ({ obj: imagesigne
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={imagesigner} showOwner={false} />
-            <DetailsItem label={t('COMMON:MSG_DETAILS_TABREPLICASETS_5')} obj={imagesigner} path="spec.owner" />
+            {/* <DetailsItem label={t('COMMON:MSG_DETAILS_TABREPLICASETS_5')} obj={imagesigner} path="spec.owner" /> */}
           </div>
           <div className="col-lg-6">
             <ImageSignerDetailsList ds={imagesigner} />
