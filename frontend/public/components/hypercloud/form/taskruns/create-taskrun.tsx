@@ -14,6 +14,7 @@ import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
 import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
+import { Workspace } from '../utils/workspaces'
 
 const defaultValues = {
   metadata: {
@@ -209,13 +210,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
 
   const workspaces =
     lists.workspaceList.length > 0 ? (
-      lists.workspaceList.map((item, index) => {
-        return (
-          <Section label={item.name} description={item.description} key={index} id={`workspace_${index}_${item.name}`}>
-            <></>
-          </Section>
-        );
-      })
+      lists.workspaceList.map((item, index) => <Workspace namespace={namespace} methods={methods} id={`spec.workspaces[${index}]`} {...item} />)
     ) : (
       <div className="help-block">{t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')}</div>
     );
@@ -343,6 +338,18 @@ export const onSubmitCallback = data => {
     }
   });
   delete data.params;
+
+  _.forEach(data.spec.workspaces, (workspace) => {
+    _.forEach(workspace.name, (type, name) => {
+      workspace.name = name;
+      if(type === 'EmptyDirectory'){
+        workspace.emptyDir = {};
+      }
+      else if(type ==='VolumeClaimTemplate') {
+        workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
+      }
+    })
+  });
 
   data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { taskRef: { kind: taskKind, name: taskName }, params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } });
   // console.log('data? ', data);

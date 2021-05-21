@@ -79,7 +79,7 @@ const ClusterTaskDetails: React.FC<ClusterTaskDetailsProps> = ({ obj: clusterTas
 }
 
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const ClusterTasks: React.FC = props => {
   const { t } = useTranslation();
@@ -100,7 +100,7 @@ export const ClusterTasksPage: React.FC<ClusterTasksPageProps> = props => {
   />;
 }
 
-export const ClusterTasksDetailsPage: React.FC<ClusterTasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ClusterTaskDetails)), editYaml()]} />;
+export const ClusterTasksDetailsPage: React.FC<ClusterTasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ClusterTaskDetails)), editResource()]} />;
 
 type ClusterTasksPageProps = {
   showTitle?: boolean;

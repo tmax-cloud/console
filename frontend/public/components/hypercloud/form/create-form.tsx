@@ -10,7 +10,7 @@ import { ButtonBar, history, resourceObjPath } from '../../utils';
 import { Section } from '../utils/section';
 
 export const isCreatePage = defaultValues => {
-  return !_.has(defaultValues, 'spec');
+  return !(_.has(defaultValues, 'spec') || _.has(defaultValues, 'status'));
 };
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {

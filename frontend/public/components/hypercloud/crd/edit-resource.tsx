@@ -130,6 +130,9 @@ const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model
     match,
   } = props;
   let plural = getMatchedPlural(match.params.plural, spec, match);
+  if (plural === 'clusterroles') {
+    plural = 'roles';
+  }
   let kind = pluralToKind(plural);
   let model = kind && modelFor(kind);
   // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
