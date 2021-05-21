@@ -86,8 +86,6 @@ const isEstablished = (conditions: any[]) => {
   return condition && condition.status === 'True';
 };
 
-const namespaced = (crd: CustomResourceDefinitionKind) => crd.spec.scope === 'Namespaced';
-
 const Established: React.FC<{ crd: CustomResourceDefinitionKind }> = ({ crd }) => {
   return crd.status && isEstablished(crd.status.conditions) ? (
     <span>
