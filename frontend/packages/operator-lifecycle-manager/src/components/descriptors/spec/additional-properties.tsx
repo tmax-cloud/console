@@ -43,7 +43,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
       } else {
         let index = 0;
         _.forIn(formData, (value, key) => {
-          if (key.indexOf('defaultKey_') >= 0 && index < +key.split('_')[1]) {
+          if (key.indexOf('Key_') >= 0 && index < +key.split('_')[1]) {
             index = +key.split('_')[1];
           }
         });
@@ -93,8 +93,8 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
       obj[Object.keys(cur)[0]] = Object.values(cur)[0];
     });
     setRowIdx(prevRowIdx => prevRowIdx + 1);
-    setItems(() => [...items, { [`defaultKey_${rowIdx}`]: `defaultValue_${rowIdx}` }]);
-    onChange({ ...obj, [`defaultKey_${rowIdx}`]: `defaultValue_${rowIdx}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
+    setItems(() => [...items, { [`Key_${rowIdx}`]: `Value_${rowIdx}` }]);
+    onChange({ ...obj, [`Key_${rowIdx}`]: `Value_${rowIdx}` }); // object값이라서 중복되는(빈 스트링인) key값이 여러개이면 안됨.
   }, [items]);
 
   return (
@@ -113,6 +113,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
           onChange={newProperty => updateProperty(index, newProperty)}
         />
       ))}
+      <p className="help-block">중복된 키를 입력할 경우, 최근 입력 값이 적용됩니다.</p>
       <div className="row">
         <Button type="button" onClick={addProperty} variant="link">
           <PlusCircleIcon className="co-icon-space-r" />
