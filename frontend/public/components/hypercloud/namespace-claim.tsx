@@ -67,19 +67,14 @@ const NamespaceClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: namesp
     menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
   }
 
-  let namespaceData;
-  if (namespaceclaims.status?.status === 'Approved') {
-    namespaceData = <ResourceLink kind="Namespace" name={namespaceclaims?.resourceName} title={namespaceclaims?.resourceName} />;
-  } else {
-    namespaceData = <ResourceLink kind="Namespace" name={namespaceclaims?.resourceName} title={namespaceclaims?.resourceName} linkTo={false} />;
-  }
-
   return (
     <TableRow id={namespaceclaims.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={namespaceclaims.metadata.name} namespace={namespaceclaims.metadata.namespace} title={namespaceclaims.metadata.uid} />
       </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>{namespaceData}</TableData>
+      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
+        <ResourceLink kind="Namespace" name={namespaceclaims?.resourceName} title={namespaceclaims?.resourceName} linkTo={namespaceclaims.status?.status === 'Approved'} />
+      </TableData>
       <TableData className={tableColumnClasses[2]}>{namespaceclaims?.status?.status}</TableData>
       <TableData className={tableColumnClasses[3]}>{namespaceclaims.metadata?.annotations?.owner}</TableData>
       <TableData className={tableColumnClasses[4]}>{fromNow(namespaceclaims?.metadata?.creationTimestamp)}</TableData>
