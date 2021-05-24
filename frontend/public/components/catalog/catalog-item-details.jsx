@@ -24,7 +24,7 @@ export class CatalogTileDetails extends React.Component {
     if (_.isFunction(markdownDescription)) {
       this.setState({ markdownLoading: true });
       markdownDescription()
-        .then((md) => this.setState({ markdown: md, markdownLoading: false }))
+        .then(md => this.setState({ markdown: md, markdownLoading: false }))
         .catch(() => this.setState({ markdownLoading: false }));
     } else {
       this.setState({ markdown: markdownDescription });
@@ -42,35 +42,15 @@ export class CatalogTileDetails extends React.Component {
   }
 
   render() {
-    const {
-      obj,
-      kind,
-      tileProvider,
-      tileDescription,
-      supportUrl,
-      longDescription,
-      documentationUrl,
-      sampleRepo,
-      customProperties,
-    } = this.props.item;
+    const { obj, kind, tileProvider, tileDescription, supportUrl, longDescription, documentationUrl, sampleRepo, customProperties } = this.props.item;
     const { plans, markdown, markdownLoading } = this.state;
 
     const creationTimestamp = _.get(obj, 'metadata.creationTimestamp');
 
     const supportUrlLink = <ExternalLink href={supportUrl} text="Get support" />;
-    const documentationUrlLink = (
-      <ExternalLink
-        href={documentationUrl}
-        additionalClassName="co-break-all"
-        text={documentationUrl}
-      />
-    );
-    const sampleRepoLink = (
-      <ExternalLink href={sampleRepo} additionalClassName="co-break-all" text={sampleRepo} />
-    );
-    const planItems = _.map(plans, (plan) => (
-      <li key={plan.metadata.uid}>{plan.spec.description || plan.spec.externalName}</li>
-    ));
+    const documentationUrlLink = <ExternalLink href={documentationUrl} additionalClassName="co-break-all" text={documentationUrl} />;
+    const sampleRepoLink = <ExternalLink href={sampleRepo} additionalClassName="co-break-all" text={sampleRepo} />;
+    const planItems = _.map(plans, plan => <li key={plan.metadata.uid}>{plan.spec.description || plan.spec.externalName}</li>);
     return (
       <div className="modal-body modal-body-border">
         <div className="modal-body-content">
@@ -80,12 +60,7 @@ export class CatalogTileDetails extends React.Component {
                 {customProperties}
                 {tileProvider && <PropertyItem label="Provider" value={tileProvider} />}
                 {supportUrl && <PropertyItem label="Support" value={supportUrlLink} />}
-                {creationTimestamp && (
-                  <PropertyItem
-                    label="Created At"
-                    value={<Timestamp timestamp={creationTimestamp} />}
-                  />
-                )}
+                {creationTimestamp && <PropertyItem label="Created At" value={<Timestamp timestamp={creationTimestamp} />} />}
               </PropertiesSidePanel>
               <div className="co-catalog-page__overlay-description">
                 <SectionHeading text="Description" />
@@ -112,28 +87,19 @@ export class CatalogTileDetails extends React.Component {
                     <p>The following resources will be created:</p>
                     <ul>
                       <li>
-                        A <span className="co-catalog-item-details__kind-label">build config</span>{' '}
-                        to build source from a Git repository.
+                        A <span className="co-catalog-item-details__kind-label">build config</span> to build source from a Git repository.
                       </li>
                       <li>
-                        An <span className="co-catalog-item-details__kind-label">image stream</span>{' '}
-                        to track built images.
+                        An <span className="co-catalog-item-details__kind-label">image stream</span> to track built images.
                       </li>
                       <li>
-                        A{' '}
-                        <span className="co-catalog-item-details__kind-label">
-                          deployment config
-                        </span>{' '}
-                        to rollout new revisions when the image changes.
+                        A <span className="co-catalog-item-details__kind-label">deployment config</span> to rollout new revisions when the image changes.
                       </li>
                       <li>
-                        A <span className="co-catalog-item-details__kind-label">service</span> to
-                        expose your workload inside the cluster.
+                        A <span className="co-catalog-item-details__kind-label">service</span> to expose your workload inside the cluster.
                       </li>
                       <li>
-                        An optional{' '}
-                        <span className="co-catalog-item-details__kind-label">route</span> to expose
-                        your workload outside the cluster.
+                        An optional <span className="co-catalog-item-details__kind-label">route</span> to expose your workload outside the cluster.
                       </li>
                     </ul>
                   </>
