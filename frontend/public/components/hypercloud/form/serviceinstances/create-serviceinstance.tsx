@@ -6,9 +6,9 @@ import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-fo
 import { /*ActionGroup,*/ Button, Wizard } from '@patternfly/react-core';
 import { AngleUpIcon, AngleDownIcon } from '@patternfly/react-icons';
 import { ServiceInstanceModel, ServicePlanModel, ClusterServicePlanModel, ClusterServiceClassModel, ServiceClassModel } from '../../../../models';
-import { k8sCreate, k8sGet, k8sList, K8sResourceKind, referenceFor, /*k8sCreate, referenceFor, modelFor*/ } from '../../../../module/k8s';
+import { k8sCreate, k8sGet, k8sList, K8sResourceKind, referenceFor /*k8sCreate, referenceFor, modelFor*/ } from '../../../../module/k8s';
 import { Section } from '../../utils/section';
-import { history, /*resourceObjPath, ButtonBar, */LoadingInline, ResourceIcon, resourceObjPath, SelectorInput } from '../../../utils';
+import { history, /*resourceObjPath, ButtonBar, */ LoadingInline, ResourceIcon, resourceObjPath, SelectorInput } from '../../../utils';
 import { TextInput } from '../../utils/text-input';
 import { RadioGroup } from '../../utils/radio';
 import { DevTool } from '@hookform/devtools';
@@ -20,42 +20,53 @@ const Description = ({ spec }) => {
   const parameters = [];
   _.forEach(spec.instanceCreateParameterSchema.properties, (value, key) => {
     parameters.push(<li key={key}>{`${key}: ${value.default}`}</li>);
-  })
+  });
 
   return (
-    <div className='hc-create-service-instance__plan-desc'>
+    <div className="hc-create-service-instance__plan-desc">
       <span>{spec.description}</span>
-      <Section label='제공 기능' id='bullets'>
-        <div className='hc-create-service-instance__plan-bullets'>
-          {spec.externalMetadata.bullets?.map(bullet => <li>{bullet}</li>)}
+      <Section label="제공 기능" id="bullets">
+        <div className="hc-create-service-instance__plan-bullets">
+          {spec.externalMetadata.bullets?.map(bullet => (
+            <li>{bullet}</li>
+          ))}
         </div>
       </Section>
-      <Button variant='plain' className="pf-m-link--align-left hc-create-service-instance__plan-extra-info__more" type="button" onClick={() => setExtraInfoOpened(!extraInfoOpened)}>
+      <Button variant="plain" className="pf-m-link--align-left hc-create-service-instance__plan-extra-info__more" type="button" onClick={() => setExtraInfoOpened(!extraInfoOpened)}>
         <span>더보기</span>
         {extraInfoOpened ? <AngleUpIcon /> : <AngleDownIcon />}
       </Button>
-      {extraInfoOpened ? <div className='hc-create-service-instance__plan-extra-info'>
-        {!_.isEmpty(parameters) && <Section label='파라미터' id='bullets'>
-          <div className='hc-create-service-instance__plan-parameters'>
-            {parameters}
-          </div>
-        </Section>}
+      {extraInfoOpened ? (
+        <div className="hc-create-service-instance__plan-extra-info">
+          {!_.isEmpty(parameters) && (
+            <Section label="파라미터" id="bullets">
+              <div className="hc-create-service-instance__plan-parameters">{parameters}</div>
+            </Section>
+          )}
 
-        <Section label='플랜 요금' id='bullets'>
-          <span className='hc-create-service-instance__plan-costs'>{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
-        </Section>
-      </div> : false}
+          <Section label="플랜 요금" id="bullets">
+            <span className="hc-create-service-instance__plan-costs">{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
+          </Section>
+        </div>
+      ) : (
+        false
+      )}
     </div>
-  )
-}
+  );
+};
 
 const planItem = (plan, index) => {
   return {
-    title: <span><ResourceIcon kind={plan.kind} />{plan.spec.externalName}</span>,
+    title: (
+      <span>
+        <ResourceIcon kind={plan.kind} />
+        {plan.spec.externalName}
+      </span>
+    ),
     desc: <Description spec={plan.spec} />,
     value: index,
-  }
-}
+  };
+};
 
 const SelectServicePlanComponent = ({ loaded, servicePlanList, defaultPlan }) => {
   const canList = loaded && !_.isEmpty(servicePlanList);
@@ -65,17 +76,8 @@ const SelectServicePlanComponent = ({ loaded, servicePlanList, defaultPlan }) =>
 
   return (
     <>
-      <Section label='서비스 플랜 목록' id='serviceplan' isRequired>
-        {loaded ? canList ? (
-          <RadioGroup
-            id='service-plan'
-            name='service-plan'
-            items={planItemList}
-            inline={false}
-            initValue={planItemList?.[defaultPlan]?.value || planItemList?.[0]?.value}
-          />)
-          : <div>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_1')}</div>
-          : <LoadingInline />}
+      <Section label="서비스 플랜 목록" id="serviceplan" isRequired>
+        {loaded ? canList ? <RadioGroup id="service-plan" name="service-plan" items={planItemList} inline={false} initValue={planItemList?.[defaultPlan]?.value || planItemList?.[0]?.value} /> : <div>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_1')}</div> : <LoadingInline />}
       </Section>
     </>
   );
@@ -91,24 +93,25 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
         <Section label={key} id={key} description={value.description} isRequired={selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key)}>
           <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} />
         </Section>
-      </ul>
-    )
-  })
+      </ul>,
+    );
+  });
 
   const { t } = useTranslation();
 
   return (
     <>
-      <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_1')} id='name' isRequired={true}>
-        <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue={defaultValue?.metadata?.name ?? 'example-name'} />
+      <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV2_1')} id="name" isRequired={true}>
+        <TextInput className="pf-c-form-control" id="metadata.name" name="metadata.name" defaultValue={defaultValue?.metadata?.name ?? 'example-name'} />
       </Section>
 
-      <div className='co-form-section__separator' />
+      <div className="co-form-section__separator" />
 
-      {!_.isEmpty(parameters) &&
-        <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_3')} id='param'>
+      {!_.isEmpty(parameters) && (
+        <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_3')} id="param">
           <div>{parameters}</div>
-        </Section>}
+        </Section>
+      )}
 
       <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV2_3')} id="label" description={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV2_5')}>
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={_.isEmpty(defaultValue?.metadata?.labels) ? [] : defaultValue?.metadata?.labels} defaultValue={defaultValue?.metadata?.labels} />
@@ -128,24 +131,22 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
     const searchParams = new URLSearchParams(location.search);
     const isClusterServiceClass = searchParams.has('cluster-service-class');
     const serviceClassName = isClusterServiceClass ? searchParams.get('cluster-service-class') : searchParams.get('service-class');
-    k8sGet(isClusterServiceClass ? ClusterServiceClassModel : ServiceClassModel, serviceClassName, !isClusterServiceClass && params.ns)
-      .then(res =>{
-        setServiceClass(res);
-      });
+    k8sGet(isClusterServiceClass ? ClusterServiceClassModel : ServiceClassModel, serviceClassName, !isClusterServiceClass && params.ns).then(res => {
+      setServiceClass(res);
+    });
     return { namespace: params.ns, serviceClassName, isClusterServiceClass };
   }, []);
 
   React.useEffect(() => {
-    k8sList(isClusterServiceClass ? ClusterServicePlanModel : ServicePlanModel, !isClusterServiceClass ? { ns: namespace } : {})
-      .then(plans => {
-        const newPlanList = plans.filter(plan => {
-          return isClusterServiceClass ? plan.spec.clusterServiceClassRef.name === serviceClassName : plan.spec.serviceClassRef.name === serviceClassName;
-        });
-        setServicePlanList(newPlanList);
-        newPlanList.length > 0 && setSelectedPlan(0);
-        setLoaded(true);
+    k8sList(isClusterServiceClass ? ClusterServicePlanModel : ServicePlanModel, !isClusterServiceClass ? { ns: namespace } : {}).then(plans => {
+      const newPlanList = plans.filter(plan => {
+        return isClusterServiceClass ? plan.spec.clusterServiceClassRef.name === serviceClassName : plan.spec.serviceClassRef.name === serviceClassName;
       });
-  }, [])
+      setServicePlanList(newPlanList);
+      newPlanList.length > 0 && setSelectedPlan(0);
+      setLoaded(true);
+    });
+  }, []);
 
   const methods = useForm();
 
@@ -153,7 +154,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
   const steps = [
     { name: '서비스 플랜 선택', component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0 },
-    { name: '서비스 인스턴스 설정', component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: 'Create', canJumpTo: selectedPlan >= 0 }
+    { name: '서비스 인스턴스 설정', component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: 'Create', canJumpTo: selectedPlan >= 0 },
   ];
 
   return (
@@ -170,7 +171,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
         </div>
         <div className="co-m-page__body">
           <Wizard
-            key='service-instance-wizard'
+            key="service-instance-wizard"
             isInPage
             isFullHeight
             isFullWidth
@@ -198,7 +199,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
               let apiVersion = `${ServiceInstanceModel.apiGroup}/${ServiceInstanceModel.apiVersion}`;
               let labels = SelectorInput.objectify(submitData.metadata.labels);
-              let spec = { [isClusterServiceClass ? 'clusterServicePlanExternalName' : 'servicePlanExternalName']: servicePlanList[selectedPlan].spec.externalName, [isClusterServiceClass ? 'clusterServiceClassExternalName' : 'serviceClassExternalName']: serviceClass.spec.externalName }
+              let spec = { [isClusterServiceClass ? 'clusterServicePlanExternalName' : 'servicePlanExternalName']: servicePlanList[selectedPlan].spec.externalName, [isClusterServiceClass ? 'clusterServiceClassExternalName' : 'serviceClassExternalName']: serviceClass.spec.externalName };
 
               delete submitData.metadata.labels;
 
