@@ -81,7 +81,7 @@ const IntegrationJobDetails: React.FC<IntegrationJobDetailsProps> = ({ obj: inte
   );
 };
 
-const { details, editResource } = navFactory;
+const { details, editYaml } = navFactory;
 
 export const IntegrationJobs: React.FC = props => {
   const { t } = useTranslation();
@@ -94,7 +94,7 @@ export const IntegrationJobsPage: React.FC<IntegrationJobsPageProps> = props => 
   return <ListPage title={t('SINGLE:MSG_CI/CD_MAILFORM_REQUEST_7')} canCreate={false} ListComponent={IntegrationJobs} kind={kind} {...props} />;
 };
 
-export const IntegrationJobsDetailsPage: React.FC<IntegrationJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationJobDetails)), editResource()]} />;
+export const IntegrationJobsDetailsPage: React.FC<IntegrationJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(IntegrationJobDetails)), editYaml()]} />;
 
 type IntegrationJobsPageProps = {
   showTitle?: boolean;
