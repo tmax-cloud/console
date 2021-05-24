@@ -469,7 +469,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
               <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                 <ActionGroup className="pf-c-form">
                   <Button type="submit" id="save-changes" variant="primary">
-                    {saveButtonText || t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
+                    {t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
                   </Button>
                   <Button onClick={history.goBack} id="cancel" variant="secondary">
                     {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
