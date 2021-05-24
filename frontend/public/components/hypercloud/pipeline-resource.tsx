@@ -89,7 +89,7 @@ const PipelineResourceDetails: React.FC<PipelineResourceDetailsProps> = ({ obj: 
 }
 
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const PipelineResources: React.FC = props => {
   const { t } = useTranslation();
@@ -111,7 +111,7 @@ export const PipelineResourcesPage: React.FC<PipelineResourcesPageProps> = props
   />;
 }
 
-export const PipelineResourcesDetailsPage: React.FC<PipelineResourcesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineResourceDetails)), editYaml()]} />;
+export const PipelineResourcesDetailsPage: React.FC<PipelineResourcesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineResourceDetails)), editResource()]} />;
 
 type PipelineResourcesPageProps = {
   showTitle?: boolean;
