@@ -90,16 +90,17 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       if (_.has(defaultValues, 'spec.volumes')) {
         let volumeDefaultValues = _.get(defaultValues, 'spec.volumes');
         volumeDefaultValues = volumeDefaultValues.map(item => {
-          let obj = {};
+          let obj = {
+            name: item.name
+          };
           if (item.configMap) {
             obj['type'] = 'configMap';
-            obj['name'] = item.configMap.name;
+            obj['configMap'] = item.configMap.name;
           } else if (item.secret) {
             obj['type'] = 'secret';
-            obj['name'] = item.secret.name;
+            obj['secret'] = item.secret.name;
           } else if (item.emptyDir) {
             obj['type'] = 'emptyDir';
-            obj['name'] = item.emptyDir.name;
           }
           return obj;
         });
@@ -142,7 +143,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   let outputResourceArr = ['name', 'targetPath', 'type', 'optional'];
   let taskParameterArr = ['name', 'description', 'type', 'default'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
-  let volumeArr = ['name', 'type'];
+  let volumeArr = ['name', 'type', 'configMap', 'secret'];
   let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env'];
 
   const paramValidCallback = (additionalConditions) => {
@@ -239,23 +240,23 @@ export const onSubmitCallback = data => {
     }
   });
   // volume
-  data.spec.volumes = data?.spec?.volumes?.map(cur => {
-    if (cur.type === 'emptyDir') {
-      return { emptyDir: {} };
-    } else if (cur.type === 'configMap') {
-      return {
-        configMap: {
-          name: cur?.name,
-        },
-      };
-    } else if (cur.type === 'secret') {
-      return {
-        secret: {
-          secretName: cur?.name,
-        },
-      };
-    }
-  });
+  // data.spec.volumes = data?.spec?.volumes?.map(cur => {
+  //   if (cur.type === 'emptyDir') {
+  //     return { emptyDir: {} };
+  //   } else if (cur.type === 'configMap') {
+  //     return {
+  //       configMap: {
+  //         name: cur?.name,
+  //       },
+  //     };
+  //   } else if (cur.type === 'secret') {
+  //     return {
+  //       secret: {
+  //         secretName: cur?.name,
+  //       },
+  //     };
+  //   }
+  // });
   // step
   data.spec.steps = data?.spec?.steps?.map((cur, idx) => {
     // command

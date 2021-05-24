@@ -6,6 +6,7 @@ import { PromiseComponent, history, resourceListPathFromModel } from '../utils';
 import { k8sKill } from '../../module/k8s/';
 import { YellowExclamationTriangleIcon } from '@console/shared';
 import { withTranslation } from 'react-i18next';
+import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 //Modal for resource deletion and allows cascading deletes if propagationPolicy is provided for the enum
 class DeleteModal extends PromiseComponent {
   constructor(props) {
@@ -43,12 +44,12 @@ class DeleteModal extends PromiseComponent {
 
   render() {
     const { kind, resource, message, t } = this.props;
-    const resourceUpperCase = kind.label.toUpperCase();
+    const resourceStringKey = ResourceStringKeyMap[kind.kind]?.label ?? kind.label;
     return (
       <form onSubmit={this._submit} name="form" className="modal-content ">
         <ModalTitle>
           <YellowExclamationTriangleIcon className="co-icon-space-r" />
-          {t('COMMON:MSG_MAIN_ACTIONBUTTON_16', { 0: t(resourceUpperCase) })}?
+          {t('COMMON:MSG_MAIN_ACTIONBUTTON_16', { 0: t(resourceStringKey) })}?
         </ModalTitle>
         <ModalBody className="modal-body">
           {message}

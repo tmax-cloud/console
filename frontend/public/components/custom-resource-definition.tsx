@@ -64,7 +64,7 @@ const CRDTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_54'),
+      title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_94'),
       sortField: 'spec.scope',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
@@ -85,8 +85,6 @@ const isEstablished = (conditions: any[]) => {
   const condition = _.find(conditions, c => c.type === 'Established');
   return condition && condition.status === 'True';
 };
-
-const namespaced = (crd: CustomResourceDefinitionKind) => crd.spec.scope === 'Namespaced';
 
 const Established: React.FC<{ crd: CustomResourceDefinitionKind }> = ({ crd }) => {
   return crd.status && isEstablished(crd.status.conditions) ? (
@@ -154,7 +152,8 @@ const CRDTableRow: RowFunction<CustomResourceDefinitionKind> = ({ obj: crd, inde
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>{crd.spec.group}</TableData>
       <TableData className={tableColumnClasses[2]}>{getLatestVersionForCRD(crd)}</TableData>
-      <TableData className={tableColumnClasses[3]}>{namespaced(crd) ? 'Yes' : 'No'}</TableData>
+      {/* <TableData className={tableColumnClasses[3]}>{namespaced(crd) ? 'Yes' : 'No'}</TableData> */}
+      <TableData className={tableColumnClasses[3]}>{crd.spec.scope}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Established crd={crd} />
       </TableData>

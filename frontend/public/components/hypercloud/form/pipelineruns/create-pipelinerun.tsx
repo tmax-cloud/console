@@ -15,6 +15,7 @@ import store from '../../../../redux';
 //import { useTranslation } from 'react-i18next';
 import { k8sGet, k8sList } from '../../../../module/k8s';
 import { Button } from '@patternfly/react-core';
+import { Workspace } from '../utils/workspaces'
 
 const defaultValues = {
   metadata: {
@@ -79,14 +80,20 @@ const ResourceListComponent = props => {
   ))
 }
 
+const WorkspaceListComponent = props => {
+  return props.workspaceList.map((cur, idx) => <Workspace namespace={props.namespace} methods={props.methods} id={`spec.workspaces[${idx}]`} {...cur} />)
+}
+
 const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
-  const { control } = useFormContext();
+  const methods = useFormContext();
+  const { control } = methods;
 
   const namespace = getActiveNamespace(store.getState());
 
   const [paramList, setParamList] = React.useState([]);
   const [resourceList, setResourceList] = React.useState([]);
   const [resourceRefList, setResourceRefList] = React.useState([]);
+  const [workspaceList, setWorkspaceList] = React.useState([]);
 
   React.useEffect(() => {
     k8sList(PipelineResourceModel, { ns: namespace })
@@ -101,6 +108,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
         setParamList(newParamList);
         setResourceList(newResourceList);
+        setWorkspaceList(pipeline.spec.workspaces);
       })
       .catch((err) => {
         console.error('Fail to get Pipeline Detail', err);
@@ -141,6 +149,11 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
         <Section label='파이프라인 리소스' id='resource'>
           <ResourceListComponent resourceList={resourceList} resourceRefList={resourceRefList} />
         </Section>}
+      {!_.isEmpty(workspaceList) &&
+        <Section label='워크스페이스' id='workspace'>
+          <WorkspaceListComponent workspaceList={workspaceList} namespace={namespace} methods={methods} />
+        </Section>
+      }
 
       <div className='co-form-section__separator' />
 
@@ -180,6 +193,18 @@ export const onSubmitCallback = data => {
   let resources = [];
   _.forEach(data.spec.resources, (obj, name) => {
     resources.push({ name: name, resourceRef: obj.resourceRef });
+  });
+
+  _.forEach(data.spec.workspaces, (workspace) => {
+    _.forEach(workspace.name, (type, name) => {
+      workspace.name = name;
+      if(type === 'EmptyDirectory'){
+        workspace.emptyDir = {};
+      }
+      else if(type ==='VolumeClaimTemplate') {
+        workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
+      }
+    })
   });
 
   delete data.metadata.labels;

@@ -61,7 +61,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
           <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceInstance, t) })} />
           <div className="row">
             <div className="col-md-6">
-              <ResourceSummary resource={serviceInstance}></ResourceSummary>
+              <ResourceSummary resource={serviceInstance} showOwner={false}></ResourceSummary>
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
@@ -70,7 +70,9 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
                   <Status status={serviceInstance.status?.lastConditionState} />
                 </dd>
                 <dt>{!!clusterServiceClassRefName ? t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_2') : t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_19')}</dt>
-                <ResourceLink kind={!!clusterServiceClassRefName ? ClusterServiceClassModel.kind : ServiceClassModel.kind} displayName={!!clusterServiceClassRefName ? clusterServiceClassRefName : serviceClassRefName} name={!!clusterServiceClassRefName ? serviceInstance.spec?.clusterServiceClassRef?.name : serviceInstance.spec?.serviceClassRef?.name} title={!!clusterServiceClassRefName ? clusterServiceClassRefName : serviceClassRefName} />
+                <dd>
+                  <ResourceLink kind={!!clusterServiceClassRefName ? ClusterServiceClassModel.kind : ServiceClassModel.kind} displayName={!!clusterServiceClassRefName ? clusterServiceClassRefName : serviceClassRefName} name={!!clusterServiceClassRefName ? serviceInstance.spec?.clusterServiceClassRef?.name : serviceInstance.spec?.serviceClassRef?.name} title={!!clusterServiceClassRefName ? clusterServiceClassRefName : serviceClassRefName} />
+                </dd>
                 <dt>{!!clusterServicePlanRefName ? t('COMMON:MSG_DETAILS_TABSERVICEPLANS_DETAILS_SIDEPANEL_13') : t('COMMON:MSG_DETAILS_TABSERVICEPLANS_1')}</dt>
                 <dd>
                   <SidebarLink displayName={!!clusterServicePlanRefName ? clusterServicePlanRefName : servicePlanRefName} name={!!clusterServicePlanRefName ? serviceInstance.spec?.clusterServicePlanRef?.name : serviceInstance.spec?.servicePlanRef?.name} kind={!!clusterServicePlanRefName ? ClusterServicePlanModel.kind : ServicePlanModel.kind}></SidebarLink>

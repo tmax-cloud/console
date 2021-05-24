@@ -7,10 +7,13 @@ import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
 
 export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods, taskParameter }) => {
-  const typeItems = {
-    string: 'String',
-    array: 'Array',
-  };
+  const typeItems = React.useMemo(
+    () => ({
+      string: 'String',
+      array: 'Array',
+    }),
+    [],
+  );
   let target = document.getElementById('task-parameter-list');
   let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
   let template;
@@ -52,13 +55,13 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
 
   return (
     <>
-      <Section label="Name" id="taskparameter_name" isRequired={true}>
+      <Section label="태스크 파라미터 이름" id="taskparameter_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="Description" id="taskparameter_desc">
+      <Section label="설명" id="taskparameter_desc">
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
-      <Section label="Type" id="taskparameter-type" isRequired={true}>
+      <Section label="타입" id="taskparameter-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
@@ -72,12 +75,12 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
         />
       </Section>
       {type === 'string' && (
-        <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다.">
+        <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다." isRequired={true}>
           <TextInput id="default" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.default : ''} />
         </Section>
       )}
       {type === 'array' && (
-        <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다.">
+        <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다." isRequired={true}>
           <ListView name="default" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={defaultListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.default : []} />
         </Section>
       )}

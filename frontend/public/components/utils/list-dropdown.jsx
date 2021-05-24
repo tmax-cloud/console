@@ -186,7 +186,7 @@ const NsDropdown_ = (props) => {
       desc="Namespaces"
       resources={resources}
       selectedKeyKind={kind}
-      placeholder="Select namespace"
+      placeholder="네임스페이스 선택"
     />
   );
 };
