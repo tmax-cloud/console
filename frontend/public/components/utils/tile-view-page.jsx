@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types';
 import { FilterSidePanel, FilterSidePanelCategory, FilterSidePanelCategoryItem, VerticalTabs, VerticalTabsTab } from '@patternfly/react-catalog-view-extension';
 import { FormControl } from 'patternfly-react';
 import { Button, EmptyState, EmptyStateBody, EmptyStateSecondaryActions, EmptyStateVariant, Gallery, GalleryItem, Title } from '@patternfly/react-core';
-import { getCatalogType, CatalogPageType } from '../catalog/catalog-page';
+import { getCatalogPageType, CatalogPageType } from '../catalog/catalog-page';
 import { history } from './router';
 import { isModalOpen } from '../modals';
 import { Dropdown } from '../utils';
@@ -307,7 +307,7 @@ const getActiveFilters = (keywordFilter, groupFilters, activeFilters, categoryFi
             if (!groupFilters || !groupFilters[filterGroup]) {
               if (lastFilters[filterGroup]) {
                 // MEMO : ServiceInstance 생성 버튼을 통해 간 catalog/.../serviceinstance가 들어간 url의 카탈로그페이지에선 ServiceClass관련 filter만 보여져야 됨
-                if (getCatalogType() === CatalogPageType.SERVICE_INSTANCE) {
+                if (getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE) {
                   activeFilters[filterGroup] = {
                     ClusterServiceClass: {
                       label: 'Cluster Service Class',
@@ -776,6 +776,8 @@ export class TileViewPage extends React.Component {
       activeCategory = findActiveCategory('all', categories);
     }
 
+    const catalogType = getCatalogPageType();
+
     return (
       <div className="co-catalog-page">
         <div className="co-catalog-page__tabs">
@@ -788,16 +790,7 @@ export class TileViewPage extends React.Component {
             <div className="co-catalog-page__filter">
               <div>
                 <FormControl className="co-catalog-page__input" type="text" inputRef={ref => (this.filterByKeywordInput = ref)} placeholder="Filter by keyword..." bsClass="pf-c-form-control" value={activeFilters.keyword.value} onChange={e => this.onKeywordChange(e.target.value)} aria-label="Filter by keyword..." />
-                {/* {groupItems && (
-                  <Dropdown
-                    className="co-catalog-page__btn-group__group-by"
-                    menuClassName="dropdown-menu--text-wrap"
-                    items={groupByTypes}
-                    onChange={(e) => this.onGroupChange(e)}
-                    titlePrefix="Group By"
-                    title={groupBy}
-                  />
-                )} */}
+                {catalogType === CatalogPageType.SERVICE_INSTANCE ? null : groupItems && <Dropdown className="co-catalog-page__btn-group__group-by" menuClassName="dropdown-menu--text-wrap" items={groupByTypes} onChange={e => this.onGroupChange(e)} titlePrefix="Group By" title={groupBy} />}
               </div>
               <div className="co-catalog-page__num-items">{activeCategory.numItems} items</div>
             </div>
