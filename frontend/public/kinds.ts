@@ -12,6 +12,7 @@ import {
   getGroupVersionKind,
 } from './module/k8s';
 import { RootState } from './redux';
+import {pluralToKind} from '@console/internal/components/hypercloud/form'
 
 export const connectToModel = connect(
   (state: RootState, props: { kind: K8sResourceKindReference } & any) => {
@@ -68,7 +69,10 @@ export const connectToPlural: ConnectToPlural = connect(
       kindObj = allModels().find(
         (model) => model.plural === plural && (!model.crd || model.legacyPluralURL),
       );
-    }
+      if(!kindObj) {
+        kindObj = state.k8s.getIn(['RESOURCES', 'models']).get(pluralToKind(plural)); // plural이 kind로 되어있는 경우 (registry -> 스캔요청 -> registry)
+      }
+      }
 
     const modelRef = isGroupVersionKind(plural) ? plural : _.get(kindObj, 'kind');
 
