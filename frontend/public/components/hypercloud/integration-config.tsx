@@ -55,28 +55,22 @@ const IntegrationConfigTableHeader = (t?: TFunction) => {
       sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_38'),
-      sortField: 'spec.image',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
+    },    
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortField: 'status.phase',
       transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
+      props: { className: tableColumnClasses[3] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[5] },
+      props: { className: tableColumnClasses[4] },
     },
   ];
 };
@@ -93,17 +87,14 @@ const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrat
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={integrationConfig.metadata.namespace} title={integrationConfig.metadata.namespace} />
-      </TableData>
+      </TableData>      
       <TableData className={tableColumnClasses[2]}>
-        {integrationConfig.spec.image}
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
         <Status status={phase} />
       </TableData>
-      <TableData className={tableColumnClasses[4]}>
+      <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={integrationConfig.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[5]}>
+      <TableData className={tableColumnClasses[4]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={integrationConfig} />
       </TableData>
     </TableRow>
