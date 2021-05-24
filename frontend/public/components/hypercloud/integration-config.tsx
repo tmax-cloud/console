@@ -156,13 +156,29 @@ export const IntegrationConfigs: React.FC = props => {
   return <Table {...props} aria-label="IntegrationConfigs" Header={IntegrationConfigTableHeader.bind(null, t)} Row={IntegrationConfigTableRow} virtualize />;
 }
 
+const integrationConfigStatusReducer = (integrationConfig: any): string => {
+  return integrationConfig?.status?.phase;
+};
+
+const filters = t => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'integrationConfig-status',
+    reducer: integrationConfigStatusReducer,
+    items: [
+      { id: 'Ready', title: 'Ready' },
+      { id: 'UnReady', title: 'UnReady' },      
+    ],
+  },
+];
 
 export const IntegrationConfigsPage: React.FC<IntegrationConfigsPageProps> = props => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return <ListPage
     // title={t('COMMON:CD_MAILFORM_REQUEST_7')}
     // createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:CD_MAILFORM_REQUEST_7') })}
+    rowFilters={filters.bind(null, t)()}
     canCreate={true}
     ListComponent={IntegrationConfigs}
     kind={kind}
