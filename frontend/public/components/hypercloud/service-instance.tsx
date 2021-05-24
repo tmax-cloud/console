@@ -61,7 +61,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
           <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceInstance, t) })} />
           <div className="row">
             <div className="col-md-6">
-              <ResourceSummary resource={serviceInstance}></ResourceSummary>
+              <ResourceSummary resource={serviceInstance} showOwner={false}></ResourceSummary>
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
