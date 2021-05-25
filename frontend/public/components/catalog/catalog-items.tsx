@@ -10,6 +10,7 @@ import { history } from '../utils/router';
 import { normalizeIconClass } from './catalog-item-icon';
 import { CatalogTileDetails } from './catalog-item-details';
 import { TileViewPage } from '../utils/tile-view-page';
+import { withTranslation } from 'react-i18next';
 
 type Metadata = { uid?: string; name?: string; namespace?: string };
 
@@ -210,11 +211,6 @@ const getAvailableFilters = (initialFilters): PageFilters => {
   return filters;
 };
 
-const filterPreference = ['kind'];
-const filterGroupNameMap: Record<string, string> = {
-  kind: 'Type',
-};
-
 const GroupByTypes: Record<string, string> = {
   Operator: 'Operator',
   None: 'None',
@@ -256,127 +252,137 @@ export const groupItems = (items: Item[], groupBy: string): Item[] | Record<stri
   return items;
 };
 
-export class CatalogTileViewPage extends React.Component<CatalogTileViewPageProps, CatalogTileViewPageState> {
-  static displayName = `CatalogTileViewPage`;
+export const CatalogTileViewPage = withTranslation()(
+  class CatalogTileViewPage extends React.Component<any, CatalogTileViewPageState> {
+    static displayName = `CatalogTileViewPage`;
 
-  constructor(props) {
-    super(props);
+    constructor(props) {
+      super(props);
 
-    this.state = { detailsItem: null };
-  }
+      this.state = { detailsItem: null };
+    }
 
-  componentDidMount() {
-    const { items } = this.props;
-    const searchParams = new URLSearchParams(window.location.search);
-    const detailsItemID = searchParams.get('details-item');
-    const detailsItem = detailsItemID && _.find(items, item => detailsItemID === _.get(item, 'obj.metadata.uid'));
-    this.setState({ detailsItem });
-  }
+    componentDidMount() {
+      const { items } = this.props;
+      const searchParams = new URLSearchParams(window.location.search);
+      const detailsItemID = searchParams.get('details-item');
+      const detailsItem = detailsItemID && _.find(items, item => detailsItemID === _.get(item, 'obj.metadata.uid'));
+      this.setState({ detailsItem });
+    }
 
-  openOverlay = (detailsItem: Item): void => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('details-item', _.get(detailsItem, 'obj.metadata.uid'));
-    setURLParams(params);
+    openOverlay = (detailsItem: Item): void => {
+      const params = new URLSearchParams(window.location.search);
+      params.set('details-item', _.get(detailsItem, 'obj.metadata.uid'));
+      setURLParams(params);
 
-    this.setState({ detailsItem });
-  };
+      this.setState({ detailsItem });
+    };
 
-  closeOverlay = (): void => {
-    const params = new URLSearchParams(window.location.search);
-    params.delete('details-item');
-    setURLParams(params);
+    closeOverlay = (): void => {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('details-item');
+      setURLParams(params);
 
-    this.setState({ detailsItem: null });
-  };
+      this.setState({ detailsItem: null });
+    };
 
-  render() {
-    const { items } = this.props;
-    const { detailsItem } = this.state;
-    return (
-      <>
-        <TileViewPage
-          items={items}
-          itemsSorter={itemsToSort => _.sortBy(itemsToSort, ({ tileName }) => tileName.toLowerCase())}
-          getAvailableCategories={() => catalogCategories}
-          // TODO(alecmerdler): Dynamic filters for each Operator and its provided APIs
-          getAvailableFilters={getAvailableFilters}
-          filterGroups={filterGroups}
-          storeFilterKey={filterKey}
-          filterGroupNameMap={filterGroupNameMap}
-          keywordCompare={keywordCompare}
-          filterRetentionPreference={filterPreference}
-          renderTile={this.renderTile}
-          pageDescription={pageDescription}
-          emptyStateInfo="No developer catalog items are being shown due to the filters being applied."
-          groupItems={groupItems}
-          groupByTypes={GroupByTypes}
+    render() {
+      // TileViewPage컴포넌트에 언어설정 바꿨을 경우를 알려주기 위해 i18n.language값을 넘겨줌. (TileViewPage컴포넌트의 componentDidUpdate 부분 참고)
+      const { items, t, i18n } = this.props;
+      const { detailsItem } = this.state;
+
+      const filterPreference = ['kind'];
+      const filterGroupNameMap: Record<string, string> = {
+        kind: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_4'),
+      };
+
+      return (
+        <>
+          <TileViewPage
+            items={items}
+            itemsSorter={itemsToSort => _.sortBy(itemsToSort, ({ tileName }) => tileName.toLowerCase())}
+            getAvailableCategories={() => catalogCategories}
+            // TODO(alecmerdler): Dynamic filters for each Operator and its provided APIs
+            getAvailableFilters={getAvailableFilters}
+            filterGroups={filterGroups}
+            storeFilterKey={filterKey}
+            filterGroupNameMap={filterGroupNameMap}
+            keywordCompare={keywordCompare}
+            filterRetentionPreference={filterPreference}
+            renderTile={this.renderTile}
+            pageDescription={pageDescription}
+            emptyStateInfo="No developer catalog items are being shown due to the filters being applied."
+            groupItems={groupItems}
+            groupByTypes={GroupByTypes}
+            language={i18n.language}
+          />
+          {this.renderModal.bind(null, t)(detailsItem)}
+        </>
+      );
+    }
+
+    renderTile = (item: Item): React.ReactElement => {
+      if (!item) {
+        return null;
+      }
+      const { obj, tileName, tileProvider, tileDescription, kind } = item;
+      const uid = obj.metadata.uid;
+      const vendor = tileProvider ? `provided by ${tileProvider}` : null;
+      const { kind: filters } = getAvailableFilters({ kind });
+      const filter = _.find(filters, ['value', kind]);
+      return (
+        <CatalogTile
+          className="co-catalog-tile"
+          key={uid}
+          onClick={() => this.openOverlay(item)}
+          title={tileName}
+          badges={[
+            <CatalogTileBadge key="type">
+              <Badge isRead>{filter?.label}</Badge>
+            </CatalogTileBadge>,
+          ]}
+          {...this.getIconProps(item)}
+          vendor={vendor}
+          description={tileDescription}
+          data-test={`${kind}-${obj.metadata.name}`}
         />
-        {this.renderModal(detailsItem)}
-      </>
-    );
-  }
+      );
+    };
 
-  renderTile = (item: Item): React.ReactElement => {
-    if (!item) {
-      return null;
-    }
-    const { obj, tileName, tileProvider, tileDescription, kind } = item;
-    const uid = obj.metadata.uid;
-    const vendor = tileProvider ? `provided by ${tileProvider}` : null;
-    const { kind: filters } = getAvailableFilters({ kind });
-    const filter = _.find(filters, ['value', kind]);
-    return (
-      <CatalogTile
-        className="co-catalog-tile"
-        key={uid}
-        onClick={() => this.openOverlay(item)}
-        title={tileName}
-        badges={[
-          <CatalogTileBadge key="type">
-            <Badge isRead>{filter?.label}</Badge>
-          </CatalogTileBadge>,
-        ]}
-        {...this.getIconProps(item)}
-        vendor={vendor}
-        description={tileDescription}
-        data-test={`${kind}-${obj.metadata.name}`}
-      />
-    );
-  };
+    renderModal = (t, detailsItem: Item) => {
+      if (!detailsItem) {
+        return null;
+      }
+      return (
+        <Modal
+          className="co-catalog-page__overlay co-catalog-page__overlay--right"
+          header={
+            <>
+              <CatalogItemHeader title={detailsItem.tileName} vendor={detailsItem.tileProvider ? `Provided by ${detailsItem.tileProvider}` : null} {...this.getIconProps(detailsItem)} />
+              <div className="co-catalog-page__overlay-actions">
+                <Link className="pf-c-button pf-m-primary co-catalog-page__overlay-action" to={detailsItem.href} role="button" title={detailsItem.createLabel} onClick={this.closeOverlay}>
+                  {detailsItem.createLabel}
+                </Link>
+              </div>
+            </>
+          }
+          isOpen={!!detailsItem}
+          onClose={this.closeOverlay}
+          title={detailsItem.tileName}
+        >
+          <CatalogTileDetails item={detailsItem} closeOverlay={this.closeOverlay} />
+        </Modal>
+      );
+    };
 
-  renderModal = (detailsItem: Item) => {
-    if (!detailsItem) {
-      return null;
-    }
-    return (
-      <Modal
-        className="co-catalog-page__overlay co-catalog-page__overlay--right"
-        header={
-          <>
-            <CatalogItemHeader title={detailsItem.tileName} vendor={detailsItem.tileProvider ? `Provided by ${detailsItem.tileProvider}` : null} {...this.getIconProps(detailsItem)} />
-            <div className="co-catalog-page__overlay-actions">
-              <Link className="pf-c-button pf-m-primary co-catalog-page__overlay-action" to={detailsItem.href} role="button" title={detailsItem.createLabel} onClick={this.closeOverlay}>
-                {detailsItem.createLabel}
-              </Link>
-            </div>
-          </>
-        }
-        isOpen={!!detailsItem}
-        onClose={this.closeOverlay}
-        title={detailsItem.tileName}
-      >
-        <CatalogTileDetails item={detailsItem} closeOverlay={this.closeOverlay} />
-      </Modal>
-    );
-  };
-
-  getIconProps = (item: Item) => {
-    const { tileImgUrl, tileIconClass } = item;
-    if (tileImgUrl) {
-      return { iconImg: tileImgUrl, iconClass: null };
-    } else if (tileIconClass) {
-      return { iconImg: null, iconClass: normalizeIconClass(tileIconClass) };
-    }
-    return { iconImg: catalogImg, iconClass: null };
-  };
-}
+    getIconProps = (item: Item) => {
+      const { tileImgUrl, tileIconClass } = item;
+      if (tileImgUrl) {
+        return { iconImg: tileImgUrl, iconClass: null };
+      } else if (tileIconClass) {
+        return { iconImg: null, iconClass: normalizeIconClass(tileIconClass) };
+      }
+      return { iconImg: catalogImg, iconClass: null };
+    };
+  },
+);
