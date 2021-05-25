@@ -23,16 +23,24 @@ const CatalogServiceClaimDetails: React.FC<CatalogServiceClaimDetailsProps> = ({
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(catalogServiceClaim, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={catalogServiceClaim}></ResourceSummary>
+            <ResourceSummary resource={catalogServiceClaim} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
-              <dd>{catalogServiceClaim.resourceName}</dd>
+              <dd>{catalogServiceClaim.spec?.resourceName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
-              <dd>{catalogServiceClaim.status && catalogServiceClaim.status.status}</dd>
-              {catalogServiceClaim.status && catalogServiceClaim.status.reason && <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_CONDITIONS_TABLEHEADER_5')}</dt>}
-              {catalogServiceClaim.status && catalogServiceClaim.status.reason && <dd>{catalogServiceClaim.status.reason}</dd>}
+              <dd>{catalogServiceClaim.status?.status}</dd>
+              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_18')}</dt>
+              <dd>
+                <Timestamp timestamp={catalogServiceClaim.status?.lastTransitionTime} />
+              </dd>
+              {catalogServiceClaim.status?.reason && (
+                <>
+                  <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_CONDITIONS_TABLEHEADER_5')}</dt>
+                  <dd>{catalogServiceClaim.status.reason}</dd>
+                </>
+              )}
             </dl>
           </div>
         </div>

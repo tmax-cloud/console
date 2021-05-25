@@ -190,7 +190,7 @@ export const onSubmitCallback = (data) => {
     let subjects = data.subjects;
     delete data.subjects;
 
-    let roleRefApiGroup = '*';
+    let roleRefApiGroup = 'rbac.authorization.k8s.io';
 
     const roleRef = data.roleRef?.name;
     const roleRefKind = roleRef.split('~~')[0];

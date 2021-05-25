@@ -18,6 +18,9 @@ mkdir tmp
 echo "clone from git reposit of resource-schema"
 git clone https://github.com/tmax-cloud/resource-schema.git ./tmp
 echo "move json file from tmp folder"
+if [ ! -d ./api ]; then
+    mkdir ./api
+fi
 cp -r ./tmp/management ./tmp/network ./tmp/storage ./tmp/workload ./api
 echo "delete tmp folder"
 rm -rf ./tmp 
