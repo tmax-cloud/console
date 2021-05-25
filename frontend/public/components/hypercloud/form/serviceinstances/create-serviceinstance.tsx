@@ -16,6 +16,7 @@ import { DevTool } from '@hookform/devtools';
 import { useTranslation } from 'react-i18next';
 
 const Description = ({ spec }) => {
+  const { t } = useTranslation();
   const [extraInfoOpened, setExtraInfoOpened] = React.useState(false);
   const parameters = [];
   _.forEach(spec.instanceCreateParameterSchema.properties, (value, key) => {
@@ -25,7 +26,7 @@ const Description = ({ spec }) => {
   return (
     <div className="hc-create-service-instance__plan-desc">
       <span>{spec.description}</span>
-      <Section label="제공 기능" id="bullets">
+      <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_2')} id="bullets">
         <div className="hc-create-service-instance__plan-bullets">
           {spec.externalMetadata.bullets?.map(bullet => (
             <li>{bullet}</li>
