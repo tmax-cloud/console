@@ -25,7 +25,7 @@ const Description = ({ id, description }) =>
 
 export const DescriptionField: React.FC<FieldProps> = ({ id, description }) => {
   const { t } = useTranslation();
-  return <Description id={id} description={description ? t(`DESCRIPTION:${description}`) : null} />;
+  return <Description id={id} description={description && !description.includes(":") ? t(`DESCRIPTION:${description}`) : description} />;
 };
 
 export const FormField: React.FC<FormFieldProps> = ({ children, id, defaultLabel, required, schema, uiSchema }) => {
