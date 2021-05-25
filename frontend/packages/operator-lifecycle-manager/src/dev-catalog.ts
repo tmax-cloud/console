@@ -19,8 +19,8 @@ const isInternal = (crd: { name: string }): boolean => {
     return false;
   }
 };
-export const normalizeClusterServiceVersions = (
-  clusterServiceVersions: ClusterServiceVersionKind[],
+export const normalizeClusterServiceVersions = ( t, 
+  clusterServiceVersions: ClusterServiceVersionKind[]
 ): K8sResourceKind[] => {
   const imgFor = (desc) =>
     _.get(desc.csv, 'spec.icon')
@@ -64,7 +64,7 @@ export const normalizeClusterServiceVersions = (
       markdownDescription: formatTileDescription(desc.csv.spec.description),
       tileProvider: desc.csv.spec.provider.name,
       tags: desc.csv.spec.keywords,
-      createLabel: 'Create',
+      createLabel: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'),
       href: `/ns/${desc.csv.metadata.namespace}/clusterserviceversions/${
         desc.csv.metadata.name
       }/${referenceForProvidedAPI(desc)}/~new`,
