@@ -151,12 +151,12 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
     if(typeof target === 'string') {
       return target.trim().length > 0;
     } else {
-      return target.length > 0;
+      return target ? target.length > 0 : false;
     }
   }
 
   const volumeValidCallback = (additionalConditions) => {
-    return additionalConditions.some(cur=>cur.trim().length > 0)
+    return additionalConditions.some(cur=>typeof cur === 'string' ? cur.trim().length > 0 : false)
   }
 
   return (
