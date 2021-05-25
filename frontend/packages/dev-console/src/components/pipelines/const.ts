@@ -1,3 +1,5 @@
+//import { useTranslation } from 'react-i18next';
+
 export enum StartedByLabel {
   user = 'pipeline.openshift.io/started-by',
   triggers = 'triggers.tekton.dev/eventlistener',
@@ -10,6 +12,7 @@ export enum PipelineResourceType {
   storage = 'storage',
 }
 
+//const { t } = useTranslation();
 export const pipelineResourceTypeSelections = {
   '': 'Select resource type',
   [PipelineResourceType.git]: 'Git',

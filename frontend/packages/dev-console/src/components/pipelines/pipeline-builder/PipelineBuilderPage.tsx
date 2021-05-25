@@ -14,14 +14,19 @@ import {
   getPipelineURL,
 } from './utils';
 import { validationSchema } from './validation-utils';
+//import { useTranslation } from 'react-i18next';
+//import { TFunction } from 'i18next';
+//import { ResourceLabel } from '../../../../../../public/models/hypercloud/resource-plural'
 
 import './PipelineBuilderPage.scss';
+//import { pluralToKind } from 'public/components/hypercloud/form';
 
 type PipelineBuilderPageProps = RouteComponentProps<{ ns?: string }> & {
   existingPipeline?: Pipeline;
 };
 
 const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
+  //const { t } = useTranslation();
   const {
     existingPipeline,
     match: {
@@ -64,6 +69,9 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
         actions.setStatus({ submitError: e.message });
       });
   };
+  //const kind = pluralToKind(PipelineModel.kind);
+  //const kind = PipelineModel.kind;
+  //const title = t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({kind: kind}, t) });
 
   return (
     <div className="odc-pipeline-builder-page">

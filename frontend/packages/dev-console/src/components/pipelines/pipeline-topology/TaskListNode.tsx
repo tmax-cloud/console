@@ -7,6 +7,7 @@ import { KebabItem, KebabOption } from '@console/internal/components/utils';
 import { observer, Node, NodeModel } from '@console/topology';
 import { PipelineResourceTask } from '../../../utils/pipeline-augment';
 import { NewTaskNodeCallback, TaskListNodeModelData } from './types';
+import { useTranslation } from 'react-i18next';
 
 import './TaskListNode.scss';
 
@@ -33,6 +34,7 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({ element, unselectedText }) 
   const [isMenuOpen, setMenuOpen] = React.useState(false);
   const { height, width } = element.getBounds();
   const { clusterTaskList, namespaceTaskList, onNewTask, onRemoveTask } = element.getData();
+  const { t } = useTranslation();
 
   const options = [
     ...namespaceTaskList.map((task) => taskToOption(task, onNewTask)),
@@ -63,7 +65,7 @@ const TaskListNode: React.FC<TaskListNodeProps> = ({ element, unselectedText }) 
                 className="odc-task-list-node__label"
                 breakpointMods={[{ modifier: FlexModifiers.grow }]}
               >
-                {unselectedText || 'Select task'}
+                {unselectedText || `${t('SINGLE:MSG_PIPELINES_CREATEFORM_21')}`}
               </FlexItem>
               <FlexItem>
                 <CaretDownIcon />
