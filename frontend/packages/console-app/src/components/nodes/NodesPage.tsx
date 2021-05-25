@@ -181,11 +181,11 @@ const fetchNodeMetrics = (): Promise<NodeMetrics> => {
     },
     {
       key: 'usedStorage',
-      query: 'sum by (instance) (node_filesystem_size_bytes - node_filesystem_free_bytes)',
+      query: '(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"})',
     },
     {
       key: 'totalStorage',
-      query: 'sum by (instance) (node_filesystem_size_bytes)',
+      query: 'node_filesystem_size_bytes{mountpoint="/"}',
     },
     {
       key: 'cpu',
