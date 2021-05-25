@@ -83,7 +83,12 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     return {
       'ui:field': 'AdditionalPropertyField',
     };
-  } else if (jsonSchema?.['x-kubernetes-int-or-string'] || jsonSchema?.['anyOf']) {
+  } else if (jsonSchemaName === 'owner' && jsonSchema?.description.indexOf(`Don't deal with this field.`) >= 0) {
+    console.log('owner');
+    delete jsonSchema?.description;
+    delete jsonSchema?.type;
+  }
+  else if (jsonSchema?.['x-kubernetes-int-or-string'] || jsonSchema?.['anyOf']) {
     if (
       isArray(jsonSchema.anyOf) &&
       jsonSchema.anyOf.every(cur => {
