@@ -18,6 +18,7 @@ const isInternal = (crd: { name: string }): boolean => {
 export const normalizeClusterServiceVersions = (t, clusterServiceVersions: ClusterServiceVersionKind[]): K8sResourceKind[] => {
   const imgFor = desc => (_.get(desc.csv, 'spec.icon') ? `data:${_.get(desc.csv, 'spec.icon', [])[0].mediatype};base64,${_.get(desc.csv, 'spec.icon', [])[0].base64data}` : operatorLogo);
 
+  // MJ : OperatorDescription타이틀에 대해 String발행되면 적용하기
   const formatTileDescription = (csvDescription: string): string => `## Operator Description\n${csvDescription}`;
 
   const operatorProvidedAPIs: K8sResourceKind[] = _.flatten(clusterServiceVersions.map(csv => providedAPIsFor(csv).map(desc => ({ ...desc, csv }))))

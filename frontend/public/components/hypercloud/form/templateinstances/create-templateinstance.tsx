@@ -105,7 +105,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
 
   return (
     <>
-      <Section label="Labels" id="label" description={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV10_1')}>
+      <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV8_1')} id="label" description={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV10_1')}>
         <Controller name="labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
       </Section>
       <div className="co-form-section__separator" />
@@ -119,10 +119,11 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
 };
 
 export const CreateTemplateInstance: React.FC<CreateTemplateInstanceProps> = ({ match: { params }, kind }) => {
+  const { t } = useTranslation();
   const formComponent = templateInstanceFormFactory(params);
   const TemplateInstanceFormComponent = formComponent;
 
-  return <TemplateInstanceFormComponent fixed={{ apiVersion: `${TemplateInstanceModel.apiGroup}/${TemplateInstanceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm />;
+  return <TemplateInstanceFormComponent fixed={{ apiVersion: `${TemplateInstanceModel.apiGroup}/${TemplateInstanceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} nameSectionTitle={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV5_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm />;
 };
 
 export const onSubmitCallback = data => {

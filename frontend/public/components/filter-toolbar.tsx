@@ -215,16 +215,11 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(labelFilters) && applyFilter(labelFilters, FilterType.LABEL);
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(externalNameFilter) && applyFilter(externalNameFilter, FilterType.EXTERNAL_NAME);
-    !_.isEmpty(defaultSelectedRows) && applyRowFilter(defaultSelectedRows);
-    if (!_.isEmpty(selectedRowFilters) || storeSelectedRows.size > 0) {
-      selectedRowFilters.map(row => storeSelectedRows.add(row));
-      applyRowFilter(Array.from(storeSelectedRows));
-      setQueryParameters(Array.from(storeSelectedRows));
-    }
-    return () => {
-      //clear filter with Awaiting
+
+    if (!_.isEmpty(defaultSelectedRows)) {
       applyRowFilter(defaultSelectedRows);
-    };
+      setQueryParameters(defaultSelectedRows);
+    }
   }, []);
 
   React.useEffect(() => {
