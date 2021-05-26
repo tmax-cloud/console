@@ -96,7 +96,7 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
           <Selector selector={namespaceSelector} kind="Namespace" />
         </div>,
       );
-    } else {
+    } else if (ps) {
       podSelectors.push(
         <div key={i++} style={style}>
           <Selector selector={ps} namespace={namespace} />
