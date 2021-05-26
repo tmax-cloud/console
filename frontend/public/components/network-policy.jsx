@@ -140,9 +140,6 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
     </div>
   );
 };
-//t(`SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2, {0: ${np.metadata.namespace}"}`)          
-//Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in <ExternalLink href={getNetworkPolicyDocLink(flags[FLAGS.OPENSHIFT])} text="Network Policies Documentation" />.
-
 
 const Details_ = ({ obj: np, flags }) => {
   const { t } = useTranslation();
