@@ -75,10 +75,10 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
             <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
               <ActionGroup className="pf-c-form">
                 <Button type="button" variant="primary" id="save-changes" onClick={onClick}>
-                  {isCreatePage(defaultValues) ? props.saveButtonText || 'Create' : 'Save'}
+                  {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
                 </Button>
                 <Button type="button" variant="secondary" id="cancel" onClick={history.goBack}>
-                  Cancel
+                  {`${t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}`}
                 </Button>
               </ActionGroup>
             </ButtonBar>
