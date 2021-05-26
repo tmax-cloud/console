@@ -10,6 +10,7 @@ import { Kebab, navFactory, ResourceKebab, SectionHeading, ResourceLink, Resourc
 import { NetworkPolicyModel } from '../models';
 import { getNetworkPolicyDocLink } from './utils/documentation';
 import { useTranslation } from 'react-i18next';
+
 const { common } = Kebab.factory;
 const menuActions = [...Kebab.getExtensionsActionsForKind(NetworkPolicyModel), ...common];
 
