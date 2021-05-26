@@ -11,13 +11,9 @@ import { RadioInput } from '../radio';
 import { Checkbox } from '../checkbox';
 import { PersistentVolumeClaimModel } from '../../models';
 import { StorageClass } from '../storage-class-form';
+import { useTranslation } from 'react-i18next';
 
-const NameValueEditorComponent = (props) => (
-  <AsyncComponent
-    loader={() => import('../utils/name-value-editor').then((c) => c.NameValueEditor)}
-    {...props}
-  />
-);
+const NameValueEditorComponent = props => <AsyncComponent loader={() => import('../utils/name-value-editor').then(c => c.NameValueEditor)} {...props} />;
 
 const cephRBDProvisionerSuffix = 'rbd.csi.ceph.com';
 
@@ -40,13 +36,9 @@ const provisionerAccessModeMapping = {
 
 // This form is done a little odd since it is used in both its own page and as
 // a sub form inside the attach storage page.
-export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
+export const CreatePVCForm: React.FC<CreatePVCFormProps> = props => {
   const [accessModeHelp, setAccessModeHelp] = React.useState('Permissions to the mounted drive.');
-  const [allowedAccessModes, setAllowedAccessModes] = React.useState([
-    'ReadWriteOnce',
-    'ReadWriteMany',
-    'ReadOnlyMany',
-  ]);
+  const [allowedAccessModes, setAllowedAccessModes] = React.useState(['ReadWriteOnce', 'ReadWriteMany', 'ReadOnlyMany']);
   const [storageClass, setStorageClass] = React.useState('');
   const [pvcName, setPvcName] = React.useState('');
   const [accessMode, setAccessMode] = React.useState('ReadWriteOnce');
@@ -55,18 +47,19 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
   const [useSelector, setUseSelector] = React.useState(false);
   const [nameValuePairs, setNameValuePairs] = React.useState([['', '']]);
   const [storageProvisioner, setStorageProvisioner] = React.useState('');
+  const { t } = useTranslation();
   const accessModeRadios = [
     {
       value: 'ReadWriteOnce',
-      title: 'Single User (RWO)',
+      title: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_21'),
     },
     {
       value: 'ReadWriteMany',
-      title: 'Shared Access (RWX)',
+      title: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_22'),
     },
     {
       value: 'ReadOnlyMany',
-      title: 'Read Only (ROX)',
+      title: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_23'),
     },
   ];
   const dropdownUnits = {
@@ -120,10 +113,7 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
         obj.spec.storageClassName = storageClass;
 
         // should set block only for RBD + RWX
-        if (
-          _.endsWith(storageProvisioner, cephRBDProvisionerSuffix) &&
-          accessMode === 'ReadWriteMany'
-        ) {
+        if (_.endsWith(storageProvisioner, cephRBDProvisionerSuffix) && accessMode === 'ReadWriteMany') {
           obj.spec.volumeMode = 'Block';
         }
       }
@@ -131,40 +121,22 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
       return obj;
     };
     onChange(updatePVC);
-  }, [
-    accessMode,
-    namespace,
-    nameValuePairs,
-    pvcName,
-    onChange,
-    storageClass,
-    requestSizeValue,
-    requestSizeUnit,
-    useSelector,
-    storageProvisioner,
-  ]);
+  }, [accessMode, namespace, nameValuePairs, pvcName, onChange, storageClass, requestSizeValue, requestSizeUnit, useSelector, storageProvisioner]);
 
   const handleNameValuePairs = ({ nameValuePairs: updatedNameValuePairs }) => {
     setNameValuePairs(updatedNameValuePairs);
   };
 
   const getAccessModeForProvisioner = (provisioner: string) => {
-    return provisioner && isCephProvisioner(provisioner)
-      ? ['ReadWriteOnce', 'ReadWriteMany']
-      : ['ReadWriteOnce', 'ReadWriteMany', 'ReadOnlyMany'];
+    return provisioner && isCephProvisioner(provisioner) ? ['ReadWriteOnce', 'ReadWriteMany'] : ['ReadWriteOnce', 'ReadWriteMany', 'ReadOnlyMany'];
   };
 
-  const handleStorageClass = (updatedStorageClass) => {
+  const handleStorageClass = updatedStorageClass => {
     const provisioner: string = updatedStorageClass?.provisioner || '';
     //if the provisioner is unknown or no storage class selected, user should be able to set any access mode
-    const modes = provisionerAccessModeMapping[provisioner]
-      ? provisionerAccessModeMapping[provisioner]
-      : getAccessModeForProvisioner(provisioner);
+    const modes = provisionerAccessModeMapping[provisioner] ? provisionerAccessModeMapping[provisioner] : getAccessModeForProvisioner(provisioner);
     //setting message to display for various modes when a storage class of a know provisioner is selected
-    const displayMessage =
-      provisionerAccessModeMapping[provisioner] || isCephProvisioner(provisioner)
-        ? 'Access mode is set by storage class and cannot be changed.'
-        : 'Permissions to the mounted drive.';
+    const displayMessage = provisionerAccessModeMapping[provisioner] || isCephProvisioner(provisioner) ? 'Access mode is set by storage class and cannot be changed.' : 'Permissions to the mounted drive.';
     setAccessMode('ReadWriteOnce');
     setAccessModeHelp(displayMessage);
     //setting accessMode to default with the change to Storage Class selection
@@ -173,20 +145,20 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
     setStorageProvisioner(provisioner);
   };
 
-  const handleRequestSizeInputChange = (obj) => {
+  const handleRequestSizeInputChange = obj => {
     setRequestSizeValue(obj.value);
     setRequestSizeUnit(obj.unit);
   };
 
-  const handleUseSelector: React.ReactEventHandler<HTMLInputElement> = (event) => {
+  const handleUseSelector: React.ReactEventHandler<HTMLInputElement> = event => {
     setUseSelector(event.currentTarget.checked);
   };
 
-  const handlePvcName: React.ReactEventHandler<HTMLInputElement> = (event) => {
+  const handlePvcName: React.ReactEventHandler<HTMLInputElement> = event => {
     setPvcName(event.currentTarget.value);
   };
 
-  const handleAccessMode: React.ReactEventHandler<HTMLInputElement> = (event) => {
+  const handleAccessMode: React.ReactEventHandler<HTMLInputElement> = event => {
     setAccessMode(event.currentTarget.value);
   };
 
@@ -195,55 +167,28 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
   return (
     <div>
       <div className="form-group">
-        <StorageClassDropdown
-          onChange={handleStorageClass}
-          id="storageclass-dropdown"
-          describedBy="storageclass-dropdown-help"
-          required={false}
-          name="storageClass"
-          filter={onlyPvcSCs}
-        />
+        <StorageClassDropdown onChange={handleStorageClass} id="storageclass-dropdown" describedBy="storageclass-dropdown-help" required={false} name="storageClass" filter={onlyPvcSCs} />
       </div>
       <label className="control-label co-required" htmlFor="pvc-name">
-        Persistent Volume Claim Name
+        {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_17')}
       </label>
       <div className="form-group">
-        <input
-          className="pf-c-form-control"
-          type="text"
-          onChange={handlePvcName}
-          placeholder="my-storage-claim"
-          aria-describedby="pvc-name-help"
-          id="pvc-name"
-          name="pvcName"
-          required
-        />
+        <input className="pf-c-form-control" type="text" onChange={handlePvcName} placeholder="my-storage-claim" aria-describedby="pvc-name-help" id="pvc-name" name="pvcName" required />
         <p className="help-block" id="pvc-name-help">
-          A unique name for the storage claim within the project.
+          {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_19')}
         </p>
       </div>
       <label className="control-label co-required" htmlFor="access-mode">
-        Access Mode
+        {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_20')}
       </label>
       <div className="form-group">
-        {accessModeRadios.map((radio) => {
+        {accessModeRadios.map(radio => {
           let radioObj = null;
           const disabled = !allowedAccessModes.includes(radio.value);
 
-          allowedAccessModes.forEach((mode) => {
+          allowedAccessModes.forEach(mode => {
             const checked = !disabled ? radio.value === accessMode : radio.value === mode;
-            radioObj = (
-              <RadioInput
-                {...radio}
-                key={radio.value}
-                onChange={handleAccessMode}
-                inline={true}
-                disabled={disabled}
-                checked={checked}
-                aria-describedby="access-mode-help"
-                name="accessMode"
-              />
-            );
+            radioObj = <RadioInput {...radio} key={radio.value} onChange={handleAccessMode} inline={true} disabled={disabled} checked={checked} aria-describedby="access-mode-help" name="accessMode" />;
           });
 
           return radioObj;
@@ -253,39 +198,15 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
         </p>
       </div>
       <label className="control-label co-required" htmlFor="request-size-input">
-        Size
+        {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_24')}
       </label>
-      <RequestSizeInput
-        name="requestSize"
-        required
-        onChange={handleRequestSizeInputChange}
-        defaultRequestSizeUnit={requestSizeUnit}
-        defaultRequestSizeValue={requestSizeValue}
-        dropdownUnits={dropdownUnits}
-        describedBy="request-size-help"
-        inputID="request-size-input"
-      />
+      <RequestSizeInput name="requestSize" required onChange={handleRequestSizeInputChange} defaultRequestSizeUnit={requestSizeUnit} defaultRequestSizeValue={requestSizeValue} dropdownUnits={dropdownUnits} describedBy="request-size-help" inputID="request-size-input" />
       <p className="help-block" id="request-size-help">
-        Desired storage capacity.
+        {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_25')}
       </p>
-      <Checkbox
-        label="Use label selectors to request storage"
-        onChange={handleUseSelector}
-        checked={useSelector}
-        name="showLabelSelector"
-      />
+      <Checkbox label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_26')} onChange={handleUseSelector} checked={useSelector} name="showLabelSelector" />
       <div className="form-group">
-        {useSelector && (
-          <NameValueEditorComponent
-            nameValuePairs={nameValuePairs}
-            valueString="Selector"
-            nameString="Label"
-            addString="Add Value"
-            readOnly={false}
-            allowSorting={false}
-            updateParentData={handleNameValuePairs}
-          />
-        )}
+        {useSelector && <NameValueEditorComponent nameValuePairs={nameValuePairs} valueString="Selector" nameString="Label" addString="Add Value" readOnly={false} allowSorting={false} updateParentData={handleNameValuePairs} />}
         <p className="help-block" id="label-selector-help">
           Use label selectors to define how storage is created.
         </p>
@@ -294,7 +215,7 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = (props) => {
   );
 };
 
-export const CreatePVCPage: React.FC<CreatePVCPageProps> = (props) => {
+export const CreatePVCPage: React.FC<CreatePVCPageProps> = props => {
   const [error, setError] = React.useState('');
   const [inProgress, setInProgress] = React.useState(false);
   const [pvcObj, setPvcObj] = React.useState(null);
@@ -305,7 +226,7 @@ export const CreatePVCPage: React.FC<CreatePVCPageProps> = (props) => {
     e.preventDefault();
     setInProgress(true);
     k8sCreate(PersistentVolumeClaimModel, pvcObj).then(
-      (resource) => {
+      resource => {
         setInProgress(false);
         history.push(resourceObjPath(resource, referenceFor(resource)));
       },

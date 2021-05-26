@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
+import { useTranslation } from 'react-i18next';
 
 const AdditionalProperty: React.FC<AdditionalPropertyProps> = ({ property, onChange = () => {}, onClickRemove = () => {} }) => {
   let key = Object.keys(property)[0];
@@ -33,6 +34,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
 }) => {
   const [items, setItems] = React.useState([]);
   const [rowIdx, setRowIdx] = React.useState(0);
+  const { t } = useTranslation();
   React.useEffect(() => {
     setItems(() => {
       return Array.isArray(formData) ? formData : _.keys(formData).map(cur => ({ [cur]: formData[cur] }));
@@ -113,7 +115,7 @@ export const AdditionalPropertyFields: React.FC<AdditionalPropertyFieldsProps> =
           onChange={newProperty => updateProperty(index, newProperty)}
         />
       ))}
-      <p className="help-block">중복된 키를 입력할 경우, 최근 입력 값이 적용됩니다.</p>
+      <p className="help-block">{t('COMMON:MSG_COMMON_DIV1_DESCRIPTION_1')}</p>
       <div className="row">
         <Button type="button" onClick={addProperty} variant="link">
           <PlusCircleIcon className="co-icon-space-r" />

@@ -272,10 +272,10 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
         <ButtonBar errorMessage={error} inProgress={inProgress}>
           <ActionGroup className="pf-c-form">
             <Button type="submit" variant="primary" id="save-changes">
-              Save
+              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
             </Button>
             <Button type="button" variant="secondary" onClick={history.goBack}>
-              Cancel
+              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
             </Button>
           </ActionGroup>
         </ButtonBar>
