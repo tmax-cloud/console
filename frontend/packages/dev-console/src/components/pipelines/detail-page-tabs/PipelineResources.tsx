@@ -32,7 +32,7 @@ const PipelineResources: React.FC<PipelineResourcesParam> = (props) => {
       />
       <DropdownField
         name="type"
-        items={pipelineResourceTypeSelections}
+        items={pipelineResourceTypeSelections.bind(null, t)()}
         fullWidth
         disabled={isReadOnly}
         title={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_15')}`}

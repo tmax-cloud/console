@@ -77,6 +77,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
   const { nameValue } = props;
   const { values, setFieldValue } = useFormikContext<FormikValues>();
   const [valueType, setValueType] = useState('');
+  const { t } = useTranslation();
   const renderValueField = (valueType, name) => {
     if (valueType === '') {
       valueType = _.get(values, `${name}.type`);
@@ -145,7 +146,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
     <div>
       <DropdownField
         fullWidth
-        items={pipelineParameterTypeSelections}
+        items={pipelineParameterTypeSelections.bind(null, t)()}
         name={`${nameValue}.type`}
         onChange={data => {
           switch (data) {
@@ -176,11 +177,12 @@ const InputSection: React.FC<InputSectionProps> = ({ label, isRequired, children
   );
 };
 
-//const { t } = useTranslation();
-export const pipelineParameterTypeSelections = {
-  '': 'Select resource type',
-  string: 'String',
-  array: 'Array',
+export const pipelineParameterTypeSelections = t => {
+  return {
+    '': t('SINGLE:MSG_PIPELINES_CREATEFORM_9'),
+    string: 'String',
+    array: 'Array',
+  };
 };
 type DropdownValueComponentProps = {
   nameValue: string;
