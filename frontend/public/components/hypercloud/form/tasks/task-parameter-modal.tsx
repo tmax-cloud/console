@@ -76,7 +76,7 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
       </Section>
       {type === 'string' && (
         <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다." isRequired={true}>
-          <TextInput id="default" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.default : ''} />
+          <TextInput id="default[0]" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.default : ''} />
         </Section>
       )}
       {type === 'array' && (

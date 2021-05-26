@@ -153,6 +153,21 @@ export const tableFilters: TableFilterMap = {
     return !!values.all.every(v => labels.includes(v));
   },
 
+  'pvc-status': (phases, pvc) => {
+    if (!phases || !phases.selected || !phases.selected.size) {
+      return true;
+    }
+
+    const phaseFunc = (pvc) => {
+      if (pvc?.metadata?.deletionTimestamp) {
+        return 'Terminating';
+      }
+      return pvc.status.phase
+    }
+    const phase = phaseFunc(pvc);
+    return phases.selected.has(phase) || !_.includes(phases.all, phase);
+  },
+
   'pod-status': (phases, pod) => {
     if (!phases || !phases.selected || !phases.selected.size) {
       return true;
@@ -282,14 +297,6 @@ export const tableFilters: TableFilterMap = {
     return fuzzyCaseInsensitive(str, project.metadata.name) || fuzzyCaseInsensitive(str, displayName);
   },
 
-  'pvc-status': (phases, pvc) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
-
-    const phase = pvc.status.phase;
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
 
   // Filter service classes by text match
   'service-class': (str, serviceClass) => {

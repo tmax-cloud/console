@@ -133,10 +133,10 @@ const tableColumnClasses = [
 
 // MEMO : ServiceInstance리스트페이지에서 ServicePlan이름클릭 시 SidePanel펼쳐진 ServiceInstance상세페이지로 이동하는 기획에 맞춰 구현하기 위해(Sidepanel펼침유무는 원래 url로 구분이 안됨)
 // ?serviceplanSidebar=open param을 붙여서 상세페이지로 이동시키고 ServiceInstanceDetails에서 해당 param이 붙어왔을 땐 sidepanel 펼쳐준 뒤 param 없애주는 방식으로 구현함.
-const ServicePlanSidePanelOpenedLink = ({ serviceinstance, displayName }) => {
+const ServicePlanSidePanelOpenedLink = ({ serviceinstance, displayName, iconKind }) => {
   return (
     <>
-      <ResourceIcon kind={kind} />
+      <ResourceIcon kind={iconKind} />
       <Link to={resourcePath(ServiceInstanceModel.kind, serviceinstance.metadata.name, serviceinstance.metadata.namespace) + '?serviceplanSidebar=open'}>{displayName}</Link>
     </>
   );
@@ -164,11 +164,11 @@ const ServiceInstanceTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[4]}>
         {!!clusterServicePlanRefName ? (
           <dd>
-            <ServicePlanSidePanelOpenedLink serviceinstance={obj} displayName={clusterServiceClassRefName} />
+            <ServicePlanSidePanelOpenedLink serviceinstance={obj} iconKind={ClusterServicePlanModel.kind} displayName={clusterServiceClassRefName} />
           </dd>
         ) : (
           <dd>
-            <ServicePlanSidePanelOpenedLink serviceinstance={obj} displayName={servicePlanRefName} />
+            <ServicePlanSidePanelOpenedLink serviceinstance={obj} iconKind={ServicePlanModel.kind} displayName={servicePlanRefName} />
           </dd>
         )}
       </TableData>
