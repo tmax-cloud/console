@@ -2,6 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { match as RMatch } from 'react-router';
 import { WithCommonForm } from '../create-form';
+import { Controller } from 'react-hook-form';
 import { coFetchJSON } from '../../../../co-fetch';
 import { NamespaceModel, ClusterRoleModel, RoleModel } from '../../../../models';
 import { k8sList } from '../../../../module/k8s';
@@ -9,13 +10,13 @@ import { Section } from '../../utils/section';
 import { LoadingInline } from '../../../utils';
 import { TextInput } from '../../utils/text-input';
 import { RadioGroup } from '../../utils/radio';
-import { Dropdown } from '../../utils/dropdown';
 import { ResourceListDropdown } from '../../utils/resource-list-dropdown';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
 import { ListView } from '../../utils/list-view';
 import { CheckboxGroup } from '../../utils/checkbox';
 import { MinusCircleIcon } from '@patternfly/react-icons';
+import { DropdownWithRef } from '../../utils/dropdown-new';
 //import { useTranslation } from 'react-i18next';
 
 const kindItems = [
@@ -85,18 +86,19 @@ const RuleItem = props => {
 
   const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ '*': 'All' });
   const { control } = methods;
-  const apiGroup = useWatch<string>({
+  const apiGroup = useWatch<{ label: string; value: string }>({
     control: control,
     name: `${name}[${index}].apiGroup`,
   });
 
   React.useEffect(() => {
-    if (apiGroup === '*') {
+    const apiGroupValue = apiGroup?.value || '*';
+    if (apiGroupValue === '*') {
       setResourceList({ '*': 'All' });
-    } else if (apiGroup === 'Core') {
+    } else if (apiGroupValue === 'Core') {
       setResourceList(coreResources);
     } else {
-      coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroup]}`).then(
+      coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}`).then(
         data => {
           let newResourceList = { '*': 'All' };
           data.resources.sort(compareObjByName);
@@ -116,10 +118,28 @@ const RuleItem = props => {
       <div className="row" key={item.id}>
         <div className="col-xs-4 pairs-list__value-field">
           <Section label="API 그룹" id={`apigroup[${index}]`} isRequired={true}>
-            <Dropdown name={`${name}[${index}].apiGroup`} items={apiGroupList} defaultValue={item.apiGroup} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].apiGroup`, item.apiGroup)} />
+            <Controller
+              as={<DropdownWithRef name={`${name}[${index}].apiGroup`} defaultValue={{ label: item.apiGroup.label, value: item.apiGroup.value }} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} />}
+              control={methods.control}
+              name={`${name}[${index}].apiGroup`}
+              onChange={([selected]) => {
+                return { value: selected };
+              }}
+              defaultValue={{ label: item.apiGroup.label, value: item.apiGroup.value }}
+            />
+            {/* <Dropdown name={`${name}[${index}].apiGroup`} items={apiGroupList} defaultValue={item.apiGroup} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].apiGroup`, item.apiGroup)} /> */}
           </Section>
           <Section label="리소스" id={`resource[${index}]`} isRequired={true}>
-            <Dropdown name={`${name}[${index}].resource`} items={resourceList} defaultValue={item.resource} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].resource`, item.resource)} />
+            <Controller
+              as={<DropdownWithRef name={`${name}[${index}].resource`} defaultValue={{ label: item.resource.label, value: item.resource.value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
+              control={methods.control}
+              name={`${name}[${index}].resource`}
+              onChange={([selected]) => {
+                return { value: selected };
+              }}
+              defaultValue={{ label: item.resource.label, value: item.resource.value }}
+            />
+            {/* <Dropdown name={`${name}[${index}].resource`} items={resourceList} defaultValue={item.resource} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].resource`, item.resource)} /> */}
           </Section>
           <Section label="벌브" id={`verb[${index}]`} isRequired={true}>
             <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].verbs`, item.verbs)} />
@@ -188,13 +208,13 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {kindToggle === 'Role' && (
         <Section label="네임스페이스" id="namespace" isRequired={true}>
-          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder='네임스페이스 선택'/>
+          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder="네임스페이스 선택" />
         </Section>
       )}
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: '*', resource: '*', verbs: ['*'] }} defaultValues={[{ apiGroup: '*', resource: '*', verbs: ['*'] }]} />
+          <ListView methods={methods} name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }} defaultValues={[{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }]} />
         </Section>
       ) : (
         <LoadingInline />
@@ -212,11 +232,16 @@ export const CreateRole: React.FC<CreateRoleProps> = ({ match: { params }, kind 
 export const onSubmitCallback = data => {
   let apiVersion = data.kind === 'Role' ? `${RoleModel.apiGroup}/${RoleModel.apiVersion}` : `${ClusterRoleModel.apiGroup}/${ClusterRoleModel.apiVersion}`;
 
-  let rules = data.rules.map(rule => ({
-    apiGroups: rule.apiGroup === 'Core' ? [''] : [rule.apiGroup ?? '*'],
-    resources: [rule.resource ?? '*'],
-    verbs: rule.verbs ?? ['*'],
-  }));
+  let rules = data.rules.map(rule => {
+    const apiGroup = rule.apiGroup?.value;
+    const reosurce = rule.resource.value;
+
+    return {
+      apiGroups: apiGroup === 'Core' ? [''] : [apiGroup ?? '*'],
+      resources: [reosurce ?? '*'],
+      verbs: rule.verbs ?? ['*'],
+    };
+  });
 
   delete data.apiVersion;
   delete data.rules;

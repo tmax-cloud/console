@@ -8,6 +8,7 @@ import { RadioGroup } from './utils/radio';
 import { Section } from './utils/section';
 import { InputSelectBox } from './utils/inputSelectBox';
 import { Dropdown } from './utils/dropdown';
+import { DropdownWithRef } from './utils/dropdown-new';
 import { ResourceDropdown } from './utils/resource-dropdown';
 import { ResourceListDropdown, ResourceListDropdownWithDataToolbar } from './utils/resource-list-dropdown';
 import { KeyValueListEditor } from './utils/key-value-list-editor';
@@ -124,6 +125,21 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     Ti: 'TiB',
   };
 
+  const newDropdownItemList = [
+    {
+      label: 'AAA',
+      value: 'aaa',
+    },
+    {
+      label: 'BBB',
+      value: 'bbb',
+    },
+    {
+      label: 'CCC',
+      value: 'ccc',
+    },
+  ];
+
   const listHeaderFragment = (
     <div className="row pairs-list__heading">
       <div className="col-xs-4 text-secondary text-uppercase">NAME</div>
@@ -210,7 +226,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           ]}
           type="single"
           useHookForm
-          idFunc={(resource)=>`${resource.metadata.uid}`} // selected 값을 custom하게 사용해야하는 경우 사용 default: metadata.name
+          idFunc={resource => `${resource.metadata.uid}`} // selected 값을 custom하게 사용해야하는 경우 사용 default: metadata.name
         />
         <ResourceDropdown
           name="RD-multiple"
@@ -242,7 +258,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           autocompletePlaceholder="search by name"
           type="multiple" // 필수 type: single / multiple
           useHookForm
-          idFunc={(resource)=>`${resource.kind}~~${resource.metadata.name}`} // selected 값을 custom하게 사용해야하는 경우 사용 default: metadata.name
+          idFunc={resource => `${resource.kind}~~${resource.metadata.name}`} // selected 값을 custom하게 사용해야하는 경우 사용 default: metadata.name
         />
         <ResourceListDropdownWithDataToolbar // react hook form 사용하지 않는 예시
           resourceList={ClusterResourceList} // 필수
@@ -301,6 +317,27 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
               number: 5,
             },
           ]}
+        />
+      </Section>
+      <Section id="new-dropdown-section" label="New Dropdown (plain item list)">
+        <Controller
+          as={<DropdownWithRef name="newdropdown" defaultValue={{ label: 'default', value: 'default' }} width="100px" useResourceItemsFormatter={false} items={newDropdownItemList} />}
+          control={methods.control}
+          name="newdropdown"
+          onChange={([selected]) => {
+            return { value: selected };
+          }}
+          defaultValue={{ label: 'default', value: 'default' }}
+        />
+      </Section>
+      <Section id="new-dropdown-section" label="New Dropdown (resource item list)">
+        <Controller
+          as={<DropdownWithRef name="newdropdown2" useResourceItemsFormatter={true} items={ClusterResourceList} />}
+          control={methods.control}
+          name="newdropdown2"
+          onChange={([selected]) => {
+            return { value: selected };
+          }}
         />
       </Section>
     </div>
