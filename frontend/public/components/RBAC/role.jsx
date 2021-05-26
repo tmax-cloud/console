@@ -272,7 +272,7 @@ export const RolesPage = ({ namespace, mock, showTitle }) => {
       ]}
       rowFilters={[
         {
-          filterGroupName: 'Role',
+          filterGroupName: t('COMMON:MSG_COMMON_FILTER_14'),
           type: 'role-kind',
           reducer: roleType,
           items: [
