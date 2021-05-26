@@ -76,9 +76,9 @@ const IngressHeader = () => {
   const { t } = useTranslation();
   return (
     <div className="row co-m-table-grid__head">
-      <div className="col-xs-4">Target Pods</div>
-      <div className="col-xs-5">From</div>
-      <div className="col-xs-3">To Ports</div>
+      <div className="col-xs-4">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_3')}</div>
+      <div className="col-xs-5">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_4')}</div>
+      <div className="col-xs-3">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_5')}</div>
     </div>
   );
 };
@@ -108,7 +108,7 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
     <div className="row co-resource-list__item">
       <div className="col-xs-4">
         <div>
-          <span className="text-muted">Pod Selector:</span>
+          <span className="text-muted">{t('SINGLE:MSG_NETWORKPOLICIES_CREATEFORM_DIV2_20')}</span>
         </div>
         <div style={style}>
           <Selector selector={podSelector} namespace={namespace} />
@@ -118,13 +118,13 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
         <div>
           {!podSelectors.length ? null : (
             <div>
-              <span className="text-muted">Pod Selector:</span>
+              <span className="text-muted">{t('SINGLE:MSG_NETWORKPOLICIES_CREATEFORM_DIV2_20')}</span>
               {podSelectors}
             </div>
           )}
           {!nsSelectors.length ? null : (
             <div style={{ paddingTop: podSelectors.length ? 10 : 0 }}>
-              <span className="text-muted">NS Selector:</span>
+              <span className="text-muted">{t('SINGLE:MSG_NETWORKPOLICIES_CREATEFORM_DIV2_19')}</span>
               {nsSelectors}
             </div>
           )}
@@ -140,9 +140,15 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
     </div>
   );
 };
+//t(`SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2, {0: ${np.metadata.namespace}"}`)          
+//Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in <ExternalLink href={getNetworkPolicyDocLink(flags[FLAGS.OPENSHIFT])} text="Network Policies Documentation" />.
+
 
 const Details_ = ({ obj: np, flags }) => {
   const { t } = useTranslation();
+  const explanation = `${t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_1', { 0: '~~'})}`;
+  const namespace = `${np.metadata.namespace}`  
+
   return (
     <>
       <div className="co-m-pane__body">
@@ -152,10 +158,12 @@ const Details_ = ({ obj: np, flags }) => {
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_INGRESSRULES_1')} />
         <p className="co-m-pane__explanation">
-          Pods accept all traffic by default. They can be isolated via Network Policies which specify a whitelist of ingress rules. When a Pod is selected by a Network Policy, it will reject all traffic not explicitly allowed via a Network Policy. See more details in <ExternalLink href={getNetworkPolicyDocLink(flags[FLAGS.OPENSHIFT])} text="Network Policies Documentation" />.
+          {explanation.split('~~')[0]}
+          <ExternalLink href={getNetworkPolicyDocLink(flags[FLAGS.OPENSHIFT])} text="Network Policies Documentation" />
+          {explanation.split('~~')[1]}          
         </p>
-        {_.isEmpty(_.get(np, 'spec.ingress[0]', [])) ? (
-          `All traffic is allowed to Pods in ${np.metadata.namespace}.`
+        {_.isEmpty(_.get(np, 'spec.ingress[0]', [])) ? (          
+          `${t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})}`
         ) : (
           <div className="co-m-table-grid co-m-table-grid--bordered">
             <IngressHeader />
