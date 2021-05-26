@@ -234,7 +234,7 @@ export const onSubmitCallback = data => {
 
   let rules = data.rules.map(rule => {
     const apiGroup = rule.apiGroup?.value;
-    const reosurce = rule.resource.value;
+    const reosurce = rule.resource?.value;
 
     return {
       apiGroups: apiGroup === 'Core' ? [''] : [apiGroup ?? '*'],
