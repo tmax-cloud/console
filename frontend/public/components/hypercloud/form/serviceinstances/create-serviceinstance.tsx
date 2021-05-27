@@ -40,12 +40,12 @@ const Description = ({ spec }) => {
       {extraInfoOpened ? (
         <div className="hc-create-service-instance__plan-extra-info">
           {!_.isEmpty(parameters) && (
-            <Section label="파라미터" id="bullets">
+            <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_3')} id="bullets">
               <div className="hc-create-service-instance__plan-parameters">{parameters}</div>
             </Section>
           )}
 
-          <Section label="플랜 요금" id="bullets">
+          <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_4')} id="bullets">
             <span className="hc-create-service-instance__plan-costs">{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
           </Section>
         </div>
@@ -122,6 +122,7 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
 };
 
 export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ match: { params }, location: { search }, kind }) => {
+  const { t } = useTranslation();
   const [loaded, setLoaded] = React.useState(false);
   const [serviceClass, setServiceClass] = React.useState<K8sResourceKind>();
   const [servicePlanList, setServicePlanList] = React.useState([]);
@@ -150,12 +151,12 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   }, []);
 
   const methods = useForm();
-
-  const title = `Create ${kind}`;
+  const serviceClassExternalName = !!serviceClass?.spec?.externalName ? ` (${serviceClass.spec?.externalName} ${isClusterServiceClass ? t('COMMON:MSG_LNB_MENU_110') : t('COMMON:MSG_LNB_MENU_108')})` : '';
+  const title = t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1');
 
   const steps = [
-    { name: '서비스 플랜 선택', component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0 },
-    { name: '서비스 인스턴스 설정', component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: 'Create', canJumpTo: selectedPlan >= 0 },
+    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV1_1'), component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_5') },
+    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0 },
   ];
 
   return (
@@ -166,7 +167,10 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
         </Helmet>
         <div className="co-m-nav-title co-m-nav-title--detail">
           <h1 className="co-m-pane__heading co-m-pane__heading--baseline">
-            <div className="co-m-pane__name">{title}</div>
+            <div className="co-m-pane__name">
+              {title}
+              <span className="h2">{serviceClassExternalName}</span>
+            </div>
           </h1>
           <p className="co-m-pane__explanation"></p>
         </div>
@@ -177,6 +181,8 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
             isFullHeight
             isFullWidth
             steps={steps}
+            backButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_4')}
+            cancelButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
             onNext={() => {
               const planData = methods.getValues()['service-plan'];
               planData && setSelectedPlan(planData);

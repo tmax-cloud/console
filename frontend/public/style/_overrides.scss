@@ -349,6 +349,21 @@ h6 {
     --pf-c-page__sidebar--BoxShadow: none;
   }
 
+  &::-webkit-scrollbar {
+    width: 7px;
+    background: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d8dadb;
+    border-radius: 7.5px;
+    opacity: 1;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: none;
+  }
+
   &.pf-m-expanded {
     width: var(--pf-c-page__sidebar--md--Width) !important; // maintain desktop width so size doesn't animate before hiding when resizing to mobile
   }
@@ -620,9 +635,9 @@ button.pf-c-dropdown__menu-item.hover {
   z-index: 150 !important;
 }
 
-.btn-group-audit ul { 
-    overflow-y: auto;
-    max-height: 500px;
+.btn-group-audit ul {
+  overflow-y: auto;
+  max-height: 500px;
 }
 
 .horizontal-line {

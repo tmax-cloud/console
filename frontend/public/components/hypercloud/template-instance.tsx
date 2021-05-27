@@ -182,7 +182,7 @@ TemplateInstanceTableHeader.displayName = 'TemplateInstanceTableHeader';
 
 const TemplateInstancesList: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Template Instance" Header={TemplateInstanceTableHeader.bind(null, t)} Row={TemplateInstanceTableRow} />;
+  return <Table {...props} aria-label="Template Instance" Header={TemplateInstanceTableHeader.bind(null, t)} Row={TemplateInstanceTableRow} customSorts={{ templateInstancePhase }} />;
 };
 TemplateInstancesList.displayName = 'TemplateInstancesList';
 
