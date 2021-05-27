@@ -30,7 +30,8 @@ spec:
             - --keycloak-auth-url=https://@@KEYCLOAK@@/auth
             - --keycloak-client-id=@@CLIENTID@@
             - --mc-mode=@@MC_MODE@@
-            - --kiali-endpoint=https://@@KIALI@@/api/kiali/
+            - --grafana-endpoint=http://grafana.monitoring.svc:3000/api/grafana/
+            - --kiali-endpoint=https://@@KIALI@@/api/kiali
             - --kibana-endpoint=http://@@KIBANA@@/api/kibana/
             - --kubeflow-endpoint=http://@@KUBEFLOW@@/api/kubeflow/
             - --managed-gitlab-url=@@GITLAB@@
