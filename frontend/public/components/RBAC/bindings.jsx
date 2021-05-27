@@ -471,7 +471,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
               <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                 <ActionGroup className="pf-c-form">
                   <Button type="submit" id="save-changes" variant="primary">
-                    {t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
+                    {isCreatePage(this.state.data.metadata) ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') }
                   </Button>
                   <Button onClick={history.goBack} id="cancel" variant="secondary">
                     {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
@@ -530,3 +530,7 @@ export const CopyRoleBinding = ({ match: { params }, kind }) => (
     <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb="Duplicate" /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
   </Firehose>
 );
+
+export const isCreatePage = metadata => {
+  return !(_.has(metadata, 'selfLink') );
+};
