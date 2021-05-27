@@ -91,7 +91,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
         let volumeDefaultValues = _.get(defaultValues, 'spec.volumes');
         volumeDefaultValues = volumeDefaultValues.map(item => {
           let obj = {
-            name: item.name
+            name: item.name,
           };
           if (item.configMap) {
             obj['type'] = 'configMap';
@@ -112,18 +112,18 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
         stepDefaultValues = stepDefaultValues.map(item => {
           return _.assign(item, {
             command: item.command?.map(cur => {
-              return {value: cur};
+              return { value: cur };
             }),
-            env: item.env?.map(cur=> {
+            env: item.env?.map(cur => {
               return {
                 envKey: [cur],
-                envValue: cur
-              }
+                envValue: cur,
+              };
             }),
             args: item.args?.map(cur => {
-              return {value: cur}
-            })
-          })
+              return { value: cur };
+            }),
+          });
         });
         setStep(stepDefaultValues);
       }
@@ -146,18 +146,21 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
   let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env'];
 
-  const paramValidCallback = (additionalConditions) => {
+  const paramValidCallback = additionalConditions => {
     let target = additionalConditions[0];
-    if(typeof target === 'string') {
+    if (typeof target === 'string') {
       return target.trim().length > 0;
     } else {
       return target ? target.length > 0 : false;
     }
-  }
+  };
 
-  const volumeValidCallback = (additionalConditions) => {
-    return additionalConditions.some(cur=>typeof cur === 'string' ? cur.trim().length > 0 : false)
-  }
+  const volumeValidCallback = additionalConditions => {
+    if (additionalConditions[0] === 'emptyDir') {
+      return true;
+    }
+    return additionalConditions.filter((c, i) => i !== 0).some(cur => (typeof cur === 'string' ? cur.trim().length > 0 : false));
+  };
 
   return (
     <>
@@ -174,7 +177,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="아웃풋 리소스" id="outputResource">
         <>
-          <ModalList list={outputResource} id="output-resource" title="Output Resource" methods={methods} requiredFields={['name', 'type']} children={<OutputResourceModal methods={methods} outputResource={outputResource} />} onRemove={removeModalData.bind(null, outputResource, setOutputResource)} handleMethod={handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, false, methods)}description="이 태스크의 추가된 아웃풋 리소스가 없습니다."></ModalList>
+          <ModalList list={outputResource} id="output-resource" title="Output Resource" methods={methods} requiredFields={['name', 'type']} children={<OutputResourceModal methods={methods} outputResource={outputResource} />} onRemove={removeModalData.bind(null, outputResource, setOutputResource)} handleMethod={handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, false, methods)} description="이 태스크의 추가된 아웃풋 리소스가 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name', 'type'], title: 'Out Resource', id: 'output-resource', handleMethod: handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, true, methods), children: <OutputResourceModal methods={methods} outputResource={outputResource} />, submitText: '추가' })}>
             + 아웃풋 리소스 추가
           </span>
@@ -182,15 +185,28 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="태스크 파라미터 구성" id="taskParamter">
         <>
-          <ModalList list={taskParameter} id="task-parameter" title="태스크 파라미터 구성" methods={methods} requiredFields={['name', 'type']} children={<TaskParameterModal methods={methods} taskParameter={taskParameter} />} onRemove={removeModalData.bind(null, taskParameter, setTaskParameter)} handleMethod={handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, false, methods)} description="이 태스크의 추가된 태스크 파라미터 구성이 없습니다."></ModalList>
-          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name', 'type'], optionalRequiredField: ['default'], optionalValidCallback: paramValidCallback, title: '태스크 파라미터', id: 'task-parameter', handleMethod: handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, true, methods), children: <TaskParameterModal methods={methods} taskParameter={taskParameter} />, submitText: '추가' })}>
+          <ModalList
+            list={taskParameter}
+            id="task-parameter"
+            title="태스크 파라미터 구성"
+            methods={methods}
+            requiredFields={['name', 'type']}
+            children={<TaskParameterModal methods={methods} taskParameter={taskParameter} />}
+            onRemove={removeModalData.bind(null, taskParameter, setTaskParameter)}
+            handleMethod={handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, false, methods)}
+            description="이 태스크의 추가된 태스크 파라미터 구성이 없습니다."
+          ></ModalList>
+          <span
+            className="open-modal_text"
+            onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name', 'type'], optionalRequiredField: ['default'], optionalValidCallback: paramValidCallback, title: '태스크 파라미터', id: 'task-parameter', handleMethod: handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, true, methods), children: <TaskParameterModal methods={methods} taskParameter={taskParameter} />, submitText: '추가' })}
+          >
             + 태스크 파라미터 추가
           </span>
         </>
       </Section>
       <Section label="워크스페이스 구성" id="workSpace">
         <>
-          <ModalList list={workSpace} id="work-space" title="워크스페이스 구성" methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, false, methods)}  description="이 태스크의 추가된 워크스페이스 구성이 없습니다."></ModalList>
+          <ModalList list={workSpace} id="work-space" title="워크스페이스 구성" methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, false, methods)} description="이 태스크의 추가된 워크스페이스 구성이 없습니다."></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name'], title: '워크스페이스', id: 'work-space', handleMethod: handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, true, methods), children: <WorkSpaceModal methods={methods} workSpace={workSpace} />, submitText: '추가' })}>
             + 워크스페이스 추가
           </span>
@@ -199,7 +215,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       <Section label="볼륨" id="volume">
         <>
           <ModalList list={volume} id="volume" title="볼륨 구성" methods={methods} requiredFields={['name', 'type']} children={<VolumeModal methods={methods} volume={volume} />} onRemove={removeModalData.bind(null, volume, setVolume)} handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)} description="이 태스크의 추가된 볼륨이 없습니다."></ModalList>
-          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name', 'type'], optionalRequiredField: ['configMap', 'secret'], optionalValidCallback: volumeValidCallback, title: '볼륨', id: 'volume', handleMethod: handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, true, methods), children: <VolumeModal methods={methods} volume={volume} />, submitText: '추가' })}>
+          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name', 'type'], optionalRequiredField: ['type', 'configMap', 'secret'], optionalValidCallback: volumeValidCallback, title: '볼륨', id: 'volume', handleMethod: handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, true, methods), children: <VolumeModal methods={methods} volume={volume} />, submitText: '추가' })}>
             + 볼륨 추가
           </span>
         </>
