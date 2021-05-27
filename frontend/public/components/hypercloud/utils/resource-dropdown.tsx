@@ -2,8 +2,10 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Firehose, FirehoseResult, FirehoseResource, LoadingInline } from '@console/internal/components/utils';
 import { ResourceListDropdown, SingleResourceDropdownProps, MultipleResourceDropdownProps } from './resource-list-dropdown';
+import { useTranslation } from 'react-i18next';
 
 const ResourceDropdownWrapper_: React.FC<ResourceDropdownWrapperProps> = props => {
+  const { t } = useTranslation();
   const getItems = resources => {
     const items = [];
     _.each(resources, (resource, k) => {
@@ -33,7 +35,7 @@ const ResourceDropdownWrapper_: React.FC<ResourceDropdownWrapperProps> = props =
       {...props}
       title={!props.loaded ? <LoadingInline /> : props.title}
       resourceList={rows} // 필수
-      autocompletePlaceholder="search by name"
+      autocompletePlaceholder={t('COMMON:MSG_COMMON_BUTTON_FILTER_PLACEHOLDER_1')}
     />
   );
 };
