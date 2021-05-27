@@ -91,7 +91,7 @@ const CatalogServiceClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortField: 'status',
+      sortFunc: 'catalogServiceClaimStatusReducer',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
@@ -112,7 +112,7 @@ CatalogServiceClaimTableHeader.displayName = 'CatalogServiceClaimTableHeader';
 
 const CatalogServiceClaimsList: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Catalog Service Claim" Header={CatalogServiceClaimTableHeader.bind(null, t)} Row={CatalogServiceClaimTableRow} />;
+  return <Table {...props} aria-label="Catalog Service Claim" Header={CatalogServiceClaimTableHeader.bind(null, t)} Row={CatalogServiceClaimTableRow} customSorts={{ catalogServiceClaimStatusReducer }} />;
 };
 CatalogServiceClaimsList.displayName = 'CatalogServiceClaimsList';
 
