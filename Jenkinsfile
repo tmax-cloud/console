@@ -94,7 +94,9 @@ pipeline {
             HOTFIX_VER = "0"
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
-            HOTFIX_VER++
+            def hotfix_nuber = (HOTFIX_VER as int) + 1
+            HOTFIX_VER = number.toString()
+            // HOTFIX_VER++
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
@@ -165,7 +167,9 @@ pipeline {
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
             // TEMP = (("${params.HOTFIX_VER}" as int) -1).toString()
-            HOTFIX_VER--
+            def hotfix_nuber = (HOTFIX_VER as int) - 1
+            HOTFIX_VER = number.toString()
+            // HOTFIX_VER--
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
