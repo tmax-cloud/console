@@ -85,6 +85,7 @@ const IngressHeader = () => {
 };
 
 const IngressRow = ({ ingress, namespace, podSelector }) => {
+  const { t } = useTranslation();
   const podSelectors = [];
   const nsSelectors = [];
   let i = 0;
