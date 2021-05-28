@@ -148,7 +148,8 @@ export const IntegrationConfigs: React.FC = props => {
 }
 
 const integrationConfigStatusReducer = (integrationConfig: any): string => {
-  return integrationConfig?.status?.phase;
+  const phase = IntegrationConfigPhase(integrationConfig);
+  return phase;
 };
 
 const filters = t => [

@@ -20,6 +20,8 @@ import {
   UpdateOperationUpdateTaskData,
 } from './types';
 import { applyChange } from './update-utils';
+import { useTranslation } from 'react-i18next';
+//import { TFunction } from 'i18next';
 
 import './PipelineBuilderForm.scss';
 
@@ -32,6 +34,8 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
   const [selectedTask, setSelectedTask] = React.useState<SelectedBuilderTask>(null);
   const selectedTaskRef = React.useRef<SelectedBuilderTask>(null);
   selectedTaskRef.current = selectedTask;
+
+  const { t } = useTranslation();
 
   const {
     existingPipeline,
@@ -96,7 +100,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
           <Form className="odc-pipeline-builder-form__grid" onSubmit={handleSubmit}>
             <div className="odc-pipeline-builder-form__short-section">
               <InputField
-                label="Name"
+                label={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_1')}`}
                 name="name"
                 type={TextInputTypes.text}
                 isDisabled={!!existingPipeline}
@@ -105,22 +109,22 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
             </div>
 
             <div>
-              <h2>Parameters</h2>
+              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_2')}`}</h2>
               <PipelineParameters addLabel="Add Parameters" fieldName="params" />
             </div>
 
             <div>
-              <h2>Resources</h2>
+              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_10')}`}</h2>
               <PipelineResources addLabel="Add Resources" fieldName="resources" />
             </div>
 
             <div>
-              <h2>Workspaces</h2>
+              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_30')}`}</h2>
               <PipelineWorkspaces addLabel="Add Workspaces" fieldName="workspaces" />
             </div>
 
             <div>
-              <h2>Tasks</h2>
+              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_20')}`}</h2>
               <PipelineBuilderVisualization
                 namespace={namespace}
                 tasksInError={status?.tasks || {}}
@@ -136,7 +140,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
                 taskGroup={taskGroup}
               />
               <p className="help-block">
-                노드 간 순차 혹은 병렬 배치를 통해 연결하여 파이프라인을 생성할 수 있습니다.
+                {`${t('SINGLE:MSG_PIPELINES_CREATEFORM_22')}`}
               </p>
             </div>
 
@@ -144,14 +148,14 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
               handleReset={closeSidebarAndHandleReset}
               errorMessage={status?.submitError}
               isSubmitting={isSubmitting}
-              submitLabel={existingPipeline ? 'Save' : 'Create'}
+              submitLabel={existingPipeline ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
               disableSubmit={
                 !dirty ||
                 !_.isEmpty(errors) ||
                 !_.isEmpty(status?.tasks) ||
                 values.tasks.length === 0
               }
-              resetLabel="Cancel"
+              resetLabel={`${t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}`}              
               sticky
             />
           </Form>
