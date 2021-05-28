@@ -17,18 +17,18 @@ import { ListView } from '../../utils/list-view';
 import { CheckboxGroup } from '../../utils/checkbox';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { DropdownWithRef } from '../../utils/dropdown-new';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-const kindItems = [
+const kindItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
-    title: '네임스페이스 롤 (Role)',
-    desc: '네임스페이스 롤은 선택된 네임스페이스에 적용됩니다.',
+    title: t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_2'),
+    desc: t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_3'),
     value: 'Role',
   },
   {
-    title: '클러스터 롤 (ClusterRole)',
-    desc: '클러스터 롤은 모든 네임스페이스에 적용됩니다.',
+    title: t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_4'),
+    desc: t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_5'),
     value: 'ClusterRole',
   },
 ];
@@ -112,12 +112,14 @@ const RuleItem = props => {
     }
   }, [apiGroup]);
 
+  const { t } = useTranslation();
+
   return (
     <>
       {index === 0 ? null : <div className="co-form-section__separator" />}
       <div className="row" key={item.id}>
         <div className="col-xs-4 pairs-list__value-field">
-          <Section label="API 그룹" id={`apigroup[${index}]`} isRequired={true}>
+          <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apigroup[${index}]`} isRequired={true}>
             <Controller
               as={<DropdownWithRef name={`${name}[${index}].apiGroup`} defaultValue={{ label: item.apiGroup.label, value: item.apiGroup.value }} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} />}
               control={methods.control}
@@ -129,7 +131,7 @@ const RuleItem = props => {
             />
             {/* <Dropdown name={`${name}[${index}].apiGroup`} items={apiGroupList} defaultValue={item.apiGroup} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].apiGroup`, item.apiGroup)} /> */}
           </Section>
-          <Section label="리소스" id={`resource[${index}]`} isRequired={true}>
+          <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>
             <Controller
               as={<DropdownWithRef name={`${name}[${index}].resource`} defaultValue={{ label: item.resource.label, value: item.resource.value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
               control={methods.control}
@@ -141,7 +143,7 @@ const RuleItem = props => {
             />
             {/* <Dropdown name={`${name}[${index}].resource`} items={resourceList} defaultValue={item.resource} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].resource`, item.resource)} /> */}
           </Section>
-          <Section label="벌브" id={`verb[${index}]`} isRequired={true}>
+          <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_12')} id={`verb[${index}]`} isRequired={true}>
             <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].verbs`, item.verbs)} />
           </Section>
         </div>
@@ -191,30 +193,30 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
     defaultValue: 'Role',
   });
 
-  //const { t } = useTranslation();
+  const { t } = useTranslation();
 
   //metadata: { namespace: params.ns }
   return (
     <>
-      <Section label="롤 타입" id="roletype" isRequired>
-        <RadioGroup name="kind" items={kindItems} inline={false} initValue={kindToggle} />
+      <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_1')} id="roletype" isRequired>
+        <RadioGroup name="kind" items={kindItems.bind(null, t)()} inline={false} initValue={kindToggle} />
       </Section>
 
       <div className="co-form-section__separator" />
 
-      <Section label="롤 이름" id="name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_6')} id="name" isRequired={true}>
         <TextInput inputClassName="pf-c-form-control" id="metadata.name" name="metadata.name" defaultValue="role-example" />
       </Section>
 
       {kindToggle === 'Role' && (
-        <Section label="네임스페이스" id="namespace" isRequired={true}>
-          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder="네임스페이스 선택" />
+        <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_7')} id="namespace" isRequired={true}>
+          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} />
         </Section>
       )}
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText="규칙 추가" headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }} defaultValues={[{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }]} />
+          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_9')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }} defaultValues={[{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }]} />
         </Section>
       ) : (
         <LoadingInline />
