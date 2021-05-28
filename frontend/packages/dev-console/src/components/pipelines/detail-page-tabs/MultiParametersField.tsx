@@ -7,7 +7,9 @@ import { TextInputTypes } from '@patternfly/react-core';
 import { InputField, DropdownField } from '@console/shared';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
+import { useTranslation } from 'react-i18next';
 export const MultiParametersField: React.FC<MultiParametersFieldProps> = ({ name }) => {
+  const { t } = useTranslation();
   const { values } = useFormikContext<FormikValues>();
   const fieldValue = _.get(values, name, []);
   const defaultItem = {
@@ -37,17 +39,17 @@ export const MultiParametersField: React.FC<MultiParametersFieldProps> = ({ name
                       variant="link"
                     >
                       <MinusCircleIcon data-test-id="pairs-list__delete-icon" className="pairs-list__side-btn pairs-list__delete-ico co-icon-space-r" />
-                      Remove Pipeline Parameter
+                      {`${t('SINGLE:MSG_PIPELINES_CREATEFORM_5')}`}
                     </Button>
                   </div>
-                  <InputSection label="Name" customClass="short-margin-top" isRequired={true}>
-                    <InputField name={`${name}.${index}.name`} type={TextInputTypes.text} placeholder="Name" />
+                  <InputSection label={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_6')}`} customClass="short-margin-top" isRequired={true}>
+                    <InputField name={`${name}.${index}.name`} type={TextInputTypes.text} placeholder={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_6')}`} />
                   </InputSection>
-                  <InputSection label="Description">
-                    <InputField name={`${name}.${index}.description`} type={TextInputTypes.text} placeholder="Description" />
+                  <InputSection label={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_7')}`}>
+                    <InputField name={`${name}.${index}.description`} type={TextInputTypes.text} placeholder={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_7')}`} />
                   </InputSection>
-                  <InputSection label="Type">
-                    <DropdownValueComponent nameValue={`${name}.${index}`}></DropdownValueComponent>
+                  <InputSection label={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_8')}`}>
+                    <DropdownValueComponent nameValue={`${name}.${index}`} ></DropdownValueComponent>
                   </InputSection>
                 </div>
               ))}
@@ -62,7 +64,7 @@ export const MultiParametersField: React.FC<MultiParametersFieldProps> = ({ name
                 variant="link"
               >
                 <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-                Add Pipeline Parameter
+                {`${t('SINGLE:MSG_PIPELINES_CREATEFORM_4')}`}
               </Button>
             </div>
           </FormGroup>
@@ -75,6 +77,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
   const { nameValue } = props;
   const { values, setFieldValue } = useFormikContext<FormikValues>();
   const [valueType, setValueType] = useState('');
+  const { t } = useTranslation();
   const renderValueField = (valueType, name) => {
     if (valueType === '') {
       valueType = _.get(values, `${name}.type`);
@@ -143,7 +146,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
     <div>
       <DropdownField
         fullWidth
-        items={pipelineParameterTypeSelections}
+        items={pipelineParameterTypeSelections.bind(null, t)()}
         name={`${nameValue}.type`}
         onChange={data => {
           switch (data) {
@@ -174,10 +177,12 @@ const InputSection: React.FC<InputSectionProps> = ({ label, isRequired, children
   );
 };
 
-export const pipelineParameterTypeSelections = {
-  '': 'Select resource type',
-  string: 'String',
-  array: 'Array',
+export const pipelineParameterTypeSelections = t => {
+  return {
+    '': t('SINGLE:MSG_PIPELINES_CREATEFORM_9'),
+    string: 'String',
+    array: 'Array',
+  };
 };
 type DropdownValueComponentProps = {
   nameValue: string;

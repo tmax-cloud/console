@@ -204,23 +204,25 @@ const roleResources = [
   { kind: 'ClusterRoleBinding', namespaced: false, optional: true },
 ];
 
-const rowFilters = [
-  {
-    filterGroupName: 'Kind',
-    type: 'role-binding-kind',
-    reducer: bindingType,
-    itemsGenerator: ({ ClusterRoleBinding: data }) => {
-      const items = [
-        { id: 'namespace', title: 'Namespace Role Bindings' },
-        { id: 'system', title: 'System Role Bindings' },
-      ];
-      if (data && data.loaded && !data.loadError) {
-        items.unshift({ id: 'cluster', title: 'Cluster-wide Role Bindings' });
-      }
-      return items;
+const rowFilters = t => {
+  return [
+    {
+      filterGroupName: t('COMMON:MSG_COMMON_FILTER_15'),
+      type: 'role-binding-kind',
+      reducer: bindingType,
+      itemsGenerator: ({ ClusterRoleBinding: data }) => {
+        const items = [
+          { id: 'namespace', title: 'Namespace Role Bindings' },
+          { id: 'system', title: 'System Role Bindings' },
+        ];
+        if (data && data.loaded && !data.loadError) {
+          items.unshift({ id: 'cluster', title: 'Cluster-wide Role Bindings' });
+        }
+        return items;
+      },
     },
-  },
-];
+  ];
+};
 
 export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new' }) => {
   const { t } = useTranslation();
@@ -238,7 +240,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
       ListComponent={BindingsList}
       namespace={namespace}
       resources={roleResources}
-      rowFilters={staticFilters ? [] : rowFilters}
+      rowFilters={staticFilters ? [] : rowFilters.bind(null, t)()}
       staticFilters={staticFilters}
       showTitle={showTitle}
       textFilter="role-binding"
@@ -469,7 +471,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
               <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                 <ActionGroup className="pf-c-form">
                   <Button type="submit" id="save-changes" variant="primary">
-                    {t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
+                    {isCreatePage(this.state.data.metadata) ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') }
                   </Button>
                   <Button onClick={history.goBack} id="cancel" variant="secondary">
                     {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
@@ -528,3 +530,7 @@ export const CopyRoleBinding = ({ match: { params }, kind }) => (
     <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb="Duplicate" /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
   </Firehose>
 );
+
+export const isCreatePage = metadata => {
+  return !(_.has(metadata, 'selfLink') );
+};
