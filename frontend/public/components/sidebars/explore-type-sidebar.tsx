@@ -2,16 +2,10 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Breadcrumb, BreadcrumbItem, Button } from '@patternfly/react-core';
 
-import {
-  getDefinitionKey,
-  getStoredSwagger,
-  getSwaggerPath,
-  K8sKind,
-  SwaggerDefinition,
-  SwaggerDefinitions,
-} from '../../module/k8s';
+import { getSwaggerPath, K8sKind, SwaggerDefinition, SwaggerDefinitions } from '../../module/k8s';
+// import { getDefinitionKey, getStoredSwagger, getSwaggerPath, K8sKind, SwaggerDefinition, SwaggerDefinitions } from '../../module/k8s';
 import { CamelCaseWrap, EmptyBox, LinkifyExternal } from '../utils';
-
+import { useTranslation } from 'react-i18next';
 const getRef = (definition: SwaggerDefinition): string => {
   const ref = definition.$ref || _.get(definition, 'items.$ref');
   const re = /^#\/definitions\//;
@@ -19,44 +13,36 @@ const getRef = (definition: SwaggerDefinition): string => {
   return ref && re.test(ref) ? ref.replace(re, '') : null;
 };
 
-export const ExploreType: React.FC<ExploreTypeProps> = (props) => {
+export const ExploreType: React.FC<ExploreTypeProps> = props => {
   // Track the previously selected items to build breadcrumbs. Each history
   // entry contains the name, description, and path to the definition in the
   // OpenAPI document.
+  const { t } = useTranslation();
   const [drilldownHistory, setDrilldownHistory] = React.useState([]);
-  const { kindObj } = props;
+  const { kindObj, definition } = props;
   if (!kindObj) {
     return null;
   }
 
-  const allDefinitions: SwaggerDefinitions = getStoredSwagger();
+  const definitionKey = `${kindObj.apiGroup}.${kindObj.apiVersion}.${kindObj.kind}`;
+  const allDefinitions: SwaggerDefinitions = { [definitionKey]: definition };
   if (!allDefinitions) {
     return null;
   }
   const currentSelection = _.last(drilldownHistory);
   // Show the current selected property or the top-level definition for the kind.
-  const currentPath = currentSelection
-    ? currentSelection.path
-    : [getDefinitionKey(kindObj, allDefinitions)];
-  const currentDefinition: SwaggerDefinition = _.get(allDefinitions, currentPath) || {};
-  const currentProperties =
-    _.get(currentDefinition, 'properties') || _.get(currentDefinition, 'items.properties');
+  // const currentPath = currentSelection ? currentSelection.path : [getDefinitionKey(kindObj, allDefinitions)];
+  const currentPath = currentSelection ? currentSelection.path : [definitionKey];
+  // const currentDefinition: SwaggerDefinition = _.get(allDefinitions, currentPath) || {};
+  const currentDefinition = _.get(allDefinitions, currentPath) || {};
+  const currentProperties = _.get(currentDefinition, 'properties') || _.get(currentDefinition, 'items.properties');
 
   // Prefer the description saved in `currentSelection`. It won't always be defined in the definition itself.
-  const description = currentSelection
-    ? currentSelection.description
-    : currentDefinition.description;
+  const description = currentSelection ? currentSelection.description : currentDefinition.description;
   const required = new Set(currentDefinition.required || []);
-  const breadcrumbs = drilldownHistory.length
-    ? [kindObj.kind, ..._.map(drilldownHistory, 'name')]
-    : [];
+  const breadcrumbs = drilldownHistory.length ? [kindObj.kind, ..._.map(drilldownHistory, 'name')] : [];
 
-  const drilldown = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    name: string,
-    desc: string,
-    path: string[],
-  ) => {
+  const drilldown = (e: React.MouseEvent<HTMLButtonElement>, name: string, desc: string, path: string[]) => {
     e.preventDefault();
     setDrilldownHistory([...drilldownHistory, { name, description: desc, path }]);
     if (props.scrollTop) {
@@ -82,8 +68,7 @@ export const ExploreType: React.FC<ExploreTypeProps> = (props) => {
   };
 
   // Get the type to display for a property reference.
-  const getTypeForRef = (ref: string): string =>
-    _.get(allDefinitions, [ref, 'format']) || _.get(allDefinitions, [ref, 'type']);
+  const getTypeForRef = (ref: string): string => _.get(allDefinitions, [ref, 'format']) || _.get(allDefinitions, [ref, 'type']);
 
   return (
     <>
@@ -96,12 +81,7 @@ export const ExploreType: React.FC<ExploreTypeProps> = (props) => {
                 {isLast ? (
                   crumb
                 ) : (
-                  <Button
-                    type="button"
-                    onClick={(e) => breadcrumbClicked(e, i)}
-                    isInline
-                    variant="link"
-                  >
+                  <Button type="button" onClick={e => breadcrumbClicked(e, i)} isInline variant="link">
                     {crumb}
                   </Button>
                 )}
@@ -134,16 +114,11 @@ export const ExploreType: React.FC<ExploreTypeProps> = (props) => {
                 </h5>
                 {definition.description && (
                   <p className="co-break-word co-pre-wrap">
-                    <LinkifyExternal>{definition.description}</LinkifyExternal>
+                    <LinkifyExternal>{definition.description ? t(`DESCRIPTION:${definition.description}`) : null}</LinkifyExternal>
                   </p>
                 )}
                 {path && (
-                  <Button
-                    type="button"
-                    onClick={(e) => drilldown(e, name, definition.description, path)}
-                    isInline
-                    variant="link"
-                  >
+                  <Button type="button" onClick={e => drilldown(e, name, definition.description, path)} isInline variant="link">
                     View details
                   </Button>
                 )}
@@ -158,5 +133,6 @@ export const ExploreType: React.FC<ExploreTypeProps> = (props) => {
 
 type ExploreTypeProps = {
   kindObj: K8sKind;
+  definition: SwaggerDefinition;
   scrollTop?: () => void;
 };

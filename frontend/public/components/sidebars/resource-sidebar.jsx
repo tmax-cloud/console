@@ -40,7 +40,7 @@ const ResourceDetails = props => {
   return <ResourceSummary resource={resource} showName={showName} showID={showID} showDescription={showDescription} showPodSelector={showPodSelector} showNodeSelector={showNodeSelector} showTolerations={showTolerations} showAnnotations={showAnnotations} showOwner={showOwner} customPathId={customPathId} />;
 };
 
-const ResourceSchema = ({ kindObj }) => <ExploreType kindObj={kindObj} scrollTop={sidebarScrollTop} />;
+const ResourceSchema = (definition, { kindObj }) => <ExploreType kindObj={kindObj} scrollTop={sidebarScrollTop} definition={definition} />;
 
 const ResourceSamples = ({ samples, kindObj, downloadSampleYaml, loadSampleYaml }) => <ResourceSidebarSamples samples={samples} kindObj={kindObj} downloadSampleYaml={downloadSampleYaml} loadSampleYaml={loadSampleYaml} />;
 
@@ -48,7 +48,7 @@ const ResourceSnippets = ({ snippets, kindObj, insertSnippetYaml }) => <Resource
 
 export const ResourceSidebar = props => {
   const { t } = useTranslation();
-  const { showName, showID, showDescription, showPodSelector, title, isFloat, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, isCreateMode, showDetails, toggleSidebar, showSidebar, samples, snippets, resource, showSchema, noTabsOnlyDetails, customPathId } = props;
+  const { definition, showName, showID, showDescription, showPodSelector, title, isFloat, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, isCreateMode, showDetails, toggleSidebar, showSidebar, samples, snippets, resource, showSchema, noTabsOnlyDetails, customPathId } = props;
   if (!kindObj || !showSidebar) {
     return null;
   }
@@ -75,7 +75,7 @@ export const ResourceSidebar = props => {
     tabs = [
       {
         name: 'Schema',
-        component: ResourceSchema,
+        component: ResourceSchema.bind(null, definition),
       },
       ...tabs,
     ];
@@ -86,7 +86,7 @@ export const ResourceSidebar = props => {
 
   return (
     <ResourceSidebarWrapper label={title || label} showSidebar={showSidebar} isFloat={isFloat} toggleSidebar={toggleSidebar}>
-      {noTabsOnlyDetails ? <ResourceDetails {...props} /> : <>{tabs.length > 0 ? <SimpleTabNav tabs={tabs} tabProps={{ showName, showID, showDescription, showPodSelector, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, samples, snippets, resource, customPathId }} additionalClassNames="co-m-horizontal-nav__menu--within-sidebar" /> : <ResourceSchema kindObj={kindObj} />}</>}
+      {noTabsOnlyDetails ? <ResourceDetails {...props} /> : <>{tabs.length > 0 ? <SimpleTabNav tabs={tabs} tabProps={{ showName, showID, showDescription, showPodSelector, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, samples, snippets, resource, customPathId }} additionalClassNames="co-m-horizontal-nav__menu--within-sidebar" /> : <ResourceSchema kindObj={kindObj} definition={definition} />}</>}
     </ResourceSidebarWrapper>
   );
 };
