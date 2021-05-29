@@ -27,7 +27,7 @@ export const YAML_TO_JS_OPTIONS = {
 export const SyncedEditor: React.FC<SyncedEditorProps> = ({ context = {}, FormEditor, initialType = EditorType.Form, initialData = {}, onChangeEditorType = _.noop, onChange = _.noop, prune, YAMLEditor, supplyEditorToggle = true }) => {
   const { formContext, yamlContext } = context;
   const [formData, setFormData] = React.useState<K8sResourceKind>(initialData);
-  const [yaml, setYAML] = React.useState(safeJSToYAML(initialData));
+  const [yaml, setYAML] = React.useState<string>(safeJSToYAML(initialData));
   const [type, setType] = React.useState<EditorType>(initialType);
   const [safeToSwitch, setSafeToSwitch] = React.useState<boolean>(true);
   const [yamlWarning, setYAMLWarning] = React.useState<boolean>(false);
@@ -88,6 +88,13 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({ context = {}, FormEd
         break;
     }
   };
+
+  // MEMO : 원인은 아직 못찾았으나 'yaml' useState의 값 초기화 하는 부분에서 safeJSToYAML()결과값으로 초기화되지 않고 예전값 상태로 남아있음.
+  // MEMO: formData의 경우 잘 초기화 되는데 yaml만 안됨.. 직접 safeJSToYAML로 변환한 값(최신값) yaml의 값 비교해서 다르면 최신값으로 set해주도록 처리함.
+  const newYaml = safeJSToYAML(initialData);
+  if (yaml !== newYaml) {
+    setYAML(newYaml);
+  }
 
   return (
     <>
