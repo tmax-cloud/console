@@ -191,7 +191,7 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
 
   const ButtonTextComponent = () => (
     <Button type="button" onClick={handleSelectContainers} variant="link" isInline>
-      {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_13_text')}
+      {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_34')}
     </Button>
   );
   const buttonString = <ButtonTextComponent key="buttonstring" />;

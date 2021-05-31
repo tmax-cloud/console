@@ -137,6 +137,24 @@ export const tableFilters: TableFilterMap = {
       apiGroup: 'rbac.authorization.k8s.io',
       name: groupName,
     }),
+  
+  // Filter Integration Config by Status
+  'integrationConfig-status' : (filter, binding) => {
+    let phase = '';
+    if (binding.status) {
+      binding.status.conditions.forEach(cur => {
+        if (cur.type === 'ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else {
+            phase = 'UnReady';
+          }
+        }
+      });
+      return filter.selected.has(phase) || filter.selected.size === 0;
+    }
+
+  },  
 
   selector: (selector, obj) => {
     if (!selector || !selector.values || !selector.values.size) {
