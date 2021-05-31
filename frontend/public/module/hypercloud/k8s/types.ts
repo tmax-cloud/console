@@ -5,7 +5,7 @@ export type ApprovalKind = K8sResourceCommon & {
   apiGroup?: string;
 };
 
-export type CatalogServiceClaimKind = K8sResourceKind & {
+export type ClusterTemplateClaimKind = K8sResourceKind & {
   resourceName?: string;
 };
 

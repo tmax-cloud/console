@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { sortable } from '@patternfly/react-table';
-import { CatalogServiceClaimModel } from '../../models';
-import { CatalogServiceClaimKind } from '../../module/k8s';
+import { ClusterTemplateClaimModel } from '../../models';
+import { ClusterTemplateClaimKind } from '../../module/k8s';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
@@ -11,34 +11,34 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 const { common } = Kebab.factory;
 
-const kind = CatalogServiceClaimModel.kind;
+const kind = ClusterTemplateClaimModel.kind;
 
-export const catalogServiceClaimMenuActions = [...Kebab.getExtensionsActionsForKind(CatalogServiceClaimModel), ...common, Kebab.factory.ModifyStatus];
+export const clusterTemplateClaimMenuActions = [...Kebab.getExtensionsActionsForKind(ClusterTemplateClaimModel), ...common, Kebab.factory.ModifyStatus];
 
-const CatalogServiceClaimDetails: React.FC<CatalogServiceClaimDetailsProps> = ({ obj: catalogServiceClaim }) => {
+const ClusterTemplateClaimDetails: React.FC<ClusterTemplateClaimDetailsProps> = ({ obj: clusterTemplateClaim }) => {
   const { t } = useTranslation();
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(catalogServiceClaim, t) })} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterTemplateClaim, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={catalogServiceClaim} showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={clusterTemplateClaim} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
-              <dd>{catalogServiceClaim.spec?.resourceName}</dd>
+              <dd>{clusterTemplateClaim.spec?.resourceName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
-              <dd>{catalogServiceClaim.status?.status}</dd>
+              <dd>{clusterTemplateClaim.status?.status}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_18')}</dt>
               <dd>
-                <Timestamp timestamp={catalogServiceClaim.status?.lastTransitionTime} />
+                <Timestamp timestamp={clusterTemplateClaim.status?.lastTransitionTime} />
               </dd>
-              {catalogServiceClaim.status?.reason && (
+              {clusterTemplateClaim.status?.reason && (
                 <>
                   <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_CONDITIONS_TABLEHEADER_5')}</dt>
-                  <dd>{catalogServiceClaim.status.reason}</dd>
+                  <dd>{clusterTemplateClaim.status.reason}</dd>
                 </>
               )}
             </dl>
@@ -49,13 +49,13 @@ const CatalogServiceClaimDetails: React.FC<CatalogServiceClaimDetailsProps> = ({
   );
 };
 
-type CatalogServiceClaimDetailsProps = {
-  obj: CatalogServiceClaimKind;
+type ClusterTemplateClaimDetailsProps = {
+  obj: ClusterTemplateClaimKind;
 };
 
 const { details, editResource } = navFactory;
-const CatalogServiceClaimsDetailsPage: React.FC<CatalogServiceClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={catalogServiceClaimMenuActions} pages={[details(CatalogServiceClaimDetails), editResource()]} />;
-CatalogServiceClaimsDetailsPage.displayName = 'CatalogServiceClaimsDetailsPage';
+const ClusterTemplateClaimsDetailsPage: React.FC<ClusterTemplateClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterTemplateClaimMenuActions} pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
+ClusterTemplateClaimsDetailsPage.displayName = 'ClusterTemplateClaimsDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
@@ -64,7 +64,7 @@ const tableColumnClasses = [
   Kebab.columnClass, // MENU ACTIONS
 ];
 
-const CatalogServiceClaimTableRow = ({ obj, index, key, style }) => {
+const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
   return (
     <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -75,13 +75,13 @@ const CatalogServiceClaimTableRow = ({ obj, index, key, style }) => {
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
-        <ResourceKebab actions={catalogServiceClaimMenuActions} kind={kind} resource={obj} />
+        <ResourceKebab actions={clusterTemplateClaimMenuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>
   );
 };
 
-const CatalogServiceClaimTableHeader = (t?: TFunction) => {
+const ClusterTemplateClaimTableHeader = (t?: TFunction) => {
   return [
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
@@ -91,7 +91,7 @@ const CatalogServiceClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'catalogServiceClaimStatusReducer',
+      sortFunc: 'clusterTemplateClaimStatusReducer',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
@@ -108,25 +108,25 @@ const CatalogServiceClaimTableHeader = (t?: TFunction) => {
   ];
 };
 
-CatalogServiceClaimTableHeader.displayName = 'CatalogServiceClaimTableHeader';
+ClusterTemplateClaimTableHeader.displayName = 'ClusterTemplateClaimTableHeader';
 
-const CatalogServiceClaimsList: React.FC = props => {
+const ClusterTemplateClaimsList: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Catalog Service Claim" Header={CatalogServiceClaimTableHeader.bind(null, t)} Row={CatalogServiceClaimTableRow} customSorts={{ catalogServiceClaimStatusReducer }} />;
+  return <Table {...props} aria-label="Cluster Template Claim" Header={ClusterTemplateClaimTableHeader.bind(null, t)} Row={ClusterTemplateClaimTableRow} customSorts={{ clusterTemplateClaimStatusReducer }} />;
 };
-CatalogServiceClaimsList.displayName = 'CatalogServiceClaimsList';
+ClusterTemplateClaimsList.displayName = 'ClusterTemplateClaimsList';
 
-const catalogServiceClaimStatusReducer = (csc: any): string => {
+const clusterTemplateClaimStatusReducer = (csc: any): string => {
   return csc?.status?.status;
 };
 
-const CatalogServiceClaimsPage: React.FC<CatalogServiceClaimsPageProps> = props => {
+const ClusterTemplateClaimsPage: React.FC<ClusterTemplateClaimsPageProps> = props => {
   const { t } = useTranslation();
   const filters = [
     {
       filterGroupName: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
-      type: 'catalog-service-claim-status',
-      reducer: catalogServiceClaimStatusReducer,
+      type: 'cluster-template-claim-status',
+      reducer: clusterTemplateClaimStatusReducer,
       items: [
         { id: 'Approved', title: t('COMMON:MSG_COMMON_STATUS_10') },
         { id: 'Rejected', title: t('COMMON:MSG_COMMON_STATUS_11') },
@@ -134,14 +134,14 @@ const CatalogServiceClaimsPage: React.FC<CatalogServiceClaimsPageProps> = props 
       ],
     },
   ];
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_19')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_19') })} canCreate={true} kind={kind} ListComponent={CatalogServiceClaimsList} rowFilters={filters} {...props} />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_19')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_19') })} canCreate={true} kind={kind} ListComponent={ClusterTemplateClaimsList} rowFilters={filters} {...props} />;
 };
-CatalogServiceClaimsPage.displayName = 'CatalogServiceClaimsPage';
+ClusterTemplateClaimsPage.displayName = 'ClusterTemplateClaimsPage';
 
-export { CatalogServiceClaimsList, CatalogServiceClaimsPage, CatalogServiceClaimsDetailsPage };
+export { ClusterTemplateClaimsList, ClusterTemplateClaimsPage, ClusterTemplateClaimsDetailsPage };
 
-type CatalogServiceClaimsPageProps = {};
+type ClusterTemplateClaimsPageProps = {};
 
-type CatalogServiceClaimsDetailsPageProps = {
+type ClusterTemplateClaimsDetailsPageProps = {
   match: any;
 };

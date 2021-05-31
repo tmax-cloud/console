@@ -35,7 +35,7 @@ const pluralToKindMap = new Map([
   ['clustertemplates', 'ClusterTemplate'],
   ['serviceinstances', 'ServiceInstance'],
   ['servicebindings', 'ServiceBinding'],
-  ['catalogserviceclaims', 'CatalogServiceClaim'],
+  ['clustertemplateclaims', 'ClusterTemplateClaim'],
   ['templates', 'Template'],
   ['templateinstances', 'TemplateInstance'],
   ['rolebindingclaims', 'RoleBindingClaim'],
