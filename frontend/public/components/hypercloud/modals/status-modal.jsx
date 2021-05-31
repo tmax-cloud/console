@@ -33,20 +33,24 @@ class BaseStatusModal extends PromiseComponent {
   }
 
   getButtonStateFromProps() {
-    const { resource } = this.props;
-    const status = resource?.status?.status;
-    switch (resource?.kind) {
-      case ResourceQuotaClaimModel.kind:
-      case RoleBindingClaimModel.kind:
-      case NamespaceClaimModel.kind:
-      case ClusterTemplateClaimModel.kind: {
-        const canModifyStatus = ['Awaiting', 'Rejected', 'Reject', 'Error'];
-        return !canModifyStatus.includes(status);
-      }
-      default: {
-        return false;
-      }
-    }
+    // const { resource } = this.props;
+    // const status = resource?.status?.status;
+    // switch (resource?.kind) {
+    //   case ResourceQuotaClaimModel.kind:
+    //   case RoleBindingClaimModel.kind:
+    //   case NamespaceClaimModel.kind:
+    //   case ClusterTemplateClaimModel.kind: {
+    //     const canModifyStatus = ['Awaiting', 'Rejected', 'Reject', 'Error'];
+    //     return !canModifyStatus.includes(status);
+    //   }
+    //   default: {
+    //     return false;
+    //   }
+    // }
+
+    // MEMO : 상태기반으로 submit버튼 비활성화 시키는 것 대신 승인처리액션버튼 자체를 제거하는걸로 기획수정돼서 무조건 false로 반환하게 수정함.
+    // MEMO : 혹시 몰라서 원래코드 주석으로 남겨둠.
+    return false;
   }
 
   _submit(e) {
@@ -73,7 +77,16 @@ class BaseStatusModal extends PromiseComponent {
       }
       case ClusterTemplateClaimModel.kind: {
         const stat = this.state.status === 'Approved' ? 'Approved' : 'Rejected';
-        const promise = k8sUpdateApproval(kind, resource, 'status', [{ op: 'replace', path: '/status/status', value: stat }], 'PATCH');
+        const promise = k8sUpdateApproval(
+          kind,
+          resource,
+          'status',
+          [
+            { op: 'replace', path: '/status/status', value: stat },
+            { op: 'replace', path: '/status/reason', value: this.state.reason || '' },
+          ],
+          'PATCH',
+        );
         this.handlePromise(promise).then(this.successSubmit);
         break;
       }
