@@ -71,11 +71,11 @@ export const tableFilters: TableFilterMap = {
     const result = resourceQuotaClaim?.status?.status;
     return results.selected.has(result) || !_.includes(results.all, result);
   },
-  'catalog-service-claim-status': (results, catalogServiceClaim) => {
+  'cluster-template-claim-status': (results, clusterTemplateClaim) => {
     if (!results || !results.selected || !results.selected.size) {
       return true;
     }
-    let result = catalogServiceClaim?.status?.status;
+    let result = clusterTemplateClaim?.status?.status;
     result = result === 'Approve' ? 'Approved' : result;
     result = result === 'Reject' ? 'Rejected' : result;
     return results.selected.has(result);

@@ -8,7 +8,7 @@ import * as classNames from 'classnames';
 import DetailsBody from '@console/shared/src/components/dashboard/details-card/DetailsBody';
 import '../../components/dashboard/dashboards-page/cluster-dashboard/details-card.scss';
 import { coFetchJSON } from '@console/internal/co-fetch';
-import { CatalogServiceClaimModel, RoleBindingClaimModel } from '../../../public/models';
+import { ClusterTemplateClaimModel, RoleBindingClaimModel } from '../../../public/models';
 import { resourceListPathFromModel } from '@console/internal/components/utils';
 import { resourceURL } from '../../module/k8s/resource';
 import './namespace-overview.scss';
@@ -26,13 +26,13 @@ const InventoryList = ({ namespace }) => {
       let num = await coFetchJSON(url);
       setState(num?.items?.length);
     };
-    fetchJSON(resourceURL(CatalogServiceClaimModel, { ns: namespace }), setCSCNum);
+    fetchJSON(resourceURL(ClusterTemplateClaimModel, { ns: namespace }), setCSCNum);
     fetchJSON(resourceURL(RoleBindingClaimModel, { ns: namespace }), setRBCNum);
   }, []);
   return (
     <div className={classNames('detail-list__inventory-list')}>
       <div>
-        <Link to={resourceListPathFromModel(CatalogServiceClaimModel, namespace)}>
+        <Link to={resourceListPathFromModel(ClusterTemplateClaimModel, namespace)}>
           {cscNum} {t('COMMON:MSG_LNB_MENU_19')}
         </Link>
       </div>

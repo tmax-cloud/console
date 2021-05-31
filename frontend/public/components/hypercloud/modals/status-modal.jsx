@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import { switchPerspective } from 'packages/dev-console/integration-tests/views/dev-perspective.view';
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
-import { NamespaceClaimModel, ResourceQuotaClaimModel, CatalogServiceClaimModel, RoleBindingClaimModel } from '../../../models';
+import { NamespaceClaimModel, ResourceQuotaClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel } from '../../../models';
 import { k8sUpdateApproval, referenceForModel } from '../../../module/k8s';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
@@ -39,7 +39,7 @@ class BaseStatusModal extends PromiseComponent {
       case ResourceQuotaClaimModel.kind:
       case RoleBindingClaimModel.kind:
       case NamespaceClaimModel.kind:
-      case CatalogServiceClaimModel.kind: {
+      case ClusterTemplateClaimModel.kind: {
         const canModifyStatus = ['Awaiting', 'Rejected', 'Reject', 'Error'];
         return !canModifyStatus.includes(status);
       }
@@ -71,7 +71,7 @@ class BaseStatusModal extends PromiseComponent {
         this.handlePromise(promise).then(this.successSubmit);
         break;
       }
-      case CatalogServiceClaimModel.kind: {
+      case ClusterTemplateClaimModel.kind: {
         const stat = this.state.status === 'Approved' ? 'Approved' : 'Rejected';
         const promise = k8sUpdateApproval(kind, resource, 'status', [{ op: 'replace', path: '/status/status', value: stat }], 'PATCH');
         this.handlePromise(promise).then(this.successSubmit);
