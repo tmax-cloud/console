@@ -8,12 +8,11 @@ import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { Popover } from '@patternfly/react-core';
 
-const { common } = Kebab.factory;
+const clusterTemplateClaimCommonActions = [Kebab.factory.Edit, Kebab.factory.Delete];
 
 const kind = ClusterTemplateClaimModel.kind;
-
-export const clusterTemplateClaimMenuActions = [...Kebab.getExtensionsActionsForKind(ClusterTemplateClaimModel), ...common, Kebab.factory.ModifyStatus];
 
 const ClusterTemplateClaimDetails: React.FC<ClusterTemplateClaimDetailsProps> = ({ obj: clusterTemplateClaim }) => {
   const { t } = useTranslation();
@@ -35,9 +34,9 @@ const ClusterTemplateClaimDetails: React.FC<ClusterTemplateClaimDetailsProps> = 
               <dd>
                 <Timestamp timestamp={clusterTemplateClaim.status?.lastTransitionTime} />
               </dd>
-              {clusterTemplateClaim.status?.reason && (
+              {clusterTemplateClaim.status?.status === 'Rejected' && (
                 <>
-                  <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_CONDITIONS_TABLEHEADER_5')}</dt>
+                  <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_20')}</dt>
                   <dd>{clusterTemplateClaim.status.reason}</dd>
                 </>
               )}
@@ -53,8 +52,15 @@ type ClusterTemplateClaimDetailsProps = {
   obj: ClusterTemplateClaimKind;
 };
 
+const unmodifiableStatus = new Set(['Approved', 'Cluster Template Deleted']);
+const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
+
 const { details, editResource } = navFactory;
-const ClusterTemplateClaimsDetailsPage: React.FC<ClusterTemplateClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterTemplateClaimMenuActions} pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
+const ClusterTemplateClaimsDetailsPage: React.FC<ClusterTemplateClaimsDetailsPageProps> = props => {
+  const [status, setStatus] = React.useState();
+  const menuActions = isUnmodifiable(status) ? clusterTemplateClaimCommonActions : [...clusterTemplateClaimCommonActions, Kebab.factory.ModifyStatus];
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setStatus4MenuActions={setStatus} pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
+};
 ClusterTemplateClaimsDetailsPage.displayName = 'ClusterTemplateClaimsDetailsPage';
 
 const tableColumnClasses = [
@@ -65,17 +71,26 @@ const tableColumnClasses = [
 ];
 
 const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
+  const menuActions = isUnmodifiable(obj.status?.status) ? clusterTemplateClaimCommonActions : [...clusterTemplateClaimCommonActions, Kebab.factory.ModifyStatus];
   return (
     <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
       </TableData>
-      <TableData className={tableColumnClasses[1]}>{obj.status && obj.status.status}</TableData>
+      <TableData className={tableColumnClasses[1]}>
+        {obj.status?.status === 'Error' ? (
+          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>{obj.status?.status}</div>
+          </Popover>
+        ) : (
+          obj.status?.status
+        )}
+      </TableData>
       <TableData className={tableColumnClasses[2]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
-        <ResourceKebab actions={clusterTemplateClaimMenuActions} kind={kind} resource={obj} />
+        <ResourceKebab actions={menuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>
   );
@@ -131,6 +146,8 @@ const ClusterTemplateClaimsPage: React.FC<ClusterTemplateClaimsPageProps> = prop
         { id: 'Approved', title: t('COMMON:MSG_COMMON_STATUS_10') },
         { id: 'Rejected', title: t('COMMON:MSG_COMMON_STATUS_11') },
         { id: 'Awaiting', title: t('COMMON:MSG_COMMON_STATUS_9') },
+        { id: 'Error', title: t('COMMON:MSG_COMMON_STATUS_15') },
+        { id: 'Cluster Template Deleted', title: 'Cluster Template Deleted' },
       ],
     },
   ];
