@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
+import { Status } from '@console/shared';
 import { K8sResourceKind, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { fromNow } from '@console/internal/components/utils/datetime';
 import { sortable } from '@patternfly/react-table';
@@ -75,7 +76,9 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{resourcequotaclaims?.status?.status}</TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <Status status={resourcequotaclaims?.status?.status} />
+      </TableData>
       <TableData className={tableColumnClasses[3]}>{resourcequotaclaims.resourceName}</TableData>
       <TableData className={tableColumnClasses[4]}>{fromNow(resourcequotaclaims?.metadata?.creationTimestamp)}</TableData>
       <TableData className={tableColumnClasses[5]}>
@@ -142,10 +145,22 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
-                <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
+                <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
+                <dd>{resourcequotaclaims.resourceName}</dd>
+              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
+                <dd>
+                  <Status status={resourcequotaclaims.status?.status} />
+                </dd>
+                {resourcequotaclaims.status?.status === 'Rejected' && (
+                  <>
+                    <dt>{t('SINGLE:MSG_DETAILS_TABDETAILS_20')}</dt>
+                    <dd>{resourcequotaclaims.status?.reason}</dd>
+                  </>
+                )}
+                {/* <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
                 <dd>{resourcequotaclaims.status?.status}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_2')}</dt>
-                <dd>{resourcequotaclaims.status?.reason}</dd>
+                <dd>{resourcequotaclaims.status?.reason}</dd> */}
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_3')}</dt>
                 <dd>{resourcequotaclaims.spec?.hard?.['limits.cpu']}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_4')}</dt>

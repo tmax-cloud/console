@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 
 import { sortable } from '@patternfly/react-table';
 import { fromNow } from '@console/internal/components/utils/datetime';
+import { Status } from '@console/shared';
 import { K8sResourceKind, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
@@ -75,7 +76,9 @@ const NamespaceClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: namesp
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={namespaceclaims?.resourceName} title={namespaceclaims?.resourceName} linkTo={namespaceclaims.status?.status === 'Approved'} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{namespaceclaims?.status?.status}</TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <Status status={namespaceclaims?.status?.status} />
+      </TableData>
       <TableData className={tableColumnClasses[3]}>{namespaceclaims.metadata?.annotations?.owner}</TableData>
       <TableData className={tableColumnClasses[4]}>{fromNow(namespaceclaims?.metadata?.creationTimestamp)}</TableData>
       <TableData className={tableColumnClasses[5]}>
@@ -141,16 +144,24 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
+                <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
+                <dd>{namespaceclaims.resourceName}</dd>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
-                <dd>{namespaceclaims.status?.status}</dd>
-                <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_1')}</dt>
-                <dd>{namespaceclaims.status?.reason}</dd>
-                <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_2')}</dt>
+                {/* <dd>{namespaceclaims.status?.status}</dd> */}
+                <dd>
+                  <Status status={namespaceclaims.status?.status} />
+                </dd>
+                {namespaceclaims.status?.status === 'Rejected' && (
+                  <>
+                    <dt>{t('SINGLE:MSG_DETAILS_TABDETAILS_20')}</dt>
+                    <dd>{namespaceclaims.status?.reason}</dd>
+                  </>
+                )}
+
+                {/* <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_2')}</dt>
                 <dd>{namespaceclaims.spec?.hard?.['limits.cpu']}</dd>
                 <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_3')}</dt>
-                <dd>{namespaceclaims.spec?.hard?.['limits.memory']}</dd>
-                <dt>{t('SINGLE:MSG_NAMESPACECLAIMS_NAMESPACEDETAILS_TABDETAILS_4')}</dt>
-                <dd>{namespaceclaims.resourceName}</dd>
+                <dd>{namespaceclaims.spec?.hard?.['limits.memory']}</dd> */}
               </dl>
             </div>
           </div>

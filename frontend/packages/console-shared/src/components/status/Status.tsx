@@ -14,6 +14,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
 
     case 'Pending':
     case 'Waiting':
+    case 'Awaiting':
       return <StatusIconAndText {...statusProps} icon={<HourglassHalfIcon />} />;
 
     case 'Planning':
