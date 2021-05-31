@@ -4,6 +4,7 @@ import { K8sResourceKind } from '@console/internal/module/k8s';
 import { EditorType, EditorToggle } from './editor-toggle';
 import { safeJSToYAML, asyncYAMLToJS } from '../../utils/yaml';
 import { Alert, Button } from '@patternfly/react-core';
+import { usePrevious } from '@console/metal3-plugin/src/hooks';
 
 const YAML_KEY_ORDER = ['apiVerion', 'kind', 'metadata', 'spec', 'status'];
 export const YAML_TO_JS_OPTIONS = {
@@ -31,6 +32,7 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({ context = {}, FormEd
   const [type, setType] = React.useState<EditorType>(initialType);
   const [safeToSwitch, setSafeToSwitch] = React.useState<boolean>(true);
   const [yamlWarning, setYAMLWarning] = React.useState<boolean>(false);
+  const prevInitialData = usePrevious(initialData);
 
   const handleFormDataChange = (newFormData: K8sResourceKind = {}) => {
     if (!_.isEqual(newFormData, formData)) {
@@ -92,7 +94,7 @@ export const SyncedEditor: React.FC<SyncedEditorProps> = ({ context = {}, FormEd
   // MEMO : 원인은 아직 못찾았으나 'yaml' useState의 값 초기화 하는 부분에서 safeJSToYAML()결과값으로 초기화되지 않고 예전값 상태로 남아있음.
   // MEMO: formData의 경우 잘 초기화 되는데 yaml만 안됨.. 직접 safeJSToYAML로 변환한 값(최신값) yaml의 값 비교해서 다르면 최신값으로 set해주도록 처리함.
   const newYaml = safeJSToYAML(initialData);
-  if (yaml !== newYaml) {
+  if (!_.isEqual(prevInitialData, initialData) && yaml !== newYaml) {
     setYAML(newYaml);
   }
 

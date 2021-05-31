@@ -20,7 +20,7 @@ const DeveloperNav = () => (
           {/* <ResourceClusterLink resource="clusterserviceplans" name="Cluster Service Plan" /> */}
           <ResourceNSLink resource="serviceinstances" name={t('COMMON:MSG_LNB_MENU_17')} />
           <ResourceNSLink resource="servicebindings" name={t('COMMON:MSG_LNB_MENU_18')} />
-          <ResourceNSLink resource="catalogserviceclaims" name={t('COMMON:MSG_LNB_MENU_19')} />
+          <ResourceNSLink resource="clustertemplateclaims" name={t('COMMON:MSG_LNB_MENU_19')} />
           <ResourceNSLink resource="templates" name={t('COMMON:MSG_LNB_MENU_20')} />
           <ResourceClusterLink resource="clustertemplates" name={t('COMMON:MSG_LNB_MENU_104')} />
           <ResourceNSLink resource="templateinstances" name={t('COMMON:MSG_LNB_MENU_21')} />
