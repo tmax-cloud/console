@@ -15,7 +15,7 @@ import store from '../../../../redux';
 import { k8sList } from '../../../../module/k8s';
 import { NamespaceModel } from '../../../../models';
 import { RadioGroup } from '../../utils/radio';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 //import { TFunction } from 'i18next';
 
 const defaultValuesTemplate = {
@@ -55,17 +55,17 @@ const kindItems = (t?: TFunction) => {
 kindItems.displayName = 'kindItems';
 */
 
-const kindItems = [    
+const kindItems = t => [    
     {
-        title: '사용자',
+        title: t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_7'),
         value: 'User',
     },
     {
-        title: '그룹',
+        title: t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_8'),
         value: 'Group',
     },
     {
-        title: '서비스 어카운트',
+        title: t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_9'),
         value: 'Service Account',
     },
 ];
@@ -106,7 +106,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
         defaultValue: 'User',
     });
 
-
+    const { t } = useTranslation();
 
     return (
         <>
@@ -140,7 +140,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
             <Section label='대상' id='kind' isRequired>
                 <RadioGroup
                     name='subjects.kind'
-                    items={kindItems}
+                    items={kindItems.bind(null, t)()}
                     inline={false}                    
                     initValue={defaultValues.subjects[0].kind}
                 />
