@@ -147,7 +147,7 @@ export const AdditionalPropertyField: React.FC<FieldProps> = props => {
 };
 
 export const OneOfField: React.FC<FieldProps> = props => {
-  const { formData, idSchema, name, onChange, required, schema, onBlur, uiSchema } = props;
+  const { formData, idSchema, name, onChange, required, schema, uiSchema } = props;
   return (
     <FieldSet defaultLabel={name || 'Resource Requirements'} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
       <OneOfFields formData={formData} uid={idSchema.$id} onChange={properties => onChange(properties)}></OneOfFields>

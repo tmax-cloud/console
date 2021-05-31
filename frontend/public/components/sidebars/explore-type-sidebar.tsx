@@ -133,6 +133,6 @@ export const ExploreType: React.FC<ExploreTypeProps> = props => {
 
 type ExploreTypeProps = {
   kindObj: K8sKind;
-  definition: SwaggerDefinition;
+  definition?: SwaggerDefinition;
   scrollTop?: () => void;
 };
