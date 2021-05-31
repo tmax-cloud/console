@@ -2,16 +2,25 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { History, Location } from 'history';
+import { connect } from 'react-redux';
 import { Route, Switch, Link, withRouter, match, matchPath } from 'react-router-dom';
+
+import * as UIActions from '../../actions/ui';
 
 import { EmptyBox, StatusBox } from './status-box';
 import { PodsPage } from '../pod';
 import NodesPage from '@console/app/src/components/nodes/NodesPage';
 import { AsyncComponent } from './async';
+import { modelFor } from '@console/internal/module/k8s';
 import { K8sResourceKind, K8sResourceCommon } from '../../module/k8s';
 import { referenceForModel, referenceFor } from '../../module/k8s/k8s';
 import { useExtensions, HorizontalNavTab, isHorizontalNavTab } from '@console/plugin-sdk';
 import { EditDefaultPage } from '../hypercloud/crd/edit-resource';
+import { CustomResourceDefinitionModel } from '@console/internal/models';
+import { pluralToKind, isVanillaObject } from '../hypercloud/form';
+import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
+import { getIdToken } from '../../hypercloud/auth';
+import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { useTranslation } from 'react-i18next';
 
 const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
@@ -176,7 +185,7 @@ export const NavBar = withRouter<NavBarProps>(({ pages, baseURL, basePath }) => 
 });
 NavBar.displayName = 'NavBar';
 
-export const HorizontalNav = React.memo((props: HorizontalNavProps) => {
+const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
   const renderContent = (routes: JSX.Element[]) => {
     const { noStatusBox, obj, EmptyMsg, label } = props;
     const content = <Switch> {routes} </Switch>;
@@ -211,6 +220,34 @@ export const HorizontalNav = React.memo((props: HorizontalNavProps) => {
       </StatusBox>
     );
   };
+
+  React.useEffect(() => {
+    let kind = pluralToKind(props.match.params.plural);
+    if (kind) {
+      let model = modelFor(kind);
+      const isCustomResourceType = !isVanillaObject(kind);
+      let url;
+      if (isCustomResourceType) {
+        url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
+        url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+      } else {
+        const directory = kindToSchemaPath.get(model.kind)?.['directory'];
+        const file = kindToSchemaPath.get(model.kind)?.['file'];
+        url = `${document.location.origin}/api/resource/${directory}/${file}`;
+      }
+      const xhrTest = new XMLHttpRequest();
+      xhrTest.open('GET', url);
+      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
+      xhrTest.onreadystatechange = function() {
+        if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
+          let template = xhrTest.response;
+          template = JSON.parse(template);
+          props.setActiveSchema(template);
+        }
+      };
+      xhrTest.send();
+    }
+  }, []);
 
   const componentProps = {
     ..._.pick(props, ['filters', 'selected', 'match', 'loaded']),
@@ -252,6 +289,10 @@ export const HorizontalNav = React.memo((props: HorizontalNavProps) => {
   );
 }, _.isEqual);
 
+export const HorizontalNav = connect(null, {
+  setActiveSchema: UIActions.setActiveSchema,
+})(HorizontalNav_);
+
 export type PodsComponentProps = {
   obj: K8sResourceKind;
   customData?: any;
@@ -284,6 +325,7 @@ export type HorizontalNavProps = {
   noStatusBox?: boolean;
   customData?: any;
   setStatus4MenuActions?: any;
+  setActiveSchema?: any;
 };
 
 export type PageComponentProps<R extends K8sResourceCommon = K8sResourceKind> = {

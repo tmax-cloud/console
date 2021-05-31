@@ -6,12 +6,7 @@ import * as _ from 'lodash-es';
 import store from '../redux';
 import { history } from '../components/utils/router';
 import { OverviewItem } from '@console/shared';
-import {
-  ALL_NAMESPACES_KEY,
-  LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY,
-  LAST_PERSPECTIVE_LOCAL_STORAGE_KEY,
-  LAST_CLUSTER_LOCAL_STORAGE_KEY,
-} from '@console/shared/src/constants';
+import { ALL_NAMESPACES_KEY, LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, LAST_CLUSTER_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 import { K8sResourceKind, PodKind, NodeKind } from '../module/k8s';
 import { allModels } from '../module/k8s/k8s-models';
 import { detectFeatures, clearSSARFlags } from './features';
@@ -23,6 +18,7 @@ export enum ActionType {
   SelectOverviewDetailsTab = 'selectOverviewDetailsTab',
   SelectOverviewItem = 'selectOverviewItem',
   SetActiveApplication = 'setActiveApplication',
+  SetActiveSchema = 'setActiveSchema',
   SetActiveNamespace = 'setActiveNamespace',
   SetActivePerspective = 'setActivePerspective',
   SetCreateProjectMessage = 'setCreateProjectMessage',
@@ -65,7 +61,7 @@ export enum ActionType {
   SetNamespaceMetrics = 'setNamespaceMetrics',
   SetNodeMetrics = 'setNodeMetrics',
   SetPinnedResources = 'setPinnedResources',
-  SetActiveCluster = "setActiveCluster",
+  SetActiveCluster = 'setActiveCluster',
 }
 
 type MetricValuesByName = {
@@ -110,6 +106,8 @@ allModels().forEach((v, k) => {
   }
 });
 
+export const getActiveSchema = (): string => store.getState().UI.get('activeSchema');
+
 export const getActiveNamespace = (): string => store.getState().UI.get('activeNamespace');
 
 export const getNamespaceMetric = (ns: K8sResourceKind, metric: string): number => {
@@ -130,7 +128,7 @@ export const getNodeMetric = (node: NodeKind, metric: string): number => {
 export const formatNamespaceRoute = (activeNamespace, originalPath, location?) => {
   let path = originalPath.substr(window.SERVER_FLAGS.basePath.length);
 
-  let parts = path.split('/').filter((p) => p);
+  let parts = path.split('/').filter(p => p);
   const prefix = parts.shift();
 
   let previousNS;
@@ -146,17 +144,12 @@ export const formatNamespaceRoute = (activeNamespace, originalPath, location?) =
     return originalPath;
   }
 
-  if (
-    (previousNS !== activeNamespace &&
-      (parts[1] !== 'new' || activeNamespace !== ALL_NAMESPACES_KEY)) ||
-    (activeNamespace === ALL_NAMESPACES_KEY && parts[1] === 'new')
-  ) {
+  if ((previousNS !== activeNamespace && (parts[1] !== 'new' || activeNamespace !== ALL_NAMESPACES_KEY)) || (activeNamespace === ALL_NAMESPACES_KEY && parts[1] === 'new')) {
     // a given resource will not exist when we switch namespaces, so pop off the tail end
     parts = parts.slice(0, 1);
   }
 
-  const namespacePrefix =
-    activeNamespace === ALL_NAMESPACES_KEY ? 'all-namespaces' : `ns/${activeNamespace}`;
+  const namespacePrefix = activeNamespace === ALL_NAMESPACES_KEY ? 'all-namespaces' : `ns/${activeNamespace}`;
 
   path = `/${prefix}/${namespacePrefix}`;
   if (parts.length) {
@@ -170,8 +163,7 @@ export const formatNamespaceRoute = (activeNamespace, originalPath, location?) =
   return path;
 };
 
-export const setCurrentLocation = (location: string) =>
-  action(ActionType.SetCurrentLocation, { location });
+export const setCurrentLocation = (location: string) => action(ActionType.SetCurrentLocation, { location });
 
 export const setActiveApplication = (application: string) => {
   return action(ActionType.SetActiveApplication, { application });
@@ -196,6 +188,14 @@ export const setActiveNamespace = (namespace: string = '') => {
   return action(ActionType.SetActiveNamespace, { namespace });
 };
 
+export const setActiveSchema = (schema: {}) => {
+  // make it noop when new active namespace is the same
+  // otherwise users will get page refresh and cry about
+  // broken direct links and bookmarks
+
+  return action(ActionType.SetActiveSchema, { schema });
+};
+
 export const getActivePerspective = (): string => store.getState().UI.get('activePerspective');
 
 export const setActivePerspective = (perspective: string) => {
@@ -217,8 +217,7 @@ export const setPinnedResources = (resources: string[]) => {
   return action(ActionType.SetPinnedResources, { resources });
 };
 
-export const beginImpersonate = (kind: string, name: string, subprotocols: string[]) =>
-  action(ActionType.BeginImpersonate, { kind, name, subprotocols });
+export const beginImpersonate = (kind: string, name: string, subprotocols: string[]) => action(ActionType.BeginImpersonate, { kind, name, subprotocols });
 export const endImpersonate = () => action(ActionType.EndImpersonate);
 export const startImpersonate = (kind: string, name: string) => async (dispatch, getState) => {
   let textEncoder;
@@ -230,7 +229,7 @@ export const startImpersonate = (kind: string, name: string) => async (dispatch,
   }
 
   if (!textEncoder) {
-    textEncoder = await import('text-encoding').then((module) => new module.TextEncoder('utf-8'));
+    textEncoder = await import('text-encoding').then(module => new module.TextEncoder('utf-8'));
   }
 
   const imp = getState().UI.get('impersonate', {});
@@ -261,19 +260,13 @@ export const startImpersonate = (kind: string, name: string) => async (dispatch,
   dispatch(detectFeatures());
   history.push(window.SERVER_FLAGS.basePath);
 };
-export const stopImpersonate = () => (dispatch) => {
+export const stopImpersonate = () => dispatch => {
   dispatch(endImpersonate());
   dispatch(clearSSARFlags());
   dispatch(detectFeatures());
   history.push(window.SERVER_FLAGS.basePath);
 };
-export const sortList = (
-  listId: string,
-  field: string,
-  func: string,
-  orderBy: string,
-  column: string,
-) => {
+export const sortList = (listId: string, field: string, func: string, orderBy: string, column: string) => {
   const url = new URL(window.location.href);
   const sp = new URLSearchParams(window.location.search);
   sp.set('orderBy', orderBy);
@@ -283,61 +276,36 @@ export const sortList = (
   return action(ActionType.SortList, { listId, field, func, orderBy });
 };
 export const selectOverviewItem = (uid: string) => action(ActionType.SelectOverviewItem, { uid });
-export const selectOverviewDetailsTab = (tab: string) =>
-  action(ActionType.SelectOverviewDetailsTab, { tab });
-export const updateOverviewMetrics = (metrics: any) =>
-  action(ActionType.UpdateOverviewMetrics, { metrics });
-export const updateOverviewResources = (resources: OverviewItem[]) =>
-  action(ActionType.UpdateOverviewResources, { resources });
-export const updateTimestamps = (lastTick: number) =>
-  action(ActionType.UpdateTimestamps, { lastTick });
+export const selectOverviewDetailsTab = (tab: string) => action(ActionType.SelectOverviewDetailsTab, { tab });
+export const updateOverviewMetrics = (metrics: any) => action(ActionType.UpdateOverviewMetrics, { metrics });
+export const updateOverviewResources = (resources: OverviewItem[]) => action(ActionType.UpdateOverviewResources, { resources });
+export const updateTimestamps = (lastTick: number) => action(ActionType.UpdateTimestamps, { lastTick });
 export const dismissOverviewDetails = () => action(ActionType.DismissOverviewDetails);
-export const updateOverviewSelectedGroup = (group: OverviewSpecialGroup | string) =>
-  action(ActionType.UpdateOverviewSelectedGroup, { group });
-export const updateOverviewLabels = (labels: string[]) =>
-  action(ActionType.UpdateOverviewLabels, { labels });
-export const updateOverviewFilterValue = (value: string) =>
-  action(ActionType.UpdateOverviewFilterValue, { value });
-export const monitoringDashboardsClearVariables = () =>
-  action(ActionType.MonitoringDashboardsClearVariables);
-export const monitoringDashboardsPatchVariable = (key: string, patch: any) =>
-  action(ActionType.MonitoringDashboardsPatchVariable, { key, patch });
-export const monitoringDashboardsPatchAllVariables = (variables: any) =>
-  action(ActionType.MonitoringDashboardsPatchAllVariables, { variables });
-export const monitoringDashboardsSetPollInterval = (pollInterval: number) =>
-  action(ActionType.MonitoringDashboardsSetPollInterval, { pollInterval });
-export const monitoringDashboardsSetTimespan = (timespan: number) =>
-  action(ActionType.MonitoringDashboardsSetTimespan, { timespan });
-export const monitoringDashboardsVariableOptionsLoaded = (key: string, newOptions: string[]) =>
-  action(ActionType.MonitoringDashboardsVariableOptionsLoaded, { key, newOptions });
+export const updateOverviewSelectedGroup = (group: OverviewSpecialGroup | string) => action(ActionType.UpdateOverviewSelectedGroup, { group });
+export const updateOverviewLabels = (labels: string[]) => action(ActionType.UpdateOverviewLabels, { labels });
+export const updateOverviewFilterValue = (value: string) => action(ActionType.UpdateOverviewFilterValue, { value });
+export const monitoringDashboardsClearVariables = () => action(ActionType.MonitoringDashboardsClearVariables);
+export const monitoringDashboardsPatchVariable = (key: string, patch: any) => action(ActionType.MonitoringDashboardsPatchVariable, { key, patch });
+export const monitoringDashboardsPatchAllVariables = (variables: any) => action(ActionType.MonitoringDashboardsPatchAllVariables, { variables });
+export const monitoringDashboardsSetPollInterval = (pollInterval: number) => action(ActionType.MonitoringDashboardsSetPollInterval, { pollInterval });
+export const monitoringDashboardsSetTimespan = (timespan: number) => action(ActionType.MonitoringDashboardsSetTimespan, { timespan });
+export const monitoringDashboardsVariableOptionsLoaded = (key: string, newOptions: string[]) => action(ActionType.MonitoringDashboardsVariableOptionsLoaded, { key, newOptions });
 export const monitoringLoading = (key: 'alerts' | 'silences' | 'notificationAlerts') =>
   action(ActionType.SetMonitoringData, {
     key,
     data: { loaded: false, loadError: null, data: null },
   });
-export const monitoringLoaded = (key: 'alerts' | 'silences' | 'notificationAlerts', data: any) =>
-  action(ActionType.SetMonitoringData, { key, data: { loaded: true, loadError: null, data } });
-export const monitoringErrored = (
-  key: 'alerts' | 'silences' | 'notificationAlerts',
-  loadError: any,
-) => action(ActionType.SetMonitoringData, { key, data: { loaded: true, loadError, data: null } });
+export const monitoringLoaded = (key: 'alerts' | 'silences' | 'notificationAlerts', data: any) => action(ActionType.SetMonitoringData, { key, data: { loaded: true, loadError: null, data } });
+export const monitoringErrored = (key: 'alerts' | 'silences' | 'notificationAlerts', loadError: any) => action(ActionType.SetMonitoringData, { key, data: { loaded: true, loadError, data: null } });
 export const monitoringSetRules = (rules: any) => action(ActionType.MonitoringSetRules, { rules });
 export const monitoringToggleGraphs = () => action(ActionType.ToggleMonitoringGraphs);
-export const notificationDrawerToggleExpanded = () =>
-  action(ActionType.NotificationDrawerToggleExpanded);
+export const notificationDrawerToggleExpanded = () => action(ActionType.NotificationDrawerToggleExpanded);
 export const notificationDrawerToggleRead = () => action(ActionType.NotificationDrawerToggleRead);
 export const queryBrowserAddQuery = () => action(ActionType.QueryBrowserAddQuery);
 export const queryBrowserDeleteAllQueries = () => action(ActionType.QueryBrowserDeleteAllQueries);
-export const queryBrowserDismissNamespaceAlert = () =>
-  action(ActionType.QueryBrowserDismissNamespaceAlert);
-export const queryBrowserDeleteQuery = (index: number) =>
-  action(ActionType.QueryBrowserDeleteQuery, { index });
-export const queryBrowserInsertText = (
-  index: number,
-  newText: string,
-  replaceFrom: number,
-  replaceTo: number,
-) => {
+export const queryBrowserDismissNamespaceAlert = () => action(ActionType.QueryBrowserDismissNamespaceAlert);
+export const queryBrowserDeleteQuery = (index: number) => action(ActionType.QueryBrowserDeleteQuery, { index });
+export const queryBrowserInsertText = (index: number, newText: string, replaceFrom: number, replaceTo: number) => {
   return action(ActionType.QueryBrowserInsertText, { index, newText, replaceFrom, replaceTo });
 };
 export const queryBrowserPatchQuery = (index: number, patch: { [key: string]: unknown }) => {
@@ -347,25 +315,21 @@ export const queryBrowserRunQueries = () => action(ActionType.QueryBrowserRunQue
 export const queryBrowserSetAllExpanded = (isExpanded: boolean) => {
   return action(ActionType.QueryBrowserSetAllExpanded, { isExpanded });
 };
-export const queryBrowserSetMetrics = (metrics: string[]) =>
-  action(ActionType.QueryBrowserSetMetrics, { metrics });
-export const queryBrowserToggleIsEnabled = (index: number) =>
-  action(ActionType.QueryBrowserToggleIsEnabled, { index });
+export const queryBrowserSetMetrics = (metrics: string[]) => action(ActionType.QueryBrowserSetMetrics, { metrics });
+export const queryBrowserToggleIsEnabled = (index: number) => action(ActionType.QueryBrowserToggleIsEnabled, { index });
 export const queryBrowserToggleSeries = (index: number, labels: { [key: string]: unknown }) => {
   return action(ActionType.QueryBrowserToggleSeries, { index, labels });
 };
-export const setPodMetrics = (podMetrics: PodMetrics) =>
-  action(ActionType.SetPodMetrics, { podMetrics });
-export const setNamespaceMetrics = (namespaceMetrics: NamespaceMetrics) =>
-  action(ActionType.SetNamespaceMetrics, { namespaceMetrics });
-export const setNodeMetrics = (nodeMetrics: NodeMetrics) =>
-  action(ActionType.SetNodeMetrics, { nodeMetrics });
+export const setPodMetrics = (podMetrics: PodMetrics) => action(ActionType.SetPodMetrics, { podMetrics });
+export const setNamespaceMetrics = (namespaceMetrics: NamespaceMetrics) => action(ActionType.SetNamespaceMetrics, { namespaceMetrics });
+export const setNodeMetrics = (nodeMetrics: NodeMetrics) => action(ActionType.SetNodeMetrics, { nodeMetrics });
 
 // TODO(alecmerdler): Implement all actions using `typesafe-actions` and add them to this export
 const uiActions = {
   setCurrentLocation,
   setActiveApplication,
   setActiveNamespace,
+  setActiveSchema,
   setActivePerspective,
   beginImpersonate,
   endImpersonate,
