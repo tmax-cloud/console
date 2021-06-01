@@ -25,7 +25,7 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
   const containers = resource?.spec?.template?.spec?.containers;
   const healthCheckAdded = _.every(containers, container => container.readinessProbe || container.livenessProbe || container.startupProbe);
   const containersByKey = _.keyBy(containers, 'name');
-  const pageTitle = healthCheckAdded ? 'Edit Health Checks' : t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_1');
+  const pageTitle = healthCheckAdded ? t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_1') : t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_1');
   const {
     kind,
     metadata: { name, namespace },
@@ -59,12 +59,12 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
       />
       <div className="odc-add-health-checks__body">
         <p>
-          Health checks for &nbsp;
+          {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_2')} &nbsp;
           <ResourceLink kind={referenceFor(resource)} name={name} namespace={namespace} title={name} inline />
         </p>
         <Form onSubmit={handleSubmit}>
           <div>
-            Container &nbsp;
+            {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_2')} &nbsp;
             {_.size(containers) > 1 ? (
               <ContainerDropdown currentKey={currentKey} containers={containersByKey} onChange={handleSelectContainer} />
             ) : (

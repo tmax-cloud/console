@@ -1,16 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { NodeKind, referenceForModel } from '@console/internal/module/k8s';
-import {
-  useAccessReview,
-  SectionHeading,
-  LabelList,
-  Kebab,
-  ResourceLink,
-  cloudProviderNames,
-  cloudProviderID,
-  Timestamp,
-} from '@console/internal/components/utils';
+import { useAccessReview, SectionHeading, LabelList, Kebab, ResourceLink, cloudProviderNames, cloudProviderID, Timestamp } from '@console/internal/components/utils';
 import { NodeModel, MachineModel } from '@console/internal/models';
 import { Button, pluralize } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
@@ -48,23 +39,18 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
             </dd>
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_65')}</dt>
             <dd>{_.get(node, 'spec.externalID', '-')}</dd>
-            <dt>Node Addresses</dt>
+            <dt>{t('SINGLE:MSG_NODES_NODEDETAILS_1')}</dt>
             <dd>
               <NodeIPList ips={getNodeAddresses(node)} expand />
             </dd>
-            <dt>Node Labels</dt>
+            <dt>{t('SINGLE:MSG_NODES_NODEDETAILS_2')}</dt>
             <dd>
               <LabelList kind="Node" labels={node.metadata.labels} />
             </dd>
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_113')}</dt>
             <dd>
               {canUpdate ? (
-                <Button
-                  variant="link"
-                  type="button"
-                  isInline
-                  onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback.bind(null, t)}
-                >
+                <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback.bind(null, t)}>
                   {pluralize(_.size(node.spec.taints), 'Taint')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
@@ -75,12 +61,7 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')}</dt>
             <dd>
               {canUpdate ? (
-                <Button
-                  variant="link"
-                  type="button"
-                  isInline
-                  onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback.bind(null, t)}
-                >
+                <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback.bind(null, t)}>
                   {pluralize(_.size(node.metadata.annotations), 'Annotation')}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
@@ -92,23 +73,15 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
               <>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_121')}</dt>
                 <dd>
-                  <ResourceLink
-                    kind={referenceForModel(MachineModel)}
-                    name={machine.name}
-                    namespace={machine.namespace}
-                  />
+                  <ResourceLink kind={referenceForModel(MachineModel)} name={machine.name} namespace={machine.namespace} />
                 </dd>
               </>
             )}
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_68')}</dt>
             <dd>{cloudProviderNames([cloudProviderID(node)])}</dd>
             {_.has(node, 'spec.unschedulable') && <dt>Unschedulable</dt>}
-            {_.has(node, 'spec.unschedulable') && (
-              <dd className="text-capitalize">
-                {_.get(node, 'spec.unschedulable', '-').toString()}
-              </dd>
-            )}
-            <dt>Created</dt>
+            {_.has(node, 'spec.unschedulable') && <dd className="text-capitalize">{_.get(node, 'spec.unschedulable', '-').toString()}</dd>}
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')}</dt>
             <dd>
               <Timestamp timestamp={node.metadata.creationTimestamp} />
             </dd>
@@ -117,9 +90,7 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
         <div className="col-md-6 col-xs-12">
           <dl className="co-m-pane__details">
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_69')}</dt>
-            <dd className="text-capitalize">
-              {_.get(node, 'status.nodeInfo.operatingSystem', '-')}
-            </dd>
+            <dd className="text-capitalize">{_.get(node, 'status.nodeInfo.operatingSystem', '-')}</dd>
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_114')}</dt>
             <dd>{_.get(node, 'status.nodeInfo.osImage', '-')}</dd>
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_70')}</dt>

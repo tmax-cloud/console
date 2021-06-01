@@ -7,6 +7,7 @@ import { K8sKind, K8sResourceKind, K8sResourceKindReference, modelFor, reference
 import { LinkifyExternal } from './link';
 import { SwaggerDefinition } from '../../module/k8s';
 import { RootState } from '@console/internal/redux';
+import { useTranslation } from 'react-i18next';
 const PropertyPath: React.FC<{ kind: string; path: string | string[] }> = ({ kind, path }) => {
   const pathArray: string[] = _.toPath(path);
   return (
@@ -29,7 +30,7 @@ const DetailsItem_: React.FC<DetailsItemProps> = props => {
   if (hideEmpty && _.isEmpty(_.get(obj, path))) {
     return null;
   }
-
+  const { t } = useTranslation();
   let currentPath = typeof path === 'string' && path.split('.');
   const schemaPath = currentPath.map(cur => `properties.${cur}`).join('.');
   const reference: K8sResourceKindReference = referenceFor(obj);
@@ -45,7 +46,7 @@ const DetailsItem_: React.FC<DetailsItemProps> = props => {
             headerContent={<div>{label}</div>}
             bodyContent={
               <LinkifyExternal>
-                <div className="co-pre-line">{description}</div>
+                <div className="co-pre-line">{t(`COMMON:${description}`)}</div>
               </LinkifyExternal>
             }
             footerContent={<PropertyPath kind={model.kind} path={path} />}

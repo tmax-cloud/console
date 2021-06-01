@@ -4,6 +4,8 @@ import * as classNames from 'classnames';
 import { History, Location } from 'history';
 import { connect } from 'react-redux';
 import { Route, Switch, Link, withRouter, match, matchPath } from 'react-router-dom';
+import { RootState } from '@console/internal/redux';
+import { match as RouterMatch } from 'react-router';
 
 import * as UIActions from '../../actions/ui';
 
@@ -11,7 +13,7 @@ import { EmptyBox, StatusBox } from './status-box';
 import { PodsPage } from '../pod';
 import NodesPage from '@console/app/src/components/nodes/NodesPage';
 import { AsyncComponent } from './async';
-import { modelFor } from '@console/internal/module/k8s';
+import { modelFor, K8sResourceKindReference, K8sKind } from '@console/internal/module/k8s';
 import { K8sResourceKind, K8sResourceCommon } from '../../module/k8s';
 import { referenceForModel, referenceFor } from '../../module/k8s/k8s';
 import { useExtensions, HorizontalNavTab, isHorizontalNavTab } from '@console/plugin-sdk';
@@ -222,9 +224,12 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
   };
 
   React.useEffect(() => {
-    let kind = pluralToKind(props.match.params.plural);
-    if (kind) {
-      let model = modelFor(kind);
+    // let kind = pluralToKind(props.match.params.plural);
+    // kind = 'AWSCluster';
+    // if (kind) {
+    let model = props.model;
+    if (model) {
+      let kind = model.kind;
       const isCustomResourceType = !isVanillaObject(kind);
       let url;
       if (isCustomResourceType) {
@@ -242,6 +247,7 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
         if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
           let template = xhrTest.response;
           template = JSON.parse(template);
+          template = isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template;
           props.setActiveSchema(template);
         }
       };
@@ -289,13 +295,33 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
   );
 }, _.isEqual);
 
-export const HorizontalNav = connect(null, {
+const stateToProps = (state: RootState, props: Omit<DefaultPageProps, 'model'>) => {
+  let plural = props.match.params.plural;
+  let kind = pluralToKind(props.match.params.plural);
+  let model = kind && modelFor(kind);
+  if (!plural) {
+    return null;
+  }
+  // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
+  if (kind && model) {
+    plural = referenceForModel(model);
+  } else {
+    kind = plural.split('~')[2];
+  }
+  return { model: state.k8s.getIn(['RESOURCES', 'models', plural]) || (state.k8s.getIn(['RESOURCES', 'models', kind]) as K8sKind) };
+};
+
+export const HorizontalNav = connect(stateToProps, {
   setActiveSchema: UIActions.setActiveSchema,
 })(HorizontalNav_);
 
 export type PodsComponentProps = {
   obj: K8sResourceKind;
   customData?: any;
+};
+export type DefaultPageProps = {
+  match: RouterMatch<{ appName: string; ns: string; plural: K8sResourceKindReference }>;
+  model: K8sKind;
 };
 
 export type NodesComponentProps = {
@@ -326,6 +352,7 @@ export type HorizontalNavProps = {
   customData?: any;
   setStatus4MenuActions?: any;
   setActiveSchema?: any;
+  model?: K8sKind;
 };
 
 export type PageComponentProps<R extends K8sResourceCommon = K8sResourceKind> = {

@@ -3,10 +3,7 @@ import DashboardCard from '@console/shared/src/components/dashboard/dashboard-ca
 import DashboardCardHeader from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardHeader';
 import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardTitle';
 import DashboardCardBody from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardBody';
-import InventoryItem, {
-  ResourceInventoryItem,
-  StatusGroupMapper,
-} from '@console/shared/src/components/dashboard/inventory-card/InventoryItem';
+import InventoryItem, { ResourceInventoryItem, StatusGroupMapper } from '@console/shared/src/components/dashboard/inventory-card/InventoryItem';
 import { getPodStatusGroups } from '@console/shared/src/components/dashboard/inventory-card/utils';
 import { referenceForModel, K8sResourceCommon, K8sKind } from '@console/internal/module/k8s';
 import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watch-hook';
@@ -14,12 +11,9 @@ import { PodModel, NodeModel } from '@console/internal/models';
 import { resourcePathFromModel } from '@console/internal/components/utils';
 
 import { NodeDashboardContext } from './NodeDashboardContext';
+import { useTranslation } from 'react-i18next';
 
-export const NodeInventoryItem: React.FC<NodeInventoryItemProps> = ({
-  nodeName,
-  model,
-  mapper,
-}) => {
+export const NodeInventoryItem: React.FC<NodeInventoryItemProps> = ({ nodeName, model, mapper }) => {
   const resource = React.useMemo(
     () => ({
       kind: model.crd ? referenceForModel(model) : model.kind,
@@ -31,39 +25,21 @@ export const NodeInventoryItem: React.FC<NodeInventoryItemProps> = ({
   const [data, loaded, loadError] = useK8sWatchResource<K8sResourceCommon[]>(resource);
   const basePath = `${resourcePathFromModel(NodeModel, nodeName)}/pods`;
 
-  return (
-    <ResourceInventoryItem
-      kind={model}
-      isLoading={!loaded}
-      error={!!loadError}
-      resources={data}
-      mapper={mapper}
-      basePath={basePath}
-    />
-  );
+  return <ResourceInventoryItem kind={model} isLoading={!loaded} error={!!loadError} resources={data} mapper={mapper} basePath={basePath} />;
 };
 
 const InventoryCard: React.FC = () => {
+  const { t } = useTranslation();
   const { obj } = React.useContext(NodeDashboardContext);
 
   return (
     <DashboardCard data-test-id="inventory-card">
       <DashboardCardHeader>
-        <DashboardCardTitle>Inventory</DashboardCardTitle>
+        <DashboardCardTitle>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDINVENTORY_1')}</DashboardCardTitle>
       </DashboardCardHeader>
       <DashboardCardBody>
-        <NodeInventoryItem
-          nodeName={obj.metadata.name}
-          model={PodModel}
-          mapper={getPodStatusGroups}
-        />
-        <InventoryItem
-          isLoading={!obj}
-          title="Image"
-          titlePlural="Images"
-          count={obj.status?.images?.length}
-          error={!obj.status?.images}
-        />
+        <NodeInventoryItem nodeName={obj.metadata.name} model={PodModel} mapper={getPodStatusGroups} />
+        <InventoryItem isLoading={!obj} title="Image" titlePlural="Images" count={obj.status?.images?.length} error={!obj.status?.images} />
       </DashboardCardBody>
     </DashboardCard>
   );

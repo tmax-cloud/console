@@ -29,18 +29,21 @@ export const MarkAsSchedulable: KebabAction = (
   obj: NodeKind,
   resources: {},
   { nodeMaintenance } = { nodeMaintenance: false }, // NOTE: used by node actions in metal3-plugin
-) => ({
-  label: 'Mark as Schedulable',
-  hidden: !isNodeUnschedulable(obj) || nodeMaintenance,
-  callback: () => makeNodeSchedulable(obj),
-  accessReview: {
-    group: kind.apiGroup,
-    resource: kind.plural,
-    name: obj.metadata.name,
-    namespace: obj.metadata.namespace,
-    verb: 'patch',
-  },
-});
+) => {
+  const { t } = useTranslation();
+  return {
+    label: t('COMMON:MSG_NODES_NODEDETAILS_ _1'),
+    hidden: !isNodeUnschedulable(obj) || nodeMaintenance,
+    callback: () => makeNodeSchedulable(obj),
+    accessReview: {
+      group: kind.apiGroup,
+      resource: kind.plural,
+      name: obj.metadata.name,
+      namespace: obj.metadata.namespace,
+      verb: 'patch',
+    },
+  };
+};
 
 export const Delete: KebabAction = (kindObj: K8sKind, node: NodeKind) => {
   const { t } = useTranslation();

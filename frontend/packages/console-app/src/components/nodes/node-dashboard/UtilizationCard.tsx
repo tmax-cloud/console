@@ -114,7 +114,7 @@ const UtilizationCard: React.FC = () => {
   return (
     <DashboardCard data-test-id="utilization-card">
       <DashboardCardHeader>
-        <DashboardCardTitle>Utilization</DashboardCardTitle>
+        <DashboardCardTitle>{t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_UTILIZATION_1')}</DashboardCardTitle>
         <Dropdown items={durationItems} onChange={setDuration} selectedKey={durationValues[duration]} title={duration} />
       </DashboardCardHeader>
       <UtilizationBody timestamps={timestamps}>

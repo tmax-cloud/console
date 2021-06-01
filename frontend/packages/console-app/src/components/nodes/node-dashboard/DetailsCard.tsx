@@ -13,8 +13,10 @@ import { NodeModel } from '@console/internal/models';
 import NodeIPList from '../NodeIPList';
 import NodeRoles from '../NodeRoles';
 import { NodeDashboardContext } from './NodeDashboardContext';
+import { useTranslation } from 'react-i18next';
 
 const DetailsCard: React.FC = () => {
+  const { t } = useTranslation();
   const { obj } = React.useContext(NodeDashboardContext);
   const detailsLink = `${resourcePathFromModel(NodeModel, obj.metadata.name)}/details`;
   const instanceType = obj.metadata.labels?.['beta.kubernetes.io/instance-type'];
@@ -22,8 +24,8 @@ const DetailsCard: React.FC = () => {
   return (
     <DashboardCard data-test-id="details-card">
       <DashboardCardHeader>
-        <DashboardCardTitle>Details</DashboardCardTitle>
-        <DashboardCardLink to={detailsLink}>View all</DashboardCardLink>
+        <DashboardCardTitle>{t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_1')}</DashboardCardTitle>
+        <DashboardCardLink to={detailsLink}>{t('SINGLE:MSG_OVERVIEW_MAIN_POPOVEROPERATOR_ALL_1')}</DashboardCardLink>
       </DashboardCardHeader>
       <DashboardCardBody>
         <DetailsBody>
