@@ -47,12 +47,10 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
       if (_.has(defaultValues, 'spec.resources.inputs')) {
         let inputResources = _.get(defaultValues, 'spec.resources.inputs');
         setInputResource(inputResources);
-        console.log('inputResource: ', inputResources);
       }
       if (_.has(defaultValues, 'spec.resources.outputs')) {
         let outputResources = _.get(defaultValues, 'spec.resources.outputs');
         setOutputResource(outputResources);
-        console.log('outputresource: ', outputResources);
       }
       if (_.has(defaultValues, 'spec.params')) {
         let paramDefaultValues = _.get(defaultValues, 'spec.params');
@@ -68,7 +66,6 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
           }
         });
         setTaskParameter(paramDefaultValues);
-        console.log('params: ', paramDefaultValues);
       }
       if (_.has(defaultValues, 'spec.workspaces')) {
         let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
@@ -85,7 +82,6 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
           return item;
         });
         setWorkSpace(workSpaceDefaultValues);
-        console.log('workspace: ', workSpaceDefaultValues);
       }
       if (_.has(defaultValues, 'spec.volumes')) {
         let volumeDefaultValues = _.get(defaultValues, 'spec.volumes');
@@ -105,7 +101,6 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
           return obj;
         });
         setVolume(volumeDefaultValues);
-        console.log('volume: ', volumeDefaultValues);
       }
       if (_.has(defaultValues, 'spec.steps')) {
         let stepDefaultValues = _.get(defaultValues, 'spec.steps');
@@ -206,8 +201,8 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label="워크스페이스 구성" id="workSpace">
         <>
-          <ModalList list={workSpace} id="work-space" title="워크스페이스 구성" methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, false, methods)} description="이 태스크의 추가된 워크스페이스 구성이 없습니다."></ModalList>
-          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name'], title: '워크스페이스', id: 'work-space', handleMethod: handleModalData.bind(null, 'workspace', workspaceArr, workSpace, setWorkSpace, true, methods), children: <WorkSpaceModal methods={methods} workSpace={workSpace} />, submitText: '추가' })}>
+          <ModalList list={workSpace} id="work-space" title="워크스페이스 구성" methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, false, methods)} description="이 태스크의 추가된 워크스페이스 구성이 없습니다."></ModalList>
+          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, methods: methods, requiredFields: ['name'], title: '워크스페이스', id: 'work-space', handleMethod: handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, true, methods), children: <WorkSpaceModal methods={methods} workSpace={workSpace} />, submitText: '추가' })}>
             + 워크스페이스 추가
           </span>
         </>
