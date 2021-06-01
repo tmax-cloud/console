@@ -17,11 +17,15 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 const kind = IntegrationConfigModel.kind;
 
 const tableColumnClasses = [
-  classNames('col-xs-2', 'col-sm-2'),
-  classNames('col-xs-2', 'col-sm-2'),
-  classNames('col-sm-2', 'hidden-xs'),
-  classNames('col-xs-2', 'col-sm-2'),
-  classNames('col-sm-2', 'hidden-xs'),
+  //classNames('col-xs-2', 'col-sm-2'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // NAME
+  //classNames('col-xs-2', 'col-sm-2'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // NAMESPACE
+  //classNames('col-sm-2', 'hidden-xs'),
+  //classNames('col-xs-2', 'col-sm-2'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // STATUS
+  //classNames('col-lg-2', 'hidden-xs'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
   Kebab.columnClass,
 ];
 
