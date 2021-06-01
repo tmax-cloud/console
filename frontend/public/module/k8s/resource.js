@@ -180,7 +180,7 @@ export const k8sUpdateApproval = (kind, resource, approval, data, method = 'PUT'
   }
 }
 
-export const k8sUpdateClaim = (kind, clusterClaim, admit, reason, userName, nameSpace) => {
+export const k8sUpdateClaim = (kind, clusterClaim, admit, reason = '', userName, nameSpace) => {
 
   const resourceClusterURL = `api/multi-hypercloud/namespaces/${nameSpace}/clusterclaims/${clusterClaim}?userId=${getId()}${getUserGroup()}`;
 

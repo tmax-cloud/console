@@ -7,7 +7,7 @@ import { KEY_CODES, Tooltip } from '@patternfly/react-core';
 import { EllipsisVIcon, AngleRightIcon } from '@patternfly/react-icons';
 import Popper from '@console/shared/src/components/popper/Popper';
 import { annotationsModal, configureReplicaCountModal, taintsModal, tolerationsModal, labelsModal, podSelectorModal, deleteModal, expandPVCModal } from '../modals';
-import { statusModal, claimModal, scanningModal } from '../hypercloud/modals';
+import { statusModal, scanningModal } from '../hypercloud/modals';
 import { asAccessReview, checkAccess, history, resourceObjPath, useAccessReview } from './index';
 import { AccessReviewResourceAttributes, K8sKind, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '../../module/k8s';
 import { impersonateStateToProps } from '../../reducers/ui';
@@ -246,7 +246,7 @@ const kebabFactory: KebabFactory = {
   ModifyClaim: (kind, obj) => ({
     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_31',
     callback: () =>
-      claimModal({
+      statusModal({
         kind,
         resource: obj,
         blocking: true,
