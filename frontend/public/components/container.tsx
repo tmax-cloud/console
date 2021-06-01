@@ -61,7 +61,6 @@ const Probe: React.FC<ProbeProps> = ({ probe, podIP }) => {
 };
 Probe.displayName = 'Probe';
 
-// MJ : String발행되면 적용하기
 const Ports: React.FC<PortsProps> = ({ ports }) => {
   const { t } = useTranslation();
   if (!ports || !ports.length) {
@@ -72,8 +71,8 @@ const Ports: React.FC<PortsProps> = ({ ports }) => {
     <table className="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Container</th>
+          <th>{t('SINGLE:MSG_PODS_PODDETAILS_CONTAINERDETAILS_2')}</th>
+          <th>{t('SINGLE:MSG_PODS_PODDETAILS_CONTAINERDETAILS_3')}</th>
         </tr>
       </thead>
       <tbody>
@@ -91,7 +90,7 @@ const Ports: React.FC<PortsProps> = ({ ports }) => {
 const VolumeMounts: React.FC<VolumeMountProps> = ({ volumeMounts }) => {
   const { t } = useTranslation();
   if (!volumeMounts || !volumeMounts.length) {
-    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No volumes have been mounted" detail="Volumes allow data to be shared as files with the pod" />;
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title={t('SINGLE:MSG_PODS_PODDETAILS_CONTAINERDETAILS_6')} detail={t('SINGLE:MSG_PODS_PODDETAILS_CONTAINERDETAILS_7')} />;
   }
 
   return (
@@ -120,7 +119,7 @@ VolumeMounts.displayName = 'VolumeMounts';
 const Env: React.FC<EnvProps> = ({ env }) => {
   const { t } = useTranslation();
   if (!env || !env.length) {
-    return <MsgBox className="co-sysevent-stream__status-box-empty" title="No variables have been set" detail="An easy way to pass configuration values" />;
+    return <MsgBox className="co-sysevent-stream__status-box-empty" title={t('SINGLE:MSG_PODS_PODDETAILS_CONTAINERDETAILS_4')} detail={t('SINGLE:MSG_PODS_PODDETAILS_CONTAINERDETAILS_5')} />;
   }
 
   const value = (e: EnvVar) => {
