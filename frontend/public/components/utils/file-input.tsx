@@ -48,12 +48,11 @@ export const FileInput = withTranslation()(
       const klass = classNames('co-file-dropzone-container', {
         'co-file-dropzone--drop-over': isOver,
       });
-      // MJ : String발행되면 적용하기
       return connectDropTarget(
         <div className="co-file-dropzone">
           {canDrop && (
             <div className={klass}>
-              <p className="co-file-dropzone__drop-text">Drop file here</p>
+              <p className="co-file-dropzone__drop-text">{t('SINGLE:MSG_SECRETS_CREATEFORM_CREATESOURCESECERT_15')}</p>
             </div>
           )}
 
