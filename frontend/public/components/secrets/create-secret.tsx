@@ -322,7 +322,6 @@ export const ImageSecretForm = withTranslation()(
   },
 );
 
-
 type ConfigEntryFormState = {
   address: string;
   username: string;
@@ -569,45 +568,46 @@ export const CreateConfigSubform = withTranslation()(
   },
 );
 
-class UploadConfigSubform extends React.Component<any, UploadConfigSubformState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      configFile: _.isEmpty(this.props.stringData) ? '' : JSON.stringify(this.props.stringData),
-      parseError: false,
-    };
-    this.changeData = this.changeData.bind(this);
-    this.onFileChange = this.onFileChange.bind(this);
-  }
-  changeData(event) {
-    this.updateState(_.attempt(JSON.parse, event.target.value), event.target.value);
-  }
-  onFileChange(fileData) {
-    this.updateState(_.attempt(JSON.parse, fileData), fileData);
-  }
-  updateState(parsedData, stringData) {
-    this.setState(
-      {
-        configFile: stringData,
-        parseError: _.isError(parsedData),
-      },
-      () => {
-        this.props.onChange(parsedData);
-        this.props.onDisable(this.state.parseError);
-      },
-    );
-  }
-  // MJ : String발행되면 적용하기
-  render() {
-    const { t } = this.props;
-    return (
-      <>
-        <DroppableFileInput onChange={this.onFileChange} inputFileData={this.state.configFile} id="docker-config" label="Configuration File" inputFieldHelpText="Upload a .dockercfg or .docker/config.json file." textareaFieldHelpText="File with credentials and other configuration for connecting to a secured image registry." isRequired={true} />
-        {this.state.parseError && <div className="co-create-secret-warning">{t('Configuration file should be in JSON format.')}</div>}
-      </>
-    );
-  }
-}
+const UploadConfigSubform = withTranslation()(
+  class UploadConfigSubform extends React.Component<any, UploadConfigSubformState> {
+    constructor(props) {
+      super(props);
+      this.state = {
+        configFile: _.isEmpty(this.props.stringData) ? '' : JSON.stringify(this.props.stringData),
+        parseError: false,
+      };
+      this.changeData = this.changeData.bind(this);
+      this.onFileChange = this.onFileChange.bind(this);
+    }
+    changeData(event) {
+      this.updateState(_.attempt(JSON.parse, event.target.value), event.target.value);
+    }
+    onFileChange(fileData) {
+      this.updateState(_.attempt(JSON.parse, fileData), fileData);
+    }
+    updateState(parsedData, stringData) {
+      this.setState(
+        {
+          configFile: stringData,
+          parseError: _.isError(parsedData),
+        },
+        () => {
+          this.props.onChange(parsedData);
+          this.props.onDisable(this.state.parseError);
+        },
+      );
+    }
+    render() {
+      const { t } = this.props;
+      return (
+        <>
+          <DroppableFileInput onChange={this.onFileChange} inputFileData={this.state.configFile} id="docker-config" label={t('SINGLE:MSG_SECRETS_CREATEFORM_CREATEIMAGEPULLSECRET_11')} inputFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEFORM_CREATEIMAGEPULLSECRET_12')} textareaFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEFORM_CREATEIMAGEPULLSECRET_13')} isRequired={true} />
+          {this.state.parseError && <div className="co-create-secret-warning">{t('Configuration file should be in JSON format.')}</div>}
+        </>
+      );
+    }
+  },
+);
 
 const WebHookSecretForm = withTranslation()(
   class WebHookSecretForm extends React.Component<WebHookSecretFormProps, WebHookSecretFormState> {
@@ -788,7 +788,7 @@ export const SSHAuthSubform = withTranslation()(
     }
     render() {
       const { t } = this.props;
-      return <DroppableFileInput onChange={this.onFileChange} inputFileData={this.state['ssh-privatekey']} id="ssh-privatekey" label="SSH Private Key" inputFieldHelpText={t('Drag and drop file with your private SSH key here or browse to upload it.')} textareaFieldHelpText="Private SSH key file for Git authentication." isRequired={true} />;
+      return <DroppableFileInput onChange={this.onFileChange} inputFileData={this.state['ssh-privatekey']} id="ssh-privatekey" label={t('SINGLE:MSG_SECRETS_CREATEFORM_CREATESOURCESECERT_12')} inputFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEFORM_CREATESOURCESECERT_13')} textareaFieldHelpText={t('SINGLE:MSG_SECRETS_CREATEFORM_CREATESOURCESECERT_14')} isRequired={true} />;
     }
   },
 );
