@@ -9,17 +9,10 @@ import { withStartGuide } from './start-guide';
 import { AsyncComponent, LoadingBox } from './utils';
 import { DefaultPage, DefaultDetailsPage } from './default-resource';
 import { resourceListPages, resourceDetailsPages } from './resource-pages';
-import {
-  apiVersionForReference,
-  isGroupVersionKind,
-  K8sKind,
-  K8sResourceKindReference,
-  kindForReference,
-  referenceForModel,
-} from '../module/k8s';
+import { apiVersionForReference, isGroupVersionKind, K8sKind, K8sResourceKindReference, kindForReference, referenceForModel } from '../module/k8s';
 
 // Parameters can be in pros.params (in URL) or in props.route (attribute of Route tag)
-const allParams = (props) => Object.assign({}, _.get(props, 'match.params'), props);
+const allParams = props => Object.assign({}, _.get(props, 'match.params'), props);
 
 export const ResourceListPage = connectToPlural(
   withStartGuide((props: ResourceListPageProps) => {
@@ -29,14 +22,8 @@ export const ResourceListPage = connectToPlural(
       if (kindsInFlight) {
         return <LoadingBox />;
       }
-      const missingType = isGroupVersionKind(plural)
-        ? `"${kindForReference(plural)}" in "${apiVersionForReference(plural)}"`
-        : `"${plural}"`;
-      return (
-        <ErrorPage404
-          message={`The server doesn't have a resource type ${missingType}. Try refreshing the page if it was recently added.`}
-        />
-      );
+      const missingType = isGroupVersionKind(plural) ? `"${kindForReference(plural)}" in "${apiVersionForReference(plural)}"` : `"${plural}"`;
+      return <ErrorPage404 message={`The server doesn't have a resource type ${missingType}. Try refreshing the page if it was recently added.`} />;
     }
     const ref = referenceForModel(kindObj);
     const componentLoader = resourceListPages.get(ref, () => Promise.resolve(DefaultPage));
@@ -46,15 +33,7 @@ export const ResourceListPage = connectToPlural(
         <Helmet>
           <title>{kindObj.labelPlural}</title>
         </Helmet>
-        <AsyncComponent
-          autoFocus={!noProjectsAvailable}
-          kind={modelRef}
-          loader={componentLoader}
-          match={props.match}
-          mock={noProjectsAvailable}
-          namespace={ns}
-          badge={getBadgeFromType(kindObj.badge)}
-        />
+        <AsyncComponent autoFocus={!noProjectsAvailable} kind={modelRef} loader={componentLoader} match={props.match} mock={noProjectsAvailable} namespace={ns} badge={getBadgeFromType(kindObj.badge)} />
       </div>
     );
   }),
@@ -70,10 +49,7 @@ export const ResourceDetailsPage = connectToPlural((props: ResourceDetailsPagePr
     return <ErrorPage404 />;
   }
 
-  const ref =
-    props.match.path.indexOf('customresourcedefinitions') === -1
-      ? referenceForModel(kindObj)
-      : null;
+  const ref = props.match.path.indexOf('customresourcedefinitions') === -1 ? referenceForModel(kindObj) : null;
   const componentLoader = resourceDetailsPages.get(ref, () => Promise.resolve(DefaultDetailsPage));
 
   return (
@@ -81,15 +57,7 @@ export const ResourceDetailsPage = connectToPlural((props: ResourceDetailsPagePr
       <Helmet>
         <title>{`${name} · Details`}</title>
       </Helmet>
-      <AsyncComponent
-        loader={componentLoader}
-        match={props.match}
-        namespace={ns}
-        kind={props.modelRef}
-        kindObj={kindObj}
-        name={decodeURIComponent(name)}
-        badge={getBadgeFromType(kindObj.badge)}
-      />
+      <AsyncComponent loader={componentLoader} match={props.match} namespace={ns} kind={props.modelRef} kindObj={kindObj} name={decodeURIComponent(name)} badge={getBadgeFromType(kindObj.badge)} />
     </>
   );
 });
