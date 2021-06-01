@@ -12,15 +12,7 @@ interface RequestTypeFormProps {
 
 export const renderPortField = (fieldName: string, resourceType: Resources) => {
   if (resourceType === Resources.KnativeService) {
-    return (
-      <InputField
-        type={TextInputTypes.text}
-        name="knative-port"
-        label="Port"
-        placeholder="0"
-        isDisabled
-      />
-    );
+    return <InputField type={TextInputTypes.text} name="knative-port" label="Port" placeholder="0" isDisabled />;
   }
   return <InputField type={TextInputTypes.text} name={fieldName} label="Port" required />;
 };
@@ -31,9 +23,7 @@ export const HTTPRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeType 
     setFieldValue,
   } = useFormikContext<FormikValues>();
   const httpHeaders = healthChecks?.[probeType]?.data?.httpGet?.httpHeaders;
-  const initialNameValuePairs = !_.isEmpty(httpHeaders)
-    ? httpHeaders.map((val) => _.values(val))
-    : [['', '']];
+  const initialNameValuePairs = !_.isEmpty(httpHeaders) ? httpHeaders.map(val => _.values(val)) : [['', '']];
   const [nameValue, setNameValue] = React.useState(initialNameValuePairs);
   const portFieldName = `healthChecks.${probeType}.data.httpGet.port`;
 
@@ -57,32 +47,11 @@ export const HTTPRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeType 
   );
   return (
     <>
-      <CheckboxField
-        name={`healthChecks.${probeType}.data.httpGet.scheme`}
-        label="Use HTTPS"
-        value="HTTPS"
-      />
-      <FormGroup
-        fieldId={getFieldId(`healthChecks.${probeType}.data.httpGet.httpHeaders`, 'name-value')}
-        name={`healthChecks.${probeType}.data.httpGet.httpHeaders`}
-        label="HTTP Headers"
-      >
-        <NameValueEditor
-          nameValuePairs={nameValue}
-          valueString="Value"
-          nameString="Header Name"
-          addString="Add Header"
-          readOnly={false}
-          allowSorting={false}
-          updateParentData={handleNameValuePairs}
-        />
+      <CheckboxField name={`healthChecks.${probeType}.data.httpGet.scheme`} label="Use HTTPS" value="HTTPS" />
+      <FormGroup fieldId={getFieldId(`healthChecks.${probeType}.data.httpGet.httpHeaders`, 'name-value')} name={`healthChecks.${probeType}.data.httpGet.httpHeaders`} label="HTTP Headers">
+        <NameValueEditor nameValuePairs={nameValue} valueString="Value" nameString="Header Name" addString="Add Header" readOnly={false} allowSorting={false} updateParentData={handleNameValuePairs} />
       </FormGroup>
-      <InputField
-        type={TextInputTypes.text}
-        name={`healthChecks.${probeType}.data.httpGet.path`}
-        label="Path"
-        placeholder="/"
-      />
+      <InputField type={TextInputTypes.text} name={`healthChecks.${probeType}.data.httpGet.path`} label="Path" placeholder="/" />
       {renderPortField(portFieldName, resources)}
     </>
   );
@@ -101,15 +70,5 @@ export const CommandRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeTy
     values: { healthChecks },
   } = useFormikContext<FormikValues>();
   const commands = healthChecks?.[probeType]?.data?.exec?.command || [''];
-  return (
-    <TextColumnField
-      name={`healthChecks.${probeType}.data.exec.command`}
-      label="Command"
-      addLabel="Add command"
-      placeholder="argument"
-      helpText="The command to run inside the container."
-      required
-      disableDeleteRow={commands.length === 1}
-    />
-  );
+  return <TextColumnField name={`healthChecks.${probeType}.data.exec.command`} label="Command" addLabel="Add command" placeholder="argument" helpText="The command to run inside the container." required disableDeleteRow={commands.length === 1} />;
 };
