@@ -147,13 +147,13 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
               <dl className="co-m-pane__details">
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
                 <dd>{resourcequotaclaims.resourceName}</dd>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
+                <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
                 <dd>
                   <Status status={resourcequotaclaims.status?.status} />
                 </dd>
                 {resourcequotaclaims.status?.status === 'Rejected' && (
                   <>
-                    <dt>{t('SINGLE:MSG_DETAILS_TABDETAILS_20')}</dt>
+                    <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_20')}</dt>
                     <dd>{resourcequotaclaims.status?.reason}</dd>
                   </>
                 )}
@@ -161,10 +161,10 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
                 <dd>{resourcequotaclaims.status?.status}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_2')}</dt>
                 <dd>{resourcequotaclaims.status?.reason}</dd> */}
-                <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_3')}</dt>
+                {/* <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_3')}</dt>
                 <dd>{resourcequotaclaims.spec?.hard?.['limits.cpu']}</dd>
                 <dt>{t('SINGLE:MSG_RESOURCEQUOTACLAIMS_RESOURCEQUOTACLAIMDETAILS_TABDETAILS_4')}</dt>
-                <dd>{resourcequotaclaims.spec?.hard?.['limits.memory']}</dd>
+                <dd>{resourcequotaclaims.spec?.hard?.['limits.memory']}</dd> */}
               </dl>
             </div>
           </div>

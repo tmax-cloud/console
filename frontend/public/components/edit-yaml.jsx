@@ -86,29 +86,31 @@ export const EditYAML_ = connect(stateToProps)(
 
     componentDidMount() {
       const model = this.getModel(this.props.obj);
-      const kind = model.kind;
-      const isCustomResourceType = !isVanillaObject(kind);
-      let url;
-      if (isCustomResourceType) {
-        url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
-        url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-      } else {
-        const directory = kindToSchemaPath.get(model.kind)?.['directory'];
-        const file = kindToSchemaPath.get(model.kind)?.['file'];
-        url = `${document.location.origin}/api/resource/${directory}/${file}`;
-      }
-      const xhrTest = new XMLHttpRequest();
-      xhrTest.open('GET', url);
-      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-      xhrTest.onreadystatechange = () => {
-        if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
-          let template = xhrTest.response;
-          template = JSON.parse(template);
-          this.setState({ definition: isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template });
+      if (model) {
+        const kind = model.kind;
+        const isCustomResourceType = !isVanillaObject(kind);
+        let url;
+        if (isCustomResourceType) {
+          url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
+          url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+        } else {
+          const directory = kindToSchemaPath.get(model.kind)?.['directory'];
+          const file = kindToSchemaPath.get(model.kind)?.['file'];
+          url = `${document.location.origin}/api/resource/${directory}/${file}`;
         }
-      };
-      xhrTest.send();
-      this.loadYaml();
+        const xhrTest = new XMLHttpRequest();
+        xhrTest.open('GET', url);
+        xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
+        xhrTest.onreadystatechange = () => {
+          if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
+            let template = xhrTest.response;
+            template = JSON.parse(template);
+            this.setState({ definition: isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template });
+          }
+        };
+        xhrTest.send();
+        this.loadYaml();
+      }
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
