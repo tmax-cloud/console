@@ -22,7 +22,7 @@ const Description = ({ spec }) => {
   _.forEach(spec.instanceCreateParameterSchema.properties, (value, key) => {
     parameters.push(<li key={key}>{`${key}: ${value.default}`}</li>);
   });
- // MJ : String발행되면 적용하기
+
   return (
     <div className="hc-create-service-instance__plan-desc">
       <span>{spec.description}</span>
@@ -34,7 +34,7 @@ const Description = ({ spec }) => {
         </div>
       </Section>
       <Button variant="plain" className="pf-m-link--align-left hc-create-service-instance__plan-extra-info__more" type="button" onClick={() => setExtraInfoOpened(!extraInfoOpened)}>
-        <span>더보기</span>
+        <span>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_11')}</span>
         {extraInfoOpened ? <AngleUpIcon /> : <AngleDownIcon />}
       </Button>
       {extraInfoOpened ? (
@@ -77,7 +77,7 @@ const SelectServicePlanComponent = ({ loaded, servicePlanList, defaultPlan }) =>
 
   return (
     <>
-      <Section label="서비스 플랜 목록" id="serviceplan" isRequired>
+      <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_10')} id="serviceplan" isRequired>
         {loaded ? canList ? <RadioGroup id="service-plan" name="service-plan" items={planItemList} inline={false} initValue={planItemList?.[defaultPlan]?.value || planItemList?.[0]?.value} /> : <div>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_1')}</div> : <LoadingInline />}
       </Section>
     </>
