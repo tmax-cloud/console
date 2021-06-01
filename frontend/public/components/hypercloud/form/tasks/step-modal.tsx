@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 import { Section } from '../../utils/section';
 import { RadioGroup } from '../../utils/radio';
 // import { ResourceDropdown } from '../../utils/resource-dropdown';
@@ -268,10 +269,10 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       {commandTypeToggle === 'command' ? (
         <>
           <Section label="커맨드" id="step-command">
-            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
+            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.command) : []} defaultItem={{ value: '' }} />
           </Section>
           <Section label="인수" id="step-parameter">
-            <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
+            <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.args) : []} />
           </Section>
         </>
       ) : (
@@ -283,7 +284,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       )}
       <div className="horizontal-line" />
       <Section label="환경 변수" id="step-parameter">
-        <ListView name="env" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? template.env : []} defaultItem={{ envKey: '', envValue: '' }} />
+        <ListView name="env" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.env) : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>
       <Section label="마운트 경로" id="step-mountPath">
         {!isVolumeExist() ? (
