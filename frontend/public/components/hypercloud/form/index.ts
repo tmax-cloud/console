@@ -48,6 +48,7 @@ const pluralToKindMap = new Map([
   ['pipelineruns', 'PipelineRun'],
   ['approvals', 'Approval'],
   ['pipelineresources', 'PipelineResource'],
+  ['integrationjobs', 'IntegrationJob'],
   ['integrationconfigs', 'IntegrationConfig'],
   ['hyperclusterresources', 'HyperClusterResource'],
   ['clusterclaims', 'ClusterClaim'],
