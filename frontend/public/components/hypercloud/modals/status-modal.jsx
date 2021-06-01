@@ -142,7 +142,7 @@ const BaseStatusModal = withTranslation()(
       const { submitDisabled } = this.state;
       return (
         <form onSubmit={this._submit} name="form" className="modal-content">
-          <ModalTitle>{t('COMMON:MSG_MAIN_ACTIONBUTTON_31')}</ModalTitle>
+          <ModalTitle>{t('COMMON:MSG_MAIN_POPUP_TITLE_1')}</ModalTitle>
           <ModalBody>
             <div className="row co-m-form-row">
               <div className="col-sm-12">{message || ''}</div>
@@ -159,13 +159,17 @@ const BaseStatusModal = withTranslation()(
                   ))}
                 </Select>
               </div>
-              <div className="col-sm-12">
-                <textarea className="col-sm-12 pf-c-form-control query-browser__query-input" style={{ height: '100px' }} onChange={this.onChangeReason} value={this.state.reason} />
-              </div>
-              <div className="col-sm-12">{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_1')}</div>
+              {this.state.status === 'Rejected' && (
+                <>
+                  <div className="col-sm-12">
+                    <textarea className="col-sm-12 pf-c-form-control query-browser__query-input" style={{ height: '100px' }} onChange={this.onChangeReason} value={this.state.reason} />
+                  </div>
+                  <div className="col-sm-12">{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_1')}</div>
+                </>
+              )}
             </div>
           </ModalBody>
-          <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Confirm" cancel={this._cancel} submitDisabled={submitDisabled} />
+          <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancel={this._cancel} submitDisabled={submitDisabled} />
         </form>
       );
     }
