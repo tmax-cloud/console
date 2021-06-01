@@ -31,13 +31,13 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const commandTypeItems = [
     {
       title: '커맨드/인수',
-      value: 'command'
+      value: 'command',
     },
     {
       title: '스크립트',
-      value: 'script'
-    }
-  ]
+      value: 'script',
+    },
+  ];
 
   let volumeItems = {};
   // volume 있는지 여부
@@ -94,9 +94,9 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
-        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} placeholder={'키'} />
+        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={'키'} />
         <span style={{ margin: '0 5px' }}>=</span>
-        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} placeholder={'값'} />
+        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={'값'} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
@@ -127,12 +127,12 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       }
     });
   }
-  
+
   // command radio toggle 용
   const commandTypeToggle = useWatch({
     control: methods.control,
     name: 'commandTypeToggle',
-    defaultValue: template ? template.commandTypeToggle : 'command'
+    defaultValue: template ? template.commandTypeToggle : 'command',
   });
 
   // image radio toggle용
@@ -185,7 +185,6 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   //     });
   // }, [image]);
 
-
   return (
     <>
       <Section label="스텝 이름" id="step-name" isRequired={true}>
@@ -193,7 +192,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </Section>
       <div className="horizontal-line" />
       <Section label="이미지" id="step-manual-image" isRequired={true}>
-          <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
+        <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
       </Section>
       {/* <Section label="이미지" id="step-image-toggle">
         <RadioGroup
@@ -267,13 +266,13 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         />
       </Section>
       {commandTypeToggle === 'command' ? (
-      <>
-        <Section label="커맨드" id="step-command">
-          <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
-        </Section>
-        <Section label="인수" id="step-parameter">
-          <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
-        </Section>
+        <>
+          <Section label="커맨드" id="step-command">
+            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? template.command : []} defaultItem={{ value: '' }} />
+          </Section>
+          <Section label="인수" id="step-parameter">
+            <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? template.args : []} />
+          </Section>
         </>
       ) : (
         <>
@@ -281,8 +280,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             <TextArea id="script" inputClassName="col-md-12 text-area" methods={methods} defaultValue={modalType === 'modify' ? template.script : ''} />
           </Section>
         </>
-      )
-    }
+      )}
       <div className="horizontal-line" />
       <Section label="환경 변수" id="step-parameter">
         <ListView name="env" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? template.env : []} defaultItem={{ envKey: '', envValue: '' }} />
@@ -296,6 +294,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
               <Dropdown
                 name="selectedVolume"
                 className="btn-group"
+                defaultValue={template ? template.selectedVolume : ''}
                 title="볼륨 선택" // 드롭다운 title 지정
                 methods={methods}
                 items={volumeItems} // (필수)
