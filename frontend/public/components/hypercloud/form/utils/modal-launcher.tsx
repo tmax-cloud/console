@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useWatch } from 'react-hook-form';
 
 export const _ModalLauncher = props => {
-  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
+  const { inProgress, path, errorMessage, title, children, cancel, handleMethod, index, submitText, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
   const { t } = useTranslation();
   const onCancel = () => {
     // 수정일 경우에만 타는 로직
@@ -21,13 +21,15 @@ export const _ModalLauncher = props => {
   };
 
   const [submitDisabled, setSubmitDisabled] = React.useState(true);
-  const validFields = requiredFields.map(cur =>
-    useWatch({
+  const validFields = requiredFields.map(cur => {
+    const defaultValues = methods.getValues(path);
+
+    return useWatch({
       control: methods.control,
       name: cur,
-      defaultValue: '',
-    }),
-  );
+      defaultValue: defaultValues.length > 0 ? defaultValues[index][cur] : '', // 초기값 세팅
+    });
+  });
   const optionalValidFields = optionalRequiredField?.map(cur => {
     let defaultValue;
     if (cur === 'default') {
