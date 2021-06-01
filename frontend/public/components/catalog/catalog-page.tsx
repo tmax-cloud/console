@@ -100,6 +100,9 @@ export const CatalogListPage = withTranslation()(
     }
 
     normalizeServiceClasses(serviceClasses: K8sResourceKind[]) {
+
+      // MEMO : tileDescription 정보들 기획임시처리로 공백으로 설정해놓음.
+
       // TODO : namespace가 없을 경우(all-namespace로 선택된 경우) 일단 default로 namespace설정되게 해놨는데 어떻게 처리할지 정해지면 수정하기
       const { namespace = 'default', t } = this.props;
       return _.reduce(
@@ -115,15 +118,16 @@ export const CatalogListPage = withTranslation()(
             tileName: serviceClassDisplayName(serviceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            tileDescription: serviceClass.spec.description,
+            // tileDescription: serviceClass.spec.description,
+            tileDescription: '',
             tileProvider: _.get(serviceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: serviceClass.spec.tags,
             createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
             // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
             href: `/k8s/ns/${namespace}/serviceinstances/~new?service-class=${serviceClass.metadata.name}`,
             supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
-            longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
-            documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
+            // longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
+            // documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
           });
           return acc;
         },
@@ -153,14 +157,15 @@ export const CatalogListPage = withTranslation()(
             tileName: serviceClassDisplayName(clusterServiceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            tileDescription: clusterServiceClass.spec.description,
+            // tileDescription: clusterServiceClass.spec.description,
+            tileDescription: '',
             tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: clusterServiceClass.spec.tags,
             createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
             // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
             href: `/k8s/ns/${namespace}/serviceinstances/~new?cluster-service-class=${clusterServiceClass.metadata.name}`,
             supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
-            longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
+            // longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
             documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.documentationUrl'),
           });
           return acc;
@@ -187,7 +192,8 @@ export const CatalogListPage = withTranslation()(
             tileName: annotations[ANNOTATIONS.displayName] || name,
             tileIconClass,
             tileImgUrl,
-            tileDescription: annotations.description,
+            // tileDescription: annotations.description,
+            tileDescription: '',
             tags,
             createLabel: 'Instantiate Template',
             tileProvider: annotations[ANNOTATIONS.providerDisplayName],
@@ -263,7 +269,8 @@ export const CatalogListPage = withTranslation()(
               tileName,
               tileIconClass: null,
               tileImgUrl,
-              tileDescription: chart.description,
+              // tileDescription: chart.description,
+              tileDescription: '',
               tags,
               createLabel: 'Install Helm Chart',
               markdownDescription,

@@ -22,7 +22,7 @@ const Description = ({ spec }) => {
   _.forEach(spec.instanceCreateParameterSchema.properties, (value, key) => {
     parameters.push(<li key={key}>{`${key}: ${value.default}`}</li>);
   });
-
+ // MJ : String발행되면 적용하기
   return (
     <div className="hc-create-service-instance__plan-desc">
       <span>{spec.description}</span>
