@@ -18,8 +18,6 @@ const isInternal = (crd: { name: string }): boolean => {
 export const normalizeClusterServiceVersions = (t, clusterServiceVersions: ClusterServiceVersionKind[]): K8sResourceKind[] => {
   const imgFor = desc => (_.get(desc.csv, 'spec.icon') ? `data:${_.get(desc.csv, 'spec.icon', [])[0].mediatype};base64,${_.get(desc.csv, 'spec.icon', [])[0].base64data}` : operatorLogo);
 
-  // MJ : OperatorDescription타이틀에 대해 String발행되면 적용하기
-  const formatTileDescription = (csvDescription: string): string => `## Operator Description\n${csvDescription}`;
 
   const operatorProvidedAPIs: K8sResourceKind[] = _.flatten(clusterServiceVersions.map(csv => providedAPIsFor(csv).map(desc => ({ ...desc, csv }))))
     .reduce((all, cur) => (all.find(v => referenceForProvidedAPI(v) === referenceForProvidedAPI(cur)) ? all : all.concat([cur])), [])
@@ -41,18 +39,17 @@ export const normalizeClusterServiceVersions = (t, clusterServiceVersions: Clust
         .toLowerCase()
         .replace(/\s/g, ''),
       tileImgUrl: imgFor(desc),
-      tileDescription: desc.description,
-      markdownDescription: formatTileDescription(desc.csv.spec.description),
+      tileDescription: desc.csv.spec.description,
       tileProvider: desc.csv.spec.provider.name,
       tags: desc.csv.spec.keywords,
       createLabel: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'),
       href: `/ns/${desc.csv.metadata.namespace}/clusterserviceversions/${desc.csv.metadata.name}/${referenceForProvidedAPI(desc)}/~new`,
       supportUrl: desc.csv.metadata.annotations?.['marketplace.openshift.io/support-workflow'],
       longDescription: `This resource is provided by ${desc.csv.spec.displayName}, a Kubernetes Operator enabled by the Operator Lifecycle Manager.`,
-      documentationUrl: _.get(
-        (desc.csv.spec.links || []).find(({ name }) => name === 'Documentation'),
-        'url',
-      ),
+      // documentationUrl: _.get(
+      //   (desc.csv.spec.links || []).find(({ name }) => name === 'Documentation'),
+      //   'url',
+      // ),
     }));
 
   return operatorProvidedAPIs;
