@@ -153,7 +153,7 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
                 </dd>
                 {resourcequotaclaims.status?.status === 'Rejected' && (
                   <>
-                    <dt>{t('SINGLE:MSG_DETAILS_TABDETAILS_20')}</dt>
+                    <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_20')}</dt>
                     <dd>{resourcequotaclaims.status?.reason}</dd>
                   </>
                 )}

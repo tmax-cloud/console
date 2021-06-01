@@ -153,7 +153,7 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
                 </dd>
                 {namespaceclaims.status?.status === 'Rejected' && (
                   <>
-                    <dt>{t('SINGLE:MSG_DETAILS_TABDETAILS_20')}</dt>
+                    <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_20')}</dt>
                     <dd>{namespaceclaims.status?.reason}</dd>
                   </>
                 )}
