@@ -193,6 +193,12 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     setOpen(false);
   };
 
+  const defaultRowFilterSetting = (filterList: string[]) => {
+    applyRowFilter(filterList);
+    setQueryParameters(filterList);
+    setOpen(false);
+  };
+
   const clearAllRowFilter = (f: string) => {
     updateRowFilterSelected(_.intersection(filters[f], selectedRowFilters));
   };
@@ -218,6 +224,9 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     if (!_.isEmpty(defaultSelectedRows)) {
       applyRowFilter(defaultSelectedRows);
       setQueryParameters(defaultSelectedRows);
+    }
+    if (location.search.indexOf('rowFilter-pod-status') >= 0) {
+      defaultRowFilterSetting(location.search.split('rowFilter-pod-status=')[1].split('%2C'));
     }
   }, []);
 
