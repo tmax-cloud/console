@@ -1,30 +1,13 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import {
-  DeploymentConfigModel,
-  DeploymentModel,
-  DaemonSetModel,
-  StatefulSetModel,
-  ReplicationControllerModel,
-  ReplicaSetModel,
-  PodModel,
-} from '@console/internal/models';
+import { DeploymentConfigModel, DeploymentModel, DaemonSetModel, StatefulSetModel, ReplicationControllerModel, ReplicaSetModel, PodModel } from '@console/internal/models';
 import { ChartLabel } from '@patternfly/react-charts';
-import {
-  K8sResourceKind,
-  K8sKind,
-  SelfSubjectAccessReviewKind,
-} from '@console/internal/module/k8s';
+import { K8sResourceKind, K8sKind, SelfSubjectAccessReviewKind } from '@console/internal/module/k8s';
 import { useSafetyFirst } from '@console/internal/components/safety-first';
 import { PodRCData, PodRingResources, PodRingData, ExtPodKind } from '../types';
 import { checkPodEditAccess, getPodStatus } from './pod-utils';
 import { RevisionModel } from '@console/knative-plugin';
-import {
-  getPodsForDeploymentConfigs,
-  getPodsForDeployments,
-  getPodsForStatefulSets,
-  getPodsForDaemonSets,
-} from './resource-utils';
+import { getPodsForDeploymentConfigs, getPodsForDeployments, getPodsForStatefulSets, getPodsForDaemonSets } from './resource-utils';
 import { AllPodStatus } from '../constants';
 
 import './pod-ring-text.scss';
@@ -64,16 +47,9 @@ const applyPods = (podsData: PodRingData, dc: PodRCData) => {
   return podsData;
 };
 
-const pluralizeString = (count: number, singularString: string, expectedString?: string) =>
-  count && count > 1 ? expectedString || `${singularString}s` : singularString;
+const pluralizeString = (count: number, singularString: string, expectedString?: string) => (count && count > 1 ? expectedString || `${singularString}s` : singularString);
 
-const isPendingPods = (
-  pods: ExtPodKind[],
-  currentPodCount: number,
-  desiredPodCount: number,
-): boolean =>
-  (pods?.length === 1 && pods[0].status?.phase === 'Pending') ||
-  (!currentPodCount && !!desiredPodCount);
+const isPendingPods = (pods: ExtPodKind[], currentPodCount: number, desiredPodCount: number): boolean => (pods?.length === 1 && pods[0].status?.phase === 'Pending') || (!currentPodCount && !!desiredPodCount);
 
 export const getFailedPods = (pods: ExtPodKind[]): number => {
   if (!pods?.length) {
@@ -88,11 +64,7 @@ export const getFailedPods = (pods: ExtPodKind[]): number => {
   }, 0);
 };
 
-const getTitleAndSubtitle = (
-  isPending: boolean,
-  currentPodCount: number,
-  desiredPodCount: number,
-) => {
+const getTitleAndSubtitle = (isPending: boolean, currentPodCount: number, desiredPodCount: number) => {
   let titlePhrase;
   let subTitlePhrase = '';
   let longSubtitle = false;
@@ -102,6 +74,9 @@ const getTitleAndSubtitle = (
     titlePhrase = isPending ? '0' : `Scaled to 0`;
     if (desiredPodCount) {
       subTitlePhrase = `scaling to ${desiredPodCount}`;
+      longSubtitle = true;
+    } else if (titlePhrase === '0') {
+      subTitlePhrase = 'pods';
       longSubtitle = true;
     }
   }
@@ -124,16 +99,10 @@ const getTitleComponent = (longSubtitle: boolean = false, reversed: boolean = fa
   React.createElement(ChartLabel, {
     dy: longSubtitle ? -5 : 0,
     style: { lineHeight: '11px' },
-    className: `pf-chart-donut-title ${
-      reversed ? 'pod-ring__center-text--reversed' : 'pod-ring__center-text'
-    }`,
+    className: `pf-chart-donut-title ${reversed ? 'pod-ring__center-text--reversed' : 'pod-ring__center-text'}`,
   });
 
-export const podRingLabel = (
-  obj: K8sResourceKind,
-  ownerKind: string,
-  pods: ExtPodKind[],
-): PodRingLabelType => {
+export const podRingLabel = (obj: K8sResourceKind, ownerKind: string, pods: ExtPodKind[]): PodRingLabelType => {
   let currentPodCount;
   let desiredPodCount;
   let title;
@@ -191,20 +160,12 @@ export const podRingLabel = (
   }
 };
 
-export const usePodScalingAccessStatus = (
-  obj: K8sResourceKind,
-  resourceKind: K8sKind,
-  pods: ExtPodKind[],
-  enableScaling?: boolean,
-  impersonate?: string,
-) => {
+export const usePodScalingAccessStatus = (obj: K8sResourceKind, resourceKind: K8sKind, pods: ExtPodKind[], enableScaling?: boolean, impersonate?: string) => {
   const [editable, setEditable] = useSafetyFirst(false);
   React.useEffect(() => {
     checkPodEditAccess(obj, resourceKind, impersonate)
-      .then((resp: SelfSubjectAccessReviewKind) =>
-        setEditable(_.get(resp, 'status.allowed', false)),
-      )
-      .catch((error) => {
+      .then((resp: SelfSubjectAccessReviewKind) => setEditable(_.get(resp, 'status.allowed', false)))
+      .catch(error => {
         // console.log is used here instead of throw error
         // throw error will break the thread and likely end-up in a white screen
         // eslint-disable-next-line
