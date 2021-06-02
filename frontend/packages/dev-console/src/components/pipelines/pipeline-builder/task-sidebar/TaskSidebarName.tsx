@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormGroup, TextInput, TextInputTypes } from '@patternfly/react-core';
 import { SidebarInputWrapper } from './temp-utils';
+import { useTranslation } from 'react-i18next';
 
 type TaskSidebarNameProps = {
   initialName: string;
@@ -27,11 +28,12 @@ const TaskSidebarName: React.FC<TaskSidebarNameProps> = (props) => {
   const [interimName, setInterimName] = React.useState(initialName);
   const [error, setError] = React.useState(null);
   const isValid = !error;
+  const { t } = useTranslation();
 
   return (
     <FormGroup
       fieldId="task-name"
-      label="Display Name"
+      label={t('SINGLE:MSG_PIPELINES_CREATEFORM_25')}
       helperTextInvalid={error}
       isValid={isValid}
       isRequired

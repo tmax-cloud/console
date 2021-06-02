@@ -53,7 +53,7 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   const actions = [
     (kind, obj) => ({
-      label: t('COMMON:MSG_MAIN_ACTIONBUTTON_19'),
+      label: `${(kind.kind === 'RoleBinding') ? t('SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_1') : t('SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_2')}`,
       href: `${resourceObjPath(obj, kind.kind)}/copy?subjectIndex=${subjectIndex}`,
       // Only perform access checks when duplicating cluster role bindings.
       // It's not practical to check namespace role bindings since we don't know what namespace the user will pick in the form.
@@ -525,9 +525,9 @@ export const EditRoleBinding = ({ match: { params }, kind }) => (
   </Firehose>
 );
 
-export const CopyRoleBinding = ({ match: { params }, kind }) => (
+export const CopyRoleBinding = ({ match: { params }, kind }) => (  
   <Firehose resources={[{ kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-    <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb="Duplicate" /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
+    <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb={`${(kind === 'RoleBinding') ? 'SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_1' : 'SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_2'}`} /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
   </Firehose>
 );
 
