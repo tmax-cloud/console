@@ -12,11 +12,12 @@ import * as UIActions from '../../actions/ui';
 import { MultiListPage, Table, TableRow, TableData } from '../factory';
 import { RadioGroup } from '../radio';
 import { confirmModal } from '../modals';
-import { ButtonBar, Kebab, Firehose, ListDropdown, MsgBox, NsDropdown, ResourceKebab, ResourceLink, ResourceName, StatusBox, getQueryArgument, history, kindObj, resourceObjPath, useAccessReview } from '../utils';
+import { ButtonBar, Kebab, Firehose, ListDropdown, MsgBox, NsDropdown, ResourceKebab, ResourceLink, ResourceName, StatusBox, getQueryArgument, history, kindObj, resourceObjPath, useAccessReview, getNamespace } from '../utils';
 import { isSystemRole } from './index';
 import { connectToFlags, flagPending } from '../../reducers/features';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { pluralToKind } from '../hypercloud/form';
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
 // Split each binding into one row per subject
@@ -226,6 +227,34 @@ const rowFilters = t => {
 
 export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new' }) => {
   const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'rolebindings',
+      name: t('COMMON:MSG_LNB_MENU_76'),
+
+    },
+    {
+      href: 'rolebindingclaims',
+      name: t('COMMON:MSG_LNB_MENU_101'),
+    },
+  ];  
+
+  const ko = kindObj(pluralToKind('rolebindings'));
+  const { namespaced, plural } = ko;
+  //const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
+  const usedNamespace = namespace;
+
+  let multiNavBaseURL;
+  if (namespaced) {
+    if (usedNamespace) {
+      multiNavBaseURL = `/k8s/ns/${usedNamespace}`;
+    } else {
+      multiNavBaseURL = `/k8s/all-namespaces`;
+    }
+  } else {
+    multiNavBaseURL = `/k8s/cluster`;
+  }
+
   return (
     <MultiListPage
       canCreate={!mock}
@@ -246,6 +275,8 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
       textFilter="role-binding"
       title={t('COMMON:MSG_LNB_MENU_76')}
       isClusterScope
+      multiNavPages={pages}
+      multiNavBaseURL={multiNavBaseURL}
     />
   );
 };

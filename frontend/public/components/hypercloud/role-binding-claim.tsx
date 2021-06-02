@@ -97,7 +97,50 @@ export const RoleBindingClaimsList: React.FC = props => {
 };
 RoleBindingClaimsList.displayName = 'RoleBindingClaimsList';
 
-export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props => <ListPage kind={'RoleBindingClaim'} canCreate={true} ListComponent={RoleBindingClaimsList} {...props} />;
+
+const roleBindingClaimStatusReducer = (rolebindingclaims: any): string => {  
+  return rolebindingclaims.status.status;
+};
+
+const filters = t => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'roleBindingClaim-status',
+    reducer: roleBindingClaimStatusReducer,
+    items: [
+      { id: 'Awaiting', title: 'Awaiting' },
+      { id: 'Rejected', title: 'Rejected' },
+      { id: 'Approved', title: 'Approved' },
+      { id: 'Error', title: 'Error' },      
+    ],
+  },
+];
+
+
+export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'rolebindings',
+      name: t('COMMON:MSG_LNB_MENU_76'),
+
+    },
+    {
+      href: 'rolebindingclaims',
+      name: t('COMMON:MSG_LNB_MENU_101'),
+    },
+  ];
+  return <ListPage
+    kind={'RoleBindingClaim'} 
+    canCreate={true} 
+    ListComponent={RoleBindingClaimsList} 
+    {...props} 
+    rowFilters={filters.bind(null, t)()}
+    multiNavPages={pages}
+    title={t('COMMON:MSG_LNB_MENU_76')}
+    />;
+};
+
 RoleBindingClaimsPage.displayName = 'RoleBindingClaimsPage';
 const RoleBindingClaimsDetails: React.FC<RoleBindingClaimDetailsProps> = ({ obj: rolebindingclaims }) => {
   const { t } = useTranslation();
