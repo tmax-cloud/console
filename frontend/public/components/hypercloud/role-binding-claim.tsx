@@ -119,12 +119,25 @@ const filters = t => [
 
 export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props => {
   const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'rolebindings',
+      name: t('COMMON:MSG_LNB_MENU_76'),
+
+    },
+    {
+      href: 'rolebindingclaims',
+      name: t('COMMON:MSG_LNB_MENU_101'),
+    },
+  ];
   return <ListPage
     kind={'RoleBindingClaim'} 
     canCreate={true} 
     ListComponent={RoleBindingClaimsList} 
     {...props} 
     rowFilters={filters.bind(null, t)()}
+    multiNavPages={pages}
+    title={t('COMMON:MSG_LNB_MENU_76')}
     />;
 };
 
