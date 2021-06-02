@@ -113,7 +113,7 @@ const RoleBindingsTableHeader = t => [
     props: { className: tableColumnClasses[0] },
   },
   {
-    title: t('COMMON:MSG_DETAILS_TABROLEBINDINGS_TABLEHEADER_2'),
+    title: t('COMMON:MSG_MAIN_TABLEHEADER_105'),
     sortField: 'roleRef.name',
     transforms: [sortable],
     props: { className: tableColumnClasses[1] },
