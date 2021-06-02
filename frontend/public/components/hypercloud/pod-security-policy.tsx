@@ -31,7 +31,7 @@ const PodSecurityPolicyTableHeader = t => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_47'),
-      sortFunc: 'spec.seLinux.rule',
+      sortField: 'spec.seLinux.rule',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },

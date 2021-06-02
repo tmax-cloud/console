@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '@console/internal/components/hypercloud/factory/modal';
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 import { useWatch } from 'react-hook-form';
 
 export const _ModalLauncher = props => {
-  const { inProgress, errorMessage, title, children, cancel, handleMethod, index, submitText, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
-  const {t} = useTranslation();
+  const { inProgress, path, errorMessage, title, children, cancel, handleMethod, index, submitText, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
+  const { t } = useTranslation();
   const onCancel = () => {
     // 수정일 경우에만 타는 로직
     let isModify = document.getElementById(`${id}-list`) ? true : false;
@@ -21,34 +21,39 @@ export const _ModalLauncher = props => {
   };
 
   const [submitDisabled, setSubmitDisabled] = React.useState(true);
-  const validFields = requiredFields.map(cur => useWatch({
-    control: methods.control,
-    name: cur,
-    defaultValue: ''
-  }))
+  const validFields = requiredFields.map(cur => {
+    const defaultValues = methods.getValues(path);
+
+    return useWatch({
+      control: methods.control,
+      name: cur,
+      defaultValue: defaultValues.length > 0 ? defaultValues[index][cur] : '', // 초기값 세팅
+    });
+  });
   const optionalValidFields = optionalRequiredField?.map(cur => {
     let defaultValue;
-    if(cur === 'default') {
-      if(validFields[1] === 'array') {
+    if (cur === 'default') {
+      if (validFields[1] === 'array') {
         defaultValue = '';
       } else {
         defaultValue = '';
       }
     }
     return useWatch({
-    control: methods.control,
-    name: cur,
-    defaultValue: defaultValue
-  })})
-  React.useEffect(()=>{
-    if(optionalRequiredField?.length === 0) {
-      if( validFields.every(cur => cur.trim().length > 0)) {
+      control: methods.control,
+      name: cur,
+      defaultValue: defaultValue,
+    });
+  });
+  React.useEffect(() => {
+    if (optionalRequiredField?.length === 0) {
+      if (validFields.every(cur => cur.trim().length > 0)) {
         setSubmitDisabled(false);
       } else {
         !submitDisabled && setSubmitDisabled(true);
       }
     } else {
-      if(validFields.every(cur => cur.trim().length > 0) && optionalValidCallback?.([...optionalValidFields])) {
+      if (validFields.every(cur => cur.trim().length > 0) && optionalValidCallback?.([...optionalValidFields])) {
         setSubmitDisabled(false);
       } else {
         !submitDisabled && setSubmitDisabled(true);
@@ -110,10 +115,12 @@ export const handleModalData = (id, objArray, curState, setState, isAddModal, me
   return false;
 };
 export const removeModalData = (curState, setState, e) => {
+  let target = e.target.closest('button');
   let removedState = curState.filter((cur, idx) => {
-    let targetIndex = Number(e.target.id.split('item-remove-')[1]);
+    let targetIndex = Number(target.id.split('item-remove-')[1]);
     return targetIndex !== idx;
   });
+  console.log('remove', curState);
   setState([...removedState]);
 };
 

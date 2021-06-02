@@ -72,7 +72,7 @@ const HealthCheckProbe: React.FC<HealthCheckProbeProps> = ({ probeType }) => {
     }
     return (
       <Button className="pf-m-link--align-left" variant={ButtonVariant.link} onClick={handleAddProbe} icon={<PlusCircleIcon />}>
-        {`Add ${getHealthChecksProbeConfig(probeType, t).formTitle}`}
+        {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_13', { 0: getHealthChecksProbeConfig(probeType, t).formTitle })}
       </Button>
     );
   };

@@ -3,13 +3,10 @@ import * as _ from 'lodash';
 import { FormikValues, useFormikContext } from 'formik';
 import { TextInputTypes, InputGroupText } from '@patternfly/react-core';
 import { InputGroupField, InputField, DropdownField, ActionGroupWithIcons } from '@console/shared';
-import {
-  HTTPRequestTypeForm,
-  TCPRequestTypeForm,
-  CommandRequestTypeForm,
-} from './RequestTypeForms';
+import { HTTPRequestTypeForm, TCPRequestTypeForm, CommandRequestTypeForm } from './RequestTypeForms';
 import { RequestType } from './health-checks-types';
 import FormSection from '../import/section/FormSection';
+import { useTranslation } from 'react-i18next';
 import './ProbeForm.scss';
 
 const getRequestTypeForm = (value: string, probeType: string) => {
@@ -38,6 +35,7 @@ enum RequestTypeOptions {
 }
 
 const ProbeForm: React.FC<ProbeFormProps> = ({ onSubmit, onClose, probeType }) => {
+  const { t } = useTranslation();
   const {
     values: { healthChecks },
     errors,
@@ -46,58 +44,15 @@ const ProbeForm: React.FC<ProbeFormProps> = ({ onSubmit, onClose, probeType }) =
   return (
     <div className="odc-heath-check-probe-form">
       <FormSection>
-        <DropdownField
-          name={`healthChecks.${probeType}.data.requestType`}
-          label="Type"
-          items={RequestTypeOptions}
-          title={RequestType.HTTPGET}
-          fullWidth
-        />
+        <DropdownField name={`healthChecks.${probeType}.data.requestType`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_15')} items={RequestTypeOptions} title={RequestType.HTTPGET} fullWidth />
         {getRequestTypeForm(healthChecks?.[probeType]?.data?.requestType, probeType)}
-        <InputField
-          type={TextInputTypes.number}
-          name={`healthChecks.${probeType}.data.failureThreshold`}
-          label="Failure Threshold"
-          style={{ maxWidth: '100%' }}
-          helpText="How many times the probe will try starting or restarting before giving up."
-        />
-        <InputField
-          type={TextInputTypes.number}
-          name={`healthChecks.${probeType}.data.successThreshold`}
-          label="Success Threshold"
-          style={{ maxWidth: '100%' }}
-          helpText="How many consecutive successes for the probe to be considered successful after having failed."
-        />
-        <InputGroupField
-          type={TextInputTypes.number}
-          name={`healthChecks.${probeType}.data.initialDelaySeconds`}
-          label="Initial Delay"
-          helpText="How long to wait after the container starts before checking it's health."
-          afterInput={<InputGroupText>{'seconds'}</InputGroupText>}
-          style={{ maxWidth: '100%' }}
-        />
-        <InputGroupField
-          type={TextInputTypes.number}
-          name={`healthChecks.${probeType}.data.periodSeconds`}
-          label="Period"
-          helpText="How often to perform the probe."
-          afterInput={<InputGroupText>{'seconds'}</InputGroupText>}
-          style={{ maxWidth: '100%' }}
-        />
-        <InputGroupField
-          type={TextInputTypes.number}
-          name={`healthChecks.${probeType}.data.timeoutSeconds`}
-          label="Timeout"
-          helpText="How long to wait for the probe to finish, if the time is exceeded, the probe is considered failed."
-          afterInput={<InputGroupText>{'seconds'}</InputGroupText>}
-          style={{ maxWidth: '100%' }}
-        />
+        <InputField type={TextInputTypes.number} name={`healthChecks.${probeType}.data.failureThreshold`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_23')} style={{ maxWidth: '100%' }} helpText={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_24')} />
+        <InputField type={TextInputTypes.number} name={`healthChecks.${probeType}.data.successThreshold`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_25')} style={{ maxWidth: '100%' }} helpText={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_26')} />
+        <InputGroupField type={TextInputTypes.number} name={`healthChecks.${probeType}.data.initialDelaySeconds`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_27')} helpText={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_29')} afterInput={<InputGroupText>{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_28')}</InputGroupText>} style={{ maxWidth: '100%' }} />
+        <InputGroupField type={TextInputTypes.number} name={`healthChecks.${probeType}.data.periodSeconds`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_30')} helpText={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_31')} afterInput={<InputGroupText>{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_28')}</InputGroupText>} style={{ maxWidth: '100%' }} />
+        <InputGroupField type={TextInputTypes.number} name={`healthChecks.${probeType}.data.timeoutSeconds`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_32')} helpText={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_33')} afterInput={<InputGroupText>{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_28')}</InputGroupText>} style={{ maxWidth: '100%' }} />
       </FormSection>
-      <ActionGroupWithIcons
-        onSubmit={onSubmit}
-        onClose={onClose}
-        isDisabled={!_.isEmpty(errors?.healthChecks?.[probeType])}
-      />
+      <ActionGroupWithIcons onSubmit={onSubmit} onClose={onClose} isDisabled={!_.isEmpty(errors?.healthChecks?.[probeType])} />
     </div>
   );
 };

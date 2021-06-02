@@ -182,11 +182,12 @@ class _EventsList extends React.Component {
 
 export const EventsList = withTranslation()(_EventsList);
 
-export const NoEvents = () => (
-  <Box className="co-sysevent-stream__status-box-empty">
-    <div className="text-center cos-status-box__detail">No events in the past hour</div>
+export const NoEvents = () => {
+  const {t} = useTranslation();
+  return <Box className="co-sysevent-stream__status-box-empty">
+    <div className="text-center cos-status-box__detail">{t('COMMON:MSG_DETAILS_TABEVENTS_5')}</div>
   </Box>
-);
+}
 
 export const NoMatchingEvents = ({ allCount }) => {
   const { t } = useTranslation();

@@ -23,7 +23,7 @@ const ClusterServiceBrokerDetails: React.FC<ClusterServiceBrokerDetailsProps> = 
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterServiceBroker, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={clusterServiceBroker}></ResourceSummary>
+            <ResourceSummary resource={clusterServiceBroker} showOwner={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">

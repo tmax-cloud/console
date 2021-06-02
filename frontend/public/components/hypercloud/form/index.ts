@@ -21,7 +21,9 @@ const pluralToKindMap = new Map([
   ['resourcequotas', 'ResourceQuota'],
   ['nodes', 'Node'],
   ['roles', 'Role'],
+  ['clusterroles', 'ClusterRole'],
   ['rolebindings', 'RoleBinding'],
+  ['clusterrolebindings', 'ClusterRoleBinding'],
   ['serviceaccounts', 'ServiceAccount'],
   ['customresourcedefinitions', 'CustomResourceDefinition'],
   ['namespaceclaims', 'NamespaceClaim'],
@@ -34,7 +36,7 @@ const pluralToKindMap = new Map([
   ['clustertemplates', 'ClusterTemplate'],
   ['serviceinstances', 'ServiceInstance'],
   ['servicebindings', 'ServiceBinding'],
-  ['catalogserviceclaims', 'CatalogServiceClaim'],
+  ['clustertemplateclaims', 'ClusterTemplateClaim'],
   ['templates', 'Template'],
   ['templateinstances', 'TemplateInstance'],
   ['rolebindingclaims', 'RoleBindingClaim'],
@@ -46,8 +48,10 @@ const pluralToKindMap = new Map([
   ['pipelineruns', 'PipelineRun'],
   ['approvals', 'Approval'],
   ['pipelineresources', 'PipelineResource'],
+  ['integrationjobs', 'IntegrationJob'],
   ['integrationconfigs', 'IntegrationConfig'],
   ['hyperclusterresources', 'HyperClusterResource'],
+  ['clustermanagers', 'ClusterManager'],
   ['clusterclaims', 'ClusterClaim'],
   ['federatedconfigmaps', 'FederatedConfigMap'],
   ['federateddeployments', 'FederatedDeployment'],
@@ -92,7 +96,7 @@ const pluralToKindMap = new Map([
   ['tfapplyclaims', 'TFApplyClaim'],
 ]);
 
-const isCreateManualSet = new Set(['Role', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBindingClaim']);
+const isCreateManualSet = new Set(['Role', 'ClusterRole', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBindingClaim']);
 const isVanillaObjectSet = new Set(['PodSecurityPolicy', 'Pod', 'Deployment', 'ReplicaSet', 'HorizontalPodAutoscaler', 'DaemonSet', 'StatefulSet', 'ConfigMap', 'Secret', 'Job', 'CronJob', 'Service', 'Ingress', 'NetworkPolicy', 'StorageClass', 'PersistentVolumeClaim', 'PersistentVolume', 'Namespace', 'LimitRange', 'ResourceQuota', 'Node', 'Role', 'RoleBinding', 'ServiceAccount', 'CustomResourceDefinition']);
 
 export const pluralToKind = plural => pluralToKindMap.get(plural);

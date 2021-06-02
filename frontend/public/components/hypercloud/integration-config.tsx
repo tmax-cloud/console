@@ -17,11 +17,15 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 const kind = IntegrationConfigModel.kind;
 
 const tableColumnClasses = [
-  classNames('col-xs-2', 'col-sm-2'),
-  classNames('col-xs-2', 'col-sm-2'),
-  classNames('col-sm-2', 'hidden-xs'),
-  classNames('col-xs-2', 'col-sm-2'),
-  classNames('col-sm-2', 'hidden-xs'),
+  //classNames('col-xs-2', 'col-sm-2'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // NAME
+  //classNames('col-xs-2', 'col-sm-2'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // NAMESPACE
+  //classNames('col-sm-2', 'hidden-xs'),
+  //classNames('col-xs-2', 'col-sm-2'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // STATUS
+  //classNames('col-lg-2', 'hidden-xs'),
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
   Kebab.columnClass,
 ];
 
@@ -55,28 +59,22 @@ const IntegrationConfigTableHeader = (t?: TFunction) => {
       sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_38'),
-      sortField: 'spec.image',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
+    },    
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortField: 'status.phase',
       transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
+      props: { className: tableColumnClasses[3] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[5] },
+      props: { className: tableColumnClasses[4] },
     },
   ];
 };
@@ -93,17 +91,14 @@ const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrat
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={integrationConfig.metadata.namespace} title={integrationConfig.metadata.namespace} />
-      </TableData>
+      </TableData>      
       <TableData className={tableColumnClasses[2]}>
-        {integrationConfig.spec.image}
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
         <Status status={phase} />
       </TableData>
-      <TableData className={tableColumnClasses[4]}>
+      <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={integrationConfig.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[5]}>
+      <TableData className={tableColumnClasses[4]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={integrationConfig} />
       </TableData>
     </TableRow>
@@ -156,13 +151,30 @@ export const IntegrationConfigs: React.FC = props => {
   return <Table {...props} aria-label="IntegrationConfigs" Header={IntegrationConfigTableHeader.bind(null, t)} Row={IntegrationConfigTableRow} virtualize />;
 }
 
+const integrationConfigStatusReducer = (integrationConfig: any): string => {
+  const phase = IntegrationConfigPhase(integrationConfig);
+  return phase;
+};
+
+const filters = t => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'integrationConfig-status',
+    reducer: integrationConfigStatusReducer,
+    items: [
+      { id: 'Ready', title: 'Ready' },
+      { id: 'UnReady', title: 'UnReady' },      
+    ],
+  },
+];
 
 export const IntegrationConfigsPage: React.FC<IntegrationConfigsPageProps> = props => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return <ListPage
     // title={t('COMMON:CD_MAILFORM_REQUEST_7')}
     // createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:CD_MAILFORM_REQUEST_7') })}
+    rowFilters={filters.bind(null, t)()}
     canCreate={true}
     ListComponent={IntegrationConfigs}
     kind={kind}

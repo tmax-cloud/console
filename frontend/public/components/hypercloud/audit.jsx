@@ -114,7 +114,7 @@ class AuditPage_ extends React.Component {
       apiservices: 'apiservices',
       attributemanifests: 'attributemanifests',
       authorizationpolicies: 'authorizationpolicies',
-      catalogserviceclaims: 'catalogserviceclaims',
+      clustertemplateclaims: 'clustertemplateclaims',
       cdis: 'cdis',
       cephblockpools: 'cephblockpools',
       cephclusters: 'cephclusters',

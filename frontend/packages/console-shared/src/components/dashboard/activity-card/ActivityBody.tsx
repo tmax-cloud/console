@@ -28,6 +28,7 @@ export const Activity: React.FC<ActivityProps> = ({ timestamp, children }) => (
 
 export const RecentEventsBodyContent: React.FC<RecentEventsBodyContentProps> = ({ events, filter, paused, setPaused, moreLink }) => {
   const ref = React.useRef<EventKind[]>([]);
+  const { t } = useTranslation();
   React.useEffect(() => {
     if (paused && events) {
       ref.current = events.data;
@@ -78,7 +79,7 @@ export const RecentEventsBodyContent: React.FC<RecentEventsBodyContentProps> = (
   if (sortedEvents.length === 0) {
     return (
       <Activity>
-        <div className="text-secondary">There are no recent events.</div>
+        <div className="text-secondary">{t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_4')}</div>
       </Activity>
     );
   }

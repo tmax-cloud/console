@@ -2,15 +2,7 @@ import * as _ from 'lodash-es';
 import { List as ImmutableList, Map as ImmutableMap } from 'immutable';
 
 import { ActionType, UIAction } from '../actions/ui';
-import {
-  ALL_NAMESPACES_KEY,
-  ALL_APPLICATIONS_KEY,
-  LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY,
-  NAMESPACE_LOCAL_STORAGE_KEY,
-  LAST_PERSPECTIVE_LOCAL_STORAGE_KEY,
-  PINNED_RESOURCES_LOCAL_STORAGE_KEY,
-  LAST_CLUSTER_LOCAL_STORAGE_KEY,
-} from '@console/shared/src/constants';
+import { ALL_NAMESPACES_KEY, ALL_APPLICATIONS_KEY, LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, NAMESPACE_LOCAL_STORAGE_KEY, LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, PINNED_RESOURCES_LOCAL_STORAGE_KEY, LAST_CLUSTER_LOCAL_STORAGE_KEY } from '@console/shared/src/constants';
 import { AlertStates, isSilenced, SilenceStates } from '../reducers/monitoring';
 import { legalNamePattern, getNamespace } from '../components/utils/link';
 import { OverviewSpecialGroup } from '../components/overview/constants';
@@ -22,16 +14,13 @@ export type UIState = ImmutableMap<string, any>;
 
 export function getDefaultPerspective() {
   let activePerspective = localStorage.getItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY);
-  if (
-    activePerspective &&
-    !getPerspectives().some((p) => p.properties.id === activePerspective)
-  ) {
+  if (activePerspective && !getPerspectives().some(p => p.properties.id === activePerspective)) {
     // invalid saved perspective
     activePerspective = undefined;
   }
   if (!activePerspective) {
     // assign default perspective
-    const defaultPerspective = getPerspectives().find((p) => p.properties.default);
+    const defaultPerspective = getPerspectives().find(p => p.properties.default);
     if (defaultPerspective) {
       activePerspective = defaultPerspective.properties.id;
     }
@@ -48,16 +37,13 @@ const newQueryBrowserQuery = (): ImmutableMap<string, any> =>
 
 const silenceFiringAlerts = (firingAlerts, silences) => {
   // For each firing alert, store a list of the Silences that are silencing it and set its state to show it is silenced
-  _.each(firingAlerts, (a) => {
-    a.silencedBy = _.filter(
-      _.get(silences, 'data'),
-      (s) => _.get(s, 'status.state') === SilenceStates.Active && isSilenced(a, s),
-    );
+  _.each(firingAlerts, a => {
+    a.silencedBy = _.filter(_.get(silences, 'data'), s => _.get(s, 'status.state') === SilenceStates.Active && isSilenced(a, s));
     if (a.silencedBy.length) {
       a.state = AlertStates.Silenced;
       // Also set the state of Alerts in `rule.alerts`
-      _.each(a.rule.alerts, (ruleAlert) => {
-        if (_.some(a.silencedBy, (s) => isSilenced(ruleAlert, s))) {
+      _.each(a.rule.alerts, ruleAlert => {
+        if (_.some(a.silencedBy, s => isSilenced(ruleAlert, s))) {
           ruleAlert.state = AlertStates.Silenced;
         }
       });
@@ -72,10 +58,7 @@ export default (state: UIState, action: UIAction): UIState => {
     let activeNamespace = getNamespace(pathname);
     if (!activeNamespace) {
       const parsedFavorite = localStorage.getItem(NAMESPACE_LOCAL_STORAGE_KEY);
-      if (
-        _.isString(parsedFavorite) &&
-        (parsedFavorite.match(legalNamePattern) || parsedFavorite === ALL_NAMESPACES_KEY)
-      ) {
+      if (_.isString(parsedFavorite) && (parsedFavorite.match(legalNamePattern) || parsedFavorite === ALL_NAMESPACES_KEY)) {
         activeNamespace = parsedFavorite;
       } else {
         activeNamespace = localStorage.getItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY);
@@ -130,9 +113,16 @@ export default (state: UIState, action: UIAction): UIState => {
         return state;
       }
 
-      return state
-        .set('activeApplication', ALL_APPLICATIONS_KEY)
-        .set('activeNamespace', action.payload.namespace);
+      return state.set('activeApplication', ALL_APPLICATIONS_KEY).set('activeNamespace', action.payload.namespace);
+
+    case ActionType.SetActiveSchema:
+      if (!action.payload.schema) {
+        // eslint-disable-next-line no-console
+        console.warn('setActiveNamespace: Not setting to falsy!');
+        return state;
+      }
+
+      return state.set('activeSchema', action.payload.schema);
 
     case ActionType.SetActivePerspective:
       return state.set('activePerspective', action.payload.perspective);
@@ -156,10 +146,7 @@ export default (state: UIState, action: UIAction): UIState => {
       return state.delete('impersonate');
 
     case ActionType.SortList:
-      return state.mergeIn(
-        ['listSorts', action.payload.listId],
-        _.pick(action.payload, ['field', 'func', 'orderBy']),
-      );
+      return state.mergeIn(['listSorts', action.payload.listId], _.pick(action.payload, ['field', 'func', 'orderBy']));
 
     case ActionType.SetCreateProjectMessage:
       return state.set('createProjectMessage', action.payload.message);
@@ -174,16 +161,10 @@ export default (state: UIState, action: UIAction): UIState => {
       return state.setIn(['monitoringDashboards', 'variables'], ImmutableMap());
 
     case ActionType.MonitoringDashboardsPatchVariable:
-      return state.mergeIn(
-        ['monitoringDashboards', 'variables', action.payload.key],
-        ImmutableMap(action.payload.patch),
-      );
+      return state.mergeIn(['monitoringDashboards', 'variables', action.payload.key], ImmutableMap(action.payload.patch));
 
     case ActionType.MonitoringDashboardsPatchAllVariables:
-      return state.setIn(
-        ['monitoringDashboards', 'variables'],
-        ImmutableMap(action.payload.variables),
-      );
+      return state.setIn(['monitoringDashboards', 'variables'], ImmutableMap(action.payload.variables));
 
     case ActionType.MonitoringDashboardsSetPollInterval:
       return state.setIn(['monitoringDashboards', 'pollInterval'], action.payload.pollInterval);
@@ -208,22 +189,12 @@ export default (state: UIState, action: UIAction): UIState => {
 
     case ActionType.SetMonitoringData: {
       // alerts used by monitoring -> alerting pages
-      const alerts =
-        action.payload.key === 'alerts'
-          ? action.payload.data
-          : state.getIn(['monitoring', 'alerts']);
+      const alerts = action.payload.key === 'alerts' ? action.payload.data : state.getIn(['monitoring', 'alerts']);
       // notificationAlerts used by notification drawer and certain dashboards
-      const notificationAlerts: NotificationAlerts =
-        action.payload.key === 'notificationAlerts'
-          ? action.payload.data
-          : state.getIn(['monitoring', 'notificationAlerts']);
-      const silences =
-        action.payload.key === 'silences'
-          ? action.payload.data
-          : state.getIn(['monitoring', 'silences']);
+      const notificationAlerts: NotificationAlerts = action.payload.key === 'notificationAlerts' ? action.payload.data : state.getIn(['monitoring', 'notificationAlerts']);
+      const silences = action.payload.key === 'silences' ? action.payload.data : state.getIn(['monitoring', 'silences']);
 
-      const isAlertFiring = (alert) =>
-        alert?.state === AlertStates.Firing || alert?.state === AlertStates.Silenced;
+      const isAlertFiring = alert => alert?.state === AlertStates.Firing || alert?.state === AlertStates.Silenced;
       const firingAlerts = _.filter(alerts?.data, isAlertFiring);
       silenceFiringAlerts(firingAlerts, silences);
       silenceFiringAlerts(_.filter(notificationAlerts?.data, isAlertFiring), silences);
@@ -233,8 +204,8 @@ export default (state: UIState, action: UIAction): UIState => {
       state = state.setIn(['monitoring', 'notificationAlerts'], notificationAlerts);
 
       // For each Silence, store a list of the Alerts it is silencing
-      _.each(_.get(silences, 'data'), (s) => {
-        s.firingAlerts = _.filter(firingAlerts, (a) => isSilenced(a, s));
+      _.each(_.get(silences, 'data'), s => {
+        s.firingAlerts = _.filter(firingAlerts, a => isSilenced(a, s));
       });
       return state.setIn(['monitoring', 'silences'], silences);
     }
@@ -242,19 +213,13 @@ export default (state: UIState, action: UIAction): UIState => {
       return state.setIn(['monitoring', 'hideGraphs'], !state.getIn(['monitoring', 'hideGraphs']));
 
     case ActionType.NotificationDrawerToggleExpanded:
-      return state.setIn(
-        ['notifications', 'isExpanded'],
-        !state.getIn(['notifications', 'isExpanded']),
-      );
+      return state.setIn(['notifications', 'isExpanded'], !state.getIn(['notifications', 'isExpanded']));
 
     case ActionType.NotificationDrawerToggleRead:
       return state.setIn(['notifications', 'isRead'], !state.getIn(['notifications', 'isRead']));
 
     case ActionType.QueryBrowserAddQuery:
-      return state.setIn(
-        ['queryBrowser', 'queries'],
-        state.getIn(['queryBrowser', 'queries']).push(newQueryBrowserQuery()),
-      );
+      return state.setIn(['queryBrowser', 'queries'], state.getIn(['queryBrowser', 'queries']).push(newQueryBrowserQuery()));
 
     case ActionType.QueryBrowserDeleteAllQueries:
       return state.setIn(['queryBrowser', 'queries'], ImmutableList([newQueryBrowserQuery()]));
@@ -272,21 +237,16 @@ export default (state: UIState, action: UIAction): UIState => {
     case ActionType.QueryBrowserInsertText: {
       const { index, newText, replaceFrom, replaceTo } = action.payload;
       const oldText = state.getIn(['queryBrowser', 'queries', index, 'text'], '');
-      const text =
-        _.isInteger(replaceFrom) && _.isInteger(replaceTo)
-          ? oldText.substring(0, replaceFrom) + newText + oldText.substring(replaceTo)
-          : oldText + newText;
+      const text = _.isInteger(replaceFrom) && _.isInteger(replaceTo) ? oldText.substring(0, replaceFrom) + newText + oldText.substring(replaceTo) : oldText + newText;
       return state.setIn(['queryBrowser', 'queries', index, 'text'], text);
     }
     case ActionType.QueryBrowserPatchQuery: {
       const { index, patch } = action.payload;
-      const query = state.hasIn(['queryBrowser', 'queries', index])
-        ? ImmutableMap(patch)
-        : newQueryBrowserQuery().merge(patch);
+      const query = state.hasIn(['queryBrowser', 'queries', index]) ? ImmutableMap(patch) : newQueryBrowserQuery().merge(patch);
       return state.mergeIn(['queryBrowser', 'queries', index], query);
     }
     case ActionType.QueryBrowserRunQueries: {
-      const queries = state.getIn(['queryBrowser', 'queries']).map((q) => {
+      const queries = state.getIn(['queryBrowser', 'queries']).map(q => {
         const isEnabled = q.get('isEnabled');
         const query = q.get('query');
         const text = _.trim(q.get('text'));
@@ -295,7 +255,7 @@ export default (state: UIState, action: UIAction): UIState => {
       return state.setIn(['queryBrowser', 'queries'], queries);
     }
     case ActionType.QueryBrowserSetAllExpanded: {
-      const queries = state.getIn(['queryBrowser', 'queries']).map((q) => {
+      const queries = state.getIn(['queryBrowser', 'queries']).map(q => {
         return q.set('isExpanded', action.payload.isExpanded);
       });
       return state.setIn(['queryBrowser', 'queries'], queries);
@@ -316,10 +276,7 @@ export default (state: UIState, action: UIAction): UIState => {
       );
     }
     case ActionType.QueryBrowserToggleSeries:
-      return state.updateIn(
-        ['queryBrowser', 'queries', action.payload.index, 'disabledSeries'],
-        (v) => _.xorWith(v, [action.payload.labels], _.isEqual),
-      );
+      return state.updateIn(['queryBrowser', 'queries', action.payload.index, 'disabledSeries'], v => _.xorWith(v, [action.payload.labels], _.isEqual));
 
     case ActionType.SelectOverviewItem:
       return state.setIn(['overview', 'selectedUID'], action.payload.uid);
@@ -391,14 +348,15 @@ export const impersonateStateToProps = ({ UI }: RootState) => {
   return { impersonate: UI.get('impersonate') };
 };
 
+export const getAcitveSchema = ({ UI }: RootState): any => UI.get('activeSchema');
+
 export const getActiveNamespace = ({ UI }: RootState): string => UI.get('activeNamespace');
 
 export const getActivePerspective = ({ UI }: RootState): string => UI.get('activePerspective');
 
 export const getActiveApplication = ({ UI }: RootState): string => UI.get('activeApplication');
 
-export const getPinnedResources = (rootState: RootState): string[] =>
-  rootState.UI.get('pinnedResources')[getActivePerspective(rootState)];
+export const getPinnedResources = (rootState: RootState): string[] => rootState.UI.get('pinnedResources')[getActivePerspective(rootState)];
 
 export const getActiveCluster = ({ UI }: RootState): string => UI.get('activeCluster');
 

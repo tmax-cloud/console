@@ -1,7 +1,7 @@
 pipeline {
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
-    choice(name: 'DEPLOY', choices:['ck2-1', 'ck1-1', 'keycloak'], description: 'Select k8s env you want to deploy the console')
+    choice(name: 'DEPLOY', choices:['team-k8s', 'ck-k8s', 'keycloak'], description: 'Select k8s env you want to deploy the console')
 
     string(name: 'KEYCLOAK', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
@@ -40,7 +40,7 @@ pipeline {
   }
   agent {
     kubernetes {
-      cloud 'ck1-1'
+      cloud 'team-k8s'
       // yamlFile './KubernetesPod.yaml'
       yaml '''\
         apiVersion: v1
@@ -94,7 +94,9 @@ pipeline {
             HOTFIX_VER = "0"
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
-            HOTFIX_VER++
+            def hotfix_number = (HOTFIX_VER as int) + 1
+            HOTFIX_VER = hotfix_number.toString()
+            // HOTFIX_VER++
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
@@ -165,7 +167,9 @@ pipeline {
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
             // TEMP = (("${params.HOTFIX_VER}" as int) -1).toString()
-            HOTFIX_VER--
+            def hotfix_number = (HOTFIX_VER as int) - 1
+            HOTFIX_VER = hotfix_number.toString()
+            // HOTFIX_VER--
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }

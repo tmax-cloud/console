@@ -83,6 +83,10 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     return {
       'ui:field': 'AdditionalPropertyField',
     };
+  } else if (jsonSchemaName === 'owner' && jsonSchema?.description.indexOf(`Don't deal with this field.`) >= 0) {
+    console.log('owner');
+    delete jsonSchema?.description;
+    delete jsonSchema?.type;
   } else if (jsonSchema?.['x-kubernetes-int-or-string'] || jsonSchema?.['anyOf']) {
     if (
       isArray(jsonSchema.anyOf) &&
@@ -99,20 +103,9 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     }
     delete jsonSchema?.anyOf;
   } else if (jsonSchema?.['oneOf']) {
-    if (
-      isArray(jsonSchema.oneOf) &&
-      jsonSchema.oneOf.every(cur => {
-        if (isArray(cur?.['type'])) {
-          return cur['type'][0] === 'string' || cur['type'][0] === 'number' || cur['type'][0] === 'null' || cur['type'][0] === 'integer';
-        } else if (cur?.['type']) {
-          return cur['type'] === 'string' || cur['type'] === 'number' || cur['type'] === 'null' || cur['type'] === 'integer';
-        }
-      })
-    ) {
-      delete jsonSchema?.oneOf;
-      jsonSchema.type = 'string';
-    }
-    delete jsonSchema?.oneOf;
+    return {
+      'ui:field': 'OneOfField', // number or string 일 경우에 컴포넌트
+    };
   } else if (jsonSchema?.['allOf']) {
     if (
       isArray(jsonSchema.allOf) &&

@@ -15,7 +15,6 @@ import { ServicePlanModel, ClusterServicePlanModel, ServiceClassModel, ClusterSe
 /**
  * Housing both the row filter and name/label filter in the same file.
  */
-// MJ : 외부이름, 외부이름으로 검색에 대한 string발행되면 적용하기
 enum FilterType {
   NAME = 'Name',
   LABEL = 'Label',
@@ -215,16 +214,11 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(labelFilters) && applyFilter(labelFilters, FilterType.LABEL);
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(externalNameFilter) && applyFilter(externalNameFilter, FilterType.EXTERNAL_NAME);
-    !_.isEmpty(defaultSelectedRows) && applyRowFilter(defaultSelectedRows);
-    if (!_.isEmpty(selectedRowFilters) || storeSelectedRows.size > 0) {
-      selectedRowFilters.map(row => storeSelectedRows.add(row));
-      applyRowFilter(Array.from(storeSelectedRows));
-      setQueryParameters(Array.from(storeSelectedRows));
-    }
-    return () => {
-      //clear filter with Awaiting
+
+    if (!_.isEmpty(defaultSelectedRows)) {
       applyRowFilter(defaultSelectedRows);
-    };
+      setQueryParameters(defaultSelectedRows);
+    }
   }, []);
 
   React.useEffect(() => {
@@ -258,13 +252,13 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
   const placeHolders = {
     [FilterType.LABEL]: 'app=frontend',
     [FilterType.NAME]: t('COMMON:MSG_COMMON_SEARCH_PLACEHOLDER_1'),
-    [FilterType.EXTERNAL_NAME]: t('외부이름으로 검색'),
+    [FilterType.EXTERNAL_NAME]: t('COMMON:MSG_COMMON_SEARCH_PLACEHOLDER_3'),
   };
 
   // MEMO : 특정 리소스 타입에서만 필요로 하는 검색기준이 있을 때
   if (props.kinds.length === 1) {
     if (requireExternalNameFiltering.includes(props.kinds[0])) {
-      searchFilterTitle[FilterType.EXTERNAL_NAME] = t('외부 이름');
+      searchFilterTitle[FilterType.EXTERNAL_NAME] = t('COMMON:MSG_COMMON_SEARCH_FILTER_5');
     }
   }
 

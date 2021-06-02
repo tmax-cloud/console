@@ -6,6 +6,7 @@ import { TextInputTypes } from '@patternfly/react-core';
 import { InputField, CheckboxField } from '@console/shared';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
+import { useTranslation } from 'react-i18next';
 export const MultiWorkspacesField: React.FC<MultiWorkspacesFieldProps> = ({ name }) => {
   const { values } = useFormikContext<FormikValues>();
   const fieldValue = _.get(values, name, []);
@@ -13,6 +14,7 @@ export const MultiWorkspacesField: React.FC<MultiWorkspacesFieldProps> = ({ name
     name: '',
     optional: false,
   };
+  const { t } = useTranslation();
 
   return (
     <FieldArray
@@ -34,14 +36,14 @@ export const MultiWorkspacesField: React.FC<MultiWorkspacesFieldProps> = ({ name
                       variant="link"
                     >
                       <MinusCircleIcon data-test-id="pairs-list__delete-icon" className="pairs-list__side-btn pairs-list__delete-ico co-icon-space-r" />
-                      Remove Pipeline workspace
+                      {`${t('SINGLE:MSG_PIPELINES_CREATEFORM_33')}`}
                     </Button>
                   </div>
-                  <InputSection label="워크스페이스 이름" customClass="short-margin-top" isRequired={true}>
-                    <InputField name={`${name}.${index}.name`} type={TextInputTypes.text} placeholder="Name" />
+                  <InputSection label={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_34')}`} customClass="short-margin-top" isRequired={true}>
+                    <InputField name={`${name}.${index}.name`} type={TextInputTypes.text} placeholder={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_34')}`} />
                   </InputSection>
                   <InputSection>
-                    <CheckboxField name={`${name}.${index}.optional`} label='이 워크스페이스를 선택 항목으로 제공합니다.' helpText='선택 항목으로 제공할 경우, 파이프라인 런 메뉴에서 파이프라인 워크스페이스를 필요에 따라 할당할 수 있습니다.'/>
+                    <CheckboxField name={`${name}.${index}.optional`} label={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_35')}`} helpText={`${t('SINGLE:MSG_PIPELINES_CREATEFORM_36')}`}/>
                   </InputSection>
                 </div>
               ))}
@@ -56,7 +58,7 @@ export const MultiWorkspacesField: React.FC<MultiWorkspacesFieldProps> = ({ name
                 variant="link"
               >
                 <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-                Add Pipeline workspace
+                {`${t('SINGLE:MSG_PIPELINES_CREATEFORM_32')}`}
               </Button>
             </div>
           </FormGroup>

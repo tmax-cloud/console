@@ -191,7 +191,7 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
 
   const ButtonTextComponent = () => (
     <Button type="button" onClick={handleSelectContainers} variant="link" isInline>
-      {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_13_text')}
+      {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_34')}
     </Button>
   );
   const buttonString = <ButtonTextComponent key="buttonstring" />;
@@ -259,23 +259,23 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
         )}
         {useContainerSelector && (
           <div className="form-group co-break-word">
-            <label className="control-label">Containers</label>
+            <label className="control-label">{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_31')}</label>
             <Button type="button" onClick={handleSelectContainers} variant="link">
-              (use all containers)
+              {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_32')}
             </Button>
             <ContainerSelector containers={obj.spec.template.spec.containers} selected={selectedContainers} onChange={handleContainerSelectionChange} />
             <p className="help-block" id="subpath-help">
-              Select which containers to mount volume into.
+              {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_33')}
             </p>
           </div>
         )}
         <ButtonBar errorMessage={error} inProgress={inProgress}>
           <ActionGroup className="pf-c-form">
             <Button type="submit" variant="primary" id="save-changes">
-              Save
+              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
             </Button>
             <Button type="button" variant="secondary" onClick={history.goBack}>
-              Cancel
+              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
             </Button>
           </ActionGroup>
         </ButtonBar>

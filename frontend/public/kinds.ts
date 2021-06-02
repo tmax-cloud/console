@@ -2,29 +2,17 @@ import * as _ from 'lodash-es';
 import { connect } from 'react-redux';
 import { match } from 'react-router-dom';
 
-import {
-  K8sKind,
-  K8sResourceKindReference,
-  kindForReference,
-  GroupVersionKind,
-  isGroupVersionKind,
-  allModels,
-  getGroupVersionKind,
-} from './module/k8s';
+import { K8sKind, K8sResourceKindReference, kindForReference, GroupVersionKind, isGroupVersionKind, allModels, getGroupVersionKind } from './module/k8s';
 import { RootState } from './redux';
+import { pluralToKind } from '@console/internal/components/hypercloud/form';
 
-export const connectToModel = connect(
-  (state: RootState, props: { kind: K8sResourceKindReference } & any) => {
-    const kind: string = props.kind || _.get(props, 'match.params.plural');
+export const connectToModel = connect((state: RootState, props: { kind: K8sResourceKindReference } & any) => {
+  const kind: string = props.kind || _.get(props, 'match.params.plural');
 
-    const kindObj: K8sKind = !_.isEmpty(kind)
-      ? state.k8s.getIn(['RESOURCES', 'models', kind]) ||
-        state.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)])
-      : null;
+  const kindObj: K8sKind = !_.isEmpty(kind) ? state.k8s.getIn(['RESOURCES', 'models', kind]) || state.k8s.getIn(['RESOURCES', 'models', kindForReference(kind)]) : null;
 
-    return { kindObj, kindsInFlight: state.k8s.getIn(['RESOURCES', 'inFlight']) } as any;
-  },
-);
+  return { kindObj, kindsInFlight: state.k8s.getIn(['RESOURCES', 'inFlight']) } as any;
+});
 
 type WithPluralProps = {
   kindObj?: K8sKind;
@@ -57,7 +45,7 @@ export const connectToPlural: ConnectToPlural = connect(
     let kindObj: K8sKind = null;
     if (groupVersionKind) {
       const [group, version, kind] = groupVersionKind;
-      kindObj = allModels().find((model) => {
+      kindObj = allModels().find(model => {
         return model.apiGroup === group && model.apiVersion === version && model.kind === kind;
       });
 
@@ -65,9 +53,11 @@ export const connectToPlural: ConnectToPlural = connect(
         kindObj = state.k8s.getIn(['RESOURCES', 'models']).get(plural);
       }
     } else {
-      kindObj = allModels().find(
-        (model) => model.plural === plural && (!model.crd || model.legacyPluralURL),
-      );
+      let kind = pluralToKind(plural);
+      kindObj = allModels().find(model => model.kind === kind && (!model.crd || model.legacyPluralURL));
+      if (!kindObj) {
+        kindObj = state.k8s.getIn(['RESOURCES', 'models']).get(kind); // plural이 kind로 되어있는 경우 (registry -> 스캔요청 -> registry)
+      }
     }
 
     const modelRef = isGroupVersionKind(plural) ? plural : _.get(kindObj, 'kind');

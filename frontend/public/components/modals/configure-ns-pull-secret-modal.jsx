@@ -9,8 +9,9 @@ import { k8sPatch, k8sPatchByName, k8sCreate } from '../../module/k8s';
 import { SecretModel, ServiceAccountModel } from '../../models';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
 import { PromiseComponent, ResourceIcon } from '../utils';
+import { withTranslation } from 'react-i18next';
 
-const parseExisitingPullSecret = (pullSecret) => {
+const parseExisitingPullSecret = pullSecret => {
   let invalidData = false;
   const invalidJson = false;
   let username, email, password, address;
@@ -57,7 +58,7 @@ const parseExisitingPullSecret = (pullSecret) => {
   return { username, password, email, address, invalidData, invalidJson };
 };
 
-const generateSecretData = (formData) => {
+const generateSecretData = formData => {
   const config = {
     auths: {},
   };
@@ -108,7 +109,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
     }
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       const input = e.target.result;
       try {
         JSON.parse(input);
@@ -170,48 +171,32 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
           value: { name: pullSecretName },
         },
       ];
-      promise = k8sCreate(SecretModel, secret).then(() =>
-        k8sPatchByName(
-          ServiceAccountModel,
-          'default',
-          namespace.metadata.name,
-          defaultServiceAccountPatch,
-        ),
-      );
+      promise = k8sCreate(SecretModel, secret).then(() => k8sPatchByName(ServiceAccountModel, 'default', namespace.metadata.name, defaultServiceAccountPatch));
     }
 
     this.handlePromise(promise).then(this.props.close);
   }
 
   render() {
-    const { namespace, pullSecret } = this.props;
+    const { namespace, pullSecret, t } = this.props;
 
     const existingData = parseExisitingPullSecret(pullSecret);
 
     return (
       <form onSubmit={this._submit} name="form" className="modal-content">
-        <ModalTitle>Default Pull Secret</ModalTitle>
+        <ModalTitle>{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_1')}</ModalTitle>
         <ModalBody>
-          <p>
-            Specify default credentials to be used to authenticate and download containers within
-            this namespace. These credentials will be the default unless a pod references a specific
-            pull secret.
-          </p>
+          <p>{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_2')}</p>
 
           {existingData.invalidData && (
-            <Alert
-              isInline
-              className="co-alert"
-              variant="danger"
-              title="Overwriting default pull secret"
-            >
+            <Alert isInline className="co-alert" variant="danger" title="Overwriting default pull secret">
               A default pull secret exists, but can't be parsed. Saving this will overwrite it.
             </Alert>
           )}
 
           <div className="row co-m-form-row">
             <div className="col-xs-3">
-              <label>Namespace</label>
+              <label>{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_3')}</label>
             </div>
             <div className="col-xs-9">
               <ResourceIcon kind="Namespace" /> &nbsp;{namespace.metadata.name}
@@ -220,7 +205,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
 
           <div className="row co-m-form-row">
             <div className="col-xs-3">
-              <label htmlFor="namespace-pull-secret-name">Secret Name</label>
+              <label htmlFor="namespace-pull-secret-name">{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_4')}</label>
             </div>
             {pullSecret ? (
               <div className="col-xs-9">
@@ -229,15 +214,9 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
               </div>
             ) : (
               <div className="col-xs-9">
-                <input
-                  type="text"
-                  className="pf-c-form-control"
-                  id="namespace-pull-secret-name"
-                  aria-describedby="namespace-pull-secret-name-help"
-                  required
-                />
+                <input type="text" className="pf-c-form-control" id="namespace-pull-secret-name" aria-describedby="namespace-pull-secret-name-help" required />
                 <p className="help-block text-muted" id="namespace-pull-secret-name-help">
-                  Friendly name to help you manage this in the future
+                  {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_5')}
                 </p>
               </div>
             )}
@@ -245,31 +224,19 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
 
           <div className="row co-m-form-row form-group">
             <div className="col-xs-3">
-              <label>Method</label>
+              <label>{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_6')}</label>
             </div>
             <div className="col-xs-9">
               <div className="radio">
                 <label className="control-label">
-                  <input
-                    type="radio"
-                    id="namespace-pull-secret-method--form"
-                    checked={this.state.method === 'form'}
-                    onChange={this._onMethodChange}
-                    value="form"
-                  />
-                  Enter Username/Password
+                  <input type="radio" id="namespace-pull-secret-method--form" checked={this.state.method === 'form'} onChange={this._onMethodChange} value="form" />
+                  {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_7')}
                 </label>
               </div>
               <div className="radio">
                 <label className="control-label">
-                  <input
-                    type="radio"
-                    checked={this.state.method === 'upload'}
-                    onChange={this._onMethodChange}
-                    id="namespace-pull-secret-method--upload"
-                    value="upload"
-                  />
-                  Upload Docker config.json
+                  <input type="radio" checked={this.state.method === 'upload'} onChange={this._onMethodChange} id="namespace-pull-secret-method--upload" value="upload" />
+                  {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_8')}
                 </label>
               </div>
             </div>
@@ -279,62 +246,37 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
             <div>
               <div className="row co-m-form-row">
                 <div className="col-xs-3">
-                  <label htmlFor="namespace-pull-secret-address">Registry Address</label>
+                  <label htmlFor="namespace-pull-secret-address">{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_9')}</label>
                 </div>
                 <div className="col-xs-9">
-                  <input
-                    type="text"
-                    className="pf-c-form-control"
-                    id="namespace-pull-secret-address"
-                    defaultValue={existingData.address}
-                    placeholder="quay.io"
-                    required
-                  />
+                  <input type="text" className="pf-c-form-control" id="namespace-pull-secret-address" defaultValue={existingData.address} placeholder="quay.io" required />
                 </div>
               </div>
               <div className="row co-m-form-row">
                 <div className="col-xs-3">
-                  <label htmlFor="namespace-pull-secret-email">Email Address</label>
+                  <label htmlFor="namespace-pull-secret-email">{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_10')}</label>
                 </div>
                 <div className="col-xs-9">
-                  <input
-                    type="email"
-                    className="pf-c-form-control"
-                    defaultValue={existingData.email}
-                    id="namespace-pull-secret-email"
-                    aria-describedby="namespace-pull-secret-email-help"
-                  />
+                  <input type="email" className="pf-c-form-control" defaultValue={existingData.email} id="namespace-pull-secret-email" aria-describedby="namespace-pull-secret-email-help" />
                   <p className="help-block text-muted" id="namespace-pull-secret-email-help">
-                    Optional, depending on registry provider
+                    {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_11')}
                   </p>
                 </div>
               </div>
               <div className="row co-m-form-row">
                 <div className="col-xs-3">
-                  <label htmlFor="namespace-pull-secret-username">Username</label>
+                  <label htmlFor="namespace-pull-secret-username">{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_12')}</label>
                 </div>
                 <div className="col-xs-9">
-                  <input
-                    type="text"
-                    defaultValue={existingData.username}
-                    className="pf-c-form-control"
-                    id="namespace-pull-secret-username"
-                    required
-                  />
+                  <input type="text" defaultValue={existingData.username} className="pf-c-form-control" id="namespace-pull-secret-username" required />
                 </div>
               </div>
               <div className="row co-m-form-row">
                 <div className="col-xs-3">
-                  <label htmlFor="namespace-pull-secret-password">Password</label>
+                  <label htmlFor="namespace-pull-secret-password">{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_13')}</label>
                 </div>
                 <div className="col-xs-9">
-                  <input
-                    type="password"
-                    defaultValue={existingData.password}
-                    className="pf-c-form-control"
-                    id="namespace-pull-secret-password"
-                    required
-                  />
+                  <input type="password" defaultValue={existingData.password} className="pf-c-form-control" id="namespace-pull-secret-password" required />
                 </div>
               </div>
             </div>
@@ -347,15 +289,9 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
                   <label htmlFor="namespace-pull-secret-file">File Upload</label>
                 </div>
                 <div className="col-xs-9">
-                  <input
-                    type="file"
-                    id="namespace-pull-secret-file"
-                    onChange={this._onFileChange}
-                    aria-describedby="namespace-pull-secret-file-help"
-                  />
+                  <input type="file" id="namespace-pull-secret-file" onChange={this._onFileChange} aria-describedby="namespace-pull-secret-file-help" />
                   <p className="help-block etext-muted" id="namespace-pull-secret-file-help">
-                    Properly configured Docker config file in JSON format. Will be base64 encoded
-                    after upload.
+                    Properly configured Docker config file in JSON format. Will be base64 encoded after upload.
                   </p>
                 </div>
               </div>
@@ -379,12 +315,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
             </div>
           )}
         </ModalBody>
-        <ModalSubmitFooter
-          errorMessage={this.state.errorMessage}
-          inProgress={this.state.inProgress}
-          submitText="Save"
-          cancel={this._cancel}
-        />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_14')} cancel={this._cancel} />
       </form>
     );
   }
@@ -395,4 +326,4 @@ ConfigureNamespacePullSecret.propTypes = {
   pullSecret: PropTypes.object,
 };
 
-export const configureNamespacePullSecretModal = createModalLauncher(ConfigureNamespacePullSecret);
+export const configureNamespacePullSecretModal = createModalLauncher(withTranslation()(ConfigureNamespacePullSecret));

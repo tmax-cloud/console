@@ -71,11 +71,11 @@ export const tableFilters: TableFilterMap = {
     const result = resourceQuotaClaim?.status?.status;
     return results.selected.has(result) || !_.includes(results.all, result);
   },
-  'catalog-service-claim-status': (results, catalogServiceClaim) => {
+  'cluster-template-claim-status': (results, clusterTemplateClaim) => {
     if (!results || !results.selected || !results.selected.size) {
       return true;
     }
-    let result = catalogServiceClaim?.status?.status;
+    let result = clusterTemplateClaim?.status?.status;
     result = result === 'Approve' ? 'Approved' : result;
     result = result === 'Reject' ? 'Rejected' : result;
     return results.selected.has(result);
@@ -137,6 +137,24 @@ export const tableFilters: TableFilterMap = {
       apiGroup: 'rbac.authorization.k8s.io',
       name: groupName,
     }),
+  
+  // Filter Integration Config by Status
+  'integrationConfig-status' : (filter, binding) => {
+    let phase = '';
+    if (binding.status) {
+      binding.status.conditions.forEach(cur => {
+        if (cur.type === 'ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else {
+            phase = 'UnReady';
+          }
+        }
+      });
+      return filter.selected.has(phase) || filter.selected.size === 0;
+    }
+
+  },  
 
   selector: (selector, obj) => {
     if (!selector || !selector.values || !selector.values.size) {
@@ -151,6 +169,21 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
     return !!values.all.every(v => labels.includes(v));
+  },
+
+  'pvc-status': (phases, pvc) => {
+    if (!phases || !phases.selected || !phases.selected.size) {
+      return true;
+    }
+
+    const phaseFunc = (pvc) => {
+      if (pvc?.metadata?.deletionTimestamp) {
+        return 'Terminating';
+      }
+      return pvc.status.phase
+    }
+    const phase = phaseFunc(pvc);
+    return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
   'pod-status': (phases, pod) => {
@@ -282,14 +315,6 @@ export const tableFilters: TableFilterMap = {
     return fuzzyCaseInsensitive(str, project.metadata.name) || fuzzyCaseInsensitive(str, displayName);
   },
 
-  'pvc-status': (phases, pvc) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
-
-    const phase = pvc.status.phase;
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
 
   // Filter service classes by text match
   'service-class': (str, serviceClass) => {

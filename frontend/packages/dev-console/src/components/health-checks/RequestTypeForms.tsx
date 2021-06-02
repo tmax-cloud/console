@@ -5,35 +5,28 @@ import { TextInputTypes, FormGroup } from '@patternfly/react-core';
 import { InputField, CheckboxField, getFieldId, TextColumnField } from '@console/shared';
 import { NameValueEditor } from '@console/internal/components/utils/name-value-editor';
 import { Resources } from '../import/import-types';
+import { useTranslation } from 'react-i18next';
 
 interface RequestTypeFormProps {
   probeType?: string;
 }
 
 export const renderPortField = (fieldName: string, resourceType: Resources) => {
+  const { t } = useTranslation();
   if (resourceType === Resources.KnativeService) {
-    return (
-      <InputField
-        type={TextInputTypes.text}
-        name="knative-port"
-        label="Port"
-        placeholder="0"
-        isDisabled
-      />
-    );
+    return <InputField type={TextInputTypes.text} name="knative-port" label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_15')} placeholder="0" isDisabled />;
   }
-  return <InputField type={TextInputTypes.text} name={fieldName} label="Port" required />;
+  return <InputField type={TextInputTypes.text} name={fieldName} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_15')} required />;
 };
 
 export const HTTPRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeType }) => {
+  const { t } = useTranslation();
   const {
     values: { healthChecks, resources },
     setFieldValue,
   } = useFormikContext<FormikValues>();
   const httpHeaders = healthChecks?.[probeType]?.data?.httpGet?.httpHeaders;
-  const initialNameValuePairs = !_.isEmpty(httpHeaders)
-    ? httpHeaders.map((val) => _.values(val))
-    : [['', '']];
+  const initialNameValuePairs = !_.isEmpty(httpHeaders) ? httpHeaders.map(val => _.values(val)) : [['', '']];
   const [nameValue, setNameValue] = React.useState(initialNameValuePairs);
   const portFieldName = `healthChecks.${probeType}.data.httpGet.port`;
 
@@ -57,32 +50,11 @@ export const HTTPRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeType 
   );
   return (
     <>
-      <CheckboxField
-        name={`healthChecks.${probeType}.data.httpGet.scheme`}
-        label="Use HTTPS"
-        value="HTTPS"
-      />
-      <FormGroup
-        fieldId={getFieldId(`healthChecks.${probeType}.data.httpGet.httpHeaders`, 'name-value')}
-        name={`healthChecks.${probeType}.data.httpGet.httpHeaders`}
-        label="HTTP Headers"
-      >
-        <NameValueEditor
-          nameValuePairs={nameValue}
-          valueString="Value"
-          nameString="Header Name"
-          addString="Add Header"
-          readOnly={false}
-          allowSorting={false}
-          updateParentData={handleNameValuePairs}
-        />
+      <CheckboxField name={`healthChecks.${probeType}.data.httpGet.scheme`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_16')} value="HTTPS" />
+      <FormGroup fieldId={getFieldId(`healthChecks.${probeType}.data.httpGet.httpHeaders`, 'name-value')} name={`healthChecks.${probeType}.data.httpGet.httpHeaders`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_17')}>
+        <NameValueEditor nameValuePairs={nameValue} valueString={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_19')} nameString={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_18')} addString={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_20')} readOnly={false} allowSorting={false} updateParentData={handleNameValuePairs} />
       </FormGroup>
-      <InputField
-        type={TextInputTypes.text}
-        name={`healthChecks.${probeType}.data.httpGet.path`}
-        label="Path"
-        placeholder="/"
-      />
+      <InputField type={TextInputTypes.text} name={`healthChecks.${probeType}.data.httpGet.path`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_21')} placeholder="/" />
       {renderPortField(portFieldName, resources)}
     </>
   );
@@ -101,15 +73,5 @@ export const CommandRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeTy
     values: { healthChecks },
   } = useFormikContext<FormikValues>();
   const commands = healthChecks?.[probeType]?.data?.exec?.command || [''];
-  return (
-    <TextColumnField
-      name={`healthChecks.${probeType}.data.exec.command`}
-      label="Command"
-      addLabel="Add command"
-      placeholder="argument"
-      helpText="The command to run inside the container."
-      required
-      disableDeleteRow={commands.length === 1}
-    />
-  );
+  return <TextColumnField name={`healthChecks.${probeType}.data.exec.command`} label="Command" addLabel="Add command" placeholder="argument" helpText="The command to run inside the container." required disableDeleteRow={commands.length === 1} />;
 };

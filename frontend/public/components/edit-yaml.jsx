@@ -12,8 +12,8 @@ import { FLAGS, ALL_NAMESPACES_KEY, getBadgeFromType } from '@console/shared';
 import { connectToFlags } from '../reducers/features';
 import { errorModal } from './modals';
 import { Firehose, checkAccess, history, Loading, resourceObjPath } from './utils';
-import { referenceForModel, k8sCreate, k8sUpdate, referenceFor, groupVersionFor } from '../module/k8s';
-import { ConsoleYAMLSampleModel } from '../models';
+import { referenceForModel, k8sCreate, getK8sAPIPath, k8sUpdate, referenceFor, groupVersionFor } from '../module/k8s';
+import { ConsoleYAMLSampleModel, CustomResourceDefinitionModel } from '../models';
 import { getResourceSidebarSamples } from './sidebars/resource-sidebar-samples';
 import { ResourceSidebar } from './sidebars/resource-sidebar';
 import { yamlTemplates } from '../models/yaml-templates';
@@ -21,6 +21,10 @@ import { yamlTemplates } from '../models/yaml-templates';
 import { definitionFor } from '../module/k8s/swagger';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { withTranslation } from 'react-i18next';
+import { getIdToken } from '../hypercloud/auth';
+
+import { pluralToKind, isVanillaObject } from './hypercloud/form';
+import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 
 const generateObjToLoad = (kind, id, yaml, namespace = 'default') => {
   const sampleObj = safeLoad(yaml ? yaml : yamlTemplates.getIn([kind, id]));
@@ -54,6 +58,7 @@ export const EditYAML_ = connect(stateToProps)(
         sampleObj: props.sampleObj,
         fileUpload: props.fileUpload,
         showSidebar: !!props.create,
+        definition: {},
       };
       this.monacoRef = React.createRef();
       // k8s uses strings for resource versions
@@ -80,7 +85,32 @@ export const EditYAML_ = connect(stateToProps)(
     }
 
     componentDidMount() {
-      this.loadYaml();
+      const model = this.getModel(this.props.obj);
+      if (model) {
+        const kind = model.kind;
+        const isCustomResourceType = !isVanillaObject(kind);
+        let url;
+        if (isCustomResourceType) {
+          url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
+          url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+        } else {
+          const directory = kindToSchemaPath.get(model.kind)?.['directory'];
+          const file = kindToSchemaPath.get(model.kind)?.['file'];
+          url = `${document.location.origin}/api/resource/${directory}/${file}`;
+        }
+        const xhrTest = new XMLHttpRequest();
+        xhrTest.open('GET', url);
+        xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
+        xhrTest.onreadystatechange = () => {
+          if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
+            let template = xhrTest.response;
+            template = JSON.parse(template);
+            this.setState({ definition: isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template });
+          }
+        };
+        xhrTest.send();
+        this.loadYaml();
+      }
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -381,14 +411,13 @@ export const EditYAML_ = connect(stateToProps)(
         'co-file-dropzone--drop-over': isOver,
       });
 
-      const { error, success, stale, yaml, showSidebar } = this.state;
+      const { error, success, stale, yaml, showSidebar, definition } = this.state;
       const { obj, download = true, header, genericYAML = false, children: customAlerts } = this.props;
       const readOnly = this.props.readOnly || this.state.notAllowed;
       const options = { readOnly, scrollBeyondLastLine: false };
       const model = this.getModel(obj);
       const { samples, snippets } = model ? getResourceSidebarSamples(model, yamlSamplesList) : { samples: [], snippets: [] };
-      const definition = model ? definitionFor(model) : { properties: [] };
-      const showSchema = definition && !_.isEmpty(definition.properties);
+      const showSchema = definition && !_.isEmpty(definition);
       const hasSidebarContent = showSchema || !_.isEmpty(samples) || !_.isEmpty(snippets);
       const sidebarLink =
         !showSidebar && hasSidebarContent ? (
@@ -464,7 +493,7 @@ export const EditYAML_ = connect(stateToProps)(
                   </div>
                 </div>
               </div>
-              {hasSidebarContent && <ResourceSidebar isCreateMode={create} kindObj={model} loadSampleYaml={this.replaceYamlContent_} insertSnippetYaml={this.insertYamlContent_} downloadSampleYaml={this.downloadSampleYaml_} showSidebar={showSidebar} toggleSidebar={this.toggleSidebar} samples={samples} snippets={snippets} showSchema={showSchema} />}
+              {hasSidebarContent && <ResourceSidebar definition={definition} isCreateMode={create} kindObj={model} loadSampleYaml={this.replaceYamlContent_} insertSnippetYaml={this.insertYamlContent_} downloadSampleYaml={this.downloadSampleYaml_} showSidebar={showSidebar} toggleSidebar={this.toggleSidebar} samples={samples} snippets={snippets} showSchema={showSchema} />}
             </div>
           </div>
         </div>

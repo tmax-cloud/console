@@ -8,7 +8,8 @@ myIP=$(hostname -I | awk '{print $1}')
 # k8sIP='220.90.208.100'
 # k8sIP='172.22.6.2'
 # k8sIP='172.23.4.201'
-k8sIP='192.168.6.171'
+# k8sIP='192.168.6.171'
+k8sIP='192.168.9.194'
 
 # BRIDGE_K8S_AUTH_BEARER_TOKEN=$(ssh root@$k8sIP "secretname=\$(kubectl get serviceaccount console-system-admin --namespace=console-system -o jsonpath='{.secrets[0].name}'); kubectl get secret "\$secretname" --namespace=console-system -o template --template='{{.data.token}}' | base64 --decode; ")
 #BRIDGE_K8S_AUTH_BEARER_TOKEN=$(ssh root@$k8sIP "secretname=\$(kubectl get serviceaccount default --namespace=kube-system -o jsonpath='{.secrets[0].name}'); kubectl get secret "\$secretname" --namespace=kube-system -o template --template='{{.data.token}}' | base64 --decode; ")
@@ -20,13 +21,13 @@ PROM_PORT='30714'
 # kubectl get svc -n monitoring grafana
 GRAFANA_PORT='3000'
 # kubectl get svc -n hypercloud5-system hypercloud5-api-server-service 
-HC_PORT='32237'
-MHC_PORT='32237'
-WEBHOOK_PORT='32237'
+HC_PORT='32369'
+MHC_PORT='32369'
+WEBHOOK_PORT='32369'
 # kubectl get svc -n efk opendistro-kibana
 KIBANA_PORT='32496'
 # kubectl get ingress -n istio-system 
-KIALI='kiali.istio-system.220.90.208.239.nip.io'
+KIALI='kiali.istio-system.172.21.4.152.nip.io'
 KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트 
 
 ./bin/console gateway \
@@ -45,7 +46,7 @@ KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트
     --prometheus-endpoint=http://$k8sIP:$PROM_PORT/api \
     --alertmanager-endpoint=http://$k8sIP:$PROM_PORT/api \
     --grafana-endpoint=http://$k8sIP:$GRAFANA_PORT/api/grafana/ \
-    --kiali-endpoint=https://$KIALI/api/kiali/ \
+    --kiali-endpoint=https://$KIALI/api/kiali \
     --kibana-endpoint=https://$k8sIP:$KIBANA_PORT/api/kibana/ \
     --kubeflow-endpoint=http://172.23.4.113/api/kubeflow/ \
     --mc-mode=true \

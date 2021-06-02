@@ -72,22 +72,67 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
         const template = await k8sGet(TemplateModel, selectedTemplateName, namespace);
         const parametersList = template?.parameters?.map((paramObj, index) => {
           const inputType = !!paramObj.valueType ? paramObj.valueType : 'text';
-          return (
+          if (inputType === 'number') {
+            // MEMO : input의 type을 number로 해도 submit 시에 data엔 string으로 들어가있어서 number로 변환해주기 위해 Controller사용하고 input onChange부분에서 숫자로 변환해줌.
             <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
-              <TextInput id={`params.${paramObj.name}`} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} />
-            </Section>
-          );
+              <Controller
+                control={methods.control}
+                name={`params.${paramObj.name}`}
+                defaultValue={paramObj.value}
+                render={props => (
+                  <input
+                    {...props}
+                    type={inputType}
+                    className="pf-c-form-control"
+                    placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')}
+                    onChange={e => {
+                      props.onChange(parseInt((e.target as HTMLInputElement).value, 10));
+                    }}
+                  />
+                )}
+              />
+            </Section>;
+          } else {
+            return (
+              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
+                <TextInput id={`params.${paramObj.name}`} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} />
+              </Section>
+            );
+          }
         });
         setParamList(parametersList);
       } else if (selectedType === 'ClusterTemplate') {
         const clusterTemplate = await k8sGet(ClusterTemplateModel, selectedTemplateName);
         const parametersList = clusterTemplate?.parameters?.map((paramObj, index) => {
           const inputType = !!paramObj.valueType ? paramObj.valueType : 'text';
-          return (
-            <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
-              <TextInput id={`params.${paramObj.name}`} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} />
-            </Section>
-          );
+          if (inputType === 'number') {
+            return (
+              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
+                <Controller
+                  control={methods.control}
+                  name={`params.${paramObj.name}`}
+                  defaultValue={paramObj.value}
+                  render={props => (
+                    <input
+                      {...props}
+                      type={inputType}
+                      className="pf-c-form-control"
+                      placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')}
+                      onChange={e => {
+                        props.onChange(parseInt((e.target as HTMLInputElement).value, 10));
+                      }}
+                    />
+                  )}
+                />
+              </Section>
+            );
+          } else {
+            return (
+              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
+                <TextInput id={`params.${paramObj.name}`} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} />
+              </Section>
+            );
+          }
         });
         setParamList(parametersList);
       }
@@ -105,7 +150,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
 
   return (
     <>
-      <Section label="Labels" id="label" description={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV10_1')}>
+      <Section label={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV8_1')} id="label" description={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV10_1')}>
         <Controller name="labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
       </Section>
       <div className="co-form-section__separator" />
@@ -119,10 +164,11 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
 };
 
 export const CreateTemplateInstance: React.FC<CreateTemplateInstanceProps> = ({ match: { params }, kind }) => {
+  const { t } = useTranslation();
   const formComponent = templateInstanceFormFactory(params);
   const TemplateInstanceFormComponent = formComponent;
 
-  return <TemplateInstanceFormComponent fixed={{ apiVersion: `${TemplateInstanceModel.apiGroup}/${TemplateInstanceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm />;
+  return <TemplateInstanceFormComponent fixed={{ apiVersion: `${TemplateInstanceModel.apiGroup}/${TemplateInstanceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} nameSectionTitle={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV5_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm />;
 };
 
 export const onSubmitCallback = data => {

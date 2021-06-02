@@ -4,10 +4,11 @@ import * as PropTypes from 'prop-types';
 import { FilterSidePanel, FilterSidePanelCategory, FilterSidePanelCategoryItem, VerticalTabs, VerticalTabsTab } from '@patternfly/react-catalog-view-extension';
 import { FormControl } from 'patternfly-react';
 import { Button, EmptyState, EmptyStateBody, EmptyStateSecondaryActions, EmptyStateVariant, Gallery, GalleryItem, Title } from '@patternfly/react-core';
-import { getCatalogType, CatalogPageType } from '../catalog/catalog-page';
+import { getCatalogPageType, CatalogPageType } from '../catalog/catalog-page';
 import { history } from './router';
 import { isModalOpen } from '../modals';
 import { Dropdown } from '../utils';
+import { withTranslation } from 'react-i18next';
 
 export const FilterTypes = {
   category: 'category',
@@ -145,8 +146,8 @@ const categorize = (items, categories) => {
  * under 'Other' main category.
  * (exported for test purposes)
  */
-export const categorizeItems = (items, itemsSorter, initCategories) => {
-  const allCategory = { id: 'all', label: 'All Items' };
+export const categorizeItems = (t, items, itemsSorter, initCategories) => {
+  const allCategory = { id: 'all', label: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_3') };
   const otherCategory = { id: 'other', label: 'Other' };
 
   const categories = {
@@ -307,7 +308,7 @@ const getActiveFilters = (keywordFilter, groupFilters, activeFilters, categoryFi
             if (!groupFilters || !groupFilters[filterGroup]) {
               if (lastFilters[filterGroup]) {
                 // MEMO : ServiceInstance 생성 버튼을 통해 간 catalog/.../serviceinstance가 들어간 url의 카탈로그페이지에선 ServiceClass관련 filter만 보여져야 됨
-                if (getCatalogType() === CatalogPageType.SERVICE_INSTANCE) {
+                if (getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE) {
                   activeFilters[filterGroup] = {
                     ClusterServiceClass: {
                       label: 'Cluster Service Class',
@@ -481,335 +482,331 @@ const defaultFilters = {
   },
 };
 
-export class TileViewPage extends React.Component {
-  constructor(props) {
-    super(props);
-    const { items, itemsSorter, getAvailableCategories, groupByTypes } = this.props;
-    const categories = getAvailableCategories(items);
+export const TileViewPage = withTranslation()(
+  class TileViewPage extends React.Component {
+    constructor(props) {
+      super(props);
+      const { items, itemsSorter, getAvailableCategories, groupByTypes, t } = this.props;
+      const categories = getAvailableCategories(items);
 
-    this.state = {
-      categories: categorizeItems(items, itemsSorter, categories),
-      selectedCategoryId: 'all',
-      activeFilters: defaultFilters,
-      filterCounts: null,
-      filterGroupsShowAll: {},
-      groupBy: groupByTypes ? groupByTypes.None : '',
-    };
+      this.state = {
+        categories: categorizeItems.bind(null, t)(items, itemsSorter, categories),
+        selectedCategoryId: 'all',
+        activeFilters: defaultFilters,
+        filterCounts: null,
+        filterGroupsShowAll: {},
+        groupBy: groupByTypes ? groupByTypes.None : '',
+      };
 
-    this.onUpdateFilters = this.onUpdateFilters.bind(this);
-    this.onFilterChange = this.onFilterChange.bind(this);
-    this.renderFilterGroup = this.renderFilterGroup.bind(this);
-    this.onShowAllToggle = this.onShowAllToggle.bind(this);
-    this.onGroupChange = this.onGroupChange.bind(this);
-  }
+      this.onUpdateFilters = this.onUpdateFilters.bind(this);
+      this.onFilterChange = this.onFilterChange.bind(this);
+      this.renderFilterGroup = this.renderFilterGroup.bind(this);
+      this.onShowAllToggle = this.onShowAllToggle.bind(this);
+      this.onGroupChange = this.onGroupChange.bind(this);
+    }
 
-  componentDidMount() {
-    const { items, filterGroups, getAvailableFilters, groupByTypes, storeFilterKey, filterRetentionPreference } = this.props;
-    const { categories } = this.state;
-    const availableFilters = getAvailableFilters(defaultFilters, items, filterGroups);
-    const activeValues = getActiveValuesFromURL(availableFilters, filterGroups, groupByTypes, storeFilterKey, filterRetentionPreference);
-
-    this.setState({
-      ...this.getUpdatedState(categories, activeValues.selectedCategoryId, activeValues.activeFilters),
-      groupBy: activeValues.groupBy,
-    });
-    this.filterByKeywordInput.focus({ preventScroll: true });
-  }
-
-  componentWillUnmount() {
-    this.unmounted = true;
-  }
-
-  componentDidUpdate(prevProps) {
-    const { activeFilters, selectedCategoryId, groupBy } = this.state;
-    const { items, itemsSorter, filterGroups, getAvailableCategories, getAvailableFilters } = this.props;
-
-    if (!_.isEqual(items, prevProps.items)) {
+    componentDidMount() {
+      const { items, filterGroups, getAvailableFilters, groupByTypes, storeFilterKey, filterRetentionPreference } = this.props;
+      const { categories } = this.state;
       const availableFilters = getAvailableFilters(defaultFilters, items, filterGroups);
-      const availableCategories = getAvailableCategories(items);
-      const categories = categorizeItems(items, itemsSorter, availableCategories);
+      const activeValues = getActiveValuesFromURL(availableFilters, filterGroups, groupByTypes, storeFilterKey, filterRetentionPreference);
 
-      const newActiveFilters = _.reduce(
-        availableFilters,
-        (updatedFilters, filterGroup, filterGroupName) => {
-          if (filterGroupName === FilterTypes.keyword) {
-            updatedFilters.keyword = activeFilters.keyword;
-            return updatedFilters;
-          }
-          _.each(filterGroup, (filterItem, filterItemName) => {
-            updatedFilters[filterGroupName][filterItemName].active = _.get(activeFilters, [filterGroupName, filterItemName, 'active'], false);
-          });
-
-          return updatedFilters;
-        },
-        availableFilters,
-      );
-
-      this.updateMountedState({
-        ...this.getUpdatedState(categories, selectedCategoryId, newActiveFilters),
-        groupBy,
+      this.setState({
+        ...this.getUpdatedState(categories, activeValues.selectedCategoryId, activeValues.activeFilters),
+        groupBy: activeValues.groupBy,
       });
-    }
-  }
-
-  getUpdatedState(categories, selectedCategoryId, activeFilters) {
-    const { items, itemsSorter, keywordCompare, filterGroups } = this.props;
-
-    if (!items) {
-      return;
-    }
-
-    const newCategories = recategorizeItems(items, itemsSorter, activeFilters, keywordCompare, categories);
-
-    return {
-      activeFilters,
-      selectedCategoryId,
-      categories: newCategories,
-      filterCounts: getFilterGroupCounts(items, itemsSorter, filterGroups, selectedCategoryId, activeFilters, newCategories, keywordCompare),
-    };
-  }
-
-  // This function is necessary due to calls to history.replace un-mounting the component before returning
-  updateMountedState(newState) {
-    if (!this.unmounted) {
-      this.setState(newState);
-    }
-  }
-
-  storeFilters(filters) {
-    if (this.props.storeFilterKey && this.props.filterRetentionPreference) {
-      const storeFilters = {};
-      _.each(this.props.filterRetentionPreference, filterGroup => {
-        if (filters[filterGroup]) {
-          storeFilters[filterGroup] = filters[filterGroup];
-        }
-      });
-      localStorage.setItem(this.props.storeFilterKey, JSON.stringify(storeFilters));
-    }
-  }
-
-  clearFilters() {
-    const { filterGroups } = this.props;
-    const { activeFilters, categories, selectedCategoryId } = this.state;
-
-    clearFilterURLParams(selectedCategoryId);
-
-    const clearedFilters = clearActiveFilters(activeFilters, filterGroups);
-
-    this.updateMountedState(this.getUpdatedState(categories, selectedCategoryId, clearedFilters));
-
-    // Don't take focus if a modal was opened while the page was loading.
-    if (!isModalOpen()) {
       this.filterByKeywordInput.focus({ preventScroll: true });
     }
 
-    this.storeFilters(clearedFilters);
-  }
-
-  selectCategory(categoryId) {
-    const { activeFilters, categories } = this.state;
-
-    updateURLParams(FilterTypes.category, categoryId);
-    this.updateMountedState(this.getUpdatedState(categories, categoryId, activeFilters));
-  }
-
-  onUpdateFilters(updatedFilters) {
-    const { selectedCategoryId, categories } = this.state;
-    this.updateMountedState(this.getUpdatedState(categories, selectedCategoryId, updatedFilters));
-  }
-
-  onFilterChange(filterType, id, value) {
-    const { activeFilters, selectedCategoryId, categories } = this.state;
-
-    if (filterType === FilterTypes.keyword) {
-      updateURLParams(FilterTypes.keyword, `${value}`);
-    } else {
-      const groupFilter = _.cloneDeep(activeFilters[filterType]);
-      _.set(groupFilter, [id, 'active'], value);
-      updateURLParams(filterType, getFilterSearchParam(groupFilter));
+    componentWillUnmount() {
+      this.unmounted = true;
     }
 
-    const updatedFilters = updateActiveFilters(activeFilters, filterType, id, value);
+    componentDidUpdate(prevProps) {
+      const { activeFilters, selectedCategoryId, groupBy } = this.state;
+      const { items, itemsSorter, filterGroups, getAvailableCategories, getAvailableFilters, t, language } = this.props;
 
-    this.updateMountedState(this.getUpdatedState(categories, selectedCategoryId, updatedFilters));
+      // MEMO : items비교를 기준으로 categories를 업데이트 해주는데, 언어설정 변경했을 때에도 이부분을 실행시키기 위해 language라는 props를 만들어서 prevProps랑 다를 때만 실행하도록 함.
+      if (!_.isEqual(items, prevProps.items) || !_.isEqual(language, prevProps.language)) {
+        const availableFilters = getAvailableFilters(defaultFilters, items, filterGroups);
+        const availableCategories = getAvailableCategories(items);
+        const categories = categorizeItems.bind(null, t)(items, itemsSorter, availableCategories);
 
-    this.storeFilters(updatedFilters);
-  }
+        const newActiveFilters = _.reduce(
+          availableFilters,
+          (updatedFilters, filterGroup, filterGroupName) => {
+            if (filterGroupName === FilterTypes.keyword) {
+              updatedFilters.keyword = activeFilters.keyword;
+              return updatedFilters;
+            }
+            _.each(filterGroup, (filterItem, filterItemName) => {
+              updatedFilters[filterGroupName][filterItemName].active = _.get(activeFilters, [filterGroupName, filterItemName, 'active'], false);
+            });
 
-  onKeywordChange(value) {
-    this.onFilterChange('keyword', null, value);
-  }
+            return updatedFilters;
+          },
+          availableFilters,
+        );
 
-  onShowAllToggle(groupName) {
-    const { filterGroupsShowAll } = this.state;
-    const updatedShow = _.clone(filterGroupsShowAll);
-    _.set(updatedShow, groupName, !_.get(filterGroupsShowAll, groupName, false));
-    this.setState({ filterGroupsShowAll: updatedShow });
-  }
+        this.updateMountedState({
+          ...this.getUpdatedState(categories, selectedCategoryId, newActiveFilters),
+          groupBy,
+        });
+      }
+    }
 
-  onGroupChange(value) {
-    const { groupByTypes } = this.props;
-    updateURLParams('groupBy', value === groupByTypes.None ? `` : `${value}`);
-    this.updateMountedState({ groupBy: value });
-  }
+    getUpdatedState(categories, selectedCategoryId, activeFilters) {
+      const { items, itemsSorter, keywordCompare, filterGroups } = this.props;
 
-  renderTabs(category, selectedCategoryId) {
-    const { id, label, subcategories, numItems } = category;
-    const active = id === selectedCategoryId;
-    const shown = id === 'all';
+      if (!items) {
+        return;
+      }
 
-    const tabClasses = `text-capitalize${!numItems ? ' co-catalog-tab__empty' : ''}`;
-    return (
-      <VerticalTabsTab key={id} title={label} active={active} className={tabClasses} onActivate={() => this.selectCategory(id)} hasActiveDescendant={hasActiveDescendant(selectedCategoryId, category)} shown={shown}>
-        {subcategories && (
-          <VerticalTabs restrictTabs activeTab={isActiveTab(selectedCategoryId, category)}>
-            {_.map(subcategories, subcategory => this.renderTabs(subcategory, selectedCategoryId))}
-          </VerticalTabs>
-        )}
-      </VerticalTabsTab>
-    );
-  }
+      const newCategories = recategorizeItems(items, itemsSorter, activeFilters, keywordCompare, categories);
 
-  renderCategoryTabs(selectedCategoryId) {
-    const { categories } = this.state;
-    const activeTab = _.has(categories, selectedCategoryId);
+      return {
+        activeFilters,
+        selectedCategoryId,
+        categories: newCategories,
+        filterCounts: getFilterGroupCounts(items, itemsSorter, filterGroups, selectedCategoryId, activeFilters, newCategories, keywordCompare),
+      };
+    }
 
-    return (
-      <VerticalTabs restrictTabs activeTab={activeTab} shown="true">
-        {_.map(categories, category => this.renderTabs(category, selectedCategoryId))}
-      </VerticalTabs>
-    );
-  }
+    // This function is necessary due to calls to history.replace un-mounting the component before returning
+    updateMountedState(newState) {
+      if (!this.unmounted) {
+        this.setState(newState);
+      }
+    }
 
-  renderFilterGroup(
-    filterGroup,
-    groupName,
-    activeFilters,
-    filterCounts,
-    onFilterChange,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    onUpdateFilters,
-  ) {
-    const { filterGroupNameMap } = this.props;
-    const { filterGroupsShowAll } = this.state;
-
-    return (
-      <FilterSidePanelCategory key={groupName} title={filterGroupNameMap[groupName] || groupName} onShowAllToggle={() => this.onShowAllToggle(groupName)} showAll={_.get(filterGroupsShowAll, groupName, false)} data-test-group-name={groupName}>
-        {_.map(filterGroup, (filter, filterName) => {
-          const { label, active } = filter;
-          return (
-            <FilterSidePanelCategoryItem key={filterName} count={_.get(filterCounts, [groupName, filterName], 0)} checked={active} onClick={e => onFilterChange(groupName, filterName, e.target.checked)} title={label} data-test={`${groupName}-${_.kebabCase(filterName)}`}>
-              {label}
-            </FilterSidePanelCategoryItem>
-          );
-        })}
-      </FilterSidePanelCategory>
-    );
-  }
-
-  renderSidePanel() {
-    let { renderFilterGroup } = this.props;
-    const { activeFilters, filterCounts } = this.state;
-
-    renderFilterGroup = renderFilterGroup || this.renderFilterGroup;
-
-    return (
-      <FilterSidePanel>
-        {_.map(activeFilters, (filterGroup, groupName) => {
-          if (groupName === FilterTypes.keyword) {
-            return;
+    storeFilters(filters) {
+      if (this.props.storeFilterKey && this.props.filterRetentionPreference) {
+        const storeFilters = {};
+        _.each(this.props.filterRetentionPreference, filterGroup => {
+          if (filters[filterGroup]) {
+            storeFilters[filterGroup] = filters[filterGroup];
           }
-          return renderFilterGroup(filterGroup, groupName, activeFilters, filterCounts, this.onFilterChange, this.onUpdateFilters);
-        })}
-      </FilterSidePanel>
-    );
-  }
-
-  renderEmptyState() {
-    const { emptyStateTitle, emptyStateInfo } = this.props;
-    return (
-      <EmptyState variant={EmptyStateVariant.full}>
-        <Title headingLevel="h2" size="lg">
-          {emptyStateTitle}
-        </Title>
-        <EmptyStateBody>{emptyStateInfo}</EmptyStateBody>
-        <EmptyStateSecondaryActions>
-          <Button variant="link" onClick={() => this.clearFilters()} data-test-id="catalog-clear-filters">
-            Clear All Filters
-          </Button>
-        </EmptyStateSecondaryActions>
-      </EmptyState>
-    );
-  }
-
-  renderItems(items, renderTile) {
-    return (
-      <Gallery gutter="sm" className="co-catalog-tile-view">
-        {_.map(items, item => (
-          <GalleryItem key={item.uid ? `gallery-${item.uid}` : `gallery-${item.obj.metadata.uid}`}>{renderTile(item)}</GalleryItem>
-        ))}
-      </Gallery>
-    );
-  }
-
-  renderGroupedItems(items, groupBy, renderTile, groupItems) {
-    const groupedItems = groupItems(items, groupBy);
-    return _.map(
-      groupedItems,
-      (value, key) =>
-        value.length > 0 && (
-          <div key={key} className="co-catalog-page__grouped-items">
-            <Title className="co-catalog-page__group-title" headingLevel="h2" size="lg">
-              {key} ({_.size(value)})
-            </Title>
-            {this.renderItems(value, renderTile)}
-          </div>
-        ),
-    );
-  }
-
-  render() {
-    const { renderTile, groupItems, groupByTypes } = this.props;
-    const { activeFilters, selectedCategoryId, categories, groupBy } = this.state;
-    let activeCategory = findActiveCategory(selectedCategoryId, categories);
-    if (!activeCategory) {
-      activeCategory = findActiveCategory('all', categories);
+        });
+        localStorage.setItem(this.props.storeFilterKey, JSON.stringify(storeFilters));
+      }
     }
 
-    return (
-      <div className="co-catalog-page">
-        <div className="co-catalog-page__tabs">
-          {this.renderCategoryTabs(activeCategory.id)}
-          {this.renderSidePanel()}
-        </div>
-        <div className="co-catalog-page__content">
-          <div className="co-catalog-page__header">
-            <div className="co-catalog-page__heading text-capitalize">{activeCategory.label}</div>
-            <div className="co-catalog-page__filter">
-              <div>
-                <FormControl className="co-catalog-page__input" type="text" inputRef={ref => (this.filterByKeywordInput = ref)} placeholder="Filter by keyword..." bsClass="pf-c-form-control" value={activeFilters.keyword.value} onChange={e => this.onKeywordChange(e.target.value)} aria-label="Filter by keyword..." />
-                {/* {groupItems && (
-                  <Dropdown
-                    className="co-catalog-page__btn-group__group-by"
-                    menuClassName="dropdown-menu--text-wrap"
-                    items={groupByTypes}
-                    onChange={(e) => this.onGroupChange(e)}
-                    titlePrefix="Group By"
-                    title={groupBy}
-                  />
-                )} */}
-              </div>
-              <div className="co-catalog-page__num-items">{activeCategory.numItems} items</div>
-            </div>
-          </div>
+    clearFilters() {
+      const { filterGroups } = this.props;
+      const { activeFilters, categories, selectedCategoryId } = this.state;
 
-          {activeCategory.numItems > 0 && <div className="co-catalog-page__grid">{groupItems && groupBy !== groupByTypes.None ? this.renderGroupedItems(activeCategory.items, groupBy, renderTile, groupItems) : this.renderItems(activeCategory.items, renderTile)}</div>}
-          {activeCategory.numItems === 0 && this.renderEmptyState()}
+      clearFilterURLParams(selectedCategoryId);
+
+      const clearedFilters = clearActiveFilters(activeFilters, filterGroups);
+
+      this.updateMountedState(this.getUpdatedState(categories, selectedCategoryId, clearedFilters));
+
+      // Don't take focus if a modal was opened while the page was loading.
+      if (!isModalOpen()) {
+        this.filterByKeywordInput.focus({ preventScroll: true });
+      }
+
+      this.storeFilters(clearedFilters);
+    }
+
+    selectCategory(categoryId) {
+      const { activeFilters, categories } = this.state;
+
+      updateURLParams(FilterTypes.category, categoryId);
+      this.updateMountedState(this.getUpdatedState(categories, categoryId, activeFilters));
+    }
+
+    onUpdateFilters(updatedFilters) {
+      const { selectedCategoryId, categories } = this.state;
+      this.updateMountedState(this.getUpdatedState(categories, selectedCategoryId, updatedFilters));
+    }
+
+    onFilterChange(filterType, id, value) {
+      const { activeFilters, selectedCategoryId, categories } = this.state;
+
+      if (filterType === FilterTypes.keyword) {
+        updateURLParams(FilterTypes.keyword, `${value}`);
+      } else {
+        const groupFilter = _.cloneDeep(activeFilters[filterType]);
+        _.set(groupFilter, [id, 'active'], value);
+        updateURLParams(filterType, getFilterSearchParam(groupFilter));
+      }
+
+      const updatedFilters = updateActiveFilters(activeFilters, filterType, id, value);
+
+      this.updateMountedState(this.getUpdatedState(categories, selectedCategoryId, updatedFilters));
+
+      this.storeFilters(updatedFilters);
+    }
+
+    onKeywordChange(value) {
+      this.onFilterChange('keyword', null, value);
+    }
+
+    onShowAllToggle(groupName) {
+      const { filterGroupsShowAll } = this.state;
+      const updatedShow = _.clone(filterGroupsShowAll);
+      _.set(updatedShow, groupName, !_.get(filterGroupsShowAll, groupName, false));
+      this.setState({ filterGroupsShowAll: updatedShow });
+    }
+
+    onGroupChange(value) {
+      const { groupByTypes } = this.props;
+      updateURLParams('groupBy', value === groupByTypes.None ? `` : `${value}`);
+      this.updateMountedState({ groupBy: value });
+    }
+
+    renderTabs(category, selectedCategoryId) {
+      const { id, label, subcategories, numItems } = category;
+      const active = id === selectedCategoryId;
+      const shown = id === 'all';
+
+      const tabClasses = `text-capitalize${!numItems ? ' co-catalog-tab__empty' : ''}`;
+      return (
+        <VerticalTabsTab key={id} title={label} active={active} className={tabClasses} onActivate={() => this.selectCategory(id)} hasActiveDescendant={hasActiveDescendant(selectedCategoryId, category)} shown={shown}>
+          {subcategories && (
+            <VerticalTabs restrictTabs activeTab={isActiveTab(selectedCategoryId, category)}>
+              {_.map(subcategories, subcategory => this.renderTabs(subcategory, selectedCategoryId))}
+            </VerticalTabs>
+          )}
+        </VerticalTabsTab>
+      );
+    }
+
+    renderCategoryTabs(selectedCategoryId) {
+      const { categories } = this.state;
+      const activeTab = _.has(categories, selectedCategoryId);
+
+      return (
+        <VerticalTabs restrictTabs activeTab={activeTab} shown="true">
+          {_.map(categories, category => this.renderTabs(category, selectedCategoryId))}
+        </VerticalTabs>
+      );
+    }
+
+    renderFilterGroup(
+      filterGroup,
+      groupName,
+      activeFilters,
+      filterCounts,
+      onFilterChange,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      onUpdateFilters,
+    ) {
+      const { filterGroupNameMap } = this.props;
+      const { filterGroupsShowAll } = this.state;
+
+      return (
+        <FilterSidePanelCategory key={groupName} title={filterGroupNameMap[groupName] || groupName} onShowAllToggle={() => this.onShowAllToggle(groupName)} showAll={_.get(filterGroupsShowAll, groupName, false)} data-test-group-name={groupName}>
+          {_.map(filterGroup, (filter, filterName) => {
+            const { label, active } = filter;
+            return (
+              <FilterSidePanelCategoryItem key={filterName} count={_.get(filterCounts, [groupName, filterName], 0)} checked={active} onClick={e => onFilterChange(groupName, filterName, e.target.checked)} title={label} data-test={`${groupName}-${_.kebabCase(filterName)}`}>
+                {label}
+              </FilterSidePanelCategoryItem>
+            );
+          })}
+        </FilterSidePanelCategory>
+      );
+    }
+
+    renderSidePanel() {
+      let { renderFilterGroup } = this.props;
+      const { activeFilters, filterCounts } = this.state;
+
+      renderFilterGroup = renderFilterGroup || this.renderFilterGroup;
+
+      return (
+        <FilterSidePanel>
+          {_.map(activeFilters, (filterGroup, groupName) => {
+            if (groupName === FilterTypes.keyword) {
+              return;
+            }
+            return renderFilterGroup(filterGroup, groupName, activeFilters, filterCounts, this.onFilterChange, this.onUpdateFilters);
+          })}
+        </FilterSidePanel>
+      );
+    }
+
+    renderEmptyState() {
+      const { emptyStateTitle, emptyStateInfo } = this.props;
+      return (
+        <EmptyState variant={EmptyStateVariant.full}>
+          <Title headingLevel="h2" size="lg">
+            {emptyStateTitle}
+          </Title>
+          <EmptyStateBody>{emptyStateInfo}</EmptyStateBody>
+          <EmptyStateSecondaryActions>
+            <Button variant="link" onClick={() => this.clearFilters()} data-test-id="catalog-clear-filters">
+              Clear All Filters
+            </Button>
+          </EmptyStateSecondaryActions>
+        </EmptyState>
+      );
+    }
+
+    renderItems(items, renderTile) {
+      return (
+        <Gallery gutter="sm" className="co-catalog-tile-view">
+          {_.map(items, item => (
+            <GalleryItem key={item.uid ? `gallery-${item.uid}` : `gallery-${item.obj.metadata.uid}`}>{renderTile(item)}</GalleryItem>
+          ))}
+        </Gallery>
+      );
+    }
+
+    renderGroupedItems(items, groupBy, renderTile, groupItems) {
+      const groupedItems = groupItems(items, groupBy);
+      return _.map(
+        groupedItems,
+        (value, key) =>
+          value.length > 0 && (
+            <div key={key} className="co-catalog-page__grouped-items">
+              <Title className="co-catalog-page__group-title" headingLevel="h2" size="lg">
+                {key} ({_.size(value)})
+              </Title>
+              {this.renderItems(value, renderTile)}
+            </div>
+          ),
+      );
+    }
+
+    render() {
+      const { renderTile, groupItems, groupByTypes, t } = this.props;
+      const { activeFilters, selectedCategoryId, categories, groupBy } = this.state;
+      let activeCategory = findActiveCategory(selectedCategoryId, categories);
+      if (!activeCategory) {
+        activeCategory = findActiveCategory('all', categories);
+      }
+
+      const catalogType = getCatalogPageType();
+
+      return (
+        <div className="co-catalog-page">
+          <div className="co-catalog-page__tabs">
+            {this.renderCategoryTabs(activeCategory.id)}
+            {this.renderSidePanel()}
+          </div>
+          <div className="co-catalog-page__content">
+            <div className="co-catalog-page__header">
+              <div className="co-catalog-page__heading text-capitalize">{activeCategory.label}</div>
+              <div className="co-catalog-page__filter">
+                <div>
+                  <FormControl className="co-catalog-page__input" type="text" inputRef={ref => (this.filterByKeywordInput = ref)} placeholder={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_5')} bsClass="pf-c-form-control" value={activeFilters.keyword.value} onChange={e => this.onKeywordChange(e.target.value)} aria-label="Filter by keyword..." />
+                  {catalogType === CatalogPageType.SERVICE_INSTANCE ? null : groupItems && <Dropdown className="co-catalog-page__btn-group__group-by" menuClassName="dropdown-menu--text-wrap" items={groupByTypes} onChange={e => this.onGroupChange(e)} titlePrefix="Group By" title={groupBy} />}
+                </div>
+                <div className="co-catalog-page__num-items">{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_6', { 0: activeCategory.numItems })}</div>
+              </div>
+            </div>
+
+            {activeCategory.numItems > 0 && <div className="co-catalog-page__grid">{groupItems && groupBy !== groupByTypes.None ? this.renderGroupedItems(activeCategory.items, groupBy, renderTile, groupItems) : this.renderItems(activeCategory.items, renderTile)}</div>}
+            {activeCategory.numItems === 0 && this.renderEmptyState()}
+          </div>
         </div>
-      </div>
-    );
-  }
-}
+      );
+    }
+  },
+);
 
 TileViewPage.displayName = 'TileViewPage';
 
@@ -829,6 +826,7 @@ TileViewPage.propTypes = {
   emptyStateInfo: PropTypes.string,
   groupItems: PropTypes.func,
   groupByTypes: PropTypes.object,
+  language: PropTypes.string,
 };
 
 TileViewPage.defaultProps = {
@@ -838,4 +836,5 @@ TileViewPage.defaultProps = {
   renderFilterGroup: null,
   emptyStateTitle: 'No Results Match the Filter Criteria',
   emptyStateInfo: 'No items are being shown due to the filters being applied.',
+  language: 'en',
 };
