@@ -85,8 +85,8 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
     switch (valueType) {
       case 'string': {
         return (
-          <InputSection label="Default Value" customClass="input-section-without-margin-left">
-            <InputField name={`${name}.default`} type={TextInputTypes.text} placeholder="Default Value" />
+          <InputSection label={t('COMMON:MSG_DETAILS_TABPARAMETERS_9')} customClass="input-section-without-margin-left">
+            <InputField name={`${name}.default`} type={TextInputTypes.text} placeholder={t('COMMON:MSG_DETAILS_TABPARAMETERS_9')} />
           </InputSection>
         );
       }
@@ -94,7 +94,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
         let arrayFieldValue = _.get(values, `${name}.default`, []);
         arrayFieldValue = arrayFieldValue === '' ? [] : arrayFieldValue;
         return (
-          <InputSection label="Default Value">
+          <InputSection label={t('COMMON:MSG_DETAILS_TABPARAMETERS_9')}>
             <FieldArray
               name={`${name}.default`}
               render={({ push, remove }) => {
@@ -103,7 +103,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
                     {arrayFieldValue.length > 0 &&
                       arrayFieldValue.map((value, index) => (
                         <div key={`${name}-default-${index}-inputWrapper`} id="parameter-array-row-input-wrapper">
-                          <InputField className="input-field" name={`${name}.default.${index}`} type={TextInputTypes.text} placeholder="Default Value" />
+                          <InputField className="input-field" name={`${name}.default.${index}`} type={TextInputTypes.text} placeholder={t('COMMON:MSG_DETAILS_TABPARAMETERS_9')} />
                           <Button
                             className="pf-m-link remove-button"
                             data-test-id="pairs-list__delete-btn"
@@ -127,7 +127,7 @@ const DropdownValueComponent: React.FC<DropdownValueComponentProps> = props => {
                       variant="link"
                     >
                       <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-                      Add Default Value
+                      {t('SINGLE:MSG_TASKS_CREATFORM_DIV5_1')}
                     </Button>
                   </FormGroup>
                 );

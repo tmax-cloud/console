@@ -2,8 +2,8 @@ import * as _ from 'lodash-es';
 import { switchPerspective } from 'packages/dev-console/integration-tests/views/dev-perspective.view';
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
-import { NamespaceClaimModel, ResourceQuotaClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel } from '../../../models';
-import { k8sUpdateApproval, referenceForModel } from '../../../module/k8s';
+import { NamespaceClaimModel, ResourceQuotaClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel, ClusterClaimModel } from '../../../models';
+import { k8sUpdateApproval, k8sUpdateClaim, referenceForModel } from '../../../module/k8s';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
 import { PromiseComponent, ResourceIcon, SelectorInput } from '../../utils';
@@ -89,6 +89,17 @@ const BaseStatusModal = withTranslation()(
             ],
             'PATCH',
           );
+          this.handlePromise(promise).then(this.successSubmit);
+          break;
+        }
+        case ClusterClaimModel.kind: {
+          const clusterClaim = resource.metadata.name;
+          const userName = resource.metadata.annotations.creator;
+          const admit = this.state.status === 'Approved' ? true : false;
+          const reason = this.state.reason;
+          const ns = resource.metadata.namespace;
+
+          const promise = k8sUpdateClaim(kind, clusterClaim, admit, reason, userName, ns);
           this.handlePromise(promise).then(this.successSubmit);
           break;
         }
