@@ -104,7 +104,7 @@ const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, k
   return (
     <TableRow id={cluster.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.fakeMetadata.fakename} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
+        <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
       <TableData className={classNames(tableColumnClasses[2])}>{cluster.spec.provider ? '생성' : '등록'}</TableData>
@@ -169,7 +169,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(cluster, t) })} />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={cluster} customPathName={'fakeMetadata.fakename'} showOwner={false} />
+            <ResourceSummary resource={cluster} customPathName={'.metadata.name'} showOwner={false} />
             {cluster.status.owner && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={cluster} children={KeyValuePrint({ obj: cluster.status.owner, key: owner })} />}
             {cluster.status.members && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={members.map(member => KeyValuePrint({ obj: cluster.status.members, key: member }))} />}
             {cluster.status.groups && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={groups.map(group => KeyValuePrint({ obj: cluster.status.groups, key: group }))} />}
@@ -199,7 +199,7 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
   return (
     <DetailsPage
       {...props}
-      titleFunc={(obj: any) => obj.fakeMetadata.fakename}
+      titleFunc={(obj: any) => obj.metadata.name}
       kind={kind}
       menuActions={menuActions}
       pages={[
