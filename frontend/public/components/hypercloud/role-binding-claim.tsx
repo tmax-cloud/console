@@ -15,7 +15,7 @@ const { common } = Kebab.factory;
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 export const getMenuActions = (status?) => {
-  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(status !== 'Success' ? [Kebab.factory.ModifyStatus] : [])];
+  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(status !== 'Approved' ? [Kebab.factory.ModifyStatus] : [])];
 }
 
 const kind = 'RoleBindingClaim';
@@ -70,8 +70,7 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind={`${(rolebindingclaims?.roleRef?.kind === 'Role') ? 'RoleBinding' : 'CluterRoleBinding'}`}  name={rolebindingclaims.resourceName} title={rolebindingclaims.resourceName} linkTo={rolebindingclaims.status?.status === 'Approved'} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        {rolebindingclaims?.status?.status}
+      <TableData className={tableColumnClasses[2]}>        
         {rolebindingclaims.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{rolebindingclaims.status?.reason}</div>} maxWidth="30rem" position="right">
             <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>{rolebindingclaims.status?.status}</div>
