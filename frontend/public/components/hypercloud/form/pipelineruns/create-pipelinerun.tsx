@@ -12,7 +12,7 @@ import { ResourceListDropdown } from '../../utils/resource-list-dropdown';
 import { ListView } from '../../utils/list-view';
 import { getActiveNamespace } from '../../../../reducers/ui';
 import store from '../../../../redux';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { k8sGet, k8sList } from '../../../../module/k8s';
 import { Button } from '@patternfly/react-core';
 import { Workspace } from '../utils/workspaces'
@@ -115,17 +115,17 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       });
   }
 
-  //const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
-      <Section label='Labels' id='label' description='Enter를 입력하여 레이블을 추가할 수 있습니다.'>
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_1')} id='label' description={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_2')}>
         <Controller name='metadata.labels' id='label' labelClassName='co-text-sample' as={SelectorInput} control={control} tags={[]} />
       </Section>
 
       <div className='co-form-section__separator' />
 
-      <Section label='파이프라인' id='pipeline' isRequired>
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id='pipeline' isRequired>
         <ResourceDropdown
           name='spec.pipelineRef.name'
           resources={[
@@ -142,11 +142,11 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       </Section>
 
       {!_.isEmpty(paramList) &&
-        <Section label='파이프라인 파라미터' id='param'>
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_4')} id='param'>
           <ParamsListComponent paramList={paramList} />
         </Section>}
       {!_.isEmpty(resourceList) &&
-        <Section label='파이프라인 리소스' id='resource'>
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_6')} id='resource'>
           <ResourceListComponent resourceList={resourceList} resourceRefList={resourceRefList} />
         </Section>}
       {!_.isEmpty(workspaceList) &&
@@ -157,7 +157,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
       <div className='co-form-section__separator' />
 
-      <Section label='서비스 어카운트 지정' id='serviceaccount' isRequired>
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id='serviceaccount' isRequired>
         <ResourceDropdown
           name='spec.serviceAccountName'
           resources={[
