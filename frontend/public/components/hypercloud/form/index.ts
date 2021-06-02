@@ -51,6 +51,7 @@ const pluralToKindMap = new Map([
   ['integrationjobs', 'IntegrationJob'],
   ['integrationconfigs', 'IntegrationConfig'],
   ['hyperclusterresources', 'HyperClusterResource'],
+  ['clustermanagers', 'ClusterManager'],
   ['clusterclaims', 'ClusterClaim'],
   ['federatedconfigmaps', 'FederatedConfigMap'],
   ['federateddeployments', 'FederatedDeployment'],

@@ -136,7 +136,7 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = props => {
     //if the provisioner is unknown or no storage class selected, user should be able to set any access mode
     const modes = provisionerAccessModeMapping[provisioner] ? provisionerAccessModeMapping[provisioner] : getAccessModeForProvisioner(provisioner);
     //setting message to display for various modes when a storage class of a know provisioner is selected
-    const displayMessage = provisionerAccessModeMapping[provisioner] || isCephProvisioner(provisioner) ? 'Access mode is set by storage class and cannot be changed.' : 'Permissions to the mounted drive.';
+    const displayMessage = provisionerAccessModeMapping[provisioner] || isCephProvisioner(provisioner) ? t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_28') : t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_29');
     setAccessMode('ReadWriteOnce');
     setAccessModeHelp(displayMessage);
     //setting accessMode to default with the change to Storage Class selection
@@ -208,7 +208,7 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = props => {
       <div className="form-group">
         {useSelector && <NameValueEditorComponent nameValuePairs={nameValuePairs} valueString="Selector" nameString="Label" addString="Add Value" readOnly={false} allowSorting={false} updateParentData={handleNameValuePairs} />}
         <p className="help-block" id="label-selector-help">
-          Use label selectors to define how storage is created.
+          {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_30')}
         </p>
       </div>
     </div>

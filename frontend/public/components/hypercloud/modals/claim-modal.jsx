@@ -59,11 +59,11 @@ class BaseClaimModal extends PromiseComponent {
   };
 
   render() {
-    const { kind, resource, description, message } = this.props;
+    const { kind, resource, description, message, t } = this.props;
 
     return (
       <form onSubmit={this._submit} name="form" className="modal-content">
-        <ModalTitle>Approval Processing</ModalTitle>
+        <ModalTitle>{t('COMMON:MSG_MAIN_POPUP_TITLE_1')}</ModalTitle>
         <ModalBody>
           <div className="row co-m-form-row">
             <div className="col-sm-12">{message || ''}</div>
@@ -75,13 +75,17 @@ class BaseClaimModal extends PromiseComponent {
                 <option value="Rejected">Rejected</option>
               </select>
             </div>
-            <div className="col-sm-12">
-              <textarea className="col-sm-12" style={{ height: '100px' }} onChange={this.onChangeReason} value={this.state.reason} />
-            </div>
-            <div className="col-sm-12">Please enter a reason for refusal.</div>
+            {this.state.status === 'Rejected' && (
+              <>
+                <div className="col-sm-12">
+                  <textarea className="col-sm-12" style={{ height: '100px' }} onChange={this.onChangeReason} value={this.state.reason} />
+                </div>
+                <div className="col-sm-12">{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_1')}</div>
+              </>
+            )}
           </div>
         </ModalBody>
-        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Confirm" cancel={this._cancel} />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancel={this._cancel} />
       </form>
     );
   }

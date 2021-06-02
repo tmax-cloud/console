@@ -259,13 +259,13 @@ export const AttachStorageForm: React.FC<AttachStorageFormProps> = props => {
         )}
         {useContainerSelector && (
           <div className="form-group co-break-word">
-            <label className="control-label">Containers</label>
+            <label className="control-label">{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_31')}</label>
             <Button type="button" onClick={handleSelectContainers} variant="link">
-              (use all containers)
+              {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_32')}
             </Button>
             <ContainerSelector containers={obj.spec.template.spec.containers} selected={selectedContainers} onChange={handleContainerSelectionChange} />
             <p className="help-block" id="subpath-help">
-              Select which containers to mount volume into.
+              {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_33')}
             </p>
           </div>
         )}

@@ -59,6 +59,7 @@ export const connectToPlural: ConnectToPlural = connect(
         kindObj = state.k8s.getIn(['RESOURCES', 'models']).get(kind); // plural이 kind로 되어있는 경우 (registry -> 스캔요청 -> registry)
       }
     }
+    console.log(state.k8s.getIn(['RESOURCES', 'models']).get('ClusterManager'));
 
     const modelRef = isGroupVersionKind(plural) ? plural : _.get(kindObj, 'kind');
 
