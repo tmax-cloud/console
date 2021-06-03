@@ -139,7 +139,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                 </Section>
             }
 
-            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_24')} id='name' isRequired={true}>
+            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_22')} id='name' isRequired={true}>
                 <TextInput className='pf-c-form-control' id='subjects.name' name='subjects.name' defaultValue={defaultValues.subjects[0].name}/>
             </Section>
 
