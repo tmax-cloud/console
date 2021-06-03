@@ -78,6 +78,7 @@ const pluralToKindMap = new Map([
   ['datavolumes', 'DataVolume'],
   ['virtualmachines', 'VirtualMachine'],
   ['registries', 'Registry'],
+  ['repositories', 'Repository'],
   ['externalregistries', 'ExternalRegistry'],
   ['imagesigners', 'ImageSigner'],
   ['imagesignrequests', 'ImageSignRequest'],
