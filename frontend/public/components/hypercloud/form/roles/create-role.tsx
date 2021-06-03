@@ -248,7 +248,7 @@ export const onSubmitCallback = data => {
   delete data.apiVersion;
   delete data.rules;
 
-  data = _.defaultsDeep(data, { apiVersion: apiVersion, rules: rules });
+  data = _.defaultsDeep({ apiVersion: apiVersion, rules: rules }, data);
   return data;
 };
 

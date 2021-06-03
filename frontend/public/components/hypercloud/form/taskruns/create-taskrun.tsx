@@ -14,7 +14,7 @@ import { Button } from '@patternfly/react-core';
 import store from '../../../../redux';
 import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
-import { Workspace } from '../utils/workspaces'
+import { Workspace } from '../utils/workspaces';
 
 const defaultValues = {
   metadata: {
@@ -208,12 +208,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
       <div className="help-block">{t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_10')}</div>
     );
 
-  const workspaces =
-    lists.workspaceList.length > 0 ? (
-      lists.workspaceList.map((item, index) => <Workspace namespace={namespace} methods={methods} id={`spec.workspaces[${index}]`} {...item} />)
-    ) : (
-      <div className="help-block">{t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')}</div>
-    );
+  const workspaces = lists.workspaceList.length > 0 ? lists.workspaceList.map((item, index) => <Workspace namespace={namespace} methods={methods} id={`spec.workspaces[${index}]`} {...item} />) : <div className="help-block">{t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')}</div>;
 
   React.useEffect(() => {
     const taskKind = selectedTask.split('~~')[0];
@@ -339,19 +334,18 @@ export const onSubmitCallback = data => {
   });
   delete data.params;
 
-  _.forEach(data.spec.workspaces, (workspace) => {
+  _.forEach(data.spec.workspaces, workspace => {
     _.forEach(workspace.name, (type, name) => {
       workspace.name = name;
-      if(type === 'EmptyDirectory'){
+      if (type === 'EmptyDirectory') {
         workspace.emptyDir = {};
-      }
-      else if(type ==='VolumeClaimTemplate') {
+      } else if (type === 'VolumeClaimTemplate') {
         workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
       }
-    })
+    });
   });
 
-  data = _.defaultsDeep(data, { kind: TaskRunModel.kind, spec: { taskRef: { kind: taskKind, name: taskName }, params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } });
+  data = _.defaultsDeep({ kind: TaskRunModel.kind, spec: { taskRef: { kind: taskKind, name: taskName }, params: formattedParams, timeout: formattedTimeout, resources: { inputs: formattedInputs, outputs: formattedOutputs } } }, data);
   // console.log('data? ', data);
   return data;
 };
