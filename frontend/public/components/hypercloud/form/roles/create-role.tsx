@@ -94,9 +94,38 @@ const roleFormFactory = (params, obj) => {
   console.log('defaultValuesTemplate: ', defaultValuesTemplate);
 
   const defaultValues = obj || defaultValuesTemplate;
+
+  if (defaultValues.rules) {
+    defaultValues.rules.forEach(element => {
+
+
+      if (element.apiGroups[0] === '') { //"" indicates the core API group    
+        element.apiGroup = 'Core';
+      }
+
+      if (element.apiGroups[0] === '*') {
+        element.apiGroup = { label: '*', value: 'All' };
+      }
+      else if (element.apiGroups[0] === 'Core') {
+        element.apiGroup = { label: 'Core', value: 'Core' };
+      }
+      else {
+        let apiGroups = element.apiGroups[0];
+        element.apiGroup = { label: apiGroups, value: apiGroups };
+      }
+
+      if (element.resources[0] === '*') {
+        element.resource = { label: '*', value: 'All' };
+      }
+      else {
+        let resources = element.resources[0];
+        element.resource = { label: resources, value: resources };
+      }
+
+    });
+  }
   /*
-  if (defaultValues.rules[0].apiGroups[0] === '') { //"" indicates the core API group
-    //defaultValues.rules[0].apiGroups[0] = {'All': '*'};
+  if (defaultValues.rules[0].apiGroups[0] === '') { //"" indicates the core API group    
     defaultValues.rules[0].apiGroups[0] = 'Core';
   }
   if (defaultValues.rules[0].apiGroups[0] === '*') {
@@ -109,10 +138,8 @@ const roleFormFactory = (params, obj) => {
     let apiGroups = defaultValues.rules[0].apiGroups[0];
     defaultValues.rules[0].apiGroups[0] = { label: apiGroups, value : apiGroups };    
   }
+  
 
-  if (defaultValues.rules[0].resources[0] === '') {    
-    defaultValues.rules[0].resources[0] = '*';
-  }
   if (defaultValues.rules[0].resources[0] === '*') {
     defaultValues.rules[0].resources[0] = { label: 'All', value : '*' };    
   }
@@ -121,6 +148,7 @@ const roleFormFactory = (params, obj) => {
     defaultValues.rules[0].resources[0] = { label: resources, value : resources };    
   }
   */
+  
   
   console.log('defaultValues: ', defaultValues);
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
@@ -132,7 +160,7 @@ const RuleItem = props => {
   const { control } = methods;
   const apiGroups = useWatch<{ label: string; value: string }>({
     control: control,
-    name: `${name}[${index}].apiGroups[0]`,
+    name: `${name}[${index}].apiGroup`,
   });
 
   React.useEffect(() => {
@@ -167,7 +195,7 @@ const RuleItem = props => {
             <Controller
               as={<DropdownWithRef name={`${name}[${index}].apiGroup`} defaultValue={{ label: item.apiGroup.label, value: item.apiGroup.value }} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} />}
               control={methods.control}
-              name={`${name}[${index}].apiGroups`}
+              name={`${name}[${index}].apiGroup`}
               onChange={([selected]) => {
                 return { value: selected };
               }}
@@ -177,7 +205,7 @@ const RuleItem = props => {
           </Section>
           <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>
             <Controller
-              as={<DropdownWithRef name={`${name}[${index}].resources`} defaultValue={{ label: item.resource.label, value: item.resource.value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
+              as={<DropdownWithRef name={`${name}[${index}].resource`} defaultValue={{ label: item.resource.label, value: item.resource.value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
               control={methods.control}
               name={`${name}[${index}].resource`}
               onChange={([selected]) => {
