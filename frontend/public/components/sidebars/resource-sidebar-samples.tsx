@@ -15,7 +15,7 @@ import * as defaultDenyAllImg from '../../imgs/network-policy-samples/4-default-
 import * as webAllowExternalImg from '../../imgs/network-policy-samples/5-web-allow-external.svg';
 import * as webDbAllowAllNsImg from '../../imgs/network-policy-samples/6-web-db-allow-all-ns.svg';
 import * as webAllowProductionImg from '../../imgs/network-policy-samples/7-web-allow-production.svg';
-import { hyperCloudSamples } from '../hypercloud/sidebars/resource-sidebar-samples';
+// import { hyperCloudSamples } from '../hypercloud/sidebars/resource-sidebar-samples';
 
 const getTargetResource = (model: K8sKind) => ({
   apiVersion: apiVersionForModel(model),
