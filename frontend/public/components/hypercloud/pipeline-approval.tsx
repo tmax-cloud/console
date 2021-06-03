@@ -95,9 +95,11 @@ export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListPr
           <div>{user}</div>
         ))}
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_20')} obj={ds} path="status.reason">
-        {ds.status.reason}
-      </DetailsItem>
+      { (ds.status.result === 'Rejected') &&
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_20')} obj={ds} path="status.reason">
+          {ds.status.reason}
+        </DetailsItem>
+      }
     </dl>
   );
 };

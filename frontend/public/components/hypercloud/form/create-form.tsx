@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 
 export const isCreatePage = defaultValues => {
-  return !(_.has(defaultValues, 'spec') || _.has(defaultValues, 'status'));
+  return !(_.has(defaultValues, 'metadata.creationTimestamp'));
 };
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
