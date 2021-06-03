@@ -354,7 +354,7 @@ export const onSubmitCallback = data => {
   // submit하기 전에 data를 가공해야 할 경우
   let labels = SelectorInput.objectify(data.metadata.labels);
   delete data.metadata.labels;
-  data = _.defaultsDeep(data, { metadata: { labels: labels } });
+  data = _.defaultsDeep({ metadata: { labels: labels } }, data);
   return data;
 };
 

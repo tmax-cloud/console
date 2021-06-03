@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 
 export const isCreatePage = defaultValues => {
-  return !(_.has(defaultValues, 'metadata.creationTimestamp'));
+  return !_.has(defaultValues, 'metadata.creationTimestamp');
 };
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
@@ -25,33 +25,33 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     const kind = pluralToKind(params.plural);
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
-    const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({kind: kind}, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({kind: kind}, t) })}`;    
+    const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({ kind: kind }, t) })}`;
 
     const [inProgress, setProgress] = React.useState(false);
     const [errorMessage, setError] = React.useState('');
 
     const onClick = methods.handleSubmit(data => {
-      let inDo = isCreatePage(defaultValues) ?_.defaultsDeep(data, props.fixed) : _.defaultsDeep(defaultValues, data);
+      let inDo = isCreatePage(defaultValues) ? _.defaultsDeep(data, props.fixed) : _.defaultsDeep(data, defaultValues);
       inDo = props.onSubmitCallback(inDo);
       const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
       setProgress(true);
-      isCreatePage(defaultValues) ?
-        k8sCreate(model, inDo)
-          .then(() => {
-            history.push(resourceObjPath(inDo, referenceFor(model)));
-          })
-          .catch(e => {
-            setProgress(false);
-            setError(e.message);
-          }): 
-        k8sUpdate(model, inDo)
-          .then(() => {
-            history.push(resourceObjPath(inDo, referenceFor(model)));
-          })
-          .catch(e => {
-            setProgress(false);
-            setError(e.message);
-          })
+      isCreatePage(defaultValues)
+        ? k8sCreate(model, inDo)
+            .then(() => {
+              history.push(resourceObjPath(inDo, referenceFor(model)));
+            })
+            .catch(e => {
+              setProgress(false);
+              setError(e.message);
+            })
+        : k8sUpdate(model, inDo)
+            .then(() => {
+              history.push(resourceObjPath(inDo, referenceFor(model)));
+            })
+            .catch(e => {
+              setProgress(false);
+              setError(e.message);
+            });
     });
     return (
       <FormProvider {...methods}>

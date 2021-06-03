@@ -210,7 +210,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
               delete submitData.metadata.labels;
 
-              submitData = _.defaultsDeep(submitData, { apiVersion: apiVersion, kind: 'ServiceInstance', metadata: { namespace: namespace, labels: labels }, spec: spec });
+              submitData = _.defaultsDeep({ apiVersion: apiVersion, kind: 'ServiceInstance', metadata: { namespace: namespace, labels: labels }, spec: spec }, submitData);
 
               k8sCreate(ServiceInstanceModel, submitData)
                 .then(() => {

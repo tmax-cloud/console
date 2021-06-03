@@ -259,7 +259,7 @@ export const CreateClusterTask: React.FC<CreateClusterTaskProps> = ({ match: { p
 export const onSubmitCallback = data => {
   let labels = SelectorInput.objectify(data.metadata.labels);
   delete data.metadata.labels;
-  data = _.defaultsDeep(data, { metadata: { labels: labels } });
+  data = _.defaultsDeep({ metadata: { labels: labels } }, data);
   // apiVersion, kind
   data.kind = ClusterTaskModel.kind;
   data.apiVersion = `${ClusterTaskModel.apiGroup}/${ClusterTaskModel.apiVersion}`;
@@ -274,23 +274,28 @@ export const onSubmitCallback = data => {
     }
   });
   // volume
-  // data.spec.volumes = data?.spec?.volumes?.map(cur => {
-  //   if (cur.type === 'emptyDir') {
-  //     return { emptyDir: {} };
-  //   } else if (cur.type === 'configMap') {
-  //     return {
-  //       configMap: {
-  //         name: cur?.name,
-  //       },
-  //     };
-  //   } else if (cur.type === 'secret') {
-  //     return {
-  //       secret: {
-  //         secretName: cur?.name,
-  //       },
-  //     };
-  //   }
-  // });
+  data.spec.volumes = data?.spec?.volumes?.map(cur => {
+    if (cur.type === 'emptyDir') {
+      return {
+        name: cur?.name,
+        emptyDir: {},
+      };
+    } else if (cur.type === 'configMap') {
+      return {
+        name: cur?.name,
+        configMap: {
+          name: cur?.configMap,
+        },
+      };
+    } else if (cur.type === 'secret') {
+      return {
+        name: cur?.name,
+        secret: {
+          secretName: cur?.secret,
+        },
+      };
+    }
+  });
   // step
   data.spec.steps = data?.spec?.steps?.map((cur, idx) => {
     // command
@@ -321,6 +326,16 @@ export const onSubmitCallback = data => {
     }
     delete data.spec.steps[idx].commandTypeToggle;
 
+    if (cur.selectedVolume) {
+      let volumeMounts = [];
+      volumeMounts.push({
+        mountPath: cur.mountPath,
+        name: cur.selectedVolume,
+      });
+      data.spec.steps[idx].volumeMounts = volumeMounts;
+      delete data.spec.steps[idx].selectedVolume;
+      delete data.spec.steps[idx].mountPath;
+    }
     return cur;
   });
 

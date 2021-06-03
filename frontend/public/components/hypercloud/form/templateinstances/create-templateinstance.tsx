@@ -203,14 +203,17 @@ export const onSubmitCallback = data => {
 
   // MEMO : final data
   if (templateKind === 'Template') {
-    data = _.defaultsDeep(data, { metadata: { labels: formattedLabels }, spec: { template: { metadata: { name: templateName, namespace: getActiveNamespace(store.getState()) }, parameters: formattedParams } } });
+    data = _.defaultsDeep({ metadata: { labels: formattedLabels }, spec: { template: { metadata: { name: templateName, namespace: getActiveNamespace(store.getState()) }, parameters: formattedParams } } }, data);
   } else {
-    data = _.defaultsDeep(data, {
-      metadata: { labels: formattedLabels },
-      spec: {
-        clustertemplate: { metadata: { name: templateName }, parameters: formattedParams },
+    data = _.defaultsDeep(
+      {
+        metadata: { labels: formattedLabels },
+        spec: {
+          clustertemplate: { metadata: { name: templateName }, parameters: formattedParams },
+        },
       },
-    });
+      data,
+    );
   }
   //   console.log('data? ', data);
   return data;

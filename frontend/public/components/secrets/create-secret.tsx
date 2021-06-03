@@ -102,15 +102,20 @@ export const withSecretForm = (SubForm, modal?: boolean) =>
         super(props);
         const existingSecret = _.pick(props.obj, ['metadata', 'type']);
         const defaultSecretType = toDefaultSecretType(this.props.secretTypeAbstraction);
-        const secret = _.defaultsDeep({}, props.fixed, existingSecret, {
-          apiVersion: 'v1',
-          data: {},
-          kind: 'Secret',
-          metadata: {
-            name: '',
+        const secret = _.defaultsDeep(
+          existingSecret,
+          {
+            apiVersion: 'v1',
+            data: {},
+            kind: 'Secret',
+            metadata: {
+              name: '',
+            },
+            type: defaultSecretType,
           },
-          type: defaultSecretType,
-        });
+          props.fixed,
+          {},
+        );
 
         this.state = {
           secretTypeAbstraction: this.props.secretTypeAbstraction,

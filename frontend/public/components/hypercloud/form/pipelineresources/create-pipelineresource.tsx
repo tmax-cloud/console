@@ -33,26 +33,23 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
 
   return (
     <>
-      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_2')} id='label' description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_3')}>
-        <Controller name='metadata.labels' id='label' labelClassName='co-text-sample' as={SelectorInput} control={control} tags={[]} />
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_2')} id="label" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_3')}>
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
       </Section>
 
-      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id='type'>
-        <Dropdown
-          name='spec.type'
-          items={typeList}
-          defaultValue={type}
-        />
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id="type">
+        <Dropdown name="spec.type" items={typeList} defaultValue={type} />
       </Section>
 
-      {type === 'git' && <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id='revision'>
-        <TextInput inputClassName='pf-c-form-control' id='spec.revision' name='spec.revision' />
-      </Section>}
+      {type === 'git' && (
+        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id="revision">
+          <TextInput inputClassName="pf-c-form-control" id="spec.revision" name="spec.revision" />
+        </Section>
+      )}
 
-      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id='url'>
-        <TextInput inputClassName='pf-c-form-control' id='spec.url' name='spec.url' />
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url">
+        <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" />
       </Section>
-
     </>
   );
 };
@@ -60,7 +57,7 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
 export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = ({ match: { params }, kind }) => {
   const formComponent = pipelineResourceFormFactory(params);
   const PipelineResourceFormComponent = formComponent;
-  return <PipelineResourceFormComponent fixed={{ apiVersion: `${PipelineResourceModel.apiGroup}/${PipelineResourceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb='Create' onSubmitCallback={onSubmitCallback} isCreate={true} />;
+  return <PipelineResourceFormComponent fixed={{ apiVersion: `${PipelineResourceModel.apiGroup}/${PipelineResourceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 export const onSubmitCallback = data => {
@@ -75,7 +72,7 @@ export const onSubmitCallback = data => {
   delete data.spec.revision;
   delete data.spec.url;
 
-  data = _.defaultsDeep(data, { metadata: { labels: labels }, spec: { params: params } });
+  data = _.defaultsDeep({ metadata: { labels: labels }, spec: { params: params } }, data);
   return data;
 };
 

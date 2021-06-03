@@ -15,7 +15,7 @@ import store from '../../../../redux';
 import { useTranslation } from 'react-i18next';
 import { k8sGet, k8sList } from '../../../../module/k8s';
 import { Button } from '@patternfly/react-core';
-import { Workspace } from '../utils/workspaces'
+import { Workspace } from '../utils/workspaces';
 
 const defaultValues = {
   metadata: {
@@ -29,19 +29,19 @@ const pipelineRunFormFactory = params => {
 
 const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultIcons) => {
   return (
-    <div className='row' key={item.id}>
-      <div className='col-xs-4 pairs-list__value-field'>
-        <TextInput className='pf-c-form-control' defaultValue={item.value} id={`${name}[${index}].value`} />
+    <div className="row" key={item.id}>
+      <div className="col-xs-4 pairs-list__value-field">
+        <TextInput className="pf-c-form-control" defaultValue={item.value} id={`${name}[${index}].value`} />
       </div>
-      <div className='col-xs-1 pairs-list__action'>
+      <div className="col-xs-1 pairs-list__action">
         <Button
-          type='button'
-          data-test-id='pairs-list__delete-btn'
-          className='pairs-list__span-btns'
+          type="button"
+          data-test-id="pairs-list__delete-btn"
+          className="pairs-list__span-btns"
           onClick={() => {
             ListActions.remove(index);
           }}
-          variant='plain'
+          variant="plain"
         >
           {ListDefaultIcons.deleteIcon}
         </Button>
@@ -51,38 +51,28 @@ const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultI
 };
 
 const ParamsListComponent = props => {
-  return props.paramList.map((cur) => (
+  return props.paramList.map(cur => (
     <ul>
       <Section label={cur.name} id={cur.name} description={cur.description}>
-        {cur.type === 'array' ?
-          <ListView name={`spec.params.${cur.name}.arrayValue`} addButtonText='추가' headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={cur.default.map(defaultValue => ({ value: defaultValue }))} />
-          : <TextInput id={`spec.params.${cur.name}.value`} defaultValue={cur.default} />
-        }
+        {cur.type === 'array' ? <ListView name={`spec.params.${cur.name}.arrayValue`} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={cur.default.map(defaultValue => ({ value: defaultValue }))} /> : <TextInput id={`spec.params.${cur.name}.value`} defaultValue={cur.default} />}
       </Section>
     </ul>
-  )
-  );
-}
+  ));
+};
 
 const ResourceListComponent = props => {
-  return props.resourceList.map((cur) => (
+  return props.resourceList.map(cur => (
     <ul>
       <Section label={cur.name} id={cur.name}>
-        <ResourceListDropdown
-          name={`spec.resources.${cur.name}.resourceRef.name`}
-          resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)}
-          type='single'
-          useHookForm
-          placeholder='파이프라인 리소스 선택'
-        />
+        <ResourceListDropdown name={`spec.resources.${cur.name}.resourceRef.name`} resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)} type="single" useHookForm placeholder="파이프라인 리소스 선택" />
       </Section>
     </ul>
-  ))
-}
+  ));
+};
 
 const WorkspaceListComponent = props => {
-  return props.workspaceList.map((cur, idx) => <Workspace namespace={props.namespace} methods={props.methods} id={`spec.workspaces[${idx}]`} {...cur} />)
-}
+  return props.workspaceList.map((cur, idx) => <Workspace namespace={props.namespace} methods={props.methods} id={`spec.workspaces[${idx}]`} {...cur} />);
+};
 
 const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
   const methods = useFormContext();
@@ -96,8 +86,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
   const [workspaceList, setWorkspaceList] = React.useState([]);
 
   React.useEffect(() => {
-    k8sList(PipelineResourceModel, { ns: namespace })
-      .then((list) => setResourceRefList(list));
+    k8sList(PipelineResourceModel, { ns: namespace }).then(list => setResourceRefList(list));
   }, []);
 
   const onSelectPipeline = (selection: string) => {
@@ -110,64 +99,66 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
         setResourceList(newResourceList);
         setWorkspaceList(pipeline.spec.workspaces);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Fail to get Pipeline Detail', err);
       });
-  }
+  };
 
   const { t } = useTranslation();
 
   return (
     <>
-      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_1')} id='label' description={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_2')}>
-        <Controller name='metadata.labels' id='label' labelClassName='co-text-sample' as={SelectorInput} control={control} tags={[]} />
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_1')} id="label" description={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_2')}>
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
       </Section>
 
-      <div className='co-form-section__separator' />
+      <div className="co-form-section__separator" />
 
-      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id='pipeline' isRequired>
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id="pipeline" isRequired>
         <ResourceDropdown
-          name='spec.pipelineRef.name'
+          name="spec.pipelineRef.name"
           resources={[
             {
               kind: 'Pipeline',
               namespace: namespace,
-              prop: 'pipeline'
+              prop: 'pipeline',
             },
           ]}
-          type='single'
+          type="single"
           useHookForm
           onChange={onSelectPipeline}
         />
       </Section>
 
-      {!_.isEmpty(paramList) &&
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_4')} id='param'>
+      {!_.isEmpty(paramList) && (
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_4')} id="param">
           <ParamsListComponent paramList={paramList} />
-        </Section>}
-      {!_.isEmpty(resourceList) &&
-        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_6')} id='resource'>
+        </Section>
+      )}
+      {!_.isEmpty(resourceList) && (
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_6')} id="resource">
           <ResourceListComponent resourceList={resourceList} resourceRefList={resourceRefList} />
-        </Section>}
-      {!_.isEmpty(workspaceList) &&
-        <Section label='워크스페이스' id='workspace'>
+        </Section>
+      )}
+      {!_.isEmpty(workspaceList) && (
+        <Section label="워크스페이스" id="workspace">
           <WorkspaceListComponent workspaceList={workspaceList} namespace={namespace} methods={methods} />
         </Section>
-      }
+      )}
 
-      <div className='co-form-section__separator' />
+      <div className="co-form-section__separator" />
 
-      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id='serviceaccount' isRequired>
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id="serviceaccount" isRequired>
         <ResourceDropdown
-          name='spec.serviceAccountName'
+          name="spec.serviceAccountName"
           resources={[
             {
               kind: 'ServiceAccount',
               namespace: namespace,
-              prop: 'serviceaccount'
+              prop: 'serviceaccount',
             },
           ]}
-          type='single'
+          type="single"
           useHookForm
           required
         />
@@ -179,7 +170,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 export const CreatePipelineRun: React.FC<CreatePipelineRunProps> = ({ match: { params }, kind }) => {
   const formComponent = pipelineRunFormFactory(params);
   const PipelineRunFormComponent = formComponent;
-  return <PipelineRunFormComponent fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb='Create' onSubmitCallback={onSubmitCallback} isCreate={true} />;
+  return <PipelineRunFormComponent fixed={{ apiVersion: `${PipelineRunModel.apiGroup}/${PipelineRunModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 export const onSubmitCallback = data => {
@@ -195,23 +186,22 @@ export const onSubmitCallback = data => {
     resources.push({ name: name, resourceRef: obj.resourceRef });
   });
 
-  _.forEach(data.spec.workspaces, (workspace) => {
+  _.forEach(data.spec.workspaces, workspace => {
     _.forEach(workspace.name, (type, name) => {
       workspace.name = name;
-      if(type === 'EmptyDirectory'){
+      if (type === 'EmptyDirectory') {
         workspace.emptyDir = {};
-      }
-      else if(type ==='VolumeClaimTemplate') {
+      } else if (type === 'VolumeClaimTemplate') {
         workspace.volumeClaimTemplate.spec.accessModes = [workspace.volumeClaimTemplate.spec.accessModes];
       }
-    })
+    });
   });
 
   delete data.metadata.labels;
   delete data.spec.params;
   delete data.spec.resources;
 
-  data = _.defaultsDeep(data, { metadata: { labels: labels }, spec: { params: params, resources: resources } });
+  data = _.defaultsDeep({ metadata: { labels: labels }, spec: { params: params, resources: resources } }, data);
   return data;
 };
 
