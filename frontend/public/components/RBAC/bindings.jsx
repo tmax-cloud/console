@@ -234,7 +234,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
 
     },
     {
-      href: 'rolebindingclaims',
+      href: 'rolebindingclaims?rowFilter-roleBindingClaim-status=Awaiting',
       name: t('COMMON:MSG_LNB_MENU_101'),
     },
   ];  
