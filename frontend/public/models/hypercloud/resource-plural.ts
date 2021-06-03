@@ -226,6 +226,10 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_187',
     label: 'COMMON:MSG_LNB_MENU_188',
   },
+  Repository: {
+    labelPlural: 'Repositories',
+    label: 'Repository',
+  },
   ExternalRegistry: {
     labelPlural: 'COMMON:MSG_LNB_MENU_189',
     label: 'COMMON:MSG_LNB_MENU_190',

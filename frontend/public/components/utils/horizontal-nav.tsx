@@ -19,7 +19,7 @@ import { referenceForModel, referenceFor } from '../../module/k8s/k8s';
 import { useExtensions, HorizontalNavTab, isHorizontalNavTab } from '@console/plugin-sdk';
 import { EditDefaultPage } from '../hypercloud/crd/edit-resource';
 import { CustomResourceDefinitionModel } from '@console/internal/models';
-import { pluralToKind, isVanillaObject } from '../hypercloud/form';
+import { pluralToKind, isVanillaObject, isCreateManual } from '../hypercloud/form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -231,14 +231,20 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
     if (model) {
       let kind = model.kind;
       const isCustomResourceType = !isVanillaObject(kind);
+      const isStructuralSchemaType = !(isVanillaObject(kind) || isCreateManual(kind));
       let url;
-      if (isCustomResourceType) {
+      if (isStructuralSchemaType) {
+        // structural schema로 해야하는 거
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-      } else {
+      } else if (!isCreateManual(kind)) {
+        // github에 저장해둔거로 해야하는 거
         const directory = kindToSchemaPath.get(model.kind)?.['directory'];
         const file = kindToSchemaPath.get(model.kind)?.['file'];
         url = `${document.location.origin}/api/resource/${directory}/${file}`;
+      } else {
+        // 직접 만든거
+        return;
       }
       const xhrTest = new XMLHttpRequest();
       xhrTest.open('GET', url);
