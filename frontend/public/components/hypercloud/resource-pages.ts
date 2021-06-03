@@ -70,7 +70,7 @@ import {
   TrainedModelModel,
   WorkflowModel,
   WorkflowTemplateModel,
-  TFApplyClaimModel
+  TFApplyClaimModel,
 } from '../../models';
 
 type ResourceMapKey = GroupVersionKind | string;
@@ -200,6 +200,7 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(ClusterTemplateModel), () => import('./cluster-template' /* webpackChunkName: "clustertemplate" */).then(m => m.ClusterTemplatesPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesPage))
   .set(referenceForModel(TemplateInstanceModel), () => import('./template-instance' /* webpackChunkName: "templateinstance" */).then(m => m.TemplateInstancesPage))
+  .set(referenceForModel(RepositoryModel), () => import('./repository' /* webpackChunkName: "repository" */).then(m => m.RepositoriesPage))
   .set(referenceForModel(RegistryModel), () => import('./registry' /* webpackChunkName: "registry" */).then(m => m.RegistriesPage))
   .set(referenceForModel(ExternalRegistryModel), () => import('./external-registry' /* webpackChunkName: "external-registry" */).then(m => m.ExternalRegistriesPage))
   .set(referenceForModel(ImageSignerModel), () => import('./image-signer' /* webpackChunkName: "image-signer" */).then(m => m.ImageSignersPage))
