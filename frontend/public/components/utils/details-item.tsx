@@ -26,17 +26,19 @@ const PropertyPath: React.FC<{ kind: string; path: string | string[] }> = ({ kin
 };
 
 const DetailsItem_: React.FC<DetailsItemProps> = props => {
-  const { label, obj, path, defaultValue = '-', hideEmpty, children, activeSchema } = props;
+  // const { label, obj, path, defaultValue = '-', hideEmpty, children, activeSchema } = props;
+  const { label, obj, path, defaultValue = '-', hideEmpty, children } = props;
   if (hideEmpty && _.isEmpty(_.get(obj, path))) {
     return null;
   }
   const { t } = useTranslation();
-  let currentPath = typeof path === 'string' && path.split('.');
-  const schemaPath = currentPath.map(cur => `properties.${cur}`).join('.');
   const reference: K8sResourceKindReference = referenceFor(obj);
   const model: K8sKind = modelFor(reference);
-  // const description: string = getPropertyDescription(model, path);
-  const description: string = _.get(activeSchema, schemaPath)?.description;
+  // let currentPath = typeof path === 'string' && path.split('.');
+  // const schemaPath = currentPath.map(cur => `properties.${cur}`).join('.');
+  // const description: string = getPropertyDescription(model, path); //기존 swagger.json 참조하는 버전
+  // const description: string = _.get(activeSchema, schemaPath)?.description; // structural schema 적용한 버전
+  const description: null = null;
   const value: React.ReactNode = children || _.get(obj, path, defaultValue);
   return (
     <>
