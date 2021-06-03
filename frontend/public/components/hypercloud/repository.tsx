@@ -17,23 +17,13 @@ export const menuActions = [...Kebab.factory.common, Kebab.factory.ModifyScannin
 
 const kind = RepositoryModel.kind;
 
-const tableColumnClasses = [
-  '',
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'),
-  Kebab.columnClass,
-];
+const tableColumnClasses = ['', classNames('pf-m-hidden', 'pf-m-visible-on-xl'), Kebab.columnClass];
 
 const RepositoryTableRow: RowFunction<K8sResourceKind> = ({ obj, index, key, style }) => {
   return (
     <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
-        <ResourceLink
-          kind={kind}
-          name={obj.metadata.name}
-          displayName={obj.spec.name}
-          namespace={obj.metadata.namespace}
-          title={obj.metadata.uid}
-        />
+        <ResourceLink kind={kind} name={obj.metadata.name} displayName={obj.spec.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />
       </TableData>
       <TableData className={tableColumnClasses[1]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
@@ -68,20 +58,12 @@ const RepositoryTableHeader = (t?: TFunction) => {
 
 RepositoryTableHeader.displayName = 'RepositoryTableHeader';
 
-
-const RepositoriesList = (props) => {
+const RepositoriesList = props => {
   const { t } = useTranslation();
 
-  return (<Table
-    {...props}
-    aria-label="Repositories"
-    Header={RepositoryTableHeader.bind(null, t)}
-    Row={RepositoryTableRow}
-    virtualize
-  />
-  );
-}
-const RepositoriesPage = (props) => {
+  return <Table {...props} aria-label="Repositories" Header={RepositoryTableHeader.bind(null, t)} Row={RepositoryTableRow} virtualize />;
+};
+const RepositoriesPage = props => {
   const { t } = useTranslation();
 
   const { canCreate = true, namespace, isExtRegistry } = props;
@@ -95,11 +77,15 @@ const RepositoriesPage = (props) => {
   return (
     <>
       <div className="pf-m-expanded" style={{ padding: '30px 0 0 30px' }}>
-        {isExtRegistry ? <button className="pf-c-dropdown__toggle pf-m-primary" style={{ backgroundColor: '#0066cc', color: 'white', fontSize: '14px', width: '150px', height: '25px', display: 'flex', justifyContent: 'center' }} onClick={scanningModal.bind(null, { kind: 'Repository', ns: namespace, showNs: false, labelSelector: { 'ext-registry': registry }, isExtRegistry })}>
-          {t('COMMON:MSG_DETAILS_TABREPOSITORIES_2')}
-        </button> : <button className="pf-c-dropdown__toggle pf-m-primary" style={{ backgroundColor: '#0066cc', color: 'white', fontSize: '14px', width: '150px', height: '25px', display: 'flex', justifyContent: 'center' }} onClick={scanningModal.bind(null, { kind: 'Repository', ns: namespace, showNs: false, labelSelector: { registry }, isExtRegistry })}>
-          {t('COMMON:MSG_DETAILS_TABREPOSITORIES_2')}
-        </button>}
+        {isExtRegistry ? (
+          <button className="pf-c-dropdown__toggle pf-m-primary" style={{ backgroundColor: '#0066cc', color: 'white', fontSize: '14px', width: '150px', height: '25px', display: 'flex', justifyContent: 'center' }} onClick={scanningModal.bind(null, { kind: 'Repository', ns: namespace, showNs: false, labelSelector: { 'ext-registry': registry }, isExtRegistry })}>
+            {t('COMMON:MSG_DETAILS_TABREPOSITORIES_2')}
+          </button>
+        ) : (
+          <button className="pf-c-dropdown__toggle pf-m-primary" style={{ backgroundColor: '#0066cc', color: 'white', fontSize: '14px', width: '150px', height: '25px', display: 'flex', justifyContent: 'center' }} onClick={scanningModal.bind(null, { kind: 'Repository', ns: namespace, showNs: false, labelSelector: { registry }, isExtRegistry })}>
+            {t('COMMON:MSG_DETAILS_TABREPOSITORIES_2')}
+          </button>
+        )}
       </div>
       <ListPage canCreate={canCreate} kind="Repository" ListComponent={RepositoriesList} {...props} />
     </>
@@ -107,13 +93,12 @@ const RepositoriesPage = (props) => {
 };
 
 const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ obj: repository }) => {
-
   const [addedTags, setAddedTags] = useState(repository.spec.versions);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getScans();
   }, []);
-
 
   const isExtRegistry = repository.metadata.labels.app === 'ext-registry' ? true : false;
 
@@ -135,7 +120,7 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ obj: repository }
       }
     }
     return '';
-  }
+  };
 
   const getScans = async () => {
     const model = Object.assign({}, RepositoryModel);
@@ -146,19 +131,20 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ obj: repository }
 
     const scans = await k8sGet(model, repository.metadata.name, repository.metadata.namespace, { path: 'imagescanresults' });
 
-    setAddedTags(addedTags.map((addedTag) => {
-      addedTag.severity = getWorstScan(scans, addedTag.version);
-      return addedTag;
-    }));
-  }
+    setAddedTags(
+      addedTags.map(addedTag => {
+        addedTag.severity = getWorstScan(scans, addedTag.version);
+        return addedTag;
+      }),
+    );
+  };
 
   // const showSigner = repository.metadata.labels?.app === 'registry' ? true : false;
-
 
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text="Registry Details" />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_DETAILS_TABREPOSITORIES_1') })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={repository} showPodSelector={false} showNodeSelector={false} showAnnotations={false} showTolerations={false} />
@@ -171,20 +157,11 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ obj: repository }
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 
-const RepositoriesDetailsPage: React.FC<RepositoriesDetailsPageProps> = props => <DetailsPage
-  {...props}
-  kind={kind}
-  menuActions={menuActions}
-  pages={[
-    details(RepositoryDetails),
-    editYaml(),
-  ]}
-/>;
-
+const RepositoriesDetailsPage: React.FC<RepositoriesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(RepositoryDetails), editYaml()]} />;
 
 type RepositoryDetailsProps = {
   obj: K8sResourceKind;
