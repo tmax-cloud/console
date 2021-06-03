@@ -23,11 +23,11 @@ export const _ModalLauncher = props => {
   const [submitDisabled, setSubmitDisabled] = React.useState(true);
   const validFields = requiredFields.map(cur => {
     const defaultValues = methods.getValues(path);
-
     return useWatch({
       control: methods.control,
       name: cur,
-      defaultValue: defaultValues.length > 0 ? defaultValues[index][cur] : '', // 초기값 세팅
+      defaultValue: typeof index === 'number' ? defaultValues?.[index]?.[cur] : '',
+      // defaultValue: defaultValues.length > 0 ? defaultValues?.[idx]?.[cur] : '', // 초기값 세팅
     });
   });
   const optionalValidFields = optionalRequiredField?.map(cur => {
