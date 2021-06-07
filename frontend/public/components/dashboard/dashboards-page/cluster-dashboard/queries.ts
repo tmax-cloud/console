@@ -49,15 +49,15 @@ const top25Queries = {
 };
 
 const overviewQueries = {
-  [OverviewQuery.MEMORY_TOTAL]: 'sum(node_memory_MemTotal_bytes)',
-  [OverviewQuery.MEMORY_UTILIZATION]: 'sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)',
+  [OverviewQuery.MEMORY_TOTAL]: 'sum(node_memory_MemTotal_bytes{cluster=""})',
+  [OverviewQuery.MEMORY_UTILIZATION]: 'sum(node_memory_MemTotal_bytes{cluster=""} - node_memory_MemAvailable_bytes{cluster=""})',
   [OverviewQuery.NETWORK_IN_UTILIZATION]: 'sum(rate(container_network_receive_bytes_total{container="POD",pod!=""}[5m]))',
   [OverviewQuery.NETWORK_OUT_UTILIZATION]: 'sum(rate(container_network_transmit_bytes_total{container="POD",pod!=""}[5m]))',
   [OverviewQuery.NETWORK_UTILIZATION]: 'sum(instance:node_network_transmit_bytes_excluding_lo:rate1m+instance:node_network_receive_bytes_excluding_lo:rate1m)',
-  [OverviewQuery.CPU_UTILIZATION]: 'sum(sum by (cpu) (rate(node_cpu_seconds_total{job="node-exporter", mode!="idle"}[1m])))',
-  [OverviewQuery.CPU_TOTAL]: 'sum(sum by (cpu) (rate(node_cpu_seconds_total{job="node-exporter"}[1m])))',
-  [OverviewQuery.STORAGE_UTILIZATION]: '(sum(node_filesystem_size_bytes) - sum(node_filesystem_free_bytes))',
-  [OverviewQuery.STORAGE_TOTAL]: 'sum(node_filesystem_size_bytes)',
+  [OverviewQuery.CPU_UTILIZATION]: 'sum(instance:node_cpu:rate:sum{cluster=""})',
+  [OverviewQuery.CPU_TOTAL]: 'sum(count(node_cpu_seconds_total{job="node-exporter",mode="idle"}) by(instance))',
+  [OverviewQuery.STORAGE_UTILIZATION]: 'sum(instance:node_filesystem_usage:sum)',
+  [OverviewQuery.STORAGE_TOTAL]: 'sum(node_filesystem_size_bytes{mountpoint="/",cluster=""})',
   [OverviewQuery.POD_UTILIZATION]: 'count(kube_pod_info)',
 };
 
