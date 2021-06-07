@@ -119,6 +119,9 @@ export const DropdownWithRef = React.forwardRef<HTMLInputElement, DropdownWithRe
     });
   }
 
+  // MEMO : 옛버전의 dropdown공통컴포넌트 사용 시 {[value1]: [label1], [value2]: [label2]} 형식으로 items값을 지정해주고있어서 예전 dropdown을 DropdownWithRef로 대체했을 때 동작하게하기 위해
+  // 그렇게 들어왔을 때에도 object형태의 item으로 바꿔주기 위해 추가한 부분.
+  // ***** 이후 DropdownWithRef컴포넌트를 새로 사용하는 상황이라면 items 형태는 object들로 이루어진 Array로 지정해주는 것을 권장함! *****
   let options = items;
   if (!Array.isArray(items)) {
     options = [];
