@@ -9,6 +9,7 @@ import { Section } from './utils/section';
 import { InputSelectBox } from './utils/inputSelectBox';
 import { Dropdown } from './utils/dropdown';
 import { DropdownWithRef } from './utils/dropdown-new';
+import { MultiSelectDropdownWithRef } from './utils/multi-dropdown-new';
 import { ResourceDropdown } from './utils/resource-dropdown';
 import { ResourceListDropdown, ResourceListDropdownWithDataToolbar } from './utils/resource-list-dropdown';
 import { KeyValueListEditor } from './utils/key-value-list-editor';
@@ -338,6 +339,39 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           onChange={([selected]) => {
             return { value: selected };
           }}
+        />
+      </Section>
+      <Section id="new-dropdown-section" label="New MultiDropdown (resource item list)">
+        <Controller
+          as={<MultiSelectDropdownWithRef name="newdropdown3" useResourceItemsFormatter={true} items={ClusterResourceList} menuWidth="250px" buttonWidth="300px" placeholder="Select Cluster And ClusterClaim" />}
+          control={methods.control}
+          name="newdropdown3"
+          onChange={([selected]) => {
+            return { value: selected };
+          }}
+        />
+        <Controller
+          as={
+            <MultiSelectDropdownWithRef
+              name="newdropdown3-2"
+              useResourceItemsFormatter={false}
+              defaultValues={[{ label: 'BBB', value: 'bbb' }]}
+              items={[
+                { label: 'AAA', value: 'aaa' },
+                { label: 'BBB', value: 'bbb' },
+                { label: 'CCC', value: 'ccc' },
+              ]}
+              menuWidth="250px"
+              buttonWidth="200px"
+              chipsGroupTitle="ABC"
+            />
+          }
+          control={methods.control}
+          name="newdropdown3-2"
+          onChange={([selected]) => {
+            return { value: selected };
+          }}
+          defaultValue={[{ label: 'BBB', value: 'bbb' }]}
         />
       </Section>
     </div>

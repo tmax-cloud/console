@@ -35,7 +35,7 @@ const defaultValuesTemplate = {
     ]
 };
 
-const kindItems = t => [    
+const kindItems = t => [
     {
         title: t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_19'),
         value: 'User',
@@ -46,7 +46,7 @@ const kindItems = t => [
     },
     {
         title: t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_21'),
-        value: 'Service Account',
+        value: 'ServiceAccount',
     },
 ];
 
@@ -74,12 +74,12 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
         control,
         control: {
             defaultValuesRef: { current: defaultValues }
-        }
+        },
     } = methods;
 
     const subjectToggle = useWatch({
         control: control,
-        name: 'subjects.kind',
+        name: 'subject.kind',
         defaultValue: 'User',
     });
 
@@ -89,9 +89,24 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
         <>
             <div className='co-form-section__separator' />
 
-            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_16')} id='role' isRequired={true}>
+            <div>
+                <div className="co-form-section__label">{t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_13')}</div>
+            </div>
+            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_14')} id='roleName' isRequired={true}>
+                <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue={defaultValues.metadata.name} />
+            </Section>
+
+            <div className='co-form-section__separator' />
+
+            <div>
+                <div className="co-form-section__label">{t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_15')}</div>
+            </div>
+
+
+            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_16')} id='roleName' isRequired={true}>
+
                 <ResourceDropdown
-                    name='roleRef.name'
+                    name='roleRef.kindAndname'
                     resources={[
                         {
                             kind: 'Role',
@@ -107,7 +122,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                     useHookForm
                     type='single'
                     idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
-                    defaultValue={ `${defaultValues.roleRef.kind}~~${defaultValues.roleRef.name}`}
+                    defaultValue={`${defaultValues.roleRef.kind}~~${defaultValues.roleRef.name}`}
                 />
             </Section>
 
@@ -116,18 +131,18 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
 
             <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_18')} id='kind' isRequired>
                 <RadioGroup
-                    name='subjects.kind'
+                    name='subject.kind'
                     items={kindItems.bind(null, t)()}
-                    inline={false}                    
+                    inline={false}
                     initValue={defaultValues.subjects[0].kind}
                 />
             </Section>
 
 
-            {subjectToggle === "Service Account" &&
+            {subjectToggle === "ServiceAccount" &&
                 <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_23')} id='namespace' isRequired={true}>
                     <ResourceListDropdown
-                        name='subjects.namespace'
+                        name='subject.namespace'
                         useHookForm
                         resourceList={namespaces}
                         kind='Namespace'
@@ -139,8 +154,8 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                 </Section>
             }
 
-            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_24')} id='name' isRequired={true}>
-                <TextInput className='pf-c-form-control' id='subjects.name' name='subjects.name' defaultValue={defaultValues.subjects[0].name}/>
+            <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_22')} id='name' isRequired={true}>
+                <TextInput className='pf-c-form-control' id='subject.name' name='subject.name' defaultValue={defaultValues.subjects[0].name} />
             </Section>
 
         </>
@@ -153,11 +168,12 @@ export const CreateRoleBindingClaim: React.FC<CreateRoleBindingClaimProps> = (pr
     console.log('obj: ', props.obj);
     const formComponent = roleBindingClaimFormFactory(props.match.params, props.obj);
     const RoleBindingClaimFormComponent = formComponent;
-    return <RoleBindingClaimFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV1_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
+    return <RoleBindingClaimFormComponent fixed={{ metadata: { namespace: props.match.params.ns } }} explanation={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV1_1')} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm={false} />;
 
 }
 
 export const onSubmitCallback = (data) => {
+    console.log('data.subject.name: ', data.subject.name);
     let apiVersion = `${RoleBindingClaimModel.apiGroup}/${RoleBindingClaimModel.apiVersion}`
     let labels = SelectorInput.objectify(data.metadata.labels);
     delete data.metadata.labels;
@@ -165,28 +181,30 @@ export const onSubmitCallback = (data) => {
 
     let kind = 'RoleBindingClaim';
 
-    let subjects = data.subjects;
-    delete data.subjects;
+    let subjects = data.subject;
+    delete data.subject;
 
     let roleRefApiGroup = 'rbac.authorization.k8s.io';
 
-    const roleRef = data.roleRef?.name;
-    const roleRefKind = roleRef.split('~~')[0];
-    const roleRefName = roleRef.split('~~')[1];
+    let roleRefkindAndname = data.roleRef?.kindAndname;
+    const roleRefKind = roleRefkindAndname.split('~~')[0];
+    const roleRefName = roleRefkindAndname.split('~~')[1];
 
-    delete data.roleRef.name;
+    delete data.roleRef.kindAndname;
 
     let name = data.metadata.name;
 
-    data = _.defaultsDeep(data,
+    data = _.defaultsDeep(
         {
             apiVersion: apiVersion,
             kind: kind,
-            metadata: { labels: labels },
+            metadata: { name: name, labels: labels },
             subjects: [subjects],
             roleRef: { name: roleRefName, apiGroup: roleRefApiGroup, kind: roleRefKind },
             resourceName: name
-        });
+        }, data);
+
+    console.log('data.subject.name: ', data.subjects[0].name);
     return data;
 
 }
@@ -212,4 +230,3 @@ type RoleBindingClaimProps = {
     };
     isCreate: boolean;
 };
-

@@ -97,8 +97,8 @@ const pluralToKindMap = new Map([
   ['tfapplyclaims', 'TFApplyClaim'],
 ]);
 
-const isCreateManualSet = new Set(['Role', 'ClusterRole', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBinding', 'RoleBindingClaim']);
-const isVanillaObjectSet = new Set(['PodSecurityPolicy', 'Pod', 'Deployment', 'ReplicaSet', 'HorizontalPodAutoscaler', 'DaemonSet', 'StatefulSet', 'ConfigMap', 'Secret', 'Job', 'CronJob', 'Service', 'Ingress', 'NetworkPolicy', 'StorageClass', 'PersistentVolumeClaim', 'PersistentVolume', 'Namespace', 'LimitRange', 'ResourceQuota', 'Node', 'Role', 'RoleBinding', 'ServiceAccount', 'CustomResourceDefinition']);
+const isCreateManualSet = new Set(['Role', 'ClusterRole', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBinding', 'ClusterRoleBinding', 'RoleBindingClaim']);
+const isVanillaObjectSet = new Set(['PodSecurityPolicy', 'Pod', 'Deployment', 'ReplicaSet', 'HorizontalPodAutoscaler', 'DaemonSet', 'StatefulSet', 'ConfigMap', 'Secret', 'Job', 'CronJob', 'Service', 'Ingress', 'NetworkPolicy', 'StorageClass', 'PersistentVolumeClaim', 'PersistentVolume', 'Namespace', 'LimitRange', 'ResourceQuota', 'Node', 'Role', 'RoleBinding', 'ClusterRole', 'ClusterRoleBinding','ServiceAccount', 'CustomResourceDefinition']);
 
 export const pluralToKind = plural => pluralToKindMap.get(plural);
 
