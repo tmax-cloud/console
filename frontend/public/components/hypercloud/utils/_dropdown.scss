@@ -11,10 +11,26 @@
   }
 }
 
-.hc-select__input {
-  color: transparent;
-}
-
 .hc-dropdown-select_toggle-icon {
   margin-right: 12px;
+}
+
+.hc-dropdown-main-button {
+  min-height: 33px;
+  width: 200px;
+  cursor: pointer;
+  align-items: center;
+  background-color: hsl(0, 0%, 100%);
+  border-color: #ededed;
+  border-bottom-color: #8a8d90;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: none;
+  display: flex;
+  line-height: 33px;
+  padding: 2px 8px;
+  &:hover {
+    border-bottom-color: #06c;
+  }
 }
