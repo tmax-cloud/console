@@ -13,6 +13,7 @@
 
 .hc-dropdown-select_toggle-icon {
   margin-right: 12px;
+  margin-left: 5px;
 }
 
 .hc-dropdown-main-button {
@@ -32,5 +33,22 @@
   padding: 2px 8px;
   &:hover {
     border-bottom-color: #06c;
+  }
+}
+
+.hc-select__menu-list {
+  &::-webkit-scrollbar {
+    width: 7px;
+    background: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d8dadb;
+    border-radius: 7.5px;
+    opacity: 1;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: none;
   }
 }
