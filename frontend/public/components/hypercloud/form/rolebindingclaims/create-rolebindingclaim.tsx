@@ -35,7 +35,7 @@ const defaultValuesTemplate = {
     ]
 };
 
-const kindItems = t => [    
+const kindItems = t => [
     {
         title: t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_19'),
         value: 'User',
@@ -93,7 +93,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                 <div className="co-form-section__label">{t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_13')}</div>
             </div>
             <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_14')} id='roleName' isRequired={true}>
-                <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue={defaultValues.metadata.name}/>                
+                <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue={defaultValues.metadata.name} />
             </Section>
 
             <div className='co-form-section__separator' />
@@ -122,9 +122,9 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                     useHookForm
                     type='single'
                     idFunc={resource => `${resource.kind}~~${resource.metadata.name}`}
-                    defaultValue={ `${defaultValues.roleRef.kind}~~${defaultValues.roleRef.name}`}
+                    defaultValue={`${defaultValues.roleRef.kind}~~${defaultValues.roleRef.name}`}
                 />
-            </Section>            
+            </Section>
 
             <div className='co-form-section__separator' />
 
@@ -133,7 +133,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                 <RadioGroup
                     name='subject.kind'
                     items={kindItems.bind(null, t)()}
-                    inline={false}                    
+                    inline={false}
                     initValue={defaultValues.subjects[0].kind}
                 />
             </Section>
@@ -155,7 +155,7 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
             }
 
             <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_22')} id='name' isRequired={true}>
-                <TextInput className='pf-c-form-control' id='subject.name' name='subject.name' defaultValue={defaultValues.subjects[0].name}/>
+                <TextInput className='pf-c-form-control' id='subject.name' name='subject.name' defaultValue={defaultValues.subjects[0].name} />
             </Section>
 
         </>
@@ -172,7 +172,7 @@ export const CreateRoleBindingClaim: React.FC<CreateRoleBindingClaimProps> = (pr
 
 }
 
-export const onSubmitCallback = (data) => {    
+export const onSubmitCallback = (data) => {
     console.log('data.subject.name: ', data.subject.name);
     let apiVersion = `${RoleBindingClaimModel.apiGroup}/${RoleBindingClaimModel.apiVersion}`
     let labels = SelectorInput.objectify(data.metadata.labels);
@@ -203,7 +203,7 @@ export const onSubmitCallback = (data) => {
             roleRef: { name: roleRefName, apiGroup: roleRefApiGroup, kind: roleRefKind },
             resourceName: name
         }, data);
-    
+
     console.log('data.subject.name: ', data.subjects[0].name);
     return data;
 
@@ -230,4 +230,3 @@ type RoleBindingClaimProps = {
     };
     isCreate: boolean;
 };
-
