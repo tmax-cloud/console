@@ -309,7 +309,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
   //metadata: { namespace: params.ns }
   return (
     <>
-      <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_1')} id="roletype" isRequired>
+      <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_1')} id="roletype" >
         <RadioGroup name="kind" items={kindItems.bind(null, t)()} inline={false} initValue={kindToggle} />
       </Section>
 
