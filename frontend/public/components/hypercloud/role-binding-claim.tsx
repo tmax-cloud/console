@@ -17,7 +17,7 @@ const { common } = Kebab.factory;
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 export const getMenuActions = (status?) => {
-  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(((status !== 'Approved')&&(status !== 'Deleted')) ? [Kebab.factory.ModifyStatus] : [])];
+  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(((status !== 'Approved')&&(status !== 'Role Binding Deleted')) ? [Kebab.factory.ModifyStatus] : [])];
 }
 
 const kind = 'RoleBindingClaim';
@@ -114,7 +114,7 @@ const filters = t => [
       { id: 'Rejected', title: 'Rejected' },
       { id: 'Approved', title: 'Approved' },
       { id: 'Error', title: 'Error' },
-      { id: 'Deleted', title: 'Role Binding Deleted' },
+      { id: 'Role Binding Deleted', title: 'Role Binding Deleted' },
     ],
   },
 ];
