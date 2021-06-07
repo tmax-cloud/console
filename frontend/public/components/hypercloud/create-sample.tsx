@@ -8,8 +8,8 @@ import { RadioGroup } from './utils/radio';
 import { Section } from './utils/section';
 import { InputSelectBox } from './utils/inputSelectBox';
 import { Dropdown } from './utils/dropdown';
-import { DropdownWithRef } from './utils/dropdown-new';
-import { MultiSelectDropdownWithRef } from './utils/multi-dropdown-new';
+import { DropdownWithRef, DropdownFirehose } from './utils/dropdown-new';
+import { MultiSelectDropdownWithRef, MultiSelectDropdownFirehose } from './utils/multi-dropdown-new';
 import { ResourceDropdown } from './utils/resource-dropdown';
 import { ResourceListDropdown, ResourceListDropdownWithDataToolbar } from './utils/resource-list-dropdown';
 import { KeyValueListEditor } from './utils/key-value-list-editor';
@@ -320,59 +320,112 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
           ]}
         />
       </Section>
-      <Section id="new-dropdown-section" label="New Dropdown (plain item list)">
-        <Controller
-          as={<DropdownWithRef name="newdropdown" defaultValue={{ label: 'default', value: 'default' }} width="100px" useResourceItemsFormatter={false} items={newDropdownItemList} />}
-          control={methods.control}
-          name="newdropdown"
-          onChange={([selected]) => {
-            return { value: selected };
-          }}
-          defaultValue={{ label: 'default', value: 'default' }}
-        />
+      <Section id="new-multi-dropdown-section" label="<< New Dropdown >>">
+        <Section id="new-dropdown-section-1" label="DropdownFirehose (Firehose)">
+          <Controller
+            as={
+              <DropdownFirehose
+                name="newdropdown-firehose"
+                resourcesConfig={[
+                  {
+                    kind: 'Namespace',
+                    prop: 'namespace',
+                    isList: true,
+                  },
+                ]}
+                kind="Namespace"
+                width="250px"
+              />
+            }
+            control={methods.control}
+            name="newdropdown-firehose"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+          />
+        </Section>
+        <Section id="new-dropdown-section-2" label="DropdownWithRef (useResourceItemsFormatter=true)">
+          <Controller
+            as={<DropdownWithRef name="newdropdown-formatter" useResourceItemsFormatter={true} items={ClusterResourceList} />}
+            control={methods.control}
+            name="newdropdown-formatter"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+          />
+        </Section>
+        <Section id="new-dropdown-section-1" label="DropdownWithRef (plain item list)">
+          <Controller
+            as={<DropdownWithRef name="newdropdown-plain" defaultValue={{ label: 'default', value: 'default' }} width="100px" useResourceItemsFormatter={false} items={newDropdownItemList} />}
+            control={methods.control}
+            name="newdropdown-plain"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+            defaultValue={{ label: 'default', value: 'default' }}
+          />
+        </Section>
       </Section>
-      <Section id="new-dropdown-section" label="New Dropdown (resource item list)">
-        <Controller
-          as={<DropdownWithRef name="newdropdown2" useResourceItemsFormatter={true} items={ClusterResourceList} />}
-          control={methods.control}
-          name="newdropdown2"
-          onChange={([selected]) => {
-            return { value: selected };
-          }}
-        />
-      </Section>
-      <Section id="new-dropdown-section" label="New MultiDropdown (resource item list)">
-        <Controller
-          as={<MultiSelectDropdownWithRef name="newdropdown3" useResourceItemsFormatter={true} items={ClusterResourceList} menuWidth="250px" buttonWidth="300px" placeholder="Select Cluster And ClusterClaim" />}
-          control={methods.control}
-          name="newdropdown3"
-          onChange={([selected]) => {
-            return { value: selected };
-          }}
-        />
-        <Controller
-          as={
-            <MultiSelectDropdownWithRef
-              name="newdropdown3-2"
-              useResourceItemsFormatter={false}
-              defaultValues={[{ label: 'BBB', value: 'bbb' }]}
-              items={[
-                { label: 'AAA', value: 'aaa' },
-                { label: 'BBB', value: 'bbb' },
-                { label: 'CCC', value: 'ccc' },
-              ]}
-              menuWidth="250px"
-              buttonWidth="200px"
-              chipsGroupTitle="ABC"
-            />
-          }
-          control={methods.control}
-          name="newdropdown3-2"
-          onChange={([selected]) => {
-            return { value: selected };
-          }}
-          defaultValue={[{ label: 'BBB', value: 'bbb' }]}
-        />
+      <Section id="new-multi-dropdown-section" label="<< New MultiDropdown >>">
+        <Section id="new-multi-dropdown-section-1" label="MultiSelectDropdownFirehose (Firehose 사용)">
+          <Controller
+            as={
+              <MultiSelectDropdownFirehose
+                name="newmultidropdown-firehose"
+                resourcesConfig={[
+                  {
+                    kind: 'Namespace',
+                    prop: 'namespace',
+                    isList: true,
+                  },
+                ]}
+                kind="Namespace"
+                menuWidth="200px"
+                placeholder="Select Namespace"
+              />
+            }
+            control={methods.control}
+            name="newmultidropdown-firehose"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+          />
+        </Section>
+        <Section id="new-multi-dropdown-section-2" label="MultiSelectDropdownWithRef (useResourceItemsFormatter=true)">
+          <Controller
+            as={<MultiSelectDropdownWithRef name="newmultidropdown-useformatter" useResourceItemsFormatter={true} items={ClusterResourceList} menuWidth="250px" buttonWidth="250px" placeholder="Select Cluster And ClusterClaim" />}
+            control={methods.control}
+            name="newmultidropdown-useformatter"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+          />
+        </Section>
+        <Section id="new-multi-dropdown-section-3" label="MultiSelectDropdownWithRef (plain items)">
+          <Controller
+            as={
+              <MultiSelectDropdownWithRef
+                name="newmultidropdown-plain"
+                useResourceItemsFormatter={false}
+                defaultValues={[{ label: 'BBB', value: 'bbb' }]}
+                items={[
+                  { label: 'AAA', value: 'aaa' },
+                  { label: 'BBB', value: 'bbb' },
+                  { label: 'CCC', value: 'ccc' },
+                ]}
+                menuWidth="250px"
+                buttonWidth="200px"
+                chipsGroupTitle="ABC"
+              />
+            }
+            control={methods.control}
+            name="newmultidropdown-plain"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+            defaultValue={[{ label: 'BBB', value: 'bbb' }]}
+          />
+        </Section>
       </Section>
     </div>
   );
