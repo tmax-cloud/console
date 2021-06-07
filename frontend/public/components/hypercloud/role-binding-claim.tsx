@@ -5,11 +5,13 @@ import { K8sResourceCommon, K8sClaimResourceKind, modelFor, k8sGet } from '../..
 
 import { sortable } from '@patternfly/react-table';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab, Timestamp } from '../utils';
+import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab, Timestamp, DetailsItem } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { RoleBindingClaimModel } from '../../models';
 import { Popover } from '@patternfly/react-core';
+import { K8sResourceKind } from '../../module/k8s';
+import { Status } from '@console/shared';
 const { common } = Kebab.factory;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
@@ -154,6 +156,9 @@ const RoleBindingClaimsDetails: React.FC<RoleBindingClaimDetailsProps> = ({ obj:
             <div className="col-sm-6">
               <ResourceSummary resource={rolebindingclaims}></ResourceSummary>
             </div>
+            <div className="col-sm-6">
+              <RoleBindingClaimDetailsList resource={rolebindingclaims}></RoleBindingClaimDetailsList>
+            </div>
           </div>
         </div>
       </div>
@@ -189,4 +194,29 @@ type RoleBindingClaimsDetailsPageProps = {
   match: any;
   name: string;
   namespace:string;
+};
+
+
+export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListProps> = ({ resource }) => {
+  const { t } = useTranslation();  
+
+  return (
+    <dl className="co-m-pane__details">
+      <DetailsItem label={`${t('COMMON:MSG_MAIN_TABLEHEADER_98')}`} obj={resource} path="resourceName">
+        {resource.status.url}
+      </DetailsItem>
+      <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
+        <Status status={resource.status.status} />
+      </DetailsItem>
+      {resource.status?.status === 'Rejected' &&
+        <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">
+          {resource.status.reason}
+        </DetailsItem>
+      }      
+    </dl>
+  ); 
+}
+
+type RoleBindingClaimDetailsListProps = {
+  resource: K8sResourceKind;
 };
