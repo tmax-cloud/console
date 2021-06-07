@@ -15,7 +15,7 @@ const { common } = Kebab.factory;
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 export const getMenuActions = (status?) => {
-  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(status !== 'Approved' ? [Kebab.factory.ModifyStatus] : [])];
+  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(((status !== 'Approved')&&(status !== 'Deleted')) ? [Kebab.factory.ModifyStatus] : [])];
 }
 
 const kind = 'RoleBindingClaim';
@@ -111,7 +111,8 @@ const filters = t => [
       { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Rejected', title: 'Rejected' },
       { id: 'Approved', title: 'Approved' },
-      { id: 'Error', title: 'Error' },      
+      { id: 'Error', title: 'Error' },
+      { id: 'Deleted', title: 'Role Binding Deleted' },
     ],
   },
 ];
@@ -126,7 +127,7 @@ export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props
 
     },
     {
-      href: 'rolebindingclaims',
+      href: 'rolebindingclaims?rowFilter-roleBindingClaim-status=Awaiting',
       name: t('COMMON:MSG_LNB_MENU_101'),
     },
   ];
