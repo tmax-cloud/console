@@ -64,18 +64,18 @@ const defaultVerbs = [
 const defaultValuesTemplate = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
   //apiGroup: '*'  
-  
+
   metadata: {
-    name: 'example-name',    
-  },  
+    name: 'example-name',
+  },
   rules: [
     {
       verbs: ['*'],
       apiGroups: ['*'],
-      resources: ['*'],      
+      resources: ['*'],
     },
   ],
-    
+
 };
 
 const compareObjByName = (a, b) => {
@@ -101,14 +101,14 @@ const roleFormFactory = (params, obj) => {
         let apiGroupKeyValue;
         if (apiGroup === '') { //"" indicates the core API group    
           apiGroup = 'Core';
-        }  
-        if (apiGroup === '*') {          
+        }
+        if (apiGroup === '*') {
           apiGroupKeyValue = { label: 'All', value: '*' };
         }
         else if (apiGroup === 'Core') {
           apiGroupKeyValue = { label: 'Core', value: 'Core' };
         }
-        else {          
+        else {
           apiGroupKeyValue = { label: apiGroup, value: apiGroup };
         }
         defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
@@ -118,7 +118,7 @@ const roleFormFactory = (params, obj) => {
         if (resource === '*') {
           resourceKeyValue = { label: 'All', value: '*' };
         }
-        else {          
+        else {
           resourceKeyValue = { label: resource, value: resource };
         }
         defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
@@ -175,8 +175,8 @@ const roleFormFactory = (params, obj) => {
     defaultValues.rules[0].resources[0] = { label: resources, value : resources };    
   }
   */
-  
-  
+
+
   console.log('defaultValues: ', defaultValues);
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
 };
@@ -293,7 +293,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
   });
 
 
-  const {    
+  const {
     control: {
       defaultValuesRef: { current: defaultValues }
     },
@@ -321,7 +321,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {kindToggle === 'Role' && (
         <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_7')} id="namespace" isRequired={true}>
-          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8') } defaultValue={defaultValues.metadata.namespace}/>
+          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} defaultValue={defaultValues.metadata.namespace} />
         </Section>
       )}
 
@@ -336,7 +336,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
   );
 };
 
-export const CreateRole: React.FC<CreateRoleProps> = ({ match: { params }, kind, obj}) => {
+export const CreateRole: React.FC<CreateRoleProps> = ({ match: { params }, kind, obj }) => {
   const { t } = useTranslation();
   const formComponent = roleFormFactory(params, obj);
   const RoleFormComponent = formComponent;
