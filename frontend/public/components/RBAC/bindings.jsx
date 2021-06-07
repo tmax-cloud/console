@@ -343,7 +343,9 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
         this.subjectIndex = props.subjectIndex || 0;
 
         const existingData = _.pick(props.obj, ['metadata.name', 'metadata.namespace', 'roleRef', 'subjects']);
-        existingData.kind = props.obj.kind;
+        if (props.obj !== undefined) {
+          existingData.kind = props.obj.kind;
+        }
         const data = _.defaultsDeep(
           existingData,
           {
