@@ -157,16 +157,14 @@ export const ImageReplicateDetailsList: React.FC<ImageReplicateDetailsListProps>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec.fromImage.registryType}</dd>
       {/* 소스 레지스트리 (네임스페이스/이름) */}
       <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_89')}</dt>
-      <dd style={{ display: 'flex', flexDirection: 'column' }}>
-        <ResourceLink kind={ExternalRegistryModel.kind} name={ds.spec.fromImage.registryName} displayName={FROM_NAMESPACE_NAME} title={FROM_NAMESPACE_NAME} namespace={ds.spec.fromImage.registryNamespace} />
-      </dd>
+      <dd style={{ display: 'flex', flexDirection: 'column' }}>{<ResourceLink kind={ds.spec.fromImage.registryType === 'HpcdRegistry' ? RegistryModel.kind : ExternalRegistryModel.kind} name={ds.spec.fromImage.registryName} displayName={FROM_NAMESPACE_NAME} title={FROM_NAMESPACE_NAME} namespace={ds.spec.fromImage.registryNamespace} />}</dd>
       {/* 타겟 레지스트리 타입 */}
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_51')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec.toImage.registryType}</dd>
       {/* 타겟 레지스트리 (네임스페이스/이름) */}
       <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_90')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>
-        <ResourceLink kind={RegistryModel.kind} name={ds.spec.toImage.registryName} displayName={TO_NAMESPACE_NAME} title={TO_NAMESPACE_NAME} namespace={ds.spec.toImage.registryNamespace} />
+        <ResourceLink kind={ds.spec.toImage.registryType === 'HpcdRegistry' ? RegistryModel.kind : ExternalRegistryModel.kind} name={ds.spec.toImage.registryName} displayName={TO_NAMESPACE_NAME} title={TO_NAMESPACE_NAME} namespace={ds.spec.toImage.registryNamespace} />
       </dd>
       {/* 서명자 */}
       {isSigner && (
