@@ -271,7 +271,7 @@ const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
           reducer: serviceInstanceStatusReducer,
           items: [
             { id: 'Ready', title: 'Ready' },
-            { id: 'Error', title: 'Error' },
+            { id: 'Failed', title: 'Failed' },
           ],
         },
       ]}
