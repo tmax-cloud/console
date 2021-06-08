@@ -93,7 +93,10 @@ const CreateRoleBindingClaimComponent: React.FC<RoleBindingClaimProps> = (props)
                 <div className="co-form-section__label">{t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_13')}</div>
             </div>
             <Section label={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGCLAIMFORM_DIV2_14')} id='roleName' isRequired={true}>
-                <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue={defaultValues.metadata.name} />
+                { defaultValues.metadata.name ? 
+                    defaultValues.metadata.name : 
+                    <TextInput className='pf-c-form-control' id='metadata.name' name='metadata.name' defaultValue={defaultValues.metadata.name} />
+                }                
             </Section>
 
             <div className='co-form-section__separator' />
