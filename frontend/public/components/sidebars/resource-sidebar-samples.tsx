@@ -15,7 +15,7 @@ import * as defaultDenyAllImg from '../../imgs/network-policy-samples/4-default-
 import * as webAllowExternalImg from '../../imgs/network-policy-samples/5-web-allow-external.svg';
 import * as webDbAllowAllNsImg from '../../imgs/network-policy-samples/6-web-db-allow-all-ns.svg';
 import * as webAllowProductionImg from '../../imgs/network-policy-samples/7-web-allow-production.svg';
-import { hyperCloudSamples } from '../hypercloud/sidebars/resource-sidebar-samples';
+// import { hyperCloudSamples } from '../hypercloud/sidebars/resource-sidebar-samples';
 
 const getTargetResource = (model: K8sKind) => ({
   apiVersion: apiVersionForModel(model),
@@ -196,7 +196,8 @@ const defaultSamples = ImmutableMap<GroupVersionKind, Sample[]>()
 
 export const getResourceSidebarSamples = (kindObj: K8sKind, yamlSamplesList: FirehoseResult) => {
   const yamlSamplesData = !_.isEmpty(yamlSamplesList) ? _.filter(yamlSamplesList.data, (sample: K8sResourceKind) => sample.spec.targetResource.apiVersion === apiVersionForModel(kindObj) && sample.spec.targetResource.kind === kindObj.kind) : [];
-  const existingSamples = hyperCloudSamples.get(referenceForModel(kindObj)) || defaultSamples.get(referenceForModel(kindObj)) || [];
+  // const existingSamples = hyperCloudSamples.get(referenceForModel(kindObj)) || defaultSamples.get(referenceForModel(kindObj)) || [];
+  const existingSamples = defaultSamples.get(referenceForModel(kindObj)) || []; //  Sample 지원 일단 보류 (hypercloud 6이후일듯.)
   const extensionSamples = !_.isEmpty(yamlSamplesData)
     ? yamlSamplesData.map((sample: K8sResourceKind) => {
         return {

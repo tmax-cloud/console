@@ -59,7 +59,7 @@ export const CreateNamespace: React.FC<CreateNamespaceProps> = props => {
 export const onSubmitCallback = data => {
   let labels = SelectorInput.objectify(data.metadata.labels);
   delete data.metadata.labels;
-  data = _.defaultsDeep(data, { metadata: { labels: labels } });
+  data = _.defaultsDeep({ metadata: { labels: labels } }, data);
   return data;
 };
 

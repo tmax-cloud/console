@@ -12,11 +12,12 @@ import * as UIActions from '../../actions/ui';
 import { MultiListPage, Table, TableRow, TableData } from '../factory';
 import { RadioGroup } from '../radio';
 import { confirmModal } from '../modals';
-import { ButtonBar, Kebab, Firehose, ListDropdown, MsgBox, NsDropdown, ResourceKebab, ResourceLink, ResourceName, StatusBox, getQueryArgument, history, kindObj, resourceObjPath, useAccessReview } from '../utils';
+import { ButtonBar, Kebab, Firehose, ListDropdown, MsgBox, NsDropdown, ResourceKebab, ResourceLink, ResourceName, StatusBox, getQueryArgument, history, kindObj, resourceObjPath, useAccessReview, getNamespace } from '../utils';
 import { isSystemRole } from './index';
 import { connectToFlags, flagPending } from '../../reducers/features';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { pluralToKind } from '../hypercloud/form';
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
 // Split each binding into one row per subject
@@ -53,7 +54,7 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   const actions = [
     (kind, obj) => ({
-      label: `${(kind.kind === 'RoleBinding') ? t('SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_1') : t('SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_2')}`,
+      label: `${kind.kind === 'RoleBinding' ? t('SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_1') : t('SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_2')}`,
       href: `${resourceObjPath(obj, kind.kind)}/copy?subjectIndex=${subjectIndex}`,
       // Only perform access checks when duplicating cluster role bindings.
       // It's not practical to check namespace role bindings since we don't know what namespace the user will pick in the form.
@@ -93,7 +94,7 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
     actions.unshift(() => ({
-      label: t(subject.kind === 'User' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_18' : 'COMMON:MSG_MAIN_ACTIONBUTTON_43', { 0: subject.name  }),
+      label: t(subject.kind === 'User' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_18' : 'COMMON:MSG_MAIN_ACTIONBUTTON_43', { 0: subject.name }),
       needTranslate: false,
       // label: `Impersonate ${subject.kind} "${subject.name}"`,
       callback: () => startImpersonate(subject.kind, subject.name),
@@ -113,7 +114,7 @@ const RoleBindingsTableHeader = t => [
     props: { className: tableColumnClasses[0] },
   },
   {
-    title: t('COMMON:MSG_DETAILS_TABROLEBINDINGS_TABLEHEADER_2'),
+    title: t('COMMON:MSG_MAIN_TABLEHEADER_105'),
     sortField: 'roleRef.name',
     transforms: [sortable],
     props: { className: tableColumnClasses[1] },
@@ -226,6 +227,33 @@ const rowFilters = t => {
 
 export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new' }) => {
   const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'rolebindings',
+      name: t('COMMON:MSG_LNB_MENU_76'),
+    },
+    {
+      href: 'rolebindingclaims?rowFilter-roleBindingClaim-status=Awaiting',
+      name: t('COMMON:MSG_LNB_MENU_101'),
+    },
+  ];
+
+  const ko = kindObj(pluralToKind('rolebindings'));
+  const { namespaced, plural } = ko;
+  //const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
+  const usedNamespace = namespace;
+
+  let multiNavBaseURL;
+  if (namespaced) {
+    if (usedNamespace) {
+      multiNavBaseURL = `/k8s/ns/${usedNamespace}`;
+    } else {
+      multiNavBaseURL = `/k8s/all-namespaces`;
+    }
+  } else {
+    multiNavBaseURL = `/k8s/cluster`;
+  }
+
   return (
     <MultiListPage
       canCreate={!mock}
@@ -246,6 +274,8 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
       textFilter="role-binding"
       title={t('COMMON:MSG_LNB_MENU_76')}
       isClusterScope
+      multiNavPages={pages}
+      multiNavBaseURL={multiNavBaseURL}
     />
   );
 };
@@ -277,7 +307,7 @@ const NsRoleDropdown = connectToFlags(FLAGS.OPENSHIFT)(NsRoleDropdown_);
 const ClusterRoleDropdown = props => {
   const { t } = useTranslation();
   return <ListDropdown {...props} dataFilter={role => !isSystemRole(role)} desc="Cluster-wide Roles (ClusterRole)" resources={[{ kind: 'ClusterRole' }]} placeholder={t('SINGLE:MSG_ROLEBINDINGS_CREATEROLEBINDINGFORM_DIV2_13')} />;
-}
+};
 
 const bindingKinds = t => [
   {
@@ -312,25 +342,32 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
 
         this.subjectIndex = props.subjectIndex || 0;
 
-        const existingData = _.pick(props.obj, ['metadata.name', 'metadata.namespace', 'roleRef', 'subjects']);
-        existingData.kind = props.kind;
-        const data = _.defaultsDeep({}, props.fixed, existingData, {
-          apiVersion: 'rbac.authorization.k8s.io/v1',
-          kind: 'RoleBinding',
-          metadata: {
-            name: '',
-          },
-          roleRef: {
-            apiGroup: 'rbac.authorization.k8s.io',
-          },
-          subjects: [
-            {
-              apiGroup: 'rbac.authorization.k8s.io',
-              kind: 'User',
+        const existingData = _.pick(props.obj, ['metadata.name', 'metadata.namespace', 'roleRef', 'subjects']); //_.pick 동작 확인 필요
+        if (props.obj !== undefined) {
+          existingData.kind = props.obj.kind;
+        }
+        const data = _.defaultsDeep(
+          existingData,
+          {
+            apiVersion: 'rbac.authorization.k8s.io/v1',
+            kind: 'RoleBinding',
+            metadata: {
               name: '',
             },
-          ],
-        });
+            roleRef: {
+              apiGroup: 'rbac.authorization.k8s.io',
+            },
+            subjects: [
+              {
+                apiGroup: 'rbac.authorization.k8s.io',
+                kind: 'User',
+                name: '',
+              },
+            ],
+          },
+          props.fixed,
+          {},
+        );
         this.state = { data, inProgress: false };
 
         this.setKind = this.setKind.bind(this);
@@ -471,7 +508,7 @@ const BaseEditRoleBinding = connect(null, { setActiveNamespace: UIActions.setAct
               <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                 <ActionGroup className="pf-c-form">
                   <Button type="submit" id="save-changes" variant="primary">
-                    {isCreatePage(this.state.data.metadata) ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') }
+                    {isCreatePage(this.state.data.metadata) ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
                   </Button>
                   <Button onClick={history.goBack} id="cancel" variant="secondary">
                     {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
@@ -501,7 +538,7 @@ export const CreateRoleBinding = ({ match: { params }, location }) => {
     metadata: { namespace: params.ns },
     roleRef: { kind: roleKind, name: roleName },
   };
-  return <BaseEditRoleBinding metadata={metadata} fixed={fixed} isCreate={true} titleVerb='COMMON:MSG_MAIN_CREATEBUTTON_1' />;
+  return <BaseEditRoleBinding metadata={metadata} fixed={fixed} isCreate={true} titleVerb="COMMON:MSG_MAIN_CREATEBUTTON_1" />;
 };
 
 const getSubjectIndex = () => {
@@ -521,16 +558,16 @@ const BindingLoadingWrapper = props => {
 
 export const EditRoleBinding = ({ match: { params }, kind }) => (
   <Firehose resources={[{ kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-    <BindingLoadingWrapper fixedKeys={['kind', 'metadata', 'roleRef']} subjectIndex={getSubjectIndex()} titleVerb='COMMON:MSG_MAIN_ACTIONBUTTON_15' saveButtonText="Save" />
+    <BindingLoadingWrapper fixedKeys={['kind', 'metadata', 'roleRef']} subjectIndex={getSubjectIndex()} titleVerb="COMMON:MSG_MAIN_ACTIONBUTTON_15" saveButtonText="Save" />
   </Firehose>
 );
 
-export const CopyRoleBinding = ({ match: { params }, kind }) => (  
+export const CopyRoleBinding = ({ match: { params }, kind }) => (
   <Firehose resources={[{ kind, name: params.name, namespace: params.ns, isList: false, prop: 'obj' }]}>
-    <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb={`${(kind === 'RoleBinding') ? 'SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_1' : 'SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_2'}`} /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
+    <BindingLoadingWrapper isCreate={true} fixedKeys={['kind']} subjectIndex={getSubjectIndex()} titleVerb={`${kind === 'RoleBinding' ? 'SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_1' : 'SINGLE:MSG_ROLEBINDINGS_DUPLICATEROLEBINDING_2'}`} /> {/* TODO: 'Duplicate {{0}} 이라는 스트링 나오면 적용해야함 */}
   </Firehose>
 );
 
 export const isCreatePage = metadata => {
-  return !(_.has(metadata, 'selfLink') );
+  return !_.has(metadata, 'selfLink');
 };

@@ -154,6 +154,10 @@ export const tableFilters: TableFilterMap = {
       return filter.selected.has(phase) || filter.selected.size === 0;
     }
 
+  },
+  // Filter Integration Config by Status
+  'roleBindingClaim-status' : (filter, binding) => {
+    return filter.selected.has(binding.status.status) || filter.selected.size === 0;    
   },  
 
   selector: (selector, obj) => {

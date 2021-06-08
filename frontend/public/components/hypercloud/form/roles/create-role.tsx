@@ -61,9 +61,21 @@ const defaultVerbs = [
   { name: 'watch', label: 'Watch' },
 ];
 
-const defaultValues = {
+const defaultValuesTemplate = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
-  apiGroup: '*',
+  //apiGroup: '*'  
+
+  metadata: {
+    name: 'example-name',
+  },
+  rules: [
+    {
+      verbs: ['*'],
+      apiGroups: ['*'],
+      resources: ['*'],
+    },
+  ],
+
 };
 
 const compareObjByName = (a, b) => {
@@ -78,21 +90,108 @@ const compareObjByName = (a, b) => {
   }
 };
 
-const roleFormFactory = params => {
+const roleFormFactory = (params, obj) => {
+  console.log('defaultValuesTemplate: ', defaultValuesTemplate);
+
+  const defaultValues = obj || defaultValuesTemplate;
+
+  if (defaultValues.rules) {
+    defaultValues.rules.forEach((rule, ruleIndex) => {
+      rule.apiGroups.forEach((apiGroup, apiGroupIndex) => {
+        let apiGroupKeyValue;
+        if (apiGroup === '') { //"" indicates the core API group    
+          apiGroup = 'Core';
+        }
+        if (apiGroup === '*') {
+          apiGroupKeyValue = { label: 'All', value: '*' };
+        }
+        else if (apiGroup === 'Core') {
+          apiGroupKeyValue = { label: 'Core', value: 'Core' };
+        }
+        else {
+          apiGroupKeyValue = { label: apiGroup, value: apiGroup };
+        }
+        defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
+      });
+      rule.resources.forEach((resource, resourceIndex) => {
+        let resourceKeyValue;
+        if (resource === '*') {
+          resourceKeyValue = { label: 'All', value: '*' };
+        }
+        else {
+          resourceKeyValue = { label: resource, value: resource };
+        }
+        defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
+      });
+
+      /*
+      if (element.apiGroups[0] === '') { //"" indicates the core API group    
+        element.apiGroup = 'Core';
+      }
+
+      if (element.apiGroups[0] === '*') {
+        element.apiGroup = { label: '*', value: 'All' };
+      }
+      else if (element.apiGroups[0] === 'Core') {
+        element.apiGroup = { label: 'Core', value: 'Core' };
+      }
+      else {
+        let apiGroups = element.apiGroups[0];
+        element.apiGroup = { label: apiGroups, value: apiGroups };
+      }
+
+      if (element.resources[0] === '*') {
+        element.resource = { label: '*', value: 'All' };
+      }
+      else {
+        let resources = element.resources[0];
+        element.resource = { label: resources, value: resources };
+      }
+      */
+
+    });
+  }
+  /*
+  if (defaultValues.rules[0].apiGroups[0] === '') { //"" indicates the core API group    
+    defaultValues.rules[0].apiGroups[0] = 'Core';
+  }
+  if (defaultValues.rules[0].apiGroups[0] === '*') {
+    defaultValues.rules[0].apiGroups[0] = { label: 'All', value : '*' };    
+  }
+  else if (defaultValues.rules[0].apiGroups[0] === 'Core') {
+    defaultValues.rules[0].apiGroups[0] = { label: 'Core', value : 'Core' };    
+  }
+  else {
+    let apiGroups = defaultValues.rules[0].apiGroups[0];
+    defaultValues.rules[0].apiGroups[0] = { label: apiGroups, value : apiGroups };    
+  }
+  
+
+  if (defaultValues.rules[0].resources[0] === '*') {
+    defaultValues.rules[0].resources[0] = { label: 'All', value : '*' };    
+  }
+  else {
+    let resources = defaultValues.rules[0].resources[0];
+    defaultValues.rules[0].resources[0] = { label: resources, value : resources };    
+  }
+  */
+
+
+  console.log('defaultValues: ', defaultValues);
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
 };
 const RuleItem = props => {
   const { item, name, index, onDeleteClick, methods, ListActions } = props;
 
-  const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ '*': 'All' });
+  const [resourceList, setResourceList] = React.useState<{ [key: string]: string }>({ 'All': '*' });
   const { control } = methods;
-  const apiGroup = useWatch<{ label: string; value: string }>({
+  const apiGroup0 = useWatch<{ label: string; value: string }>({
     control: control,
-    name: `${name}[${index}].apiGroup`,
+    name: `${name}[${index}].apiGroups[0]`,
   });
 
   React.useEffect(() => {
-    const apiGroupValue = apiGroup?.value || '*';
+    const apiGroupValue = apiGroup0?.value || '*';
     if (apiGroupValue === '*') {
       setResourceList({ '*': 'All' });
     } else if (apiGroupValue === 'Core') {
@@ -110,7 +209,7 @@ const RuleItem = props => {
         },
       );
     }
-  }, [apiGroup]);
+  }, [apiGroup0]);
 
   const { t } = useTranslation();
 
@@ -121,25 +220,25 @@ const RuleItem = props => {
         <div className="col-xs-4 pairs-list__value-field">
           <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apigroup[${index}]`} isRequired={true}>
             <Controller
-              as={<DropdownWithRef name={`${name}[${index}].apiGroup`} defaultValue={{ label: item.apiGroup.label, value: item.apiGroup.value }} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} />}
+              as={<DropdownWithRef name={`${name}[${index}].apiGroups[0]`} defaultValue={{ label: item.apiGroups[0].label, value: item.apiGroups[0].value }} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} />}
               control={methods.control}
-              name={`${name}[${index}].apiGroup`}
+              name={`${name}[${index}].apiGroups[0]`}
               onChange={([selected]) => {
                 return { value: selected };
               }}
-              defaultValue={{ label: item.apiGroup.label, value: item.apiGroup.value }}
+              defaultValue={{ label: item.apiGroups[0].label, value: item.apiGroups[0].value }}
             />
             {/* <Dropdown name={`${name}[${index}].apiGroup`} items={apiGroupList} defaultValue={item.apiGroup} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].apiGroup`, item.apiGroup)} /> */}
           </Section>
           <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>
             <Controller
-              as={<DropdownWithRef name={`${name}[${index}].resource`} defaultValue={{ label: item.resource.label, value: item.resource.value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
+              as={<DropdownWithRef name={`${name}[${index}].resources[0]`} defaultValue={{ label: item.resources[0].label, value: item.resources[0].value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
               control={methods.control}
-              name={`${name}[${index}].resource`}
+              name={`${name}[${index}].resources[0]`}
               onChange={([selected]) => {
                 return { value: selected };
               }}
-              defaultValue={{ label: item.resource.label, value: item.resource.value }}
+              defaultValue={{ label: item.resources[0].label, value: item.resources[0].value }}
             />
             {/* <Dropdown name={`${name}[${index}].resource`} items={resourceList} defaultValue={item.resource} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].resource`, item.resource)} /> */}
           </Section>
@@ -193,12 +292,24 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
     defaultValue: 'Role',
   });
 
+
+  const {
+    control: {
+      defaultValuesRef: { current: defaultValues }
+    },
+  } = methods;
+
   const { t } = useTranslation();
 
+  /*
+  if (rules[0].apiGroups[0] === '*') {
+    rules[0].apiGroups[0] = {'All': '*'};
+  }
+  */
   //metadata: { namespace: params.ns }
   return (
     <>
-      <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_1')} id="roletype" isRequired>
+      <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_1')} id="roletype" >
         <RadioGroup name="kind" items={kindItems.bind(null, t)()} inline={false} initValue={kindToggle} />
       </Section>
 
@@ -210,13 +321,13 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {kindToggle === 'Role' && (
         <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_7')} id="namespace" isRequired={true}>
-          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} />
+          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} defaultValue={defaultValues.metadata.namespace} />
         </Section>
       )}
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_9')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }} defaultValues={[{ apiGroup: { label: 'All', value: '*' }, resource: { label: 'All', value: '*' }, verbs: ['*'] }]} />
+          <ListView methods={methods} name={`rules`} addButtonText='규칙 추가' headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={[{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }]} />
         </Section>
       ) : (
         <LoadingInline />
@@ -225,18 +336,19 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
   );
 };
 
-export const CreateRole: React.FC<CreateRoleProps> = ({ match: { params }, kind }) => {
-  const formComponent = roleFormFactory(params);
+export const CreateRole: React.FC<CreateRoleProps> = ({ match: { params }, kind, obj }) => {
+  const { t } = useTranslation();
+  const formComponent = roleFormFactory(params, obj);
   const RoleFormComponent = formComponent;
-  return <RoleFormComponent fixed={{}} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm={false} />;
+  return <RoleFormComponent fixed={{}} explanation={t('SINGLE:MSG_ROLES_CREATEFORM_DIV1_1')} titleVerb='Create' onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm={false} />;
 };
 
 export const onSubmitCallback = data => {
   let apiVersion = data.kind === 'Role' ? `${RoleModel.apiGroup}/${RoleModel.apiVersion}` : `${ClusterRoleModel.apiGroup}/${ClusterRoleModel.apiVersion}`;
 
   let rules = data.rules.map(rule => {
-    const apiGroup = rule.apiGroup?.value;
-    const reosurce = rule.resource?.value;
+    const apiGroup = rule.apiGroups[0]?.value;
+    const reosurce = rule.resources[0]?.value;
 
     return {
       apiGroups: apiGroup === 'Core' ? [''] : [apiGroup ?? '*'],
@@ -248,7 +360,7 @@ export const onSubmitCallback = data => {
   delete data.apiVersion;
   delete data.rules;
 
-  data = _.defaultsDeep(data, { apiVersion: apiVersion, rules: rules });
+  data = _.defaultsDeep({ apiVersion: apiVersion, rules: rules }, data);
   return data;
 };
 
@@ -262,6 +374,7 @@ type CreateRoleProps = {
   titleVerb: string;
   saveButtonText?: string;
   isCreate: boolean;
+  obj: any;
 };
 
 type RoleFormProps = {

@@ -2,19 +2,22 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 
 import { K8sResourceCommon, K8sClaimResourceKind, modelFor, k8sGet } from '../../module/k8s';
-import { fromNow } from '@console/internal/components/utils/datetime';
+
 import { sortable } from '@patternfly/react-table';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
+import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab, Timestamp, DetailsItem } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { RoleBindingClaimModel } from '../../models';
+import { Popover } from '@patternfly/react-core';
+import { K8sResourceKind } from '../../module/k8s';
+import { Status } from '@console/shared';
 const { common } = Kebab.factory;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 export const getMenuActions = (status?) => {
-  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(status !== 'Success' ? [Kebab.factory.ModifyStatus] : [])];
+  return [...Kebab.getExtensionsActionsForKind(modelFor('RoleBindingClaim')), ...common, ...(((status !== 'Approved') && (status !== 'Role Binding Deleted')) ? [Kebab.factory.ModifyStatus] : [])];
 }
 
 const kind = 'RoleBindingClaim';
@@ -29,7 +32,7 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
-      sortField: 'metadata.namespace',
+      sortField: 'resourceName',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
@@ -40,8 +43,8 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
-      sortField: 'resourceName',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
@@ -67,11 +70,23 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
         <ResourceLink kind={kind} name={rolebindingclaims.metadata.name} namespace={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.uid} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.namespace} linkTo={rolebindingclaims.status?.status === 'Approved'} />
+        <ResourceLink kind={`${(rolebindingclaims?.roleRef?.kind === 'Role') ? 'RoleBinding' : 'CluterRoleBinding'}`} name={rolebindingclaims.resourceName} title={rolebindingclaims.resourceName} linkTo={rolebindingclaims.status?.status === 'Approved'} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>{rolebindingclaims?.status?.status}</TableData>
-      <TableData className={tableColumnClasses[3]}>{rolebindingclaims.resourceName}</TableData>
-      <TableData className={tableColumnClasses[4]}>{fromNow(rolebindingclaims?.metadata?.creationTimestamp)}</TableData>
+      <TableData className={tableColumnClasses[2]}>
+        {rolebindingclaims.status?.status === 'Error' ? (
+          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{rolebindingclaims.status?.reason}</div>} maxWidth="30rem" position="right">
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>{rolebindingclaims.status?.status}</div>
+          </Popover>
+        ) : (
+          rolebindingclaims.status?.status
+        )}
+      </TableData>
+      <TableData className={tableColumnClasses[3]}>
+        <ResourceLink kind="Namespace" name={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.namespace} />
+      </TableData>
+      <TableData className={tableColumnClasses[4]}>
+        <Timestamp timestamp={rolebindingclaims.metadata.creationTimestamp} />
+      </TableData>
       <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={rolebindingclaims} />
       </TableData>
@@ -84,7 +99,51 @@ export const RoleBindingClaimsList: React.FC = props => {
 };
 RoleBindingClaimsList.displayName = 'RoleBindingClaimsList';
 
-export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props => <ListPage kind={'RoleBindingClaim'} canCreate={true} ListComponent={RoleBindingClaimsList} {...props} />;
+
+const roleBindingClaimStatusReducer = (rolebindingclaims: any): string => {
+  return rolebindingclaims.status.status;
+};
+
+const filters = t => [
+  {
+    filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
+    type: 'roleBindingClaim-status',
+    reducer: roleBindingClaimStatusReducer,
+    items: [
+      { id: 'Awaiting', title: 'Awaiting' },
+      { id: 'Rejected', title: 'Rejected' },
+      { id: 'Approved', title: 'Approved' },
+      { id: 'Error', title: 'Error' },
+      { id: 'Role Binding Deleted', title: 'Role Binding Deleted' },
+    ],
+  },
+];
+
+
+export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'rolebindings',
+      name: t('COMMON:MSG_LNB_MENU_76'),
+
+    },
+    {
+      href: 'rolebindingclaims?rowFilter-roleBindingClaim-status=Awaiting',
+      name: t('COMMON:MSG_LNB_MENU_101'),
+    },
+  ];
+  return <ListPage
+    kind={'RoleBindingClaim'}
+    canCreate={true}
+    ListComponent={RoleBindingClaimsList}
+    {...props}
+    rowFilters={filters.bind(null, t)()}
+    multiNavPages={pages}
+    title={t('COMMON:MSG_LNB_MENU_76')}
+  />;
+};
+
 RoleBindingClaimsPage.displayName = 'RoleBindingClaimsPage';
 const RoleBindingClaimsDetails: React.FC<RoleBindingClaimDetailsProps> = ({ obj: rolebindingclaims }) => {
   const { t } = useTranslation();
@@ -97,6 +156,9 @@ const RoleBindingClaimsDetails: React.FC<RoleBindingClaimDetailsProps> = ({ obj:
             <div className="col-sm-6">
               <ResourceSummary resource={rolebindingclaims}></ResourceSummary>
             </div>
+            <div className="col-sm-6">
+              <RoleBindingClaimDetailsList resource={rolebindingclaims}></RoleBindingClaimDetailsList>
+            </div>
           </div>
         </div>
       </div>
@@ -108,11 +170,11 @@ RoleBindingClaimsDetails.displayName = 'RoleBindingClaimsDetails';
 const { details, editResource } = navFactory;
 export const RoleBindingClaimsDetailsPage: React.FC<RoleBindingClaimsDetailsPageProps> = props => {
   const [menuActions, setMenuActions] = React.useState(getMenuActions());
-  React.useEffect(()=>{
-    k8sGet(RoleBindingClaimModel, props.name, props.namespace) 
-    .then(res =>{
-      setMenuActions(getMenuActions(res?.status?.status));
-    });
+  React.useEffect(() => {
+    k8sGet(RoleBindingClaimModel, props.name, props.namespace)
+      .then(res => {
+        setMenuActions(getMenuActions(res?.status?.status));
+      });
   }, [props.name, props.namespace]);
   return <DetailsPage {...props} kind={'RoleBindingClaim'} menuActions={menuActions} pages={[details(RoleBindingClaimsDetails), editResource()]} />
 };
@@ -131,5 +193,30 @@ type RoleBindingClaimsPageProps = {
 type RoleBindingClaimsDetailsPageProps = {
   match: any;
   name: string;
-  namespace:string;
+  namespace: string;
+};
+
+
+export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListProps> = ({ resource }) => {
+  const { t } = useTranslation();
+
+  return (
+    <dl className="co-m-pane__details">
+      <DetailsItem label={`${t('COMMON:MSG_MAIN_TABLEHEADER_98')}`} obj={resource} path="resourceName">
+        {resource.status.url}
+      </DetailsItem>
+      <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
+        <Status status={resource.status.status} />
+      </DetailsItem>
+      {resource.status?.status === 'Rejected' &&
+        <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">
+          {resource.status.reason}
+        </DetailsItem>
+      }
+    </dl>
+  );
+}
+
+type RoleBindingClaimDetailsListProps = {
+  resource: K8sResourceKind;
 };

@@ -12,7 +12,8 @@ import { NavSection } from '../../nav/section';
 
 const searchStartsWith = ['search'];
 const rolesStartsWith = ['roles', 'clusterroles'];
-const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings'];
+const rolebindingsStartsWith = ['rolebindings', 'clusterrolebindings', 'rolebindingclaims', 'clusterrolebindingclaims'];
+//const rolebindingclaimsStartsWith = ['rolebindingclaims', 'clusterrolebindingclaims'];
 const quotaStartsWith = ['resourcequotas', 'clusterresourcequotas', 'resourcequotaclaims'];
 const namespaceStartsWith = ['namespaces', 'namespaceclaims'];
 
@@ -72,7 +73,7 @@ const MasterNav = () => (
         <NavSection title={t('COMMON:MSG_LNB_MENU_73')}>
           <ResourceNSLink resource="roles" name={t('COMMON:MSG_LNB_MENU_75')} startsWith={rolesStartsWith} />
           <ResourceNSLink resource="rolebindings" name={t('COMMON:MSG_LNB_MENU_76')} startsWith={rolebindingsStartsWith} />
-          <ResourceNSLink resource="rolebindingclaims" name={t('COMMON:MSG_LNB_MENU_101')} startsWith={rolebindingsStartsWith} />
+          {/*<ResourceNSLink resource="rolebindingclaims" name={t('COMMON:MSG_LNB_MENU_101')} startsWith={rolebindingclaimsStartsWith} />*/}
           <ResourceNSLink resource="serviceaccounts" name={t('COMMON:MSG_LNB_MENU_74')} />
           <ResourceClusterLink resource="podsecuritypolicies" name={t('COMMON:MSG_LNB_MENU_78')} />
           {/* <AuthAdminLink resource={referenceForModel(UserModel)} name="Users" />

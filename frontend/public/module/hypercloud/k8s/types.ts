@@ -19,6 +19,7 @@ export type ClusterTemplateClaimKind = K8sResourceKind & {
 
 export type K8sClaimResourceKind = K8sResourceKind & {
   resourceName?: string;
+  roleRef? : any;
 };
 
 // export type K8sResourceCommon = {

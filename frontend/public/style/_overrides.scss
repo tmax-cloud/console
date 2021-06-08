@@ -186,6 +186,12 @@ h6 {
 .pf-c-chip-group.pf-m-toolbar {
   margin-bottom: var(--pf-global--spacer--xs);
 }
+
+// MJ : Multidropdown의 chip컨테이너 닫기버튼 제거하는 부분
+// #multidropdown-toolbar .pf-c-chip-group__close {
+//   display: none;
+// }
+
 // PF components that calculate their correct height based on --pf-global--FontSize--md: 1rem
 .pf-c-modal-box,
 .pf-c-switch {
@@ -259,6 +265,10 @@ h6 {
     --pf-c-data-toolbar--PaddingTop: 0;
     --pf-c-data-toolbar__content--PaddingLeft: 0;
     --pf-c-data-toolbar__content--PaddingRight: 0;
+  }
+
+  #multidropdown-toolbar.pf-c-data-toolbar {
+    grid-gap: 5px;
   }
 
   .pf-c-page__main-section {

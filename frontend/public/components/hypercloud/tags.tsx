@@ -6,12 +6,11 @@ import { compoundExpand, sortable } from '@patternfly/react-table';
 import { Kebab, ResourceKebab } from '../utils';
 import { SingleExpandableTable } from './utils/expandable-table';
 import { ExpandableInnerTable } from './utils/expandable-inner-table';
+import { useTranslation } from 'react-i18next';
 
 export const menuActions = [Kebab.factory.ModifyScanning];
 
-const tableColumnClasses = [
-  Kebab.columnClass,
-];
+const tableColumnClasses = [Kebab.columnClass];
 
 export const Tags: React.SFC<TagsProps> = ({ tags, namespace, repository, registry, isExtRegistry }) => {
   return (
@@ -21,22 +20,22 @@ export const Tags: React.SFC<TagsProps> = ({ tags, namespace, repository, regist
       </div>
     </>
   );
-}
+};
 
 const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry }) => {
-
+  const { t } = useTranslation();
   const TagsListHeaderColumns = [
-    'Name',
-    'Signer',
+    t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+    t('COMMON:MSG_MAIN_TABLEHEADER_74'),
     {
       title: 'Scan Result',
       cellTransforms: [compoundExpand],
     },
-    'Created Time',
+    t('COMMON:MSG_MAIN_TABLEHEADER_12'),
     {
       title: '',
-      props: { className: tableColumnClasses[0] }
-    }
+      props: { className: tableColumnClasses[0] },
+    },
   ];
 
   const rowRenderer = (index, obj) => {
@@ -59,21 +58,24 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
         },
       },
       {
-        title: obj?.createdAt
+        title: obj?.createdAt,
       },
       {
-        title: <ResourceKebab actions={menuActions} kind='Tag' resource={obj} />,
-        props: { className: tableColumnClasses[0] }
-      }
+        title: <ResourceKebab actions={menuActions} kind="Tag" resource={obj} />,
+        props: { className: tableColumnClasses[0] },
+      },
     ];
   };
 
   const innerRenderer = parentItem => {
-
     const ScanResultTableRow = obj => {
       return [
         {
-          title: <a href={obj.link} target="_blank">{obj.name}</a>,
+          title: (
+            <a href={obj.link} target="_blank">
+              {obj.name}
+            </a>
+          ),
           textValue: obj.name,
         },
         {
@@ -120,7 +122,7 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
               severity: resObj[proerty][i].Severity,
               name: resObj[proerty][i].Name,
               version: resObj[proerty][i].NamespaceName,
-              link: resObj[proerty][i].Link
+              link: resObj[proerty][i].Link,
             });
           }
         }
@@ -129,10 +131,10 @@ const TagsListTable = ({ tags, namespace, repository, registry, isExtRegistry })
       .catch(err => {
         return <div>{err}</div>;
       });
-  }
+  };
 
   return <SingleExpandableTable header={TagsListHeaderColumns} itemList={tags} rowRenderer={rowRenderer} innerRenderer={innerRenderer} compoundParent={2}></SingleExpandableTable>;
-}
+};
 
 export type TagsProps = {
   tags: any;

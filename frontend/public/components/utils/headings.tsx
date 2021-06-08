@@ -86,7 +86,7 @@ export const PageHeading = connectToModel((props: PageHeadingProps) => {
     customData,
     badge,
     getResourceStatus = (resource: K8sResourceKind): string =>
-      _.get(resource, ['status', 'phase'], null),
+      (_.get(resource, ['status', 'phase'], null)||_.get(resource, ['status', 'status'], null)),
     className,
   } = props;
   const extraResources = _.reduce(
