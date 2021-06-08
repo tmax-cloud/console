@@ -28,7 +28,9 @@ WEBHOOK_PORT='32369'
 KIBANA_PORT='32496'
 # kubectl get ingress -n istio-system 
 KIALI='kiali.istio-system.172.21.4.152.nip.io'
-KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트 
+# kubectl get svc -n istio-system ingressgateway  (kubectl get gateway -n kubeflow로 어떤 포트를 이용하는지 정확히 확인)
+KUBEFLOW_IP='192.168.9.141'
+# KUBEFLOW_PORT='80' 
 
 ./bin/console gateway \
     --listen=https://$myIP:9000 \
@@ -48,7 +50,7 @@ KUBEFLOW_PORT='32190' # 80포트에 대응되는 포트
     --grafana-endpoint=http://$k8sIP:$GRAFANA_PORT/api/grafana/ \
     --kiali-endpoint=https://$KIALI/api/kiali \
     --kibana-endpoint=https://$k8sIP:$KIBANA_PORT/api/kibana/ \
-    --kubeflow-endpoint=http://172.23.4.113/api/kubeflow/ \
+    --kubeflow-endpoint=http://$KUBEFLOW_IP/api/kubeflow/ \
     --mc-mode=true \
     --release-mode=true \
     --public-dir=./frontend/public/dist \
