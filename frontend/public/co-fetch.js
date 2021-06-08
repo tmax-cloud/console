@@ -164,11 +164,12 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
       return response.text();
     }
 
+    const contentType = response.headers.get('Content-Type');
     // If the response has no body, return promise that resolves with an empty object
     if (response.headers.get('Content-Length') === '0') {
-      return Promise.resolve(response.headers.get('Content-Type') === 'text/plain' ? '' : {});
+      return Promise.resolve(contentType.indexOf('text/plain') > -1 ? '' : {});
     }
-    if (response.headers.get('Content-Type') === 'text/plain') {
+    if (contentType.indexOf('text/plain') > -1) {
       return response.text();
     }
     return response.json();
