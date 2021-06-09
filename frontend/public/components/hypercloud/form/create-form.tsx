@@ -34,9 +34,14 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
       let inDo = isCreatePage(defaultValues) ? _.defaultsDeep(data, props.fixed) : _.defaultsDeep(data, defaultValues);
       inDo = props.onSubmitCallback(inDo);
       const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
-      setProgress(true);
-      isCreatePage(defaultValues)
-        ? k8sCreate(model, inDo)
+      if (inDo.error) {
+        setProgress(false);
+        setError(inDo.error);
+      }
+      else {
+        setProgress(true);
+        isCreatePage(defaultValues)
+          ? k8sCreate(model, inDo)
             .then(() => {
               history.push(resourceObjPath(inDo, referenceFor(model)));
             })
@@ -44,7 +49,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
               setProgress(false);
               setError(e.message);
             })
-        : k8sUpdate(model, inDo)
+          : k8sUpdate(model, inDo)
             .then(() => {
               history.push(resourceObjPath(inDo, referenceFor(model)));
             })
@@ -52,6 +57,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
               setProgress(false);
               setError(e.message);
             });
+      }
     });
     return (
       <FormProvider {...methods}>
