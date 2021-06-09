@@ -18,6 +18,7 @@ import { CheckboxGroup } from '../../utils/checkbox';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { DropdownWithRef } from '../../utils/dropdown-new';
 import { useTranslation } from 'react-i18next';
+import { MultiSelectDropdownWithRef } from './../../utils/multi-dropdown-new';
 
 const kindItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
@@ -228,17 +229,26 @@ const RuleItem = props => {
               }}
               defaultValue={{ label: item.apiGroups[0].label, value: item.apiGroups[0].value }}
             />
-            {/* <Dropdown name={`${name}[${index}].apiGroup`} items={apiGroupList} defaultValue={item.apiGroup} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].apiGroup`, item.apiGroup)} /> */}
-          </Section>
-          <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>
-            <Controller
-              as={<DropdownWithRef name={`${name}[${index}].resources[0]`} defaultValue={{ label: item.resources[0].label, value: item.resources[0].value }} methods={methods} useResourceItemsFormatter={false} items={resourceList} />}
+            {/*<Controller
+              as={<MultiSelectDropdownWithRef name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false}  items={apiGroupList} placeholder='Select API Groups' />}
               control={methods.control}
-              name={`${name}[${index}].resources[0]`}
+              name={`${name}[${index}].apiGroups`}
               onChange={([selected]) => {
                 return { value: selected };
               }}
-              defaultValue={{ label: item.resources[0].label, value: item.resources[0].value }}
+              defaultValues={item.apiGroups}
+            />*/}
+            {/* <Dropdown name={`${name}[${index}].apiGroup`} items={apiGroupList} defaultValue={item.apiGroup} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].apiGroup`, item.apiGroup)} /> */}
+          </Section>
+          <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>            
+            <Controller
+              as={<MultiSelectDropdownWithRef name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false}  items={resourceList} placeholder='Select Resources'/>}
+              control={methods.control}
+              name={`${name}[${index}].resources`}
+              onChange={([selected]) => {
+                return { value: selected };
+              }}
+              defaultValues={item.resources}
             />
             {/* <Dropdown name={`${name}[${index}].resource`} items={resourceList} defaultValue={item.resource} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].resource`, item.resource)} /> */}
           </Section>
@@ -348,11 +358,15 @@ export const onSubmitCallback = data => {
 
   let rules = data.rules.map(rule => {
     const apiGroup = rule.apiGroups[0]?.value;
-    const reosurce = rule.resources[0]?.value;
+    let resources = new Array;
+    rule.resources.forEach( (r, index) => {
+      resources[index] = r.value;
+    });
+    
 
     return {
       apiGroups: apiGroup === 'Core' ? [''] : [apiGroup ?? '*'],
-      resources: [reosurce ?? '*'],
+      resources: resources ?? ['*'],
       verbs: rule.verbs ?? ['*'],
     };
   });

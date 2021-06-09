@@ -176,7 +176,6 @@ export const CreateRoleBindingClaim: React.FC<CreateRoleBindingClaimProps> = (pr
 }
 
 export const onSubmitCallback = (data) => {
-    console.log('data.subject.name: ', data.subject.name);
     let apiVersion = `${RoleBindingClaimModel.apiGroup}/${RoleBindingClaimModel.apiVersion}`
     let labels = SelectorInput.objectify(data.metadata.labels);
     delete data.metadata.labels;
@@ -206,8 +205,13 @@ export const onSubmitCallback = (data) => {
             roleRef: { name: roleRefName, apiGroup: roleRefApiGroup, kind: roleRefKind },
             resourceName: name
         }, data);
+    
+    //if ( !name || roleRefkindAndname === '~~' || !data.subject.name ) {
+    if ( !name || !subjects.name || (subjects.kind==='ServiceAccount' && !subjects.namespace) || !roleRefName ) {    
+        data = _.defaultsDeep({ error: 'Please complete all fields.' }, data);
+        return data;
+    }
 
-    console.log('data.subject.name: ', data.subjects[0].name);
     return data;
 
 }
