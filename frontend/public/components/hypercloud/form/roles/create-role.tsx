@@ -327,7 +327,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText='규칙 추가' headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={[{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }]} />
+          <ListView methods={methods} name={`rules`} addButtonText='규칙 추가' headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
         </Section>
       ) : (
         <LoadingInline />

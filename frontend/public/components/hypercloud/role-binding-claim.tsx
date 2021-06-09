@@ -69,8 +69,14 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={rolebindingclaims.metadata.name} namespace={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.uid} />
       </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind={`${(rolebindingclaims?.roleRef?.kind === 'Role') ? 'RoleBinding' : 'CluterRoleBinding'}`} name={rolebindingclaims.resourceName} title={rolebindingclaims.resourceName} linkTo={rolebindingclaims.status?.status === 'Approved'} />
+      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>  
+        <ResourceLink 
+            kind='RoleBinding'
+            namespace={rolebindingclaims.metadata.namespace}
+            name={rolebindingclaims.resourceName}
+            title={rolebindingclaims.resourceName}
+            linkTo={rolebindingclaims.status?.status === 'Approved'}
+        />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         {rolebindingclaims.status?.status === 'Error' ? (
