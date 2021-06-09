@@ -3,6 +3,16 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Button } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
+
+/**
+ * hook-form으로 데이터를 관리하면서 Item을 추가/제거 할 수 있는 리스트뷰 컴포넌트이다.
+ * @prop {string} name - hook form에 등록할 리스트뷰의 name.
+ * @prop {object[]} defaultValues - 리스트뷰에 기본으로 들어갈 값을 설정해주는 속성이다. key/value로 이루어진 리스트뷰에 기본으로 두 개의 row item이 추가된 상태로 설정해주고 싶다면, [{key: 'AAA', value: 'aaa'}, {key: 'BBB', value: 'bbb'}] 로 설정해주면 된다.
+ * @prop {object} defaultItem - 새로운 item 추가 시 해당 item에 넣어줄 기본값들에 대한 설정을 해주는 속성이다. (예: {key: 'defaultKey', value:'defaultValue'})
+ * @prop {Function} itemRenderer - 리스트뷰 하나의 row item을 커스터마이징 할 수 있는 함수. 속성을 설정하지 않으면 기본으로 key/value로 이루어진 itemRenderer가 들어간다.
+ * @prop {JSX.Element} headerFragment - 리스트뷰의 header부분을 커스터마이징 할 수 있는 속성. 속성을 설정하지 않으면 기본으로 KEY, VALUE로 구성된 헤더컴포넌트가 들어간다.
+ * @prop {string} addButtonText - item 추가버튼의 텍스트. 기본값은 'Add'이다.
+ */
 export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText, defaultValues }) => {
   const { control, register, getValues, setValue } = methods ? methods : useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: name });
