@@ -97,29 +97,34 @@ const roleFormFactory = (params, obj) => {
     defaultValues.rules.forEach((rule, ruleIndex) => {
       rule.apiGroups.forEach((apiGroup, apiGroupIndex) => {
         let apiGroupKeyValue;
-        if (apiGroup === '') { //"" indicates the core API group    
-          apiGroup = 'Core';
+        if (typeof(apiGroup) === 'string') {
+          if (apiGroup === '') { //"" indicates the core API group    
+            apiGroup = 'Core';
+          }
+          if (apiGroup === '*') {
+            apiGroupKeyValue = { label: 'All', value: '*' };
+          }
+          else if (apiGroup === 'Core') {
+            apiGroupKeyValue = { label: 'Core', value: 'Core' };
+          }
+          else {
+            apiGroupKeyValue = { label: apiGroup, value: apiGroup };
+          }
+          defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
+
         }
-        if (apiGroup === '*') {
-          apiGroupKeyValue = { label: 'All', value: '*' };
-        }
-        else if (apiGroup === 'Core') {
-          apiGroupKeyValue = { label: 'Core', value: 'Core' };
-        }
-        else {
-          apiGroupKeyValue = { label: apiGroup, value: apiGroup };
-        }
-        defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
       });
       rule.resources.forEach((resource, resourceIndex) => {
         let resourceKeyValue;
-        if (resource === '*') {
-          resourceKeyValue = { label: 'All', value: '*' };
-        }
-        else {
-          resourceKeyValue = { label: resource, value: resource };
-        }
-        defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
+        if (typeof(resource) === 'string') {
+          if (resource === '*') {
+            resourceKeyValue = { label: 'All', value: '*' };
+          }
+          else {
+            resourceKeyValue = { label: resource, value: resource };
+          }
+          defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
+        }                
       });
     });
   }
