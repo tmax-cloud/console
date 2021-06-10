@@ -149,12 +149,12 @@ export const UtilizationCard = ({ namespace }) => {
     [],
   );
 
-  const storagePopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => {
-      return <div>{current}</div>;
-    }),
-    [],
-  );
+  // const storagePopover = React.useCallback(
+  //   React.memo<TopConsumerPopoverProp>(({ current }) => {
+  //     return <div>{current}</div>;
+  //   }),
+  //   [],
+  // );
 
   const podPopover = React.useCallback(
     React.memo<TopConsumerPopoverProp>(({ current }) => {
@@ -211,7 +211,7 @@ export const UtilizationCard = ({ namespace }) => {
       <UtilizationBody timestamps={timestamps}>
         <PrometheusUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_CPU_1')} utilizationQuery={queries[OverviewQuery.CPU_UTILIZATION].utilization} TopConsumerPopover={cpuPopover} duration={durationValues[duration]} humanizeValue={humanizeCpuCores} setTimestamps={setTimestamps} />
         <PrometheusUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_MEMORY_1')} utilizationQuery={queries[OverviewQuery.MEMORY_UTILIZATION].utilization} TopConsumerPopover={memPopover} duration={durationValues[duration]} humanizeValue={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} />
-        <PrometheusUtilizationItem title={'Filesystem'} utilizationQuery={queries[OverviewQuery.STORAGE_UTILIZATION].utilization} TopConsumerPopover={storagePopover} duration={durationValues[duration]} humanizeValue={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} />
+        {/* <PrometheusUtilizationItem title={'Filesystem'} utilizationQuery={queries[OverviewQuery.STORAGE_UTILIZATION].utilization} TopConsumerPopover={storagePopover} duration={durationValues[duration]} humanizeValue={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} /> */}
         <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} queries={namespaceMultilineQueries(namespace)[OverviewQuery.NETWORK_UTILIZATION]} duration={durationValues[duration]} humanizeValue={humanizeDecimalBytesPerSec} TopConsumerPopovers={[networkInPopover, networkOutPopover]} />
         <PrometheusUtilizationItem title="Pod count" utilizationQuery={queries[OverviewQuery.POD_UTILIZATION].utilization} TopConsumerPopover={podPopover} duration={durationValues[duration]} humanizeValue={humanizeNumber} />
       </UtilizationBody>
