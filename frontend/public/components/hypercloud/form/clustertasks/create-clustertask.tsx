@@ -118,6 +118,9 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
             args: item.args?.map(cur => {
               return { value: cur };
             }),
+            mountPath: item.volumeMounts?.[0].mountPath,
+            selectedVolume: item.volumeMounts?.[0].name,
+            commandTypeToggle: item?.script ? 'script' : 'command',
           });
         });
         setStep(stepDefaultValues);
