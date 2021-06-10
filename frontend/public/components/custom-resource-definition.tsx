@@ -34,7 +34,7 @@ const crdInstancesPath = (crd: CustomResourceDefinitionKind) => {
 const instances = (kind: K8sKind, obj: CustomResourceDefinitionKind) => {
   const { t } = useTranslation();
   return {
-    label: t('COMMON:MSG_MAIN_ACTIONBUTTON_38'),
+    label: t('COMMON:MSG_MAIN_ACTIONBUTTON_21'),
     href: crdInstancesPath(obj),
   };
 };
