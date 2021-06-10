@@ -226,7 +226,10 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
       setQueryParameters(defaultSelectedRows);
     }
     if (location.search.indexOf('rowFilter-pod-status') >= 0) {
-      defaultRowFilterSetting(location.search.split('rowFilter-pod-status=')[1].split('%2C'));
+      if (storeSelectedRows.size === 0) {
+        // Node 페이지 파드 탭에서 filter 적용하면 mount 될 때 뿐 아니라 업데이트 될 때도 불려서 무한재귀 돎.. 방어로직 추가
+        defaultRowFilterSetting(location.search.split('rowFilter-pod-status=')[1].split('%2C'));
+      }
     }
   }, []);
 

@@ -5,6 +5,7 @@ import { Status } from '@console/shared';
 import { K8sResourceKind, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { fromNow } from '@console/internal/components/utils/datetime';
 import { sortable } from '@patternfly/react-table';
+import { Popover } from '@patternfly/react-core';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +78,13 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
         <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <Status status={resourcequotaclaims?.status?.status} />
+        {resourcequotaclaims?.status?.status === 'Error' ? (
+          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{resourcequotaclaims.status?.reason}</div>} maxWidth="30rem" position="right">
+            <Status status={resourcequotaclaims?.status?.status} />
+          </Popover>
+        ) : (
+          <Status status={resourcequotaclaims?.status?.status} />
+        )}
       </TableData>
       <TableData className={tableColumnClasses[3]}>{resourcequotaclaims.resourceName}</TableData>
       <TableData className={tableColumnClasses[4]}>{fromNow(resourcequotaclaims?.metadata?.creationTimestamp)}</TableData>

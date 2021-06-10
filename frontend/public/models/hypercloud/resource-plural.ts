@@ -250,6 +250,10 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_95',
     label: 'COMMON:MSG_LNB_MENU_174',
   },
+  ImageReplicate: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_93',
+    label: 'COMMON:MSG_LNB_MENU_172',
+  },
   Namespace: {
     labelPlural: 'COMMON:MSG_LNB_MENU_3',
     label: 'COMMON:MSG_LNB_MENU_106',

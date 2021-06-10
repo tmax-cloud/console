@@ -10,9 +10,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { SafetyFirst } from '../safety-first';
 import { TextFilter } from '../factory';
 import { Dropdown, Box, Timestamp, PageHeading } from '../utils';
-import { coFetchJSON } from '../../co-fetch';
+import { coFetchJSON, coFetch } from '../../co-fetch';
 import { getId, getUserGroup } from '../../hypercloud/auth';
 import { setQueryArgument, getQueryArgument, removeQueryArgument } from '../utils/router.ts';
+import { k8sGet } from '@console/internal/module/k8s';
 import { useTranslation, withTranslation } from 'react-i18next';
 
 // TODO
@@ -110,100 +111,12 @@ class AuditPage_ extends React.Component {
     this.statuslist = { all: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_1'), Success: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_2'), Failure: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_3') };
     this.resourcelist = {
       all: t('SINGLE:MSG_AUDITLOGS_MAIN_RESOURCEFILTER_1'),
-      adapters: 'adapters',
-      apiservices: 'apiservices',
-      attributemanifests: 'attributemanifests',
-      authorizationpolicies: 'authorizationpolicies',
-      clustertemplateclaims: 'clustertemplateclaims',
-      cdis: 'cdis',
-      cephblockpools: 'cephblockpools',
-      cephclusters: 'cephclusters',
-      cephfilesystems: 'cephfilesystems',
-      cephnfses: 'cephnfses',
-      cephobjectstores: 'cephobjectstores',
-      cephobjectstoreusers: 'cephobjectstoreusers',
-      clients: 'clients',
-      clusterrbacconfigs: 'clusterrbacconfigs',
-      clusterrolebindings: 'clusterrolebindings',
-      clusterroles: 'clusterroles',
-      clusterservicebrokers: 'clusterservicebrokers',
-      clusterserviceclasses: 'clusterserviceclasses',
-      clusterserviceplans: 'clusterserviceplans',
-      clustertasks: 'clustertasks',
-      clustertemplates: 'clustertemplates',
-      conditions: 'conditions',
-      controllerrevisions: 'controllerrevisions',
-      cronjobs: 'cronjobs',
-      csidrivers: 'csidrivers',
-      csinodes: 'csinodes',
-      customresourcedefinitions: 'customresourcedefinitions',
-      daemonsets: 'daemonsets',
-      deployments: 'deployments',
-      destinationrules: 'destinationrules',
-      envoyfilters: 'envoyfilters',
-      gateways: 'gateways',
-      handlers: 'handlers',
-      horizontalpodautoscalers: 'horizontalpodautoscalers',
-      httpapispecbindings: 'httpapispecbindings',
-      httpapispecs: 'httpapispecs',
-      images: 'images',
-      ingresses: 'ingresses',
-      instances: 'instances',
-      jobs: 'jobs',
-      kubevirts: 'kubevirts',
-      meshpolicies: 'meshpolicies',
-      mutatingwebhookconfigurations: 'mutatingwebhookconfigurations',
-      namespaceclaims: 'namespaceclaims',
-      peerauthentications: 'peerauthentications',
-      pipelineresources: 'pipelineresources',
-      pipelineruns: 'pipelineruns',
-      pipelines: 'pipelines',
-      poddisruptionbudgets: 'poddisruptionbudgets',
-      pods: 'pods',
-      podsecuritypolicies: 'podsecuritypolicies',
-      policies: 'policies',
-      quotaspecbindings: 'quotaspecbindings',
-      quotaspecs: 'quotaspecs',
-      rbacconfigs: 'rbacconfigs',
-      registries: 'registries',
-      replicasets: 'replicasets',
-      requestauthentications: 'requestauthentications',
-      resourcequotaclaims: 'resourcequotaclaims',
-      rolebindings: 'rolebindings',
-      roles: 'roles',
-      rules: 'rules',
-      servicebindings: 'servicebindings',
-      servicebrokers: 'servicebrokers',
-      serviceclasses: 'serviceclasses',
-      serviceentries: 'serviceentries',
-      serviceinstances: 'serviceinstances',
-      serviceplans: 'serviceplans',
-      servicerolebindings: 'servicerolebindings',
-      serviceroles: 'serviceroles',
-      sidecars: 'sidecars',
-      statefulsets: 'statefulsets',
-      storageclasses: 'storageclasses',
-      taskruns: 'taskruns',
-      tasks: 'tasks',
-      templateinstances: 'templateinstances',
-      templates: 'templates',
-      tokens: 'tokens',
-      usergroups: 'usergroups',
-      users: 'users',
-      usersecuritypolicies: 'usersecuritypolicies',
-      validatingwebhookconfigurations: 'validatingwebhookconfigurations',
-      virtualmachineinstancemigrations: 'virtualmachineinstancemigrations',
-      virtualmachineinstancepresets: 'virtualmachineinstancepresets',
-      virtualmachineinstancereplicasets: 'virtualmachineinstancereplicasets',
-      virtualmachineinstances: 'virtualmachineinstances',
-      virtualmachines: 'virtualmachines',
-      virtualservices: 'virtualservices',
-      volumeattachments: 'volumeattachments',
     };
 
     this.state = {
       namespace: '',
       language: this.props.i18n.language,
+      isResourceLoaded: false,
       actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1') },
       resourceType: this.resourcelist.all,
       action: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'),
@@ -218,6 +131,7 @@ class AuditPage_ extends React.Component {
       paginationPos: '215px',
     };
 
+    this.getResourceList = this.getResourceList.bind(this);
     this.onChangeResourceType = e => this.onChangeResourceType_(e);
     this.onChangeAction = e => this.onChangeAction_(e);
     this.onChangeStatus = e => this.onChangeStatus_(e);
@@ -226,6 +140,23 @@ class AuditPage_ extends React.Component {
     this.onChangeEndDate = e => this.onChangeEndDate_(e);
     this.onChangePage = e => this.onChangePage_(e);
     this.onSearch = e => this.onSearch_(e);
+  }
+
+  async getResourceList() {
+    const { t } = this.props;
+    // console.log(this.props);
+    // const namespace = props.namespace;
+    await coFetch('/api/webhook/audit/resources')
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        let resourceList = res.sort().forEach(cur => {
+          this.resourcelist[cur] = cur;
+        });
+      })
+      .catch(function(myJson) {
+        console.error(myJson);
+      });
   }
 
   onChangeResourceType_(e) {
@@ -594,10 +525,10 @@ class AuditPage_ extends React.Component {
     });
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
     const namespace = _.get(this.props, 'match.params.ns');
     const { t, i18n } = this.props;
-    console.log(this.props.i18n.language);
+
     if (i18n.language !== this.state.language) {
       this.resourcelist.all = t('SINGLE:MSG_AUDITLOGS_MAIN_RESOURCEFILTER_1');
       this.codeList = { all: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_1'), 100: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_2'), 200: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_3'), 300: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_4'), 400: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_5'), 500: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_6') };
@@ -643,28 +574,36 @@ class AuditPage_ extends React.Component {
       }
       if (namespace === undefined) {
         // all namespace
-        coFetchJSON(uri).then(response => {
+        await coFetchJSON(uri).then(response => {
           // console.log(response.items);
           this.setState({
             data: response.eventList.Items,
             pages: Math.ceil(response.rowsCount / 100),
           });
         });
+      } else if (namespace === 'default') {
+        this.setState({
+          data: [],
+          pages: 0,
+          isResourceLoaded: true,
+        });
       } else {
         uri += `&namespace=${namespace}`;
-        coFetchJSON(uri).then(response => {
+        await coFetchJSON(uri).then(response => {
           // console.log(response.items);
           this.setState({
             data: response.eventList.Items,
             pages: Math.ceil(response.rowsCount / 100),
+            isResourceLoaded: true,
           });
         });
       }
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const namespace = _.get(this.props, 'match.params.ns');
+    await this.getResourceList();
     this.setState({ namespace: namespace });
     this.setState({ action: this.state.actionList.all });
     const search = getQueryArgument('user');
@@ -675,16 +614,22 @@ class AuditPage_ extends React.Component {
     }
     if (namespace === undefined) {
       // all namespace
-      coFetchJSON(uri).then(response => {
+      await coFetchJSON(uri).then(response => {
         // console.log(response.items);
         this.setState({
           data: response.eventList.Items,
           pages: Math.ceil(response.rowsCount / 100),
         });
       });
+    } else if (namespace === 'default') {
+      this.setState({
+        data: [],
+        pages: 0,
+        isResourceLoaded: true,
+      });
     } else {
       uri += `&namespace=${namespace}`;
-      coFetchJSON(uri).then(response => {
+      await coFetchJSON(uri).then(response => {
         // console.log(response.items);
         this.setState({
           data: response.eventList.Items,
@@ -692,6 +637,7 @@ class AuditPage_ extends React.Component {
         });
       });
     }
+    this.setState({ isResourceLoaded: true });
   }
   onIconClick = e => {
     const datePickerElem = e.target.previousElementSibling.firstChild.firstChild;
@@ -704,41 +650,43 @@ class AuditPage_ extends React.Component {
 
     return (
       <React.Fragment>
-        <div>
-          <Helmet>
-            <title>{t('COMMON:MSG_LNB_MENU_5')}</title>
-          </Helmet>
-          <PageHeading detail={true} title={t('COMMON:MSG_LNB_MENU_5')}>
-            <div className="co-m-pane__filter-bar" style={{ marginBottom: 0, marginLeft: 0 }}>
-              <div className="co-m-pane__filter-bar-group">
-                <Dropdown title={this.state.resourceType} className="btn-group btn-group-audit" items={this.resourcelist} onChange={this.onChangeResourceType} />
-                <Dropdown title={this.state.action} className="btn-group" items={actionList} onChange={this.onChangeAction} />
-                <Dropdown title={this.state.status} className="btn-group" items={this.statuslist} onChange={this.onChangeStatus} />
-                <Dropdown style={{ marginRight: '30px' }} title={this.state.code} className="btn-group" items={this.codeList} onChange={this.onChangeCode} />
-                <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
-                <div className="co-datepicker-wrapper">
-                  <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
-                  <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
+        {this.state.isResourceLoaded ? (
+          <div>
+            <Helmet>
+              <title>{t('COMMON:MSG_LNB_MENU_5')}</title>
+            </Helmet>
+            <PageHeading detail={true} title={t('COMMON:MSG_LNB_MENU_5')}>
+              <div className="co-m-pane__filter-bar" style={{ marginBottom: 0, marginLeft: 0 }}>
+                <div className="co-m-pane__filter-bar-group">
+                  <Dropdown title={this.state.resourceType} className="btn-group btn-group-audit" items={this.resourcelist} onChange={this.onChangeResourceType} />
+                  <Dropdown title={this.state.action} className="btn-group" items={actionList} onChange={this.onChangeAction} />
+                  <Dropdown title={this.state.status} className="btn-group" items={this.statuslist} onChange={this.onChangeStatus} />
+                  <Dropdown style={{ marginRight: '30px' }} title={this.state.code} className="btn-group" items={this.codeList} onChange={this.onChangeCode} />
+                  <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
+                  <div className="co-datepicker-wrapper">
+                    <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
+                    <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
+                  </div>
+                  <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
+                  <div className="co-datepicker-wrapper">
+                    <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
+                    <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
+                  </div>
                 </div>
-                <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_2')}</p>
-                <div className="co-datepicker-wrapper">
-                  <DatePicker className="co-datepicker" placeholderText="To" startDate={start} endDate={end} selected={end} onChange={this.onChangeEndDate} minDate={start} maxDate={new Date()} />
-                  <i className="fa fa-calendar" aria-hidden="true" onClick={this.onIconClick}></i>
+                <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
+                  <TextFilter id="audit" label="Filter User Account" autoFocus={true} onChange={this.onSearch} />
                 </div>
               </div>
-              <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-                <TextFilter id="audit" label="Filter User Account" autoFocus={true} onChange={this.onSearch} />
-              </div>
-            </div>
-          </PageHeading>
+            </PageHeading>
 
-          <AuditList {...this.props} textFilter={textFilter} data={data} />
-          {data && data.length !== 0 && (
-            <div className="pagination-div">
-              <ReactPaginate previousLabel={'<'} nextLabel={'>'} breakLabel={'...'} breakClassName={'break-me'} pageCount={this.state.pages} marginPagesDisplayed={2} pageRangeDisplayed={5} onPageChange={this.onChangePage} containerClassName={'pagination'} subContainerClassName={'pages pagination'} activeClassName={'active'} forcePage={this.state.offset} />
-            </div>
-          )}
-        </div>
+            <AuditList {...this.props} textFilter={textFilter} data={data} />
+            {data && data.length !== 0 && (
+              <div className="pagination-div">
+                <ReactPaginate previousLabel={'<'} nextLabel={'>'} breakLabel={'...'} breakClassName={'break-me'} pageCount={this.state.pages} marginPagesDisplayed={2} pageRangeDisplayed={5} onPageChange={this.onChangePage} containerClassName={'pagination'} subContainerClassName={'pages pagination'} activeClassName={'active'} forcePage={this.state.offset} />
+              </div>
+            )}
+          </div>
+        ) : null}
       </React.Fragment>
     );
   }

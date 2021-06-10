@@ -47,7 +47,7 @@ export const MarkAsSchedulable: KebabAction = (
 
 export const Delete: KebabAction = (kindObj: K8sKind, node: NodeKind) => {
   const { t } = useTranslation();
-  const message = <p>{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_4')}</p>;
+  const message = <p>{t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_4', { 0: node.metadata.name })}</p>;
 
   return {
     label: t('COMMON:MSG_COMMON_ACTIONBUTTON_51'),

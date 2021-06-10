@@ -89,10 +89,12 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
                   {lastTime && <Timestamp className="co-sysevent__timestamp" timestamp={lastTime} />}
                 </div>
                 <div className="co-sysevent__details">
-                  <small className="co-sysevent__source">
-                    {t('SINGLE:MSG_EVENTS_MAIN_1', { something: source.component })}
-                    {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <>{source.host}</>}</span>}
-                  </small>
+                  {source?.component && (
+                    <small className="co-sysevent__source">
+                      {t('SINGLE:MSG_EVENTS_MAIN_1', { something: source.component })}
+                      {source.component === 'kubelet' && <span> on {flags[FLAGS.CAN_LIST_NODE] ? <Link to={resourcePathFromModel(NodeModel, source.host)}>{source.host}</Link> : <>{source.host}</>}</span>}
+                    </small>
+                  )}
                   {count > 1 && (
                     <small className="co-sysevent__count text-secondary">
                       {count} times
@@ -183,11 +185,13 @@ class _EventsList extends React.Component {
 export const EventsList = withTranslation()(_EventsList);
 
 export const NoEvents = () => {
-  const {t} = useTranslation();
-  return <Box className="co-sysevent-stream__status-box-empty">
-    <div className="text-center cos-status-box__detail">{t('COMMON:MSG_DETAILS_TABEVENTS_5')}</div>
-  </Box>
-}
+  const { t } = useTranslation();
+  return (
+    <Box className="co-sysevent-stream__status-box-empty">
+      <div className="text-center cos-status-box__detail">{t('COMMON:MSG_DETAILS_TABEVENTS_5')}</div>
+    </Box>
+  );
+};
 
 export const NoMatchingEvents = ({ allCount }) => {
   const { t } = useTranslation();
@@ -280,6 +284,7 @@ class _EventStream extends React.Component {
       })
       .onopen(() => {
         this.setState({ error: false, loading: false });
+        this.flushMessages();
       })
       .onclose(evt => {
         if (evt && evt.wasClean === false) {
@@ -360,6 +365,7 @@ class _EventStream extends React.Component {
   componentDidUpdate(prevProps) {
     // If the namespace has changed, created a new WebSocket with the new namespace
     if (prevProps.namespace !== this.props.namespace) {
+      this.messages = {}; // namespace 변경이후에 들고 있던 messages 초기화
       this.ws && this.ws.destroy();
       this.wsInit(this.props.namespace);
     }
@@ -473,7 +479,7 @@ export const ResourceEventStream = ({
   },
 }) => {
   const { t } = useTranslation();
-  return <_EventStream t={t} fieldSelector={`involvedObject.uid=${uid},involvedObject.name=${name},involvedObject.kind=${kind}`} namespace={namespace} cluster={kind === "ClusterManager" && name} resourceEventStream />;
+  return <_EventStream t={t} fieldSelector={`involvedObject.uid=${uid},involvedObject.name=${name},involvedObject.kind=${kind}`} namespace={namespace} cluster={kind === 'ClusterManager' && name} resourceEventStream />;
 };
 export const ResourcesEventStream = ({ filters, namespace }) => {
   const { t } = useTranslation();

@@ -11,16 +11,31 @@ import { getSchemaErrors } from './utils';
 import { useTranslation } from 'react-i18next';
 import './styles.scss';
 
+function editFormData(formData) {
+  // formData를 수정해야하는 경우 ex - 필수값인데 없이 생성하여도 생성되는 경우 -> Edit 페이지에서 에러 남.
+  let { kind } = formData;
+
+  if (kind === 'LimitRange') {
+    let changedFormData = formData?.spec?.limits === null && {};
+    return changedFormData;
+  }
+  return formData;
+}
+
 export const DynamicForm: React.FC<DynamicFormProps> = props => {
   const { t } = useTranslation();
-  const { ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, formData = {}, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {}, create = true } = props;
+  const { ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {}, create = true } = props;
   const schemaErrors = getSchemaErrors(schema);
+  let { formData } = props;
   // IF the top level schema is unsupported, don't render a form at all.
   if (schemaErrors.length) {
     // eslint-disable-next-line no-console
     console.warn('A form could not be generated for this resource.', schemaErrors);
     return <Alert isInline className="co-alert co-break-word" variant="info" title={'A form is not available for this resource. Please use the YAML View.'} />;
   }
+
+  formData = editFormData(formData);
+
   return (
     <>
       <Alert isInline className="co-alert co-break-word" variant="info" title={'Note: Some fields may not be represented in this form. Please select "YAML View" for full control of object creation.'} />
