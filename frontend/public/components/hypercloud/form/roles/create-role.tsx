@@ -19,6 +19,7 @@ import { MinusCircleIcon } from '@patternfly/react-icons';
 import { DropdownWithRef } from '../../utils/dropdown-new';
 import { useTranslation } from 'react-i18next';
 import { MultiSelectDropdownWithRef } from './../../utils/multi-dropdown-new';
+//import { pluralToKind } from './../';
 
 const kindItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
@@ -64,8 +65,6 @@ const defaultVerbs = [
 
 const defaultValuesTemplate = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
-  //apiGroup: '*'  
-
   metadata: {
     name: 'example-name',
   },
@@ -92,8 +91,6 @@ const compareObjByName = (a, b) => {
 };
 
 const roleFormFactory = (params, obj) => {
-  console.log('defaultValuesTemplate: ', defaultValuesTemplate);
-
   const defaultValues = obj || defaultValuesTemplate;
 
   if (defaultValues.rules) {
@@ -124,61 +121,9 @@ const roleFormFactory = (params, obj) => {
         }
         defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
       });
-
-      /*
-      if (element.apiGroups[0] === '') { //"" indicates the core API group    
-        element.apiGroup = 'Core';
-      }
-
-      if (element.apiGroups[0] === '*') {
-        element.apiGroup = { label: '*', value: 'All' };
-      }
-      else if (element.apiGroups[0] === 'Core') {
-        element.apiGroup = { label: 'Core', value: 'Core' };
-      }
-      else {
-        let apiGroups = element.apiGroups[0];
-        element.apiGroup = { label: apiGroups, value: apiGroups };
-      }
-
-      if (element.resources[0] === '*') {
-        element.resource = { label: '*', value: 'All' };
-      }
-      else {
-        let resources = element.resources[0];
-        element.resource = { label: resources, value: resources };
-      }
-      */
-
     });
   }
-  /*
-  if (defaultValues.rules[0].apiGroups[0] === '') { //"" indicates the core API group    
-    defaultValues.rules[0].apiGroups[0] = 'Core';
-  }
-  if (defaultValues.rules[0].apiGroups[0] === '*') {
-    defaultValues.rules[0].apiGroups[0] = { label: 'All', value : '*' };    
-  }
-  else if (defaultValues.rules[0].apiGroups[0] === 'Core') {
-    defaultValues.rules[0].apiGroups[0] = { label: 'Core', value : 'Core' };    
-  }
-  else {
-    let apiGroups = defaultValues.rules[0].apiGroups[0];
-    defaultValues.rules[0].apiGroups[0] = { label: apiGroups, value : apiGroups };    
-  }
-  
 
-  if (defaultValues.rules[0].resources[0] === '*') {
-    defaultValues.rules[0].resources[0] = { label: 'All', value : '*' };    
-  }
-  else {
-    let resources = defaultValues.rules[0].resources[0];
-    defaultValues.rules[0].resources[0] = { label: resources, value : resources };    
-  }
-  */
-
-
-  console.log('defaultValues: ', defaultValues);
   return WithCommonForm(CreateRoleComponent, params, defaultValues);
 };
 const RuleItem = props => {
