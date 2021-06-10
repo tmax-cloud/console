@@ -9,9 +9,8 @@ import NodeTerminal from './NodeTerminal';
 import { menuActions } from './menu-actions';
 import NodeDashboard from './node-dashboard/NodeDashboard';
 import { useTranslation } from 'react-i18next';
-
+import { NodeKind } from '@console/internal/module/k8s';
 const { editResource, events, pods } = navFactory;
-
 // const pages = [
 //   {
 //     href: '',
@@ -32,6 +31,10 @@ const { editResource, events, pods } = navFactory;
 //     component: NodeTerminal,
 //   },
 // ];
+const NodePodsTab: React.FC<NodePodsTabProps> = ({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />;
+type NodePodsTabProps = {
+  obj: NodeKind;
+};
 const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = props => {
   const { t } = useTranslation();
   const pages = [
@@ -46,7 +49,7 @@ const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = prop
       component: NodeDetails,
     },
     editResource(),
-    pods(({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />),
+    pods(NodePodsTab),
     events(ResourceEventStream),
     {
       href: 'terminal',
@@ -56,5 +59,4 @@ const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = prop
   ];
   return <DetailsPage {...props} getResourceStatus={nodeStatus} menuActions={menuActions} pages={pages} />;
 };
-
 export default NodeDetailsPage;
