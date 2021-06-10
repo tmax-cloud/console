@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import { ActionGroup, Button } from '@patternfly/react-core';
 import { k8sCreate, k8sUpdate, referenceFor, K8sResourceKind, modelFor } from '../../../module/k8s';
@@ -15,14 +15,27 @@ import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'metadata.creationTimestamp');
 };
+export const kindToggle = (kindPlural, methods) => {
+  if ( kindPlural === 'roles' ) {
+    const kindToggle = useWatch({   
+      control: methods.control,   
+      name: 'kind',
+      defaultValue: 'Role',
+    });    
+    (kindToggle === 'Role' ) ? kindPlural = 'roles' : kindPlural = 'clusterroles';
+  }
+  return kindPlural;
+};
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
   const { t } = useTranslation();
 
   const FormComponent: React.FC<CommonFormProps_> = props => {
-    const methods = useForm({ defaultValues: defaultValues });
+    const methods = useForm({ defaultValues: defaultValues });    
 
-    const kind = pluralToKind(params.plural);
+    const kind = pluralToKind(kindToggle(params.plural, methods));
+    //const kind = pluralToKind(params.plural);
+    
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
     const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({ kind: kind }, t) })}`;
