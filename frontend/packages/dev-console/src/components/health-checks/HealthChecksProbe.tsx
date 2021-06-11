@@ -62,7 +62,8 @@ const HealthCheckProbe: React.FC<HealthCheckProbeProps> = ({ probeType }) => {
       return (
         <>
           <span className="odc-heath-check-probe__successText">
-            <GreenCheckCircleIcon /> {`${getHealthChecksProbeConfig(probeType, t).formTitle} Added`}
+            <GreenCheckCircleIcon /> {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_23', { 0: `${getHealthChecksProbeConfig(probeType, t).formTitle}` })}
+            {/* <GreenCheckCircleIcon /> {`${getHealthChecksProbeConfig(probeType, t).formTitle} Added`} */}
           </span>
           <Button className="pf-m-plain--align-left" variant={ButtonVariant.plain} onClick={handleDeleteProbe}>
             <MinusCircleIcon />

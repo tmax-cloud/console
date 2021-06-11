@@ -221,27 +221,30 @@ export const NotaryLoader: React.FC<NotaryLoaderProps> = props => {
   return <AsyncComponent loader={() => import('./notary').then(c => c.NotariesDetailsPage)} kind={'Notary'} kindObj={NotaryModel} name={decodeURIComponent(props.obj.metadata.name)} namespace={props.obj.metadata.namespace} match={props.match} />;
 };
 
-export const RegistriesDetailsPage: React.FC<RegistriesDetailsPageProps> = props => (
-  <DetailsPage
-    {...props}
-    kind={kind}
-    menuActions={menuActions}
-    pages={[
-      details(detailsPage(RegistryDetails)),
-      editResource(),
-      {
-        href: 'repository',
-        name: 'Repository',
-        component: RepositoriesTab,
-      },
-      {
-        href: 'notary',
-        name: 'Notary',
-        component: detailsPage(NotaryLoader),
-      },
-    ]}
-  />
-);
+export const RegistriesDetailsPage: React.FC<RegistriesDetailsPageProps> = props => {
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      menuActions={menuActions}
+      pages={[
+        details(detailsPage(RegistryDetails)),
+        editResource(),
+        {
+          href: 'repository',
+          name: t('COMMON:MSG_DETAILS_TABREPOSITORIES_1'),
+          component: RepositoriesTab,
+        },
+        {
+          href: 'notary',
+          name: t('COMMON:MSG_DETAILS_TABNOTARY_1'),
+          component: detailsPage(NotaryLoader),
+        },
+      ]}
+    />
+  );
+};
 
 type RegistryDetailsListProps = {
   ds: K8sResourceKind;
