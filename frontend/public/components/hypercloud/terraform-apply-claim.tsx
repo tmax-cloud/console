@@ -10,6 +10,7 @@ import { TFApplyClaimModel } from '../../models';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { Popover } from '@patternfly/react-core';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
 
@@ -18,7 +19,7 @@ import './terraform-apply-claim.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), Kebab.factory.ModifyStatus, ...Kebab.factory.common];
 
 const kind = TFApplyClaimModel.kind;
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), Kebab.columnClass];
@@ -78,9 +79,15 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={tfapplyclaim.metadata.namespace} title={tfapplyclaim.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}> {tfapplyclaim.spec.url}</TableData>
+      <TableData className={tableColumnClasses[2]}> {tfapplyclaim.spec?.url}</TableData>
       <TableData className={tableColumnClasses[3]}>
-        <Status status={tfapplyclaim?.status?.phase} />
+        {tfapplyclaim?.status?.status === 'Error' ? (
+          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{tfapplyclaim.status?.reason}</div>} maxWidth="30rem" position="right">
+            <Status status={tfapplyclaim?.status?.status} />
+          </Popover>
+        ) : (
+          <Status status={tfapplyclaim?.status?.status} />
+        )}
       </TableData>
       <TableData className={tableColumnClasses[4]}>{tfapplyclaim.metadata.annotations.creator}</TableData>
 
@@ -111,13 +118,13 @@ export const TFApplyClaimDetailsList: React.FC<TFApplyClaimDetailsListProps> = (
         <TFApplyClaimStatus result={ds?.status?.phase} />
       </dd>
       <dt>{t('테라폼 버전')}</dt>
-      <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec.version}</dd>
+      <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.version}</dd>
       <dt>{t('저장소 주소')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>
-        <a href={ds.spec.url}>{ds.spec.url}</a>
+        <a href={ds.spec?.url}>{ds.spec?.url}</a>
       </dd>
       <dt>{t('계정 시크릿')}</dt>
-      <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec.secret}</dd>
+      <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.secret}</dd>
     </dl>
   );
 };

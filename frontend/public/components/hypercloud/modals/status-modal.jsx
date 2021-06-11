@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import { switchPerspective } from 'packages/dev-console/integration-tests/views/dev-perspective.view';
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
-import { NamespaceClaimModel, ResourceQuotaClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel, ClusterClaimModel } from '../../../models';
+import { NamespaceClaimModel, ResourceQuotaClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel, ClusterClaimModel, TFApplyClaimModel } from '../../../models';
 import { k8sUpdateApproval, k8sUpdateClaim, referenceForModel } from '../../../module/k8s';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
@@ -70,6 +70,21 @@ const BaseStatusModal = withTranslation()(
             'status',
             [
               { op: 'replace', path: '/status/status', value: stat },
+              { op: 'replace', path: '/status/reason', value: this.state.reason },
+            ],
+            'PATCH',
+          );
+          this.handlePromise(promise).then(this.successSubmit);
+          break;
+        }
+        case TFApplyClaimModel.kind: {
+          const stat = this.state.status === 'Approved' ? 'Approve' : 'Rejected';
+          const promise = k8sUpdateApproval(
+            kind,
+            resource,
+            'status',
+            [
+              { op: 'replace', path: '/status/action', value: stat },
               { op: 'replace', path: '/status/reason', value: this.state.reason },
             ],
             'PATCH',
