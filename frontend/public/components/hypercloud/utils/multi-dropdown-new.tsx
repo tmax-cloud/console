@@ -25,7 +25,6 @@ const MenuContainer = props => {
         marginTop: 2,
         position: 'absolute',
         zIndex: 2,
-        maxHeight: '40vh',
         overflowY: 'auto',
       }}
       {...props}
