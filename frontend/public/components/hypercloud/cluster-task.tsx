@@ -15,12 +15,7 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 
 const kind = ClusterTaskModel.kind;
 
-const tableColumnClasses = [
-  classNames('col-xs-6', 'col-sm-4'),
-  classNames('col-xs-6', 'col-sm-4'),
-  Kebab.columnClass,
-];
-
+const tableColumnClasses = [classNames('col-xs-6', 'col-sm-6'), classNames('col-xs-6', 'col-sm-6'), Kebab.columnClass];
 
 const ClusterTaskTableHeader = (t?: TFunction) => {
   return [
@@ -44,7 +39,6 @@ const ClusterTaskTableHeader = (t?: TFunction) => {
 };
 
 ClusterTaskTableHeader.displayName = 'ClusterTaskTableHeader';
-
 
 const ClusterTaskTableRow: RowFunction<K8sResourceKind> = ({ obj: clusterTask, index, key, style }) => {
   return (
@@ -76,29 +70,20 @@ const ClusterTaskDetails: React.FC<ClusterTaskDetailsProps> = ({ obj: clusterTas
       </div>
     </>
   );
-}
-
+};
 
 const { details, editResource } = navFactory;
 
 export const ClusterTasks: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="ClusterTasks" Header={ClusterTaskTableHeader.bind(null, t)} Row={ClusterTaskTableRow} virtualize />;
-}
-
+};
 
 export const ClusterTasksPage: React.FC<ClusterTasksPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage
-    title={t('COMMON:MSG_LNB_MENU_94')}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_94') })}
-    canCreate={true}
-    ListComponent={ClusterTasks}
-    kind={kind}
-    {...props}
-  />;
-}
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_94')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_94') })} canCreate={true} ListComponent={ClusterTasks} kind={kind} {...props} />;
+};
 
 export const ClusterTasksDetailsPage: React.FC<ClusterTasksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ClusterTaskDetails)), editResource()]} />;
 
