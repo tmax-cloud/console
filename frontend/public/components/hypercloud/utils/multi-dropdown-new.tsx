@@ -8,6 +8,10 @@ import { Firehose, FirehoseResult, FirehoseResource } from '@console/internal/co
 import { DataToolbar, DataToolbarContent, DataToolbarFilter, DataToolbarItem } from '@patternfly/react-core';
 import { ResourceIcon } from '../../utils';
 
+const DROPDOWN_SECTION_ID = 'hc-multidropdown-item';
+const SELECT_ALL_VALUE = '<SELECT_ALL>';
+
+/* 드롭다운 부위별 styling을 위해 만든 컴포넌트들 */
 const { Option } = components;
 
 const MenuContainer = props => {
@@ -46,33 +50,65 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
   );
 };
 
-const ResourceItem = props => {
-  return (
+const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props) => {
+  const { data, options: allOptions, getValue, isSelected } = props;
+  const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
+  let allSelected = false;
+  const currentValue = getValue();
+
+  if (shrinkOnSelectAll) {
+    if (_.isEqual(currentValue?.[0], selectAllChipObj)) {
+      allSelected = true;
+    }
+  }
+  if (isSelectAllCheckbox) {
+    if (allOptions.length === 1) {
+      // MEMO : selectall 옵션 외에 다른 item이 없는 경우
+      allSelected = true;
+    } else {
+      // MEMO : selectall 옵션과 다른 item들이 있는 경우
+      // MEMO : allOptions엔 selectall 옵션 item도 존재해서 하나 빼줘야 함
+      if (allOptions.length - 1 === currentValue?.length) {
+        allSelected = true;
+      }
+    }
+  }
+
+  const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isSelected;
+
+  return isResourceItem ? (
     <Option {...props}>
-      <span className={'co-resource-item'}>
-        <input type="checkbox" style={{ marginRight: '3px' }} checked={props.isSelected} onChange={() => null} />
-        <span className="co-resource-icon--fixed-width">
-          <ResourceIcon kind={props.data.kind} />
+      <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
+        <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked} onChange={() => null} />
+
+        <span className="co-resource-icon--fixed-width" id={DROPDOWN_SECTION_ID}>
+          <ResourceIcon kind={isSelectAllCheckbox ? 'All' : props.data.kind} />
         </span>
-        <span className="co-resource-item__resource-name" style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden' }}>
-          <span>{props.data.label}</span>
+        <span id={DROPDOWN_SECTION_ID} className="co-resource-item__resource-name" style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden' }}>
+          <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
+        </span>
+      </span>
+    </Option>
+  ) : (
+    <Option {...props}>
+      <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
+        <input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />
+        <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}>
+          <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
         </span>
       </span>
     </Option>
   );
 };
 
-const TextItem = props => {
-  return (
-    <Option {...props}>
-      <span className={'co-resource-item'}>
-        <input style={{ marginRight: '10px' }} type="checkbox" checked={props.isSelected} onChange={() => null} />
-        <span className="co-resource-item__resource-name">
-          <span>{props.data.label}</span>
-        </span>
-      </span>
-    </Option>
-  );
+/* 드롭다운 item click 이벤트가 일어날 때 상황에 대한 type들 */
+const CaseType = {
+  UNCHECK_SET_EMPTY: 'UNCHECK_SET_EMPTY', // selectAll=unchecked, value와 chip 모두 비워야 하는 상황
+  CHECK_SET_ONE_ALL: 'CHECK_SET_ONE_ALL', // selectAll=checked, value와 chip엔 하나의 all표시 object(예: {label:'All', value: '*'})만 세팅해야 하는 상황
+  CHECK_SET_ALL_OPTIONS: 'CHECK_SET_ALL_OPTIONS', // selectAll=checked, value와 chip엔 모든 options 추가해야 하는 상황
+  UNCHECK_SET_FILTERED_VALUES: 'UNCHECK_SET_FILTERED_VALUES', // shrinkOnSelectAll이 true이고 value, chip에 {label: 'All', value: '*'} 만 있는 상황에서 하나의 option을 uncheck하면 all이 풀리면서 나머지 checked 상태인 options들이 value와 chip에 추가돼야 된다.
+  CHECK_SET_VALUES: 'CHECK_SET_VALUES', // shrinkOnSelectAll이 false일 때, options 중 마지막 option까지 다 체크하는 순간엔 selectAll도 checked 돼야 한다.
+  UNCHECK_SET_VALUES: 'UNCHECK_SET_VALUES', // shrinkOnSelectAll이 false일 때, 모든 options이 체크돼있는 상황에서 하나를 uncheck하면 selectAll도 uncheck 시켜줘야 한다.
 };
 
 /**
@@ -87,17 +123,16 @@ const TextItem = props => {
  * @prop {any[]} defaultValues - 드롭다운의 기본 선택값을 지정해주는 속성. [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}] 형태로 설정해주고, 해당 item은 items props에 존재하는 item이어야 한다. (Controller로 감싸서 ListView컴포넌트 안에 사용 시 Controller의 defaultValue속성에도 같은 값을 지정해줘야 한다)
  * @prop {any | any[]} items - 옛버전의 dropdown에서 object로 사용해서 object도 받을 수 있게 처리해놓았으나, object[] 형태의 사용을 권장함. (예: [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}])
  */
-
 export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, MultiSelectDropdownWithRefProps>((props, ref) => {
-  const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px' } = props;
+  const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, shrinkOnSelectAll = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px' } = props;
   const { setValue, watch } = methods ? methods : useFormContext();
+  const [chips, setChips] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
-
+  const [selectAllChecked, setSelectAllChecked] = React.useState(false);
   const dropdownElement = React.useRef<HTMLDivElement>();
-
-  const handleChange = (value, action, setStateFunction, childSelect = null) => {
-    const inputRef = action.name;
-    setValue(inputRef, value);
+  const selectAllOption = {
+    label: 'All',
+    value: SELECT_ALL_VALUE,
   };
 
   const defaultValuesWithKey = defaultValues.map(item => {
@@ -109,33 +144,6 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
   });
 
   const selectedValues = watch(name, defaultValuesWithKey);
-
-  const onWindowClick = event => {
-    const { current } = dropdownElement;
-    if (!current) {
-      return;
-    }
-
-    if (event.target === current || (current && current.contains(event.target))) {
-      return;
-    }
-
-    hide(event);
-  };
-
-  const hide = e => {
-    e && e.stopPropagation();
-    window.removeEventListener('click', onWindowClick);
-    setIsOpen(false);
-  };
-
-  React.useEffect(() => {
-    window.addEventListener('click', onWindowClick);
-
-    return () => {
-      window.removeEventListener('click', onWindowClick);
-    };
-  }, []);
 
   const customStyles = {
     control: (provided, state) => ({
@@ -192,42 +200,164 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
         };
       });
     }
+  } else {
+    // MEMO : 옛버전의 dropdown공통컴포넌트 사용 시 {[value1]: [label1], [value2]: [label2]} 형식으로 items값을 지정해주고있어서 예전 dropdown을 MultiSelectDropdownWithRef로 대체했을 때 동작하게하기 위해
+    // 그렇게 들어왔을 때에도 object형태의 item으로 바꿔주기 위해 추가한 부분.
+    // ***** 이후 MultiSelectDropdownWithRef컴포넌트를 새로 사용하는 상황이라면 items 형태는 object들로 이루어진 Array로 지정해주는 것을 권장함! *****
+    if (!Array.isArray(items)) {
+      for (const key in items) {
+        formattedOptions.push({
+          key: `${key}-${items[key]}`,
+          value: key,
+          label: items[key],
+        });
+      }
+    } else {
+      if (!useResourceItemsFormatter) {
+        // MEMO : item마다 고유의 key값이 있어야 delete chip 가능해서 key값 넣어주는 부분.
+        // MEMO : key값 규칙은 "[label]-[value]"로 지정해주고 있음. defaultValues로 들어오는 값에 대해서도 이와 같이 key값 만들어서 지정해줌.
+        formattedOptions = items.map(item => {
+          return { key: item.key || `${item.label}-${item.value}`, label: item.label, value: item.value };
+        });
+      }
+    }
   }
 
-  // MEMO : 옛버전의 dropdown공통컴포넌트 사용 시 {[value1]: [label1], [value2]: [label2]} 형식으로 items값을 지정해주고있어서 예전 dropdown을 MultiSelectDropdownWithRef로 대체했을 때 동작하게하기 위해
-  // 그렇게 들어왔을 때에도 object형태의 item으로 바꿔주기 위해 추가한 부분.
-  // ***** 이후 MultiSelectDropdownWithRef컴포넌트를 새로 사용하는 상황이라면 items 형태는 object들로 이루어진 Array로 지정해주는 것을 권장함! *****
-  let options = [];
-  if (!Array.isArray(items)) {
-    for (const key in items) {
-      options.push({
-        key: `${key}-${items[key]}`,
-        value: key,
-        label: items[key],
-      });
+  /* 초반 defaultValues를 받았을 때 드롭다운에 반영해주는 부분. */
+  React.useEffect(() => {
+    const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
+    if (selectAllChip.length > 0) {
+      // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
+      if (shrinkOnSelectAll) {
+        setSelectAllChecked(true);
+        setChips([selectAllChipObj]);
+      } else {
+        // EMPTY : defaultValue에 all관련 chip이 있는데 shrinkOnSelectAll은 false일 경우는 있으면 안된다. defaultValue로 all관련 chip이 들어올 경우엔 해당 드롭다운의 shrinkOnSelectAll=true로 설정해줘야 한다.
+      }
+    } else if (formattedOptions?.length > 0 && defaultValuesWithKey.length > 0 && formattedOptions.length === defaultValuesWithKey.length) {
+      // MEMO : defaultValues의 길이와 items의 길이가 같은 경우 모든 요소들이 선택된걸로 간주
+      setSelectAllChecked(true);
+      setChips(defaultValuesWithKey);
+    } else {
+      setSelectAllChecked(false);
+      setChips(defaultValuesWithKey);
     }
-  } else {
-    if (!useResourceItemsFormatter) {
-      // MEMO : item마다 고유의 key값이 있어야 delete chip 가능해서 key값 넣어주는 부분.
-      // MEMO : key값 규칙은 "[label]-[value]"로 지정해주고 있음. defaultValues로 들어오는 값에 대해서도 이와 같이 key값 만들어서 지정해줌.
-      options = items.map(item => {
-        return { key: item.key || `${item.label}-${item.value}`, label: item.label, value: item.value };
-      });
+  }, []);
+
+  const setDropdownSettings = (isSelectAll, formValues, chips) => {
+    setSelectAllChecked(isSelectAll);
+    setValue(name, formValues);
+    setChips(chips);
+  };
+
+  const getCaseType = (clickSelectAll, selectAllChecked, shrinkOnSelectAll, isValuesAndOptionsLengthEqual) => {
+    if (clickSelectAll) {
+      if (selectAllChecked) {
+        return CaseType.UNCHECK_SET_EMPTY;
+      } else {
+        return shrinkOnSelectAll ? CaseType.CHECK_SET_ONE_ALL : CaseType.CHECK_SET_ALL_OPTIONS;
+      }
+    } else {
+      if (shrinkOnSelectAll) {
+        if (selectAllChecked) {
+          return CaseType.UNCHECK_SET_FILTERED_VALUES;
+        } else {
+          return isValuesAndOptionsLengthEqual ? CaseType.CHECK_SET_ONE_ALL : CaseType.UNCHECK_SET_VALUES;
+        }
+      } else {
+        return isValuesAndOptionsLengthEqual ? CaseType.CHECK_SET_VALUES : CaseType.UNCHECK_SET_VALUES;
+      }
     }
-  }
+  };
+
+  const handleChange = (value, actionMeta, allOptions = []) => {
+    const { action, option } = actionMeta;
+
+    /** react-select의 Select컴포넌트에선 action유형을 해당 값이 values로 등록돼있는지 아닌지로 구별하는듯하다.
+     * selectAll아이템의 경우 클릭했을 때 values로 들어가진 않도록 해놓은 아이템이라 항상 values엔 없어서 클릭할 때마다 select-option으로 action이 들어온다.
+     * values에 등록된 애들은 클릭 시 deselect-option으로 action유형이 들어온다. 이게 정상적인 경우.
+     */
+    // MEMO : selectAll의 현 체크여부는 위와 같은 이유로 판단 불가하기 때문에 selectAllChecked state로 관리하게 함.
+    const clickSelectAll = action === 'select-option' && option.value === selectAllOption.value;
+    const isEqual = value.length === allOptions.length;
+
+    const caseType = getCaseType(clickSelectAll, selectAllChecked, shrinkOnSelectAll, isEqual);
+    switch (caseType) {
+      case CaseType.UNCHECK_SET_EMPTY: {
+        setDropdownSettings(false, [], []);
+        break;
+      }
+      case CaseType.CHECK_SET_ONE_ALL: {
+        setDropdownSettings(true, selectAllChipObj, [selectAllChipObj]);
+        break;
+      }
+      case CaseType.CHECK_SET_ALL_OPTIONS: {
+        setDropdownSettings(true, allOptions, allOptions);
+        break;
+      }
+      case CaseType.UNCHECK_SET_FILTERED_VALUES: {
+        const newValues = allOptions.filter(item => !_.isEqual(option, item));
+        setDropdownSettings(false, newValues, newValues);
+        break;
+      }
+      case CaseType.CHECK_SET_VALUES: {
+        setDropdownSettings(true, value, value);
+        break;
+      }
+      case CaseType.UNCHECK_SET_VALUES: {
+        setDropdownSettings(false, value, value);
+        break;
+      }
+      default: {
+      }
+    }
+  };
+
+  const getOptions = options => [selectAllOption, ...options];
+
   const toggleOpen = () => {
     window.addEventListener('click', onWindowClick);
     setIsOpen(!isOpen);
   };
 
   const clearAll = () => {
-    setValue(name, []);
+    setDropdownSettings(false, [], []);
   };
 
   const onDeleteChip = (chipGroup, chip) => {
-    const newValues = selectedValues?.filter(item => chip.key !== item.key);
-    setValue(name, newValues);
+    if (chip.key === SELECT_ALL_VALUE) {
+      setDropdownSettings(false, [], []);
+    } else {
+      const newValues = selectedValues?.filter(item => chip.key !== item.key);
+      setDropdownSettings(false, newValues, newValues);
+    }
   };
+
+  /* Mouse click 이벤트 핸들링 부분 */
+  const onWindowClick = event => {
+    const { current } = dropdownElement;
+    if (!current) {
+      return;
+    }
+    const target = event.target;
+    if (target === current || (current && current.contains(target)) || target.id?.includes(DROPDOWN_SECTION_ID) || target.parentElement?.id.includes(DROPDOWN_SECTION_ID) || target.id?.indexOf('react-select') > -1) {
+      return;
+    }
+    hide(event);
+  };
+
+  const hide = e => {
+    e && e.stopPropagation();
+    window.removeEventListener('click', onWindowClick);
+    setIsOpen(false);
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('click', onWindowClick);
+    return () => {
+      window.removeEventListener('click', onWindowClick);
+    };
+  }, []);
 
   return (
     <DataToolbar id="multidropdown-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={`Clear all`}>
@@ -235,9 +365,9 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
         <DataToolbarItem>
           <DataToolbarFilter
             deleteChipGroup={clearAll}
-            chips={selectedValues?.map(item => {
+            chips={chips?.map(item => {
               return {
-                key: item.key,
+                key: item.key || SELECT_ALL_VALUE,
                 node: (
                   <>
                     <ResourceIcon kind={item.kind ?? ''} />
@@ -249,23 +379,23 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
           >
-            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={selectedValues.length || 0} buttonWidth={buttonWidth} />}>
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
               <Select
                 name={name}
                 autoFocus
                 styles={customStyles}
                 value={selectedValues || []}
-                options={useResourceItemsFormatter ? formattedOptions : options}
+                options={getOptions(formattedOptions)}
                 controlShouldRenderValue={false}
                 isMulti
                 components={{
-                  Option: useResourceItemsFormatter ? ResourceItem : TextItem,
+                  Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj),
                   IndicatorSeparator: null,
                   DropdownIndicator: null,
                 }}
                 ref={ref}
                 onChange={(value, action) => {
-                  handleChange(value, action, null, 'subtype');
+                  handleChange(value, action, formattedOptions);
                 }}
                 menuIsOpen
                 classNamePrefix="hc-select"
@@ -316,6 +446,8 @@ type MultiSelectDropdownWithRefProps = {
   chipsGroupTitle?: string;
   buttonWidth?: string;
   resources?: FirehoseResult[];
+  shrinkOnSelectAll?: boolean;
+  selectAllChipObj?: { label: string; value: string; [key: string]: string };
 };
 
 type MultiSelectDropdownFirehoseProps = {
