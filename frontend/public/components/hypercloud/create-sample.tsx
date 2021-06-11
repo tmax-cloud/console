@@ -382,6 +382,8 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
                 kind="Namespace"
                 menuWidth="200px"
                 placeholder="Select Namespace"
+                shrinkOnSelectAll={true}
+                selectAllChipObj={{ label: 'All Select', value: 'all' }}
               />
             }
             control={methods.control}
@@ -393,7 +395,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
         </Section>
         <Section id="new-multi-dropdown-section-2" label="MultiSelectDropdownWithRef (useResourceItemsFormatter=true)">
           <Controller
-            as={<MultiSelectDropdownWithRef name="newmultidropdown-useformatter" useResourceItemsFormatter={true} items={ClusterResourceList} menuWidth="250px" buttonWidth="250px" placeholder="Select Cluster And ClusterClaim" />}
+            as={<MultiSelectDropdownWithRef name="newmultidropdown-useformatter" shrinkOnSelectAll={false} useResourceItemsFormatter={true} items={ClusterResourceList} menuWidth="250px" buttonWidth="250px" placeholder="Select Cluster And ClusterClaim" />}
             control={methods.control}
             name="newmultidropdown-useformatter"
             onChange={([selected]) => {
@@ -406,6 +408,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
             as={
               <MultiSelectDropdownWithRef
                 name="newmultidropdown-plain"
+                shrinkOnSelectAll={false}
                 useResourceItemsFormatter={false}
                 defaultValues={[{ label: 'BBB', value: 'bbb' }]}
                 items={[
