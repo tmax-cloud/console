@@ -122,6 +122,8 @@ const CaseType = {
  * @prop {boolean} useResourceItemsFormatter - k8s서비스콜을 통해 받아온 리소스리스트에서 필요한 정보를 사용해 {key, apiVersion, kind, label, value} 형태의 item으로 이루어진 드롭다운을 만들어주는 formatter 사용여부를 결정하는 값. 리소스 kind아이콘이 표시된 형태의 드롭다운을 만들어준다. 해당 옵션을 사용하려면 items props로 k8sList콜을 통해 가져온 리소스리스트를 넣어주어야 한다.
  * @prop {any[]} defaultValues - 드롭다운의 기본 선택값을 지정해주는 속성. [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}] 형태로 설정해주고, 해당 item은 items props에 존재하는 item이어야 한다. (Controller로 감싸서 ListView컴포넌트 안에 사용 시 Controller의 defaultValue속성에도 같은 값을 지정해줘야 한다)
  * @prop {any | any[]} items - 옛버전의 dropdown에서 object로 사용해서 object도 받을 수 있게 처리해놓았으나, object[] 형태의 사용을 권장함. (예: [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}])
+ * @prop {boolean} shrinkOnSelectAll - 모든 아이템을 선택했을 때 하나의 All아이템으로 줄어들게할 지 여부를 설정하는 속성.
+ * @prop {{ label: string; value: string; }} selectAllChipObj - shrinkOnSelectAll=true일 때 모든 아이템 선택시 표시해줄 chip object에 대한 설정. 기본값은 {label: 'All', value: '*'} 이다. defaultValue로 selectAllChipObj와 동일한 형태의 값이 들어왔을 때에도 모든 아이템이 선택된 것으로 처리 된다. 이와 같이 동작하게 하려면 shrinkOnSelectAll=true로 설정해줘야 한다.
  */
 export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, MultiSelectDropdownWithRefProps>((props, ref) => {
   const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, shrinkOnSelectAll = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px' } = props;
@@ -135,7 +137,7 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
     value: SELECT_ALL_VALUE,
   };
 
-  const defaultValuesWithKey = defaultValues.map(item => {
+  const defaultValuesWithKey =  defaultValues?.map(item => {
     return {
       key: `${item.label}-${item.value}`,
       label: item.label,
@@ -187,7 +189,7 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
         }
       });
     } else if (Array.isArray(items)) {
-      formattedOptions = items.map(item => {
+      formattedOptions = items?.map(item => {
         const kindValue = item.kind || kind || '';
         const label = item.spec?.externalName || item.metadata?.name || '';
         const value = item.metadata?.name || item.metadata?.uid || '';
@@ -213,13 +215,11 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
         });
       }
     } else {
-      if (!useResourceItemsFormatter) {
-        // MEMO : item마다 고유의 key값이 있어야 delete chip 가능해서 key값 넣어주는 부분.
-        // MEMO : key값 규칙은 "[label]-[value]"로 지정해주고 있음. defaultValues로 들어오는 값에 대해서도 이와 같이 key값 만들어서 지정해줌.
-        formattedOptions = items.map(item => {
-          return { key: item.key || `${item.label}-${item.value}`, label: item.label, value: item.value };
-        });
-      }
+      // MEMO : item마다 고유의 key값이 있어야 delete chip 가능해서 key값 넣어주는 부분.
+      // MEMO : key값 규칙은 "[label]-[value]"로 지정해주고 있음. defaultValues로 들어오는 값에 대해서도 이와 같이 key값 만들어서 지정해줌.
+      formattedOptions = items?.map(item => {
+        return { key: item.key || `${item.label}-${item.value}`, label: item.label, value: item.value };
+      });
     }
   }
 
