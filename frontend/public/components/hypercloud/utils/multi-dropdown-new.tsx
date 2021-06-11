@@ -52,6 +52,7 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
 
 const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props) => {
   const { data, options: allOptions, getValue, isSelected } = props;
+  const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
   const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
   let allSelected = false;
   const currentValue = getValue();
@@ -77,19 +78,21 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props
   const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isSelected;
 
   return isResourceItem ? (
-    <Option {...props}>
-      <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
-        <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked} onChange={() => null} />
+    justSelectAllOption ? null : (
+      <Option {...props}>
+        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
+          <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked} onChange={() => null} />
 
-        <span className="co-resource-icon--fixed-width" id={DROPDOWN_SECTION_ID}>
-          <ResourceIcon kind={isSelectAllCheckbox ? 'All' : props.data.kind} />
+          <span className="co-resource-icon--fixed-width" id={DROPDOWN_SECTION_ID}>
+            <ResourceIcon kind={isSelectAllCheckbox ? 'All' : props.data.kind} />
+          </span>
+          <span id={DROPDOWN_SECTION_ID} className="co-resource-item__resource-name" style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden' }}>
+            <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
+          </span>
         </span>
-        <span id={DROPDOWN_SECTION_ID} className="co-resource-item__resource-name" style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden' }}>
-          <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
-        </span>
-      </span>
-    </Option>
-  ) : (
+      </Option>
+    )
+  ) : justSelectAllOption ? null : (
     <Option {...props}>
       <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
         <input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />
@@ -137,7 +140,7 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
     value: SELECT_ALL_VALUE,
   };
 
-  const defaultValuesWithKey =  defaultValues?.map(item => {
+  const defaultValuesWithKey = defaultValues?.map(item => {
     return {
       key: `${item.label}-${item.value}`,
       label: item.label,
