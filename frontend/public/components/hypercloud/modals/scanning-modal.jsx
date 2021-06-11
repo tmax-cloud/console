@@ -1,6 +1,7 @@
 import * as _ from 'lodash-es';
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { history } from '@console/internal/components/utils';
 import { k8sCreateUrl, k8sList, referenceForModel, kindForReference } from '../../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
@@ -181,8 +182,9 @@ class BaseScanningModal extends PromiseComponent {
     this.handlePromise(promise).then(this.successSubmit);
   }
 
-  successSubmit = ({ imageScanRequestName }) => {
+  successSubmit = response => {
     const { resource } = this.props;
+    const { imageScanRequestName } = JSON.parse(response);
 
     const namespace = resource?.metadata?.namespace || this.state.namespace || resource?.namespace;
 
@@ -220,13 +222,13 @@ class BaseScanningModal extends PromiseComponent {
           </div>
           <div className="row co-m=-form-row">
             <div className="col-sm-12" style={{ marginBottom: '15px' }}>
-              <Section label="Name" id="name" isRequired={true}>
+              <Section label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')} id="name" isRequired={true}>
                 <input className="pf-c-form-control" id="name" name="metadata.name" onChange={this.onChangeName} value={this.state.name} />
               </Section>
             </div>
             {showNs && (
               <div className="col-sm-12" style={{ marginBottom: '15px' }}>
-                <Section label="Namespace" id="namespace" isRequired={true}>
+                <Section label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')} id="namespace" isRequired={true}>
                   <select className="col-sm-12" value={this.state.namespace} onChange={this.onChangeNamespace}>
                     {this.state.namespaces.map(namespace => (
                       <option key={namespace} value={namespace}>
@@ -238,7 +240,7 @@ class BaseScanningModal extends PromiseComponent {
               </div>
             )}
             <div className="col-sm-12">
-              <label className={'control-label co-required'} htmlFor={label}>
+              <label className={classNames('control-label', { ['co-required']: !resource || label === 'Repositories' })} htmlFor={label}>
                 {label}
               </label>
               <div className="co-search-group">
@@ -257,7 +259,7 @@ class BaseScanningModal extends PromiseComponent {
             </div>
           </div>
         </ModalBody>
-        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Confirm" cancel={this._cancel} />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancel={this._cancel} />
       </form>
     );
   }
