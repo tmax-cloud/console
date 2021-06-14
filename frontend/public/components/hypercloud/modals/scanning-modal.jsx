@@ -240,7 +240,7 @@ class BaseScanningModal extends PromiseComponent {
               </div>
             )}
             <div className="col-sm-12">
-              <label className={classNames('control-label', { ['co-required']: !resource || label === 'Repositories' })} htmlFor={label}>
+              <label className={classNames('control-label', { ['co-required']: !resource && kind !== 'Repository' })} htmlFor={label}>
                 {label}
               </label>
               <div className="co-search-group">
