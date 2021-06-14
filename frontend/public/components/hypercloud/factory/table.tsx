@@ -432,7 +432,7 @@ export const Table = connect<TablePropsFromState, TablePropsFromDispatch, TableP
         </WindowScroller>
       );
       const children = mock ? (
-        <EmptyBox label={label} />
+        <EmptyBox label={label} kind={this.props['aria-label']} />
       ) : (
         <TableWrapper virtualize={virtualize} ariaLabel={ariaLabel} ariaRowCount={ariaRowCount}>
           <PfTable cells={columns} rows={virtualize ? [] : Rows({ componentProps, selectedResourcesForKind, customData })} gridBreakPoint={gridBreakPoint} onSort={this._onSort} onSelect={onSelect} sortBy={sortBy} className="pf-m-compact pf-m-border-rows" role={virtualize ? 'presentation' : 'grid'} aria-label={virtualize ? null : ariaLabel}>

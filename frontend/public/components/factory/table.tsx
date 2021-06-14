@@ -108,7 +108,7 @@ const sorts = {
   nodeFS: (node: NodeKind): number => nodeFS(node),
   machinePhase: (machine: MachineKind): string => getMachinePhase(machine),
   nodePods: (node: NodeKind): number => nodePods(node),
-  numSecrets: sa => sa.secrets? sa.secrets.length : 0,
+  numSecrets: sa => (sa.secrets ? sa.secrets.length : 0),
 };
 
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {
@@ -475,7 +475,7 @@ export const Table = connect<TablePropsFromState, TablePropsFromDispatch, TableP
         </WindowScroller>
       );
       const children = mock ? (
-        <EmptyBox label={label} />
+        <EmptyBox label={label} kind={this.props['aria-label']} />
       ) : (
         <TableWrapper virtualize={virtualize} ariaLabel={ariaLabel} ariaRowCount={ariaRowCount}>
           <PfTable cells={columns} rows={virtualize && !expandable ? [] : !!Rows ? Rows({ componentProps, selectedResourcesForKind, customData }) : expandableData} gridBreakPoint={gridBreakPoint} onSort={this._onSort} onSelect={onSelect} onExpand={this._onExpand} sortBy={sortBy} className="pf-m-compact pf-m-border-rows" role={virtualize ? 'presentation' : 'grid'} aria-label={virtualize ? null : ariaLabel}>

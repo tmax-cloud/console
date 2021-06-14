@@ -7,16 +7,9 @@ import * as restrictedSignImg from '../../imgs/restricted-sign.svg';
 import { TimeoutError } from '../../co-fetch';
 import { useTranslation } from 'react-i18next';
 
-export const Box: React.FC<BoxProps> = ({ children, className }) => (
-  <div className={classNames('cos-status-box', className)}>{children}</div>
-);
+export const Box: React.FC<BoxProps> = ({ children, className }) => <div className={classNames('cos-status-box', className)}>{children}</div>;
 
-export const LoadError: React.FC<LoadErrorProps> = ({
-  label,
-  className,
-  message,
-  canRetry = true,
-}) => (
+export const LoadError: React.FC<LoadErrorProps> = ({ label, className, message, canRetry = true }) => (
   <Box className={className}>
     <div className="text-center cos-error-title">
       Error Loading {label}
@@ -25,12 +18,7 @@ export const LoadError: React.FC<LoadErrorProps> = ({
     {canRetry && (
       <div className="text-center">
         Please{' '}
-        <Button
-          type="button"
-          onClick={window.location.reload.bind(window.location)}
-          variant="link"
-          isInline
-        >
+        <Button type="button" onClick={window.location.reload.bind(window.location)} variant="link" isInline>
           try again
         </Button>
         .
@@ -60,14 +48,15 @@ export const LoadingBox: React.FC<LoadingBoxProps> = ({ className, message }) =>
 );
 LoadingBox.displayName = 'LoadingBox';
 
-export const EmptyBox: React.FC<EmptyBoxProps> = ({ label }) => {
+export const EmptyBox: React.FC<EmptyBoxProps> = props => {
   const { t } = useTranslation();
+  const { label, kind } = props;
   return (
     <Box>
-      <div className="text-center">{label ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: label }) : t('COMMON:MSG_COMMON_ERROR_MESSAGE_23')}</div>
+      <div className="text-center">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: label || kind })}</div>
     </Box>
   );
-}
+};
 EmptyBox.displayName = 'EmptyBox';
 
 export const MsgBox: React.FC<MsgBoxProps> = ({ title, detail, className = '' }) => (
@@ -82,10 +71,7 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => (
   <div>
     <Box className="text-center">
       <img className="cos-status-box__access-denied-icon" src={restrictedSignImg} />
-      <MsgBox
-        title="Restricted Access"
-        detail="You don't have access to this section due to cluster policy."
-      />
+      <MsgBox title="Restricted Access" detail="You don't have access to this section due to cluster policy." />
     </Box>
     {_.isString(message) && (
       <Alert isInline className="co-alert" variant="danger" title="Error details">
@@ -96,34 +82,20 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => (
 );
 AccessDenied.displayName = 'AccessDenied';
 
-const Data: React.FC<DataProps> = ({
-  NoDataEmptyMsg,
-  EmptyMsg,
-  label,
-  data,
-  unfilteredData,
-  children,
-}) => {
+const Data: React.FC<DataProps> = props => {
+  const { NoDataEmptyMsg, EmptyMsg, label, data, unfilteredData, children } = props;
   if (NoDataEmptyMsg && _.isEmpty(unfilteredData)) {
-    return (
-      <div className="loading-box loading-box__loaded">
-        {NoDataEmptyMsg ? <NoDataEmptyMsg /> : <EmptyBox label={label} />}
-      </div>
-    );
+    return <div className="loading-box loading-box__loaded">{NoDataEmptyMsg ? <NoDataEmptyMsg /> : <EmptyBox label={label} />}</div>;
   }
 
   if (!data || _.isEmpty(data)) {
-    return (
-      <div className="loading-box loading-box__loaded">
-        {EmptyMsg ? <EmptyMsg /> : <EmptyBox label={label} />}
-      </div>
-    );
+    return <div className="loading-box loading-box__loaded">{EmptyMsg ? <EmptyMsg /> : <EmptyBox label={label} kind={props['aria-label']} />}</div>;
   }
   return <div className="loading-box loading-box__loaded">{children}</div>;
 };
 Data.displayName = 'Data';
 
-export const StatusBox: React.FC<StatusBoxProps> = (props) => {
+export const StatusBox: React.FC<StatusBoxProps> = props => {
   const { loadError, loaded, skeleton, ...dataProps } = props;
 
   if (loadError) {
@@ -142,21 +114,13 @@ export const StatusBox: React.FC<StatusBoxProps> = (props) => {
     if (loaded && loadError instanceof TimeoutError) {
       return (
         <Data {...dataProps}>
-          <div className="co-m-timeout-error text-muted">
-            Timed out fetching new data. The data below is stale.
-          </div>
+          <div className="co-m-timeout-error text-muted">Timed out fetching new data. The data below is stale.</div>
           {props.children}
         </Data>
       );
     }
 
-    return (
-      <LoadError
-        message={loadError.message}
-        label={props.label}
-        className="loading-box loading-box__errored"
-      />
-    );
+    return <LoadError message={loadError.message} label={props.label} className="loading-box loading-box__errored" />;
   }
 
   if (!loaded) {
@@ -189,6 +153,7 @@ type LoadingBoxProps = {
 
 type EmptyBoxProps = {
   label?: string;
+  kind?: string;
 };
 
 type MsgBoxProps = {

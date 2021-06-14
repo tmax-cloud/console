@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainingJobModel), ...Kebab.factory.common];
 
 export const tjKind = tj => {
-  return tj.kind === 'PyTorchJob' ? 'pytorchjob' : 'tfjob';
+  return tj.kind === 'PyTorchJob' ? 'PyTorchJob' : 'TFJob';
 };
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
@@ -71,8 +71,8 @@ const TJStatus = ({ tj }) => {
 };
 
 const TJComposition = ({ tj }) => {
-  const specs = Object.entries(tj.spec);
-  const keys = Object.keys(specs[0][1]);
+  const specs = tj?.spec && Object.entries(tj.spec);
+  const keys = specs ? Object.keys(specs[0][1]) : [];
   let str = '';
   for (let i = 0; i < keys.length; i++) {
     str += `${keys[i]} ${specs[0][1][keys[i]].replicas}`;
@@ -130,9 +130,7 @@ const TrainingJobTableRow: RowFunction<K8sResourceKind> = ({ obj: tj, index, key
       <TableData className={tableColumnClasses[2]}>
         <TJStatus tj={tj} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <TJComposition tj={tj} />
-      </TableData>
+      <TableData className={tableColumnClasses[3]}>{<TJComposition tj={tj} />}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <ResourceKebab actions={menuActions} kind={tjKind(tj)} resource={tj} />
       </TableData>
@@ -154,13 +152,13 @@ const TrainingJobDetails: React.FC<TrainingJobDetailsProps> = ({ obj: tj }) => {
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 export const TrainingJobs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="TrainingJobs" Header={TrainingJobTableHeader.bind(null, t)} Row={TrainingJobTableRow} virtualize />;
-}
+};
 
 export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
   const { t } = useTranslation();
@@ -175,32 +173,35 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
     createLink: type => `/k8s/ns/${props.namespace || 'default'}/${type}s/~new`,
   };
 
-  return (<MultiListPage
-    showTitle
-    title='Training Jobs'
-    canCreate={true}
-    ListComponent={TrainingJobs}
-    namespace={props.namespace}
-    createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(TrainingJobModel, t) })}
-    createProps={createProps}
-    flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
-    resources={[
-      { kind: 'TFJob', namespaced: true, optional: true },
-      { kind: 'PyTorchJob', namespaced: true, optional: true },
-    ]}
-    rowFilters={[
-      {
-        filterGroupName: 'Training Job',
-        type: 'trainingjob-kind',
-        reducer: tjKind,
-        items: [
-          { id: 'tfjob', title: 'TF Job' },
-          { id: 'pytorchjob', title: 'Pytorch Job' },
-        ],
-      },
-    ]} {...props} />
+  return (
+    <MultiListPage
+      showTitle
+      title="Training Jobs"
+      canCreate={true}
+      ListComponent={TrainingJobs}
+      namespace={props.namespace}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(TrainingJobModel, t) })}
+      createProps={createProps}
+      flatten={resources => _.flatMap(resources, 'data').filter(r => !!r)}
+      resources={[
+        { kind: 'TFJob', namespaced: true, optional: true },
+        { kind: 'PyTorchJob', namespaced: true, optional: true },
+      ]}
+      rowFilters={[
+        {
+          filterGroupName: 'Training Job',
+          type: 'trainingjob-kind',
+          reducer: tjKind,
+          items: [
+            { id: 'tfjob', title: 'TF Job' },
+            { id: 'pytorchjob', title: 'Pytorch Job' },
+          ],
+        },
+      ]}
+      {...props}
+    />
   );
-}
+};
 
 export const TrainingJobsDetailsPage: React.FC<TrainingJobsDetailsPageProps> = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(TrainingJobDetails)), editYaml()]} />;
 
