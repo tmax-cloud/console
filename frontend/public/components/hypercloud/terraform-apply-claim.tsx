@@ -83,10 +83,10 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
       <TableData className={tableColumnClasses[3]}>
         {tfapplyclaim?.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{tfapplyclaim.status?.reason}</div>} maxWidth="30rem" position="right">
-            <Status status={tfapplyclaim?.status?.status} />
+            <Status status={tfapplyclaim?.status?.phase} />
           </Popover>
         ) : (
-          <Status status={tfapplyclaim?.status?.status} />
+          <Status status={tfapplyclaim?.status?.phase} />
         )}
       </TableData>
       <TableData className={tableColumnClasses[4]}>{tfapplyclaim.metadata.annotations.creator}</TableData>

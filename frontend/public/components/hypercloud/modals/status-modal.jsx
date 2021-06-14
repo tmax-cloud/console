@@ -78,7 +78,7 @@ const BaseStatusModal = withTranslation()(
           break;
         }
         case TFApplyClaimModel.kind: {
-          const stat = this.state.status === 'Approved' ? 'Approve' : 'Rejected';
+          const stat = this.state.status === 'Approved' ? 'Approve' : 'Reject';
           const promise = k8sUpdateApproval(
             kind,
             resource,
