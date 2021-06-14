@@ -168,7 +168,7 @@ export const rerunPipelineRunAndRedirect: KebabAction = (
 export const stopPipelineRun: KebabAction = (kind: K8sKind, pipelineRun: PipelineRun) => {
   // The returned function will be called using the 'kind' and 'obj' in Kebab Actions
   return {
-    label: 'Stop',
+    label: '정지',
     callback: () => {
       k8sPatch(
         PipelineRunModel,
