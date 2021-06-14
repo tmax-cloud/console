@@ -62,7 +62,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'Dashboards/Overview/Health/URL',
     properties: {
       title: 'Cluster',
-      url: 'healthz',
+      url: 'readyz',
       fetch: fetchK8sHealth,
       healthHandler: getK8sHealthState,
       additionalResource: {
