@@ -135,7 +135,7 @@ export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props
 
     },
     {
-      href: 'rolebindingclaims?rowFilter-roleBindingClaim-status=Awaiting',
+      href: 'rolebindingclaims',
       name: t('COMMON:MSG_LNB_MENU_101'),
     },
   ];
@@ -147,6 +147,7 @@ export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props
     rowFilters={filters.bind(null, t)()}
     multiNavPages={pages}
     title={t('COMMON:MSG_LNB_MENU_76')}
+    defaultSelectedRows={['Awaiting']} 
   />;
 };
 
