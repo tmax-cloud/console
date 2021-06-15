@@ -494,8 +494,8 @@ const DetailsStateToProps = ({ UI }) => ({
 export const NamespaceDetails = connect(DetailsStateToProps)(NamespaceDetails_);
 
 const RolesPage = ({ obj: { metadata } }) => {
-  const rolebindingspage = <RoleBindingsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={false} />;
-  const rolebindingclaimspage = <RoleBindingClaimsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={false} />;
+  const rolebindingspage = <RoleBindingsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={false} single={true} />;
+  const rolebindingclaimspage = <RoleBindingClaimsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={false} single={true} />;
   return (
     <>
       <div className={classNames('namespace-details_role-binding')}>{rolebindingspage}</div>
