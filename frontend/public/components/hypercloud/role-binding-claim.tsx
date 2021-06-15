@@ -139,6 +139,17 @@ export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props
       name: t('COMMON:MSG_LNB_MENU_101'),
     },
   ];
+  if (props.single) {
+    return <ListPage
+      kind={'RoleBindingClaim'}
+      canCreate={true}
+      ListComponent={RoleBindingClaimsList}
+      {...props}
+      rowFilters={filters.bind(null, t)()}      
+      title={t('COMMON:MSG_LNB_MENU_76')}
+      defaultSelectedRows={['Awaiting']}
+    />;
+  }
   return <ListPage
     kind={'RoleBindingClaim'}
     canCreate={true}
@@ -195,6 +206,7 @@ type RoleBindingClaimsPageProps = {
   showTitle?: boolean;
   namespace?: string;
   selector?: any;
+  single? : boolean;
 };
 
 type RoleBindingClaimsDetailsPageProps = {

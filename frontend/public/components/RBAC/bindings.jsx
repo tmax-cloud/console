@@ -225,8 +225,9 @@ const rowFilters = t => {
   ];
 };
 
-export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new' }) => {
-  const { t } = useTranslation();
+export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new', single = false }) => {
+  const { t } = useTranslation(); 
+
   const pages = [
     {
       href: 'rolebindings',
@@ -253,6 +254,33 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
   } else {
     multiNavBaseURL = `/k8s/cluster`;
   }
+
+  if (single) {
+    return (
+      <MultiListPage
+        canCreate={!mock}
+        createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(RoleBindingModel, t) })}
+        createProps={{
+          to: createPath,
+        }}
+        mock={mock}
+        filterLabel="by role or subject"
+        flatten={flatten}
+        label={t('COMMON:MSG_LNB_MENU_76')}
+        ListComponent={BindingsList}
+        namespace={namespace}
+        resources={roleResources}
+        rowFilters={staticFilters ? [] : rowFilters.bind(null, t)()}
+        staticFilters={staticFilters}
+        showTitle={showTitle}
+        textFilter="role-binding"
+        title={t('COMMON:MSG_LNB_MENU_76')}
+        isClusterScope
+      />
+    );
+
+  }
+
 
   return (
     <MultiListPage
