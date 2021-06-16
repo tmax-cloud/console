@@ -25,7 +25,16 @@ const ServiceIP = ({ s }) => {
 
 const kind = 'Service';
 
-const tableColumnClasses = [classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'hidden-xs'), classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'), classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
+const tableColumnClasses = [
+  classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'col-xs-6'), 
+  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), 
+  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'),  
+  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), 
+  classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'hidden-xs'), 
+  classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'), 
+  classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), 
+  Kebab.columnClass
+];
 
 const ServiceTableHeader = t => {
   return [
@@ -42,26 +51,38 @@ const ServiceTableHeader = t => {
       props: { className: tableColumnClasses[1] },
     },
     {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_17'),
+      sortField: 'spec.type',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[2] },
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_26'),
+      sortField: 'spec.type',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[3] },
+    },
+    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
       sortField: 'metadata.labels',
       transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
+      props: { className: tableColumnClasses[4] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_16'),
       sortField: 'spec.selector',
       transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[5] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_27'),
       sortField: 'spec.clusterIP',
       transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
+      props: { className: tableColumnClasses[6] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[5] },
+      props: { className: tableColumnClasses[7] },
     },
   ];
 };
@@ -77,15 +98,21 @@ const ServiceTableRow = ({ obj: s, index, key, style }) => {
         <ResourceLink kind="Namespace" name={s.metadata.namespace} title={s.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <LabelList kind={kind} labels={s.metadata.labels} />
+        {s.spec.type}
       </TableData>
       <TableData className={tableColumnClasses[3]}>
-        <Selector selector={s.spec.selector} namespace={s.metadata.namespace} />
+        {(s.spec.type) !== 'LoadBalancer' ? ('No External IP') : (_.map(s.status.loadBalancer.ingress, i => i.hostname || i.ip || '-'))}
       </TableData>
       <TableData className={tableColumnClasses[4]}>
-        <ServiceIP s={s} />
+        <LabelList kind={kind} labels={s.metadata.labels} />
       </TableData>
       <TableData className={tableColumnClasses[5]}>
+        <Selector selector={s.spec.selector} namespace={s.metadata.namespace} />
+      </TableData>
+      <TableData className={tableColumnClasses[6]}>
+        <ServiceIP s={s} />
+      </TableData>
+      <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={s} />
       </TableData>
     </TableRow>
