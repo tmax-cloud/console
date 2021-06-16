@@ -8,10 +8,10 @@ import UtilizationBody from '@console/shared/src/components/dashboard/utilizatio
 import { ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 import { useExtensions, DashboardsOverviewUtilizationItem, isDashboardsOverviewUtilizationItem } from '@console/plugin-sdk';
 import { DashboardItemProps, withDashboardResources } from '../dashboard/with-dashboard-resources';
-import { humanizeBinaryBytes, humanizeCpuCores, humanizeNumber, humanizeDecimalBytesPerSec } from '../utils/units';
+import { humanizeBinaryBytes, humanizeCpuCores, humanizeNumber } from '../utils/units';
 import { getRangeVectorStats, getInstantVectorStats } from '../graphs/utils';
 import { Dropdown } from '../utils/dropdown';
-import { OverviewQuery, namespaceUtilizationQueries, namespaceMultilineQueries } from '../dashboard/dashboards-page/cluster-dashboard/queries';
+import { OverviewQuery, namespaceUtilizationQueries } from '../dashboard/dashboards-page/cluster-dashboard/queries';
 import { getPrometheusQueryResponse } from '../../actions/dashboards';
 import { Humanize } from '../utils/types';
 import { useMetricDuration, UTILIZATION_QUERY_HOUR_MAP } from '@console/shared/src/components/dashboard/duration-hook';
@@ -163,19 +163,19 @@ export const UtilizationCard = ({ namespace }) => {
     [],
   );
 
-  const networkInPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => {
-      return <div>{current}</div>;
-    }),
-    [],
-  );
+  // const networkInPopover = React.useCallback(
+  //   React.memo<TopConsumerPopoverProp>(({ current }) => {
+  //     return <div>{current}</div>;
+  //   }),
+  //   [],
+  // );
 
-  const networkOutPopover = React.useCallback(
-    React.memo<TopConsumerPopoverProp>(({ current }) => {
-      return <div>{current}</div>;
-    }),
-    [],
-  );
+  // const networkOutPopover = React.useCallback(
+  //   React.memo<TopConsumerPopoverProp>(({ current }) => {
+  //     return <div>{current}</div>;
+  //   }),
+  //   [],
+  // );
 
   let durationItems = {
     ['ONE_HR']: t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_1_1'),
@@ -212,7 +212,7 @@ export const UtilizationCard = ({ namespace }) => {
         <PrometheusUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_CPU_1')} utilizationQuery={queries[OverviewQuery.CPU_UTILIZATION].utilization} TopConsumerPopover={cpuPopover} duration={durationValues[duration]} humanizeValue={humanizeCpuCores} setTimestamps={setTimestamps} />
         <PrometheusUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_MEMORY_1')} utilizationQuery={queries[OverviewQuery.MEMORY_UTILIZATION].utilization} TopConsumerPopover={memPopover} duration={durationValues[duration]} humanizeValue={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} />
         {/* <PrometheusUtilizationItem title={'Filesystem'} utilizationQuery={queries[OverviewQuery.STORAGE_UTILIZATION].utilization} TopConsumerPopover={storagePopover} duration={durationValues[duration]} humanizeValue={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} /> */}
-        <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} queries={namespaceMultilineQueries(namespace)[OverviewQuery.NETWORK_UTILIZATION]} duration={durationValues[duration]} humanizeValue={humanizeDecimalBytesPerSec} TopConsumerPopovers={[networkInPopover, networkOutPopover]} />
+        {/* <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} queries={namespaceMultilineQueries(namespace)[OverviewQuery.NETWORK_UTILIZATION]} duration={durationValues[duration]} humanizeValue={humanizeDecimalBytesPerSec} TopConsumerPopovers={[networkInPopover, networkOutPopover]} /> */}
         <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_78')} utilizationQuery={queries[OverviewQuery.POD_UTILIZATION].utilization} TopConsumerPopover={podPopover} duration={durationValues[duration]} humanizeValue={humanizeNumber} />
       </UtilizationBody>
     </DashboardCard>

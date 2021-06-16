@@ -478,7 +478,7 @@ class MastheadToolbarContents_ extends React.Component {
             </ToolbarItem>
             <SystemStatusButton statuspageData={statuspageData} />
 
-            <ToolbarItem className="hidden-xs">{this._renderLanguageMenu(false)}</ToolbarItem>
+            {/* <ToolbarItem className="hidden-xs">{this._renderLanguageMenu(false)}</ToolbarItem> */}
             
             <ToolbarItem>
               <div className="co-masthead__line"></div>
