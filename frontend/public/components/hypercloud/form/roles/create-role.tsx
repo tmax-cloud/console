@@ -37,7 +37,7 @@ const kindItems = t => [
 
 let apiGroupList = {};
 const coreResources = {
-  '*': 'All',
+  //'*': 'All',
   configmaps: 'configmaps',
   endpoints: 'endpoints',
   events: 'events',
@@ -144,21 +144,33 @@ const RuleItem = props => {
   React.useEffect(() => {
     const apiGroupValue = apiGroup0?.value || '*';
     if (apiGroupValue === '*') {
-      setResourceList({ '*': 'All' });
+      //setResourceList({ '*': 'All' });
+      //setResourceList({ '*': '*' });
+      setResourceList({});
     } else if (apiGroupValue === 'Core') {
       setResourceList(coreResources);
     } else {
+      let newResourceList = {};
+      
       coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}`).then(
         data => {
-          let newResourceList = { '*': 'All' };
-          data.resources.sort(compareObjByName);
-          data.resources.forEach(resource => (newResourceList[resource.name] = resource.name));
-          setResourceList(newResourceList);
+          data.versions.forEach(version => (
+            coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}/${version.version}`).then(
+              data => {                
+                data.resources.sort(compareObjByName);
+                data.resources.forEach(resource => (newResourceList[resource.name] = resource.name));                
+              },
+              err => {
+                console.log('Fail to get resource list');
+              },
+            )
+            ));          
         },
         err => {
           console.log('Fail to get resource list');
-        },
-      );
+        }
+      );      
+      setResourceList(newResourceList);
     }
   }, [apiGroup0]);
 
@@ -237,7 +249,9 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       let list = { '*': 'All', Core: 'Core' };
       result.groups.sort(compareObjByName);
       result.groups.forEach(apigroup => {
-        list[apigroup.name] = apigroup.preferredVersion.groupVersion;
+        //list[apigroup.name] = apigroup.preferredVersion.groupVersion;
+        //list[apigroup.name] = apigroup.preferredVersion.groupVersion;
+        list[apigroup.name] = apigroup.name;
       });
       apiGroupList = list;
       setLoaded(true);
