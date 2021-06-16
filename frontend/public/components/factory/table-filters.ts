@@ -17,7 +17,7 @@ import {
 } from '../../module/k8s';
 
 import { alertingRuleIsActive, alertDescription, alertState, silenceState } from '../../reducers/monitoring';
-import { pipelineRunFilterReducer } from '../../../packages/dev-console/src/utils/pipeline-filter-reducer';
+import { pipelineRunFilterReducer } from '@console/dev-console/src/utils/pipeline-filter-reducer';
 
 export const fuzzyCaseInsensitive = (a: string, b: string): boolean => fuzzy(_.toLower(a), _.toLower(b));
 
@@ -137,9 +137,9 @@ export const tableFilters: TableFilterMap = {
       apiGroup: 'rbac.authorization.k8s.io',
       name: groupName,
     }),
-  
+
   // Filter Integration Config by Status
-  'integrationConfig-status' : (filter, binding) => {
+  'integrationConfig-status': (filter, binding) => {
     let phase = '';
     if (binding.status) {
       binding.status.conditions.forEach(cur => {
@@ -153,12 +153,11 @@ export const tableFilters: TableFilterMap = {
       });
       return filter.selected.has(phase) || filter.selected.size === 0;
     }
-
   },
   // Filter Integration Config by Status
-  'roleBindingClaim-status' : (filter, binding) => {
-    return filter.selected.has(binding.status.status) || filter.selected.size === 0;    
-  },  
+  'roleBindingClaim-status': (filter, binding) => {
+    return filter.selected.has(binding.status.status) || filter.selected.size === 0;
+  },
 
   selector: (selector, obj) => {
     if (!selector || !selector.values || !selector.values.size) {
@@ -180,12 +179,12 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phaseFunc = (pvc) => {
+    const phaseFunc = pvc => {
       if (pvc?.metadata?.deletionTimestamp) {
         return 'Terminating';
       }
-      return pvc.status.phase
-    }
+      return pvc.status.phase;
+    };
     const phase = phaseFunc(pvc);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
@@ -318,7 +317,6 @@ export const tableFilters: TableFilterMap = {
     const displayName = _.get(project, ['metadata', 'annotations', 'openshift.io/display-name']);
     return fuzzyCaseInsensitive(str, project.metadata.name) || fuzzyCaseInsensitive(str, displayName);
   },
-
 
   // Filter service classes by text match
   'service-class': (str, serviceClass) => {

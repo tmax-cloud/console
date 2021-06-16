@@ -29,7 +29,7 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
-      sortField: 'metadata.namespace',
+      sortField: 'resourceName',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
@@ -40,8 +40,8 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_107'),
-      sortField: 'resourceName',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
@@ -59,7 +59,7 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
 };
 ResourceQuotaClaimTableHeader.displayName = 'ResourceQuotaClaimTableHeader';
 
-const unmodifiableStatus = new Set(['Approved', 'Namespace Deleted']);
+const unmodifiableStatus = new Set(['Approved']);
 const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
 const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: resourcequotaclaims, index, key, style }) => {
   let menuActions: any[];
@@ -75,7 +75,7 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
         <ResourceLink kind={kind} name={resourcequotaclaims.metadata.name} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.uid} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
+        <ResourceLink kind="ResourceQuota" name={resourcequotaclaims.resourceName} title={resourcequotaclaims.resourceName} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         {resourcequotaclaims?.status?.status === 'Error' ? (
@@ -86,7 +86,9 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
           <Status status={resourcequotaclaims?.status?.status} />
         )}
       </TableData>
-      <TableData className={tableColumnClasses[3]}>{resourcequotaclaims.resourceName}</TableData>
+      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
+        <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} />
+      </TableData>
       <TableData className={tableColumnClasses[4]}>{fromNow(resourcequotaclaims?.metadata?.creationTimestamp)}</TableData>
       <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={resourcequotaclaims} />
@@ -113,7 +115,6 @@ const filters = t => [
       { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Approved', title: 'Approved' },
       { id: 'Rejected', title: 'Rejected' },
-      { id: 'Namespace Deleted', title: 'Namespace Deleted' },
       { id: 'Error', title: 'Error' },
     ],
   },
