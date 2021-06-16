@@ -16,7 +16,10 @@ function editFormData(formData) {
   let { kind } = formData;
 
   if (kind === 'LimitRange') {
-    let changedFormData = formData?.spec?.limits === null && {};
+    let changedFormData = formData;
+    if (formData?.spec?.limits === null) {
+      changedFormData.spec.limits = [];
+    }
     return changedFormData;
   }
   return formData;
