@@ -49,7 +49,7 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
   );
 };
 
-const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props) => {
+const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, props) => {
   const { data, options: allOptions, getValue, isSelected } = props;
   const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
   const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
@@ -64,7 +64,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props
   if (isSelectAllCheckbox) {
     if (allOptions.length === 1) {
       // MEMO : selectall 옵션 외에 다른 item이 없는 경우
-      allSelected = true;
+      allSelected = selectAllChecked;
     } else {
       // MEMO : selectall 옵션과 다른 item들이 있는 경우
       // MEMO : allOptions엔 selectall 옵션 item도 존재해서 하나 빼줘야 함
@@ -77,7 +77,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props
   const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isSelected;
 
   return isResourceItem ? (
-    justSelectAllOption ? null : (
+    justSelectAllOption && !showSelectAllOnEmpty ? null : (
       <Option {...props}>
         <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
           <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked} onChange={() => null} />
@@ -91,7 +91,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, props
         </span>
       </Option>
     )
-  ) : justSelectAllOption ? null : (
+  ) : justSelectAllOption && !showSelectAllOnEmpty ? null : (
     <Option {...props}>
       <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
         <input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />
@@ -125,10 +125,11 @@ const CaseType = {
  * @prop {any[]} defaultValues - 드롭다운의 기본 선택값을 지정해주는 속성. [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}] 형태로 설정해주고, 해당 item은 items props에 존재하는 item이어야 한다. (Controller로 감싸서 ListView컴포넌트 안에 사용 시 Controller의 defaultValue속성에도 같은 값을 지정해줘야 한다)
  * @prop {any | any[]} items - 옛버전의 dropdown에서 object로 사용해서 object도 받을 수 있게 처리해놓았으나, object[] 형태의 사용을 권장함. (예: [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}])
  * @prop {boolean} shrinkOnSelectAll - 모든 아이템을 선택했을 때 하나의 All아이템으로 줄어들게할 지 여부를 설정하는 속성.
+ * @prop {boolean} showSelectAllOnEmpty - 드롭다운 아이템이 없을 때 SelectAll 버튼만 보여줄 지 여부를 설정하는 속성.
  * @prop {{ label: string; value: string; }} selectAllChipObj - shrinkOnSelectAll=true일 때 모든 아이템 선택시 표시해줄 chip object에 대한 설정. 기본값은 {label: 'All', value: '*'} 이다. defaultValue로 selectAllChipObj와 동일한 형태의 값이 들어왔을 때에도 모든 아이템이 선택된 것으로 처리 된다. 이와 같이 동작하게 하려면 shrinkOnSelectAll=true로 설정해줘야 한다.
  */
 export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, MultiSelectDropdownWithRefProps>((props, ref) => {
-  const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, shrinkOnSelectAll = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px' } = props;
+  const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px' } = props;
   const { setValue, watch } = methods ? methods : useFormContext();
   const [chips, setChips] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -257,7 +258,14 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
       if (selectAllChecked) {
         return CaseType.UNCHECK_SET_EMPTY;
       } else {
-        return shrinkOnSelectAll ? CaseType.CHECK_SET_ONE_ALL : CaseType.CHECK_SET_ALL_OPTIONS;
+        if (showSelectAllOnEmpty && formattedOptions.length === 0) {
+          return CaseType.CHECK_SET_ONE_ALL;
+        }
+        if (shrinkOnSelectAll) {
+          return CaseType.CHECK_SET_ONE_ALL;
+        } else {
+          return CaseType.CHECK_SET_ALL_OPTIONS;
+        }
       }
     } else {
       if (shrinkOnSelectAll) {
@@ -391,7 +399,7 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
                 controlShouldRenderValue={false}
                 isMulti
                 components={{
-                  Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj),
+                  Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked),
                   IndicatorSeparator: null,
                   DropdownIndicator: null,
                 }}
@@ -449,6 +457,7 @@ type MultiSelectDropdownWithRefProps = {
   buttonWidth?: string;
   resources?: FirehoseResult[];
   shrinkOnSelectAll?: boolean;
+  showSelectAllOnEmpty?: boolean;
   selectAllChipObj?: { label: string; value: string; [key: string]: string };
 };
 
