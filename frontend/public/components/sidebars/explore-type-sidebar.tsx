@@ -6,6 +6,7 @@ import { getSwaggerPath, K8sKind, SwaggerDefinition, SwaggerDefinitions } from '
 // import { getDefinitionKey, getStoredSwagger, getSwaggerPath, K8sKind, SwaggerDefinition, SwaggerDefinitions } from '../../module/k8s';
 import { CamelCaseWrap, EmptyBox, LinkifyExternal } from '../utils';
 import { useTranslation } from 'react-i18next';
+
 const getRef = (definition: SwaggerDefinition): string => {
   const ref = definition.$ref || _.get(definition, 'items.$ref');
   const re = /^#\/definitions\//;
@@ -90,9 +91,9 @@ export const ExploreType: React.FC<ExploreTypeProps> = props => {
           })}
         </Breadcrumb>
       )}
-      {description && (
+      {!!description && (
         <p className="co-break-word co-pre-wrap">
-          <LinkifyExternal>{description}</LinkifyExternal>
+          <LinkifyExternal>{!description.includes(':') ? t(`DESCRIPTION:${description}`) : description}</LinkifyExternal>
         </p>
       )}
       {_.isEmpty(currentProperties) ? (
@@ -114,7 +115,7 @@ export const ExploreType: React.FC<ExploreTypeProps> = props => {
                 </h5>
                 {definition.description && (
                   <p className="co-break-word co-pre-wrap">
-                    <LinkifyExternal>{definition.description ? t(`DESCRIPTION:${definition.description}`) : null}</LinkifyExternal>
+                    <LinkifyExternal>{!!definition.description ? (!definition.description.includes(':') ? t(`DESCRIPTION:${definition.description}`) : definition.description) : ''}</LinkifyExternal>
                   </p>
                 )}
                 {path && (
