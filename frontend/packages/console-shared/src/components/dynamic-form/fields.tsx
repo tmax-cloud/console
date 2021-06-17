@@ -44,6 +44,7 @@ export const FormField: React.FC<FormFieldProps> = ({ children, id, defaultLabel
 };
 
 export const FieldSet: React.FC<FieldSetProps> = ({ children, defaultLabel, idSchema, required = false, schema, uiSchema }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = React.useState(false);
   const [showLabel, label] = useSchemaLabel(schema, uiSchema, defaultLabel);
   const description = useSchemaDescription(schema, uiSchema);
@@ -59,7 +60,7 @@ export const FieldSet: React.FC<FieldSetProps> = ({ children, defaultLabel, idSc
             {_.startCase(label)}
           </label>
         </AccordionToggle>
-        {description && <Description id={`${idSchema.$id}_description`} description={description} />}
+        {description && <Description id={`${idSchema.$id}_description`} description={!description.includes(':') ? t(`DESCRIPTION:${description}`) : description} />}
         <AccordionContent id={`${idSchema.$id}_accordion-content`} isHidden={!expanded}>
           {children}
         </AccordionContent>
@@ -151,9 +152,12 @@ export const OneOfField: React.FC<FieldProps> = props => {
   if (!name) {
     return <NullField />;
   }
+  const changeItem = properties => {
+    return onChange(properties);
+  };
   return (
     <FieldSet defaultLabel={name} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
-      <OneOfFields formData={formData} schema={schema} uid={idSchema.$id} onChange={properties => onChange(properties)}></OneOfFields>
+      <OneOfFields formData={formData} schema={schema} uid={idSchema.$id} onChange={changeItem}></OneOfFields>
     </FieldSet>
   );
 };
