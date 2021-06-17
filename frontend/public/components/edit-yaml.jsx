@@ -96,7 +96,7 @@ export const EditYAML_ = connect(stateToProps)(
         } else {
           const directory = kindToSchemaPath.get(model.kind)?.['directory'];
           const file = kindToSchemaPath.get(model.kind)?.['file'];
-          url = `${document.location.origin}/api/resource/${directory}/${file}`;
+          url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
         }
         const xhrTest = new XMLHttpRequest();
         xhrTest.open('GET', url);
