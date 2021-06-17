@@ -47,7 +47,7 @@ export const FieldTemplate: React.FC<FieldTemplateProps> = props => {
   if (hidden || !dependencyMet) {
     return null;
   }
-  const isGroup = JSON_SCHEMA_GROUP_TYPES.includes(type);
+  const isGroup = JSON_SCHEMA_GROUP_TYPES.includes(type) || uiSchema['ui:field'] === 'OneOfField';
   return isGroup ? children : <AtomicFieldTemplate {...props} />;
 };
 
