@@ -246,9 +246,9 @@ const NodeHealth: React.FC = () => {
         <GalleryItem>
           <NodeStatus node={obj} className="co-node-health__status" />
         </GalleryItem>
-        <GalleryItem>
+        {/* <GalleryItem>
           <HealthChecksItem />
-        </GalleryItem>
+        </GalleryItem> */}
       </Gallery>
     </HealthBody>
   );

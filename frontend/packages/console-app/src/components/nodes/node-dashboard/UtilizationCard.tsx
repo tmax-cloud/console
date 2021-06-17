@@ -10,8 +10,8 @@ import UtilizationBody from '@console/shared/src/components/dashboard/utilizatio
 import { ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 import { getNodeAddresses } from '@console/shared/src/selectors/node';
 import { PodModel, ProjectModel } from '@console/internal/models';
-import { humanizeCpuCores, humanizeBinaryBytes, humanizeDecimalBytesPerSec, humanizeNumber, Dropdown } from '@console/internal/components/utils';
-import { PrometheusUtilizationItem, PrometheusMultilineUtilizationItem } from '@console/internal/components/dashboard/dashboards-page/cluster-dashboard/utilization-card';
+import { humanizeCpuCores, humanizeBinaryBytes, humanizeNumber, Dropdown } from '@console/internal/components/utils';
+import { PrometheusUtilizationItem } from '@console/internal/components/dashboard/dashboards-page/cluster-dashboard/utilization-card';
 
 import { NodeQueries, getUtilizationQueries, getMultilineQueries, getTopConsumerQueries } from './queries';
 import { NodeDashboardContext } from './NodeDashboardContext';
@@ -61,7 +61,7 @@ const UtilizationCard: React.FC = () => {
   const { t } = useTranslation();
   const nodeName = obj.metadata.name;
   const nodeIp = getNodeAddresses(obj).find(addr => addr.type === 'InternalIP')?.address;
-  const [queries, multilineQueries, consumers] = React.useMemo(() => {
+  const [queries] = React.useMemo(() => {
     const topConsumerQueries = getTopConsumerQueries(nodeIp);
     return [
       getUtilizationQueries(nodeName, nodeIp),
@@ -79,13 +79,13 @@ const UtilizationCard: React.FC = () => {
 
   const memPopover = React.useCallback(({ current }) => <div>{current}</div>, [nodeIp, nodeName]);
 
-  const filesystemPopover = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
+  // const filesystemPopover = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
 
-  const networkPopoverIn = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
+  // const networkPopoverIn = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
 
-  const networkPopoverOut = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
+  // const networkPopoverOut = React.useCallback(({ current }: TopConsumerPopoverProp) => <div>{current}</div>, [consumers]);
 
-  const networkPopovers = React.useMemo(() => [networkPopoverIn, networkPopoverOut], [networkPopoverIn, networkPopoverOut]);
+  // const networkPopovers = React.useMemo(() => [networkPopoverIn, networkPopoverOut], [networkPopoverIn, networkPopoverOut]);
 
   let durationItems = {
     ['ONE_HR']: t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_1_1'),
@@ -120,8 +120,8 @@ const UtilizationCard: React.FC = () => {
       <UtilizationBody timestamps={timestamps}>
         <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABNODE_TABLEHEADER_3')} humanizeValue={humanizeCpuCores} utilizationQuery={queries[NodeQueries.CPU_USAGE]} totalQuery={queries[NodeQueries.CPU_TOTAL]} TopConsumerPopover={cpuPopover} duration={durationValues[duration]} setTimestamps={setTimestamps} setLimitReqState={setCPULimit} />
         <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABNODE_TABLEHEADER_4')} humanizeValue={humanizeBinaryBytes} utilizationQuery={queries[NodeQueries.MEMORY_USAGE]} totalQuery={queries[NodeQueries.MEMORY_TOTAL]} byteDataType={ByteDataTypes.BinaryBytes} TopConsumerPopover={memPopover} duration={durationValues[duration]} setLimitReqState={setMemoryLimit} />
-        <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanizeValue={humanizeBinaryBytes} utilizationQuery={queries[NodeQueries.FILESYSTEM_USAGE]} totalQuery={queries[NodeQueries.FILESYSTEM_TOTAL]} byteDataType={ByteDataTypes.BinaryBytes} TopConsumerPopover={filesystemPopover} duration={durationValues[duration]} />
-        <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} humanizeValue={humanizeDecimalBytesPerSec} queries={multilineQueries[NodeQueries.NETWORK_UTILIZATION]} TopConsumerPopovers={networkPopovers} duration={durationValues[duration]} />
+        {/* <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanizeValue={humanizeBinaryBytes} utilizationQuery={queries[NodeQueries.FILESYSTEM_USAGE]} totalQuery={queries[NodeQueries.FILESYSTEM_TOTAL]} byteDataType={ByteDataTypes.BinaryBytes} TopConsumerPopover={filesystemPopover} duration={durationValues[duration]} /> */}
+        {/* <PrometheusMultilineUtilizationItem title={t('SINGLE:MSG_OVERVIEW_MAIN_CARDCLUSTERUTILIZATION_NETWORK_1')} humanizeValue={humanizeDecimalBytesPerSec} queries={multilineQueries[NodeQueries.NETWORK_UTILIZATION]} TopConsumerPopovers={networkPopovers} duration={durationValues[duration]} /> */}
         <PrometheusUtilizationItem title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_78')} humanizeValue={humanizeNumber} utilizationQuery={queries[NodeQueries.POD_COUNT]} duration={durationValues[duration]} />
       </UtilizationBody>
     </DashboardCard>

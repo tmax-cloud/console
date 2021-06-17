@@ -15,7 +15,7 @@ import { getRestartPolicyLabel, podPhase, podPhaseFilterReducer, podReadiness, p
 import { getContainerState, getContainerStatus } from '../module/k8s/container';
 import { ResourceEventStream } from './events';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunctionArgs } from './factory';
-import { AsyncComponent, DetailsItem, Kebab, NodeLink, OwnerReferences, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, ScrollToTopOnMount, SectionHeading, Timestamp, formatBytesAsMiB, formatCores, humanizeBinaryBytes, humanizeDecimalBytesPerSec, humanizeCpuCores, navFactory, pluralize, units } from './utils';
+import { AsyncComponent, DetailsItem, Kebab, NodeLink, OwnerReferences, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, ScrollToTopOnMount, SectionHeading, Timestamp, formatBytesAsMiB, formatCores, humanizeBinaryBytes, humanizeCpuCores, navFactory, pluralize, units } from './utils';
 import { PodLogs } from './pod-logs';
 import { Area, PROMETHEUS_BASE_PATH, PROMETHEUS_TENANCY_BASE_PATH, requirePrometheus } from './graphs';
 import { VolumesTable } from './volumes-table';
@@ -250,14 +250,14 @@ const PodGraphs = requirePrometheus(({ pod }) => {
           <Area title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_81')} humanize={humanizeBinaryBytes} byteDataType={ByteDataTypes.BinaryBytes} namespace={pod.metadata.namespace} query={`pod:container_fs_usage_bytes:sum{pod='${pod.metadata.name}',namespace='${pod.metadata.namespace}'}`} />
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div className="col-md-12 col-lg-4">
           <Area title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_79')} humanize={humanizeDecimalBytesPerSec} namespace={pod.metadata.namespace} query={`sum(irate(container_network_receive_bytes_total{pod='${pod.metadata.name}', namespace='${pod.metadata.namespace}'}[5m])) by (pod, namespace)`} />
         </div>
         <div className="col-md-12 col-lg-4">
           <Area title={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_80')} humanize={humanizeDecimalBytesPerSec} namespace={pod.metadata.namespace} query={`sum(irate(container_network_transmit_bytes_total{pod='${pod.metadata.name}', namespace='${pod.metadata.namespace}'}[5m])) by (pod, namespace)`} />
         </div>
-      </div>
+      </div> */}
 
       <br />
     </>

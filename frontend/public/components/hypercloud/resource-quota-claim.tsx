@@ -59,7 +59,7 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
 };
 ResourceQuotaClaimTableHeader.displayName = 'ResourceQuotaClaimTableHeader';
 
-const unmodifiableStatus = new Set(['Approved']);
+const unmodifiableStatus = new Set(['Approved', 'Resource Quota Deleted']);
 const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
 const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: resourcequotaclaims, index, key, style }) => {
   let menuActions: any[];
@@ -115,6 +115,7 @@ const filters = t => [
       { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Approved', title: 'Approved' },
       { id: 'Rejected', title: 'Rejected' },
+      { id: 'Resource Quota Deleted', title: 'Resource Quota Deleted' },
       { id: 'Error', title: 'Error' },
     ],
   },

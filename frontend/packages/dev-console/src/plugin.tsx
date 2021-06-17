@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 // import { CodeIcon, BoltIcon, DatabaseIcon, CatalogIcon } from '@patternfly/react-icons';
-import { CodeIcon, CatalogIcon } from '@patternfly/react-icons';
+import { CodeIcon } from '@patternfly/react-icons';
 import {
   Plugin,
   ModelDefinition,
@@ -34,7 +34,7 @@ import {
   // ImageStreamImportsModel,
   ConfigMapModel,
 } from '@console/internal/models';
-import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
+// import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
 import * as models from './models';
 import { getKebabActionsForKind } from './utils/kebab-actions';
 import {
@@ -873,16 +873,16 @@ const plugin: Plugin<ConsumedExtensions> = [
       icon: yamlIcon,
     },
   },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'dev-catalog',
-      url: '/catalog',
-      label: 'From Catalog',
-      description: 'Browse the catalog to discover, deploy and connect to services',
-      icon: <CatalogIcon />,
-    },
-  },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'dev-catalog',
+  //     url: '/catalog',
+  //     label: 'From Catalog',
+  //     description: 'Browse the catalog to discover, deploy and connect to services',
+  //     icon: <CatalogIcon />,
+  //   },
+  // },
   // {
   //   type: 'AddAction',
   //   properties: {
@@ -903,16 +903,16 @@ const plugin: Plugin<ConsumedExtensions> = [
   //     icon: <BoltIcon />,
   //   },
   // },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'helm',
-      url: '/catalog?kind=%5B"HelmChart"%5D',
-      label: 'Helm Chart',
-      description: 'Browse the catalog to discover and install Helm Charts',
-      icon: helmIcon,
-    },
-  },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'helm',
+  //     url: '/catalog?kind=%5B"HelmChart"%5D',
+  //     label: 'Helm Chart',
+  //     description: 'Browse the catalog to discover and install Helm Charts',
+  //     icon: helmIcon,
+  //   },
+  // },
   {
     type: 'AddAction',
     flags: {

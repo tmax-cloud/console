@@ -4,7 +4,7 @@ import { Translation } from 'react-i18next';
 // import { GroupModel, UserModel } from '../../../models';
 
 // import { referenceForModel } from '../../../module/k8s';
-import { HrefLink, ResourceNSLink, ResourceClusterLink, NewTabLink } from '../../nav/items';
+import { HrefLink, ResourceNSLink, ResourceClusterLink } from '../../nav/items';
 // import { AuthAdminLink } from './items';
 import { NavSection } from '../../nav/section';
 
@@ -29,14 +29,14 @@ const MasterNav = () => (
           <ResourceNSLink resource="events" name={t('COMMON:MSG_LNB_MENU_6')} />
           {/* <HrefLink href="/grafana" name="Grafana" />
           <HrefLink href="/kibana" name="Kibana" /> */}
-          <NewTabLink name={t('COMMON:MSG_LNB_MENU_98')} type="grafana" />
+          {/* <NewTabLink name={t('COMMON:MSG_LNB_MENU_98')} type="grafana" />
           <NewTabLink name={t('COMMON:MSG_LNB_MENU_99')} type="kibana" />
-          <NewTabLink name={t('COMMON:GitLab')} type="git" />
+          <NewTabLink name={t('COMMON:GitLab')} type="git" /> */}
         </NavSection>
-        <NavSection title={t('COMMON:MSG_LNB_MENU_7')}>
+        {/* <NavSection title={t('COMMON:MSG_LNB_MENU_7')}>
           <HrefLink href="/operatorhub" name={t('COMMON:MSG_LNB_MENU_8')} />
           <ResourceNSLink resource='clusterserviceversions' name={t('COMMON:MSG_LNB_MENU_9')} startsWith={['operators.coreos.com', 'clusterserviceversions',]} />
-        </NavSection>
+        </NavSection> */}
         <NavSection title={t('COMMON:MSG_LNB_MENU_22')}>
           <ResourceNSLink resource="pods" name={t('COMMON:MSG_LNB_MENU_23')} />
           <ResourceNSLink resource="deployments" name={t('COMMON:MSG_LNB_MENU_24')} />
@@ -75,7 +75,7 @@ const MasterNav = () => (
           <ResourceNSLink resource="rolebindings" name={t('COMMON:MSG_LNB_MENU_76')} startsWith={rolebindingsStartsWith} />
           {/*<ResourceNSLink resource="rolebindingclaims" name={t('COMMON:MSG_LNB_MENU_101')} startsWith={rolebindingclaimsStartsWith} />*/}
           <ResourceNSLink resource="serviceaccounts" name={t('COMMON:MSG_LNB_MENU_74')} />
-          <ResourceClusterLink resource="podsecuritypolicies" name={t('COMMON:MSG_LNB_MENU_78')} />
+          {/* <ResourceClusterLink resource="podsecuritypolicies" name={t('COMMON:MSG_LNB_MENU_78')} /> */}
           {/* <AuthAdminLink resource={referenceForModel(UserModel)} name="Users" />
           <AuthAdminLink resource={referenceForModel(GroupModel)} name="User Groups" /> */}
         </NavSection>
