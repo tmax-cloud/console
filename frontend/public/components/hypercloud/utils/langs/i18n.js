@@ -15,13 +15,13 @@ const resource = {
     COMMON: en.COMMON,
     SINGLE: en.SINGLE,
     MULTI: en.MULTI,
-    SCHEMA: en.SCHEMA,
+    DESCRIPTION: en.DESCRIPTION,
   },
   ko: {
     COMMON: ko.COMMON,
     SINGLE: ko.SINGLE,
     MULTI: ko.MULTI,
-    SCHEMA: ko.SCHEMA,
+    DESCRIPTION: ko.DESCRIPTION,
   },
 };
 
