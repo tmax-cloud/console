@@ -6,28 +6,24 @@ import { JSONSchema6 } from 'json-schema';
 
 export const OneOfFields: React.FC<OneOfFieldsProps> = props => {
   const { uid, formData, onChange, schema } = props;
-  let items = { title: {}, description: {} };
+  let items = {};
+  const defaultValue = schema.oneOf[0]?.['title'];
   schema.oneOf.forEach(cur => {
-    items.title[cur['title']] = _.startCase(cur['title']);
-    items.description[cur['description']] = _.startCase(cur['description']);
+    items[cur['title']] = _.startCase(cur['type']);
+    // description 추가한다고 하면 items안에 객체형식으로 해야할듯
   });
 
-  const [type, setType] = React.useState('string');
+  const [type, setType] = React.useState(defaultValue);
   React.useEffect(() => {
-    if (typeof formData === 'string') {
-      setType('string');
-    } else if (typeof formData !== 'undefined') {
-      // string이랑 undefined가 아니면 integer밖에 없음
-      setType('integer');
-    }
+    setType(defaultValue);
   }, []);
   return (
     <>
       <div className="key-operator-value__row">
-        <Dropdown id={uid} key={uid} title={items[type]} selectedKey={type} items={items.title ?? {}} onChange={setType} />
+        <Dropdown id={uid} key={uid} selectedKey={type} items={items ?? {}} onChange={setType} />
       </div>
       <label className={'control-label '}>{type}</label>
-      <div className="">{type === 'string' ? <input className="pf-c-form-control" id={uid} key={uid} onChange={({ currentTarget }) => onChange(currentTarget.value)} value={formData} type="text" /> : <input className="pf-c-form-control" id={uid} key={uid} onChange={({ currentTarget }) => onChange(currentTarget.value !== '' ? _.toNumber(currentTarget.value) : '')} value={formData} type="number" />}</div>{' '}
+      <div className="">{items[type] === 'String' ? <input className="pf-c-form-control" id={uid} key={uid} onChange={({ currentTarget }) => onChange(currentTarget.value)} value={formData} type="text" /> : <input className="pf-c-form-control" id={uid} key={uid} onChange={({ currentTarget }) => onChange(currentTarget.value !== '' ? _.toNumber(currentTarget.value) : '')} value={formData} type="number" />}</div>{' '}
     </>
   );
 };

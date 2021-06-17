@@ -152,9 +152,12 @@ export const OneOfField: React.FC<FieldProps> = props => {
   if (!name) {
     return <NullField />;
   }
+  const changeItem = properties => {
+    return onChange(properties);
+  };
   return (
     <FieldSet defaultLabel={name} idSchema={idSchema} required={required} schema={schema} uiSchema={uiSchema}>
-      <OneOfFields formData={formData} schema={schema} uid={idSchema.$id} onChange={properties => onChange(properties)}></OneOfFields>
+      <OneOfFields formData={formData} schema={schema} uid={idSchema.$id} onChange={changeItem}></OneOfFields>
     </FieldSet>
   );
 };
