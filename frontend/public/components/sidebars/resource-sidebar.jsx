@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ResourceSidebarSnippets, ResourceSidebarSamples } from './resource-sidebar-samples';
 import { ExploreType } from './explore-type-sidebar';
 import { SimpleTabNav, ResourceSummary } from '../utils';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { modelFor } from '@console/internal/module/k8s';
 
 const sidebarScrollTop = () => {
   document.getElementsByClassName('co-p-has-sidebar__sidebar')[0].scrollTop = 0;
@@ -14,7 +16,8 @@ const sidebarScrollTop = () => {
 
 class ResourceSidebarWrapper extends React.Component {
   render() {
-    const { label, children, showSidebar, toggleSidebar, isFloat = false } = this.props;
+    const { label, children, showSidebar, toggleSidebar, isFloat = false, t } = this.props;
+    const resourceLabel = ResourceLabel(modelFor(label?.replace(/ /g, '')) ?? {}, t) || label;
 
     if (!showSidebar) {
       return null;
@@ -27,7 +30,7 @@ class ResourceSidebarWrapper extends React.Component {
           <Button type="button" className="co-p-has-sidebar__sidebar-close" variant="plain" aria-label="Close" onClick={toggleSidebar}>
             <CloseIcon />
           </Button>
-          <h2 className="co-p-has-sidebar__sidebar-heading">{label}</h2>
+          <h2 className="co-p-has-sidebar__sidebar-heading">{resourceLabel}</h2>
           {children}
         </div>
       </div>
@@ -61,7 +64,7 @@ export const ResourceSidebar = props => {
   let tabs = [];
   if (showSamples) {
     tabs.push({
-      name: 'Samples',
+      name: t('COMMON:MSG_CREATEYAML_DIV3_TABSAMPLE_1'),
       component: ResourceSamples,
     });
   }
@@ -74,7 +77,7 @@ export const ResourceSidebar = props => {
   if (showSchema) {
     tabs = [
       {
-        name: 'Schema',
+        name: t('COMMON:MSG_CREATEYAML_DIV3_TABSCHEMA_1'),
         component: ResourceSchema.bind(null, definition),
       },
       ...tabs,
@@ -85,7 +88,7 @@ export const ResourceSidebar = props => {
   }
 
   return (
-    <ResourceSidebarWrapper label={title || label} showSidebar={showSidebar} isFloat={isFloat} toggleSidebar={toggleSidebar}>
+    <ResourceSidebarWrapper label={title || label} showSidebar={showSidebar} isFloat={isFloat} toggleSidebar={toggleSidebar} t={t}>
       {noTabsOnlyDetails ? <ResourceDetails {...props} /> : <>{tabs.length > 0 ? <SimpleTabNav tabs={tabs} tabProps={{ showName, showID, showDescription, showPodSelector, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, samples, snippets, resource, customPathId }} additionalClassNames="co-m-horizontal-nav__menu--within-sidebar" /> : <ResourceSchema kindObj={kindObj} definition={definition} />}</>}
     </ResourceSidebarWrapper>
   );
