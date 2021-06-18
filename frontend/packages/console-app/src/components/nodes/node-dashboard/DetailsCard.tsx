@@ -19,8 +19,8 @@ const DetailsCard: React.FC = () => {
   const { t } = useTranslation();
   const { obj } = React.useContext(NodeDashboardContext);
   const detailsLink = `${resourcePathFromModel(NodeModel, obj.metadata.name)}/details`;
-  const instanceType = obj.metadata.labels?.['beta.kubernetes.io/instance-type'];
-  const zone = obj.metadata.labels?.['topology.kubernetes.io/zone'];
+  // const instanceType = obj.metadata.labels?.['beta.kubernetes.io/instance-type'];
+  // const zone = obj.metadata.labels?.['topology.kubernetes.io/zone'];
   return (
     <DashboardCard data-test-id="details-card">
       <DashboardCardHeader>
@@ -35,12 +35,12 @@ const DetailsCard: React.FC = () => {
           <DetailItem isLoading={!obj} title="Role">
             <NodeRoles node={obj} />
           </DetailItem>
-          <DetailItem isLoading={!obj} title="Instance Type" error={!instanceType}>
+          {/* <DetailItem isLoading={!obj} title="Instance Type" error={!instanceType}>
             {instanceType}
           </DetailItem>
           <DetailItem isLoading={!obj} title="Zone" error={!zone}>
             {zone}
-          </DetailItem>
+          </DetailItem> */}
           <DetailItem isLoading={!obj} title="Node Addresses">
             <NodeIPList ips={getNodeAddresses(obj)} expand />
           </DetailItem>
