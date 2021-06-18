@@ -75,7 +75,7 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
         <ResourceLink kind={kind} name={resourcequotaclaims.metadata.name} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.uid} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="ResourceQuota" name={resourcequotaclaims.resourceName} title={resourcequotaclaims.resourceName} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
+        <ResourceLink kind="ResourceQuota" name={resourcequotaclaims.resourceName} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.resourceName} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         {resourcequotaclaims?.status?.status === 'Error' ? (
