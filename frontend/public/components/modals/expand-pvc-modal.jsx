@@ -1,3 +1,4 @@
+import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
@@ -8,11 +9,15 @@ import { k8sPatch, referenceFor } from '../../module/k8s/';
 class ExpandPVCModal extends PromiseComponent {
   constructor(props) {
     super(props);
+
+    const size = _.get(this.props.resource, 'status.capacity.storage');
+    const defaultValue = size.substring(0, size.length - 2);
+    const defaultUnit = size.split(defaultValue)[1];
     this.state = {
       inProgress: false,
       errorMessage: '',
-      requestSizeValue: '',
-      requestSizeUnit: 'Gi',
+      requestSizeValue: defaultValue,
+      requestSizeUnit: defaultUnit,
     };
     this._handleRequestSizeInputChange = this._handleRequestSizeInputChange.bind(this);
     this._cancel = this.props.cancel.bind(this);
@@ -33,7 +38,7 @@ class ExpandPVCModal extends PromiseComponent {
         value: { storage: `${requestSizeValue}${requestSizeUnit}` },
       },
     ];
-    this.handlePromise(k8sPatch(this.props.kind, this.props.resource, patch)).then((resource) => {
+    this.handlePromise(k8sPatch(this.props.kind, this.props.resource, patch)).then(resource => {
       this.props.close();
       // redirected to the details page for persitent volume claim
       history.push(resourceObjPath(resource, referenceFor(resource)));
@@ -49,34 +54,16 @@ class ExpandPVCModal extends PromiseComponent {
     };
     const { requestSizeUnit, requestSizeValue } = this.state;
     return (
-      <form
-        onSubmit={this._submit}
-        name="form"
-        className="modal-content modal-content--no-inner-scroll"
-      >
+      <form onSubmit={this._submit} name="form" className="modal-content modal-content--no-inner-scroll">
         <ModalTitle>Expand {kind.label}</ModalTitle>
         <ModalBody>
           <p>
-            Increase the capacity of claim{' '}
-            <strong className="co-break-word">{resource.metadata.name}.</strong> This can be a
-            time-consuming process.
+            Increase the capacity of claim <strong className="co-break-word">{resource.metadata.name}.</strong> This can be a time-consuming process.
           </p>
           <label className="control-label co-required">Size</label>
-          <RequestSizeInput
-            name="requestSize"
-            required
-            onChange={this._handleRequestSizeInputChange}
-            defaultRequestSizeUnit={requestSizeUnit}
-            defaultRequestSizeValue={requestSizeValue}
-            dropdownUnits={dropdownUnits}
-          />
+          <RequestSizeInput name="requestSize" required onChange={this._handleRequestSizeInputChange} defaultRequestSizeUnit={requestSizeUnit} defaultRequestSizeValue={requestSizeValue} dropdownUnits={dropdownUnits} />
         </ModalBody>
-        <ModalSubmitFooter
-          errorMessage={this.state.errorMessage}
-          inProgress={this.state.inProgress}
-          submitText="Expand"
-          cancel={this._cancel}
-        />
+        <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText="Expand" cancel={this._cancel} />
       </form>
     );
   }
