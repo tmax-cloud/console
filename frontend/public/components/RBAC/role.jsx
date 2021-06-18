@@ -227,7 +227,7 @@ export const RolesDetailsPage = props => {
     Kebab.factory.Edit,
     Kebab.factory.Delete,
   ];
-  return <DetailsPage {...props} pages={[navFactory.details(withTranslation()(Details)), navFactory.editResource(), { href: 'bindings', name: t('COMMON:MSG_DETAILS_TAB_14'), component: BindingsForRolePage }]} menuActions={menuActions} />;
+  return <DetailsPage {...props} pages={[navFactory.details(withTranslation()(Details)), navFactory.editYaml(), { href: 'bindings', name: t('COMMON:MSG_DETAILS_TAB_14'), component: BindingsForRolePage }]} menuActions={menuActions} />;
 };
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
