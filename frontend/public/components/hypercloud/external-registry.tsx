@@ -181,7 +181,7 @@ export const ExternalRegistriesPage = withRouter(props => {
   const createItems = React.useMemo(
     () => ({
       generic: t('COMMON:MSG_LNB_MENU_190'),
-      scan: t('COMMON:MSG_LNB_MENU_174'),
+      scan: t('COMMON:MSG_COMMON_ACTIONBUTTON_20'),
     }),
     [t],
   );
