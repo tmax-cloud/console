@@ -7,18 +7,27 @@ import * as k8sSelector from '../../module/k8s/selector';
 import * as k8sSelectorRequirement from '../../module/k8s/selector-requirement';
 
 // Helpers for cleaning up tags by running them through the selector parser
-const cleanSelectorStr = (tag) => k8sSelector.selectorToString(k8sSelector.selectorFromString(tag));
-const cleanTags = (tags) => k8sSelector.split(cleanSelectorStr(tags.join(',')));
+const cleanSelectorStr = tag => k8sSelector.selectorToString(k8sSelector.selectorFromString(tag));
+const cleanTags = tags => k8sSelector.split(cleanSelectorStr(tags.join(',')));
 
 export class SelectorInput extends React.Component {
   constructor(props) {
     super(props);
     this.isBasic = !!_.get(this.props.options, 'basic');
-    this.setRef = (ref) => (this.ref_ = ref);
+    this.setRef = ref => (this.ref_ = ref);
+
+    const defaultTags = this.props.tags;
+    if (defaultTags.length === 0 && this.props.value) {
+      for (let key in this.props.value) {
+        let value = this.props.value[key];
+        let tag = value ? `${key}=${value}` : key;
+        defaultTags.push(tag);
+      }
+    }
     this.state = {
       inputValue: '',
       isInputValid: true,
-      tags: this.props.tags,
+      tags: defaultTags,
     };
   }
 
@@ -28,7 +37,7 @@ export class SelectorInput extends React.Component {
 
   static objectify(arr) {
     const result = {};
-    _.each(arr, (item) => {
+    _.each(arr, item => {
       const [key, value = null] = item.split('=');
       result[key] = value;
     });
@@ -73,7 +82,7 @@ export class SelectorInput extends React.Component {
     // Is the new tag a duplicate of an already existing tag?
     // Note that TagsInput accepts an onlyUnique property, but we handle this logic ourselves so that we can set a
     // custom error class
-    if (_.filter(tags, (tag) => tag === cleanNewTag).length > 1) {
+    if (_.filter(tags, tag => tag === cleanNewTag).length > 1) {
       this.setState({ isInputValid: false });
       return;
     }
@@ -118,17 +127,7 @@ export class SelectorInput extends React.Component {
     return (
       <div className="co-search-input pf-c-form-control">
         <tags-input>
-          <TagsInput
-            ref={this.setRef}
-            className="tags"
-            value={tags}
-            addKeys={addKeys}
-            removeKeys={removeKeys}
-            inputProps={inputProps}
-            renderTag={renderTag}
-            onChange={this.handleChange.bind(this)}
-            addOnBlur
-          />
+          <TagsInput ref={this.setRef} className="tags" value={tags} addKeys={addKeys} removeKeys={removeKeys} inputProps={inputProps} renderTag={renderTag} onChange={this.handleChange.bind(this)} addOnBlur />
         </tags-input>
       </div>
     );
