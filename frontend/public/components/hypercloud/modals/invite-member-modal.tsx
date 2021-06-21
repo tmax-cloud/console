@@ -9,7 +9,7 @@ import { TextInput } from '@patternfly/react-core';
 import Select, { components } from 'react-select';
 import { coFetchJSON } from '../../../co-fetch';
 import { getId, getUserGroup, getAuthUrl, getAccessToken } from '../../../hypercloud/auth';
-import { UsersIcon, TimesIcon, SearchIcon } from '@patternfly/react-icons';
+import { UsersIcon, TimesIcon, SearchIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
@@ -46,7 +46,7 @@ const customStyles = {
     ...provided,
     borderRadius: 0,
     borderColor: '#ededed',
-    borderBottomColor: '#8a8d90',
+    borderBottomColor: state.isFocused ? '#06c' : '#8a8d90',
     cursor: 'pointer',
     '&:hover': { borderBottomColor: '#06c' },
     boxShadow: 'none',
@@ -129,24 +129,36 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
   const [memberList, setMemberList] = React.useState(null);
   const [isSearchBarDisabled, setSearchBarDisabled] = React.useState(false);
   const [isAdmin, setIsAdmin] = React.useState(false);
+  const [showWarning, setShowWarning] = React.useState(false);
 
   const members = _.map(props.existMembers, (value, key) => key);
   const groups = _.map(props.existGroups, (value, key) => key);
   const membersUrl = members.reduce((acc, curr) => acc + `&except=${curr}`, `${getAuthUrl()}/user/list?token=${getAccessToken()}`);
-  // const membersUrl = members.reduce((acc, curr) => acc + `&except=${curr}`, `${window.SERVER_FLAGS.KeycloakAuthURL}/realms/${window.SERVER_FLAGS.KeycloakRealm}/user/list`);
   const groupsUrl = groups.reduce((acc, curr) => acc + `&except=${curr}`, `${getAuthUrl()}/group/list?exceptDefault=true&token=${getAccessToken()}`);
+
+  const selectRef: React.RefObject<HTMLDivElement> = React.createRef();
 
   const MemberItem = props => {
     return (
       <Option {...props}>
         <div className="hc-invite-modal__member-item" key="list-member">
-          <div key="list-member-name">
+          <div key="list-member-name" style={{ color: '#151515' }}>
             {type === 'group' && <UsersIcon className="hc-member__group-icon" />}
             {props.data.name || 'Unknown'}
           </div>
-          <div key="list-member-email">{props.data.email}</div>
+          <div key="list-member-email" style={{ color: '#6A6E73' }}>
+            {props.data.email}
+          </div>
         </div>
       </Option>
+    );
+  };
+
+  const WarningMessage = props => {
+    return (
+      <div style={{ color: '#C9190B' }}>
+        <ExclamationCircleIcon /> {t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_ERRORMESSAGE_1')}
+      </div>
     );
   };
 
@@ -200,17 +212,24 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
   };
 
   const onSelectItem = (value, action) => {
+    setShowWarning(false);
     setSelectedMember(value);
     setSearchBarDisabled(true);
   };
 
   const submit: React.FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
-    // MEMO : user초대일 땐 member email, group초대일 땐 group name 만 넣어서 콜하면 됨
-    const memberEmail = type === 'user' ? selectedMember.email : selectedMember.name;
-    const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member_invitation/${type}/${memberEmail}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'POST');
-    console.log('promise? ', promise);
-    handlePromise(promise).then(close);
+
+    if (selectedMember.name === '' && selectedMember.email === '') {
+      selectRef.current?.focus();
+      setShowWarning(true);
+      return false;
+    } else {
+      // MEMO : user초대일 땐 member email, group초대일 땐 group name 만 넣어서 콜하면 됨
+      const memberEmail = type === 'user' ? selectedMember.email : selectedMember.name;
+      const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member_invitation/${type}/${memberEmail}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'POST');
+      handlePromise(promise).then(close);
+    }
   };
 
   return (
@@ -234,17 +253,19 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
                 <>
                   {isSearchBarDisabled ? (
                     <div className="hc-invite-modal__selectedMember">
-                      <span key="member_name" className="hc-invite-modal__selectedMember__name">
+                      <span key="member_name" className="hc-invite-modal__selectedMember__name" style={{ color: '#151515' }}>
                         {type === 'group' && <UsersIcon className="hc-member__group-icon" />}
                         {selectedMember.name || 'Unknown'}
                         <TimesIcon onClick={clearSelection} className="hc-member__close-icon" />
                       </span>
-                      <span key="member_email" className="hc-invite-modal__selectedMember__email">
+                      <span key="member_email" className="hc-invite-modal__selectedMember__email" style={{ color: '#6A6E73' }}>
                         {selectedMember.email}
                       </span>
                     </div>
                   ) : (
                     <Select
+                      id="member-select"
+                      ref={selectRef}
                       styles={customStyles}
                       options={memberList}
                       components={{
@@ -275,12 +296,13 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
                 />
               )}
             </div>
-            <div style={{ whiteSpace: 'pre-wrap' }}>{type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1') : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2')}</div>
+            <div style={{ whiteSpace: 'pre-wrap', color: '#383F45' }}>{type === 'user' ? t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_1') : t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SUBMESSAGE_2')}</div>
           </div>
         </Section>
         <Section label={t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_LABEL_1')} id="role" isRequired={true}>
           <RadioGroup id="role" currentValue={role} items={roleItems.bind(null, t)()} onChange={({ currentTarget }) => setRole(currentTarget.value)} />
         </Section>
+        {showWarning ? <WarningMessage /> : null}
       </ModalBody>
       <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_3')} cancelText={t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_2')} cancel={cancel} />
     </form>

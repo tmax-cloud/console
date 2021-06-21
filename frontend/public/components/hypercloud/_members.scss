@@ -63,7 +63,8 @@
       display: flex;
       flex-direction: column;
       height: 60px;
-      background-color: var(--pf-global--disabled-color--300);
+      background-color: rgba(0, 102, 204, 0.2);
+      border: 1px solid #0066cc;
       padding: 8px 16px;
 
       &__name {
@@ -105,7 +106,8 @@
   .co-radio-group {
     font-size: 16px;
 
-    .radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
+    .radio-inline + .radio-inline,
+    .checkbox-inline + .checkbox-inline {
       margin-left: 54px;
     }
   }
