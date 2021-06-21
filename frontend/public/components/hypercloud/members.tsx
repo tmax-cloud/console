@@ -125,7 +125,7 @@ export const UsersTable = (props) => {
       {_.isEmpty(filteredRows) ? (
         <EmptyBox label="Users" />
       ) : (
-        <Table aria-label="Users" sortBy={sortBy} onSort={onSort} cells={MemberTableHeader.bind(null, t)()} rows={filteredRows} actionResolver={isOwner && actionResolver.bind(null, t)}>
+        <Table aria-label="Users" sortBy={sortBy} onSort={onSort} cells={MemberTableHeader.bind(null, t)()} rows={filteredRows} actionResolver={isOwner? actionResolver.bind(null, t) : null}>
           <TableHeader />
           <TableBody />
         </Table>
@@ -210,7 +210,7 @@ export const MembersPage = (props) => {
         <TextInput className='hc-members__search' value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'MemberId' ? t('search by email') : t('search by name')}></TextInput>
         {isOwner &&
           <div className="co-m-primary-action">
-            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ namespace: props.namespace, clusterName: props.clusterName, modalClassName: 'modal-lg', existMembers: members })}>
+            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ namespace: props.namespace, clusterName: props.clusterName, modalClassName: 'hc-invite-modal__container', existMembers: members })}>
               {t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_1')}
             </Button>
           </div>}

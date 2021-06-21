@@ -11,6 +11,10 @@ export const getUserGroup = function() {
   return result;
 };
 
+export const getAuthUrl = function() {
+  return getParsedAccessToken().iss || '';
+};
+
 export const setIdToken = function(token) {
   sessionStorage.setItem('idToken', token);
   return;
