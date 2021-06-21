@@ -109,7 +109,7 @@ export const ExploreType: React.FC<ExploreTypeProps> = props => {
                   <CamelCaseWrap value={name} />
                   &nbsp;
                   <small>
-                    <span className="co-break-word">{definitionType}</span>
+                    <span className="co-break-word">{Array.isArray(definitionType) ? definitionType.join('/') : definitionType}</span>
                     {required.has(name) && <> &ndash; required</>}
                   </small>
                 </h5>
