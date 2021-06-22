@@ -169,7 +169,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(cluster, t) })} />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={cluster} customPathName={'.metadata.name'} showOwner={false} />
+            <ResourceSummary resource={cluster} showOwner={false} />
             {cluster.status.owner && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={cluster} children={KeyValuePrint({ obj: cluster.status.owner, key: owner })} />}
             {cluster.status.members && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={members.map(member => KeyValuePrint({ obj: cluster.status.members, key: member }))} />}
             {cluster.status.groups && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={groups.map(group => KeyValuePrint({ obj: cluster.status.groups, key: group }))} />}
