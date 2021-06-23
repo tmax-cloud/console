@@ -365,7 +365,6 @@ export const PodExecLoader: React.FC<PodExecLoaderProps> = ({ obj, message }) =>
 );
 
 export const PodsDetailsPage: React.FC<PodDetailsPageProps> = props => {
-  const { t } = useTranslation();
   return (
     <DetailsPage
       {...props}
@@ -379,7 +378,7 @@ export const PodsDetailsPage: React.FC<PodDetailsPageProps> = props => {
         navFactory.events(ResourceEventStream),
         {
           href: 'terminal',
-          name: t('COMMON:MSG_DETAILS_TAB_8'),
+          name: 'COMMON:MSG_DETAILS_TAB_8',
           component: PodExecLoader,
         },
       ]}

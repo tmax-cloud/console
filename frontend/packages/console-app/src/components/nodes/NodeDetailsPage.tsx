@@ -36,16 +36,15 @@ type NodePodsTabProps = {
   obj: NodeKind;
 };
 const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = props => {
-  const { t } = useTranslation();
   const pages = [
     {
       href: '',
-      name: t('COMMON:MSG_DETAILS_TABOVERVIEW_1'),
+      name: 'COMMON:MSG_DETAILS_TABOVERVIEW_1',
       component: NodeDashboard,
     },
     {
       href: 'details',
-      name: t('COMMON:MSG_DETAILS_TAB_1'),
+      name: 'COMMON:MSG_DETAILS_TAB_1',
       component: NodeDetails,
     },
     editResource(),
@@ -53,7 +52,7 @@ const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = prop
     events(ResourceEventStream),
     {
       href: 'terminal',
-      name: t('COMMON:MSG_DETAILS_TAB_8'),
+      name: 'COMMON:MSG_DETAILS_TAB_8',
       component: NodeTerminal,
     },
   ];
