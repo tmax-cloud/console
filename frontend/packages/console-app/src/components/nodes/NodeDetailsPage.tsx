@@ -8,7 +8,6 @@ import NodeDetails from './NodeDetails';
 import NodeTerminal from './NodeTerminal';
 import { menuActions } from './menu-actions';
 import NodeDashboard from './node-dashboard/NodeDashboard';
-import { useTranslation } from 'react-i18next';
 import { NodeKind } from '@console/internal/module/k8s';
 const { editResource, events, pods } = navFactory;
 // const pages = [
