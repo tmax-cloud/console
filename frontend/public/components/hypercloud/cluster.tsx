@@ -184,7 +184,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
   );
 };
 
-const { details, /* nodes, */ editYaml, events } = navFactory;
+const { /* nodes, */ editYaml, events } = navFactory;
 export const Clusters: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Clusters" Header={ClusterTableHeader.bind(null, t)} Row={ClusterTableRow} virtualize />;
@@ -196,7 +196,6 @@ export const ClustersPage: React.FC<ClustersPageProps> = props => {
 };
 
 export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => {
-  const { t } = useTranslation();
   return (
     <DetailsPage
       {...props}
@@ -204,7 +203,11 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
       kind={kind}
       menuActions={menuActions}
       pages={[
-        details(detailsPage(ClusterDetails)),
+        {
+          href: '',
+          name: 'COMMON:MSG_DETAILS_TABOVERVIEW_3',
+          component: detailsPage(ClusterDetails),
+        },
         editYaml() /* nodes(ClusterNodes),  events(ResourceEventStream) */,
         /*{
           href: 'node',
@@ -224,7 +227,7 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
         events(ResourceEventStream),
         {
           href: 'access',
-          name: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1'),
+          name: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1',
           component: pageProps => <MembersPage clusterName={pageProps.obj.metadata.name} namespace={pageProps.obj.metadata.namespace} owner={pageProps.obj.metadata.annotations.owner} title="Members" />,
         },
       ]}
