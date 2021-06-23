@@ -101,13 +101,14 @@ ClusterTableHeader.displayName = 'ClusterTableHeader';
 
 const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, key, style }) => {
   const owner = cluster.metadata?.annotations?.owner;
+  let type = cluster.metadata.labels?.type;
   return (
     <TableRow id={cluster.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
-      <TableData className={classNames(tableColumnClasses[2])}>{cluster.spec.provider ? '생성' : '등록'}</TableData>
+      <TableData className={classNames(tableColumnClasses[2])}>{type === 'created' ? '생성' : type === 'registered' ? '등록' : '-'}</TableData>
       <TableData className={tableColumnClasses[3]}>{cluster.status?.phase}</TableData>
       <TableData className={tableColumnClasses[4]}>{cluster.spec.version}</TableData>
       <TableData className={tableColumnClasses[5]}>{`${cluster.status?.masterRun ?? 0} / ${cluster.spec?.masterNum ?? 0}`}</TableData>
