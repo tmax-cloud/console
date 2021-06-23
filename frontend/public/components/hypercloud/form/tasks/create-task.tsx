@@ -34,6 +34,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     },
   } = methods;
 
+  const [labels, setLabels] = React.useState([]);
   const [inputResource, setInputResource] = React.useState([]);
   const [outputResource, setOutputResource] = React.useState([]);
   const [taskParameter, setTaskParameter] = React.useState([]);
@@ -44,6 +45,14 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   // 이 페이지가 처음 마운트 되었을 때 한번 되어야 함. (나중에 modal 별로 다 한거를 custom hook으로 묶어주면 좋을듯.)
   React.useEffect(() => {
     if (!isCreatePage(defaultValues)) {
+      if (_.has(defaultValues, 'metadata.labels')) {
+        let labelObj = _.get(defaultValues, 'metadata.labels');
+        let labelTemp = [];
+        for (let key in labelObj) {
+          labelTemp.push(`${key}=${labelObj[key]}`);
+        }
+        setLabels(labelTemp);
+      }
       if (_.has(defaultValues, 'spec.resources.inputs')) {
         let inputResources = _.get(defaultValues, 'spec.resources.inputs');
         setInputResource(inputResources);
@@ -111,8 +120,8 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             }),
             env: item.env?.map(cur => {
               return {
-                envKey: [cur],
-                envValue: cur,
+                envKey: cur.name,
+                envValue: cur.value,
               };
             }),
             args: item.args?.map(cur => {
@@ -127,7 +136,6 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
     }
   }, []);
-
   // Modal Form 초기 세팅위한 Hook들 Custom Hook으로 정리
   useInitModal(methods, inputResource, 'spec.resources.inputs');
   useInitModal(methods, outputResource, 'spec.resources.outputs');
@@ -163,7 +171,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   return (
     <>
       <Section label="레이블" id="label" description="Enter를 입력하여 레이블을 추가할 수 있습니다.">
-        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={<SelectorInput tags={labels} />} control={control} />
       </Section>
       <Section label="인풋 리소스" id="inputResource">
         <>
@@ -266,6 +274,15 @@ export const onSubmitCallback = data => {
   // apiVersion, kind
   data.kind = TaskModel.kind;
   data.apiVersion = `${TaskModel.apiGroup}/${TaskModel.apiVersion}`;
+  //parameter
+  data.spec.params = data?.spec?.params?.map((cur, idx) => {
+    if (cur.type === 'string') {
+      data.spec.params[idx].default = data.spec.params[idx].default[0];
+    } else {
+      data.spec.params[idx].default = cur.default.map(cur => cur.value);
+    }
+    return cur;
+  });
   // workspace
   data.spec.workspaces = data?.spec?.workspaces?.map((cur, idx) => {
     let isReadOnly = cur.accessMode === 'readOnly' ? true : false;
