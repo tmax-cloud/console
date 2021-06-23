@@ -81,10 +81,12 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
       <TableData className={tableColumnClasses[2]}>
         {rolebindingclaims.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{rolebindingclaims.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>{rolebindingclaims.status?.status}</div>
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
+              <Status status={rolebindingclaims?.status?.status} />
+            </div>
           </Popover>
         ) : (
-          rolebindingclaims.status?.status
+          <Status status={rolebindingclaims?.status?.status} />
         )}
       </TableData>
       <TableData className={tableColumnClasses[3]}>
