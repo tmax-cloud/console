@@ -1,4 +1,4 @@
-HyperCloud Console 4.2
+HyperCloud Console 5.0
 =========================
 **HyperCloud - Cluster Console 코드 프로젝트 입니다.**
 - [설치 가이드](https://github.com/tmax-cloud/hypercloud-console/blob/hc-dev/install-yaml/hypercloud_console_install.md)
