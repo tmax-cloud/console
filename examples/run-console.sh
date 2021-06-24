@@ -17,7 +17,7 @@ k8sIP='192.168.9.194'
 
 # Should verify port number which corresponding to Service in yourself!!
 # kubectl get svc -n monitoring prometheus-k8s
-PROM_PORT='30714'
+PROM_PORT='30569'
 # kubectl get svc -n monitoring grafana
 GRAFANA_PORT='3000'
 # kubectl get svc -n hypercloud5-system hypercloud5-api-server-service 

@@ -148,7 +148,7 @@ export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props
       ListComponent={RoleBindingClaimsList}
       {...props}
       rowFilters={filters.bind(null, t)()}      
-      title={t('COMMON:MSG_LNB_MENU_76')}
+      title={t('COMMON:MSG_LNB_MENU_101')}
       defaultSelectedRows={['Awaiting']}
     />;
   }
