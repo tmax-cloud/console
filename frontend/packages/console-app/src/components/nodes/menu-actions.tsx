@@ -32,7 +32,7 @@ export const MarkAsSchedulable: KebabAction = (
 ) => {
   const { t } = useTranslation();
   return {
-    label: t('COMMON:MSG_NODES_NODEDETAILS_3'),
+    label: t('SINGLE:MSG_NODES_NODEDETAILS_3'),
     hidden: !isNodeUnschedulable(obj) || nodeMaintenance,
     callback: () => makeNodeSchedulable(obj),
     accessReview: {
