@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/managed-by: tmax
+    app.kubernetes.io/name: traefik
+  name: traefik
+  namespace: traefik
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: traefik
+    port: 9000
+    protocol: TCP
+    targetPort: traefik
+  - name: web
+    port: 80
+    protocol: TCP
+    targetPort: web
+  - name: websecure
+    port: 443
+    protocol: TCP
+    targetPort: websecure
+  - name: k8s
+    port: 6443
+    protocol: TCP
+    targetPort: k8s
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+  sessionAffinity: None
+  type: LoadBalancer
