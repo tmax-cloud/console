@@ -101,13 +101,14 @@ ClusterTableHeader.displayName = 'ClusterTableHeader';
 
 const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, key, style }) => {
   const owner = cluster.metadata?.annotations?.owner;
+  let type = cluster.metadata.labels?.type;
   return (
     <TableRow id={cluster.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
-      <TableData className={classNames(tableColumnClasses[2])}>{cluster.spec.provider ? '생성' : '등록'}</TableData>
+      <TableData className={classNames(tableColumnClasses[2])}>{type === 'created' ? '생성' : type === 'registered' ? '등록' : '-'}</TableData>
       <TableData className={tableColumnClasses[3]}>{cluster.status?.phase}</TableData>
       <TableData className={tableColumnClasses[4]}>{cluster.spec.version}</TableData>
       <TableData className={tableColumnClasses[5]}>{`${cluster.status?.masterRun ?? 0} / ${cluster.spec?.masterNum ?? 0}`}</TableData>
@@ -169,7 +170,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(cluster, t) })} />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={cluster} customPathName={'.metadata.name'} showOwner={false} />
+            <ResourceSummary resource={cluster} showOwner={false} />
             {cluster.status.owner && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={cluster} children={KeyValuePrint({ obj: cluster.status.owner, key: owner })} />}
             {cluster.status.members && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={members.map(member => KeyValuePrint({ obj: cluster.status.members, key: member }))} />}
             {cluster.status.groups && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={groups.map(group => KeyValuePrint({ obj: cluster.status.groups, key: group }))} />}
@@ -183,7 +184,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
   );
 };
 
-const { details, /* nodes, */ editYaml, events } = navFactory;
+const { /* nodes, */ editYaml, events } = navFactory;
 export const Clusters: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Clusters" Header={ClusterTableHeader.bind(null, t)} Row={ClusterTableRow} virtualize />;
@@ -195,7 +196,6 @@ export const ClustersPage: React.FC<ClustersPageProps> = props => {
 };
 
 export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => {
-  const { t } = useTranslation();
   return (
     <DetailsPage
       {...props}
@@ -203,7 +203,11 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
       kind={kind}
       menuActions={menuActions}
       pages={[
-        details(detailsPage(ClusterDetails)),
+        {
+          href: '',
+          name: 'COMMON:MSG_DETAILS_TABOVERVIEW_3',
+          component: detailsPage(ClusterDetails),
+        },
         editYaml() /* nodes(ClusterNodes),  events(ResourceEventStream) */,
         /*{
           href: 'node',
@@ -223,7 +227,7 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
         events(ResourceEventStream),
         {
           href: 'access',
-          name: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1'),
+          name: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1',
           component: pageProps => <MembersPage clusterName={pageProps.obj.metadata.name} namespace={pageProps.obj.metadata.namespace} owner={pageProps.obj.metadata.annotations.owner} title="Members" />,
         },
       ]}

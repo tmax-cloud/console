@@ -68,12 +68,12 @@ export const navFactory: NavFactory = {
   }),
   events: component => ({
     href: 'events',
-    name: '이벤트',
+    name: 'COMMON:MSG_DETAILS_TAB_7',
     component,
   }),
   logs: component => ({
     href: 'logs',
-    name: '로그',
+    name: 'COMMON:MSG_DETAILS_TAB_6',
     component,
   }),
   editResource: (component = EditDefaultPage) => ({
@@ -83,12 +83,12 @@ export const navFactory: NavFactory = {
   }),
   editYaml: (component = editYamlComponent) => ({
     href: 'yaml',
-    name: 'YAML',
+    name: 'COMMON:MSG_DETAILS_TAB_2',
     component,
   }),
   pods: component => ({
     href: 'pods',
-    name: '파드',
+    name: 'COMMON:MSG_DETAILS_TAB_10',
     component: component || PodsComponent,
   }),
   nodes: component => ({
@@ -98,7 +98,7 @@ export const navFactory: NavFactory = {
   }),
   roles: component => ({
     href: 'roles',
-    name: '롤 바인딩',
+    name: 'COMMON:MSG_DETAILS_TAB_14',
     component,
   }),
   builds: component => ({
@@ -118,7 +118,7 @@ export const navFactory: NavFactory = {
   }),
   clusterServicePlans: component => ({
     href: 'serviceplans',
-    name: '서비스 플랜',
+    name: 'COMMON:MSG_DETAILS_TAB_3',
     component,
   }),
   serviceBindings: component => ({
@@ -153,7 +153,7 @@ export const navFactory: NavFactory = {
   }),
   signerKey: component => ({
     href: 'signerkeys',
-    name: '서명자 키',
+    name: 'COMMON:MSG_DETAILS_TABSIGNERKEY_1',
     component,
   }),
 };
