@@ -78,7 +78,7 @@ export const navFactory: NavFactory = {
   }),
   editResource: (component = EditDefaultPage) => ({
     href: 'edit',
-    name: 'Edit',
+    name: 'COMMON:MSG_DETAILS_TAB_18',
     component,
   }),
   editYaml: (component = editYamlComponent) => ({
