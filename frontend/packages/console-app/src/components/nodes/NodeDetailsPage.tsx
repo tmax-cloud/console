@@ -5,7 +5,7 @@ import { ResourceEventStream } from '@console/internal/components/events';
 import { DetailsPage } from '@console/internal/components/factory';
 import { nodeStatus } from '../../status/node';
 import NodeDetails from './NodeDetails';
-import NodeTerminal from './NodeTerminal';
+// import NodeTerminal from './NodeTerminal';
 import { menuActions } from './menu-actions';
 import NodeDashboard from './node-dashboard/NodeDashboard';
 import { NodeKind } from '@console/internal/module/k8s';
@@ -49,11 +49,11 @@ const NodeDetailsPage: React.FC<React.ComponentProps<typeof DetailsPage>> = prop
     editResource(),
     pods(NodePodsTab),
     events(ResourceEventStream),
-    {
-      href: 'terminal',
-      name: 'COMMON:MSG_DETAILS_TAB_8',
-      component: NodeTerminal,
-    },
+    // {
+    //   href: 'terminal',
+    //   name: 'COMMON:MSG_DETAILS_TAB_8',
+    //   component: NodeTerminal,
+    // },
   ];
   return <DetailsPage {...props} getResourceStatus={nodeStatus} menuActions={menuActions} pages={pages} />;
 };
