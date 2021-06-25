@@ -35,7 +35,7 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'status.status',
+      sortField: 'status.status',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
