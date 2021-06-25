@@ -18,7 +18,7 @@ import { menuActions } from './menu-actions';
 import NodeStatus from './NodeStatus';
 import { useTranslation } from 'react-i18next';
 
-const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
+const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 const NodeTableHeader = t => {
   return [
@@ -59,20 +59,14 @@ const NodeTableHeader = t => {
       props: { className: tableColumnClasses[5] },
     },
     {
-      title: 'Filesystem',
-      sortFunc: 'nodeFS',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[6] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[7] },
-    },
-    {
       title: '',
-      props: { className: tableColumnClasses[8] },
+      props: { className: tableColumnClasses[7] },
     },
   ];
 };
@@ -95,9 +89,6 @@ const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProp
   const totalMem = metrics?.totalMemory?.[`${nodeAddress}:9100`];
   const memory = Number.isFinite(usedMem) && Number.isFinite(totalMem) ? `${humanizeBinaryBytes(usedMem).string} / ${humanizeBinaryBytes(totalMem).string}` : '-';
   const cores = metrics?.cpu?.[`${nodeAddress}:9100`];
-  const usedStrg = metrics?.usedStorage?.[`${nodeAddress}:9100`];
-  const totalStrg = metrics?.totalStorage?.[`${nodeAddress}:9100`];
-  const storage = Number.isFinite(usedStrg) && Number.isFinite(totalStrg) ? `${humanizeBinaryBytes(usedStrg).string} / ${humanizeBinaryBytes(totalStrg).string}` : '-';
   const pods = metrics?.pods?.[nodeName] ?? '-';
   return (
     <TableRow id={nodeUID} index={index} trKey={rowKey} style={style}>
@@ -113,11 +104,10 @@ const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProp
       <TableData className={tableColumnClasses[3]}>{pods}</TableData>
       <TableData className={tableColumnClasses[4]}>{memory}</TableData>
       <TableData className={tableColumnClasses[5]}>{cores ? `${formatCores(cores)} cores` : '-'}</TableData>
-      <TableData className={tableColumnClasses[6]}>{storage}</TableData>
-      <TableData className={tableColumnClasses[7]}>
+      <TableData className={tableColumnClasses[6]}>
         <Timestamp timestamp={node.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[8]}>
+      <TableData className={tableColumnClasses[7]}>
         <ResourceKebab actions={menuActions} kind={referenceForModel(NodeModel)} resource={node} />
       </TableData>
     </TableRow>
@@ -182,10 +172,6 @@ const fetchNodeMetrics = (): Promise<NodeMetrics> => {
     {
       key: 'usedStorage',
       query: '(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"})',
-    },
-    {
-      key: 'totalStorage',
-      query: 'node_filesystem_size_bytes{mountpoint="/"}',
     },
     {
       key: 'cpu',
