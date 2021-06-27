@@ -13,7 +13,7 @@ import {
 } from '@console/plugin-sdk';
 import { referenceForModel } from '@console/internal/module/k8s';
 import { FLAGS } from '@console/shared/src/constants';
-import { normalizeClusterServiceVersions } from './dev-catalog';
+// import { normalizeClusterServiceVersions } from './dev-catalog';
 import * as models from './models';
 import { Flags } from './const';
 import { getClusterServiceVersionsWithStatuses } from './components/dashboard/utils';
@@ -46,14 +46,14 @@ const plugin: Plugin<ConsumedExtensions> = [
       flag: Flags.OPERATOR_LIFECYCLE_MANAGER,
     },
   },
-  {
-    type: 'DevCatalogModel',
-    properties: {
-      model: models.ClusterServiceVersionModel,
-      flag: Flags.OPERATOR_LIFECYCLE_MANAGER,
-      normalize: normalizeClusterServiceVersions,
-    },
-  },
+  // {
+  //   type: 'DevCatalogModel',
+  //   properties: {
+  //     model: models.ClusterServiceVersionModel,
+  //     flag: Flags.OPERATOR_LIFECYCLE_MANAGER,
+  //     normalize: normalizeClusterServiceVersions,
+  //   },
+  // },
   // {
   //   type: 'NavItem/Href',
   //   properties: {
