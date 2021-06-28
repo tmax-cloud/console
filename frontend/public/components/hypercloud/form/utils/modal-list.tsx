@@ -18,9 +18,7 @@ export const ModalList = props => {
                   id={`item-modify-${id}-${index}`}
                   onClick={e => {
                     let target = document.getElementById(`item-modify-${id}-${index}`).closest('li');
-                    console.log(target);
                     target.dataset.modify = 'true';
-                    // target['dataset']['modify'] = true;
                     return ModalLauncher({ inProgress: false, path: path, index: index, methods: methods, requiredFields: requiredFields, title: title, id: id, handleMethod: handleMethod, children: children, submitText: '수정' });
                   }}
                 >
