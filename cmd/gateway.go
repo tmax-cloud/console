@@ -33,9 +33,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
 
 	// "github.com/openshift/library-go/pkg/crypto"
+
+	"github.com/gorilla/handlers"
+	"github.com/justinas/alice"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -62,7 +64,7 @@ var serverCmd = &cobra.Command{
 		if err != nil {
 			log.Errorf("error occure when create console.New(cfg) %v \n", err)
 		}
-		staticHandler := staticServer.Gateway()
+		// staticHandler := staticServer.Gateway()
 
 		// Get Default Server
 		defaultServer = viper.Get("SERVER").(*hypercloud.HttpServer)
@@ -73,7 +75,8 @@ var serverCmd = &cobra.Command{
 		pvd.Filename = dir + "/configs/dynamic-config.yaml"
 		routinesPool := safe.NewPool(context.Background())
 		watcher := pServer.NewWatcher(pvd, routinesPool)
-		watcher.AddListener(switchRouter(staticHandler, defaultServer))
+		// watcher.AddListener(switchRouter(staticServer, staticHandler, defaultServer))
+		watcher.AddListener(switchRouter(staticServer, defaultServer))
 		watcher.Start()
 	},
 }
@@ -82,7 +85,8 @@ func init() {
 }
 
 // Create Router when changing proxy config
-func switchRouter(defaultHandler http.Handler, proxySrv *pServer.HttpServer) func(config dynamic.Configuration) {
+// func switchRouter(staticServer *console.Console, defaultHandler http.Handler, proxySrv *pServer.HttpServer) func(config dynamic.Configuration) {
+func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServer) func(config dynamic.Configuration) {
 	return func(config dynamic.Configuration) {
 		log.Info("===Starting SwitchRouter====")
 		routerTemp, err := router.NewRouter()
@@ -91,6 +95,10 @@ func switchRouter(defaultHandler http.Handler, proxySrv *pServer.HttpServer) fun
 			// return nil, err
 		}
 		log.Infof("buildHandler : %v  \n", config.Routers)
+		c := staticServer
+		standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders, handlers.ProxyHeaders)
+		tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
+
 		for name, value := range config.Routers {
 			log.Infof("Create Hypercloud proxy based on %v: %v \n", name, value)
 			backURL, err := url.Parse(value.Server)
@@ -106,27 +114,38 @@ func switchRouter(defaultHandler http.Handler, proxySrv *pServer.HttpServer) fun
 				Endpoint:        backURL,
 			}
 			dhproxy := proxy.NewProxy(dhconfig)
-			err = routerTemp.AddRoute(value.Rule, 0, http.StripPrefix(value.Path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				token := r.Header.Clone().Get("Authorization")
-				temp := strings.Split(token, "Bearer ")
-				if len(temp) > 1 {
-					token = temp[1]
-				} else {
-					token = temp[0]
-				}
-				// NOTE: query에 token 정보가 있을 시 해당 token으로 설정
-				queryToken := r.URL.Query().Get("token")
-				if queryToken != "" && token == "" {
-					r.URL.Query().Del("token")
-					token = queryToken
-				}
-				r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+
+			err = routerTemp.AddRoute(value.Rule, 0, http.StripPrefix(value.Path, tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+				r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 				dhproxy.ServeHTTP(w, r)
 			})))
+
+			// err = routerTemp.AddRoute(value.Rule, 0, http.StripPrefix(value.Path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// 	tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+			// 		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+			// 		dhproxy.ServeHTTP(w, r)
+			// 	})
+			// 	// token := r.Header.Clone().Get("Authorization")
+			// 	// temp := strings.Split(token, "Bearer ")
+			// 	// if len(temp) > 1 {
+			// 	// 	token = temp[1]
+			// 	// } else {
+			// 	// 	token = temp[0]
+			// 	// }
+			// 	// // NOTE: query에 token 정보가 있을 시 해당 token으로 설정
+			// 	// queryToken := r.URL.Query().Get("token")
+			// 	// if queryToken != "" && token == "" {
+			// 	// 	r.URL.Query().Del("token")
+			// 	// 	token = queryToken
+			// 	// }
+			// 	// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+			// 	// dhproxy.ServeHTTP(w, r)
+			// })))
 			if err != nil {
 				log.Error("failed to put proxy handler into Router", err)
 			}
 		}
+
 		err = routerTemp.AddRoute("PathPrefix(`/api/console/dynamic`)", 0, http.HandlerFunc(
 			func(rw http.ResponseWriter, r *http.Request) {
 				rw.Header().Set("Content-Type", "application/json")
@@ -138,10 +157,10 @@ func switchRouter(defaultHandler http.Handler, proxySrv *pServer.HttpServer) fun
 			},
 		))
 		if err != nil {
-			log.Error("/api/k8sAll/ has a problem", err)
+			log.Error("/api/console/dynamic has a problem", err)
 		}
 
-		err = routerTemp.AddRoute("PathPrefix(`/`)", 0, defaultHandler)
+		err = routerTemp.AddRoute("PathPrefix(`/`)", 0, staticServer.Gateway())
 		if err != nil {
 			log.Error("failed to put hypercloud proxy", err)
 			// return nil, err
@@ -151,11 +170,11 @@ func switchRouter(defaultHandler http.Handler, proxySrv *pServer.HttpServer) fun
 		log.Info("Call updateHandler --> routerTemp.Router")
 		// olderSrv:=proxySrv.Handler.Switcher.GetHandler()
 
-		if proxySrv.Switcher.GetHandler() == nil {
-			proxySrv.Switcher.UpdateHandler(http.NotFoundHandler())
+		if defaultServer.Switcher.GetHandler() == nil {
+			defaultServer.Switcher.UpdateHandler(http.NotFoundHandler())
 		}
-
-		proxySrv.Switcher.UpdateHandler(routerTemp)
+		defaultServer.Switcher.UpdateHandler(standardMiddleware.Then(routerTemp))
+		// defaultServer.Switcher.UpdateHandler(routerTemp)
 
 	}
 }

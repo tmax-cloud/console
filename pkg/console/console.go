@@ -104,9 +104,9 @@ func New(cfg *v1.Config) (*Console, error) {
 
 // Gateway is API gateway like reverse proxy server related in k8s, Prometheus, Grafana, and hypercloud-operator
 func (c *Console) Gateway() http.Handler {
-	standardMiddleware := alice.New(c.recoverPanic, c.logRequest, secureHeaders, handlers.ProxyHeaders)
+	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.JwtHandler, handlers.ProxyHeaders)
 	// tokenMiddleware := alice.New(c.jwtHandler, c.tokenHandler) // jwt validation handler + token handler
-	tokenMiddleware := alice.New(c.tokenHandler) // select token depending on release-mode
+	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
 
 	handle := func(path string, handler http.Handler) {
@@ -297,7 +297,7 @@ func (c *Console) Gateway() http.Handler {
 
 // Server is server only serving static asset & jsconfig
 func (c *Console) Server() http.Handler {
-	standardMiddleware := alice.New(c.recoverPanic, c.logRequest, secureHeaders, handlers.ProxyHeaders)
+	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders, handlers.ProxyHeaders)
 	r := mux.NewRouter()
 	staticHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/"), http.FileServer(http.Dir(c.PublicDir)))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/")).Handler(gzipHandler(staticHandler))
