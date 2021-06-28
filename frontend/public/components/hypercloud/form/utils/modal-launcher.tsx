@@ -31,18 +31,10 @@ export const _ModalLauncher = props => {
     });
   });
   const optionalValidFields = optionalRequiredField?.map(cur => {
-    let defaultValue;
-    if (cur === 'default') {
-      if (validFields[1] === 'array') {
-        defaultValue = '';
-      } else {
-        defaultValue = '';
-      }
-    }
     return useWatch({
       control: methods.control,
       name: cur,
-      defaultValue: defaultValue,
+      defaultValue: '',
     });
   });
   React.useEffect(() => {

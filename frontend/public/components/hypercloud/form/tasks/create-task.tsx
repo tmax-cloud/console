@@ -66,12 +66,12 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
         paramDefaultValues = paramDefaultValues.map(item => {
           if (item.type === 'array') {
             return _.assign(item, {
-              default: item.default?.map(cur => {
+              defaultArr: item.default?.map(cur => {
                 return { value: cur };
               }),
             });
           } else {
-            return _.assign(item, { default: item.default });
+            return _.assign(item, { defaultStr: item.default });
           }
         });
         setTaskParameter(paramDefaultValues);
@@ -80,14 +80,11 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
         let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
         workSpaceDefaultValues = workSpaceDefaultValues.map(item => {
           if (typeof workSpaceDefaultValues.readOnly != 'undefined') {
-            // 여기서 부터 다시...
-            if (item.readOnly) {
-              item.accessMode = 'readOnly';
-            } else {
-              item.accessMode = 'readWrite';
-            }
-            delete item.readOnly;
+            item.accessMode = 'readOnly';
+          } else {
+            item.accessMode = 'readWrite';
           }
+          delete item.readOnly;
           return item;
         });
         setWorkSpace(workSpaceDefaultValues);
@@ -147,14 +144,15 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   // 각 모달에서 다루는 data들
   let inputResourceArr = ['name', 'targetPath', 'type', 'optional'];
   let outputResourceArr = ['name', 'targetPath', 'type', 'optional'];
-  let taskParameterArr = ['name', 'description', 'type', 'default'];
+  let taskParameterArr = ['name', 'description', 'type', 'defaultStr', 'defaultArr'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
   let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath'];
 
   const paramValidCallback = additionalConditions => {
-    let target = additionalConditions[0];
-    if (typeof target === 'string') {
+    let type = additionalConditions[0] ? 'array' : 'string';
+    let target = type === 'string' ? additionalConditions[1] : additionalConditions[0];
+    if (type === 'string') {
       return target.trim().length > 0;
     } else {
       return target ? target.length > 0 : false;
@@ -211,7 +209,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
           </span>
         </>
       </Section>
-      <Section label="태스크 파라미터 구성" id="taskParamter">
+      <Section label="태스크 파라미터 구성" id="taskParameter">
         <>
           <ModalList
             list={taskParameter}
@@ -227,7 +225,9 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
           ></ModalList>
           <span
             className="open-modal_text"
-            onClick={() => ModalLauncher({ inProgress: false, path: 'spec.params', methods: methods, requiredFields: ['name', 'type'], optionalRequiredField: ['default'], optionalValidCallback: paramValidCallback, title: '태스크 파라미터', id: 'task-parameter', handleMethod: handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, true, methods), children: <TaskParameterModal methods={methods} taskParameter={taskParameter} />, submitText: '추가' })}
+            onClick={() =>
+              ModalLauncher({ inProgress: false, path: 'spec.params', methods: methods, requiredFields: ['name', 'type'], optionalRequiredField: ['defaultArr', 'defaultStr'], optionalValidCallback: paramValidCallback, title: '태스크 파라미터', id: 'task-parameter', handleMethod: handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, true, methods), children: <TaskParameterModal methods={methods} taskParameter={taskParameter} />, submitText: '추가' })
+            }
           >
             + 태스크 파라미터 추가
           </span>
@@ -268,7 +268,14 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ match: { params }, obj, 
 };
 
 export const onSubmitCallback = data => {
-  let labels = SelectorInput.objectify(data.metadata.labels);
+  let labels = {};
+  if (_.isArray(data.metadata.labels)) {
+    data.metadata.labels.forEach(cur => {
+      labels = typeof cur === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+    });
+  } else {
+    labels = typeof data.metadata.labels === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+  }
   delete data.metadata.labels;
   data = _.defaultsDeep({ metadata: { labels: labels } }, data);
   // apiVersion, kind
@@ -277,10 +284,12 @@ export const onSubmitCallback = data => {
   //parameter
   data.spec.params = data?.spec?.params?.map((cur, idx) => {
     if (cur.type === 'string') {
-      data.spec.params[idx].default = data.spec.params[idx].default[0];
+      data.spec.params[idx].default = data.spec.params[idx].defaultStr;
     } else {
-      data.spec.params[idx].default = cur.default.map(cur => cur.value);
+      data.spec.params[idx].default = cur.defaultArr.map(cur => cur.value);
     }
+    delete data.spec.params[idx].defaultStr;
+    delete data.spec.params[idx].defaultArr;
     return cur;
   });
   // workspace
