@@ -322,7 +322,20 @@ const getActiveFilters = (keywordFilter, groupFilters, activeFilters, categoryFi
                     },
                   };
                 } else {
-                  _.assign(activeFilters[filterGroup], lastFilters[filterGroup]);
+                  // MEMO : DevCatalog filter항목을 제거했을 때에도 localStorage에 제거한 항목에 대한 데이터가 남아있으면 filter선택란에 제거한 항목이 다시 살아나는 경우가 있어서,
+                  // MEMO : localStorage에 있어도 실제 필터항목에 없으면 가져오지 않도록 수정함.
+                  const lastFilter = lastFilters[filterGroup];
+
+                  if (typeof lastFilter === 'object') {
+                    Object.keys(lastFilter).forEach(key => {
+                      if (_.has(activeFilters[filterGroup], key)) {
+                        activeFilters[filterGroup][key] = _.cloneDeep(lastFilter[key]);
+                      }
+                    });
+                  }
+
+                  // MEMO : 무조건 localStorage에 있는 필터설정값으로 현재 필터를 설정해줬던 원래 코드
+                  // _.assign(activeFilters[filterGroup], lastFilters[filterGroup]);
                 }
               }
             }
