@@ -3,7 +3,7 @@
 set -exuo pipefail
 
 myIP=$(hostname -I | awk '{print $1}')
-
+# myIP=$(ipconfig getifaddr en0)
 # Default K8S Endpoint is public POC environment 
 # k8sIP='220.90.208.100'
 # k8sIP='172.22.6.2'
@@ -35,6 +35,7 @@ KUBEFLOW_IP='192.168.9.141'
 ./bin/console gateway \
     --listen=https://$myIP:9000 \
     --base-address=https://$myIP:9000 \
+    --dynamic-file=./configs/dynamic-config.yaml \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
     --redirect-port=8080 \
