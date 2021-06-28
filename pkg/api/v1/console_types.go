@@ -69,4 +69,5 @@ type AppInfo struct {
 	McMode      bool   `yaml:"mcMode,omitempty"`
 	ReleaseMode bool   `yaml:"releaseMode,omitempty"`
 	PublicDir   string `yaml:"publicDir,omitempty"`
+	DynamicFile string `yaml:"dynamicFile,omitempty"`
 }

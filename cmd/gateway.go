@@ -71,8 +71,9 @@ var serverCmd = &cobra.Command{
 
 		var pvd = new(file.Provider)
 		pvd.Watch = true
-		dir, _ := os.Getwd()
-		pvd.Filename = dir + "/configs/dynamic-config.yaml"
+		// dir, _ := os.Getwd()
+		// pvd.Filename = dir + "/configs/dynamic-config.yaml"
+		pvd.Filename = cfg.DynamicFile
 		routinesPool := safe.NewPool(context.Background())
 		watcher := pServer.NewWatcher(pvd, routinesPool)
 		// watcher.AddListener(switchRouter(staticServer, staticHandler, defaultServer))
