@@ -100,7 +100,7 @@ const ImageReplicateTableRow: RowFunction<K8sResourceKind> = ({ obj: imagereplic
       <TableData className={tableColumnClasses[5]}>{imagereplicate.spec.toImage.registryType}</TableData>
       {/* 타겟 레지스트리 (네임스페이스/이름) */}
       <TableData className={tableColumnClasses[6]}>
-        <ResourceLink kind={imagereplicate.spec.fromImage.registryType === 'HpcdRegistry' ? RegistryModel.kind : ExternalRegistryModel.kind} name={imagereplicate.spec.toImage.registryName} displayName={TO_NAMESPACE_NAME} namespace={imagereplicate.spec.toImage.registryNamespace} />
+        <ResourceLink kind={imagereplicate.spec.toImage.registryType === 'HpcdRegistry' ? RegistryModel.kind : ExternalRegistryModel.kind} name={imagereplicate.spec.toImage.registryName} displayName={TO_NAMESPACE_NAME} namespace={imagereplicate.spec.toImage.registryNamespace} />
       </TableData>
       <TableData className={tableColumnClasses[7]}>
         <Timestamp timestamp={imagereplicate.metadata.creationTimestamp} />
