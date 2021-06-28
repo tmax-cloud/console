@@ -144,7 +144,7 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
         <div className="hc-invite-modal__member-item" key="list-member">
           <div key="list-member-name" style={{ color: '#151515' }}>
             {type === 'group' && <UsersIcon className="hc-member__group-icon" />}
-            {props.data.name || 'Unknown'}
+            {props.data.name || props.data.email?.split('@')[0]}
           </div>
           <div key="list-member-email" style={{ color: '#6A6E73' }}>
             {props.data.email}
@@ -255,7 +255,7 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
                     <div className="hc-invite-modal__selectedMember">
                       <span key="member_name" className="hc-invite-modal__selectedMember__name" style={{ color: '#151515' }}>
                         {type === 'group' && <UsersIcon className="hc-member__group-icon" />}
-                        {selectedMember.name || 'Unknown'}
+                        {selectedMember.name || selectedMember.email?.split('@')[0]}
                         <TimesIcon onClick={clearSelection} className="hc-member__close-icon" />
                       </span>
                       <span key="member_email" className="hc-invite-modal__selectedMember__email" style={{ color: '#6A6E73' }}>
