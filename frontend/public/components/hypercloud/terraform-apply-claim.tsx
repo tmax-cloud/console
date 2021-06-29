@@ -19,8 +19,6 @@ import './terraform-apply-claim.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), Kebab.factory.ModifyStatus, ...Kebab.factory.common];
-
 const kind = TFApplyClaimModel.kind;
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), Kebab.columnClass];
 
@@ -39,7 +37,7 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('저장소'),
+      title: 'Git URL',
       sortField: 'spec.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
@@ -71,6 +69,14 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
 };
 
 const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim, index, key, style }) => {
+  let menuActions: KebabAction[];
+  const unmodifiableStatus = new Set(['Destroyed']);
+  const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
+  if (isUnmodifiable(tfapplyclaim?.status?.status)) {
+    menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  } else {
+    menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+  }
   return (
     <TableRow id={tfapplyclaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -259,37 +265,49 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   );
 });
 
-export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => (
-  <DetailsPage
-    {...props}
-    kind={kind}
-    menuActions={menuActions}
-    pages={[
-      details(detailsPage(TFApplyClaimDetails)),
-      {
-        href: 'plan',
-        name: '플랜',
-        component: TFPlanLogs,
-      },
-      {
-        href: 'apply',
-        name: '어플라이',
-        component: TFApplyLogs,
-      },
-      {
-        href: 'destroy',
-        name: '디스트로이',
-        component: TFDestroyLogs,
-      },
-      {
-        href: 'state',
-        name: '상태',
-        component: TFStatusLogs,
-      },
-      editResource(),
-    ]}
-  />
-);
+export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => {
+  let menuActions: KebabAction[];
+  const [status, setStatus] = React.useState();
+  const unmodifiableStatus = new Set(['Destroyed']);
+  const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
+  if (isUnmodifiable(status)) {
+    menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  } else {
+    menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+  }
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      menuActions={menuActions}
+      setStatus4MenuActions={setStatus}
+      pages={[
+        details(detailsPage(TFApplyClaimDetails)),
+        {
+          href: 'plan',
+          name: '플랜',
+          component: TFPlanLogs,
+        },
+        {
+          href: 'apply',
+          name: '어플라이',
+          component: TFApplyLogs,
+        },
+        {
+          href: 'destroy',
+          name: '디스트로이',
+          component: TFDestroyLogs,
+        },
+        {
+          href: 'state',
+          name: '상태',
+          component: TFStatusLogs,
+        },
+        editResource(),
+      ]}
+    />
+  );
+};
 
 type TFApplyClaimDetailsListProps = {
   ds: K8sResourceKind;
