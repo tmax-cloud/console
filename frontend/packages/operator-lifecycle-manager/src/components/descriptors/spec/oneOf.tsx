@@ -9,7 +9,11 @@ export const OneOfFields: React.FC<OneOfFieldsProps> = props => {
   let items = {};
   const defaultValue = schema.oneOf[0]?.['title'];
   schema.oneOf.forEach(cur => {
-    items[cur['title']] = _.startCase(cur['type']);
+    if (typeof cur['type'] === 'string') {
+      items[cur['title']] = _.startCase(cur['type']);
+    } else {
+      items[cur['title']] = _.startCase(cur['type'][0]);
+    }
     // description 추가한다고 하면 items안에 객체형식으로 해야할듯
   });
 
