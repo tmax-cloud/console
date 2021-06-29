@@ -85,7 +85,7 @@ const BaseStatusModal = withTranslation()(
             'status',
             [
               { op: 'replace', path: '/status/action', value: stat },
-              { op: 'replace', path: '/status/reason', value: this.state.reason },
+              // { op: 'replace', path: '/status/reason', value: this.state.reason },
             ],
             'PATCH',
           );
