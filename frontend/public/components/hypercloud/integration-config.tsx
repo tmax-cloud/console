@@ -62,7 +62,7 @@ const IntegrationConfigTableHeader = (t?: TFunction) => {
     },    
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortField: 'status.phase',
+      sortFunc: 'phase',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },

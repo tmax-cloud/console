@@ -50,13 +50,13 @@ const PipelineRunTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortField: 'status.conditions[0].reason',
+      sortFunc: 'pipelineRunFilterReducer',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_78'),
-      sortField: 'status.conditions[0].reason',
+      sortFunc: 'LinkedPipelineRunTaskStatus',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
@@ -68,7 +68,7 @@ const PipelineRunTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_81'),
-      sortField: 'status.completionTime',
+      sortFunc: 'pipelineRunDuration',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
     },
