@@ -13,6 +13,7 @@ import { getId, getUserGroup } from '../../../hypercloud/auth';
 type clusterItemProps = {
   displayName: string;
   name: string;
+  namespace: string;
 };
 
 type StateProps = {
@@ -36,9 +37,10 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
   const onClusterSelect = React.useCallback(
     (event: React.MouseEvent<HTMLLinkElement>, cluster): void => {
       event.preventDefault();
+      const clusterName = `${cluster.namespace}/${cluster.name}`;
 
-      if (cluster.name !== activeCluster) {
-        setActiveCluster(cluster.name);
+      if (clusterName !== activeCluster) {
+        setActiveCluster(clusterName);
         window.location.reload();
         // TODO: rerendering 고도화...
       }
@@ -50,27 +52,30 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
   );
 
   const renderClusterToggle = React.useCallback(
-    (name: string) =>
-      loaded ? (
+    (name: string) => {
+      const isClusterExists = !!name && clusters.find(cl => `${cl.namespace}/${cl.name}` === name);
+      return loaded ? (
         <DropdownToggle isOpen={isClusterDropdownOpen} onToggle={toggleClusterOpen} iconComponent={CaretDownIcon} data-test-id="perspective-switcher-toggle">
-          <Title size="md">{name ? clusters.find(cl => cl.name === name)?.displayName ?? name : 'undefined'}</Title>
+          <Title size="md">{isClusterExists ? name : 'undefined'}</Title>
         </DropdownToggle>
       ) : (
         <LoadingInline />
-      ),
+      );
+    },
     [isClusterDropdownOpen, toggleClusterOpen, clusters, loaded],
   );
 
   const getClusterItems = React.useCallback(
     clusters => {
       let clusterItmes = [];
-      clusters.forEach(nextCluster =>
+      clusters.forEach(nextCluster => {
+        const clusterName = `${nextCluster.namespace}/${nextCluster.name}`;
         clusterItmes.push(
-          <DropdownItem key={nextCluster.name} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onClusterSelect(event, nextCluster)} isHovered={nextCluster.name === activeCluster} component="button">
-            <Title size="md">{nextCluster.displayName}</Title>
+          <DropdownItem key={nextCluster.name} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onClusterSelect(event, nextCluster)} isHovered={clusterName === activeCluster} component="button">
+            <Title size="md">{clusterName}</Title>
           </DropdownItem>,
-        ),
-      );
+        );
+      });
       return clusterItmes;
     },
     [activeCluster, onClusterSelect],
@@ -84,17 +89,17 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
         .then(res => {
           const clusterList: clusterItemProps[] = res.reduce((list, cluster) => {
             if (cluster.status.ready) {
-              list.push({ displayName: cluster.metadata.name, name: cluster.metadata.name });
+              list.push({ displayName: cluster.metadata.name, name: cluster.metadata.name, namespace: cluster.metadata.namespace });
             }
             return list;
           }, []);
 
           setClusters(clusterList);
 
-          const hasCluster = activeCluster && clusterList.find(cl => cl.name === activeCluster);
+          const hasCluster = activeCluster && clusterList.find(cl => `${cl.namespace}/${cl.name}` === activeCluster);
 
           if (!hasCluster) {
-            setActiveCluster(clusterList[0]?.name);
+            setActiveCluster(`${clusterList[0]?.namespace}/${clusterList[0]?.name}`);
           }
 
           setLoaded(true);

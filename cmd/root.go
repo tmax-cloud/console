@@ -99,6 +99,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&cfg.McMode, "mc-mode", true, "Choose Cluster Mode (multi | single)")
 	rootCmd.PersistentFlags().BoolVar(&cfg.ReleaseMode, "release-mode", true, "when true, use jwt token given by keycloak")
 	rootCmd.PersistentFlags().StringVar(&cfg.PublicDir, "public-dir", "./frontend/public/dist", "listen Address")
+	rootCmd.PersistentFlags().StringVar(&cfg.DynamicFile, "dynamic-file", "./configs/dynamic-config.yaml", "dynamic config file (default is ./configs/dynamic-config.yaml")
 
 	err := viper.BindPFlags(rootCmd.Flags())
 	if err != nil {

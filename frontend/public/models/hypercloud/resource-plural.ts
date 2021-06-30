@@ -186,6 +186,10 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_52',
     label: 'COMMON:MSG_LNB_MENU_141',
   },
+  TrainingJob: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_68',
+    label: 'COMMON:MSG_LNB_MENU_152',
+  },
   Task: {
     labelPlural: 'COMMON:MSG_LNB_MENU_57',
     label: 'COMMON:MSG_LNB_MENU_144',

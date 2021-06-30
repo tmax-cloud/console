@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (c *Console) jwtHandler(next http.Handler) http.Handler {
+func (c *Console) JwtHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// c.KeycloakAuthURL
 		// c.KeycloakRealm
@@ -19,7 +19,7 @@ func (c *Console) jwtHandler(next http.Handler) http.Handler {
 	})
 }
 
-func (c *Console) tokenHandler(next http.Handler) http.Handler {
+func (c *Console) TokenHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if c.ReleaseModeFlag {
 			token := r.Header.Clone().Get("Authorization")
@@ -42,7 +42,7 @@ func (c *Console) tokenHandler(next http.Handler) http.Handler {
 	})
 }
 
-func secureHeaders(next http.Handler) http.Handler {
+func (c *Console) SecureHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Prevent MIME sniffing (https://en.wikipedia.org/wiki/Content_sniffing)
 		w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -60,14 +60,14 @@ func secureHeaders(next http.Handler) http.Handler {
 	})
 }
 
-func (c *Console) logRequest(next http.Handler) http.Handler {
+func (c *Console) LogRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Infof("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 		next.ServeHTTP(w, r)
 	})
 }
 
-func (c *Console) recoverPanic(next http.Handler) http.Handler {
+func (c *Console) RecoverPanic(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {

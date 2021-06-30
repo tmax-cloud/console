@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { connect } from 'react-redux';
 import { Map as ImmutableMap } from 'immutable';
-import { useExtensions, DashboardsOverviewHealthSubsystem, DashboardsOverviewHealthPrometheusSubsystem, isDashboardsOverviewHealthSubsystem, isDashboardsOverviewHealthURLSubsystem, DashboardsOverviewHealthURLSubsystem, isDashboardsOverviewHealthPrometheusSubsystem, isDashboardsOverviewHealthResourceSubsystem, isDashboardsOverviewHealthOperator } from '@console/plugin-sdk';
+import { useExtensions, DashboardsOverviewHealthSubsystem, DashboardsOverviewHealthPrometheusSubsystem, isDashboardsOverviewHealthSubsystem, isDashboardsOverviewHealthURLSubsystem, DashboardsOverviewHealthURLSubsystem, isDashboardsOverviewHealthPrometheusSubsystem, isDashboardsOverviewHealthResourceSubsystem } from '@console/plugin-sdk';
 import { Gallery, GalleryItem } from '@patternfly/react-core';
 import { getInfrastructurePlatform } from '@console/shared';
 import DashboardCard from '@console/shared/src/components/dashboard/dashboard-card/DashboardCard';
@@ -12,7 +12,7 @@ import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboa
 import HealthBody from '@console/shared/src/components/dashboard/status-card/HealthBody';
 import { K8sKind } from '../../../../module/k8s';
 import { RootState } from '../../../../redux';
-import { OperatorHealthItem, PrometheusHealthItem, URLHealthItem, ResourceHealthItem } from './health-item';
+import { PrometheusHealthItem, URLHealthItem, ResourceHealthItem } from './health-item';
 import { ClusterDashboardContext } from './context';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +35,7 @@ export const StatusCard = connect<StatusCardProps>(mapStateToProps)(({ k8sModels
 
   const subsystems = React.useMemo(() => filterSubsystems(subsystemExtensions, k8sModels), [subsystemExtensions, k8sModels]);
 
-  const operatorSubsystemIndex = React.useMemo(() => subsystems.findIndex(isDashboardsOverviewHealthOperator), [subsystems]);
+  // const operatorSubsystemIndex = React.useMemo(() => subsystems.findIndex(isDashboardsOverviewHealthOperator), [subsystems]);
   const { infrastructure, infrastructureLoaded } = React.useContext(ClusterDashboardContext);
 
   const healthItems: { title: string; Component: React.ReactNode }[] = [];
@@ -62,13 +62,15 @@ export const StatusCard = connect<StatusCardProps>(mapStateToProps)(({ k8sModels
       });
     }
   });
-  if (operatorSubsystemIndex !== -1) {
-    const operatorSubsystems = subsystems.filter(isDashboardsOverviewHealthOperator);
-    healthItems.splice(operatorSubsystemIndex, 0, {
-      title: t('SINGLE:MSG_OVERVIEW_MAIN_CARDSTATUS_OPERATORS_1'),
-      Component: <OperatorHealthItem operatorExtensions={operatorSubsystems} />,
-    });
-  }
+
+  // MEMO : Dashboard 상태에서 오퍼레이터부분 제거
+  // if (operatorSubsystemIndex !== -1) {
+  //   const operatorSubsystems = subsystems.filter(isDashboardsOverviewHealthOperator);
+  //   healthItems.splice(operatorSubsystemIndex, 0, {
+  //     title: t('SINGLE:MSG_OVERVIEW_MAIN_CARDSTATUS_OPERATORS_1'),
+  //     Component: <OperatorHealthItem operatorExtensions={operatorSubsystems} />,
+  //   });
+  // }
 
   return (
     <DashboardCard gradient data-test-id="status-card">
