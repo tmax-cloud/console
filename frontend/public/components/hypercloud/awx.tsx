@@ -8,6 +8,7 @@ import { awxStatusReducer } from '../factory/table-filters';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { Status } from '@console/shared';
 import { AWXModel } from '../../models';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
@@ -98,13 +99,13 @@ export const AWXDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
   const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={awx}>
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
         <Status status={awxStatusReducer(awx)} />
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_4')} obj={awx} path="spec.tower_hostname">
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
         <a href={awx.spec?.tower_hostname}>{awx.spec?.tower_hostname || '-'}</a>
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_38')} obj={awx}>
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
         <ImageSummary obj={awx} />
       </DetailsItem>
     </dl>
@@ -116,7 +117,7 @@ const AWXDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: 'AWX 인스턴스' })} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(awx, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={awx} showOwner={false} />
@@ -152,7 +153,7 @@ const filters = (t) => [
 
 export const AWXsPage: React.FC = (props) => {
   const { t } = useTranslation();
-  return <ListPage title={t('AWX 인스턴스')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('AWX 인스턴스') })} canCreate={true} ListComponent={AWXs} kind={kind} rowFilters={filters.bind(null, t)()} {...props} />
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_199')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_199') })} canCreate={true} ListComponent={AWXs} kind={kind} rowFilters={filters.bind(null, t)()} {...props} />
 };
 
 export const AWXsDetailsPage: React.FC<DetailsPageProps> = (props) => <DetailsPage {...props} kind={kind} menuActions={menuActions} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editYaml()]} />;

@@ -51,8 +51,8 @@ const MulticlusterNav = () => (
             <ResourceClusterLink resource="federatednamespaces" name={t('COMMON:MSG_LNB_MENU_3')} />
           </NavGroup>
         </NavSection>
-        <NavSection title={t('앤서블')}>
-          <ResourceNSLink resource="awxs" name={t('AWX 인스턴스')} />
+        <NavSection title={t('COMMON:MSG_LNB_MENU_197')}>
+          <ResourceNSLink resource="awxs" name={t('COMMON:MSG_LNB_MENU_199')} />
         </NavSection>
         {/* <NavSection title="Image">
       <ResourceClusterLink resource="federatedregistries" name="Registry" />

@@ -315,7 +315,7 @@ export const ResourceStringKeyMap = {
     label: 'COMMON:MSG_LNB_MENU_160',
   },
   AWX: {
-    labelPlural: 'AWX Instances',
-    label: 'AWX Instance',
+    labelPlural: 'COMMON:MSG_LNB_MENU_198',
+    label: 'COMMON:MSG_LNB_MENU_199',
   }
 };
