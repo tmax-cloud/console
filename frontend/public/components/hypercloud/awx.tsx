@@ -33,7 +33,7 @@ const AWXTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortField: 'status.conditions[0].reason',
+      sortFunc: 'awxStatusReducer',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
