@@ -902,6 +902,18 @@ export const TFApplyClaimModel: K8sKind = {
   plural: 'tfapplyclaims',
 };
 
+export const HelmReleaseModel: K8sKind = {
+  kind: 'HelmRelease',
+  label: 'Helm Release',
+  labelPlural: 'Helm Release',
+  apiGroup: 'helm.fluxcd.io',
+  apiVersion: 'v1',
+  abbr: 'HR',
+  namespaced: true,
+  id: 'helmrelease',
+  plural: 'helmreleases',
+};
+
 export const AWXModel: K8sKind = {
   kind: 'AWX',
   label: 'AWX Instance',

@@ -50,8 +50,10 @@ export class DropdownMixin extends React.PureComponent {
   }
 
   onClick_(selectedKey, e) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e.target.type !== 'checkbox') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     const { items, actionItems, onChange, noSelection, title, type } = this.props;
 

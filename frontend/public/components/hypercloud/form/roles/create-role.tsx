@@ -95,37 +95,41 @@ const roleFormFactory = (params, obj) => {
 
   if (defaultValues.rules) {
     defaultValues.rules.forEach((rule, ruleIndex) => {
-      rule.apiGroups.forEach((apiGroup, apiGroupIndex) => {
-        let apiGroupKeyValue;
-        if (typeof(apiGroup) === 'string') {
-          if (apiGroup === '') { //"" indicates the core API group    
-            apiGroup = 'Core';
+      if (rule.apiGroups) {
+        rule.apiGroups.forEach((apiGroup, apiGroupIndex) => {
+          let apiGroupKeyValue;
+          if (typeof(apiGroup) === 'string') {
+            if (apiGroup === '') { //"" indicates the core API group    
+              apiGroup = 'Core';
+            }
+            if (apiGroup === '*') {
+              apiGroupKeyValue = { label: 'All', value: '*' };
+            }
+            else if (apiGroup === 'Core') {
+              apiGroupKeyValue = { label: 'Core', value: 'Core' };
+            }
+            else {
+              apiGroupKeyValue = { label: apiGroup, value: apiGroup };
+            }
+            defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
+  
           }
-          if (apiGroup === '*') {
-            apiGroupKeyValue = { label: 'All', value: '*' };
-          }
-          else if (apiGroup === 'Core') {
-            apiGroupKeyValue = { label: 'Core', value: 'Core' };
-          }
-          else {
-            apiGroupKeyValue = { label: apiGroup, value: apiGroup };
-          }
-          defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
+        });
+        rule.resources.forEach((resource, resourceIndex) => {
+          let resourceKeyValue;
+          if (typeof(resource) === 'string') {
+            if (resource === '*') {
+              resourceKeyValue = { label: 'All', value: '*' };
+            }
+            else {
+              resourceKeyValue = { label: resource, value: resource };
+            }
+            defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
+          }                
+        });
 
-        }
-      });
-      rule.resources.forEach((resource, resourceIndex) => {
-        let resourceKeyValue;
-        if (typeof(resource) === 'string') {
-          if (resource === '*') {
-            resourceKeyValue = { label: 'All', value: '*' };
-          }
-          else {
-            resourceKeyValue = { label: resource, value: resource };
-          }
-          defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
-        }                
-      });
+      }
+      
     });
   }
 
@@ -221,7 +225,7 @@ const RuleItem = props => {
         <div className="col-xs-1 pairs-list__action">
           <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
             <MinusCircleIcon className="pairs-list__side-btn pairs-list__delete-icon co-icon-space-r" />
-            <span>규칙 제거</span>
+            <span>{t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_23')}</span>
           </Button>
         </div>
       </div>
@@ -301,7 +305,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText='규칙 추가' headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
+          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
         </Section>
       ) : (
         <LoadingInline />

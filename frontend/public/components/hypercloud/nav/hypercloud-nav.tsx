@@ -61,6 +61,9 @@ const HyperCloudNav = () => (
           <ResourceNSLink resource="serviceaccounts" name={t('COMMON:MSG_LNB_MENU_74')} />
           <ResourceClusterLink resource="podsecuritypolicies" name={t('COMMON:MSG_LNB_MENU_78')} />
         </NavSection>
+        <NavSection title='헬름'>
+          <ResourceNSLink resource="helmreleases" name='헬름 릴리스' />
+        </NavSection>
       </>
     )}
   </Translation>

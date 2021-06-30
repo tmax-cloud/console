@@ -71,6 +71,7 @@ import {
   WorkflowModel,
   WorkflowTemplateModel,
   TFApplyClaimModel,
+  HelmReleaseModel,
   AWXModel,
 } from '../../models';
 
@@ -147,6 +148,7 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesDetailsPage))
   .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesDetailsPage))
   .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsDetailsPage))
+  .set(referenceForModel(HelmReleaseModel), () => import('./helm-release' /* webpackChunkName: "helm-release" */).then(m => m.HelmReleaseDetailsPage))
   .set(referenceForModel(AWXModel), () => import('./awx' /* webpackChunkName: "awx" */).then(m => m.AWXsDetailsPage));
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
@@ -218,4 +220,5 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesPage))
   .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesPage))
   .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsPage))
+  .set(referenceForModel(HelmReleaseModel), () => import('./helm-release' /* webpackChunkName: "helm-release" */).then(m => m.HelmReleasePage))
   .set(referenceForModel(AWXModel), () => import('./awx' /* webpackChunkName: "awx" */).then(m => m.AWXsPage));

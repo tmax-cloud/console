@@ -175,21 +175,21 @@ const getAvailableFilters = (initialFilters): PageFilters => {
     };
   } else {
     filters.kind = {
-      ClusterServiceVersion: {
-        label: 'Operator Backed',
-        value: 'InstalledOperator',
-        active: true,
-      },
-      HelmChart: {
-        label: 'Helm Charts',
-        value: 'HelmChart',
-        active: false,
-      },
-      ImageStream: {
-        label: 'Builder Image',
-        value: 'ImageStream',
-        active: false,
-      },
+      // ClusterServiceVersion: {
+      //   label: 'Operator Backed',
+      //   value: 'InstalledOperator',
+      //   active: true,
+      // },
+      // HelmChart: {
+      //   label: 'Helm Charts',
+      //   value: 'HelmChart',
+      //   active: false,
+      // },
+      // ImageStream: {
+      //   label: 'Builder Image',
+      //   value: 'ImageStream',
+      //   active: false,
+      // },
       Template: {
         label: 'Template',
         value: 'Template',

@@ -41,7 +41,7 @@ const ExternalRegistryTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'Registry Type',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_109'),
       sortField: 'spec.registryType',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },

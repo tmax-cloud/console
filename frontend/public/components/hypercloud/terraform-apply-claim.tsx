@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 
-import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TFApplyClaimModel } from '../../models';
@@ -13,13 +12,52 @@ import { TFunction } from 'i18next';
 import { Popover } from '@patternfly/react-core';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
+import { K8sKind, k8sUpdateApproval, K8sResourceKind } from '@console/internal/module/k8s';
 
 import './terraform-apply-claim.scss';
 
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), Kebab.factory.ModifyStatus, ...Kebab.factory.common];
+export const makeTerraformPlan = (resource: K8sResourceKind, action: string): Promise<K8sResourceKind> => {
+  switch (action) {
+    case 'plan':
+      return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Plan' }], 'PATCH');
+      break;
+    case 'apply':
+      return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH');
+      break;
+  }
+};
+
+export const TerraformPlan: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
+  const { t } = useTranslation();
+  return {
+    label: t('테라폼 플랜'),
+    callback: () => makeTerraformPlan(obj, 'plan'),
+    accessReview: {
+      group: kind.apiGroup,
+      resource: kind.plural,
+      name: obj.metadata.name,
+      namespace: obj.metadata.namespace,
+      verb: 'patch',
+    },
+  };
+};
+export const TerraformApply: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
+  const { t } = useTranslation();
+  return {
+    label: t('테라폼 어플라이'),
+    callback: () => makeTerraformPlan(obj, 'apply'),
+    accessReview: {
+      group: kind.apiGroup,
+      resource: kind.plural,
+      name: obj.metadata.name,
+      namespace: obj.metadata.namespace,
+      verb: 'patch',
+    },
+  };
+};
 
 const kind = TFApplyClaimModel.kind;
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), Kebab.columnClass];
@@ -39,7 +77,7 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('저장소'),
+      title: 'Git URL',
       sortField: 'spec.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
@@ -71,6 +109,17 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
 };
 
 const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim, index, key, style }) => {
+  let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
+  const planableStatus = new Set(['Approved']);
+  const appliable = new Set(['Approved', 'Planned']);
+  const isModifiable = (status: string) => !unmodifiableStatus.has(status);
+  const isPlanable = (status: string) => planableStatus.has(status);
+  const isAppliable = (status: string) => appliable.has(status);
+  // push
+  isModifiable(tfapplyclaim.status.phase) && menuActions.push(Kebab.factory.ModifyStatus);
+  isPlanable(tfapplyclaim.status.phase) && menuActions.push(TerraformPlan);
+  isAppliable(tfapplyclaim.status.phase) && menuActions.push(TerraformApply);
   return (
     <TableRow id={tfapplyclaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -81,7 +130,7 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
       </TableData>
       <TableData className={tableColumnClasses[2]}> {tfapplyclaim.spec?.url}</TableData>
       <TableData className={tableColumnClasses[3]}>
-        {tfapplyclaim?.status?.status === 'Error' ? (
+        {tfapplyclaim?.status?.phase === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{tfapplyclaim.status?.reason}</div>} maxWidth="30rem" position="right">
             <Status status={tfapplyclaim?.status?.phase} />
           </Popover>
@@ -259,37 +308,52 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   );
 });
 
-export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => (
-  <DetailsPage
-    {...props}
-    kind={kind}
-    menuActions={menuActions}
-    pages={[
-      details(detailsPage(TFApplyClaimDetails)),
-      {
-        href: 'plan',
-        name: '플랜',
-        component: TFPlanLogs,
-      },
-      {
-        href: 'apply',
-        name: '어플라이',
-        component: TFApplyLogs,
-      },
-      {
-        href: 'destroy',
-        name: '디스트로이',
-        component: TFDestroyLogs,
-      },
-      {
-        href: 'state',
-        name: '상태',
-        component: TFStatusLogs,
-      },
-      editResource(),
-    ]}
-  />
-);
+export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => {
+  let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  const [status, setStatus] = React.useState();
+  const unmodifiableStatus = new Set(['Destroyed']);
+  const planableStatus = new Set(['Approved']);
+  const appliable = new Set(['Approved', 'Planned']);
+  const isModifiable = (status: string) => !unmodifiableStatus.has(status);
+  const isPlanable = (status: string) => planableStatus.has(status);
+  const isAppliable = (status: string) => appliable.has(status);
+  // push
+  isModifiable(status) && menuActions.push(Kebab.factory.ModifyStatus);
+  isPlanable(status) && menuActions.push(TerraformPlan);
+  isAppliable(status) && menuActions.push(TerraformApply);
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      menuActions={menuActions}
+      setStatus4MenuActions={setStatus}
+      pages={[
+        details(detailsPage(TFApplyClaimDetails)),
+        {
+          href: 'plan',
+          name: '플랜',
+          component: TFPlanLogs,
+        },
+        {
+          href: 'apply',
+          name: '어플라이',
+          component: TFApplyLogs,
+        },
+        {
+          href: 'destroy',
+          name: '디스트로이',
+          component: TFDestroyLogs,
+        },
+        {
+          href: 'state',
+          name: '상태',
+          component: TFStatusLogs,
+        },
+        editResource(),
+      ]}
+    />
+  );
+};
 
 type TFApplyClaimDetailsListProps = {
   ds: K8sResourceKind;
