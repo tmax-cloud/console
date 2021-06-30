@@ -154,9 +154,14 @@ export const tableFilters: TableFilterMap = {
       return filter.selected.has(phase) || filter.selected.size === 0;
     }
   },
-  // Filter Integration Config by Status
+  // Filter Role Binding Claim by Status
   'roleBindingClaim-status': (filter, binding) => {
     return filter.selected.has(binding.status.status) || filter.selected.size === 0;
+  },
+
+  // Filter Helm Release by Phase
+  'helmReleases-status': (filter, binding) => {
+    return filter.selected.has(binding.status?.phase) || filter.selected.size === 0;
   },
 
   selector: (selector, obj) => {

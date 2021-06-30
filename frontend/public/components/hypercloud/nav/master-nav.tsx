@@ -79,6 +79,9 @@ const MasterNav = () => (
           {/* <AuthAdminLink resource={referenceForModel(UserModel)} name="Users" />
           <AuthAdminLink resource={referenceForModel(GroupModel)} name="User Groups" /> */}
         </NavSection>
+        <NavSection title='헬름'>
+          <ResourceNSLink resource="helmreleases" name='헬름 릴리스' />
+        </NavSection>
       </>
     )}
   </Translation>

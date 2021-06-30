@@ -95,6 +95,7 @@ const pluralToKindMap = new Map([
   ['workflowtemplates', 'WorkflowTemplate'],
   ['workflows', 'Workflow'],
   ['tfapplyclaims', 'TFApplyClaim'],
+  ['helmreleases','HelmRelease'],
 ]);
 
 const isCreateManualSet = new Set(['Role', 'ClusterRole', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBinding', 'ClusterRoleBinding', 'RoleBindingClaim']);
