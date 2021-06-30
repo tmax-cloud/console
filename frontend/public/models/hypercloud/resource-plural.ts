@@ -314,4 +314,8 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_78',
     label: 'COMMON:MSG_LNB_MENU_160',
   },
+  AWX: {
+    labelPlural: 'AWX Instances',
+    label: 'AWX Instance',
+  }
 };
