@@ -73,9 +73,9 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option,
   const needTranslate = option?.needTranslate ?? true;
   return (
     <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label}>
-      {option?.icon && (!option?.iconPosition || option?.iconPosition === 'left') && <KebabItemIcon_ icon={option.icon} />}
+      {option.icon && (!option.iconPosition || option.iconPosition === 'left') && <KebabItemIcon_ icon={option.icon} />}
       {needTranslate ? (!!labelSplit[1] ? t(labelSplit[0], { 0: t(labelSplit[1]) }) : t(labelSplit[0])) : option.label}
-      {option?.icon && option?.iconPosition === 'right' && <KebabItemIcon_ icon={option.icon} iconPosition={option.iconPosition} />}
+      {option.icon && option.iconPosition === 'right' && <KebabItemIcon_ icon={option.icon} iconPosition={option.iconPosition} />}
     </button>
   );
 };
@@ -363,7 +363,7 @@ const kebabFactory: KebabFactory = {
       iconPosition: 'right',
       callback: () => {
         if (obj.spec?.tower_hostname) {
-          window.open(obj.spec?.tower_hostname);
+          window.open(obj.spec.tower_hostname);
         }
       },
     };
