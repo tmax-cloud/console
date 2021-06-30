@@ -34,7 +34,7 @@ export const makeTerraformPlan = (resource: K8sResourceKind, action: string): Pr
 export const TerraformPlan: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
   const { t } = useTranslation();
   return {
-    label: t('테라폼 플랜'),
+    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_73'),
     callback: () => makeTerraformPlan(obj, 'plan'),
     accessReview: {
       group: kind.apiGroup,
@@ -48,7 +48,7 @@ export const TerraformPlan: KebabAction = (kind: K8sKind, obj: K8sResourceKind, 
 export const TerraformApply: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
   const { t } = useTranslation();
   return {
-    label: t('테라폼 어플라이'),
+    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_74'),
     callback: () => makeTerraformPlan(obj, 'apply'),
     accessReview: {
       group: kind.apiGroup,
@@ -167,13 +167,13 @@ export const TFApplyClaimDetailsList: React.FC<TFApplyClaimDetailsListProps> = (
       <dd>
         <TFApplyClaimStatus result={ds?.status?.phase} />
       </dd>
-      <dt>{t('테라폼 버전')}</dt>
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_68')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.version}</dd>
-      <dt>{t('저장소 주소')}</dt>
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_69')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>
         <a href={ds.spec?.url}>{ds.spec?.url}</a>
       </dd>
-      <dt>{t('계정 시크릿')}</dt>
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_70')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.secret}</dd>
     </dl>
   );
@@ -257,29 +257,30 @@ export type HCK8sResourceKind = K8sResourceKind & {
 //   );
 // };
 
-const GitInfo = ({ url, branch, commit }) => (
-  <div>
-    <div style={{ display: 'flex' }}>
-      <span>URL:</span>
-      <span>{url}</span>
+const GitInfo = ({ url, branch, commit }) => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <div style={{ display: 'flex' }}>
+        <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_3', { 0: url })}</span>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_4', { 0: branch })}</span>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_5', { 0: commit })}</span>
+      </div>
     </div>
-    <div style={{ display: 'flex' }}>
-      <span>브랜치:</span>
-      <span>{branch}</span>
-    </div>
-    <div style={{ display: 'flex' }}>
-      <span>커밋:</span>
-      <span>{commit}</span>
-    </div>
-  </div>
-);
+  );
+};
 
 const TFApplyLog: React.FC<TFLogsProps> = React.memo(({ obj }) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="tfac-logs__contents__extra-space">
         <div className="tfac-logs__contents__extra-space__key">
-          <span>최근 커밋</span>
+          <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_1')}</span>
         </div>
         <Tooltip content={GitInfo(obj.status)} maxWidth="30rem" position="top">
           <span>{obj.status.commit}</span>
@@ -294,6 +295,7 @@ const TFApplyLog: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 
 const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
   const [selectedItem, setSelectedItem] = React.useState(0);
+  const { t } = useTranslation();
 
   const __setSelectedItem = (i: React.SetStateAction<number>) => {
     return setSelectedItem(i);
@@ -311,7 +313,7 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
     <>
       <div className="tfac-logs__contents__extra-space">
         <div className="tfac-logs__contents__extra-space__key">
-          <span>실행시간</span>
+          <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABPLAN_1')}</span>
         </div>
         {items && <Dropdown items={items} onChange={__setSelectedItem} selectedKey={selectedItem} />}
       </div>
@@ -333,10 +335,11 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   );
 });
 const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
-  let logs = ['Planned', 'Applied', 'Destroied'];
+  const { t } = useTranslation();
+  let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroied: 'MSG_COMMON_STATUS_27' }];
   const [selectedLog, setSelectedLog] = React.useState(obj.status.phase);
   if (obj.status.phase === 'Planned') {
-    logs = ['Planned'];
+    logs = [{ Planned: 'MSG_COMMON_STATUS_25' }];
   }
   const onClickItem = e => {
     let target = e.target.closest('li');
@@ -360,8 +363,8 @@ const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
       <div className="tfac-logs">
         <ul className="tfac-logs__vertical-nav">
           {logs.map(cur => (
-            <li className="tfac-logs__vertical-nav__item" data-item={cur} onClick={onClickItem}>
-              <span className={classNames({ ['tfac-logs__vertical-nav__item__font']: selectedLog === cur })}>{_.startCase(cur)}</span>
+            <li className="tfac-logs__vertical-nav__item" data-item={Object.keys(cur)[0]} onClick={onClickItem}>
+              <span className={classNames({ ['tfac-logs__vertical-nav__item__font']: selectedLog === Object.keys(cur)[0] })}>{t(`COMMON:${Object.values(cur)[0]}`)}</span>
             </li>
           ))}
         </ul>
@@ -394,7 +397,7 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__extra-space">
         <div className="tfac-logs__status__spec">
-          <div className="tfac-logs__status__spec__title">{t('변경 상태 내역')}</div>
+          <div className="tfac-logs__status__spec__title">{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABRESOURCESTATUS_1')}</div>
           <Tooltip content={ResourceStatus(obj.status?.resource)} maxWidth="30rem" position="top">
             <div className="tfac-logs__status__spec__num">
               <span style={{ color: 'green' }}>+{obj.status?.resource?.added || 0}</span>
@@ -412,6 +415,7 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 });
 
 export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => {
+  const { t } = useTranslation();
   let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
   const [status, setStatus] = React.useState();
   const unmodifiableStatus = new Set(['Destroyed']);
@@ -450,12 +454,12 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
         // },
         {
           href: 'logs',
-          name: '로그',
+          name: t('COMMON:MSG_DETAILS_TABLOGS_8'),
           component: TFLogs,
         },
         {
           href: 'state',
-          name: '리소스 상태',
+          name: t('COMMON:MSG_DETAILS_TAB_17'),
           component: TFStatusLogs,
         },
       ]}
