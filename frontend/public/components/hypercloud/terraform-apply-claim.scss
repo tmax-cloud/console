@@ -1,6 +1,50 @@
 .tfac-logs {
   //   margin-left: 30px;
   //   margin-right: 30px;
+  margin-top: 30px;
+  display: flex;
+
+  &__vertical-nav {
+    list-style: none;
+    width: 200px;
+    margin: 0 10px;
+    box-sizing: border-box;
+    padding: 0;
+    background-color: transparent;
+    &__item {
+      height: 30px;
+      font-size: 16pt;
+      margin: 5px 10px;
+      cursor: pointer;
+      &__font {
+        font-weight: bold;
+      }
+    }
+    &__item::after {
+      background-color: rgb(43, 154, 243);
+      width: 40px;
+      height: 3px;
+      box-sizing: border-box;
+    }
+  }
+
+  &__contents {
+    width: 100%;
+    &__extra-space {
+      display: flex;
+      line-height: 30px;
+      margin: 5px 10px;
+      height: 30px;
+      &__key {
+        margin-right: 30px;
+      }
+    }
+
+    &__rawlogs {
+      // width: 1570px;
+      height: 560px;
+    }
+  }
 
   &__extra-space {
     display: flex;
@@ -19,26 +63,24 @@
   }
 
   &__status {
-    // width: 50%;
-    display: grid;
-    grid-template-columns: 50% 10%;
     height: 560px;
     margin-left: 30px;
     margin-right: 30px;
 
     &__spec {
-      padding-left: 10%;
-
+      display: flex;
       &__title {
         text-align: center;
         font-weight: bold;
       }
 
       &__num {
-        padding-top: 10%;
         display: grid;
         grid-template-columns: 33% 33% 33%;
         text-align: center;
+        span {
+          margin-left: 8px;
+        }
       }
     }
   }

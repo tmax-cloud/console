@@ -2,6 +2,8 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
+import { Tooltip, Popover } from '@patternfly/react-core';
+// import { Link, withRouter } from 'react-router-dom';
 
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
@@ -9,7 +11,6 @@ import { TFApplyClaimModel } from '../../models';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-import { Popover } from '@patternfly/react-core';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
 import { K8sKind, k8sUpdateApproval, K8sResourceKind } from '@console/internal/module/k8s';
@@ -215,6 +216,7 @@ export const TFApplyClaimsPage: React.FC<TFApplyClaimsPageProps> = props => {
 
 type TFLogsProps = {
   obj: any;
+  match?: any;
 };
 
 const Convert = require('ansi-to-html');
@@ -241,16 +243,54 @@ const SimpleLogs = ({ content }) => {
 export type HCK8sResourceKind = K8sResourceKind & {
   fakeMetadata?: any;
 };
-const TFApplyLogs: React.FC<TFLogsProps> = props => {
+
+// const TFLogs: React.FC = props => {
+//   let selectedLog;
+
+//   return (
+//     <>
+//       <div className="tfac-logs__extra-space">{props.obj.status.commit}</div>
+//       <div className="tfac-logs__rawlogs">
+//         <SimpleLogs content={props.obj.status.apply} />
+//       </div>
+//     </>
+//   );
+// };
+
+const GitInfo = ({ url, branch, commit }) => (
+  <div>
+    <div style={{ display: 'flex' }}>
+      <span>URL:</span>
+      <span>{url}</span>
+    </div>
+    <div style={{ display: 'flex' }}>
+      <span>브랜치:</span>
+      <span>{branch}</span>
+    </div>
+    <div style={{ display: 'flex' }}>
+      <span>커밋:</span>
+      <span>{commit}</span>
+    </div>
+  </div>
+);
+
+const TFApplyLog: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   return (
     <>
-      <div className="tfac-logs__extra-space">{props.obj.status.commit}</div>
-      <div className="tfac-logs__rawlogs">
-        <SimpleLogs content={props.obj.status.apply} />
+      <div className="tfac-logs__contents__extra-space">
+        <div className="tfac-logs__contents__extra-space__key">
+          <span>최근 커밋</span>
+        </div>
+        <Tooltip content={GitInfo(obj.status)} maxWidth="30rem" position="top">
+          <span>{obj.status.commit}</span>
+        </Tooltip>
+      </div>
+      <div className="tfac-logs__contents__rawlogs">
+        <SimpleLogs content={obj.status.apply} />
       </div>
     </>
   );
-};
+});
 
 const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
   const [selectedItem, setSelectedItem] = React.useState(0);
@@ -269,8 +309,13 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
 
   return (
     <>
-      <div className="tfac-logs__extra-space">{items && <Dropdown items={items} onChange={__setSelectedItem} selectedKey={selectedItem} />}</div>
-      <div className="tfac-logs__rawlogs">
+      <div className="tfac-logs__contents__extra-space">
+        <div className="tfac-logs__contents__extra-space__key">
+          <span>실행시간</span>
+        </div>
+        {items && <Dropdown items={items} onChange={__setSelectedItem} selectedKey={selectedItem} />}
+      </div>
+      <div className="tfac-logs__contents__rawlogs">
         <SimpleLogs key={selectedItem} content={props.obj.status?.plans?.[selectedItem]?.log} />
       </div>
     </>
@@ -280,29 +325,87 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
 const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   return (
     <>
-      <div className="tfac-logs__extra-space"></div>
-      <div className="tfac-logs__rawlogs">
+      <div className="tfac-logs__contents__extra-space"></div>
+      <div className="tfac-logs__contents__rawlogs">
         <SimpleLogs content={obj.status.destroy} />
       </div>
     </>
   );
 });
+const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
+  let logs = ['Planned', 'Applied', 'Destroied'];
+  const [selectedLog, setSelectedLog] = React.useState(obj.status.phase);
+  if (obj.status.phase === 'Planned') {
+    logs = ['Planned'];
+  }
+  const onClickItem = e => {
+    let target = e.target.closest('li');
+    setSelectedLog(target.dataset.item);
+  };
+  let component;
+  switch (selectedLog) {
+    case 'Applied':
+      component = <TFApplyLog obj={obj} />;
+      break;
+    case 'Destroied':
+      component = <TFDestroyLogs obj={obj} />;
+      break;
+    case 'Planned':
+      component = <TFPlanLogs obj={obj} />;
+      break;
+  }
+
+  return (
+    <>
+      <div className="tfac-logs">
+        <ul className="tfac-logs__vertical-nav">
+          {logs.map(cur => (
+            <li className="tfac-logs__vertical-nav__item" data-item={cur} onClick={onClickItem}>
+              <span className={classNames({ ['tfac-logs__vertical-nav__item__font']: selectedLog === cur })}>{_.startCase(cur)}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="tfac-logs__contents">{component}</div>
+      </div>
+    </>
+  );
+};
+
+const ResourceStatus = props => {
+  const { added, updated, deleted } = props || {};
+  return (
+    <div>
+      <div style={{ display: 'flex' }}>
+        <span>{`${added || '0'}  Added`}</span>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <span>{`${updated || '0'}  Updated`}</span>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <span>{`${deleted || '0'}  Deleted`}</span>
+      </div>
+    </div>
+  );
+};
 
 const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   const { t } = useTranslation();
   return (
     <>
-      <div className="tfac-logs__extra-space"></div>
-      <div className="tfac-logs__status">
-        <SimpleLogs content={obj.status.state} />
+      <div className="tfac-logs__extra-space">
         <div className="tfac-logs__status__spec">
           <div className="tfac-logs__status__spec__title">{t('변경 상태 내역')}</div>
-          <div className="tfac-logs__status__spec__num">
-            <span style={{ color: 'green' }}>+{obj.status.resource?.added || 0}</span>
-            <span style={{ color: 'blue' }}>~{obj.status.resource?.updated || 0}</span>
-            <span style={{ color: 'red' }}>-{obj.status.resource?.deleted || 0}</span>
-          </div>
+          <Tooltip content={ResourceStatus(obj.status?.resource)} maxWidth="30rem" position="top">
+            <div className="tfac-logs__status__spec__num">
+              <span style={{ color: 'green' }}>+{obj.status?.resource?.added || 0}</span>
+              <span style={{ color: 'blue' }}>~{obj.status?.resource?.updated || 0}</span>
+              <span style={{ color: 'red' }}>-{obj.status?.resource?.deleted || 0}</span>
+            </div>
+          </Tooltip>
         </div>
+      </div>
+      <div className="tfac-logs__status">
+        <SimpleLogs content={obj.status.state} />
       </div>
     </>
   );
@@ -329,27 +432,32 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
       setStatus4MenuActions={setStatus}
       pages={[
         details(detailsPage(TFApplyClaimDetails)),
+        editResource(),
+        // {
+        //   href: 'plan',
+        //   name: '플랜',
+        //   component: TFPlanLogs,
+        // },
+        // {
+        //   href: 'apply',
+        //   name: '어플라이',
+        //   component: TFApplyLogs,
+        // },
+        // {
+        //   href: 'destroy',
+        //   name: '디스트로이',
+        //   component: TFDestroyLogs,
+        // },
         {
-          href: 'plan',
-          name: '플랜',
-          component: TFPlanLogs,
-        },
-        {
-          href: 'apply',
-          name: '어플라이',
-          component: TFApplyLogs,
-        },
-        {
-          href: 'destroy',
-          name: '디스트로이',
-          component: TFDestroyLogs,
+          href: 'logs',
+          name: '로그',
+          component: TFLogs,
         },
         {
           href: 'state',
-          name: '상태',
+          name: '리소스 상태',
           component: TFStatusLogs,
         },
-        editResource(),
       ]}
     />
   );
