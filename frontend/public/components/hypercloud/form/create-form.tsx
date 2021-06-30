@@ -15,7 +15,7 @@ import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'metadata.creationTimestamp');
 };
-export const kindToggle = (kindPlural, methods) => {
+export const kindToggle = (kindPlural, methods) => { //범용적으로 변경할 필요 있음
   if ( kindPlural === 'roles' ) {
     const kindToggle = useWatch({   
       control: methods.control,   
