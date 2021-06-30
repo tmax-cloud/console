@@ -139,6 +139,8 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
     label: 'All',
     value: SELECT_ALL_VALUE,
   };
+  const { clearAllText } = props;
+  const clearFiltersText = clearAllText || 'Clear all';
 
   const defaultValuesWithKey = defaultValues?.map(item => {
     return {
@@ -370,7 +372,7 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
   }, []);
 
   return (
-    <DataToolbar id="multidropdown-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={`Clear all`}>
+    <DataToolbar id="multidropdown-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={clearFiltersText}>
       <DataToolbarContent>
         <DataToolbarItem>
           <DataToolbarFilter
@@ -459,6 +461,7 @@ type MultiSelectDropdownWithRefProps = {
   shrinkOnSelectAll?: boolean;
   showSelectAllOnEmpty?: boolean;
   selectAllChipObj?: { label: string; value: string; [key: string]: string };
+  clearAllText?: string;
 };
 
 type MultiSelectDropdownFirehoseProps = {
