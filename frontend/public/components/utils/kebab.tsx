@@ -4,7 +4,7 @@ import * as classNames from 'classnames';
 import * as FocusTrap from 'focus-trap-react';
 import { connect } from 'react-redux';
 import { KEY_CODES, Tooltip } from '@patternfly/react-core';
-import { EllipsisVIcon, AngleRightIcon } from '@patternfly/react-icons';
+import { EllipsisVIcon, AngleRightIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
 import Popper from '@console/shared/src/components/popper/Popper';
 import { annotationsModal, configureReplicaCountModal, taintsModal, tolerationsModal, labelsModal, podSelectorModal, deleteModal, expandPVCModal } from '../modals';
 import { statusModal, scanningModal } from '../hypercloud/modals';
@@ -51,6 +51,12 @@ export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] =>
   return menuOptions;
 };
 
+const KebabItemIcon_ = (props) => {
+  const { icon, iconPosition } = props;
+  const marginLeft = iconPosition === 'right' ? 'var(--pf-global--spacer--sm)' : 0;
+  return <span className="oc-kebab__icon" style={{ marginLeft: marginLeft }}>{icon}</span>;
+};
+
 const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option, onClick, onEscape, autoFocus, isAllowed }) => {
   const { t } = useTranslation();
   const handleEscape = e => {
@@ -67,8 +73,9 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option,
   const needTranslate = option?.needTranslate ?? true;
   return (
     <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label}>
-      {option.icon && <span className="oc-kebab__icon">{option.icon}</span>}
+      {option?.icon && (!option?.iconPosition || option?.iconPosition === 'left') && <KebabItemIcon_ icon={option.icon} />}
       {needTranslate ? (!!labelSplit[1] ? t(labelSplit[0], { 0: t(labelSplit[1]) }) : t(labelSplit[0])) : option.label}
+      {option?.icon && option?.iconPosition === 'right' && <KebabItemIcon_ icon={option.icon} iconPosition={option.iconPosition} />}
     </button>
   );
 };
@@ -349,6 +356,18 @@ const kebabFactory: KebabFactory = {
       accessReview: asAccessReview(kind, obj, 'patch'),
     };
   },
+  Url: (kind, obj) => {
+    return {
+      label: 'URL',
+      icon: <ExternalLinkAltIcon color="var(--pf-global--Color--dark-200)" />,
+      iconPosition: 'right',
+      callback: () => {
+        if (obj.spec?.tower_hostname) {
+          window.open(obj.spec?.tower_hostname);
+        }
+      },
+    };
+  },
 };
 
 // The common menu actions that most resource share
@@ -486,6 +505,7 @@ export type KebabOption = {
   // Eg. `Menu 1/Menu 2/Menu 3`
   path?: string;
   icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
   needTranslate?: boolean;
 };
 

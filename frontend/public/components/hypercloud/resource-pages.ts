@@ -71,6 +71,7 @@ import {
   WorkflowModel,
   WorkflowTemplateModel,
   TFApplyClaimModel,
+  AWXModel,
 } from '../../models';
 
 type ResourceMapKey = GroupVersionKind | string;
@@ -145,7 +146,8 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "workflow" */).then(m => m.WorkflowsDetailsPage))
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesDetailsPage))
   .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesDetailsPage))
-  .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsDetailsPage));
+  .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsDetailsPage))
+  .set(referenceForModel(AWXModel), () => import('./awx' /* webpackChunkName: "awx" */).then(m => m.AWXsDetailsPage));
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -215,4 +217,5 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(WorkflowModel), () => import('./workflow' /* webpackChunkName: "workflow" */).then(m => m.WorkflowsPage))
   .set(referenceForModel(WorkflowTemplateModel), () => import('./workflow-template' /* webpackChunkName: "workflow-template" */).then(m => m.WorkflowTemplatesPage))
   .set(referenceForModel(ImageReplicateModel), () => import('./image-replicate' /* webpackChunkName: "image-sign-request" */).then(m => m.ImageReplicatesPage))
-  .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsPage));
+  .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsPage))
+  .set(referenceForModel(AWXModel), () => import('./awx' /* webpackChunkName: "awx" */).then(m => m.AWXsPage));

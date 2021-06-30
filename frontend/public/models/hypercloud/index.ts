@@ -901,3 +901,15 @@ export const TFApplyClaimModel: K8sKind = {
   id: 'tfapplyclaim',
   plural: 'tfapplyclaims',
 };
+
+export const AWXModel: K8sKind = {
+  kind: 'AWX',
+  label: 'AWX Instance',
+  labelPlural: 'AWX Instances',
+  apiGroup: 'awx.ansible.com',
+  apiVersion: 'v1beta1',
+  abbr: 'AWX',
+  namespaced: true,
+  id: 'awx',
+  plural: 'awxs',
+};

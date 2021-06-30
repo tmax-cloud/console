@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavItemSeparator, NavGroup } from '@patternfly/react-core';
 // import { referenceForModel } from '../../module/k8s';
 // import { ExternalLink, HrefLink, ResourceNSLink, ResourceClusterLink } from './items';
-import { ResourceNSLink, ResourceClusterLink, NewTabLink } from '../../nav/items';
+import { ResourceNSLink, ResourceClusterLink } from '../../nav/items';
 import { NavSection } from '../../nav/section';
 import { Translation } from 'react-i18next';
 // import { ALL_NAMESPACES_KEY } from '../../../../packages/console-shared/src/constants/common';
@@ -51,8 +51,8 @@ const MulticlusterNav = () => (
             <ResourceClusterLink resource="federatednamespaces" name={t('COMMON:MSG_LNB_MENU_3')} />
           </NavGroup>
         </NavSection>
-        <NavSection title={t('앤서블 웍스')} isSingleChild={true}>
-          <NewTabLink name={t('앤서블 웍스')} type="ansibleawx" />
+        <NavSection title={t('앤서블')}>
+          <ResourceNSLink resource="awxs" name={t('AWX 인스턴스')} />
         </NavSection>
         {/* <NavSection title="Image">
       <ResourceClusterLink resource="federatedregistries" name="Registry" />
