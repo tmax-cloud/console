@@ -152,6 +152,7 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 				rw.Header().Set("Content-Type", "application/json")
 				err := json.NewEncoder(rw).Encode(config)
 				if err != nil {
+					log.Error("failed to encode config information")
 					http.NotFound(rw, r)
 					return
 				}
