@@ -129,7 +129,7 @@ const CaseType = {
  * @prop {{ label: string; value: string; }} selectAllChipObj - shrinkOnSelectAll=true일 때 모든 아이템 선택시 표시해줄 chip object에 대한 설정. 기본값은 {label: 'All', value: '*'} 이다. defaultValue로 selectAllChipObj와 동일한 형태의 값이 들어왔을 때에도 모든 아이템이 선택된 것으로 처리 된다. 이와 같이 동작하게 하려면 shrinkOnSelectAll=true로 설정해줘야 한다.
  */
 export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, MultiSelectDropdownWithRefProps>((props, ref) => {
-  const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px' } = props;
+  const { name, defaultValues = [], methods, items, resources: resourcesResult, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px', clearAllText = 'Clear all' } = props;
   const { setValue, watch } = methods ? methods : useFormContext();
   const [chips, setChips] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -139,8 +139,6 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
     label: 'All',
     value: SELECT_ALL_VALUE,
   };
-  const { clearAllText } = props;
-  const clearFiltersText = clearAllText || 'Clear all';
 
   const defaultValuesWithKey = defaultValues?.map(item => {
     return {
@@ -372,7 +370,7 @@ export const MultiSelectDropdownWithRef = React.forwardRef<HTMLInputElement, Mul
   }, []);
 
   return (
-    <DataToolbar id="multidropdown-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={clearFiltersText}>
+    <DataToolbar id="multidropdown-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={clearAllText}>
       <DataToolbarContent>
         <DataToolbarItem>
           <DataToolbarFilter
