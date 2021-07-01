@@ -235,7 +235,7 @@ export const TFApplyClaims: React.FC = props => {
 export const TFApplyClaimsPage: React.FC<TFApplyClaimsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage title={t('테라폼 클레임')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('테라폼 클레임') })} canCreate={true} ListComponent={TFApplyClaims} kind={kind} {...props} />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_201')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_201') })} canCreate={true} ListComponent={TFApplyClaims} kind={kind} {...props} />;
 };
 
 type TFLogsProps = {
@@ -288,9 +288,11 @@ const GitInfo = ({ status: { url, commit }, spec: { branch } }) => {
       <div style={{ display: 'flex' }}>
         <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_3', { 0: url })}</span>
       </div>
-      <div style={{ display: 'flex' }}>
-        <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_4', { 0: branch })}</span>
-      </div>
+      {branch && (
+        <div style={{ display: 'flex' }}>
+          <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_4', { 0: branch })}</span>
+        </div>
+      )}
       <div style={{ display: 'flex' }}>
         <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_5', { 0: commit })}</span>
       </div>
@@ -361,10 +363,11 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
   const { t } = useTranslation();
   let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroyed: 'MSG_COMMON_STATUS_27' }];
-  const [selectedLog, setSelectedLog] = React.useState(obj.status.phase);
-  if (obj.status.phase === 'Planned') {
-    logs = [{ Planned: 'MSG_COMMON_STATUS_25' }];
-  }
+  const [selectedLog, setSelectedLog] = React.useState(obj.status.phase === 'Error' ? obj.status?.prephase ?? 'Planned' : obj.status.phase);
+  // if (obj.status.phase === 'Planned') {
+  //   logs = [{ Planned: 'MSG_COMMON_STATUS_25' }];
+  // }
+
   const onClickItem = e => {
     let target = e.target.closest('li');
     setSelectedLog(target.dataset.item);
