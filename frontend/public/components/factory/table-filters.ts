@@ -49,6 +49,12 @@ const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
   return pipelineApproval.status.result;
 };
 
+export const awxStatusReducer = (awx: any): string => {
+  const conditions = _.get(awx, ['status', 'conditions'], []);
+  if (conditions.length === 0) return '-';
+  return conditions[0].reason === 'Successful' ? 'Succeeded' : conditions[0].reason === 'Running' ? 'Deploying' : conditions[0].reason;
+};
+
 // TODO: Table filters are undocumented, stringly-typed, and non-obvious. We can change that.
 export const tableFilters: TableFilterMap = {
   name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
@@ -364,6 +370,15 @@ export const tableFilters: TableFilterMap = {
     };
     const status = templateInstancePhase(instance);
 
+    return statuses.selected.has(status) || !_.includes(statuses.all, status);
+  },
+
+  'awx-status': (statuses, awx) => {
+    if (!statuses || !statuses.selected || !statuses.selected.size) {
+      return true;
+    }
+
+    const status = awxStatusReducer(awx);
     return statuses.selected.has(status) || !_.includes(statuses.all, status);
   },
 

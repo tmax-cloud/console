@@ -79,7 +79,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       if (_.has(defaultValues, 'spec.workspaces')) {
         let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
         workSpaceDefaultValues = workSpaceDefaultValues.map(item => {
-          if (typeof workSpaceDefaultValues.readOnly != 'undefined') {
+          if (typeof item.readOnly != 'undefined') {
             item.accessMode = 'readOnly';
           } else {
             item.accessMode = 'readWrite';
