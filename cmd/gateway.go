@@ -69,11 +69,20 @@ var serverCmd = &cobra.Command{
 		// Get Default Server
 		defaultServer = viper.Get("SERVER").(*hypercloud.HttpServer)
 
+		if _, err := os.Stat(cfg.DynamicFile); os.IsNotExist(err) {
+			log.Infof("Not Exist Proxy Config file : %s", cfg.DynamicFile)
+			f, _ := os.Create(cfg.DynamicFile)
+			err = f.Chmod(0777)
+			if err != nil {
+				log.Errorf("Error occur when change file permission %v \n", err)
+			}
+		}
 		var pvd = new(file.Provider)
 		pvd.Watch = true
 		// dir, _ := os.Getwd()
 		// pvd.Filename = dir + "/configs/dynamic-config.yaml"
-		pvd.Filename = cfg.DynamicFile
+		pvd.Filename = string(cfg.DynamicFile)
+
 		routinesPool := safe.NewPool(context.Background())
 		watcher := pServer.NewWatcher(pvd, routinesPool)
 		// watcher.AddListener(switchRouter(staticServer, staticHandler, defaultServer))
