@@ -165,16 +165,6 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
         );
       }
 
-      case 'ansibleawx': {
-        const onClick = () => {
-          window.open('https://www.google.com');
-        };
-        return (
-          <NavItem isActive={false} onClick={onClick}>
-            <Link to="#" onClick={e => {e.preventDefault();}} className="pf-c-nav__link">{name}</Link>
-          </NavItem>
-        );
-      }
       default: {
       }
     }
