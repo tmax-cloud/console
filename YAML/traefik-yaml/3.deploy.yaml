@@ -25,9 +25,8 @@ spec:
       creationTimestamp: null
       labels:
         app.kubernetes.io/instance: traefik
-        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/managed-by: tmax
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.19.1
     spec:
       containers:
       - args:
@@ -38,6 +37,7 @@ spec:
         - --entryPoints.websecure.address=:8443/tcp
         - --entryPoints.k8s.address=:6443/tcp
         - --api.dashboard=true
+        - --api.insecure=true
         - --ping=true
         - --providers.kubernetescrd
         - --providers.kubernetesingress
