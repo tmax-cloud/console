@@ -208,7 +208,7 @@ const RuleItem = props => {
           </Section>
           <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>            
             <Controller
-              as={<MultiSelectDropdownWithRef name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false}  items={resourceList} placeholder='Select Resources' clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')}/>}
+              as={<MultiSelectDropdownWithRef name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false}  items={resourceList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_24')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} />}
               control={methods.control}
               name={`${name}[${index}].resources`}
               onChange={([selected]) => {
