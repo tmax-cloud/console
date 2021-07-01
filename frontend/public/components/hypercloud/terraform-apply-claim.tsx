@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
-import { K8sKind, k8sUpdateApproval, K8sResourceKind } from '@console/internal/module/k8s';
+import { K8sKind, k8sUpdateApproval, k8sUpdate, K8sResourceKind } from '@console/internal/module/k8s';
 
 import './terraform-apply-claim.scss';
 
@@ -28,6 +28,8 @@ export const makeTerraformPlan = (resource: K8sResourceKind, action: string): Pr
     case 'apply':
       return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH');
       break;
+    case 'destroy':
+      return k8sUpdate(TFApplyClaimModel, _.defaultsDeep({ spec: { destroy: true } }, resource));
   }
 };
 
@@ -50,6 +52,20 @@ export const TerraformApply: KebabAction = (kind: K8sKind, obj: K8sResourceKind,
   return {
     label: t('COMMON:MSG_COMMON_ACTIONBUTTON_74'),
     callback: () => makeTerraformPlan(obj, 'apply'),
+    accessReview: {
+      group: kind.apiGroup,
+      resource: kind.plural,
+      name: obj.metadata.name,
+      namespace: obj.metadata.namespace,
+      verb: 'patch',
+    },
+  };
+};
+export const TerraformDestroy: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
+  const { t } = useTranslation();
+  return {
+    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_75'),
+    callback: () => makeTerraformPlan(obj, 'destroy'),
     accessReview: {
       group: kind.apiGroup,
       resource: kind.plural,
@@ -114,13 +130,16 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
   const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
   const planableStatus = new Set(['Approved']);
   const appliable = new Set(['Approved', 'Planned']);
+  const destroyable = new Set(['Applied']);
   const isModifiable = (status: string) => !unmodifiableStatus.has(status);
   const isPlanable = (status: string) => planableStatus.has(status);
   const isAppliable = (status: string) => appliable.has(status);
+  const isDestroyable = (status: string) => destroyable.has(status);
   // push
   isModifiable(tfapplyclaim.status.phase) && menuActions.push(Kebab.factory.ModifyStatus);
   isPlanable(tfapplyclaim.status.phase) && menuActions.push(TerraformPlan);
   isAppliable(tfapplyclaim.status.phase) && menuActions.push(TerraformApply);
+  isDestroyable(tfapplyclaim.status.phase) && menuActions.push(TerraformDestroy);
   return (
     <TableRow id={tfapplyclaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -140,7 +159,6 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
         )}
       </TableData>
       <TableData className={tableColumnClasses[4]}>{tfapplyclaim.metadata.annotations.creator}</TableData>
-
       <TableData className={tableColumnClasses[5]}>
         <Timestamp timestamp={tfapplyclaim.metadata.annotations.createdTime} />
       </TableData>
@@ -175,6 +193,12 @@ export const TFApplyClaimDetailsList: React.FC<TFApplyClaimDetailsListProps> = (
       </dd>
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_70')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.secret}</dd>
+      {ds.spec?.branch && (
+        <>
+          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_71')}</dt>
+          <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.branch}</dd>
+        </>
+      )}
     </dl>
   );
 };
@@ -257,7 +281,7 @@ export type HCK8sResourceKind = K8sResourceKind & {
 //   );
 // };
 
-const GitInfo = ({ url, branch, commit }) => {
+const GitInfo = ({ status: { url, commit }, spec: { branch } }) => {
   const { t } = useTranslation();
   return (
     <div>
@@ -282,7 +306,7 @@ const TFApplyLog: React.FC<TFLogsProps> = React.memo(({ obj }) => {
         <div className="tfac-logs__contents__extra-space__key">
           <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_1')}</span>
         </div>
-        <Tooltip content={GitInfo(obj.status)} maxWidth="30rem" position="top">
+        <Tooltip content={GitInfo(obj)} maxWidth="30rem" position="top">
           <span>{obj.status.commit}</span>
         </Tooltip>
       </div>
@@ -336,7 +360,7 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 });
 const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
   const { t } = useTranslation();
-  let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroied: 'MSG_COMMON_STATUS_27' }];
+  let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroyed: 'MSG_COMMON_STATUS_27' }];
   const [selectedLog, setSelectedLog] = React.useState(obj.status.phase);
   if (obj.status.phase === 'Planned') {
     logs = [{ Planned: 'MSG_COMMON_STATUS_25' }];
@@ -350,7 +374,7 @@ const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
     case 'Applied':
       component = <TFApplyLog obj={obj} />;
       break;
-    case 'Destroied':
+    case 'Destroyed':
       component = <TFDestroyLogs obj={obj} />;
       break;
     case 'Planned':
