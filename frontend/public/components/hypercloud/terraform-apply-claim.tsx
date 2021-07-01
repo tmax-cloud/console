@@ -38,13 +38,6 @@ export const TerraformPlan: KebabAction = (kind: K8sKind, obj: K8sResourceKind, 
   return {
     label: t('COMMON:MSG_COMMON_ACTIONBUTTON_73'),
     callback: () => makeTerraformPlan(obj, 'plan'),
-    accessReview: {
-      group: kind.apiGroup,
-      resource: kind.plural,
-      name: obj.metadata.name,
-      namespace: obj.metadata.namespace,
-      verb: 'patch',
-    },
   };
 };
 export const TerraformApply: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
@@ -52,13 +45,6 @@ export const TerraformApply: KebabAction = (kind: K8sKind, obj: K8sResourceKind,
   return {
     label: t('COMMON:MSG_COMMON_ACTIONBUTTON_74'),
     callback: () => makeTerraformPlan(obj, 'apply'),
-    accessReview: {
-      group: kind.apiGroup,
-      resource: kind.plural,
-      name: obj.metadata.name,
-      namespace: obj.metadata.namespace,
-      verb: 'patch',
-    },
   };
 };
 export const TerraformDestroy: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
@@ -66,13 +52,6 @@ export const TerraformDestroy: KebabAction = (kind: K8sKind, obj: K8sResourceKin
   return {
     label: t('COMMON:MSG_COMMON_ACTIONBUTTON_75'),
     callback: () => makeTerraformPlan(obj, 'destroy'),
-    accessReview: {
-      group: kind.apiGroup,
-      resource: kind.plural,
-      name: obj.metadata.name,
-      namespace: obj.metadata.namespace,
-      verb: 'patch',
-    },
   };
 };
 
@@ -126,20 +105,24 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
 };
 
 const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim, index, key, style }) => {
-  let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
-  const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
-  const planableStatus = new Set(['Approved']);
-  const appliable = new Set(['Approved', 'Planned']);
-  const destroyable = new Set(['Applied']);
-  const isModifiable = (status: string) => !unmodifiableStatus.has(status);
-  const isPlanable = (status: string) => planableStatus.has(status);
-  const isAppliable = (status: string) => appliable.has(status);
-  const isDestroyable = (status: string) => destroyable.has(status);
-  // push
-  isModifiable(tfapplyclaim.status.phase) && menuActions.push(Kebab.factory.ModifyStatus);
-  isPlanable(tfapplyclaim.status.phase) && menuActions.push(TerraformPlan);
-  isAppliable(tfapplyclaim.status.phase) && menuActions.push(TerraformApply);
-  isDestroyable(tfapplyclaim.status.phase) && menuActions.push(TerraformDestroy);
+  let menuActions;
+
+  switch (tfapplyclaim.status?.phase) {
+    case 'Approved':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply, Kebab.factory.TerraformDestroy];
+      break;
+    case 'Awaiting':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+      break;
+    case 'Planned':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformApply];
+      break;
+    case 'Applied':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformDestroy];
+      break;
+    default:
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  }
   return (
     <TableRow id={tfapplyclaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -267,19 +250,6 @@ const SimpleLogs = ({ content }) => {
 export type HCK8sResourceKind = K8sResourceKind & {
   fakeMetadata?: any;
 };
-
-// const TFLogs: React.FC = props => {
-//   let selectedLog;
-
-//   return (
-//     <>
-//       <div className="tfac-logs__extra-space">{props.obj.status.commit}</div>
-//       <div className="tfac-logs__rawlogs">
-//         <SimpleLogs content={props.obj.status.apply} />
-//       </div>
-//     </>
-//   );
-// };
 
 const GitInfo = ({ status: { url, commit }, spec: { branch } }) => {
   const { t } = useTranslation();
@@ -441,23 +411,27 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
   );
 });
 
-export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => {
+export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = React.memo(props => {
   const { t } = useTranslation();
-  let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  let menuActions;
   const [status, setStatus] = React.useState();
-  const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
-  const planableStatus = new Set(['Approved']);
-  const appliable = new Set(['Approved', 'Planned']);
-  const destroyable = new Set(['Applied']);
-  const isModifiable = (status: string) => !unmodifiableStatus.has(status);
-  const isPlanable = (status: string) => planableStatus.has(status);
-  const isAppliable = (status: string) => appliable.has(status);
-  const isDestroyable = (status: string) => destroyable.has(status);
-  // push
-  isModifiable(status) && menuActions.push(Kebab.factory.ModifyStatus);
-  isPlanable(status) && menuActions.push(TerraformPlan);
-  isAppliable(status) && menuActions.push(TerraformApply);
-  isDestroyable(status) && menuActions.push(TerraformDestroy);
+
+  switch (status) {
+    case 'Approved':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply, Kebab.factory.TerraformDestroy];
+      break;
+    case 'Awaiting':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+      break;
+    case 'Planned':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformApply];
+      break;
+    case 'Applied':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformDestroy];
+      break;
+    default:
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  }
 
   return (
     <DetailsPage
@@ -481,7 +455,7 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
       ]}
     />
   );
-};
+});
 
 type TFApplyClaimDetailsListProps = {
   ds: K8sResourceKind;
