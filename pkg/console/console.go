@@ -104,7 +104,8 @@ func New(cfg *v1.Config) (*Console, error) {
 
 // Gateway is API gateway like reverse proxy server related in k8s, Prometheus, Grafana, and hypercloud-operator
 func (c *Console) Gateway() http.Handler {
-	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.JwtHandler, handlers.ProxyHeaders)
+	// standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.JwtHandler, handlers.ProxyHeaders)
+	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
 	// tokenMiddleware := alice.New(c.jwtHandler, c.tokenHandler) // jwt validation handler + token handler
 	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
