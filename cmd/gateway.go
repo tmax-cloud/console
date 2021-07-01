@@ -69,8 +69,10 @@ var serverCmd = &cobra.Command{
 		// Get Default Server
 		defaultServer = viper.Get("SERVER").(*hypercloud.HttpServer)
 
+		// file
 		if _, err := os.Stat(cfg.DynamicFile); os.IsNotExist(err) {
 			log.Infof("Not Exist Proxy Config file : %s", cfg.DynamicFile)
+			log.Infof("So create proxy config file : %s", cfg.DynamicFile)
 			f, _ := os.Create(cfg.DynamicFile)
 			err = f.Chmod(0777)
 			if err != nil {
