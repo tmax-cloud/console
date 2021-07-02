@@ -214,19 +214,6 @@ export const KebabItems: React.FC<KebabItemsProps> = ({ options, ...props }) => 
   return <KebabMenuItems {...props} options={menuOptions} />;
 };
 
-const makeTerraformPlan = (resource: K8sResourceKind, action: string): Promise<K8sResourceKind> => {
-  switch (action) {
-    case 'plan':
-      return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Plan' }], 'PATCH');
-      break;
-    case 'apply':
-      return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH');
-      break;
-    case 'destroy':
-      return k8sUpdate(TFApplyClaimModel, _.defaultsDeep({ spec: { destroy: true } }, resource));
-  }
-};
-
 const kebabFactory: KebabFactory = {
   Delete: (kind, obj) => ({
     label: `COMMON:MSG_MAIN_ACTIONBUTTON_16**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
@@ -270,17 +257,17 @@ const kebabFactory: KebabFactory = {
   }),
   TerraformPlan: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
     label: 'COMMON:MSG_COMMON_ACTIONBUTTON_73',
-    callback: () => makeTerraformPlan(obj, 'plan'),
+    callback: () => k8sUpdateApproval(TFApplyClaimModel, obj, 'status', [{ op: 'replace', path: '/status/action', value: 'Plan' }], 'PATCH'),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   TerraformApply: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
     label: 'COMMON:MSG_COMMON_ACTIONBUTTON_74',
-    callback: () => makeTerraformPlan(obj, 'apply'),
+    callback: () => k8sUpdateApproval(TFApplyClaimModel, obj, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH'),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   TerraformDestroy: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
     label: 'COMMON:MSG_COMMON_ACTIONBUTTON_75',
-    callback: () => makeTerraformPlan(obj, 'destroy'),
+    callback: () => k8sUpdate(TFApplyClaimModel, _.defaultsDeep({ spec: { destroy: true } }, obj)),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyClaim: (kind, obj) => ({
