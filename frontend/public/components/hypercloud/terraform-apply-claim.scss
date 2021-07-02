@@ -12,19 +12,19 @@
     padding: 0;
     background-color: transparent;
     &__item {
-      height: 30px;
-      font-size: 16pt;
+      height: 38px;
+      font-size: 15pt;
       margin: 5px 10px;
       cursor: pointer;
       &__font {
         font-weight: bold;
       }
     }
-    &__item::after {
-      background-color: rgb(43, 154, 243);
-      width: 40px;
-      height: 3px;
-      box-sizing: border-box;
+    &__item:hover {
+      border-bottom: 3px solid rgb(0, 102, 204);
+    }
+    &__item-selected {
+      border-bottom: 3px solid rgb(0, 102, 204);
     }
   }
 

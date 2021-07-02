@@ -360,7 +360,7 @@ const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
       <div className="tfac-logs">
         <ul className="tfac-logs__vertical-nav">
           {logs.map(cur => (
-            <li className="tfac-logs__vertical-nav__item" data-item={Object.keys(cur)[0]} onClick={onClickItem}>
+            <li className={classNames({ 'tfac-logs__vertical-nav__item-selected': selectedLog === Object.keys(cur)[0], 'tfac-logs__vertical-nav__item': true })} data-item={Object.keys(cur)[0]} onClick={onClickItem}>
               <span className={classNames({ ['tfac-logs__vertical-nav__item__font']: selectedLog === Object.keys(cur)[0] })}>{t(`COMMON:${Object.values(cur)[0]}`)}</span>
             </li>
           ))}
@@ -418,7 +418,7 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
 
   switch (status) {
     case 'Approved':
-      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply, Kebab.factory.TerraformDestroy];
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply];
       break;
     case 'Awaiting':
       menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
