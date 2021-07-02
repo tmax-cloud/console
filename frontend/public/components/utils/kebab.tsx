@@ -396,7 +396,7 @@ const kebabFactory: KebabFactory = {
       iconPosition: 'right',
       callback: () => {
         if (obj.spec?.tower_hostname) {
-          window.open(obj.spec.tower_hostname);
+          window.open(`https://${obj.spec?.tower_hostname}`);
         }
       },
     };
