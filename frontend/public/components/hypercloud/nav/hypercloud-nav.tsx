@@ -35,7 +35,7 @@ const HyperCloudNav = () => (
           <ResourceNSLink resource="secrets" name={t('COMMON:MSG_LNB_MENU_26')} />
           <ResourceNSLink resource="jobs" name={t('COMMON:MSG_LNB_MENU_29')} />
           <ResourceNSLink resource="cronjobs" name={t('COMMON:MSG_LNB_MENU_28')} />
-          <ResourceNSLink resource="helmreleases" name='헬름 릴리스' />
+          <ResourceNSLink resource="helmreleases" name={t('COMMON:MSG_LNB_MENU_203')} />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_46')}>
           <ResourceNSLink resource="services" name={t('COMMON:MSG_LNB_MENU_47')} />
