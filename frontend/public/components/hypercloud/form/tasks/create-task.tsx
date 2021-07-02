@@ -281,6 +281,10 @@ export const onSubmitCallback = data => {
   // apiVersion, kind
   data.kind = TaskModel.kind;
   data.apiVersion = `${TaskModel.apiGroup}/${TaskModel.apiVersion}`;
+  // resources
+  if (data.spec.resources.inputs.length === 0 && data.spec.resources.outputs.length === 0) {
+    delete data.spec.resources;
+  }
   //parameter
   data.spec.params = data?.spec?.params?.map((cur, idx) => {
     if (cur.type === 'string') {
