@@ -103,7 +103,7 @@ export const AWXDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
         <Status status={awxStatusReducer(awx)} />
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
-        <a href={awx.spec?.tower_hostname}>{awx.spec?.tower_hostname || '-'}</a>
+        <a href={`https://${awx.spec?.tower_hostname}`} target="_blank" >{awx.spec?.tower_hostname || '-'}</a>
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
         <ImageSummary obj={awx} />
