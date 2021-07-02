@@ -50,7 +50,6 @@ const MasterNav = () => (
           <ResourceNSLink resource="secrets" name={t('COMMON:MSG_LNB_MENU_26')} />
           <ResourceNSLink resource="jobs" name={t('COMMON:MSG_LNB_MENU_29')} />
           <ResourceNSLink resource="cronjobs" name={t('COMMON:MSG_LNB_MENU_28')} />
-          <ResourceNSLink resource="helmreleases" name='헬름 릴리스' />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_46')}>
           <ResourceNSLink resource="services" name={t('COMMON:MSG_LNB_MENU_47')} />
@@ -79,6 +78,9 @@ const MasterNav = () => (
           <ResourceClusterLink resource="podsecuritypolicies" name={t('COMMON:MSG_LNB_MENU_78')} />
           {/* <AuthAdminLink resource={referenceForModel(UserModel)} name="Users" />
           <AuthAdminLink resource={referenceForModel(GroupModel)} name="User Groups" /> */}
+        </NavSection>
+        <NavSection title='헬름'>
+          <ResourceNSLink resource="helmreleases" name='헬름 릴리스' />
         </NavSection>
       </>
     )}
