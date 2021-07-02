@@ -73,7 +73,7 @@ const setClaimStatus = status => {
   let menuActions;
   switch (status) {
     case 'Approved':
-      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply];
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply];
       break;
     case 'Awaiting':
       menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
