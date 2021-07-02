@@ -69,14 +69,14 @@ const FederatedReplicaSetTableRow: RowFunction<K8sResourceKind> = ({ obj: replic
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         <Link to={`/k8s/ns/${replicaset.metadata.namespace}/replicasets/${replicaset.metadata.name}/pods`} title="pods">
-          {replicaset.status.currentNumberScheduled} of {replicaset.status.desiredNumberScheduled} pods
+          {replicaset.status?.currentNumberScheduled} of {replicaset.status?.desiredNumberScheduled} pods
         </Link>
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <LabelList kind={kind} labels={replicaset.metadata.labels} />
       </TableData>
       <TableData className={tableColumnClasses[4]}>
-        <Selector selector={replicaset.spec.selector} namespace={replicaset.metadata.namespace} />
+        <Selector selector={replicaset.spec?.selector} namespace={replicaset.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={replicaset} />
@@ -88,38 +88,40 @@ const FederatedReplicaSetTableRow: RowFunction<K8sResourceKind> = ({ obj: replic
 export const FederatedReplicaSetDetailsList: React.FC<FederatedReplicaSetDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
   return (
-  <dl className="co-m-pane__details">
-    <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
-    <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
-  </dl>
-);}
+    <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
+    </dl>
+  );
+};
 
 const FederatedReplicaSetDetails: React.FC<FederatedReplicaSetDetailsProps> = ({ obj: replicaset }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
-      <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_31') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={replicaset} showPodSelector showNodeSelector showTolerations />
-        </div>
-        <div className="col-lg-6">
-          <FederatedReplicaSetDetailsList ds={replicaset} />
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_31') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={replicaset} showPodSelector showNodeSelector showTolerations />
+          </div>
+          <div className="col-lg-6">
+            <FederatedReplicaSetDetailsList ds={replicaset} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml, events } = navFactory;
 export const FederatedReplicaSets: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Replica Sets" Header={FederatedReplicaSetTableHeader.bind(null, t)} Row={FederatedReplicaSetTableRow} virtualize />;
-}
+};
 
 export const FederatedReplicaSetsPage: React.FC<FederatedReplicaSetsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedReplicaSets} kind={kind} {...props} />;
 

@@ -88,38 +88,40 @@ const FederatedJobTableRow: RowFunction<K8sResourceKind> = ({ obj: job, index, k
 export const FederatedJobDetailsList: React.FC<FederatedJobDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
   return (
-  <dl className="co-m-pane__details">
-  <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
-  <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
-  </dl>
-);}
+    <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
+    </dl>
+  );
+};
 
 const FederatedJobDetails: React.FC<FederatedJobDetailsProps> = ({ obj: job }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
-    <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_29') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={job} showPodSelector showNodeSelector showTolerations />
-        </div>
-        <div className="col-lg-6">
-          <FederatedJobDetailsList ds={job} />
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_29') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={job} showPodSelector showNodeSelector showTolerations />
+          </div>
+          <div className="col-lg-6">
+            <FederatedJobDetailsList ds={job} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml, events } = navFactory;
 export const FederatedJobs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Jobs" Header={FederatedJobTableHeader.bind(null, t)} Row={FederatedJobTableRow} virtualize />;
-}
+};
 
 export const FederatedJobsPage: React.FC<FederatedJobsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedJobs} kind={kind} {...props} />;
 
