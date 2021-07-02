@@ -317,5 +317,9 @@ export const ResourceStringKeyMap = {
   AWX: {
     labelPlural: 'COMMON:MSG_LNB_MENU_198',
     label: 'COMMON:MSG_LNB_MENU_199',
-  }
+  },
+  TFApplyClaim: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_200',
+    label: 'COMMON:MSG_LNB_MENU_201',
+  },
 };

@@ -9,7 +9,7 @@ import Popper from '@console/shared/src/components/popper/Popper';
 import { annotationsModal, configureReplicaCountModal, taintsModal, tolerationsModal, labelsModal, podSelectorModal, deleteModal, expandPVCModal } from '../modals';
 import { statusModal, scanningModal } from '../hypercloud/modals';
 import { asAccessReview, checkAccess, history, resourceObjPath, useAccessReview } from './index';
-import { AccessReviewResourceAttributes, K8sKind, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '../../module/k8s';
+import { AccessReviewResourceAttributes, K8sKind, K8sResourceKind, K8sResourceKindReference, referenceForModel, k8sUpdateApproval, k8sUpdate } from '../../module/k8s';
 import { impersonateStateToProps } from '../../reducers/ui';
 import { connectToModel } from '../../kinds';
 import * as plugins from '../../plugins';
@@ -18,6 +18,7 @@ import { TFunction } from 'i18next';
 import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 import * as hoistStatics from 'hoist-non-react-statics';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
+import { TFApplyClaimModel } from '../../models';
 
 export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] => {
   const subs: { [key: string]: KebabSubMenu } = {};
@@ -51,10 +52,14 @@ export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] =>
   return menuOptions;
 };
 
-const KebabItemIcon_ = (props) => {
+const KebabItemIcon_ = props => {
   const { icon, iconPosition } = props;
   const marginLeft = iconPosition === 'right' ? 'var(--pf-global--spacer--sm)' : 0;
-  return <span className="oc-kebab__icon" style={{ marginLeft: marginLeft }}>{icon}</span>;
+  return (
+    <span className="oc-kebab__icon" style={{ marginLeft: marginLeft }}>
+      {icon}
+    </span>
+  );
 };
 
 const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option, onClick, onEscape, autoFocus, isAllowed }) => {
@@ -248,6 +253,21 @@ const kebabFactory: KebabFactory = {
         resource: obj,
         blocking: true,
       }),
+    accessReview: asAccessReview(kind, obj, 'patch'),
+  }),
+  TerraformPlan: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_73',
+    callback: () => k8sUpdateApproval(TFApplyClaimModel, obj, 'status', [{ op: 'replace', path: '/status/action', value: 'Plan' }], 'PATCH'),
+    accessReview: asAccessReview(kind, obj, 'patch'),
+  }),
+  TerraformApply: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_74',
+    callback: () => k8sUpdateApproval(TFApplyClaimModel, obj, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH'),
+    accessReview: asAccessReview(kind, obj, 'patch'),
+  }),
+  TerraformDestroy: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_75',
+    callback: () => k8sUpdate(TFApplyClaimModel, _.defaultsDeep({ spec: { destroy: true } }, obj)),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyClaim: (kind, obj) => ({

@@ -56,7 +56,6 @@ const FederatedDaemonSetTableHeader = (t?: TFunction) => {
 FederatedDaemonSetTableHeader.displayName = 'FederatedDaemonSetTableHeader';
 
 const FederatedDaemonSetTableRow: RowFunction<K8sResourceKind> = ({ obj: daemonset, index, key, style }) => {
-  const { t } = useTranslation();
   return (
     <TableRow id={daemonset.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -68,9 +67,7 @@ const FederatedDaemonSetTableRow: RowFunction<K8sResourceKind> = ({ obj: daemons
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={daemonset.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(daemonset.metadata.annotations) })}
-      </TableData>
+      <TableData className={tableColumnClasses[3]}>{_.size(daemonset.metadata.annotations)} comments</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={daemonset.metadata.creationTimestamp} />
       </TableData>
@@ -101,10 +98,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ daemonset }) => {
   );
 };
 
-export const DaemonSetDistributionTable: React.FC<DaemonSetDistributionTableProps> = ({
-  heading,
-  daemonset
-}) => {
+export const DaemonSetDistributionTable: React.FC<DaemonSetDistributionTableProps> = ({ heading, daemonset }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -124,31 +118,33 @@ export const DaemonSetDistributionTable: React.FC<DaemonSetDistributionTableProp
         </div>
       </div>
     </>
-  );}
+  );
+};
 
 const FederatedDaemonSetDetails: React.FC<FederatedDaemonSetDetailsProps> = ({ obj: daemonset }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
+    <>
+      <div className="co-m-pane__body">
         <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_30') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={daemonset} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={daemonset} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <DaemonSetDistributionTable
-        key="distributionTable"
-        heading="Distribution"
-        daemonset={daemonset} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <DaemonSetDistributionTable key="distributionTable" heading="Distribution" daemonset={daemonset} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml } = navFactory;
-export const FederatedDaemonSets: React.FC = props => <Table {...props} aria-label="Federated Daemon Sets" Header={FederatedDaemonSetTableHeader} Row={FederatedDaemonSetTableRow} virtualize />;
+export const FederatedDaemonSets: React.FC = props => {
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="Federated Daemon Sets" Header={FederatedDaemonSetTableHeader.bind(null, t)} Row={FederatedDaemonSetTableRow} virtualize />;
+};
 
 export const FederatedDaemonSetsPage: React.FC<FederatedDaemonSetsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedDaemonSets} kind={kind} {...props} />;
 
@@ -156,7 +152,7 @@ export const FederatedDaemonSetsDetailsPage: React.FC<FederatedDaemonSetsDetails
 
 type ClusterRowProps = {
   daemonset: K8sResourceKind;
-}
+};
 
 type DaemonSetDistributionTableProps = {
   daemonset: K8sResourceKind;

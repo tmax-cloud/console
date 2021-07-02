@@ -87,13 +87,13 @@ const FederatedDeploymentDetails: React.FC<FederatedDeploymentDetailsProps> = ({
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml, events } = navFactory;
 export const FederatedDeployments: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Deployments" Header={FederatedDeploymentTableHeader.bind(null, t)} Row={FederatedDeploymentTableRow} virtualize />;
-}
+};
 
 export const FederatedDeploymentsPage: React.FC<FederatedDeploymentsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedDeployments} kind={kind} {...props} />;
 
