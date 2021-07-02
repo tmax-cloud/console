@@ -60,7 +60,7 @@ const FederatedHPATableRow: RowFunction<K8sResourceKind> = ({ obj: horizontalpod
         <ResourceLink kind={kind} name={horizontalpodautoscaler.metadata.name} namespace={horizontalpodautoscaler.metadata.namespace} title={horizontalpodautoscaler.metadata.uid} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <Status status={horizontalpodautoscaler.status.phase} />
+        <Status status={horizontalpodautoscaler.status?.phase} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={horizontalpodautoscaler.metadata.labels} />
