@@ -56,19 +56,18 @@ const FederatedCronJobTableHeader = (t?: TFunction) => {
 FederatedCronJobTableHeader.displayName = 'FederatedCronJobTableHeader';
 
 const FederatedCronJobTableRow: RowFunction<K8sResourceKind> = ({ obj: cronjob, index, key, style }) => {
-  const { t } = useTranslation();
   return (
     <TableRow id={cronjob.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={cronjob.metadata.name} namespace={cronjob.metadata.namespace} title={cronjob.metadata.uid} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <Status status={cronjob.status.phase} />
+        <Status status={cronjob.status?.phase} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={cronjob.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>{t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(cronjob.metadata.annotations) })}</TableData>
+      <TableData className={tableColumnClasses[3]}>{_.size(cronjob.metadata.annotations)} comments</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={cronjob.metadata.creationTimestamp} />
       </TableData>

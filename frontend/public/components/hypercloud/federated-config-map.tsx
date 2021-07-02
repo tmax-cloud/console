@@ -69,7 +69,7 @@ const FederatedConfigMapTableRow: RowFunction<K8sResourceKind> = ({ obj: configm
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         <Link to={`/k8s/ns/${configmap.metadata.namespace}/configmaps/${configmap.metadata.name}/pods`} title="pods">
-          {configmap.status.currentNumberScheduled} of {configmap.status.desiredNumberScheduled} pods
+          {configmap.status?.currentNumberScheduled} of {configmap.status?.desiredNumberScheduled} pods
         </Link>
       </TableData>
       <TableData className={tableColumnClasses[3]}>

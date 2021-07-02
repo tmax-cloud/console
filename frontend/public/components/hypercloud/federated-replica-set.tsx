@@ -69,14 +69,14 @@ const FederatedReplicaSetTableRow: RowFunction<K8sResourceKind> = ({ obj: replic
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         <Link to={`/k8s/ns/${replicaset.metadata.namespace}/replicasets/${replicaset.metadata.name}/pods`} title="pods">
-          {replicaset.status.currentNumberScheduled} of {replicaset.status.desiredNumberScheduled} pods
+          {replicaset.status?.currentNumberScheduled} of {replicaset.status?.desiredNumberScheduled} pods
         </Link>
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <LabelList kind={kind} labels={replicaset.metadata.labels} />
       </TableData>
       <TableData className={tableColumnClasses[4]}>
-        <Selector selector={replicaset.spec.selector} namespace={replicaset.metadata.namespace} />
+        <Selector selector={replicaset.spec?.selector} namespace={replicaset.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={replicaset} />

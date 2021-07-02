@@ -56,7 +56,6 @@ const FederatedDaemonSetTableHeader = (t?: TFunction) => {
 FederatedDaemonSetTableHeader.displayName = 'FederatedDaemonSetTableHeader';
 
 const FederatedDaemonSetTableRow: RowFunction<K8sResourceKind> = ({ obj: daemonset, index, key, style }) => {
-  const { t } = useTranslation();
   return (
     <TableRow id={daemonset.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -68,7 +67,7 @@ const FederatedDaemonSetTableRow: RowFunction<K8sResourceKind> = ({ obj: daemons
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={daemonset.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>{t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(daemonset.metadata.annotations) })}</TableData>
+      <TableData className={tableColumnClasses[3]}>{_.size(daemonset.metadata.annotations)} comments</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={daemonset.metadata.creationTimestamp} />
       </TableData>

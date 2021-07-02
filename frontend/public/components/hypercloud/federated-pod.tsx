@@ -56,7 +56,6 @@ const FederatedPodTableHeader = (t?: TFunction) => {
 FederatedPodTableHeader.displayName = 'FederatedPodTableHeader';
 
 const FederatedPodTableRow: RowFunction<K8sResourceKind> = ({ obj: pod, index, key, style }) => {
-  const { t } = useTranslation();
   return (
     <TableRow id={pod.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -69,7 +68,7 @@ const FederatedPodTableRow: RowFunction<K8sResourceKind> = ({ obj: pod, index, k
         <LabelList kind={kind} labels={pod.metadata.labels} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
-        {t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(pod.metadata.annotations) })}
+        { _.size(pod.metadata.annotations)} comments
       </TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={pod.metadata.creationTimestamp} />

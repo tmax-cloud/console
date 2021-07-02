@@ -56,7 +56,6 @@ const FederatedStatefulSetTableHeader = (t?: TFunction) => {
 FederatedStatefulSetTableHeader.displayName = 'FederatedStatefulSetTableHeader';
 
 const FederatedStatefulSetTableRow: RowFunction<K8sResourceKind> = ({ obj: statefulset, index, key, style }) => {
-  const { t } = useTranslation();
   return (
     <TableRow id={statefulset.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -68,7 +67,7 @@ const FederatedStatefulSetTableRow: RowFunction<K8sResourceKind> = ({ obj: state
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={statefulset.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>{t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(statefulset.metadata.annotations) })}</TableData>
+      <TableData className={tableColumnClasses[3]}>{_.size(statefulset.metadata.annotations)} comments</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={statefulset.metadata.creationTimestamp} />
       </TableData>
