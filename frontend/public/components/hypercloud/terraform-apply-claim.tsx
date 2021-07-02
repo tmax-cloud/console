@@ -442,16 +442,20 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
   const { t } = useTranslation();
   let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
   const [status, setStatus] = React.useState();
-  const unmodifiableStatus = new Set(['Destroyed']);
+  const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
   const planableStatus = new Set(['Approved']);
   const appliable = new Set(['Approved', 'Planned']);
+  const destroyable = new Set(['Applied']);
   const isModifiable = (status: string) => !unmodifiableStatus.has(status);
   const isPlanable = (status: string) => planableStatus.has(status);
   const isAppliable = (status: string) => appliable.has(status);
+  const isDestroyable = (status: string) => destroyable.has(status);
   // push
   isModifiable(status) && menuActions.push(Kebab.factory.ModifyStatus);
   isPlanable(status) && menuActions.push(TerraformPlan);
   isAppliable(status) && menuActions.push(TerraformApply);
+  isDestroyable(status) && menuActions.push(TerraformDestroy);
+
   return (
     <DetailsPage
       {...props}
@@ -461,21 +465,6 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
       pages={[
         details(detailsPage(TFApplyClaimDetails)),
         editResource(),
-        // {
-        //   href: 'plan',
-        //   name: '플랜',
-        //   component: TFPlanLogs,
-        // },
-        // {
-        //   href: 'apply',
-        //   name: '어플라이',
-        //   component: TFApplyLogs,
-        // },
-        // {
-        //   href: 'destroy',
-        //   name: '디스트로이',
-        //   component: TFDestroyLogs,
-        // },
         {
           href: 'logs',
           name: t('COMMON:MSG_DETAILS_TABLOGS_8'),

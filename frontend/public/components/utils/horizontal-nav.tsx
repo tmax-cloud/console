@@ -291,7 +291,7 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
     return <Route path={path} exact key={p.name} render={render} />;
   });
 
-  props.setStatus4MenuActions && props.setStatus4MenuActions(props.obj.data?.status?.status);
+  props.setStatus4MenuActions && props.setStatus4MenuActions(props.obj.data?.status?.status || props.obj.data?.status?.phase);
 
   return (
     <div className={classNames('co-m-page__body', props.className)}>

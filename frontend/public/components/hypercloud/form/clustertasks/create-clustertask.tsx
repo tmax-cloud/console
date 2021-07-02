@@ -79,7 +79,7 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
       if (_.has(defaultValues, 'spec.workspaces')) {
         let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
         workSpaceDefaultValues = workSpaceDefaultValues.map(item => {
-          if (typeof workSpaceDefaultValues.readOnly != 'undefined') {
+          if (typeof item.readOnly != 'undefined') {
             item.accessMode = 'readOnly';
           } else {
             item.accessMode = 'readWrite';
@@ -282,6 +282,10 @@ export const onSubmitCallback = data => {
   // apiVersion, kind
   data.kind = ClusterTaskModel.kind;
   data.apiVersion = `${ClusterTaskModel.apiGroup}/${ClusterTaskModel.apiVersion}`;
+  // resources
+  if (data.spec.resources.inputs.length === 0 && data.spec.resources.outputs.length === 0) {
+    delete data.spec.resources;
+  }
   //parameter
   data.spec.params = data?.spec?.params?.map((cur, idx) => {
     if (cur.type === 'string') {

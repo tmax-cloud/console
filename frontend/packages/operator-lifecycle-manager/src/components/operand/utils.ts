@@ -102,9 +102,11 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     }
     delete jsonSchema?.anyOf;
   } else if (jsonSchema?.['oneOf']) {
-    return {
-      'ui:field': 'OneOfField', // number or string 일 경우에 컴포넌트
-    };
+    if ('title' in jsonSchema.oneOf) {
+      return {
+        'ui:field': 'OneOfField', // number or string 일 경우에 컴포넌트
+      };
+    }
   } else if (jsonSchema?.['allOf']) {
     if (
       isArray(jsonSchema.allOf) &&

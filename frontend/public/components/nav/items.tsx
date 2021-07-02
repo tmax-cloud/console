@@ -12,12 +12,10 @@ import { featureReducerName } from '../../reducers/features';
 import { RootState } from '../../redux';
 import { getActiveNamespace } from '../../reducers/ui';
 
-export const matchesPath = (resourcePath, prefix) =>
-  resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
-export const matchesModel = (resourcePath, model) =>
-  model && matchesPath(resourcePath, referenceForModel(model));
+export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
+export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
 
-export const stripNS = (href) => {
+export const stripNS = href => {
   href = stripBasePath(href);
   return href
     .replace(/^\/?k8s\//, '')
@@ -50,7 +48,7 @@ class NavLink<P extends NavLinkProps> extends React.PureComponent<P> {
   }
 
   static startsWith(resourcePath: string, someStrings: string[]) {
-    return _.some(someStrings, (s) => resourcePath.startsWith(s));
+    return _.some(someStrings, s => resourcePath.startsWith(s));
   }
 
   render() {
@@ -63,14 +61,7 @@ class NavLink<P extends NavLinkProps> extends React.PureComponent<P> {
     const linkClasses = classNames('pf-c-nav__link', { 'pf-m-current': isActive });
     return (
       <NavItem className={itemClasses} isActive={isActive}>
-        <Link
-          className={linkClasses}
-          id={id}
-          data-test-id={testID}
-          to={this.to}
-          onClick={onClick}
-          title={tipText}
-        >
+        <Link className={linkClasses} id={id} data-test-id={testID} to={this.to} onClick={onClick} title={tipText}>
           {name}
           {children}
         </Link>
@@ -93,11 +84,7 @@ export class ResourceNSLink extends NavLink<ResourceNSLinkProps> {
 
 export class ResourceClusterLink extends NavLink<ResourceClusterLinkProps> {
   static isActive(props, resourcePath) {
-    return (
-      resourcePath === props.resource ||
-      _.startsWith(resourcePath, `${props.resource}/`) ||
-      matchesModel(resourcePath, props.model)
-    );
+    return resourcePath === props.resource || _.startsWith(resourcePath, `${props.resource}/`) || matchesModel(resourcePath, props.model);
   }
 
   get to() {
@@ -122,12 +109,20 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
     switch (type) {
       case 'grafana': {
         const onClick = () => {
-          let ns = localStorage.getItem('bridge/last-namespace-name') === '#ALL_NS#' ? 'all-namespaces' : localStorage.getItem('bridge/last-namespace-name') ?? 'all-namespaces';
-          window.open(`${document.location.origin}/api/grafana/d/k8s-namespace/?var-namespace=${ns}`);
+          // let ns = localStorage.getItem('bridge/last-namespace-name') === '#ALL_NS#' ? 'all-namespaces' : localStorage.getItem('bridge/last-namespace-name') ?? 'all-namespaces';
+          window.open(`${document.location.origin}/api/grafana/login/generic_oauth`);
         };
         return (
           <NavItem isActive={false} onClick={onClick}>
-            <Link to="#" onClick={e => {e.preventDefault();}} className="pf-c-nav__link">{name}</Link>
+            <Link
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+              }}
+              className="pf-c-nav__link"
+            >
+              {name}
+            </Link>
           </NavItem>
         );
       }
@@ -138,7 +133,15 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
         };
         return (
           <NavItem isActive={false} onClick={onClick}>
-            <Link to="#" onClick={e => {e.preventDefault();}} className="pf-c-nav__link">{name}</Link>
+            <Link
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+              }}
+              className="pf-c-nav__link"
+            >
+              {name}
+            </Link>
           </NavItem>
         );
       }
@@ -149,7 +152,15 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
         };
         return (
           <NavItem isActive={false} onClick={onClick}>
-            <Link to="#" onClick={e => {e.preventDefault();}} className="pf-c-nav__link">{name}</Link>
+            <Link
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+              }}
+              className="pf-c-nav__link"
+            >
+              {name}
+            </Link>
           </NavItem>
         );
       }
@@ -160,7 +171,15 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
         };
         return (
           <NavItem isActive={false} onClick={onClick}>
-            <Link to="#" onClick={e => {e.preventDefault();}} className="pf-c-nav__link">{name}</Link>
+            <Link
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+              }}
+              className="pf-c-nav__link"
+            >
+              {name}
+            </Link>
           </NavItem>
         );
       }
@@ -253,14 +272,7 @@ type RootNavLinkProps<T extends NavLinkProps = NavLinkProps> = NavLinkProps & {
   component: NavLinkComponent<T>;
 };
 
-const RootNavLink_: React.FC<RootNavLinkProps & RootNavLinkStateProps> = ({
-  canRender,
-  component: Component,
-  isActive,
-  className,
-  children,
-  ...props
-}) => {
+const RootNavLink_: React.FC<RootNavLinkProps & RootNavLinkStateProps> = ({ canRender, component: Component, isActive, className, children, ...props }) => {
   if (!canRender) {
     return null;
   }
@@ -271,11 +283,8 @@ const RootNavLink_: React.FC<RootNavLinkProps & RootNavLinkStateProps> = ({
   );
 };
 
-const rootNavLinkMapStateToProps = (
-  state: RootState,
-  { required, component: Component, ...props }: RootNavLinkProps,
-): RootNavLinkStateProps => ({
-  canRender: required ? _.castArray(required).every((r) => state[featureReducerName].get(r)) : true,
+const rootNavLinkMapStateToProps = (state: RootState, { required, component: Component, ...props }: RootNavLinkProps): RootNavLinkStateProps => ({
+  canRender: required ? _.castArray(required).every(r => state[featureReducerName].get(r)) : true,
   activeNamespace: getActiveNamespace(state),
   isActive: Component.isActive(props, stripNS(state.UI.get('location')), getActiveNamespace(state)),
 });
