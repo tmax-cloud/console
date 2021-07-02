@@ -68,9 +68,7 @@ const FederatedStatefulSetTableRow: RowFunction<K8sResourceKind> = ({ obj: state
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={statefulset.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(statefulset.metadata.annotations) })}
-      </TableData>
+      <TableData className={tableColumnClasses[3]}>{t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(statefulset.metadata.annotations) })}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={statefulset.metadata.creationTimestamp} />
       </TableData>
@@ -101,10 +99,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ statefulset }) => {
   );
 };
 
-export const StatefulSetDistributionTable: React.FC<StatefulSetDistributionTableProps> = ({
-  heading,
-  statefulset
-}) => {
+export const StatefulSetDistributionTable: React.FC<StatefulSetDistributionTableProps> = ({ heading, statefulset }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -124,39 +119,40 @@ export const StatefulSetDistributionTable: React.FC<StatefulSetDistributionTable
         </div>
       </div>
     </>
-  );}
+  );
+};
 
 const FederatedStatefulSetDetails: React.FC<FederatedStatefulSetDetailsProps> = ({ obj: statefulset }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
-    <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_25') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={statefulset} />
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_25') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={statefulset} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <StatefulSetDistributionTable
-        key="distributionTable"
-        heading="Distribution"
-        statefulset={statefulset} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <StatefulSetDistributionTable key="distributionTable" heading="Distribution" statefulset={statefulset} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml } = navFactory;
-export const FederatedStatefulSets: React.FC = props => <Table {...props} aria-label="Federated Stateful Sets" Header={FederatedStatefulSetTableHeader} Row={FederatedStatefulSetTableRow} virtualize />;
-
+export const FederatedStatefulSets: React.FC = props => {
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="Federated Stateful Sets" Header={FederatedStatefulSetTableHeader.bind(null, t)} Row={FederatedStatefulSetTableRow} virtualize />;
+};
 export const FederatedStatefulSetsPage: React.FC<FederatedStatefulSetsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedStatefulSets} kind={kind} {...props} />;
 
 export const FederatedStatefulSetsDetailsPage: React.FC<FederatedStatefulSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedStatefulSetDetails)), editYaml()]} />;
 
 type ClusterRowProps = {
   statefulset: K8sResourceKind;
-}
+};
 
 type StatefulSetDistributionTableProps = {
   statefulset: K8sResourceKind;
