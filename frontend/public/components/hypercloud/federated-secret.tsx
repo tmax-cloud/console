@@ -88,38 +88,40 @@ const FederatedSecretTableRow: RowFunction<K8sResourceKind> = ({ obj: secret, in
 export const FederatedSecretDetailsList: React.FC<FederatedSecretDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
   return (
-  <dl className="co-m-pane__details">
-  <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
-  <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
-  </dl>
-);}
+    <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
+    </dl>
+  );
+};
 
 const FederatedSecretDetails: React.FC<FederatedSecretDetailsProps> = ({ obj: secret }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
-    <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_26') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={secret} showPodSelector showNodeSelector showTolerations />
-        </div>
-        <div className="col-lg-6">
-          <FederatedSecretDetailsList ds={secret} />
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_26') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={secret} showPodSelector showNodeSelector showTolerations />
+          </div>
+          <div className="col-lg-6">
+            <FederatedSecretDetailsList ds={secret} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml, events } = navFactory;
 export const FederatedSecrets: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Secrets" Header={FederatedSecretTableHeader.bind(null, t)} Row={FederatedSecretTableRow} virtualize />;
-}
+};
 
 export const FederatedSecretsPage: React.FC<FederatedSecretsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedSecrets} kind={kind} {...props} />;
 

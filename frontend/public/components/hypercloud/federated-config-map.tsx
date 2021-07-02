@@ -88,39 +88,40 @@ const FederatedConfigMapTableRow: RowFunction<K8sResourceKind> = ({ obj: configm
 export const FederatedConfigMapDetailsList: React.FC<FederatedConfigMapDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
   return (
-  <dl className="co-m-pane__details">
-    <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
-    <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
-  </dl>
-);
-  }
+    <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_38')} obj={ds} path="status.currentNumberScheduled" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_39')} obj={ds} path="status.desiredNumberScheduled" />
+    </dl>
+  );
+};
 
 const FederatedConfigMapDetails: React.FC<FederatedConfigMapDetailsProps> = ({ obj: configmap }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
-    <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_27') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={configmap} showPodSelector showNodeSelector showTolerations />
-        </div>
-        <div className="col-lg-6">
-          <FederatedConfigMapDetailsList ds={configmap} />
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_27') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={configmap} showPodSelector showNodeSelector showTolerations />
+          </div>
+          <div className="col-lg-6">
+            <FederatedConfigMapDetailsList ds={configmap} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml, events } = navFactory;
 export const FederatedConfigMaps: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Config Maps" Header={FederatedConfigMapTableHeader.bind(null, t)} Row={FederatedConfigMapTableRow} virtualize />;
-}
+};
 
 export const FederatedConfigMapsPage: React.FC<FederatedConfigMapsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedConfigMaps} kind={kind} {...props} />;
 

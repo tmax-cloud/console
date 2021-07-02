@@ -65,9 +65,7 @@ const FederatedHPATableRow: RowFunction<K8sResourceKind> = ({ obj: horizontalpod
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={horizontalpodautoscaler.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {`${_.size(horizontalpodautoscaler.metadata.annotations)} Annotation`}
-      </TableData>
+      <TableData className={tableColumnClasses[3]}>{`${_.size(horizontalpodautoscaler.metadata.annotations)} Annotation`}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={horizontalpodautoscaler.metadata.creationTimestamp} />
       </TableData>
@@ -98,28 +96,25 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ horizontalpodautoscaler 
   );
 };
 
-export const HPADistributionTable: React.FC<HPADistributionTableProps> = ({
-  heading,
-  horizontalpodautoscaler
-}) => (
-    <>
-      <SectionHeading text={heading} />
-      <div className="co-m-table-grid co-m-table-grid--bordered">
-        <div className="row co-m-table-grid__head">
-          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">Resource Name</div>
-          <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">Cluster Name</div>
-          <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">Result</div>
-          <div className="col-lg-1 col-md-2 hidden-sm hidden-xs">Time</div>
-        </div>
-        <div className="co-m-table-grid__body">
-          {/*containers.map((c: any, i: number) => (
+export const HPADistributionTable: React.FC<HPADistributionTableProps> = ({ heading, horizontalpodautoscaler }) => (
+  <>
+    <SectionHeading text={heading} />
+    <div className="co-m-table-grid co-m-table-grid--bordered">
+      <div className="row co-m-table-grid__head">
+        <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">Resource Name</div>
+        <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">Cluster Name</div>
+        <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">Result</div>
+        <div className="col-lg-1 col-md-2 hidden-sm hidden-xs">Time</div>
+      </div>
+      <div className="co-m-table-grid__body">
+        {/*containers.map((c: any, i: number) => (
           <ClusterRow key={i} horizontalpodautoscaler={horizontalpodautoscaler} container={c} />
         ))*/}
-          <ClusterRow horizontalpodautoscaler={horizontalpodautoscaler} />
-        </div>
+        <ClusterRow horizontalpodautoscaler={horizontalpodautoscaler} />
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 
 const FederatedHPADetails: React.FC<FederatedHPADetailsProps> = ({ obj: horizontalpodautoscaler }) => (
   <>
@@ -132,10 +127,7 @@ const FederatedHPADetails: React.FC<FederatedHPADetailsProps> = ({ obj: horizont
       </div>
     </div>
     <div className="co-m-pane__body">
-      <HPADistributionTable
-        key="distributionTable"
-        heading="Distribution"
-        horizontalpodautoscaler={horizontalpodautoscaler} />
+      <HPADistributionTable key="distributionTable" heading="Distribution" horizontalpodautoscaler={horizontalpodautoscaler} />
     </div>
   </>
 );
@@ -149,7 +141,7 @@ export const FederatedHPAsDetailsPage: React.FC<FederatedHPAsDetailsPageProps> =
 
 type ClusterRowProps = {
   horizontalpodautoscaler: K8sResourceKind;
-}
+};
 
 type HPADistributionTableProps = {
   horizontalpodautoscaler: K8sResourceKind;
