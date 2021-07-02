@@ -68,9 +68,7 @@ const FederatedCronJobTableRow: RowFunction<K8sResourceKind> = ({ obj: cronjob, 
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={cronjob.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(cronjob.metadata.annotations) })}
-      </TableData>
+      <TableData className={tableColumnClasses[3]}>{t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(cronjob.metadata.annotations) })}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={cronjob.metadata.creationTimestamp} />
       </TableData>
@@ -101,10 +99,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ cronjob }) => {
   );
 };
 
-export const CronJobDistributionTable: React.FC<CronJobDistributionTableProps> = ({
-  heading,
-  cronjob
-}) => {
+export const CronJobDistributionTable: React.FC<CronJobDistributionTableProps> = ({ heading, cronjob }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -124,39 +119,40 @@ export const CronJobDistributionTable: React.FC<CronJobDistributionTableProps> =
         </div>
       </div>
     </>
-  );}
+  );
+};
 
 const FederatedCronJobDetails: React.FC<FederatedCronJobDetailsProps> = ({ obj: cronjob }) => {
   const { t } = useTranslation();
   return (
-  <>
-    <div className="co-m-pane__body">
-    <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_28') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={cronjob} />
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_28') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={cronjob} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <CronJobDistributionTable
-        key="distributionTable"
-        heading="Distribution"
-        cronjob={cronjob} />
-    </div>
-  </>
-);}
+      <div className="co-m-pane__body">
+        <CronJobDistributionTable key="distributionTable" heading="Distribution" cronjob={cronjob} />
+      </div>
+    </>
+  );
+};
 
 const { details, editYaml } = navFactory;
-export const FederatedCronJobs: React.FC = props => <Table {...props} aria-label="Federated Cron Jobs" Header={FederatedCronJobTableHeader} Row={FederatedCronJobTableRow} virtualize />;
-
+export const FederatedCronJobs: React.FC = props => {
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="Federated Cron Jobs" Header={FederatedCronJobTableHeader.bind(null, t)} Row={FederatedCronJobTableRow} virtualize />;
+};
 export const FederatedCronJobsPage: React.FC<FederatedCronJobsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedCronJobs} kind={kind} {...props} />;
 
 export const FederatedCronJobsDetailsPage: React.FC<FederatedCronJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedCronJobDetails)), editYaml()]} />;
 
 type ClusterRowProps = {
   cronjob: K8sResourceKind;
-}
+};
 
 type CronJobDistributionTableProps = {
   cronjob: K8sResourceKind;
