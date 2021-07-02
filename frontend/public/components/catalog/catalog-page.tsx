@@ -9,13 +9,15 @@ import { CatalogTileViewPage, Item } from './catalog-items';
 import { k8sListPartialMetadata, referenceForModel, serviceClassDisplayName, K8sResourceCommon, K8sResourceKind, PartialObjectMetadata, TemplateKind } from '../../module/k8s';
 import { withStartGuide } from '../start-guide';
 import { connectToFlags, flagPending, FlagsObject } from '../../reducers/features';
-import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, ExternalLink } from '../utils';
+import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, ExternalLink, Box, MsgBox } from '../utils';
 import { getAnnotationTags, getMostRecentBuilderTag, isBuilder } from '../image-stream';
 import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon } from './catalog-item-icon';
 import { ClusterServiceClassModel, TemplateModel, ServiceClassModel } from '../../models';
 import * as plugins from '../../plugins';
 import { coFetch, coFetchJSON } from '../../co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
+import * as noResourceImg from '../../imgs/hypercloud/img_no_resource.svg';
+import { Link } from 'react-router-dom';
 
 export const CatalogPageType = {
   SERVICE_INSTANCE: 'ServiceInstance',
@@ -29,6 +31,7 @@ export const getCatalogPageType = () => {
     return CatalogPageType.DEVELOPER;
   }
 };
+
 export const CatalogListPage = withTranslation()(
   class CatalogListPage extends React.Component<any, CatalogListPageState> {
     constructor(props: CatalogListPageProps) {
@@ -100,7 +103,6 @@ export const CatalogListPage = withTranslation()(
     }
 
     normalizeServiceClasses(serviceClasses: K8sResourceKind[]) {
-
       // MEMO : tileDescription 정보들 기획임시처리로 공백으로 설정해놓음.
 
       // TODO : namespace가 없을 경우(all-namespace로 선택된 경우) 일단 default로 namespace설정되게 해놨는데 어떻게 처리할지 정해지면 수정하기
@@ -317,12 +319,30 @@ export const CatalogListPage = withTranslation()(
       });
     }
 
+    // MJ : i18n String 발행되면 적용하기
     render() {
-      const { loaded, loadError } = this.props;
+      const { loaded, loadError, namespace = 'default' } = this.props;
       const { items } = this.state;
+      const label = 'Resources';
+
+      const ServiceInstanceEmptyPage = () => {
+        return (
+          <div>
+            <Box className="text-center">
+              <img className="cos-status-box__access-denied-icon" src={noResourceImg} />
+              <MsgBox title="" detail="서비스 인스턴스를 생성할 리소스가 없습니다." />
+            </Box>
+            <Box className="text-center">
+              <Link to={`/k8s/ns/${namespace}/serviceinstances`}>목록으로 돌아가기</Link>
+            </Box>
+          </div>
+        );
+      };
+
+      const EmptyPage = getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE ? ServiceInstanceEmptyPage : null;
 
       return (
-        <StatusBox skeleton={skeletonCatalog} data={items} loaded={loaded} loadError={loadError} label="Resources">
+        <StatusBox skeleton={skeletonCatalog} data={[]} loaded={loaded} loadError={loadError} label={label} EmptyMsg={EmptyPage}>
           <CatalogTileViewPage items={items} />
         </StatusBox>
       );
