@@ -342,7 +342,7 @@ export const CatalogListPage = withTranslation()(
       const EmptyPage = getCatalogPageType() === CatalogPageType.SERVICE_INSTANCE ? ServiceInstanceEmptyPage : null;
 
       return (
-        <StatusBox skeleton={skeletonCatalog} data={[]} loaded={loaded} loadError={loadError} label={label} EmptyMsg={EmptyPage}>
+        <StatusBox skeleton={skeletonCatalog} data={items} loaded={loaded} loadError={loadError} label={label} EmptyMsg={EmptyPage}>
           <CatalogTileViewPage items={items} />
         </StatusBox>
       );
