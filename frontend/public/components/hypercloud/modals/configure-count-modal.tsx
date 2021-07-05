@@ -5,8 +5,10 @@ import { k8sPatch, K8sResourceKind, K8sKind } from '../../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
 import { NumberSpinner, withHandlePromise } from '../../utils';
 import { Section } from '../utils/section';
+import { useTranslation } from 'react-i18next';
 
 export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModalProps) => {
+  const { t } = useTranslation();
   const getPath1 = props.path1.substring(1).replace('/', '.');
   const [value1, setValue1] = React.useState<number>(_.get(props.resource, getPath1) || props.defaultValue);
 
@@ -48,10 +50,10 @@ export const ConfigureCountModal = withHandlePromise((props: ConfigureCountModal
       <ModalTitle>{props.title}</ModalTitle>
       <ModalBody>
         <p>{props.message}</p>
-        <Section label="Master Node" id="master-node">
+        <Section label={t('COMMON:MSG_MAIN_POPUP_13')} id="master-node">
           <NumberSpinner className="pf-c-form-control" value={value1} onChange={(e: any) => setValue1(e.target.value)} changeValueBy={operation => setValue1(_.toInteger(value1) + operation * 2)} autoFocus required min={1} />
         </Section>
-        <Section label="Worker Node" id="worker-node">
+        <Section label={t('COMMON:MSG_MAIN_POPUP_14')} id="worker-node">
           <NumberSpinner className="pf-c-form-control" value={value2} onChange={(e: any) => setValue2(e.target.value)} changeValueBy={operation => setValue2(_.toInteger(value2) + operation)} autoFocus required min={1} />
         </Section>
       </ModalBody>
@@ -64,19 +66,15 @@ export const configureCountModal = createModalLauncher(ConfigureCountModal);
 
 export const configureClusterNodesModal = props => {
   return configureCountModal(
-    _.defaults(
-      {},
-      {
-        defaultValue: 1,
-        title: 'Edit Nodes',
-        message: `Master node and worker node can be scaled.`,
-        // path: '/spec/masterNum',
-        path1: '/spec/masterNum',
-        path2: '/spec/workerNum',
-        buttonText: 'Save',
-      },
-      props,
-    ),
+    _.defaults({}, props, {
+      defaultValue: 1,
+      title: 'Edit Nodes',
+      message: `Master node and worker node can be scaled.`,
+      // path: '/spec/masterNum',
+      path1: '/spec/masterNum',
+      path2: '/spec/workerNum',
+      buttonText: 'Save',
+    }),
   );
 };
 

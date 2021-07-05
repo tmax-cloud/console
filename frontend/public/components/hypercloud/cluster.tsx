@@ -14,27 +14,34 @@ import { MembersPage } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ResourceEventStream } from '../events';
 
-const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => ({
-  label: 'Edit Nodes',
-  callback: () =>
-    configureClusterNodesModal({
-      resourceKind: kind,
-      resource: obj,
-    }),
-  accessReview: {
-    group: kind.apiGroup,
-    resource: kind.plural,
-    name: obj.metadata.name,
-    verb: 'patch',
-  },
-});
-
-export const menuActions: KebabAction[] = [ModifyClusterNodes, ...Kebab.getExtensionsActionsForKind(ClusterManagerModel), ...Kebab.factory.common];
+const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
+  const { t } = useTranslation();
+  return {
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_78',
+    callback: () =>
+      configureClusterNodesModal({
+        resourceKind: kind,
+        resource: obj,
+        title: t('COMMON:MSG_MAIN_POPUP_11'),
+        message: t('COMMON:MSG_MAIN_POPUP_12'),
+        buttonText: t('COMMON:MSG_MAIN_POPUP_15'),
+      }),
+    accessReview: {
+      group: kind.apiGroup,
+      resource: kind.plural,
+      name: obj.metadata.name,
+      verb: 'patch',
+    },
+  };
+};
 
 const kind = ClusterManagerModel.kind;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
+const ClusterType = {
+  CREATED: 'created',
+  REGISTERED: 'registered',
+};
 const ClusterTableHeader = (t?: TFunction) => {
   return [
     {
@@ -99,16 +106,27 @@ const ClusterTableHeader = (t?: TFunction) => {
 };
 ClusterTableHeader.displayName = 'ClusterTableHeader';
 
+const getMenuActions = type => {
+  let menuActions: any[];
+  if (type === ClusterType.CREATED) {
+    menuActions = [ModifyClusterNodes, ...Kebab.getExtensionsActionsForKind(ClusterManagerModel), ...Kebab.factory.common];
+  } else {
+    menuActions = [...Kebab.getExtensionsActionsForKind(ClusterManagerModel), ...Kebab.factory.common];
+  }
+  return menuActions;
+};
+
 const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, key, style }) => {
   const owner = cluster.metadata?.annotations?.owner;
   let type = cluster.metadata.labels?.type;
+
   return (
     <TableRow id={cluster.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
-      <TableData className={classNames(tableColumnClasses[2])}>{type === 'created' ? '생성' : type === 'registered' ? '등록' : '-'}</TableData>
+      <TableData className={classNames(tableColumnClasses[2])}>{type === ClusterType.CREATED ? '생성' : type === ClusterType.REGISTERED ? '등록' : '-'}</TableData>
       <TableData className={tableColumnClasses[3]}>{cluster.status?.phase}</TableData>
       <TableData className={tableColumnClasses[4]}>{cluster.spec.version}</TableData>
       <TableData className={tableColumnClasses[5]}>{`${cluster.status?.masterRun ?? 0} / ${cluster.spec?.masterNum ?? 0}`}</TableData>
@@ -118,7 +136,7 @@ const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, k
         <Timestamp timestamp={cluster.metadata.creationTimestamp} />
       </TableData>
       <TableData className={tableColumnClasses[9]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={cluster} />
+        <ResourceKebab actions={getMenuActions(type)} kind={kind} resource={cluster} />
       </TableData>
     </TableRow>
   );
@@ -192,16 +210,30 @@ export const Clusters: React.FC = props => {
 
 export const ClustersPage: React.FC<ClustersPageProps> = props => {
   const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_84')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_84') })} ListComponent={Clusters} kind={kind} {...props} />;
+  const pages = [
+    {
+      href: 'clustermanagers',
+      name: t('COMMON:MSG_LNB_MENU_84'),
+    },
+    {
+      href: 'clusterclaims',
+      name: t('COMMON:MSG_LNB_MENU_105'),
+    },
+  ];
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_84')} multiNavPages={pages} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_84') })} ListComponent={Clusters} kind={kind} {...props} />;
 };
 
 export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => {
+  const [type, setType] = React.useState('');
+
   return (
     <DetailsPage
       {...props}
       titleFunc={(obj: any) => obj.metadata.name}
       kind={kind}
-      menuActions={menuActions}
+      menuActions={getMenuActions(type)}
+      setState4MenuActions={setType}
+      statePath="metadata.labels.type"
       pages={[
         {
           href: '',
