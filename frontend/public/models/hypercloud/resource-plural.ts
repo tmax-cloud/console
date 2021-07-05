@@ -20,6 +20,10 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_105',
     label: 'COMMON:MSG_LNB_MENU_182',
   },
+  ClusterRegistration: {
+    labelPlural: 'Cluster Registrations',
+    label: 'Cluster Registration',
+  },
   ClusterManager: {
     labelPlural: 'COMMON:MSG_LNB_MENU_84',
     label: 'COMMON:MSG_LNB_MENU_165',

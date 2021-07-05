@@ -925,3 +925,15 @@ export const AWXModel: K8sKind = {
   id: 'awx',
   plural: 'awxs',
 };
+
+export const ClusterRegistrationModel: K8sKind = {
+  label: 'ClusterRegistration',
+  labelPlural: 'Cluster Registrations',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'cluster.tmax.io',
+  plural: 'clusterregistrations',
+  abbr: 'CLR',
+  kind: 'ClusterRegistration',
+  id: 'clusterregistration',
+  namespaced: true,
+};

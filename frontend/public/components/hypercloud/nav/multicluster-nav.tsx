@@ -14,7 +14,7 @@ type SeparatorProps = {
 
 const Separator: React.FC<SeparatorProps> = ({ name }) => <NavItemSeparator name={name} />;
 
-const clustermanagersStartsWith = ['clustermanagers', 'clusterclaims'];
+const clustermanagersStartsWith = ['clustermanagers', 'clusterclaims', 'clusterregistrations'];
 
 const MulticlusterNav = () => (
   <Translation>
