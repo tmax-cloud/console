@@ -10,6 +10,7 @@ import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '
 import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { ExperimentModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { Status } from '@console/shared';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ExperimentModel), ...Kebab.factory.common];
 
@@ -60,10 +61,48 @@ const ExperimentTableHeader = (t?: TFunction) => {
 };
 ExperimentTableHeader.displayName = 'ExperimentTableHeader';
 
+const getConditionStatus = obj => {
+  const conditions = obj.status?.conditions;
+  return !!conditions ? conditions[conditions.length - 1]?.type : '-';
+};
+
+const getOptimizationStatus = obj => {
+  const objective = obj.spec?.objective;
+  const metrics = obj.status?.currentOptimalTrial?.observation?.metrics;
+
+  switch (objective?.objectiveMetricName) {
+    case 'accuracy':
+    case 'Validation-accuracy': {
+      const goal = objective.goal;
+      const type = objective.type;
+      const metric = metrics?.find(metric => metric.name === 'Validation-accuracy');
+      if (!!metric) {
+        const value = type === 'maximize' ? metric.max : metric.min;
+        return `${value} / ${goal}`;
+      } else {
+        return `- / ${goal}`;
+      }
+    }
+    case 'loss':
+    case 'Validation-loss': {
+      const goal = objective.goal;
+      const type = objective.type;
+      const metric = metrics?.find(metric => metric.name === 'Validation-loss');
+      if (!!metric) {
+        const value = type === 'maximize' ? metric.max : metric.min;
+        return `${value} / ${goal}`;
+      } else {
+        return `- / ${goal}`;
+      }
+    }
+    default:
+      return '-';
+  }
+};
+
 const ExperimentTableRow: RowFunction<K8sResourceKind> = ({ obj: experiment, index, key, style }) => {
-  let experimentectiveMetricName = experiment.spec.experimentective?.experimentectiveMetricName;
-  let currentOptimal = experimentectiveMetricName && experiment.status.currentOptimalTrial.observation.metrics ? experiment.status.currentOptimalTrial.observation.metrics.find(metric => metric.name === experimentectiveMetricName) : { value: 0 };
-  let optimal = currentOptimal.value + '/' + experiment.spec.experimentective?.goal;
+  const trials = experiment.status?.trials || '-';
+  const maxTrials = experiment.spec?.maxTrialCount || '-';
   return (
     <TableRow id={experiment.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -72,17 +111,11 @@ const ExperimentTableRow: RowFunction<K8sResourceKind> = ({ obj: experiment, ind
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={experiment.metadata.namespace} title={experiment.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        {experiment.spec.algorithm.algorithmName}
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {experiment.status.trials + '/' + experiment.spec.maxTrialCount}
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        {optimal}
-      </TableData>
+      <TableData className={tableColumnClasses[2]}>{experiment.spec?.algorithm?.algorithmName || '-'}</TableData>
+      <TableData className={tableColumnClasses[3]}>{`${trials} / ${maxTrials}`}</TableData>
+      <TableData className={tableColumnClasses[4]}>{getOptimizationStatus(experiment)}</TableData>
       <TableData className={tableColumnClasses[5]}>
-        {experiment.status.conditions.length ? experiment.status.conditions[experiment.status.conditions.length - 1].type : ''}
+        <Status status={getConditionStatus(experiment)} />
       </TableData>
       <TableData className={tableColumnClasses[6]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={experiment} />
@@ -92,36 +125,33 @@ const ExperimentTableRow: RowFunction<K8sResourceKind> = ({ obj: experiment, ind
 };
 
 export const ExperimentDetailsList: React.FC<ExperimentDetailsListProps> = ({ experiment }) => {
-  let objectiveMetricName = experiment.spec.objective.objectiveMetricName;
-  const metrics = _.get(experiment, 'status.currentOptimalTrial.observation.metrics');
-  let currentOptimal = objectiveMetricName && Array.isArray(metrics) ? metrics.find(metric => metric.name === objectiveMetricName) : { value: 0 };
-  let optimal = currentOptimal.value + '/' + experiment.spec.objective?.goal;
-
   const { t } = useTranslation();
+  const trials = experiment.status?.trials || '-';
+  const maxTrials = experiment.spec?.maxTrialCount || '-';
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')} obj={experiment} path="status.conditions">
-        {experiment.status.conditions.length ? experiment.status.conditions[experiment.status.conditions.length - 1].type : ''}
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')} obj={experiment}>
+        <Status status={getConditionStatus(experiment)} />
       </DetailsItem>
       <DetailsItem label={t('알고리즘 이름')} obj={experiment} path="spec.algorithm.algorithmName">
-        {experiment.spec.algorithm.algorithmName}
+        {experiment.spec?.algorithm?.algorithmName}
       </DetailsItem>
-      <DetailsItem label={t('트라이얼 개수')} obj={experiment} path="status.currentNumberScheduled">
-        {experiment.status.trials + '/' + experiment.spec.maxTrialCount}
+      <DetailsItem label={t('트라이얼 개수')} obj={experiment}>
+        {`${trials} / ${maxTrials}`}
       </DetailsItem>
-      <DetailsItem label={t('최적화 상태')} obj={experiment} path="status.desiredNumberScheduled">
-        {optimal}
+      <DetailsItem label={t('최적화 상태')} obj={experiment}>
+        {getOptimizationStatus(experiment)}
       </DetailsItem>
     </dl>
   );
-}
+};
 
 const ExperimentDetails: React.FC<ExperimentDetailsProps> = ({ obj: experiment }) => {
   const { t } = useTranslation();
   return (
     <>
       <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(experiment, t) })}/>
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(experiment, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={experiment} />
@@ -133,13 +163,13 @@ const ExperimentDetails: React.FC<ExperimentDetailsProps> = ({ obj: experiment }
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 export const Experiments: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Experiments" Header={ExperimentTableHeader.bind(null, t)} Row={ExperimentTableRow} virtualize />;
-}
+};
 
 export const ExperimentsPage: React.FC<ExperimentsPageProps> = props => <ListPage canCreate={true} ListComponent={Experiments} kind={kind} {...props} />;
 
