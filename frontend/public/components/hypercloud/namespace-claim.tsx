@@ -133,7 +133,7 @@ export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => 
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
     },
   ];
-  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
+  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} mock={false} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: namespaceclaims }) => {
