@@ -171,8 +171,20 @@ const filters = [
   },
 ];
 
-export const ClusterClaimsPage: React.FC<ClusterClaimsPageProps> = props => <ListPage canCreate={true} ListComponent={ClusterClaims} kind={kind} rowFilters={filters} {...props} />;
-
+export const ClusterClaimsPage: React.FC<ClusterClaimsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'clustermanagers',
+      name: t('COMMON:MSG_LNB_MENU_84'),
+    },
+    {
+      href: 'clusterclaims',
+      name: t('COMMON:MSG_LNB_MENU_105'),
+    },
+  ];
+  return <ListPage canCreate={true} multiNavPages={pages} ListComponent={ClusterClaims} kind={kind} rowFilters={filters} {...props} />;
+};
 export const ClusterClaimsDetailsPage: React.FC<ClusterClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ClusterClaimDetails)), editYaml()]} />;
 
 type ClusterRowProps = {

@@ -14,15 +14,17 @@ type SeparatorProps = {
 
 const Separator: React.FC<SeparatorProps> = ({ name }) => <NavItemSeparator name={name} />;
 
+const clustermanagersStartsWith = ['clustermanagers', 'clusterclaims'];
+
 const MulticlusterNav = () => (
   <Translation>
     {t => (
       <>
-        <NavSection title={t('COMMON:MSG_LNB_MENU_105')} isSingleChild={true}>
+        {/* <NavSection title={t('COMMON:MSG_LNB_MENU_105')} isSingleChild={true}>
           <ResourceNSLink resource="clusterclaims" name={t('COMMON:MSG_LNB_MENU_105')} />
-        </NavSection>
+        </NavSection> */}
         <NavSection title={t('COMMON:MSG_LNB_MENU_84')} isSingleChild={true}>
-          <ResourceNSLink resource="clustermanagers" name={t('COMMON:MSG_LNB_MENU_84')} />
+          <ResourceNSLink resource="clustermanagers" name={t('COMMON:MSG_LNB_MENU_84')} startsWith={clustermanagersStartsWith} />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_201')} isSingleChild={true}>
           <ResourceNSLink resource="tfapplyclaims" name={t('COMMON:MSG_LNB_MENU_201')} />

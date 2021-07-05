@@ -189,7 +189,7 @@ export const NamespaceClaimsDetailsPage: React.FC<NamespaceClaimsDetailsPageProp
   } else {
     menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
   }
-  return <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} setStatus4MenuActions={setStatus} pages={[details(NamespaceClaimsDetails), editResource()]} />;
+  return <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} setState4MenuActions={setStatus} statePath="status.status" pages={[details(NamespaceClaimsDetails), editResource()]} />;
 };
 NamespaceClaimsDetailsPage.displayName = 'NamespaceClaimsDetailsPage';
 
