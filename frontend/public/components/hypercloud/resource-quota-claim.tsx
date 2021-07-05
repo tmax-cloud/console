@@ -194,7 +194,7 @@ export const ResourceQuotaClaimsDetailsPage: React.FC<ResourceQuotaClaimsDetails
   } else {
     menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
   }
-  return <DetailsPage {...props} kind={'ResourceQuotaClaim'} menuActions={menuActions} setStatus4MenuActions={setStatus} pages={[details(ResourceQuotaClaimsDetails), editResource()]} />;
+  return <DetailsPage {...props} kind={'ResourceQuotaClaim'} menuActions={menuActions} setState4MenuActions={setStatus} statePath='status.status' pages={[details(ResourceQuotaClaimsDetails), editResource()]} />;
 };
 ResourceQuotaClaimsDetailsPage.displayName = 'ResourceQuotaClaimsDetailsPage';
 
