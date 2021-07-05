@@ -100,7 +100,7 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
             obj['configMap'] = item.configMap.name;
           } else if (item.secret) {
             obj['type'] = 'secret';
-            obj['secret'] = item.secret.name;
+            obj['secret'] = item.secret.secretName;
           } else if (item.emptyDir) {
             obj['type'] = 'emptyDir';
           }
