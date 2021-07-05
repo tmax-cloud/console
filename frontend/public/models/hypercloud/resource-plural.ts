@@ -335,4 +335,8 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_194',
     label: 'COMMON:MSG_LNB_MENU_194',
   },
+  HelmRelease: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_203',
+    label: 'COMMON:MSG_LNB_MENU_204',
+  },
 };
