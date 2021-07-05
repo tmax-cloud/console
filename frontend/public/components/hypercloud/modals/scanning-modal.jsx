@@ -201,8 +201,8 @@ class BaseScanningModal extends PromiseComponent {
   };
 
   onSelectedItemChange = items => {
-    const resource = [...items][0] === 'All' ? this.state.resources.map(res => res.metadata.name) : [...items].map(item => this.state.resources.find(res => res.metadata.uid === item)?.metadata.name);
-    this.setState({ resource });
+    const resource = [...items][0] === 'All' ? this.state.resources.map(res => res.metadata.name) : [...items].map(item => this.state.resources.find(res => res.metadata.name === item)?.metadata.name);
+    this.setState({ resource: resource });
   };
 
   render() {
