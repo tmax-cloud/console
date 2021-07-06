@@ -53,6 +53,7 @@ const pluralToKindMap = new Map([
   ['hyperclusterresources', 'HyperClusterResource'],
   ['clustermanagers', 'ClusterManager'],
   ['clusterclaims', 'ClusterClaim'],
+  ['clusterregistrations', 'ClusterRegistration'],
   ['federatedconfigmaps', 'FederatedConfigMap'],
   ['federateddeployments', 'FederatedDeployment'],
   ['federatedingresses', 'FederatedIngress'],

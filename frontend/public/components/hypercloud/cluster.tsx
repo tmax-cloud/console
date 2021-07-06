@@ -219,6 +219,10 @@ export const ClustersPage: React.FC<ClustersPageProps> = props => {
       href: 'clusterclaims',
       name: t('COMMON:MSG_LNB_MENU_105'),
     },
+    {
+      href: 'clusterregistrations',
+      name: t('COMMON:MSG_MAIN_TAB_3'),
+    },
   ];
   return <ListPage title={t('COMMON:MSG_LNB_MENU_84')} multiNavPages={pages} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_84') })} ListComponent={Clusters} kind={kind} {...props} />;
 };
