@@ -311,7 +311,7 @@ const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
       return prephase || 'Planned';
     }
   };
-  const [selectedLog, setSelectedLog] = React.useState(selecteLogFunc.bind(null, obj.status));
+  const [selectedLog, setSelectedLog] = React.useState(selecteLogFunc(obj.status));
 
   const onClickItem = e => {
     let target = e.target.closest('li');
@@ -334,8 +334,8 @@ const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
     <>
       <div className="tfac-logs">
         <ul className="tfac-logs__vertical-nav">
-          {logs.map(cur => (
-            <li className={classNames({ 'tfac-logs__vertical-nav__item-selected': selectedLog === Object.keys(cur)[0], 'tfac-logs__vertical-nav__item': true })} data-item={Object.keys(cur)[0]} onClick={onClickItem}>
+          {logs.map((cur, idx) => (
+            <li className={classNames({ 'tfac-logs__vertical-nav__item-selected': selectedLog === Object.keys(cur)[0], 'tfac-logs__vertical-nav__item': true })} key={idx} data-item={Object.keys(cur)[0]} onClick={onClickItem}>
               <span className={classNames({ ['tfac-logs__vertical-nav__item__font']: selectedLog === Object.keys(cur)[0] })}>{t(`COMMON:${Object.values(cur)[0]}`)}</span>
             </li>
           ))}
