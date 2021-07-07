@@ -91,7 +91,7 @@ const setClaimStatus = status => {
 };
 
 const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim, index, key, style }) => {
-  let menuActions = setClaimStatus(tfapplyclaim.status.phase);
+  let menuActions = setClaimStatus(tfapplyclaim.status?.phase);
   return (
     <TableRow id={tfapplyclaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -248,11 +248,11 @@ const TFApplyLog: React.FC<TFLogsProps> = React.memo(({ obj }) => {
           <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_1')}</span>
         </div>
         <Tooltip content={GitInfo(obj)} maxWidth="30rem" position="top">
-          <span>{obj.status.commit}</span>
+          <span>{obj.status?.commit}</span>
         </Tooltip>
       </div>
       <div className="tfac-logs__contents__rawlogs">
-        <SimpleLogs content={obj.status.apply} />
+        <SimpleLogs content={obj.status?.apply} />
       </div>
     </>
   );
@@ -267,10 +267,10 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
   };
 
   let items: any;
-  if (props.obj.status.plans) {
+  if (props.obj.status?.plans) {
     items = Object.assign(
       {},
-      props.obj.status.plans.map((item: { lastexectiontime: any }) => item.lastexectiontime),
+      props.obj.status?.plans.map((item: { lastexectiontime: any }) => item.lastexectiontime),
     );
   }
 
@@ -294,7 +294,7 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__contents__extra-space"></div>
       <div className="tfac-logs__contents__rawlogs">
-        <SimpleLogs content={obj.status.destroy} />
+        <SimpleLogs content={obj.status?.destroy} />
       </div>
     </>
   );
@@ -302,7 +302,7 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
   const { t } = useTranslation();
   let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroyed: 'MSG_COMMON_STATUS_27' }];
-  const [selectedLog, setSelectedLog] = React.useState(obj.status.phase === 'Planned' || obj.status.phase === 'Applied' || obj.status.phase === 'Destroyed' ? obj.status.phase : obj.status?.prephase === 'Awaiting' ? 'Planned' : obj.status?.prephase ?? 'Planned');
+  const [selectedLog, setSelectedLog] = React.useState(obj.status?.phase === 'Planned' || obj.status?.phase === 'Applied' || obj.status?.phase === 'Destroyed' ? obj.status?.phase ?? '-' : obj.status?.prephase === 'Awaiting' ? 'Planned' : obj.status?.prephase ?? 'Planned');
 
   const onClickItem = e => {
     let target = e.target.closest('li');
@@ -371,7 +371,7 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
         </div>
       </div>
       <div className="tfac-logs__status">
-        <SimpleLogs content={obj.status.state} />
+        <SimpleLogs content={obj.status?.state} />
       </div>
     </>
   );
