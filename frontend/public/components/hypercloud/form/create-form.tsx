@@ -44,7 +44,18 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     const [errorMessage, setError] = React.useState('');
 
     const onClick = methods.handleSubmit(data => {
-      let inDo = isCreatePage(defaultValues) ? _.defaultsDeep(data, props.fixed) : _.defaultsDeep(data, defaultValues);
+      let inDo;
+      if (isCreatePage(defaultValues)) {
+        inDo = _.defaultsDeep(data, props.fixed);
+      } else {
+        // 1. data에는 이미 spec에 대한 값은 다 있을 것이기 때문에 기존 defaultValues에서 spec영역만을 제외한 부분을 fixed로 정의
+        let fixed = _.cloneDeep(defaultValues);
+        delete fixed.spec;
+        // 2. defaultsDeep 첫번째 매개변수 하위 요소에 빈 배열이 있을 경우 source 객체 값을 그대로 받아옴.. 그래서 1번에서 빈배열로 변환될 소지가 있는 spec을 제외한 fixed객체를 만들어서 넘겨줌
+        inDo = _.defaultsDeep(data, fixed);
+      }
+
+      inDo = isCreatePage(defaultValues) ? _.defaultsDeep(data, props.fixed) : _.defaultsDeep(data, props.fixed);
       inDo = props.onSubmitCallback(inDo);
       const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
       if (inDo.error) {
