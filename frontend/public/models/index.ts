@@ -942,7 +942,7 @@ export const ConsoleYAMLSampleModel: K8sKind = {
   label: 'Console YAML Sample',
   labelPlural: 'Console YAML Samples',
   apiVersion: 'v1',
-  apiGroup: 'console.openshift.io',
+  apiGroup: 'console.tmax.io',
   plural: 'consoleyamlsamples',
   abbr: 'CYS',
   namespaced: false,

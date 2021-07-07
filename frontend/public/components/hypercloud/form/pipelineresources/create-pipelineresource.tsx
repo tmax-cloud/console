@@ -10,13 +10,17 @@ import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { useTranslation } from 'react-i18next';
 
-const defaultValues = {
+const defaultValuesTemplate = {
   metadata: {
     name: 'example-name',
   },
+  spec: {
+    type: 'git'
+  }
 };
 
-const pipelineResourceFormFactory = params => {
+const pipelineResourceFormFactory = (params, obj) => {
+  const defaultValues = obj || defaultValuesTemplate;
   return WithCommonForm(CreatePipelineResourceComponent, params, defaultValues);
 };
 
@@ -31,6 +35,26 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
     defaultValue: 'git',
   });
 
+  const methods = useFormContext();
+  const {
+    control: {
+      defaultValuesRef: { current: defaultValues }
+    },
+  } = methods;
+  let defaultRevision = '';
+  let defaultUrl = '';
+
+  if (defaultValues.spec.params !== undefined) {
+    defaultValues.spec.params.forEach(element => {
+      if (element.name === 'revision') {
+        defaultRevision = element.value;
+      }
+      if (element.name === 'url') {
+        defaultUrl = element.value;
+      }
+    });
+  }
+  
   return (
     <>
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_2')} id="label" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_3')}>
@@ -38,30 +62,37 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
       </Section>
 
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id="type">
-        <Dropdown name="spec.type" items={typeList} defaultValue={type} />
+        <Dropdown name="spec.type" items={typeList} defaultValue={defaultValues.spec.type} />
       </Section>
 
       {type === 'git' && (
         <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id="revision">
-          <TextInput inputClassName="pf-c-form-control" id="spec.revision" name="spec.revision" />
+          <TextInput inputClassName="pf-c-form-control" id="spec.revision" name="spec.revision" defaultValue={defaultRevision} />
         </Section>
       )}
 
       <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url">
-        <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" />
+        <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" defaultValue={defaultUrl} />
       </Section>
     </>
   );
 };
 
-export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = ({ match: { params }, kind }) => {
-  const formComponent = pipelineResourceFormFactory(params);
+export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = ({ match: { params }, kind, obj }) => {
+  const formComponent = pipelineResourceFormFactory(params, obj);
   const PipelineResourceFormComponent = formComponent;
   return <PipelineResourceFormComponent fixed={{ apiVersion: `${PipelineResourceModel.apiGroup}/${PipelineResourceModel.apiVersion}`, kind, metadata: { namespace: params.ns } }} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} />;
 };
 
 export const onSubmitCallback = data => {
   let labels = SelectorInput.objectify(data.metadata.labels);
+  if (_.isArray(data.metadata.labels)) {
+    data.metadata.labels.forEach(cur => {
+      labels = typeof cur === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+    });
+  } else {
+    labels = typeof data.metadata.labels === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+  }
 
   let params = [];
   data.spec.revision && params.push({ name: 'revision', value: data.spec.revision });
@@ -86,6 +117,7 @@ type CreatePipelineResourceProps = {
   titleVerb: string;
   saveButtonText?: string;
   isCreate: boolean;
+  obj: any;
 };
 
 type PipelineResourceFormProps = {
