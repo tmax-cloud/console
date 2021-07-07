@@ -302,7 +302,16 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
   const { t } = useTranslation();
   let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroyed: 'MSG_COMMON_STATUS_27' }];
-  const [selectedLog, setSelectedLog] = React.useState(obj.status?.phase === 'Planned' || obj.status?.phase === 'Applied' || obj.status?.phase === 'Destroyed' ? obj.status?.phase ?? '-' : obj.status?.prephase === 'Awaiting' ? 'Planned' : obj.status?.prephase ?? 'Planned');
+  const selecteLogFunc = ({ phase, prephase }) => {
+    if (phase === 'Planned' || phase === 'Applied' || phase === 'Destroyed') {
+      return phase;
+    } else if (prephase === 'Awaiting') {
+      return 'Planned';
+    } else {
+      return prephase || 'Planned';
+    }
+  };
+  const [selectedLog, setSelectedLog] = React.useState(selecteLogFunc.bind(null, obj.status));
 
   const onClickItem = e => {
     let target = e.target.closest('li');
