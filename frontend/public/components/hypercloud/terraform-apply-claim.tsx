@@ -6,75 +6,19 @@ import { Tooltip, Popover } from '@patternfly/react-core';
 // import { Link, withRouter } from 'react-router-dom';
 
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TFApplyClaimModel } from '../../models';
 import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
-import { K8sKind, k8sUpdateApproval, k8sUpdate, K8sResourceKind } from '@console/internal/module/k8s';
+import { K8sResourceKind } from '@console/internal/module/k8s';
 
 import './terraform-apply-claim.scss';
 
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
-
-export const makeTerraformPlan = (resource: K8sResourceKind, action: string): Promise<K8sResourceKind> => {
-  switch (action) {
-    case 'plan':
-      return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Plan' }], 'PATCH');
-      break;
-    case 'apply':
-      return k8sUpdateApproval(TFApplyClaimModel, resource, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH');
-      break;
-    case 'destroy':
-      return k8sUpdate(TFApplyClaimModel, _.defaultsDeep({ spec: { destroy: true } }, resource));
-  }
-};
-
-export const TerraformPlan: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
-  const { t } = useTranslation();
-  return {
-    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_73'),
-    callback: () => makeTerraformPlan(obj, 'plan'),
-    accessReview: {
-      group: kind.apiGroup,
-      resource: kind.plural,
-      name: obj.metadata.name,
-      namespace: obj.metadata.namespace,
-      verb: 'patch',
-    },
-  };
-};
-export const TerraformApply: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
-  const { t } = useTranslation();
-  return {
-    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_74'),
-    callback: () => makeTerraformPlan(obj, 'apply'),
-    accessReview: {
-      group: kind.apiGroup,
-      resource: kind.plural,
-      name: obj.metadata.name,
-      namespace: obj.metadata.namespace,
-      verb: 'patch',
-    },
-  };
-};
-export const TerraformDestroy: KebabAction = (kind: K8sKind, obj: K8sResourceKind, resources: {}) => {
-  const { t } = useTranslation();
-  return {
-    label: t('COMMON:MSG_COMMON_ACTIONBUTTON_75'),
-    callback: () => makeTerraformPlan(obj, 'destroy'),
-    accessReview: {
-      group: kind.apiGroup,
-      resource: kind.plural,
-      name: obj.metadata.name,
-      namespace: obj.metadata.namespace,
-      verb: 'patch',
-    },
-  };
-};
 
 const kind = TFApplyClaimModel.kind;
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), Kebab.columnClass];
@@ -125,21 +69,29 @@ const TFApplyClaimTableHeader = (t?: TFunction) => {
   ];
 };
 
+const setClaimStatus = status => {
+  let menuActions;
+  switch (status) {
+    case 'Approved':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformPlan, Kebab.factory.TerraformApply];
+      break;
+    case 'Awaiting':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+      break;
+    case 'Planned':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformApply];
+      break;
+    case 'Applied':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformDestroy];
+      break;
+    default:
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
+  }
+  return menuActions;
+};
+
 const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim, index, key, style }) => {
-  let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
-  const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
-  const planableStatus = new Set(['Approved']);
-  const appliable = new Set(['Approved', 'Planned']);
-  const destroyable = new Set(['Applied']);
-  const isModifiable = (status: string) => !unmodifiableStatus.has(status);
-  const isPlanable = (status: string) => planableStatus.has(status);
-  const isAppliable = (status: string) => appliable.has(status);
-  const isDestroyable = (status: string) => destroyable.has(status);
-  // push
-  isModifiable(tfapplyclaim.status.phase) && menuActions.push(Kebab.factory.ModifyStatus);
-  isPlanable(tfapplyclaim.status.phase) && menuActions.push(TerraformPlan);
-  isAppliable(tfapplyclaim.status.phase) && menuActions.push(TerraformApply);
-  isDestroyable(tfapplyclaim.status.phase) && menuActions.push(TerraformDestroy);
+  let menuActions = setClaimStatus(tfapplyclaim.status?.phase);
   return (
     <TableRow id={tfapplyclaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -235,7 +187,7 @@ export const TFApplyClaims: React.FC = props => {
 export const TFApplyClaimsPage: React.FC<TFApplyClaimsPageProps> = props => {
   const { t } = useTranslation();
 
-  return <ListPage title={t('테라폼 클레임')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('테라폼 클레임') })} canCreate={true} ListComponent={TFApplyClaims} kind={kind} {...props} />;
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_201')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_201') })} canCreate={true} ListComponent={TFApplyClaims} kind={kind} {...props} />;
 };
 
 type TFLogsProps = {
@@ -268,19 +220,6 @@ export type HCK8sResourceKind = K8sResourceKind & {
   fakeMetadata?: any;
 };
 
-// const TFLogs: React.FC = props => {
-//   let selectedLog;
-
-//   return (
-//     <>
-//       <div className="tfac-logs__extra-space">{props.obj.status.commit}</div>
-//       <div className="tfac-logs__rawlogs">
-//         <SimpleLogs content={props.obj.status.apply} />
-//       </div>
-//     </>
-//   );
-// };
-
 const GitInfo = ({ status: { url, commit }, spec: { branch } }) => {
   const { t } = useTranslation();
   return (
@@ -288,9 +227,11 @@ const GitInfo = ({ status: { url, commit }, spec: { branch } }) => {
       <div style={{ display: 'flex' }}>
         <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_3', { 0: url })}</span>
       </div>
-      <div style={{ display: 'flex' }}>
-        <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_4', { 0: branch })}</span>
-      </div>
+      {branch && (
+        <div style={{ display: 'flex' }}>
+          <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_4', { 0: branch })}</span>
+        </div>
+      )}
       <div style={{ display: 'flex' }}>
         <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_5', { 0: commit })}</span>
       </div>
@@ -307,11 +248,11 @@ const TFApplyLog: React.FC<TFLogsProps> = React.memo(({ obj }) => {
           <span>{t('MULTI:MSG_MULTI_TERRAFORMCLAMS_TABLOGS_TABAPPLY_1')}</span>
         </div>
         <Tooltip content={GitInfo(obj)} maxWidth="30rem" position="top">
-          <span>{obj.status.commit}</span>
+          <span>{obj.status?.commit}</span>
         </Tooltip>
       </div>
       <div className="tfac-logs__contents__rawlogs">
-        <SimpleLogs content={obj.status.apply} />
+        <SimpleLogs content={obj.status?.apply} />
       </div>
     </>
   );
@@ -326,10 +267,10 @@ const TFPlanLogs: React.FC<TFLogsProps> = React.memo(props => {
   };
 
   let items: any;
-  if (props.obj.status.plans) {
+  if (props.obj.status?.plans) {
     items = Object.assign(
       {},
-      props.obj.status.plans.map((item: { lastexectiontime: any }) => item.lastexectiontime),
+      props.obj.status?.plans.map((item: { lastexectiontime: any }) => item.lastexectiontime),
     );
   }
 
@@ -353,7 +294,7 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
     <>
       <div className="tfac-logs__contents__extra-space"></div>
       <div className="tfac-logs__contents__rawlogs">
-        <SimpleLogs content={obj.status.destroy} />
+        <SimpleLogs content={obj.status?.destroy} />
       </div>
     </>
   );
@@ -361,10 +302,8 @@ const TFDestroyLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
   const { t } = useTranslation();
   let logs = [{ Planned: 'MSG_COMMON_STATUS_25' }, { Applied: 'MSG_COMMON_STATUS_26' }, { Destroyed: 'MSG_COMMON_STATUS_27' }];
-  const [selectedLog, setSelectedLog] = React.useState(obj.status.phase);
-  if (obj.status.phase === 'Planned') {
-    logs = [{ Planned: 'MSG_COMMON_STATUS_25' }];
-  }
+  const [selectedLog, setSelectedLog] = React.useState(obj.status?.phase === 'Planned' || obj.status?.phase === 'Applied' || obj.status?.phase === 'Destroyed' ? obj.status?.phase ?? '-' : obj.status?.prephase === 'Awaiting' ? 'Planned' : obj.status?.prephase ?? 'Planned');
+
   const onClickItem = e => {
     let target = e.target.closest('li');
     setSelectedLog(target.dataset.item);
@@ -387,7 +326,7 @@ const TFLogs: React.FC<TFLogsProps> = ({ obj, match }) => {
       <div className="tfac-logs">
         <ul className="tfac-logs__vertical-nav">
           {logs.map(cur => (
-            <li className="tfac-logs__vertical-nav__item" data-item={Object.keys(cur)[0]} onClick={onClickItem}>
+            <li className={classNames({ 'tfac-logs__vertical-nav__item-selected': selectedLog === Object.keys(cur)[0], 'tfac-logs__vertical-nav__item': true })} data-item={Object.keys(cur)[0]} onClick={onClickItem}>
               <span className={classNames({ ['tfac-logs__vertical-nav__item__font']: selectedLog === Object.keys(cur)[0] })}>{t(`COMMON:${Object.values(cur)[0]}`)}</span>
             </li>
           ))}
@@ -432,7 +371,7 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
         </div>
       </div>
       <div className="tfac-logs__status">
-        <SimpleLogs content={obj.status.state} />
+        <SimpleLogs content={obj.status?.state} />
       </div>
     </>
   );
@@ -440,21 +379,8 @@ const TFStatusLogs: React.FC<TFLogsProps> = React.memo(({ obj }) => {
 
 export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> = props => {
   const { t } = useTranslation();
-  let menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
   const [status, setStatus] = React.useState();
-  const unmodifiableStatus = new Set(['Destroyed', 'Planned', 'Applied']);
-  const planableStatus = new Set(['Approved']);
-  const appliable = new Set(['Approved', 'Planned']);
-  const destroyable = new Set(['Applied']);
-  const isModifiable = (status: string) => !unmodifiableStatus.has(status);
-  const isPlanable = (status: string) => planableStatus.has(status);
-  const isAppliable = (status: string) => appliable.has(status);
-  const isDestroyable = (status: string) => destroyable.has(status);
-  // push
-  isModifiable(status) && menuActions.push(Kebab.factory.ModifyStatus);
-  isPlanable(status) && menuActions.push(TerraformPlan);
-  isAppliable(status) && menuActions.push(TerraformApply);
-  isDestroyable(status) && menuActions.push(TerraformDestroy);
+  let menuActions = setClaimStatus(status);
 
   return (
     <DetailsPage
