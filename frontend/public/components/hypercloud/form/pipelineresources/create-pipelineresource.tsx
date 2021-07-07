@@ -86,6 +86,13 @@ export const CreatePipelineResource: React.FC<CreatePipelineResourceProps> = ({ 
 
 export const onSubmitCallback = data => {
   let labels = SelectorInput.objectify(data.metadata.labels);
+  if (_.isArray(data.metadata.labels)) {
+    data.metadata.labels.forEach(cur => {
+      labels = typeof cur === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+    });
+  } else {
+    labels = typeof data.metadata.labels === 'string' ? SelectorInput.objectify(data.metadata.labels) : data.metadata.labels;
+  }
 
   let params = [];
   data.spec.revision && params.push({ name: 'revision', value: data.spec.revision });
