@@ -15,14 +15,15 @@ import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'metadata.creationTimestamp');
 };
-export const kindToggle = (kindPlural, methods) => { //범용적으로 변경할 필요 있음
-  if ( kindPlural === 'roles' ) {
-    const kindToggle = useWatch({   
-      control: methods.control,   
+export const kindToggle = (kindPlural, methods) => {
+  //범용적으로 변경할 필요 있음
+  if (kindPlural === 'roles') {
+    const kindToggle = useWatch({
+      control: methods.control,
       name: 'kind',
       defaultValue: 'Role',
-    });    
-    (kindToggle === 'Role' ) ? kindPlural = 'roles' : kindPlural = 'clusterroles';
+    });
+    kindToggle === 'Role' ? (kindPlural = 'roles') : (kindPlural = 'clusterroles');
   }
   return kindPlural;
 };
@@ -31,11 +32,11 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
   const { t } = useTranslation();
 
   const FormComponent: React.FC<CommonFormProps_> = props => {
-    const methods = useForm({ defaultValues: defaultValues });    
+    const methods = useForm({ defaultValues: defaultValues });
 
     const kind = pluralToKind(kindToggle(params.plural, methods));
     //const kind = pluralToKind(params.plural);
-    
+
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
     const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({ kind: kind }, t) })}`;
@@ -50,26 +51,25 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
       if (inDo.error) {
         setProgress(false);
         setError(inDo.error);
-      }
-      else {
+      } else {
         setProgress(true);
         isCreatePage(defaultValues)
           ? k8sCreate(model, inDo)
-            .then(() => {
-              history.push(resourceObjPath(inDo, referenceFor(model)));
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(e.message);
-            })
+              .then(() => {
+                history.push(resourceObjPath(inDo, referenceFor(model)));
+              })
+              .catch(e => {
+                setProgress(false);
+                setError(e.message);
+              })
           : k8sUpdate(model, inDo)
-            .then(() => {
-              history.push(resourceObjPath(inDo, referenceFor(model)));
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(e.message);
-            });
+              .then(() => {
+                history.push(resourceObjPath(inDo, referenceFor(model)));
+              })
+              .catch(e => {
+                setProgress(false);
+                setError(e.message);
+              });
       }
     });
     return (
