@@ -106,6 +106,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
           samples={[]}
           isCreateMode={true}
           showDetails={true}
+          noTabsOnlyDetails={true}
         />
       </div>
     </>
@@ -118,7 +119,7 @@ type ServiceInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} pages={[details(ServiceInstanceDetails), editYaml()]} />;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={serviceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [
