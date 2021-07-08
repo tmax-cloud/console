@@ -225,8 +225,8 @@ const rowFilters = t => {
   ];
 };
 
-export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new', single = false }) => {
-  const { t } = useTranslation(); 
+export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new', single = false, displayTitleRow = true }) => {
+  const { t } = useTranslation();
 
   const pages = [
     {
@@ -273,6 +273,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
         rowFilters={staticFilters ? [] : rowFilters.bind(null, t)()}
         staticFilters={staticFilters}
         showTitle={showTitle}
+        displayTitleRow={displayTitleRow}
         textFilter="role-binding"
         title={t('COMMON:MSG_LNB_MENU_76')}
         isClusterScope
@@ -299,6 +300,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
       rowFilters={staticFilters ? [] : rowFilters.bind(null, t)()}
       staticFilters={staticFilters}
       showTitle={showTitle}
+      displayTitleRow={displayTitleRow}
       textFilter="role-binding"
       title={t('COMMON:MSG_LNB_MENU_76')}
       isClusterScope
