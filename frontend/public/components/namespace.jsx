@@ -179,8 +179,8 @@ export const NamespacesPage = props => {
       ListComponent={NamespacesList}
       canCreate={true}
       multiNavPages={pages}
-      // createProps={createProps}
-      // createHandler={() => createNamespaceModal({ blocking: true })}
+    // createProps={createProps}
+    // createHandler={() => createNamespaceModal({ blocking: true })}
     />
   );
 };
@@ -226,19 +226,19 @@ const projectTableHeader = ({ showMetrics, showActions }) => {
     },
     ...(showMetrics
       ? [
-          {
-            title: 'Memory',
-            sortFunc: 'namespaceMemory',
-            transforms: [sortable],
-            props: { className: projectColumnClasses[4] },
-          },
-          {
-            title: 'CPU',
-            sortFunc: 'namespaceCPU',
-            transforms: [sortable],
-            props: { className: projectColumnClasses[5] },
-          },
-        ]
+        {
+          title: 'Memory',
+          sortFunc: 'namespaceMemory',
+          transforms: [sortable],
+          props: { className: projectColumnClasses[4] },
+        },
+        {
+          title: 'CPU',
+          sortFunc: 'namespaceCPU',
+          transforms: [sortable],
+          props: { className: projectColumnClasses[5] },
+        },
+      ]
       : []),
     {
       title: 'Created',
@@ -494,8 +494,8 @@ const DetailsStateToProps = ({ UI }) => ({
 export const NamespaceDetails = connect(DetailsStateToProps)(NamespaceDetails_);
 
 const RolesPage = ({ obj: { metadata } }) => {
-  const rolebindingspage = <RoleBindingsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={true} single={true} />;
-  const rolebindingclaimspage = <RoleBindingClaimsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={true} single={true} />;
+  const rolebindingspage = <RoleBindingsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={true} single={true} displayTitleRow={false} />;
+  const rolebindingclaimspage = <RoleBindingClaimsPage createPath={`/k8s/ns/${metadata.name}/rolebindings/~new?rolekind=Role`} namespace={metadata.name} showTitle={true} single={true} displayTitleRow={false} />;
   return (
     <>
       <div className={classNames('namespace-details_role-binding')}>{rolebindingspage}</div>
@@ -561,11 +561,11 @@ class NamespaceBarDropdowns_ extends React.Component {
     }
     const defaultActionItem = canCreateProject
       ? [
-          {
-            actionTitle: `Create ${model.label}`,
-            actionKey: CREATE_NEW_RESOURCE,
-          },
-        ]
+        {
+          actionTitle: `Create ${model.label}`,
+          actionKey: CREATE_NEW_RESOURCE,
+        },
+      ]
       : [];
 
     const onChange = newNamespace => {

@@ -143,7 +143,7 @@ export const FireMan_ = connect(null, { filterList })(
     };
 
     render() {
-      const { canCreate, createAccessReview, createButtonText, createProps = {}, helpText, resources, badge, title, unclickableMsg, multiNavPages, baseURL, basePath } = this.props;
+      const { canCreate, createAccessReview, createButtonText, createProps = {}, helpText, resources, badge, title, displayTitleRow, unclickableMsg, multiNavPages, baseURL, basePath } = this.props;
 
       let createLink;
       if (canCreate) {
@@ -198,12 +198,14 @@ export const FireMan_ = connect(null, { filterList })(
         </div>
       );
 
+      const titleClassName = displayTitleRow ? 'co-m-nav-title--row' : 'co-m-nav-title--column';
+
       return (
         <>
           {/* Badge rendered from PageHeading only when title is present */}
 
-          <PageHeading title={title} badge={title ? badge : null} className={classNames({ 'co-m-nav-title--row': createLink })}>
-            {multiNavPages ? undefined : buttonComponent}
+          <PageHeading title={title} badge={title ? badge : null} className={classNames({ [titleClassName]: createLink })}>
+            {multiNavPages ? undefined : <div style={{ marginBottom: displayTitleRow ? 0 : '10px' }}>{buttonComponent}</div>}
             {!title && badge && <div>{badge}</div>}
           </PageHeading>
 
@@ -260,11 +262,12 @@ FireMan_.propTypes = {
   selectorFilterLabel: PropTypes.string,
   textFilter: PropTypes.string,
   title: PropTypes.string,
+  displayTitleRow: PropTypes.bool,
 };
 
-/** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean, defaultSelectedRows?: string[]} >} */
+/** @type {React.SFC<{ListComponent: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, displayTitleRow?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean, defaultSelectedRows?: string[]} >} */
 export const ListPage = withFallback(props => {
-  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows } = props;
+  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, displayTitleRow, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows } = props;
   let { createProps } = props;
   const { t } = useTranslation();
   const ko = kindObj(kind);
@@ -349,6 +352,7 @@ export const ListPage = withFallback(props => {
       rowFilters={rowFilters}
       selectorFilterLabel="Filter by selector (app=nginx) ..."
       showTitle={showTitle}
+      displayTitleRow={displayTitleRow}
       textFilter={textFilter}
       title={title}
       badge={badge}
@@ -364,9 +368,9 @@ export const ListPage = withFallback(props => {
 
 ListPage.displayName = 'ListPage';
 
-/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[]} >} */
+/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, displayTitleRow?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[]} >} */
 export const MultiListPage = props => {
-  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows } = props;
+  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, displayTitleRow = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows } = props;
 
   const { t } = useTranslation();
 
@@ -381,7 +385,7 @@ export const MultiListPage = props => {
   }));
 
   return (
-    <FireMan_ autoFocus={autoFocus} canCreate={canCreate} createAccessReview={createAccessReview} createButtonText={createButtonText || 'Create'} createProps={createProps} filterLabel={filterLabel || 'by name'} helpText={helpText} resources={mock ? [] : resources} selectorFilterLabel="Filter by selector (app=nginx) ..." textFilter={textFilter} title={showTitle ? title : undefined} badge={badge} unclickableMsg={unclickableMsg} multiNavPages={multiNavPages} baseURL={multiNavBaseURL}>
+    <FireMan_ autoFocus={autoFocus} canCreate={canCreate} createAccessReview={createAccessReview} createButtonText={createButtonText || 'Create'} createProps={createProps} filterLabel={filterLabel || 'by name'} helpText={helpText} resources={mock ? [] : resources} selectorFilterLabel="Filter by selector (app=nginx) ..." textFilter={textFilter} title={showTitle ? title : undefined} displayTitleRow={displayTitleRow} badge={badge} unclickableMsg={unclickableMsg} multiNavPages={multiNavPages} baseURL={multiNavBaseURL}>
       <Firehose resources={mock ? [] : resources}>
         <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} />
       </Firehose>
