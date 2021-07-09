@@ -164,7 +164,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
         paramList?.length > 0 ? (
           <>
             <label className="control-label">{t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV13_1')}</label>
-            {paramList}{' '}
+            {paramList}
           </>
         ) : (
           <>
