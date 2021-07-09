@@ -283,7 +283,7 @@ export const onSubmitCallback = data => {
   data.kind = ClusterTaskModel.kind;
   data.apiVersion = `${ClusterTaskModel.apiGroup}/${ClusterTaskModel.apiVersion}`;
   // resources
-  if (data.spec.resources.inputs.length === 0 && data.spec.resources.outputs.length === 0) {
+  if (data.spec.resources.inputs.length === 0 && datap.spec.resources.outputs.length === 0) {
     delete data.spec.resources;
   }
   //parameter
@@ -301,6 +301,9 @@ export const onSubmitCallback = data => {
   data.spec.workspaces = data?.spec?.workspaces?.map((cur, idx) => {
     let isReadOnly = cur.accessMode === 'readOnly' ? true : false;
     delete data.spec.workspaces[idx].accessMode;
+    if (cur.mountPath === '') {
+      cur.mountPath = `/workspace/${cur.name}`;
+    }
     if (isReadOnly) {
       return { ...cur, readOnly: true };
     } else {
