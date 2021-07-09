@@ -13,8 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(AWXModel), ...Kebab.factory.common, Kebab.factory.Connect];
-const customMenuActionLabel = 'URL';
-let customMenuActionUrl = '';
 
 const kind = AWXModel.kind;
 
@@ -55,7 +53,7 @@ const AWXTableHeader = (t?: TFunction) => {
 AWXTableHeader.displayName = 'AWXTableHeader';
 
 const AWXTableRow: RowFunction<K8sResourceKind> = ({ obj: awx, index, key, style }) => {
-  customMenuActionUrl = `https://${awx.spec?.tower_hostname}`;
+  const url = awx.spec?.tower_hostname ? `https://${awx.spec?.tower_hostname}` : null;
   return (
     <TableRow id={awx.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -71,7 +69,7 @@ const AWXTableRow: RowFunction<K8sResourceKind> = ({ obj: awx, index, key, style
         <Timestamp timestamp={awx.metadata.creationTimestamp} />
       </TableData>
       <TableData className={tableColumnClasses[4]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={awx} customData={{ label: customMenuActionLabel, url: customMenuActionUrl }} />
+        <ResourceKebab actions={menuActions} kind={kind} resource={awx} customData={{ label: 'URL', url }} />
       </TableData>
     </TableRow>
   );
@@ -100,13 +98,12 @@ const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
 
 export const AWXDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
   const { t } = useTranslation();
-  customMenuActionUrl = awx.spec?.tower_hostname ? `https://${awx.spec?.tower_hostname}` : null;
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
-        {awx.spec?.tower_hostname ? (<a href={customMenuActionUrl} target="_blank" >{awx.spec.tower_hostname}</a>) : (<div>-</div>)}
+        {awx.spec?.tower_hostname ? (<a href={`https://${awx.spec?.tower_hostname}`} target="_blank" >{awx.spec.tower_hostname}</a>) : (<div>-</div>)}
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
         <ImageSummary obj={awx} />
@@ -159,7 +156,10 @@ export const AWXsPage: React.FC = (props) => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_199')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_199') })} canCreate={true} ListComponent={AWXs} kind={kind} rowFilters={filters.bind(null, t)()} {...props} />
 };
 
-export const AWXsDetailsPage: React.FC<DetailsPageProps> = (props) => <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: customMenuActionLabel, url: customMenuActionUrl }} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editYaml()]} />;;
+export const AWXsDetailsPage: React.FC<DetailsPageProps> = (props) => {
+  const [url, setUrl] = React.useState(null);
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} statePath='spec.tower_hostname' setState4MenuActions={setUrl} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editYaml()]} />
+};
 
 type ImageSummaryProps = {
   obj: K8sResourceKind;
