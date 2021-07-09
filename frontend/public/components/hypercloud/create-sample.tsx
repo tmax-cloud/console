@@ -17,6 +17,7 @@ import { TagsLabel } from './utils/tags-label';
 import { NumberSpinner } from './utils/number-spinner';
 import { ListView } from './utils/list-view';
 import { Button } from '@patternfly/react-core';
+import { TextInput } from './utils/text-input';
 
 const defaultValues = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
@@ -176,7 +177,10 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
   return (
     <div>
       <Section label="Labels" id="label" description="이것은 Label입니다.">
-        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
+        <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} valid={true} />
+      </Section>
+      <Section label="TextInput Error" id="text-input" description="Textinput 컴포넌트가 에러일경우" valid={false}>
+        <TextInput id="error" inputClassName="col-md-12" methods={methods} valid={false} />
       </Section>
       <Section id="resources" label="Radio Group">
         <RadioGroup
@@ -190,8 +194,8 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
       </Section>
       <Section id="section" label="Grid Section" isRequired={true}>
         {/* sample로 각각다른 3개 node 넣어봄. 1,2,3,4 개 일 경우 다 정상동작 하는 것 확인.*/}
-        <Section id="label" label="Label (for Section)">
-          <Controller name="metadata.section.label" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} />
+        <Section id="label" label="Label (for Section)" valid={false}>
+          <Controller name="metadata.section.label" id="label" labelClassName="co-text-sample" as={SelectorInput} control={methods.control} tags={[]} valid={false} />
         </Section>
         <Section id="cpu" label="Input Selectbox (for Section)">
           <InputSelectBox textName="spec.section.cpu" id="cpu" dropdownName="spec.section.cpuRange" selectedKey="Mi" items={dropdownUnits} />
