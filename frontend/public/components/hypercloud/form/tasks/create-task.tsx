@@ -300,6 +300,11 @@ export const onSubmitCallback = data => {
   data.spec.workspaces = data?.spec?.workspaces?.map((cur, idx) => {
     let isReadOnly = cur.accessMode === 'readOnly' ? true : false;
     delete data.spec.workspaces[idx].accessMode;
+
+    if (cur.mountPath === '') {
+      cur.mountPath = `/workspace/${cur.name}`;
+    }
+
     if (isReadOnly) {
       return { ...cur, readOnly: true };
     } else {
