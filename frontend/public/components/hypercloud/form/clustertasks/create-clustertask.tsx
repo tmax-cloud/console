@@ -283,7 +283,7 @@ export const onSubmitCallback = data => {
   data.kind = ClusterTaskModel.kind;
   data.apiVersion = `${ClusterTaskModel.apiGroup}/${ClusterTaskModel.apiVersion}`;
   // resources
-  if (data.spec.resources.inputs.length === 0 && datap.spec.resources.outputs.length === 0) {
+  if (data.spec.resources.inputs.length === 0 && data.spec.resources.outputs.length === 0) {
     delete data.spec.resources;
   }
   //parameter
