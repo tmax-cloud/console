@@ -64,7 +64,7 @@ const TemplateInstanceDetails: React.FC<TemplateInstanceDetailsProps> = ({ obj: 
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(templateInstance, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={templateInstance} showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={templateInstance} showOwner={false} showPodSelector showNodeSelector></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
@@ -89,7 +89,7 @@ type TemplateInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const TemplateInstancesDetailsPage: React.FC<TemplateInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={templateInstanceMenuActions} pages={[details(TemplateInstanceDetails), editYaml()]} />;
+const TemplateInstancesDetailsPage: React.FC<TemplateInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} getResourceStatus={templateInstancePhase} menuActions={templateInstanceMenuActions} pages={[details(TemplateInstanceDetails), editYaml()]} />;
 TemplateInstancesDetailsPage.displayName = 'TemplateInstancesDetailsPage';
 
 const tableColumnClasses = [

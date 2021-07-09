@@ -10,7 +10,7 @@ import { K8sResourceKind, modelFor } from '../../module/k8s';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
-import { navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp } from '../utils';
+import { navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp, ResourceIcon } from '../utils';
 import { ResourceSidebar } from '../sidebars/resource-sidebar';
 const kind = ServicePlanModel.kind;
 
@@ -98,18 +98,21 @@ const ServicePlanTableRow = (setSidebarDetails, setShowSidebar, setSidebarTitle,
   const { obj, index, key, style } = props;
   const SidebarLink = ({ name, kind, obj }) => {
     return (
-      <Button
-        type="button"
-        variant="link"
-        isInline
-        onClick={() => {
-          setShowSidebar(true);
-          setSidebarDetails(obj);
-          setSidebarTitle(obj.spec?.externalName);
-        }}
-      >
-        {name}
-      </Button>
+      <span className="co-resource-item">
+        <ResourceIcon kind={kind} />
+        <Button
+          type="button"
+          variant="link"
+          isInline
+          onClick={() => {
+            setShowSidebar(true);
+            setSidebarDetails(obj);
+            setSidebarTitle(obj.spec?.externalName);
+          }}
+        >
+          {name}
+        </Button>
+      </span>
     );
   };
   return (
@@ -158,6 +161,7 @@ const ServicePlansPage: React.FC<ServicePlansPageProps> = props => {
           showID={false}
           showPodSelector={false}
           showNodeSelector={false}
+          showDescription={true}
           showOwner={false}
           showAnnotations={false}
           showSidebar={showSidebar}

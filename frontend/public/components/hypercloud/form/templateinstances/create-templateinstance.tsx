@@ -160,7 +160,19 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
         <RadioGroup name="type" items={typeItems} inline={false} initValue={selectedType} methods={methods} />
       </Section>
       {templateDropdown}
-      {paramList}
+      {!!paramList ? (
+        paramList?.length > 0 ? (
+          <>
+            <label className="control-label">{t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV13_1')}</label>
+            {paramList}
+          </>
+        ) : (
+          <>
+            <label className="control-label">{t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV13_1')}</label>
+            <div className="help-block">{t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV16_1')}</div>
+          </>
+        )
+      ) : null}
     </>
   );
 };

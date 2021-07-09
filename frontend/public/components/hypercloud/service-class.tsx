@@ -30,7 +30,9 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_17')}</dt>
               <dd>{serviceClass.spec?.externalName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
-              <dd>{serviceClass.spec?.serviceBrokerName}</dd>
+              <dd>
+                <ResourceLink kind="ServiceBroker" name={serviceClass.spec?.serviceBrokerName} title={serviceClass.spec?.serviceBrokerName} namespace={serviceClass.metadata.namespace} />
+              </dd>
             </dl>
           </div>
         </div>

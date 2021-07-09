@@ -45,6 +45,22 @@ const serviceInstanceStatusReducer = (serviceInstance: any): string => {
   return serviceInstance.status.lastConditionState;
 };
 
+const ClusterServiceBrokerPhase = instance => {
+  let phase = '';
+  if (instance.status) {
+    instance.status.conditions.forEach(cur => {
+      if (cur.type === 'Ready') {
+        if (cur.status === 'True') {
+          phase = 'Running';
+        } else {
+          phase = 'Error';
+        }
+      }
+    });
+    return phase;
+  }
+};
+
 const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
   return pipelineApproval.status.result;
 };
@@ -233,6 +249,14 @@ export const tableFilters: TableFilterMap = {
     }
 
     const phase = serviceInstanceStatusReducer(serviceInstance);
+    return phases.selected.has(phase) || !_.includes(phases.all, phase);
+  },
+  'cluster-service-broker-status': (phases, clusterServiceBroker) => {
+    if (!phases || !phases.selected || !phases.selected.size) {
+      return true;
+    }
+
+    const phase = ClusterServiceBrokerPhase(clusterServiceBroker);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
