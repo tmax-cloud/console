@@ -16,13 +16,13 @@ export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'metadata.creationTimestamp');
 };
 export const kindToggle = (kindPlural, methods) => {
-  if ( kindPlural === 'roles' ) {
-    const kindToggle = useWatch({   
-      control: methods.control,   
+  if (kindPlural === 'roles') {
+    const kindToggle = useWatch({
+      control: methods.control,
       name: 'kind',
       defaultValue: 'Role',
-    });    
-    (kindToggle === 'Role' ) ? kindPlural = 'roles' : kindPlural = 'clusterroles';
+    });
+    kindToggle === 'Role' ? (kindPlural = 'roles') : (kindPlural = 'clusterroles');
   }
   return kindPlural;
 };
@@ -31,11 +31,11 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
   const { t } = useTranslation();
 
   const FormComponent: React.FC<CommonFormProps_> = props => {
-    const methods = useForm({ defaultValues: defaultValues });    
+    const methods = useForm({ defaultValues: defaultValues });
 
     const kind = pluralToKind(kindToggle(params.plural, methods));
     //const kind = pluralToKind(params.plural);
-    
+
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
     const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({ kind: kind }, t) })}`;
@@ -44,32 +44,40 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
     const [errorMessage, setError] = React.useState('');
 
     const onClick = methods.handleSubmit(data => {
-      let inDo = isCreatePage(defaultValues) ? _.defaultsDeep(data, props.fixed) : _.defaultsDeep(data, defaultValues);
+      let inDo;
+      if (isCreatePage(defaultValues)) {
+        inDo = _.defaultsDeep(data, props.fixed);
+      } else {
+        // 1. data에는 이미 spec에 대한 값은 다 있을 것이기 때문에 기존 defaultValues에서 spec영역만을 제외한 부분을 fixed로 정의
+        let fixed = _.cloneDeep(defaultValues);
+        delete fixed.spec;
+        // 2. defaultsDeep 첫번째 매개변수 하위 요소에 빈 배열이 있을 경우 source 객체 값을 그대로 받아옴.. 그래서 1번에서 빈배열로 변환될 소지가 있는 spec을 제외한 fixed객체를 만들어서 넘겨줌
+        inDo = _.defaultsDeep(data, fixed);
+      }
       inDo = props.onSubmitCallback(inDo);
       const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
       if (inDo.error) {
         setProgress(false);
         setError(inDo.error);
-      }
-      else {
+      } else {
         setProgress(true);
         isCreatePage(defaultValues)
           ? k8sCreate(model, inDo)
-            .then(() => {
-              history.push(resourceObjPath(inDo, referenceFor(model)));
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(e.message);
-            })
+              .then(() => {
+                history.push(resourceObjPath(inDo, referenceFor(model)));
+              })
+              .catch(e => {
+                setProgress(false);
+                setError(e.message);
+              })
           : k8sUpdate(model, inDo)
-            .then(() => {
-              history.push(resourceObjPath(inDo, referenceFor(model)));
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(e.message);
-            });
+              .then(() => {
+                history.push(resourceObjPath(inDo, referenceFor(model)));
+              })
+              .catch(e => {
+                setProgress(false);
+                setError(e.message);
+              });
       }
     });
     return (

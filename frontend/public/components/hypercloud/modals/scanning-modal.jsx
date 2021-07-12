@@ -125,14 +125,23 @@ class BaseScanningModal extends PromiseComponent {
         }));
       }
     } else if (kind === 'Repository' || modelKind?.kind === 'Repository') {
+      let resources = this.state.resources;
       if (resource) {
+        let index;
+        resources.some((cur, idx) => {
+          if (cur.metadata.name === resource.metada.name) {
+            index = idx;
+            return true;
+          }
+        });
+        let versions = resources[index].spec.versions.map(cur => cur.version);
         registries = [
           {
             name: resource.spec.registry,
             repositories: [
               {
                 name: resource.metadata.name,
-                versions: ['*'],
+                versions: versions,
               },
             ],
           },
@@ -142,10 +151,21 @@ class BaseScanningModal extends PromiseComponent {
         registries = [
           {
             name: reg,
-            repositories: this.state.resource.map(selectedItem => ({
-              name: selectedItem,
-              versions: ['*'],
-            })),
+            repositories: this.state.resource.map(selectedItem => {
+              let index;
+              resources.some((cur, idx) => {
+                if (cur.metadata.name === selectedItem) {
+                  index = idx;
+                  return true;
+                }
+              });
+              let versions = resources[index].spec.versions.map(cur => cur.version);
+
+              return {
+                name: selectedItem,
+                versions: versions,
+              };
+            }),
           },
         ];
       }
@@ -201,8 +221,8 @@ class BaseScanningModal extends PromiseComponent {
   };
 
   onSelectedItemChange = items => {
-    const resource = [...items][0] === 'All' ? this.state.resources.map(res => res.metadata.name) : [...items].map(item => this.state.resources.find(res => res.metadata.uid === item)?.metadata.name);
-    this.setState({ resource });
+    const resource = [...items][0] === 'All' ? this.state.resources.map(res => res.metadata.name) : [...items].map(item => this.state.resources.find(res => res.metadata.name === item)?.metadata.name);
+    this.setState({ resource: resource });
   };
 
   render() {

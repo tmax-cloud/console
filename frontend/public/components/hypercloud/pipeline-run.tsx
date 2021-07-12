@@ -56,8 +56,8 @@ const PipelineRunTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_78'),
-      sortFunc: 'LinkedPipelineRunTaskStatus',
-      transforms: [sortable],
+      //sortFunc: 'LinkedPipelineRunTaskStatus',
+      //transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
