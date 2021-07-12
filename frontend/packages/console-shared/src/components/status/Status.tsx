@@ -5,6 +5,7 @@ import { YellowExclamationTriangleIcon } from './icons';
 import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
+import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
@@ -42,8 +43,13 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Not Ready':
     case 'NotReady':
     case 'Terminating':
-    case 'Deleted':
+    case 'Rejected':
       return <StatusIconAndText {...statusProps} icon={<BanIcon />} />;
+
+    case 'Namespace Deleted':
+    case 'Cluster Template Deleted':
+    case 'Deleted':
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon" style={{ width: '1.2em', height: '1.2em', padding: 0, overflow: 'hidden', left: '-2px', top: '0.2em' }} src={DeletedIcon} />} />;
 
     case 'Warning':
       return <StatusIconAndText {...statusProps} icon={<ExclamationTriangleIcon />} />;
@@ -61,7 +67,6 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'ImagePullBackOff':
     case 'InstallCheckFailed':
     case 'Lost':
-    case 'Rejected':
     case 'UpgradeFailed':
       return <ErrorStatus {...statusProps}>{children}</ErrorStatus>;
 
