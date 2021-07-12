@@ -177,10 +177,10 @@ const NamespacesTableRow = ({ obj: ns, index, key, style }) => {
       <TableData className={classNames(namespacesColumnClasses[1], 'co-break-word')}>
         <Status status={ns.status.phase} />
       </TableData>
-      <TableData className={namespacesColumnClasses[3]}>
+      <TableData className={namespacesColumnClasses[2]}>
         <SubscriptionPeriod timestamp={ns.metadata.creationTimestamp} labels={ns.metadata.labels} />
       </TableData>
-      <TableData className={namespacesColumnClasses[2]}>
+      <TableData className={namespacesColumnClasses[3]}>
         <LabelList kind="Namespace" labels={ns.metadata.labels} />
       </TableData>
       <TableData className={namespacesColumnClasses[4]}>
