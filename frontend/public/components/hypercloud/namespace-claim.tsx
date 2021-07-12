@@ -80,7 +80,7 @@ const NamespaceClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: namesp
       <TableData className={tableColumnClasses[2]}>
         {namespaceclaims?.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{namespaceclaims.status?.reason}</div>} maxWidth="30rem" position="right">
-            <Status status={namespaceclaims?.status?.status} />
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}><Status status={namespaceclaims?.status?.status} /></div>
           </Popover>
         ) : (
           <Status status={namespaceclaims?.status?.status} />
