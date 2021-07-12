@@ -132,6 +132,8 @@ const SubscriptionPeriod = ({ timestamp, labels, className }) => {
     return <div className="co-timestamp">-</div>;
   }
 
+  const { t } = useTranslation();
+
   const formatTimeZoneStamp = (timestamp) => {
     const d = new Date(timestamp);
     const date = d.toLocaleDateString();
@@ -139,21 +141,19 @@ const SubscriptionPeriod = ({ timestamp, labels, className }) => {
     if (date.indexOf('.') > -1) {
       // date가 YYYY. MM. DD로 들어오는 경우
       const dateSplit = date.replace(/\.\s/g, '.').split('.');
-      const formattedDate = dateSplit[0] + '.' + (dateSplit[1]?.length === 1 ? '0' + dateSplit[1] : dateSplit[1]) + '.' + (dateSplit[2]?.length === 1 ? '0' + dateSplit[2] : dateSplit[2]);
-      return `${formattedDate}`;
+      return dateSplit[0] + '.' + (dateSplit[1]?.length === 1 ? '0' + dateSplit[1] : dateSplit[1]) + '.' + (dateSplit[2]?.length === 1 ? '0' + dateSplit[2] : dateSplit[2]);
     } else if (date.indexOf('/') > -1) {
       // date가 YYYY/MM/DD로 들어오는 경우
-      const formattedDate = date.replace(/\//g, '.');
-      return `${formattedDate}`;
+      return date.replace(/\//g, '.');
     } else {
-      return `${date}`;
+      return date;
     }
   };
 
   const getDeletionDate = (labels) => {
     const deletionDate = _.get(labels, 'deletionDate');
     if(!!deletionDate && deletionDate.indexOf('-') !== -1) {
-      return `${deletionDate.replace(/-/g, '.')}`;
+      return `${deletionDate.replace(/-/g, '.')} ${t('만료')}`;
     }
     return '';
   };
