@@ -48,7 +48,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Namespace Deleted':
     case 'Cluster Template Deleted':
     case 'Deleted':
-      return <StatusIconAndText {...statusProps} icon={<img className="font-icon" style={{ width: '1.2em', height: '1.2em', padding: 0, overflow: 'hidden', left: '-2px', top: '0.2em' }} src={DeletedIcon} />} />;
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon" style={{ width: '1.2em', height: '1.2em', padding: 0, overflow: 'hidden', left: '-2px', top: '0.3em', marginRight: '2px' }} src={DeletedIcon} />} />;
 
     case 'Warning':
       return <StatusIconAndText {...statusProps} icon={<ExclamationTriangleIcon />} />;
