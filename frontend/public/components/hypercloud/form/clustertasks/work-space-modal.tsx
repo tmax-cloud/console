@@ -41,7 +41,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
       <Section label="마운트 경로" id="workspace_mountPath">
-        <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
+        <TextInput id="mountPath" inputClassName="col-md-12" placeholder="/workspace/<name>" methods={methods} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
       </Section>
       <Section label="접근 모드" id="workspace_access">
         <RadioGroup

@@ -52,16 +52,6 @@ export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] =>
   return menuOptions;
 };
 
-const KebabItemIcon_ = props => {
-  const { icon, iconPosition } = props;
-  const marginLeft = iconPosition === 'right' ? 'var(--pf-global--spacer--sm)' : 0;
-  return (
-    <span className="oc-kebab__icon" style={{ marginLeft: marginLeft }}>
-      {icon}
-    </span>
-  );
-};
-
 const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option, onClick, onEscape, autoFocus, isAllowed }) => {
   const { t } = useTranslation();
   const handleEscape = e => {
@@ -78,9 +68,9 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option,
   const needTranslate = option?.needTranslate ?? true;
   return (
     <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label}>
-      {option.icon && (!option.iconPosition || option.iconPosition === 'left') && <KebabItemIcon_ icon={option.icon} />}
+      {option.icon && (!option.iconPosition || option.iconPosition === 'left') && <span className='oc-kebab__icon'>{option.icon}</span>}
       {needTranslate ? (!!labelSplit[1] ? t(labelSplit[0], { 0: t(labelSplit[1]) }) : t(labelSplit[0])) : option.label}
-      {option.icon && option.iconPosition === 'right' && <KebabItemIcon_ icon={option.icon} iconPosition={option.iconPosition} />}
+      {option.icon && option.iconPosition === 'right' && <span className='oc-kebab__icon' style={{ marginLeft: 'var(--pf-global--spacer--sm)' }}>{option.icon}</span>}
     </button>
   );
 };
@@ -365,27 +355,17 @@ const kebabFactory: KebabFactory = {
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
-  Connect: (kind, obj) => {
-    const { t } = useTranslation();
+  Connect: (kind, obj, resources, customData: { label: string, url: string }) => {
     return {
-      label: t('Connect'),
-      callback: () => {
-        let url = `/api/kubeflow/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
-        window.open(url);
-      },
-      accessReview: asAccessReview(kind, obj, 'patch'),
-    };
-  },
-  Url: (kind, obj) => {
-    return {
-      label: 'URL',
+      label: customData?.label || '',
       icon: <ExternalLinkAltIcon color="var(--pf-global--Color--dark-200)" />,
       iconPosition: 'right',
       callback: () => {
-        if (obj.spec?.tower_hostname) {
-          window.open(`https://${obj.spec?.tower_hostname}`);
+        if (customData?.url) {
+          window.open(customData.url);
         }
       },
+      accessReview: asAccessReview(kind, obj, 'patch'),
     };
   },
 };
@@ -405,11 +385,11 @@ export const getExtensionsKebabActionsForKind = (kind: K8sKind) => {
 };
 
 export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
-  const { actions, kind, kindObj, resource, isDisabled } = props;
+  const { actions, kind, kindObj, resource, isDisabled, extraResources, customData } = props;
 
   if (kind === 'Tag') {
     const options = _.reject(
-      actions.map(a => a(kindObj, resource)),
+      actions.map(a => a(kindObj, resource, extraResources, customData)),
       'hidden',
     );
     return <Kebab options={options} key={resource.version} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
@@ -419,7 +399,7 @@ export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
     return null;
   }
   const options = _.reject(
-    actions.map(a => a(kindObj, resource)),
+    actions.map(a => a(kindObj, resource, extraResources, customData)),
     'hidden',
   );
   return <Kebab options={options} key={resource.metadata.uid} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
@@ -537,6 +517,8 @@ export type ResourceKebabProps = {
   kind: K8sResourceKindReference;
   resource: K8sResourceKind | any;
   isDisabled?: boolean;
+  extraResources?: { [prop: string]: K8sResourceKind | K8sResourceKind[] };
+  customData?: any;
 };
 
 type KebabSubMenu = {

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
 import { K8sResourceKind } from '../../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { NotebookModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
@@ -13,6 +13,7 @@ import { Status } from '@console/shared';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
+const id = NotebookModel.id;
 const kind = NotebookModel.kind;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
@@ -52,6 +53,7 @@ const NotebookTableHeader = (t?: TFunction) => {
 NotebookTableHeader.displayName = 'NotebookTableHeader';
 
 const NotebookTableRow: RowFunction<K8sResourceKind> = ({ obj: notebook, index, key, style }) => {
+  const url = `/api/kubeflow/${id}/${notebook.metadata.namespace}/${notebook.metadata.name}/`;
   return (
     <TableRow id={notebook.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -65,7 +67,7 @@ const NotebookTableRow: RowFunction<K8sResourceKind> = ({ obj: notebook, index, 
       </TableData>
       <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>{notebook.spec?.template.spec.containers[0].image || '-'}</TableData>
       <TableData className={tableColumnClasses[4]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={notebook} />
+        <ResourceKebab actions={menuActions} kind={kind} resource={notebook} customData={{ label: 'Connect', url }} />
       </TableData>
     </TableRow>
   );
@@ -111,7 +113,10 @@ export const Notebooks: React.FC = props => {
 
 export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} ListComponent={Notebooks} kind={kind} {...props} />;
 
-export const NotebooksDetailsPage: React.FC<NotebooksDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(NotebookDetails)), editYaml()]} />;
+export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
+  const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editYaml()]} />
+};
 
 type NotebookDetailsListProps = {
   notebook: K8sResourceKind;
@@ -125,8 +130,4 @@ type NotebooksPageProps = {
   showTitle?: boolean;
   namespace?: string;
   selector?: any;
-};
-
-type NotebooksDetailsPageProps = {
-  match: any;
 };
