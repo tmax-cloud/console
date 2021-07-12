@@ -114,13 +114,13 @@ const NamespacesTableHeader = t => {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_56'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: namespacesColumnClasses[3] },
+      props: { className: namespacesColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
       sortField: 'metadata.labels',
       transforms: [sortable],
-      props: { className: namespacesColumnClasses[2] },
+      props: { className: namespacesColumnClasses[3] },
     },
     { title: '', props: { className: namespacesColumnClasses[4] } },
   ];
