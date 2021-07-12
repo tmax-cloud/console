@@ -25,7 +25,7 @@ const ServiceBrokerDetails: React.FC<ServiceBrokerDetailsProps> = ({ obj: servic
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceBroker, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={serviceBroker} showAnnotations={false} showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={serviceBroker} showAnnotations={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
