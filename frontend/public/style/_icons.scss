@@ -14,3 +14,13 @@
 .update-pending {
   color: $color-pf-blue-400;
 }
+
+.co-status-deleted-icon {
+  width: 1.2em;
+  height: 1.2em;
+  padding: 0;
+  overflow: hidden;
+  left: -2px;
+  top: 0.3em;
+  margin-right: 2px;
+}
