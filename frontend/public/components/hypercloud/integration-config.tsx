@@ -32,7 +32,7 @@ const tableColumnClasses = [
 const IntegrationConfigPhase = instance => {
   let phase = '';
   if (instance.status) {
-    instance.status.conditions.forEach(cur => {
+    instance.status.conditions?.forEach(cur => {
       if (cur.type === 'ready') {
         if (cur.status === 'True') {
           phase = 'Ready';

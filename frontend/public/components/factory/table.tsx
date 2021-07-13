@@ -118,7 +118,7 @@ const sorts = {
   IntegrationConfigPhase: integrationConfig => {
     let phase = '';
     if (integrationConfig.status) {
-      integrationConfig.status.conditions.forEach(cur => {
+      integrationConfig.status.conditions?.forEach(cur => {
         if (cur.type === 'ready') {
           if (cur.status === 'True') {
             phase = 'Ready';
@@ -129,6 +129,41 @@ const sorts = {
       });
       return phase;
     }
+  },
+  InferenceServicePhase: instance => {
+    let phase = '';
+    if (instance.status) {
+      instance.status.conditions?.forEach(cur => {
+        if (cur.type === 'Ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else {
+            phase = 'Not Ready';
+          }
+        }
+      });
+      return phase;
+    }
+  },
+  InferenceServiceFramework: isvc => {
+    const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+    let framework;
+    Object.keys(isvc.spec.predictor).forEach(curPredictor => {
+      if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+        framework = curPredictor;
+      }
+    });
+    return framework;
+  },
+  InferenceServiceMultimodel: isvc => {
+    const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+    let framework;
+    Object.keys(isvc.spec.predictor).forEach(curPredictor => {
+      if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+        framework = curPredictor;
+      }
+    });
+    return (isvc?.spec?.predictor[framework]?.storageUri) ? 'N' : 'Y';
   },
 };
 
