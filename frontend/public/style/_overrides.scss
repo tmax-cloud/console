@@ -408,8 +408,7 @@ h6 {
     }
 
     font-size: 13px;
-
-    .pf-c-nav__simple-list .pf-c-nav__link {
+    .pf-c-nav__item .pf-c-nav__separator .pf-c-nav__simple-list .pf-c-nav__link {
       font-size: 13px;
       // fix bug where nav items retain focus after navigation
       // see https://github.com/patternfly/patternfly-next/issues/2463
@@ -440,6 +439,12 @@ h6 {
   // see https://github.com/patternfly/patternfly-next/issues/2463
   .pf-c-nav__item.pf-m-current .pf-c-nav__simple-list .pf-c-nav__link:focus {
     color: var(--pf-global--Color--light-100); // escape PF var chaos
+  }
+
+  .pf-c-nav__item .pf-c-nav__separator {
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #a1a1a1;
   }
 }
 

@@ -68,7 +68,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
           <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceInstance, t) })} />
           <div className="row">
             <div className="col-md-6">
-              <ResourceSummary resource={serviceInstance} showOwner={false}></ResourceSummary>
+              <ResourceSummary resource={serviceInstance}></ResourceSummary>
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
@@ -106,6 +106,7 @@ const ServiceInstanceDetails: React.FC<ServiceInstanceDetailsProps> = props => {
           samples={[]}
           isCreateMode={true}
           showDetails={true}
+          noTabsOnlyDetails={true}
         />
       </div>
     </>
@@ -118,7 +119,7 @@ type ServiceInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} pages={[details(ServiceInstanceDetails), editYaml()]} />;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={serviceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [
