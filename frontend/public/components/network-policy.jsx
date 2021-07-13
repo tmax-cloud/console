@@ -83,15 +83,28 @@ const IngressHeader = () => {
     </div>
   );
 };
+const EgressHeader = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="row co-m-table-grid__head">
+      <div className="col-xs-4">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_3')}</div>
+      <div className="col-xs-5">To</div>
+      <div className="col-xs-3">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_5')}</div>
+    </div>
+  );
+};
+
+
 
 const IngressRow = ({ ingress, namespace, podSelector }) => {
   const { t } = useTranslation();
   const podSelectors = [];
   const nsSelectors = [];
+  const ipBlocks = [];
   let i = 0;
 
   const style = { margin: '5px 0' };
-  _.each(ingress.from, ({ namespaceSelector, podSelector: ps }) => {
+  _.each(ingress.from, ({ namespaceSelector, podSelector: ps, ipBlock }) => {
     if (namespaceSelector) {
       nsSelectors.push(
         <div key={i++} style={style}>
@@ -102,6 +115,13 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
       podSelectors.push(
         <div key={i++} style={style}>
           <Selector selector={ps} namespace={namespace} />
+        </div>,
+      );
+    } else if (ipBlock) {
+      ipBlocks.push(
+        <div key={i++} style={style}>
+          {ipBlock?.cidr && <div>cidr={ipBlock?.cidr}</div>}          
+          {ipBlock?.except && <div>except={ipBlock?.except}</div>}          
         </div>,
       );
     }
@@ -130,10 +150,89 @@ const IngressRow = ({ ingress, namespace, podSelector }) => {
               {nsSelectors}
             </div>
           )}
+          {!ipBlocks.length ? null : (
+            <div style={{ paddingTop: podSelectors.length ? 10 : 0 }}>
+              <span className="text-muted">ip Block :</span>
+              {ipBlocks}
+            </div>
+          )}
         </div>
       </div>
       <div className="col-xs-3">
         {_.map(ingress.ports, (port, k) => (
+          <p key={k}>
+            {port.protocol}/{port.port}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const EgressRow = ({ egress, namespace, podSelector }) => {
+  const { t } = useTranslation();
+  const podSelectors = [];
+  const nsSelectors = [];
+  const ipBlocks = [];
+  let i = 0;
+
+  const style = { margin: '5px 0' };
+  _.each(egress.to, ({ namespaceSelector, podSelector: ps, ipBlock }) => {
+    if (namespaceSelector) {
+      nsSelectors.push(
+        <div key={i++} style={style}>
+          <Selector selector={namespaceSelector} kind="Namespace" />
+        </div>,
+      );
+    } else if (ps) {
+      podSelectors.push(
+        <div key={i++} style={style}>
+          <Selector selector={ps} namespace={namespace} />
+        </div>,
+      );
+    } else if (ipBlock) {
+      ipBlocks.push(
+        <div key={i++} style={style}>
+          {ipBlock?.cidr && <div>cidr={ipBlock?.cidr}</div>}          
+          {ipBlock?.except && <div>except={ipBlock?.except}</div>}          
+        </div>,
+      );
+    }
+  });
+  return (
+    <div className="row co-resource-list__item">
+      <div className="col-xs-4">
+        <div>
+          <span className="text-muted">{t('SINGLE:MSG_NETWORKPOLICIES_CREATEFORM_DIV2_20')}</span>
+        </div>
+        <div style={style}>
+          <Selector selector={podSelector} namespace={namespace} />
+        </div>
+      </div>
+      <div className="col-xs-5">
+        <div>
+          {!podSelectors.length ? null : (
+            <div>
+              <span className="text-muted">{t('SINGLE:MSG_NETWORKPOLICIES_CREATEFORM_DIV2_20')}</span>
+              {podSelectors}
+            </div>
+          )}
+          {!nsSelectors.length ? null : (
+            <div style={{ paddingTop: podSelectors.length ? 10 : 0 }}>
+              <span className="text-muted">{t('SINGLE:MSG_NETWORKPOLICIES_CREATEFORM_DIV2_19')}</span>
+              {nsSelectors}
+            </div>
+          )}
+          {!ipBlocks.length ? null : (
+            <div style={{ paddingTop: podSelectors.length ? 10 : 0 }}>
+              <span className="text-muted">ip Block :</span>
+              {ipBlocks}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="col-xs-3">
+        {_.map(egress.ports, (port, k) => (
           <p key={k}>
             {port.protocol}/{port.port}
           </p>
@@ -169,6 +268,21 @@ const Details_ = ({ obj: np, flags }) => {
             <div className="co-m-table-grid__body">
               {_.map(np.spec.ingress, (ingress, i) => (
                 <IngressRow key={i} ingress={ingress} podSelector={np.spec.podSelector} namespace={np.metadata.namespace} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text='이그레스 규칙' />        
+        {_.isEmpty(_.get(np, 'spec.egress[0]', [])) ? (          
+          `${t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})}`
+        ) : (
+          <div className="co-m-table-grid co-m-table-grid--bordered">
+            <EgressHeader />
+            <div className="co-m-table-grid__body">
+              {_.map(np.spec.egress, (egress, i) => (
+                <EgressRow key={i} egress={egress} podSelector={np.spec.podSelector} namespace={np.metadata.namespace} />
               ))}
             </div>
           </div>
