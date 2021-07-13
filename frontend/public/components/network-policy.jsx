@@ -242,8 +242,8 @@ const EgressRow = ({ egress, namespace, podSelector }) => {
 
 const Details_ = ({ obj: np, flags }) => {
   const { t } = useTranslation();
-  const explanation = `${t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_1', { 0: '~~'})}`;
-  const namespace = `${np.metadata.namespace}`  
+  const explanation = t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_1', { 0: '~~'});
+  const namespace = np.metadata.namespace;
 
   return (
     <>
@@ -259,7 +259,7 @@ const Details_ = ({ obj: np, flags }) => {
           {explanation.split('~~')[1]}          
         </p>
         {_.isEmpty(np.spec?.ingress) ? (          
-          `${t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})}`
+          t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})
         ) : (
           <div className="co-m-table-grid co-m-table-grid--bordered">
             <IngressHeader />
@@ -274,7 +274,7 @@ const Details_ = ({ obj: np, flags }) => {
       <div className="co-m-pane__body">
         <SectionHeading text='이그레스 규칙' />        
         {_.isEmpty(np.spec?.egress) ? (          
-          `${t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})}`
+          t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})
         ) : (
           <div className="co-m-table-grid co-m-table-grid--bordered">
             <EgressHeader />
