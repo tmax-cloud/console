@@ -228,7 +228,6 @@ export const RegistriesDetailsPage: React.FC<RegistriesDetailsPageProps> = props
     tabList.push(notaryTab(detailsPage(NotaryLoader)));
   }
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={tabList} setCustomState={setNotary} customStatePath="spec.notary.enabled" />;
-  // return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={tabList} />;
 };
 
 type RegistryDetailsListProps = {

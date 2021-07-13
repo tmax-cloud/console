@@ -91,9 +91,6 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
                   {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
                 </Button>
               )}
-              {/* <Button type="submit" variant="primary" isDisabled={!!isButtonDisabled}>
-                {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
-              </Button> */}
               <Button onClick={history.goBack} variant="secondary">
                 {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
               </Button>
