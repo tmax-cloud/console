@@ -227,11 +227,11 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
         {resource?.resourceName}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
-        <Status status={resource.status.status} />
+        <Status status={resource.status?.status} />
       </DetailsItem>
       {resource.status?.status === 'Rejected' &&
         <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">
-          {resource.status.reason}
+          {resource.status?.reason}
         </DetailsItem>
       }
     </dl>
