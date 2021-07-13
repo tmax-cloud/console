@@ -61,19 +61,26 @@ const CreatePipelineResourceComponent: React.FC<PipelineResourceFormProps> = pro
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={[]} />
       </Section>
 
-      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id="type">
+      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_4')} id="type" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_10')}>
         <Dropdown name="spec.type" items={typeList} defaultValue={defaultValues.spec.type} />
       </Section>
 
       {type === 'git' && (
-        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id="revision">
+        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_5')} id="revision" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_11')}>
           <TextInput inputClassName="pf-c-form-control" id="spec.revision" name="spec.revision" defaultValue={defaultRevision} />
+        </Section>        
+      )}
+      {type === 'git' && (
+        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url" description={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_12')}>
+          <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" defaultValue={defaultUrl} />
         </Section>
       )}
 
-      <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url">
-        <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" defaultValue={defaultUrl} />
-      </Section>
+      {type === 'image' && (
+        <Section label={t('SINGLE:MSG_PIPELINERESOURCES_CREATEFORM_6')} id="url" description='참조할 이미지 주소 또는 이미지가 저장될 주소'>
+          <TextInput inputClassName="pf-c-form-control" id="spec.url" name="spec.url" defaultValue={defaultUrl} />
+        </Section>
+      )}
     </>
   );
 };
