@@ -122,7 +122,7 @@ const getRowMemberData = members => members.map(member => (Array.isArray(member)
 
 export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProps) => {
   const { t } = useTranslation();
-  const { handlePromise, errorMessage, inProgress, close, cancel } = props;
+  const { handlePromise, errorMessage, inProgress, close, cancel, rerenderPage } = props;
   const [type, setType] = React.useState('user');
   const [role, setRole] = React.useState('admin');
   const [selectedMember, setSelectedMember] = React.useState({ name: '', email: '' });
@@ -229,6 +229,7 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
       const memberEmail = type === 'user' ? selectedMember.email : selectedMember.name;
       const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member_invitation/${type}/${memberEmail}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'POST');
       handlePromise(promise).then(close);
+      rerenderPage(true);
     }
   };
 
@@ -317,5 +318,6 @@ export type InviteMemberModalProps = {
   type: string;
   existMembers: string[];
   existGroups: string[];
+  rerenderPage?: any;
 } & ModalComponentProps &
   HandlePromiseProps;
