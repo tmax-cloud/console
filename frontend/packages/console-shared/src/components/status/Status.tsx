@@ -6,6 +6,7 @@ import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
+import * as AwaitingIcon from '@console/internal/imgs/hypercloud/awaiting.svg';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
@@ -15,8 +16,10 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
 
     case 'Pending':
     case 'Waiting':
-    case 'Awaiting':
       return <StatusIconAndText {...statusProps} icon={<HourglassHalfIcon />} />;
+
+    case 'Awaiting':
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-awaiting-icon" src={AwaitingIcon} />} />;
 
     case 'Planning':
       return <StatusIconAndText {...statusProps} icon={<ClipboardListIcon />} />;
