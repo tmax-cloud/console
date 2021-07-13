@@ -5,6 +5,7 @@ import { YellowExclamationTriangleIcon } from './icons';
 import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
+import { TestIcon } from './icons';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
@@ -63,6 +64,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Lost':
     case 'Rejected':
     case 'UpgradeFailed':
+    case 'Failure':
       return <ErrorStatus {...statusProps}>{children}</ErrorStatus>;
 
     case 'Accepted':
@@ -87,6 +89,38 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Unknown':
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
 
+    case 'ChartFetched':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'ChartFetchFailed':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Installing':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Upgrading':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Deployed':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'DeployFailed':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Testing':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'TestFailed':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Tested':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;    
+    case 'RollingBack':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'RolledBack':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'RollBackFailed':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Applied':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Destroyed':
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case 'Unready':
+    case 'UnReady':
+      return <StatusIconAndText {...statusProps} icon={<TestIcon />} />;
+  
     default:
       return <>{status || DASH}</>;
   }
