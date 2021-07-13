@@ -8,6 +8,7 @@ import defaultFields from './fields';
 import { FieldTemplate as DefaultFieldTemplate, ObjectFieldTemplate as DefaultObjectFieldTemplate, ArrayFieldTemplate as DefaultArrayFieldTemplate, ErrorTemplate as DefaultErrorTemplate } from './templates';
 import { K8S_UI_SCHEMA } from './const';
 import { getSchemaErrors } from './utils';
+import { isSaveButtonDisabled } from '@console/internal/components/hypercloud/crd/edit-resource';
 import { useTranslation } from 'react-i18next';
 import './styles.scss';
 
@@ -39,6 +40,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
 
   formData = editFormData(formData);
 
+  const isButtonDisabled = formData.status && isSaveButtonDisabled(formData);
+
   return (
     <>
       <Alert isInline className="co-alert co-break-word" variant="info" title={'Note: Some fields may not be represented in this form. Please select "YAML View" for full control of object creation.'} />
@@ -66,7 +69,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
           {errors.length > 0 && <ErrorTemplate errors={errors} />}
           <div style={{ paddingBottom: '30px' }}>
             <ActionGroup className="pf-c-form">
-              <Button type="submit" variant="primary">
+              <Button type="submit" variant="primary" isDisabled={!!isButtonDisabled}>
                 {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
               </Button>
               <Button onClick={history.goBack} variant="secondary">

@@ -21,6 +21,25 @@ import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
 
+const isNotAllowedStatus = (statusList, currentStatus) => {
+  return _.indexOf(statusList, currentStatus) >= 0;
+};
+
+export const isSaveButtonDisabled = obj => {
+  let kind = obj.kind;
+  let status = ''; // 리소스마다 status 위치 다름
+  switch (kind) {
+    case 'TFApplyClaim':
+      status = obj.status.phase;
+      return isNotAllowedStatus(['Approved', 'Planned', 'Applied', 'Destroyed'], status);
+    case 'ResourceQuotaClaim':
+      status = obj.status.status;
+      return isNotAllowedStatus(['Approved', 'Resource Quota Deleted'], status);
+    default:
+      return false;
+  }
+};
+
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
 
