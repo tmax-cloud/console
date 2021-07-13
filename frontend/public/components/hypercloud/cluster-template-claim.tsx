@@ -87,10 +87,12 @@ const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[2]}>
         {obj.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>{obj.status?.status}</div>
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
+              <Status status={obj.status?.status} />
+            </div>
           </Popover>
         ) : (
-          obj.status?.status
+          <Status status={obj.status?.status} />
         )}
       </TableData>
       <TableData className={tableColumnClasses[3]}>
