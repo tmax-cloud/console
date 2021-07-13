@@ -5,9 +5,11 @@ import { Accordion, ActionGroup, Button, Alert } from '@patternfly/react-core';
 import { history } from '@console/internal/components/utils';
 import defaultWidgets from './widgets';
 import defaultFields from './fields';
+import { Tooltip } from '@patternfly/react-core';
 import { FieldTemplate as DefaultFieldTemplate, ObjectFieldTemplate as DefaultObjectFieldTemplate, ArrayFieldTemplate as DefaultArrayFieldTemplate, ErrorTemplate as DefaultErrorTemplate } from './templates';
 import { K8S_UI_SCHEMA } from './const';
 import { getSchemaErrors } from './utils';
+import { isSaveButtonDisabled } from '@console/internal/components/hypercloud/crd/edit-resource';
 import { useTranslation } from 'react-i18next';
 import './styles.scss';
 
@@ -25,6 +27,14 @@ function editFormData(formData) {
   return formData;
 }
 
+const saveButtonDisabledString = () => {
+  return (
+    <div>
+      <span>수정할 수 없는 상태의 리소스입니다.</span>
+    </div>
+  );
+};
+
 export const DynamicForm: React.FC<DynamicFormProps> = props => {
   const { t } = useTranslation();
   const { ArrayFieldTemplate = DefaultArrayFieldTemplate, errors = [], ErrorTemplate = DefaultErrorTemplate, fields = {}, FieldTemplate = DefaultFieldTemplate, formContext, noValidate = false, ObjectFieldTemplate = DefaultObjectFieldTemplate, onChange = _.noop, onError = _.noop, onSubmit = _.noop, schema, uiSchema = {}, widgets = {}, create = true } = props;
@@ -38,6 +48,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
   }
 
   formData = editFormData(formData);
+
+  const isButtonDisabled = formData.status && isSaveButtonDisabled(formData);
 
   return (
     <>
@@ -66,9 +78,19 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
           {errors.length > 0 && <ErrorTemplate errors={errors} />}
           <div style={{ paddingBottom: '30px' }}>
             <ActionGroup className="pf-c-form">
-              <Button type="submit" variant="primary">
-                {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
-              </Button>
+              {!!isButtonDisabled ? (
+                <Tooltip content={saveButtonDisabledString()} maxWidth="30rem" position="bottom">
+                  <div>
+                    <Button type="submit" variant="primary" isDisabled={true}>
+                      {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
+                    </Button>
+                  </div>
+                </Tooltip>
+              ) : (
+                <Button type="submit" variant="primary" isDisabled={false}>
+                  {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
+                </Button>
+              )}
               <Button onClick={history.goBack} variant="secondary">
                 {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
               </Button>
