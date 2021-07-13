@@ -26,7 +26,7 @@ const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-s
 const InferenceServicePhase = instance => {
   let phase = '';
   if (instance.status) {
-    instance.status.conditions.forEach(cur => {
+    instance.status.conditions?.forEach(cur => {
       if (cur.type === 'Ready') {
         if (cur.status === 'True') {
           phase = 'Ready';
@@ -111,7 +111,7 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       </TableData>
       <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
       <TableData className={tableColumnClasses[3]}>{framework}</TableData>
-      <TableData className={tableColumnClasses[4]}>{isvc.status.url}</TableData>
+      <TableData className={tableColumnClasses[4]}>{isvc.status?.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'N' : 'Y'}</TableData>
       <TableData className={tableColumnClasses[6]}>
         <Timestamp timestamp={isvc.metadata.creationTimestamp} />
@@ -145,7 +145,7 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
         <Status status={phase} />
       </DetailsItem>
       <DetailsItem label={'INFERENCEURL'} obj={ds} path="status.url">
-        {ds.status.url}
+        {ds.status?.url}
       </DetailsItem>
       <DetailsItem label={'PREDICTOR'} obj={ds} path="spec.predictor">
         <div>Framework: {framework}</div>
