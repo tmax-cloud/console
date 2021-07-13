@@ -20,7 +20,7 @@ import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-t
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
-import { TFApplyClaimModel, ResourceQuotaClaimModel } from '@console/internal/models';
+import { TFApplyClaimModel, ResourceQuotaClaimModel, NamespaceClaimModel } from '@console/internal/models';
 
 const isNotAllowedStatus = (statusList, currentStatus) => {
   return _.indexOf(statusList, currentStatus) >= 0;
@@ -36,6 +36,9 @@ export const isSaveButtonDisabled = obj => {
     case ResourceQuotaClaimModel.kind:
       status = obj.status.status;
       return isNotAllowedStatus(['Approved', 'Resource Quota Deleted'], status);
+    case NamespaceClaimModel.kind:
+      status = obj?.status?.status;
+      return isNotAllowedStatus(['Approved', 'Namespace Deleted'], status);
     default:
       return false;
   }
