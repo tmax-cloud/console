@@ -6,7 +6,7 @@ import { Translation } from 'react-i18next';
 import { DetailsItem } from './details-item';
 import { Kebab } from './kebab';
 import { LabelList } from './label-list';
-import { OwnerReferences } from './owner-references';
+// import { OwnerReferences } from './owner-references';
 import { ResourceLink } from './resource-link';
 import { ServicePlanModel, ClusterServicePlanModel } from '../../models';
 import { Selector } from './selector';
@@ -110,11 +110,11 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')} obj={resource} path="metadata.creationTimestamp">
             <Timestamp timestamp={metadata.creationTimestamp} />
           </DetailsItem>
-          {showOwner && (
+          {/* {showOwner && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={resource} path="metadata.ownerReferences">
               <OwnerReferences resource={resource} />
             </DetailsItem>
-          )}
+          )} */}
         </dl>
       )}
     </Translation>
