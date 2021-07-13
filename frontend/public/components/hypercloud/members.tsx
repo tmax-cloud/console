@@ -72,7 +72,7 @@ const MemberTableHeader = (t?: TFunction) => {
 MemberTableHeader.displayName = 'UserTableHeader';
 
 export const UsersTable = props => {
-  const { isOwner, owner, members, heading, searchType, searchKey } = props;
+  const { isOwner, owner, members, heading, searchType, searchKey, rerenderPage } = props;
 
   const { t } = useTranslation();
   const ownerRow = owner ? ownerData.bind(null, owner, t)() : [];
@@ -119,13 +119,13 @@ export const UsersTable = props => {
       {
         title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_ACTIONBUTTON_1'),
         onClick: (event, rowId, rowData, extra) => {
-          modifyMemberModal({ modalClassName: 'modal-lg', member: rowData.obj });
+          modifyMemberModal({ modalClassName: 'modal-lg', member: rowData.obj, rerenderPage: rerenderPage });
         },
       },
       {
         title: t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_ACTIONBUTTON_2'),
         onClick: (event, rowId, rowData, extra) => {
-          removeMemberModal({ modalClassName: 'modal-lg', member: rowData.obj });
+          removeMemberModal({ modalClassName: 'modal-lg', member: rowData.obj, rerenderPage: rerenderPage });
         },
       },
     ];
@@ -167,6 +167,7 @@ export const MembersPage = props => {
   const [searchType, setSearchType] = React.useState('MemberName');
   const [searchKey, setSearchKey] = React.useState('');
   const [isOpen, setOpen] = React.useState(false);
+  const [shouldRerender, setShouldRerender] = React.useState(false);
 
   const onToggle = (open: boolean) => setOpen(open);
   const onSelect = event => {
@@ -189,6 +190,7 @@ export const MembersPage = props => {
   ];
 
   React.useEffect(() => {
+    shouldRerender === true && setShouldRerender(false);
     coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member?userId=${getId()}${getUserGroup()}`, 'GET')
       .then(res => {
         let idx = _.findIndex(res, (mem: RowMemberData) => mem.Status === 'owner');
@@ -199,7 +201,7 @@ export const MembersPage = props => {
       .catch(err => {
         console.log('Fail to get member list. ' + err);
       });
-  }, []);
+  }, [shouldRerender]);
 
   const isOwner = props.owner === getId();
   const { t } = useTranslation();
@@ -219,14 +221,14 @@ export const MembersPage = props => {
         <TextInput className="hc-members__search" value={searchKey} onChange={handleTextInputChange} placeholder={searchType === 'MemberId' ? t('search by email') : t('search by name')}></TextInput>
         {isOwner && (
           <div className="co-m-primary-action">
-            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ namespace: props.namespace, clusterName: props.clusterName, modalClassName: 'hc-invite-modal__container', existMembers: members })}>
+            <Button variant="primary" id="yaml-create" onClick={() => inviteMemberModal({ namespace: props.namespace, clusterName: props.clusterName, modalClassName: 'hc-invite-modal__container', existMembers: members, rerenderPage: setShouldRerender })}>
               {t('MULTI:MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_BUTTON_1')}
             </Button>
           </div>
         )}
       </div>
       <div className="hc-members__body">
-        <UsersTable clusterName={props.clusterName} isOwner={isOwner} owner={owner} members={members} searchType={searchType} searchKey={searchKey} />
+        <UsersTable clusterName={props.clusterName} isOwner={isOwner} owner={owner} members={members} searchType={searchType} searchKey={searchKey} rerenderPage={setShouldRerender} />
       </div>
     </>
   );

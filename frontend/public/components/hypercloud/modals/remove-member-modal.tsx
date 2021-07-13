@@ -9,17 +9,12 @@ import { getId, getUserGroup } from '../../../hypercloud/auth';
 import { useTranslation } from 'react-i18next';
 
 export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProps) => {
-  const [errorMsg, setError] = React.useState('');
-
+  const { handlePromise, close, cancel, errorMessage, inProgress, rerenderPage } = props;
   const submit: React.FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault(); ///cluster/cho/remove_member/group/ck1-3?userId=kubernetes-admin&userGroup=hypercloud5
-    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/remove_member/${props.member.Attribute}/${props.member.MemberId}?userId=${getId()}${getUserGroup()}`, 'POST')
-      .then(res => {
-        props.close();
-      })
-      .catch(err => {
-        setError(err);
-      });
+    const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/remove_member/${props.member.Attribute}/${props.member.MemberId}?userId=${getId()}${getUserGroup()}`, 'POST');
+    handlePromise(promise).then(close);
+    rerenderPage(true);
   };
 
   const { t } = useTranslation();
@@ -33,7 +28,7 @@ export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProp
       <ModalBody className="modal-body">
         <div>{t('MULTI:MSG_MULTI_CLUSTERS_DELETEPEPLEPOPUP_MAINMESSAGE_1', { 0: props.member.MemberName, 1: props.member.MemberId, 2: props.member.Cluster })}</div>
       </ModalBody>
-      <ModalSubmitFooter errorMessage={errorMsg} inProgress={props.inProgress} submitText={t('MULTI:MSG_MULTI_CLUSTERS_DELETEACCESSMEMBER_2')} cancelText={t('MULTI:MSG_MULTI_CLUSTERS_DELETEACCESSMEMBER_1')} cancel={props.cancel} />
+      <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={t('MULTI:MSG_MULTI_CLUSTERS_DELETEACCESSMEMBER_2')} cancelText={t('MULTI:MSG_MULTI_CLUSTERS_DELETEACCESSMEMBER_1')} cancel={cancel} />
     </form>
   );
 });
@@ -41,6 +36,7 @@ export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProp
 export const removeMemberModal = createModalLauncher(RemoveMemberModal);
 
 export type RemoveMemberModalProps = {
+  rerenderPage?: any;
   member: {
     Id?: number;
     Namespace?: string;

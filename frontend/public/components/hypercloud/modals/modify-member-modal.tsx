@@ -26,18 +26,14 @@ const roleItems = (t?: TFunction) => [
 ];
 
 export const ModifyMemberModal = withHandlePromise((props: ModifyMemberModalProps) => {
+  const { handlePromise, close, cancel, inProgress, errorMessage, rerenderPage } = props;
   const [role, setRole] = React.useState(props.member.Role);
-  const [errorMsg, setError] = React.useState('');
 
   const submit: React.FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
-    coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/update_role/${props.member.Attribute}/${props.member.MemberId}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'PUT')
-      .then(res => {
-        props.close();
-      })
-      .catch(err => {
-        setError(err);
-      });
+    const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/update_role/${props.member.Attribute}/${props.member.MemberId}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'PUT');
+    handlePromise(promise).then(close);
+    rerenderPage(true);
   };
 
   const { t } = useTranslation();
@@ -49,7 +45,7 @@ export const ModifyMemberModal = withHandlePromise((props: ModifyMemberModalProp
           <RadioGroup id="role" currentValue={role} items={roleItems.bind(null, t)()} onChange={({ currentTarget }) => setRole(currentTarget.value)} />
         </Section>
       </ModalBody>
-      <ModalSubmitFooter errorMessage={errorMsg} inProgress={props.inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancelText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')} cancel={props.cancel} />
+      <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancelText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')} cancel={cancel} />
     </form>
   );
 });
@@ -57,6 +53,7 @@ export const ModifyMemberModal = withHandlePromise((props: ModifyMemberModalProp
 export const modifyMemberModal = createModalLauncher(ModifyMemberModal);
 
 export type ModifyMemberModalProps = {
+  rerenderPage?: any;
   member: {
     Id?: number;
     Namespace?: string;
