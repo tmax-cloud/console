@@ -91,8 +91,8 @@ const fetchNamespaceMetrics = () => {
 const namespacesColumnClasses = [
   '', // name
   '', // status
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // labels
   classNames('pf-m-hidden', 'pf-m-visible-on-lg pf-u-w-16-on-lg'), // created
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // labels
   Kebab.columnClass,
 ];
 
@@ -111,14 +111,14 @@ const NamespacesTableHeader = t => {
       props: { className: namespacesColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
-      sortField: 'metadata.labels',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_56'),
+      sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: namespacesColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'metadata.creationTimestamp',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      sortField: 'metadata.labels',
       transforms: [sortable],
       props: { className: namespacesColumnClasses[3] },
     },
@@ -126,6 +126,47 @@ const NamespacesTableHeader = t => {
   ];
 };
 NamespacesTableHeader.displayName = 'NamespacesTableHeader';
+
+const SubscriptionPeriod = ({ timestamp, labels, className }) => {
+  if (!timestamp) {
+    return <div className="co-timestamp">-</div>;
+  }
+
+  const { t } = useTranslation();
+
+  const formatTimeZoneStamp = (timestamp) => {
+    const d = new Date(timestamp);
+    const date = d.toLocaleDateString();
+  
+    if (date.indexOf('.') > -1) {
+      // date가 YYYY. MM. DD로 들어오는 경우
+      const dateSplit = date.replace(/\.\s/g, '.').split('.');
+      return dateSplit[0] + '.' + (dateSplit[1]?.length === 1 ? '0' + dateSplit[1] : dateSplit[1]) + '.' + (dateSplit[2]?.length === 1 ? '0' + dateSplit[2] : dateSplit[2]);
+    } else if (date.indexOf('/') > -1) {
+      // date가 YYYY/MM/DD로 들어오는 경우
+      return date.replace(/\//g, '.');
+    } else {
+      return date;
+    }
+  };
+
+  const getDeletionDate = (labels) => {
+    const deletionDate = _.get(labels, 'deletionDate');
+    if(!!deletionDate && deletionDate.indexOf('-') !== -1) {
+      return `${deletionDate.replace(/-/g, '.')} ${t('만료')}`;
+    }
+    return '';
+  };
+
+  const createdDate = formatTimeZoneStamp(timestamp);
+  const deletionDate = getDeletionDate(labels);
+
+  return (
+    <div className={classNames('co-timestamp co-icon-and-text', className)}>
+        <span>{`${createdDate} ~ ${deletionDate}`}</span>
+    </div>
+  );
+};
 
 const NamespacesTableRow = ({ obj: ns, index, key, style }) => {
   return (
@@ -137,10 +178,10 @@ const NamespacesTableRow = ({ obj: ns, index, key, style }) => {
         <Status status={ns.status.phase} />
       </TableData>
       <TableData className={namespacesColumnClasses[2]}>
-        <LabelList kind="Namespace" labels={ns.metadata.labels} />
+        <SubscriptionPeriod timestamp={ns.metadata.creationTimestamp} labels={ns.metadata.labels} />
       </TableData>
       <TableData className={namespacesColumnClasses[3]}>
-        <Timestamp timestamp={ns.metadata.creationTimestamp} />
+        <LabelList kind="Namespace" labels={ns.metadata.labels} />
       </TableData>
       <TableData className={namespacesColumnClasses[4]}>
         <ResourceKebab actions={nsMenuActions} kind="Namespace" resource={ns} />
