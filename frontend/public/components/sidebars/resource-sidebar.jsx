@@ -8,6 +8,7 @@ import { ResourceSidebarSnippets, ResourceSidebarSamples } from './resource-side
 import { ExploreType } from './explore-type-sidebar';
 import { SimpleTabNav, ResourceSummary } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { NetworkPolicyModel } from '../../models';
 import { modelFor } from '@console/internal/module/k8s';
 
 const sidebarScrollTop = () => {
@@ -58,7 +59,8 @@ export const ResourceSidebar = props => {
 
   const { label } = kindObj;
 
-  const showSamples = !_.isEmpty(samples) && isCreateMode;
+  // MEMO : 네트워크정책 리소스 YAML 사이드바에선 샘플 없애달라는 요청으로 해당 구문 수정함
+  const showSamples = kindObj.kind !== NetworkPolicyModel.kind && !_.isEmpty(samples) && isCreateMode;
   const showSnippets = !_.isEmpty(snippets);
 
   let tabs = [];
