@@ -12,15 +12,15 @@ const DeveloperNav = () => (
           <HrefLink href="/add" activePath="/add/" name="+ Add" />
         </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_10')}>
-          <ResourceNSLink resource="servicebrokers" name={t('COMMON:MSG_LNB_MENU_11')} />
-          <ResourceNSLink resource="serviceclasses" name={t('COMMON:MSG_LNB_MENU_12')} />
+          {/* <ResourceNSLink resource="servicebrokers" name={t('COMMON:MSG_LNB_MENU_11')} />
+          <ResourceNSLink resource="serviceclasses" name={t('COMMON:MSG_LNB_MENU_12')} /> */}
           {/* <ResourceNSLink resource="serviceplans" name="Service Plan" /> */}
-          <ResourceClusterLink resource="clusterservicebrokers" name={t('COMMON:MSG_LNB_MENU_14')} />
-          <ResourceClusterLink resource="clusterserviceclasses" name={t('COMMON:MSG_LNB_MENU_15')} />
+          {/* <ResourceClusterLink resource="clusterservicebrokers" name={t('COMMON:MSG_LNB_MENU_14')} />
+          <ResourceClusterLink resource="clusterserviceclasses" name={t('COMMON:MSG_LNB_MENU_15')} /> */}
           {/* <ResourceClusterLink resource="clusterserviceplans" name="Cluster Service Plan" /> */}
-          <ResourceNSLink resource="serviceinstances" name={t('COMMON:MSG_LNB_MENU_17')} />
+          {/* <ResourceNSLink resource="serviceinstances" name={t('COMMON:MSG_LNB_MENU_17')} />
           <ResourceNSLink resource="servicebindings" name={t('COMMON:MSG_LNB_MENU_18')} />
-          <ResourceNSLink resource="clustertemplateclaims" name={t('COMMON:MSG_LNB_MENU_19')} />
+          <ResourceNSLink resource="clustertemplateclaims" name={t('COMMON:MSG_LNB_MENU_19')} /> */}
           <ResourceNSLink resource="templates" name={t('COMMON:MSG_LNB_MENU_20')} />
           <ResourceClusterLink resource="clustertemplates" name={t('COMMON:MSG_LNB_MENU_104')} />
           <ResourceNSLink resource="templateinstances" name={t('COMMON:MSG_LNB_MENU_21')} />
