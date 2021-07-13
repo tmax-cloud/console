@@ -332,7 +332,8 @@ export const EditYAML_ = connect(stateToProps)(
             if (redirect) {
               let url = this.props.redirectURL;
               if (!url) {
-                const path = _.isFunction(this.props.resourceObjPath) ? this.props.resourceObjPath : resourceObjPath;
+                // const path = _.isFunction(this.props.resourceObjPath) ? this.props.resourceObjPath : resourceObjPath;
+                const path = resourceObjPath;
                 url = path(o, referenceFor(o));
               }
               history.push(url);

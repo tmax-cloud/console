@@ -50,7 +50,7 @@ const { details, editResource } = navFactory;
 const ServiceBrokersDetailsPage: React.FC<ServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceBrokerMenuActions} pages={[details(ServiceBrokerDetails), editResource()]} />;
 ServiceBrokersDetailsPage.displayName = 'ServiceBrokersDetailsPage';
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), Kebab.columnClass];
+const tableColumnClasses = ['', classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
 const ServiceBrokerPhase = instance => {
   let phase = '';
@@ -81,6 +81,7 @@ const ServiceBrokerTableRow: RowFunction<K8sResourceKind> = ({ obj, index, key, 
       <TableData className={tableColumnClasses[2]}>
         <Status status={phase} />
       </TableData>
+      <TableData className={tableColumnClasses[3]}>{obj.spec?.url}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
@@ -110,6 +111,12 @@ const ServiceBrokerTableHeader = (t?: TFunction) => {
       sortFunc: 'ServiceBrokerPhase',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_4'),
+      sortField: 'spec.url',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[3] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),

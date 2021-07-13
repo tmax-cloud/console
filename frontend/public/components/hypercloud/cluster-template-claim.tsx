@@ -3,6 +3,7 @@ import * as _ from 'lodash-es';
 import { sortable } from '@patternfly/react-table';
 import { ClusterTemplateClaimModel } from '../../models';
 import { ClusterTemplateClaimKind } from '../../module/k8s';
+import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
@@ -22,14 +23,16 @@ const ClusterTemplateClaimDetails: React.FC<ClusterTemplateClaimDetailsProps> = 
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterTemplateClaim, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={clusterTemplateClaim} showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={clusterTemplateClaim}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
               <dd>{clusterTemplateClaim.spec?.resourceName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
-              <dd>{clusterTemplateClaim.status?.status}</dd>
+              <dd>
+                <Status status={clusterTemplateClaim.status?.status} />
+              </dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_18')}</dt>
               <dd>
                 <Timestamp timestamp={clusterTemplateClaim.status?.lastTransitionTime} />
@@ -59,12 +62,13 @@ const { details, editResource } = navFactory;
 const ClusterTemplateClaimsDetailsPage: React.FC<ClusterTemplateClaimsDetailsPageProps> = props => {
   const [status, setStatus] = React.useState();
   const menuActions = isUnmodifiable(status) ? clusterTemplateClaimCommonActions : [...clusterTemplateClaimCommonActions, Kebab.factory.ModifyStatus];
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setState4MenuActions={setStatus} statePath='status.status' pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setState4MenuActions={setStatus} statePath="status.status" pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
 };
 ClusterTemplateClaimsDetailsPage.displayName = 'ClusterTemplateClaimsDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
+  '', // NAMESPACE
   '', // STATUS
   '', // CREATED
   Kebab.columnClass, // MENU ACTIONS
@@ -78,6 +82,9 @@ const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
         <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
       </TableData>
       <TableData className={tableColumnClasses[1]}>
+        <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
+      </TableData>
+      <TableData className={tableColumnClasses[2]}>
         {obj.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
             <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>{obj.status?.status}</div>
@@ -86,10 +93,10 @@ const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
           obj.status?.status
         )}
       </TableData>
-      <TableData className={tableColumnClasses[2]}>
+      <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
+      <TableData className={tableColumnClasses[4]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>
@@ -105,20 +112,26 @@ const ClusterTemplateClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      sortField: 'metadata.namespace',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[1] },
+    },
+    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortFunc: 'clusterTemplateClaimStatusReducer',
       transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
+      props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
+      props: { className: tableColumnClasses[3] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[3] },
+      props: { className: tableColumnClasses[4] },
     },
   ];
 };

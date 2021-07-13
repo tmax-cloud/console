@@ -319,9 +319,8 @@ export const CatalogListPage = withTranslation()(
       });
     }
 
-    // MJ : i18n String 발행되면 적용하기
     render() {
-      const { loaded, loadError, namespace = 'default' } = this.props;
+      const { loaded, loadError, namespace = 'default', t } = this.props;
       const { items } = this.state;
       const label = 'Resources';
 
@@ -330,10 +329,10 @@ export const CatalogListPage = withTranslation()(
           <div>
             <Box className="text-center">
               <img className="cos-status-box__access-denied-icon" src={noResourceImg} />
-              <MsgBox title="" detail="서비스 인스턴스를 생성할 리소스가 없습니다." />
+              <MsgBox title="" detail={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_ERROR_1')} />
             </Box>
             <Box className="text-center">
-              <Link to={`/k8s/ns/${namespace}/serviceinstances`}>목록으로 돌아가기</Link>
+              <Link to={`/k8s/ns/${namespace}/serviceinstances`}>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV2_ERROR_1')}</Link>
             </Box>
           </div>
         );
