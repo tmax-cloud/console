@@ -46,6 +46,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Rejected':
       return <StatusIconAndText {...statusProps} icon={<BanIcon />} />;
 
+    case 'Resource Quota Deleted':
     case 'Namespace Deleted':
     case 'Cluster Template Deleted':
     case 'Deleted':
@@ -110,7 +111,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'TestFailed':
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
     case 'Tested':
-      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;    
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
     case 'RollingBack':
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
     case 'RolledBack':
@@ -124,7 +125,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Unready':
     case 'UnReady':
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
-  
+
     default:
       return <>{status || DASH}</>;
   }
