@@ -23,14 +23,15 @@ const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-s
 const MemberTableRows = (members): ITableRow[] => {
   const data = [];
   _.forEach(members, member => {
+    const memberName = !!member.MemberName ? member.MemberName : member.MemberId?.split('@')[0];
     data.push({
       cells: [
         member.Attribute === 'user' ? (
-          member.MemberName
+          memberName
         ) : (
           <>
             <UsersIcon className="hc-member__group-icon" />
-            {member.MemberName}
+            {memberName}
           </>
         ),
         member.MemberId,
