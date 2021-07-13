@@ -6,7 +6,6 @@ import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
-import { TestIcon } from './icons';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
@@ -124,7 +123,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
     case 'Unready':
     case 'UnReady':
-      return <StatusIconAndText {...statusProps} icon={<TestIcon />} />;
+      return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
   
     default:
       return <>{status || DASH}</>;
