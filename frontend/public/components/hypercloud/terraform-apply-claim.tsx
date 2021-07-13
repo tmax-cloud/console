@@ -84,6 +84,9 @@ const setClaimStatus = status => {
     case 'Applied':
       menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.TerraformDestroy];
       break;
+    case 'Rejected':
+      menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyStatus];
+      break;
     default:
       menuActions = [...Kebab.getExtensionsActionsForKind(TFApplyClaimModel), ...Kebab.factory.common];
   }
