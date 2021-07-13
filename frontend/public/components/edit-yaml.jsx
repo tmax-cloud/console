@@ -472,8 +472,8 @@ export const EditYAML_ = connect(stateToProps)(
                           {t('COMMON:MSG_COMMON_BUTTON_ETC_9')}
                         </Button>
                       )}
-                      {!create && !readOnly && (
-                        <Button type="submit" variant="primary" id="save-changes" onClick={() => this.save()}>
+                      {!create && (
+                        <Button type="submit" variant="primary" id="save-changes" onClick={() => this.save()} isDisabled={readOnly}>
                           {t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
                         </Button>
                       )}

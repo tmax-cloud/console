@@ -20,7 +20,7 @@ import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-t
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
-import { TFApplyClaimModel, ResourceQuotaClaimModel, NamespaceClaimModel } from '@console/internal/models';
+import { TFApplyClaimModel, ResourceQuotaClaimModel, NamespaceClaimModel, ClusterClaimModel, ClusterTemplateClaimModel } from '@console/internal/models';
 
 const isNotAllowedStatus = (statusList, currentStatus) => {
   return _.indexOf(statusList, currentStatus) >= 0;
@@ -39,6 +39,12 @@ export const isSaveButtonDisabled = obj => {
     case NamespaceClaimModel.kind:
       status = obj?.status?.status;
       return isNotAllowedStatus(['Approved', 'Namespace Deleted'], status);
+    case ClusterClaimModel.kind:
+      status = obj?.status?.phase;
+      return isNotAllowedStatus(['Approved', 'ClusterClaim Deleted'], status);
+    case ClusterTemplateClaimModel.kind:
+      status = obj?.status?.status;
+      return isNotAllowedStatus(['Approved', 'Cluster Template Deleted'], status);
     default:
       return false;
   }
@@ -60,7 +66,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
         <SyncedEditor
           context={{
             formContext: { create },
-            yamlContext: { next, match, create },
+            yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
           }}
           initialData={sample}
           initialType={EditorType.YAML}
@@ -122,7 +128,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
             <SyncedEditor
               context={{
                 formContext: { match, model, next, schema, create },
-                yamlContext: { next, match, create },
+                yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
               }}
               FormEditor={FormComponent}
               initialData={sample}
