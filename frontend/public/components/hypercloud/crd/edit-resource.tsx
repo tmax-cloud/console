@@ -20,6 +20,7 @@ import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-t
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
+import { TFApplyClaimModel, ResourceQuotaClaimModel } from '@console/internal/models';
 
 const isNotAllowedStatus = (statusList, currentStatus) => {
   return _.indexOf(statusList, currentStatus) >= 0;
@@ -29,10 +30,10 @@ export const isSaveButtonDisabled = obj => {
   let kind = obj.kind;
   let status = ''; // 리소스마다 status 위치 다름
   switch (kind) {
-    case 'TFApplyClaim':
+    case TFApplyClaimModel.kind:
       status = obj.status.phase;
       return isNotAllowedStatus(['Approved', 'Planned', 'Applied', 'Destroyed'], status);
-    case 'ResourceQuotaClaim':
+    case ResourceQuotaClaimModel.kind:
       status = obj.status.status;
       return isNotAllowedStatus(['Approved', 'Resource Quota Deleted'], status);
     default:
