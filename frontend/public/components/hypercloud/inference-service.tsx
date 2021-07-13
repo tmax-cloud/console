@@ -55,26 +55,26 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'STATUS',
-      sortField: 'phase',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
+      sortFunc: 'InferenceServicePhase',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'FRAMEWORK',
-      sortField: 'framework',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_100'),
+      sortFunc: 'InferenceServiceFramework',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: 'URL',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_101'),
       sortField: 'isvc.status.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: 'MULTIMODEL',
-      sortField: 'multimodel',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_102'),
+      sortFunc: 'InferenceServiceMultimodel',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
     },
@@ -144,18 +144,18 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
-      <DetailsItem label={'INFERENCEURL'} obj={ds} path="status.url">
+      <DetailsItem label={`${t('COMMON:MSG_MAIN_TABLEHEADER_101')}`} obj={ds} path="status.url">
         {ds.status?.url}
       </DetailsItem>
-      <DetailsItem label={'PREDICTOR'} obj={ds} path="spec.predictor">
-        <div>Framework: {framework}</div>
-        <div>Runtime Version: {ds.spec.predictor[framework]?.runtimeVersion}</div>
+      <DetailsItem label={`${t('COMMON:predictor')}`} obj={ds} path="spec.predictor">
+        {framework && <div>{`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_126')}`}: {framework}</div>}
+        <div>{`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_128')}`}: {ds.spec.predictor[framework]?.runtimeVersion}</div>
       </DetailsItem>
-      <DetailsItem label={'TRANSFOMER'} obj={ds} path="spec.transformer">
-        {(ds.spec.transformer) ? 'Y' : 'N'}
+      <DetailsItem label={`${t('COMMON:transformer')}`} obj={ds} path="spec.transformer">
+        {(ds.spec.transformer) ? (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_133')) : (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_134'))}
       </DetailsItem>
-      <DetailsItem label={'EXPLAINER'} obj={ds} path="spec.explainer">
-        {(ds.spec.explainer) ? 'Y' : 'N'}
+      <DetailsItem label={`${t('COMMON:explainer')}`} obj={ds} path="spec.explainer">
+        {(ds.spec.explainer) ? (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_133')) : (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_134'))}
       </DetailsItem>
     </dl>
   );
