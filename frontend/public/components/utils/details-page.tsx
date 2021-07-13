@@ -95,14 +95,14 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
             </DetailsItem>
           )}
           {showAnnotations && (
-            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')} obj={resource} path="metadata.annotations">
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_99')} obj={resource} path="metadata.annotations">
               {canUpdate ? (
                 <Button data-test-id="edit-annotations" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(model, resource).callback.bind(null, t)} variant="link">
-                  {pluralize(_.size(metadata.annotations), 'Annotation')}
+                  {t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(metadata.annotations) })}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
               ) : (
-                pluralize(_.size(metadata.annotations), 'Annotation')
+                t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(metadata.annotations) })
               )}
             </DetailsItem>
           )}
