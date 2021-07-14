@@ -162,7 +162,15 @@ func createConsole(config *v1.Config) (*Console, error) {
 		KeycloakAuthURL:  config.KeycloakAuthURL,
 		KeycloakClientId: config.KeycloakClientId,
 
-		K8sProxyConfig:        k8sProxyConfig,
+		K8sProxyConfig: k8sProxyConfig,
+		K8sClient: &http.Client{
+			Transport: &http.Transport{
+				// TLSClientConfig: &tls.Config{
+				// 	InsecureSkipVerify: true,
+				// },
+				TLSClientConfig: k8sProxyConfig.TLSClientConfig,
+			},
+		},
 		PrometheusProxyConfig: newProxy(config.PrometheusEndpoint),
 		// ThanosProxyConfig:                newProxy(config.ThanosEndpoint),
 		// ThanosTenancyProxyConfig:         newProxy(config.PrometheusEndpoint),
