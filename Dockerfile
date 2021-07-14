@@ -1,17 +1,21 @@
-FROM quay.io/coreos/tectonic-console-builder:v19 AS build
-
+FROM golang:1.16 AS golang
 RUN mkdir -p /go/src/github.com/openshift/console/
 ADD . /go/src/github.com/openshift/console/
 WORKDIR /go/src/github.com/openshift/console/
-RUN ./build.sh
+RUN ./build-backend.sh
+
+FROM quay.io/coreos/tectonic-console-builder:v22 AS build
+RUN mkdir -p /go/src/github.com/openshift/console/
+COPY --from=golang /go/src/github.com/openshift/console/ /go/src/github.com/openshift/console/
+WORKDIR /go/src/github.com/openshift/console/
+RUN ./build-frontend.sh
 
 FROM openshift/origin-base
-
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/bin/console /opt/bridge/bin/console
 RUN mkdir -p /opt/bridge/api/
 COPY --from=build /go/src/github.com/openshift/console/api /opt/bridge/api
-RUN mkdir -p /opt/bridge/configs/ 
+RUN mkdir -p /opt/bridge/configs/
 
 WORKDIR /opt/bridge/
 
