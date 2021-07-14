@@ -20,36 +20,7 @@ import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-t
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
-import { TFApplyClaimModel, ResourceQuotaClaimModel, NamespaceClaimModel, ClusterClaimModel, ClusterTemplateClaimModel } from '@console/internal/models';
-
-const isNotAllowedStatus = (statusList, currentStatus) => {
-  return _.indexOf(statusList, currentStatus) >= 0;
-};
-
-export const isSaveButtonDisabled = obj => {
-  let kind = obj.kind;
-  let status = ''; // 리소스마다 status 위치 다름
-  switch (kind) {
-    case TFApplyClaimModel.kind:
-      status = obj.status.phase;
-      return isNotAllowedStatus(['Approved', 'Planned', 'Applied', 'Destroyed'], status);
-    case ResourceQuotaClaimModel.kind:
-      status = obj.status.status;
-      return isNotAllowedStatus(['Approved', 'Resource Quota Deleted'], status);
-    case NamespaceClaimModel.kind:
-      status = obj?.status?.status;
-      return isNotAllowedStatus(['Approved', 'Namespace Deleted'], status);
-    case ClusterClaimModel.kind:
-      status = obj?.status?.phase;
-      return isNotAllowedStatus(['Approved', 'ClusterClaim Deleted'], status);
-    case ClusterTemplateClaimModel.kind:
-      status = obj?.status?.status;
-      return isNotAllowedStatus(['Approved', 'Cluster Template Deleted'], status);
-    default:
-      return false;
-  }
-};
-
+import { isSaveButtonDisabled } from '../utils/button-state';
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind, AWXModel.kind];
 
