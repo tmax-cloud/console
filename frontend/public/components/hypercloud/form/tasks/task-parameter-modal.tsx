@@ -6,8 +6,10 @@ import { TextInput } from '../../utils/text-input';
 import { ListView } from '../../utils/list-view';
 import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
+import { useTranslation } from 'react-i18next';
 
 export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods, taskParameter }) => {
+  const { t } = useTranslation();
   const typeItems = React.useMemo(
     () => ({
       string: 'String',
@@ -56,17 +58,17 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
 
   return (
     <>
-      <Section label="태스크 파라미터 이름" id="taskparameter_name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_19')} id="taskparameter_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="설명" id="taskparameter_desc">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_20')} id="taskparameter_desc">
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
-      <Section label="타입" id="taskparameter-type" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_21')} id="taskparameter-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
-          title="타입 선택" // 드롭다운 title 지정
+          title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
           methods={methods}
           items={typeItems} // (필수)
           style={{ display: 'block' }}
@@ -76,12 +78,12 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
         />
       </Section>
       {type === 'string' && (
-        <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다." isRequired={true}>
+        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')} isRequired={true}>
           <TextInput id="defaultStr" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.defaultStr : ''} />
         </Section>
       )}
       {type === 'array' && (
-        <Section label="기본 값" id="taskparameter_default" description="태스크 런 또는 파이프라인 생성 시 파라미터를 입력하지 않을 경우 기본 값으로 설정됩니다." isRequired={true}>
+        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')} isRequired={true}>
           <ListView name="defaultArr" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={defaultListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.defaultArr) : []} />
         </Section>
       )}

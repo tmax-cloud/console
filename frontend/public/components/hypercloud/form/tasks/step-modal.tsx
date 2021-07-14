@@ -9,6 +9,7 @@ import { TextArea } from '../../utils/text-area';
 import { ListView } from '../../utils/list-view';
 import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
+import { useTranslation } from 'react-i18next';
 // import { modelFor, k8sList } from '@console/internal/module/k8s';
 // import { makeQuery } from '../../../utils/k8s-watcher';
 
@@ -28,14 +29,15 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   // const [isOpen, setIsOpen] = React.useState(false);
   // const [imageList, setImageList] = React.useState({});
   // const [imageTagList, setImageTagList] = React.useState({});
+  const { t } = useTranslation();
 
   const commandTypeItems = [
     {
-      title: '커맨드/인수',
+      title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_96'),
       value: 'command',
     },
     {
-      title: '스크립트',
+      title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_97'),
       value: 'script',
     },
   ];
@@ -95,9 +97,9 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
-        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={'키'} />
+        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
         <span style={{ margin: '0 5px' }}>=</span>
-        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={'값'} />
+        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
@@ -192,7 +194,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <div className="horizontal-line" />
-      <Section label="이미지" id="step-manual-image" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_33')} id="step-manual-image" isRequired={true}>
         <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
       </Section>
       {/* <Section label="이미지" id="step-image-toggle">
@@ -258,7 +260,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         </>
       )} */}
       <div className="horizontal-line" />
-      <Section label="명령어 타입" id="command-type-toggle">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_95')} id="command-type-toggle">
         <RadioGroup
           methods={methods}
           name="commandTypeToggle" // 서버에 보낼 데이터에서의 path (필수)
@@ -268,27 +270,27 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </Section>
       {commandTypeToggle === 'command' ? (
         <>
-          <Section label="커맨드" id="step-command">
-            <ListView name="command" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.command) : []} defaultItem={{ value: '' }} />
+          <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_40')} id="step-command">
+            <ListView name="command" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={commandListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.command) : []} defaultItem={{ value: '' }} />
           </Section>
-          <Section label="인수" id="step-parameter">
-            <ListView name="args" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.args) : []} />
+          <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_41')} id="step-parameter">
+            <ListView name="args" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={parameterListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.args) : []} />
           </Section>
         </>
       ) : (
         <>
-          <Section label="스크립트" id="step-parameter">
+          <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_97')} id="step-script">
             <TextArea id="script" inputClassName="col-md-12 text-area" methods={methods} defaultValue={modalType === 'modify' ? template.script : ''} />
           </Section>
         </>
       )}
       <div className="horizontal-line" />
-      <Section label="환경 변수" id="step-parameter">
-        <ListView name="env" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.env) : []} defaultItem={{ envKey: '', envValue: '' }} />
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env">
+        <ListView name="env" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.env) : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>
-      <Section label="마운트 경로" id="step-mountPath">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} id="step-mountPath">
         {!isVolumeExist() ? (
-          '마운트할 볼륨을 먼저 추가해 주세요.'
+          t('SINGLE:MSG_TASKS_CREATFORM_DIV2_46')
         ) : (
           <>
             <Section id="selectedVolume">
@@ -296,7 +298,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
                 name="selectedVolume"
                 className="btn-group"
                 defaultValue={template ? template.selectedVolume : ''}
-                title="볼륨 선택" // 드롭다운 title 지정
+                title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} // 드롭다운 title 지정
                 methods={methods}
                 items={volumeItems} // (필수)
                 style={{ display: 'block' }}
@@ -305,7 +307,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
               />
             </Section>
             <Section id="mountPath">
-              <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} placeholder="마운트 경로를 입력해 주세요." defaultValue={modalType === 'modify' ? template.mountPath : ''} />
+              <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_48')} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
             </Section>
           </>
         )}
