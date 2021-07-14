@@ -26,7 +26,7 @@ const Details = ({ obj: replicaSet }) => {
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(replicaSet, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={replicaSet} showPodSelector showNodeSelector showTolerations>
+            <ResourceSummary resource={replicaSet} showPodSelector showNodeSelector showTolerations showOwner={false}>
               {revision && (
                 <>
                   <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_41')}</dt>

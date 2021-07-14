@@ -86,7 +86,7 @@ const CronJobDetails: React.FC<CronJobDetailsProps> = ({ obj: cronjob }) => {
         <div className="row">
           <div className="col-md-6">
             <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(cronjob, t) })} />
-            <ResourceSummary resource={cronjob}>
+            <ResourceSummary resource={cronjob} showOwner={false}>
               <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_19')} obj={cronjob} path="spec.schedule" />
               <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_20')} obj={cronjob} path="spec.concurrencyPolicy" />
               <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_21')} obj={cronjob} path="spec.startingDeadlineSeconds">

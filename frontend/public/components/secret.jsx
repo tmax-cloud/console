@@ -99,7 +99,7 @@ const SecretDetails = ({ obj: secret }) => {
     <>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(secret, t) })} />
-        <ResourceSummary resource={secret} />
+        <ResourceSummary resource={secret} showOwner={false}/>
       </div>
       <div className="co-m-pane__body">
         <SecretData data={secret.data} type={secret.type} />

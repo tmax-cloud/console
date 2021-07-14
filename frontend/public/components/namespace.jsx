@@ -485,7 +485,7 @@ export const NamespaceSummary = ({ ns }) => {
   return (
     <div className="row">
       <div className="col-sm-6 col-xs-12">
-        <ResourceSummary resource={ns}>
+        <ResourceSummary resource={ns} showOwner={false}>
           {displayName && <dt>Display Name</dt>}
           {displayName && <dd>{displayName}</dd>}
           {requester && <dt>Requester</dt>}

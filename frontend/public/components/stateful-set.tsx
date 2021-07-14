@@ -42,7 +42,7 @@ const StatefulSetDetails: React.FC<StatefulSetDetailsProps> = ({ obj: ss }) => {
             return d.loaded ? <PodRingSet key={ss.metadata.uid} podData={d.data[ss.metadata.uid]} obj={ss} resourceKind={StatefulSetModel} path="/spec/replicas" /> : <LoadingInline />;
           }}
         />
-        <ResourceSummary resource={ss} showPodSelector showNodeSelector showTolerations />
+        <ResourceSummary resource={ss} showPodSelector showNodeSelector showTolerations showOwner={false}/>
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_CONTAINERS_TABLEHEADER_1')} />

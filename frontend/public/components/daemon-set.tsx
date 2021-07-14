@@ -112,7 +112,7 @@ const DaemonSetDetails: React.FC<DaemonSetDetailsProps> = ({ obj: daemonset }) =
         />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={daemonset} showPodSelector showNodeSelector showTolerations />
+            <ResourceSummary resource={daemonset} showPodSelector showNodeSelector showTolerations showOwner={false}/>
           </div>
           <div className="col-lg-6">
             <DaemonSetDetailsList ds={daemonset} />
