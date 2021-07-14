@@ -35,8 +35,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/openshift/library-go/pkg/crypto"
-	// "github.com/openshift/library-go/pkg/crypto"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
@@ -120,7 +119,7 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 				log.Error(errors.Wrapf(err, "URL Parsing failed for: %s", value.Server))
 			}
 			dhconfig := &proxy.Config{
-				TLSClientConfig: crypto.SecureTLSConfig(&tls.Config{
+				TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
 					InsecureSkipVerify: true,
 				}),
 				HeaderBlacklist: []string{"X-CSRFToken"},

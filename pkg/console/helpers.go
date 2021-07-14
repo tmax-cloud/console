@@ -192,9 +192,12 @@ func newProxy(endpoint string) *proxy.Config {
 	url := validateURL(endpoint, endpoint)
 	return &proxy.Config{
 		HeaderBlacklist: []string{"X-CSRFToken"},
-		TLSClientConfig: &tls.Config{
+		// TLSClientConfig: &tls.Config{
+		// 	InsecureSkipVerify: true,
+		// },
+		TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
 			InsecureSkipVerify: true,
-		},
+		}),
 		Endpoint: url,
 		Origin:   "http://localhost",
 	}
