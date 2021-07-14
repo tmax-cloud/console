@@ -9,7 +9,7 @@ import { ErrorPage404 } from './error';
 import { safeYAMLToJS } from '@console/shared/src/utils/yaml';
 
 export const CreateYAML = connectToPlural((props: CreateYAMLProps) => {
-  const { create = true, match, kindsInFlight, kindObj, hideHeader = false, onChange = () => null, resourceObjPath } = props;
+  const { create = true, match, kindsInFlight, kindObj, hideHeader = false, onChange = () => null, resourceObjPath, readOnly } = props;
   const { params } = match;
 
   if (!kindObj) {
@@ -36,7 +36,7 @@ export const CreateYAML = connectToPlural((props: CreateYAMLProps) => {
 
   // TODO: if someone edits namespace, we'll redirect to old namespace
 
-  return <AsyncComponent loader={() => import('./droppable-edit-yaml').then(c => c.DroppableEditYAML)} obj={obj} create={create} kind={kindObj.kind} header={header} hideHeader={hideHeader} resourceObjPath={resourceObjPath} onChange={onChange} />;
+  return <AsyncComponent loader={() => import('./droppable-edit-yaml').then(c => c.DroppableEditYAML)} obj={obj} create={create} kind={kindObj.kind} header={header} hideHeader={hideHeader} resourceObjPath={resourceObjPath} onChange={onChange} readOnly={readOnly} />;
 });
 
 export const EditYAMLPage: React.SFC<EditYAMLPageProps> = props => {
@@ -64,6 +64,7 @@ export type CreateYAMLProps = {
   kindObj: K8sKind;
   template?: string;
   download?: boolean;
+  readOnly?: boolean;
   header?: string;
   hideHeader?: boolean;
   resourceObjPath?: (obj: K8sResourceKind, kind: K8sResourceKindReference) => string;
