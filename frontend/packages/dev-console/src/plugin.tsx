@@ -576,7 +576,10 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'Page/Route',
     properties: {
       exact: true,
-      path: [`/k8s/ns/:ns/${referenceForModel(PipelineModel)}/:pipelineName/builder`],
+      path: [
+        `/k8s/ns/:ns/${referenceForModel(PipelineModel)}/:pipelineName/builder`,
+        `/k8s/ns/:ns/pipelines/:pipelineName/edit`,
+      ],
       loader: async () =>
         (
           await import(
