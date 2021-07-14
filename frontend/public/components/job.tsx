@@ -130,7 +130,7 @@ const JobDetails: React.FC<JobsDetailsProps> = ({ obj: job }) => {
         <div className="row">
           <div className="col-md-6">
             <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(job, t) })} />
-            <ResourceSummary resource={job} showPodSelector showOwner={false}>
+            <ResourceSummary resource={job} showPodSelector>
               <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_35')} obj={job} path="spec.completions" />
               <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_36')} obj={job} path="spec.parallelism" />
               <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_37')} obj={job} path="spec.activeDeadlineSeconds">

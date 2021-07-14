@@ -135,7 +135,7 @@ export const HorizontalPodAutoscalersDetails: React.FC<HorizontalPodAutoscalersD
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(hpa, t) })} />
         <div className="row">
           <div className="col-sm-6">
-            <ResourceSummary resource={hpa} showOwner={false}/>
+            <ResourceSummary resource={hpa} />
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
