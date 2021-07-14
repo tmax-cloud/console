@@ -200,7 +200,7 @@ export const ClusterClaimsPage: React.FC<ClusterClaimsPageProps> = props => {
 export const ClusterClaimsDetailsPage: React.FC<ClusterClaimsDetailsPageProps> = props => {
   const [status, setStatus] = React.useState();
   const menuActions = isUnmodifiable(status) ? clusterClaimCommonActions : [...clusterClaimCommonActions, Kebab.factory.ModifyClaim];
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setState4MenuActions={setStatus} statePath="status.phase" pages={[details(detailsPage(ClusterClaimDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setCustomState={setStatus} customStatePath="status.phase" pages={[details(detailsPage(ClusterClaimDetails)), editResource()]} />;
 };
 
 type ClusterRowProps = {

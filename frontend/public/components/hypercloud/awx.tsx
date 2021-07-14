@@ -76,12 +76,7 @@ const AWXTableRow: RowFunction<K8sResourceKind> = ({ obj: awx, index, key, style
 };
 
 const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
-  const images = [
-    obj.spec?.tower_image,
-    ...(obj.spec?.tower_ee_images?.map(item => item.image) || []),
-    obj.spec?.tower_redis_image,
-    obj.spec?.tower_postgres_image,
-  ].filter((item) => !!item);
+  const images = [obj.spec?.tower_image, ...(obj.spec?.tower_ee_images?.map(item => item.image) || []), obj.spec?.tower_redis_image, obj.spec?.tower_postgres_image].filter(item => !!item);
 
   if (images.length === 0) {
     images.push('-');
@@ -90,7 +85,7 @@ const ImageSummary: React.FC<ImageSummaryProps> = ({ obj }) => {
   return (
     <>
       {images.map((image, index) => {
-        return (<div key={`image-${index}`}>{image}</div>)
+        return <div key={`image-${index}`}>{image}</div>;
       })}
     </>
   );
@@ -100,10 +95,15 @@ export const AWXDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
   const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
-      </DetailsItem>
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}></DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
-        {awx.spec?.tower_hostname ? (<a href={`https://${awx.spec?.tower_hostname}`} target="_blank" >{awx.spec.tower_hostname}</a>) : (<div>-</div>)}
+        {awx.spec?.tower_hostname ? (
+          <a href={`https://${awx.spec?.tower_hostname}`} target="_blank">
+            {awx.spec.tower_hostname}
+          </a>
+        ) : (
+          <div>-</div>
+        )}
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
         <ImageSummary obj={awx} />
@@ -133,12 +133,12 @@ const AWXDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
 
 const { details, editYaml } = navFactory;
 
-export const AWXs: React.FC = (props) => {
+export const AWXs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="AWX Instances" Header={AWXTableHeader.bind(null, t)} Row={AWXTableRow} virtualize />;
 };
 
-const filters = (t) => [
+const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'awx-status',
@@ -151,14 +151,14 @@ const filters = (t) => [
   },
 ];
 
-export const AWXsPage: React.FC = (props) => {
+export const AWXsPage: React.FC = props => {
   const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_199')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_199') })} canCreate={true} ListComponent={AWXs} kind={kind} rowFilters={filters.bind(null, t)()} {...props} />
+  return <ListPage title={t('COMMON:MSG_LNB_MENU_199')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_199') })} canCreate={true} ListComponent={AWXs} kind={kind} rowFilters={filters.bind(null, t)()} {...props} />;
 };
 
-export const AWXsDetailsPage: React.FC<DetailsPageProps> = (props) => {
+export const AWXsDetailsPage: React.FC<DetailsPageProps> = props => {
   const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} statePath='spec.tower_hostname' setState4MenuActions={setUrl} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editYaml()]} />
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editYaml()]} />;
 };
 
 type ImageSummaryProps = {

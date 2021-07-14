@@ -301,7 +301,6 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
     return <Route path={path} exact key={p.name} render={render} />;
   });
 
-  props.setState4MenuActions && props.statePath && props.setState4MenuActions(_.get(props.obj.data, props.statePath));
   props.setCustomState && props.customStatePath && props.setCustomState(_.get(props.obj.data, props.customStatePath));
 
   return (
@@ -367,8 +366,6 @@ export type HorizontalNavProps = {
   EmptyMsg?: React.ComponentType<any>;
   noStatusBox?: boolean;
   customData?: any;
-  setState4MenuActions?: any;
-  statePath?: string;
   setActiveSchema?: any;
   model?: K8sKind;
   setCustomState?: any;

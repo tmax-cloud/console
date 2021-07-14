@@ -31,7 +31,7 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
   const [ref, width] = useRefWidth();
   const ready = !error && !loading;
   const status = loading ? 'Loading' : error;
-  const labels = ({ datum: { x, y } }) => (x ? `${x} ${usedLabel}` : `${100 - y} ${remainderLabel}`);
+  const labels = ({ datum: { x, y } }) => (x ? `${x} ${usedLabel}` : `${100 - y.toFixed(1)}% ${remainderLabel}`);
   return (
     <PrometheusGraph className={classNames('graph-wrapper--title-center graph-wrapper--gauge', className)} ref={ref} title={title}>
       <PrometheusGraphLink query={query}>
