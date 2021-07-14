@@ -5,6 +5,8 @@ go 1.15
 require (
 	github.com/auth0/go-jwt-middleware v1.0.0
 	github.com/cenkalti/backoff/v4 v4.1.0
+	github.com/docker/go-metrics v0.0.1 // indirect
+	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
 	github.com/eapache/channels v1.1.0
 	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/fsnotify/fsnotify v1.4.9
@@ -14,8 +16,8 @@ require (
 	github.com/gravitational/trace v1.1.14 // indirect
 	github.com/justinas/alice v1.2.0
 	github.com/magiconair/properties v1.8.4 // indirect
+	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
-	github.com/openshift/library-go v0.0.0-20210713101519-bd06a0ee02c3
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
@@ -30,10 +32,13 @@ require (
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.6.2
+	k8s.io/apiextensions-apiserver v0.21.1 // indirect
 	k8s.io/apimachinery v0.21.2
+	k8s.io/apiserver v0.21.1
 	k8s.io/cli-runtime v0.21.2
 	k8s.io/client-go v0.21.2
 	k8s.io/klog v1.0.0
+	k8s.io/klog/v2 v2.8.0
 	rsc.io/letsencrypt v0.0.3 // indirect
 	sigs.k8s.io/yaml v1.2.0
 )

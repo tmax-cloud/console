@@ -9,8 +9,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"sigs.k8s.io/yaml"
 	"strings"
+
+	"sigs.k8s.io/yaml"
 
 	"helm.sh/helm/v3/pkg/repo"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -20,7 +21,8 @@ import (
 	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/klog"
 
-	"github.com/openshift/library-go/pkg/crypto"
+	"console/pkg/crypto"
+	// "github.com/openshift/library-go/pkg/crypto"
 )
 
 var (

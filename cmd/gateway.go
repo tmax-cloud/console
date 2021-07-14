@@ -35,8 +35,8 @@ import (
 	"net/url"
 	"os"
 
-	// "openshift/library-go/pkg/crypto"
-	"github.com/openshift/library-go/pkg/crypto"
+	"console/pkg/crypto"
+	// "github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
