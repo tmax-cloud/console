@@ -15,7 +15,8 @@ import (
 	"runtime"
 	"strings"
 
-	"console/pkg/crypto"
+	// "console/pkg/crypto"
+	"github.com/openshift/library-go/pkg/crypto"
 )
 
 const (

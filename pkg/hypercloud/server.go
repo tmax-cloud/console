@@ -11,7 +11,8 @@ import (
 	v1 "console/pkg/api/v1"
 	"console/pkg/hypercloud/safe"
 
-	"console/pkg/crypto"
+	// "console/pkg/crypto"
+	"github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/sirupsen/logrus"
 )
