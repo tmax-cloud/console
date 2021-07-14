@@ -15,7 +15,6 @@ import (
 	"runtime"
 	"strings"
 
-	// "console/pkg/crypto"
 	"github.com/openshift/library-go/pkg/crypto"
 )
 
@@ -72,6 +71,7 @@ func createConsole(config *v1.Config) (*Console, error) {
 	)
 
 	k8sProxyConfig := &proxy.Config{}
+	k8sClient := &http.Client{}
 	// Console In Cluster
 	if config.K8sEndpoint == "" || config.K8sEndpoint == K8sEndpoint {
 		k8sCertPEM, err := ioutil.ReadFile(k8sInClusterCA)
@@ -98,6 +98,11 @@ func createConsole(config *v1.Config) (*Console, error) {
 			Endpoint:        k8sURL,
 			Origin:          "http://localhost",
 		}
+		k8sClient = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: k8sProxyConfig.TLSClientConfig,
+			},
+		}
 		// Console Off Cluster
 	} else {
 		k8sAuthServiceAccountBearerToken = ""
@@ -106,10 +111,15 @@ func createConsole(config *v1.Config) (*Console, error) {
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: true,
-				CipherSuites:       crypto.DefaultCiphers(),
+				// CipherSuites:       crypto.DefaultCiphers(),
 			},
 			Endpoint: k8sURL,
 			Origin:   "http://localhost",
+		}
+		k8sClient = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: k8sProxyConfig.TLSClientConfig,
+			},
 		}
 	}
 
@@ -163,15 +173,8 @@ func createConsole(config *v1.Config) (*Console, error) {
 		KeycloakAuthURL:  config.KeycloakAuthURL,
 		KeycloakClientId: config.KeycloakClientId,
 
-		K8sProxyConfig: k8sProxyConfig,
-		K8sClient: &http.Client{
-			Transport: &http.Transport{
-				// TLSClientConfig: &tls.Config{
-				// 	InsecureSkipVerify: true,
-				// },
-				TLSClientConfig: k8sProxyConfig.TLSClientConfig,
-			},
-		},
+		K8sProxyConfig:        k8sProxyConfig,
+		K8sClient:             k8sClient,
 		PrometheusProxyConfig: newProxy(config.PrometheusEndpoint),
 		// ThanosProxyConfig:                newProxy(config.ThanosEndpoint),
 		// ThanosTenancyProxyConfig:         newProxy(config.PrometheusEndpoint),
