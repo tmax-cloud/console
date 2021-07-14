@@ -2,8 +2,10 @@ import * as React from 'react';
 import { Section } from '../../utils/section';
 import { RadioGroup } from '../../utils/radio';
 import { TextInput } from '../../utils/text-input';
+import { useTranslation } from 'react-i18next';
 
 export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpace }) => {
+  const { t } = useTranslation();
   const accessModeItem = [
     // RadioGroup 컴포넌트에 넣어줄 items
     {
@@ -34,16 +36,16 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
 
   return (
     <>
-      <Section label="워크스페이스 이름" id="workspace_name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_58')} id="workspace_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="설명" id="workspace_desc">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_59')} id="workspace_desc">
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
-      <Section label="마운트 경로" id="workspace_mountPath">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_60')} id="workspace_mountPath">
         <TextInput id="mountPath" inputClassName="col-md-12" placeholder="/workspace/<name>" methods={methods} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
       </Section>
-      <Section label="접근 모드" id="workspace_access">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_63')} id="workspace_access">
         <RadioGroup
           methods={methods}
           name="accessMode" // 서버에 보낼 데이터에서의 path (필수)
@@ -62,9 +64,9 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
             setOption(!option);
           }}
         />
-        이 워크스페이스를 선택 항목으로 제공합니다.
+        {t('SINGLE:MSG_TASKS_CREATFORM_DIV2_66')}
       </label>
-      <p>선택 항목으로 제공할 경우, 태스크 런 또는 파이프라인 메뉴에서 파이프라인 워크스페이스를 필요에 따라 할당할 수 있습니다.</p>
+      <p>{t('SINGLE:MSG_TASKS_CREATFORM_DIV2_67')}</p>
     </>
   );
 };

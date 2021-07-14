@@ -3,13 +3,15 @@ import { Section } from '../../utils/section';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => {
+  const { t } = useTranslation();
   const typeItems = React.useMemo(
     () => ({
-      emptyDir: '빈 디렉토리',
-      configMap: '컨피그 맵',
-      secret: '시크릿',
+      emptyDir: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_72'),
+      configMap: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_73'),
+      secret: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_74'),
     }),
     [],
   );
@@ -32,14 +34,14 @@ export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => 
 
   return (
     <>
-      <Section label="볼륨 이름" id="volume-name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_69')} id="volume-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="타입" id="volume-type" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_70')} id="volume-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
-          title="볼륨 선택" // 드롭다운 title 지정
+          title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_71')} // 드롭다운 title 지정
           methods={methods}
           items={typeItems} // (필수)
           style={{ display: 'block' }}
@@ -49,12 +51,12 @@ export const VolumeModal: React.FC<VolumeModalProps> = ({ methods, volume }) => 
         />
       </Section>
       {type === 'configMap' && (
-        <Section label="컨피그 맵" id="volume-config-map" isRequired={true}>
+        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_73')} id="volume-config-map" isRequired={true}>
           <TextInput id="configMap" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.configMap : ''} />
         </Section>
       )}
       {type === 'secret' && (
-        <Section label="시크릿" id="volume-secret" isRequired={true}>
+        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_74')} id="volume-secret" isRequired={true}>
           <TextInput id="secret" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.secret : ''} />
         </Section>
       )}
