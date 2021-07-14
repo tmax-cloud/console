@@ -97,13 +97,8 @@ const pluralToKindMap = new Map([
   ['tfapplyclaims', 'TFApplyClaim'],
 ]);
 
-<<<<<<< HEAD
-const isCreateManualSet = new Set(['ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBinding', 'ClusterRoleBinding', 'RoleBindingClaim']);
-const isVanillaObjectSet = new Set(['PodSecurityPolicy', 'Pod', 'Deployment', 'ReplicaSet', 'HorizontalPodAutoscaler', 'DaemonSet', 'StatefulSet', 'ConfigMap', 'Secret', 'Job', 'CronJob', 'Service', 'Ingress', 'NetworkPolicy', 'StorageClass', 'PersistentVolumeClaim', 'PersistentVolume', 'Namespace', 'LimitRange', 'ResourceQuota', 'Node', 'Role', 'RoleBinding', 'ClusterRole', 'ClusterRoleBinding','ServiceAccount', 'CustomResourceDefinition']);
-=======
-const isCreateManualSet = new Set(['Role', 'ClusterRole', 'ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBinding', 'ClusterRoleBinding', 'RoleBindingClaim', 'Pipeline']);
+const isCreateManualSet = new Set(['ServiceInstance', 'TemplateInstance', 'Task', 'ClusterTask', 'TaskRun', 'PipelineRun', 'PipelineResource', 'RoleBinding', 'ClusterRoleBinding', 'RoleBindingClaim', 'Pipeline']);
 const isVanillaObjectSet = new Set(['PodSecurityPolicy', 'Pod', 'Deployment', 'ReplicaSet', 'HorizontalPodAutoscaler', 'DaemonSet', 'StatefulSet', 'ConfigMap', 'Secret', 'Job', 'CronJob', 'Service', 'Ingress', 'NetworkPolicy', 'StorageClass', 'PersistentVolumeClaim', 'PersistentVolume', 'Namespace', 'LimitRange', 'ResourceQuota', 'Node', 'Role', 'RoleBinding', 'ClusterRole', 'ClusterRoleBinding', 'ServiceAccount', 'CustomResourceDefinition']);
->>>>>>> fb14ce5d6... [bugfix][patch][IMS]265683 파이프라인 edit시 폼뷰가 나오지 않음
 
 export const pluralToKind = plural => pluralToKindMap.get(plural);
 
