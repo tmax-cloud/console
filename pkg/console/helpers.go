@@ -15,7 +15,7 @@ import (
 	"runtime"
 	"strings"
 
-	"console/pkg/crypto"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
 	// "github.com/openshift/library-go/pkg/crypto"
 )
 
@@ -83,10 +83,9 @@ func createConsole(config *v1.Config) (*Console, error) {
 		if !rootCAs.AppendCertsFromPEM(k8sCertPEM) {
 			log.Fatalf("No CA found for the API server")
 		}
-		tlsConfig := &tls.Config{
-			RootCAs:      rootCAs,
-			CipherSuites: crypto.DefaultCiphers(),
-		}
+		tlsConfig := oscrypto.SecureTLSConfig(&tls.Config{
+			RootCAs: rootCAs,
+		})
 		bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 		if err != nil {
@@ -110,10 +109,9 @@ func createConsole(config *v1.Config) (*Console, error) {
 		k8sURL = validateURL("k8sEndpoint", config.K8sEndpoint)
 		k8sProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			TLSClientConfig: &tls.Config{
+			TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
 				InsecureSkipVerify: true,
-				// CipherSuites:       crypto.DefaultCiphers(),
-			},
+			}),
 			Endpoint: k8sURL,
 			Origin:   "http://localhost",
 		}

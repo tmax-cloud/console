@@ -21,7 +21,7 @@ import (
 	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/klog"
 
-	"console/pkg/crypto"
+	"github.com/openshift/library-go/pkg/crypto"
 	// "github.com/openshift/library-go/pkg/crypto"
 )
 

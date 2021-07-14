@@ -20,7 +20,7 @@ import (
 	"console/pkg/config/dynamic"
 	"console/pkg/console"
 
-	// "console/pkg/crypto"
+	// "github.com/openshift/library-go/pkg/crypto"
 	"console/pkg/hypercloud"
 	pServer "console/pkg/hypercloud"
 	"console/pkg/hypercloud/provider/file"
@@ -35,7 +35,7 @@ import (
 	"net/url"
 	"os"
 
-	"console/pkg/crypto"
+	"github.com/openshift/library-go/pkg/crypto"
 	// "github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/gorilla/handlers"
@@ -120,10 +120,9 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 				log.Error(errors.Wrapf(err, "URL Parsing failed for: %s", value.Server))
 			}
 			dhconfig := &proxy.Config{
-				TLSClientConfig: &tls.Config{
+				TLSClientConfig: crypto.SecureTLSConfig(&tls.Config{
 					InsecureSkipVerify: true,
-					CipherSuites:       crypto.DefaultCiphers(),
-				},
+				}),
 				HeaderBlacklist: []string{"X-CSRFToken"},
 				Endpoint:        backURL,
 			}
