@@ -62,7 +62,7 @@ const { details, editResource } = navFactory;
 const ClusterTemplateClaimsDetailsPage: React.FC<ClusterTemplateClaimsDetailsPageProps> = props => {
   const [status, setStatus] = React.useState();
   const menuActions = isUnmodifiable(status) ? clusterTemplateClaimCommonActions : [...clusterTemplateClaimCommonActions, Kebab.factory.ModifyStatus];
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setState4MenuActions={setStatus} statePath="status.status" pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setCustomState={setStatus} customStatePath="status.status" pages={[details(ClusterTemplateClaimDetails), editResource()]} />;
 };
 ClusterTemplateClaimsDetailsPage.displayName = 'ClusterTemplateClaimsDetailsPage';
 
