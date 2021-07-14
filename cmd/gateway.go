@@ -19,7 +19,8 @@ import (
 	v1 "console/pkg/api/v1"
 	"console/pkg/config/dynamic"
 	"console/pkg/console"
-	"console/pkg/crypto"
+
+	// "console/pkg/crypto"
 	"console/pkg/hypercloud"
 	pServer "console/pkg/hypercloud"
 	"console/pkg/hypercloud/provider/file"
@@ -34,7 +35,8 @@ import (
 	"net/url"
 	"os"
 
-	// "github.com/openshift/library-go/pkg/crypto"
+	// "openshift/library-go/pkg/crypto"
+	"github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
