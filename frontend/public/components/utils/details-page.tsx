@@ -6,7 +6,7 @@ import { Translation } from 'react-i18next';
 import { DetailsItem } from './details-item';
 import { Kebab } from './kebab';
 import { LabelList } from './label-list';
-import { OwnerReferences } from './owner-references';
+// import { OwnerReferences } from './owner-references';
 import { ResourceLink } from './resource-link';
 import { ServicePlanModel, ClusterServicePlanModel } from '../../models';
 import { Selector } from './selector';
@@ -95,14 +95,14 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
             </DetailsItem>
           )}
           {showAnnotations && (
-            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')} obj={resource} path="metadata.annotations">
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_99')} obj={resource} path="metadata.annotations">
               {canUpdate ? (
                 <Button data-test-id="edit-annotations" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(model, resource).callback.bind(null, t)} variant="link">
-                  {pluralize(_.size(metadata.annotations), 'Annotation')}
+                  {t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(metadata.annotations) })}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
               ) : (
-                pluralize(_.size(metadata.annotations), 'Annotation')
+                t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(metadata.annotations) })
               )}
             </DetailsItem>
           )}
@@ -110,11 +110,11 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')} obj={resource} path="metadata.creationTimestamp">
             <Timestamp timestamp={metadata.creationTimestamp} />
           </DetailsItem>
-          {showOwner && (
+          {/* {showOwner && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={resource} path="metadata.ownerReferences">
               <OwnerReferences resource={resource} />
             </DetailsItem>
-          )}
+          )} */}
         </dl>
       )}
     </Translation>

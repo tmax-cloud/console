@@ -224,14 +224,14 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={`${t('COMMON:MSG_MAIN_TABLEHEADER_98')}`} obj={resource} path="resourceName">
-        {resource.status.url}
+        {resource?.resourceName}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
-        <Status status={resource.status.status} />
+        <Status status={resource.status?.status} />
       </DetailsItem>
       {resource.status?.status === 'Rejected' &&
         <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">
-          {resource.status.reason}
+          {resource.status?.reason}
         </DetailsItem>
       }
     </dl>
