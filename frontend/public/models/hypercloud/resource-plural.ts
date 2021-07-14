@@ -335,6 +335,14 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_194',
     label: 'COMMON:MSG_LNB_MENU_194',
   },
+  InferenceService: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_192',
+    label: 'COMMON:MSG_LNB_MENU_193',
+  },
+  TrainedModel: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_196',
+    label: 'COMMON:MSG_LNB_MENU_196',
+  },
   HelmRelease: {
     labelPlural: 'COMMON:MSG_LNB_MENU_203',
     label: 'COMMON:MSG_LNB_MENU_204',
