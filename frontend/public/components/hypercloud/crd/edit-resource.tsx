@@ -151,7 +151,15 @@ export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProp
       <Helmet>
         <title>{`Edit ${kind}`}</title>
       </Helmet>
-      {isCreateManual(kind) ? <AsyncComponent loader={() => import(`../form/${plural}/create-${kind.toLowerCase()}` /* webpackChunkName: "create-secret" */).then(m => m[`Create${kind}`])} obj={props.obj} match={props.match} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
+      {isCreateManual(kind) ? (
+        kind === 'Pipeline' ? (
+          <AsyncComponent loader={() => import('../../../../packages/dev-console/src/components/pipelines/pipeline-builder/PipelineBuilderEditPage').then(m => m.default)} obj={props.obj} match={props.match} />
+        ) : (
+          <AsyncComponent loader={() => import(`../form/${plural}/create-${kind.toLowerCase()}`).then(m => m[`Create${kind}`])} obj={props.obj} match={props.match} />
+        )
+      ) : (
+        <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />
+      )}
     </>
   );
 });
