@@ -51,7 +51,7 @@ const TYPES = {
   },
 };
 
-export const getType = (name) => {
+export const getType = name => {
   const type = TYPES[name];
   if (!_.isPlainObject(type)) {
     return {
@@ -122,7 +122,7 @@ const convertValueWithUnitsToBaseValue = (value, unitArray, divisor) => {
   return { value, unit };
 };
 
-const getDefaultFractionDigits = (value) => {
+const getDefaultFractionDigits = value => {
   if (value < 1) {
     return 3;
   }
@@ -152,36 +152,18 @@ const round = (units.round = (value, fractionDigits) => {
   return Math.round(value * multiplier) / multiplier;
 });
 
-const humanize = (units.humanize = (
-  value,
-  typeName,
-  useRound = false,
-  initialUnit,
-  preferredUnit,
-) => {
+const humanize = (units.humanize = (value, typeName, useRound = false, initialUnit, preferredUnit) => {
   const type = getType(typeName);
 
   if (!isFinite(value)) {
     value = 0;
   }
 
-  let converted = convertBaseValueToUnits(
-    value,
-    type.units,
-    type.divisor,
-    initialUnit,
-    preferredUnit,
-  );
+  let converted = convertBaseValueToUnits(value, type.units, type.divisor, initialUnit, preferredUnit);
 
   if (useRound) {
     converted.value = round(converted.value);
-    converted = convertBaseValueToUnits(
-      converted.value,
-      type.units,
-      type.divisor,
-      converted.unit,
-      preferredUnit,
-    );
+    converted = convertBaseValueToUnits(converted.value, type.units, type.divisor, converted.unit, preferredUnit);
   }
 
   const formattedValue = formatValue(converted.value);
@@ -204,23 +186,15 @@ const formatPercentage = (value, options) => {
   return Intl.NumberFormat(locales, rest).format(value);
 };
 
-export const humanizeBinaryBytesWithoutB = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'binaryBytesWithoutB', true, initialUnit, preferredUnit);
-export const humanizeBinaryBytes = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'binaryBytes', true, initialUnit, preferredUnit);
-export const humanizeDecimalBytes = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'decimalBytes', true, initialUnit, preferredUnit);
-export const humanizeDecimalBytesPerSec = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'decimalBytesPerSec', true, initialUnit, preferredUnit);
-export const humanizePacketsPerSec = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'packetsPerSec', true, initialUnit, preferredUnit);
-export const humanizeNumber = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'numeric', true, initialUnit, preferredUnit);
-export const humanizeNumberSI = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'SI', true, initialUnit, preferredUnit);
-export const humanizeSeconds = (v, initialUnit, preferredUnit) =>
-  humanize(v, 'seconds', true, initialUnit, preferredUnit);
-export const humanizeCpuCores = (v) => {
+export const humanizeBinaryBytesWithoutB = (v, initialUnit, preferredUnit) => humanize(v, 'binaryBytesWithoutB', true, initialUnit, preferredUnit);
+export const humanizeBinaryBytes = (v, initialUnit, preferredUnit) => humanize(v, 'binaryBytes', true, initialUnit, preferredUnit);
+export const humanizeDecimalBytes = (v, initialUnit, preferredUnit) => humanize(v, 'decimalBytes', true, initialUnit, preferredUnit);
+export const humanizeDecimalBytesPerSec = (v, initialUnit, preferredUnit) => humanize(v, 'decimalBytesPerSec', true, initialUnit, preferredUnit);
+export const humanizePacketsPerSec = (v, initialUnit, preferredUnit) => humanize(v, 'packetsPerSec', true, initialUnit, preferredUnit);
+export const humanizeNumber = (v, initialUnit, preferredUnit) => humanize(v, 'numeric', true, initialUnit, preferredUnit);
+export const humanizeNumberSI = (v, initialUnit, preferredUnit) => humanize(v, 'SI', true, initialUnit, preferredUnit);
+export const humanizeSeconds = (v, initialUnit, preferredUnit) => humanize(v, 'seconds', true, initialUnit, preferredUnit);
+export const humanizeCpuCores = v => {
   const value = v < 1 ? round(v * 1000) : v;
   const unit = v < 1 ? 'm' : '';
   return {
@@ -229,14 +203,14 @@ export const humanizeCpuCores = (v) => {
     value,
   };
 };
-export const humanizePercentage = (value) => {
+export const humanizePercentage = value => {
   if (!isFinite(value)) {
     value = 0;
   }
   return {
     string: formatPercentage(value / 100),
     unit: '%',
-    value: round(value, 1),
+    value: round(value, 2),
   };
 };
 
@@ -245,7 +219,7 @@ units.dehumanize = (value, typeName) => {
   return convertValueWithUnitsToBaseValue(value, type.units, type.divisor);
 };
 
-validate.split = (value) => {
+validate.split = value => {
   const index = value.search(/([a-zA-Z]+)/g);
   let number, unit;
   if (index === -1) {
@@ -257,7 +231,7 @@ validate.split = (value) => {
   return [parseFloat(number, 10), unit];
 };
 
-const baseUnitedValidation = (value) => {
+const baseUnitedValidation = value => {
   if (value === null || value.length === 0) {
     return;
   }
@@ -358,7 +332,7 @@ validate.memory = (value = '') => {
 // is problematic for comparing quota resources because you need to know
 // what unit you're dealing with already (e.g. decimal vs binary). Returns
 // null if value isn't recognized as valid.
-export const convertToBaseValue = (value) => {
+export const convertToBaseValue = value => {
   if (!_.isString(value)) {
     return null;
   }
@@ -390,7 +364,7 @@ export const convertToBaseValue = (value) => {
   return null;
 };
 
-export const secondsToNanoSeconds = (value) => {
+export const secondsToNanoSeconds = value => {
   const val = Number(value);
   return Number.isFinite(val) ? val * 1000 ** 3 : 0;
 };
@@ -401,9 +375,9 @@ export const formatToFractionalDigits = (value, digits) =>
     maximumFractionDigits: digits,
   }).format(value);
 
-export const formatBytesAsMiB = (bytes) => {
+export const formatBytesAsMiB = bytes => {
   const mib = bytes / 1024 / 1024;
   return formatToFractionalDigits(mib, 1);
 };
 
-export const formatCores = (cores) => formatToFractionalDigits(cores, 3);
+export const formatCores = cores => formatToFractionalDigits(cores, 3);

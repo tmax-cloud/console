@@ -11,8 +11,8 @@ import { Section } from '../utils/section';
 
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
-import { RoleBindingClaimModel } from '@console/internal/models';
 import { Tooltip } from '@patternfly/react-core';
+import { saveButtonDisabledString, isSaveButtonDisabled } from '../utils/button-state';
 
 export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'metadata.creationTimestamp');
@@ -28,30 +28,6 @@ export const kindToggle = (kindPlural, methods) => {
     kindToggle === 'Role' ? (kindPlural = 'roles') : (kindPlural = 'clusterroles');
   }
   return kindPlural;
-};
-
-const isNotAllowedStatus = (statusList, currentStatus) => {
-  return _.indexOf(statusList, currentStatus) >= 0;
-};
-
-const isSaveButtonDisabled = obj => {
-  let kind = obj.kind;
-  let status = ''; // 리소스마다 status 위치 다름
-  switch (kind) {
-    case RoleBindingClaimModel.kind:
-      status = obj?.status?.status;
-      return isNotAllowedStatus(['Approved', 'Role Binding Deleted'], status);
-    default:
-      return false;
-  }
-};
-
-const saveButtonDisabledString = () => {
-  return (
-    <div>
-      <span>수정할 수 없는 상태의 리소스입니다.</span>
-    </div>
-  );
 };
 
 export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
@@ -92,21 +68,21 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
         setProgress(true);
         isCreatePage(defaultValues)
           ? k8sCreate(model, inDo)
-            .then(() => {
-              history.push(resourceObjPath(inDo, referenceFor(model)));
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(e.message);
-            })
+              .then(() => {
+                history.push(resourceObjPath(inDo, referenceFor(model)));
+              })
+              .catch(e => {
+                setProgress(false);
+                setError(e.message);
+              })
           : k8sUpdate(model, inDo)
-            .then(() => {
-              history.push(resourceObjPath(inDo, referenceFor(model)));
-            })
-            .catch(e => {
-              setProgress(false);
-              setError(e.message);
-            });
+              .then(() => {
+                history.push(resourceObjPath(inDo, referenceFor(model)));
+              })
+              .catch(e => {
+                setProgress(false);
+                setError(e.message);
+              });
       }
     });
     return (
@@ -135,13 +111,13 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
                     <div>
                       <Button type="button" variant="primary" id="save-changes" onClick={onClick} isDisabled={true}>
                         {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
-                      </Button>                      
+                      </Button>
                     </div>
                   </Tooltip>
                 ) : (
                   <Button type="button" variant="primary" id="save-changes" onClick={onClick} isDisabled={false}>
-                  {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
-                </Button>                  
+                    {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
+                  </Button>
                 )}
                 <Button type="button" variant="secondary" id="cancel" onClick={history.goBack}>
                   {`${t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}`}

@@ -399,8 +399,8 @@ export const TFApplyClaimsDetailsPage: React.FC<TFApplyClaimsDetailsPageProps> =
       {...props}
       kind={kind}
       menuActions={menuActions}
-      setState4MenuActions={setStatus}
-      statePath='status.phase'
+      setCustomState={setStatus}
+      customStatePath="status.phase"
       pages={[
         details(detailsPage(TFApplyClaimDetails)),
         editResource(),
