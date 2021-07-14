@@ -12,15 +12,10 @@ import PipelineBuilderHeader from './PipelineBuilderHeader';
 import PipelineBuilderVisualization from './PipelineBuilderVisualization';
 import Sidebar from './task-sidebar/Sidebar';
 import TaskSidebar from './task-sidebar/TaskSidebar';
-import {
-  CleanupResults,
-  PipelineBuilderTaskGroup,
-  SelectedBuilderTask,
-  UpdateErrors,
-  UpdateOperationUpdateTaskData,
-} from './types';
+import { CleanupResults, PipelineBuilderTaskGroup, SelectedBuilderTask, UpdateErrors, UpdateOperationUpdateTaskData } from './types';
 import { applyChange } from './update-utils';
 import { useTranslation } from 'react-i18next';
+import { isCreatePage } from '../../../../../../public/components/hypercloud/form/create-form';
 //import { TFunction } from 'i18next';
 
 import './PipelineBuilderForm.scss';
@@ -30,35 +25,23 @@ type PipelineBuilderFormProps = FormikProps<FormikValues> & {
   namespace: string;
 };
 
-const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
+const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
   const [selectedTask, setSelectedTask] = React.useState<SelectedBuilderTask>(null);
   const selectedTaskRef = React.useRef<SelectedBuilderTask>(null);
   selectedTaskRef.current = selectedTask;
 
   const { t } = useTranslation();
 
-  const {
-    existingPipeline,
-    status,
-    isSubmitting,
-    dirty,
-    handleReset,
-    handleSubmit,
-    errors,
-    namespace,
-    setFieldValue,
-    setStatus,
-    values,
-  } = props;
+  const { existingPipeline, status, isSubmitting, dirty, handleReset, handleSubmit, errors, namespace, setFieldValue, setStatus, values } = props;
   const statusRef = React.useRef(status);
   statusRef.current = status;
 
   const updateErrors: UpdateErrors = React.useCallback(
-    (taskErrors) => {
+    taskErrors => {
       if (taskErrors) {
         setStatus({
           ...statusRef.current,
-          tasks: _.omitBy(_.merge({}, statusRef.current?.tasks, taskErrors), (v) => !v),
+          tasks: _.omitBy(_.merge({}, statusRef.current?.tasks, taskErrors), v => !v),
         });
       }
     },
@@ -94,18 +77,12 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
     <>
       <Stack className="odc-pipeline-builder-form">
         <StackItem>
-          <PipelineBuilderHeader existingPipeline={existingPipeline} namespace={namespace} />
+          <PipelineBuilderHeader existingPipeline={existingPipeline} namespace={namespace} isCreate={isCreatePage(existingPipeline)} />
         </StackItem>
         <StackItem isFilled className="odc-pipeline-builder-form__content">
           <Form className="odc-pipeline-builder-form__grid" onSubmit={handleSubmit}>
             <div className="odc-pipeline-builder-form__short-section">
-              <InputField
-                label={`${t('COMMON:MSG_MAIN_TABLEHEADER_1')}`}
-                name="name"
-                type={TextInputTypes.text}
-                isDisabled={!!existingPipeline}
-                required
-              />
+              <InputField label={`${t('COMMON:MSG_MAIN_TABLEHEADER_1')}`} name="name" type={TextInputTypes.text} isDisabled={!!existingPipeline} required />
             </div>
 
             <div>
@@ -134,30 +111,13 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
                     resource,
                   });
                 }}
-                onUpdateTasks={(updatedTaskGroup, op) =>
-                  updateTasks(applyChange(updatedTaskGroup, op))
-                }
+                onUpdateTasks={(updatedTaskGroup, op) => updateTasks(applyChange(updatedTaskGroup, op))}
                 taskGroup={taskGroup}
               />
-              <p className="help-block">
-                {`${t('SINGLE:MSG_PIPELINES_CREATEFORM_22')}`}
-              </p>
+              <p className="help-block">{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_22')}`}</p>
             </div>
 
-            <FormFooter
-              handleReset={closeSidebarAndHandleReset}
-              errorMessage={status?.submitError}
-              isSubmitting={isSubmitting}
-              submitLabel={existingPipeline ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
-              disableSubmit={
-                !dirty ||
-                !_.isEmpty(errors) ||
-                !_.isEmpty(status?.tasks) ||
-                values.tasks.length === 0
-              }
-              resetLabel={`${t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}`}              
-              sticky
-            />
+            <FormFooter handleReset={closeSidebarAndHandleReset} errorMessage={status?.submitError} isSubmitting={isSubmitting} submitLabel={existingPipeline ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')} disableSubmit={!dirty || !_.isEmpty(errors) || !_.isEmpty(status?.tasks) || values.tasks.length === 0} resetLabel={`${t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}`} sticky />
           </Form>
         </StackItem>
       </Stack>
@@ -177,11 +137,9 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
               resourceList={values.resources || []}
               errorMap={status?.tasks || {}}
               onUpdateTask={(data: UpdateOperationUpdateTaskData) => {
-                updateTasks(
-                  applyChange(taskGroup, { type: UpdateOperationType.UPDATE_TASK, data }),
-                );
+                updateTasks(applyChange(taskGroup, { type: UpdateOperationType.UPDATE_TASK, data }));
               }}
-              onRemoveTask={(taskName) => {
+              onRemoveTask={taskName => {
                 removeTaskModal(taskName, () => {
                   setSelectedTask(null);
                   updateTasks(
