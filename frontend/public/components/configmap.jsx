@@ -76,7 +76,7 @@ const ConfigMapDetails = ({ obj: configMap }) => {
     <>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(configMap, t) })} />
-        <ResourceSummary resource={configMap} showOwner={false}/>
+        <ResourceSummary resource={configMap} />
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DATA_1')} />
