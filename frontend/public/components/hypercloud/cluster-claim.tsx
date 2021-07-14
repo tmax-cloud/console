@@ -12,11 +12,14 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyClaim];
+export const clusterClaimCommonActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common];
 
 const kind = ClusterClaimModel.kind;
 
 const tableColumnClasses = ['', '', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
+
+const unmodifiableStatus = new Set(['Approved', 'ClusterClaim Deleted']);
+const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
 
 const ClusterClaimTableHeader = (t?: TFunction) => {
   return [
@@ -71,6 +74,7 @@ const ClusterClaimTableHeader = (t?: TFunction) => {
 ClusterClaimTableHeader.displayName = 'ClusterClaimTableHeader';
 
 const ClusterClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: clusterClaim, index, key, style }) => {
+  const menuActions = isUnmodifiable(clusterClaim.status?.phase) ? clusterClaimCommonActions : [...clusterClaimCommonActions, Kebab.factory.ModifyClaim];
   return (
     <TableRow id={clusterClaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -149,7 +153,7 @@ const ClusterClaimDetails: React.FC<ClusterClaimDetailsProps> = ({ obj: clusterC
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const ClusterClaims: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Cluster Claims" Header={ClusterClaimTableHeader.bind(null, t)} Row={ClusterClaimTableRow} virtualize />;
@@ -193,7 +197,11 @@ export const ClusterClaimsPage: React.FC<ClusterClaimsPageProps> = props => {
   ];
   return <ListPage canCreate={true} multiNavPages={pages} ListComponent={ClusterClaims} kind={kind} rowFilters={filters} {...props} />;
 };
-export const ClusterClaimsDetailsPage: React.FC<ClusterClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ClusterClaimDetails)), editYaml()]} />;
+export const ClusterClaimsDetailsPage: React.FC<ClusterClaimsDetailsPageProps> = props => {
+  const [status, setStatus] = React.useState();
+  const menuActions = isUnmodifiable(status) ? clusterClaimCommonActions : [...clusterClaimCommonActions, Kebab.factory.ModifyClaim];
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setState4MenuActions={setStatus} statePath="status.phase" pages={[details(detailsPage(ClusterClaimDetails)), editResource()]} />;
+};
 
 type ClusterRowProps = {
   pod: K8sResourceKind;

@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const menuActions: KebabAction[] = [...Kebab.factory.common];
 const kind = ClusterRegistrationModel.kind;
 const tableColumnClasses = [
@@ -109,7 +109,7 @@ const ClusterRegistrationDetails: React.FC<ClusterRegistrationDetailsProps> = ({
 };
 
 export const ClusterRegistrationsDetailsPage: React.FC<ClusterRegistrationsDetailsPageProps> = props => {
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(ClusterRegistrationDetails), editYaml()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(ClusterRegistrationDetails), editResource()]} />;
 };
 
 type ClusterRegistrationDetailsProps = {
