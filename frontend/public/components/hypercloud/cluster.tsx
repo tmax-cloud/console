@@ -236,8 +236,8 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
       titleFunc={(obj: any) => obj.metadata.name}
       kind={kind}
       menuActions={getMenuActions(type)}
-      setState4MenuActions={setType}
-      statePath="metadata.labels.type"
+      setCustomState={setType}
+      customStatePath="metadata.labels.type"
       pages={[
         {
           href: '',
