@@ -44,7 +44,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
 
   return (
     <>
-      <Alert isInline className="co-alert co-break-word" variant="info" title={'Note: Some fields may not be represented in this form. Please select "YAML View" for full control of object creation.'} />
+      <Alert isInline className="co-alert co-break-word" variant="info" title={t('COMMON:MSG_COMMON_CREATEFORM_MESSAGE_1')} />
       <Accordion asDefinitionList={false} className="co-dynamic-form__accordion">
         <Form
           className="co-dynamic-form"
