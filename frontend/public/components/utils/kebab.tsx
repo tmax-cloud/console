@@ -68,9 +68,13 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option,
   const needTranslate = option?.needTranslate ?? true;
   return (
     <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label}>
-      {option.icon && (!option.iconPosition || option.iconPosition === 'left') && <span className='oc-kebab__icon'>{option.icon}</span>}
+      {option.icon && (!option.iconPosition || option.iconPosition === 'left') && <span className="oc-kebab__icon">{option.icon}</span>}
       {needTranslate ? (!!labelSplit[1] ? t(labelSplit[0], { 0: t(labelSplit[1]) }) : t(labelSplit[0])) : option.label}
-      {option.icon && option.iconPosition === 'right' && <span className='oc-kebab__icon' style={{ marginLeft: 'var(--pf-global--spacer--sm)' }}>{option.icon}</span>}
+      {option.icon && option.iconPosition === 'right' && (
+        <span className="oc-kebab__icon" style={{ marginLeft: 'var(--pf-global--spacer--sm)' }}>
+          {option.icon}
+        </span>
+      )}
     </button>
   );
 };
@@ -232,6 +236,7 @@ const kebabFactory: KebabFactory = {
         kind,
         resource: obj,
         blocking: true,
+        labelKind: 'Label',
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -293,6 +298,7 @@ const kebabFactory: KebabFactory = {
         kind,
         resource: obj,
         blocking: true,
+        labelKind: 'Pod',
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -355,7 +361,7 @@ const kebabFactory: KebabFactory = {
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
-  Connect: (kind, obj, resources, customData: { label: string, url: string }) => {
+  Connect: (kind, obj, resources, customData: { label: string; url: string }) => {
     return {
       label: customData?.label || '',
       icon: <ExternalLinkAltIcon color="var(--pf-global--Color--dark-200)" />,
