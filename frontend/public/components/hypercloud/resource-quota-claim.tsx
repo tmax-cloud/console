@@ -149,8 +149,6 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
           <div className="row">
             <div className="col-sm-6">
               <ResourceSummary resource={resourcequotaclaims} showOwner={false}></ResourceSummary>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')}</dt>
-              <dd>{resourcequotaclaims?.metadata?.annotations?.creator}</dd>
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
