@@ -9,7 +9,7 @@ import { PipelineModel } from '../../../models';
 
 import './PipelineBuilderEditPage.scss';
 
-type PipelineBuilderEditPageProps = RouteComponentProps<{ ns: string; name: string }>;
+type PipelineBuilderEditPageProps = { isCreate?: boolean } & RouteComponentProps<{ ns: string; name: string }>;
 
 const PipelineBuilderEditPage: React.FC<PipelineBuilderEditPageProps> = props => {
   const [editPipeline, setEditPipeline] = React.useState<Pipeline>(null);
