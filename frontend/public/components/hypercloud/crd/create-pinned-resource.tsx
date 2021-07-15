@@ -14,18 +14,21 @@ import { Helmet } from 'react-helmet';
 import { match as RouterMatch } from 'react-router';
 import { OperandForm } from '@console/operator-lifecycle-manager/src/components/operand/operand-form';
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
-import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
+import { DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
 import { pluralToKind, isVanillaObject } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
+import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
+import { useTranslation } from 'react-i18next';
 // import { safeDump } from 'js-yaml';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
 const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind, RoleModel.kind];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
+  const { t } = useTranslation();
   if (!model) {
     return null;
   }
@@ -40,9 +43,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       <>
         <div className="co-create-operand__header">
           <div className="co-create-operand__header-buttons">
-            <BreadCrumbs breadcrumbs={[{ name: `Create ${model.label}`, path: window.location.pathname }]} />
+            <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
           </div>
-          <h1 className="co-create-operand__header-text">{`Create ${model.label}`}</h1>
+          <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
         </div>
         <SyncedEditor
           context={{
@@ -86,8 +89,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       };
       xhrTest.send();
     }, []);
-
-    const [helpText, setHelpText] = React.useState(FORM_HELP_TEXT);
+    const formHelpText = t('COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1');
+    const yamlHelpText = t('COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1');
+    const [helpText, setHelpText] = React.useState(formHelpText);
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
 
@@ -101,18 +105,17 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
     const pruneFunc = React.useCallback(data => prune(data, sample), [sample]);
 
     const onChangeEditorType = React.useCallback(newMethod => {
-      setHelpText(newMethod === EditorType.Form ? FORM_HELP_TEXT : YAML_HELP_TEXT);
+      setHelpText(newMethod === EditorType.Form ? formHelpText : yamlHelpText);
     }, []);
-
     return (
       <StatusBox loaded={loaded} loadError={loadError} data={template}>
         {loaded ? (
           <>
             <div className="co-create-operand__header">
               <div className="co-create-operand__header-buttons">
-                <BreadCrumbs breadcrumbs={[{ name: `Create ${model.label}`, path: window.location.pathname }]} />
+                <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
               </div>
-              <h1 className="co-create-operand__header-text">{`Create ${model.label}`}</h1>
+              <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
               <p className="help-block">{helpText}</p>
             </div>
             <SyncedEditor
@@ -148,10 +151,11 @@ const stateToProps = (state: RootState, props: Omit<CreateDefaultPageProps, 'mod
 };
 
 export const CreateDefaultPage = connect(stateToProps)((props: CreateDefaultPageProps) => {
+  const { t } = useTranslation();
   return (
     <>
       <Helmet>
-        <title>{`Create ${kindForReference(props.match.params.plural)}`}</title>
+        <title>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kindForReference(props.match.params.plural) }, t) })}</title>
       </Helmet>
       <CreateDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={true} />
     </>

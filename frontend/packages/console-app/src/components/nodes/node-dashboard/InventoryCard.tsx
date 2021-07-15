@@ -39,7 +39,7 @@ const InventoryCard: React.FC = () => {
       </DashboardCardHeader>
       <DashboardCardBody>
         <NodeInventoryItem nodeName={obj.metadata.name} model={PodModel} mapper={getPodStatusGroups} />
-        <InventoryItem isLoading={!obj} title="Image" titlePlural="Images" count={obj.status?.images?.length} error={!obj.status?.images} />
+        <InventoryItem isLoading={!obj} title="Image" titlePlural={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_CARDINVENTORIES_1')} count={obj.status?.images?.length} error={!obj.status?.images} />
       </DashboardCardBody>
     </DashboardCard>
   );
