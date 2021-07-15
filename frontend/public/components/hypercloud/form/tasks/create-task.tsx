@@ -170,7 +170,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
 
   return (
     <>
-      <Section label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_33')} id="label" description="Enter를 입력하여 레이블을 추가할 수 있습니다.">
+      <Section label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_33')} id="label" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_92')}>
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={<SelectorInput tags={labels} />} control={control} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_11')} id="inputResource">
