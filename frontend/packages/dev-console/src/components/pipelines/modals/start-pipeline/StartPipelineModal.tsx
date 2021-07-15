@@ -13,6 +13,7 @@ import { startPipelineSchema } from '../common/validation-utils';
 import StartPipelineForm from './StartPipelineForm';
 import { submitStartPipeline } from './submit-utils';
 import { StartPipelineFormValues } from './types';
+import { useTranslation } from 'react-i18next';
 
 export interface StartPipelineModalProps {
   pipeline: Pipeline;
@@ -51,6 +52,8 @@ const StartPipelineModal: React.FC<StartPipelineModalProps & ModalComponentProps
       });
   };
 
+  const { t } = useTranslation();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -58,7 +61,7 @@ const StartPipelineModal: React.FC<StartPipelineModalProps & ModalComponentProps
       validationSchema={startPipelineSchema}
     >
       {(props) => (
-        <ModalStructure submitBtnText="Start" title="Start Pipeline" close={close} {...props}>
+        <ModalStructure submitBtnText={t('COMMON:MSG_MAIN_ACTIONBUTTON_28')} title={t('SINGLE:MSG_CI/CD_STARTPIPELINEPOPUP_TITLE_1')} close={close} {...props}>
           <StartPipelineForm {...props} />
         </ModalStructure>
       )}

@@ -137,8 +137,10 @@ export const PipelinesPage: React.FC<PipelinesPageProps> = props => {
   />;
 }
 
-export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props => (
-  <DetailsPage
+export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props => {
+  const { t } = useTranslation();
+
+  return <DetailsPage
     {...props}
     kind={kind}
     menuActions={menuActions}
@@ -147,22 +149,22 @@ export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props =
       editResource(),
       {
         href: 'runs',
-        name: 'Pipeline Runs',
+        name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1'),
         component: pageProps => <PipelineRunsPage showTitle={false} canCreate={false} namespace={pageProps.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': pageProps.obj.metadata.name, }} />,
       },
       {
         href: 'parameters',
-        name: 'Parameters',
+        name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPARAMETERS_1'),
         component: pageProps => <PipelineForm PipelineFormComponent={PipelineParametersForm} formName="parameters" validationSchema={parametersValidationSchema} obj={pageProps.obj} {...pageProps} />,
       },
       {
         href: 'resources',
-        name: 'Resources',
+        name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABRESOURCES_1'),
         component: pageProps => <PipelineForm PipelineFormComponent={PipelineResourcesForm} formName="resources" validationSchema={resourcesValidationSchema} obj={pageProps.obj} {...pageProps} />,
       },
     ]}
-  />
-);
+  />;
+};
 
 type PipelineDetailsListProps = {
   ds: Pipeline;
