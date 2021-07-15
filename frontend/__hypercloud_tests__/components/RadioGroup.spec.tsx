@@ -37,7 +37,7 @@ describe('RadioGroupTestSample', () => {
     });
   });
 
-  it('radio group render first element', async () => {
+  it('radio group items rendered', async () => {
     expect(wrapper.debug()).toMatchSnapshot();
     expect(wrapper.find(RadioInput).exists()).toBe(true);
     expect(wrapper.find(RadioInput).length).toBe(3);
