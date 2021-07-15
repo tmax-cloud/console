@@ -1,6 +1,7 @@
 package console
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -11,13 +12,19 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
+	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/rest"
+	"k8s.io/klog"
 
 	v1 "console/pkg/api/v1"
 	"console/pkg/auth"
 	"console/pkg/hypercloud/proxy"
+	"console/pkg/serverutils"
 	"console/pkg/version"
 
 	"github.com/sirupsen/logrus"
+
+	helmhandlerspkg "console/pkg/helm/handlers"
 )
 
 var (
@@ -71,8 +78,9 @@ type Console struct {
 	PublicDir  string
 	StaticUser *auth.User
 	// A lister for resource listing a particular kind
-	GOARCH string
-	GOOS   string
+	GOARCH      string
+	GOOS        string
+	KubeVersion string
 	// customization
 	McMode          bool
 	ReleaseModeFlag bool
@@ -83,7 +91,9 @@ type Console struct {
 	KeycloakClientId        string
 	KeycloakUseHiddenIframe bool
 	// Proxy
+	// A client with the correct TLS setup for communicating with the API server.
 	K8sProxyConfig                   *proxy.Config
+	K8sClient                        *http.Client
 	PrometheusProxyConfig            *proxy.Config
 	AlertManagerProxyConfig          *proxy.Config
 	GrafanaProxyConfig               *proxy.Config
@@ -288,6 +298,56 @@ func (c *Console) Gateway() http.Handler {
 	k8sApiHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/"), http.FileServer(http.Dir("./api")))
 	handle("/api/resource/", gzipHandler(securityHeadersMiddleware(k8sApiHandler)))
 
+	// Helm
+	// fmt.Println(c.GetKubeVersion())
+	// fmt.Println(c.KubeVersion)
+	// c.KubeVersion = "v1.19.4"
+	// fmt.Println(c.KubeVersion)
+	helmHandlers := helmhandlerspkg.New(c.K8sProxyConfig.Endpoint.String(), c.K8sClient.Transport, c)
+	// tlsClient := &http.Client{
+	// 	Transport: &http.Transport{
+	// 		TLSClientConfig: &tls.Config{
+	// 			InsecureSkipVerify: true,
+	// 		},
+	// 		// TLSClientConfig: k8sProxyConfig.TLSClientConfig,
+	// 	},
+	// }
+	// helmHandlers := helmhandlerspkg.New("https://k8s-at-home.com/", tlsClient.Transport, c)
+	// Helm Endpoints
+	handle("/api/helm/template", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		helmHandlers.HandleHelmRenderManifests(c.StaticUser, w, r)
+	}))
+	handle("/api/helm/releases", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		helmHandlers.HandleHelmList(c.StaticUser, w, r)
+	}))
+	handle("/api/helm/chart", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		helmHandlers.HandleChartGet(c.StaticUser, w, r)
+	}))
+	handle("/api/helm/release/history", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		helmHandlers.HandleGetReleaseHistory(c.StaticUser, w, r)
+	}))
+	handle("/api/helm/charts/index.yaml", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		helmHandlers.HandleIndexFile(c.StaticUser, w, r)
+	}))
+
+	handle("/api/helm/release", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			helmHandlers.HandleGetRelease(c.StaticUser, w, r)
+		case http.MethodPost:
+			helmHandlers.HandleHelmInstall(c.StaticUser, w, r)
+		case http.MethodDelete:
+			helmHandlers.HandleUninstallRelease(c.StaticUser, w, r)
+		case http.MethodPatch:
+			helmHandlers.HandleRollbackRelease(c.StaticUser, w, r)
+		case http.MethodPut:
+			helmHandlers.HandleUpgradeRelease(c.StaticUser, w, r)
+		default:
+			w.Header().Set("Allow", "GET, POST, PATCH, PUT, DELETE")
+			serverutils.SendResponse(w, http.StatusMethodNotAllowed, serverutils.ApiError{Err: "Unsupported method, supported methods are GET, POST, PATCH, PUT, DELETE"})
+		}
+	}))
+
 	r.PathPrefix(c.BaseURL.Path).HandlerFunc(c.indexHandler)
 	r.PathPrefix("/api/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
@@ -357,4 +417,38 @@ func (c *Console) indexHandler(w http.ResponseWriter, r *http.Request) {
 	if err := tpls.ExecuteTemplate(w, indexPageTemplateName, jsg); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func (c *Console) GetKubeVersion() string {
+	if c.KubeVersion != "" {
+		return c.KubeVersion
+	}
+	config := &rest.Config{
+		Host:      c.K8sProxyConfig.Endpoint.String(),
+		Transport: c.K8sClient.Transport,
+	}
+	kubeVersion, err := kubeVersion(config)
+	if err != nil {
+		kubeVersion = ""
+		klog.Warningf("Failed to get cluster k8s version from api server %s", err.Error())
+	}
+	c.KubeVersion = kubeVersion
+	return c.KubeVersion
+}
+
+func kubeVersion(config *rest.Config) (string, error) {
+	client, err := discovery.NewDiscoveryClientForConfig(config)
+	if err != nil {
+		return "", err
+	}
+
+	kubeVersion, err := client.ServerVersion()
+	if err != nil {
+		return "", err
+	}
+
+	if kubeVersion != nil {
+		return kubeVersion.String(), nil
+	}
+	return "", errors.New("failed to get kubernetes version")
 }

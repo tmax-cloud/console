@@ -193,8 +193,6 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/k8s/ns/:ns/customresourcedefinitions/:plural/~new" exact />
           <LazyRoute path="/k8s/cluster/rolebindings/~new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateRoleBinding)} kind="RoleBinding" />
           <LazyRoute path="/k8s/ns/:ns/rolebindings/~new" exact loader={() => import('./RBAC' /* webpackChunkName: "rbac" */).then(m => m.CreateRoleBinding)} kind="RoleBinding" />
-          <LazyRoute path="/k8s/cluster/pipelines/~new" exact loader={() => import('../../packages/dev-console/src/components/pipelines/pipeline-builder' /* webpackChunkName: "PipelineBuilderPage" */).then(m => m.PipelineBuilderPage)} kind="Pipeline" />
-          <LazyRoute path="/k8s/ns/:ns/pipelines/~new" exact loader={() => import('../../packages/dev-console/src/components/pipelines/pipeline-builder' /* webpackChunkName: "PipelineBuilderPage" */).then(m => m.PipelineBuilderPage)} kind="Pipeline" />
           <LazyRoute path="/k8s/ns/:ns/:plural/~new/" exact />
           <LazyRoute path="/k8s/cluster/:plural/~new/" exact />
           <LazyRoute path="/k8s/ns/:ns/routes/~new/form" exact kind="Route" loader={() => import('./routes/create-route' /* webpackChunkName: "create-route" */).then(m => m.CreateRoute)} />
