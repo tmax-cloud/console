@@ -208,7 +208,7 @@ const RuleItem = props => {
           </Section>
           <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resource[${index}]`} isRequired={true}>            
             <Controller
-              as={<MultiSelectDropdownWithRef name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false}  items={resourceList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_24')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} />}
+              as={<MultiSelectDropdownWithRef name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false}  items={resourceList} placeholder={t('COMMON:MSG_COMMON_FILTER_2')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} />}
               control={methods.control}
               name={`${name}[${index}].resources`}
               onChange={([selected]) => {
@@ -299,7 +299,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {kindToggle === 'Role' && (
         <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_7')} id="namespace" isRequired={true}>
-          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} defaultValue={defaultValues.metadata.namespace} />
+          <ResourceListDropdown name="metadata.namespace" useHookForm resourceList={namespaces} kind="Namespace" resourceType="Namespace" type="single" placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} defaultValue={defaultValues.metadata.namespace} autocompletePlaceholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_8')} />
         </Section>
       )}
 
