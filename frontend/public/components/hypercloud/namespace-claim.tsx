@@ -147,9 +147,7 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
         <div className="co-m-pane__body-group">
           <div className="row">
             <div className="col-sm-6">
-              <ResourceSummary resource={namespaceclaims} showOwner={false}></ResourceSummary>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')}</dt>
-              <dd>{namespaceclaims.metadata.annotations.owner}</dd>
+              <ResourceSummary resource={namespaceclaims} />
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
