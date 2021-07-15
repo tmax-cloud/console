@@ -15,7 +15,6 @@ import TaskSidebar from './task-sidebar/TaskSidebar';
 import { CleanupResults, PipelineBuilderTaskGroup, SelectedBuilderTask, UpdateErrors, UpdateOperationUpdateTaskData } from './types';
 import { applyChange } from './update-utils';
 import { useTranslation } from 'react-i18next';
-import { isCreatePage } from '../../../../../../public/components/hypercloud/form/create-form';
 //import { TFunction } from 'i18next';
 
 import './PipelineBuilderForm.scss';
@@ -23,6 +22,7 @@ import './PipelineBuilderForm.scss';
 type PipelineBuilderFormProps = FormikProps<FormikValues> & {
   existingPipeline: Pipeline;
   namespace: string;
+  isCreate?: boolean;
 };
 
 const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
@@ -32,7 +32,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
 
   const { t } = useTranslation();
 
-  const { existingPipeline, status, isSubmitting, dirty, handleReset, handleSubmit, errors, namespace, setFieldValue, setStatus, values } = props;
+  const { existingPipeline, status, isSubmitting, dirty, handleReset, handleSubmit, errors, namespace, setFieldValue, setStatus, values, isCreate } = props;
   const statusRef = React.useRef(status);
   statusRef.current = status;
 
@@ -77,7 +77,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
     <>
       <Stack className="odc-pipeline-builder-form">
         <StackItem>
-          <PipelineBuilderHeader existingPipeline={existingPipeline} namespace={namespace} isCreate={isCreatePage(existingPipeline)} />
+          <PipelineBuilderHeader existingPipeline={existingPipeline} namespace={namespace} isCreate={isCreate} />
         </StackItem>
         <StackItem isFilled className="odc-pipeline-builder-form__content">
           <Form className="odc-pipeline-builder-form__grid" onSubmit={handleSubmit}>
