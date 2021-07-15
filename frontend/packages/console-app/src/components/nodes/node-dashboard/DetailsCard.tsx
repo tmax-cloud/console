@@ -29,10 +29,10 @@ const DetailsCard: React.FC = () => {
       </DashboardCardHeader>
       <DashboardCardBody>
         <DetailsBody>
-          <DetailItem isLoading={!obj} title="Node Name">
+          <DetailItem isLoading={!obj} title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_CARDDETAILS_4')}>
             {obj.metadata.name}
           </DetailItem>
-          <DetailItem isLoading={!obj} title="Role">
+          <DetailItem isLoading={!obj} title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_CARDDETAILS_5')}>
             <NodeRoles node={obj} />
           </DetailItem>
           {/* <DetailItem isLoading={!obj} title="Instance Type" error={!instanceType}>
@@ -41,7 +41,7 @@ const DetailsCard: React.FC = () => {
           <DetailItem isLoading={!obj} title="Zone" error={!zone}>
             {zone}
           </DetailItem> */}
-          <DetailItem isLoading={!obj} title="Node Addresses">
+          <DetailItem isLoading={!obj} title={t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_CARDDETAILS_3')}>
             <NodeIPList ips={getNodeAddresses(obj)} expand />
           </DetailItem>
         </DetailsBody>
