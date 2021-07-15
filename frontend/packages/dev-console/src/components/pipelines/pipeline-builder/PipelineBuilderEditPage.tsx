@@ -9,34 +9,33 @@ import { PipelineModel } from '../../../models';
 
 import './PipelineBuilderEditPage.scss';
 
-type PipelineBuilderEditPageProps = RouteComponentProps<{ ns: string; pipelineName: string }>;
+type PipelineBuilderEditPageProps = { isCreate?: boolean } & RouteComponentProps<{ ns: string; name: string }>;
 
-const PipelineBuilderEditPage: React.FC<PipelineBuilderEditPageProps> = (props) => {
+const PipelineBuilderEditPage: React.FC<PipelineBuilderEditPageProps> = props => {
   const [editPipeline, setEditPipeline] = React.useState<Pipeline>(null);
   const [error, setError] = React.useState<string>(null);
   const {
     match: {
-      params: { pipelineName, ns },
+      params: { name, ns },
     },
   } = props;
 
   React.useEffect(() => {
-    k8sGet(PipelineModel, pipelineName, ns)
+    k8sGet(PipelineModel, name, ns)
       .then((res: Pipeline) => {
         setEditPipeline(res);
       })
       .catch(() => {
         setError('Unable to load Pipeline');
       });
-  }, [pipelineName, ns]);
+  }, [name, ns]);
 
   if (error) {
     // TODO: confirm verbiage with UX
     return (
       <div className="odc-pipeline-builder-edit-page">
         <Alert variant="danger" isInline title={error}>
-          Navigate back to the{' '}
-          <Link to={`/k8s/ns/${ns}/${referenceForModel(PipelineModel)}`}>Pipelines page</Link>.
+          Navigate back to the <Link to={`/k8s/ns/${ns}/${referenceForModel(PipelineModel)}`}>Pipelines page</Link>.
         </Alert>
       </div>
     );

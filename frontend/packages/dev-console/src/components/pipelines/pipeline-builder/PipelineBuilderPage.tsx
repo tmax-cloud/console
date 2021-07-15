@@ -23,6 +23,7 @@ import './PipelineBuilderPage.scss';
 
 type PipelineBuilderPageProps = RouteComponentProps<{ ns?: string }> & {
   existingPipeline?: Pipeline;
+  isCreate?: boolean;
 };
 
 const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
@@ -88,6 +89,7 @@ const PipelineBuilderPage: React.FC<PipelineBuilderPageProps> = (props) => {
             {...formikProps}
             namespace={ns}
             existingPipeline={existingPipeline}
+            isCreate={props.isCreate}
           />
         )}
       />
