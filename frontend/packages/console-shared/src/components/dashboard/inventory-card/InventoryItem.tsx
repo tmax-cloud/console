@@ -41,6 +41,7 @@ const getTop3Groups = (groups: DashboardsInventoryItemGroup[], groupIDs: string[
 };
 
 export const InventoryItem: React.FC<InventoryItemProps> = React.memo(({ isLoading, title, titlePlural, count, children, error = false, TitleComponent, ExpandedComponent }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = React.useState(false);
   const onClick = React.useCallback(() => setExpanded(!expanded), [expanded]);
   const titleMessage = pluralize(count, title, titlePlural, !isLoading && !error);
@@ -53,7 +54,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = React.memo(({ isLoadi
               {isLoading && !error && <div className="skeleton-inventory" />}
               {TitleComponent ? <TitleComponent>{titleMessage}</TitleComponent> : titleMessage}
             </div>
-            {!expanded && (error || !isLoading) && <div className="co-inventory-card__item-status">{error ? <div className="co-dashboard-text--small text-secondary">Not available</div> : children}</div>}
+            {!expanded && (error || !isLoading) && <div className="co-inventory-card__item-status">{error ? <div className="co-dashboard-text--small text-secondary">{t('COMMON:MSG_OVERVIEW_MAIN_CARDSTATUS_1')}</div> : children}</div>}
           </div>
         </AccordionToggle>
         <AccordionContent isHidden={!expanded} className="co-inventory-card__accordion-body">
@@ -67,7 +68,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = React.memo(({ isLoadi
         {isLoading && !error && <div className="skeleton-inventory" />}
         {TitleComponent ? <TitleComponent>{titleMessage}</TitleComponent> : titleMessage}
       </div>
-      {(error || !isLoading) && <div className="co-inventory-card__item-status">{error ? <div className="co-dashboard-text--small text-secondary">Not available</div> : children}</div>}
+      {(error || !isLoading) && <div className="co-inventory-card__item-status">{error ? <div className="co-dashboard-text--small text-secondary">{t('COMMON:MSG_OVERVIEW_MAIN_CARDSTATUS_1')}</div> : children}</div>}
     </div>
   );
 });
