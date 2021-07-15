@@ -129,6 +129,8 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             mountPath: item.volumeMounts?.[0].mountPath,
             selectedVolume: item.volumeMounts?.[0].name,
             commandTypeToggle: item?.script ? 'script' : 'command',
+            registryTypeToggle: 'internal',
+            isFirstTimeEdit: true,
           });
         });
         setStep(stepDefaultValues);
@@ -149,7 +151,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   let taskParameterArr = ['name', 'description', 'type', 'defaultStr', 'defaultArr'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
-  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath'];
+  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit'];
 
   const paramValidCallback = additionalConditions => {
     let type = additionalConditions[0] ? 'array' : 'string';
@@ -168,9 +170,24 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     return additionalConditions.filter((c, i) => i !== 0).some(cur => (typeof cur === 'string' ? cur.trim().length > 0 : false));
   };
 
+  const stepValidCallback = (additionalConditions: string[]) => {
+    const [type, image, registryRegistry, registryImage, registryTag] = additionalConditions;
+    if (type === 'internal') {
+      if (registryRegistry && registryImage && registryTag) {
+        return true;
+      }
+      return false;
+    } else {
+      if (image) {
+        return true;
+      }
+      return false;
+    }
+  };
+
   return (
     <>
-      <Section label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_33')} id="label" description="Enter를 입력하여 레이블을 추가할 수 있습니다.">
+      <Section label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_33')} id="label" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_92')}>
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={<SelectorInput tags={labels} />} control={control} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_11')} id="inputResource">
@@ -276,8 +293,38 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step">
         <>
-          <ModalList list={step} id="step" path="spec.steps" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} methods={methods} requiredFields={['name', 'image']} children={<StepModal methods={methods} step={step} />} onRemove={removeModalData.bind(null, step, setStep)} handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_88')}></ModalList>
-          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, path: 'spec.steps', methods: methods, requiredFields: ['name', 'image'], title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26'), id: 'step', handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods), children: <StepModal methods={methods} step={step} />, submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8') })}>
+          <ModalList
+            list={step}
+            id="step"
+            path="spec.steps"
+            title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')}
+            methods={methods}
+            requiredFields={['name']}
+            optionalRequiredField={['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag']}
+            optionalValidCallback={stepValidCallback}
+            children={<StepModal methods={methods} step={step} />}
+            onRemove={removeModalData.bind(null, step, setStep)}
+            handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)}
+            description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_88')}
+          ></ModalList>
+          <span
+            className="open-modal_text"
+            onClick={() =>
+              ModalLauncher({
+                inProgress: false,
+                path: 'spec.steps',
+                methods: methods,
+                requiredFields: ['name'],
+                optionalRequiredField: ['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag'],
+                optionalValidCallback: stepValidCallback,
+                title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26'),
+                id: 'step',
+                handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods),
+                children: <StepModal methods={methods} step={step} />,
+                submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8'),
+              })
+            }
+          >
             {`+ ${t('SINGLE:MSG_TASKS_CREATFORM_DIV2_89')}`}
           </span>
         </>
@@ -361,25 +408,21 @@ export const onSubmitCallback = data => {
   });
   // step
   data.spec.steps = data?.spec?.steps?.map((cur, idx) => {
+    // image
+    if (cur.registryTypeToggle === 'internal' && cur.registryRegistry) {
+      cur.image = `${cur.registryRegistry}/${cur.registryImage}:${cur.registryTag}`;
+    }
+    delete cur.registryRegistry;
+    delete cur.registryImage;
+    delete cur.registryTag;
+    delete cur.registryTypeToggle;
+    delete cur.isFirstTimeEdit;
     // command
     cur.command = cur?.command?.map(curCommand => curCommand?.value);
     //args
     cur.args = cur?.args?.map(curArg => curArg?.value);
     //env
     cur.env = cur?.env?.map(curEnv => ({ name: curEnv?.envKey, value: curEnv?.envValue }));
-
-    if (cur.imageToggle === 'registry') {
-      cur.image = `${cur.registryRegistry}-${cur.registryImage}-${cur.registryTag}`;
-
-      delete data.spec.steps[idx].registryRegistry;
-      delete data.spec.steps[idx].registryImage;
-      delete data.spec.steps[idx].registryTag;
-    } else {
-      delete data.spec.steps[idx].registryRegistry;
-      delete data.spec.steps[idx].registryImage;
-      delete data.spec.steps[idx].registryTag;
-    }
-    delete data.spec.steps[idx].imageToggle;
 
     if (cur.commandTypeToggle === 'command') {
       delete data.spec.steps[idx].script;
