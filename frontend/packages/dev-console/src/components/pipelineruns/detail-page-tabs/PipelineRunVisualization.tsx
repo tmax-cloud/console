@@ -4,6 +4,7 @@ import { k8sGet } from '@console/internal/module/k8s';
 import { PipelineModel } from '../../../models';
 import PipelineVisualization from '../../pipelines/detail-page-tabs/pipeline-details/PipelineVisualization';
 import { Pipeline, PipelineRun, pipelineRefExists, PipelineTask } from '../../../utils/pipeline-augment';
+import { useTranslation } from 'react-i18next';
 
 type PipelineRunVisualizationProps = {
   pipelineRun: PipelineRun;
@@ -13,12 +14,18 @@ const PipelineRunVisualization: React.FC<PipelineRunVisualizationProps> = ({ pip
   const [errorMessage, setErrorMessage] = React.useState<string>(null);
   const [pipeline, setPipeline] = React.useState<Pipeline>(null);
 
+  const { t } = useTranslation();
+
   React.useEffect(() => {
     if (pipelineRefExists(pipelineRun)) {
       k8sGet(PipelineModel, pipelineRun.spec.pipelineRef.name, pipelineRun.metadata.namespace)
         .then((res: Pipeline) => setPipeline(res))
-        .catch((error) =>
-          setErrorMessage(error?.message || 'Could not load visualization at this time.'),
+        .catch((error) => {
+          if (error?.message == `pipelines.tekton.dev "${pipelineRun.spec.pipelineRef.name}" not found`) {
+            error.message = t('COMMON:MSG_DETAILS_TABDETAILS_83', { 0: pipelineRun.spec.pipelineRef.name });
+          }
+          setErrorMessage(error?.message || 'Could not load visualization at this time.')
+        },
         );
     } else {
       const p: Pipeline = {

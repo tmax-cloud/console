@@ -11,6 +11,7 @@ import { containerToLogSourceStatus } from '../../../utils/pipeline-utils';
 import { getRenderContainers } from './logs-utils';
 import Logs from './Logs';
 import './MultiStreamLogs.scss';
+import { useTranslation } from 'react-i18next';
 
 type MultiStreamLogsProps = {
   resource: PodKind;
@@ -79,6 +80,11 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
 
   const containerStatus: ContainerStatus[] = resource.status?.containerStatuses ?? [];
   const divider = <FlexItem className="odc-multi-stream-logs__divider">|</FlexItem>;
+  const { t } = useTranslation();
+  if ( downloadAllLabel === 'Download All Task Logs') {
+    downloadAllLabel = t('COMMON:MSG_DETAILS_TABLOGS_23');
+  }
+  
   return (
     <div ref={fullscreenRef} className="odc-multi-stream-logs">
       <Flex
@@ -92,7 +98,7 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
         >
           <Button variant="link" onClick={downloadLogs} isInline>
             <DownloadIcon className="odc-multi-stream-logs__icon" />
-            Download
+            {t('COMMON:MSG_DETAILS_TABLOGS_1')}
           </Button>
         </FlexItem>
         {divider}
@@ -119,12 +125,12 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
               {isFullscreen ? (
                 <>
                   <CompressIcon className="odc-multi-stream-logs__icon" />
-                  Collapse
+                  {t('COMMON:MSG_DETAILS_TABTERMINAL_10')}
                 </>
               ) : (
                 <>
                   <ExpandIcon className="odc-multi-stream-logs__icon" />
-                  Expand
+                  {t('COMMON:MSG_DETAILS_TABLOGS_2')}
                 </>
               )}
             </Button>
