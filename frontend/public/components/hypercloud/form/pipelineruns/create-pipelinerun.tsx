@@ -117,6 +117,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id="pipeline" isRequired>
         <ResourceDropdown
           name="spec.pipelineRef.name"
+          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
           resources={[
             {
               kind: 'Pipeline',
@@ -141,7 +142,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
         </Section>
       )}
       {!_.isEmpty(workspaceList) && (
-        <Section label="워크스페이스" id="workspace">
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_9')} id="workspace">
           <WorkspaceListComponent workspaceList={workspaceList} namespace={namespace} methods={methods} />
         </Section>
       )}
@@ -151,6 +152,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id="serviceaccount" isRequired>
         <ResourceDropdown
           name="spec.serviceAccountName"
+          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
           resources={[
             {
               kind: 'ServiceAccount',
