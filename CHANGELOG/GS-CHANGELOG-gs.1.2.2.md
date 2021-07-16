@@ -5,4 +5,7 @@ Version: hypercloud-console_gs.1.2.2
 - [bugfix][patch] 네임스페이스 클레임에서 소유자 항목 제거 (yunhee_shin) 
     Message: 
 - [patch] 리소스 쿼터 소유자 제거 (Hyowook Park) 
+    Message: - [bugfix][patch] 네임스페이스 클레임에서 소유자 항목 제거 (yunhee_shin) 
+    Message: 
+- [patch] 리소스 쿼터 소유자 제거 (Hyowook Park) 
     Message: 
