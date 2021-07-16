@@ -29,7 +29,7 @@ export const isSaveButtonDisabled = obj => {
       return isNotAllowedStatus(['Approved', 'Namespace Deleted'], status);
     case ClusterClaimModel.kind:
       status = obj?.status?.phase;
-      return isNotAllowedStatus(['Approved', 'ClusterClaim Deleted'], status);
+      return isNotAllowedStatus(['Approved', 'ClusterClaim Deleted', 'ClusterDeleted', 'Cluster Deleted'], status);
     case ClusterTemplateClaimModel.kind:
       status = obj?.status?.status;
       return isNotAllowedStatus(['Approved', 'Cluster Template Deleted'], status);
