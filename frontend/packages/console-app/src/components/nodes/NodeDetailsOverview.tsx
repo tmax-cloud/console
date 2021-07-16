@@ -51,7 +51,7 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
             <dd>
               {canUpdate ? (
                 <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback.bind(null, t)}>
-                  {pluralize(_.size(node.spec.taints), 'Taint')}
+                  {t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_142', { 0: _.size(node.spec.taints) })}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
               ) : (

@@ -155,7 +155,7 @@ class TaintsModal extends PromiseComponent<TaintsModalProps, TaintsModalState> {
             variant="link"
           >
             <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-            Add More
+            {this.props.addMoreText || 'Add More'}
           </Button>
         </ModalBody>
         <ModalSubmitFooter
@@ -176,6 +176,7 @@ type TaintsModalProps = {
   resource: NodeKind;
   title: string;
   submitText: string;
+  addMoreText: string;
 } & ModalComponentProps;
 
 type TaintsModalState = {

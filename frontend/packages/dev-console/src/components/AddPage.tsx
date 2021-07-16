@@ -9,6 +9,7 @@ import ODCEmptyState from './EmptyState';
 import NamespacedPage from './NamespacedPage';
 import ProjectsExistWrapper from './ProjectsExistWrapper';
 // import CreateProjectListPage from './projects/CreateProjectListPage';
+import { useTranslation } from 'react-i18next';
 
 export interface AddPageProps {
   match: RMatch<{
@@ -38,6 +39,7 @@ const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, 
   const deployments = resources?.deployments?.data;
   const statefulSets = resources?.statefulSets?.data;
   const knativeService = resources?.knativeService?.data;
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (loaded) {
@@ -50,8 +52,8 @@ const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, 
     <ODCEmptyState
       title="Add"
       hintBlock={
-        <HintBlock title="No workloads found">
-          <p>To add content to your project, create an application, component or service using one of these options.</p>
+        <HintBlock title={t('SINGLE:MSG_ADD_CREATFORM_3')}>
+          <p>{t('SINGLE:MSG_ADD_CREATFORM_4')}</p>
         </HintBlock>
       }
     />
@@ -107,11 +109,12 @@ const RenderEmptyState = ({ namespace }) => {
 };
 
 const SelectNamespacePage = () => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="odc-empty-state__title">
-        <PageHeading title="Select a namespace" />
-        <div className="co-catalog-page__description odc-empty-state__hint-block">To add a resource, select a namespace first.</div>
+        <PageHeading title={t('SINGLE:MSG_ADD_CREATFORM_1')} />
+        <div className="co-catalog-page__description odc-empty-state__hint-block">{t('SINGLE:MSG_ADD_CREATFORM_2')}</div>
       </div>
     </>
   );
