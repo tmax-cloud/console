@@ -15,7 +15,7 @@ import { getRestartPolicyLabel, podPhase, podPhaseFilterReducer, podReadiness, p
 import { getContainerState, getContainerStatus } from '../module/k8s/container';
 import { ResourceEventStream } from './events';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunctionArgs } from './factory';
-import { AsyncComponent, DetailsItem, Kebab, NodeLink, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, ScrollToTopOnMount, SectionHeading, Timestamp, formatBytesAsMiB, formatCores, humanizeBinaryBytes, humanizeDecimalBytesPerSec, humanizeCpuCores, navFactory, pluralize, units } from './utils';
+import { AsyncComponent, DetailsItem, Kebab, NodeLink, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, ScrollToTopOnMount, SectionHeading, Timestamp, formatBytesAsMiB, formatCores, humanizeBinaryBytes, humanizeCpuCores, navFactory, pluralize, units } from './utils';
 import { PodLogs } from './pod-logs';
 import { Area, PROMETHEUS_BASE_PATH, PROMETHEUS_TENANCY_BASE_PATH, requirePrometheus } from './graphs';
 import { VolumesTable } from './volumes-table';
