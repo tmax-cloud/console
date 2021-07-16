@@ -50,12 +50,11 @@ const BaseLabelsModal = withTranslation()(
       this.handlePromise(promise).then(this.props.close);
     }
 
-    // MJ : Edit Labels에 대한 string발행되면 적용하기
     render() {
       const { kind, resource, labelKind, labelClassName, t } = this.props;
       const label = labelKind === 'Pod' ? t('COMMON:MSG_MAIN_TABLEHEADER_16') : t('COMMON:MSG_MAIN_TABLEHEADER_15');
-      const message = labelKind === 'Pod' ? t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_8') : t('Labels help you organize and select resources. Adding labels below will let you query for objects that have similar, overlapping or dissimilar labels.');
-      const i18nKey = labelKind === 'Pod' ? 'COMMON:MSG_MAIN_POPUP_DESCRIPTION_9' : 'Labels';
+      const message = labelKind === 'Pod' ? t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_8') : t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_11');
+      const i18nKey = labelKind === 'Pod' ? 'COMMON:MSG_MAIN_POPUP_DESCRIPTION_9' : 'COMMON:MSG_MAIN_POPUP_DESCRIPTION_12';
       const ResourceNameComponent = () => (
         <>
           <ResourceIcon kind={kind.crd ? referenceForModel(kind) : kind.kind} /> {resource.metadata.name}
@@ -73,7 +72,7 @@ const BaseLabelsModal = withTranslation()(
             <div className="row co-m-form-row">
               <div className="col-sm-12">
                 <label htmlFor="tags-input" className="control-label">
-                  {labelKind === 'Pod' ? <Trans i18nKey={i18nKey}>{[resourceNameComponent]}</Trans> : <>Labels for {resourceNameComponent}</>}
+                  <Trans i18nKey={i18nKey}>{[resourceNameComponent]}</Trans>
                 </label>
                 <SelectorInput onChange={labels => this.setState({ labels })} tags={this.state.labels} labelClassName={labelClassName || `co-text-${kind.id}`} autoFocus />
               </div>

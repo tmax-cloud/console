@@ -416,7 +416,7 @@ class _EventStream extends React.Component {
     }
 
     if (error) {
-      statusBtnTxt = <span className="co-sysevent-stream__connection-error">Error connecting to event stream{_.isString(error) && `: ${error}`}</span>;
+      statusBtnTxt = <span className="co-sysevent-stream__connection-error">{t('COMMON:MSG_DETAILS_TABEVENTS_1', { 0: _.isString(error) ? error : '' })}</span>;
       sysEventStatus = <ErrorLoadingEvents />;
     } else if (loading) {
       statusBtnTxt = <span>{t('SINGLE:MSG_EVENTS_MAIN_STATUS_1')}</span>;
