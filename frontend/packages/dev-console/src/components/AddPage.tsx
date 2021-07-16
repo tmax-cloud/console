@@ -50,7 +50,7 @@ const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, 
   }, [loaded, loadError, daemonSets, deploymentConfigs, deployments, statefulSets, knativeService]);
   return noWorkloads ? (
     <ODCEmptyState
-      title="Add"
+      title={t('SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_1')}
       hintBlock={
         <HintBlock title={t('SINGLE:MSG_ADD_CREATFORM_3')}>
           <p>{t('SINGLE:MSG_ADD_CREATFORM_4')}</p>
@@ -58,7 +58,7 @@ const EmptyStateLoader: React.FC<EmptyStateLoaderProps> = ({ resources, loaded, 
       }
     />
   ) : (
-    <ODCEmptyState title="Add" />
+    <ODCEmptyState title={t('SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_1')} hintBlock={t('SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_2')} />
   );
 };
 
@@ -122,7 +122,7 @@ const SelectNamespacePage = () => {
 
 export const AddPage: React.FC<AddPageProps> = ({ match }) => {
   const namespace = match.params.ns;
-
+  const { t } = useTranslation();
   return (
     <>
       <Helmet>
@@ -130,7 +130,7 @@ export const AddPage: React.FC<AddPageProps> = ({ match }) => {
       </Helmet>
       <NamespacedPage>
         <Firehose resources={[{ kind: 'Namespace', prop: 'projects', isList: true }]}>
-          <ProjectsExistWrapper title="Add">{namespace ? <RenderEmptyState namespace={namespace} /> : <SelectNamespacePage />}</ProjectsExistWrapper>
+          <ProjectsExistWrapper title={t('SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_1')}>{namespace ? <RenderEmptyState namespace={namespace} /> : <SelectNamespacePage />}</ProjectsExistWrapper>
         </Firehose>
       </NamespacedPage>
     </>

@@ -8,6 +8,7 @@ import { RootState } from '@console/internal/redux';
 import { isAddAction, AddAction } from '../extensions/add-actions';
 import './EmptyState.scss';
 import { ALL_NAMESPACES_KEY } from '@console/shared';
+import { useTranslation } from 'react-i18next';
 
 const navigateTo = (e: React.SyntheticEvent, url: string) => {
   history.push(url);
@@ -25,6 +26,7 @@ const Item: React.FC<ItemProps> = ({
   },
   namespace,
 }) => {
+  const { t } = useTranslation();
   const access =
     !accessReview ||
     // Defined extensions are immutable. This check will be consistent.
@@ -37,7 +39,7 @@ const Item: React.FC<ItemProps> = ({
   const resolvedUrl = url.replace(/:namespace\b/g, namespace);
   return access ? (
     <GalleryItem>
-      <CatalogTile data-test-id={id} className="odc-empty-state__tile" onClick={(e: React.SyntheticEvent) => navigateTo(e, resolvedUrl)} href={resolvedUrl} title={label} iconImg={typeof icon === 'string' ? icon : undefined} iconClass={iconClass} icon={React.isValidElement(icon) ? icon : undefined} description={description} />
+      <CatalogTile data-test-id={id} className="odc-empty-state__tile" onClick={(e: React.SyntheticEvent) => navigateTo(e, resolvedUrl)} href={resolvedUrl} title={t(label)} iconImg={typeof icon === 'string' ? icon : undefined} iconClass={iconClass} icon={React.isValidElement(icon) ? icon : undefined} description={t(description)} />
     </GalleryItem>
   ) : null;
 };
