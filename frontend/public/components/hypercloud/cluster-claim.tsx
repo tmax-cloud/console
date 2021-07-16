@@ -18,7 +18,7 @@ const kind = ClusterClaimModel.kind;
 
 const tableColumnClasses = ['', '', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-const unmodifiableStatus = new Set(['Approved', 'ClusterClaim Deleted']);
+const unmodifiableStatus = new Set(['Approved', 'ClusterClaim Deleted', 'ClusterDeleted', 'Cluster Deleted']);
 const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
 
 const ClusterClaimTableHeader = (t?: TFunction) => {
