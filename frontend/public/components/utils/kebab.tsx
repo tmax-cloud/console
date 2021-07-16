@@ -329,11 +329,13 @@ const kebabFactory: KebabFactory = {
   }),
   ModifyTaints: (kind, obj) => ({
     label: 'Edit Taints',
-    callback: () =>
+    callback: (t) =>
       taintsModal({
         resourceKind: kind,
         resource: obj,
         modalClassName: 'modal-lg',
+        submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
+        title: t('Edit Taints'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),

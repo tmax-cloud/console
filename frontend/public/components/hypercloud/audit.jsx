@@ -674,7 +674,7 @@ class AuditPage_ extends React.Component {
                   </div>
                 </div>
                 <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-                  <TextFilter id="audit" label="Filter User Account" autoFocus={true} onChange={this.onSearch} />
+                  <TextFilter id="audit" label={t('SINGLE:MSG_AUDITLOGS_MAIN_2')} autoFocus={true} onChange={this.onSearch} />
                 </div>
               </div>
             </PageHeading>
