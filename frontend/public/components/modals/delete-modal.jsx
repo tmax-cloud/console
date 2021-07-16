@@ -5,7 +5,7 @@ import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '.
 import { PromiseComponent, history, resourceListPathFromModel } from '../utils';
 import { k8sKill } from '../../module/k8s/';
 import { YellowExclamationTriangleIcon } from '@console/shared';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 //Modal for resource deletion and allows cascading deletes if propagationPolicy is provided for the enum
 class DeleteModal extends PromiseComponent {
@@ -41,10 +41,11 @@ class DeleteModal extends PromiseComponent {
   _onChecked() {
     this.checked = !this.checked;
   }
-
   render() {
     const { kind, resource, message, t } = this.props;
     const resourceStringKey = ResourceStringKeyMap[kind.kind]?.label ?? kind.label;
+    const ResourceName = () => <strong className="co-break-word">{resource.metadata.name}</strong>;
+    const Namespace = () => <strong>{resource.metadata.namespace}</strong>;
     return (
       <form onSubmit={this._submit} name="form" className="modal-content ">
         <ModalTitle>
@@ -54,19 +55,12 @@ class DeleteModal extends PromiseComponent {
         <ModalBody className="modal-body">
           {message}
           <div>
-            Are you sure you want to delete <strong className="co-break-word">{resource.metadata.name}</strong>
-            {_.has(resource.metadata, 'namespace') && (
-              <span>
-                {' '}
-                in namespace <strong>{resource.metadata.namespace}</strong>
-              </span>
-            )}
-            ?
+            {_.has(resource.metadata, 'namespace') ? <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName />, <Namespace />]}</Trans> : <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_25">{[<ResourceName />]}</Trans>}
             {_.has(kind, 'propagationPolicy') && (
               <div className="checkbox">
                 <label className="control-label">
                   <input type="checkbox" onChange={() => this.setState({ isChecked: !this.state.isChecked })} checked={!!this.state.isChecked} />
-                  Delete dependent objects of this resource
+                  {t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_26')}
                 </label>
               </div>
             )}

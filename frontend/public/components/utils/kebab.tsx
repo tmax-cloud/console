@@ -311,6 +311,7 @@ const kebabFactory: KebabFactory = {
         blocking: true,
         submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
         title: t('COMMON:MSG_MAIN_ACTIONBUTTON_5'),
+        addString: t('COMMON:MSG_MAIN_POPUP_16'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -329,13 +330,14 @@ const kebabFactory: KebabFactory = {
   }),
   ModifyTaints: (kind, obj) => ({
     label: 'Edit Taints',
-    callback: (t) =>
+    callback: t =>
       taintsModal({
         resourceKind: kind,
         resource: obj,
         modalClassName: 'modal-lg',
         submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
-        title: t('Edit Taints'),
+        title: t('SINGLE:MSG_NODES_NODEDETAILS_4'),
+        addMoreText: t('SINGLE:MSG_NODES_NODEDETAILS_5'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),

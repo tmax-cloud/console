@@ -86,11 +86,11 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_11')} obj={resource} path={tolerationsPath}>
               {canUpdate ? (
                 <Button type="button" isInline onClick={Kebab.factory.ModifyTolerations(model, resource).callback.bind(null, t)} variant="link">
-                  {pluralize(_.size(tolerations), 'Toleration')}
+                  {t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_108', { 0: _.size(tolerations) })}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
               ) : (
-                pluralize(_.size(tolerations), 'Toleration')
+                t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_108', { 0: _.size(tolerations) })
               )}
             </DetailsItem>
           )}

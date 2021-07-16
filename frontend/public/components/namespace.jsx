@@ -153,7 +153,7 @@ const SubscriptionPeriod = ({ timestamp, labels, className }) => {
   const getDeletionDate = (labels) => {
     const deletionDate = _.get(labels, 'deletionDate');
     if(!!deletionDate && deletionDate.indexOf('-') !== -1) {
-      return `${deletionDate.replace(/-/g, '.')} ${t('만료')}`;
+      return `${deletionDate.replace(/-/g, '.')} ${t('SINGLE:MSG_NAMESPACES_MAIN_1')}`;
     }
     return '';
   };

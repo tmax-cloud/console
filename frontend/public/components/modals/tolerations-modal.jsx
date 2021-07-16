@@ -86,31 +86,31 @@ class TolerationsModal extends PromiseComponent {
   };
 
   render() {
+    const { t: tFunc } = this.props;
     const operators = {
-      Exists: 'Exists',
-      Equal: 'Equal',
+      Exists: tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_16'),
+      Equal: tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_17'),
     };
     const effects = {
-      '': 'All Effects',
-      NoSchedule: 'NoSchedule',
-      PreferNoSchedule: 'PreferNoSchedule',
-      NoExecute: 'NoExecute',
+      '': tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_20'),
+      NoSchedule: tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_21'),
+      PreferNoSchedule: tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_22'),
+      NoExecute: tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_23'),
     };
     const { tolerations, errorMessage, inProgress } = this.state;
-    const { t } = this.props;
     return (
       <form onSubmit={this._submit} name="form" className="modal-content modal-content--accommodate-dropdown toleration-modal">
-        <ModalTitle>Edit Tolerations</ModalTitle>
+        <ModalTitle>{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_13')}</ModalTitle>
         <ModalBody>
           {_.isEmpty(tolerations) ? (
             <EmptyBox label="Tolerations" />
           ) : (
             <>
               <div className="row toleration-modal__heading hidden-sm hidden-xs">
-                <div className="col-md-4 text-secondary text-uppercase">Key</div>
-                <div className="col-md-2 text-secondary text-uppercase">Operator</div>
-                <div className="col-md-3 text-secondary text-uppercase">Value</div>
-                <div className="col-md-2 text-secondary text-uppercase">Effect</div>
+                <div className="col-md-4 text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_14')}</div>
+                <div className="col-md-2 text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_15')}</div>
+                <div className="col-md-3 text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_18')}</div>
+                <div className="col-md-2 text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_19')}</div>
                 <div className="col-md-1" />
               </div>
               {_.map(tolerations, (t, i) => {
@@ -118,20 +118,20 @@ class TolerationsModal extends PromiseComponent {
                 return (
                   <div className="row toleration-modal__row" key={i}>
                     <div className="col-md-4 col-sm-5 col-xs-5 toleration-modal__field">
-                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">Key</div>
+                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_14')}</div>
                       <input type="text" className="pf-c-form-control" value={key} onChange={e => this._change(e, i, 'key')} readOnly={!this._isEditable(t)} />
                     </div>
                     <div className="col-md-2 col-sm-5 col-xs-5 toleration-modal__field">
-                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">Operator</div>
+                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_15')}</div>
                       {this._isEditable(t) ? <Dropdown className="toleration-modal__dropdown" dropDownClassName="dropdown--full-width" items={operators} onChange={op => this._opChange(op, i)} selectedKey={operator} title={operators[operator]} /> : <input type="text" className="pf-c-form-control" value={operator} readOnly />}
                     </div>
                     <div className="clearfix visible-sm visible-xs" />
                     <div className="col-md-3 col-sm-5 col-xs-5 toleration-modal__field">
-                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">Value</div>
+                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_18')}</div>
                       <input type="text" className="pf-c-form-control" value={value} onChange={e => this._change(e, i, 'value')} readOnly={!this._isEditable(t) || operator === 'Exists'} />
                     </div>
                     <div className="col-md-2 col-sm-5 col-xs-5 toleration-modal__field">
-                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">Effect</div>
+                      <div className="toleration-modal__heading hidden-md hidden-lg text-secondary text-uppercase">{tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_19')}</div>
                       {this._isEditable(t) ? <Dropdown className="toleration-modal__dropdown" dropDownClassName="dropdown--full-width" items={effects} onChange={e => this._change(e, i, 'effect')} selectedKey={effect} title={effects[effect]} /> : <input type="text" className="pf-c-form-control" value={effects[effect]} readOnly />}
                     </div>
                     <div className="col-md-1 col-sm-2 col-xs-2">
@@ -148,10 +148,10 @@ class TolerationsModal extends PromiseComponent {
           )}
           <Button className="pf-m-link--align-left" onClick={this._addRow} type="button" variant="link">
             <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-            Add More
+            {tFunc('COMMON:MSG_MAIN_POPUP_DESCRIPTION_24')}
           </Button>
         </ModalBody>
-        <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText="Save" cancel={this._cancel} />
+        <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitText={tFunc('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancel={this._cancel} />
       </form>
     );
   }
