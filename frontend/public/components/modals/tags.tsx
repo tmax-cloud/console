@@ -51,6 +51,7 @@ export const TagsModal = withHandlePromise((props: TagsModalProps) => {
           nameValuePairs={tags}
           submit={submit}
           updateParentData={({ nameValuePairs }) => setTags(nameValuePairs)}
+          addString={props.addString}
         />
       </ModalBody>
       <ModalSubmitFooter
@@ -76,6 +77,7 @@ type TagsModalProps = {
   tags?: { [key: string]: string };
   path: string;
   title: string;
+  addString?: string;
   kind: K8sKind;
   resource: K8sResourceKind;
   handlePromise: <T>(promise: Promise<T>) => Promise<T>;

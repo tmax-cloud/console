@@ -5,6 +5,7 @@ import { SearchIcon } from '@patternfly/react-icons';
 
 import { Selector as SelectorKind } from '../../module/k8s';
 import { selectorToString } from '../../module/k8s/selector';
+import { useTranslation } from 'react-i18next';
 
 const Requirement: React.FC<RequirementProps> = ({ kind, requirements, namespace = '' }) => {
   // Strip off any trailing '=' characters for valueless selectors
@@ -13,9 +14,7 @@ const Requirement: React.FC<RequirementProps> = ({ kind, requirements, namespace
     .replace(/=$/g, '');
   const requirementAsUrlEncodedString = encodeURIComponent(requirementAsString);
 
-  const to = namespace
-    ? `/search/ns/${namespace}?kind=${kind}&q=${requirementAsUrlEncodedString}`
-    : `/search/all-namespaces?kind=${kind}&q=${requirementAsUrlEncodedString}`;
+  const to = namespace ? `/search/ns/${namespace}?kind=${kind}&q=${requirementAsUrlEncodedString}` : `/search/all-namespaces?kind=${kind}&q=${requirementAsUrlEncodedString}`;
 
   return (
     <div className="co-m-requirement">
@@ -28,19 +27,10 @@ const Requirement: React.FC<RequirementProps> = ({ kind, requirements, namespace
 };
 Requirement.displayName = 'Requirement';
 
-export const Selector: React.FC<SelectorProps> = ({
-  kind = 'Pod',
-  selector = {},
-  namespace = undefined,
-}) => (
-  <div className="co-m-selector">
-    {_.isEmpty(selector) ? (
-      <p className="text-muted">No selector</p>
-    ) : (
-      <Requirement kind={kind} requirements={selector} namespace={namespace} />
-    )}
-  </div>
-);
+export const Selector: React.FC<SelectorProps> = ({ kind = 'Pod', selector = {}, namespace = undefined }) => {
+  const { t } = useTranslation();
+  return <div className="co-m-selector">{_.isEmpty(selector) ? <p className="text-muted">{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_111')}</p> : <Requirement kind={kind} requirements={selector} namespace={namespace} />}</div>;
+};
 Selector.displayName = 'Selector';
 
 type RequirementProps = {
