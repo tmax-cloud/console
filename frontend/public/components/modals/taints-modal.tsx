@@ -82,7 +82,7 @@ class TaintsModal extends PromiseComponent<TaintsModalProps, TaintsModalState> {
         name="form"
         className="modal-content modal-content--accommodate-dropdown taint-modal"
       >
-        <ModalTitle>Edit Taints</ModalTitle>
+        <ModalTitle>{this.props.title || 'Edit Taints'}</ModalTitle>
         <ModalBody>
           {_.isEmpty(taints) ? (
             <EmptyBox label="Taints" />
@@ -161,7 +161,7 @@ class TaintsModal extends PromiseComponent<TaintsModalProps, TaintsModalState> {
         <ModalSubmitFooter
           errorMessage={errorMessage}
           inProgress={inProgress}
-          submitText="Save"
+          submitText={this.props.submitText || 'Save'}
           cancel={this._cancel}
         />
       </form>
@@ -174,6 +174,8 @@ export const taintsModal = createModalLauncher(TaintsModal);
 type TaintsModalProps = {
   resourceKind: K8sKind;
   resource: NodeKind;
+  title: string;
+  submitText: string;
 } & ModalComponentProps;
 
 type TaintsModalState = {
