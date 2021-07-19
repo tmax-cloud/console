@@ -116,9 +116,15 @@ const TaskSidebar: React.FC<TaskSidebarProps> = (props) => {
             <h2>{t('SINGLE:MSG_PIPELINES_CREATEFORM_26')}</h2>
             {params.map((param) => {
               const taskParams: PipelineTaskParam[] = taskField.value?.params || [];
-              const thisParam = taskParams.find(
+              let thisParam = taskParams.find(
                 (taskFieldParam) => taskFieldParam.name === param.name,
               );
+              if (thisParam === undefined ) {
+                thisParam = {
+                  value: '',
+                  name: param.name,
+                }
+              }
               return (
                 <div key={param.name} className="odc-task-sidebar__param">
                   <TaskSidebarParam
