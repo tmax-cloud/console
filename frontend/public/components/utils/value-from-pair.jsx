@@ -46,24 +46,13 @@ const getHeaders = (configMap, secret, serviceAccount) => {
   return headers;
 };
 
-const getKeys = (keyMap) => {
+const getKeys = keyMap => {
   const itemKeys = {};
   _.mapKeys(keyMap, (value, key) => (itemKeys[key] = key));
   return itemKeys;
 };
 
-export const NameKeyDropdownPair = ({
-  name,
-  key,
-  configMaps,
-  secrets,
-  serviceAccounts,
-  onChange,
-  kind,
-  nameTitle,
-  placeholderString,
-  isKeyRef = true,
-}) => {
+export const NameKeyDropdownPair = ({ name, key, configMaps, secrets, serviceAccounts, onChange, kind, nameTitle, placeholderString, isKeyRef = true }) => {
   let itemKeys = {};
   let refProperty;
   const cmItems = {};
@@ -76,29 +65,23 @@ export const NameKeyDropdownPair = ({
   const secretRefProperty = isKeyRef ? 'secretKeyRef' : 'secretRef';
   const serviceAccountRefProperty = isKeyRef ? 'serviceAccountKeyRef' : 'serviceAccountRef';
 
-  _.each(configMaps.items, (v) => {
-    cmItems[`${v.metadata.name}:${cmRefProperty}`] = (
-      <ResourceName kind="ConfigMap" name={v.metadata.name} />
-    );
+  _.each(configMaps.items, v => {
+    cmItems[`${v.metadata.name}:${cmRefProperty}`] = <ResourceName kind="ConfigMap" name={v.metadata.name} />;
     if (kind === 'ConfigMap' && _.isEqual(v.metadata.name, name)) {
       refProperty = cmRefProperty;
       itemKeys = getKeys(v.data);
     }
   });
-  _.each(secrets.items, (v) => {
-    secretItems[`${v.metadata.name}:${secretRefProperty}`] = (
-      <ResourceName kind="Secret" name={v.metadata.name} />
-    );
+  _.each(secrets.items, v => {
+    secretItems[`${v.metadata.name}:${secretRefProperty}`] = <ResourceName kind="Secret" name={v.metadata.name} />;
     if (kind === 'Secret' && _.isEqual(v.metadata.name, name)) {
       refProperty = secretRefProperty;
       itemKeys = getKeys(v.data);
     }
   });
   serviceAccounts &&
-    _.each(serviceAccounts.items, (v) => {
-      saItems[`${v.metadata.name}:${serviceAccountRefProperty}`] = (
-        <ResourceName kind="ServiceAccount" name={v.metadata.name} />
-      );
+    _.each(serviceAccounts.items, v => {
+      saItems[`${v.metadata.name}:${serviceAccountRefProperty}`] = <ResourceName kind="ServiceAccount" name={v.metadata.name} />;
       if (kind === 'ServiceAccount' && _.isEqual(v.metadata.name, name)) {
         refProperty = serviceAccountRefProperty;
         itemKeys = getKeys(v.data);
@@ -123,27 +106,14 @@ export const NameKeyDropdownPair = ({
         title={nameTitle}
         headerBefore={headerBefore}
         spacerBefore={spacerBefore}
-        onChange={(val) => {
+        onChange={val => {
           const keyValuePair = _.split(val, ':');
           onChange({
-            [keyValuePair[1]]: isKeyRef
-              ? { name: keyValuePair[0], key: '' }
-              : { name: keyValuePair[0] },
+            [keyValuePair[1]]: isKeyRef ? { name: keyValuePair[0], key: '' } : { name: keyValuePair[0] },
           });
         }}
       />
-      {isKeyRef && (
-        <Dropdown
-          menuClassName="value-from__menu dropdown-menu--text-wrap"
-          className="value-from value-from--key"
-          autocompleteFilter={keyAutocompleteFilter}
-          autocompletePlaceholder="Key"
-          items={itemKeys}
-          selectedKey={key}
-          title={keyTitle}
-          onChange={(val) => onChange({ [refProperty]: { name, key: val } })}
-        />
-      )}
+      {isKeyRef && <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from value-from--key" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder="Key" items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [refProperty]: { name, key: val } })} />}
     </>
   );
 };
@@ -159,21 +129,9 @@ const FieldRef = ({ data: { fieldPath } }) => (
   </>
 );
 
-const ConfigMapSecretKeyRef = ({
-  data: { name, key },
-  configMaps,
-  secrets,
-  serviceAccounts,
-  onChange,
-  disabled,
-  kind,
-}) => {
+const ConfigMapSecretKeyRef = ({ data: { name, key }, configMaps, secrets, serviceAccounts, onChange, disabled, kind }) => {
   const placeholderString = 'Config Map or Secret';
-  const nameTitle = _.isEmpty(name) ? (
-    'Select a resource'
-  ) : (
-    <ResourceName kind={kind} name={name} />
-  );
+  const nameTitle = _.isEmpty(name) ? 'Select a resource' : <ResourceName kind={kind} name={name} />;
 
   if (disabled) {
     return (
@@ -200,34 +158,16 @@ const ConfigMapSecretKeyRef = ({
   });
 };
 
-const ConfigMapSecretRef = ({
-  data: { name, key },
-  configMaps,
-  secrets,
-  serviceAccounts,
-  onChange,
-  disabled,
-  kind,
-}) => {
+const ConfigMapSecretRef = ({ data: { name, key }, configMaps, secrets, serviceAccounts, onChange, disabled, kind }) => {
   const placeholderString = 'Config Map or Secret';
-  const nameTitle = _.isEmpty(name) ? (
-    'Select a resource'
-  ) : (
-    <ResourceName kind={kind} name={name} />
-  );
+  const nameTitle = _.isEmpty(name) ? 'Select a resource' : <ResourceName kind={kind} name={name} />;
   const isKeyRef = false;
   const nameString = _.isEmpty(name) ? '' : `${name} - ${kind}`;
 
   if (disabled) {
     return (
       <div className="pairs-list__value-ro-field">
-        <input
-          type="text"
-          className="pf-c-form-control"
-          value={nameString}
-          disabled
-          placeholder="config map/secret"
-        />
+        <input type="text" className="pf-c-form-control" value={nameString} disabled placeholder="config map/secret" />
       </div>
     );
   }
@@ -248,12 +188,7 @@ const ConfigMapSecretRef = ({
 const ResourceFieldRef = ({ data: { containerName, resource } }) => (
   <>
     <div className="pairs-list__value-ro-field">
-      <input
-        type="text"
-        className="pf-c-form-control value-from"
-        value={`${containerName} - Resource Field`}
-        disabled
-      />
+      <input type="text" className="pf-c-form-control value-from" value={`${containerName} - Resource Field`} disabled />
     </div>
     <div className="pairs-list__value-ro-field">
       <input type="text" className="pf-c-form-control value-from" value={resource} disabled />
@@ -315,17 +250,7 @@ export class ValueFromPair extends React.PureComponent {
     const componentInfo = keyStringToComponent[valueFromKey];
     const Component = componentInfo.component;
 
-    return (
-      <Component
-        data={pair[valueFromKey]}
-        configMaps={configMaps}
-        secrets={secrets}
-        serviceAccounts={serviceAccounts}
-        kind={componentInfo.kind}
-        onChange={this.onChangeVal}
-        disabled={disabled}
-      />
-    );
+    return <Component data={pair[valueFromKey]} configMaps={configMaps} secrets={secrets} serviceAccounts={serviceAccounts} kind={componentInfo.kind} onChange={this.onChangeVal} disabled={disabled} />;
   }
 }
 ValueFromPair.propTypes = {
