@@ -85,7 +85,7 @@ const HealthCheckProbe: React.FC<HealthCheckProbeProps> = ({ probeType }) => {
         {healthChecks?.[probeType]?.enabled && (
           <Button className="pf-m-link--align-left" variant={ButtonVariant.link} onClick={onEditProbe}>
             &nbsp;&nbsp;
-            {'Edit Probe'}
+            {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_24')}
           </Button>
         )}
       </div>
