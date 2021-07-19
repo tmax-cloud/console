@@ -646,8 +646,8 @@ const plugin: Plugin<ConsumedExtensions> = [
     properties: {
       id: 'import-yaml',
       url: '/k8s/ns/:namespace/import',
-      label: 'YAML',
-      description: 'Create resources from their YAML or JSON definitions',
+      label: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_3',
+      description: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_4',
       icon: yamlIcon,
     },
   },
@@ -656,8 +656,8 @@ const plugin: Plugin<ConsumedExtensions> = [
     properties: {
       id: 'dev-catalog',
       url: '/catalog',
-      label: 'From Catalog',
-      description: 'Browse the catalog to discover, deploy and connect to services',
+      label: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_5',
+      description: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_6',
       icon: <CatalogIcon />,
     },
   },
@@ -699,8 +699,8 @@ const plugin: Plugin<ConsumedExtensions> = [
     properties: {
       id: 'pipeline',
       url: `/k8s/ns/:namespace/${referenceForModel(PipelineModel)}/~new/builder`,
-      label: 'Pipeline',
-      description: 'Create a Tekton Pipeline to automate delivery of your application',
+      label: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_7',
+      description: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_8',
       icon: pipelineIcon,
       accessReview: [
         {
