@@ -6,7 +6,6 @@ import { k8sKill } from '../../module/k8s';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
 import { history, PromiseComponent } from '../utils';
 import { YellowExclamationTriangleIcon } from '@console/shared';
-
 import { withTranslation, Trans } from 'react-i18next';
 
 const DeleteNamespaceModal = withTranslation()(
@@ -34,19 +33,16 @@ const DeleteNamespaceModal = withTranslation()(
 
     render() {
       const { t } = this.props;
-      const StrongTextComponent = () => <strong className="co-break-word">{this.props.resource.metadata.name}</strong>;
-      const strongString = <StrongTextComponent key="strongstring" />;
+      const NamespaceName = () => <strong className="co-break-word">{this.props.resource.metadata.name}</strong>;
       return (
         <form onSubmit={this._submit} name="form" className="modal-content ">
           <ModalTitle className="modal-header">
-            <YellowExclamationTriangleIcon className="co-icon-space-r" /> {t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_5', { 0: ResourceLabel(this.props.kind, t) })}
+            <YellowExclamationTriangleIcon className="co-icon-space-r" />
+            {t('COMMON:MSG_MAIN_POPUP_17')}
           </ModalTitle>
           <ModalBody>
-            <p>
-              <Trans i18nKey="COMMON:MSG_MAIN_POPUP_18">{strongString}</Trans>
-            </p>
-            <p>
-              <Trans i18nKey="COMMON:MSG_MAIN_POPUP_20">{strongString}</Trans>
+            <p style={{ whiteSpace: 'pre-wrap' }}>
+              <Trans i18nKey="COMMON:MSG_MAIN_POPUP_18">{[<NamespaceName />]}</Trans>
             </p>
             <input type="text" className="pf-c-form-control" onKeyUp={this._matchTypedNamespace} placeholder={t('COMMON:MSG_MAIN_POPUP_19')} autoFocus={true} />
           </ModalBody>
