@@ -329,7 +329,7 @@ const kebabFactory: KebabFactory = {
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyTaints: (kind, obj) => ({
-    label: 'Edit Taints',
+    label: 'SINGLE:MSG_NODES_NODEDETAILS_4',
     callback: t =>
       taintsModal({
         resourceKind: kind,
@@ -338,6 +338,7 @@ const kebabFactory: KebabFactory = {
         submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
         title: t('SINGLE:MSG_NODES_NODEDETAILS_4'),
         addMoreText: t('SINGLE:MSG_NODES_NODEDETAILS_5'),
+        label: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_113'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),

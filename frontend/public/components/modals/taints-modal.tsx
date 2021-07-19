@@ -85,7 +85,7 @@ class TaintsModal extends PromiseComponent<TaintsModalProps, TaintsModalState> {
         <ModalTitle>{this.props.title || 'Edit Taints'}</ModalTitle>
         <ModalBody>
           {_.isEmpty(taints) ? (
-            <EmptyBox label="Taints" />
+            <EmptyBox label={this.props.label || 'Taints'} />
           ) : (
             <>
               <div className="row taint-modal__heading hidden-sm hidden-xs">
@@ -175,6 +175,7 @@ type TaintsModalProps = {
   resourceKind: K8sKind;
   resource: NodeKind;
   title: string;
+  label: string;
   submitText: string;
   addMoreText: string;
 } & ModalComponentProps;
