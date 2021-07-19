@@ -2,12 +2,14 @@ import * as React from 'react';
 import { Section } from '../../utils/section';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
+import { useTranslation } from 'react-i18next';
 
 export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods, inputResource }) => {
+  const { t } = useTranslation();
   const typeItems = React.useMemo(
     () => ({
       git: 'Git',
-      image: '이미지',
+      image: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_33'),
     }),
     [],
   );
@@ -28,14 +30,14 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
 
   return (
     <>
-      <Section label="인풋 리소스 이름" id="inputresource_name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_12')} id="inputresource_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
-      <Section label="타입" id="inputresource-type" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_13')} id="inputresource-type" isRequired={true}>
         <Dropdown
           name="type"
           className="btn-group"
-          title="타입 선택" // 드롭다운 title 지정
+          title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_54')} // 드롭다운 title 지정
           methods={methods}
           items={typeItems} // (필수)
           style={{ display: 'block' }}
@@ -44,7 +46,7 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
           defaultValue={modalType === 'modify' ? template.type : ''}
         />
       </Section>
-      <Section label="리소스 저장 경로" id="inputresource_path">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_14')} id="inputresource_path">
         <TextInput id="targetPath" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.targetPath : ''} />
       </Section>
       <label>
@@ -57,9 +59,9 @@ export const InputResourceModal: React.FC<InputResourceModalProps> = ({ methods,
             setOption(!option);
           }}
         />
-        이 리소스를 선택 항목으로 제공합니다.
+        {t('SINGLE:MSG_TASKS_CREATFORM_DIV2_15')}
       </label>
-      <p>선택 항목으로 제공할 경우, 태스크 런 또는 파이프라인 메뉴에서 파이프라인 리소스를 필요에 따라 할당할 수 있습니다.</p>
+      <p>{t('SINGLE:MSG_TASKS_CREATFORM_DIV2_16')}</p>
     </>
   );
 };
