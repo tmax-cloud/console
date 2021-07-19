@@ -69,9 +69,11 @@ export const TCPRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeType }
 };
 
 export const CommandRequestTypeForm: React.FC<RequestTypeFormProps> = ({ probeType }) => {
+  const { t } = useTranslation();
+  // MJ : argument String발행되면 적용하기
   const {
     values: { healthChecks },
   } = useFormikContext<FormikValues>();
   const commands = healthChecks?.[probeType]?.data?.exec?.command || [''];
-  return <TextColumnField name={`healthChecks.${probeType}.data.exec.command`} label="Command" addLabel="Add command" placeholder="argument" helpText="The command to run inside the container." required disableDeleteRow={commands.length === 1} />;
+  return <TextColumnField name={`healthChecks.${probeType}.data.exec.command`} label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_25')} addLabel={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_27')} placeholder="argument" helpText={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_26')} required disableDeleteRow={commands.length === 1} />;
 };
