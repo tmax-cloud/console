@@ -8,8 +8,6 @@ import { history, PromiseComponent } from '../utils';
 import { YellowExclamationTriangleIcon } from '@console/shared';
 import { withTranslation, Trans } from 'react-i18next';
 
-import { withTranslation, Trans } from 'react-i18next';
-
 const DeleteNamespaceModal = withTranslation()(
   class DeleteNamespaceModal extends PromiseComponent {
     constructor(props) {
@@ -60,4 +58,4 @@ DeleteNamespaceModal.propTypes = {
   resource: PropTypes.object,
 };
 
-export const deleteNamespaceModal = createModalLauncher(withTranslation()(DeleteNamespaceModal));
+export const deleteNamespaceModal = createModalLauncher(DeleteNamespaceModal);
