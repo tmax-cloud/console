@@ -111,7 +111,7 @@ const NamespacesTableHeader = t => {
       props: { className: namespacesColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_56'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: namespacesColumnClasses[2] },
@@ -127,6 +127,7 @@ const NamespacesTableHeader = t => {
 };
 NamespacesTableHeader.displayName = 'NamespacesTableHeader';
 
+/** IMS 266483 - 포탈에서 trial로 신청할 경우에만 구독기간 생성됨. 포탈 미연동의 이유로 임시 제거
 const SubscriptionPeriod = ({ timestamp, labels, className }) => {
   if (!timestamp) {
     return <div className="co-timestamp">-</div>;
@@ -167,6 +168,7 @@ const SubscriptionPeriod = ({ timestamp, labels, className }) => {
     </div>
   );
 };
+*/
 
 const NamespacesTableRow = ({ obj: ns, index, key, style }) => {
   return (
@@ -178,7 +180,7 @@ const NamespacesTableRow = ({ obj: ns, index, key, style }) => {
         <Status status={ns.status.phase} />
       </TableData>
       <TableData className={namespacesColumnClasses[2]}>
-        <SubscriptionPeriod timestamp={ns.metadata.creationTimestamp} labels={ns.metadata.labels} />
+        <Timestamp timestamp={ns.metadata.creationTimestamp} />
       </TableData>
       <TableData className={namespacesColumnClasses[3]}>
         <LabelList kind="Namespace" labels={ns.metadata.labels} />
