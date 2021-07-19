@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RadioGroup } from '@console/internal/components/radio';
 import './styles.scss';
+import { useTranslation } from 'react-i18next';
 
 export enum EditorType {
   Form = 'form',
@@ -8,10 +9,11 @@ export enum EditorType {
 }
 
 export const EditorToggle: React.FC<EditorToggleProps> = ({ value, onChange }) => {
+  const { t } = useTranslation();
   return (
     <div className="co-synced-editor__editor-toggle">
       <RadioGroup
-        label="Configure via:"
+        label={t('COMMON:MSG_COMMON_CREATEFORM_RADIOBUTTON_1')}
         currentValue={value}
         inline
         items={[

@@ -140,7 +140,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
                 updateTasks(applyChange(taskGroup, { type: UpdateOperationType.UPDATE_TASK, data }));
               }}
               onRemoveTask={taskName => {
-                removeTaskModal(taskName, () => {
+                removeTaskModal(t, taskName, () => {
                   setSelectedTask(null);
                   updateTasks(
                     applyChange(taskGroup, {

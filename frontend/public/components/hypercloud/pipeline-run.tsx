@@ -197,12 +197,15 @@ export const PipelineRunsPage: React.FC<PipelineRunsPageProps> = props => {
   />;
 }
 
-export const PipelineRunsDetailsPage: React.FC<PipelineRunsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions()} pages={[details(detailsPage(PipelineRunDetails)), editYaml(), {
-  href: 'logs',
-  path: 'logs/:name?',
-  name: 'Logs',
-  component: PipelineRunLogsWithActiveTask,
-},]} />;
+export const PipelineRunsDetailsPage: React.FC<PipelineRunsDetailsPageProps> = props => {
+  const { t } = useTranslation();
+  return <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions()} pages={[details(detailsPage(PipelineRunDetails)), editYaml(), {
+    href: 'logs',
+    path: 'logs/:name?',
+    name: t('COMMON:MSG_DETAILS_TAB_6'),
+    component: PipelineRunLogsWithActiveTask,
+  },]} />
+};
 
 
 type PipelineRunDetailsListProps = {
