@@ -4,6 +4,7 @@ import * as _ from 'lodash-es';
 import * as fuzzy from 'fuzzysearch';
 
 import { Dropdown, ResourceName } from './';
+import { useTranslation } from 'react-i18next';
 
 // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#envvarsource-v1-core
 //   valueFrom:
@@ -31,16 +32,16 @@ const getSpacer = (configMap, secret) => {
   return _.isEmpty(configMap) || _.isEmpty(secret) ? spacerBefore : spacerBefore.add(secret);
 };
 
-const getHeaders = (configMap, secret, serviceAccount) => {
+const getHeaders = (configMap, secret, serviceAccount, t) => {
   const headers = {};
   if (configMap && !_.isEmpty(configMap)) {
-    headers[configMap] = 'Config Maps';
+    headers[configMap] = t('COMMON:MSG_LNB_MENU_27');
   }
   if (secret && !_.isEmpty(secret)) {
-    headers[secret] = 'Secrets';
+    headers[secret] = t('COMMON:MSG_LNB_MENU_26');
   }
   if (serviceAccount && !_.isEmpty(serviceAccount)) {
-    headers[serviceAccount] = 'Service Accounts';
+    headers[serviceAccount] = t('COMMON:MSG_LNB_MENU_74');
   }
 
   return headers;
@@ -53,6 +54,7 @@ const getKeys = keyMap => {
 };
 
 export const NameKeyDropdownPair = ({ name, key, configMaps, secrets, serviceAccounts, onChange, kind, nameTitle, placeholderString, isKeyRef = true }) => {
+  const { t } = useTranslation();
   let itemKeys = {};
   let refProperty;
   const cmItems = {};
@@ -60,7 +62,7 @@ export const NameKeyDropdownPair = ({ name, key, configMaps, secrets, serviceAcc
   const saItems = {};
   const nameAutocompleteFilter = (text, item) => fuzzy(text, item.props.name);
   const keyAutocompleteFilter = (text, item) => fuzzy(text, item);
-  const keyTitle = _.isEmpty(key) ? 'Select a key' : key;
+  const keyTitle = _.isEmpty(key) ? t('COMMON:MSG_DETAILS_TABENVIRONMENT_15') : key;
   const cmRefProperty = isKeyRef ? 'configMapKeyRef' : 'configMapRef';
   const secretRefProperty = isKeyRef ? 'secretKeyRef' : 'secretRef';
   const serviceAccountRefProperty = isKeyRef ? 'serviceAccountKeyRef' : 'serviceAccountRef';
@@ -91,9 +93,11 @@ export const NameKeyDropdownPair = ({ name, key, configMaps, secrets, serviceAcc
   const firstConfigMap = _.isEmpty(cmItems) ? {} : Object.keys(cmItems)[0];
   const firstSecret = _.isEmpty(secretItems) ? {} : Object.keys(secretItems)[0];
   const firstServiceAccount = saItems && !_.isEmpty(saItems) ? Object.keys(saItems)[0] : {};
-  const headerBefore = getHeaders(firstConfigMap, firstSecret, firstServiceAccount);
+  const headerBefore = getHeaders(firstConfigMap, firstSecret, firstServiceAccount, t);
   const spacerBefore = getSpacer(firstConfigMap, firstSecret);
   const items = _.assign({}, cmItems, secretItems, saItems);
+
+  // MJ : Key에 대한 String 발행되면 적용하기
   return (
     <>
       <Dropdown
@@ -130,8 +134,9 @@ const FieldRef = ({ data: { fieldPath } }) => (
 );
 
 const ConfigMapSecretKeyRef = ({ data: { name, key }, configMaps, secrets, serviceAccounts, onChange, disabled, kind }) => {
-  const placeholderString = 'Config Map or Secret';
-  const nameTitle = _.isEmpty(name) ? 'Select a resource' : <ResourceName kind={kind} name={name} />;
+  const { t } = useTranslation();
+  const placeholderString = t('COMMON:MSG_DETAILS_TABENVIRONMENT_16');
+  const nameTitle = _.isEmpty(name) ? t('COMMON:MSG_DETAILS_TABENVIRONMENT_14') : <ResourceName kind={kind} name={name} />;
 
   if (disabled) {
     return (
@@ -159,8 +164,9 @@ const ConfigMapSecretKeyRef = ({ data: { name, key }, configMaps, secrets, servi
 };
 
 const ConfigMapSecretRef = ({ data: { name, key }, configMaps, secrets, serviceAccounts, onChange, disabled, kind }) => {
-  const placeholderString = 'Config Map or Secret';
-  const nameTitle = _.isEmpty(name) ? 'Select a resource' : <ResourceName kind={kind} name={name} />;
+  const { t } = useTranslation();
+  const placeholderString = t('COMMON:MSG_DETAILS_TABENVIRONMENT_16');
+  const nameTitle = _.isEmpty(name) ? t('COMMON:MSG_DETAILS_TABENVIRONMENT_14') : <ResourceName kind={kind} name={name} />;
   const isKeyRef = false;
   const nameString = _.isEmpty(name) ? '' : `${name} - ${kind}`;
 
