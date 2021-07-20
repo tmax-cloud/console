@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Node, observer, WithDndDropProps, WithSelectionProps, WithContextMenuProps } from '@console/topology';
 import { SHOW_GROUPING_HINT_EVENT } from '../../../topology-types';
 import { RegroupHint } from '../../RegroupHint';
-import DamonSetNode from './DamonSetNode';
+import StatefulSetNode from './StatefulSetNode';
 import StatefulSetGroup from './StatefulSetGroup';
 
 import './StatefulSet.scss';
@@ -29,7 +29,7 @@ const ObservedStatefulSet: React.FC<StatefulSetProps> = ({ element, selected, on
   }, [dropTarget, canDrop, element, dragRegroupable]);
 
   if (element.isCollapsed()) {
-    return <DamonSetNode element={element} selected={selected} onSelect={onSelect} dndDropRef={dndDropRef} canDrop={canDrop} dropTarget={dropTarget} onContextMenu={onContextMenu} contextMenuOpen={contextMenuOpen} dragging={dragging} />;
+    return <StatefulSetNode element={element} selected={selected} onSelect={onSelect} dndDropRef={dndDropRef} canDrop={canDrop} dropTarget={dropTarget} onContextMenu={onContextMenu} contextMenuOpen={contextMenuOpen} dragging={dragging} />;
   }
 
   return <StatefulSetGroup element={element} selected={selected} onSelect={onSelect} dndDropRef={dndDropRef} canDrop={canDrop} dropTarget={dropTarget} droppable={droppable} onContextMenu={onContextMenu} contextMenuOpen={contextMenuOpen} dragging={dragging} />;
