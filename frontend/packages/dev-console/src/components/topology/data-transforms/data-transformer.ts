@@ -6,7 +6,7 @@ import { getImageForIconClass } from '@console/internal/components/catalog/catal
 import { TrafficData, KialiNode } from '../topology-types';
 import { TopologyDataModel, TopologyDataResources, Edge } from '../hypercloud/hypercloud-topology-types';
 import { TYPE_TRAFFIC_CONNECTOR, TYPE_WORKLOAD, TYPE_CONNECTS_TO } from '../components/const';
-// import { HelmReleaseResourcesMap } from '../../helm/helm-types';
+import { HelmReleaseResourcesMap } from '../../helm/helm-types';
 import { allowedResources } from '../topology-utils';
 import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyGroupItems, getTopologyNodeItem, mergeGroup, getComponentType } from './transform-utils';
 // import { getOperatorTopologyDataModel } from '../operators/operators-data-transformer';
@@ -94,7 +94,7 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
 /**
  * Tranforms the k8s resources objects into topology data
  */
-export const transformTopologyData = (resources: TopologyDataResources, transformBy: string[], utils?: Function[], trafficData?: TrafficData): TopologyDataModel => {
+export const transformTopologyData = (resources: TopologyDataResources, transformBy: string[], utils?: Function[], trafficData?: TrafficData, helmResourcesMap?: HelmReleaseResourcesMap): TopologyDataModel => {
   const topologyGraphAndNodeData: TopologyDataModel = {
     graph: { nodes: [], edges: [], groups: [] },
     topology: {},

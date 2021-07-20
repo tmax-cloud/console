@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { K8sResourceKind, referenceFor } from '@console/internal/module/k8s';
 import { TransformResourceData, isKnativeServing } from '@console/shared';
+import { ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 import { PodModel, PersistentVolumeClaimModel, ServiceModel, ReplicaSetModel, StatefulSetModel, DaemonSetModel, DeploymentModel } from '@console/internal/models';
 import { getImageForIconClass } from '@console/internal/components/catalog/catalog-item-icon';
 import { TYPE_EVENT_SOURCE, TYPE_KNATIVE_REVISION } from '@console/knative-plugin/src/topology/const';
@@ -23,7 +24,7 @@ export const dataObjectFromModel = (node: Node | Group): TopologyDataObject => {
 /**
  * create instance of TransformResourceData, return object containing all methods
  */
-export const createInstanceForResource = (resources: HyperCloudTopologyDataResource, utils?: Function[]) => {
+export const createInstanceForResource = (resources: HyperCloudTopologyDataResource, utils?: Function[], installedOperators?: ClusterServiceVersionKind[]) => {
   const transformResourceData = new TransformResourceData(resources, utils);
 
   return {
@@ -44,7 +45,7 @@ export const createTopologyNodeData = (dc: TopologyOverviewItem, type: string, d
   const { obj: deploymentConfig, current, previous, isRollingOut, buildConfigs, pipelines = [], pipelineRuns = [] } = dc;
   const dcUID = _.get(deploymentConfig, 'metadata.uid');
   const deploymentsLabels = _.get(deploymentConfig, 'metadata.labels', {});
-  const deploymentsAnnotations = _.get(deploymentConfig, 'metadata.annotations', {});
+  // const deploymentsAnnotations = _.get(deploymentConfig, 'metadata.annotations', {});
 
   const builderImageIcon = getImageForIconClass(`icon-${deploymentsLabels['app.openshift.io/runtime']}`) || getImageForIconClass(`icon-${deploymentsLabels['app.kubernetes.io/name']}`);
   return {
