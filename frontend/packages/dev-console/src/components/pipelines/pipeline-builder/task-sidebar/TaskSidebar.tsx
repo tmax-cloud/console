@@ -122,7 +122,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = (props) => {
               return (
                 <div key={param.name} className="odc-task-sidebar__param">
                   <TaskSidebarParam
-                    hasParamError={!thisParam.value && !!thisTaskError?.includes(TaskErrorType.MISSING_REQUIRED_PARAMS)}
+                    hasParamError={!thisParam?.value && !!thisTaskError?.includes(TaskErrorType.MISSING_REQUIRED_PARAMS)}
                     resourceParam={param}
                     taskParam={thisParam}
                     onChange={(value) => {

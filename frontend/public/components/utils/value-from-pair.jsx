@@ -97,7 +97,6 @@ export const NameKeyDropdownPair = ({ name, key, configMaps, secrets, serviceAcc
   const spacerBefore = getSpacer(firstConfigMap, firstSecret);
   const items = _.assign({}, cmItems, secretItems, saItems);
 
-  // MJ : Key에 대한 String 발행되면 적용하기
   return (
     <>
       <Dropdown
@@ -117,7 +116,7 @@ export const NameKeyDropdownPair = ({ name, key, configMaps, secrets, serviceAcc
           });
         }}
       />
-      {isKeyRef && <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from value-from--key" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder="Key" items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [refProperty]: { name, key: val } })} />}
+      {isKeyRef && <Dropdown menuClassName="value-from__menu dropdown-menu--text-wrap" className="value-from value-from--key" autocompleteFilter={keyAutocompleteFilter} autocompletePlaceholder={t('SINGLE:MSG_DAEMONSETS_EDITDAEMONSETS_ADDHEALTHCHECKS_13')} items={itemKeys} selectedKey={key} title={keyTitle} onChange={val => onChange({ [refProperty]: { name, key: val } })} />}
     </>
   );
 };
