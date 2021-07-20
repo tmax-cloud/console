@@ -10,11 +10,9 @@ import './ConnectsTo.scss';
 type ConnectsToProps = {
   element: Edge;
   dragging?: boolean;
-} & WithSourceDragProps &
-  WithTargetDragProps &
-  WithRemoveConnectorProps;
+} & WithSourceDragProps
 
-const ObservedConnectsTo: React.FC<ConnectsToProps> = ({ element, targetDragRef, children, ...others }) => {
+const ObservedConnectsTo: React.FC<ConnectsToProps> = ({ element, children, ...others }) => {
   const childEdges = element.getChildren();
   const sourceData = childEdges?.length > 0 ? (childEdges[0] as Edge).getSource().getData() : element.getSource().getData();
   const resourceObj = getTopologyResourceObject(sourceData);
@@ -30,7 +28,7 @@ const ObservedConnectsTo: React.FC<ConnectsToProps> = ({ element, targetDragRef,
 
   return (
     <BaseEdge className={edgeClasses} element={element} {...others}>
-      <EdgeConnectorArrow dragRef={editAccess ? targetDragRef : undefined} edge={element} />
+      <EdgeConnectorArrow edge={element} />
       {children}
     </BaseEdge>
   );

@@ -31,9 +31,9 @@ class ComponentFactory extends AbstractSBRComponentFactory {
         case TYPE_APPLICATION_GROUP:
           return withDndDrop(applicationGroupDropTargetSpec)(withSelection(false, true)(withContextMenu(groupContextMenu)(Application)));
         case TYPE_WORKLOAD:
-          return this.withAddResourceConnector()(withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(WorkloadNode))))));
+          return withDndDrop<any, any, { droppable?: boolean; hover?: boolean; canDrop?: boolean }, NodeComponentProps>(nodeDropTargetSpec)(withEditReviewAccess('patch')(withDragNode(nodeDragSourceSpec(type))(withSelection(false, true)(withContextMenu(workloadContextMenu)(WorkloadNode)))));
         case TYPE_CONNECTS_TO:
-          return withTargetDrag(edgeDragSourceSpec(MOVE_CONNECTOR_DROP_TYPE, this.serviceBinding, createConnection))(withRemoveConnector(removeConnectorCallback)(ConnectsTo));
+          return withTargetDrag(edgeDragSourceSpec(MOVE_CONNECTOR_DROP_TYPE, this.serviceBinding, createConnection))(ConnectsTo);
         case TYPE_SERVICE_BINDING:
           return withRemoveConnector(removeConnectorCallback)(ServiceBinding);
         case TYPE_AGGREGATE_EDGE:
