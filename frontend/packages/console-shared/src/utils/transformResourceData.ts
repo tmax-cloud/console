@@ -12,6 +12,8 @@ import {
   createDeploymentItems,
   createPodItems,
   createStatefulSetItems,
+  createReplicaSetItems,
+  createServiceItems,
   getBuildConfigsForResource,
   getPodsForDeploymentConfigs,
   getPodsForDeployments,
@@ -85,6 +87,30 @@ export class TransformResourceData {
   ): OverviewItem[] =>
     createStatefulSetItems(
       statefulSets,
+      this.resources,
+      this.installedOperators,
+      this.utils,
+      operatorsFilter,
+    );
+
+  public createReplicaSetItems = (
+    replicaSets: K8sResourceKind[],
+    operatorsFilter?: boolean,
+  ): OverviewItem[] =>
+  createReplicaSetItems(
+      replicaSets,
+      this.resources,
+      this.installedOperators,
+      this.utils,
+      operatorsFilter,
+    );
+
+  public createServiceItems = (
+    services: K8sResourceKind[],
+    operatorsFilter?: boolean,
+  ): OverviewItem[] =>
+  createServiceItems(
+      services,
       this.resources,
       this.installedOperators,
       this.utils,

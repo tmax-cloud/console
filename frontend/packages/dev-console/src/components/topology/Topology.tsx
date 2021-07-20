@@ -23,7 +23,7 @@ import TopologyApplicationPanel from './application-panel/TopologyApplicationPan
 import ConnectedTopologyEdgePanel from './TopologyEdgePanel';
 import { topologyModelFromDataModel } from './data-transforms/topology-model';
 import { layoutFactory, COLA_LAYOUT, COLA_FORCE_LAYOUT } from './layouts/layoutFactory';
-import { TYPE_APPLICATION_GROUP, ComponentFactory } from './components';
+import { TYPE_APPLICATION_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP, ComponentFactory } from './components';
 import TopologyFilterBar from './filters/TopologyFilterBar';
 import { getTopologyFilters, getTopologySearchQuery, TopologyFilters, TOPOLOGY_SEARCH_FILTER_KEY, FILTER_ACTIVE_CLASS } from './filters';
 import TopologyHelmReleasePanel from './helm/TopologyHelmReleasePanel';
@@ -263,7 +263,8 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
   const selectedItemDetails = () => {
     const selectedEntity = selectedIds[0] ? visRef.current.getElementById(selectedIds[0]) : null;
     if (isNode(selectedEntity)) {
-      if (selectedEntity.getType() === TYPE_APPLICATION_GROUP) {
+      // TODO : 각 그룹 타입별로 별도의 Panel 만들기
+      if ([TYPE_APPLICATION_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP].includes(selectedEntity.getType())) {
         return (
           <TopologyApplicationPanel
             graphData={graphData}

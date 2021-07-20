@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Firehose } from '@console/internal/components/utils';
 import { referenceForModel } from '@console/internal/module/k8s';
 import { ServiceModel } from '@console/knative-plugin';
-import { VirtualMachineModel } from '@console/kubevirt-plugin/src/models';
+// import { VirtualMachineModel } from '@console/kubevirt-plugin/src/models';
 import { ResourceDropdown } from '@console/shared';
 
 interface ApplicationDropdownProps {
@@ -33,12 +33,12 @@ interface ApplicationDropdownProps {
 
 const ApplicationDropdown: React.FC<ApplicationDropdownProps> = ({ namespace, ...props }) => {
   const resources = [
-    {
-      isList: true,
-      namespace,
-      kind: 'DeploymentConfig',
-      prop: 'deploymentConfigs',
-    },
+    // {
+    //   isList: true,
+    //   namespace,
+    //   kind: 'DeploymentConfig',
+    //   prop: 'deploymentConfigs',
+    // },
     {
       isList: true,
       namespace,
@@ -70,13 +70,13 @@ const ApplicationDropdown: React.FC<ApplicationDropdownProps> = ({ namespace, ..
       namespace,
       prop: 'secrets',
     },
-    {
-      isList: true,
-      kind: VirtualMachineModel.kind,
-      namespace,
-      prop: 'virtualMachines',
-      optional: true,
-    },
+    // {
+    //   isList: true,
+    //   kind: VirtualMachineModel.kind,
+    //   namespace,
+    //   prop: 'virtualMachines',
+    //   optional: true,
+    // },
   ];
   return (
     <Firehose resources={resources}>
