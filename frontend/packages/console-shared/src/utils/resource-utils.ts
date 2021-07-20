@@ -19,6 +19,7 @@ import {
   DaemonSetModel,
   StatefulSetModel,
   PodModel,
+  ServiceModel,
 } from '@console/internal/models';
 import { getBuildNumber } from '@console/internal/module/k8s/builds';
 import { FirehoseResource } from '@console/internal/components/utils';
@@ -52,13 +53,6 @@ export const getResourceList = (namespace: string, resList?: any) => {
   let resources: FirehoseResource[] = [
     {
       isList: true,
-      kind: 'DeploymentConfig',
-      namespace,
-      prop: 'deploymentConfigs',
-      optional: true,
-    },
-    {
-      isList: true,
       kind: 'Deployment',
       namespace,
       prop: 'deployments',
@@ -87,13 +81,6 @@ export const getResourceList = (namespace: string, resList?: any) => {
     },
     {
       isList: true,
-      kind: 'Route',
-      namespace,
-      prop: 'routes',
-      optional: true,
-    },
-    {
-      isList: true,
       kind: 'Service',
       namespace,
       prop: 'services',
@@ -104,20 +91,6 @@ export const getResourceList = (namespace: string, resList?: any) => {
       kind: 'ReplicaSet',
       namespace,
       prop: 'replicaSets',
-      optional: true,
-    },
-    {
-      isList: true,
-      kind: 'BuildConfig',
-      namespace,
-      prop: 'buildConfigs',
-      optional: true,
-    },
-    {
-      isList: true,
-      kind: 'Build',
-      namespace,
-      prop: 'builds',
       optional: true,
     },
     {
@@ -144,12 +117,12 @@ export const getResourceList = (namespace: string, resList?: any) => {
   ];
 
   let utils = [];
-  if (resList) {
-    resList.forEach((resource) => {
-      resources = [...resources, ...resource.properties.resources(namespace)];
-      utils = [...utils, resource.properties.utils];
-    });
-  }
+  // if (resList) {
+  //   resList.forEach((resource) => {
+  //     resources = [...resources, ...resource.properties.resources(namespace)];
+  //     utils = [...utils, resource.properties.utils];
+  //   });
+  // }
 
   return { resources, utils };
 };
@@ -356,7 +329,7 @@ const getPodAlerts = (pod: K8sResourceKind): OverviewItemAlerts => {
     const { type, status, reason, message } = condition;
     if (type === 'PodScheduled' && status === 'False' && reason === 'Unschedulable') {
       // eslint-disable-next-line
-      const key = podAlertKey(reason, pod, name);
+      const key = podAlertKey(reason, pod);
       alerts[key] = {
         severity: 'error',
         message: `${reason}: ${message}`,
@@ -786,7 +759,7 @@ export const createDeploymentItems = (
     const isRollingOut = !!current && !!previous;
     const buildConfigs = getBuildConfigsForResource(obj, resources);
     const services = getServicesForResource(obj, resources);
-    const routes = getRoutesForServices(services, resources);
+    // const routes = getRoutesForServices(services, resources);
     const alerts = {
       ...getResourcePausedAlert(obj),
       ...getBuildAlerts(buildConfigs),
@@ -801,7 +774,7 @@ export const createDeploymentItems = (
       obj,
       previous,
       pods,
-      routes,
+      // routes,
       services,
       status,
       isMonitorable: true,
@@ -836,7 +809,7 @@ export const createDaemonSetItems = (
     };
     const buildConfigs = getBuildConfigsForResource(obj, resources);
     const services = getServicesForResource(obj, resources);
-    const routes = getRoutesForServices(services, resources);
+    // const routes = getRoutesForServices(services, resources);
     const pods = getPodsForResource(obj, resources);
     const alerts = {
       ...combinePodAlerts(pods),
@@ -848,7 +821,7 @@ export const createDaemonSetItems = (
       buildConfigs,
       obj,
       pods,
-      routes,
+      // routes,
       services,
       status,
       isMonitorable: true,
@@ -881,23 +854,79 @@ export const createStatefulSetItems = (
       ...getBuildAlerts(buildConfigs),
     };
     const services = getServicesForResource(obj, resources);
-    const routes = getRoutesForServices(services, resources);
+    // const routes = getRoutesForServices(services, resources);
     const status = resourceStatus(obj);
     return {
       alerts,
       buildConfigs,
       obj,
       pods,
-      routes,
+      // routes,
       services,
       status,
       isMonitorable: true,
       isOperatorBackedService: isOperatorBackedService(obj, installedOperators),
     };
   });
-  if (operatorsFilter !== undefined) {
-    return items.filter((item) => item.isOperatorBackedService === operatorsFilter);
-  }
+  return items;
+};
+
+export const createReplicaSetItems = (
+  replicaSets: K8sResourceKind[],
+  resources: any,
+  installedOperators: ClusterServiceVersionKind[],
+  utils?: Function[],
+  operatorsFilter?: boolean,
+): OverviewItem[] => {
+  const items = _.map(replicaSets, (rs) => {
+    const obj: K8sResourceKind = {
+      ...rs,
+      apiVersion: apiVersionForModel(ReplicaSetModel),
+      kind: ReplicaSetModel.kind,
+    };
+    const buildConfigs = getBuildConfigsForResource(obj, resources);
+    const pods = getPodsForResource(obj, resources);
+    const alerts = {
+      ...combinePodAlerts(pods),
+      ...getBuildAlerts(buildConfigs),
+    };
+    const services = getServicesForResource(obj, resources);
+    // const routes = getRoutesForServices(services, resources);
+    const status = resourceStatus(obj);
+    return {
+      alerts,
+      buildConfigs,
+      obj,
+      pods,
+      // routes,
+      services,
+      status,
+      isMonitorable: true,
+      isOperatorBackedService: isOperatorBackedService(obj, installedOperators),
+    };
+  });
+  return items;
+};
+
+export const createServiceItems = (
+  services: K8sResourceKind[],
+  resources: any,
+  installedOperators: ClusterServiceVersionKind[],
+  utils?: Function[],
+  operatorsFilter?: boolean,
+): OverviewItem[] => {
+  const items = _.map(services, (s) => {
+    const obj: K8sResourceKind = {
+      ...s,
+      apiVersion: apiVersionForModel(ServiceModel),
+      kind: ServiceModel.kind,
+    };
+    return {
+      obj,
+      services: null,
+      buildConfigs: null
+    };
+  });
   return items;
 };
 
@@ -911,22 +940,22 @@ export const createPodItems = (resources: any): OverviewItem[] => {
         apiVersion: apiVersionForModel(PodModel),
         kind: PodModel.kind,
       };
-      const owners = _.get(obj, 'metadata.ownerReferences');
-      const phase = _.get(obj, 'status.phase');
-      if (!_.isEmpty(owners) || phase === 'Succeeded' || phase === 'Failed') {
-        return acc;
-      }
+      // const owners = _.get(obj, 'metadata.ownerReferences');
+      // const phase = _.get(obj, 'status.phase');
+      // if (!_.isEmpty(owners) || phase === 'Succeeded' || phase === 'Failed') {
+      //   return acc;
+      // }
 
       const alerts = getPodAlerts(obj);
       const services = getServicesForResource(obj, resources);
-      const routes = getRoutesForServices(services, resources);
+      // const routes = getRoutesForServices(services, resources);
       const status = podStatus(obj);
       return [
         ...acc,
         {
           alerts,
           obj,
-          routes,
+          // routes,
           services,
           status,
         },
