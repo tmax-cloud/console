@@ -5,7 +5,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
-import { DEFAULT_GROUP_NAME, METRICS_POLL_INTERVAL, OverviewItem, getResourceList, createDaemonSetItems, createDeploymentConfigItems, createDeploymentItems, createPodItems, createStatefulSetItems, formatNamespacedRouteForResource } from '@console/shared';
+import { DEFAULT_GROUP_NAME, METRICS_POLL_INTERVAL, OverviewItem, getResourceList, createDaemonSetItems, createDeploymentItems, createPodItems, createStatefulSetItems, formatNamespacedRouteForResource } from '@console/shared';
 import { OverviewCRD } from '@console/plugin-sdk';
 import { ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 import { coFetchJSON } from '../../co-fetch';
