@@ -38,6 +38,19 @@ export const getTrafficConnectors = (trafficData: TrafficData, resources: K8sRes
   }, []);
 };
 
+const deploymentToService = (childServices, typedDataModel, item) => {
+  if (!!item.services) {
+    childServices.forEach(serviceItem => {
+      const { obj: deployment } = item;
+      const { obj: service } = serviceItem;
+      const serviceUid = _.get(service, ['metadata', 'uid']);
+      typedDataModel.topology[serviceUid] = createTopologyNodeData(serviceItem, getComponentType(service.kind), getImageForIconClass(`icon-hc-service`));
+      typedDataModel.graph.nodes.push(getTopologyNodeItem(service, TYPE_WORKLOAD));
+      typedDataModel.graph.edges.push({ id: `${serviceUid}_${deployment.metadata.name}`, type: TYPE_CONNECTS_TO, source: serviceUid, target: deployment.metadata.uid });
+    });
+  }
+};
+
 const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources: K8sResourceKind[], utils: Function[], transformBy: string[]): TopologyDataModel => {
   const baseDataModel: TopologyDataModel = {
     graph: { nodes: [], edges: [], groups: [] },
@@ -57,18 +70,9 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
         const uid = _.get(obj, ['metadata', 'uid']);
         typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
         switch (key) {
-          case 'deployments': {
-            if (!!item.services) {
-              transformResourceData['services'](item.services).forEach(serviceItem => {
-                const { obj: service } = serviceItem;
-                const serviceUid = _.get(service, ['metadata', 'uid']);
-                typedDataModel.topology[serviceUid] = createTopologyNodeData(serviceItem, getComponentType(service.kind), getImageForIconClass(`icon-hc-service`));
-                typedDataModel.graph.nodes.push(getTopologyNodeItem(service, TYPE_WORKLOAD));
-                typedDataModel.graph.edges.push({ id: `${serviceUid}_${obj.metadata.name}`, type: TYPE_CONNECTS_TO, source: serviceUid, target: obj.metadata.uid });
-              });
-            }
-            break;
-          }
+          case 'deployments':
+            const childServices = transformResourceData['services'](item.services);
+            deploymentToService(childServices, typedDataModel, item);
           case 'replicaSets':
           case 'daemonSets':
           case 'statefulSets': {
