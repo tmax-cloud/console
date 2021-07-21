@@ -165,24 +165,7 @@ export const getTopologyEdgeItems = (dc: K8sResourceKind, resources: K8sResource
  */
 export const getTopologyGroupItems = (obj: K8sResourceKind): Group => {
   switch (obj.kind) {
-    case ReplicaSetModel.kind: {
-      const owners = _.get(obj, ['metadata', 'ownerReferences']);
-      if (!!owners?.[0]) {
-        const ownerName = owners[0].name;
-        const ownerKind = owners[0].kind;
-        if (getComponentType(ownerKind) === TYPE_WORKLOAD) {
-          return null;
-        }
-        return {
-          id: owners[0].uid,
-          type: getComponentType(ownerKind),
-          name: ownerName,
-          nodes: [_.get(obj, ['metadata', 'uid'])],
-        };
-      } else {
-        return null;
-      }
-    }
+    case ReplicaSetModel.kind:
     case PodModel.kind: {
       const owners = _.get(obj, ['metadata', 'ownerReferences']);
       if (!!owners?.[0]) {
