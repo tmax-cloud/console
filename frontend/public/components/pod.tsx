@@ -15,7 +15,7 @@ import { getRestartPolicyLabel, podPhase, podPhaseFilterReducer, podReadiness, p
 import { getContainerState, getContainerStatus } from '../module/k8s/container';
 import { ResourceEventStream } from './events';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunctionArgs } from './factory';
-import { AsyncComponent, DetailsItem, Kebab, NodeLink, OwnerReferences, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, ScrollToTopOnMount, SectionHeading, Timestamp, formatBytesAsMiB, formatCores, humanizeBinaryBytes, humanizeCpuCores, navFactory, pluralize, units } from './utils';
+import { AsyncComponent, DetailsItem, Kebab, NodeLink, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, ScrollToTopOnMount, SectionHeading, Timestamp, formatBytesAsMiB, formatCores, humanizeBinaryBytes, humanizeCpuCores, navFactory, pluralize, units } from './utils';
 import { PodLogs } from './pod-logs';
 import { Area, PROMETHEUS_BASE_PATH, PROMETHEUS_TENANCY_BASE_PATH, requirePrometheus } from './graphs';
 import { VolumesTable } from './volumes-table';
@@ -95,13 +95,12 @@ const PodTableRow = connect<PodTableRowPropsFromState, null, PodTableRowProps>(p
         {readyCount}/{totalContainers}
       </TableData>
       <TableData className={tableColumnClasses[4]}>{restarts}</TableData>
-      <TableData className={tableColumnClasses[5]}>{showNodes ? <ResourceLink kind="Node" name={pod.spec.nodeName} namespace={namespace} /> : <OwnerReferences resource={pod} />}</TableData>
-      <TableData className={tableColumnClasses[6]}>{bytes ? `${formatBytesAsMiB(bytes)} MiB` : '-'}</TableData>
-      <TableData className={tableColumnClasses[7]}>{cores ? `${formatCores(cores)} cores` : '-'}</TableData>
-      <TableData className={tableColumnClasses[8]}>
+      <TableData className={tableColumnClasses[5]}>{bytes ? `${formatBytesAsMiB(bytes)} MiB` : '-'}</TableData>
+      <TableData className={tableColumnClasses[6]}>{cores ? `${formatCores(cores)} cores` : '-'}</TableData>
+      <TableData className={tableColumnClasses[7]}>
         <Timestamp timestamp={creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[9]}>
+      <TableData className={tableColumnClasses[8]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={pod} isDisabled={phase === 'Terminating'} />
       </TableData>
     </TableRow>
@@ -143,32 +142,26 @@ const getHeader = showNodes => {
         props: { className: tableColumnClasses[4] },
       },
       {
-        title: showNodes ? t('COMMON:MSG_MAIN_TABLEHEADER_63') : t('COMMON:MSG_MAIN_TABLEHEADER_11'),
-        sortField: showNodes ? 'spec.nodeName' : 'metadata.ownerReferences[0].name',
-        transforms: [sortable],
-        props: { className: tableColumnClasses[5] },
-      },
-      {
         title: t('COMMON:MSG_MAIN_TABLEHEADER_65'),
         sortFunc: 'podMemory',
         transforms: [sortable],
-        props: { className: tableColumnClasses[6] },
+        props: { className: tableColumnClasses[5] },
       },
       {
         title: t('COMMON:MSG_MAIN_TABLEHEADER_64'),
         sortFunc: 'podCPU',
         transforms: [sortable],
-        props: { className: tableColumnClasses[7] },
+        props: { className: tableColumnClasses[6] },
       },
       {
         title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
         sortField: 'metadata.creationTimestamp',
         transforms: [sortable],
-        props: { className: tableColumnClasses[8] },
+        props: { className: tableColumnClasses[7] },
       },
       {
         title: '',
-        props: { className: tableColumnClasses[9] },
+        props: { className: tableColumnClasses[8] },
       },
     ];
   };
@@ -288,7 +281,7 @@ export const PodDetailsList: React.FC<PodDetailsListProps> = ({ pod }) => {
   );
 };
 
-export const PodResourceSummary: React.FC<PodResourceSummaryProps> = ({ pod }) => <ResourceSummary resource={pod} showNodeSelector nodeSelector="spec.nodeSelector" showTolerations />;
+export const PodResourceSummary: React.FC<PodResourceSummaryProps> = ({ pod }) => <ResourceSummary resource={pod} showOwner={false} showNodeSelector nodeSelector="spec.nodeSelector" showTolerations />;
 
 const Details: React.FC<PodDetailsProps> = ({ obj: pod }) => {
   const { t } = useTranslation();

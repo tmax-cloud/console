@@ -8,7 +8,7 @@ import { ResourceSidebarSnippets, ResourceSidebarSamples } from './resource-side
 import { ExploreType } from './explore-type-sidebar';
 import { SimpleTabNav, ResourceSummary } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { NetworkPolicyModel } from '../../models';
+import { NetworkPolicyModel, ResourceQuotaModel, RoleModel } from '../../models';
 import { modelFor } from '@console/internal/module/k8s';
 
 const sidebarScrollTop = () => {
@@ -50,6 +50,7 @@ const ResourceSamples = ({ samples, kindObj, downloadSampleYaml, loadSampleYaml 
 
 const ResourceSnippets = ({ snippets, kindObj, insertSnippetYaml }) => <ResourceSidebarSnippets snippets={snippets} kindObj={kindObj} insertSnippetYaml={insertSnippetYaml} />;
 
+const kindsRemoveSampleTab = [NetworkPolicyModel.kind, ResourceQuotaModel.kind, RoleModel.kind];
 export const ResourceSidebar = props => {
   const { t } = useTranslation();
   const { definition, showName, showID, showDescription, showPodSelector, title, isFloat, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, isCreateMode, showDetails, toggleSidebar, showSidebar, samples, snippets, resource, showSchema, noTabsOnlyDetails, customPathId } = props;
@@ -60,7 +61,7 @@ export const ResourceSidebar = props => {
   const { label } = kindObj;
 
   // MEMO : 네트워크정책 리소스 YAML 사이드바에선 샘플 없애달라는 요청으로 해당 구문 수정함
-  const showSamples = kindObj.kind !== NetworkPolicyModel.kind && !_.isEmpty(samples) && isCreateMode;
+  const showSamples = !kindsRemoveSampleTab.includes(kindObj.kind) && !_.isEmpty(samples) && isCreateMode;
   const showSnippets = !_.isEmpty(snippets);
 
   let tabs = [];

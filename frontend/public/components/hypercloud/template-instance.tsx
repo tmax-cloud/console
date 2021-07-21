@@ -73,9 +73,6 @@ const TemplateInstanceDetails: React.FC<TemplateInstanceDetailsProps> = ({ obj: 
               </DetailsItem>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_104')}</dt>
               <dd>{objectSummary}</dd>
-              <DetailsItem label={t('COMMON:MSG_LNB_MENU_17')} obj={templateInstance} path="metadata.labels.serviceInstanceRef">
-                {!!templateInstance.metadata.labels?.serviceInstanceRef ? <ResourceLink kind="ServiceInstance" name={templateInstance.metadata.labels?.serviceInstanceRef} title={templateInstance.metadata.labels?.serviceInstanceRef} /> : 'None'}
-              </DetailsItem>
             </dl>
           </div>
         </div>
@@ -97,8 +94,7 @@ const tableColumnClasses = [
   '', // NAMESPACE
   classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), // STATUS
   classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // RESOURCE SUMMARY
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // SERVICE INSTANCE
-  classNames('pf-m-hidden', 'pf-m-visible-on-xl'), // CREATED
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
   Kebab.columnClass, // MENU ACTIONS
 ];
 
@@ -117,11 +113,10 @@ const TemplateInstanceTableRow = ({ obj, index, key, style }) => {
         <Status status={phase} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>{objectSummary}</TableData>
-      <TableData className={tableColumnClasses[4]}>{!!obj.metadata.labels?.serviceInstanceRef ? <ResourceLink kind="ServiceInstance" name={obj.metadata.labels?.serviceInstanceRef} namespace={obj.metadata.namespace} title={obj.metadata.labels?.serviceInstanceRef} /> : 'None'}</TableData>
-      <TableData className={tableColumnClasses[5]}>
+      <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[6]}>
+      <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={templateInstanceMenuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>
@@ -153,20 +148,14 @@ const TemplateInstanceTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_LNB_MENU_17'),
-      sortField: 'metadata.labels.serviceInstanceRef',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
-    },
-    {
       title: '',
-      props: { className: tableColumnClasses[6] },
+      props: { className: tableColumnClasses[5] },
     },
   ];
 };

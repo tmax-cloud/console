@@ -6,16 +6,18 @@ import { global_warning_color_100 as warningColor } from '@patternfly/react-toke
 
 type ModalCallback = () => void;
 
-export const removeTaskModal = (taskName: string, onRemove: ModalCallback) => {
+export const removeTaskModal = (t, taskName: string, onRemove: ModalCallback) => {
   confirmModal({
-    title: 'Remove Task',
+    title: t('SINGLE:MSG_PIPELINES_CREATEFORM_37'),
     message: (
       <ModalContent
         icon={<ExclamationTriangleIcon size="lg" color={warningColor.value} />}
-        title={`Remove ${taskName}?`}
-        message={`Are you sure you want to remove ${taskName}?`}
+        title={t('SINGLE:MSG_PIPELINES_CREATEFORM_38', { 0: taskName })}
+        message={t('SINGLE:MSG_PIPELINES_CREATEFORM_39', { 0: taskName })}
       />
     ),
+    cancelText: t('SINGLE:MSG_PIPELINES_CREATEFORM_40'),
+    btnText: t('SINGLE:MSG_PIPELINES_CREATEFORM_41'),
     buttonText: 'Remove',
     executeFn: () => {
       onRemove();

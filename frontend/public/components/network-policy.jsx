@@ -78,8 +78,8 @@ const IngressHeader = () => {
   return (
     <div className="row co-m-table-grid__head">
       <div className="col-xs-4">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_3')}</div>
-      <div className="col-xs-5">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_4')}</div>
-      <div className="col-xs-3">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_5')}</div>
+      <div className="col-xs-5">From</div>
+      <div className="col-xs-3">To Ports</div>
     </div>
   );
 };
@@ -88,8 +88,8 @@ const EgressHeader = () => {
   return (
     <div className="row co-m-table-grid__head">
       <div className="col-xs-4">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_3')}</div>
-      <div className="col-xs-5">{t('COMMON:MSG_DETAILS_TABDETAILS_INGRESSRULES_TABLEHEADER_8')}</div>
-      <div className="col-xs-3">{t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_5')}</div>
+      <div className="col-xs-5">To</div>
+      <div className="col-xs-3">To Ports</div>
     </div>
   );
 };
@@ -280,7 +280,7 @@ const Details_ = ({ obj: np, flags }) => {
           {egress_explanation.split('~~')[1]}          
         </p>
         {_.isEmpty(np.spec?.egress) ? (          
-          t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_INGRESSRULES_2', { 0: namespace})
+          t('SINGLE:MSG_NETWORKPOLICIES_NETWORKPOLICYDETAILS_TABDETAILS_EGRESSRULES_2', { 0: namespace})
         ) : (
           <div className="co-m-table-grid co-m-table-grid--bordered">
             <EgressHeader />

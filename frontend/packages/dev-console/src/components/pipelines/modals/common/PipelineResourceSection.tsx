@@ -4,6 +4,7 @@ import { FieldArray, useField } from 'formik';
 import FormSection from '../../../import/section/FormSection';
 import PipelineResourceDropdownField from './PipelineResourceDropdownField';
 import { PipelineModalFormResource } from './types';
+import { useTranslation } from 'react-i18next';
 
 type ResourceSectionType = {
   formikIndex: number;
@@ -38,6 +39,7 @@ const PipelineResourceSection: React.FC = () => {
 
   const sections: ResourceSection = resources.reduce(reduceToSections, {} as ResourceSection);
   const types = Object.keys(sections);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -49,17 +51,19 @@ const PipelineResourceSection: React.FC = () => {
             const section = sections[type];
 
             return (
-              <FormSection title={`${capitalize(type)} Resources`} fullWidth>
+              <FormSection title={(type === 'git') ? t('SINGLE:MSG_CI/CD_STARTPIPELINEPOPUP_GITRESOURCES_1'): (type === 'image') ? t('SINGLE:MSG_CI/CD_STARTPIPELINEPOPUP_IMAGERESOURCES_1') : `${capitalize(type)} Resources`} fullWidth>
                 {section.map((sectionData: ResourceSectionType) => {
                   const { formikIndex, resource } = sectionData;
 
                   return (
+                    <div>
                     <PipelineResourceDropdownField
                       key={resource.name}
                       name={`resources.${formikIndex}`}
                       filterType={type}
-                      label={resource.name}
+                      label={t('SINGLE:MSG_CI/CD_MAILFORM_REQUEST_4')}
                     />
+                    {resource.name}</div>
                   );
                 })}
               </FormSection>
