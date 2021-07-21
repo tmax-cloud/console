@@ -2,12 +2,13 @@ export const TOPOLOGY_DISPLAY_FILTERS_LOCAL_STORAGE_KEY = `bridge/topology-displ
 export const DEFAULT_TOPOLOGY_FILTERS = {
   display: {
     podCount: false,
-    eventSources: true,
-    virtualMachines: true,
+    eventSources: false,
+    virtualMachines: false,
     showLabels: true,
     knativeServices: true,
     appGrouping: true,
-    operatorGrouping: true,
-    helmGrouping: true,
+    workloadGrouping: true,
+    operatorGrouping: false,
+    helmGrouping: false,
   },
 };
