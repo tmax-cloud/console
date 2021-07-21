@@ -468,7 +468,11 @@ class BaseLayout implements Layout {
     const links: LayoutLink[] = [];
     edges.forEach(e => {
       const source = this.getLayoutNode(this.nodes, e.getSource());
-      const target = this.getLayoutNode(this.nodes, e.getTarget());
+      let target = this.getLayoutNode(this.nodes, e.getTarget());
+      // MEMO : Deployment Group과 Service Node 연결된 edge의 경우 target을 못찾아서 Group의 0번째 노드를 target으로 설정하도록 임시처리 (수정필요함)
+      if (!target) {
+        target = this.getLayoutNode(this.nodes, e.getTarget().getNodes()[0]);
+      }
       if (source && target) {
         this.initializeEdgeBendpoints(e);
         links.push(this.createLayoutLink(e, source, target));
