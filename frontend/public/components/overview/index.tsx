@@ -5,18 +5,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
-import {
-  DEFAULT_GROUP_NAME,
-  METRICS_POLL_INTERVAL,
-  OverviewItem,
-  getResourceList,
-  createDaemonSetItems,
-  createDeploymentConfigItems,
-  createDeploymentItems,
-  createPodItems,
-  createStatefulSetItems,
-  formatNamespacedRouteForResource,
-} from '@console/shared';
+import { DEFAULT_GROUP_NAME, METRICS_POLL_INTERVAL, OverviewItem, getResourceList, createDaemonSetItems, createDeploymentConfigItems, createDeploymentItems, createPodItems, createStatefulSetItems, formatNamespacedRouteForResource } from '@console/shared';
 import { OverviewCRD } from '@console/plugin-sdk';
 import { ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 import { coFetchJSON } from '../../co-fetch';
@@ -54,12 +43,7 @@ const asOverviewGroups = (keyedItems: { [name: string]: OverviewItem[] }): Overv
 
 const getApplication = (item: OverviewItem): string => {
   const labels = _.get(item, 'obj.metadata.labels') || {};
-  return (
-    labels['app.kubernetes.io/part-of'] ||
-    labels['app.kubernetes.io/name'] ||
-    labels.app ||
-    DEFAULT_GROUP_NAME
-  );
+  return labels['app.kubernetes.io/part-of'] || labels['app.kubernetes.io/name'] || labels.app || DEFAULT_GROUP_NAME;
 };
 
 const groupByApplication = (items: OverviewItem[]): OverviewGroup[] => {
@@ -68,15 +52,12 @@ const groupByApplication = (items: OverviewItem[]): OverviewGroup[] => {
 };
 
 const groupByResource = (items: OverviewItem[]): OverviewGroup[] => {
-  const byResource = _.groupBy(items, (item) => _.startCase(item.obj.kind));
+  const byResource = _.groupBy(items, item => _.startCase(item.obj.kind));
   return asOverviewGroups(byResource);
 };
 
 const groupByLabel = (items: OverviewItem[], label: string): OverviewGroup[] => {
-  const byLabel = _.groupBy(
-    items,
-    (item): string => _.get(item, ['obj', 'metadata', 'labels', label]) || DEFAULT_GROUP_NAME,
-  );
+  const byLabel = _.groupBy(items, (item): string => _.get(item, ['obj', 'metadata', 'labels', label]) || DEFAULT_GROUP_NAME);
   return asOverviewGroups(byLabel);
 };
 
@@ -97,8 +78,7 @@ const headingStateToProps = ({ UI }): OverviewHeadingPropsFromState => {
 };
 
 const headingDispatchToProps = (dispatch): OverviewHeadingPropsFromDispatch => ({
-  selectGroup: (group: OverviewSpecialGroup) =>
-    dispatch(UIActions.updateOverviewSelectedGroup(group)),
+  selectGroup: (group: OverviewSpecialGroup) => dispatch(UIActions.updateOverviewSelectedGroup(group)),
   changeFilter: (value: string) => dispatch(UIActions.updateOverviewFilterValue(value)),
 });
 
@@ -120,16 +100,7 @@ class OverviewHeading_ extends React.Component<OverviewHeadingProps> {
     return (
       <div className="co-m-pane__filter-bar">
         <div className="co-m-pane__filter-bar-group">
-          <Dropdown
-            className="btn-group"
-            menuClassName="dropdown-menu--text-wrap"
-            items={dropdownItems}
-            onChange={selectGroup}
-            titlePrefix="Group by"
-            title={dropdownItems[selectedGroup] || 'Select Category'}
-            spacerBefore={new Set([firstLabel])}
-            headerBefore={{ [firstLabel]: 'Label' }}
-          />
+          <Dropdown className="btn-group" menuClassName="dropdown-menu--text-wrap" items={dropdownItems} onChange={selectGroup} titlePrefix="Group by" title={dropdownItems[selectedGroup] || 'Select Category'} spacerBefore={new Set([firstLabel])} headerBefore={{ [firstLabel]: 'Label' }} />
         </div>
         <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
           <TextFilter defaultValue={filterValue} label="by name" onChange={changeFilter} />
@@ -139,14 +110,7 @@ class OverviewHeading_ extends React.Component<OverviewHeadingProps> {
   }
 }
 
-const OverviewHeading = connect<
-  OverviewHeadingPropsFromState,
-  OverviewHeadingPropsFromDispatch,
-  OverviewHeadingOwnProps
->(
-  headingStateToProps,
-  headingDispatchToProps,
-)(OverviewHeading_);
+const OverviewHeading = connect<OverviewHeadingPropsFromState, OverviewHeadingPropsFromDispatch, OverviewHeadingOwnProps>(headingStateToProps, headingDispatchToProps)(OverviewHeading_);
 
 const mainContentStateToProps = ({ UI }): OverviewMainContentPropsFromState => {
   const { filterValue, metrics, selectedGroup, labels } = UI.get('overview').toJS();
@@ -157,14 +121,10 @@ const mainContentDispatchToProps = (dispatch): OverviewMainContentPropsFromDispa
   updateLabels: (labels: string[]) => dispatch(UIActions.updateOverviewLabels(labels)),
   updateMetrics: (metrics: OverviewMetrics) => dispatch(UIActions.updateOverviewMetrics(metrics)),
   updateResources: (items: OverviewItem[]) => dispatch(UIActions.updateOverviewResources(items)),
-  updateSelectedGroup: (group: OverviewSpecialGroup) =>
-    dispatch(UIActions.updateOverviewSelectedGroup(group)),
+  updateSelectedGroup: (group: OverviewSpecialGroup) => dispatch(UIActions.updateOverviewSelectedGroup(group)),
 });
 
-class OverviewMainContent_ extends React.Component<
-  OverviewMainContentProps,
-  OverviewMainContentState
-> {
+class OverviewMainContent_ extends React.Component<OverviewMainContentProps, OverviewMainContentState> {
   private metricsInterval: any = null;
 
   readonly state: OverviewMainContentState = {
@@ -183,23 +143,7 @@ class OverviewMainContent_ extends React.Component<
   }
 
   componentDidUpdate(prevProps: OverviewMainContentProps): void {
-    const {
-      builds,
-      buildConfigs,
-      daemonSets,
-      deployments,
-      deploymentConfigs,
-      filterValue,
-      loaded,
-      namespace,
-      pods,
-      replicaSets,
-      replicationControllers,
-      routes,
-      services,
-      statefulSets,
-      selectedGroup,
-    } = this.props;
+    const { builds, buildConfigs, daemonSets, deployments, deploymentConfigs, filterValue, loaded, namespace, pods, replicaSets, replicationControllers, routes, services, statefulSets, selectedGroup } = this.props;
 
     if (
       namespace !== prevProps.namespace ||
@@ -247,9 +191,7 @@ class OverviewMainContent_ extends React.Component<
     };
 
     const promises = _.map(queries, (query, name) => {
-      const url = `${PROMETHEUS_TENANCY_BASE_PATH}/api/v1/query?namespace=${namespace}&query=${encodeURIComponent(
-        query,
-      )}`;
+      const url = `${PROMETHEUS_TENANCY_BASE_PATH}/api/v1/query?namespace=${namespace}&query=${encodeURIComponent(query)}`;
       return coFetchJSON(url).then(({ data: { result } }) => {
         const byPod: MetricValuesByPod = result.reduce((acc, { metric, value }) => {
           acc[metric.pod] = Number(value[1]);
@@ -260,14 +202,11 @@ class OverviewMainContent_ extends React.Component<
     });
 
     Promise.all(promises)
-      .then((data) => {
-        const metrics = data.reduce(
-          (acc: OverviewMetrics, metric): OverviewMetrics => _.assign(acc, metric),
-          {},
-        );
+      .then(data => {
+        const metrics = data.reduce((acc: OverviewMetrics, metric): OverviewMetrics => _.assign(acc, metric), {});
         this.props.updateMetrics(metrics);
       })
-      .catch((res) => {
+      .catch(res => {
         const status = _.get(res, 'response.status');
         // eslint-disable-next-line no-console
         console.error('Could not fetch metrics, status:', status);
@@ -289,11 +228,8 @@ class OverviewMainContent_ extends React.Component<
     }
 
     const filterString = filterValue.toLowerCase();
-    return _.filter(items, (item) => {
-      return (
-        fuzzy(filterString, _.get(item, 'obj.metadata.name', '')) ||
-        _.get(item, 'obj.metadata.uid') === _.get(selectedItem, 'obj.metadata.uid')
-      );
+    return _.filter(items, item => {
+      return fuzzy(filterString, _.get(item, 'obj.metadata.name', '')) || _.get(item, 'obj.metadata.uid') === _.get(selectedItem, 'obj.metadata.uid');
     });
   }
 
@@ -307,14 +243,7 @@ class OverviewMainContent_ extends React.Component<
   }
 
   createOverviewData(): OverviewMainContentState {
-    const {
-      loaded,
-      mock,
-      selectedGroup,
-      updateLabels,
-      updateSelectedGroup,
-      updateResources,
-    } = this.props;
+    const { loaded, mock, selectedGroup, updateLabels, updateSelectedGroup, updateResources } = this.props;
     if (!loaded) {
       return;
     }
@@ -324,30 +253,15 @@ class OverviewMainContent_ extends React.Component<
     }
 
     const items = [
-      ...createDaemonSetItems(
-        this.props.daemonSets.data,
-        this.props,
-        this.props?.clusterServiceVersions?.data,
-        this.props.utils,
-      ),
-      ...createDeploymentItems(
-        this.props.deployments.data,
-        this.props,
-        this.props?.clusterServiceVersions?.data,
-        this.props.utils,
-      ),
-      ...createDeploymentConfigItems(
-        this.props.deploymentConfigs.data,
-        this.props,
-        this.props?.clusterServiceVersions?.data,
-        this.props.utils,
-      ),
-      ...createStatefulSetItems(
-        this.props.statefulSets.data,
-        this.props,
-        this.props?.clusterServiceVersions?.data,
-        this.props.utils,
-      ),
+      ...createDaemonSetItems(this.props.daemonSets.data, this.props, this.props?.clusterServiceVersions?.data, this.props.utils),
+      ...createDeploymentItems(this.props.deployments.data, this.props, this.props?.clusterServiceVersions?.data, this.props.utils),
+      // ...createDeploymentConfigItems(
+      //   this.props.deploymentConfigs.data,
+      //   this.props,
+      //   this.props?.clusterServiceVersions?.data,
+      //   this.props.utils,
+      // ),
+      ...createStatefulSetItems(this.props.statefulSets.data, this.props, this.props?.clusterServiceVersions?.data, this.props.utils),
       ...createPodItems(this.props),
     ];
 
@@ -355,11 +269,7 @@ class OverviewMainContent_ extends React.Component<
 
     const filteredItems = this.filterItems(items);
     const labels = this.getLabels(filteredItems);
-    if (
-      selectedGroup !== OverviewSpecialGroup.GROUP_BY_APPLICATION &&
-      selectedGroup !== OverviewSpecialGroup.GROUP_BY_RESOURCE &&
-      !_.includes(labels, selectedGroup)
-    ) {
+    if (selectedGroup !== OverviewSpecialGroup.GROUP_BY_APPLICATION && selectedGroup !== OverviewSpecialGroup.GROUP_BY_RESOURCE && !_.includes(labels, selectedGroup)) {
       updateSelectedGroup(OverviewSpecialGroup.GROUP_BY_APPLICATION);
     }
 
@@ -380,8 +290,7 @@ class OverviewMainContent_ extends React.Component<
         title="No Workloads Found."
         detail={
           <div>
-            <Link to={formatNamespacedRouteForResource('import', namespace)}>Import YAML</Link> or{' '}
-            <Link to={`/add/ns/${namespace}`}>add other content</Link> to your project.
+            <Link to={formatNamespacedRouteForResource('import', namespace)}>Import YAML</Link> or <Link to={`/add/ns/${namespace}`}>add other content</Link> to your project.
           </div>
         }
       />
@@ -400,19 +309,8 @@ class OverviewMainContent_ extends React.Component<
     return (
       <div className="co-m-pane">
         {hasItems && <OverviewHeading project={_.get(project, 'data')} />}
-        <div
-          className={
-            (!hasItems && emptyBodyClass) || 'co-m-pane__body co-m-pane__body--no-top-margin'
-          }
-        >
-          <StatusBox
-            skeleton={skeletonOverview}
-            data={filteredItems}
-            label="Resources"
-            loaded={loaded}
-            loadError={loadError}
-            EmptyMsg={EmptyMsg || OverviewEmptyState}
-          >
+        <div className={(!hasItems && emptyBodyClass) || 'co-m-pane__body co-m-pane__body--no-top-margin'}>
+          <StatusBox skeleton={skeletonOverview} data={filteredItems} label="Resources" loaded={loaded} loadError={loadError} EmptyMsg={EmptyMsg || OverviewEmptyState}>
             <ProjectOverview groups={groupedItems} />
           </StatusBox>
         </div>
@@ -421,21 +319,12 @@ class OverviewMainContent_ extends React.Component<
   }
 }
 
-const OverviewMainContent = connect<
-  OverviewMainContentPropsFromState,
-  OverviewMainContentPropsFromDispatch,
-  OverviewMainContentOwnProps
->(
-  mainContentStateToProps,
-  mainContentDispatchToProps,
-)(OverviewMainContent_);
+const OverviewMainContent = connect<OverviewMainContentPropsFromState, OverviewMainContentPropsFromDispatch, OverviewMainContentOwnProps>(mainContentStateToProps, mainContentDispatchToProps)(OverviewMainContent_);
 
 const overviewStateToProps = ({ UI, FLAGS }): OverviewPropsFromState => {
   const selectedUID = UI.getIn(['overview', 'selectedUID']);
   const resources = UI.getIn(['overview', 'resources']);
-  const resourceList = plugins.registry
-    .getOverviewCRDs()
-    .filter((resource) => FLAGS.get(resource.properties.required));
+  const resourceList = plugins.registry.getOverviewCRDs().filter(resource => FLAGS.get(resource.properties.required));
   const selectedItem = !!resources && resources.get(selectedUID);
   return { selectedItem, resourceList };
 };
@@ -446,26 +335,14 @@ const overviewDispatchToProps = (dispatch): OverviewPropsFromDispatch => {
   };
 };
 
-const Overview_: React.SFC<OverviewProps> = ({
-  mock,
-  match,
-  selectedItem,
-  resourceList,
-  title,
-  dismissDetails,
-  EmptyMsg,
-  emptyBodyClass,
-}) => {
+const Overview_: React.SFC<OverviewProps> = ({ mock, match, selectedItem, resourceList, title, dismissDetails, EmptyMsg, emptyBodyClass }) => {
   const namespace = _.get(match, 'params.name');
   const sidebarOpen = !_.isEmpty(selectedItem);
   const className = classnames('overview', { 'overview--sidebar-shown': sidebarOpen });
   const ref = React.useRef();
   const [height, setHeight] = React.useState(500);
-  const calcHeight = (node) => {
-    setHeight(
-      document.getElementsByClassName('pf-c-page')[0].getBoundingClientRect().bottom -
-        node.current.getBoundingClientRect().top,
-    );
+  const calcHeight = node => {
+    setHeight(document.getElementsByClassName('pf-c-page')[0].getBoundingClientRect().bottom - node.current.getBoundingClientRect().top);
   };
   React.useLayoutEffect(() => {
     calcHeight(ref);
@@ -488,15 +365,7 @@ const Overview_: React.SFC<OverviewProps> = ({
       <div className="overview__main-column" ref={ref} style={{ height }}>
         <div className="overview__main-column-section">
           <Firehose resources={mock ? [] : resources}>
-            <OverviewMainContent
-              mock={mock}
-              namespace={namespace}
-              selectedItem={selectedItem}
-              title={title}
-              utils={utils}
-              EmptyMsg={EmptyMsg}
-              emptyBodyClass={emptyBodyClass}
-            />
+            <OverviewMainContent mock={mock} namespace={namespace} selectedItem={selectedItem} title={title} utils={utils} EmptyMsg={EmptyMsg} emptyBodyClass={emptyBodyClass} />
           </Firehose>
         </div>
       </div>
@@ -514,14 +383,7 @@ const Overview_: React.SFC<OverviewProps> = ({
   );
 };
 
-export const Overview = connect<
-  OverviewPropsFromState,
-  OverviewPropsFromDispatch,
-  OverviewOwnProps
->(
-  overviewStateToProps,
-  overviewDispatchToProps,
-)(Overview_);
+export const Overview = connect<OverviewPropsFromState, OverviewPropsFromDispatch, OverviewOwnProps>(overviewStateToProps, overviewDispatchToProps)(Overview_);
 
 export type PodOverviewItem = {
   obj: PodKind;
@@ -556,9 +418,7 @@ type OverviewHeadingOwnProps = {
   project: K8sResourceKind;
 };
 
-type OverviewHeadingProps = OverviewHeadingPropsFromState &
-  OverviewHeadingPropsFromDispatch &
-  OverviewHeadingOwnProps;
+type OverviewHeadingProps = OverviewHeadingPropsFromState & OverviewHeadingPropsFromDispatch & OverviewHeadingOwnProps;
 
 type OverviewMainContentPropsFromState = {
   filterValue: string;
@@ -599,9 +459,7 @@ type OverviewMainContentOwnProps = {
   emptyBodyClass?: string;
 };
 
-export type OverviewMainContentProps = OverviewMainContentPropsFromState &
-  OverviewMainContentPropsFromDispatch &
-  OverviewMainContentOwnProps;
+export type OverviewMainContentProps = OverviewMainContentPropsFromState & OverviewMainContentPropsFromDispatch & OverviewMainContentOwnProps;
 
 type OverviewMainContentState = {
   readonly items: any[];
