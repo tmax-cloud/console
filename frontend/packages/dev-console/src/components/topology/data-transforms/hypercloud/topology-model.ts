@@ -31,7 +31,7 @@ const getHyperCloudGroupModel = (d: Group, model: TopologyDataModel, filters: To
         group: true,
         type: d.type,
         visible: true,
-        collapsed: filters && !filters.display.workloadGrouping,
+        collapsed: filters && d.type !== TYPE_DEPLOYMENT_GROUP && !filters.display.workloadGrouping,
         data,
         children: d.nodes,
         label: d.name,
