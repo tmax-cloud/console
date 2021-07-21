@@ -54,6 +54,7 @@ const ReplicaSetGroup: React.FC<ReplicaSetGroupProps> = ({ element, selected, on
   const displayFilters = useDisplayFilters();
   const showLabels = displayFilters.showLabels || hover;
 
+  const { x, y, width, height } = element.getBounds();
   // cast to number and coerce
   const padding = maxPadding(element.getStyle<NodeStyle>().padding);
   const hullPadding = (point: PointWithSize | PointTuple) => (point[2] || 0) + padding;
@@ -117,7 +118,8 @@ const ReplicaSetGroup: React.FC<ReplicaSetGroupProps> = ({ element, selected, on
             'is-filtered': filtered,
           })}
         >
-          <path ref={dndDropRef} className="odc-replicaset-group__bg" filter={createSvgIdUrl(hover || labelHover || dragging || contextMenuOpen || dropTarget ? NODE_SHADOW_FILTER_ID_HOVER : NODE_SHADOW_FILTER_ID)} d={pathRef.current} />
+          <rect ref={dndDropRef} className="odc-replicaset-group__bg" filter={createSvgIdUrl(hover || labelHover || dragging || contextMenuOpen || dropTarget ? NODE_SHADOW_FILTER_ID_HOVER : NODE_SHADOW_FILTER_ID)} x={x} y={y} width={width} height={height} rx="5" ry="5" />
+          {/* <path ref={dndDropRef} className="odc-replicaset-group__bg" filter={createSvgIdUrl(hover || labelHover || dragging || contextMenuOpen || dropTarget ? NODE_SHADOW_FILTER_ID_HOVER : NODE_SHADOW_FILTER_ID)} d={pathRef.current} /> */}
         </g>
       </Layer>
       {showLabels && (

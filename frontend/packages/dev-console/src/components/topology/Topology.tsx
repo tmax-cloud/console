@@ -21,7 +21,7 @@ import { GraphData, TopologyDataModel, TopologyDataObject, SHOW_GROUPING_HINT_EV
 import TopologyResourcePanel from './TopologyResourcePanel';
 import TopologyApplicationPanel from './application-panel/TopologyApplicationPanel';
 import ConnectedTopologyEdgePanel from './TopologyEdgePanel';
-import { topologyModelFromDataModel } from './data-transforms/topology-model';
+import { topologyModelFromDataModel } from './data-transforms/hypercloud/topology-model';
 import { layoutFactory, COLA_LAYOUT, COLA_FORCE_LAYOUT } from './layouts/layoutFactory';
 import { TYPE_APPLICATION_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP, ComponentFactory } from './components';
 import TopologyFilterBar from './filters/TopologyFilterBar';
