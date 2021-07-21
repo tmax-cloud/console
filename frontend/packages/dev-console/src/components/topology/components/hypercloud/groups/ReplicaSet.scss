@@ -9,10 +9,10 @@
   }
 
   &__bg {
-    fill: var(--pf-global--Color--light-100);
+    fill: #bebee2;
     fill-opacity: 0.6;
-    stroke: var(--pf-global--Color--light-100);
-    stroke-width: 5px;
+    stroke: #5b3798;
+    stroke-width: 1px;
   }
 
   &.is-filtered &__bg {
