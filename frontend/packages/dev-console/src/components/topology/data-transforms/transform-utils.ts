@@ -34,6 +34,7 @@ export const createInstanceForResource = (resources: HyperCloudTopologyDataResou
     replicaSets: transformResourceData.createReplicaSetItems,
     pods: transformResourceData.createPodItems,
     services: transformResourceData.createServiceItems,
+    persistentVolumeClaims: transformResourceData.createPersistentVolumeClaimItems,
   };
 };
 
