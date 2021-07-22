@@ -54,7 +54,7 @@ const graphModel: Model = {
   graph: {
     id: 'g1',
     type: 'graph',
-    layout: COLA_LAYOUT,
+    layout: COLA_FORCE_LAYOUT,
     layers: [BOTTOM_LAYER, GROUPS_LAYER, 'groups2', DEFAULT_LAYER, TOP_LAYER],
   },
 };
@@ -229,7 +229,7 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
         ]}
       >
         <div className="odc-topology__layout-group">
-          <Tooltip content="Layout 1">
+          <Tooltip content="Layout Type 1">
             <ToolbarItem className="odc-topology__layout-button" tabIndex={-1}>
               <Button
                 className={classNames('pf-topology-control-bar__button', {
@@ -238,11 +238,11 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
                 variant="tertiary"
                 onClick={() => setLayout(COLA_LAYOUT)}
               >
-                <TopologyIcon className="odc-topology__layout-button__icon" />1<span className="sr-only">Layout 1</span>
+                <TopologyIcon className="odc-topology__layout-button__icon" />1<span className="sr-only">Layout Type 1</span>
               </Button>
             </ToolbarItem>
           </Tooltip>
-          <Tooltip content="Layout 2">
+          <Tooltip content="Layout Type 2">
             <ToolbarItem className="odc-topology__layout-button" tabIndex={-1}>
               <Button
                 className={classNames('pf-topology-control-bar__button', {
@@ -251,7 +251,7 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
                 variant="tertiary"
                 onClick={() => setLayout(COLA_FORCE_LAYOUT)}
               >
-                <TopologyIcon className="odc-topology__layout-button__icon" />2<span className="sr-only">Layout 2</span>
+                <TopologyIcon className="odc-topology__layout-button__icon" />2<span className="sr-only">Layout Type 2</span>
               </Button>
             </ToolbarItem>
           </Tooltip>

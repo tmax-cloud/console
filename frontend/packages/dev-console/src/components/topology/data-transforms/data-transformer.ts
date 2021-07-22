@@ -8,7 +8,8 @@ import { TopologyDataModel, TopologyDataResources, Edge } from '../hypercloud/hy
 import { TYPE_TRAFFIC_CONNECTOR, TYPE_WORKLOAD, TYPE_CONNECTS_TO } from '../components/const';
 import { HelmReleaseResourcesMap } from '../../helm/helm-types';
 import { allowedResources } from '../topology-utils';
-import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyGroupItems, getTopologyNodeItem, mergeGroup, getComponentType } from './transform-utils';
+import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem, getComponentType } from './transform-utils';
+import { getChildrenResources } from './hypercloud/transform-utils';
 // import { getOperatorTopologyDataModel } from '../operators/operators-data-transformer';
 // import { getHelmTopologyDataModel } from '../helm/helm-data-transformer';
 
@@ -44,7 +45,7 @@ const deploymentToService = (childServices, typedDataModel, item) => {
     const { obj: service } = serviceItem;
     const serviceUid = _.get(service, ['metadata', 'uid']);
     typedDataModel.topology[serviceUid] = createTopologyNodeData(serviceItem, getComponentType(service.kind), getImageForIconClass(`icon-hc-service`));
-    typedDataModel.graph.nodes.push(getTopologyNodeItem(service, TYPE_WORKLOAD));
+    typedDataModel.graph.nodes.push(getTopologyNodeItem(service, getComponentType(service.kind)));
     typedDataModel.graph.edges.push({ id: `${serviceUid}_${deployment.metadata.name}`, type: TYPE_CONNECTS_TO, source: serviceUid, target: deployment.metadata.uid });
   });
 };
@@ -66,9 +67,12 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
       transformResourceData[key](resources[key].data).forEach(item => {
         const { obj } = item;
         const uid = _.get(obj, ['metadata', 'uid']);
-        typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
+
         switch (key) {
           case 'deployments': {
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
+            const children = getChildrenResources(obj, resources);
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind), children));
             if (!!item.services) {
               const childServices = transformResourceData['services'](item.services);
               deploymentToService(childServices, typedDataModel, item);
@@ -78,23 +82,34 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
           case 'replicaSets':
           case 'daemonSets':
           case 'statefulSets': {
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
+
             // MEMO : children이 없을 땐 workload 타입의 단일노드로 표시해주게 처리함.
             const children = item.pods?.map(p => p.metadata?.uid) || [];
             if (children.length === 0) {
               typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, TYPE_WORKLOAD));
+            } else {
+              typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind), children));
             }
             break;
           }
           case 'pods': {
-            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, TYPE_WORKLOAD));
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
+            break;
+          }
+          case 'persistentVolumeClaims': {
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
             break;
           }
           default: {
-            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
-            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, TYPE_WORKLOAD));
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
           }
         }
-        mergeGroup(getTopologyGroupItems(obj), typedDataModel.graph.groups);
+        // MEMO : Group 개념의 컴포넌트가 현재 없어서 주석처리함
+        // mergeGroup(getTopologyGroupItems(obj), typedDataModel.graph.groups);
       });
       addToTopologyDataModel(typedDataModel, baseDataModel);
     }

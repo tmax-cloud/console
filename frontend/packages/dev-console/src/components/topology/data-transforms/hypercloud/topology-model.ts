@@ -1,7 +1,7 @@
 import { EdgeModel, Model, NodeModel, createAggregateEdges } from '@console/topology';
 import { ALL_APPLICATIONS_KEY } from '@console/shared/src';
 import { TopologyFilters } from '../../filters';
-import { TopologyDataModel, TopologyDataObject, Node, Group } from '../../topology-types';
+import { TopologyDataModel, TopologyDataObject, Node } from '../../topology-types';
 import { TYPE_APPLICATION_GROUP, TYPE_AGGREGATE_EDGE, NODE_WIDTH, NODE_HEIGHT, NODE_PADDING, GROUP_WIDTH, GROUP_HEIGHT, GROUP_PADDING, TYPE_STATEFULSET_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_REPLICASET_GROUP, TYPE_DAEMONSET_GROUP } from '../../components/const';
 import { dataObjectFromModel } from '../transform-utils';
 
@@ -16,14 +16,15 @@ const getApplicationGroupForNode = (node: Node, groups: NodeModel[]): NodeModel 
   return getApplicationGroupForNode(group, groups);
 };
 
-const getHyperCloudGroupModel = (d: Group, model: TopologyDataModel, filters: TopologyFilters): NodeModel => {
+const getHyperCloudNodeModel = (d: Node, model: TopologyDataModel, filters: TopologyFilters): NodeModel => {
   switch (d.type) {
     case TYPE_DEPLOYMENT_GROUP:
     case TYPE_REPLICASET_GROUP:
     case TYPE_DAEMONSET_GROUP:
     case TYPE_STATEFULSET_GROUP: {
       const data: TopologyDataObject = model.topology[d.id] || dataObjectFromModel(d);
-      data.groupResources = d.nodes.map(id => model.topology[id]);
+      data.groupResources = d.children?.map(id => model.topology[id]);
+
       return {
         width: GROUP_WIDTH,
         height: GROUP_HEIGHT,
@@ -33,7 +34,7 @@ const getHyperCloudGroupModel = (d: Group, model: TopologyDataModel, filters: To
         visible: true,
         collapsed: filters && d.type !== TYPE_DEPLOYMENT_GROUP && !filters.display.workloadGrouping,
         data,
-        children: d.nodes,
+        children: d.children,
         label: d.name,
         style: {
           padding: GROUP_PADDING,
@@ -48,10 +49,6 @@ const getHyperCloudGroupModel = (d: Group, model: TopologyDataModel, filters: To
 
 export const topologyModelFromDataModel = (dataModel: TopologyDataModel, application: string = ALL_APPLICATIONS_KEY, filters?: TopologyFilters): Model => {
   const groupNodes: NodeModel[] = dataModel.graph.groups.map(d => {
-    let node = getHyperCloudGroupModel(d, dataModel, filters);
-    if (node) {
-      return node;
-    }
 
     const data: TopologyDataObject = dataModel.topology[d.id] || dataObjectFromModel(d);
     data.groupResources = d.nodes.map(id => dataModel.topology[id]);
@@ -74,6 +71,12 @@ export const topologyModelFromDataModel = (dataModel: TopologyDataModel, applica
   });
 
   const nodes: NodeModel[] = dataModel.graph.nodes.map(d => {
+    
+    let node = getHyperCloudNodeModel(d, dataModel, filters);
+    if (node) {
+      return node;
+    }
+
     return {
       width: NODE_WIDTH,
       height: NODE_HEIGHT,

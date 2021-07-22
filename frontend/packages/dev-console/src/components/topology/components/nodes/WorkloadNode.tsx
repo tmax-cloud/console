@@ -8,7 +8,8 @@ import { Tooltip, TooltipPosition } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { routeDecoratorIcon } from '../../../import/render-utils';
 import { Decorator } from './Decorator';
-import PodSet, { podSetInnerRadius } from './PodSet';
+// import PodSet, { podSetInnerRadius } from './PodSet';
+import { podSetInnerRadius } from './PodSet';
 import BuildDecorator from './build-decorators/BuildDecorator';
 import { BaseNode } from './BaseNode';
 import { getCheURL, getEditURL, getServiceBindingStatus } from '../../topology-utils';
@@ -99,7 +100,7 @@ const ObservedWorkloadNode: React.FC<WorkloadNodeProps> = ({ element, urlAnchorR
             <BuildDecorator key="build" workloadData={workloadData} x={cx - radius + decoratorRadius * 0.7} y={cy + radius - decoratorRadius * 0.7} radius={decoratorRadius} />,
           ]}
         >
-          <PodSet size={size} x={cx} y={cy} data={donutStatus} showPodCount={filters.podCount} />
+          {/* <PodSet size={size} x={cx} y={cy} data={donutStatus} showPodCount={filters.podCount} /> */}
         </BaseNode>
       </Tooltip>
     </g>
