@@ -60,24 +60,14 @@ export const ExternalLink: React.FC<ExternalLinkProps> = ({ href, text, addition
     {text}
   </a>
 );
-export const HyperCloudManualLink: React.FC<HyperCloudManualLinkProps> = ({ href, text, additionalClassName = '', dataTestID }) => (
-  <a className={classNames('co-external-link', additionalClassName)} href={href} target="_blank" rel="noopener noreferrer" data-test-id={dataTestID}>
-    {text}
-  </a>
-);
+
+export const HyperCloudManualLink = "https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/user_guide/console_connect_sub/execution-environment.html";
 
 // Open links in a new window and set noopener/noreferrer.
 export const LinkifyExternal: React.FC<{ children: React.ReactNode }> = ({ children }) => <Linkify properties={{ target: '_blank', rel: 'noopener noreferrer' }}>{children}</Linkify>;
 LinkifyExternal.displayName = 'LinkifyExternal';
 
 type ExternalLinkProps = {
-  href: string;
-  text: React.ReactNode;
-  additionalClassName?: string;
-  dataTestID?: string;
-};
-
-type HyperCloudManualLinkProps = {
   href: string;
   text: React.ReactNode;
   additionalClassName?: string;

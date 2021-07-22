@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router';
-
+import { HyperCloudManualLink } from '../../utils'
 const WelcomePage = ({ history }) => {
   localStorage.setItem('flag/first-time-login', true);
   return (
@@ -15,8 +15,8 @@ const WelcomePage = ({ history }) => {
         <p className="welcome__description">시작하기 위해 애플리케이션 용 네임스페이스를 만드세요.</p>
         <p className="welcome__description">
           자세한 내용은{' '}
-          <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20200918-000001/4.1-ko/welcome/overview_sub/index.html" target="_blank">
-            HyperCloud 매뉴얼<i className="fas fa-external-link-alt"></i>
+          <a className='co-external-link' href={HyperCloudManualLink} target="_blank" rel="noopener noreferrer">
+            HyperCloud 매뉴얼
           </a>
           을 참조하세요.
         </p>
