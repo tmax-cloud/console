@@ -16,7 +16,26 @@
 }
 
 .co-status-deleted-icon,
-.co-status-awaiting-icon {
+.co-status-awaiting-icon,
+.co-status-chartfetched-icon,
+.co-status-chartfetchfailed-icon,
+.co-status-installing-icon,
+.co-status-upgrading-icon,
+.co-status-deployed-icon,
+.co-status-deployedfailed-icon,
+.co-status-testing-icon,
+.co-status-testfailed-icon,
+.co-status-tested-icon,
+.co-status-rollingback-icon,
+.co-status-rolledback-icon,
+.co-status-rollbackfailed-icon,
+.co-status-applied-icon,
+.co-status-destroyed-icon,
+.co-status-ready-icon,
+.co-status-unready-icon,
+.co-status-planned-icon,
+.co-status-creating-icon,
+.co-status-error-icon {
   width: 1.2em;
   height: 1.2em;
   padding: 0;
