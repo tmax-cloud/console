@@ -17,6 +17,7 @@ export interface TopologyDataResources {
   statefulSets?: FirehoseResult;
   pipelines?: FirehoseResult;
   pipelineRuns?: FirehoseResult;
+  persistentVolumeClaims?: FirehoseResult;
 }
 
 export interface Node {

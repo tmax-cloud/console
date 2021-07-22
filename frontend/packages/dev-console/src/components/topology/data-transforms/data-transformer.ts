@@ -85,7 +85,12 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             }
             break;
           }
+          case 'pods': {
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, TYPE_WORKLOAD));
+            break;
+          }
           default: {
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, TYPE_WORKLOAD));
           }
         }
