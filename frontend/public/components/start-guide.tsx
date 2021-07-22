@@ -18,7 +18,8 @@ export const HypercloudGettingStarted = () => (
   <>
     <p>HyperCloud helps you quickly develop, host, and scale applications. To get started, you'll need a namespace. Currently, you can't create or access any namespaces. You'll need to contact a cluster administrator for help.</p>
     <p>
-      To learn more, visit the HyperCloud <HyperCloudManualLink href={'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20200918-000001/4.1-ko/welcome/overview_sub/index.html'} text="manual" />
+      To learn more, visit the HyperCloud   
+      <a className='co-external-link' href={HyperCloudManualLink} target="_blank" rel="noopener noreferrer" />
     </p>
   </>
 );
