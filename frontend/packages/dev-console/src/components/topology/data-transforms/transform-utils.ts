@@ -8,7 +8,7 @@ import { TYPE_EVENT_SOURCE, TYPE_KNATIVE_REVISION } from '@console/knative-plugi
 import { edgesFromAnnotations } from '../../../utils/application-utils';
 import { TopologyDataModel, TopologyDataObject, Node, Edge, Group, TopologyOverviewItem, ConnectsToData } from '../topology-types';
 import { TopologyDataResources as HyperCloudTopologyDataResource } from '../hypercloud/hypercloud-topology-types';
-import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP } from '../components/const';
+import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE } from '../components/const';
 
 export const dataObjectFromModel = (node: Node | Group): TopologyDataObject => {
   return {
@@ -204,7 +204,7 @@ export const getComponentType = kind => {
     case PodModel.kind:
       return TYPE_WORKLOAD;
     case ServiceModel.kind:
-      return TYPE_WORKLOAD;
+      return TYPE_SERVICE;
     case PersistentVolumeClaimModel.kind:
       return TYPE_WORKLOAD;
     default:
