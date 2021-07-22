@@ -112,7 +112,6 @@ export const removeModalData = (curState, setState, e) => {
     let targetIndex = Number(target.id.split('item-remove-')[1]);
     return targetIndex !== idx;
   });
-  console.log('remove', curState);
   setState([...removedState]);
 };
 

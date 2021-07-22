@@ -76,10 +76,6 @@ class MastheadToolbarContents_ extends React.Component {
     return formatNamespacedRouteForResource('import', this.props.activeNamespace);
   }
 
-  _getManualPath() {
-    return 'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20200918-000001/4.1-ko/welcome/overview_sub/index.html';
-  }
-
   _updateUser() {
     const { flags, user } = this.props;
     if (!flags[FLAGS.OPENSHIFT]) {
@@ -501,10 +497,9 @@ class MastheadToolbarContents_ extends React.Component {
             </ToolbarItem>
 
             <CloudShellMastheadButton />
-            {/* TODO: 매뉴얼 5.0버전으로 바꿔야함 */}
             <ToolbarItem className="co-masthead-icon__button">
               <Tooltip content="Manual" position={TooltipPosition.bottom}>
-                <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20200918-000001/4.1-ko/welcome/overview_sub/index.html" target="_blank">
+                <a href={HyperCloudManualLink} target="_blank">
                 <QuestionCircleIcon className="co-masthead-icon" color="white"/></a>
               </Tooltip>
             </ToolbarItem>

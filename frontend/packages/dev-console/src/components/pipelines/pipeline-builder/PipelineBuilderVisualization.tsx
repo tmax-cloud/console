@@ -54,7 +54,7 @@ const PipelineBuilderVisualization: React.FC<PipelineBuilderVisualizationProps> 
     <PipelineTopologyGraph
       // TODO: fix this; the graph layout isn't properly laying out nodes
       key={nodes.map((n) => n.id).join('-')}
-      id="pipeline-builder"
+      id="pipeline-builder_graph"
       fluid
       nodes={nodes}
       edges={getEdgesFromNodes(nodes)}
