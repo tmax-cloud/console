@@ -50,7 +50,6 @@ export default class Visualization extends Stateful implements Controller {
 
     // create elements
     if (model.graph) {
-      model.graph.id = model.graph.id + '_graph';
       this.graph = this.createElement<Graph>(ModelKind.graph, model.graph);
     }
     const validIds: string[] = [];
