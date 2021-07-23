@@ -5,32 +5,14 @@ import { K8sResourceKind, PodKind } from '@console/internal/module/k8s';
 import { PodStatus } from '@console/internal/components/pod';
 import { PodControllerOverviewItem } from '../types';
 import { DaemonSetModel } from '@console/internal/models';
-import {podPhase} from '@console/internal/module/k8s/pods';
+import { podPhase } from '@console/internal/module/k8s/pods';
 import { Status } from '@console/shared';
 
-export const resourceStatus = (
-  obj: K8sResourceKind,
-  current?: PodControllerOverviewItem,
-  isRollingOut?: boolean,
-) => {
+export const resourceStatus = (obj: K8sResourceKind, current?: PodControllerOverviewItem, isRollingOut?: boolean) => {
   if (obj.kind === DaemonSetModel.kind) {
-    return (
-      <OverviewItemReadiness
-        desired={obj?.status?.desiredNumberScheduled}
-        ready={obj?.status?.currentNumberScheduled}
-        resource={obj}
-      />
-    );
+    return <OverviewItemReadiness desired={obj?.status?.desiredNumberScheduled} ready={obj?.status?.currentNumberScheduled} resource={obj} />;
   }
-  return isRollingOut ? (
-    <span className="text-muted">Rollout in progress...</span>
-  ) : (
-    <OverviewItemReadiness
-      desired={obj.spec.replicas}
-      ready={obj.status.replicas}
-      resource={current ? current.obj : obj}
-    />
-  );
+  return isRollingOut ? <span className="text-muted">Rollout in progress...</span> : <OverviewItemReadiness desired={obj.spec.replicas} ready={obj.status.replicas} resource={current ? current.obj : obj} />;
 };
 
 export const podStatus = (obj: PodKind) => {
@@ -38,9 +20,8 @@ export const podStatus = (obj: PodKind) => {
 };
 
 export const podStatusIcon = (obj: PodKind) => {
-  return <Status status={podPhase(obj)} iconOnly noTooltip/>;
+  return <Status status={podPhase(obj)} iconOnly noTooltip />;
 };
-
 
 type OverviewItemReadinessProps = {
   desired: number;
@@ -48,11 +29,7 @@ type OverviewItemReadinessProps = {
   ready: number;
 };
 
-export const OverviewItemReadiness: React.FC<OverviewItemReadinessProps> = ({
-  desired = 0,
-  ready = 0,
-  resource,
-}) => {
+export const OverviewItemReadiness: React.FC<OverviewItemReadinessProps> = ({ desired = 0, ready = 0, resource }) => {
   const href = `${resourceObjPath(resource, resource.kind)}/pods`;
   return (
     <Link to={href}>
