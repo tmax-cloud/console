@@ -5,6 +5,8 @@ import { K8sResourceKind, PodKind } from '@console/internal/module/k8s';
 import { PodStatus } from '@console/internal/components/pod';
 import { PodControllerOverviewItem } from '../types';
 import { DaemonSetModel } from '@console/internal/models';
+import {podPhase} from '@console/internal/module/k8s/pods';
+import { Status } from '@console/shared';
 
 export const resourceStatus = (
   obj: K8sResourceKind,
@@ -34,6 +36,11 @@ export const resourceStatus = (
 export const podStatus = (obj: PodKind) => {
   return <PodStatus pod={obj} />;
 };
+
+export const podStatusIcon = (obj: PodKind) => {
+  return <Status status={podPhase(obj)} iconOnly noTooltip/>;
+};
+
 
 type OverviewItemReadinessProps = {
   desired: number;
