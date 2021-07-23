@@ -1,7 +1,8 @@
 import * as _ from 'lodash-es';
 import { K8sResourceKind } from '@console/internal/module/k8s';
-import { DeploymentModel } from '@console/internal/models';
 import { TopologyDataResources } from '../../hypercloud/hypercloud-topology-types';
+import { PodModel, PersistentVolumeClaimModel, ServiceModel, ReplicaSetModel, StatefulSetModel, DaemonSetModel, DeploymentModel } from '@console/internal/models';
+import { TYPE_WORKLOAD, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE } from '../../components/const';
 
 export const getChildrenResources = (obj: K8sResourceKind, resources: TopologyDataResources) => {
   const parentUid = _.get(obj, 'metadata.uid');
@@ -38,5 +39,26 @@ export const getChildrenResources = (obj: K8sResourceKind, resources: TopologyDa
       const childrenIdArray = childPods.map(item => item.metadata?.uid);
       return childrenIdArray;
     }
+  }
+};
+
+export const getComponentType = kind => {
+  switch (kind) {
+    case DeploymentModel.kind:
+      return TYPE_DEPLOYMENT_GROUP;
+    case StatefulSetModel.kind:
+      return TYPE_STATEFULSET_GROUP;
+    case DaemonSetModel.kind:
+      return TYPE_DAEMONSET_GROUP;
+    case ReplicaSetModel.kind:
+      return TYPE_REPLICASET_GROUP;
+    case PodModel.kind:
+      return TYPE_WORKLOAD;
+    case ServiceModel.kind:
+      return TYPE_SERVICE;
+    case PersistentVolumeClaimModel.kind:
+      return TYPE_WORKLOAD;
+    default:
+      return TYPE_WORKLOAD;
   }
 };
