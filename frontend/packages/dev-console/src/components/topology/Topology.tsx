@@ -33,6 +33,10 @@ import { TYPE_OPERATOR_BACKED_SERVICE } from './operators/components/const';
 import { OperatorsComponentFactory } from './operators/components/operatorsComponentFactory';
 import { getServiceBindingStatus } from './topology-utils';
 import TopologyHelmWorkloadPanel from './helm/TopologyHelmWorkloadPanel';
+import { referenceForModel, modelFor } from '@console/internal/module/k8s';
+import { resourceOverviewPages } from '@console/internal/components/overview/resource-overview-pages';
+import { AsyncComponent } from '@console/internal/components/utils';
+import { ModifyApplication } from '../../actions/modify-application';
 
 interface StateProps {
   filters: TopologyFilters;
@@ -264,7 +268,7 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
     const selectedEntity = selectedIds[0] ? visRef.current.getElementById(selectedIds[0]) : null;
     if (isNode(selectedEntity)) {
       // TODO : 각 그룹 타입별로 별도의 Panel 만들기
-      if ([TYPE_APPLICATION_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP].includes(selectedEntity.getType())) {
+      if ([TYPE_APPLICATION_GROUP].includes(selectedEntity.getType())) {
         return (
           <TopologyApplicationPanel
             graphData={graphData}
@@ -275,6 +279,12 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
             }}
           />
         );
+      } else if ([TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP].includes(selectedEntity.getType())) {
+        const item = selectedEntity.getData().resources;
+        const kindObj = modelFor(item.obj.kind);
+        const ref = referenceForModel(kindObj);
+        const loader = resourceOverviewPages.get(ref);
+        return <AsyncComponent loader={loader} kindObj={kindObj} item={item} customActions={[ModifyApplication]} />;
       }
       // TODO: Use Plugins
       if (selectedEntity.getType() === TYPE_HELM_RELEASE) {

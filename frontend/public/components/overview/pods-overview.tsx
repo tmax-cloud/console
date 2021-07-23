@@ -11,10 +11,7 @@ const MAX_PODS: number = 3;
 const MAX_ERROR_PODS: number = 10;
 
 const podUpdateTime = (pod: PodKind) => {
-  const allStatuses = [
-    ..._.get(pod, 'status.containerStatuses', []),
-    ..._.get(pod, 'status.initContainerStatuses', []),
-  ];
+  const allStatuses = [..._.get(pod, 'status.containerStatuses', []), ..._.get(pod, 'status.initContainerStatuses', [])];
   const updateTimes = _.reduce(
     allStatuses,
     (times, nextStatus) => {
@@ -38,18 +35,7 @@ const podUpdateTime = (pod: PodKind) => {
   return _.head(_.reverse(updateTimes.sort()));
 };
 
-const errorPhases = [
-  'ContainerCannotRun',
-  'CrashLoopBackOff',
-  'Critical',
-  'Error',
-  'Failed',
-  'InstallCheckFailed',
-  'Cancelled',
-  'Expired',
-  'Not Ready',
-  'Terminating',
-];
+const errorPhases = ['ContainerCannotRun', 'CrashLoopBackOff', 'Critical', 'Error', 'Failed', 'InstallCheckFailed', 'Cancelled', 'Expired', 'Not Ready', 'Terminating'];
 
 const isPodError = (pod: PodKind) => _.includes(errorPhases, podPhase(pod));
 
@@ -105,7 +91,7 @@ type PodOverviewItemProps = {
 
 const PodsOverviewList: React.SFC<PodOverviewListProps> = ({ pods }) => (
   <ul className="list-group">
-    {_.map(pods, (pod) => (
+    {_.map(pods, pod => (
       <PodOverviewItem key={pod.metadata.uid} pod={pod} />
     ))}
   </ul>
@@ -113,21 +99,16 @@ const PodsOverviewList: React.SFC<PodOverviewListProps> = ({ pods }) => (
 
 PodsOverviewList.displayName = 'PodsOverviewList';
 
-export const PodsOverview: React.SFC<PodsOverviewProps> = ({
-  pods,
-  obj,
-  allPodsLink,
-  emptyText,
-}) => {
+export const PodsOverview: React.SFC<PodsOverviewProps> = ({ pods, obj, allPodsLink, emptyText }) => {
   const {
     metadata: { name, namespace },
   } = obj;
 
-  const errorPodCount = _.size(_.filter(pods, (pod) => isPodError(pod)));
+  const errorPodCount = _.size(_.filter(pods, pod => isPodError(pod)));
   const podsShown = Math.max(Math.min(errorPodCount, MAX_ERROR_PODS), MAX_PODS);
   const linkTo = allPodsLink || `${resourcePath(referenceFor(obj), name, namespace)}/pods`;
   const emptyMessage = emptyText || 'No Pods found for this resource.';
-  pods.sort(podCompare);
+  pods?.sort(podCompare);
 
   return (
     <>
@@ -138,11 +119,7 @@ export const PodsOverview: React.SFC<PodsOverviewProps> = ({
           </Link>
         )}
       </SidebarSectionHeading>
-      {_.isEmpty(pods) ? (
-        <span className="text-muted">{emptyMessage}</span>
-      ) : (
-        <PodsOverviewList pods={_.take(pods, podsShown)} />
-      )}
+      {_.isEmpty(pods) ? <span className="text-muted">{emptyMessage}</span> : <PodsOverviewList pods={_.take(pods, podsShown)} />}
     </>
   );
 };

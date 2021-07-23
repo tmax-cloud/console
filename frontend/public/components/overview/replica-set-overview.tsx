@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import { ServiceModel } from '../../models';
-import { menuActions } from '../service';
+import { ReplicaSetModel } from '../../models';
+import { replicaSetMenuActions } from '../replicaset';
 import { KebabAction, ResourceSummary } from '../utils';
 
 import { OverviewDetailsResourcesTab } from './resource-overview-page';
 import { ResourceOverviewDetails } from './resource-overview-details';
 import { OverviewItem } from '@console/shared';
 
-const ServiceOverviewDetails: React.SFC<ServiceOverviewDetailsProps> = ({ item: { obj: ss, pods: pods, current, previous, isRollingOut } }) => (
+const ReplicaSetOverviewDetails: React.SFC<ReplicaSetOverviewDetailsProps> = ({ item: { obj: ss, pods: pods, current, previous, isRollingOut } }) => (
   <div className="overview__sidebar-pane-body resource-overview__body">
     <ResourceSummary resource={ss} showPodSelector showNodeSelector showTolerations />
   </div>
@@ -17,7 +17,7 @@ const ServiceOverviewDetails: React.SFC<ServiceOverviewDetailsProps> = ({ item: 
 const tabs = [
   {
     name: 'Details',
-    component: ServiceOverviewDetails,
+    component: ReplicaSetOverviewDetails,
   },
   {
     name: 'Resources',
@@ -25,13 +25,13 @@ const tabs = [
   },
 ];
 
-export const ServiceOverview: React.SFC<ServiceOverviewProps> = ({ item, customActions }) => <ResourceOverviewDetails item={item} kindObj={ServiceModel} menuActions={customActions ? [...customActions, ...menuActions] : menuActions} tabs={tabs} />;
+export const ReplicaSetOverview: React.SFC<ReplicaSetOverviewProps> = ({ item, customActions }) => <ResourceOverviewDetails item={item} kindObj={ReplicaSetModel} menuActions={customActions ? [...customActions, ...replicaSetMenuActions] : replicaSetMenuActions} tabs={tabs} />;
 
-type ServiceOverviewDetailsProps = {
+type ReplicaSetOverviewDetailsProps = {
   item: OverviewItem;
 };
 
-type ServiceOverviewProps = {
+type ReplicaSetOverviewProps = {
   item: OverviewItem;
   customActions?: KebabAction[];
 };
