@@ -1,7 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { useState } from 'react';
 import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
@@ -141,20 +140,23 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
+      <DetailsItem label={t('COMMON:MSG_COMMON_TABLEHEADER_2')} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:MSG_MAIN_TABLEHEADER_101')}`} obj={ds} path="status.url">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_101')} obj={ds} path="status.url">
         {ds.status?.url}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:predictor')}`} obj={ds} path="spec.predictor">
-        {framework && <div>{`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_126')}`}: {framework}</div>}
-        <div>{`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_128')}`}: {ds.spec.predictor[framework]?.runtimeVersion}</div>
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_125')} obj={ds} path="spec.predictor">
+        {framework && <div>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_126')} : {framework}</div>}
+        {ds.spec.predictor[framework]?.runtimeVersion && <div>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_128')} : {ds.spec.predictor[framework]?.runtimeVersion}</div>}
+        {ds.spec.predictor.minReplicas && <div>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_129')} : {ds.spec.predictor.minReplicas}</div>}
+        {ds.spec.predictor.maxReplicas && <div>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_130')} : {ds.spec.predictor.maxReplicas}</div>}
+        {ds.spec.predictor.containerConcurrency && <div>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_131')} : {ds.spec.predictor.containerConcurrency}</div>}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:transformer')}`} obj={ds} path="spec.transformer">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_132')} obj={ds} path="spec.transformer">
         {(ds.spec.transformer) ? (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_133')) : (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_134'))}
       </DetailsItem>
-      <DetailsItem label={`${t('COMMON:explainer')}`} obj={ds} path="spec.explainer">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_135')} obj={ds} path="spec.explainer">
         {(ds.spec.explainer) ? (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_133')) : (t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_134'))}
       </DetailsItem>
     </dl>
@@ -182,26 +184,24 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
   let modelList;
   let modelCM;
 
-  const [modelsList, setModelsList] = useState([]);
+  const [modelsList, setModelsList] = React.useState([]);
 
   if (multiModelToggle) {
-
-
-    k8sList(ConfigMapModel, { ns: namespace }).then(list => {
-      list.forEach((value, index) => {
-        let configMapName = "modelconfig-" + isvc.metadata.name + "-0";
-        if (value.metadata.name.indexOf(configMapName) != -1) {
-          modelCM = list[index];
-          let modelsjsonkey = "models.json"
-          modelsjson = modelCM.data[modelsjsonkey];
-          modelList = JSON.parse(modelsjson);
-          setModelsList(modelList);
-        }
+    React.useEffect(() => {
+      k8sList(ConfigMapModel, { ns: namespace }).then(list => {
+        list.forEach((value, index) => {
+          let configMapName = "modelconfig-" + isvc.metadata.name + "-0";
+          if (value.metadata.name.indexOf(configMapName) != -1) {
+            modelCM = list[index];
+            let modelsjsonkey = "models.json"
+            modelsjson = modelCM.data[modelsjsonkey];
+            modelList = JSON.parse(modelsjson);
+            setModelsList(modelList);
+          }
+        });
       });
-    });
+    }, []);
   }
-  let models = [];  
-  models = modelsList;
 
   return (
     <>
@@ -216,11 +216,11 @@ const InferenceServiceDetails: React.FC<InferenceServiceDetailsProps> = ({ obj: 
           </div>
         </div>
       </div>
-      {multiModelToggle === true &&
+      {multiModelToggle &&
         <div className="co-m-pane__body">
-          <SectionHeading text="Models" />
+          <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_136')} />
           <div>
-            <ModelTable key="initContainerTable" models={models} />
+            <ModelTable key="initContainerTable" models={modelsList} />
           </div>        
         </div>
       }
@@ -258,6 +258,7 @@ export const InferenceServicesDetailsPage: React.FC<InferenceServicesDetailsPage
       {...props}
       kind={kind}
       menuActions={menuActions}
+      getResourceStatus={InferenceServicePhase}
       pages={[details(detailsPage(InferenceServiceDetails)), editResource()]}
     />
   );
@@ -293,7 +294,7 @@ type ModelKind = {
   };
 };
 
-export const ModelRow: React.FC<ModelRowProps> = ({ model }) => {
+const ModelRow: React.FC<ModelRowProps> = ({ model }) => {
   return (
     <div className="row">
       <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">
@@ -312,15 +313,16 @@ export const ModelRow: React.FC<ModelRowProps> = ({ model }) => {
   );
 };
 
-export const ModelTable: React.FC<ModelTableProps> = ({ models }) => {  
+const ModelTable: React.FC<ModelTableProps> = ({ models }) => {
+  const { t } = useTranslation();
   return (
     <>      
       <div className="co-m-table-grid co-m-table-grid--bordered">
         <div className="row co-m-table-grid__head">
-          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{'Model Name'}</div>
-          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{'Storage Uri'}</div>
-          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{'Framework'}</div>
-          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{'Memory'}</div>          
+          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_137')}</div>
+          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_138')}</div>
+          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_139')}</div>
+          <div className="col-lg-2 col-md-3 col-sm-4 col-xs-5">{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_140')}</div>          
         </div>
         <div className="co-m-table-grid__body">
           {models.map((model: any, i: number) => (

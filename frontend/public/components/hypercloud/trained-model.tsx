@@ -190,6 +190,7 @@ export const TrainedModelsDetailsPage: React.FC<TrainedModelsDetailsPageProps> =
       {...props}
       kind={kind}
       menuActions={menuActions}
+      getResourceStatus={TrainedModelPhase}
       pages={[details(detailsPage(TrainedModelDetails)), editResource()]}
     />
   );
