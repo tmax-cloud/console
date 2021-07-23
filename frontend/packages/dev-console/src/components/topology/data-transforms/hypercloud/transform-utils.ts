@@ -1,8 +1,32 @@
 import * as _ from 'lodash-es';
 import { K8sResourceKind } from '@console/internal/module/k8s';
-import { TopologyDataResources } from '../../hypercloud/hypercloud-topology-types';
+import { TopologyDataResources, TopologyOverviewItem, TopologyDataObject } from '../../hypercloud/hypercloud-topology-types';
 import { PodModel, PersistentVolumeClaimModel, ServiceModel, ReplicaSetModel, StatefulSetModel, DaemonSetModel, DeploymentModel } from '@console/internal/models';
-import { TYPE_WORKLOAD, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE } from '../../components/const';
+import { TYPE_WORKLOAD, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE, TYPE_POD } from '../../components/const';
+
+export const createTopologyPodNodeData = (item: TopologyOverviewItem, type: string, defaultIcon: string, operatorBackedService: boolean = false): TopologyDataObject => {
+  const { obj: pod } = item;
+  const uid = _.get(pod, 'metadata.uid');
+  const labels = _.get(pod, 'metadata.labels', {});
+
+  return {
+    id: uid,
+    name: _.get(pod, 'metadata.name') || labels['app.kubernetes.io/instance'],
+    type,
+    resources: { ...item, isOperatorBackedService: operatorBackedService },
+    pods: item.pods,
+    operatorBackedService,
+    data: {
+      url: '',
+      kind: PodModel.kind,
+      editURL: '',
+      vcsURI: '',
+      image: defaultIcon,
+      obj: pod,
+      status: item.status,
+    },
+  };
+};
 
 export const getChildrenResources = (obj: K8sResourceKind, resources: TopologyDataResources) => {
   const parentUid = _.get(obj, 'metadata.uid');
@@ -25,7 +49,7 @@ export const getChildrenResources = (obj: K8sResourceKind, resources: TopologyDa
             return volume.persistentVolumeClaim.claimName;
           }
         }) || [];
-        
+
       const childPVCs = !!pvcNames ? resources['persistentVolumeClaims'].data?.filter(pvc => pvcNames.includes(pvc.metadata.name)) || [] : [];
       const childPods = resources['pods'].data.filter(filterChildrenByParentId);
       const childReplicaSets = resources['replicaSets'].data?.filter(filterChildrenByParentId);
@@ -51,7 +75,7 @@ export const getComponentType = kind => {
     case ReplicaSetModel.kind:
       return TYPE_REPLICASET_GROUP;
     case PodModel.kind:
-      return TYPE_WORKLOAD;
+      return TYPE_POD;
     case ServiceModel.kind:
       return TYPE_SERVICE;
     case PersistentVolumeClaimModel.kind:

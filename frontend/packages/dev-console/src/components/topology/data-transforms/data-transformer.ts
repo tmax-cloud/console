@@ -9,7 +9,7 @@ import { TYPE_TRAFFIC_CONNECTOR, TYPE_WORKLOAD, TYPE_CONNECTS_TO } from '../comp
 import { HelmReleaseResourcesMap } from '../../helm/helm-types';
 import { allowedResources } from '../topology-utils';
 import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem } from './transform-utils';
-import { getChildrenResources, getComponentType } from './hypercloud/transform-utils';
+import { getChildrenResources, getComponentType, createTopologyPodNodeData } from './hypercloud/transform-utils';
 // import { getOperatorTopologyDataModel } from '../operators/operators-data-transformer';
 // import { getHelmTopologyDataModel } from '../helm/helm-data-transformer';
 
@@ -94,7 +94,7 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             break;
           }
           case 'pods': {
-            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
+            typedDataModel.topology[uid] = createTopologyPodNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
             break;
           }
