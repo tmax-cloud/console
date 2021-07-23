@@ -25,10 +25,8 @@ export const getChildrenResources = (obj: K8sResourceKind, resources: TopologyDa
             return volume.persistentVolumeClaim.claimName;
           }
         }) || [];
-      let childPVCs = [];
-      if (!!pvcNames) {
-        childPVCs = resources['persistentVolumeClaims'].data?.filter(pvc => pvcNames.includes(pvc.metadata.name));
-      }
+        
+      const childPVCs = !!pvcNames ? resources['persistentVolumeClaims'].data?.filter(pvc => pvcNames.includes(pvc.metadata.name)) || [] : [];
       const childPods = resources['pods'].data.filter(filterChildrenByParentId);
       const childReplicaSets = resources['replicaSets'].data?.filter(filterChildrenByParentId);
       const childrenIdArray = [...childPVCs, ...childPods, ...childReplicaSets]?.map(item => item?.metadata?.uid);
