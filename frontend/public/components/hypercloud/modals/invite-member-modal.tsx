@@ -228,8 +228,10 @@ export const InviteMemberModal = withHandlePromise((props: InviteMemberModalProp
       // MEMO : user초대일 땐 member email, group초대일 땐 group name 만 넣어서 콜하면 됨
       const memberEmail = type === 'user' ? selectedMember.email : selectedMember.name;
       const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.namespace}/clustermanagers/${props.clusterName}/member_invitation/${type}/${memberEmail}?userId=${getId()}${getUserGroup()}&remoteRole=${role}`, 'POST');
-      handlePromise(promise).then(close);
-      rerenderPage(true);
+      handlePromise(promise).then(() => {
+        close();
+        rerenderPage(true);
+      });
     }
   };
 
