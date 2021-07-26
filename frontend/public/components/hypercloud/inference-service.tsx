@@ -29,6 +29,8 @@ const InferenceServicePhase = instance => {
       if (cur.type === 'Ready') {
         if (cur.status === 'True') {
           phase = 'Ready';
+        } else if (cur.status === 'Unknown') {
+          phase = 'Unknown';
         } else {
           phase = 'Not Ready';
         }

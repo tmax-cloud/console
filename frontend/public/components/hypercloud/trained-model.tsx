@@ -51,7 +51,7 @@ const TrainedModelTableHeader = (t?: TFunction) => {
     },
     {      
       title: t('COMMON:MSG_COMMON_FILTER_16'),
-      sortField: 'phase',
+      sortFunc: 'TrainedModelPhase',
       transforms: [sortable],      
       props: { className: tableColumnClasses[2] },
     },
@@ -122,7 +122,7 @@ export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = (
         <Status status={phase} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_LNB_MENU_193')} obj={ds} path="spec.inferenceService">
-        <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />        
+        <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_100')} obj={ds} path="spec.model.framework">
         {ds.spec.model.framework}
