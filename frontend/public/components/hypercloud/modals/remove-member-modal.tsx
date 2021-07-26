@@ -13,8 +13,10 @@ export const RemoveMemberModal = withHandlePromise((props: RemoveMemberModalProp
   const submit: React.FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault(); ///cluster/cho/remove_member/group/ck1-3?userId=kubernetes-admin&userGroup=hypercloud5
     const promise = coFetchJSON(`/api/multi-hypercloud/namespaces/${props.member.Namespace}/clustermanagers/${props.member.Cluster}/remove_member/${props.member.Attribute}/${props.member.MemberId}?userId=${getId()}${getUserGroup()}`, 'POST');
-    handlePromise(promise).then(close);
-    rerenderPage(true);
+    handlePromise(promise).then(() => {
+      close();
+      rerenderPage(true);
+    });
   };
 
   const { t } = useTranslation();
