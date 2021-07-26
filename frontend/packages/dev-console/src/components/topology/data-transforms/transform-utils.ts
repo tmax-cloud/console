@@ -2,13 +2,12 @@ import * as _ from 'lodash';
 import { K8sResourceKind, referenceFor } from '@console/internal/module/k8s';
 import { TransformResourceData, isKnativeServing } from '@console/shared';
 import { ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
-import { PodModel, PersistentVolumeClaimModel, ServiceModel, ReplicaSetModel, StatefulSetModel, DaemonSetModel, DeploymentModel } from '@console/internal/models';
 import { getImageForIconClass } from '@console/internal/components/catalog/catalog-item-icon';
 import { TYPE_EVENT_SOURCE, TYPE_KNATIVE_REVISION } from '@console/knative-plugin/src/topology/const';
 import { edgesFromAnnotations } from '../../../utils/application-utils';
 import { TopologyDataModel, TopologyDataObject, Node, Edge, Group, TopologyOverviewItem, ConnectsToData } from '../topology-types';
 import { TopologyDataResources as HyperCloudTopologyDataResource } from '../hypercloud/hypercloud-topology-types';
-import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE } from '../components/const';
+import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_APPLICATION_GROUP } from '../components/const';
 
 export const dataObjectFromModel = (node: Node | Group): TopologyDataObject => {
   return {
@@ -165,32 +164,16 @@ export const getTopologyEdgeItems = (dc: K8sResourceKind, resources: K8sResource
  * create groups data for graph
  */
 export const getTopologyGroupItems = (obj: K8sResourceKind): Group => {
-  switch (obj.kind) {
-    default: {
-      return null;
-    }
+  const groupName = _.get(obj, ['metadata', 'labels', 'app.kubernetes.io/part-of']);
+  if (!groupName) {
+    return null;
   }
-};
-
-export const getComponentType = kind => {
-  switch (kind) {
-    case DeploymentModel.kind:
-      return TYPE_DEPLOYMENT_GROUP;
-    case StatefulSetModel.kind:
-      return TYPE_STATEFULSET_GROUP;
-    case DaemonSetModel.kind:
-      return TYPE_DAEMONSET_GROUP;
-    case ReplicaSetModel.kind:
-      return TYPE_REPLICASET_GROUP;
-    case PodModel.kind:
-      return TYPE_WORKLOAD;
-    case ServiceModel.kind:
-      return TYPE_SERVICE;
-    case PersistentVolumeClaimModel.kind:
-      return TYPE_WORKLOAD;
-    default:
-      return TYPE_WORKLOAD;
-  }
+  return {
+    id: `group:${groupName}`,
+    type: TYPE_APPLICATION_GROUP,
+    name: groupName,
+    nodes: [_.get(obj, ['metadata', 'uid'])],
+  };
 };
 
 export const mergeGroup = (newGroup: Group, existingGroups: Group[]): void => {

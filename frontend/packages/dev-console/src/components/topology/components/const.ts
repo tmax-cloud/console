@@ -2,6 +2,7 @@ import { STORAGE_PREFIX } from '@console/shared';
 
 export const TYPE_WORKLOAD = 'workload';
 export const TYPE_SERVICE = 'service';
+export const TYPE_POD = 'pod';
 export const TYPE_CONNECTS_TO = 'connects-to';
 export const TYPE_AGGREGATE_EDGE = 'aggregate-edge';
 export const TYPE_SERVICE_BINDING = 'service-binding';
