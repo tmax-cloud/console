@@ -87,6 +87,9 @@ export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListPr
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={ds} path="status.result">
         <Status status={ds.status.result} />
       </DetailsItem>
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TAB_11')} obj={ds} path="spec.pipelineRun">
+        <ResourceLink kind="PipelineRun" namespace={ds.metadata.namespace} name={ds.spec.pipelineRun} title={ds.spec.pipelineRun} />
+      </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_18')} obj={ds} path="status.decisionTime">
         {time}
       </DetailsItem>
