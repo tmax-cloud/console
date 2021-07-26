@@ -137,6 +137,8 @@ const sorts = {
         if (cur.type === 'Ready') {
           if (cur.status === 'True') {
             phase = 'Ready';
+          } else if (cur.status === 'Unknown') {
+            phase = 'Unknown';
           } else {
             phase = 'Not Ready';
           }
@@ -164,6 +166,21 @@ const sorts = {
       }
     });
     return (isvc?.spec?.predictor[framework]?.storageUri) ? 'N' : 'Y';
+  },
+  TrainedModelPhase: instance => {
+    let phase = '';
+    if (instance.status) {
+      instance.status.conditions.forEach(cur => {
+        if (cur.type === 'Ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else {
+            phase = 'Not Ready';
+          }
+        }
+      });
+      return phase;
+    }
   },
 };
 
