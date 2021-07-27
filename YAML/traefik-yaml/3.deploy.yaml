@@ -41,6 +41,7 @@ spec:
         - --ping=true
         - --providers.kubernetescrd
         - --providers.kubernetesingress
+        - --providers.kubernetesingress.labelselector="app=traefik"
         - --providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik
         - --providers.file
         - --providers.file.directory=/data/config

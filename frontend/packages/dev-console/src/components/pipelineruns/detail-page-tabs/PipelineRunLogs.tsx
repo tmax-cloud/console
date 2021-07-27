@@ -11,16 +11,19 @@ import { PipelineRunModel } from '../../../../../../../frontend/public/models/in
 import LogsWrapperComponent from '../logs/LogsWrapperComponent';
 import { getDownloadAllLogsCallback } from '../logs/logs-utils';
 import './PipelineRunLogs.scss';
+import { withTranslation } from 'react-i18next';
 
+/*
 interface PipelineRunLogsProps {
   obj: PipelineRun;
   activeTask?: string;
 }
+*/
 interface PipelineRunLogsState {
   activeItem: string;
   navUntouched: boolean;
 }
-class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunLogsState> {
+class PipelineRunLogs_ extends React.Component<any, PipelineRunLogsState> {
   constructor(props) {
     super(props);
     this.state = { activeItem: null, navUntouched: true };
@@ -75,7 +78,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
   };
 
   render() {
-    const { obj } = this.props;
+    const { obj, t } = this.props;
     const { activeItem } = this.state;
     const taskRunFromYaml = _.merge(_.get(obj, ['status', 'taskRuns'], {}), _.get(obj, ['status', 'runs'], {}));
     const taskRuns = this.getSortedTaskRun(taskRunFromYaml);
@@ -142,7 +145,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
             <Firehose key={activeItem} resources={resources}>
               <LogsWrapperComponent
                 taskName={_.get(taskRunFromYaml, [activeItem, 'pipelineTaskName'], '-')}
-                downloadAllLabel="Download All Task Logs"
+                downloadAllLabel={t('COMMON:MSG_DETAILS_TABLOGS_23')}
                 onDownloadAll={downloadAllCallback}
               />
             </Firehose>
@@ -161,6 +164,7 @@ class PipelineRunLogs extends React.Component<PipelineRunLogsProps, PipelineRunL
     );
   }
 }
+const PipelineRunLogs = withTranslation()(PipelineRunLogs_);
 
 type PipelineRunLogsWithActiveTaskProps = {
   obj: PipelineRun;

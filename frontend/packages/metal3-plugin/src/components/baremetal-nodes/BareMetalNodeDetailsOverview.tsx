@@ -63,7 +63,7 @@ const BareMetalNodeDetailsOverview: React.FC<BareMetalNodeDetailsOverviewProps> 
                 pluralize(_.size(node.spec.taints), 'Taint')
               )}
             </dd>
-            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')}</dt>
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_99')}</dt>
             <dd>
               {canUpdate ? (
                 <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback.bind(null, t)}>

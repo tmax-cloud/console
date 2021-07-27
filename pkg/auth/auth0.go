@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/form3tech-oss/jwt-go"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
 )
 
 const (
@@ -69,7 +71,16 @@ func getPEMCertificate(token *jwt.Token, jwksURI string) (string, error) {
 	// }
 	// res, err := c.Do(req)
 	// res, err := http.Get("https://hyperauth.org/auth/realms/tmax/protocol/openid-connect/certs")
-	res, err := http.Get(jwksURI)
+	c := http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
+				InsecureSkipVerify: true,
+			}),
+		},
+	}
+	req, _ := http.NewRequest(http.MethodGet, jwksURI, http.NoBody)
+	res, err := c.Do(req)
+	// res, err := http.Get(jwksURI)
 	if err != nil {
 		return "", err
 	}

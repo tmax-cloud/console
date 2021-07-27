@@ -15,10 +15,15 @@ export const ResourceLabelPlural = (kindObj, t?: TFunction) => {
   return t(ResourceStringKeyMap[kindObj.kind].labelPlural);
 };
 
+// MJ : Experiment 복수형 string 발행되면 대체하기
 export const ResourceStringKeyMap = {
   ClusterClaim: {
     labelPlural: 'COMMON:MSG_LNB_MENU_105',
     label: 'COMMON:MSG_LNB_MENU_182',
+  },
+  ClusterRegistration: {
+    labelPlural: 'Cluster Registrations',
+    label: 'Cluster Registration',
   },
   ClusterManager: {
     labelPlural: 'COMMON:MSG_LNB_MENU_84',
@@ -313,5 +318,33 @@ export const ResourceStringKeyMap = {
   PodSecurityPolicy: {
     labelPlural: 'COMMON:MSG_LNB_MENU_78',
     label: 'COMMON:MSG_LNB_MENU_160',
+  },
+  AWX: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_198',
+    label: 'COMMON:MSG_LNB_MENU_199',
+  },
+  TFApplyClaim: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_200',
+    label: 'COMMON:MSG_LNB_MENU_201',
+  },
+  Notebook: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_65',
+    label: 'COMMON:MSG_LNB_MENU_151',
+  },
+  Experiment: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_194',
+    label: 'COMMON:MSG_LNB_MENU_194',
+  },
+  InferenceService: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_192',
+    label: 'COMMON:MSG_LNB_MENU_193',
+  },
+  TrainedModel: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_196',
+    label: 'COMMON:MSG_LNB_MENU_196',
+  },
+  HelmRelease: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_203',
+    label: 'COMMON:MSG_LNB_MENU_204',
   },
 };

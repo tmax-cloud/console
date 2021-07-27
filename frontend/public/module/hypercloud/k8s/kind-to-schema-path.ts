@@ -22,4 +22,5 @@ export const kindToSchemaPath = new Map([
   ['PodSecurityPolicy', { directory: 'workload', file: 'PodSecurityPolicy.json' }],
   ['ReplicaSet', { directory: 'workload', file: 'ReplicaSet.json' }],
   ['StatefulSet', { directory: 'workload', file: 'StatefulSet.json' }],
+  ['ClusterRole', { directory: 'management', file: 'ClusterRole.json' }],
 ]);

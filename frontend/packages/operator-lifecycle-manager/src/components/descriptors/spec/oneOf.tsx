@@ -7,12 +7,14 @@ import { JSONSchema6 } from 'json-schema';
 export const OneOfFields: React.FC<OneOfFieldsProps> = props => {
   const { uid, formData, onChange, schema } = props;
   let items = {};
-  const defaultValue = schema.oneOf[0]?.['title'];
-  schema.oneOf.forEach(cur => {
-    if (typeof cur['type'] === 'string') {
-      items[cur['title']] = _.startCase(cur['type']);
-    } else {
-      items[cur['title']] = _.startCase(cur['type'][0]);
+  const defaultValue = typeof formData === 'undefined' ? schema.oneOf[0]?.['title'] : typeof formData === 'string' ? 'string' : schema.oneOf[1]?.['title'];
+  schema.oneOf.forEach((cur: any) => {
+    if ('title' in cur) {
+      if (typeof cur['type'] === 'string') {
+        items[cur['title']] = _.startCase(cur['type']);
+      } else {
+        items[cur['title']] = _.startCase(cur['type'][0]);
+      }
     }
     // description 추가한다고 하면 items안에 객체형식으로 해야할듯
   });

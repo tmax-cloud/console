@@ -80,7 +80,9 @@ const NamespaceClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: namesp
       <TableData className={tableColumnClasses[2]}>
         {namespaceclaims?.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{namespaceclaims.status?.reason}</div>} maxWidth="30rem" position="right">
-            <Status status={namespaceclaims?.status?.status} />
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
+              <Status status={namespaceclaims?.status?.status} />
+            </div>
           </Popover>
         ) : (
           <Status status={namespaceclaims?.status?.status} />
@@ -133,7 +135,7 @@ export const NamespaceClaimsPage: React.FC<NamespaceClaimsPageProps> = props => 
       name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
     },
   ];
-  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
+  return <ListPage kind={'NamespaceClaim'} canCreate={true} ListComponent={NamespaceClaimsList} {...props} title={t('COMMON:MSG_LNB_MENU_3')} mock={false} multiNavPages={pages} rowFilters={filters.bind(null, t)()} defaultSelectedRows={['Awaiting']} />;
 };
 NamespaceClaimsPage.displayName = 'NamespaceClaimsPage';
 const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: namespaceclaims }) => {
@@ -145,9 +147,7 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
         <div className="co-m-pane__body-group">
           <div className="row">
             <div className="col-sm-6">
-              <ResourceSummary resource={namespaceclaims} showOwner={false}></ResourceSummary>
-              <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')}</dt>
-              <dd>{namespaceclaims.metadata.annotations.owner}</dd>
+              <ResourceSummary resource={namespaceclaims} />
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
@@ -189,7 +189,7 @@ export const NamespaceClaimsDetailsPage: React.FC<NamespaceClaimsDetailsPageProp
   } else {
     menuActions = [...Kebab.getExtensionsActionsForKind(modelFor('NamespaceClaim')), ...common, Kebab.factory.ModifyStatus];
   }
-  return <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} setStatus4MenuActions={setStatus} pages={[details(NamespaceClaimsDetails), editResource()]} />;
+  return <DetailsPage {...props} kind={'NamespaceClaim'} menuActions={menuActions} setCustomState={setStatus} customStatePath="status.status" pages={[details(NamespaceClaimsDetails), editResource()]} />;
 };
 NamespaceClaimsDetailsPage.displayName = 'NamespaceClaimsDetailsPage';
 

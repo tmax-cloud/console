@@ -262,7 +262,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
         </div>
       </Section>
       <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_14')} id="serviceaccount" description={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_16')} isRequired={true}>
-        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_15')} useHookForm />
+        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_15')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} useHookForm />
       </Section>
     </>
   );

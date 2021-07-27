@@ -806,7 +806,7 @@ export const TileViewPage = withTranslation()(
               <div className="co-catalog-page__filter">
                 <div>
                   <FormControl className="co-catalog-page__input" type="text" inputRef={ref => (this.filterByKeywordInput = ref)} placeholder={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_5')} bsClass="pf-c-form-control" value={activeFilters.keyword.value} onChange={e => this.onKeywordChange(e.target.value)} aria-label="Filter by keyword..." />
-                  {catalogType === CatalogPageType.SERVICE_INSTANCE ? null : groupItems && <Dropdown className="co-catalog-page__btn-group__group-by" menuClassName="dropdown-menu--text-wrap" items={groupByTypes} onChange={e => this.onGroupChange(e)} titlePrefix="Group By" title={groupBy} />}
+                  {/* {catalogType === CatalogPageType.SERVICE_INSTANCE ? null : groupItems && <Dropdown className="co-catalog-page__btn-group__group-by" menuClassName="dropdown-menu--text-wrap" items={groupByTypes} onChange={e => this.onGroupChange(e)} titlePrefix="Group By" title={groupBy} />} */}
                 </div>
                 <div className="co-catalog-page__num-items">{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_6', { 0: activeCategory.numItems })}</div>
               </div>

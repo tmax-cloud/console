@@ -156,6 +156,16 @@ export const navFactory: NavFactory = {
     name: 'COMMON:MSG_DETAILS_TABSIGNERKEY_1',
     component,
   }),
+  repositoryTab: component => ({
+    href: 'repository',
+    name: 'COMMON:MSG_DETAILS_TABREPOSITORIES_1',
+    component: component,
+  }),
+  notaryTab: component => ({
+    href: 'notary',
+    name: 'COMMON:MSG_DETAILS_TABNOTARY_1',
+    component: component,
+  }),
 };
 
 export const NavBar = withRouter<NavBarProps>(({ pages, baseURL, basePath }) => {
@@ -291,7 +301,7 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
     return <Route path={path} exact key={p.name} render={render} />;
   });
 
-  props.setStatus4MenuActions && props.setStatus4MenuActions(props.obj.data?.status?.status);
+  props.setCustomState && props.customStatePath && props.setCustomState(_.get(props.obj.data, props.customStatePath));
 
   return (
     <div className={classNames('co-m-page__body', props.className)}>
@@ -356,9 +366,10 @@ export type HorizontalNavProps = {
   EmptyMsg?: React.ComponentType<any>;
   noStatusBox?: boolean;
   customData?: any;
-  setStatus4MenuActions?: any;
   setActiveSchema?: any;
   model?: K8sKind;
+  setCustomState?: any;
+  customStatePath?: string;
 };
 
 export type PageComponentProps<R extends K8sResourceCommon = K8sResourceKind> = {

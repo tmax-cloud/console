@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  ChartDonutThreshold,
-  ChartDonutUtilization,
-  ChartThemeColor,
-} from '@patternfly/react-charts';
+import { ChartDonutThreshold, ChartDonutUtilization, ChartThemeColor } from '@patternfly/react-charts';
 import classNames from 'classnames';
 
 import { PrometheusGraph, PrometheusGraphLink } from './prometheus-graph';
@@ -35,13 +31,9 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
   const [ref, width] = useRefWidth();
   const ready = !error && !loading;
   const status = loading ? 'Loading' : error;
-  const labels = ({ datum: { x, y } }) => (x ? `${x} ${usedLabel}` : `${y} ${remainderLabel}`);
+  const labels = ({ datum: { x, y } }) => (x ? `${x} ${usedLabel}` : `${100 - y.toFixed(1)}% ${remainderLabel}`);
   return (
-    <PrometheusGraph
-      className={classNames('graph-wrapper--title-center graph-wrapper--gauge', className)}
-      ref={ref}
-      title={title}
-    >
+    <PrometheusGraph className={classNames('graph-wrapper--title-center graph-wrapper--gauge', className)} ref={ref} title={title}>
       <PrometheusGraphLink query={query}>
         <ChartDonutThreshold
           data={thresholds}
@@ -50,58 +42,22 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
           width={width}
           y="value"
         >
-          <ChartDonutUtilization
-            labels={labels}
-            data={ready ? data : { y: 0 }}
-            invert={invert}
-            padding={0}
-            subTitle={ready ? secondaryTitle : ''}
-            themeColor={themeColor}
-            thresholds={thresholds}
-            title={status || label}
-          />
+          <ChartDonutUtilization labels={labels} data={ready ? data : { y: 0 }} invert={invert} padding={0} subTitle={ready ? secondaryTitle : ''} themeColor={themeColor} thresholds={thresholds} title={status || label} />
         </ChartDonutThreshold>
       </PrometheusGraphLink>
     </PrometheusGraph>
   );
 };
 
-export const Gauge: React.FC<GaugeProps> = ({
-  humanize = humanizePercentage,
-  invert,
-  namespace,
-  percent = 0,
-  query,
-  remainderLabel,
-  secondaryTitle,
-  thresholds,
-  title,
-  usedLabel,
-}) => {
+export const Gauge: React.FC<GaugeProps> = ({ humanize = humanizePercentage, invert, namespace, percent = 0, query, remainderLabel, secondaryTitle, thresholds, title, usedLabel }) => {
   const [response, error, loading] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
     namespace,
     query,
   });
 
-  const [data] = response
-    ? getInstantVectorStats(response, null, humanize).map(({ label, y }) => ({ x: label, y }))
-    : [{ x: humanize(percent).string, y: percent }];
-  return (
-    <GaugeChart
-      data={data}
-      error={!!error && 'No Data'}
-      invert={invert}
-      label={data.x}
-      loading={loading}
-      query={query}
-      remainderLabel={remainderLabel}
-      secondaryTitle={secondaryTitle}
-      thresholds={thresholds}
-      title={title}
-      usedLabel={usedLabel}
-    />
-  );
+  const [data] = response ? getInstantVectorStats(response, null, humanize).map(({ label, y }) => ({ x: label, y })) : [{ x: humanize(percent).string, y: percent }];
+  return <GaugeChart data={data} error={!!error && 'No Data'} invert={invert} label={data.x} loading={loading} query={query} remainderLabel={remainderLabel} secondaryTitle={secondaryTitle} thresholds={thresholds} title={title} usedLabel={usedLabel} />;
 };
 
 type GaugeChartProps = {

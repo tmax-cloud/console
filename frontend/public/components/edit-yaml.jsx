@@ -332,7 +332,8 @@ export const EditYAML_ = connect(stateToProps)(
             if (redirect) {
               let url = this.props.redirectURL;
               if (!url) {
-                const path = _.isFunction(this.props.resourceObjPath) ? this.props.resourceObjPath : resourceObjPath;
+                // const path = _.isFunction(this.props.resourceObjPath) ? this.props.resourceObjPath : resourceObjPath;
+                const path = resourceObjPath;
                 url = path(o, referenceFor(o));
               }
               history.push(url);
@@ -471,8 +472,8 @@ export const EditYAML_ = connect(stateToProps)(
                           {t('COMMON:MSG_COMMON_BUTTON_ETC_9')}
                         </Button>
                       )}
-                      {!create && !readOnly && (
-                        <Button type="submit" variant="primary" id="save-changes" onClick={() => this.save()}>
+                      {!create && (
+                        <Button type="submit" variant="primary" id="save-changes" onClick={() => this.save()} isDisabled={readOnly}>
                           {t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}
                         </Button>
                       )}

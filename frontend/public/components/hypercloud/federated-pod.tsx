@@ -56,7 +56,6 @@ const FederatedPodTableHeader = (t?: TFunction) => {
 FederatedPodTableHeader.displayName = 'FederatedPodTableHeader';
 
 const FederatedPodTableRow: RowFunction<K8sResourceKind> = ({ obj: pod, index, key, style }) => {
-  const { t } = useTranslation();
   return (
     <TableRow id={pod.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -68,9 +67,7 @@ const FederatedPodTableRow: RowFunction<K8sResourceKind> = ({ obj: pod, index, k
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <LabelList kind={kind} labels={pod.metadata.labels} />
       </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {t('MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(pod.metadata.annotations) })}
-      </TableData>
+      <TableData className={tableColumnClasses[3]}>{_.size(pod.metadata.annotations)} comments</TableData>
       <TableData className={tableColumnClasses[4]}>
         <Timestamp timestamp={pod.metadata.creationTimestamp} />
       </TableData>
@@ -101,10 +98,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ pod }) => {
   );
 };
 
-export const PodDistributionTable: React.FC<PodDistributionTableProps> = ({
-  heading,
-  pod
-}) => {
+export const PodDistributionTable: React.FC<PodDistributionTableProps> = ({ heading, pod }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -125,7 +119,7 @@ export const PodDistributionTable: React.FC<PodDistributionTableProps> = ({
       </div>
     </>
   );
-}
+};
 
 const FederatedPodDetails: React.FC<FederatedPodDetailsProps> = ({ obj: pod }) => {
   const { t } = useTranslation();
@@ -140,20 +134,17 @@ const FederatedPodDetails: React.FC<FederatedPodDetailsProps> = ({ obj: pod }) =
         </div>
       </div>
       <div className="co-m-pane__body">
-        <PodDistributionTable
-          key="distributionTable"
-          heading="Distribution"
-          pod={pod} />
+        <PodDistributionTable key="distributionTable" heading="Distribution" pod={pod} />
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 export const FederatedPods: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Pods" Header={FederatedPodTableHeader.bind(null, t)} Row={FederatedPodTableRow} virtualize />;
-}
+};
 
 export const FederatedPodsPage: React.FC<FederatedPodsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedPods} kind={kind} {...props} />;
 
@@ -161,7 +152,7 @@ export const FederatedPodsDetailsPage: React.FC<FederatedPodsDetailsPageProps> =
 
 type ClusterRowProps = {
   pod: K8sResourceKind;
-}
+};
 
 type PodDistributionTableProps = {
   pod: K8sResourceKind;

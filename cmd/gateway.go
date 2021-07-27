@@ -19,7 +19,8 @@ import (
 	v1 "console/pkg/api/v1"
 	"console/pkg/config/dynamic"
 	"console/pkg/console"
-	"console/pkg/crypto"
+
+	// "github.com/openshift/library-go/pkg/crypto"
 	"console/pkg/hypercloud"
 	pServer "console/pkg/hypercloud"
 	"console/pkg/hypercloud/provider/file"
@@ -34,7 +35,7 @@ import (
 	"net/url"
 	"os"
 
-	// "github.com/openshift/library-go/pkg/crypto"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
@@ -69,11 +70,22 @@ var serverCmd = &cobra.Command{
 		// Get Default Server
 		defaultServer = viper.Get("SERVER").(*hypercloud.HttpServer)
 
+		// file
+		if _, err := os.Stat(cfg.DynamicFile); os.IsNotExist(err) {
+			log.Infof("Not Exist Proxy Config file : %s", cfg.DynamicFile)
+			log.Infof("So create proxy config file : %s", cfg.DynamicFile)
+			f, _ := os.Create(cfg.DynamicFile)
+			err = f.Chmod(0777)
+			if err != nil {
+				log.Errorf("Error occur when change file permission %v \n", err)
+			}
+		}
 		var pvd = new(file.Provider)
 		pvd.Watch = true
 		// dir, _ := os.Getwd()
 		// pvd.Filename = dir + "/configs/dynamic-config.yaml"
-		pvd.Filename = cfg.DynamicFile
+		pvd.Filename = string(cfg.DynamicFile)
+
 		routinesPool := safe.NewPool(context.Background())
 		watcher := pServer.NewWatcher(pvd, routinesPool)
 		// watcher.AddListener(switchRouter(staticServer, staticHandler, defaultServer))
@@ -107,10 +119,9 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 				log.Error(errors.Wrapf(err, "URL Parsing failed for: %s", value.Server))
 			}
 			dhconfig := &proxy.Config{
-				TLSClientConfig: &tls.Config{
+				TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
 					InsecureSkipVerify: true,
-					CipherSuites:       crypto.DefaultCiphers(),
-				},
+				}),
 				HeaderBlacklist: []string{"X-CSRFToken"},
 				Endpoint:        backURL,
 			}
@@ -152,6 +163,7 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 				rw.Header().Set("Content-Type", "application/json")
 				err := json.NewEncoder(rw).Encode(config)
 				if err != nil {
+					log.Error("failed to encode config information")
 					http.NotFound(rw, r)
 					return
 				}

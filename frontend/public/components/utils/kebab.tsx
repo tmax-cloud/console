@@ -4,12 +4,12 @@ import * as classNames from 'classnames';
 import * as FocusTrap from 'focus-trap-react';
 import { connect } from 'react-redux';
 import { KEY_CODES, Tooltip } from '@patternfly/react-core';
-import { EllipsisVIcon, AngleRightIcon } from '@patternfly/react-icons';
+import { EllipsisVIcon, AngleRightIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
 import Popper from '@console/shared/src/components/popper/Popper';
 import { annotationsModal, configureReplicaCountModal, taintsModal, tolerationsModal, labelsModal, podSelectorModal, deleteModal, expandPVCModal } from '../modals';
 import { statusModal, scanningModal } from '../hypercloud/modals';
 import { asAccessReview, checkAccess, history, resourceObjPath, useAccessReview } from './index';
-import { AccessReviewResourceAttributes, K8sKind, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '../../module/k8s';
+import { AccessReviewResourceAttributes, K8sKind, K8sResourceKind, K8sResourceKindReference, referenceForModel, k8sUpdateApproval, k8sUpdate } from '../../module/k8s';
 import { impersonateStateToProps } from '../../reducers/ui';
 import { connectToModel } from '../../kinds';
 import * as plugins from '../../plugins';
@@ -18,6 +18,7 @@ import { TFunction } from 'i18next';
 import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 import * as hoistStatics from 'hoist-non-react-statics';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
+import { TFApplyClaimModel } from '../../models';
 
 export const kebabOptionsToMenu = (options: KebabOption[]): KebabMenuOption[] => {
   const subs: { [key: string]: KebabSubMenu } = {};
@@ -67,8 +68,13 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({ option,
   const needTranslate = option?.needTranslate ?? true;
   return (
     <button className={classes} onClick={e => !disabled && onClick(e, option)} autoFocus={autoFocus} onKeyDown={onEscape && handleEscape} data-test-action={option.label}>
-      {option.icon && <span className="oc-kebab__icon">{option.icon}</span>}
+      {option.icon && (!option.iconPosition || option.iconPosition === 'left') && <span className="oc-kebab__icon">{option.icon}</span>}
       {needTranslate ? (!!labelSplit[1] ? t(labelSplit[0], { 0: t(labelSplit[1]) }) : t(labelSplit[0])) : option.label}
+      {option.icon && option.iconPosition === 'right' && (
+        <span className="oc-kebab__icon" style={{ marginLeft: 'var(--pf-global--spacer--sm)' }}>
+          {option.icon}
+        </span>
+      )}
     </button>
   );
 };
@@ -230,6 +236,7 @@ const kebabFactory: KebabFactory = {
         kind,
         resource: obj,
         blocking: true,
+        labelKind: 'Label',
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -241,6 +248,21 @@ const kebabFactory: KebabFactory = {
         resource: obj,
         blocking: true,
       }),
+    accessReview: asAccessReview(kind, obj, 'patch'),
+  }),
+  TerraformPlan: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_73',
+    callback: () => k8sUpdateApproval(TFApplyClaimModel, obj, 'status', [{ op: 'replace', path: '/status/action', value: 'Plan' }], 'PATCH'),
+    accessReview: asAccessReview(kind, obj, 'patch'),
+  }),
+  TerraformApply: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_74',
+    callback: () => k8sUpdateApproval(TFApplyClaimModel, obj, 'status', [{ op: 'replace', path: '/status/action', value: 'Apply' }], 'PATCH'),
+    accessReview: asAccessReview(kind, obj, 'patch'),
+  }),
+  TerraformDestroy: (kind: K8sKind, obj: K8sResourceKind, resources: {}) => ({
+    label: 'COMMON:MSG_COMMON_ACTIONBUTTON_75',
+    callback: () => k8sUpdate(TFApplyClaimModel, _.defaultsDeep({ spec: { destroy: true } }, obj)),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyClaim: (kind, obj) => ({
@@ -276,6 +298,7 @@ const kebabFactory: KebabFactory = {
         kind,
         resource: obj,
         blocking: true,
+        labelKind: 'Pod',
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -288,6 +311,7 @@ const kebabFactory: KebabFactory = {
         blocking: true,
         submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
         title: t('COMMON:MSG_MAIN_ACTIONBUTTON_5'),
+        addString: t('COMMON:MSG_MAIN_POPUP_16'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -305,12 +329,16 @@ const kebabFactory: KebabFactory = {
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
   ModifyTaints: (kind, obj) => ({
-    label: 'Edit Taints',
-    callback: () =>
+    label: 'SINGLE:MSG_NODES_NODEDETAILS_4',
+    callback: t =>
       taintsModal({
         resourceKind: kind,
         resource: obj,
         modalClassName: 'modal-lg',
+        submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_3'),
+        title: t('SINGLE:MSG_NODES_NODEDETAILS_4'),
+        addMoreText: t('SINGLE:MSG_NODES_NODEDETAILS_5'),
+        label: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_113'),
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
@@ -338,13 +366,15 @@ const kebabFactory: KebabFactory = {
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
   }),
-  Connect: (kind, obj) => {
-    const { t } = useTranslation();
+  Connect: (kind, obj, resources, customData: { label: string; url: string }) => {
     return {
-      label: t('Connect'),
+      label: customData?.label || '',
+      icon: <ExternalLinkAltIcon color="var(--pf-global--Color--dark-200)" />,
+      iconPosition: 'right',
       callback: () => {
-        let url = `/api/kubeflow/${kind.id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
-        window.open(url);
+        if (customData?.url) {
+          window.open(customData.url);
+        }
       },
       accessReview: asAccessReview(kind, obj, 'patch'),
     };
@@ -366,11 +396,11 @@ export const getExtensionsKebabActionsForKind = (kind: K8sKind) => {
 };
 
 export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
-  const { actions, kind, kindObj, resource, isDisabled } = props;
+  const { actions, kind, kindObj, resource, isDisabled, extraResources, customData } = props;
 
   if (kind === 'Tag') {
     const options = _.reject(
-      actions.map(a => a(kindObj, resource)),
+      actions.map(a => a(kindObj, resource, extraResources, customData)),
       'hidden',
     );
     return <Kebab options={options} key={resource.version} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
@@ -380,7 +410,7 @@ export const ResourceKebab = connectToModel((props: ResourceKebabProps) => {
     return null;
   }
   const options = _.reject(
-    actions.map(a => a(kindObj, resource)),
+    actions.map(a => a(kindObj, resource, extraResources, customData)),
     'hidden',
   );
   return <Kebab options={options} key={resource.metadata.uid} isDisabled={isDisabled !== undefined ? isDisabled : _.get(resource.metadata, 'deletionTimestamp')} />;
@@ -486,6 +516,7 @@ export type KebabOption = {
   // Eg. `Menu 1/Menu 2/Menu 3`
   path?: string;
   icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
   needTranslate?: boolean;
 };
 
@@ -497,6 +528,8 @@ export type ResourceKebabProps = {
   kind: K8sResourceKindReference;
   resource: K8sResourceKind | any;
   isDisabled?: boolean;
+  extraResources?: { [prop: string]: K8sResourceKind | K8sResourceKind[] };
+  customData?: any;
 };
 
 type KebabSubMenu = {

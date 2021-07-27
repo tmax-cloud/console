@@ -15,7 +15,8 @@ import (
 	"runtime"
 	"strings"
 
-	"console/pkg/crypto"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
+	// "github.com/openshift/library-go/pkg/crypto"
 )
 
 const (
@@ -71,6 +72,7 @@ func createConsole(config *v1.Config) (*Console, error) {
 	)
 
 	k8sProxyConfig := &proxy.Config{}
+	k8sClient := &http.Client{}
 	// Console In Cluster
 	if config.K8sEndpoint == "" || config.K8sEndpoint == K8sEndpoint {
 		k8sCertPEM, err := ioutil.ReadFile(k8sInClusterCA)
@@ -81,10 +83,9 @@ func createConsole(config *v1.Config) (*Console, error) {
 		if !rootCAs.AppendCertsFromPEM(k8sCertPEM) {
 			log.Fatalf("No CA found for the API server")
 		}
-		tlsConfig := &tls.Config{
-			RootCAs:      rootCAs,
-			CipherSuites: crypto.DefaultCiphers(),
-		}
+		tlsConfig := oscrypto.SecureTLSConfig(&tls.Config{
+			RootCAs: rootCAs,
+		})
 		bearerToken, err := ioutil.ReadFile(k8sInClusterBearerToken)
 		k8sAuthServiceAccountBearerToken = string(bearerToken)
 		if err != nil {
@@ -97,18 +98,27 @@ func createConsole(config *v1.Config) (*Console, error) {
 			Endpoint:        k8sURL,
 			Origin:          "http://localhost",
 		}
+		k8sClient = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: k8sProxyConfig.TLSClientConfig,
+			},
+		}
 		// Console Off Cluster
 	} else {
 		k8sAuthServiceAccountBearerToken = ""
 		k8sURL = validateURL("k8sEndpoint", config.K8sEndpoint)
 		k8sProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},
-			TLSClientConfig: &tls.Config{
+			TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
 				InsecureSkipVerify: true,
-				CipherSuites:       crypto.DefaultCiphers(),
-			},
+			}),
 			Endpoint: k8sURL,
 			Origin:   "http://localhost",
+		}
+		k8sClient = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: k8sProxyConfig.TLSClientConfig,
+			},
 		}
 	}
 
@@ -163,6 +173,7 @@ func createConsole(config *v1.Config) (*Console, error) {
 		KeycloakClientId: config.KeycloakClientId,
 
 		K8sProxyConfig:        k8sProxyConfig,
+		K8sClient:             k8sClient,
 		PrometheusProxyConfig: newProxy(config.PrometheusEndpoint),
 		// ThanosProxyConfig:                newProxy(config.ThanosEndpoint),
 		// ThanosTenancyProxyConfig:         newProxy(config.PrometheusEndpoint),
@@ -181,9 +192,12 @@ func newProxy(endpoint string) *proxy.Config {
 	url := validateURL(endpoint, endpoint)
 	return &proxy.Config{
 		HeaderBlacklist: []string{"X-CSRFToken"},
-		TLSClientConfig: &tls.Config{
+		// TLSClientConfig: &tls.Config{
+		// 	InsecureSkipVerify: true,
+		// },
+		TLSClientConfig: oscrypto.SecureTLSConfig(&tls.Config{
 			InsecureSkipVerify: true,
-		},
+		}),
 		Endpoint: url,
 		Origin:   "http://localhost",
 	}

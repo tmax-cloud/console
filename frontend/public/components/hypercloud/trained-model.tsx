@@ -50,25 +50,25 @@ const TrainedModelTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[1] },
     },
     {      
-      title: 'STATUS',
-      sortField: 'phase',
+      title: t('COMMON:MSG_COMMON_FILTER_16'),
+      sortFunc: 'TrainedModelPhase',
       transforms: [sortable],      
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'FRAMEWORK',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_100'),
       sortField: 'spec.model.framework',
       transforms: [sortable],      
       props: { className: tableColumnClasses[3] },
     },
     {
-      title: 'URL',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_101'),
       sortField: 'status.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
-      title: 'STORAGEURI',
+      title: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_138'),
       sortField: 'spec.model.storageUri',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
@@ -118,22 +118,22 @@ export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = (
 
   return (
     <dl className="co-m-pane__details">      
-      <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
+      <DetailsItem label={t('COMMON:MSG_COMMON_TABLEHEADER_2')} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
-      <DetailsItem label={'INFERENCESERVICE'} obj={ds} path="spec.inferenceService">
-        <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />        
+      <DetailsItem label={t('COMMON:MSG_LNB_MENU_193')} obj={ds} path="spec.inferenceService">
+        <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />
       </DetailsItem>
-      <DetailsItem label={'FRAMEWORK'} obj={ds} path="spec.model.framework">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_100')} obj={ds} path="spec.model.framework">
         {ds.spec.model.framework}
       </DetailsItem>
-      <DetailsItem label={'MEMORY'} obj={ds} path="spec.model.memory">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_140')} obj={ds} path="spec.model.memory">
         {ds.spec.model.memory}
       </DetailsItem>
-      <DetailsItem label={'INFERENCEURL'} obj={ds} path="status.url">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_101')} obj={ds} path="status.url">
         {ds.status.url}
       </DetailsItem>
-      <DetailsItem label={'STORAGEURI'} obj={ds} path="spec.model.storageUri">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_138')} obj={ds} path="spec.model.storageUri">
         {ds.spec.model.storageUri}
       </DetailsItem>
     </dl>
@@ -172,8 +172,8 @@ export const TrainedModelsPage: React.FC<TrainedModelsPageProps> = props => {
 
   return (
     <ListPage
-      title="Trained Model"
-      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: "Trained Model" })}
+      title={t('COMMON:MSG_LNB_MENU_196')}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_196') })}
       canCreate={true}
       ListComponent={TrainedModels}
       kind={kind} {...props}
@@ -190,6 +190,7 @@ export const TrainedModelsDetailsPage: React.FC<TrainedModelsDetailsPageProps> =
       {...props}
       kind={kind}
       menuActions={menuActions}
+      getResourceStatus={TrainedModelPhase}
       pages={[details(detailsPage(TrainedModelDetails)), editResource()]}
     />
   );

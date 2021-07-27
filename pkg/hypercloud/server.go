@@ -11,7 +11,8 @@ import (
 	v1 "console/pkg/api/v1"
 	"console/pkg/hypercloud/safe"
 
-	"console/pkg/crypto"
+	"github.com/openshift/library-go/pkg/crypto"
+	// "github.com/openshift/library-go/pkg/crypto"
 
 	"github.com/sirupsen/logrus"
 )
@@ -50,9 +51,7 @@ func New(config *v1.ConsoleInfo) (*HttpServer, error) {
 		Addr:         listenURL.Host,
 		Handler:      handler,
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
-		TLSConfig: &tls.Config{
-			CipherSuites: crypto.DefaultCiphers(),
-		},
+		TLSConfig:    crypto.SecureTLSConfig(&tls.Config{}),
 	}
 
 	return &HttpServer{

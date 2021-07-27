@@ -13,12 +13,14 @@ const PipelineRunVisualization: React.FC<PipelineRunVisualizationProps> = ({ pip
   const [errorMessage, setErrorMessage] = React.useState<string>(null);
   const [pipeline, setPipeline] = React.useState<Pipeline>(null);
 
+
   React.useEffect(() => {
     if (pipelineRefExists(pipelineRun)) {
       k8sGet(PipelineModel, pipelineRun.spec.pipelineRef.name, pipelineRun.metadata.namespace)
         .then((res: Pipeline) => setPipeline(res))
-        .catch((error) =>
-          setErrorMessage(error?.message || 'Could not load visualization at this time.'),
+        .catch((error) => {
+          setErrorMessage(error?.message || 'Could not load visualization at this time.')
+        },
         );
     } else {
       const p: Pipeline = {

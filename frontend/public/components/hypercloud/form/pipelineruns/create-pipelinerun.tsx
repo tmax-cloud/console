@@ -51,20 +51,22 @@ const paramItemRenderer = (methods, name, item, index, ListActions, ListDefaultI
 };
 
 const ParamsListComponent = props => {
+  const { t } = useTranslation();
   return props.paramList.map(cur => (
     <ul>
       <Section label={cur.name} id={cur.name} description={cur.description}>
-        {cur.type === 'array' ? <ListView name={`spec.params.${cur.name}.arrayValue`} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={cur.default.map(defaultValue => ({ value: defaultValue }))} /> : <TextInput id={`spec.params.${cur.name}.value`} defaultValue={cur.default} />}
+        {cur.type === 'array' ? <ListView name={`spec.params.${cur.name}.arrayValue`} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={cur.default.map(defaultValue => ({ value: defaultValue }))} /> : <TextInput id={`spec.params.${cur.name}.value`} defaultValue={cur.default} />}
       </Section>
     </ul>
   ));
 };
 
 const ResourceListComponent = props => {
+  const { t } = useTranslation();
   return props.resourceList.map(cur => (
     <ul>
       <Section label={cur.name} id={cur.name}>
-        <ResourceListDropdown name={`spec.resources.${cur.name}.resourceRef.name`} resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)} type="single" useHookForm placeholder="파이프라인 리소스 선택" />
+        <ResourceListDropdown name={`spec.resources.${cur.name}.resourceRef.name`} resourceList={props.resourceRefList.filter(ref => cur.type === ref.spec.type)} type="single" useHookForm placeholder={t('SINGLE:MSG_PIPELINES_CREATEFORM_29')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} />
       </Section>
     </ul>
   ));
@@ -117,6 +119,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id="pipeline" isRequired>
         <ResourceDropdown
           name="spec.pipelineRef.name"
+          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
           resources={[
             {
               kind: 'Pipeline',
@@ -141,7 +144,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
         </Section>
       )}
       {!_.isEmpty(workspaceList) && (
-        <Section label="워크스페이스" id="workspace">
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_9')} id="workspace">
           <WorkspaceListComponent workspaceList={workspaceList} namespace={namespace} methods={methods} />
         </Section>
       )}
@@ -151,6 +154,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id="serviceaccount" isRequired>
         <ResourceDropdown
           name="spec.serviceAccountName"
+          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
           resources={[
             {
               kind: 'ServiceAccount',

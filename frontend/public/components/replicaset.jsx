@@ -63,7 +63,7 @@ const ReplicaSetsDetailsPage = props => <DetailsPage {...props} menuActions={rep
 
 const kind = 'ReplicaSet';
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), Kebab.columnClass];
+const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), Kebab.columnClass];
 
 const ReplicaSetTableRow = ({ obj, index, key, style }) => {
   return (
@@ -83,12 +83,9 @@ const ReplicaSetTableRow = ({ obj, index, key, style }) => {
         <LabelList kind={kind} labels={obj.metadata.labels} />
       </TableData>
       <TableData className={tableColumnClasses[4]}>
-        <OwnerReferences resource={obj} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
-      <TableData className={tableColumnClasses[6]}>
+      <TableData className={tableColumnClasses[5]}>
         <ResourceKebab actions={replicaSetMenuActions} kind={kind} resource={obj} />
       </TableData>
     </TableRow>
@@ -120,12 +117,6 @@ const ReplicaSetTableHeader = t => {
       sortField: 'metadata.labels',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_11'),
-      sortField: 'metadata.ownerReferences[0].name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),

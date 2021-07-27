@@ -36,6 +36,9 @@ const HyperCloudNav = () => (
           <ResourceNSLink resource="jobs" name={t('COMMON:MSG_LNB_MENU_29')} />
           <ResourceNSLink resource="cronjobs" name={t('COMMON:MSG_LNB_MENU_28')} />
         </NavSection>
+        <NavSection title={t('COMMON:MSG_LNB_MENU_202')}>
+          <ResourceNSLink resource="helmreleases" name={t('COMMON:MSG_LNB_MENU_203')} />
+        </NavSection>
         <NavSection title={t('COMMON:MSG_LNB_MENU_46')}>
           <ResourceNSLink resource="services" name={t('COMMON:MSG_LNB_MENU_47')} />
           <ResourceNSLink resource="ingresses" name={t('COMMON:MSG_LNB_MENU_48')} />
@@ -60,9 +63,6 @@ const HyperCloudNav = () => (
           <ResourceNSLink resource="rolebindings" name={t('COMMON:MSG_LNB_MENU_76')} startsWith={rolebindingsStartsWith} />
           <ResourceNSLink resource="serviceaccounts" name={t('COMMON:MSG_LNB_MENU_74')} />
           <ResourceClusterLink resource="podsecuritypolicies" name={t('COMMON:MSG_LNB_MENU_78')} />
-        </NavSection>
-        <NavSection title='헬름'>
-          <ResourceNSLink resource="helmreleases" name='헬름 릴리스' />
         </NavSection>
       </>
     )}

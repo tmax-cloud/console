@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
 import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '@console/internal/module/k8s';
-import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel } from '@console/internal/models';
+import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel, AWXModel } from '@console/internal/models';
 import { StatusBox, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
@@ -20,9 +20,9 @@ import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-t
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
-
+import { isSaveButtonDisabled } from '../utils/button-state';
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
-const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind];
+const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind, AWXModel.kind];
 
 export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, obj, create }) => {
   if (!model) {
@@ -37,7 +37,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
         <SyncedEditor
           context={{
             formContext: { create },
-            yamlContext: { next, match, create },
+            yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
           }}
           initialData={sample}
           initialType={EditorType.YAML}
@@ -99,7 +99,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
             <SyncedEditor
               context={{
                 formContext: { match, model, next, schema, create },
-                yamlContext: { next, match, create },
+                yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
               }}
               FormEditor={FormComponent}
               initialData={sample}
@@ -151,7 +151,7 @@ export const EditDefaultPage = connect(stateToProps)((props: EditDefaultPageProp
       <Helmet>
         <title>{`Edit ${kind}`}</title>
       </Helmet>
-      {isCreateManual(kind) ? <AsyncComponent loader={() => import(`../form/${plural}/create-${kind.toLowerCase()}` /* webpackChunkName: "create-secret" */).then(m => m[`Create${kind}`])} obj={props.obj} match={props.match} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
+      {isCreateManual(kind) ? <AsyncComponent loader={() => import(`../form/${plural}/create-${kind.toLowerCase()}`).then(m => m[`Create${kind}`])} obj={props.obj} match={props.match} /> : <EditDefault {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} create={false} />}
     </>
   );
 });

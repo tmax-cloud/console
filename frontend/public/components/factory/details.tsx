@@ -62,7 +62,7 @@ export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...prop
       >
         {props.children}
       </PageHeading>
-      <HorizontalNav pages={allPages} pagesFor={props.pagesFor} className={`co-m-${_.get(props.kind, 'kind', props.kind)}`} match={props.match} label={props.label || (props.kind as any).label} resourceKeys={resourceKeys} customData={props.customData} setStatus4MenuActions={props.setStatus4MenuActions} />
+      <HorizontalNav pages={allPages} pagesFor={props.pagesFor} className={`co-m-${_.get(props.kind, 'kind', props.kind)}`} match={props.match} label={props.label || (props.kind as any).label} resourceKeys={resourceKeys} customData={props.customData} setCustomState={props.setCustomState} customStatePath={props.customStatePath} />
     </Firehose>
   );
 }, ErrorBoundaryFallback);
@@ -88,7 +88,8 @@ export type DetailsPageProps = {
   getResourceStatus?: (resource: K8sResourceKind) => string;
   children?: React.ReactNode;
   customKind?: string;
-  setStatus4MenuActions?: any;
+  setCustomState?: any;
+  customStatePath?: string;
 };
 
 DetailsPage.displayName = 'DetailsPage';

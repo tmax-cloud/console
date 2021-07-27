@@ -18,7 +18,7 @@ import { ResourceLabel } from '../models/hypercloud/resource-plural';
 const ModifyJobParallelism: KebabAction = (kind: K8sKind, obj: JobKind) => {
   const { t } = useTranslation();
   return {
-    label: t('COMMON:MSG_MAIN_ACTIONBUTTON_10'),
+    label: 'COMMON:MSG_MAIN_ACTIONBUTTON_10',
     callback: () =>
       configureJobParallelismModal({
         resourceKind: kind,

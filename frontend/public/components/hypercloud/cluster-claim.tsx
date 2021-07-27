@@ -10,12 +10,16 @@ import { Status } from '@console/shared';
 import { ClusterClaimModel } from '../../models';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common, Kebab.factory.ModifyClaim];
+export const clusterClaimCommonActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common];
 
 const kind = ClusterClaimModel.kind;
 
 const tableColumnClasses = ['', '', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
+
+const unmodifiableStatus = new Set(['Approved', 'ClusterClaim Deleted', 'ClusterDeleted', 'Cluster Deleted']);
+const isUnmodifiable = (status: string) => unmodifiableStatus.has(status);
 
 const ClusterClaimTableHeader = (t?: TFunction) => {
   return [
@@ -70,6 +74,7 @@ const ClusterClaimTableHeader = (t?: TFunction) => {
 ClusterClaimTableHeader.displayName = 'ClusterClaimTableHeader';
 
 const ClusterClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: clusterClaim, index, key, style }) => {
+  const menuActions = isUnmodifiable(clusterClaim.status?.phase) ? clusterClaimCommonActions : [...clusterClaimCommonActions, Kebab.factory.ModifyClaim];
   return (
     <TableRow id={clusterClaim.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -112,40 +117,43 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ pod }) => {
   );
 };
 
-export const ClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = ({ clcl }) => {
+export const ClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = ({ clcl, t }) => {
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label="Provider" obj={clcl} path="spec.provider" />
-      <DetailsItem label="Cluster Name" obj={clcl} path="spec.clusterName" />
-      <DetailsItem label="Version" obj={clcl} path="spec.version" />
-      <DetailsItem label="Region" obj={clcl} path="spec.region" />
-      <DetailsItem label="Master Node Count" obj={clcl} path="spec.masterNum" />
-      <DetailsItem label="Master Node Type" obj={clcl} path="spec.masterType" />
-      <DetailsItem label="Worker Node Count" obj={clcl} path="spec.workerNum" />
-      <DetailsItem label="Worker Node Type" obj={clcl} path="spec.workerType" />
-      <DetailsItem label="SSH Key" obj={clcl} path="spec.sshKey" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={clcl} path="spec.version" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_56')} obj={clcl} path="spec.region" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={clcl} path="spec.masterNum" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_59')} obj={clcl} path="spec.masterType" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={clcl} path="spec.workerNum" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_60')} obj={clcl} path="spec.workerType" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_61')} obj={clcl} path="spec.sshKey" />
     </dl>
   );
 };
 
-const ClusterClaimDetails: React.FC<ClusterClaimDetailsProps> = ({ obj: clusterClaim }) => (
-  <>
-    <div className="co-m-pane__body">
-      <SectionHeading text="Cluster Claim Details" />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={clusterClaim} showOwner={false} />
-          <DetailsItem label="Owner" obj={clusterClaim} path="metadata.annotations.creator" />
-        </div>
-        <div className="col-lg-6">
-          <ClusterClaimDetailsList clcl={clusterClaim} />
+const ClusterClaimDetails: React.FC<ClusterClaimDetailsProps> = ({ obj: clusterClaim }) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterClaim, t) })} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={clusterClaim} showOwner={false} />
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={clusterClaim} path="metadata.annotations.creator" />
+          </div>
+          <div className="col-lg-6">
+            <ClusterClaimDetailsList clcl={clusterClaim} t={t} />
+          </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
+};
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const ClusterClaims: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Cluster Claims" Header={ClusterClaimTableHeader.bind(null, t)} Row={ClusterClaimTableRow} virtualize />;
@@ -171,9 +179,29 @@ const filters = [
   },
 ];
 
-export const ClusterClaimsPage: React.FC<ClusterClaimsPageProps> = props => <ListPage canCreate={true} ListComponent={ClusterClaims} kind={kind} rowFilters={filters} {...props} />;
-
-export const ClusterClaimsDetailsPage: React.FC<ClusterClaimsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ClusterClaimDetails)), editYaml()]} />;
+export const ClusterClaimsPage: React.FC<ClusterClaimsPageProps> = props => {
+  const { t } = useTranslation();
+  const pages = [
+    {
+      href: 'clustermanagers',
+      name: t('COMMON:MSG_LNB_MENU_84'),
+    },
+    {
+      href: 'clusterclaims',
+      name: t('COMMON:MSG_LNB_MENU_105'),
+    },
+    {
+      href: 'clusterregistrations',
+      name: t('COMMON:MSG_MAIN_TAB_3'),
+    },
+  ];
+  return <ListPage canCreate={true} multiNavPages={pages} ListComponent={ClusterClaims} kind={kind} rowFilters={filters} {...props} />;
+};
+export const ClusterClaimsDetailsPage: React.FC<ClusterClaimsDetailsPageProps> = props => {
+  const [status, setStatus] = React.useState();
+  const menuActions = isUnmodifiable(status) ? clusterClaimCommonActions : [...clusterClaimCommonActions, Kebab.factory.ModifyClaim];
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} setCustomState={setStatus} customStatePath="status.phase" pages={[details(detailsPage(ClusterClaimDetails)), editResource()]} />;
+};
 
 type ClusterRowProps = {
   pod: K8sResourceKind;
@@ -181,6 +209,7 @@ type ClusterRowProps = {
 
 type ClusterClaimDetailsListProps = {
   clcl: K8sResourceKind;
+  t: TFunction;
 };
 
 type ClusterClaimDetailsProps = {

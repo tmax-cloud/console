@@ -113,7 +113,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = (props) => {
 
         {params && (
           <>
-            <h2>Parameters</h2>
+            <h2>{t('SINGLE:MSG_PIPELINES_CREATEFORM_26')}</h2>
             {params.map((param) => {
               const taskParams: PipelineTaskParam[] = taskField.value?.params || [];
               const thisParam = taskParams.find(
@@ -122,7 +122,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = (props) => {
               return (
                 <div key={param.name} className="odc-task-sidebar__param">
                   <TaskSidebarParam
-                    hasParamError={!thisParam.value && !!thisTaskError?.includes(TaskErrorType.MISSING_REQUIRED_PARAMS)}
+                    hasParamError={!thisParam?.value && !!thisTaskError?.includes(TaskErrorType.MISSING_REQUIRED_PARAMS)}
                     resourceParam={param}
                     taskParam={thisParam}
                     onChange={(value) => {
@@ -142,13 +142,13 @@ const TaskSidebar: React.FC<TaskSidebarProps> = (props) => {
 
         {inputResources && (
           <>
-            <h2>Input Resources</h2>
+            <h2>{t('SINGLE:MSG_PIPELINES_CREATEFORM_27')}</h2>
             {inputResources.map(renderResource('inputs'))}
           </>
         )}
         {outputResources && (
           <>
-            <h2>Output Resources</h2>
+            <h2>{t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_6')}</h2>
             {outputResources.map(renderResource('outputs'))}
           </>
         )}

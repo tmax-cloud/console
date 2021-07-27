@@ -4,24 +4,33 @@ import { ActionGroup, Alert, Button, ButtonVariant } from '@patternfly/react-cor
 import { ButtonBar } from '@console/internal/components/utils';
 import { FormFooterProps } from './form-utils-types';
 import './FormFooter.scss';
+import { useTranslation } from 'react-i18next';
 
 const FormFooter: React.FC<FormFooterProps> = ({
   handleSubmit,
   handleReset,
   handleCancel,
-  submitLabel = 'Save',
-  resetLabel = 'Reload',
-  cancelLabel = 'Cancel',
-  infoTitle = 'You made changes to this page.',
-  infoMessage = `Click ${submitLabel} to save changes or ${resetLabel} to cancel changes.`,
+  submitLabel,
+  resetLabel,
+  cancelLabel,
+  infoTitle,
+  infoMessage,
   isSubmitting,
   errorMessage,
   successMessage,
   disableSubmit,
   showAlert,
   sticky,
-}) => (
-  <ButtonBar
+}) => {
+  const { t } = useTranslation();
+  infoTitle = infoTitle || t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABOVERVIEW_1');
+  infoMessage = infoMessage || t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABOVERVIEW_2');
+  //infoMessage === `Click ${submitLabel} to save changes or ${resetLabel} to cancel changes.`
+  submitLabel = submitLabel || t('COMMON:MSG_COMMON_BUTTON_COMMIT_3');
+  resetLabel = resetLabel || t('COMMON:MSG_COMMON_BUTTON_ETC_13');
+  cancelLabel = cancelLabel || t('COMMON:MSG_COMMON_BUTTON_COMMIT_2');
+
+  return <ButtonBar
     className={cx('ocs-form-footer', {
       'ocs-form-footer__sticky': sticky,
     })}
@@ -66,6 +75,6 @@ const FormFooter: React.FC<FormFooterProps> = ({
       )}
     </ActionGroup>
   </ButtonBar>
-);
+};
 
 export default FormFooter;

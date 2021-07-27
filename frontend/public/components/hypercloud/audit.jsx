@@ -175,7 +175,7 @@ class AuditPage_ extends React.Component {
       });
     } else if (e === 'users') {
       this.setState({
-        actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'), create: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_2'), delete: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_3'), patch: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6'), update: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7'), login: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_4'), logout: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_5') },
+        actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'), patch: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6'), update: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7'), LOGIN: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_4'), LOGOUT: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_5'), LOGIN_ERROR: t('로그인 에러') },
       });
     } else {
       this.setState({
@@ -213,7 +213,7 @@ class AuditPage_ extends React.Component {
   onChangeAction_(value) {
     if (value !== 'all') {
       this.setState({
-        action: value,
+        action: this.state.actionList[value],
       });
     } else {
       this.setState({
@@ -259,7 +259,7 @@ class AuditPage_ extends React.Component {
   onChangeStatus_(value) {
     if (value !== 'all') {
       this.setState({
-        status: value,
+        status: this.statuslist[value],
       });
     } else {
       this.setState({
@@ -302,7 +302,7 @@ class AuditPage_ extends React.Component {
   onChangeCode_(value) {
     if (value !== 'all') {
       this.setState({
-        code: value,
+        code: this.codeList[value],
       });
     } else {
       this.setState({
@@ -674,7 +674,7 @@ class AuditPage_ extends React.Component {
                   </div>
                 </div>
                 <div className="co-m-pane__filter-bar-group co-m-pane__filter-bar-group--filter">
-                  <TextFilter id="audit" label="Filter User Account" autoFocus={true} onChange={this.onSearch} />
+                  <TextFilter id="audit" label={t('SINGLE:MSG_AUDITLOGS_MAIN_2')} autoFocus={true} onChange={this.onSearch} />
                 </div>
               </div>
             </PageHeading>

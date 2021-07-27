@@ -15,6 +15,8 @@ import { DefaultPage } from './default-resource';
 import { GreenCheckCircleIcon } from '@console/shared';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { ResourceLabel } from '../models/hypercloud/resource-plural';
+
 const { common } = Kebab.factory;
 
 // TODO: replace referenceForCRD_ to referenceForCRD without side effect
@@ -169,7 +171,7 @@ const Details: React.FC<{ obj: CustomResourceDefinitionKind }> = ({ obj: crd }) 
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text="Custom Resource Definition Details" />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(crd, t) })} />
         <div className="co-m-pane__body-group">
           <div className="row">
             <div className="col-sm-6">
@@ -225,7 +227,7 @@ export const CustomResourceDefinitionsList: React.FC<CustomResourceDefinitionsLi
 };
 
 export const CustomResourceDefinitionsPage: React.FC<CustomResourceDefinitionsPageProps> = props => <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} />;
-export const CustomResourceDefinitionsDetailsPage: React.FC<CustomResourceDefinitionsDetailsPageProps> = props => <DetailsPage {...props} kind="CustomResourceDefinition" menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource(), { name: 'Instances', href: 'instances', component: Instances }]} />;
+export const CustomResourceDefinitionsDetailsPage: React.FC<CustomResourceDefinitionsDetailsPageProps> = props => <DetailsPage {...props} kind="CustomResourceDefinition" menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource(), { name: 'COMMON:MSG_DETAILS_TAB_15', href: 'instances', component: Instances }]} />;
 
 export type CustomResourceDefinitionsListProps = {};
 

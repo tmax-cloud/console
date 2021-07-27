@@ -23,7 +23,7 @@ const ClusterServiceBrokerDetails: React.FC<ClusterServiceBrokerDetailsProps> = 
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterServiceBroker, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={clusterServiceBroker} showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={clusterServiceBroker} showAnnotations={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
@@ -45,16 +45,17 @@ type ClusterServiceBrokerDetailsProps = {
 };
 
 const { details, editResource } = navFactory;
-const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editResource()]} />;
+const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} getResourceStatus={ClusterServiceBrokerPhase} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editResource()]} />;
 ClusterServiceBrokersDetailsPage.displayName = 'ClusterServiceBrokersDetailsPage';
 
 const tableColumnClasses = [
   '', // NAME
-  '', // URL
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // STATUS
+  '', // STATUS
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // URL
   classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // CREATED
   Kebab.columnClass, // MENU ACTIONS
 ];
+
 const ClusterServiceBrokerPhase = instance => {
   let phase = '';
   if (instance.status) {
@@ -78,10 +79,10 @@ const ClusterServiceBrokerTableRow = ({ obj, index, key, style }) => {
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={obj.metadata.name} title={obj.metadata.name} />
       </TableData>
-      <TableData className={tableColumnClasses[1]}>{obj.spec.url}</TableData>
-      <TableData className={tableColumnClasses[2]}>
+      <TableData className={tableColumnClasses[1]}>
         <Status status={phase} />
       </TableData>
+      <TableData className={tableColumnClasses[2]}>{obj.spec.url}</TableData>
       <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
       </TableData>
@@ -101,14 +102,14 @@ const ClusterServiceBrokerTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_4'),
-      sortField: 'spec.url',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
+      sortFunc: 'ServiceBrokerPhase',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'ServiceBrokerPhase',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_4'),
+      sortField: 'spec.url',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
@@ -134,7 +135,28 @@ ClusterServiceBrokersList.displayName = 'ClusterServiceBrokersList';
 
 const ClusterServiceBrokersPage: React.FC<ClusterServiceBrokersPageProps> = props => {
   const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_14')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_14') })} canCreate={true} kind={kind} ListComponent={ClusterServiceBrokersList} {...props} />;
+  return (
+    <ListPage
+      title={t('COMMON:MSG_LNB_MENU_14')}
+      createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_14') })}
+      rowFilters={[
+        {
+          filterLabel: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
+          filterGroupName: 'Status',
+          type: 'cluster-service-broker-status',
+          reducer: ClusterServiceBrokerPhase,
+          items: [
+            { id: 'Running', title: 'Running' },
+            { id: 'Error', title: 'Error' },
+          ],
+        },
+      ]}
+      canCreate={true}
+      kind={kind}
+      ListComponent={ClusterServiceBrokersList}
+      {...props}
+    />
+  );
 };
 ClusterServiceBrokersPage.displayName = 'ClusterServiceBrokersPage';
 

@@ -97,13 +97,14 @@ const Inner = connectToFlags(FLAGS.CAN_LIST_NODE)(
                   )}
                   {count > 1 && (
                     <small className="co-sysevent__count text-secondary">
-                      {count} times
+                      {t('COMMON:MSG_DETAILS_TABEVENTS_7', { 0: count })}
+                      <Timestamp timestamp={firstTime} simple={true} omitSuffix={true} />
+                      {/* {count} times
                       {firstTime && (
                         <>
-                          {' '}
                           in the last <Timestamp timestamp={firstTime} simple={true} omitSuffix={true} />
                         </>
-                      )}
+                      )} */}
                     </small>
                   )}
                 </div>
@@ -415,7 +416,7 @@ class _EventStream extends React.Component {
     }
 
     if (error) {
-      statusBtnTxt = <span className="co-sysevent-stream__connection-error">Error connecting to event stream{_.isString(error) && `: ${error}`}</span>;
+      statusBtnTxt = <span className="co-sysevent-stream__connection-error">{t('COMMON:MSG_DETAILS_TABEVENTS_1', { 0: _.isString(error) ? error : '' })}</span>;
       sysEventStatus = <ErrorLoadingEvents />;
     } else if (loading) {
       statusBtnTxt = <span>{t('SINGLE:MSG_EVENTS_MAIN_STATUS_1')}</span>;
@@ -443,7 +444,7 @@ class _EventStream extends React.Component {
           <div className={klass}>
             <TogglePlay active={active} onClick={this.toggleStream} className="co-sysevent-stream__timeline__btn" />
             <div className="co-sysevent-stream__timeline__end-message">
-              There are no events before <Timestamp timestamp={this.state.oldestTimestamp} />
+              {t('COMMON:MSG_DETAILS_TABEVENTS_6')} <Timestamp timestamp={this.state.oldestTimestamp} />
             </div>
           </div>
           {count > 0 && <EventStreamList events={filteredEvents} EventComponent={Inner} />}

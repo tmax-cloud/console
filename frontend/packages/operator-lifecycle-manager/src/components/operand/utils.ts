@@ -68,6 +68,14 @@ export const hasNoFields = (jsonSchema: JSONSchema6 = {}): boolean => {
   }
 };
 
+const isValidOneofComponent = target => {
+  if (_.isArray(target)) {
+    return target.every(cur => 'title' in cur);
+  } else {
+    return 'title' in target;
+  }
+};
+
 // Map json schema to default ui schema
 export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: string): UiSchema => {
   const type = getSchemaType(jsonSchema ?? {});
@@ -102,9 +110,11 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     }
     delete jsonSchema?.anyOf;
   } else if (jsonSchema?.['oneOf']) {
-    return {
-      'ui:field': 'OneOfField', // number or string 일 경우에 컴포넌트
-    };
+    if (isValidOneofComponent(jsonSchema.oneOf)) {
+      return {
+        'ui:field': 'OneOfField', // number or string 일 경우에 컴포넌트
+      };
+    }
   } else if (jsonSchema?.['allOf']) {
     if (
       isArray(jsonSchema.allOf) &&

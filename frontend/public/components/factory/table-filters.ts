@@ -45,8 +45,30 @@ const serviceInstanceStatusReducer = (serviceInstance: any): string => {
   return serviceInstance.status.lastConditionState;
 };
 
+const ClusterServiceBrokerPhase = instance => {
+  let phase = '';
+  if (instance.status) {
+    instance.status.conditions.forEach(cur => {
+      if (cur.type === 'Ready') {
+        if (cur.status === 'True') {
+          phase = 'Running';
+        } else {
+          phase = 'Error';
+        }
+      }
+    });
+    return phase;
+  }
+};
+
 const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
   return pipelineApproval.status.result;
+};
+
+export const awxStatusReducer = (awx: any): string => {
+  const conditions = _.get(awx, ['status', 'conditions'], []);
+  if (conditions.length === 0) return '-';
+  return conditions[0].reason === 'Successful' ? 'Succeeded' : conditions[0].reason === 'Running' ? 'Deploying' : conditions[0].reason;
 };
 
 // TODO: Table filters are undocumented, stringly-typed, and non-obvious. We can change that.
@@ -229,6 +251,14 @@ export const tableFilters: TableFilterMap = {
     const phase = serviceInstanceStatusReducer(serviceInstance);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
+  'cluster-service-broker-status': (phases, clusterServiceBroker) => {
+    if (!phases || !phases.selected || !phases.selected.size) {
+      return true;
+    }
+
+    const phase = ClusterServiceBrokerPhase(clusterServiceBroker);
+    return phases.selected.has(phase) || !_.includes(phases.all, phase);
+  },
 
   'pipeline-run-status': (results, pipelineRun) => {
     if (!results || !results.selected || !results.selected.size) {
@@ -364,6 +394,15 @@ export const tableFilters: TableFilterMap = {
     };
     const status = templateInstancePhase(instance);
 
+    return statuses.selected.has(status) || !_.includes(statuses.all, status);
+  },
+
+  'awx-status': (statuses, awx) => {
+    if (!statuses || !statuses.selected || !statuses.selected.size) {
+      return true;
+    }
+
+    const status = awxStatusReducer(awx);
     return statuses.selected.has(status) || !_.includes(statuses.all, status);
   },
 

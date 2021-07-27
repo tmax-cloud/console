@@ -21,6 +21,7 @@ spec:
             - /opt/bridge/bin/console
             - gateway
             - --public-dir=/opt/bridge/static
+            - --dynamic-file=/opt/bridge/configs/dynamic-config.yaml
             - --listen=https://0.0.0.0:443
             - --base-address=https://0.0.0.0:443
             - --redirect-port=80
@@ -33,9 +34,9 @@ spec:
             - --grafana-endpoint=http://grafana.monitoring.svc:3000/api/grafana/
             - --kiali-endpoint=https://0.0.0.0:20001/api/kiali
             - --kibana-endpoint=http://kibana.kube-logging.svc.cluster.local:5601/api/kibana/
-            - --kubeflow-endpoint=http://0.0.0.0/api/kubeflow/
+            - --kubeflow-endpoint=http://istio-ingressgateway.istio-system.svc/api/kubeflow/
             - --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/
-          image: tmaxcloudck/hypercloud-console:5.0.17.3
+          image: tmaxcloudck/hypercloud-console:5.0.21.0
           imagePullPolicy: Always
           name: console
           ports:

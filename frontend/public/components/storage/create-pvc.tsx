@@ -206,7 +206,7 @@ export const CreatePVCForm: React.FC<CreatePVCFormProps> = props => {
       </p>
       <Checkbox label={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_26')} onChange={handleUseSelector} checked={useSelector} name="showLabelSelector" />
       <div className="form-group">
-        {useSelector && <NameValueEditorComponent nameValuePairs={nameValuePairs} valueString="Selector" nameString="Label" addString="Add Value" readOnly={false} allowSorting={false} updateParentData={handleNameValuePairs} />}
+        {useSelector && <NameValueEditorComponent nameValuePairs={nameValuePairs} valueString={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_34')} nameString={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_32')} addString={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_36')} readOnly={false} allowSorting={false} updateParentData={handleNameValuePairs} />}
         <p className="help-block" id="label-selector-help">
           {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_30')}
         </p>

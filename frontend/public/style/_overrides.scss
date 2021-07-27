@@ -408,8 +408,7 @@ h6 {
     }
 
     font-size: 13px;
-
-    .pf-c-nav__simple-list .pf-c-nav__link {
+    .pf-c-nav__item .pf-c-nav__separator .pf-c-nav__simple-list .pf-c-nav__link {
       font-size: 13px;
       // fix bug where nav items retain focus after navigation
       // see https://github.com/patternfly/patternfly-next/issues/2463
@@ -440,6 +439,12 @@ h6 {
   // see https://github.com/patternfly/patternfly-next/issues/2463
   .pf-c-nav__item.pf-m-current .pf-c-nav__simple-list .pf-c-nav__link:focus {
     color: var(--pf-global--Color--light-100); // escape PF var chaos
+  }
+
+  .pf-c-nav__item .pf-c-nav__separator {
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #a1a1a1;
   }
 }
 
@@ -657,4 +662,35 @@ button.pf-c-dropdown__menu-item.hover {
 
 .text-area {
   resize: none;
+}
+
+.error-string {
+  color: #c9190b;
+  margin: 0;
+}
+
+.error-text {
+  padding-bottom: calc(0.375rem - 2px);
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23c9190b' d='M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z'/%3E%3C/svg%3E");
+  background-position: calc(100% - 0.5rem) center;
+  background-size: 1rem 1rem;
+  border-bottom-width: 2px;
+  background-repeat: no-repeat;
+  border: 1px solid;
+  border-color: #bdbbbb #bdbbbb #c9190b #bdbbbb !important;
+}
+
+.drag-button {
+  border: 1px solid rgb(118, 118, 118);
+  background-color: rgb(239, 239, 239);
+  width: 30px;
+  padding-top: 3px;
+  padding-right: 1px;
+  border-radius: 2px;
+  height: 27px;
+  margin-left: 8px;
+  font-size: 18px;
+  &__img {
+    margin-bottom: 5px;
+  }
 }

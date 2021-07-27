@@ -8,6 +8,9 @@ import { alertStateOrder, silenceFiringAlertsOrder, silenceStateOrder } from '..
 import { ingressValidHosts } from '../ingress';
 import { convertToBaseValue, EmptyBox, StatusBox, WithScrollContainer } from '../utils';
 import { getClusterOperatorStatus, getClusterOperatorVersion, getJobTypeAndCompletions, getTemplateInstanceStatus, K8sResourceKind, K8sResourceKindReference, NodeKind, planExternalName, PodKind, podPhase, podReadiness, podRestarts, serviceCatalogStatus, serviceClassDisplayName, MachineKind } from '../../module/k8s';
+//import LinkedPipelineRunTaskStatus from '../../../packages/dev-console/src/components/pipelineruns/status/LinkedPipelineRunTaskStatus';
+import { pipelineRunFilterReducer } from '../../../packages/dev-console/src/utils/pipeline-filter-reducer';
+import { pipelineRunDuration } from '../../../packages/dev-console/src/utils/pipeline-utils';
 
 import {
   IRowData, // eslint-disable-line no-unused-vars
@@ -109,6 +112,76 @@ const sorts = {
   machinePhase: (machine: MachineKind): string => getMachinePhase(machine),
   nodePods: (node: NodeKind): number => nodePods(node),
   numSecrets: sa => (sa.secrets ? sa.secrets.length : 0),
+  pipelineRunFilterReducer: (pipelineRun): string => pipelineRunFilterReducer(pipelineRun),
+  //LinkedPipelineRunTaskStatus: (pipelineRun) => LinkedPipelineRunTaskStatus(pipelineRun),
+  pipelineRunDuration: pipelineRun => pipelineRunDuration(pipelineRun),
+  IntegrationConfigPhase: integrationConfig => {
+    let phase = '';
+    if (integrationConfig.status) {
+      integrationConfig.status.conditions?.forEach(cur => {
+        if (cur.type === 'ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else {
+            phase = 'UnReady';
+          }
+        }
+      });
+      return phase;
+    }
+  },
+  InferenceServicePhase: instance => {
+    let phase = '';
+    if (instance.status) {
+      instance.status.conditions?.forEach(cur => {
+        if (cur.type === 'Ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else if (cur.status === 'Unknown') {
+            phase = 'Unknown';
+          } else {
+            phase = 'Not Ready';
+          }
+        }
+      });
+      return phase;
+    }
+  },
+  InferenceServiceFramework: isvc => {
+    const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+    let framework;
+    Object.keys(isvc.spec.predictor).forEach(curPredictor => {
+      if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+        framework = curPredictor;
+      }
+    });
+    return framework;
+  },
+  InferenceServiceMultimodel: isvc => {
+    const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
+    let framework;
+    Object.keys(isvc.spec.predictor).forEach(curPredictor => {
+      if (frameworkList.some(curFramework => curFramework === curPredictor)) {
+        framework = curPredictor;
+      }
+    });
+    return (isvc?.spec?.predictor[framework]?.storageUri) ? 'N' : 'Y';
+  },
+  TrainedModelPhase: instance => {
+    let phase = '';
+    if (instance.status) {
+      instance.status.conditions.forEach(cur => {
+        if (cur.type === 'Ready') {
+          if (cur.status === 'True') {
+            phase = 'Ready';
+          } else {
+            phase = 'Not Ready';
+          }
+        }
+      });
+      return phase;
+    }
+  },
 };
 
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {

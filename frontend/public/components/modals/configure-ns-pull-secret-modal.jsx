@@ -190,7 +190,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
 
           {existingData.invalidData && (
             <Alert isInline className="co-alert" variant="danger" title="Overwriting default pull secret">
-              A default pull secret exists, but can't be parsed. Saving this will overwrite it.
+              {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_16')}
             </Alert>
           )}
 
@@ -291,7 +291,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
                 <div className="col-xs-9">
                   <input type="file" id="namespace-pull-secret-file" onChange={this._onFileChange} aria-describedby="namespace-pull-secret-file-help" />
                   <p className="help-block etext-muted" id="namespace-pull-secret-file-help">
-                    Properly configured Docker config file in JSON format. Will be base64 encoded after upload.
+                    {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_15')}
                   </p>
                 </div>
               </div>
@@ -300,7 +300,7 @@ class ConfigureNamespacePullSecret extends PromiseComponent {
                   <div className="row co-m-form-row">
                     <div className="col-xs-9 col-sm-offset-3">
                       <Alert isInline className="co-alert" variant="danger" title="Invalid JSON">
-                        The uploaded file is not properly-formatted JSON.
+                        {t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABDETAILS_17')}
                       </Alert>
                     </div>
                   </div>

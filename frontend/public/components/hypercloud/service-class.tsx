@@ -21,7 +21,7 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(serviceClass, t) })} />
         <div className="row">
           <div className="col-md-6">
-            <ResourceSummary resource={serviceClass} showPodSelector={false} showNodeSelector={false} showAnnotations={false} showOwner={false}></ResourceSummary>
+            <ResourceSummary resource={serviceClass} showPodSelector={false} showNodeSelector={false} showAnnotations={false}></ResourceSummary>
           </div>
           <div className="col-md-6">
             <dl className="co-m-pane__details">
@@ -30,7 +30,9 @@ const ServiceClassDetails: React.FC<ServiceClassDetailsProps> = ({ obj: serviceC
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_17')}</dt>
               <dd>{serviceClass.spec?.externalName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_18')}</dt>
-              <dd>{serviceClass.spec?.serviceBrokerName}</dd>
+              <dd>
+                <ResourceLink kind="ServiceBroker" name={serviceClass.spec?.serviceBrokerName} title={serviceClass.spec?.serviceBrokerName} namespace={serviceClass.metadata.namespace} />
+              </dd>
             </dl>
           </div>
         </div>

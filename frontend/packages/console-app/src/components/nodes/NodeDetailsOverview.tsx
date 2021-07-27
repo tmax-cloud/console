@@ -51,18 +51,18 @@ const NodeDetailsOverview: React.FC<NodeDetailsOverviewProps> = ({ node }) => {
             <dd>
               {canUpdate ? (
                 <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyTaints(NodeModel, node).callback.bind(null, t)}>
-                  {pluralize(_.size(node.spec.taints), 'Taint')}
+                  {t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_142', { 0: _.size(node.spec.taints) })}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
               ) : (
                 pluralize(_.size(node.spec.taints), 'Taint')
               )}
             </dd>
-            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12')}</dt>
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_99')}</dt>
             <dd>
               {canUpdate ? (
                 <Button variant="link" type="button" isInline onClick={Kebab.factory.ModifyAnnotations(NodeModel, node).callback.bind(null, t)}>
-                  {pluralize(_.size(node.metadata.annotations), 'Annotation')}
+                  {t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_100', { 0: _.size(node.metadata.annotations) })}
                   <PencilAltIcon className="co-icon-space-l pf-c-button-icon--plain" />
                 </Button>
               ) : (

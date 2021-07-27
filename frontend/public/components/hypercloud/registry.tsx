@@ -137,7 +137,7 @@ const RegistryDetails: React.FC<RegistryDetailsProps> = ({ obj: registry }) => {
   );
 };
 
-const { details, editResource } = navFactory;
+const { details, editResource, repositoryTab, notaryTab } = navFactory;
 
 export const Registries: React.FC = props => {
   const { t } = useTranslation();
@@ -222,28 +222,12 @@ export const NotaryLoader: React.FC<NotaryLoaderProps> = props => {
 };
 
 export const RegistriesDetailsPage: React.FC<RegistriesDetailsPageProps> = props => {
-  const { t } = useTranslation();
-  return (
-    <DetailsPage
-      {...props}
-      kind={kind}
-      menuActions={menuActions}
-      pages={[
-        details(detailsPage(RegistryDetails)),
-        editResource(),
-        {
-          href: 'repository',
-          name: t('COMMON:MSG_DETAILS_TABREPOSITORIES_1'),
-          component: RepositoriesTab,
-        },
-        {
-          href: 'notary',
-          name: t('COMMON:MSG_DETAILS_TABNOTARY_1'),
-          component: detailsPage(NotaryLoader),
-        },
-      ]}
-    />
-  );
+  const [notary, setNotary] = React.useState();
+  let tabList = [details(detailsPage(RegistryDetails)), editResource(), repositoryTab(RepositoriesTab)];
+  if (!!notary) {
+    tabList.push(notaryTab(detailsPage(NotaryLoader)));
+  }
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={tabList} setCustomState={setNotary} customStatePath="spec.notary.enabled" />;
 };
 
 type RegistryDetailsListProps = {

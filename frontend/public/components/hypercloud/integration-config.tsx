@@ -32,7 +32,7 @@ const tableColumnClasses = [
 const IntegrationConfigPhase = instance => {
   let phase = '';
   if (instance.status) {
-    instance.status.conditions.forEach(cur => {
+    instance.status.conditions?.forEach(cur => {
       if (cur.type === 'ready') {
         if (cur.status === 'True') {
           phase = 'Ready';
@@ -62,7 +62,7 @@ const IntegrationConfigTableHeader = (t?: TFunction) => {
     },    
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'phase',
+      sortFunc: 'IntegrationConfigPhase',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },

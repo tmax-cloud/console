@@ -913,3 +913,27 @@ export const HelmReleaseModel: K8sKind = {
   id: 'helmrelease',
   plural: 'helmreleases',
 };
+
+export const AWXModel: K8sKind = {
+  kind: 'AWX',
+  label: 'AWX Instance',
+  labelPlural: 'AWX Instances',
+  apiGroup: 'awx.ansible.com',
+  apiVersion: 'v1beta1',
+  abbr: 'AWX',
+  namespaced: true,
+  id: 'awx',
+  plural: 'awxs',
+};
+
+export const ClusterRegistrationModel: K8sKind = {
+  label: 'ClusterRegistration',
+  labelPlural: 'Cluster Registrations',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'cluster.tmax.io',
+  plural: 'clusterregistrations',
+  abbr: 'CLR',
+  kind: 'ClusterRegistration',
+  id: 'clusterregistration',
+  namespaced: true,
+};
