@@ -102,7 +102,7 @@ const ImageSignerDetails: React.FC<ImageSignerDetailsProps> = ({ obj: imagesigne
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(imagesigner, t) })} />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={imagesigner} showOwner={true} useHcOwnerPath={true} />
+            <ResourceSummary resource={imagesigner} showOwner={false} />
             {/* <DetailsItem label={t('COMMON:MSG_DETAILS_TABREPLICASETS_5')} obj={imagesigner} path="spec.owner" /> */}
           </div>
           <div className="col-lg-6">
