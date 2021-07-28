@@ -1,2 +1,1 @@
-frontend/packages/console-excel-to-json/16.uistr_hypercloud5.xlsx filter=lfs diff=lfs merge=lfs -text
-frontend/packages/console-excel-to-json/16.uistr_hypercloud5_Description.xlsx filter=lfs diff=lfs merge=lfs -text
+*.xlsx filter=lfs diff=lfs merge=lfs -text
