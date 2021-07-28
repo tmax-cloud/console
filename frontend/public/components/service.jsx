@@ -8,7 +8,7 @@ import { DetailsItem, Kebab, LabelList, ResourceIcon, ResourceKebab, ResourceLin
 import { ServiceModel } from '../models';
 import { useTranslation } from 'react-i18next';
 
-const menuActions = [Kebab.factory.ModifyPodSelector, ...Kebab.getExtensionsActionsForKind(ServiceModel), ...Kebab.factory.common];
+export const menuActions = [Kebab.factory.ModifyPodSelector, ...Kebab.getExtensionsActionsForKind(ServiceModel), ...Kebab.factory.common];
 
 const ServiceIP = ({ s }) => {
   const children = _.map(s.spec.ports, (portObj, i) => {
@@ -25,16 +25,7 @@ const ServiceIP = ({ s }) => {
 
 const kind = 'Service';
 
-const tableColumnClasses = [
-  classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'col-xs-6'), 
-  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), 
-  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'),  
-  classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), 
-  classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'hidden-xs'), 
-  classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'), 
-  classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), 
-  Kebab.columnClass
-];
+const tableColumnClasses = [classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-3', 'col-md-3', 'col-sm-4', 'hidden-xs'), classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'), classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
 
 const ServiceTableHeader = t => {
   return [
@@ -97,12 +88,8 @@ const ServiceTableRow = ({ obj: s, index, key, style }) => {
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={s.metadata.namespace} title={s.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        {s.spec.type}
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {(s.spec.type) !== 'LoadBalancer' ? ('No External IP') : (_.map(s.status.loadBalancer.ingress, i => i.hostname || i.ip || '-'))}
-      </TableData>
+      <TableData className={tableColumnClasses[2]}>{s.spec.type}</TableData>
+      <TableData className={tableColumnClasses[3]}>{s.spec.type !== 'LoadBalancer' ? 'No External IP' : _.map(s.status.loadBalancer.ingress, i => i.hostname || i.ip || '-')}</TableData>
       <TableData className={tableColumnClasses[4]}>
         <LabelList kind={kind} labels={s.metadata.labels} />
       </TableData>

@@ -2,17 +2,18 @@ export const TOPOLOGY_SEARCH_FILTER_KEY = 'searchQuery';
 export const FILTER_ACTIVE_CLASS = 'odc-m-filter-active';
 
 export enum ShowFiltersKeyValue {
-  podCount = 'Pod Count',
-  eventSources = 'Event Sources',
-  virtualMachines = 'Virtual Machines',
+  // podCount = 'Pod Count',
+  // eventSources = 'Event Sources',
+  // virtualMachines = 'Virtual Machines',
   showLabels = 'Show Labels',
 }
 
 export enum ExpandFiltersKeyValue {
   appGrouping = 'Application Groupings',
-  helmGrouping = 'Helm Releases',
-  knativeServices = 'Knative Services',
-  operatorGrouping = 'Operator Groupings',
+  workloadGrouping = 'Workload Groupings',
+  // helmGrouping = 'Helm Releases',
+  // knativeServices = 'Knative Services',
+  // operatorGrouping = 'Operator Groupings',
 }
 
 export type TopologyFilters = {
@@ -26,6 +27,7 @@ export type DisplayFilters = {
   showLabels: boolean;
   knativeServices: boolean;
   appGrouping: boolean;
+  workloadGrouping: boolean;
   operatorGrouping: boolean;
   helmGrouping: boolean;
 };

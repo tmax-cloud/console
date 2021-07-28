@@ -4,15 +4,15 @@ import { match as RMatch } from 'react-router';
 import { Firehose } from '@console/internal/components/utils';
 import * as plugins from '@console/internal/plugins';
 import { getResourceList } from '@console/shared';
-import { referenceForModel, K8sResourceKind } from '@console/internal/module/k8s';
+// import { referenceForModel, K8sResourceKind } from '@console/internal/module/k8s';
 import { RootState } from '@console/internal/redux';
-import { safeLoadAll } from 'js-yaml';
-import { ServiceBindingRequestModel } from '../../models';
+// import { safeLoadAll } from 'js-yaml';
+// import { ServiceBindingRequestModel } from '../../models';
 import { transformTopologyData } from './data-transforms/data-transformer';
-import { allowedResources, getHelmReleaseKey, getServiceBindingStatus } from './topology-utils';
+import { allowedResources, getServiceBindingStatus } from './topology-utils';
 import { TopologyDataModel, TopologyDataResources, TrafficData } from './topology-types';
-import { HelmReleaseResourcesMap } from '../helm/helm-types';
-import { fetchHelmReleases } from '../helm/helm-utils';
+// import { HelmReleaseResourcesMap } from '../helm/helm-types';
+// import { fetchHelmReleases } from '../helm/helm-utils';
 
 export interface RenderProps {
   data?: TopologyDataModel;
@@ -46,70 +46,70 @@ export interface TopologyDataControllerProps extends StateProps {
 }
 
 const Controller: React.FC<ControllerProps> = ({ render, resources, loaded, loadError, utils, namespace, serviceBinding, trafficData }) => {
-  const secretCount = React.useRef<number>(-1);
-  const [helmResourcesMap, setHelmResourcesMap] = React.useState<HelmReleaseResourcesMap>(null);
-  React.useEffect(() => {
-    const count = resources?.secrets?.data?.length ?? 0;
-    if ((resources.secrets?.loaded && count !== secretCount.current) || resources.secrets?.loadError) {
-      secretCount.current = count;
-      if (count === 0) {
-        setHelmResourcesMap({});
-        return;
-      }
+  // const secretCount = React.useRef<number>(-1);
+  // const [helmResourcesMap, setHelmResourcesMap] = React.useState<HelmReleaseResourcesMap>(null);
+  // React.useEffect(() => {
+  //   const count = resources?.secrets?.data?.length ?? 0;
+  //   if ((resources.secrets?.loaded && count !== secretCount.current) || resources.secrets?.loadError) {
+  //     secretCount.current = count;
+  //     if (count === 0) {
+  //       setHelmResourcesMap({});
+  //       return;
+  //     }
 
-      fetchHelmReleases(namespace)
-        .then(releases => {
-          setHelmResourcesMap(
-            releases.reduce((acc, release) => {
-              try {
-                const manifestResources: K8sResourceKind[] = safeLoadAll(release.manifest);
-                manifestResources.forEach(resource => {
-                  const resourceKindName = getHelmReleaseKey(resource);
-                  if (!acc.hasOwnProperty(resourceKindName)) {
-                    acc[resourceKindName] = {
-                      releaseName: release.name,
-                      releaseVersion: release.version,
-                      chartIcon: release.chart.metadata.icon,
-                      manifestResources,
-                      releaseNotes: release.info.notes,
-                    };
-                  }
-                });
-              } catch (e) {
-                // eslint-disable-next-line no-console
-                console.error(e);
-              }
-              return acc;
-            }, {}),
-          );
-        })
-        .catch(() => {
-          setHelmResourcesMap({});
-        });
-    }
-  }, [namespace, resources, resources.secrets, secretCount, setHelmResourcesMap]);
+  //     fetchHelmReleases(namespace)
+  //       .then(releases => {
+  //         setHelmResourcesMap(
+  //           releases.reduce((acc, release) => {
+  //             try {
+  //               const manifestResources: K8sResourceKind[] = safeLoadAll(release.manifest);
+  //               manifestResources.forEach(resource => {
+  //                 const resourceKindName = getHelmReleaseKey(resource);
+  //                 if (!acc.hasOwnProperty(resourceKindName)) {
+  //                   acc[resourceKindName] = {
+  //                     releaseName: release.name,
+  //                     releaseVersion: release.version,
+  //                     chartIcon: release.chart.metadata.icon,
+  //                     manifestResources,
+  //                     releaseNotes: release.info.notes,
+  //                   };
+  //                 }
+  //               });
+  //             } catch (e) {
+  //               // eslint-disable-next-line no-console
+  //               console.error(e);
+  //             }
+  //             return acc;
+  //           }, {}),
+  //         );
+  //       })
+  //       .catch(() => {
+  //         setHelmResourcesMap({});
+  //       });
+  //   }
+  // }, [namespace, resources, resources.secrets, secretCount, setHelmResourcesMap]);
 
   return render({
-    loaded: loaded && !!helmResourcesMap,
+    loaded: loaded,
     loadError,
     namespace,
     serviceBinding,
-    data: loaded && helmResourcesMap ? transformTopologyData(resources, allowedResources, utils, trafficData, helmResourcesMap) : null,
+    data: loaded ? transformTopologyData(resources, allowedResources, utils, trafficData) : null,
   });
 };
 
 export const TopologyDataController: React.FC<TopologyDataControllerProps> = ({ match, render, resourceList, serviceBinding }) => {
   const namespace = match.params.name;
   const { resources, utils } = getResourceList(namespace, resourceList);
-  if (serviceBinding) {
-    resources.push({
-      isList: true,
-      kind: referenceForModel(ServiceBindingRequestModel),
-      namespace,
-      prop: 'serviceBindingRequests',
-      optional: true,
-    });
-  }
+  // if (serviceBinding) {
+  //   resources.push({
+  //     isList: true,
+  //     kind: referenceForModel(ServiceBindingRequestModel),
+  //     namespace,
+  //     prop: 'serviceBindingRequests',
+  //     optional: true,
+  //   });
+  // }
 
   return (
     <Firehose resources={resources}>

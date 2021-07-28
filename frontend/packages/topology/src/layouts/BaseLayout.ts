@@ -1,34 +1,8 @@
 import * as _ from 'lodash';
 import { action } from 'mobx';
-import {
-  Edge,
-  Graph,
-  Layout,
-  Node,
-  ADD_CHILD_EVENT,
-  REMOVE_CHILD_EVENT,
-  GRAPH_LAYOUT_END_EVENT,
-  ElementChildEventListener,
-  NODE_COLLAPSE_CHANGE_EVENT,
-  NodeCollapseChangeEventListener,
-  NodeStyle,
-  ElementVisibilityChangeEventListener,
-  ELEMENT_VISIBILITY_CHANGE_EVENT,
-  ElementVisibilityChangeEvent,
-} from '../types';
-import {
-  leafNodeElements,
-  groupNodeElements,
-  getClosestVisibleParent,
-} from '../utils/element-utils';
-import {
-  DRAG_MOVE_OPERATION,
-  DRAG_NODE_END_EVENT,
-  DRAG_NODE_START_EVENT,
-  DragEvent,
-  DragNodeEventListener,
-  DragOperationWithType,
-} from '../behavior';
+import { Edge, Graph, Layout, Node, ADD_CHILD_EVENT, REMOVE_CHILD_EVENT, GRAPH_LAYOUT_END_EVENT, ElementChildEventListener, NODE_COLLAPSE_CHANGE_EVENT, NodeCollapseChangeEventListener, NodeStyle, ElementVisibilityChangeEventListener, ELEMENT_VISIBILITY_CHANGE_EVENT, ElementVisibilityChangeEvent } from '../types';
+import { leafNodeElements, groupNodeElements, getClosestVisibleParent } from '../utils/element-utils';
+import { DRAG_MOVE_OPERATION, DRAG_NODE_END_EVENT, DRAG_NODE_START_EVENT, DragEvent, DragNodeEventListener, DragOperationWithType } from '../behavior';
 import { BaseEdge } from '../elements';
 import { ForceSimulation } from './ForceSimulation';
 import { Rect } from '../geom';
@@ -312,9 +286,7 @@ class BaseLayout implements Layout {
       found = true;
     }
     if (!found) {
-      const dragGroup: LayoutGroup | undefined = this.groups.find(
-        (group: LayoutGroup) => group.id === id,
-      );
+      const dragGroup: LayoutGroup | undefined = this.groups.find((group: LayoutGroup) => group.id === id);
       if (dragGroup) {
         const groupNodes = dragGroup.leaves;
         groupNodes.forEach((node: LayoutNode) => {
@@ -347,9 +319,7 @@ class BaseLayout implements Layout {
     if (dragNode) {
       dragNode.isFixed = false;
     } else {
-      const dragGroup: LayoutGroup | undefined = this.groups.find(
-        (group: LayoutGroup) => group.id === id,
-      );
+      const dragGroup: LayoutGroup | undefined = this.groups.find((group: LayoutGroup) => group.id === id);
       if (dragGroup) {
         const groupNodes = dragGroup.leaves;
         groupNodes.forEach((node: LayoutNode) => {
@@ -373,10 +343,7 @@ class BaseLayout implements Layout {
     if (controller) {
       controller.addEventListener(ADD_CHILD_EVENT, this.handleChildAdded);
       controller.addEventListener(REMOVE_CHILD_EVENT, this.handleChildRemoved);
-      controller.addEventListener(
-        ELEMENT_VISIBILITY_CHANGE_EVENT,
-        this.handleElementVisibilityChange,
-      );
+      controller.addEventListener(ELEMENT_VISIBILITY_CHANGE_EVENT, this.handleElementVisibilityChange);
       controller.addEventListener(NODE_COLLAPSE_CHANGE_EVENT, this.handleNodeCollapse);
     }
   }
@@ -389,10 +356,7 @@ class BaseLayout implements Layout {
     if (controller) {
       controller.removeEventListener(ADD_CHILD_EVENT, this.handleChildAdded);
       controller.removeEventListener(REMOVE_CHILD_EVENT, this.handleChildRemoved);
-      controller.removeEventListener(
-        ELEMENT_VISIBILITY_CHANGE_EVENT,
-        this.handleElementVisibilityChange,
-      );
+      controller.removeEventListener(ELEMENT_VISIBILITY_CHANGE_EVENT, this.handleElementVisibilityChange);
       controller.removeEventListener(NODE_COLLAPSE_CHANGE_EVENT, this.handleNodeCollapse);
     }
   }
@@ -411,9 +375,7 @@ class BaseLayout implements Layout {
     }
   };
 
-  protected handleElementVisibilityChange: ElementVisibilityChangeEventListener = (
-    event: ElementVisibilityChangeEvent,
-  ): void => {
+  protected handleElementVisibilityChange: ElementVisibilityChangeEventListener = (event: ElementVisibilityChangeEvent): void => {
     if (event.visible === (this.nodesMap[event.target.getId()] === undefined)) {
       this.scheduleRestart = true;
       this.scheduleLayout();
@@ -438,9 +400,7 @@ class BaseLayout implements Layout {
   };
 
   protected getFixedNodeDistance = (link: LayoutLink): number => {
-    return Math.sqrt(
-      (link.sourceNode.x - link.targetNode.x) ** 2 + (link.sourceNode.y - link.targetNode.y) ** 2,
-    );
+    return Math.sqrt((link.sourceNode.x - link.targetNode.x) ** 2 + (link.sourceNode.y - link.targetNode.y) ** 2);
   };
 
   protected getLayoutNode(nodes: LayoutNode[], node: Node | null): LayoutNode | undefined {
@@ -484,12 +444,7 @@ class BaseLayout implements Layout {
     return new LayoutNode(node, nodeDistance, index);
   }
 
-  protected createLayoutLink(
-    edge: Edge,
-    source: LayoutNode,
-    target: LayoutNode,
-    isFalse: boolean = false,
-  ): LayoutLink {
+  protected createLayoutLink(edge: Edge, source: LayoutNode, target: LayoutNode, isFalse: boolean = false): LayoutLink {
     return new LayoutLink(edge, source, target, isFalse);
   }
 
@@ -511,9 +466,13 @@ class BaseLayout implements Layout {
 
   protected getLinks(edges: Edge[]): LayoutLink[] {
     const links: LayoutLink[] = [];
-    edges.forEach((e) => {
+    edges.forEach(e => {
       const source = this.getLayoutNode(this.nodes, e.getSource());
-      const target = this.getLayoutNode(this.nodes, e.getTarget());
+      let target = this.getLayoutNode(this.nodes, e.getTarget());
+      // MEMO : Deployment Group과 Service Node 연결된 edge의 경우 target을 못찾아서 Group의 0번째 노드를 target으로 설정하도록 임시처리 (수정필요함)
+      if (!target) {
+        target = this.getLayoutNode(this.nodes, e.getTarget().getNodes()[0]);
+      }
       if (source && target) {
         this.initializeEdgeBendpoints(e);
         links.push(this.createLayoutLink(e, source, target));
@@ -524,15 +483,11 @@ class BaseLayout implements Layout {
   }
 
   // Turn empty groups into nodes
-  protected getNodesFromGroups(
-    groups: Node[],
-    nodeDistance: number,
-    nodeCount: number,
-  ): LayoutNode[] {
+  protected getNodesFromGroups(groups: Node[], nodeDistance: number, nodeCount: number): LayoutNode[] {
     let count = 0;
     const groupNodes: LayoutNode[] = [];
     groups.forEach((group: Node) => {
-      if (group.getChildren().filter((c) => c.isVisible()).length === 0) {
+      if (group.getChildren().filter(c => c.isVisible()).length === 0) {
         groupNodes.push(this.createLayoutNode(group, nodeDistance, nodeCount + count++));
       }
     });
@@ -543,17 +498,13 @@ class BaseLayout implements Layout {
   protected getGroups(groups: Node[], nodes: LayoutNode[], padding: number): LayoutGroup[] {
     let nodeIndex = nodes.length;
     // Create groups only for those with children
-    const layoutGroups: LayoutGroup[] = groups
-      .filter((g) => g.getChildren().filter((c) => c.isVisible()).length > 0)
-      .map((group: Node) => this.createLayoutGroup(group, padding, nodeIndex++));
+    const layoutGroups: LayoutGroup[] = groups.filter(g => g.getChildren().filter(c => c.isVisible()).length > 0).map((group: Node) => this.createLayoutGroup(group, padding, nodeIndex++));
 
     layoutGroups.forEach((groupNode: LayoutGroup) => {
       const leaves: LayoutNode[] = [];
-      const leafElements = groupNode.element
-        .getChildren()
-        .filter((node: Node) => !node.isGroup() || node.getChildren().length === 0);
+      const leafElements = groupNode.element.getChildren().filter((node: Node) => !node.isGroup() || node.getChildren().length === 0);
       leafElements.forEach((leaf: Node) => {
-        const layoutLeaf = nodes.find((n) => n.id === leaf.getId());
+        const layoutLeaf = nodes.find(n => n.id === leaf.getId());
         if (layoutLeaf) {
           leaves.push(layoutLeaf);
           layoutLeaf.parent = groupNode;
@@ -561,11 +512,9 @@ class BaseLayout implements Layout {
       });
       groupNode.leaves = leaves;
       const childGroups: LayoutGroup[] = [];
-      const groupElements = groupNode.element
-        .getChildren()
-        .filter((node: Node) => node.isGroup() && !node.isCollapsed());
+      const groupElements = groupNode.element.getChildren().filter((node: Node) => node.isGroup() && !node.isCollapsed());
       groupElements.forEach((group: Node) => {
-        const layoutGroup = layoutGroups.find((g) => g.id === group.getId());
+        const layoutGroup = layoutGroups.find(g => g.id === group.getId());
         if (layoutGroup) {
           childGroups.push(layoutGroup);
           layoutGroup.parent = groupNode;
@@ -577,11 +526,7 @@ class BaseLayout implements Layout {
     return layoutGroups;
   }
 
-  protected initializeNodePositions(
-    newNodes: LayoutNode[],
-    graph: Graph,
-    force: boolean = false,
-  ): void {
+  protected initializeNodePositions(newNodes: LayoutNode[], graph: Graph, force: boolean = false): void {
     const { width, height } = graph.getBounds();
     const cx = width / 2;
     const cy = height / 2;
@@ -602,7 +547,7 @@ class BaseLayout implements Layout {
   ): void {}
 
   protected updateExistingNodes(existingNodes: LayoutNode[]): void {
-    existingNodes.forEach((n) => {
+    existingNodes.forEach(n => {
       (n as LayoutNode).isFixed = true;
     });
   }
@@ -624,36 +569,30 @@ class BaseLayout implements Layout {
     const prevGroups = this.groups;
 
     // create datum
-    const leafNodes = leafNodeElements(this.graph.getNodes()).filter((n) => n.isVisible());
-    const groups = groupNodeElements(this.graph.getNodes()).filter((g) => g.isVisible());
+    const leafNodes = leafNodeElements(this.graph.getNodes()).filter(n => n.isVisible());
+    const groups = groupNodeElements(this.graph.getNodes()).filter(g => g.isVisible());
 
     this.nodes = this.getNodes(leafNodes, this.options.nodeDistance);
 
-    const groupNodes: LayoutNode[] = this.getNodesFromGroups(
-      groups,
-      this.options.nodeDistance,
-      this.nodes.length,
-    );
+    const groupNodes: LayoutNode[] = this.getNodesFromGroups(groups, this.options.nodeDistance, this.nodes.length);
     if (groupNodes) {
       this.nodes.push(...groupNodes);
     }
 
     this.groups = this.getGroups(groups, this.nodes, this.options.groupDistance);
 
-    const newNodes: LayoutNode[] = initialRun
-      ? this.nodes
-      : this.nodes.filter((node) => !this.nodesMap[node.element.getId()]);
+    const newNodes: LayoutNode[] = initialRun ? this.nodes : this.nodes.filter(node => !this.nodesMap[node.element.getId()]);
     let addingNodes = restart && newNodes.length > 0;
 
     if (!initialRun && restart && !addingNodes) {
-      this.groups.forEach((group) => {
-        const prevGroup = prevGroups.find((g) => g.element.getId() === group.element.getId());
+      this.groups.forEach(group => {
+        const prevGroup = prevGroups.find(g => g.element.getId() === group.element.getId());
         if (!prevGroup) {
           addingNodes = true;
           newNodes.push(...group.leaves);
         } else {
-          group.leaves.forEach((node) => {
-            if (!prevGroup.leaves.find((l) => l.element.getId() === node.element.getId())) {
+          group.leaves.forEach(node => {
+            if (!prevGroup.leaves.find(l => l.element.getId() === node.element.getId())) {
               newNodes.push(node);
             }
           });
@@ -678,7 +617,7 @@ class BaseLayout implements Layout {
 
     this.setupLayout(this.graph, this.nodes, this.edges, this.groups);
 
-    this.updateExistingNodes(this.nodes.filter((n) => !newNodes.includes(n)));
+    this.updateExistingNodes(this.nodes.filter(n => !newNodes.includes(n)));
 
     if (initialRun || addingNodes) {
       // Reset the force simulation

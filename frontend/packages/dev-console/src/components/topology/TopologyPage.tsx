@@ -101,7 +101,7 @@ export const TopologyPage: React.FC<TopologyPageProps> = ({ match }) => {
           </>
         }
       >
-        <Firehose resources={[{ kind: 'Project', prop: 'projects', isList: true }]}>
+        <Firehose resources={[{ kind: 'Namespace', prop: 'projects', isList: true }]}>
           <ProjectsExistWrapper title="Topology">
             {namespace ? showListView ? <AsyncComponent mock={false} match={match} title="" EmptyMsg={EmptyMsg} emptyBodyClass="odc-namespaced-page__content" loader={() => import('@console/internal/components/overview' /* webpackChunkName: "topology-overview" */).then(m => m.Overview)} /> : <ConnectedTopologyDataController match={match} render={renderTopology} /> : <ProjectListPage title="Topology">Select a project to view the topology</ProjectListPage>}
           </ProjectsExistWrapper>

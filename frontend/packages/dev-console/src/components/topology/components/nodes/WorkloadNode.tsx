@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash-es';
 import { connect } from 'react-redux';
 import { calculateRadius } from '@console/shared';
 import { Node, observer, WithCreateConnectorProps, WithDragNodeProps, WithSelectionProps, WithDndDropProps, WithContextMenuProps } from '@console/topology';
@@ -7,7 +8,8 @@ import { Tooltip, TooltipPosition } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { routeDecoratorIcon } from '../../../import/render-utils';
 import { Decorator } from './Decorator';
-import PodSet, { podSetInnerRadius } from './PodSet';
+// import PodSet, { podSetInnerRadius } from './PodSet';
+import { podSetInnerRadius } from './PodSet';
 import BuildDecorator from './build-decorators/BuildDecorator';
 import { BaseNode } from './BaseNode';
 import { getCheURL, getEditURL, getServiceBindingStatus } from '../../topology-utils';
@@ -35,6 +37,14 @@ export type WorkloadNodeProps = {
   WithCreateConnectorProps &
   StateProps;
 
+const hasNodeName = data => {
+  return data.kind === 'Pod' && _.get(data, 'spec', 'nodeName');
+};
+
+const findNodeName = data => {
+  return { nodeUrl: `/k8s/cluster/nodes/${data.spec.nodeName}`, nodeIcon: 'hi' };
+};
+
 const ObservedWorkloadNode: React.FC<WorkloadNodeProps> = ({ element, urlAnchorRef, canDrop, dropTarget, serviceBinding, cheURL, ...rest }) => {
   const { width, height } = element.getDimensions();
   const workloadData = element.getData().data;
@@ -45,6 +55,7 @@ const ObservedWorkloadNode: React.FC<WorkloadNodeProps> = ({ element, urlAnchorR
   const cheEnabled = !!cheURL;
   const cx = width / 2;
   const cy = height / 2;
+  const { nodeUrl, nodeIcon } = hasNodeName(donutStatus.dc) && findNodeName(donutStatus.dc);
   const editUrl = editURL || getEditURL(vcsURI, cheURL);
   const repoIcon = routeDecoratorIcon(editUrl, decoratorRadius, cheEnabled);
   const tipContent = `Create a ${serviceBinding && element.getData().operatorBackedService ? 'binding' : 'visual'} connector`;
@@ -63,6 +74,13 @@ const ObservedWorkloadNode: React.FC<WorkloadNodeProps> = ({ element, urlAnchorR
           canDrop={canDrop}
           {...rest}
           attachments={[
+            nodeIcon && (
+              <Tooltip key="node" content={donutStatus.dc.spec.nodeName} position={TooltipPosition.right}>
+                <Decorator x={cx + radius - decoratorRadius * 0.7} y={cy + radius - decoratorRadius * 0.7} radius={decoratorRadius} href={nodeUrl} external>
+                  <g transform={`translate(-${decoratorRadius / 2}, -${decoratorRadius / 2})`}>{nodeIcon}</g>
+                </Decorator>
+              </Tooltip>
+            ),
             repoIcon && (
               <Tooltip key="edit" content="Edit Source Code" position={TooltipPosition.right}>
                 <Decorator x={cx + radius - decoratorRadius * 0.7} y={cy + radius - decoratorRadius * 0.7} radius={decoratorRadius} href={editUrl} external>
@@ -82,7 +100,7 @@ const ObservedWorkloadNode: React.FC<WorkloadNodeProps> = ({ element, urlAnchorR
             <BuildDecorator key="build" workloadData={workloadData} x={cx - radius + decoratorRadius * 0.7} y={cy + radius - decoratorRadius * 0.7} radius={decoratorRadius} />,
           ]}
         >
-          <PodSet size={size} x={cx} y={cy} data={donutStatus} showPodCount={filters.podCount} />
+          {/* <PodSet size={size} x={cx} y={cy} data={donutStatus} showPodCount={filters.podCount} /> */}
         </BaseNode>
       </Tooltip>
     </g>
