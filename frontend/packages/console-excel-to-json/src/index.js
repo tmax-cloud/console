@@ -135,28 +135,23 @@ console.log('-------------------------------------------------------------------
   // get common/single/multi string
   for (const key of Object.keys(KeyMap)) {
     if (key !== KeyMap.DESCRIPTION.label) {
-      try {
-        console.log(`${KeyMap[key].sheet} sheet conversion start...`);
-        const data = await read(commonFile, KeyMap[key].sheet, KeyMap[key].column);
-        for (const lang of Object.keys(LanguageMap)) {
-          result[lang] = { ...result[lang], [KeyMap[key].label]: data[lang] };
-        }
-      } catch (error) {
-        console.log(error.message);
+      console.log(`${KeyMap[key].sheet} sheet conversion start...`);
+      const data = await read(commonFile, KeyMap[key].sheet, KeyMap[key].column);
+      for (const lang of Object.keys(LanguageMap)) {
+        result[lang] = { ...result[lang], [KeyMap[key].label]: data[lang] };
       }
+      console.log(`[KR] ${key} Size:`, Object.keys(result.KR[key]).length); // result's size check
     }
   }
 
   // get description string
-  try {
-    console.log(`${KeyMap.DESCRIPTION.sheet} sheet conversion start...`);
-    const data = await read(descFile, KeyMap.DESCRIPTION.sheet, KeyMap.DESCRIPTION.column);
-    for (const lang of Object.keys(LanguageMap)) {
-      result[lang] = { ...result[lang], [KeyMap.DESCRIPTION.label]: data[lang] };
-    }
-  } catch (error) {
-    console.log(error.message);
+  console.log(`${KeyMap.DESCRIPTION.sheet} sheet conversion start...`);
+  const data = await read(descFile, KeyMap.DESCRIPTION.sheet, KeyMap.DESCRIPTION.column);
+  for (const lang of Object.keys(LanguageMap)) {
+    result[lang] = { ...result[lang], [KeyMap.DESCRIPTION.label]: data[lang] };
   }
+  // result's size check
+  console.log(`[KR] ${KeyMap.DESCRIPTION.label} Size:`, Object.keys(result.KR.DESCRIPTION).length);
 
   // write file
   for (const lang of Object.keys(LanguageMap)) {
