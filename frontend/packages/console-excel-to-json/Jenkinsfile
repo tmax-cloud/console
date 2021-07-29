@@ -1,0 +1,51 @@
+import java.text.SimpleDateFormat
+pipeline {
+    agent any
+    tools {
+        nodejs "NodeJS"
+    }
+    stages {
+        stage("Git") {
+            steps {
+                checkout([  $class: "GitSCM", 
+                    branches: [
+                        [name: "refs/heads/feature/excel-to-json"]
+                    ],
+                    extensions: [
+                        [$class: "GitLFSPull"]
+                    ],
+                    userRemoteConfigs: [
+                        [credentialsId: "yunhee_shin",
+                        url: "https://github.com/tmax-cloud/console.git"]
+                    ]
+                ])
+            }
+        }
+        stage("Run") {
+            steps {
+                dir("frontend/packages/console-excel-to-json") {
+                    sh 'npm install'
+                    sh 'npm start'
+                }
+            }
+        }
+        stage("Print") {
+            steps {
+                script {
+                    def dateFormat = new SimpleDateFormat("yy.MM.dd")
+                    def date = new Date() 
+                    def TODAY = dateFormat.format(date)
+                    sh "echo i18n string ${TODAY} 버전 반영"
+                }
+            }
+        }
+    }
+    post {
+        success {
+            sh "echo SUCCESSFUL"
+        }
+        failure {
+            sh "echo FAILED"
+        }
+    }
+}
