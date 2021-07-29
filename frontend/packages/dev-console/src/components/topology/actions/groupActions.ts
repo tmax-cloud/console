@@ -72,5 +72,6 @@ const addResourcesMenu = (graphData: GraphData, application: TopologyApplication
 
 export const groupActions = (graphData: GraphData, application: TopologyApplicationObject, connectorSource?: Node): KebabOption[] => {
   const addItems = addResourcesMenu(graphData, application, connectorSource);
-  return !connectorSource ? [deleteGroup(application), ...addItems] : addItems;
+  // return !connectorSource ? [deleteGroup(application), ...addItems] : addItems;
+  return !connectorSource ? [deleteGroup(application)] : addItems;
 };
