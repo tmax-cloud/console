@@ -1,10 +1,16 @@
 import { STORAGE_PREFIX } from '@console/shared';
 
 export const TYPE_WORKLOAD = 'workload';
+export const TYPE_SERVICE = 'service';
+export const TYPE_POD = 'pod';
 export const TYPE_CONNECTS_TO = 'connects-to';
 export const TYPE_AGGREGATE_EDGE = 'aggregate-edge';
 export const TYPE_SERVICE_BINDING = 'service-binding';
 export const TYPE_APPLICATION_GROUP = 'part-of';
+export const TYPE_DEPLOYMENT_GROUP = 'deployment-group';
+export const TYPE_DAEMONSET_GROUP = 'daemonset-group';
+export const TYPE_STATEFULSET_GROUP = 'statefulset-group';
+export const TYPE_REPLICASET_GROUP = 'replicaset-group';
 export const TYPE_TRAFFIC_CONNECTOR = 'traffic-connector';
 export const LAST_TOPOLOGY_VIEW_LOCAL_STORAGE_KEY = `${STORAGE_PREFIX}/last-topology-view`;
 

@@ -117,7 +117,7 @@ const getMenuActions = type => {
 };
 
 const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, key, style }) => {
-  const owner = cluster.metadata?.annotations?.owner;
+  const owner = cluster.metadata?.annotations?.creator;
   let type = cluster.metadata.labels?.type;
 
   return (
@@ -178,7 +178,7 @@ const KeyValuePrint: React.FC<KeyValuePrintProps> = ({ obj, key }) => {
 };
 
 const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
-  const owner = cluster.status.owner && Object.keys(cluster.status.owner)[0];
+  // const owner = cluster.status.owner && Object.keys(cluster.status.owner)[0];
   const members = cluster.status.members && Object.keys(cluster.status.members);
   const groups = cluster.status.groups && Object.keys(cluster.status.groups);
   const { t } = useTranslation();
@@ -188,8 +188,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(cluster, t) })} />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={cluster} showOwner={false} />
-            {cluster.status.owner && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={cluster} children={KeyValuePrint({ obj: cluster.status.owner, key: owner })} />}
+            <ResourceSummary resource={cluster} />
             {cluster.status.members && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={members.map(member => KeyValuePrint({ obj: cluster.status.members, key: member }))} />}
             {cluster.status.groups && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={groups.map(group => KeyValuePrint({ obj: cluster.status.groups, key: group }))} />}
           </div>

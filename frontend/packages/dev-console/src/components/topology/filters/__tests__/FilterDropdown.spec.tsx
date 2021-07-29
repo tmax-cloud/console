@@ -11,6 +11,7 @@ const VALID_FILTERS = {
   showLabels: true,
   knativeServices: true,
   appGrouping: true,
+  workloadGrouping: true,
   operatorGrouping: true,
   helmGrouping: true,
 };

@@ -26,7 +26,7 @@ export type OverviewItem<T = K8sResourceKind> = {
   obj: T;
   pods?: PodKind[];
   previous?: PodControllerOverviewItem;
-  routes: RouteKind[];
+  routes?: RouteKind[];
   services: K8sResourceKind[];
   status?: React.ReactNode;
   ksroutes?: K8sResourceKind[];

@@ -4,10 +4,10 @@ import { TransformResourceData, isKnativeServing } from '@console/shared';
 import { ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 import { getImageForIconClass } from '@console/internal/components/catalog/catalog-item-icon';
 import { TYPE_EVENT_SOURCE, TYPE_KNATIVE_REVISION } from '@console/knative-plugin/src/topology/const';
-import { edgesFromAnnotations, edgesFromServiceBinding } from '../../../utils/application-utils';
-import { TopologyDataModel, TopologyDataResources, TopologyDataObject, Node, Edge, Group, TopologyOverviewItem, ConnectsToData } from '../topology-types';
-import { TYPE_APPLICATION_GROUP, TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_SERVICE_BINDING } from '../components/const';
-import { getRoutesURL } from '../topology-utils';
+import { edgesFromAnnotations } from '../../../utils/application-utils';
+import { TopologyDataModel, TopologyDataObject, Node, Edge, Group, TopologyOverviewItem, ConnectsToData } from '../topology-types';
+import { TopologyDataResources as HyperCloudTopologyDataResource } from '../hypercloud/hypercloud-topology-types';
+import { TYPE_WORKLOAD, TYPE_CONNECTS_TO, TYPE_APPLICATION_GROUP } from '../components/const';
 
 export const dataObjectFromModel = (node: Node | Group): TopologyDataObject => {
   return {
@@ -23,25 +23,29 @@ export const dataObjectFromModel = (node: Node | Group): TopologyDataObject => {
 /**
  * create instance of TransformResourceData, return object containing all methods
  */
-export const createInstanceForResource = (resources: TopologyDataResources, utils?: Function[], installedOperators?: ClusterServiceVersionKind[]) => {
-  const transformResourceData = new TransformResourceData(resources, utils, installedOperators);
+export const createInstanceForResource = (resources: HyperCloudTopologyDataResource, utils?: Function[], installedOperators?: ClusterServiceVersionKind[]) => {
+  const transformResourceData = new TransformResourceData(resources, utils);
 
   return {
     deployments: transformResourceData.createDeploymentItems,
-    deploymentConfigs: transformResourceData.createDeploymentConfigItems,
     daemonSets: transformResourceData.createDaemonSetItems,
     statefulSets: transformResourceData.createStatefulSetItems,
+    replicaSets: transformResourceData.createReplicaSetItems,
+    pods: transformResourceData.createPodItems,
+    services: transformResourceData.createServiceItems,
+    persistentVolumeClaims: transformResourceData.createPersistentVolumeClaimItems,
   };
 };
 
 /**
  * create all data that need to be shown on a topology data
  */
+// MJ : NodeData정제과정도 다시 짜야 함
 export const createTopologyNodeData = (dc: TopologyOverviewItem, type: string, defaultIcon: string, operatorBackedService: boolean = false): TopologyDataObject => {
   const { obj: deploymentConfig, current, previous, isRollingOut, buildConfigs, pipelines = [], pipelineRuns = [] } = dc;
   const dcUID = _.get(deploymentConfig, 'metadata.uid');
   const deploymentsLabels = _.get(deploymentConfig, 'metadata.labels', {});
-  const deploymentsAnnotations = _.get(deploymentConfig, 'metadata.annotations', {});
+  // const deploymentsAnnotations = _.get(deploymentConfig, 'metadata.annotations', {});
 
   const builderImageIcon = getImageForIconClass(`icon-${deploymentsLabels['app.openshift.io/runtime']}`) || getImageForIconClass(`icon-${deploymentsLabels['app.kubernetes.io/name']}`);
   return {
@@ -52,10 +56,13 @@ export const createTopologyNodeData = (dc: TopologyOverviewItem, type: string, d
     pods: dc.pods,
     operatorBackedService,
     data: {
-      url: getRoutesURL(dc),
+      // url: getRoutesURL(dc),
+      url: '',
       kind: referenceFor(deploymentConfig),
-      editURL: deploymentsAnnotations['app.openshift.io/edit-url'],
-      vcsURI: deploymentsAnnotations['app.openshift.io/vcs-uri'],
+      // editURL: deploymentsAnnotations['app.openshift.io/edit-url'],
+      // vcsURI: deploymentsAnnotations['app.openshift.io/vcs-uri'],
+      editURL: '',
+      vcsURI: '',
       builderImage: builderImageIcon || defaultIcon,
       isKnativeResource: type && (type === TYPE_EVENT_SOURCE || type === TYPE_KNATIVE_REVISION) ? true : isKnativeServing(deploymentConfig, 'metadata.labels'),
       build: buildConfigs?.[0]?.builds?.[0],
@@ -80,12 +87,12 @@ export const createTopologyNodeData = (dc: TopologyOverviewItem, type: string, d
 export const getTopologyNodeItem = (dc: K8sResourceKind, type?: string, children?: string[]): Node => {
   const uid = _.get(dc, ['metadata', 'uid']);
   const name = _.get(dc, ['metadata', 'name']);
-  const label = _.get(dc, ['metadata', 'labels', 'app.openshift.io/instance']);
+  // const label = _.get(dc, ['metadata', 'labels', 'app.openshift.io/instance']);
 
   return {
     id: uid,
     type: type || TYPE_WORKLOAD,
-    name: label || name,
+    name: name,
     ...(children && children.length && { children }),
   };
 };
@@ -128,27 +135,27 @@ export const getTopologyEdgeItems = (dc: K8sResourceKind, resources: K8sResource
     }
   });
 
-  _.forEach(edgesFromServiceBinding(dc, sbrs), sbr => {
-    // look for multiple backing services first in `backingServiceSelectors`
-    // followed by a fallback to the single reference in `backingServiceSelector`
-    _.forEach(sbr.spec.backingServiceSelectors || [sbr.spec.backingServiceSelector], bss => {
-      if (bss) {
-        // handles multiple edges
-        const targetResource = resources.find(deployment => deployment?.metadata?.ownerReferences?.[0]?.kind === bss.kind && deployment?.metadata?.ownerReferences?.[0]?.name === bss.resourceRef);
-        const target = targetResource?.metadata?.uid;
-        const source = dc?.metadata?.uid;
-        if (source && target) {
-          edges.push({
-            id: `${source}_${target}`,
-            type: TYPE_SERVICE_BINDING,
-            source,
-            target,
-            data: { sbr },
-          });
-        }
-      }
-    });
-  });
+  // _.forEach(edgesFromServiceBinding(dc, sbrs), sbr => {
+  //   // look for multiple backing services first in `backingServiceSelectors`
+  //   // followed by a fallback to the single reference in `backingServiceSelector`
+  //   _.forEach(sbr.spec.backingServiceSelectors || [sbr.spec.backingServiceSelector], bss => {
+  //     if (bss) {
+  //       // handles multiple edges
+  //       const targetResource = resources.find(deployment => deployment?.metadata?.ownerReferences?.[0]?.kind === bss.kind && deployment?.metadata?.ownerReferences?.[0]?.name === bss.resourceRef);
+  //       const target = targetResource?.metadata?.uid;
+  //       const source = dc?.metadata?.uid;
+  //       if (source && target) {
+  //         edges.push({
+  //           id: `${source}_${target}`,
+  //           type: TYPE_SERVICE_BINDING,
+  //           source,
+  //           target,
+  //           data: { sbr },
+  //         });
+  //       }
+  //     }
+  //   });
+  // });
 
   return edges;
 };
@@ -156,17 +163,16 @@ export const getTopologyEdgeItems = (dc: K8sResourceKind, resources: K8sResource
 /**
  * create groups data for graph
  */
-export const getTopologyGroupItems = (dc: K8sResourceKind): Group => {
-  const groupName = _.get(dc, ['metadata', 'labels', 'app.kubernetes.io/part-of']);
+export const getTopologyGroupItems = (obj: K8sResourceKind): Group => {
+  const groupName = _.get(obj, ['metadata', 'labels', 'app.kubernetes.io/part-of']);
   if (!groupName) {
     return null;
   }
-
   return {
     id: `group:${groupName}`,
     type: TYPE_APPLICATION_GROUP,
     name: groupName,
-    nodes: [_.get(dc, ['metadata', 'uid'])],
+    nodes: [_.get(obj, ['metadata', 'uid'])],
   };
 };
 
