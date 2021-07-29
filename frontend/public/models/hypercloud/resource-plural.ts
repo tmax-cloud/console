@@ -15,7 +15,6 @@ export const ResourceLabelPlural = (kindObj, t?: TFunction) => {
   return t(ResourceStringKeyMap[kindObj.kind].labelPlural);
 };
 
-// MJ : Experiment 복수형 string 발행되면 대체하기
 export const ResourceStringKeyMap = {
   ClusterClaim: {
     labelPlural: 'COMMON:MSG_LNB_MENU_105',
@@ -333,7 +332,7 @@ export const ResourceStringKeyMap = {
   },
   Experiment: {
     labelPlural: 'COMMON:MSG_LNB_MENU_194',
-    label: 'COMMON:MSG_LNB_MENU_194',
+    label: 'COMMON:MSG_LNB_MENU_205',
   },
   InferenceService: {
     labelPlural: 'COMMON:MSG_LNB_MENU_192',
