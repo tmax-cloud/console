@@ -21,9 +21,9 @@ import { GraphData, TopologyDataModel, TopologyDataObject, SHOW_GROUPING_HINT_EV
 import TopologyResourcePanel from './TopologyResourcePanel';
 import TopologyApplicationPanel from './application-panel/TopologyApplicationPanel';
 import ConnectedTopologyEdgePanel from './TopologyEdgePanel';
-import { topologyModelFromDataModel } from './data-transforms/topology-model';
+import { topologyModelFromDataModel } from './data-transforms/hypercloud/topology-model';
 import { layoutFactory, COLA_LAYOUT, COLA_FORCE_LAYOUT } from './layouts/layoutFactory';
-import { TYPE_APPLICATION_GROUP, ComponentFactory } from './components';
+import { TYPE_APPLICATION_GROUP, TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP, ComponentFactory } from './components';
 import TopologyFilterBar from './filters/TopologyFilterBar';
 import { getTopologyFilters, getTopologySearchQuery, TopologyFilters, TOPOLOGY_SEARCH_FILTER_KEY, FILTER_ACTIVE_CLASS } from './filters';
 import TopologyHelmReleasePanel from './helm/TopologyHelmReleasePanel';
@@ -33,6 +33,10 @@ import { TYPE_OPERATOR_BACKED_SERVICE } from './operators/components/const';
 import { OperatorsComponentFactory } from './operators/components/operatorsComponentFactory';
 import { getServiceBindingStatus } from './topology-utils';
 import TopologyHelmWorkloadPanel from './helm/TopologyHelmWorkloadPanel';
+import { referenceForModel, modelFor } from '@console/internal/module/k8s';
+import { resourceOverviewPages } from '@console/internal/components/overview/resource-overview-pages';
+import { AsyncComponent } from '@console/internal/components/utils';
+import { ModifyApplication } from '../../actions/modify-application';
 
 interface StateProps {
   filters: TopologyFilters;
@@ -54,7 +58,7 @@ const graphModel: Model = {
   graph: {
     id: 'g1',
     type: 'graph',
-    layout: COLA_LAYOUT,
+    layout: COLA_FORCE_LAYOUT,
     layers: [BOTTOM_LAYER, GROUPS_LAYER, 'groups2', DEFAULT_LAYER, TOP_LAYER],
   },
 };
@@ -229,7 +233,7 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
         ]}
       >
         <div className="odc-topology__layout-group">
-          <Tooltip content="Layout 1">
+          <Tooltip content="Layout Type 1">
             <ToolbarItem className="odc-topology__layout-button" tabIndex={-1}>
               <Button
                 className={classNames('pf-topology-control-bar__button', {
@@ -238,11 +242,11 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
                 variant="tertiary"
                 onClick={() => setLayout(COLA_LAYOUT)}
               >
-                <TopologyIcon className="odc-topology__layout-button__icon" />1<span className="sr-only">Layout 1</span>
+                <TopologyIcon className="odc-topology__layout-button__icon" />1<span className="sr-only">Layout Type 1</span>
               </Button>
             </ToolbarItem>
           </Tooltip>
-          <Tooltip content="Layout 2">
+          <Tooltip content="Layout Type 2">
             <ToolbarItem className="odc-topology__layout-button" tabIndex={-1}>
               <Button
                 className={classNames('pf-topology-control-bar__button', {
@@ -251,7 +255,7 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
                 variant="tertiary"
                 onClick={() => setLayout(COLA_FORCE_LAYOUT)}
               >
-                <TopologyIcon className="odc-topology__layout-button__icon" />2<span className="sr-only">Layout 2</span>
+                <TopologyIcon className="odc-topology__layout-button__icon" />2<span className="sr-only">Layout Type 2</span>
               </Button>
             </ToolbarItem>
           </Tooltip>
@@ -263,7 +267,8 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
   const selectedItemDetails = () => {
     const selectedEntity = selectedIds[0] ? visRef.current.getElementById(selectedIds[0]) : null;
     if (isNode(selectedEntity)) {
-      if (selectedEntity.getType() === TYPE_APPLICATION_GROUP) {
+      // TODO : 각 그룹 타입별로 별도의 Panel 만들기
+      if ([TYPE_APPLICATION_GROUP].includes(selectedEntity.getType())) {
         return (
           <TopologyApplicationPanel
             graphData={graphData}
@@ -274,6 +279,12 @@ const Topology: React.FC<ComponentProps> = ({ data, filters, application, namesp
             }}
           />
         );
+      } else if ([TYPE_DEPLOYMENT_GROUP, TYPE_STATEFULSET_GROUP, TYPE_DAEMONSET_GROUP, TYPE_REPLICASET_GROUP].includes(selectedEntity.getType())) {
+        const item = selectedEntity.getData().resources;
+        const kindObj = modelFor(item.obj.kind);
+        const ref = referenceForModel(kindObj);
+        const loader = resourceOverviewPages.get(ref);
+        return <AsyncComponent loader={loader} kindObj={kindObj} item={item} customActions={[ModifyApplication]} />;
       }
       // TODO: Use Plugins
       if (selectedEntity.getType() === TYPE_HELM_RELEASE) {

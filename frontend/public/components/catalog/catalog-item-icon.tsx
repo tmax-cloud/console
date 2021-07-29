@@ -95,6 +95,9 @@ import * as windowsImg from '../../imgs/logos/windows.svg';
 import * as wordpressImg from '../../imgs/logos/wordpress.svg';
 import * as xamarinImg from '../../imgs/logos/xamarin.svg';
 import * as zendImg from '../../imgs/logos/zend.svg';
+import * as PodImg from '../../imgs/logos/pod.svg';
+import * as ServiceImg from '../../imgs/logos/service.svg';
+import * as PVCImage from '../../imgs/logos/pvc.svg';
 import * as menuImg from '../../imgs/hypercloud/menu.svg';
 
 const logos = new Map()
@@ -194,7 +197,10 @@ const logos = new Map()
   .set('icon-windows', windowsImg)
   .set('icon-wordpress', wordpressImg)
   .set('icon-xamarin', xamarinImg)
-  .set('icon-zend', zendImg);
+  .set('icon-zend', zendImg)
+  .set('icon-hc-pod', PodImg)
+  .set('icon-hc-service', ServiceImg)
+  .set('icon-hc-pvc', PVCImage);
 
 export const normalizeIconClass = (iconClass: string): string => {
   return _.startsWith(iconClass, 'icon-') ? `font-icon ${iconClass}` : iconClass;
