@@ -21,8 +21,12 @@ const progressBar = new cliProgress.SingleBar({ format: 'progress [{bar}] {perce
  * @param {string} str 수정할 문자열
  * @param {Object} option 문자열 수정에 대한 옵션
  * @param {boolean} option.addSingleQuote 문자열 앞에 "'" 문자를 추가할 지 여부
+ * @param {string} key String ID 컬럼 값
  */
-const fixExcelString = (str, option = {}) => {
+const fixExcelString = (str, option = {}, key) => {
+  if (key === 'MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SEARCHBAR_2') {
+    return fixExcelString(value, { addSingleQuote: true });
+  }
   // 일부 스트링에 '{{0}}'가 앞에 위치할 경우 따옴표가 삭제되는 이상 현상 발생. 의도적으로 따옴표를 붙임
   if (option && option.addSingleQuote) {
     return "'" + str;
@@ -36,6 +40,18 @@ const fixExcelString = (str, option = {}) => {
  */
 const fixJsonString = str => {
   return (str + '').replace(/\\\\/g, '\\');
+};
+
+/**
+ * 삭제된 키인지 검사
+ * @param {Object} data 데이터 객체
+ */
+const isDeletedKey = data => {
+  const deletedStringColumn = data.raw['삭제여부'];
+  if (deletedStringColumn && deletedStringColumn.toString().toUpperCase() === 'O') {
+    return true;
+  }
+  return false;
 };
 
 /**
@@ -66,29 +82,29 @@ const read = async (filePath, sheetName, keyColumn) => {
   let isFirst = true;
   let totalSheetSize = 0;
 
+  /**
+   * | A column  |  B column  |
+   * | --------- | ---------- |
+   * |   hello   |    123     |
+   * 엑셀 구성이 위와 같을 때, data 구성은 다음과 같습니다.
+   * {
+   *    "raw":  { "A column": "hello", "B column": 123.123 },
+   *    "header": [],
+   *    "totalSheetSize": 1110,
+   *    "processedSheetSize": 1110
+   * }
+   */
   stream.on('data', data => {
-    /**
-     * data 구성은 다음과 같습니다.
-     * {
-     *    "raw":  { "A": "hello", "B": 123.123 },
-     *    "header": [],
-     *    "totalSheetSize": 1110,
-     *    "processedSheetSize": 1110
-     * }
-     */
     if (isFirst) {
       totalSheetSize = data.totalSheetSize;
       progressBar.start(data.totalSheetSize, 0);
       isFirst = false;
     } else {
       const key = data.raw[keyColumn];
-      if (isValidKey(key)) {
+      if (!isDeletedKey(data) && isValidKey(key)) {
         for (const lang of Object.keys(LanguageMap)) {
           let value = data.raw[LanguageMap[lang].column];
           value = fixExcelString(value);
-          if (key === 'MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SEARCHBAR_2') {
-            value = fixExcelString(value, { addSingleQuote: true });
-          }
           result[lang] = { ...result[lang], [key]: value };
         }
       }
