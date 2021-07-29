@@ -8,7 +8,7 @@ import { TopologyDataModel, TopologyDataResources, Edge } from '../hypercloud/hy
 import { TYPE_TRAFFIC_CONNECTOR, TYPE_WORKLOAD, TYPE_CONNECTS_TO } from '../components/const';
 import { HelmReleaseResourcesMap } from '../../helm/helm-types';
 import { allowedResources } from '../topology-utils';
-import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem } from './transform-utils';
+import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem, mergeGroup, getTopologyGroupItems } from './transform-utils';
 import { getChildrenResources, getComponentType, createTopologyPodNodeData } from './hypercloud/transform-utils';
 // import { getOperatorTopologyDataModel } from '../operators/operators-data-transformer';
 // import { getHelmTopologyDataModel } from '../helm/helm-data-transformer';
@@ -108,8 +108,7 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
           }
         }
-        // MEMO : Group 개념의 컴포넌트가 현재 없어서 주석처리함
-        // mergeGroup(getTopologyGroupItems(obj), typedDataModel.graph.groups);
+        mergeGroup(getTopologyGroupItems(obj), typedDataModel.graph.groups);
       });
       addToTopologyDataModel(typedDataModel, baseDataModel);
     }
