@@ -24,11 +24,11 @@ const FormFooter: React.FC<FormFooterProps> = ({
 }) => {
   const { t } = useTranslation();
   infoTitle = infoTitle || t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABOVERVIEW_1');
-  infoMessage = infoMessage || t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABOVERVIEW_2');
-  //infoMessage === `Click ${submitLabel} to save changes or ${resetLabel} to cancel changes.`
   submitLabel = submitLabel || t('COMMON:MSG_COMMON_BUTTON_COMMIT_3');
   resetLabel = resetLabel || t('COMMON:MSG_COMMON_BUTTON_ETC_13');
   cancelLabel = cancelLabel || t('COMMON:MSG_COMMON_BUTTON_COMMIT_2');
+  infoMessage = infoMessage || t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABOVERVIEW_2', { 0: resetLabel, 1: submitLabel });
+  //infoMessage === `Click ${submitLabel} to save changes or ${resetLabel} to cancel changes.`
 
   return <ButtonBar
     className={cx('ocs-form-footer', {
