@@ -131,11 +131,11 @@ describe('Import Submit Utils', () => {
 
       const imageStreamSpy = jest
         .spyOn(submitUtils, 'createOrUpdateImageStream')
-        .mockImplementation(() => ({
+        .mockImplementation(() => new Promise((resolve, reject) => resolve({
           status: {
             dockerImageReference: 'test:1234',
           },
-        }));
+        })));
 
       const returnValue = await createOrUpdateResources(mockData, buildImage.obj, false);
       // createImageStream is called as separate entity

@@ -215,11 +215,11 @@ describe('DeployImage Submit Utils', () => {
 
       const imageStreamSpy = jest
         .spyOn(submitUtils, 'createOrUpdateImageStream')
-        .mockImplementation(() => ({
+        .mockImplementation(() => new Promise((resolve, reject) => resolve({
           status: {
             dockerImageReference: 'test:1234',
           },
-        }));
+        })));
 
       createOrUpdateDeployImageResources(mockData, false)
         .then((returnValue) => {

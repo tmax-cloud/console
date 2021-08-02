@@ -17,7 +17,7 @@ let topologyProps: TopologyPageProps;
 let renderTopologyProps: RenderTopologyProps;
 
 jest.mock('react-redux', () => {
-  const ActualReactRedux = require.requireActual('react-redux');
+  const ActualReactRedux = jest.requireActual('react-redux');
   return {
     ...ActualReactRedux,
     useSelector: jest.fn(),
