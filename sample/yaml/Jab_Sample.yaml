@@ -1,0 +1,28 @@
+apiVersion: console.tmax.io/v1
+kind: ConsoleYAMLSample
+metadata:
+  name: example-for-sample
+spec:
+  description: An example Job for sample add
+  targetResource:
+    apiVersion: batch/v1
+    kind: Job
+  title: Example Sample
+  yaml: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: countdown
+    spec:
+      template:
+        metadata:
+          name: countdown
+        spec:
+          containers:
+            - command:
+                - bin/bash
+                - '-c'
+                - for i in 9 8 7 6 5 4 3 2 1 ; do echo $i ; done
+              image: 'centos:7'
+              name: counter
+          restartPolicy: Never
