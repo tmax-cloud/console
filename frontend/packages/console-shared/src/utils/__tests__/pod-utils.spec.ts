@@ -1,20 +1,6 @@
 import * as utils from '@console/internal/components/utils';
-import {
-  isIdled,
-  isKnativeServing,
-  getPodStatus,
-  getPodData,
-  checkPodEditAccess,
-  isContainerLoopingFilter,
-} from '../pod-utils';
-import {
-  deploymentConfig,
-  notIdledDeploymentConfig,
-  deployment,
-  mockPod,
-  statefulSets,
-  allpods,
-} from '../__mocks__/pod-utils-test-data';
+import { isIdled, isKnativeServing, getPodStatus, getPodData, checkPodEditAccess, isContainerLoopingFilter } from '../pod-utils';
+import { deploymentConfig, notIdledDeploymentConfig, deployment, mockPod, statefulSets, allpods } from '../__mocks__/pod-utils-test-data';
 import { PodControllerOverviewItem } from '../../types';
 import { DeploymentConfigModel } from '@console/internal/models';
 import { K8sResourceKind } from '@console/internal/module/k8s';
@@ -115,24 +101,20 @@ describe('checkPodEditAccess', () => {
     };
   });
 
-  it('should have access true if check Access return allowed true', (done) => {
-    jest
-      .spyOn(utils, 'checkAccess')
-      .mockImplementation(() => Promise.resolve({ status: { allowed: true } }));
+  it('should have access true if check Access return allowed true', done => {
+    jest.spyOn(utils, 'checkAccess').mockImplementation(() => Promise.resolve({ status: { allowed: true }, apiVersion: 'authorization.k8s.io/v1', kind: 'SelfSubjectAccessReview', spec: {} }));
     checkPodEditAccess(obj, DeploymentConfigModel, undefined)
-      .then((resp) => {
+      .then(resp => {
         expect(resp.status.allowed).toBe(true);
         done();
       })
       .catch(() => {});
   });
 
-  it('should have access false if check Access return allowed false', (done) => {
-    jest
-      .spyOn(utils, 'checkAccess')
-      .mockImplementation(() => Promise.resolve({ status: { allowed: false } }));
+  it('should have access false if check Access return allowed false', done => {
+    jest.spyOn(utils, 'checkAccess').mockImplementation(() => Promise.resolve({ status: { allowed: false }, apiVersion: 'authorization.k8s.io/v1', kind: 'SelfSubjectAccessReview', spec: {} }));
     checkPodEditAccess(obj, DeploymentConfigModel, undefined)
-      .then((resp) => {
+      .then(resp => {
         expect(resp.status.allowed).toBe(false);
         done();
       })
