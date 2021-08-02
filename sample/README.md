@@ -4,6 +4,7 @@
 ## Console YAML Sample 설명
 * Yaml Editor 에서 제공되는 Sidebar(스키마 및 샘플 기능 제공) 에서 샘플 YAML 을 Editor 로 보내 주거나(Try it) 다운로드(Download YAML) 하게 해줌
 * Sidebar 에서는 consoleYAMLsamples CRD의 CR을 조회하여 Sample Yaml 을 제공함
+  * 등록된 consoleYAMLsamples CR 의 spec.targetResource.kind 기준으로 조회하여 해당 리소스의 여려개의 샘플들을 제공
 ![image](figure/1.Sidebar_Schema.png)
 ![image](figure/2.Sidebar_Sample.png)
 
