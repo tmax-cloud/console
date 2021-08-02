@@ -5,14 +5,7 @@
     "es6": true,
     "jasmine": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:react/recommended",
-    "plugin:console/json",
-    "plugin:console/prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:react/recommended", "plugin:console/json", "plugin:console/prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
@@ -27,10 +20,7 @@
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
-    "camelcase": [
-      "error",
-      { "allow": ["UNSAFE_componentWillReceiveProps", "UNSAFE_componentWillMount"] }
-    ],
+    "camelcase": ["error", { "allow": ["UNSAFE_componentWillReceiveProps", "UNSAFE_componentWillMount"] }],
     "consistent-return": 0,
     "consistent-this": [1, "that"],
     "curly": [2, "all"],
@@ -53,10 +43,7 @@
     "no-prototype-builtins": 0, // Disable with exlint v6 update.
     "no-shadow": ["error"],
     "no-underscore-dangle": 0,
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { "varsIgnorePattern": "React", "args": "after-used" }
-    ],
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "React", "args": "after-used" }],
     "@typescript-eslint/no-use-before-define": 2,
     "no-var": 2,
     "object-shorthand": ["error", "properties"],
