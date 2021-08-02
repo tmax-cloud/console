@@ -43,15 +43,17 @@ spec:
 ## Sample 등록
 * 1. CR 생성
   * 1.1 Import YAML
-   * CLI 로 [Jab_Sample.yaml](yaml/Jab_Sample.yaml) 실행하거나 `ex) kubectl apply -f Jab_Sample.yaml`
-   * Hypercloud 에서 YAML 을 Import
+    * CLI 로 [Jab_Sample.yaml](yaml/Jab_Sample.yaml) 실행하거나 `ex) kubectl apply -f Jab_Sample.yaml`
+    * Hypercloud 에서 YAML 을 Import
+  
   `/k8s/all-namespaces/import`
   `/k8s/cluster/customresourcedefinitions/console.tmax.io~v1~ConsoleYAMLSample/~new`
 ![image](figure/5.import_YAML.png)
 ![image](figure/6.import_YAML_example.png)
 
   * 1.2 
-   * Hypercloud 에서 Form View 에서 작성
+    * Hypercloud 에서 Form View 에서 작성
+
   `/k8s/cluster/customresourcedefinitions/console.tmax.io~v1~ConsoleYAMLSample/~new`
 ![image](figure/7.consoleYAMLsamples_CRD_List.png)
 ![image](figure/8.consoleYAMLsamples_CRD_Create.png)
