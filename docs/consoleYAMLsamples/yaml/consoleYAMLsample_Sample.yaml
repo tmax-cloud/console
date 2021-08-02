@@ -1,0 +1,23 @@
+apiVersion: console.tmax.io/v1
+kind: ConsoleYAMLSample
+metadata:
+  name: example-for-consoleYAMLsample
+spec:
+  description: An example consoleYAMLsample
+  targetResource:
+    apiVersion: console.tmax.io/v1
+    kind: ConsoleYAMLSample
+  title: Example consoleYAMLsample
+  yaml: |
+    apiVersion: console.tmax.io/v1
+    kind: ConsoleYAMLSample
+    metadata:
+      name: ConsoleYAMLSample CR Name
+    spec:
+      description: Sample Description in sidebar
+      targetResource:
+        apiVersion: target resource ApiVersion
+        kind: target resource Kind
+      title: Sample Title in sidebar
+      yaml: |
+        yaml TEXT

@@ -1,0 +1,24 @@
+
+apiVersion: console.tmax.io/v1
+kind: ConsoleYAMLSample
+metadata:
+  name: example-for-pod-sample
+spec:
+  description: An example Pod for sample add
+  targetResource:
+    apiVersion: batch/v1
+    kind: Pod
+  title: Example Sample
+  yaml: |
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: Pod-sample-example
+    spec:
+      containers:
+        - image: nginx
+          name: web
+          ports:
+            - containerPort: 80
+              name: web
+              protocol: TCP
