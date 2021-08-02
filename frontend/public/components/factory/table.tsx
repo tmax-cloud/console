@@ -9,8 +9,8 @@ import { ingressValidHosts } from '../ingress';
 import { convertToBaseValue, EmptyBox, StatusBox, WithScrollContainer } from '../utils';
 import { getClusterOperatorStatus, getClusterOperatorVersion, getJobTypeAndCompletions, getTemplateInstanceStatus, K8sResourceKind, K8sResourceKindReference, NodeKind, planExternalName, PodKind, podPhase, podReadiness, podRestarts, serviceCatalogStatus, serviceClassDisplayName, MachineKind } from '../../module/k8s';
 //import LinkedPipelineRunTaskStatus from '../../../packages/dev-console/src/components/pipelineruns/status/LinkedPipelineRunTaskStatus';
-import { pipelineRunFilterReducer } from '../../../packages/dev-console/src/utils/pipeline-filter-reducer';
-import { pipelineRunDuration } from '../../../packages/dev-console/src/utils/pipeline-utils';
+import { pipelineRunFilterReducer } from '@console/dev-console/src/utils/pipeline-filter-reducer';
+import { pipelineRunDuration } from '@console/dev-console/src/utils/pipeline-utils';
 
 import {
   IRowData, // eslint-disable-line no-unused-vars
