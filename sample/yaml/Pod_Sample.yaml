@@ -2,12 +2,12 @@
 apiVersion: console.tmax.io/v1
 kind: ConsoleYAMLSample
 metadata:
-  name: example-for-sample
+  name: example-for-pod-sample
 spec:
-  description: An example Job for sample add
+  description: An example Pod for sample add
   targetResource:
     apiVersion: batch/v1
-    kind: Job
+    kind: Pod
   title: Example Sample
   yaml: |
     apiVersion: v1
