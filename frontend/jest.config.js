@@ -1,5 +1,3 @@
-// MEMO : jest에 enzyme으로 테스트하던 기존 오픈쉬프트 jest config. (HyperCloud에선 사용하고 있지 않음)
-
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jest-environment-jsdom',
