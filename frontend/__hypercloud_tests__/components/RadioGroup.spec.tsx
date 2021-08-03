@@ -42,7 +42,6 @@ const renderRadioGroup = () => {
 };
 
 describe('RadioGroupTest', () => {
-  afterEach(cleanup);
   beforeEach(() => {
     // Empty
   });

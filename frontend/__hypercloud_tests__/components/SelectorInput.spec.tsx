@@ -30,7 +30,6 @@ const renderSelectorInput = () => {
 };
 
 describe('SelectorInputTest', () => {
-  afterEach(cleanup);
   beforeEach(() => {
     // Empty
   });
