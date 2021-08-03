@@ -41,7 +41,7 @@ const renderRadioGroup = () => {
   });
 };
 
-describe('RadioGroupTest', () => {
+describe('RadioGroup Test', () => {
   beforeEach(() => {
     // Empty
   });

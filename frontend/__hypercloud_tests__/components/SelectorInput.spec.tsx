@@ -29,7 +29,7 @@ const renderSelectorInput = () => {
   return render(<SelectorInputForm />);
 };
 
-describe('SelectorInputTest', () => {
+describe('SelectorInput Test', () => {
   beforeEach(() => {
     // Empty
   });
