@@ -14,7 +14,7 @@ const CombineNodes = (id, description, children, valid) => {
   // children node 개수에 따라 가로 분할 class 적용
   let isArray = Array.isArray(children);
   let className = isArray ? `col-md-${Math.floor(12 / children.length)}` : 'col-md-12';
-  return isArray ? children.map((cur, idx) => <Node className={className} key={`${id}-${idx}`} children={cur} description={description} valid={valid} />) : <Node id={id} className={className} children={children} description={description} valid={valid} />;
+  return isArray ? children.map((cur, idx) => <Node className={className} key={`${id}-${idx}`} children={cur} description={description} valid={valid} />) : <Node className={className} children={children} description={description} valid={valid} />;
 };
 
 export const Section: React.FC<SectionProps> = ({ id, label, description, children, isRequired = false, valid = true }) => {
