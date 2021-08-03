@@ -65,17 +65,12 @@ describe('Section Test', () => {
 
   it('Section에 각 프로퍼티 지정시에 잘 매핑되는지', () => {
     const children = <span>test</span>;
-    const { container } = renderSection({ childrens: children, description: '나는 디스크립션입니다.', isRequired: true });
+    const { getByText } = renderSection({ childrens: children, description: '나는 디스크립션입니다.', isRequired: true });
 
     // isRequired true일 때 co-required 잘 들어가는지
-    const isRequired = container.hasAttribute('isRequired') && container.attributes['isRequired'];
-    if (isRequired) {
-      expect(container).toHaveClass('co-required');
-    }
+    expect(getByText('Test')).toHaveClass('co-required');
 
     // description 정상적으로 출력 잘 되는지
-    const description = screen.getByText('나는 디스크립션입니다.');
-    expect(description).toMatchSnapshot();
-    // description이 제대로 렌더 되는지 여부도 추가로 테스트 필요
+    expect(getByText('나는 디스크립션입니다.')).toMatchSnapshot();
   });
 });
