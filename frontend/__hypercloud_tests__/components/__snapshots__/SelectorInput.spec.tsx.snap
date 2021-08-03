@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectorInputTest input에 값을 입력하고 엔터치면 해당 값의 chip이 추가돼야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="co-search-input pf-c-form-control"
+    >
+      <tags-input>
+        <div
+          class="tags react-tagsinput--focused"
+        >
+          <span>
+            <span
+              class="tag-item co-text-sample"
+            >
+              <span
+                class="tag-item__content"
+              >
+                AAA
+              </span>
+               
+              <a
+                class="remove-button"
+              >
+                ×
+              </a>
+            </span>
+            <span
+              class="tag-item co-text-sample"
+            >
+              <span
+                class="tag-item__content"
+              >
+                BBB
+              </span>
+               
+              <a
+                class="remove-button"
+              >
+                ×
+              </a>
+            </span>
+            <span
+              class="tag-item co-text-sample"
+            >
+              <span
+                class="tag-item__content"
+              >
+                abc
+              </span>
+               
+              <a
+                class="remove-button"
+              >
+                ×
+              </a>
+            </span>
+            <input
+              class="input"
+              id="tags-input"
+              placeholder=""
+              spellcheck="false"
+              type="text"
+              value=""
+            />
+          </span>
+        </div>
+      </tags-input>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`SelectorInputTest tags로 설정한 태그들이 defaultTags로 세팅되어야 합니다. 1`] = `
+<form>
+  <div
+    class="co-search-input pf-c-form-control"
+  >
+    <tags-input>
+      <div
+        class="tags"
+      >
+        <span>
+          <span
+            class="tag-item co-text-sample"
+          >
+            <span
+              class="tag-item__content"
+            >
+              AAA
+            </span>
+             
+            <a
+              class="remove-button"
+            >
+              ×
+            </a>
+          </span>
+          <span
+            class="tag-item co-text-sample"
+          >
+            <span
+              class="tag-item__content"
+            >
+              BBB
+            </span>
+             
+            <a
+              class="remove-button"
+            >
+              ×
+            </a>
+          </span>
+          <input
+            class="input"
+            id="tags-input"
+            placeholder=""
+            spellcheck="false"
+            type="text"
+            value=""
+          />
+        </span>
+      </div>
+    </tags-input>
+  </div>
+  <button
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`SelectorInputTest x 아이콘 클릭 시 해당 tag가 제거돼야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="co-search-input pf-c-form-control"
+    >
+      <tags-input>
+        <div
+          class="tags"
+        >
+          <span>
+            <span
+              class="tag-item co-text-sample"
+            >
+              <span
+                class="tag-item__content"
+              >
+                AAA
+              </span>
+               
+              <a
+                class="remove-button"
+              >
+                ×
+              </a>
+            </span>
+            <input
+              class="input"
+              id="tags-input"
+              placeholder=""
+              spellcheck="false"
+              type="text"
+              value=""
+            />
+          </span>
+        </div>
+      </tags-input>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
