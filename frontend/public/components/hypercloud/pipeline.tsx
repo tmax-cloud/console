@@ -150,7 +150,7 @@ export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props =
       {
         href: 'runs',
         name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1'),
-        component: pageProps => <PipelineRunsPage showTitle={false} canCreate={false} namespace={pageProps.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': pageProps.obj.metadata.name, }} />,
+        component: pageProps => <PipelineRunsPage showTitle={false} canCreate={false} namespace={pageProps.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': pageProps.obj.metadata.name, }} inPipelinePage={true} />,
       },
       {
         href: 'parameters',
