@@ -1,6 +1,7 @@
 const fs = require('fs');
 const getXlsxStream = require('./parse.js');
 const cliProgress = require('cli-progress');
+require('dotenv').config();
 
 const LanguageMap = {
   KR: { column: 'String(KR)', file: 'ko.json' },
@@ -47,6 +48,9 @@ const fixJsonString = str => {
  * @param {Object} data 데이터 객체
  */
 const isDeletedKey = data => {
+  if (process.env.WITH_DELETED_STR === 'Y') {
+    return false;
+  }
   const deletedStringColumn = data.raw['삭제여부'];
   if (deletedStringColumn && deletedStringColumn.toString().toUpperCase() === 'O') {
     return true;
