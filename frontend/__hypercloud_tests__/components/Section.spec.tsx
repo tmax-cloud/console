@@ -1,71 +1,81 @@
 import * as React from 'react';
+import { render, cleanup, screen } from '@testing-library/react';
 import { Section } from '../../public/components/hypercloud/utils/section';
 import { TextInput } from '../../public/components/hypercloud/utils/text-input';
-import { mount, ReactWrapper } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 import { useForm, FormProvider } from 'react-hook-form';
 
+type RenderSectionProps = {
+  childrens: React.ReactChild;
+  isRequired?: boolean;
+  description?: string;
+};
+
 describe('Section Test', () => {
-  it('Section children 하나일 경우 snapshot이랑 매치 되는지', () => {
-    const wrapper: ReactWrapper = mount(
-      <Section label="Test" id="test">
-        <span>test</span>
+  afterEach(cleanup);
+
+  // 일반 컴포넌트를 children으로 갖는  Section
+  const renderSection = ({ childrens, isRequired, description }: RenderSectionProps) =>
+    render(
+      <Section label="Test" id="test" isRequired={isRequired} description={description}>
+        {childrens}
       </Section>,
     );
-    expect(wrapper.debug()).toMatchSnapshot();
+
+  // react-hook-form 컴포넌트를 children으로 갖는  Section
+  const reactHookRenderSection = () =>
+    render(
+      <Section label="Test" id="test">
+        <TextInput name="test-text" id="test-text" />
+      </Section>,
+      {
+        wrapper: ({ children }) => {
+          const methods = useForm();
+          return (
+            <FormProvider {...methods}>
+              <form>{children}</form>
+            </FormProvider>
+          );
+        },
+      },
+    );
+
+  it('Section children 하나일 경우 snapshot이랑 매치 되는지', () => {
+    const children = <span>test</span>;
+    const { container } = renderSection({ childrens: children });
+    expect(container).toMatchSnapshot();
   });
 
-  it('Section children 하나인데 react-hook-form 컴포넌트 일 경우 snapshot이랑 매치 되는지', async () => {
-    let wrapper: ReactWrapper;
-    await act(async () => {
-      wrapper = mount(
-        <Section label="Test" id="test">
-          <TextInput name="test-text" id="test-text" />
-        </Section>,
-        {
-          wrappingComponent: ({ children }) => {
-            const methods = useForm();
-            return (
-              <FormProvider {...methods}>
-                <form>{children}</form>
-              </FormProvider>
-            );
-          },
-        },
-      );
-    });
-
-    expect(wrapper.debug()).toMatchSnapshot();
+  it('Section children 하나인데 react-hook-form 컴포넌트 일 경우 snapshot이랑 매치 되는지', () => {
+    const { container } = reactHookRenderSection();
+    expect(container).toMatchSnapshot();
   });
 
   it('Section children 여러개인 경우 snapshot이랑 매치되는지', () => {
-    const wrapper: ReactWrapper = mount(
-      <Section label="Test" id="test">
+    const childrens = (
+      <>
         <span>test 1</span>
         <span>test 2</span>
         <span>test 3</span>
         <span>test 4</span>
-      </Section>,
+      </>
     );
-    expect(wrapper.debug()).toMatchSnapshot();
+    const { container } = renderSection({ childrens: childrens });
+    expect(container).toMatchSnapshot();
   });
 
   it('Section에 각 프로퍼티 지정시에 잘 매핑되는지', () => {
-    const wrapper: ReactWrapper = mount(
-      <Section label="Test" description="나는 디스크립션입니다." isRequired={true} id="test">
-        <span>test</span>
-      </Section>,
-    );
-    expect(wrapper.debug()).toMatchSnapshot();
-    expect(wrapper.props()['label']).toBe('Test');
-    expect(wrapper.props()['description']).toBe('나는 디스크립션입니다.');
-    expect(wrapper.props()['isRequired']).toBe(true);
+    const children = <span>test</span>;
+    const { container } = renderSection({ childrens: children, description: '나는 디스크립션입니다.', isRequired: true });
 
-    const pElement = wrapper.find('p');
-    expect(pElement.text()).toBe('나는 디스크립션입니다.'); // description 잘 나오는지
+    // isRequired true일 때 co-required 잘 들어가는지
+    const isRequired = container.hasAttribute('isRequired') && container.attributes['isRequired'];
+    if (isRequired) {
+      expect(container).toHaveClass('co-required');
+    }
 
-    const labelElement = wrapper.find('label');
-    expect(labelElement.hasClass('co-required')).toBe(true); // required 표시되는지
-    expect(labelElement.text()).toBe('Test'); // 라벨 맞게 그려지는지
+    // description 정상적으로 출력 잘 되는지
+    const description = screen.getByText('나는 디스크립션입니다.');
+    expect(description).toMatchSnapshot();
+    // description이 제대로 렌더 되는지 여부도 추가로 테스트 필요
   });
 });
