@@ -1,6 +1,7 @@
 const fs = require('fs');
 const getXlsxStream = require('./parse.js');
 const cliProgress = require('cli-progress');
+require('dotenv').config();
 
 const LanguageMap = {
   KR: { column: 'String(KR)', file: 'ko.json' },
@@ -19,13 +20,13 @@ const progressBar = new cliProgress.SingleBar({ format: 'progress [{bar}] {perce
 /**
  * EXCEL에 입력된 문자열을 수정
  * @param {string} str 수정할 문자열
+ * @param {string} key String ID 컬럼 값
  * @param {Object} option 문자열 수정에 대한 옵션
  * @param {boolean} option.addSingleQuote 문자열 앞에 "'" 문자를 추가할 지 여부
- * @param {string} key String ID 컬럼 값
  */
-const fixExcelString = (str, option = {}, key) => {
+const fixExcelString = (str, key, option = {}) => {
   if (key === 'MSG_MULTI_CLUSTERS_INVITEPEOPLEPOPUP_SEARCHBAR_2') {
-    return fixExcelString(value, { addSingleQuote: true });
+    return fixExcelString(str, '', { addSingleQuote: true });
   }
   // 일부 스트링에 '{{0}}'가 앞에 위치할 경우 따옴표가 삭제되는 이상 현상 발생. 의도적으로 따옴표를 붙임
   if (option && option.addSingleQuote) {
@@ -47,6 +48,9 @@ const fixJsonString = str => {
  * @param {Object} data 데이터 객체
  */
 const isDeletedKey = data => {
+  if (process.env.WITH_DELETED_STR === 'Y') {
+    return false;
+  }
   const deletedStringColumn = data.raw['삭제여부'];
   if (deletedStringColumn && deletedStringColumn.toString().toUpperCase() === 'O') {
     return true;
@@ -104,7 +108,7 @@ const read = async (filePath, sheetName, keyColumn) => {
       if (!isDeletedKey(data) && isValidKey(key)) {
         for (const lang of Object.keys(LanguageMap)) {
           let value = data.raw[LanguageMap[lang].column];
-          value = fixExcelString(value);
+          value = fixExcelString(value, key);
           result[lang] = { ...result[lang], [key]: value };
         }
       }
