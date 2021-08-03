@@ -11,10 +11,7 @@ import { LoadingInline } from '@console/internal/components/utils';
 import { PipelineResourceModel } from '../../../../models';
 import { PipelineResourceKind } from '../../../../utils/pipeline-augment';
 import { CREATE_PIPELINE_RESOURCE } from './const';
-import { InputField } from '@console/shared';
-
 import './PipelineResourceDropdown.scss';
-import { useTranslation } from 'react-i18next';
 
 type PipelineResourceDropdownProps = {
   autoSelect?: boolean;
@@ -69,10 +66,8 @@ const PipelineResourceDropdown: React.FC<PipelineResourceDropdownProps> = (props
       return { label, value: resourceName };
     }),
   ];
-  const { t } = useTranslation();
 
   return (
-    <>
     <Select
       className="odc-pipeline-resource-dropdown"
       selections={selectedKey}
@@ -91,12 +86,6 @@ const PipelineResourceDropdown: React.FC<PipelineResourceDropdownProps> = (props
         </SelectOption>
       ))}
     </Select>
-    <InputField        
-        name={name}
-        label={t('COMMON:MSG_MAIN_TABLEHEADER_1')}        
-        isDisabled
-      />
-    </>
   );
 };
 
