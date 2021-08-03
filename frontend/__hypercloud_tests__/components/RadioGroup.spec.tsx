@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { RadioGroup } from '../../public/components/hypercloud/utils/radio';
-import { cleanup, render, fireEvent, act, screen } from '@testing-library/react';
+import { cleanup, render, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { useForm, FormProvider } from 'react-hook-form';
+
+const mockSubmit = jest.fn(data => {});
 
 const resources = [
   {
@@ -24,7 +27,14 @@ const renderRadioGroup = () => {
       const methods = useForm();
       return (
         <FormProvider {...methods}>
-          <form>{children}</form>
+          <form
+            onSubmit={methods.handleSubmit(data => {
+              mockSubmit(data);
+            })}
+          >
+            <RadioGroup name="radio-group" items={resources} inline={false} initValue="gpu" />
+            <button type="submit">Submit</button>
+          </form>
         </FormProvider>
       );
     },
@@ -33,7 +43,9 @@ const renderRadioGroup = () => {
 
 describe('RadioGroupTest', () => {
   afterEach(cleanup);
-  beforeEach(() => {});
+  beforeEach(() => {
+    // Empty
+  });
 
   it('초기 렌더 스냅샷 테스트입니다.', () => {
     const { container } = renderRadioGroup();
@@ -53,28 +65,13 @@ describe('RadioGroupTest', () => {
     expect(gpuRadio.checked).toBeTruthy();
   });
 
-  it("'Memory' Radio버튼 선택 후 submit 시 { 'radio-group': 'memory'} 형식으로 submit 되어야 합니다.", async () => {
-    const mockSubmit = jest.fn(data => console.log(data));
+  it('Submit 시 보내지는 value 형식 테스트입니다.', async () => {
+    const { getByText } = renderRadioGroup();
 
-    const RadioGroupForm = () => {
-      const methods = useForm();
-      return (
-        <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(data => {
-              mockSubmit(data);
-            })}
-          >
-            <RadioGroup name="radio-group" items={resources} inline={false} initValue="gpu" />
-            <button type="submit">Submit</button>
-          </form>
-        </FormProvider>
-      );
-    };
-    
-    render(<RadioGroupForm />);
-    fireEvent.click(screen.getByText('Memory'));
-    await act(async () => fireEvent.submit(screen.getByText('Submit')));
+    // MEMO : memory radio button 선택
+    userEvent.click(getByText('Memory'));
+
+    await act(async () => userEvent.click(getByText('Submit')));
     expect(mockSubmit).toHaveBeenCalledTimes(1);
     expect(mockSubmit).toHaveBeenCalledWith({ 'radio-group': 'memory' });
   });
