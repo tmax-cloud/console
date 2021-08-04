@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Nav, NavItem, NavList } from '@patternfly/react-core';
 import { StatusIcon } from '@console/shared';
 import { Firehose, resourcePathFromModel } from '@console/internal/components/utils';
-import { pipelineRunFilterReducer } from '../../../utils/pipeline-filter-reducer';
+//import { pipelineRunFilterReducer } from '../../../utils/pipeline-filter-reducer';
 import { PipelineRun } from '../../../utils/pipeline-augment';
 import { PipelineRunModel } from '../../../../../../../frontend/public/models/index';
 import LogsWrapperComponent from '../logs/LogsWrapperComponent';
@@ -123,7 +123,7 @@ class PipelineRunLogs_ extends React.Component<any, PipelineRunLogsState> {
                     >
                       <Link to={path + _.get(taskRunFromYaml, [task, `pipelineTaskName`], '-')}>
                         <StatusIcon
-                          status={pipelineRunFilterReducer(
+                          status={taskReducer(
                             _.merge(_.get(obj, ['status', 'taskRuns'], {}), _.get(obj, ['status', 'runs'], {})),
                           )}
                         />
@@ -169,6 +169,31 @@ const PipelineRunLogs = withTranslation()(PipelineRunLogs_);
 type PipelineRunLogsWithActiveTaskProps = {
   obj: PipelineRun;
   params?: RouteComponentProps;
+};
+
+const taskStatus = (task): string => {  
+  const conditions = _.get(task, [Object.keys(task)[0], 'status', 'conditions'], []);
+  const isCancelled = conditions.find((c) =>
+    ['PipelineRunCancelled', 'TaskRunCancelled'].some((cancel) => cancel === c.reason),
+  );
+  if (isCancelled) {
+    return 'Cancelled';
+  }
+  if (conditions.length === 0) return null;
+
+  const condition = conditions.find((c) => c.type === 'Succeeded');
+  return !condition || !condition.status
+    ? null
+    : condition.status === 'True'
+    ? 'Completed'
+    : condition.status === 'False'
+    ? 'Failed'
+    : 'Running';
+};
+
+const taskReducer = (task): string => {
+  const status = taskStatus(task);
+  return status || '-';
 };
 
 export const PipelineRunLogsWithActiveTask: React.FC<PipelineRunLogsWithActiveTaskProps> = ({
