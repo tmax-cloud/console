@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RadioGroup } from '../../public/components/hypercloud/utils/radio';
+import { RadioGroup } from '@console/internal/components/hypercloud/utils/radio';
 import { render, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -21,7 +21,7 @@ const resources = [
   },
 ];
 
-const renderRadioGroup = () => {
+const renderRadioGroupForm = () => {
   return render(<RadioGroup name="radio-group" items={resources} inline={false} initValue="gpu" />, {
     wrapper: ({ children }) => {
       const methods = useForm();
@@ -32,7 +32,7 @@ const renderRadioGroup = () => {
               mockSubmit(data);
             })}
           >
-            <RadioGroup name="radio-group" items={resources} inline={false} initValue="gpu" />
+            {children}
             <button type="submit">Submit</button>
           </form>
         </FormProvider>
@@ -47,25 +47,25 @@ describe('RadioGroup Test', () => {
   });
 
   it('초기 렌더 스냅샷 테스트입니다.', () => {
-    const { container } = renderRadioGroup();
+    const { container } = renderRadioGroupForm();
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('items props로 받은 item들을 RadioInput아이템으로 렌더링 되어야 합니다.', () => {
-    const { getByDisplayValue } = renderRadioGroup();
+    const { getByDisplayValue } = renderRadioGroupForm();
     expect(getByDisplayValue('cpu')).toBeTruthy();
     expect(getByDisplayValue('gpu')).toBeTruthy();
     expect(getByDisplayValue('memory')).toBeTruthy();
   });
 
   it('initValue로 설정한 input은 default로 체크 돼있어야 합니다.', () => {
-    const { getByDisplayValue } = renderRadioGroup();
+    const { getByDisplayValue } = renderRadioGroupForm();
     const gpuRadio = getByDisplayValue('gpu') as HTMLInputElement;
     expect(gpuRadio.checked).toBeTruthy();
   });
 
   it('Submit 시 보내지는 value 형식 테스트입니다.', async () => {
-    const { getByText } = renderRadioGroup();
+    const { getByText } = renderRadioGroupForm();
 
     // MEMO : memory radio button 선택
     userEvent.click(getByText('Memory'));

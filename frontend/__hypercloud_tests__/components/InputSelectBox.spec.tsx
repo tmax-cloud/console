@@ -15,7 +15,7 @@ const dropdownUnits = {
   Ti: 'TiB',
 };
 
-const renderInputSelectBox = () => {
+const renderInputSelectBoxForm = () => {
   return render(<InputSelectBox textName="spec.section.cpu" id="cpu" dropdownName="spec.section.cpuRange" selectedKey="Gi" items={dropdownUnits} />, {
     wrapper: ({ children }) => {
       const methods = useForm();
@@ -40,13 +40,13 @@ describe('InputSelectBox Test', () => {
     // Empty
   });
   it('selectedKey로 설정한 값이 selectbox에 default로 선택 되어야 합니다.', () => {
-    const { container, getByText } = renderInputSelectBox();
+    const { container, getByText } = renderInputSelectBoxForm();
     expect(getByText('GiB')).toBeTruthy();
     expect(container).toMatchSnapshot();
   });
 
   it('SelectBox 클릭 시 드롭다운 메뉴가 펼쳐져야 합니다.', () => {
-    const { container, getByTestId, getAllByRole } = renderInputSelectBox();
+    const { container, getByTestId, getAllByRole } = renderInputSelectBoxForm();
     const button = getByTestId('dropdown-button');
     userEvent.click(button);
     expect(getAllByRole('listitem')).toHaveLength(3);
@@ -54,7 +54,7 @@ describe('InputSelectBox Test', () => {
   });
 
   it('Submit 시 보내지는 value 형식 테스트입니다.', async () => {
-    const { getByTestId, getByRole, getByText } = renderInputSelectBox();
+    const { getByTestId, getByRole, getByText } = renderInputSelectBoxForm();
 
     // MEMO : input에 300입력, 드롭다운에서 TiB 선택 후 Submit버튼 클릭.
     userEvent.type(getByRole('spinbutton'), '300');
