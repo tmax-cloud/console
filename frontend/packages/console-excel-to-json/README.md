@@ -5,6 +5,7 @@
 ## 실행
 
 1. `console-excel-to-json` 디렉토리의 `root`에 최신 `16.uiSTR_HyperCloud5.xlsx`과 `16.uiSTR_HyperCloud5_Description.xlsx` 파일을 추가합니다.
+   (단, 압축되어 있을 때는 압축을 풀어 진행하며, commit 시에는 압축하여 push합니다.)
 
 2. 커맨드를 실행합니다.
 
