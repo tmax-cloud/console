@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node --max-old-space-size=4096 src/index.js",
-    "start:del": "WITH_DELETED_STR=Y npm run-script start"
+    "start-y": "INCLUDE_UNUSED_STRING=Y npm run-script start"
   },
   "dependencies": {
     "cli-progress": "^3.9.0",
