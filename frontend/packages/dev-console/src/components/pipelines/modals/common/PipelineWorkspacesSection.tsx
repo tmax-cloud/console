@@ -7,6 +7,7 @@ import FormSection from '../../../import/section/FormSection';
 import { VolumeTypes } from '../../const';
 import PVCDropdown from './PVCDropdown';
 import MultipleResourceKeySelector from './MultipleResourceKeySelector';
+import { useTranslation } from 'react-i18next';
 
 const getVolumeTypeFields = (volumeType: VolumeTypes, index: number) => {
   switch (VolumeTypes[volumeType]) {
@@ -43,9 +44,10 @@ const getVolumeTypeFields = (volumeType: VolumeTypes, index: number) => {
 const PipelineWorkspacesSection: React.FC = () => {
   const { setFieldValue } = useFormikContext<FormikValues>();
   const [{ value: workspaces }] = useField<PipelineWorkspace[]>('workspaces');
+  const { t } = useTranslation();
   return (
     workspaces.length > 0 && (
-      <FormSection title="Workspaces" fullWidth>
+      <FormSection title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_9')} fullWidth>
         {workspaces.map((workspace, index) => (
           <div className="form-group" key={workspace.name}>
             <DropdownField
