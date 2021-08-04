@@ -137,9 +137,17 @@ export const PipelinesPage: React.FC<PipelinesPageProps> = props => {
   />;
 }
 
-export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props => {
-  const { t } = useTranslation();
+const PipelineRunsTab: React.FC<PipelineDetailsProps> = props => {
+  return <PipelineRunsPage showTitle={false} canCreate={false} namespace={props.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': props.obj.metadata.name, }} inPipelinePage={true} />
+};
+const PipelineParametersTab: React.FC<PipelineDetailsProps> = props => {
+  return <PipelineForm PipelineFormComponent={PipelineParametersForm} formName="parameters" validationSchema={parametersValidationSchema} obj={props.obj} {...props} />
+};
+const PipelineResourcesTab: React.FC<PipelineDetailsProps> = props => {
+  return <PipelineForm PipelineFormComponent={PipelineResourcesForm} formName="resources" validationSchema={resourcesValidationSchema} obj={props.obj} {...props} />
+};
 
+export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props => {
   return <DetailsPage
     {...props}
     kind={kind}
@@ -149,18 +157,18 @@ export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props =
       editResource(),
       {
         href: 'runs',
-        name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1'),
-        component: pageProps => <PipelineRunsPage showTitle={false} canCreate={false} namespace={pageProps.obj.metadata.namespace} selector={{ 'tekton.dev/pipeline': pageProps.obj.metadata.name, }} inPipelinePage={true} />,
+        name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1',
+        component: PipelineRunsTab,
       },
       {
         href: 'parameters',
-        name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPARAMETERS_1'),
-        component: pageProps => <PipelineForm PipelineFormComponent={PipelineParametersForm} formName="parameters" validationSchema={parametersValidationSchema} obj={pageProps.obj} {...pageProps} />,
+        name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPARAMETERS_1',
+        component: PipelineParametersTab,
       },
       {
         href: 'resources',
-        name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABRESOURCES_1'),
-        component: pageProps => <PipelineForm PipelineFormComponent={PipelineResourcesForm} formName="resources" validationSchema={resourcesValidationSchema} obj={pageProps.obj} {...pageProps} />,
+        name: 'SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABRESOURCES_1',
+        component: PipelineResourcesTab,
       },
     ]}
   />;
