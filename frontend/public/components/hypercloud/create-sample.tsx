@@ -306,7 +306,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
       </Section>
       <Section id="listviewsection2" label="Customized List View">
         <ListView
-          name="numberspinnerListView"
+          name="metadata.spinnerNumList"
           addButtonText="Add Name/Num"
           headerFragment={listHeaderFragment}
           itemRenderer={listItemRenderer}
