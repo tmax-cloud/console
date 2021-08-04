@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import * as classNames from 'classnames';
-import TagsInput from 'react-tagsinput';
+import * as TagsInput from 'react-tagsinput';
 import { useFormContext, Controller } from 'react-hook-form';
 
 export const TagsLabel = ({ name, placeholder = '' }) => {
