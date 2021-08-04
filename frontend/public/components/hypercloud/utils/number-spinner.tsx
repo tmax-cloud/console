@@ -13,11 +13,11 @@ export const NumberSpinner: React.FC<NumberSpinnerProps> = ({ className, initial
   };
   return (
     <div>
-      <Button onClick={() => changeValueBy(-1)} type="button" variant="plain" isDisabled={!_.isNil(min) && value <= min} aria-label="Decrement" className="co-m-number-spinner__button">
+      <Button data-testid="minus-button" onClick={() => changeValueBy(-1)} type="button" variant="plain" isDisabled={!_.isNil(min) && value <= min} aria-label="Decrement" className="co-m-number-spinner__button">
         <MinusSquareIcon className="co-m-number-spinner__down-icon" />
       </Button>
       <input name={name} type="number" ref={register({ min: min, max: max })} value={value} onChange={(e: any) => setValue(e.target.value)} className={classNames(className, 'co-m-number-spinner__input', 'hc-number-spinner__input')} {...inputProps}></input>
-      <Button onClick={() => changeValueBy(1)} type="button" variant="plain" isDisabled={!_.isNil(max) && value >= max} aria-label="Increment" className="co-m-number-spinner__button">
+      <Button data-testid="plus-button" onClick={() => changeValueBy(1)} type="button" variant="plain" isDisabled={!_.isNil(max) && value >= max} aria-label="Increment" className="co-m-number-spinner__button">
         <PlusSquareIcon className="co-m-number-spinner__up-icon" />
       </Button>
     </div>
