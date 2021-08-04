@@ -58,7 +58,7 @@ describe('TagsLabel Test', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('tag들을 모두 제거하면 placeholder가 표시돼야 합니다.', () => {
+  it('x 아이콘 클릭 시 해당 tag가 제거돼야 합니다.', () => {
     const { container, queryByText, getAllByText } = renderTagsLabelForm();
 
     userEvent.click(getAllByText('×')[0]);
