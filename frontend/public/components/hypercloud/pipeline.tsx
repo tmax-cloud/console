@@ -148,8 +148,6 @@ const PipelineResourcesTab: React.FC<PipelineDetailsProps> = props => {
 };
 
 export const PipelinesDetailsPage: React.FC<PipelinesDetailsPageProps> = props => {
-  //const { t } = useTranslation();
-  /*name: t('SINGLE:MSG_PIPELINES_PIPELINEDETAILS_TABPIPELINERUNS_1'),*/
   return <DetailsPage
     {...props}
     kind={kind}
