@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, cleanup, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { Section } from '../../public/components/hypercloud/utils/section';
 import { TextInput } from '../../public/components/hypercloud/utils/text-input';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -11,8 +11,6 @@ type RenderSectionProps = {
 };
 
 describe('Section Test', () => {
-  afterEach(cleanup);
-
   // 일반 컴포넌트를 children으로 갖는  Section
   const renderSection = ({ childrens, isRequired, description }: RenderSectionProps) =>
     render(
