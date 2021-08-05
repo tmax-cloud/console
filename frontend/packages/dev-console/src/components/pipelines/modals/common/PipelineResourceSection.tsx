@@ -56,14 +56,12 @@ const PipelineResourceSection: React.FC = () => {
                   const { formikIndex, resource } = sectionData;
 
                   return (
-                    <div>
                     <PipelineResourceDropdownField
                       key={resource.name}
                       name={`resources.${formikIndex}`}
                       filterType={type}
                       label={t('SINGLE:MSG_CI/CD_MAILFORM_REQUEST_4')}
                     />
-                    {resource.name}</div>
                   );
                 })}
               </FormSection>

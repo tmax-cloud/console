@@ -1,6 +1,7 @@
 const fs = require('fs');
 const getXlsxStream = require('./parse.js');
 const cliProgress = require('cli-progress');
+require('dotenv').config();
 
 const LanguageMap = {
   KR: { column: 'String(KR)', file: 'ko.json' },
@@ -15,6 +16,8 @@ const KeyMap = {
 };
 
 const progressBar = new cliProgress.SingleBar({ format: 'progress [{bar}] {percentage}% | {value}/{total} bytes' }, cliProgress.Presets.lagacy);
+
+const dir = './langs';
 
 /**
  * EXCEL에 입력된 문자열을 수정
@@ -47,6 +50,9 @@ const fixJsonString = str => {
  * @param {Object} data 데이터 객체
  */
 const isDeletedKey = data => {
+  if (process.env.INCLUDE_UNUSED_STRING === 'Y') {
+    return false;
+  }
   const deletedStringColumn = data.raw['삭제여부'];
   if (deletedStringColumn && deletedStringColumn.toString().toUpperCase() === 'O') {
     return true;
@@ -131,6 +137,9 @@ const read = async (filePath, sheetName, keyColumn) => {
 const write = (filePath, data) => {
   console.log(`Writing to ${filePath}...`);
   const jsonData = fixJsonString(JSON.stringify(data, null, 2));
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
   fs.writeFile(filePath, jsonData, { encoding: 'utf8' }, error => {
     if (error) throw error;
     console.log(`Writing to ${filePath} finished successfully!`);
@@ -171,7 +180,7 @@ console.log('-------------------------------------------------------------------
 
   // write file
   for (const lang of Object.keys(LanguageMap)) {
-    write(`langs/${LanguageMap[lang].file}`, result[lang]);
+    write(`${dir}/${LanguageMap[lang].file}`, result[lang]);
   }
 })();
 /** script end */
