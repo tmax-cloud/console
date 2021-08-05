@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputSelectBox } from '../../public/components/hypercloud/utils/inputSelectBox';
+import { InputSelectBox } from '@console/internal/components/hypercloud/utils/inputSelectBox';
 import { render, act } from '@testing-library/react';
 import { configure } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectorInput } from '../../public/components/utils';
+import { SelectorInput } from '@console/internal/components/utils';
 import { render, act } from '@testing-library/react';
 import { configure } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
