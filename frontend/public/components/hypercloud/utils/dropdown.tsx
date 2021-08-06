@@ -208,7 +208,7 @@ const Dropdown_: React.SFC<DropdownProps> = props => {
 
 export const Dropdown = React.memo(Dropdown_);
 
-type DropdownProps = {
+export type DropdownProps = {
   id?: string;
   name: string;
   className?: string;

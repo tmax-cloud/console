@@ -4,7 +4,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { configure } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
-import { Dropdown } from '../../public/components/hypercloud/utils/dropdown';
+import { Dropdown, DropdownProps } from '../../public/components/hypercloud/utils/dropdown';
 
 configure({ testIdAttribute: 'data-test-id' });
 
@@ -15,12 +15,12 @@ const resources = {
   Ti: 'TiB',
 };
 
-const renderDropdown = ({ required, resources, defaultValue, disabled }: renderDropdownProps) => {
+const renderDropdown = ({ name, required, items, defaultValue, disabled }: DropdownProps) => {
   return render(
     <Dropdown
-      name="dropdown1"
+      name={name}
       className="btn-group"
-      items={resources} // (필수)
+      items={items} // (필수)
       required={required}
       defaultValue={defaultValue}
       disabled={disabled}
@@ -48,32 +48,36 @@ const renderDropdown = ({ required, resources, defaultValue, disabled }: renderD
   );
 };
 
+const defaultParameters = { name: 'dropdown1', items: resources };
+
 describe('Dropdown test', () => {
   it('초기 렌더 스냅샷 테스트입니다.', () => {
-    const { container } = renderDropdown({ required: true, resources: resources });
+    const { container } = renderDropdown({ ...defaultParameters });
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('defaultValue 프로퍼티 추가시에 정상동작 테스트입니다.', () => {
-    const { getByText } = renderDropdown({ required: true, resources: resources, defaultValue: 'Gi' });
+    const { getByText } = renderDropdown({ ...defaultParameters, defaultValue: 'Gi' });
 
     expect(getByText('GiB')).toBeTruthy();
   });
+
   it('드롭다운 활성화 되었을 때 menulist 펼쳐지는 여부.', () => {
-    const { getByTestId } = renderDropdown({ required: true, resources: resources });
+    const { getByTestId } = renderDropdown({ ...defaultParameters });
 
     userEvent.click(getByTestId('dropdown-button'));
 
     expect(getByTestId('menu-list')).toBeTruthy();
   });
+
   it('disabled 프로퍼티가 true일 때 테스트.', () => {
-    const { getByTestId } = renderDropdown({ required: true, resources, disabled: true });
+    const { getByTestId } = renderDropdown({ ...defaultParameters, disabled: true });
 
     expect(getByTestId('dropdown-button')).toBeDisabled();
   });
 
   it('Submit 시 보내지는 value 형식 테스트', async () => {
-    const { getByText } = renderDropdown({ required: true, resources, defaultValue: 'Gi' });
+    const { getByText } = renderDropdown({ ...defaultParameters, defaultValue: 'Gi' });
 
     await act(async () => {
       console.log('눌렸니?');
@@ -84,10 +88,3 @@ describe('Dropdown test', () => {
     expect(mockSubmit).toHaveBeenCalledWith({ dropdown1: 'Gi' });
   });
 });
-
-type renderDropdownProps = {
-  required: boolean;
-  resources: any;
-  defaultValue?: string;
-  disabled?: boolean;
-};
