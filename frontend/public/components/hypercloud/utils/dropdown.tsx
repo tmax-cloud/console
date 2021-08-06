@@ -5,24 +5,12 @@ import { CaretDownIcon } from '@patternfly/react-icons';
 import { useFormContext } from 'react-hook-form';
 import { usePrevious } from '@console/metal3-plugin/src/hooks';
 
-const DropDownRow: React.SFC<DropdownRowProps> = React.memo((props) => {
-  const {
-    itemKey,
-    content,
-    onClick,
-    hover,
-    selected
-  } = props;
+const DropDownRow: React.SFC<DropdownRowProps> = React.memo(props => {
+  const { itemKey, content, onClick, hover, selected } = props;
 
   return (
     <li key={itemKey}>
-      <button
-        className={classNames("pf-c-dropdown__menu-item", { hover, focus: selected })}
-        id={`${itemKey}-link`}
-        data-test-id="dropdown-menu"
-        data-test-dropdown-menu={itemKey}
-        onClick={(e) => onClick(itemKey, e)}
-      >
+      <button className={classNames('pf-c-dropdown__menu-item', { hover, focus: selected })} id={`${itemKey}-link`} data-test-id="dropdown-menu" data-test-dropdown-menu={itemKey} onClick={e => onClick(itemKey, e)}>
         {content}
       </button>
     </li>
@@ -30,29 +18,16 @@ const DropDownRow: React.SFC<DropdownRowProps> = React.memo((props) => {
 });
 
 type DropdownRowProps = {
-  itemKey: string,
-  content: React.ReactNode,
-  onClick: (selected: string, e: any) => void,
-  className?: string,
-  hover: boolean,
-  selected: boolean
-}
+  itemKey: string;
+  content: React.ReactNode;
+  onClick: (selected: string, e: any) => void;
+  className?: string;
+  hover: boolean;
+  selected: boolean;
+};
 
-const Dropdown_: React.SFC<DropdownProps> = (props) => {
-  const {
-    name,
-    ariaLabel,
-    className,
-    buttonClassName,
-    menuClassName,
-    dropDownClassName,
-    titlePrefix,
-    describedBy,
-    disabled,
-    required,
-    methods,
-    defaultValue,
-  } = props;
+const Dropdown_: React.SFC<DropdownProps> = props => {
+  const { name, ariaLabel, className, buttonClassName, menuClassName, dropDownClassName, titlePrefix, describedBy, disabled, required, methods, defaultValue } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
   const selectedKey = watch(name, defaultValue);
@@ -69,7 +44,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     return () => {
       unregister(name);
       window.removeEventListener('click', onWindowClick);
-    }
+    };
   }, [name, register, unregister]);
 
   React.useEffect(() => {
@@ -84,11 +59,11 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     setValue(name, defaultValue);
     setKeyboardHoverKey(defaultValue);
   }, [defaultValue]);
-  
+
   const dropdownElement = React.useRef<HTMLDivElement>();
   const dropdownList = React.useRef<HTMLUListElement>();
 
-  const onWindowClick = (event) => {
+  const onWindowClick = event => {
     if (active) {
       return;
     }
@@ -115,7 +90,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     hide(e);
   };
 
-  const toggle = (e) => {
+  const toggle = e => {
     e.preventDefault();
 
     if (disabled) {
@@ -135,13 +110,13 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     setActive(true);
   };
 
-  const hide = (e) => {
+  const hide = e => {
     e && e.stopPropagation();
     window.removeEventListener('click', onWindowClick);
     setActive(false);
   };
 
-  const onKeyDown = (e) => {
+  const onKeyDown = e => {
     const { key } = e;
     if (key === 'Escape') {
       hide(e);
@@ -181,7 +156,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
     setKeyboardHoverKey(newKey);
     e.stopPropagation();
     e.preventDefault(); // 키보드 사용시 화면 스크롤되지 않도록 처리
-  }
+  };
 
   const spacerBefore = props.spacerBefore || new Set();
   const headerBefore = props.headerBefore || {};
@@ -206,42 +181,15 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
         </li>,
       );
     }
-    rows.push(
-      <DropDownRow
-        className={klass}
-        key={key}
-        itemKey={key}
-        content={content}
-        onClick={onClickItem}
-        selected={selected}
-        hover={hover}
-      />,
-    );
+    rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onClick={onClickItem} selected={selected} hover={hover} />);
   };
 
   _.each(itemList, (v, k) => addItem(k, v));
 
   return (
     <div className={classNames(className)} ref={dropdownElement} style={...props.style}>
-      <div
-        className={classNames(
-          { 'dropdown pf-c-dropdown hc-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true },
-          dropDownClassName,
-        )}
-      >
-        <button
-          aria-label={ariaLabel}
-          aria-haspopup="true"
-          aria-expanded={active}
-          aria-describedby={describedBy}
-          className={classNames('pf-c-dropdown__toggle hc-dropdown__button', buttonClassName)}
-          data-test-id="dropdown-button"
-          onClick={toggle}
-          onKeyDown={onKeyDown}
-          type="button"
-          id={props.id}
-          disabled={disabled}
-        >
+      <div className={classNames({ 'dropdown pf-c-dropdown hc-dropdown': true, 'pf-m-expanded': active, 'col-md-12': true }, dropDownClassName)}>
+        <button aria-label={ariaLabel} aria-haspopup="true" aria-expanded={active} aria-describedby={describedBy} className={classNames('pf-c-dropdown__toggle hc-dropdown__button', buttonClassName)} data-test-id="dropdown-button" onClick={toggle} onKeyDown={onKeyDown} type="button" id={props.id} disabled={disabled}>
           <span className="pf-c-dropdown__toggle-text">
             {titlePrefix && `${titlePrefix}: `}
             {_.get(props.items, selectedKey ?? defaultValue, props.title)}
@@ -249,10 +197,7 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
           <CaretDownIcon className="pf-c-dropdown__toggle-icon" />
         </button>
         {active && (
-          <ul
-            ref={dropdownList}
-            className={classNames('pf-c-dropdown__menu hc-dropdown__menu', menuClassName)}
-          >
+          <ul ref={dropdownList} data-test-id="menu-list" className={classNames('pf-c-dropdown__menu hc-dropdown__menu', menuClassName)}>
             {rows}
           </ul>
         )}
@@ -264,25 +209,25 @@ const Dropdown_: React.SFC<DropdownProps> = (props) => {
 export const Dropdown = React.memo(Dropdown_);
 
 type DropdownProps = {
-  id?: string,
-  name: string,
-  className?: string,
-  style?: any,
-  dropDownClassName?: string,
-  ariaLabel?: string,
-  headerBefore?: { [key: string]: string },
-  items: object,
-  menuClassName?: string,
-  itemClassName?: string,
-  buttonClassName?: string,
-  spacerBefore?: Set<string>,
-  textFilter?: string,
+  id?: string;
+  name: string;
+  className?: string;
+  style?: any;
+  dropDownClassName?: string;
+  ariaLabel?: string;
+  headerBefore?: { [key: string]: string };
+  items: object;
+  menuClassName?: string;
+  itemClassName?: string;
+  buttonClassName?: string;
+  spacerBefore?: Set<string>;
+  textFilter?: string;
   title?: React.ReactNode;
   titlePrefix?: React.ReactNode;
-  defaultValue?: string,
+  defaultValue?: string;
   describedBy?: string;
   active?: boolean;
-  required?: boolean,
-  disabled?: boolean,
-  methods?: any
+  required?: boolean;
+  disabled?: boolean;
+  methods?: any;
 };
