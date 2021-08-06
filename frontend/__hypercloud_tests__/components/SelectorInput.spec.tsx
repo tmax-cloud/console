@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectorInput } from '../../public/components/utils';
+import { SelectorInput } from '@console/internal/components/utils';
 import { render, act } from '@testing-library/react';
 import { configure } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +10,7 @@ configure({ testIdAttribute: 'id' });
 
 const mockSubmit = jest.fn(data => {});
 
-const renderSelectorInput = () => {
+const renderSelectorInputForm = () => {
   const SelectorInputForm = () => {
     const methods = useForm();
     return (
@@ -29,20 +29,20 @@ const renderSelectorInput = () => {
   return render(<SelectorInputForm />);
 };
 
-describe('SelectorInputTest', () => {
+describe('SelectorInput Test', () => {
   beforeEach(() => {
     // Empty
   });
 
   it('tags로 설정한 태그들이 defaultTags로 세팅되어야 합니다.', () => {
-    const { container, getByText } = renderSelectorInput();
+    const { container, getByText } = renderSelectorInputForm();
     expect(getByText('AAA')).toBeTruthy();
     expect(getByText('BBB')).toBeTruthy();
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('input에 값을 입력하고 엔터치면 해당 값의 chip이 추가돼야 합니다.', () => {
-    const { container, getByText, getByTestId } = renderSelectorInput();
+    const { container, getByText, getByTestId } = renderSelectorInputForm();
     const tagsInput = getByTestId('tags-input');
 
     userEvent.type(tagsInput, 'abc');
@@ -53,14 +53,14 @@ describe('SelectorInputTest', () => {
   });
 
   it('x 아이콘 클릭 시 해당 tag가 제거돼야 합니다.', () => {
-    const { container, getAllByText, queryByText } = renderSelectorInput();
+    const { container, getAllByText, queryByText } = renderSelectorInputForm();
     userEvent.click(getAllByText('×')[1]);
     expect(queryByText('BBB')).toBeNull();
     expect(container).toMatchSnapshot();
   });
 
   it('Submit 시 보내지는 value 형식 테스트입니다.', async () => {
-    const { getByText, getByTestId } = renderSelectorInput();
+    const { getByText, getByTestId } = renderSelectorInputForm();
     const tagsInput = getByTestId('tags-input');
 
     // MEMO : 'CCC' 태그 chip 추가

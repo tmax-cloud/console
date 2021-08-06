@@ -16,7 +16,7 @@ module.exports = {
   testRegex: '.*\\.spec\\.(ts|tsx|js|jsx)$',
   testURL: 'http://localhost',
   setupFiles: ['./__mocks__/localStorage.ts', './__mocks__/matchMedia.js', './__mocks__/serverFlags.js', './__mocks__/mutationObserver.js'],
-  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.tsx'],
   coverageDirectory: '__coverage__',
   coverageReporters: ['json', 'lcov', 'text', 'text-summary'],
   collectCoverageFrom: ['public/*.{js,jsx,ts,tsx}', 'public/{components,module,ui}/**/*.{js,jsx,ts,tsx}', 'packages/*/src/**/*.{js,jsx,ts,tsx}', '!**/node_modules/**'],

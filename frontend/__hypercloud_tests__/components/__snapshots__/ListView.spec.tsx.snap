@@ -1,0 +1,492 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListView Test CustomListView 스냅샷 및 react-hook-form 싱크(Submit value) 테스트입니다. 1`] = `
+<div>
+  <form>
+    <div>
+      <div
+        class="row pairs-list__heading"
+      >
+        <div
+          class="col-xs-4 text-secondary text-uppercase"
+        >
+          NAME
+        </div>
+        <div
+          class="col-xs-4 text-secondary text-uppercase"
+        >
+          NUM
+        </div>
+        <div
+          class="col-xs-1 co-empty__header"
+        />
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-xs-4 pairs-list__name-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.spinnerNumList[0].name"
+            name="metadata.spinnerNumList[0].name"
+            value="row1"
+          />
+        </div>
+        <div
+          class="col-xs-4 pairs-list__value-field"
+        >
+          <div>
+            <button
+              aria-label="Decrement"
+              class="pf-c-button pf-m-plain co-m-number-spinner__button"
+              data-testid="minus-button"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="co-m-number-spinner__down-icon"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"
+                  transform=""
+                />
+              </svg>
+            </button>
+            <input
+              class="co-m-number-spinner__input hc-number-spinner__input"
+              data-testid="metadata.spinnerNumList[0].number"
+              name="metadata.spinnerNumList[0].number"
+              type="number"
+              value="1"
+            />
+            <button
+              aria-label="Increment"
+              class="pf-c-button pf-m-plain co-m-number-spinner__button"
+              data-testid="plus-button"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="co-m-number-spinner__up-icon"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+                  transform=""
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="col-xs-1 pairs-list__action"
+        >
+          <button
+            class="pf-c-button pf-m-plain pairs-list__span-btns"
+            data-testid="delete-button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="pairs-list__side-btn pairs-list__delete-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"
+                transform=""
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Delete
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-xs-4 pairs-list__name-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.spinnerNumList[1].name"
+            name="metadata.spinnerNumList[1].name"
+            value="defaultName"
+          />
+        </div>
+        <div
+          class="col-xs-4 pairs-list__value-field"
+        >
+          <div>
+            <button
+              aria-label="Decrement"
+              class="pf-c-button pf-m-plain co-m-number-spinner__button"
+              data-testid="minus-button"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="co-m-number-spinner__down-icon"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"
+                  transform=""
+                />
+              </svg>
+            </button>
+            <input
+              class="co-m-number-spinner__input hc-number-spinner__input"
+              data-testid="metadata.spinnerNumList[1].number"
+              name="metadata.spinnerNumList[1].number"
+              type="number"
+              value="0"
+            />
+            <button
+              aria-label="Increment"
+              class="pf-c-button pf-m-plain co-m-number-spinner__button"
+              data-testid="plus-button"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="co-m-number-spinner__up-icon"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 448 512"
+                width="1em"
+              >
+                <path
+                  d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+                  transform=""
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="col-xs-1 pairs-list__action"
+        >
+          <button
+            class="pf-c-button pf-m-plain pairs-list__span-btns"
+            data-testid="delete-button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="pairs-list__side-btn pairs-list__delete-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"
+                transform=""
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Delete
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="row col-xs-12"
+      >
+        <button
+          class="pf-c-button pf-m-link pf-m-link--align-left"
+          data-test-id="pairs-list__add-btn"
+          type="button"
+        >
+          <span
+            class="pf-c-button__text"
+          >
+            <svg
+              aria-hidden="true"
+              class="co-icon-space-r"
+              data-test-id="pairs-list__add-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+                transform=""
+              />
+            </svg>
+            Add NumberSpinner
+          </span>
+        </button>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ListView Test 아이템 추가 후 리스트뷰 중간 아이템을 제거하면 각 row의 순서 및 값이 유지 되어야 합니다. 1`] = `
+<div>
+  <form>
+    <div>
+      <div
+        class="row pairs-list__heading"
+      >
+        <div
+          class="col-xs-4 text-secondary text-uppercase"
+        >
+          KEY
+        </div>
+        <div
+          class="col-xs-4 text-secondary text-uppercase"
+        >
+          VALUE
+        </div>
+        <div
+          class="col-xs-1 co-empty__header"
+        />
+      </div>
+      <div
+        class="row"
+        data-testid="row"
+      >
+        <div
+          class="col-xs-4 pairs-list__name-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.listview[0].key"
+            name="metadata.listview[0].key"
+            value="AAA"
+          />
+        </div>
+        <div
+          class="col-xs-4 pairs-list__value-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.listview[0].value"
+            name="metadata.listview[0].value"
+            value="aaa"
+          />
+        </div>
+        <div
+          class="col-xs-1 pairs-list__action"
+        >
+          <button
+            class="pf-c-button pf-m-plain pairs-list__span-btns"
+            data-test-id="pairs-list__delete-btn"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="pairs-list__side-btn pairs-list__delete-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"
+                transform=""
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Delete
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="row"
+        data-testid="row"
+      >
+        <div
+          class="col-xs-4 pairs-list__name-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.listview[1].key"
+            name="metadata.listview[1].key"
+            value="CCC"
+          />
+        </div>
+        <div
+          class="col-xs-4 pairs-list__value-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.listview[1].value"
+            name="metadata.listview[1].value"
+            value="ccc"
+          />
+        </div>
+        <div
+          class="col-xs-1 pairs-list__action"
+        >
+          <button
+            class="pf-c-button pf-m-plain pairs-list__span-btns"
+            data-test-id="pairs-list__delete-btn"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="pairs-list__side-btn pairs-list__delete-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"
+                transform=""
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Delete
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="row"
+        data-testid="row"
+      >
+        <div
+          class="col-xs-4 pairs-list__name-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.listview[2].key"
+            name="metadata.listview[2].key"
+            value="DDD"
+          />
+        </div>
+        <div
+          class="col-xs-4 pairs-list__value-field"
+        >
+          <input
+            class="pf-c-form-control"
+            data-testid="metadata.listview[2].value"
+            name="metadata.listview[2].value"
+            value="ddd"
+          />
+        </div>
+        <div
+          class="col-xs-1 pairs-list__action"
+        >
+          <button
+            class="pf-c-button pf-m-plain pairs-list__span-btns"
+            data-test-id="pairs-list__delete-btn"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="pairs-list__side-btn pairs-list__delete-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z"
+                transform=""
+              />
+            </svg>
+            <span
+              class="sr-only"
+            >
+              Delete
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="row col-xs-12"
+      >
+        <button
+          class="pf-c-button pf-m-link pf-m-link--align-left"
+          data-test-id="pairs-list__add-btn"
+          type="button"
+        >
+          <span
+            class="pf-c-button__text"
+          >
+            <svg
+              aria-hidden="true"
+              class="co-icon-space-r"
+              data-test-id="pairs-list__add-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+                transform=""
+              />
+            </svg>
+            Add Key/Value
+          </span>
+        </button>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextInput Test error 상태일 경우 TextInput이 에러상태로 렌더되어야 합니다. 1`] = `
+<div>
+  <form>
+    <input
+      class="col-md-12 error-text"
+      name="textinput"
+      value=""
+    />
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;

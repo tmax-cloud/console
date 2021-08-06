@@ -14,7 +14,8 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
  * @prop {string} addButtonText - item 추가버튼의 텍스트. 기본값은 'Add'이다.
  */
 export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText, defaultValues }) => {
-  const { control, register, getValues, setValue } = methods ? methods : useFormContext();
+  const methods_ = methods || useFormContext();
+  const { control, register, getValues, setValue } = methods_;
   const { fields, append, remove } = useFieldArray({ control, name: name });
 
   const DefaultListHeaderFragment = (
@@ -34,12 +35,12 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
 
   const DefaultListItemRenderer = (register, name, item, index, ListActions, ListDefaultIcons) => {
     return (
-      <div className="row" key={item.id}>
+      <div className="row" key={item.id} data-testid="row">
         <div className="col-xs-4 pairs-list__name-field">
-          <input ref={register()} className="pf-c-form-control" name={`${name}[${index}].key`} defaultValue={item.key}></input>
+          <input ref={register()} className="pf-c-form-control" name={`${name}[${index}].key`} data-testid={`${name}[${index}].key`} defaultValue={item.key}></input>
         </div>
         <div className="col-xs-4 pairs-list__value-field">
-          <input ref={register()} className="pf-c-form-control" name={`${name}[${index}].value`} defaultValue={item.value}></input>
+          <input ref={register()} className="pf-c-form-control" name={`${name}[${index}].value`} data-testid={`${name}[${index}].value`} defaultValue={item.value}></input>
         </div>
         <div className="col-xs-1 pairs-list__action">
           <Button
@@ -87,7 +88,7 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
     deleteIcon: deleteIcon,
   };
 
-  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(methods, name, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
+  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(methods_, name, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
 
   return (
     <div>
