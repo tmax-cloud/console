@@ -4,7 +4,6 @@ import { render, act } from '@testing-library/react';
 import { DeploymentModel } from '@console/internal/models';
 import { DeploymentsTestData } from '../../__hypercloud_mocks__/deploymentMocks';
 import * as _ from 'lodash-es';
-import { Provider } from 'react-redux';
 import store from '@console/internal/redux';
 import userEvent from '@testing-library/user-event';
 import { configure } from '@testing-library/dom';
@@ -50,18 +49,16 @@ const renderResourceDropdownForm = (props: ResourceDropdownProps) => {
     wrapper: ({ children }) => {
       const methods = useForm();
       return (
-        <Provider store={store}>
-          <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(data => {
-                mockSubmit(data);
-              })}
-            >
-              {children}
-              <button type="submit">Submit</button>
-            </form>
-          </FormProvider>
-        </Provider>
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(data => {
+              mockSubmit(data);
+            })}
+          >
+            {children}
+            <button type="submit">Submit</button>
+          </form>
+        </FormProvider>
       );
     },
   });
