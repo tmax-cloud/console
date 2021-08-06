@@ -1,0 +1,195 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NumberSpinner Test initValue로 설정한 값으로 input value가 초기세팅 되어야 합니다. 1`] = `
+<div>
+  <form>
+    <div>
+      <button
+        aria-label="Decrement"
+        class="pf-c-button pf-m-plain co-m-number-spinner__button"
+        data-testid="minus-button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="co-m-number-spinner__down-icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"
+            transform=""
+          />
+        </svg>
+      </button>
+      <input
+        class="co-m-number-spinner__input hc-number-spinner__input"
+        name="spinner1"
+        type="number"
+        value="1"
+      />
+      <button
+        aria-label="Increment"
+        class="pf-c-button pf-m-plain co-m-number-spinner__button"
+        data-testid="plus-button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="co-m-number-spinner__up-icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+            transform=""
+          />
+        </svg>
+      </button>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`NumberSpinner Test plus button을 한번 클릭하면 input value가 +1 되어야 합니다. 1`] = `
+<div>
+  <form>
+    <div>
+      <button
+        aria-label="Decrement"
+        class="pf-c-button pf-m-plain co-m-number-spinner__button"
+        data-testid="minus-button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="co-m-number-spinner__down-icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"
+            transform=""
+          />
+        </svg>
+      </button>
+      <input
+        class="co-m-number-spinner__input hc-number-spinner__input"
+        name="spinner1"
+        type="number"
+        value="2"
+      />
+      <button
+        aria-label="Increment"
+        class="pf-c-button pf-m-plain co-m-number-spinner__button"
+        data-testid="plus-button"
+        disabled=""
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="co-m-number-spinner__up-icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+            transform=""
+          />
+        </svg>
+      </button>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`NumberSpinner Test 설정한 max값 이상으로 input value가 증가하지 않고 plus button은 disabled 돼야 합니다. 1`] = `
+<div>
+  <form>
+    <div>
+      <button
+        aria-label="Decrement"
+        class="pf-c-button pf-m-plain co-m-number-spinner__button"
+        data-testid="minus-button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="co-m-number-spinner__down-icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM92 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H92z"
+            transform=""
+          />
+        </svg>
+      </button>
+      <input
+        class="co-m-number-spinner__input hc-number-spinner__input"
+        name="spinner1"
+        type="number"
+        value="2"
+      />
+      <button
+        aria-label="Increment"
+        class="pf-c-button pf-m-plain co-m-number-spinner__button"
+        data-testid="plus-button"
+        disabled=""
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="co-m-number-spinner__up-icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"
+            transform=""
+          />
+        </svg>
+      </button>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;

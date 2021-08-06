@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputSelectBox Test SelectBox 클릭 시 드롭다운 메뉴가 펼쳐져야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="pf-c-input-group"
+    >
+      <input
+        class="pf-c-form-control"
+        id="cpu"
+        name="spec.section.cpu"
+        type="number"
+      />
+      <div
+        class="btn-group"
+      >
+        <div
+          class="dropdown pf-c-dropdown pf-m-expanded"
+        >
+          <button
+            aria-expanded="true"
+            aria-haspopup="true"
+            class="pf-c-dropdown__toggle"
+            data-test-id="dropdown-button"
+            type="button"
+          >
+            <span
+              class="pf-c-dropdown__toggle-text"
+            >
+              GiB
+            </span>
+            <svg
+              aria-hidden="true"
+              class="pf-c-dropdown__toggle-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 320 512"
+              width="1em"
+            >
+              <path
+                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                transform=""
+              />
+            </svg>
+          </button>
+          <ul
+            class="pf-c-dropdown__menu"
+          >
+            <li>
+              <button
+                class="pf-c-dropdown__menu-item"
+                data-test-dropdown-menu="Mi"
+                data-test-id="dropdown-menu"
+                id="Mi-link"
+              >
+                MiB
+              </button>
+            </li>
+            <li>
+              <button
+                class="pf-c-dropdown__menu-item"
+                data-test-dropdown-menu="Gi"
+                data-test-id="dropdown-menu"
+                id="Gi-link"
+              >
+                GiB
+              </button>
+            </li>
+            <li>
+              <button
+                class="pf-c-dropdown__menu-item"
+                data-test-dropdown-menu="Ti"
+                data-test-id="dropdown-menu"
+                id="Ti-link"
+              >
+                TiB
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`InputSelectBox Test selectedKey로 설정한 값이 selectbox에 default로 선택 되어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="pf-c-input-group"
+    >
+      <input
+        class="pf-c-form-control"
+        id="cpu"
+        name="spec.section.cpu"
+        type="number"
+      />
+      <div
+        class="btn-group"
+      >
+        <div
+          class="dropdown pf-c-dropdown"
+        >
+          <button
+            aria-expanded="false"
+            aria-haspopup="true"
+            class="pf-c-dropdown__toggle"
+            data-test-id="dropdown-button"
+            type="button"
+          >
+            <span
+              class="pf-c-dropdown__toggle-text"
+            >
+              GiB
+            </span>
+            <svg
+              aria-hidden="true"
+              class="pf-c-dropdown__toggle-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 320 512"
+              width="1em"
+            >
+              <path
+                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                transform=""
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
