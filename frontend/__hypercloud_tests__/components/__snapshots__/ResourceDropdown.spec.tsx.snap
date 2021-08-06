@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ResourceDropdown Test Single ResourceDropdown 테스트입니다. 1`] = `
+exports[`ResourceDropdown Test Multi ResourceDropdown 초기렌더 후 드롭다운 펼쳤을 때의 모습 테스트입니다. 1`] = `
 <div>
   <form>
     <div
@@ -20,18 +20,14 @@ exports[`ResourceDropdown Test Single ResourceDropdown 테스트입니다. 1`] =
             <span
               class="pf-c-dropdown__toggle-text"
             >
-              <div
-                class="co-m-loader co-an-fade-in-out co-m-loader--inline"
-              >
-                <div
-                  class="co-m-loader-dot__one"
-                />
-                <div
-                  class="co-m-loader-dot__two"
-                />
-                <div
-                  class="co-m-loader-dot__three"
-                />
+              <div>
+                Resources 
+                <span
+                  class="pf-c-badge pf-m-read"
+                  id="mrd-badge"
+                >
+                  0
+                </span>
               </div>
             </span>
             <svg
@@ -67,6 +63,288 @@ exports[`ResourceDropdown Test Single ResourceDropdown 테스트입니다. 1`] =
               value=""
             />
           </div>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="All-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <div
+                  class="pf-c-check"
+                >
+                  <input
+                    aria-invalid="false"
+                    class="pf-c-check__input"
+                    id="all-resources"
+                    type="checkbox"
+                  />
+                </div>
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    All
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-all"
+                    title="All"
+                  >
+                    A
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  SINGLE:MSG_CONTAINERREGISTRIES_CREATEIMAGESCANREQUESTPOPUP_1
+                </span>
+              </span>
+            </a>
+          </li>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="catalog-catalog-controller-manager-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <div
+                  class="pf-c-check"
+                >
+                  <input
+                    aria-invalid="false"
+                    class="pf-c-check__input"
+                    id="8b12e367-e9e3-4596-9a5c-b4884887923d:checkbox"
+                    tabindex="-1"
+                    type="checkbox"
+                  />
+                </div>
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    Deployment
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-deployment"
+                    title="Deployment"
+                  >
+                    D
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    catalog-catalog-controller-manager
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="catalog-catalog-webhook-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <div
+                  class="pf-c-check"
+                >
+                  <input
+                    aria-invalid="false"
+                    class="pf-c-check__input"
+                    id="27ddeff5-6f90-41db-8572-ddfe39face39:checkbox"
+                    tabindex="-1"
+                    type="checkbox"
+                  />
+                </div>
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    Deployment
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-deployment"
+                    title="Deployment"
+                  >
+                    D
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    catalog-catalog-webhook
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ResourceDropdown Test Single ResourceDropdown 펼쳤을 때 Deployment 리스트아이템 2개가 있어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="co-type-selector"
+    >
+      <div
+        class="dropdown pf-c-dropdown pf-m-expanded"
+      >
+        <button
+          aria-haspopup="true"
+          class="pf-c-dropdown__toggle"
+          type="button"
+        >
+          <div
+            class="btn-dropdown__content-wrap"
+          >
+            <span
+              class="pf-c-dropdown__toggle-text"
+            >
+              select one deployment
+            </span>
+            <svg
+              aria-hidden="true"
+              class="pf-c-dropdown__toggle-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 320 512"
+              width="1em"
+            >
+              <path
+                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                transform=""
+              />
+            </svg>
+          </div>
+        </button>
+        <ul
+          class="dropdown-menu__autocomplete-filter pf-c-dropdown__menu dropdown-menu--text-wrap"
+          role="listbox"
+        >
+          <div
+            class="dropdown-menu__filter"
+          >
+            <input
+              autocapitalize="none"
+              class="pf-c-form-control"
+              data-test-id="dropdown-text-filter"
+              placeholder="COMMON:MSG_COMMON_BUTTON_FILTER_PLACEHOLDER_1"
+              type="text"
+              value=""
+            />
+          </div>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="catalog-catalog-controller-manager-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    Deployment
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-deployment"
+                    title="Deployment"
+                  >
+                    D
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    catalog-catalog-controller-manager
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="catalog-catalog-webhook-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    Deployment
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-deployment"
+                    title="Deployment"
+                  >
+                    D
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    catalog-catalog-webhook
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
