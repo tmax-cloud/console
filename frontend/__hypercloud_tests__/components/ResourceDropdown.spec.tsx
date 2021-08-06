@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import { configure } from '@testing-library/dom';
 import { useForm, FormProvider } from 'react-hook-form';
 import * as k8sActions from '@console/internal/actions/k8s';
-import { inject } from '../../public/components/utils/inject';
+import { inject } from '@console/internal/components/utils/inject';
 
 const mockSubmit = jest.fn(data => {});
 
@@ -30,7 +30,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 // MEMO : ResourceDropdown의 ResourceDropdownWrapper_가 Firehose로 감싸져있어서 Firehose컴포넌트에 대한 mocking 해줌
-jest.mock('../../public/components/utils/firehose', () => {
+jest.mock('@console/internal/components/utils/firehose', () => {
   return {
     Firehose: props => {
       return inject(props.children, {
