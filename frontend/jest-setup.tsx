@@ -7,7 +7,7 @@ import store from '@console/internal/redux';
 
 const render = (ui, options) => {
   const Wrapper = ({ children }) => {
-    return <Provider store={store}></Provider>;
+    return <Provider store={store}>{children}</Provider>;
   };
   return rtlRender(ui, { wrapper: Wrapper, ...options });
 };
