@@ -195,7 +195,7 @@ const filters = [
     type: 'pipeline-run-status',
     reducer: pipelineRunFilterReducer,
     items: [
-      { id: 'Succeeded', title: 'Succeeded' },
+      { id: 'Completed', title: 'Completed' },
       { id: 'Running', title: 'Running' },
       { id: 'Failed', title: 'Failed' },
       { id: 'Cancelled', title: 'Cancelled' },

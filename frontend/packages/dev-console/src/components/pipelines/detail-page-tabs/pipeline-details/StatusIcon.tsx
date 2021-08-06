@@ -22,6 +22,7 @@ export const StatusIcon: React.FC<StatusIconProps> = ({ status, ...props }) => {
     case runStatus.Running:
       return <SyncAltIcon {...props} className="fa-spin" />;
 
+    case runStatus.Completed:
     case runStatus.Succeeded:
       return <CheckCircleIcon {...props} />;
 

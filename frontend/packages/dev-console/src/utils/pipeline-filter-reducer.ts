@@ -14,7 +14,7 @@ export const pipelineRunStatus = (pipelineRun): string => {
   return !condition || !condition.status
     ? null
     : condition.status === 'True'
-    ? 'Succeeded'
+    ? 'Completed'
     : condition.status === 'False'
     ? 'Failed'
     : 'Running';
