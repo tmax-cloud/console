@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Section Test Section children 여러개인 경우 snapshot이랑 매치되는지 1`] = `
+<div>
+  <div
+    class="form-group"
+  >
+    <label
+      class="control-label "
+      for="test"
+    >
+      Test
+    </label>
+    <div
+      class="row"
+    >
+      <div
+        class="col-md-12"
+      >
+        <div>
+          <span>
+            test 1
+          </span>
+          <span>
+            test 2
+          </span>
+          <span>
+            test 3
+          </span>
+          <span>
+            test 4
+          </span>
+        </div>
+        <div
+          class="row"
+        />
+        <p
+          class="help-block"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Section Test Section children 하나인데 react-hook-form 컴포넌트 일 경우 snapshot이랑 매치 되는지 1`] = `
+<div>
+  <form>
+    <div
+      class="form-group"
+    >
+      <label
+        class="control-label "
+        for="test"
+      >
+        Test
+      </label>
+      <div
+        class="row"
+      >
+        <div
+          class="col-md-12"
+        >
+          <div>
+            <input
+              class=""
+              name="test-text"
+              value=""
+            />
+          </div>
+          <div
+            class="row"
+          />
+          <p
+            class="help-block"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`Section Test Section children 하나일 경우 snapshot이랑 매치 되는지 1`] = `
+<div>
+  <div
+    class="form-group"
+  >
+    <label
+      class="control-label "
+      for="test"
+    >
+      Test
+    </label>
+    <div
+      class="row"
+    >
+      <div
+        class="col-md-12"
+      >
+        <div>
+          <span>
+            test
+          </span>
+        </div>
+        <div
+          class="row"
+        />
+        <p
+          class="help-block"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Section Test Section에 각 프로퍼티 지정시에 잘 매핑되는지 1`] = `
+<p
+  class="help-block"
+>
+  나는 디스크립션입니다.
+</p>
+`;

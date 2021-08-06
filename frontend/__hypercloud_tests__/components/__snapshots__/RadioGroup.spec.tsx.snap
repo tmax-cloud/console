@@ -1,5 +1,71 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`RadioGroup Test 초기 렌더 스냅샷 테스트입니다. 1`] = `
+<form>
+  <div
+    class="co-radio-group"
+  >
+    <div
+      class="radio"
+    >
+      <label
+        class=""
+      >
+        <input
+          initvalue="gpu"
+          item="cpu"
+          name="radio-group"
+          type="radio"
+          value="cpu"
+        />
+        Cpu
+         
+      </label>
+    </div>
+    <div
+      class="radio"
+    >
+      <label
+        class=""
+      >
+        <input
+          checked=""
+          initvalue="gpu"
+          item="gpu"
+          name="radio-group"
+          type="radio"
+          value="gpu"
+        />
+        Gpu
+         
+      </label>
+    </div>
+    <div
+      class="radio"
+    >
+      <label
+        class=""
+      >
+        <input
+          initvalue="gpu"
+          item="memory"
+          name="radio-group"
+          type="radio"
+          value="memory"
+        />
+        Memory
+         
+      </label>
+    </div>
+  </div>
+  <button
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`RadioGroupTest 초기 렌더 스냅샷 테스트입니다. 1`] = `
 <form>
   <div
