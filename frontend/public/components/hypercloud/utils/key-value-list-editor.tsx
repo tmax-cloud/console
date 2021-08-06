@@ -49,12 +49,12 @@ export const KeyValueListEditor: React.FC<KeyValueListEditorProps> = ({ name, di
     return fields.map((item, index) => (
       <Draggable draggableId={item.id} index={index} key={item.id}>
         {provided => (
-          <div ref={provided.innerRef} {...provided.draggableProps}>
-            <div className={'col-xs-1 pairs-list__action ' + (disableReorder ? 'hide' : '')} {...provided.dragHandleProps}>
+          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+            <div className={'col-xs-1 pairs-list__action ' + (disableReorder ? 'hide' : '')}>
               <PficonDragdropIcon className="vertical-center" />
             </div>
             <div className="col-xs-5 pairs-list__name-field">
-              <input type="text" className="pf-c-form-control" ref={register({ validate: validateKey })} name={`${name}[${index}].key`} defaultValue={item.key} />
+              <input type="text" data-testid={'drag-value-id'} className="pf-c-form-control" ref={register({ validate: validateKey })} name={`${name}[${index}].key`} defaultValue={item.key} />
             </div>
             <div className="col-xs-5 pairs-list__value-field">
               <input type="text" className="pf-c-form-control" ref={register({ validate: validateValue })} name={`${name}[${index}].value`} defaultValue={item.value} />

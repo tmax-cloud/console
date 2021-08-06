@@ -164,6 +164,7 @@
     "protractor-fail-fast": "3.x",
     "protractor-jasmine2-screenshot-reporter": "0.5.x",
     "react-beautiful-dnd": "13.0.0",
+    "react-beautiful-dnd-test-utils": "^3.2.1",
     "read-pkg": "5.x",
     "redux-mock-store": "^1.5.3",
     "resolve-url-loader": "2.x",
