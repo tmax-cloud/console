@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ResourceDropdown, ResourceDropdownProps } from '@console/internal/components/hypercloud/utils/resource-dropdown';
 import { render, act } from '../../test-utils';
 import { DeploymentModel } from '@console/internal/models';
-import { DeploymentsTestData } from '../../__hypercloud_mocks__/deploymentMocks';
+import { DeploymentsTestData } from '../../__hypercloud_mocks__/firehoseMocks';
 import * as _ from 'lodash-es';
 import store from '@console/internal/redux';
 import userEvent from '@testing-library/user-event';
