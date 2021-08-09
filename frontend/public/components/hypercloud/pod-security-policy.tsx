@@ -96,19 +96,19 @@ export const PodSecurityPoliciesDetailsList: React.FC<PodSecurityPoliciesDetails
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('특권 보유 여부')} obj={ds} path="spec.privileged">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_46')} obj={ds} path="spec.privileged">
         {ds.spec.privileged ? 'True' : 'False'}
       </DetailsItem>
-      <DetailsItem label={t('보안 강화 리눅스')} obj={ds} path="spec.seLinux.rule">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_47')} obj={ds} path="spec.seLinux.rule">
         {ds.spec.seLinux.rule}
       </DetailsItem>
-      <DetailsItem label={t('사용자로 실행')} obj={ds} path="spec.runAsUser.rule">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_48')} obj={ds} path="spec.runAsUser.rule">
         {ds.spec.runAsUser.rule}
       </DetailsItem>
-      <DetailsItem label={t('파일 스토리지 그룹')} obj={ds} path="spec.fsGroup.rule">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_49')} obj={ds} path="spec.fsGroup.rule">
         {ds.spec.fsGroup.rule}
       </DetailsItem>
-      <DetailsItem label={t('보충 그룹')} obj={ds} path="spec.supplementalGroups.rule">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_50')} obj={ds} path="spec.supplementalGroups.rule">
         {ds.spec.supplementalGroups.rule}
       </DetailsItem>
     </dl>
