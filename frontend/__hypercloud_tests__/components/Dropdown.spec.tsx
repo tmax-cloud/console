@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, act } from '../../test-utils';
 import { useForm, FormProvider } from 'react-hook-form';
 import { configure } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 import { Dropdown, DropdownProps } from '../../public/components/hypercloud/utils/dropdown';
 
 configure({ testIdAttribute: 'data-test-id' });
