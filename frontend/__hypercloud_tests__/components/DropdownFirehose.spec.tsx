@@ -115,7 +115,7 @@ describe('DropdownFirehose Test', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('드롭다운 아이템 한개 선택 시 해당 아이템 선택상태로 드롭다운 타이틀이 변경되어야 합니다.', async () => {
+  it('드롭다운 아이템 선택 후 Submit 시 value 형태 테스트입니다.', async () => {
     const { getByText } = await renderDropdownFirehoseForm({
       name: 'DropdownFirehose_3',
       resourcesConfig: [
