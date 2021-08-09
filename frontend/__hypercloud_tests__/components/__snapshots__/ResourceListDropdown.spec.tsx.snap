@@ -1,0 +1,340 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResourceListDropdown Test Multi ResourceListDropdown 드롭다운 아이템리스트 검색 결과 테스트입니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="co-type-selector"
+    >
+      <div
+        class="dropdown pf-c-dropdown pf-m-expanded"
+      >
+        <button
+          aria-haspopup="true"
+          class="pf-c-dropdown__toggle"
+          type="button"
+        >
+          <div
+            class="btn-dropdown__content-wrap"
+          >
+            <span
+              class="pf-c-dropdown__toggle-text"
+            >
+              <div>
+                Cluster and Cluster Claim 
+                <span
+                  class="pf-c-badge pf-m-read"
+                  id="mrd-badge"
+                >
+                  0
+                </span>
+              </div>
+            </span>
+            <svg
+              aria-hidden="true"
+              class="pf-c-dropdown__toggle-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 320 512"
+              width="1em"
+            >
+              <path
+                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                transform=""
+              />
+            </svg>
+          </div>
+        </button>
+        <ul
+          class="dropdown-menu__autocomplete-filter pf-c-dropdown__menu dropdown-menu--text-wrap"
+          role="listbox"
+        >
+          <div
+            class="dropdown-menu__filter"
+          >
+            <input
+              autocapitalize="none"
+              class="pf-c-form-control"
+              data-test-id="dropdown-text-filter"
+              placeholder="search by name"
+              type="text"
+              value="j"
+            />
+          </div>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="ClusterManager~~jmc-zgw2v-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <div
+                  class="pf-c-check"
+                >
+                  <input
+                    aria-invalid="false"
+                    class="pf-c-check__input"
+                    id="1a482d7d-ac35-46d3-8496-a94688fc6d0e:checkbox"
+                    tabindex="-1"
+                    type="checkbox"
+                  />
+                </div>
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    ClusterManager
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-clustermanager"
+                    title="ClusterManager"
+                  >
+                    CM
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    jmc
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ResourceListDropdown Test Single ResourceListDropdown 아이템 선택 시 드롭다운이 접히고 타이틀이 변경되어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="co-type-selector"
+    >
+      <div
+        class="dropdown pf-c-dropdown"
+      >
+        <button
+          aria-haspopup="true"
+          class="pf-c-dropdown__toggle"
+          type="button"
+        >
+          <div
+            class="btn-dropdown__content-wrap"
+          >
+            <span
+              class="pf-c-dropdown__toggle-text"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    ClusterManager
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-clustermanager"
+                    title="ClusterManager"
+                  >
+                    CM
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    jmc
+                  </span>
+                </span>
+              </span>
+            </span>
+            <svg
+              aria-hidden="true"
+              class="pf-c-dropdown__toggle-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 320 512"
+              width="1em"
+            >
+              <path
+                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                transform=""
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ResourceListDropdown Test Single ResourceListDropdown 펼쳤을 때 리스트아이템 CC, CM 2개가 있어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="co-type-selector"
+    >
+      <div
+        class="dropdown pf-c-dropdown pf-m-expanded"
+      >
+        <button
+          aria-haspopup="true"
+          class="pf-c-dropdown__toggle"
+          type="button"
+        >
+          <div
+            class="btn-dropdown__content-wrap"
+          >
+            <span
+              class="pf-c-dropdown__toggle-text"
+            >
+              Resource Dropdown
+            </span>
+            <svg
+              aria-hidden="true"
+              class="pf-c-dropdown__toggle-icon"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 320 512"
+              width="1em"
+            >
+              <path
+                d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                transform=""
+              />
+            </svg>
+          </div>
+        </button>
+        <ul
+          class="dropdown-menu__autocomplete-filter pf-c-dropdown__menu dropdown-menu--text-wrap"
+          role="listbox"
+        >
+          <div
+            class="dropdown-menu__filter"
+          >
+            <input
+              autocapitalize="none"
+              class="pf-c-form-control"
+              data-test-id="dropdown-text-filter"
+              placeholder="search by name"
+              type="text"
+              value=""
+            />
+          </div>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="jmc-zgw2v-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    ClusterManager
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-clustermanager"
+                    title="ClusterManager"
+                  >
+                    CM
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    jmc
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
+          <li
+            class=""
+            role="option"
+          >
+            <a
+              class="pf-c-dropdown__menu-item"
+              href="#"
+              id="example-link"
+            >
+              <span
+                class="co-resource-item"
+              >
+                <span
+                  class="co-resource-icon--fixed-width"
+                >
+                  <span
+                    class="sr-only"
+                  >
+                    ClusterClaim
+                  </span>
+                  <span
+                    class="co-m-resource-icon co-m-resource-clusterclaim"
+                    title="ClusterClaim"
+                  >
+                    CC
+                  </span>
+                </span>
+                <span
+                  class="co-resource-item__resource-name"
+                >
+                  <span>
+                    example
+                  </span>
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
