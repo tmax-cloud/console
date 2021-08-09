@@ -65,5 +65,5 @@ build 후 './frontend/public/dist' 폴더에 파일들이 생성되며, 이 파�
 
 # 📚 가이드 리스트
 
-- ### [Console YAML Samples 사용 가이드](/consoleYAMLsamples)
-- ### [Helm](/helm)
+- ### [Console YAML Samples 사용 가이드]({{'/consoleYAMLsamples' | relative_url}})
+- ### [Helm]({{'/helm' | relative_url}})
