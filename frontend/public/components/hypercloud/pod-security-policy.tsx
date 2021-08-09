@@ -4,7 +4,7 @@ import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { K8sResourceCommon, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
+import { DetailsItem, Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 // import { WorkloadTableRow, WorkloadTableHeader } from '../workload-table';
 import { useTranslation } from 'react-i18next';
 const { common } = Kebab.factory;
@@ -91,6 +91,30 @@ export const PodSecurityPoliciesPage: React.FC<PodSecurityPoliciesPageProps> = p
 };
 PodSecurityPoliciesPage.displayName = 'PodSecurityPoliciesPage';
 
+export const PodSecurityPoliciesDetailsList: React.FC<PodSecurityPoliciesDetailsListProps> = ({ ds }) => {
+  const { t } = useTranslation();
+
+  return (
+    <dl className="co-m-pane__details">
+      <DetailsItem label={t('특권 보유 여부')} obj={ds} path="spec.privileged">
+        {ds.spec.privileged ? 'True' : 'False'}
+      </DetailsItem>
+      <DetailsItem label={t('보안 강화 리눅스')} obj={ds} path="spec.seLinux.rule">
+        {ds.spec.seLinux.rule}
+      </DetailsItem>
+      <DetailsItem label={t('사용자로 실행')} obj={ds} path="spec.runAsUser.rule">
+        {ds.spec.runAsUser.rule}
+      </DetailsItem>
+      <DetailsItem label={t('파일 스토리지 그룹')} obj={ds} path="spec.fsGroup.rule">
+        {ds.spec.fsGroup.rule}
+      </DetailsItem>
+      <DetailsItem label={t('보충 그룹')} obj={ds} path="spec.supplementalGroups.rule">
+        {ds.spec.supplementalGroups.rule}
+      </DetailsItem>
+    </dl>
+  );
+}
+
 const PodSecurityPoliciesDetails: React.FC<PodSecurityPoliciesDetailsProps> = ({ obj: podsecuritypolicies }) => {
   const { t } = useTranslation();
   return (
@@ -102,6 +126,9 @@ const PodSecurityPoliciesDetails: React.FC<PodSecurityPoliciesDetailsProps> = ({
             <div className="col-sm-6">
               <ResourceSummary resource={podsecuritypolicies}></ResourceSummary>
             </div>
+            <div className="col-lg-6">
+              <PodSecurityPoliciesDetailsList ds={podsecuritypolicies} />
+          </div>
           </div>
         </div>
       </div>
@@ -116,6 +143,10 @@ PodSecurityPoliciesDetailsPage.displayName = 'PodSecurityPoliciesDetailsPage';
 
 type PodSecurityPoliciesDetailsProps = {
   obj: K8sResourceCommon;
+};
+
+type PodSecurityPoliciesDetailsListProps = {
+  ds: any;
 };
 
 type PodSecurityPoliciesPageProps = {
