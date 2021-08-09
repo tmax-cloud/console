@@ -1,9 +1,12 @@
 ---
 layout: default
 title: HyperCloud 5.1
+description: >-
+  HyperCloud 5.1 콘솔 프로젝트입니다.
+permalink: /
 ---
-  
-# 📕 HyperCloud Console 5.1 환경구축 
+
+# 📕 HyperCloud Console 5.1 환경구축
 
 - Console 설치 가이드 - [가이드 링크](https://github.com/tmax-cloud/install-console)
 - openshift console 코드 원본 - [GitHub](https://github.com/openshift/console/tree/release-4.5)
@@ -43,22 +46,24 @@ build 후 './frontend/public/dist' 폴더에 파일들이 생성되며, 이 파�
 ~~$GOPATH/github.com/openshift/console 경로에서
 ./example/run-bridge.sh 실행~~
 
-
 ~~- kubernetes 인증서 파일 필요~~
-  ~~- kubernetes가 설치 된 node의 `/root/.kube/config ` 를 console 노드의 ` /root/.kube/` 에 config 파일 저장~~
+~~- kubernetes가 설치 된 node의 `/root/.kube/config ` 를 console 노드의 ` /root/.kube/` 에 config 파일 저장~~
 
-* ```shell
-export KUBECONFIG=/root/.kube/config
-source ./contrib/environment.sh
-./bin/bridge
-```
+- ```shell
+  export KUBECONFIG=/root/.kube/config
+  source ./contrib/environment.sh
+  ./bin/bridge
+  ```
 
 ### console 5.1 버전 실행 커맨드
-* ```shell
-./examples/run-console.sh
-```
+
+- ```shell
+  ./examples/run-console.sh
+  ```
 
 ---
 
-# 가이드 목록
-* ### [Console YAML Samples 사용 가이드](./console-yaml-sample.html)  
+# 📚 가이드 리스트
+
+- ### [Console YAML Samples 사용 가이드](/consoleYAMLsamples)
+- ### [Helm](/helm)
