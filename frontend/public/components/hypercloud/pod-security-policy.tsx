@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 
 import { sortable } from '@patternfly/react-table';
-import { K8sResourceCommon, K8sClaimResourceKind, modelFor } from '../../module/k8s';
+import { K8sResourceKind, K8sResourceCommon, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { DetailsItem, Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 // import { WorkloadTableRow, WorkloadTableHeader } from '../workload-table';
@@ -146,7 +146,7 @@ type PodSecurityPoliciesDetailsProps = {
 };
 
 type PodSecurityPoliciesDetailsListProps = {
-  ds: any;
+  ds: K8sResourceKind;
 };
 
 type PodSecurityPoliciesPageProps = {
