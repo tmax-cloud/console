@@ -1,3 +1,8 @@
+---
+layout: default
+title: Console YAML Samples 사용 가이드
+description: Console YAML Samples 사용 가이드입니다.
+---
 
 [< Home](/console/)
 
@@ -45,28 +50,26 @@ spec:
 
 ## Sample 등록
 
-- 1. CR 생성
+1. CR 생성
 
-  - 1.1 Import YAML
-    - CLI 로 [Jab_Sample.yaml](yaml/Jab_Sample.yaml) 실행하거나 `ex) kubectl apply -f Jab_Sample.yaml`
-    - Hypercloud 에서 YAML 을 Import
+    - 1.1 Import YAML
+      - CLI 로 [Jab_Sample.yaml](yaml/Jab_Sample.yaml) 실행하거나 `ex) kubectl apply -f Jab_Sample.yaml`
+      - Hypercloud 에서 YAML 을 Import
 
-  `/k8s/all-namespaces/import`
-  `/k8s/cluster/customresourcedefinitions/console.tmax.io~v1~ConsoleYAMLSample/~new`
+    `/k8s/all-namespaces/import`
+    `/k8s/cluster/customresourcedefinitions/console.tmax.io~v1~ConsoleYAMLSample/~new`
 
-  [![image](figure/5.import_YAML.png)](figure/5.import_YAML.png)
-  [![image](figure/6.import_YAML_example.png)](figure/6.import_YAML_example.png)
+    [![image](figure/5.import_YAML.png)](figure/5.import_YAML.png)
+    [![image](figure/6.import_YAML_example.png)](figure/6.import_YAML_example.png)
 
-  - 1.2
-    - Hypercloud 에서 Form View 에서 작성
+    - 1.2
+      - Hypercloud 에서 Form View 에서 작성
 
-  `/k8s/cluster/customresourcedefinitions/console.tmax.io~v1~ConsoleYAMLSample/~new`
+    `/k8s/cluster/customresourcedefinitions/console.tmax.io~v1~ConsoleYAMLSample/~new`
 
-  [![image](figure/7.consoleYAMLsamples_CRD_List.png)](figure/7.consoleYAMLsamples_CRD_List.png)
-  [![image](figure/8.consoleYAMLsamples_CRD_Create.png)](figure/8.consoleYAMLsamples_CRD_Create.png)
+    [![image](figure/7.consoleYAMLsamples_CRD_List.png)](figure/7.consoleYAMLsamples_CRD_List.png)
+    [![image](figure/8.consoleYAMLsamples_CRD_Create.png)](figure/8.consoleYAMLsamples_CRD_Create.png)  
+2. sidebar 에서 확인
+  [![image](figure/9.consoleYAMLsamples_Check.png)](figure/9.consoleYAMLsamples_Check.png)
 
-- 2.  sidebar 에서 확인
-      [![image](figure/9.consoleYAMLsamples_Check.png)](figure/9.consoleYAMLsamples_Check.png)  
-
-  
 [< Home](/console/)
