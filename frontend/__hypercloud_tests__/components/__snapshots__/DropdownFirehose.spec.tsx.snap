@@ -1,0 +1,241 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DropdownFirehose Test 드롭다운 아이템 한개 선택 시 해당 아이템 선택상태로 드롭다운 타이틀이 변경되어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class=" css-3rh5y4-container"
+    >
+      <span
+        aria-atomic="false"
+        aria-live="polite"
+        aria-relevant="additions text"
+        class="css-1f43avz-a11yText-A11yText"
+      />
+      <div
+        class="hc-select__control css-11m1fh2-control"
+      >
+        <div
+          class="hc-select__value-container hc-select__value-container--has-value css-g1d714-ValueContainer"
+        >
+          <div
+            class="hc-select__single-value css-zk88xw-singleValue"
+          >
+            <span
+              class="co-resource-item"
+            >
+              <span
+                class="co-resource-icon--fixed-width"
+              >
+                <span
+                  class="sr-only"
+                >
+                  Deployment
+                </span>
+                <span
+                  class="co-m-resource-icon co-m-resource-deployment"
+                  title="Deployment"
+                >
+                  D
+                </span>
+              </span>
+              <span
+                class="co-resource-item__resource-name"
+              >
+                <span>
+                  catalog-catalog-controller-manager
+                </span>
+              </span>
+            </span>
+          </div>
+          <input
+            aria-autocomplete="list"
+            class="css-wmatm6-dummyInput-DummyInput"
+            id="react-select-3-input"
+            readonly=""
+            tabindex="0"
+            value=""
+          />
+        </div>
+        <div
+          class="hc-select__indicators css-1hb7zxy-IndicatorsContainer"
+        >
+          <svg
+            aria-hidden="true"
+            class="hc-dropdown-select_toggle-icon"
+            fill="currentColor"
+            height="1em"
+            role="img"
+            style="vertical-align: -0.125em;"
+            viewBox="0 0 320 512"
+            width="1em"
+          >
+            <path
+              d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+              transform=""
+            />
+          </svg>
+        </div>
+      </div>
+      <input
+        name="DropdownFirehose_2"
+        type="hidden"
+        value="catalog-catalog-controller-manager"
+      />
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`DropdownFirehose Test 드롭다운을 펼쳤을 때 Deployment 리스트아이템 2개가 있어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class=" css-3rh5y4-container"
+    >
+      <span
+        aria-atomic="false"
+        aria-live="polite"
+        aria-relevant="additions text"
+        class="css-1f43avz-a11yText-A11yText"
+      >
+        <span
+          id="aria-selection"
+        />
+        <span
+          id="aria-context"
+        >
+          option catalog-catalog-controller-manager focused, 1 of 2. 2 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+        </span>
+      </span>
+      <div
+        class="hc-select__control hc-select__control--is-focused hc-select__control--menu-is-open css-11m1fh2-control"
+      >
+        <div
+          class="hc-select__value-container css-g1d714-ValueContainer"
+        >
+          <div
+            class="hc-select__placeholder css-1wa3eu0-placeholder"
+          >
+            Select...
+          </div>
+          <input
+            aria-autocomplete="list"
+            class="css-wmatm6-dummyInput-DummyInput"
+            id="react-select-2-input"
+            readonly=""
+            tabindex="0"
+            value=""
+          />
+        </div>
+        <div
+          class="hc-select__indicators css-1hb7zxy-IndicatorsContainer"
+        >
+          <svg
+            aria-hidden="true"
+            class="hc-dropdown-select_toggle-icon"
+            fill="currentColor"
+            height="1em"
+            role="img"
+            style="vertical-align: -0.125em;"
+            viewBox="0 0 320 512"
+            width="1em"
+          >
+            <path
+              d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+              transform=""
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="hc-select__menu css-8plzl5-menu"
+      >
+        <div
+          class="hc-select__menu-list css-4ljt47-MenuList"
+        >
+          <div
+            class="hc-select__option hc-select__option--is-focused css-1jc9azf-option"
+            id="react-select-2-option-0"
+            tabindex="-1"
+          >
+            <span
+              class="co-resource-item"
+            >
+              <span
+                class="co-resource-icon--fixed-width"
+              >
+                <span
+                  class="sr-only"
+                >
+                  Deployment
+                </span>
+                <span
+                  class="co-m-resource-icon co-m-resource-deployment"
+                  title="Deployment"
+                >
+                  D
+                </span>
+              </span>
+              <span
+                class="co-resource-item__resource-name"
+              >
+                <span>
+                  catalog-catalog-controller-manager
+                </span>
+              </span>
+            </span>
+          </div>
+          <div
+            class="hc-select__option css-2j4qrh-option"
+            id="react-select-2-option-1"
+            tabindex="-1"
+          >
+            <span
+              class="co-resource-item"
+            >
+              <span
+                class="co-resource-icon--fixed-width"
+              >
+                <span
+                  class="sr-only"
+                >
+                  Deployment
+                </span>
+                <span
+                  class="co-m-resource-icon co-m-resource-deployment"
+                  title="Deployment"
+                >
+                  D
+                </span>
+              </span>
+              <span
+                class="co-resource-item__resource-name"
+              >
+                <span>
+                  catalog-catalog-webhook
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <input
+        name="DropdownFirehose_1"
+        type="hidden"
+        value=""
+      />
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;

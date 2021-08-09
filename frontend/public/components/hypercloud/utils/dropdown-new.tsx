@@ -210,7 +210,7 @@ export const DropdownFirehose = React.forwardRef<HTMLInputElement, DropdownFireh
   );
 });
 
-type DropdownWithRefProps = {
+export type DropdownWithRefProps = {
   id?: string;
   name: string;
   defaultValue?: any;
@@ -222,6 +222,6 @@ type DropdownWithRefProps = {
   resources?: FirehoseResult[];
 };
 
-type DropdownFirehoseProps = {
+export type DropdownFirehoseProps = {
   resourcesConfig: FirehoseResource[];
 } & DropdownWithRefProps;

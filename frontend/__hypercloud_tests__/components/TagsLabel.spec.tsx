@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TagsLabel } from '@console/internal/components/hypercloud/utils/tags-label';
-import { render, act } from '@testing-library/react';
+import { render, act } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { configure } from '@testing-library/dom';
 import { useForm, FormProvider } from 'react-hook-form';

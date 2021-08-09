@@ -115,7 +115,7 @@ export const MultipleResourceListDropdown: React.SFC<BaseResourceListDropdown & 
         props.title ?? (
           <div key="title-resource">
             {`${props.resourceType} `}
-            <Badge isRead>{selected?.has('All') ? 'All' : selectedSize}</Badge>
+            <Badge isRead id="mrd-badge">{selected?.has('All') ? 'All' : selectedSize}</Badge>
           </div>
         )
       }

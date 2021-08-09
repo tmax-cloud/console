@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SelectorInput } from '@console/internal/components/utils';
-import { render, act } from '@testing-library/react';
+import { render, act } from '../../test-utils';
 import { configure } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { useForm, FormProvider, Controller } from 'react-hook-form';

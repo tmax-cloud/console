@@ -63,6 +63,6 @@ function areEqual(prevProps, nextProps) {
 
 export const ResourceDropdown = React.memo(ResourceDropdown_, areEqual);
 
-type ResourceDropdownProps = (SingleResourceDropdownProps | MultipleResourceDropdownProps) & {
+export type ResourceDropdownProps = (SingleResourceDropdownProps | MultipleResourceDropdownProps) & {
   resources: FirehoseResource[];
 };
