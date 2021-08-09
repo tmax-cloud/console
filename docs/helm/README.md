@@ -1,5 +1,6 @@
 
-[< Home](./)
+
+[< Home](/console/)
 
 # Helm Documentations
 
