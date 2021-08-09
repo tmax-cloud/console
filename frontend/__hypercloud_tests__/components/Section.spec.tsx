@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render } from '../../test-utils';
 import { Section } from '../../public/components/hypercloud/utils/section';
 import { TextInput } from '../../public/components/hypercloud/utils/text-input';
 import { useForm, FormProvider } from 'react-hook-form';

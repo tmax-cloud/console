@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ResourceDropdown, ResourceDropdownProps } from '@console/internal/components/hypercloud/utils/resource-dropdown';
-import { render, act } from '@testing-library/react';
+import { render, act } from '../../test-utils';
 import { DeploymentModel } from '@console/internal/models';
 import { DeploymentsTestData } from '../../__hypercloud_mocks__/deploymentMocks';
 import * as _ from 'lodash-es';

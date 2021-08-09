@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RadioGroup } from '@console/internal/components/hypercloud/utils/radio';
-import { render, act } from '@testing-library/react';
+import { render, act } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { useForm, FormProvider } from 'react-hook-form';
 
