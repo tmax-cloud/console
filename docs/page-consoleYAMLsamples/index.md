@@ -6,7 +6,7 @@ description: Console YAML Samples 사용 가이드입니다.
 
 [< Home](/console/)
 
-# Console YAML Samples 사용 가이드
+# 📗 Console YAML Samples 사용 가이드
 
 ## Console YAML Sample 설명
 
