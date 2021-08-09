@@ -1,5 +1,5 @@
 
-[< Home](/)
+[< Home](/console/)
 
 # Console YAML Samples 사용 가이드
 
@@ -69,4 +69,4 @@ spec:
       [![image](figure/9.consoleYAMLsamples_Check.png)](figure/9.consoleYAMLsamples_Check.png)  
 
   
-[< Home](/)
+[< Home](/console/)
