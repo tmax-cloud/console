@@ -3,6 +3,7 @@ import { render } from '../../test-utils';
 import { KeyValueListEditor } from '../../public/components/hypercloud/utils/key-value-list-editor';
 import { useForm, FormProvider } from 'react-hook-form';
 import { act } from 'react-dom/test-utils';
+import { mockGetComputedSpacing, mockDndElSpacing, makeDnd, DND_DIRECTION_DOWN, DND_DRAGGABLE_DATA_ATTR } from 'react-beautiful-dnd-test-utils';
 import userEvent from '@testing-library/user-event';
 
 const mockSubmit = jest.fn(data => {});
@@ -20,7 +21,7 @@ const defaultValues = {
 };
 
 const renderKeyValueList = ({ disableReorder: disableReorder }) => {
-  return render(<KeyValueListEditor name="metadata.keyvaluelist" disableReorder={disableReorder} />, {
+  const keyValueListContainer = render(<KeyValueListEditor name="metadata.keyvaluelist" disableReorder={disableReorder} />, {
     wrapper: ({ children }) => {
       const methods = useForm({ defaultValues: defaultValues });
       return (
@@ -37,11 +38,29 @@ const renderKeyValueList = ({ disableReorder: disableReorder }) => {
       );
     },
   });
+
+  mockDndElSpacing(keyValueListContainer);
+
+  const makeGetDragEl = elm => () => elm.closest(DND_DRAGGABLE_DATA_ATTR);
+
+  return {
+    makeGetDragEl,
+    ...keyValueListContainer,
+  };
+};
+
+const createTestTextOrderByTestIdHelper = getAllByTestId => {
+  const testTextOrderByTestId = (testId, expectedTexts) => {
+    const texts = getAllByTestId(testId).map(x => x.value);
+    expect(texts).toEqual(expectedTexts);
+  };
+  return testTextOrderByTestId;
 };
 
 describe('KeyValueList Test', () => {
-  // snapshot 테스트는 이 컴포넌트 자체가 id를 랜덤하게 gen해줘서 매번 실패함 (의미가 없음)
-
+  beforeEach(() => {
+    mockGetComputedSpacing();
+  });
   it('disableReorder props가 true일 때  동작 테스트', () => {
     const { getAllByRole } = renderKeyValueList({ disableReorder: true });
 
@@ -71,21 +90,20 @@ describe('KeyValueList Test', () => {
     expect(mockSubmit).toHaveBeenCalledWith(defaultValues);
   });
 
-  // it('DnD 테스트', async () => {
-  //   const { getAllByRole, container } = renderKeyValueList({ disableReorder: false });
-  //   let start;
-  //   let end;
+  it('DnD 테스트', async () => {
+    const { getByText, makeGetDragEl, getAllByRole, getAllByTestId } = renderKeyValueList({ disableReorder: false });
 
-  //   getAllByRole('button')
-  //     .filter(cur => cur.classList.contains('pairs-list__action'))
-  //     .forEach((cur, idx) => {
-  //       if (idx === 0) {
-  //         start = cur;
-  //       } else if (idx === 3) {
-  //         end = cur;
-  //       }
-  //     });
-  //   fireEvent.click(start);
-  //   expect(container.firstChild).toMatchSnapshot();
-  // });
+    const elArr = getAllByRole('img', { hidden: true }).filter(cur => cur.classList.contains('vertical-center'));
+
+    await makeDnd({
+      getByText,
+      getDragEl: makeGetDragEl(elArr[0]),
+      direction: DND_DIRECTION_DOWN,
+      positions: 2,
+    });
+
+    const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestId);
+
+    testTextOrderByTestId('drag-value-id', ['B', 'C', 'A', 'D', 'E']);
+  });
 });
