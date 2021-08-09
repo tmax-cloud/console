@@ -1,16 +1,7 @@
-import * as React from 'react';
 import '@testing-library/jest-dom';
 import 'url-search-params-polyfill';
-import { render as rtlRender } from '@testing-library/react';
-import { Provider } from 'react-redux';
+
+// MEMO : jest setup단계에서 store를 만들어주지 않으면 InputSelectBox.spec.tsx 테스트코드 실행 시 타는 createStore단계에서 UI 키에 대한 reducer가 없다는 에러가 뜸.
+// setup단계에서 store를 만들어 export해주고 test-util에서 store를 사용해서 render함수 래핑하는 순서로 구현함.
 import store from '@console/internal/redux';
-
-const render = (ui, options) => {
-  const Wrapper = ({ children }) => {
-    return <Provider store={store}>{children}</Provider>;
-  };
-  return rtlRender(ui, { wrapper: Wrapper, ...options });
-};
-
-export * from '@testing-library/react';
-export { render };
+export { store };
