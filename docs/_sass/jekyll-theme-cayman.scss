@@ -69,7 +69,7 @@ a {
   border-color: rgba(255, 255, 255, 0.2);
   border-style: solid;
   border-width: 1px;
-  border-radius: 0.3rem;
+  border-radius: 0.5rem;
   transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 
   &:hover {
@@ -94,13 +94,14 @@ a {
 
   @include small {
     display: block;
-    width: 100%;
-    padding: 0.75rem;
+    width: 70%;
+    padding: 0.55rem;
     font-size: 0.9rem;
+    margin: auto auto;
 
     + .btn {
+      margin: auto auto;
       margin-top: 1rem;
-      margin-left: 0;
     }
   }
 }
@@ -116,15 +117,15 @@ a {
   );
 
   @include large {
-    padding: 5rem 6rem;
+    padding: 3rem 6rem;
   }
 
   @include medium {
-    padding: 3rem 4rem;
+    padding: 2rem 4rem;
   }
 
   @include small {
-    padding: 2rem 1rem;
+    padding: 1.5em 1rem;
   }
 }
 
@@ -133,15 +134,15 @@ a {
   margin-bottom: 0.1rem;
 
   @include large {
-    font-size: 3.25rem;
-  }
-
-  @include medium {
     font-size: 2.25rem;
   }
 
+  @include medium {
+    font-size: 2rem;
+  }
+
   @include small {
-    font-size: 1.75rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -151,15 +152,15 @@ a {
   opacity: 0.7;
 
   @include large {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 
   @include medium {
-    font-size: 1.15rem;
+    font-size: 1rem;
   }
 
   @include small {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 }
 
