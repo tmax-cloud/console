@@ -1,0 +1,564 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResourceDropdown Test shrinkOnSelectAll가 false인 드롭다운의 모든 아이템 선택 후 clear all 클릭 동작 테스트입니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="pf-c-data-toolbar"
+      id="multidropdown-toolbar"
+    >
+      <div
+        class="pf-c-data-toolbar__content"
+      >
+        <div
+          class="pf-c-data-toolbar__content-section"
+        >
+          <div
+            class="pf-c-data-toolbar__item"
+          >
+            <div
+              class="pf-c-data-toolbar__item"
+            >
+              <div
+                style="position: relative;"
+              >
+                <div
+                  class="hc-dropdown-main-button"
+                  style="width: 200px;"
+                >
+                  <span
+                    style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden; width: calc(100% - 60px);"
+                  >
+                    Select Resources
+                  </span>
+                  <span
+                    class="pf-c-badge pf-m-read"
+                  >
+                    0
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="hc-dropdown-select_toggle-icon"
+                    fill="currentColor"
+                    height="1em"
+                    role="img"
+                    style="margin-left: 10px; position: absolute; right: 0px;"
+                    viewBox="0 0 320 512"
+                    width="1em"
+                  >
+                    <path
+                      d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                      transform=""
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pf-c-data-toolbar__expandable-content"
+          id="multidropdown-toolbar-expandable-content-26"
+        >
+          <div
+            class="pf-c-data-toolbar__group"
+          />
+        </div>
+      </div>
+      <div
+        class="pf-c-data-toolbar__content pf-m-hidden"
+        hidden=""
+      >
+        <div
+          class="pf-c-data-toolbar__group"
+        />
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ResourceDropdown Test 검색 필터링 툴바 테스트입니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="pf-c-data-toolbar"
+      id="multidropdown-toolbar"
+    >
+      <div
+        class="pf-c-data-toolbar__content"
+      >
+        <div
+          class="pf-c-data-toolbar__content-section"
+        >
+          <div
+            class="pf-c-data-toolbar__item"
+          >
+            <div
+              class="pf-c-data-toolbar__item"
+            >
+              <div
+                style="position: relative;"
+              >
+                <div
+                  class="hc-dropdown-main-button"
+                  style="width: 200px;"
+                >
+                  <span
+                    style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden; width: calc(100% - 60px);"
+                  >
+                    Select Resources
+                  </span>
+                  <span
+                    class="pf-c-badge pf-m-read"
+                  >
+                    0
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="hc-dropdown-select_toggle-icon"
+                    fill="currentColor"
+                    height="1em"
+                    role="img"
+                    style="margin-left: 10px; position: absolute; right: 0px;"
+                    viewBox="0 0 320 512"
+                    width="1em"
+                  >
+                    <path
+                      d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                      transform=""
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="background-color: white; border-radius: 4px; box-shadow: 0 0 0 1px hsla(218, 50%, 10%, 0.1), 0 4px 11px hsla(218, 50%, 10%, 0.1); margin-top: 2px; position: absolute; z-index: 2; overflow-y: auto;"
+                >
+                  <div
+                    class=" css-1xz6ynz-container"
+                  >
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    >
+                      <span
+                        id="aria-selection"
+                      />
+                      <span
+                        id="aria-context"
+                      >
+                        option catalog-catalog-webhook focused, 3 of 3. 1 result available for search term catalog-catalog-w. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
+                      </span>
+                    </span>
+                    <div
+                      class="hc-select__control hc-select__control--is-focused hc-select__control--menu-is-open css-11hhl9n-control"
+                    >
+                      <div
+                        class="hc-select__value-container hc-select__value-container--is-multi css-g1d714-ValueContainer"
+                      >
+                        <div
+                          class="css-b8ldur-Input"
+                        >
+                          <div
+                            class="hc-select__input"
+                            style="display: inline-block;"
+                          >
+                            <input
+                              aria-autocomplete="list"
+                              autocapitalize="none"
+                              autocomplete="off"
+                              autocorrect="off"
+                              id="react-select-4-input"
+                              spellcheck="false"
+                              style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
+                              tabindex="0"
+                              type="text"
+                              value="catalog-catalog-w"
+                            />
+                            <div
+                              style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                            >
+                              catalog-catalog-w
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="hc-select__indicators css-1hb7zxy-IndicatorsContainer"
+                      />
+                    </div>
+                    <div
+                      class="hc-select__menu css-aey3sy-Menu"
+                    >
+                      <div
+                        class="hc-select__menu-list hc-select__menu-list--is-multi css-4ljt47-MenuList"
+                      >
+                        <div
+                          class="hc-select__option hc-select__option--is-focused css-1nuv1fz-option"
+                          id="react-select-4-option-2"
+                          tabindex="-1"
+                        >
+                          <span
+                            class="co-resource-item"
+                            id="hc-multidropdown-item"
+                          >
+                            <input
+                              id="hc-multidropdown-item"
+                              style="margin-right: 3px;"
+                              type="checkbox"
+                            />
+                            <span
+                              class="co-resource-icon--fixed-width"
+                              id="hc-multidropdown-item"
+                            >
+                              <span
+                                class="sr-only"
+                              >
+                                Deployment
+                              </span>
+                              <span
+                                class="co-m-resource-icon co-m-resource-deployment"
+                                title="Deployment"
+                              >
+                                D
+                              </span>
+                            </span>
+                            <span
+                              class="co-resource-item__resource-name"
+                              id="hc-multidropdown-item"
+                              style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden;"
+                            >
+                              <span
+                                id="hc-multidropdown-item"
+                              >
+                                catalog-catalog-webhook
+                              </span>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <input
+                        name="MultiDropdownFirehose3"
+                        type="hidden"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pf-c-data-toolbar__expandable-content"
+          id="multidropdown-toolbar-expandable-content-17"
+        >
+          <div
+            class="pf-c-data-toolbar__group"
+          />
+        </div>
+      </div>
+      <div
+        class="pf-c-data-toolbar__content pf-m-hidden"
+        hidden=""
+      >
+        <div
+          class="pf-c-data-toolbar__group"
+        />
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ResourceDropdown Test 모든 아이템을 체크한 상태에서 All의 체크를 해제하면 value가 비어야 합니다. 1`] = `
+<div>
+  <form>
+    <div
+      class="pf-c-data-toolbar"
+      id="multidropdown-toolbar"
+    >
+      <div
+        class="pf-c-data-toolbar__content"
+      >
+        <div
+          class="pf-c-data-toolbar__content-section"
+        >
+          <div
+            class="pf-c-data-toolbar__item"
+          >
+            <div
+              class="pf-c-data-toolbar__item"
+            >
+              <div
+                style="position: relative;"
+              >
+                <div
+                  class="hc-dropdown-main-button"
+                  style="width: 200px;"
+                >
+                  <span
+                    style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden; width: calc(100% - 60px);"
+                  >
+                    Select Resources
+                  </span>
+                  <span
+                    class="pf-c-badge pf-m-read"
+                  >
+                    0
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="hc-dropdown-select_toggle-icon"
+                    fill="currentColor"
+                    height="1em"
+                    role="img"
+                    style="margin-left: 10px; position: absolute; right: 0px;"
+                    viewBox="0 0 320 512"
+                    width="1em"
+                  >
+                    <path
+                      d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                      transform=""
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="background-color: white; border-radius: 4px; box-shadow: 0 0 0 1px hsla(218, 50%, 10%, 0.1), 0 4px 11px hsla(218, 50%, 10%, 0.1); margin-top: 2px; position: absolute; z-index: 2; overflow-y: auto;"
+                >
+                  <div
+                    class=" css-1xz6ynz-container"
+                  >
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
+                    <div
+                      class="hc-select__control hc-select__control--menu-is-open css-odw0t-control"
+                    >
+                      <div
+                        class="hc-select__value-container hc-select__value-container--is-multi css-g1d714-ValueContainer"
+                      >
+                        <div
+                          class="hc-select__placeholder css-1wa3eu0-placeholder"
+                        >
+                          Select...
+                        </div>
+                        <div
+                          class="css-b8ldur-Input"
+                        >
+                          <div
+                            class="hc-select__input"
+                            style="display: inline-block;"
+                          >
+                            <input
+                              aria-autocomplete="list"
+                              autocapitalize="none"
+                              autocomplete="off"
+                              autocorrect="off"
+                              id="react-select-3-input"
+                              spellcheck="false"
+                              style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
+                              tabindex="0"
+                              type="text"
+                              value=""
+                            />
+                            <div
+                              style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="hc-select__indicators css-1hb7zxy-IndicatorsContainer"
+                      />
+                    </div>
+                    <div
+                      class="hc-select__menu css-aey3sy-Menu"
+                    >
+                      <div
+                        class="hc-select__menu-list hc-select__menu-list--is-multi css-4ljt47-MenuList"
+                      >
+                        <div
+                          class="hc-select__option hc-select__option--is-focused css-1nuv1fz-option"
+                          id="react-select-3-option-0"
+                          tabindex="-1"
+                        >
+                          <span
+                            class="co-resource-item"
+                            id="hc-multidropdown-item"
+                          >
+                            <input
+                              id="hc-multidropdown-item"
+                              style="margin-right: 3px;"
+                              type="checkbox"
+                            />
+                            <span
+                              class="co-resource-icon--fixed-width"
+                              id="hc-multidropdown-item"
+                            >
+                              <span
+                                class="sr-only"
+                              >
+                                All
+                              </span>
+                              <span
+                                class="co-m-resource-icon co-m-resource-all"
+                                title="All"
+                              >
+                                A
+                              </span>
+                            </span>
+                            <span
+                              class="co-resource-item__resource-name"
+                              id="hc-multidropdown-item"
+                              style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden;"
+                            >
+                              <span
+                                id="hc-multidropdown-item"
+                              >
+                                All
+                              </span>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="hc-select__option css-1nuv1fz-option"
+                          id="react-select-3-option-1"
+                          tabindex="-1"
+                        >
+                          <span
+                            class="co-resource-item"
+                            id="hc-multidropdown-item"
+                          >
+                            <input
+                              id="hc-multidropdown-item"
+                              style="margin-right: 3px;"
+                              type="checkbox"
+                            />
+                            <span
+                              class="co-resource-icon--fixed-width"
+                              id="hc-multidropdown-item"
+                            >
+                              <span
+                                class="sr-only"
+                              >
+                                Deployment
+                              </span>
+                              <span
+                                class="co-m-resource-icon co-m-resource-deployment"
+                                title="Deployment"
+                              >
+                                D
+                              </span>
+                            </span>
+                            <span
+                              class="co-resource-item__resource-name"
+                              id="hc-multidropdown-item"
+                              style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden;"
+                            >
+                              <span
+                                id="hc-multidropdown-item"
+                              >
+                                catalog-catalog-controller-manager
+                              </span>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="hc-select__option css-1nuv1fz-option"
+                          id="react-select-3-option-2"
+                          tabindex="-1"
+                        >
+                          <span
+                            class="co-resource-item"
+                            id="hc-multidropdown-item"
+                          >
+                            <input
+                              id="hc-multidropdown-item"
+                              style="margin-right: 3px;"
+                              type="checkbox"
+                            />
+                            <span
+                              class="co-resource-icon--fixed-width"
+                              id="hc-multidropdown-item"
+                            >
+                              <span
+                                class="sr-only"
+                              >
+                                Deployment
+                              </span>
+                              <span
+                                class="co-m-resource-icon co-m-resource-deployment"
+                                title="Deployment"
+                              >
+                                D
+                              </span>
+                            </span>
+                            <span
+                              class="co-resource-item__resource-name"
+                              id="hc-multidropdown-item"
+                              style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden;"
+                            >
+                              <span
+                                id="hc-multidropdown-item"
+                              >
+                                catalog-catalog-webhook
+                              </span>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <input
+                        name="MultiDropdownFirehose2"
+                        type="hidden"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pf-c-data-toolbar__expandable-content"
+          id="multidropdown-toolbar-expandable-content-14"
+        >
+          <div
+            class="pf-c-data-toolbar__group"
+          />
+        </div>
+      </div>
+      <div
+        class="pf-c-data-toolbar__content pf-m-hidden"
+        hidden=""
+      >
+        <div
+          class="pf-c-data-toolbar__group"
+        />
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
