@@ -19,7 +19,7 @@ const NamespaceOverview = props => {
   const detailCard = {
     Card: DetailCard,
     props: {
-      href: `${props.match.url}/details`,
+      href: props.match.url.slice(-1) !== '/' ? `${props.match.url}/details` : `${props.match.url}details`,
       name: props.obj.metadata.name,
       requester: props.obj.metadata?.annotations?.creator,
       label: props.obj.metadata?.labels?.fromClaim,
