@@ -10,8 +10,6 @@ import { useForm, FormProvider, Controller } from 'react-hook-form';
 import * as k8sActions from '@console/internal/actions/k8s';
 import { inject } from '@console/internal/components/utils/inject';
 
-const mockSubmit = jest.fn(data => {});
-
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
     return {
@@ -27,7 +25,6 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-// MEMO : ResourceDropdown의 ResourceDropdownWrapper_가 Firehose로 감싸져있어서 Firehose컴포넌트에 대한 mocking 해줌
 jest.mock('@console/internal/components/utils/firehose', () => {
   return {
     Firehose: props => {
@@ -52,11 +49,7 @@ const renderMultiSelectDropdownFirehoseForm = (props: MultiSelectDropdownFirehos
       getValues = methods.getValues;
       return (
         <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(data => {
-              mockSubmit(data);
-            })}
-          >
+          <form>
             <Controller
               as={children}
               control={methods.control}
