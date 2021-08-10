@@ -63,6 +63,7 @@ const renderResourceListDropdownWithDataToolbarWithReactHook = ({ resourceList, 
       showAll={showAll} // 드롭다운에 all resource 라는 항목이 생긴다.
       title="select Resources" // 드롭다운 title 지정
       resourceType={resourceType} // title, placeholder, all resources, chip group 에 적용되는 문구 (title, placeholder는 직접 지정하는 것의 우선순위가 더 높음)
+      autocompletePlaceholder={autocompletePlaceholder}
       useHookForm
     />,
     {
@@ -96,7 +97,7 @@ describe('ResourceListDropdownWithDataToolbar test', () => {
       expect(container.firstChild).toMatchSnapshot();
     });
 
-    it('resources들 다 잘 들거았는지 테스트', () => {
+    it('resources들 다 잘 들어갔는지 테스트', () => {
       const { getByRole, getAllByRole } = renderResourceListDropdownWithDataToolbarWithNoReactHook({ ...defaultParameters });
 
       userEvent.click(getByRole('button'));
