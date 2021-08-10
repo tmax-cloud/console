@@ -363,6 +363,12 @@ const kebabFactory: KebabFactory = {
       accessReview: asAccessReview(kind, obj, 'patch'),
     };
   },
+  YAML: (kind, obj) => ({
+    label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
+    href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/yaml`,
+    // TODO: Fallback to "View YAML"? We might want a similar fallback for annotations, labels, etc.
+    accessReview: asAccessReview(kind, obj, 'update'),
+  }),
 };
 
 // The common menu actions that most resource share
