@@ -8,7 +8,7 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
 #
-# If you need help with YAML syntax, here are some quick references for you: 
+# If you need help with YAML syntax, here are some quick references for you:
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 #
@@ -19,11 +19,9 @@
 # in the templates via {{ site.myvariable }}.
 
 title: HyperCloud 5.1
-description: >- 
-  HyperCloud 5.1 콘솔 프로젝트입니다.
 domain: tmax-cloud.github.io      # if you want to force HTTPS, specify the domain without the http at the start, e.g. example.com
 url: https://tmax-cloud.github.io/  # the base hostname and protocol for your site, e.g. http://example.com
-baseurl: /console/   
+baseurl: /console/
 
 # Build settings
 remote_theme: pages-themes/cayman@v0.2.0
