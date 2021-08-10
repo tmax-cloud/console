@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MultiSelectDropdownWithRef test 초기 렌더링 테스트 1`] = `
+<div>
+  <form>
+    <div
+      class="pf-c-data-toolbar"
+      id="multidropdown-toolbar"
+    >
+      <div
+        class="pf-c-data-toolbar__content"
+      >
+        <div
+          class="pf-c-data-toolbar__content-section"
+        >
+          <div
+            class="pf-c-data-toolbar__item"
+          >
+            <div
+              class="pf-c-data-toolbar__item"
+            >
+              <div
+                style="position: relative;"
+              >
+                <div
+                  class="hc-dropdown-main-button"
+                  style="width: 200px;"
+                >
+                  <span
+                    style="margin: 0px 3px; text-overflow: ellipsis; display: block; white-space: nowrap; overflow-x: hidden; width: calc(100% - 60px);"
+                  >
+                    Select Resources
+                  </span>
+                  <span
+                    class="pf-c-badge pf-m-read"
+                  >
+                    0
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="hc-dropdown-select_toggle-icon"
+                    fill="currentColor"
+                    height="1em"
+                    role="img"
+                    style="margin-left: 10px; position: absolute; right: 0px;"
+                    viewBox="0 0 320 512"
+                    width="1em"
+                  >
+                    <path
+                      d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+                      transform=""
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pf-c-data-toolbar__expandable-content"
+          id="multidropdown-toolbar-expandable-content-1"
+        >
+          <div
+            class="pf-c-data-toolbar__group"
+          />
+        </div>
+      </div>
+      <div
+        class="pf-c-data-toolbar__content pf-m-hidden"
+        hidden=""
+      >
+        <div
+          class="pf-c-data-toolbar__group"
+        />
+      </div>
+    </div>
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;

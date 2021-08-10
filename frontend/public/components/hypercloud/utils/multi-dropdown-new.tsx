@@ -443,7 +443,7 @@ export const MultiSelectDropdownFirehose = React.forwardRef<HTMLInputElement, Mu
   );
 });
 
-type MultiSelectDropdownWithRefProps = {
+export type MultiSelectDropdownWithRefProps = {
   id?: string;
   name: string;
   defaultValues?: any[];
