@@ -285,7 +285,7 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
           </span>
         </>
       </Section>
-      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step" isRequired={true}>
         <>
           <ModalList
             list={step}
