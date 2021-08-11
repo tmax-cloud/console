@@ -274,7 +274,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
           </span>
         </>
       </Section>
-      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step" isRequired={true}>
         <>
           <ModalList list={step} id="step" path="spec.steps" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} methods={methods} requiredFields={['name', 'image']} children={<StepModal methods={methods} step={step} />} onRemove={removeModalData.bind(null, step, setStep)} handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_88')}></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, path: 'spec.steps', methods: methods, requiredFields: ['name', 'image'], title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26'), id: 'step', handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods), children: <StepModal methods={methods} step={step} />, submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8') })}>
