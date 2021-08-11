@@ -339,6 +339,7 @@ export const augmentRunsToData = (
 };
 
 export enum runStatus {
+  Completed = 'Completed',
   Succeeded = 'Succeeded',
   Failed = 'Failed',
   Running = 'Running',
@@ -353,6 +354,7 @@ export enum runStatus {
 
 export const getRunStatusColor = (status: string): StatusMessage => {
   switch (status) {
+    case runStatus.Completed:
     case runStatus.Succeeded:
       return { message: 'Succeeded', pftoken: successColor };
     case runStatus.Failed:

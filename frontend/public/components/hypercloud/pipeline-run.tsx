@@ -107,6 +107,31 @@ const PipelineRunTableRow: RowFunction<PipelineRun> = ({ obj: pipelineRun, index
     </TableRow>
   );
 };
+const PipelineRunInPipelinePageTableRow: RowFunction<PipelineRun> = ({ obj: pipelineRun, index, key, style }) => {
+  return (
+    <TableRow id={pipelineRun.metadata.uid} index={index} trKey={key} style={style}>
+      <TableData className={tableColumnClasses[0]}>
+        <ResourceLink kind={kind} name={pipelineRun.metadata.name} namespace={pipelineRun.metadata.namespace} title={pipelineRun.metadata.uid} />
+      </TableData>
+      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
+        <ResourceLink kind="Namespace" name={pipelineRun.metadata.namespace} title={pipelineRun.metadata.namespace} />
+      </TableData>
+      <TableData className={tableColumnClasses[2]}>
+        <Status status={pipelineRunFilterReducer(pipelineRun)} />
+      </TableData>
+      <TableData className={tableColumnClasses[3]}>
+        <LinkedPipelineRunTaskStatus pipelineRun={pipelineRun} />
+      </TableData>
+      <TableData className={tableColumnClasses[4]}>
+        <Timestamp timestamp={pipelineRun.status && pipelineRun.status.startTime} />
+      </TableData>
+      <TableData className={tableColumnClasses[5]}>{pipelineRunDuration(pipelineRun)}</TableData>
+      <TableData className={tableColumnClasses[6]}>
+        <ResourceKebab actions={getPipelineRunKebabActions(true)} kind={kind} resource={pipelineRun} />
+      </TableData>
+    </TableRow>
+  );
+};
 
 export const PipelineRunDetailsList: React.FC<PipelineRunDetailsListProps> = ({ pipelineRun }) => {
   const unfilteredResources = pipelineRun.spec.resources as PipelineRunReferenceResource[];
@@ -170,7 +195,7 @@ const filters = [
     type: 'pipeline-run-status',
     reducer: pipelineRunFilterReducer,
     items: [
-      { id: 'Succeeded', title: 'Succeeded' },
+      { id: 'Completed', title: 'Completed' },
       { id: 'Running', title: 'Running' },
       { id: 'Failed', title: 'Failed' },
       { id: 'Cancelled', title: 'Cancelled' },
@@ -182,15 +207,20 @@ export const PipelineRuns: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Pipeline Runs" Header={PipelineRunTableHeader.bind(null, t)} Row={PipelineRunTableRow} virtualize />;
 }
+export const PipelineRunsInPipelinePage: React.FC = props => {
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="Pipeline Runs" Header={PipelineRunTableHeader.bind(null, t)} Row={PipelineRunInPipelinePageTableRow} virtualize />;
+}
 
 export const PipelineRunsPage: React.FC<PipelineRunsPageProps> = props => {
   const { t } = useTranslation();
+  const { inPipelinePage } = props;
 
   return <ListPage
     title={t('COMMON:MSG_LNB_MENU_60')}
     createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_60') })}
     canCreate={true}
-    ListComponent={PipelineRuns}
+    ListComponent={inPipelinePage ? PipelineRunsInPipelinePage : PipelineRuns}
     kind={kind}
     rowFilters={filters}
     {...props}
@@ -199,7 +229,7 @@ export const PipelineRunsPage: React.FC<PipelineRunsPageProps> = props => {
 
 export const PipelineRunsDetailsPage: React.FC<PipelineRunsDetailsPageProps> = props => {
   const { t } = useTranslation();
-  return <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions()} pages={[details(detailsPage(PipelineRunDetails)), editYaml(), {
+  return <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions(true)} pages={[details(detailsPage(PipelineRunDetails)), editYaml(), {
     href: 'logs',
     path: 'logs/:name?',
     name: t('COMMON:MSG_DETAILS_TAB_6'),
@@ -217,6 +247,7 @@ type PipelineRunsPageProps = {
   showTitle?: boolean;
   namespace?: string;
   selector?: any;
+  inPipelinePage?: boolean;
 };
 
 type PipelineRunDetailsProps = {

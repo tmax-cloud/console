@@ -81,9 +81,6 @@ export const MultiStreamLogs: React.FC<MultiStreamLogsProps> = ({
   const containerStatus: ContainerStatus[] = resource.status?.containerStatuses ?? [];
   const divider = <FlexItem className="odc-multi-stream-logs__divider">|</FlexItem>;
   const { t } = useTranslation();
-  if ( downloadAllLabel === 'Download All Task Logs') {
-    downloadAllLabel = t('COMMON:MSG_DETAILS_TABLOGS_23');
-  }
   
   return (
     <div ref={fullscreenRef} className="odc-multi-stream-logs">

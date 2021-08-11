@@ -11,7 +11,6 @@ import { LoadingInline } from '@console/internal/components/utils';
 import { PipelineResourceModel } from '../../../../models';
 import { PipelineResourceKind } from '../../../../utils/pipeline-augment';
 import { CREATE_PIPELINE_RESOURCE } from './const';
-
 import './PipelineResourceDropdown.scss';
 
 type PipelineResourceDropdownProps = {

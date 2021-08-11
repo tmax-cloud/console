@@ -68,6 +68,7 @@ export const StorageClassDropdownInner = withTranslation()(
 
       // Determine if there is a default storage class
       state.defaultClass = _.findKey(unorderedItems, 'default');
+      const { t } = this.props;
       const { selectedKey } = this.state;
       if (!state.defaultClass) {
         // Add No Storage Class option if there is not a default storage class
@@ -75,7 +76,7 @@ export const StorageClassDropdownInner = withTranslation()(
       }
 
       if (!this.props.loaded || !selectedKey) {
-        state.title = <span className="text-muted">Select storage class</span>;
+        state.title = <span className="text-muted">{t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_31')}</span>;
       }
 
       const selectedItem = unorderedItems[selectedKey || state.defaultClass];
@@ -135,7 +136,7 @@ export const StorageClassDropdownInner = withTranslation()(
               <label className={this.props.hideClassName ? `${this.props.hideClassName} control-label` : 'control-label'} htmlFor={id}>
                 {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_15')}
               </label>
-              <Dropdown className="co-storage-class-dropdown" dropDownClassName="dropdown--full-width" autocompleteFilter={this.autocompleteFilter} autocompletePlaceholder="Select storage class" items={items} selectedKey={selectedKey} title={this.state.title} onChange={this.onChange} id={id} menuClassName="dropdown-menu--text-wrap" />
+              <Dropdown className="co-storage-class-dropdown" dropDownClassName="dropdown--full-width" autocompleteFilter={this.autocompleteFilter} autocompletePlaceholder={t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_31')} items={items} selectedKey={selectedKey} title={this.state.title} onChange={this.onChange} id={id} menuClassName="dropdown-menu--text-wrap" />
               {describedBy && (
                 <p className="help-block" id={describedBy}>
                   {t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDSTORAGE_16')}

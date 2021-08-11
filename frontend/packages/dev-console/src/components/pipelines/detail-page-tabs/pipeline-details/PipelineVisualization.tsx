@@ -27,7 +27,7 @@ const PipelineVisualization: React.FC<PipelineTopologyVisualizationProps> = ({
   return (
     <div className="odc-pipeline-visualization">
       <PipelineTopologyGraph
-        id={pipelineRun?.metadata?.name || pipeline.metadata.name}
+        id={pipelineRun?.metadata?.uid || pipeline.metadata.uid}
         nodes={nodes}
         edges={edges}
         layout={PipelineLayout.DAGRE_VIEWER}

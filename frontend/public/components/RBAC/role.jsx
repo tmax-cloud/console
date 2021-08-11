@@ -50,7 +50,7 @@ const RolesTableRow = (t, { obj: role, index, key, style }) => {
       label: roleKind(role) === 'Role' ? t('COMMON:MSG_COMMON_ACTIONBUTTON_52') : t('COMMON:MSG_COMMON_ACTIONBUTTON_52'),
       href: `/k8s/cluster/rolebindings/~new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
     }),
-    Kebab.factory.Edit,
+    Kebab.factory.YAML,
     Kebab.factory.Delete,
   ];
   console.log(roleKind(role));
@@ -224,7 +224,7 @@ export const RolesDetailsPage = props => {
       label: t('COMMON:MSG_COMMON_ACTIONBUTTON_52'),
       href: `/k8s/cluster/rolebindings/~new?rolekind=${roleKind(role)}&rolename=${role.metadata.name}`,
     }),
-    Kebab.factory.Edit,
+    Kebab.factory.YAML,
     Kebab.factory.Delete,
   ];
   return <DetailsPage {...props} pages={[navFactory.details(withTranslation()(Details)), navFactory.editYaml(), { href: 'bindings', name: t('COMMON:MSG_DETAILS_TAB_14'), component: BindingsForRolePage }]} menuActions={menuActions} />;

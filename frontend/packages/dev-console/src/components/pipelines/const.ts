@@ -14,11 +14,8 @@ export enum PipelineResourceType {
 
 export const pipelineResourceTypeSelections = t => {
   return {
-    '': t('SINGLE:MSG_PIPELINES_CREATEFORM_15'),
     [PipelineResourceType.git]: t('SINGLE:MSG_PIPELINES_CREATEFORM_16'),
     [PipelineResourceType.image]: t('SINGLE:MSG_PIPELINES_CREATEFORM_17'),
-    [PipelineResourceType.cluster]: t('SINGLE:MSG_PIPELINES_CREATEFORM_18'),
-    [PipelineResourceType.storage]: t('SINGLE:MSG_PIPELINES_CREATEFORM_19'),
   };
 };
 

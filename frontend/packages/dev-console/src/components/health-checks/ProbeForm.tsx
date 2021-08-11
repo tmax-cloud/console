@@ -28,18 +28,18 @@ interface ProbeFormProps {
   probeType: string;
 }
 
-enum RequestTypeOptions {
-  httpGet = 'HTTP GET',
-  command = 'Container Command',
-  tcpSocket = 'TCP Socket',
-}
-
 const ProbeForm: React.FC<ProbeFormProps> = ({ onSubmit, onClose, probeType }) => {
   const { t } = useTranslation();
   const {
     values: { healthChecks },
     errors,
   } = useFormikContext<FormikValues>();
+
+  const RequestTypeOptions = {
+    httpGet: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_28'),
+    command: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_29'),
+    tcpSocket: t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_30'),
+  };
 
   return (
     <div className="odc-heath-check-probe-form">
