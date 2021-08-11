@@ -44,46 +44,28 @@ const ClusterResourceList = [
   },
 ];
 
-const renderResourceListDropdownWithDataToolbarWithNoReactHook = ({ resourceList, showAll, resourceType, autocompletePlaceholder }: ResourceListDropdownWithDataToolbarProps) => {
-  return render(
-    <ResourceListDropdownWithDataToolbar // react hook form 사용하지 않는 예시
-      resourceList={resourceList} // 필수
-      showAll={showAll} // 드롭다운에 all resource 라는 항목이 생긴다.
-      resourceType={resourceType} // title, placeholder, all resources, chip group 에 적용되는 문구 (title, placeholder는 직접 지정하는 것의 우선순위가 더 높음)
-      autocompletePlaceholder={autocompletePlaceholder} // 검색란 placeholder
-    />,
-  );
+const renderResourceListDropdownWithDataToolbarWithNoReactHook = (props: ResourceListDropdownWithDataToolbarProps) => {
+  return render(<ResourceListDropdownWithDataToolbar {...props} />);
 };
 
-const renderResourceListDropdownWithDataToolbarWithReactHook = ({ resourceList, showAll, resourceType, autocompletePlaceholder }: ResourceListDropdownWithDataToolbarProps) => {
-  return render(
-    <ResourceListDropdownWithDataToolbar // react hook form 사용하는 예시
-      name="ResourceListDropdownWithDataToolbar1"
-      resourceList={resourceList} // 필수
-      showAll={showAll} // 드롭다운에 all resource 라는 항목이 생긴다.
-      title="select Resources" // 드롭다운 title 지정
-      resourceType={resourceType} // title, placeholder, all resources, chip group 에 적용되는 문구 (title, placeholder는 직접 지정하는 것의 우선순위가 더 높음)
-      autocompletePlaceholder={autocompletePlaceholder}
-      useHookForm
-    />,
-    {
-      wrapper: ({ children }) => {
-        const methods = useForm();
-        return (
-          <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(data => {
-                mockSubmit(data);
-              })}
-            >
-              {children}
-              <button type="submit">Submit</button>
-            </form>
-          </FormProvider>
-        );
-      },
+const renderResourceListDropdownWithDataToolbarWithReactHook = (props: ResourceListDropdownWithDataToolbarProps) => {
+  return render(<ResourceListDropdownWithDataToolbar {...props} />, {
+    wrapper: ({ children }) => {
+      const methods = useForm();
+      return (
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(data => {
+              mockSubmit(data);
+            })}
+          >
+            {children}
+            <button type="submit">Submit</button>
+          </form>
+        </FormProvider>
+      );
     },
-  );
+  });
 };
 
 const defaultParameters = {
