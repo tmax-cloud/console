@@ -151,7 +151,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
       <div className="co-form-section__separator" />
 
-      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id="serviceaccount" isRequired>
+      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id="serviceaccount" >
         <ResourceDropdown
           name="spec.serviceAccountName"
           placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
