@@ -1,5 +1,6 @@
 @import '~@patternfly/patternfly/sass-utilities/colors';
 @import '../../../topology-utils';
+@import '../../../../../../../../public/style/vars';
 
 .odc-replicaset-group {
   outline: none;
@@ -9,10 +10,11 @@
   }
 
   &__bg {
-    fill: #bebee2;
+    fill: rgba(117, 136, 146, 0.1);
     fill-opacity: 0.6;
-    stroke: #5b3798;
+    stroke: $color-hc-replicaset;
     stroke-width: 1px;
+    stroke-dasharray: 10;
   }
 
   &.is-filtered &__bg {

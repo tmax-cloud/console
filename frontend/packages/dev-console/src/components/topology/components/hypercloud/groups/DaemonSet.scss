@@ -1,5 +1,6 @@
 @import '~@patternfly/patternfly/sass-utilities/colors';
 @import '../../../topology-utils';
+@import '../../../../../../../../public/style/vars';
 
 .odc-daemonset-group {
   outline: none;
@@ -9,9 +10,9 @@
   }
 
   &__bg {
-    fill: #a0caaab8;
+    fill: rgba(208, 237, 0, 0.1);
     fill-opacity: 0.6;
-    stroke: #2c754f;
+    stroke: $color-hc-daemonset;
     stroke-width: 5px;
   }
 
