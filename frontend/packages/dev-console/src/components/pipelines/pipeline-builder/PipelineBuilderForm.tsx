@@ -15,6 +15,7 @@ import TaskSidebar from './task-sidebar/TaskSidebar';
 import { CleanupResults, PipelineBuilderTaskGroup, SelectedBuilderTask, UpdateErrors, UpdateOperationUpdateTaskData } from './types';
 import { applyChange } from './update-utils';
 import { useTranslation } from 'react-i18next';
+import { Section } from '../../../../../../public/components/hypercloud/utils/section';
 //import { TFunction } from 'i18next';
 
 import './PipelineBuilderForm.scss';
@@ -82,42 +83,49 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
         <StackItem isFilled className="odc-pipeline-builder-form__content">
           <Form className="odc-pipeline-builder-form__grid" onSubmit={handleSubmit}>
             <div className="odc-pipeline-builder-form__short-section">
-              <InputField label={`${t('COMMON:MSG_MAIN_TABLEHEADER_1')}`} name="name" type={TextInputTypes.text} isDisabled={!!existingPipeline} required />
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_1')} id="name" isRequired={true}>
+                <InputField name="name" type={TextInputTypes.text} isDisabled={!!existingPipeline} required />
+              </Section>
             </div>
 
             <div>
-              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_2')}`}</h2>
-              <PipelineParameters addLabel="Add Parameters" fieldName="params" />
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_2')} id="params" >
+                <PipelineParameters addLabel="Add Parameters" fieldName="params" />
+              </Section>
             </div>
 
             <div>
-              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_10')}`}</h2>
-              <PipelineResources addLabel="Add Resources" fieldName="resources" />
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_10')} id="resources" >
+                <PipelineResources addLabel="Add Resources" fieldName="resources" />
+              </Section>  
             </div>
 
             <div>
-              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_30')}`}</h2>
-              <PipelineWorkspaces addLabel="Add Workspaces" fieldName="workspaces" />
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_30')} id="workspaces" >
+                <PipelineWorkspaces addLabel="Add Workspaces" fieldName="workspaces" />
+              </Section>
             </div>
 
             <div>
-              <h2>{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_20')}`}</h2>
-              <PipelineBuilderVisualization
-                namespace={namespace}
-                tasksInError={status?.tasks || {}}
-                onTaskSelection={(task, resource) => {
-                  setSelectedTask({
-                    taskIndex: values.tasks.findIndex(({ name }) => name === task.name),
-                    resource,
-                  });
-                }}
-                onUpdateTasks={(updatedTaskGroup, op) => updateTasks(applyChange(updatedTaskGroup, op))}
-                taskGroup={taskGroup}
-              />
-              <p className="help-block">{`${t('SINGLE:MSG_PIPELINES_CREATEFORM_22')}`}</p>
+              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_20')} id="task" isRequired={true}>
+                {/*<h2>{t('SINGLE:MSG_PIPELINES_CREATEFORM_20')}<h2 style={style}>*</h2></h2>*/}
+                <PipelineBuilderVisualization
+                  namespace={namespace}
+                  tasksInError={status?.tasks || {}}
+                  onTaskSelection={(task, resource) => {
+                    setSelectedTask({
+                      taskIndex: values.tasks.findIndex(({ name }) => name === task.name),
+                      resource,
+                    });
+                  }}
+                  onUpdateTasks={(updatedTaskGroup, op) => updateTasks(applyChange(updatedTaskGroup, op))}
+                  taskGroup={taskGroup}
+                />
+              </Section>
+              <p className="help-block">{t('SINGLE:MSG_PIPELINES_CREATEFORM_22')}</p>
             </div>
 
-            <FormFooter handleReset={closeSidebarAndHandleReset} errorMessage={status?.submitError} isSubmitting={isSubmitting} submitLabel={existingPipeline ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')} disableSubmit={!dirty || !_.isEmpty(errors) || !_.isEmpty(status?.tasks) || values.tasks.length === 0} resetLabel={`${t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}`} sticky />
+            <FormFooter handleReset={closeSidebarAndHandleReset} errorMessage={status?.submitError} isSubmitting={isSubmitting} submitLabel={existingPipeline ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_3') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')} disableSubmit={!dirty || !_.isEmpty(errors) || !_.isEmpty(status?.tasks) || values.tasks.length === 0} resetLabel={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')} sticky />
           </Form>
         </StackItem>
       </Stack>
