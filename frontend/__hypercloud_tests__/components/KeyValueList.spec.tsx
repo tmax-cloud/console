@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { render } from '../../test-utils';
+import { render, act } from '../../test-utils';
 import { KeyValueListEditor } from '../../public/components/hypercloud/utils/key-value-list-editor';
 import { useForm, FormProvider } from 'react-hook-form';
-import { act } from 'react-dom/test-utils';
 import { mockGetComputedSpacing, mockDndElSpacing, makeDnd, DND_DIRECTION_DOWN, DND_DRAGGABLE_DATA_ATTR } from 'react-beautiful-dnd-test-utils';
 import userEvent from '@testing-library/user-event';
 

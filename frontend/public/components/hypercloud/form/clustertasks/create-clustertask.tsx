@@ -154,15 +154,15 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
   let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit'];
 
-  const paramValidCallback = additionalConditions => {
-    let type = additionalConditions[0] ? 'array' : 'string';
-    let target = type === 'string' ? additionalConditions[1] : additionalConditions[0];
-    if (type === 'string') {
-      return target.trim().length > 0;
-    } else {
-      return target ? target.length > 0 : false;
-    }
-  };
+  // const paramValidCallback = additionalConditions => {
+  //   let type = additionalConditions[0] ? 'array' : 'string';
+  //   let target = type === 'string' ? additionalConditions[1] : additionalConditions[0];
+  //   if (type === 'string') {
+  //     return target.trim().length > 0;
+  //   } else {
+  //     return target ? target.length > 0 : false;
+  //   }
+  // };
 
   const volumeValidCallback = additionalConditions => {
     if (additionalConditions[0] === 'emptyDir') {
@@ -250,8 +250,8 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
                 path: 'spec.params',
                 methods: methods,
                 requiredFields: ['name', 'type'],
-                optionalRequiredField: ['defaultArr', 'defaultStr'],
-                optionalValidCallback: paramValidCallback,
+                // optionalRequiredField: ['defaultArr', 'defaultStr'],
+                // optionalValidCallback: paramValidCallback,
                 title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_18'),
                 id: 'task-parameter',
                 handleMethod: handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, true, methods),
@@ -285,7 +285,7 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
           </span>
         </>
       </Section>
-      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step" isRequired={true}>
         <>
           <ModalList
             list={step}
