@@ -20,3 +20,72 @@ description: >-
 - ### [(WSL2) Linux 개발환경 구축 가이드]({{'/page-wsl' | relative_url}})
 - ### [Console YAML Samples 사용 가이드]({{'/page-consoleYAMLsamples' | relative_url}})
 - ### [Helm]({{'/page-helm' | relative_url}})
+<br/>
+
+---
+# 🧐 메뉴 담당자
+
+<div class="menuHandlerTable-container">
+<div class="inner-vertical-container">
+<h2>Master Menu</h2>
+<table class="inline-table">
+  {% for row in site.data.masterMenu %}
+    {% if forloop.first %}
+    <tr>
+      {% for pair in row %}
+        <th>{{ pair[0] }}</th>
+      {% endfor %}
+    </tr>
+    {% endif %}
+
+    {% tablerow pair in row %}
+      {{ pair[1] }}
+    {% endtablerow %}
+
+{% endfor %}
+
+</table>
+
+<h2>Multi Cluster Menu</h2>
+<table class="inline-table">
+  {% for row in site.data.multiMenu %}
+    {% if forloop.first %}
+    <tr>
+      {% for pair in row %}
+        <th>{{ pair[0] }}</th>
+      {% endfor %}
+    </tr>
+    {% endif %}
+
+    {% tablerow pair in row %}
+      {{ pair[1] }}
+    {% endtablerow %}
+
+{% endfor %}
+
+</table>
+</div>
+
+<div class="inner-vertical-container">
+<h2 style="display: inline-block;">Developer Menu</h2>
+<table class="inline-table">
+  {% for row in site.data.developerMenu %}
+    {% if forloop.first %}
+    <tr>
+      {% for pair in row %}
+        <th>{{ pair[0] }}</th>
+      {% endfor %}
+    </tr>
+    {% endif %}
+
+    {% tablerow pair in row %}
+      {{ pair[1] }}
+    {% endtablerow %}
+
+{% endfor %}
+
+</table>
+</div>
+
+</div>
+
