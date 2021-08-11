@@ -307,48 +307,49 @@ a {
     }
   }
 
-  table {
-    display: block;
-    width: 100%;
-    overflow: auto;
-    word-break: normal;
-    word-break: keep-all; // For Firefox to horizontally scroll wider tables.
-    -webkit-overflow-scrolling: touch;
+  // MEMO : Cayman테마 기존 테이블 스타일링 부분 주석 처리
+  // table {
+  //   display: block;
+  //   width: 100%;
+  //   overflow: auto;
+  //   word-break: normal;
+  //   word-break: keep-all; // For Firefox to horizontally scroll wider tables.
+  //   -webkit-overflow-scrolling: touch;
 
-    th {
-      font-weight: bold;
-    }
+  //   th {
+  //     font-weight: bold;
+  //   }
 
-    th,
-    td {
-      padding: 0.5rem 1rem;
-      border: 1px solid $table-border-color;
-    }
-  }
+  //   th,
+  //   td {
+  //     padding: 0.5rem 1rem;
+  //     border: 1px solid $table-border-color;
+  //   }
+  // }
 
-  dl {
-    padding: 0;
+  // dl {
+  //   padding: 0;
 
-    dt {
-      padding: 0;
-      margin-top: 1rem;
-      font-size: 1rem;
-      font-weight: bold;
-    }
+  //   dt {
+  //     padding: 0;
+  //     margin-top: 1rem;
+  //     font-size: 1rem;
+  //     font-weight: bold;
+  //   }
 
-    dd {
-      padding: 0;
-      margin-bottom: 1rem;
-    }
-  }
+  //   dd {
+  //     padding: 0;
+  //     margin-bottom: 1rem;
+  //   }
+  // }
 
-  hr {
-    height: 2px;
-    padding: 0;
-    margin: 1rem 0;
-    background-color: $hr-border-color;
-    border: 0;
-  }
+  // hr {
+  //   height: 2px;
+  //   padding: 0;
+  //   margin: 1rem 0;
+  //   background-color: $hr-border-color;
+  //   border: 0;
+  // }
 }
 
 .site-footer {
@@ -376,4 +377,120 @@ a {
 
 .site-footer-credits {
   color: $blockquote-text-color;
+}
+
+table {
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1.5;
+  // margin: auto auto;
+  font-size: 13px;
+  // width: 500px;
+}
+table thead {
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+}
+table thead th {
+  padding: 10px;
+  font-weight: bold;
+  vertical-align: top;
+  color: #fff;
+
+  &:first-of-type {
+    // width: 30%;
+    background-color: #4e69ad;
+  }
+
+  &:nth-of-type(2) {
+    // width: 50%;
+    background: #4c8a90;
+  }
+  &:nth-of-type(3) {
+    // width: 20%;
+    background: #68629e;
+  }
+}
+
+table tbody th {
+  padding: 10px;
+  font-weight: bold;
+  vertical-align: top;
+  border-bottom: 1px solid #ccc;
+  background: #fcf1f4;
+  color: white;
+
+  &:first-of-type {
+    // width: 30%;
+    background-color: #4e69ad;
+  }
+
+  &:nth-of-type(2) {
+    // width: 50%;
+    background: #4c8a90;
+  }
+  &:nth-of-type(3) {
+    // width: 20%;
+    background: #68629e;
+  }
+}
+table td {
+  padding: 10px;
+  vertical-align: top;
+  border-bottom: 1px solid #d0cfcf;
+
+  &:first-of-type {
+    background-color: #f7fbff;
+    font-weight: 600;
+  }
+
+  &:nth-of-type(2) {
+    background: #ebf5f7;
+  }
+  &:nth-of-type(3) {
+    background: #eeedf7;
+  }
+}
+
+.menuHandlerTable-container {
+  @include large {
+    flex: row wrap;
+  }
+
+  @include medium {
+    flex-direction: column;
+  }
+
+  @include small {
+    flex-direction: column;
+  }
+
+  .inner-vertical-container {
+    flex-flow: column;
+    display: inline-block;
+
+    @include large {
+      width: 47%;
+    }
+
+    @include medium {
+      width: 100%;
+    }
+
+    @include small {
+      width: 100%;
+    }
+  }
+
+  h2 {
+    margin-top: 0;
+
+    &:nth-of-type(2) {
+      margin-top: 20px;
+    }
+  }
+}
+
+.inline-table {
+  display: inline-block;
 }
