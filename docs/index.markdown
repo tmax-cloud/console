@@ -67,7 +67,7 @@ description: >-
 </div>
 
 <div class="inner-vertical-container">
-<h2 style="display: inline-block;">Developer Menu</h2>
+<h2>Developer Menu</h2>
 <table class="inline-table">
   {% for row in site.data.developerMenu %}
     {% if forloop.first %}
