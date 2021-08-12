@@ -1,6 +1,6 @@
 @import '~@patternfly/patternfly/sass-utilities/colors';
 @import '../../../topology-utils';
-@import '../../../../../../../../public/style/vars';
+@import '~@console/internal/style/vars';
 
 .odc-replicaset-group {
   outline: none;
