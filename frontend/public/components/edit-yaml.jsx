@@ -23,7 +23,7 @@ import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { withTranslation } from 'react-i18next';
 import { getIdToken } from '../hypercloud/auth';
 
-import { pluralToKind, isVanillaObject } from './hypercloud/form';
+import { pluralToKind, isResourceSchemaBasedMenuSet } from './hypercloud/form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 
 const generateObjToLoad = (kind, id, yaml, namespace = 'default') => {
@@ -88,7 +88,7 @@ export const EditYAML_ = connect(stateToProps)(
       const model = this.getModel(this.props.obj);
       if (model) {
         const kind = model.kind;
-        const isCustomResourceType = !isVanillaObject(kind);
+        const isCustomResourceType = !isResourceSchemaBasedMenuSet(kind);
         let url;
         if (isCustomResourceType) {
           url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
