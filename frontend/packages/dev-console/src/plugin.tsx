@@ -716,7 +716,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     },
     properties: {
       id: 'pipeline',
-      url: `/k8s/ns/:namespace/${referenceForModel(PipelineModel)}/~new/builder`,
+      url: `/k8s/ns/:namespace/pipelines/~new`,
       label: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_7',
       description: 'SINGLE:MSG_ADD_CREATEFORM_TABDETAILS_8',
       icon: pipelineIcon,
