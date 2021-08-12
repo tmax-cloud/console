@@ -146,7 +146,7 @@ describe('usePodScalingAccessStatus', () => {
   beforeEach(() => {
     jest
       .spyOn(utils, 'checkPodEditAccess')
-      .mockImplementation(() => Promise.resolve({ status: { allowed: false },  apiVersion: 'authorization.k8s.io/v1', kind: 'SelfSubjectAccessReview', spec: {}  }));
+      .mockImplementation(() => Promise.resolve({ status: { allowed: false } }));
     obj = {
       kind: '',
       metadata: {},
