@@ -462,6 +462,6 @@ export type MultiSelectDropdownWithRefProps = {
   clearAllText?: string;
 };
 
-type MultiSelectDropdownFirehoseProps = {
+export type MultiSelectDropdownFirehoseProps = {
   resourcesConfig: FirehoseResource[];
 } & MultiSelectDropdownWithRefProps;

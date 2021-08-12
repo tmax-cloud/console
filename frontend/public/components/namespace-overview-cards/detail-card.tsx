@@ -15,7 +15,7 @@ const DetailsList = ({ name, requester, label }) => {
   return (
     <div>
       <DetailItem title={t('COMMON:MSG_MAIN_TABLEHEADER_1')}>{name}</DetailItem>
-      <DetailItem title={t('요청자')}>{requester ? <div>{requester}</div> : <div style={{ color: 'gray' }}>{t('요청자 없음')}</div>}</DetailItem>
+      <DetailItem title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABOVERVIEW_1')}>{requester ? <div>{requester}</div> : <div style={{ color: 'gray' }}>{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABOVERVIEW_2')}</div>}</DetailItem>
       <DetailItem title={t('COMMON:MSG_MAIN_TABLEHEADER_15')}>{label ? <div>{label}</div> : <div style={{ color: 'gray' }}>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_SIDEPANEL_4')}</div>}</DetailItem>
     </div>
   );
