@@ -742,7 +742,7 @@ export const TileViewPage = withTranslation()(
     }
 
     renderEmptyState() {
-      const { emptyStateTitle, emptyStateInfo } = this.props;
+      const { emptyStateTitle, emptyStateInfo, clearFiltersButtonText } = this.props;
       return (
         <EmptyState variant={EmptyStateVariant.full}>
           <Title headingLevel="h2" size="lg">
@@ -751,7 +751,7 @@ export const TileViewPage = withTranslation()(
           <EmptyStateBody>{emptyStateInfo}</EmptyStateBody>
           <EmptyStateSecondaryActions>
             <Button variant="link" onClick={() => this.clearFilters()} data-test-id="catalog-clear-filters">
-              Clear All Filters
+              {clearFiltersButtonText}
             </Button>
           </EmptyStateSecondaryActions>
         </EmptyState>
@@ -837,6 +837,7 @@ TileViewPage.propTypes = {
   renderTile: PropTypes.func.isRequired,
   emptyStateTitle: PropTypes.string,
   emptyStateInfo: PropTypes.string,
+  clearFiltersButtonText: PropTypes.string,
   groupItems: PropTypes.func,
   groupByTypes: PropTypes.object,
   language: PropTypes.string,
@@ -849,5 +850,6 @@ TileViewPage.defaultProps = {
   renderFilterGroup: null,
   emptyStateTitle: 'No Results Match the Filter Criteria',
   emptyStateInfo: 'No items are being shown due to the filters being applied.',
+  clearFiltersButtonText: 'Clear All Filters',
   language: 'en',
 };
