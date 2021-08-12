@@ -19,7 +19,7 @@ import { referenceForModel, referenceFor } from '../../module/k8s/k8s';
 import { useExtensions, HorizontalNavTab, isHorizontalNavTab } from '@console/plugin-sdk';
 import { EditDefaultPage } from '../hypercloud/crd/edit-resource';
 import { CustomResourceDefinitionModel } from '@console/internal/models';
-import { pluralToKind, isVanillaObject, isCreateManual } from '../hypercloud/form';
+import { pluralToKind, isResourceSchemaBasedMenuSet, isCreateManual } from '../hypercloud/form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -240,8 +240,8 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
     let model = props.model;
     if (model) {
       let kind = model.kind;
-      const isCustomResourceType = !isVanillaObject(kind);
-      const isStructuralSchemaType = !(isVanillaObject(kind) || isCreateManual(kind));
+      const isCustomResourceType = !isResourceSchemaBasedMenuSet(kind);
+      const isStructuralSchemaType = !(isResourceSchemaBasedMenuSet(kind) || isCreateManual(kind));
       let url;
       if (isStructuralSchemaType) {
         // structural schema로 해야하는 거

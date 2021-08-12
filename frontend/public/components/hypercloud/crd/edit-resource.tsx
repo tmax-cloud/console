@@ -15,7 +15,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isVanillaObject, isCreateManual } from '../form';
+import { pluralToKind, isResourceSchemaBasedMenuSet, isCreateManual } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -53,7 +53,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 
     React.useEffect(() => {
       let kind = pluralToKind(model.plural);
-      const isCustomResourceType = !isVanillaObject(kind);
+      const isCustomResourceType = !isResourceSchemaBasedMenuSet(kind);
       let url;
       if (isCustomResourceType) {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
