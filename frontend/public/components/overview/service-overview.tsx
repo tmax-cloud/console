@@ -4,7 +4,7 @@ import { ServiceModel } from '../../models';
 import { menuActions } from '../service';
 import { KebabAction, ResourceSummary } from '../utils';
 
-import { OverviewDetailsResourcesTab } from './resource-overview-page';
+// import { OverviewDetailsResourcesTab } from './resource-overview-page';
 import { ResourceOverviewDetails } from './resource-overview-details';
 import { OverviewItem } from '@console/shared';
 
@@ -19,10 +19,10 @@ const tabs = [
     name: 'Details',
     component: ServiceOverviewDetails,
   },
-  {
-    name: 'Resources',
-    component: OverviewDetailsResourcesTab,
-  },
+  // {
+  //   name: 'Resources',
+  //   component: OverviewDetailsResourcesTab,
+  // },
 ];
 
 export const ServiceOverview: React.SFC<ServiceOverviewProps> = ({ item, customActions }) => <ResourceOverviewDetails item={item} kindObj={ServiceModel} menuActions={customActions ? [...customActions, ...menuActions] : menuActions} tabs={tabs} />;

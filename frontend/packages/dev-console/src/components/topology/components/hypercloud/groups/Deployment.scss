@@ -1,5 +1,6 @@
 @import '~@patternfly/patternfly/sass-utilities/colors';
 @import '../../../topology-utils';
+@import '~@console/internal/style/vars';
 
 .odc-deployment-group {
   outline: none;
@@ -9,9 +10,9 @@
   }
 
   &__bg {
-    fill: #6c97ec33;
+    fill: rgba(111, 92, 185, 0.1);
     fill-opacity: 0.6;
-    stroke: #4556b9;
+    stroke: $color-hc-deployment;
     stroke-width: 5px;
   }
 

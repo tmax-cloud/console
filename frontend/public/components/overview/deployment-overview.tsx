@@ -5,7 +5,7 @@ import { DeploymentKind } from '../../module/k8s';
 import { DeploymentDetailsList, menuActions } from '../deployment';
 import { KebabAction, LoadingInline, ResourceSummary, WorkloadPausedAlert } from '../utils';
 
-import { OverviewDetailsResourcesTab } from './resource-overview-page';
+// import { OverviewDetailsResourcesTab } from './resource-overview-page';
 import { ResourceOverviewDetails } from './resource-overview-details';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 import { OverviewItem } from '@console/shared';
@@ -59,10 +59,10 @@ const tabs = [
     name: 'Details',
     component: DeploymentOverviewDetails,
   },
-  {
-    name: 'Resources',
-    component: OverviewDetailsResourcesTab,
-  },
+  // {
+  //   name: 'Resources',
+  //   component: OverviewDetailsResourcesTab,
+  // },
 ];
 
 export const DeploymentOverviewPage: React.SFC<DeploymentOverviewProps> = ({
