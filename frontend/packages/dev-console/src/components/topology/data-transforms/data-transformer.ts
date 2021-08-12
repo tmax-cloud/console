@@ -8,8 +8,8 @@ import { TopologyDataModel, TopologyDataResources, Edge } from '../hypercloud/hy
 import { TYPE_TRAFFIC_CONNECTOR, TYPE_WORKLOAD, TYPE_CONNECTS_TO } from '../components/const';
 import { HelmReleaseResourcesMap } from '../../helm/helm-types';
 import { allowedResources } from '../topology-utils';
-import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem, mergeGroup, getTopologyGroupItems } from './transform-utils';
-import { getChildrenResources, getComponentType, createTopologyPodNodeData } from './hypercloud/transform-utils';
+import { addToTopologyDataModel, createInstanceForResource, createTopologyNodeData, getTopologyNodeItem, mergeGroup } from './transform-utils';
+import { getChildrenResources, getComponentType, createTopologyPodNodeData, getTopologyGroupItems } from './hypercloud/transform-utils';
 // import { getOperatorTopologyDataModel } from '../operators/operators-data-transformer';
 // import { getHelmTopologyDataModel } from '../helm/helm-data-transformer';
 
@@ -47,6 +47,7 @@ const deploymentToService = (childServices, typedDataModel, item) => {
     typedDataModel.topology[serviceUid] = createTopologyNodeData(serviceItem, getComponentType(service.kind), getImageForIconClass(`icon-hc-service`));
     typedDataModel.graph.nodes.push(getTopologyNodeItem(service, getComponentType(service.kind)));
     typedDataModel.graph.edges.push({ id: `${serviceUid}_${deployment.metadata.name}`, type: TYPE_CONNECTS_TO, source: serviceUid, target: deployment.metadata.uid });
+    mergeGroup(getTopologyGroupItems(service), typedDataModel.graph.groups);
   });
 };
 
