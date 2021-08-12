@@ -205,6 +205,11 @@ const getAvailableFilters = (initialFilters): PageFilters => {
         value: 'ServiceClass',
         active: false,
       },
+      HelmChart: {
+        label: 'Helm Chart',
+        value: 'HelmChart',
+        active: false,
+      },
     };
   }
 
