@@ -78,12 +78,12 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
         />
       </Section>
       {type === 'string' && (
-        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')} isRequired={true}>
+        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')}>
           <TextInput id="defaultStr" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.defaultStr : ''} />
         </Section>
       )}
       {type === 'array' && (
-        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')} isRequired={true}>
+        <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')}>
           <ListView name="defaultArr" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={defaultListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.defaultArr) : []} />
         </Section>
       )}
