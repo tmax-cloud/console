@@ -225,11 +225,11 @@ export const ResourceOverviewHeading: React.SFC<ResourceOverviewHeadingProps> = 
           </Link>
           {isDeleting && <ResourceItemDeleting />}
         </div>
-        {!isDeleting && (
+        {/* {!isDeleting && (
           <div className="co-actions">
             <ActionsMenu actions={actions.map((a) => a(kindObj, resource))} />
           </div>
-        )}
+        )} */}
       </h1>
       <HealthChecksAlert resource={resource} />
     </div>

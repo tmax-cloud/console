@@ -36,15 +36,19 @@ const getPluginTabResources = (item, tabs): ResourceOverviewDetailsProps['tabs']
     return tab;
   });
 
-  /** Add new tabs from plugin */
-  const newTabs = tabEntry.map((entry) => {
-    return {
-      name: entry.properties.name,
-      component: getResourceTabComp(entry),
-    };
-  });
+  
+  // MEMO : Overview tab으로 각 overview 컴포넌트에서 지정해준 Detail탭만 뜨게 해야돼서 Monitoring 탭 등이 추가되는 이 구문 주석처리 (추후 다시 복구될 수 있음)
 
-  return overridenTabs.concat(newTabs);
+  /** Add new tabs from plugin */
+  // const newTabs = tabEntry.map((entry) => {
+  //   return {
+  //     name: entry.properties.name,
+  //     component: getResourceTabComp(entry),
+  //   };
+  // });
+
+  // return overridenTabs.concat(newTabs);
+  return overridenTabs;
 };
 
 export const ResourceOverviewDetails = connect<PropsFromState, PropsFromDispatch, OwnProps>(

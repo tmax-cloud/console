@@ -5,7 +5,7 @@ import { menuActions } from '../stateful-set';
 import { KebabAction, ResourceSummary } from '../utils';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 
-import { OverviewDetailsResourcesTab } from './resource-overview-page';
+// import { OverviewDetailsResourcesTab } from './resource-overview-page';
 import { ResourceOverviewDetails } from './resource-overview-details';
 import { OverviewItem } from '@console/shared';
 
@@ -36,10 +36,10 @@ const tabs = [
     name: 'Details',
     component: StatefulSetOverviewDetails,
   },
-  {
-    name: 'Resources',
-    component: OverviewDetailsResourcesTab,
-  },
+  // {
+  //   name: 'Resources',
+  //   component: OverviewDetailsResourcesTab,
+  // },
 ];
 
 export const StatefulSetOverview: React.SFC<StatefulSetOverviewProps> = ({
