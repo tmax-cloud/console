@@ -117,7 +117,7 @@ const FederatedSecretDetails: React.FC<FederatedSecretDetailsProps> = ({ obj: se
   );
 };
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedSecrets: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Secrets" Header={FederatedSecretTableHeader.bind(null, t)} Row={FederatedSecretTableRow} virtualize />;
@@ -125,7 +125,7 @@ export const FederatedSecrets: React.FC = props => {
 
 export const FederatedSecretsPage: React.FC<FederatedSecretsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedSecrets} kind={kind} {...props} />;
 
-export const FederatedSecretsDetailsPage: React.FC<FederatedSecretsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedSecretDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedSecretsDetailsPage: React.FC<FederatedSecretsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedSecretDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedSecretDetailsListProps = {
   ds: K8sResourceKind;

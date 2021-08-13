@@ -75,12 +75,12 @@ const FederatedNamespaceDetails: React.FC<FederatedNamespaceDetailsProps> = ({ o
   </>
 );
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedNamespaces: React.FC = props => <Table {...props} aria-label="Federated Namespaces" Header={FederatedNamespaceTableHeader} Row={FederatedNamespaceTableRow} virtualize />;
 
 export const FederatedNamespacesPage: React.FC<FederatedNamespacesPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedNamespaces} kind={kind} {...props} />;
 
-export const FederatedNamespacesDetailsPage: React.FC<FederatedNamespacesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedNamespaceDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedNamespacesDetailsPage: React.FC<FederatedNamespacesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedNamespaceDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedNamespaceDetailsProps = {
   obj: K8sResourceKind;

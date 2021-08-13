@@ -109,12 +109,12 @@ const FederatedIngressDetails: React.FC<FederatedIngressDetailsProps> = ({ obj: 
   </>
 );
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedIngresses: React.FC = props => <Table {...props} aria-label="Federated Ingresses" Header={FederatedIngressTableHeader} Row={FederatedIngressTableRow} virtualize />;
 
 export const FederatedIngressesPage: React.FC<FederatedIngressesPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedIngresses} kind={kind} {...props} />;
 
-export const FederatedIngressesDetailsPage: React.FC<FederatedIngressesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedIngressDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedIngressesDetailsPage: React.FC<FederatedIngressesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedIngressDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedIngressDetailsListProps = {
   ds: K8sResourceKind;

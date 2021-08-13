@@ -42,8 +42,8 @@ describe('TagsLabel Test', () => {
 
   it('form의 defaultValues로 기본 tag들이 생성돼야 합니다.', () => {
     const { container, getByText } = renderTagsLabelForm();
-    expect(getByText('AAA')).toBeTruthy();
-    expect(getByText('BBB')).toBeTruthy();
+    getByText('AAA');
+    getByText('BBB');
     expect(container).toMatchSnapshot();
   });
 
@@ -54,7 +54,7 @@ describe('TagsLabel Test', () => {
     userEvent.type(tagsInput, 'CCC');
     userEvent.keyboard('{Enter}');
     expect(tagsInput).toHaveValue('');
-    expect(getByText('CCC')).toBeTruthy();
+    getByText('CCC');
     expect(container).toMatchSnapshot();
   });
 

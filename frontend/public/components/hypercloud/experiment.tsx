@@ -165,7 +165,7 @@ const ExperimentDetails: React.FC<ExperimentDetailsProps> = ({ obj: experiment }
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const Experiments: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Experiments" Header={ExperimentTableHeader.bind(null, t)} Row={ExperimentTableRow} virtualize />;
@@ -173,7 +173,7 @@ export const Experiments: React.FC = props => {
 
 export const ExperimentsPage: React.FC<ExperimentsPageProps> = props => <ListPage canCreate={true} ListComponent={Experiments} kind={kind} {...props} />;
 
-export const ExperimentsDetailsPage: React.FC<ExperimentsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ExperimentDetails)), editYaml()]} />;
+export const ExperimentsDetailsPage: React.FC<ExperimentsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ExperimentDetails)), editResource()]} />;
 
 type ExperimentDetailsListProps = {
   experiment: K8sResourceKind;

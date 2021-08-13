@@ -140,7 +140,7 @@ const FederatedDaemonSetDetails: React.FC<FederatedDaemonSetDetailsProps> = ({ o
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const FederatedDaemonSets: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Daemon Sets" Header={FederatedDaemonSetTableHeader.bind(null, t)} Row={FederatedDaemonSetTableRow} virtualize />;
@@ -148,7 +148,7 @@ export const FederatedDaemonSets: React.FC = props => {
 
 export const FederatedDaemonSetsPage: React.FC<FederatedDaemonSetsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedDaemonSets} kind={kind} {...props} />;
 
-export const FederatedDaemonSetsDetailsPage: React.FC<FederatedDaemonSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedDaemonSetDetails)), editYaml()]} />;
+export const FederatedDaemonSetsDetailsPage: React.FC<FederatedDaemonSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedDaemonSetDetails)), editResource()]} />;
 
 type ClusterRowProps = {
   daemonset: K8sResourceKind;

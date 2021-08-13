@@ -117,7 +117,7 @@ const FederatedConfigMapDetails: React.FC<FederatedConfigMapDetailsProps> = ({ o
   );
 };
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedConfigMaps: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Config Maps" Header={FederatedConfigMapTableHeader.bind(null, t)} Row={FederatedConfigMapTableRow} virtualize />;
@@ -125,7 +125,7 @@ export const FederatedConfigMaps: React.FC = props => {
 
 export const FederatedConfigMapsPage: React.FC<FederatedConfigMapsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedConfigMaps} kind={kind} {...props} />;
 
-export const FederatedConfigMapsDetailsPage: React.FC<FederatedConfigMapsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedConfigMapDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedConfigMapsDetailsPage: React.FC<FederatedConfigMapsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedConfigMapDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedConfigMapDetailsListProps = {
   ds: K8sResourceKind;

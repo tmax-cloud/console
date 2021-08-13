@@ -117,7 +117,7 @@ const FederatedJobDetails: React.FC<FederatedJobDetailsProps> = ({ obj: job }) =
   );
 };
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedJobs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Jobs" Header={FederatedJobTableHeader.bind(null, t)} Row={FederatedJobTableRow} virtualize />;
@@ -125,7 +125,7 @@ export const FederatedJobs: React.FC = props => {
 
 export const FederatedJobsPage: React.FC<FederatedJobsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedJobs} kind={kind} {...props} />;
 
-export const FederatedJobsDetailsPage: React.FC<FederatedJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedJobDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedJobsDetailsPage: React.FC<FederatedJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedJobDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedJobDetailsListProps = {
   ds: K8sResourceKind;

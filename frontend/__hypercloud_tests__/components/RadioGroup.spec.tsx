@@ -53,9 +53,9 @@ describe('RadioGroup Test', () => {
 
   it('items props로 받은 item들을 RadioInput아이템으로 렌더링 되어야 합니다.', () => {
     const { getByDisplayValue } = renderRadioGroupForm();
-    expect(getByDisplayValue('cpu')).toBeTruthy();
-    expect(getByDisplayValue('gpu')).toBeTruthy();
-    expect(getByDisplayValue('memory')).toBeTruthy();
+    getByDisplayValue('cpu');
+    getByDisplayValue('gpu');
+    getByDisplayValue('memory');
   });
 
   it('initValue로 설정한 input은 default로 체크 돼있어야 합니다.', () => {
