@@ -2,7 +2,30 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
 import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel } from '@console/internal/module/k8s';
-import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel, AWXModel } from '@console/internal/models';
+import {
+  CustomResourceDefinitionModel,
+  SecretModel,
+  TemplateModel,
+  ClusterTemplateModel,
+  AWXModel,
+  ClusterServiceBrokerModel,
+  FederatedConfigMapModel,
+  FederatedDeploymentModel,
+  FederatedHPAModel,
+  FederatedIngressModel,
+  FederatedJobModel,
+  FederatedNamespaceModel,
+  FederatedPodModel,
+  FederatedReplicaSetModel,
+  FederatedSecretModel,
+  FederatedCronJobModel,
+  FederatedDaemonSetModel,
+  FederatedServiceModel,
+  FederatedStatefulSetModel,
+  ServiceBindingModel,
+  NotebookModel,
+  ExperimentModel,
+} from '@console/internal/models';
 import { StatusBox, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
@@ -25,7 +48,31 @@ import { useTranslation } from 'react-i18next';
 // import { safeDump } from 'js-yaml';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
-const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind, AWXModel.kind];
+// MEMO : Create, Edit 모두 YAML로 가능한 리소스만 editYaml -> editResource로 바꾸고 여기 kind 추가하기. 
+// MEMO : Create은 커스텀폼으로하고 디테일의 YAML탭에선 Read만 가능한 리소스의 경우엔 editYaml -> editResource로 수정하면 안됨.
+export const OnlyYamlEditorKinds = [
+  SecretModel.kind,
+  TemplateModel.kind,
+  ClusterTemplateModel.kind,
+  AWXModel.kind,
+  ClusterServiceBrokerModel.kind,
+  ServiceBindingModel.kind,
+  NotebookModel.kind,
+  ExperimentModel.kind,
+  FederatedConfigMapModel.kind,
+  FederatedDeploymentModel.kind,
+  FederatedHPAModel.kind,
+  FederatedIngressModel.kind,
+  FederatedJobModel.kind,
+  FederatedNamespaceModel.kind,
+  FederatedPodModel.kind,
+  FederatedReplicaSetModel.kind,
+  FederatedSecretModel.kind,
+  FederatedCronJobModel.kind,
+  FederatedDaemonSetModel.kind,
+  FederatedServiceModel.kind,
+  FederatedStatefulSetModel.kind,
+];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
   const { t } = useTranslation();

@@ -89,7 +89,7 @@ const FederatedDeploymentDetails: React.FC<FederatedDeploymentDetailsProps> = ({
   );
 };
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedDeployments: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Deployments" Header={FederatedDeploymentTableHeader.bind(null, t)} Row={FederatedDeploymentTableRow} virtualize />;
@@ -97,7 +97,7 @@ export const FederatedDeployments: React.FC = props => {
 
 export const FederatedDeploymentsPage: React.FC<FederatedDeploymentsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedDeployments} kind={kind} {...props} />;
 
-export const FederatedDeploymentsDetailsPage: React.FC<FederatedDeploymentsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedDeploymentDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedDeploymentsDetailsPage: React.FC<FederatedDeploymentsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedDeploymentDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedDeploymentDetailsProps = {
   obj: K8sResourceKind;
