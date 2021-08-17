@@ -98,7 +98,7 @@ const ServiceBindingDetails: React.SFC<ServiceBindingDetailsProps> = ({ obj: sb 
 
 const pages = [
   navFactory.details(ServiceBindingDetails),
-  navFactory.editYaml(),
+  navFactory.editResource(),
   navFactory.events(ResourceEventStream),
 ];
 export const ServiceBindingDetailsPage: React.SFC<ServiceBindingDetailsPageProps> = (props) => (

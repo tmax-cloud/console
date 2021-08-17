@@ -33,7 +33,7 @@ export class SimpleTabNav extends React.Component<SimpleTabNavProps, SimpleTabNa
     this.state = { selectedTab: props.selectedTab };
   }
 
-  onClickTab = (name) => {
+  onClickTab = name => {
     this.props.onClickTab && this.props.onClickTab(name);
     this.setState({
       selectedTab: name,
@@ -41,11 +41,7 @@ export class SimpleTabNav extends React.Component<SimpleTabNavProps, SimpleTabNa
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const selectedTab = (
-      _.find(nextProps.tabs, { name: prevState.selectedTab }) ||
-      _.find(nextProps.tabs, { name: nextProps.selectedTab }) ||
-      _.head(nextProps.tabs)
-    ).name;
+    const selectedTab = (_.find(nextProps.tabs, { name: prevState.selectedTab }) || _.find(nextProps.tabs, { name: nextProps.selectedTab }) || _.head(nextProps.tabs)).name;
     if (prevState.selectedTab !== selectedTab) {
       return {
         selectedTab,
@@ -63,13 +59,8 @@ export class SimpleTabNav extends React.Component<SimpleTabNavProps, SimpleTabNa
     return (
       <>
         <ul className={classNames('co-m-horizontal-nav__menu', additionalClassNames)}>
-          {_.map(tabs, (tab) => (
-            <SimpleTab
-              active={selectedTabData.name === tab.name}
-              key={tab.name}
-              onClick={this.onClickTab}
-              title={tab.name}
-            />
+          {_.map(tabs, tab => (
+            <SimpleTab active={selectedTabData.name === tab.name} key={tab.name} onClick={this.onClickTab} title={tab.name} />
           ))}
         </ul>
         <Component {...tabProps} />

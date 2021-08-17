@@ -105,7 +105,7 @@ const NotebookDetails: React.FC<NotebookDetailsProps> = ({ obj: notebook }) => {
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const Notebooks: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Notebooks" Header={NotebookTableHeader.bind(null, t)} Row={NotebookTableRow} virtualize />;
@@ -115,7 +115,7 @@ export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage ca
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
   const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editYaml()]} />
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />
 };
 
 type NotebookDetailsListProps = {

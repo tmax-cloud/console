@@ -124,7 +124,7 @@ const ClusterServiceBrokerDetails: React.SFC<ClusterServiceBrokerDetailsProps> =
 };
 
 const ServiceClassTabPage = ({ obj }) => <ClusterServiceClassPage showTitle={false} fieldSelector={`spec.clusterServiceBrokerName=${obj.metadata.name}`} />;
-export const ClusterServiceBrokerDetailsPage: React.SFC<ClusterServiceBrokerDetailsPageProps> = props => <DetailsPage {...props} kind={referenceForModel(ClusterServiceBrokerModel)} menuActions={menuActions} pages={[navFactory.details(detailsPage(ClusterServiceBrokerDetails)), navFactory.editYaml(), navFactory.clusterServiceClasses(ServiceClassTabPage)]} />;
+export const ClusterServiceBrokerDetailsPage: React.SFC<ClusterServiceBrokerDetailsPageProps> = props => <DetailsPage {...props} kind={referenceForModel(ClusterServiceBrokerModel)} menuActions={menuActions} pages={[navFactory.details(detailsPage(ClusterServiceBrokerDetails)), navFactory.editResource(), navFactory.clusterServiceClasses(ServiceClassTabPage)]} />;
 export const ClusterServiceBrokerList: React.SFC = props => <Table {...props} aria-label="Cluster Service Brokers" Header={ClusterServiceBrokerTableHeader} Row={ClusterServiceBrokerTableRow} virtualize />;
 
 export const ClusterServiceBrokerPage: React.SFC<ClusterServiceBrokerPageProps> = props => <ListPage {...props} ListComponent={ClusterServiceBrokerList} kind={referenceForModel(ClusterServiceBrokerModel)} canCreate={true} showTitle={false} />;

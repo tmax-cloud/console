@@ -140,14 +140,14 @@ const FederatedStatefulSetDetails: React.FC<FederatedStatefulSetDetailsProps> = 
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const FederatedStatefulSets: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Stateful Sets" Header={FederatedStatefulSetTableHeader.bind(null, t)} Row={FederatedStatefulSetTableRow} virtualize />;
 };
 export const FederatedStatefulSetsPage: React.FC<FederatedStatefulSetsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedStatefulSets} kind={kind} {...props} />;
 
-export const FederatedStatefulSetsDetailsPage: React.FC<FederatedStatefulSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedStatefulSetDetails)), editYaml()]} />;
+export const FederatedStatefulSetsDetailsPage: React.FC<FederatedStatefulSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedStatefulSetDetails)), editResource()]} />;
 
 type ClusterRowProps = {
   statefulset: K8sResourceKind;

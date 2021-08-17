@@ -4,7 +4,7 @@ import { ReplicaSetModel } from '../../models';
 import { replicaSetMenuActions } from '../replicaset';
 import { KebabAction, ResourceSummary } from '../utils';
 
-import { OverviewDetailsResourcesTab } from './resource-overview-page';
+// import { OverviewDetailsResourcesTab } from './resource-overview-page';
 import { ResourceOverviewDetails } from './resource-overview-details';
 import { OverviewItem } from '@console/shared';
 
@@ -19,10 +19,10 @@ const tabs = [
     name: 'Details',
     component: ReplicaSetOverviewDetails,
   },
-  {
-    name: 'Resources',
-    component: OverviewDetailsResourcesTab,
-  },
+  // {
+  //   name: 'Resources',
+  //   component: OverviewDetailsResourcesTab,
+  // },
 ];
 
 export const ReplicaSetOverview: React.SFC<ReplicaSetOverviewProps> = ({ item, customActions }) => <ResourceOverviewDetails item={item} kindObj={ReplicaSetModel} menuActions={customActions ? [...customActions, ...replicaSetMenuActions] : replicaSetMenuActions} tabs={tabs} />;

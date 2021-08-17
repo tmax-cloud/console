@@ -41,14 +41,24 @@
   background-color: $color-rbac-binding-dark;
 }
 
-.co-m-resource-daemonset,
-.co-m-resource-deployment,
 .co-m-resource-deploymentconfig,
 .co-m-resource-job,
 .co-m-resource-petset,
-.co-m-resource-replicaset,
 .co-m-resource-replicationcontroller {
   background-color: $color-pod-overlord;
+}
+
+.co-m-resource-deployment {
+  background-color: $color-hc-deployment;
+}
+.co-m-resource-daemonset {
+  background-color: $color-hc-daemonset;
+}
+.co-m-resource-replicaset {
+  background-color: $color-hc-replicaset;
+}
+.co-m-resource-statefulset {
+  background-color: $color-hc-statefulset;
 }
 
 .co-m-resource-machine,

@@ -10,7 +10,7 @@ import { K8sResourceKind, modelFor, k8sGet } from '../../module/k8s';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
-import { Kebab, ResourceKebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, Timestamp, resourcePath } from '../utils';
+import { Kebab, ResourceKebab, navFactory, viewYamlComponent, SectionHeading, ResourceSummary, ResourceLink, Timestamp, resourcePath } from '../utils';
 import { ResourceSidebar } from '../sidebars/resource-sidebar';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ResourceIcon } from '../utils/resource-icon';
@@ -119,7 +119,7 @@ type ServiceInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={serviceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={serviceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml(viewYamlComponent)]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [

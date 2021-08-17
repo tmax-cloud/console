@@ -140,7 +140,7 @@ const FederatedPodDetails: React.FC<FederatedPodDetailsProps> = ({ obj: pod }) =
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const FederatedPods: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Pods" Header={FederatedPodTableHeader.bind(null, t)} Row={FederatedPodTableRow} virtualize />;
@@ -148,7 +148,7 @@ export const FederatedPods: React.FC = props => {
 
 export const FederatedPodsPage: React.FC<FederatedPodsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedPods} kind={kind} {...props} />;
 
-export const FederatedPodsDetailsPage: React.FC<FederatedPodsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedPodDetails)), editYaml()]} />;
+export const FederatedPodsDetailsPage: React.FC<FederatedPodsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedPodDetails)), editResource()]} />;
 
 type ClusterRowProps = {
   pod: K8sResourceKind;

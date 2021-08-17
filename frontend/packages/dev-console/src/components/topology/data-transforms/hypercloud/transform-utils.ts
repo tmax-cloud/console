@@ -1,8 +1,8 @@
 import * as _ from 'lodash-es';
 import { K8sResourceKind } from '@console/internal/module/k8s';
-import { TopologyDataResources, TopologyOverviewItem, TopologyDataObject } from '../../hypercloud/hypercloud-topology-types';
+import { TopologyDataResources, TopologyOverviewItem, TopologyDataObject, Group } from '../../hypercloud/hypercloud-topology-types';
 import { PodModel, PersistentVolumeClaimModel, ServiceModel, ReplicaSetModel, StatefulSetModel, DaemonSetModel, DeploymentModel } from '@console/internal/models';
-import { TYPE_WORKLOAD, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE, TYPE_POD } from '../../components/const';
+import { TYPE_WORKLOAD, TYPE_DEPLOYMENT_GROUP, TYPE_DAEMONSET_GROUP, TYPE_STATEFULSET_GROUP, TYPE_REPLICASET_GROUP, TYPE_SERVICE, TYPE_POD, TYPE_APPLICATION_GROUP } from '../../components/const';
 
 export const createTopologyPodNodeData = (item: TopologyOverviewItem, type: string, defaultIcon: string, operatorBackedService: boolean = false): TopologyDataObject => {
   const { obj: pod } = item;
@@ -82,5 +82,37 @@ export const getComponentType = kind => {
       return TYPE_WORKLOAD;
     default:
       return TYPE_WORKLOAD;
+  }
+};
+
+export const getTopologyGroupItems = (obj: K8sResourceKind): Group => {
+  const groupName = _.get(obj, ['metadata', 'labels', 'app.kubernetes.io/part-of']);
+  if (!groupName) {
+    return null;
+  }
+  // MEMO : Application그룹 하위에 들어갈 애들은 딱 그 depth의 리소스만 들어가야 토폴로지 정상적으로 나옴.
+  // 예: application으로 감싸진 deployment안에 pod들 있을 때 Application의 nodes로 들어갈 id는 deployment id만이여야 한다.
+
+  switch (obj.kind) {
+    case ServiceModel.kind:
+    case DaemonSetModel.kind:
+    case StatefulSetModel.kind:
+    case PersistentVolumeClaimModel.kind:
+    case DeploymentModel.kind: {
+      return {
+        id: `group:${groupName}`,
+        type: TYPE_APPLICATION_GROUP,
+        name: groupName,
+        nodes: [_.get(obj, ['metadata', 'uid'])],
+      };
+    }
+    case PodModel.kind: {
+      const ownerRef = _.get(obj, ['metadata', 'ownerReferences']);
+      if (!!ownerRef && ownerRef.length > 0 && ownerRef[0].kind != 'Node') {
+        return null;
+      }
+    }
+    default:
+      return null;
   }
 };

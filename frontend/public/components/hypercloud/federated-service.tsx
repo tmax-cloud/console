@@ -189,12 +189,12 @@ const FederatedServiceDetails: React.FC<FederatedServiceDetailsProps> = ({ obj: 
   </>
 );
 
-const { details, editYaml, events } = navFactory;
+const { details, editResource, events } = navFactory;
 export const FederatedServices: React.FC = props => <Table {...props} aria-label="Federated Services" Header={FederatedServiceTableHeader} Row={FederatedServiceTableRow} virtualize />;
 
 export const FederatedServicesPage: React.FC<FederatedServicesPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedServices} kind={kind} {...props} />;
 
-export const FederatedServicesDetailsPage: React.FC<FederatedServicesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedServiceDetails)), editYaml(), events(ResourceEventStream)]} />;
+export const FederatedServicesDetailsPage: React.FC<FederatedServicesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedServiceDetails)), editResource(), events(ResourceEventStream)]} />;
 
 type FederatedServiceDetailsProps = {
   obj: K8sResourceKind;

@@ -3,7 +3,7 @@ import { PodOverviewItem } from '.';
 import { PodResourceSummary, PodDetailsList, menuActions } from '../pod';
 import { PodModel } from '../../models';
 import { ResourceOverviewDetails } from './resource-overview-details';
-import { NetworkingOverview } from './networking-overview';
+// import { NetworkingOverview } from './networking-overview';
 import { KebabAction } from '../utils';
 
 const PodOverviewDetails: React.SFC<PodOverviewDetailsProps> = ({ item: { obj: pod } }) => {
@@ -19,21 +19,21 @@ const PodOverviewDetails: React.SFC<PodOverviewDetailsProps> = ({ item: { obj: p
   );
 };
 
-const PodResourcesTab: React.SFC<PodResourcesTabProps> = ({ item: { routes, services } }) => (
-  <div className="overview__sidebar-pane-body">
-    <NetworkingOverview services={services} routes={routes} />
-  </div>
-);
+// const PodResourcesTab: React.SFC<PodResourcesTabProps> = ({ item: { routes, services } }) => (
+//   <div className="overview__sidebar-pane-body">
+//     <NetworkingOverview services={services} routes={routes} />
+//   </div>
+// );
 
 const tabs = [
   {
     name: 'Details',
     component: PodOverviewDetails,
   },
-  {
-    name: 'Resources',
-    component: PodResourcesTab,
-  },
+  // {
+  //   name: 'Resources',
+  //   component: PodResourcesTab,
+  // },
 ];
 
 export const PodOverviewPage: React.SFC<PodOverviewPageProps> = ({ item, customActions }) => (
@@ -49,9 +49,9 @@ type PodOverviewDetailsProps = {
   item: PodOverviewItem;
 };
 
-type PodResourcesTabProps = {
-  item: PodOverviewItem;
-};
+// type PodResourcesTabProps = {
+//   item: PodOverviewItem;
+// };
 
 type PodOverviewPageProps = {
   item: PodOverviewItem;

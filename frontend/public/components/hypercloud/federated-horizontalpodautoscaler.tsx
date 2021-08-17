@@ -132,12 +132,12 @@ const FederatedHPADetails: React.FC<FederatedHPADetailsProps> = ({ obj: horizont
   </>
 );
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const FederatedHPAs: React.FC = props => <Table {...props} aria-label="Federated HPAs" Header={FederatedHPATableHeader} Row={FederatedHPATableRow} virtualize />;
 
 export const FederatedHPAsPage: React.FC<FederatedHPAsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedHPAs} kind={kind} {...props} />;
 
-export const FederatedHPAsDetailsPage: React.FC<FederatedHPAsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedHPADetails)), editYaml()]} />;
+export const FederatedHPAsDetailsPage: React.FC<FederatedHPAsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedHPADetails)), editResource()]} />;
 
 type ClusterRowProps = {
   horizontalpodautoscaler: K8sResourceKind;

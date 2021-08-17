@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema6 } from 'json-schema';
 import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel } from '@console/internal/module/k8s';
-import { CustomResourceDefinitionModel, SecretModel, TemplateModel, ClusterTemplateModel, AWXModel } from '@console/internal/models';
+import * as models from '@console/internal/models';
 import { StatusBox, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
@@ -16,7 +16,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isVanillaObject } from '../form';
+import { pluralToKind, isResourceSchemaBasedMenuSet } from '../form';
 import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
@@ -25,7 +25,31 @@ import { useTranslation } from 'react-i18next';
 // import { safeDump } from 'js-yaml';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
-const OnlyYamlEditorKinds = [SecretModel.kind, TemplateModel.kind, ClusterTemplateModel.kind, AWXModel.kind];
+// MEMO : Create, Edit 모두 YAML로 가능한 리소스만 editYaml -> editResource로 바꾸고 여기 kind 추가하기.
+// MEMO : Create은 커스텀폼으로하고 디테일의 YAML탭에선 Read만 가능한 리소스의 경우엔 editYaml -> editResource로 수정하면 안됨.
+export const OnlyYamlEditorKinds = [
+  models.SecretModel.kind,
+  models.TemplateModel.kind,
+  models.ClusterTemplateModel.kind,
+  models.AWXModel.kind,
+  models.ClusterServiceBrokerModel.kind,
+  models.ServiceBindingModel.kind,
+  models.NotebookModel.kind,
+  models.ExperimentModel.kind,
+  models.FederatedConfigMapModel.kind,
+  models.FederatedDeploymentModel.kind,
+  models.FederatedHPAModel.kind,
+  models.FederatedIngressModel.kind,
+  models.FederatedJobModel.kind,
+  models.FederatedNamespaceModel.kind,
+  models.FederatedPodModel.kind,
+  models.FederatedReplicaSetModel.kind,
+  models.FederatedSecretModel.kind,
+  models.FederatedCronJobModel.kind,
+  models.FederatedDaemonSetModel.kind,
+  models.FederatedServiceModel.kind,
+  models.FederatedStatefulSetModel.kind,
+];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
   const { t } = useTranslation();
@@ -66,10 +90,10 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
 
     React.useEffect(() => {
       let kind = pluralToKind(model.plural);
-      const isCustomResourceType = !isVanillaObject(kind);
+      const isCustomResourceType = !isResourceSchemaBasedMenuSet(kind);
       let url;
       if (isCustomResourceType) {
-        url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
+        url = getK8sAPIPath({ apiGroup: models.CustomResourceDefinitionModel.apiGroup, apiVersion: models.CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
       } else {
         const directory = kindToSchemaPath.get(model.kind)?.['directory'];

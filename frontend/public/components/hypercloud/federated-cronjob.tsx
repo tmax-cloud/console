@@ -140,14 +140,14 @@ const FederatedCronJobDetails: React.FC<FederatedCronJobDetailsProps> = ({ obj: 
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const FederatedCronJobs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Federated Cron Jobs" Header={FederatedCronJobTableHeader.bind(null, t)} Row={FederatedCronJobTableRow} virtualize />;
 };
 export const FederatedCronJobsPage: React.FC<FederatedCronJobsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedCronJobs} kind={kind} {...props} />;
 
-export const FederatedCronJobsDetailsPage: React.FC<FederatedCronJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedCronJobDetails)), editYaml()]} />;
+export const FederatedCronJobsDetailsPage: React.FC<FederatedCronJobsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedCronJobDetails)), editResource()]} />;
 
 type ClusterRowProps = {
   cronjob: K8sResourceKind;
