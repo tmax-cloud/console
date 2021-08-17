@@ -162,7 +162,7 @@ const TrainingJobDetails: React.FC<TrainingJobDetailsProps> = ({ obj: tj }) => {
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const TrainingJobs: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} label={ResourceLabelPlural(TrainingJobModel, t)} aria-label="TrainingJobs" Header={TrainingJobTableHeader.bind(null, t)} Row={TrainingJobTableRow} virtualize />;
@@ -211,7 +211,7 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
   );
 };
 
-export const TrainingJobsDetailsPage: React.FC<TrainingJobsDetailsPageProps> = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(TrainingJobDetails)), editYaml()]} />;
+export const TrainingJobsDetailsPage: React.FC<TrainingJobsDetailsPageProps> = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(TrainingJobDetails)), editResource()]} />;
 
 type TrainingJobDetailsProps = {
   obj: K8sResourceKind;
