@@ -57,6 +57,17 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
     return null;
   }
 
+  const makeTitle = kind => {
+    switch (kind) {
+      case 'PyTorchJob':
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_2', { 0: t('COMMON:MSG_MAIN_BUTTON_5'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      case 'TFJob':
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_2', { 0: t('COMMON:MSG_MAIN_BUTTON_4'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      default:
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) });
+    }
+  };
+
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
     let definition;
@@ -67,9 +78,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       <>
         <div className="co-create-operand__header">
           <div className="co-create-operand__header-buttons">
-            <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
+            <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
           </div>
-          <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
+          <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
         </div>
         <SyncedEditor
           context={{
@@ -137,9 +148,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
           <>
             <div className="co-create-operand__header">
               <div className="co-create-operand__header-buttons">
-                <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
+                <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
               </div>
-              <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
+              <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
               <p className="help-block">{helpText}</p>
             </div>
             <SyncedEditor
