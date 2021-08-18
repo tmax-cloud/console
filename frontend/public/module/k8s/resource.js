@@ -5,7 +5,7 @@ import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
 import { getActivePerspective, getActiveCluster } from '../../actions/ui';
 import { getId, getUserGroup } from '../../hypercloud/auth';
-import { kindToSchemaPath } from '../hypercloud/k8s/kind-to-schema-path.ts'
+import { resourceSchemaBasedMenuMap } from '../../components/hypercloud/form'
 
 export const getDynamicProxyPath = (cluster) => {
   if (window.SERVER_FLAGS.McMode && getActivePerspective() == 'hc') {
@@ -212,8 +212,8 @@ export const k8sPatch = (kind, resource, data, opts = {}) => {
 };
 
 export const k8sCreateSchema = (kind) => {
-  const directory = kindToSchemaPath.get(kind)?.['directory'];
-  const file = kindToSchemaPath.get(kind)?.['file'];
+  const directory = resourceSchemaBasedMenuMap.get(kind)?.['directory'];
+  const file = resourceSchemaBasedMenuMap.get(kind)?.['file'];
   const schemaUrl = `/api/resource/${directory}/${file}`;
   return coFetchJSON(`${schemaUrl}`, 'GET');
 }
