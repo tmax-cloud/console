@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>planned</title>
-    <g id="Page-4:-Component" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="0_1_07_Form-Editor" transform="translate(-714.000000, -682.000000)">
-            <g id="Group-4" transform="translate(676.000000, 519.000000)">
-                <g id="Group" transform="translate(38.000000, 61.000000)">
-                    <g id="planned" transform="translate(0.000000, 102.000000)">
-                        <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                        <path d="M22,2 L22,22 L2,22 L2,2 L22,2 Z M19.5,4.5 L4.5,4.5 L4.5,19.5 L19.5,19.5 L19.5,4.5 Z M17,14.9166667 L17,17.4166667 L7,17.4166667 L7,14.9166667 L17,14.9166667 Z M17,10.75 L17,13.25 L7,13.25 L7,10.75 L17,10.75 Z M17,6.58333333 L17,9.08333333 L7,9.08333333 L7,6.58333333 L17,6.58333333 Z" id="Planned" fill="#000000" fill-rule="nonzero"></path>
-                    </g>
-                </g>
-            </g>
+    <title>table_status/planned</title>
+    <g id="table_status/planned" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="planned">
+            <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <path d="M22,2 L22,22 L2,22 L2,2 L22,2 Z M19.5,4.5 L4.5,4.5 L4.5,19.5 L19.5,19.5 L19.5,4.5 Z M17,14.9166667 L17,17.4166667 L7,17.4166667 L7,14.9166667 L17,14.9166667 Z M17,10.75 L17,13.25 L7,13.25 L7,10.75 L17,10.75 Z M17,6.58333333 L17,9.08333333 L7,9.08333333 L7,6.58333333 L17,6.58333333 Z" id="Planned" fill="#000000" fill-rule="nonzero"></path>
         </g>
     </g>
 </svg>

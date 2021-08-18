@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>table_status/running</title>
+    <g id="table_status/running" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="running">
+            <rect id="bg" fill-rule="nonzero" x="0" y="0" width="24" height="24"></rect>
+            <polygon id="Path" fill-opacity="0.3" fill="#000000" fill-rule="nonzero" points="12 3.9246753 12 12 3.38169681 12 5.68878602 19.1216992 13.4422718 20.7594173 19.1622168 16.6926007 20.6549914 10.9392182 18.4153167 5.77041475"></polygon>
+            <path d="M12,2 C17.5234375,2 22,6.4765625 22,12 C22,17.5234375 17.5234375,22 12,22 C6.4765625,22 2,17.5234375 2,12 C2,6.4765625 6.4765625,2 12,2 Z M12,5 C8.13359375,5 5,8.13359375 5,12 C5,15.8664062 8.13359375,19 12,19 C15.8664062,19 19,15.8664062 19,12 C19,8.13359375 15.8664062,5 12,5 Z M12,9 C10.3429688,9 9,10.3429688 9,12 C9,13.6570312 10.3429688,15 12,15 C13.6570312,15 15,13.6570312 15,12 C15,10.3429688 13.6570312,9 12,9 Z" fill="#000000"></path>
+        </g>
+    </g>
+</svg>
