@@ -49,16 +49,16 @@ const TrainedModelTableHeader = (t?: TFunction) => {
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
-    {      
+    {
       title: t('COMMON:MSG_COMMON_FILTER_16'),
       sortFunc: 'TrainedModelPhase',
-      transforms: [sortable],      
+      transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_100'),
       sortField: 'spec.model.framework',
-      transforms: [sortable],      
+      transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
@@ -101,8 +101,8 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
       <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
       <TableData className={tableColumnClasses[3]}>{tm.spec.model.framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{tm.status.url}</TableData>
-      <TableData className={tableColumnClasses[5]}>{tm.spec.model.storageUri}</TableData>      
-      <TableData className={tableColumnClasses[6]}>        
+      <TableData className={tableColumnClasses[5]}>{tm.spec.model.storageUri}</TableData>
+      <TableData className={tableColumnClasses[6]}>
         <Timestamp timestamp={tm.metadata.creationTimestamp} />
       </TableData>
       <TableData className={tableColumnClasses[7]}>
@@ -113,11 +113,11 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
 };
 
 export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = ({ ds }) => {
-  const { t } = useTranslation();  
+  const { t } = useTranslation();
   const phase = TrainedModelPhase(ds);
 
   return (
-    <dl className="co-m-pane__details">      
+    <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_COMMON_TABLEHEADER_2')} obj={ds} path="status.result">
         <Status status={phase} />
       </DetailsItem>
@@ -156,7 +156,7 @@ const TrainedModelDetails: React.FC<TrainedModelDetailsProps> = ({ obj: tm }) =>
             <TrainedModelDetailsList ds={tm} />
           </div>
         </div>
-      </div>      
+      </div>
     </>
   );
 };
