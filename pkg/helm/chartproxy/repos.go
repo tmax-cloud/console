@@ -27,14 +27,18 @@ import (
 
 var (
 	helmChartRepositoryGVK = schema.GroupVersionResource{
-		Group:    "helm.openshift.io",
-		Version:  "v1beta1",
-		Resource: "helmchartrepositories",
+		// Group:   "helm.openshift.io",
+		// Version" "v1beta1"
+		// Resource: "helmchartrepositories",
+		// https://docs.openshift.com/container-platform/4.6/rest_api/config_apis/helmchartrepository-helm-openshift-io-v1beta1.html
+		Group:    "helm.fluxcd.io",
+		Version:  "v1",
+		Resource: "helmrelease",
 	}
 )
 
 const (
-	configNamespace = "openshift-config"
+	configNamespace = "helm-ns"
 )
 
 type helmRepo struct {
@@ -67,7 +71,8 @@ func (hr helmRepo) IndexFile() (*repo.IndexFile, error) {
 	if err != nil {
 		return nil, err
 	}
-	indexURL := hr.URL.String()
+	// indexURL := hr.URL.String()
+	indexURL := "https://stefanprodan.github.io/podinfo"
 	if !strings.HasSuffix(indexURL, "/index.yaml") {
 		indexURL += "/index.yaml"
 	}
@@ -86,16 +91,16 @@ func (hr helmRepo) IndexFile() (*repo.IndexFile, error) {
 	if err != nil {
 		return nil, err
 	}
-	for _, chartVersions := range indexFile.Entries {
-		for _, chartVersion := range chartVersions {
-			for i, url := range chartVersion.URLs {
-				chartVersion.URLs[i], err = repo.ResolveReferenceURL(hr.URL.String(), url)
-				if err != nil {
-					klog.Errorf("Error resolving chart url for %v: %v", hr, err)
-				}
-			}
-		}
-	}
+	// for _, chartVersions := range indexFile.Entries {
+	// 	for _, chartVersion := range chartVersions {
+	// 		for i, url := range chartVersion.URLs {
+	// 			chartVersion.URLs[i], err = repo.ResolveReferenceURL(hr.URL.String(), url)
+	// 			if err != nil {
+	// 				klog.Errorf("Error resolving chart url for %v: %v", hr, err)
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	return &indexFile, nil
 }
@@ -206,6 +211,7 @@ func (b *helmRepoGetter) List() ([]*helmRepo, error) {
 		klog.Errorf("Error listing helm chart repositories: %v \nempty repository list will be used", err)
 		return helmRepos, nil
 	}
+
 	for _, item := range repos.Items {
 		helmConfig, err := b.unmarshallConfig(item)
 		if err != nil {

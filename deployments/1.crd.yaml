@@ -4,7 +4,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.0
-  creationTimestamp: null
   name: consoles.hypercloud.tmaxcloud.com
 spec:
   group: hypercloud.tmaxcloud.com
@@ -187,3 +186,6 @@ spec:
     - name: v1
       served: true
       storage: true
+
+
+
