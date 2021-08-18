@@ -81,7 +81,7 @@ const EnvoyFilterDetails: React.FC<EnvoyFilterDetailsProps> = ({ obj: envoyfilte
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const EnvoyFilters: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Envoy Filters" Header={EnvoyFilterTableHeader.bind(null, t)} Row={EnvoyFilterTableRow} virtualize />;
@@ -92,7 +92,7 @@ export const EnvoyFiltersPage: React.FC<EnvoyFiltersPageProps> = props => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_38')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_38') })} canCreate={true} ListComponent={EnvoyFilters} kind={kind} {...props} />;
 };
 
-export const EnvoyFiltersDetailsPage: React.FC<EnvoyFiltersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(EnvoyFilterDetails)), editYaml()]} />;
+export const EnvoyFiltersDetailsPage: React.FC<EnvoyFiltersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(EnvoyFilterDetails)), editResource()]} />;
 
 type EnvoyFilterDetailsProps = {
   obj: K8sResourceKind;
