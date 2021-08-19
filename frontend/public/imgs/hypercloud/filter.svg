@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>table_status/filter</title>
+    <g id="table_status/filter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="filter">
+            <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <path d="M14.4999684,21.0616916 L14.4999684,10.8258151 L21.7244538,3.60041428 C22.313289,3.01157901 21.8959621,2 21.0614991,2 L2.93860224,2 C2.10585581,2 1.68566791,3.01039646 2.27568573,3.60041428 L9.49998033,10.8258151 L9.49998033,18.8749598 C9.49998033,19.1808596 9.64924908,19.4675334 9.89987409,19.6430091 L13.0248666,21.8297028 C13.6413584,22.2612966 14.4999684,21.8239045 14.4999684,21.0616916 Z" fill="#000000"></path>
+        </g>
+    </g>
+</svg>
