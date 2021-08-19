@@ -27,7 +27,6 @@ import { useTranslation } from 'react-i18next';
 // MEMO : Create, Edit 모두 YAML로 가능한 리소스만 editYaml -> editResource로 바꾸고 여기 kind 추가하기.
 // MEMO : Create은 커스텀폼으로하고 디테일의 YAML탭에선 Read만 가능한 리소스의 경우엔 editYaml -> editResource로 수정하면 안됨.
 export const OnlyYamlEditorKinds = [
-  models.SecretModel.kind,
   models.TemplateModel.kind,
   models.ClusterTemplateModel.kind,
   models.AWXModel.kind,
@@ -48,6 +47,16 @@ export const OnlyYamlEditorKinds = [
   models.FederatedDaemonSetModel.kind,
   models.FederatedServiceModel.kind,
   models.FederatedStatefulSetModel.kind,
+  models.VirtualServiceModel.kind,
+  models.DestinationRuleModel.kind,
+  models.EnvoyFilterModel.kind,
+  models.GatewayModel.kind,
+  models.SidecarModel.kind,
+  models.ServiceEntryModel.kind,
+  models.RequestAuthenticationModel.kind,
+  models.PeerAuthenticationModel.kind,
+  models.AuthorizationPolicyModel.kind,
+  models.ClusterManagerModel.kind,
 ];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
@@ -55,6 +64,17 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
   if (!model) {
     return null;
   }
+
+  const makeTitle = kind => {
+    switch (kind) {
+      case 'PyTorchJob':
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_2', { 0: t('COMMON:MSG_MAIN_BUTTON_5'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      case 'TFJob':
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_2', { 0: t('COMMON:MSG_MAIN_BUTTON_4'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      default:
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) });
+    }
+  };
 
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
@@ -66,9 +86,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       <>
         <div className="co-create-operand__header">
           <div className="co-create-operand__header-buttons">
-            <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
+            <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
           </div>
-          <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
+          <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
         </div>
         <SyncedEditor
           context={{
@@ -136,9 +156,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
           <>
             <div className="co-create-operand__header">
               <div className="co-create-operand__header-buttons">
-                <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
+                <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
               </div>
-              <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
+              <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
               <p className="help-block">{helpText}</p>
             </div>
             <SyncedEditor

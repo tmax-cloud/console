@@ -162,7 +162,7 @@ const SecretsPage = props => {
     image: t('SINGLE:MSG_SECRETS_MAIN_BUTTON_2'),
     source: t('SINGLE:MSG_SECRETS_MAIN_BUTTON_3'),
     webhook: t('SINGLE:MSG_SECRETS_MAIN_BUTTON_4'),
-    yaml: t('SINGLE:MSG_SECRETS_MAIN_BUTTON_5'),
+    /*yaml: t('SINGLE:MSG_SECRETS_MAIN_BUTTON_5'), 폼뷰만 사용함 */
   };
 
   const createProps = {
@@ -173,6 +173,6 @@ const SecretsPage = props => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_26')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_26') })} ListComponent={SecretsList} canCreate={true} rowFilters={filters} createProps={createProps} {...props} />;
 };
 
-const SecretsDetailsPage = props => <DetailsPage {...props} buttonActions={actionButtons} menuActions={menuActions} pages={[navFactory.details(detailsPage(SecretDetails)), navFactory.editYaml()]} />;
+const SecretsDetailsPage = props => <DetailsPage {...props} buttonActions={actionButtons} menuActions={menuActions} pages={[navFactory.details(detailsPage(SecretDetails)), navFactory.editResource()]} />;
 
 export { SecretsList, SecretsPage, SecretsDetailsPage };
