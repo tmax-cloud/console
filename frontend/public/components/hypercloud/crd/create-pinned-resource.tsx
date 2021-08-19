@@ -48,6 +48,15 @@ export const OnlyYamlEditorKinds = [
   models.FederatedDaemonSetModel.kind,
   models.FederatedServiceModel.kind,
   models.FederatedStatefulSetModel.kind,
+  models.VirtualServiceModel.kind,
+  models.DestinationRuleModel.kind,
+  models.EnvoyFilterModel.kind,
+  models.GatewayModel.kind,
+  models.SidecarModel.kind,
+  models.ServiceEntryModel.kind,
+  models.RequestAuthenticationModel.kind,
+  models.PeerAuthenticationModel.kind,
+  models.AuthorizationPolicyModel.kind,
 ];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {

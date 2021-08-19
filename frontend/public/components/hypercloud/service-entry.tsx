@@ -81,7 +81,7 @@ const ServiceEntryDetails: React.FC<ServiceEntryDetailsProps> = ({ obj: servicee
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const ServiceEntries: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Service Entries" Header={ServiceEntryTableHeader.bind(null, t)} Row={ServiceEntryTableRow} virtualize />;
@@ -92,7 +92,7 @@ export const ServiceEntriesPage: React.FC<ServiceEntriesPageProps> = props => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_41')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_41') })} canCreate={true} ListComponent={ServiceEntries} kind={kind} {...props} />;
 }
 
-export const ServiceEntriesDetailsPage: React.FC<ServiceEntriesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ServiceEntryDetails)), editYaml()]} />;
+export const ServiceEntriesDetailsPage: React.FC<ServiceEntriesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(ServiceEntryDetails)), editResource()]} />;
 
 type ServiceEntryDetailsProps = {
   obj: K8sResourceKind;
