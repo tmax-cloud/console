@@ -25,6 +25,8 @@ import { getIdToken } from '../hypercloud/auth';
 
 import { pluralToKind, isResourceSchemaBasedMenu, resourceSchemaBasedMenuMap } from './hypercloud/form';
 
+import { ClusterTemplateModel, TemplateModel } from '@console/internal/models';
+
 const generateObjToLoad = (kind, id, yaml, namespace = 'default') => {
   const sampleObj = safeLoad(yaml ? yaml : yamlTemplates.getIn([kind, id]));
   if (_.has(sampleObj.metadata, 'namespace')) {
@@ -38,6 +40,9 @@ const stateToProps = ({ k8s, UI }) => ({
   impersonate: UI.get('impersonate'),
   models: k8s.getIn(['RESOURCES', 'models']),
 });
+
+// MEMO : GS인증에서 '사이드바 보기' 제거해야 되는 kind들 있어서 해당 구문 추가함. 
+const kindsRemoveSidebarLink = [TemplateModel.kind, ClusterTemplateModel.kind];
 
 /**
  * This component loads the entire Monaco editor library with it.
@@ -420,7 +425,7 @@ export const EditYAML_ = connect(stateToProps)(
       const showSchema = definition && !_.isEmpty(definition);
       const hasSidebarContent = showSchema || !_.isEmpty(samples) || !_.isEmpty(snippets);
       const sidebarLink =
-        !showSidebar && hasSidebarContent ? (
+        !showSidebar && hasSidebarContent && !kindsRemoveSidebarLink.includes(obj.kind) ? (
           <Button type="button" variant="link" isInline onClick={this.toggleSidebar}>
             <InfoCircleIcon className="co-icon-space-r co-p-has-sidebar__sidebar-link-icon" />
             {t('COMMON:MSG_COMMON_BUTTON_ETC_11')}
