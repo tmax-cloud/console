@@ -49,6 +49,7 @@ export const OnlyYamlEditorKinds = [
   models.FederatedDaemonSetModel.kind,
   models.FederatedServiceModel.kind,
   models.FederatedStatefulSetModel.kind,
+  models.ClusterManagerModel.kind,
 ];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
