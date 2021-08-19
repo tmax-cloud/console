@@ -38,7 +38,7 @@ export const resourceSchemaBasedMenuMap = new Map([
   [models.StatefulSetModel.kind, { directory: SCHEMA_DIRECTORY.WORKLOAD, file: 'StatefulSet.json' }],
 ]);
 
-const isCreateManualSet = new Set([models.RoleModel.kind, models.ClusterRoleModel.kind, models.ServiceInstanceModel.kind, models.TemplateInstanceModel.kind, models.TaskModel.kind, models.ClusterTaskModel.kind, models.TaskRunModel.kind, models.PipelineRunModel.kind, models.PipelineResourceModel.kind, models.RoleBindingModel.kind, models.ClusterRoleBindingModel.kind, models.RoleBindingClaimModel.kind, models.PipelineModel.kind]);
+const isCreateManualSet = new Set([models.RoleModel.kind, models.ClusterRoleModel.kind, models.ServiceInstanceModel.kind, models.TemplateInstanceModel.kind, models.TaskModel.kind, models.ClusterTaskModel.kind, models.TaskRunModel.kind, models.PipelineRunModel.kind, models.PipelineResourceModel.kind, models.RoleBindingModel.kind, models.ClusterRoleBindingModel.kind, models.RoleBindingClaimModel.kind, models.PipelineModel.kind, models.SecretModel.kind]);
 
 export const pluralToKind = (plural: string) => allModels().find(model => model.plural === plural)?.kind;
 
