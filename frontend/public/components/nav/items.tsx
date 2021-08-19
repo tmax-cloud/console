@@ -11,6 +11,7 @@ import * as plugins from '../../plugins';
 import { featureReducerName } from '../../reducers/features';
 import { RootState } from '../../redux';
 import { getActiveNamespace } from '../../reducers/ui';
+import { NavItemSeparator } from '@patternfly/react-core';
 
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
@@ -272,6 +273,12 @@ const RootNavLink_: React.FC<RootNavLinkProps & RootNavLinkStateProps> = ({ canR
     </Component>
   );
 };
+
+type SeparatorProps = {
+  name: string;
+  required?: string;
+};
+export const Separator: React.FC<SeparatorProps> = ({ name }) => <NavItemSeparator name={name} />;
 
 const rootNavLinkMapStateToProps = (state: RootState, { required, component: Component, ...props }: RootNavLinkProps): RootNavLinkStateProps => ({
   canRender: required ? _.castArray(required).every(r => state[featureReducerName].get(r)) : true,
