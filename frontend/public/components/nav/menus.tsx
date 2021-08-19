@@ -140,14 +140,27 @@ const generateMenu = (perspective, data, isInnerMenu, t: TFunction, i18n: i18n) 
           resource: model.plural,
           ...modelMenuInfo,
         };
-        return getMenuComponent(menuInfo, label);
+        return isInnerMenu ? (
+          getMenuComponent(menuInfo, label)
+        ) : (
+          <NavSection title={label} isSingleChild={true}>
+            {getMenuComponent(menuInfo, label)}
+          </NavSection>
+        );
       }
     } else {
       const menuInfo = CustomMenusMap[kind];
       if (!menuInfo || !menuInfo.visible) {
         return <></>;
       } else {
-        return getMenuComponent(menuInfo, i18n.exists(menuInfo.defaultLabel) ? t(menuInfo.defaultLabel) : menuInfo.defaultLabel);
+        const label = i18n.exists(menuInfo.defaultLabel) ? t(menuInfo.defaultLabel) : menuInfo.defaultLabel;
+        return isInnerMenu ? (
+          getMenuComponent(menuInfo, label)
+        ) : (
+          <NavSection title={label} isSingleChild={true}>
+            {getMenuComponent(menuInfo, label)}
+          </NavSection>
+        );
       }
     }
   }
