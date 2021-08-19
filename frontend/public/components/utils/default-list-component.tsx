@@ -41,7 +41,11 @@ const makeTableRow = (row: Rows) => {
       <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
         {_row.map((value, index) => {
           const className = value.className || generateTableClassName(index);
-          return <TableData className={className}>{value.children}</TableData>;
+          return (
+            <TableData key={`${obj.metadata.uid}-${index}`} className={className}>
+              {value.children}
+            </TableData>
+          );
         })}
       </TableRow>
     );
@@ -50,11 +54,11 @@ const makeTableRow = (row: Rows) => {
 };
 
 export const DefaultListComponent: React.FC<DefaultListComponentProps> = props => {
-  const { label, header, row } = props.tableProps;
+  const { header, row } = props.tableProps;
   const { t } = useTranslation();
   const headerFunc = makeTableHeader(header, t);
   const rowFunc = makeTableRow(row);
-  return <Table {...props} aria-label={label} Header={headerFunc} Row={rowFunc} virtualize />;
+  return <Table {...props} aria-label="Resource List" Header={headerFunc} Row={rowFunc} virtualize />;
 };
 
 type Header = {
@@ -73,7 +77,6 @@ type Row = {
 type Rows = (resource: K8sResourceKind) => Row[];
 
 export type TableProps = {
-  label: string;
   header: Header[];
   row: Rows;
 };

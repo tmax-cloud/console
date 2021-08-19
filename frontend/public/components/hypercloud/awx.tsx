@@ -16,7 +16,6 @@ const kind = AWXModel.kind;
 const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(AWXModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
 const tableProps: TableProps = {
-  label: AWXModel.label,
   header: [
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
