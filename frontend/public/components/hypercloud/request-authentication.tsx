@@ -81,7 +81,7 @@ const RequestAuthenticationDetails: React.FC<RequestAuthenticationDetailsProps> 
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const RequestAuthentications: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Request Authentications" Header={RequestAuthenticationTableHeader.bind(null, t)} Row={RequestAuthenticationTableRow} virtualize />;
@@ -92,7 +92,7 @@ export const RequestAuthenticationsPage: React.FC<RequestAuthenticationsPageProp
   return <ListPage title={t('COMMON:MSG_LNB_MENU_42')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_42') })} canCreate={true} ListComponent={RequestAuthentications} kind={kind} {...props} />;
 };
 
-export const RequestAuthenticationsDetailsPage: React.FC<RequestAuthenticationsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(RequestAuthenticationDetails)), editYaml()]} />;
+export const RequestAuthenticationsDetailsPage: React.FC<RequestAuthenticationsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(RequestAuthenticationDetails)), editResource()]} />;
 
 type RequestAuthenticationDetailsProps = {
   obj: K8sResourceKind;

@@ -1003,7 +1003,7 @@ const SecretLoadingWrapper = withTranslation()(
       formComponent: null,
       secretTypeAbstraction: SecretTypeAbstraction.generic,
     };
-    componentDidUpdate() {
+    componentDidMount() {
       // Set the proper secret form component, once the secret is received by Firehose.
       // 'formComponent' needs to be set only once, to avoid losing form state,
       // caused by component mounting/unmounting.

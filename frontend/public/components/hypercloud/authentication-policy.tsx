@@ -81,7 +81,7 @@ const AuthorizationPolicyDetails: React.FC<AuthorizationPolicyDetailsProps> = ({
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const AuthorizationPolicies: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Authorization Policies" Header={AuthorizationPolicyTableHeader.bind(null, t)} Row={AuthorizationPolicyTableRow} virtualize />;
@@ -92,7 +92,7 @@ export const AuthorizationPoliciesPage: React.FC<AuthorizationPoliciesPageProps>
   return <ListPage title={t('COMMON:MSG_LNB_MENU_44')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_44') })} canCreate={true} ListComponent={AuthorizationPolicies} kind={kind} {...props} />;
 };
 
-export const AuthorizationPoliciesDetailsPage: React.FC<AuthorizationPoliciesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(AuthorizationPolicyDetails)), editYaml()]} />;
+export const AuthorizationPoliciesDetailsPage: React.FC<AuthorizationPoliciesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(AuthorizationPolicyDetails)), editResource()]} />;
 
 type AuthorizationPolicyDetailsProps = {
   obj: K8sResourceKind;
