@@ -27,7 +27,6 @@ import { useTranslation } from 'react-i18next';
 // MEMO : Create, Edit 모두 YAML로 가능한 리소스만 editYaml -> editResource로 바꾸고 여기 kind 추가하기.
 // MEMO : Create은 커스텀폼으로하고 디테일의 YAML탭에선 Read만 가능한 리소스의 경우엔 editYaml -> editResource로 수정하면 안됨.
 export const OnlyYamlEditorKinds = [
-  models.SecretModel.kind,
   models.TemplateModel.kind,
   models.ClusterTemplateModel.kind,
   models.AWXModel.kind,
