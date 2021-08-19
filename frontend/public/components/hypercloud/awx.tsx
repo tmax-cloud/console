@@ -131,7 +131,7 @@ const AWXDetails: React.FC<AWXDetailsProps> = ({ obj: awx }) => {
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 
 export const AWXs: React.FC = props => {
   const { t } = useTranslation();
@@ -158,7 +158,7 @@ export const AWXsPage: React.FC = props => {
 
 export const AWXsDetailsPage: React.FC<DetailsPageProps> = props => {
   const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editYaml()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editResource()]} />;
 };
 
 type ImageSummaryProps = {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>table_status/rejected</title>
+    <g id="table_status/rejected" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="rejected">
+            <rect id="Rectangle-Copy" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <path d="M12,22 C17.5228153,22 22,17.5228153 22,12 C22,6.47718466 17.5228547,2 12,2 C6.47718466,2 2,6.47714529 2,12 C2,17.5228547 6.47718466,22 12,22 Z M18.0800466,16.2552136 L7.74474704,5.91999275 C10.5755576,3.92985289 14.6087213,4.11618731 17.2463064,6.75369361 C19.885309,9.39273564 20.068887,13.4263325 18.0800466,16.2552136 Z M6.75369361,17.2463064 C4.11469097,14.6072644 3.93111297,10.5736675 5.91995338,7.74478642 L16.255253,18.0800072 C13.4244818,20.0701471 9.39127867,19.8838521 6.75369361,17.2463064 Z" id="Rejected" fill="#000000" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

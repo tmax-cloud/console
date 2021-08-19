@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>applied</title>
-    <g id="Page-4:-Component" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="0_1_07_Form-Editor" transform="translate(-714.000000, -716.000000)">
-            <g id="Group-4" transform="translate(676.000000, 519.000000)">
-                <g id="Group" transform="translate(38.000000, 61.000000)">
-                    <g id="applied" transform="translate(0.000000, 136.000000)">
-                        <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                        <path d="M22,2 L22,22 L2,22 L2,2 L22,2 Z M19.5,4.5 L4.5,4.5 L4.5,19.5 L19.5,19.5 L19.5,4.5 Z M11.4699675,6.58333333 L13.2377345,8.38178821 L10.9308333,10.7282264 L17,10.7283004 L17,13.2716996 L10.9316667,13.2716256 L13.2377345,15.6182118 L11.4699675,17.4166667 L6.16666667,11.999926 L11.4699675,6.58333333 Z" fill="#000000" fill-rule="nonzero"></path>
-                    </g>
-                </g>
-            </g>
+    <title>table_status/applied</title>
+    <g id="table_status/applied" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="applied">
+            <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <path d="M22,2 L22,22 L2,22 L2,2 L22,2 Z M19.5,4.5 L4.5,4.5 L4.5,19.5 L19.5,19.5 L19.5,4.5 Z M11.4699675,6.58333333 L13.2377345,8.38178821 L10.9308333,10.7282264 L17,10.7283004 L17,13.2716996 L10.9316667,13.2716256 L13.2377345,15.6182118 L11.4699675,17.4166667 L6.16666667,11.999926 L11.4699675,6.58333333 Z" fill="#000000" fill-rule="nonzero"></path>
         </g>
     </g>
 </svg>

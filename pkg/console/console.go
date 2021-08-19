@@ -315,22 +315,29 @@ func (c *Console) Gateway() http.Handler {
 	// helmHandlers := helmhandlerspkg.New("https://k8s-at-home.com/", tlsClient.Transport, c)
 	// Helm Endpoints
 	handle("/api/helm/template", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 		helmHandlers.HandleHelmRenderManifests(c.StaticUser, w, r)
 	}))
 	handle("/api/helm/releases", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 		helmHandlers.HandleHelmList(c.StaticUser, w, r)
 	}))
 	handle("/api/helm/chart", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 		helmHandlers.HandleChartGet(c.StaticUser, w, r)
 	}))
 	handle("/api/helm/release/history", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 		helmHandlers.HandleGetReleaseHistory(c.StaticUser, w, r)
 	}))
 	handle("/api/helm/charts/index.yaml", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 		helmHandlers.HandleIndexFile(c.StaticUser, w, r)
 	}))
 
 	handle("/api/helm/release", tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 		switch r.Method {
 		case http.MethodGet:
 			helmHandlers.HandleGetRelease(c.StaticUser, w, r)
