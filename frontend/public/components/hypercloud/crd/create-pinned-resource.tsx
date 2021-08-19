@@ -16,8 +16,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isResourceSchemaBasedMenuSet } from '../form';
-import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
+import { pluralToKind, isResourceSchemaBasedMenu, resourceSchemaBasedMenuMap } from '../form';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
@@ -49,6 +48,16 @@ export const OnlyYamlEditorKinds = [
   models.FederatedDaemonSetModel.kind,
   models.FederatedServiceModel.kind,
   models.FederatedStatefulSetModel.kind,
+  models.VirtualServiceModel.kind,
+  models.DestinationRuleModel.kind,
+  models.EnvoyFilterModel.kind,
+  models.GatewayModel.kind,
+  models.SidecarModel.kind,
+  models.ServiceEntryModel.kind,
+  models.RequestAuthenticationModel.kind,
+  models.PeerAuthenticationModel.kind,
+  models.AuthorizationPolicyModel.kind,
+  models.ClusterManagerModel.kind,
 ];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
@@ -56,6 +65,17 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
   if (!model) {
     return null;
   }
+
+  const makeTitle = kind => {
+    switch (kind) {
+      case 'PyTorchJob':
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_2', { 0: t('COMMON:MSG_MAIN_BUTTON_5'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      case 'TFJob':
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_2', { 0: t('COMMON:MSG_MAIN_BUTTON_4'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      default:
+        return t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) });
+    }
+  };
 
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
@@ -67,9 +87,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
       <>
         <div className="co-create-operand__header">
           <div className="co-create-operand__header-buttons">
-            <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
+            <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
           </div>
-          <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
+          <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
         </div>
         <SyncedEditor
           context={{
@@ -90,14 +110,14 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
 
     React.useEffect(() => {
       let kind = pluralToKind(model.plural);
-      const isCustomResourceType = !isResourceSchemaBasedMenuSet(kind);
+      const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
       let url;
       if (isCustomResourceType) {
         url = getK8sAPIPath({ apiGroup: models.CustomResourceDefinitionModel.apiGroup, apiVersion: models.CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
       } else {
-        const directory = kindToSchemaPath.get(model.kind)?.['directory'];
-        const file = kindToSchemaPath.get(model.kind)?.['file'];
+        const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
+        const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
         url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
       }
       const xhrTest = new XMLHttpRequest();
@@ -137,9 +157,9 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
           <>
             <div className="co-create-operand__header">
               <div className="co-create-operand__header-buttons">
-                <BreadCrumbs breadcrumbs={[{ name: t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) }), path: window.location.pathname }]} />
+                <BreadCrumbs breadcrumbs={[{ name: makeTitle(model.kind), path: window.location.pathname }]} />
               </div>
-              <h1 className="co-create-operand__header-text">{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: model.kind }, t) })}</h1>
+              <h1 className="co-create-operand__header-text">{makeTitle(model.kind)}</h1>
               <p className="help-block">{helpText}</p>
             </div>
             <SyncedEditor

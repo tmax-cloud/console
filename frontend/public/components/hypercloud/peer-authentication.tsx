@@ -81,7 +81,7 @@ const PeerAuthenticationDetails: React.FC<PeerAuthenticationDetailsProps> = ({ o
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const PeerAuthentications: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Peer Authentications" Header={PeerAuthenticationTableHeader.bind(null, t)} Row={PeerAuthenticationTableRow} virtualize />;
@@ -92,7 +92,7 @@ export const PeerAuthenticationsPage: React.FC<PeerAuthenticationsPageProps> = p
   return <ListPage title={t('COMMON:MSG_LNB_MENU_43')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_43') })} canCreate={true} ListComponent={PeerAuthentications} kind={kind} {...props} />;
 };
 
-export const PeerAuthenticationsDetailsPage: React.FC<PeerAuthenticationsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PeerAuthenticationDetails)), editYaml()]} />;
+export const PeerAuthenticationsDetailsPage: React.FC<PeerAuthenticationsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PeerAuthenticationDetails)), editResource()]} />;
 
 type PeerAuthenticationDetailsProps = {
   obj: K8sResourceKind;

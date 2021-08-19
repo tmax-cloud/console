@@ -102,7 +102,7 @@ const VirtualServiceDetails: React.FC<VirtualServiceDetailsProps> = ({ obj: virt
   </>
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const VirtualServices: React.FC = props =>{
   const { t } = useTranslation();
   return <Table {...props} aria-label="Virtual Services" Header={VirtualServiceTableHeader.bind(null, t)} Row={VirtualServiceTableRow} virtualize />;
@@ -113,7 +113,7 @@ export const VirtualServicesPage: React.FC<VirtualServicesPageProps> = props => 
   return <ListPage title={t('COMMON:MSG_LNB_MENU_36')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_36') })} canCreate={true} ListComponent={VirtualServices} kind={kind} {...props} />;
 };
 
-export const VirtualServicesDetailsPage: React.FC<VirtualServicesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(VirtualServiceDetails)), editYaml()]} />;
+export const VirtualServicesDetailsPage: React.FC<VirtualServicesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(VirtualServiceDetails)), editResource()]} />;
 
 type VirtualServiceDetailsProps = {
   obj: K8sResourceKind;

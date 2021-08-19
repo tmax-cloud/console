@@ -15,8 +15,7 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isResourceSchemaBasedMenuSet, isCreateManual } from '../form';
-import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
+import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, resourceSchemaBasedMenuMap } from '../form';
 import { getIdToken } from '../../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { AsyncComponent } from '../../utils/async';
@@ -52,14 +51,14 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 
     React.useEffect(() => {
       let kind = pluralToKind(model.plural);
-      const isCustomResourceType = !isResourceSchemaBasedMenuSet(kind);
+      const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
       let url;
       if (isCustomResourceType) {
         url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
         url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
       } else {
-        const directory = kindToSchemaPath.get(model.kind)?.['directory'];
-        const file = kindToSchemaPath.get(model.kind)?.['file'];
+        const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
+        const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
         url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
       }
       const xhrTest = new XMLHttpRequest();

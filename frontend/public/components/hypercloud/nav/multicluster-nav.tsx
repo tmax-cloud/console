@@ -1,18 +1,10 @@
 import * as React from 'react';
-import { NavItemSeparator } from '@patternfly/react-core';
 // import { referenceForModel } from '../../module/k8s';
 // import { ExternalLink, HrefLink, ResourceNSLink, ResourceClusterLink } from './items';
-import { ResourceNSLink } from '../../nav/items';
+import { ResourceNSLink, Separator } from '../../nav/items';
 import { NavSection } from '../../nav/section';
 import { Translation } from 'react-i18next';
 // import { ALL_NAMESPACES_KEY } from '../../../../packages/console-shared/src/constants/common';
-
-type SeparatorProps = {
-  name: string;
-  required?: string;
-};
-
-const Separator: React.FC<SeparatorProps> = ({ name }) => <NavItemSeparator name={name} />;
 
 const clustermanagersStartsWith = ['clustermanagers', 'clusterclaims', 'clusterregistrations'];
 

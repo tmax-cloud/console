@@ -81,7 +81,7 @@ const SidecarDetails: React.FC<SidecarDetailsProps> = ({ obj: sidecar }) => {
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const Sidecars: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Sidecars" Header={SidecarTableHeader.bind(null, t)} Row={SidecarTableRow} virtualize />;
@@ -92,7 +92,7 @@ export const SidecarsPage: React.FC<SidecarsPageProps> = props => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_40')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_40') })} canCreate={true} ListComponent={Sidecars} kind={kind} {...props} />;
 };
 
-export const SidecarsDetailsPage: React.FC<SidecarsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(SidecarDetails)), editYaml()]} />;
+export const SidecarsDetailsPage: React.FC<SidecarsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(SidecarDetails)), editResource()]} />;
 
 type SidecarDetailsProps = {
   obj: K8sResourceKind;

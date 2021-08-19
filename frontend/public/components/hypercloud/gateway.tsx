@@ -82,7 +82,7 @@ const GatewayDetails: React.FC<GatewayDetailsProps> = ({ obj: gateway }) => {
   </>;
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const Gateways: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Gateways" Header={GatewayTableHeader.bind(null, t)} Row={GatewayTableRow} virtualize />;
@@ -93,7 +93,7 @@ export const GatewaysPage: React.FC<GatewaysPageProps> = props => {
   return <ListPage title={t('COMMON:MSG_LNB_MENU_39')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_39') })} canCreate={true} ListComponent={Gateways} kind={kind} {...props} />;
 };
 
-export const GatewaysDetailsPage: React.FC<GatewaysDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(GatewayDetails)), editYaml()]} />;
+export const GatewaysDetailsPage: React.FC<GatewaysDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(GatewayDetails)), editResource()]} />;
 
 type GatewayDetailsProps = {
   obj: K8sResourceKind;
