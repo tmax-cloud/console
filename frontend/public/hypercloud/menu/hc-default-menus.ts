@@ -160,5 +160,4 @@ const SingleNavMenus = [
   },
 ];
 
-const HyperCloudDefaultMenus = { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus };
-export default HyperCloudDefaultMenus;
+export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus };
