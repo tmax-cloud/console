@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dropdown, DropdownItem, DropdownToggle, Title } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { Perspective } from '@console/plugin-sdk';
-import { getPerspectives } from '../../hypercloud/perspectives';
+import { getPerspectives, PerspectiveType } from '../../hypercloud/perspectives';
 import { RootState } from '../../redux';
 import { featureReducerName, getFlagsObject, FlagsObject } from '../../reducers/features';
 import { getActivePerspective } from '../../reducers/ui';
@@ -79,7 +79,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
       <div className="oc-nav-header">
         <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_1')}</div>
         <Dropdown isOpen={isPerspectiveDropdownOpen} toggle={renderToggle(icon, name)} dropdownItems={getPerspectiveItems(perspectives)} data-test-id="perspective-switcher-menu" />
-        {activePerspective == 'hc' && (
+        {activePerspective == PerspectiveType.SINGLE && (
           <>
             <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_2')}</div>
             <ClusterDropdown onClusterSelected={onClusterSelected} />
