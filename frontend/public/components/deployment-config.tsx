@@ -4,35 +4,19 @@ import * as _ from 'lodash-es';
 import { Status, PodRingController } from '@console/shared';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
-import { k8sCreate, K8sKind, K8sResourceKind, K8sResourceKindReference } from '../module/k8s';
+import { k8sCreate, K8sKind, K8sResourceKind } from '../module/k8s';
 import { errorModal } from './modals';
 import { DeploymentConfigModel } from '../models';
 import { Conditions } from './conditions';
 import { ResourceEventStream } from './events';
 import { VolumesTable } from './volumes-table';
-import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
-import { DetailsPage, ListPage, Table, RowFunction } from './factory';
-import {
-  AsyncComponent,
-  ContainerTable,
-  DetailsItem,
-  Kebab,
-  KebabAction,
-  LoadingInline,
-  ResourceSummary,
-  SectionHeading,
-  WorkloadPausedAlert,
-  getExtensionsKebabActionsForKind,
-  navFactory,
-  pluralize,
-  togglePaused,
-} from './utils';
+import { DetailsPage, ListPage } from './factory';
+import { AsyncComponent, ContainerTable, DetailsItem, Kebab, KebabAction, LoadingInline, ResourceSummary, SectionHeading, WorkloadPausedAlert, getExtensionsKebabActionsForKind, navFactory, pluralize, togglePaused } from './utils';
 import { ReplicationControllersPage } from './replication-controller';
 
-import { WorkloadTableRow, WorkloadTableHeader } from './workload-table';
+import { WorkloadTableProps } from './workload-table';
 
-const DeploymentConfigsReference: K8sResourceKindReference = 'DeploymentConfig';
+const kind = DeploymentConfigModel.kind;
 
 const rollout = (dc: K8sResourceKind): Promise<K8sResourceKind> => {
   const req = {
@@ -259,61 +243,12 @@ const pages = [
   navFactory.events(ResourceEventStream),
 ];
 
-export const DeploymentConfigsDetailsPage: React.FC<DeploymentConfigsDetailsPageProps> = (
-  props,
-) => {
-  return (
-    <DetailsPage
-      {...props}
-      kind={DeploymentConfigsReference}
-      menuActions={menuActions}
-      pages={pages}
-    />
-  );
+export const DeploymentConfigsDetailsPage: React.FC<DeploymentConfigsDetailsPageProps> = props => {
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={pages} />;
 };
 DeploymentConfigsDetailsPage.displayName = 'DeploymentConfigsDetailsPage';
 
-const kind = 'DeploymentConfig';
-
-const DeploymentConfigTableRow: RowFunction<K8sResourceKind> = ({ obj, index, key, style }) => {
-  return (
-    <WorkloadTableRow
-      obj={obj}
-      index={index}
-      rowKey={key}
-      style={style}
-      menuActions={menuActions}
-      kind={kind}
-    />
-  );
-};
-
-const DeploymentConfigTableHeader = (t?: TFunction) => {
-  return WorkloadTableHeader(t);
-};
-DeploymentConfigTableHeader.displayName = 'DeploymentConfigTableHeader';
-
-export const DeploymentConfigsList: React.FC = (props) => {
-  const { t } = useTranslation();
-  return (
-  <Table
-    {...props}
-    aria-label="Deployment Configs"
-    Header={DeploymentConfigTableHeader.bind(null, t)}
-    Row={DeploymentConfigTableRow}
-    virtualize
-  />
-)};
-DeploymentConfigsList.displayName = 'DeploymentConfigsList';
-
-export const DeploymentConfigsPage: React.FC<DeploymentConfigsPageProps> = (props) => (
-  <ListPage
-    kind={DeploymentConfigsReference}
-    ListComponent={DeploymentConfigsList}
-    canCreate={true}
-    {...props}
-  />
-);
+export const DeploymentConfigsPage: React.FC<DeploymentConfigsPageProps> = props => <ListPage kind={kind} tableProps={WorkloadTableProps({ kind: kind, menuActions: menuActions })} canCreate={true} {...props} />;
 DeploymentConfigsPage.displayName = 'DeploymentConfigsListPage';
 
 type ReplicationControllersTabProps = {
