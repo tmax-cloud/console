@@ -74,7 +74,7 @@ type Row = {
   children: React.ReactNode;
 };
 
-type Rows = (resource: K8sResourceKind) => Row[];
+type Rows = (resource: any) => Row[];
 
 export type TableProps = {
   header: Header[];
