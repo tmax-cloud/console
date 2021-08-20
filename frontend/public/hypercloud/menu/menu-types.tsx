@@ -171,4 +171,13 @@ export const CustomMenusMap: CustomMenusMap = {
     startsWith: startsWith.clusterserviceversionsStartsWith,
     isMultiOnly: false,
   },
+  Topology: {
+    kind: 'Topology',
+    visible: true,
+    type: MenuLinkType.HrefLink,
+    defaultLabel: 'COMMON:MSG_LNB_MENU_191',
+    href: '/topology',
+    activePath: '/topology/',
+    isMultiOnly: false,
+  },
 };
