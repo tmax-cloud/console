@@ -104,9 +104,10 @@ export class HrefLink extends NavLink<HrefLinkProps> {
   }
 }
 
+// MEMO : document.location.origin 뒤에 path붙여서 띄워주는 링크의 경우 해당 path에 대한 프록시처리가 되어있어야만 함.
 export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P> {
   render() {
-    const { name, type } = this.props;
+    const { name, type, url } = this.props;
     switch (type) {
       case 'grafana': {
         const onClick = () => {
@@ -166,9 +167,10 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
         );
       }
 
-      case 'git': {
+      default: {
+        // MEMO : type Props가 없을 경우, default NewTabLink는 url로 들어온 값 그대로를 새탭으로 띄워주게끔 처리함.
         const onClick = () => {
-          window.open(window.SERVER_FLAGS.gitlabURL);
+          window.open(url);
         };
         return (
           <NavItem isActive={false} onClick={onClick}>
@@ -183,9 +185,6 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
             </Link>
           </NavItem>
         );
-      }
-
-      default: {
       }
     }
   }
@@ -223,6 +222,7 @@ export type HrefLinkProps = NavLinkProps & {
 export type NewTabLinkProps = NavLinkProps & {
   name: string;
   type: string;
+  url?: string;
 };
 
 export type NavLinkComponent<T extends NavLinkProps = NavLinkProps> = React.ComponentType<T> & {

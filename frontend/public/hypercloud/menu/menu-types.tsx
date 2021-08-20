@@ -31,7 +31,6 @@ type BasicCustomMenuInfo = {
   kind: string;
 };
 
-// MEMO : 각 Link 타입에서 필요한 속성들 type 지정
 interface ResourceNSLinkProps extends BasicMenuInfo {
   type: MenuLinkType.ResourceNSLink;
   resource?: string;
@@ -47,7 +46,8 @@ interface HrefLinkProps extends BasicMenuInfo {
 }
 interface NewTabLinkProps extends BasicMenuInfo {
   type: MenuLinkType.NewTabLink;
-  newTabLinkType: 'grafana' | 'kibana' | 'git' | 'kiali';
+  newTabLinkType?: 'grafana' | 'kibana' | 'kiali';
+  url?: string;
 }
 
 export type MenuInfo = BasicMenuInfo & (ResourceNSLinkProps | ResourceClusterLinkProps | HrefLinkProps | NewTabLinkProps);
@@ -134,7 +134,7 @@ export const CustomMenusMap: CustomMenusMap = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_195',
-    newTabLinkType: 'git',
+    url: window.SERVER_FLAGS.gitlabURL,
     isMultiOnly: false,
   },
   Add: {

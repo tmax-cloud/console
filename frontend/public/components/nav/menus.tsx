@@ -107,7 +107,7 @@ const getMenuComponent = (menuInfo, labelText) => {
     case MenuLinkType.HrefLink:
       return <HrefLink key={labelText} href={menuInfo.href} activePath={menuInfo.activePath} name={labelText} startsWith={menuInfo.startsWith} />;
     case MenuLinkType.NewTabLink:
-      return <NewTabLink key={labelText} name={labelText} type={menuInfo.newTabLinkType} />;
+      return <NewTabLink key={labelText} name={labelText} type={menuInfo.newTabLinkType} url={menuInfo.url}/>;
     case MenuLinkType.ResourceClusterLink:
       return <ResourceClusterLink key={labelText} resource={menuInfo.resource} name={labelText} startsWith={menuInfo.startsWith} />;
     case MenuLinkType.ResourceNSLink:
