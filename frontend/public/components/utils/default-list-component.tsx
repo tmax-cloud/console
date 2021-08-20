@@ -4,7 +4,6 @@ import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Table, TableRow, TableData, RowFunctionArgs } from '../factory';
 import { sortable } from '@patternfly/react-table';
-import { K8sResourceKind } from '../../module/k8s';
 import { TFunction } from 'i18next';
 
 const generateTableClassName = (index: number): string => {
@@ -35,8 +34,8 @@ const makeTableHeader = (header: Header[], t: TFunction) => {
 
 const makeTableRow = (row: Rows) => {
   const Component = (props: RowFunctionArgs) => {
-    const { obj, index, key, style } = props;
-    const _row = row(obj);
+    const { obj, index, key, style, customData } = props;
+    const _row = row(obj, customData);
     return (
       <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
         {_row.map((value, index) => {
@@ -74,7 +73,7 @@ type Row = {
   children: React.ReactNode;
 };
 
-type Rows = (resource: any) => Row[];
+type Rows = (resource: any, customData?: any) => Row[];
 
 export type TableProps = {
   header: Header[];
