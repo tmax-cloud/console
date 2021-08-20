@@ -104,90 +104,27 @@ export class HrefLink extends NavLink<HrefLinkProps> {
   }
 }
 
+// MEMO : document.location.origin 뒤에 path붙여서 띄워주는 url 링크의 경우 해당 path에 대한 프록시처리가 되어있어야만 함.
 export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P> {
   render() {
-    const { name, type } = this.props;
-    switch (type) {
-      case 'grafana': {
-        const onClick = () => {
-          // let ns = localStorage.getItem('bridge/last-namespace-name') === '#ALL_NS#' ? 'all-namespaces' : localStorage.getItem('bridge/last-namespace-name') ?? 'all-namespaces';
-          window.open(`${document.location.origin}/api/grafana/login/generic_oauth`);
-        };
-        return (
-          <NavItem isActive={false} onClick={onClick}>
-            <Link
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-              }}
-              className="pf-c-nav__link"
-            >
-              {name}
-            </Link>
-          </NavItem>
-        );
-      }
-
-      case 'kibana': {
-        const onClick = () => {
-          window.open(`${document.location.origin}/api/kibana/`);
-        };
-        return (
-          <NavItem isActive={false} onClick={onClick}>
-            <Link
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-              }}
-              className="pf-c-nav__link"
-            >
-              {name}
-            </Link>
-          </NavItem>
-        );
-      }
-
-      case 'kiali': {
-        const onClick = () => {
-          window.open(`${document.location.origin}/api/kiali/`);
-        };
-        return (
-          <NavItem isActive={false} onClick={onClick}>
-            <Link
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-              }}
-              className="pf-c-nav__link"
-            >
-              {name}
-            </Link>
-          </NavItem>
-        );
-      }
-
-      case 'git': {
-        const onClick = () => {
-          window.open(window.SERVER_FLAGS.gitlabURL);
-        };
-        return (
-          <NavItem isActive={false} onClick={onClick}>
-            <Link
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-              }}
-              className="pf-c-nav__link"
-            >
-              {name}
-            </Link>
-          </NavItem>
-        );
-      }
-
-      default: {
-      }
-    }
+    const { name, url } = this.props;
+    // MEMO : type Props가 없을 경우, default NewTabLink는 url로 들어온 값 그대로를 새탭으로 띄워주게끔 처리함.
+    const onClick = () => {
+      window.open(url);
+    };
+    return (
+      <NavItem isActive={false} onClick={onClick}>
+        <Link
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+          }}
+          className="pf-c-nav__link"
+        >
+          {name}
+        </Link>
+      </NavItem>
+    );
   }
 }
 
@@ -222,7 +159,7 @@ export type HrefLinkProps = NavLinkProps & {
 
 export type NewTabLinkProps = NavLinkProps & {
   name: string;
-  type: string;
+  url?: string;
 };
 
 export type NavLinkComponent<T extends NavLinkProps = NavLinkProps> = React.ComponentType<T> & {

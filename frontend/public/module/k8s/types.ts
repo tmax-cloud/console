@@ -1,6 +1,7 @@
 import { JSONSchema6 } from 'json-schema';
 import { BadgeType, NodeAddress } from '@console/shared';
 import { EventInvolvedObject } from './event';
+import { HyperCloudExtension } from '@console/internal/module/hypercloud/k8s/types';
 
 export type OwnerReference = {
   name: string;
@@ -869,7 +870,7 @@ export type K8sKind = {
   // This should not be set for new models, but is needed to avoid breaking
   // existing links as we transition to using the API group in URL paths.
   legacyPluralURL?: boolean;
-};
+} & HyperCloudExtension;
 
 export type Cause = {
   field: string;

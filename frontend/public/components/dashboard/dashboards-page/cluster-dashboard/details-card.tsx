@@ -8,6 +8,7 @@ import DetailItem from '@console/shared/src/components/dashboard/details-card/De
 import { DashboardItemProps, withDashboardResources } from '../../with-dashboard-resources';
 import { getIdToken } from '../../../../hypercloud/auth';
 import { getActivePerspective, getActiveCluster } from '../../../../actions/ui';
+import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { useTranslation } from 'react-i18next';
 import * as _ from 'lodash';
 import * as classNames from 'classnames';
@@ -76,7 +77,7 @@ export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: Details
     const fetchHcVersion = async () => {
       let url;
       let headers;
-      if (getActivePerspective() === 'master') {
+      if (getActivePerspective() === PerspectiveType.MASTER) {
         url = 'api/hypercloud/version';
       } else {
         url = `api/${getActiveCluster()}/version`;
