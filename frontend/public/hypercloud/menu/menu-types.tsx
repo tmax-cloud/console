@@ -13,6 +13,15 @@ export enum MenuLinkType {
   NewTabLink = 'NewTabLink',
 }
 
+/**
+ * 리소스 Model의 MenuInfo에서 사용할 기본적인 속성들.
+ * @prop {MenuLinkType} type - 메뉴 link의 타입.
+ * @prop {string} defaultLabel - 메뉴 label값. i18n String 키값으로 넣어줄 시 번역이 적용된다.
+ * @prop {boolean} isMultiOnly - 멀티클러스터 탭에서만 추가 가능한지 여부를 정해주는 속성.
+ * @prop {Array<string>} startsWith - 메뉴버튼이 활성화표시 될 조건 path들에 대한 배열이다.
+ * @prop {boolean} visible - 메뉴 표시여부에 대한 속성이다. (false이면 사용자가 작성한 CMP리소스 내용에 메뉴추가를 해도 LNB에 보이지 않는다.)
+ * @prop {string} kind - 메뉴의 kind 속성. CustomMenusMap 키값과 동일하게 설정해줘야 한다.
+ */
 type BasicMenuInfo = {
   type: MenuLinkType;
   defaultLabel?: string;
@@ -22,6 +31,15 @@ type BasicMenuInfo = {
   kind?: string;
 };
 
+/**
+ * CustomMenuInfo에서 사용할 기본적인 속성들.
+ * @prop {MenuLinkType} type - 메뉴 link의 타입.
+ * @prop {string} defaultLabel - 메뉴 label값. i18n String 키값으로 넣어줄 시 번역이 적용된다.
+ * @prop {boolean} isMultiOnly - 멀티클러스터 탭에서만 추가 가능한지 여부를 정해주는 속성.
+ * @prop {Array<string>} startsWith - 메뉴버튼이 활성화표시 될 조건 path들에 대한 배열이다.
+ * @prop {boolean} visible - 메뉴 표시여부에 대한 속성이다. (false이면 사용자가 작성한 CMP리소스 내용에 메뉴추가를 해도 LNB에 보이지 않는다.)
+ * @prop {string} kind - 메뉴의 kind 속성. CustomMenusMap 키값과 동일하게 설정해줘야 한다.
+ */
 type BasicCustomMenuInfo = {
   type: MenuLinkType;
   defaultLabel: string;
@@ -39,11 +57,23 @@ interface ResourceClusterLinkProps extends BasicMenuInfo {
   type: MenuLinkType.ResourceClusterLink;
   resource?: string;
 }
+
+/**
+ * href link의 속성들이다.
+ * @prop {string} href - 이동할 href 값.
+ * @prop {string} activePath - LNB의 버튼이 활성화 상태일 때의 url path 조건.
+ */
 interface HrefLinkProps extends BasicMenuInfo {
   type: MenuLinkType.HrefLink;
   href: string;
   activePath?: string;
 }
+
+/**
+ * 새 탭으로 뜨는 link의 속성들이다. newTabLinkType, url 속성 중 하나는 설정이 돼야 한다.
+ * @prop {'grafana' | 'kibana' | 'kiali'} newTabLinkType - NewTabLink컴포넌트 안의 switch문에 분기처리로 작업이 되어있는 type들. 새로운 type을 추가하려면 NewTabLink컴포넌트 안에 해당 type에 대해 구현이 되어있어야 한다.
+ * @prop {string} url - newTabLinkType을 지정하지않고 url만 지정하면 고정된 url로 새탭을 띄워준다.
+ */
 interface NewTabLinkProps extends BasicMenuInfo {
   type: MenuLinkType.NewTabLink;
   newTabLinkType?: 'grafana' | 'kibana' | 'kiali';
