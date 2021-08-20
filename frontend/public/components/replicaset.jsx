@@ -61,86 +61,66 @@ const ReplicaSetPods = props => <PodsComponent {...props} customData={{ showNode
 const { details, editResource, pods, envEditor, events } = navFactory;
 const ReplicaSetsDetailsPage = props => <DetailsPage {...props} menuActions={replicaSetMenuActions} pages={[details(Details), editResource(), pods(ReplicaSetPods), envEditor(environmentComponent), events(ResourceEventStream)]} />;
 
-const kind = 'ReplicaSet';
+const kind = ReplicaSetModel.kind;
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), Kebab.columnClass];
-
-const ReplicaSetTableRow = ({ obj, index, key, style }) => {
-  return (
-    <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <Link to={`${resourcePath(kind, obj.metadata.name, obj.metadata.namespace)}/pods`} title="pods">
-          {obj.status.replicas || 0} of {obj.spec.replicas} pods
-        </Link>
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <LabelList kind={kind} labels={obj.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <Timestamp timestamp={obj.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <ResourceKebab actions={replicaSetMenuActions} kind={kind} resource={obj} />
-      </TableData>
-    </TableRow>
-  );
-};
-
-const ReplicaSetTableHeader = t => {
-  return [
+const tableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
       sortFunc: 'numReplicas',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[6] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
+  ],
+  row: obj => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      className: 'co-break-word',
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
+      children: (
+        <Link to={`${resourcePath(kind, obj.metadata.name, obj.metadata.namespace)}/pods`} title="pods">
+          {obj.status.replicas || 0} of {obj.spec.replicas} pods
+        </Link>
+      ),
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    {
+      children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={replicaSetMenuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
 
-ReplicaSetTableHeader.displayName = 'ReplicaSetTableHeader';
-
-const ReplicaSetsList = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Replica Sets" Header={ReplicaSetTableHeader.bind(null, t)} Row={ReplicaSetTableRow} virtualize />;
-};
 const ReplicaSetsPage = props => {
-  const { t } = useTranslation();
-  const { canCreate = true } = props;
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_31')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_31') })} canCreate={canCreate} kind="ReplicaSet" ListComponent={ReplicaSetsList} {...props} />;
+  return <ListPage canCreate={true} kind={kind} tableProps={tableProps} {...props} />;
 };
 
-export { ReplicaSetsList, ReplicaSetsPage, ReplicaSetsDetailsPage };
+export { ReplicaSetsPage, ReplicaSetsDetailsPage };

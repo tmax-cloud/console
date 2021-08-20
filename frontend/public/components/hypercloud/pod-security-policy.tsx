@@ -5,7 +5,6 @@ import { sortable } from '@patternfly/react-table';
 import { K8sResourceCommon, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
-// import { WorkloadTableRow, WorkloadTableHeader } from '../workload-table';
 import { useTranslation } from 'react-i18next';
 const { common } = Kebab.factory;
 
