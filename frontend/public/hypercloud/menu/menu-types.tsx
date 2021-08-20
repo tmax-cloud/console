@@ -70,13 +70,11 @@ interface HrefLinkProps extends BasicMenuInfo {
 }
 
 /**
- * 새 탭으로 뜨는 link의 속성들이다. newTabLinkType, url 속성 중 하나는 설정이 돼야 한다.
- * @prop {'grafana' | 'kibana' | 'kiali'} newTabLinkType - NewTabLink컴포넌트 안의 switch문에 분기처리로 작업이 되어있는 type들. 새로운 type을 추가하려면 NewTabLink컴포넌트 안에 해당 type에 대해 구현이 되어있어야 한다.
- * @prop {string} url - newTabLinkType을 지정하지않고 url만 지정하면 고정된 url로 새탭을 띄워준다.
+ * 새 탭으로 열리는 link의 속성들이다.
+ * @prop {string} url - 새탭을 띄워줄 url 속성.
  */
 interface NewTabLinkProps extends BasicMenuInfo {
   type: MenuLinkType.NewTabLink;
-  newTabLinkType?: 'grafana' | 'kibana' | 'kiali';
   url?: string;
 }
 
@@ -148,7 +146,7 @@ export const CustomMenusMap: CustomMenusMap = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_98',
-    newTabLinkType: 'grafana',
+    url: `${document.location.origin}/api/grafana/login/generic_oauth`,
     isMultiOnly: false,
   },
   Kibana: {
@@ -156,7 +154,7 @@ export const CustomMenusMap: CustomMenusMap = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_99',
-    newTabLinkType: 'kibana',
+    url: `${document.location.origin}/api/kibana/`,
     isMultiOnly: false,
   },
   Git: {
@@ -181,7 +179,7 @@ export const CustomMenusMap: CustomMenusMap = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_45',
-    newTabLinkType: 'kiali',
+    url: `${document.location.origin}/api/kiali/`,
     isMultiOnly: false,
   },
   OperatorHub: {
