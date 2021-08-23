@@ -35,7 +35,7 @@ const NodeTableHeader = t => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'Role',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_96'),
       sortFunc: 'nodeRoles',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
@@ -59,7 +59,7 @@ const NodeTableHeader = t => {
       props: { className: tableColumnClasses[5] },
     },
     {
-      title: 'Filesystem',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_106'),
       sortFunc: 'nodeFS',
       transforms: [sortable],
       props: { className: tableColumnClasses[6] },
