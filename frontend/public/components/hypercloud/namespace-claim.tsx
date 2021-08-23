@@ -10,7 +10,6 @@ import { Popover } from '@patternfly/react-core';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-// import { WorkloadTableRow, WorkloadTableHeader } from '../workload-table';
 
 const { common } = Kebab.factory;
 

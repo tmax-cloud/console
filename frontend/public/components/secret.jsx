@@ -2,14 +2,14 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
-import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
+import { DetailsPage, ListPage } from './factory';
 import { SecretData } from './configmap-and-secret-data';
 import { Kebab, SectionHeading, ResourceKebab, ResourceLink, ResourceSummary, Timestamp, detailsPage, navFactory, resourceObjPath } from './utils';
 import { SecretType } from './secrets/create-secret';
 import { configureAddSecretToWorkloadModal } from './modals/add-secret-to-workload';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { SecretModel } from '../models';
 
 export const WebHookSecretKey = 'WebHookSecretKey';
 
@@ -27,70 +27,59 @@ const actionButtons = [addSecretToWorkload];
 
 const menuActions = [Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.EditSecret, Kebab.factory.Delete];
 
-const kind = 'Secret';
+const kind = SecretModel.kind;
 
-const tableColumnClasses = [classNames('col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-md-3', 'col-sm-4', 'hidden-xs'), classNames('col-lg-1', 'hidden-md', 'hidden-sm', 'hidden-xs'), classNames('col-md-3', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
-
-const SecretTableHeader = t => {
-  return [
+const tableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_17'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_17',
       sortField: 'type',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_18'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_18',
       sortFunc: 'dataSize',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[5] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
-};
-SecretTableHeader.displayName = 'SecretTableHeader';
-
-const SecretTableRow = ({ obj: secret, index, key, style }) => {
-  const data = _.size(secret.data);
-  return (
-    <TableRow id={secret.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind="Secret" name={secret.metadata.name} namespace={secret.metadata.namespace} title={secret.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={secret.metadata.namespace} title={secret.metadata.namespace} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>{secret.type}</TableData>
-      <TableData className={tableColumnClasses[3]}>{data}</TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <Timestamp timestamp={secret.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={secret} />
-      </TableData>
-    </TableRow>
-  );
+  ],
+  row: obj => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      classNames: 'co-break-word',
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
+      className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
+      children: obj.type,
+    },
+    {
+      children: _.size(obj.data),
+    },
+    {
+      children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
 
 const SecretDetails = ({ obj: secret }) => {
@@ -107,12 +96,6 @@ const SecretDetails = ({ obj: secret }) => {
     </>
   );
 };
-
-const SecretsList = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Secrets" Header={SecretTableHeader.bind(null, t)} Row={SecretTableRow} virtualize />;
-};
-SecretsList.displayName = 'SecretsList';
 
 const IMAGE_FILTER_VALUE = 'Image';
 const SOURCE_FILTER_VALUE = 'Source';
@@ -170,9 +153,9 @@ const SecretsPage = props => {
     createLink: type => `/k8s/ns/${props.namespace || 'default'}/secrets/~new/${type !== 'yaml' ? type : ''}`,
   };
 
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_26')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_26') })} ListComponent={SecretsList} canCreate={true} rowFilters={filters} createProps={createProps} {...props} />;
+  return <ListPage tableProps={tableProps} canCreate={true} rowFilters={filters} createProps={createProps} {...props} />;
 };
 
 const SecretsDetailsPage = props => <DetailsPage {...props} buttonActions={actionButtons} menuActions={menuActions} pages={[navFactory.details(detailsPage(SecretDetails)), navFactory.editResource()]} />;
 
-export { SecretsList, SecretsPage, SecretsDetailsPage };
+export { SecretsPage, SecretsDetailsPage };

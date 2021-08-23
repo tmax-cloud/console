@@ -5,10 +5,9 @@ import { PodRingController } from '@console/shared';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { K8sResourceKind } from '../module/k8s';
 import { ResourceEventStream } from './events';
-import { DetailsPage, ListPage, Table, RowFunction } from './factory';
+import { DetailsPage, ListPage } from './factory';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
-import { WorkloadTableRow, WorkloadTableHeader } from './workload-table';
+import { WorkloadTableProps } from './workload-table';
 
 import { AsyncComponent, Kebab, KebabAction, ContainerTable, ResourceSummary, SectionHeading, navFactory, LoadingInline, PodsComponent } from './utils';
 import { VolumesTable } from './volumes-table';
@@ -18,23 +17,14 @@ import { ResourceLabel } from '../models/hypercloud/resource-plural';
 const { AddStorage, common, ModifyCount } = Kebab.factory;
 export const menuActions: KebabAction[] = [AddHealthChecks, ModifyCount, AddStorage, ...Kebab.getExtensionsActionsForKind(StatefulSetModel), EditHealthChecks, ...common];
 
-const kind = 'StatefulSet';
-
-const StatefulSetTableRow: RowFunction<K8sResourceKind> = ({ obj, index, key, style }) => {
-  return <WorkloadTableRow obj={obj} index={index} rowKey={key} style={style} menuActions={menuActions} kind={kind} />;
-};
-
-const StatefulSetTableHeader = (t?: TFunction) => {
-  return WorkloadTableHeader(t);
-};
-StatefulSetTableHeader.displayName = 'StatefulSetTableHeader';
+const kind = StatefulSetModel.kind;
 
 const StatefulSetDetails: React.FC<StatefulSetDetailsProps> = ({ obj: ss }) => {
   const { t } = useTranslation();
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', {0: ResourceLabel(ss, t)})} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(ss, t) })} />
         <PodRingController
           namespace={ss.metadata.namespace}
           kind={ss.kind}
@@ -60,13 +50,8 @@ const EnvironmentPage: React.FC<EnvironmentPageProps> = props => <AsyncComponent
 const envPath = ['spec', 'template', 'spec', 'containers'];
 const EnvironmentTab: React.FC<EnvironmentTabProps> = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec} envPath={envPath} readOnly={false} />;
 
-export const StatefulSetsList: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Stateful Sets" Header={StatefulSetTableHeader.bind(null, t)} Row={StatefulSetTableRow} virtualize />;
-};
-export const StatefulSetsPage: React.FC<StatefulSetsPageProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage {...props} title={t('COMMON:MSG_LNB_MENU_25')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_25') })} ListComponent={StatefulSetsList} kind={kind} canCreate={true} />;
+export const StatefulSetsPage: React.FC = props => {
+  return <ListPage {...props} tableProps={WorkloadTableProps({ kind: kind, menuActions: menuActions })} kind={kind} canCreate={true} />;
 };
 
 const StatefulSetPods: React.FC<StatefulSetPodsProps> = props => <PodsComponent {...props} customData={{ showNodes: true }} />;
@@ -88,12 +73,6 @@ type EnvironmentTabProps = {
 
 type StatefulSetDetailsProps = {
   obj: K8sResourceKind;
-};
-
-type StatefulSetsPageProps = {
-  showTitle?: boolean;
-  namespace?: string;
-  selector?: any;
 };
 
 type StatefulSetPodsProps = {
