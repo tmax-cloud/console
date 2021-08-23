@@ -3,12 +3,13 @@ import { coFetchJSON } from '../../co-fetch';
 import { k8sBasePath, multiClusterBasePath } from './k8s';
 import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
+import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../../actions/ui';
 import { getId, getUserGroup } from '../../hypercloud/auth';
 import { resourceSchemaBasedMenuMap } from '../../components/hypercloud/form'
 
 export const getDynamicProxyPath = (cluster) => {
-  if (window.SERVER_FLAGS.McMode && getActivePerspective() == 'hc') {
+  if (window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE) {
     return `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
   } else if (cluster) {
     return `${window.SERVER_FLAGS.basePath}api/${cluster}`;
@@ -44,7 +45,7 @@ const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
   let p = multiClusterBasePath;
 
-  if (window.SERVER_FLAGS.McMode && getActivePerspective() == 'hc') {
+  if (window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE) {
     p = `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
   } else if (cluster) {
     p = `${window.SERVER_FLAGS.basePath}api/${cluster}`;
@@ -240,7 +241,7 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   let isMultiCluster = isCluster(kind) || isClusterClaim(kind);
   let listURL = isMultiCluster ? resourceClusterURL(kind, {ns: params.ns}) : resourceURL(kind, { ns: params.ns });
   // let listURL = resourceURL(kind, { ns: params.ns });
-  if(localStorage.getItem('bridge/last-perspective') === 'hc') {
+  if(localStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
     return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
   }
 

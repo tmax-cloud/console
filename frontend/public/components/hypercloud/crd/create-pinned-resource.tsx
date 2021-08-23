@@ -27,14 +27,11 @@ import { useTranslation } from 'react-i18next';
 // MEMO : Create, Edit 모두 YAML로 가능한 리소스만 editYaml -> editResource로 바꾸고 여기 kind 추가하기.
 // MEMO : Create은 커스텀폼으로하고 디테일의 YAML탭에선 Read만 가능한 리소스의 경우엔 editYaml -> editResource로 수정하면 안됨.
 export const OnlyYamlEditorKinds = [
-  models.SecretModel.kind,
   models.TemplateModel.kind,
   models.ClusterTemplateModel.kind,
   models.AWXModel.kind,
   models.ClusterServiceBrokerModel.kind,
   models.ServiceBindingModel.kind,
-  models.NotebookModel.kind,
-  models.ExperimentModel.kind,
   models.FederatedConfigMapModel.kind,
   models.FederatedDeploymentModel.kind,
   models.FederatedHPAModel.kind,
@@ -48,6 +45,16 @@ export const OnlyYamlEditorKinds = [
   models.FederatedDaemonSetModel.kind,
   models.FederatedServiceModel.kind,
   models.FederatedStatefulSetModel.kind,
+  models.VirtualServiceModel.kind,
+  models.DestinationRuleModel.kind,
+  models.EnvoyFilterModel.kind,
+  models.GatewayModel.kind,
+  models.SidecarModel.kind,
+  models.ServiceEntryModel.kind,
+  models.RequestAuthenticationModel.kind,
+  models.PeerAuthenticationModel.kind,
+  models.AuthorizationPolicyModel.kind,
+  models.ClusterManagerModel.kind,
 ];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {

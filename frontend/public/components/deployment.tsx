@@ -4,20 +4,19 @@ import { Status, PodRingController } from '@console/shared';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { DeploymentModel } from '../models';
-import { DeploymentKind, K8sKind, K8sResourceKindReference } from '../module/k8s';
+import { DeploymentKind, K8sKind } from '../module/k8s';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { configureUpdateStrategyModal, errorModal } from './modals';
 import { Conditions } from './conditions';
 import { ResourceEventStream } from './events';
 import { VolumesTable } from './volumes-table';
-import { DetailsPage, ListPage, Table, RowFunction } from './factory';
+import { DetailsPage, ListPage } from './factory';
 import { AsyncComponent, DetailsItem, Kebab, KebabAction, ContainerTable, navFactory, pluralize, ResourceSummary, SectionHeading, togglePaused, WorkloadPausedAlert, LoadingInline } from './utils';
 import { ReplicaSetsPage } from './replicaset';
-import { WorkloadTableRow, WorkloadTableHeader } from './workload-table';
+import { WorkloadTableProps } from './workload-table';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 
-const deploymentsReference: K8sResourceKindReference = 'Deployment';
+const kind = DeploymentModel.kind;
 const { ModifyCount, AddStorage, common } = Kebab.factory;
 
 const UpdateStrategy: KebabAction = (kind: K8sKind, deployment: DeploymentKind) => {
@@ -139,18 +138,17 @@ const ReplicaSetsTab: React.FC<ReplicaSetsTabProps> = ({ obj }) => {
 
 const { details, editResource, pods, envEditor, events } = navFactory;
 export const DeploymentsDetailsPage: React.FC<DeploymentsDetailsPageProps> = props => {
-  const { t } = useTranslation();
   return (
     <DetailsPage
       {...props}
-      kind={deploymentsReference}
+      kind={kind}
       menuActions={menuActions}
       pages={[
         details(DeploymentDetails),
         editResource(),
         {
           href: 'replicasets',
-          name: t('COMMON:MSG_LNB_MENU_31'),
+          name: 'COMMON:MSG_LNB_MENU_31',
           component: ReplicaSetsTab,
         },
         pods(),
@@ -170,37 +168,13 @@ type DeploymentDetailsProps = {
   obj: DeploymentKind;
 };
 
-const kind = 'Deployment';
-
-const DeploymentTableRow: RowFunction<DeploymentKind> = ({ obj, index, key, style }) => {
-  return <WorkloadTableRow obj={obj} index={index} rowKey={key} style={style} menuActions={menuActions} kind={kind} />;
-};
-
-const DeploymentTableHeader = (t?: TFunction) => {
-  return WorkloadTableHeader(t);
-};
-DeploymentTableHeader.displayName = 'DeploymentTableHeader';
-
-export const DeploymentsList: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Deployments" Header={DeploymentTableHeader.bind(null, t)} Row={DeploymentTableRow} virtualize />;
-};
-DeploymentsList.displayName = 'DeploymentsList';
-
-export const DeploymentsPage: React.FC<DeploymentsPageProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_24')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_24') })} kind={deploymentsReference} canCreate={true} ListComponent={DeploymentsList} {...props} />;
+export const DeploymentsPage: React.FC = props => {
+  return <ListPage canCreate={true} kind={kind} tableProps={WorkloadTableProps({ kind: kind, menuActions: menuActions })} {...props} />;
 };
 DeploymentsPage.displayName = 'DeploymentsPage';
 
 type ReplicaSetsTabProps = {
   obj: DeploymentKind;
-};
-
-type DeploymentsPageProps = {
-  showTitle?: boolean;
-  namespace?: string;
-  selector?: any;
 };
 
 type DeploymentsDetailsPageProps = {

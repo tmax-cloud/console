@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>delete</title>
-    <g id="Page-4:-Component" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="0_1_07_Form-Editor" transform="translate(-714.000000, -816.000000)">
-            <g id="Group-4" transform="translate(676.000000, 519.000000)">
-                <g id="Group" transform="translate(38.000000, 61.000000)">
-                    <g id="delete" transform="translate(0.000000, 236.000000)">
-                        <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                        <path d="M12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 Z M12,4.5 C7.85786438,4.5 4.5,7.85786438 4.5,12 C4.5,16.1421356 7.85786438,19.5 12,19.5 C16.1421356,19.5 19.5,16.1421356 19.5,12 C19.5,7.85786438 16.1421356,4.5 12,4.5 Z M16.5,10.75 C16.7761424,10.75 17,10.9738576 17,11.25 L17,12.75 C17,13.0261424 16.7761424,13.25 16.5,13.25 L7.5,13.25 C7.22385763,13.25 7,13.0261424 7,12.75 L7,11.25 C7,10.9738576 7.22385763,10.75 7.5,10.75 L16.5,10.75 Z" id="Delete" fill="#000000" fill-rule="nonzero"></path>
-                    </g>
-                </g>
-            </g>
+    <title>table_status/delete</title>
+    <g id="table_status/delete" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="delete">
+            <rect id="box" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <path d="M12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 Z M12,4.5 C7.85786438,4.5 4.5,7.85786438 4.5,12 C4.5,16.1421356 7.85786438,19.5 12,19.5 C16.1421356,19.5 19.5,16.1421356 19.5,12 C19.5,7.85786438 16.1421356,4.5 12,4.5 Z M16.5,10.75 C16.7761424,10.75 17,10.9738576 17,11.25 L17,12.75 C17,13.0261424 16.7761424,13.25 16.5,13.25 L7.5,13.25 C7.22385763,13.25 7,13.0261424 7,12.75 L7,11.25 C7,10.9738576 7.22385763,10.75 7.5,10.75 L16.5,10.75 Z" id="Delete" fill="#000000" fill-rule="nonzero"></path>
         </g>
     </g>
 </svg>

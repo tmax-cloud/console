@@ -1,16 +1,13 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { Link } from 'react-router-dom';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { Status } from '@console/shared';
 import { getJobTypeAndCompletions, K8sKind, JobKind, K8sResourceKind } from '../module/k8s';
 import { Conditions } from './conditions';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
+import { DetailsPage, ListPage } from './factory';
 import { configureJobParallelismModal } from './modals';
-import { ContainerTable, DetailsItem, Kebab, KebabAction, LabelList, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, pluralize } from './utils';
+import { ContainerTable, DetailsItem, Kebab, KebabAction, LabelList, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, pluralize, TableProps } from './utils';
 import { ResourceEventStream } from './events';
 import { JobModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
@@ -39,83 +36,71 @@ const ModifyJobParallelism: KebabAction = (kind: K8sKind, obj: JobKind) => {
 };
 const menuActions: KebabAction[] = [ModifyJobParallelism, ...Kebab.getExtensionsActionsForKind(JobModel), ...Kebab.factory.common];
 
-const kind = 'Job';
+const kind = JobModel.kind;
 
-const tableColumnClasses = [classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-3', 'col-md-4', 'col-sm-4', 'hidden-xs'), classNames('col-lg-2', 'col-md-2', 'hidden-sm', 'hidden-xs'), classNames('col-lg-1', 'hidden-md', 'hidden-sm', 'hidden-xs'), classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
-
-const JobTableHeader = (t?: TFunction) => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_22'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_22',
       sortFunc: 'jobCompletions',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_17'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_17',
       sortFunc: 'jobType',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortFunc: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[6] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
-};
-JobTableHeader.displayName = 'JobTableHeader';
-
-const JobTableRow: RowFunction<JobKind> = ({ obj: job, index, key, style }) => {
-  const { type, completions } = getJobTypeAndCompletions(job);
-  return (
-    <TableRow id={job.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={job.metadata.name} namespace={job.metadata.namespace} title={job.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={job.metadata.namespace} title={job.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <LabelList kind={kind} labels={job.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <Link to={`/k8s/ns/${job.metadata.namespace}/jobs/${job.metadata.name}/pods`} title="pods">
-          {job.status.succeeded || 0} of {completions}
-        </Link>
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>{type}</TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <Timestamp timestamp={job.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[6]}>
-        <ResourceKebab actions={menuActions} kind="Job" resource={job} />
-      </TableData>
-    </TableRow>
-  );
+  ],
+  row: (obj: JobKind) => {
+    const { type, completions } = getJobTypeAndCompletions(obj);
+    return [
+      {
+        children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+      },
+      {
+        children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+      },
+      {
+        children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+      },
+      {
+        children: (
+          <Link to={`/k8s/ns/${obj.metadata.namespace}/jobs/${obj.metadata.name}/pods`} title="pods">
+            {obj.status.succeeded || 0} of {completions}
+          </Link>
+        ),
+      },
+      {
+        children: type,
+      },
+      {
+        children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+      },
+      {
+        className: Kebab.columnClass,
+        children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+      },
+    ];
+  },
 };
 
 const jobStatus = (job: JobKind): string => {
@@ -174,25 +159,14 @@ const JobPods: React.FC<JobPodsProps> = props => <PodsComponent {...props} custo
 
 const { details, pods, editResource, events } = navFactory;
 const JobsDetailsPage: React.FC<JobsDetailsPageProps> = props => <DetailsPage {...props} getResourceStatus={jobStatus} kind={kind} menuActions={menuActions} pages={[details(JobDetails), editResource(), pods(JobPods), events(ResourceEventStream)]} />;
-const JobsList: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label={JobModel.labelPlural} Header={JobTableHeader.bind(null, t)} Row={JobTableRow} virtualize />;
-};
 
-const JobsPage: React.FC<JobsPageProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_29')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_29') })} ListComponent={JobsList} kind={kind} canCreate={true} {...props} />;
+const JobsPage: React.FC = props => {
+  return <ListPage tableProps={tableProps} kind={kind} canCreate={true} {...props} />;
 };
-export { JobsList, JobsPage, JobsDetailsPage };
+export { JobsPage, JobsDetailsPage };
 
 type JobsDetailsProps = {
   obj: JobKind;
-};
-
-type JobsPageProps = {
-  showTitle?: boolean;
-  namespace?: string;
-  selector?: any;
 };
 
 type JobPodsProps = {

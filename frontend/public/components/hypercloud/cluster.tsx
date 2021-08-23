@@ -201,7 +201,7 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
   );
 };
 
-const { /* nodes, */ editYaml, events } = navFactory;
+const { /* nodes, */ editResource, events } = navFactory;
 export const Clusters: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Clusters" Header={ClusterTableHeader.bind(null, t)} Row={ClusterTableRow} virtualize />;
@@ -243,7 +243,7 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
           name: 'COMMON:MSG_DETAILS_TABOVERVIEW_3',
           component: detailsPage(ClusterDetails),
         },
-        editYaml() /* nodes(ClusterNodes),  events(ResourceEventStream) */,
+        editResource() /* nodes(ClusterNodes),  events(ResourceEventStream) */,
         /*{
           href: 'node',
           name: 'Node',

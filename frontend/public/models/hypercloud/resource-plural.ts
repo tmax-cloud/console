@@ -28,19 +28,58 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_84',
     label: 'COMMON:MSG_LNB_MENU_165',
   },
-  FederatedPod: {},
-  FederatedDeployment: {},
-  FederatedReplicaSet: {},
-  FederatedHorizontalPodAutoscaler: {},
-  FederatedDaemonSet: {},
-  FederatedStatefulSet: {},
-  FederatedConfigMap: {},
-  FederatedSecret: {},
-  FederatedJob: {},
-  FederatedCronJob: {},
-  FederatedIngress: {},
-  FederatedService: {},
-  FederatedNamespace: {},
+  FederatedPod: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_23',
+    label: 'COMMON:MSG_LNB_MENU_116',
+  },
+  FederatedDeployment: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_24',
+    label: 'COMMON:MSG_LNB_MENU_117',
+  },
+  FederatedReplicaSet: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_31',
+    label: 'COMMON:MSG_LNB_MENU_124',
+  },
+  FederatedHorizontalPodAutoscaler: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_32',
+    label: 'COMMON:MSG_LNB_MENU_125',
+  },
+  FederatedDaemonSet: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_30',
+    label: 'COMMON:MSG_LNB_MENU_123',
+  },
+  FederatedStatefulSet: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_25',
+    label: 'COMMON:MSG_LNB_MENU_118',
+  },
+  FederatedConfigMap: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_27',
+    label: 'COMMON:MSG_LNB_MENU_120',
+  },
+  FederatedSecret: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_26',
+    label: 'COMMON:MSG_LNB_MENU_119',
+  },
+  FederatedJob: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_29',
+    label: 'COMMON:MSG_LNB_MENU_122',
+  },
+  FederatedCronJob: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_28',
+    label: 'COMMON:MSG_LNB_MENU_121',
+  },
+  FederatedIngress: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_48',
+    label: 'COMMON:MSG_LNB_MENU_138',
+  },
+  FederatedService: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_47',
+    label: 'COMMON:MSG_LNB_MENU_137',
+  },
+  FederatedNamespace: {
+    labelPlural: 'COMMON:MSG_LNB_MENU_3',
+    label: 'COMMON:MSG_LNB_MENU_106',
+  },
   //
   ServiceBroker: {
     labelPlural: 'COMMON:MSG_LNB_MENU_11',

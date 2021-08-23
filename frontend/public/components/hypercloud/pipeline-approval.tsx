@@ -5,7 +5,7 @@ import { sortable } from '@patternfly/react-table';
 import { Status } from '@console/shared';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, viewYamlComponent } from '../utils';
 import { ApprovalModel } from '../../models';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
@@ -156,7 +156,7 @@ export const PipelineApprovalsPage: React.FC<PipelineApprovalsPageProps> = props
   return <ListPage title={t('COMMON:MSG_LNB_MENU_61')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_61') })} canCreate={false} ListComponent={PipelineApprovals} kind={kind} {...props} rowFilters={filters.bind(null, t)()} />;
 };
 
-export const PipelineApprovalsDetailsPage: React.FC<PipelineApprovalsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineApprovalDetails)), editYaml()]} />;
+export const PipelineApprovalsDetailsPage: React.FC<PipelineApprovalsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(PipelineApprovalDetails)), editYaml(viewYamlComponent)]} />;
 
 type PipelineApprovalDetailsListProps = {
   ds: K8sResourceKind;
