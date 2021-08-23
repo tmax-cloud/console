@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
-import { matchPath, match as RMatch, Link, Redirect } from 'react-router-dom';
-import { Tooltip, Popover, Button } from '@patternfly/react-core';
-import { ListIcon, TopologyIcon, QuestionCircleIcon } from '@patternfly/react-icons';
+import { matchPath, match as RMatch, Redirect } from 'react-router-dom';
+import { Popover, Button } from '@patternfly/react-core';
+import { QuestionCircleIcon } from '@patternfly/react-icons';
 import { StatusBox, Firehose, HintBlock, AsyncComponent, removeQueryArgument } from '@console/internal/components/utils';
 
 import EmptyState from '../EmptyState';
@@ -93,11 +93,11 @@ export const TopologyPage: React.FC<TopologyPageProps> = ({ match }) => {
                 </Button>
               </Popover>
             )}
-            <Tooltip position="left" content={showListView ? 'Topology View' : 'List View'}>
+            {/* <Tooltip position="left" content={showListView ? 'Topology View' : 'List View'}>
               <Link className="pf-c-button pf-m-plain" to={`/topology/${namespace ? `ns/${namespace}` : 'all-namespaces'}${showListView ? '/graph' : '/list'}`}>
                 {showListView ? <TopologyIcon size="md" /> : <ListIcon size="md" />}
               </Link>
-            </Tooltip>
+            </Tooltip> */}
           </>
         }
       >
