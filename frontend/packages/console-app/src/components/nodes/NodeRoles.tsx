@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DASH, getNodeRoles } from '@console/shared';
+import { getNodeRoles } from '@console/shared';
 import { NodeKind } from '@console/internal/module/k8s';
 
 type NodeRolesProps = {
@@ -10,7 +10,7 @@ const NodeRoles: React.FC<NodeRolesProps> = ({ node }) => (
   <>
     {getNodeRoles(node)
       .sort()
-      .join(', ') || DASH}
+      .join(', ') || 'worker'}
   </>
 );
 

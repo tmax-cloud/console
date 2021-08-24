@@ -167,7 +167,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   });
   // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
   React.useEffect(() => {
-    if (!isFirstTimeEdit) {
+    if (!isFirstTimeEdit && imageRegistry) {
       const ko = modelFor('Repository');
       let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
       k8sList(ko, query)
@@ -184,7 +184,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
 
   // Image 선택되면 ImageTag Dropdown 메뉴 채워주기
   React.useEffect(() => {
-    if (!isFirstTimeEdit) {
+    if (!isFirstTimeEdit && image) {
       const ko = modelFor('Repository');
       let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
       k8sList(ko, query)

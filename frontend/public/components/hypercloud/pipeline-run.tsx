@@ -5,7 +5,7 @@ import { sortable } from '@patternfly/react-table';
 
 import { referenceForModel } from '@console/internal/module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
-import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { Kebab, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, viewYamlComponent } from '../utils';
 import { PipelineRunModel, PipelineModel, PipelineResourceModel } from '../../models';
 import { pipelineRunDuration } from '../../../packages/dev-console/src/utils/pipeline-utils';
 import { PipelineRun, pipelineRefExists, PipelineRunReferenceResource } from '../../../packages/dev-console/src/utils/pipeline-augment';
@@ -229,7 +229,7 @@ export const PipelineRunsPage: React.FC<PipelineRunsPageProps> = props => {
 
 export const PipelineRunsDetailsPage: React.FC<PipelineRunsDetailsPageProps> = props => {
   const { t } = useTranslation();
-  return <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions(true)} pages={[details(detailsPage(PipelineRunDetails)), editYaml(), {
+  return <DetailsPage {...props} kind={kind} menuActions={getPipelineRunKebabActions(true)} pages={[details(detailsPage(PipelineRunDetails)), editYaml(viewYamlComponent), {
     href: 'logs',
     path: 'logs/:name?',
     name: t('COMMON:MSG_DETAILS_TAB_6'),

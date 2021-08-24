@@ -3,7 +3,8 @@ import * as classNames from 'classnames';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import { sortable } from '@patternfly/react-table';
-import { getName, getUID, getNodeRole, getNodeAddresses } from '@console/shared';
+import { getName, getUID, getNodeAddresses } from '@console/shared';
+import { getNodeRole } from '@console/shared/src/selectors/node';
 import { NodeModel } from '@console/internal/models';
 import { NodeKind, referenceForModel } from '@console/internal/module/k8s';
 import { Table, TableRow, TableData, ListPage, RowFunctionArgs } from '@console/internal/components/factory';
@@ -35,7 +36,7 @@ const NodeTableHeader = t => {
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'Role',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_96'),
       sortFunc: 'nodeRoles',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
@@ -59,7 +60,7 @@ const NodeTableHeader = t => {
       props: { className: tableColumnClasses[5] },
     },
     {
-      title: 'Filesystem',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_106'),
       sortFunc: 'nodeFS',
       transforms: [sortable],
       props: { className: tableColumnClasses[6] },

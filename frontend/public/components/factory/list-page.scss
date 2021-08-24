@@ -3,6 +3,8 @@
   button {
     cursor: no-drop;
     pointer-events: none;
+    color: var(--pf-global--disabled-color--100);
+    background-color: var(--pf-global--disabled-color--200);
   }
   a {
     pointer-events: none;
