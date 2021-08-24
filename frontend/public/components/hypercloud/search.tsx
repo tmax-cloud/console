@@ -27,7 +27,7 @@ const ResourceList = connectToModel(({ kindObj, mock, namespace, selector, nameF
   const componentLoader = resourceListPages.get(referenceForModel(kindObj), () => Promise.resolve(DefaultPage));
   const ns = kindObj.namespaced ? namespace : undefined;
 
-  return <AsyncComponent loader={componentLoader} namespace={ns} selector={selector} nameFilter={nameFilter} kind={kindObj.crd ? referenceForModel(kindObj) : kindObj.kind} showTitle={false} hideTextFilter autoFocus={false} mock={mock} badge={getBadgeFromType(kindObj.badge)} hideToolbar />;
+  return <AsyncComponent loader={componentLoader} namespace={ns} selector={selector} nameFilter={nameFilter} kind={kindObj.crd ? referenceForModel(kindObj) : kindObj.kind} showTitle={false} autoFocus={false} mock={mock} badge={getBadgeFromType(kindObj.badge)} hideToolbar />;
 });
 
 interface StateProps {
