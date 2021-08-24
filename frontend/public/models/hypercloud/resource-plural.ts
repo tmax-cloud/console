@@ -229,6 +229,14 @@ export const ResourceStringKeyMap = {
     labelPlural: 'COMMON:MSG_LNB_MENU_52',
     label: 'COMMON:MSG_LNB_MENU_141',
   },
+  TFJob: {
+    labelPlural: 'COMMON:MSG_MAIN_BUTTON_4',
+    label: 'COMMON:MSG_MAIN_BUTTON_4',
+  },
+  PyTorchJob: {
+    labelPlural: 'COMMON:MSG_MAIN_BUTTON_5',
+    label: 'COMMON:MSG_MAIN_BUTTON_5',
+  },
   TrainingJob: {
     labelPlural: 'COMMON:MSG_LNB_MENU_68',
     label: 'COMMON:MSG_LNB_MENU_152',
