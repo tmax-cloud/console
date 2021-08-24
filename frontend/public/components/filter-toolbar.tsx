@@ -221,10 +221,13 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(externalNameFilter) && applyFilter(externalNameFilter, FilterType.EXTERNAL_NAME);
 
-    if (!_.isEmpty(defaultSelectedRows)) {
-      applyRowFilter(defaultSelectedRows);
-      setQueryParameters(defaultSelectedRows);
+    if (!hideToolbar) {
+      if (!_.isEmpty(defaultSelectedRows)) {
+        applyRowFilter(defaultSelectedRows);
+        setQueryParameters(defaultSelectedRows);
+      }
     }
+
     if (location.search.indexOf('rowFilter-pod-status') >= 0) {
       defaultRowFilterSetting(location.search.split('rowFilter-pod-status=')[1].split('%2C'));
     }

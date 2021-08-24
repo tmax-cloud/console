@@ -357,12 +357,15 @@ export const onSubmitCallback = data => {
   if (data.spec.resources.inputs.length === 0 && data.spec.resources.outputs.length === 0) {
     delete data.spec.resources;
   }
+
   //parameter
   data.spec.params = data?.spec?.params?.map((cur, idx) => {
-    if (cur.type === 'string') {
-      data.spec.params[idx].default = data.spec.params[idx].defaultStr;
-    } else {
-      data.spec.params[idx].default = cur.defaultArr.map(cur => cur.value);
+    const stringDefault = cur?.defaultStr;
+    const arrayDefault = cur.defaultArr?.map(cur => cur.value)?.filter(cur => !!cur);
+    if (cur.type === 'string' && !!stringDefault) {
+      data.spec.params[idx].default = stringDefault;
+    } else if (arrayDefault?.length > 0) {
+      data.spec.params[idx].default = arrayDefault;
     }
     delete data.spec.params[idx].defaultStr;
     delete data.spec.params[idx].defaultArr;

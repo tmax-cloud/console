@@ -88,44 +88,53 @@ const fetchNamespaceMetrics = () => {
   return Promise.all(promises).then(data => _.assign({}, ...data));
 };
 
-const namespacesColumnClasses = [
-  '', // name
-  '', // status
-  classNames('pf-m-hidden', 'pf-m-visible-on-lg pf-u-w-16-on-lg'), // created
-  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // labels
-  Kebab.columnClass,
-];
-
-const NamespacesTableHeader = t => {
-  return [
+const namespacesTableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: namespacesColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
       sortField: 'status.phase',
-      transforms: [sortable],
-      props: { className: namespacesColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: namespacesColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: namespacesColumnClasses[3] },
     },
-    { title: '', props: { className: namespacesColumnClasses[4] } },
-  ];
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
+  ],
+  row: obj => {
+    const kind = NamespaceModel.kind;
+    return [
+      {
+        children: <ResourceLink kind={kind} name={obj.metadata.name} title={obj.metadata.uid} />,
+      },
+      {
+        classNames: 'co-break-word',
+        children: <Status status={obj.status.phase} />,
+      },
+      {
+        children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+      },
+      {
+        children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+      },
+      {
+        className: Kebab.columnClass,
+        children: <ResourceKebab actions={nsMenuActions} kind={kind} resource={obj} />,
+      },
+    ];
+  },
 };
-NamespacesTableHeader.displayName = 'NamespacesTableHeader';
 
 /** IMS 266483 - 포탈에서 trial로 신청할 경우에만 구독기간 생성됨. 포탈 미연동의 이유로 임시 제거
 const SubscriptionPeriod = ({ timestamp, labels, className }) => {
@@ -170,33 +179,6 @@ const SubscriptionPeriod = ({ timestamp, labels, className }) => {
 };
 */
 
-const NamespacesTableRow = ({ obj: ns, index, key, style }) => {
-  return (
-    <TableRow id={ns.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={namespacesColumnClasses[0]}>
-        <ResourceLink kind="Namespace" name={ns.metadata.name} title={ns.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(namespacesColumnClasses[1], 'co-break-word')}>
-        <Status status={ns.status.phase} />
-      </TableData>
-      <TableData className={namespacesColumnClasses[2]}>
-        <Timestamp timestamp={ns.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={namespacesColumnClasses[3]}>
-        <LabelList kind="Namespace" labels={ns.metadata.labels} />
-      </TableData>
-      <TableData className={namespacesColumnClasses[4]}>
-        <ResourceKebab actions={nsMenuActions} kind="Namespace" resource={ns} />
-      </TableData>
-    </TableRow>
-  );
-};
-
-export const NamespacesList = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Namespaces" Header={NamespacesTableHeader.bind(null, t)} Row={NamespacesTableRow} virtualize />;
-};
-
 export const NamespacesPage = props => {
   const { t } = useTranslation();
   // const createProps = {
@@ -208,22 +190,21 @@ export const NamespacesPage = props => {
   const pages = [
     {
       href: 'namespaces',
-      name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1'),
+      name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
     },
     {
       href: 'namespaceclaims',
-      name: t('SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1'),
+      name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
     },
   ];
   return (
     <ListPage
       {...props}
-      title={t('COMMON:MSG_LNB_MENU_3')}
-      ListComponent={NamespacesList}
+      tableProps={namespacesTableProps}
       canCreate={true}
       multiNavPages={pages}
-    // createProps={createProps}
-    // createHandler={() => createNamespaceModal({ blocking: true })}
+      // createProps={createProps}
+      // createHandler={() => createNamespaceModal({ blocking: true })}
     />
   );
 };
@@ -269,19 +250,19 @@ const projectTableHeader = ({ showMetrics, showActions }) => {
     },
     ...(showMetrics
       ? [
-        {
-          title: 'Memory',
-          sortFunc: 'namespaceMemory',
-          transforms: [sortable],
-          props: { className: projectColumnClasses[4] },
-        },
-        {
-          title: 'CPU',
-          sortFunc: 'namespaceCPU',
-          transforms: [sortable],
-          props: { className: projectColumnClasses[5] },
-        },
-      ]
+          {
+            title: 'Memory',
+            sortFunc: 'namespaceMemory',
+            transforms: [sortable],
+            props: { className: projectColumnClasses[4] },
+          },
+          {
+            title: 'CPU',
+            sortFunc: 'namespaceCPU',
+            transforms: [sortable],
+            props: { className: projectColumnClasses[5] },
+          },
+        ]
       : []),
     {
       title: 'Created',
@@ -604,11 +585,11 @@ class NamespaceBarDropdowns_ extends React.Component {
     }
     const defaultActionItem = canCreateProject
       ? [
-        {
-          actionTitle: `Create ${model.label}`,
-          actionKey: CREATE_NEW_RESOURCE,
-        },
-      ]
+          {
+            actionTitle: `Create ${model.label}`,
+            actionKey: CREATE_NEW_RESOURCE,
+          },
+        ]
       : [];
 
     const onChange = newNamespace => {
