@@ -23,8 +23,9 @@ import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { withTranslation } from 'react-i18next';
 import { getIdToken } from '../hypercloud/auth';
 
-import { pluralToKind, isVanillaObject } from './hypercloud/form';
-import { kindToSchemaPath } from '@console/internal/module/hypercloud/k8s/kind-to-schema-path';
+import { pluralToKind, isResourceSchemaBasedMenu, resourceSchemaBasedMenuMap } from './hypercloud/form';
+
+import { ClusterTemplateModel, TemplateModel } from '@console/internal/models';
 
 const generateObjToLoad = (kind, id, yaml, namespace = 'default') => {
   const sampleObj = safeLoad(yaml ? yaml : yamlTemplates.getIn([kind, id]));
@@ -39,6 +40,9 @@ const stateToProps = ({ k8s, UI }) => ({
   impersonate: UI.get('impersonate'),
   models: k8s.getIn(['RESOURCES', 'models']),
 });
+
+// MEMO : GS인증에서 '사이드바 보기' 제거해야 되는 kind들 있어서 해당 구문 추가함. 
+const kindsRemoveSidebarLink = [TemplateModel.kind, ClusterTemplateModel.kind];
 
 /**
  * This component loads the entire Monaco editor library with it.
@@ -88,14 +92,14 @@ export const EditYAML_ = connect(stateToProps)(
       const model = this.getModel(this.props.obj);
       if (model) {
         const kind = model.kind;
-        const isCustomResourceType = !isVanillaObject(kind);
+        const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
         let url;
         if (isCustomResourceType) {
           url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
           url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
         } else {
-          const directory = kindToSchemaPath.get(model.kind)?.['directory'];
-          const file = kindToSchemaPath.get(model.kind)?.['file'];
+          const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
+          const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
           url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
         }
         const xhrTest = new XMLHttpRequest();
@@ -418,10 +422,10 @@ export const EditYAML_ = connect(stateToProps)(
       const options = { readOnly, scrollBeyondLastLine: false };
       const model = this.getModel(obj);
       const { samples, snippets } = model ? getResourceSidebarSamples(model, yamlSamplesList) : { samples: [], snippets: [] };
-      const showSchema = definition && !_.isEmpty(definition);
+      const showSchema = definition && !_.isEmpty(definition) && !kindsRemoveSidebarLink.includes(obj.kind);
       const hasSidebarContent = showSchema || !_.isEmpty(samples) || !_.isEmpty(snippets);
       const sidebarLink =
-        !showSidebar && hasSidebarContent ? (
+        !showSidebar && hasSidebarContent && !kindsRemoveSidebarLink.includes(obj.kind) ? (
           <Button type="button" variant="link" isInline onClick={this.toggleSidebar}>
             <InfoCircleIcon className="co-icon-space-r co-p-has-sidebar__sidebar-link-icon" />
             {t('COMMON:MSG_COMMON_BUTTON_ETC_11')}
