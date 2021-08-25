@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { K8sResourceKind } from '../module/k8s';
@@ -10,6 +9,7 @@ import { VolumesTable } from './volumes-table';
 import { DaemonSetModel } from '../models';
 import { PodRingController, PodRing } from '@console/shared';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { PodStatus } from './hypercloud/utils/pod-status';
 
 export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(DaemonSetModel), EditHealthChecks, ...Kebab.factory.common];
 
@@ -52,11 +52,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children: (
-        <Link to={`/k8s/ns/${obj.metadata.namespace}/daemonsets/${obj.metadata.name}/pods`} title="pods">
-          {obj.status.currentNumberScheduled} of {obj.status.desiredNumberScheduled} pods
-        </Link>
-      ),
+      children: <PodStatus resource={obj} kind={kind} desired={obj.status.desiredNumberScheduled} ready={obj.status.currentNumberScheduled} />,
     },
     {
       children: <LabelList kind={kind} labels={obj.metadata.labels} />,
