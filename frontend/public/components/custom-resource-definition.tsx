@@ -7,7 +7,7 @@ import { BanIcon } from '@patternfly/react-icons';
 
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
 import { AsyncComponent, DetailsItem, EmptyBox, Kebab, KebabAction, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from './utils';
-import { apiVersionCompare, CRDVersion, CustomResourceDefinitionKind, getLatestVersionForCRD, K8sKind, referenceForCRD, referenceForCRD_, modelFor } from '../module/k8s';
+import { apiVersionCompare, CRDVersion, referenceForModel, CustomResourceDefinitionKind, getLatestVersionForCRD, K8sKind, referenceForCRD, referenceForCRD_, modelFor } from '../module/k8s';
 import { CustomResourceDefinitionModel } from '../models';
 import { Conditions } from './conditions';
 import { resourceListPages } from './resource-pages';
@@ -205,7 +205,6 @@ const Details: React.FC<{ obj: CustomResourceDefinitionKind }> = ({ obj: crd }) 
 
 const Instances: React.FC<InstancesProps> = ({ obj, namespace }) => {
   let crdKind;
-  const componentLoader = resourceListPages.get(crdKind, () => Promise.resolve(DefaultPage));
 
   const kind = modelFor(obj.spec.names.kind);
   if (kind === undefined) {
@@ -217,6 +216,8 @@ const Instances: React.FC<InstancesProps> = ({ obj, namespace }) => {
       crdKind = obj.spec.names.kind;
     }
   }
+
+  const componentLoader = resourceListPages.get(referenceForModel(kind || crdKind), () => Promise.resolve(DefaultPage));
 
   return <AsyncComponent loader={componentLoader} namespace={namespace ? namespace : undefined} kind={crdKind} showTitle={false} autoFocus={false} />;
 };
