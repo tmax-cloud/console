@@ -21,7 +21,7 @@ const ShortcutsLink: React.FC<ShortcutsLinkProps> = ({ onHideShortcuts }) => {
           <Shortcut ctrlCmd shift keyName="o">
             View document outline
           </Shortcut>
-          <Shortcut hover>View property descriptions</Shortcut>
+          {/* <Shortcut hover>View property descriptions</Shortcut> */}
           <Shortcut ctrlCmd keyName="s">
             Save
           </Shortcut>
