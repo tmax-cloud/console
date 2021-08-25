@@ -17,14 +17,14 @@ const ShortcutsLink: React.FC<ShortcutsLinkProps> = ({ onHideShortcuts }) => {
         <ShortcutTable>
           <Shortcut ctrl keyName="space">
             Activate auto complete
-        </Shortcut>
+          </Shortcut>
           <Shortcut ctrlCmd shift keyName="o">
             View document outline
-        </Shortcut>
+          </Shortcut>
           <Shortcut hover>View property descriptions</Shortcut>
           <Shortcut ctrlCmd keyName="s">
             Save
-        </Shortcut>
+          </Shortcut>
         </ShortcutTable>
       }
       maxWidth="25rem"
@@ -37,6 +37,6 @@ const ShortcutsLink: React.FC<ShortcutsLinkProps> = ({ onHideShortcuts }) => {
       </Button>
     </Popover>
   );
-}
+};
 
 export default ShortcutsLink;
