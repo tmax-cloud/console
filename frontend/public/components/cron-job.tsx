@@ -3,10 +3,11 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DetailsPage, ListPage } from './factory';
 import { CronJobKind } from '../module/k8s';
-import { ContainerTable, DetailsItem, Kebab, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, pluralize, TableProps } from './utils';
+import { ContainerTable, DetailsItem, Kebab, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, pluralize } from './utils';
 import { ResourceEventStream } from './events';
 import { CronJobModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { TableProps } from './hypercloud/utils/default-list-component';
 
 const { common } = Kebab.factory;
 const menuActions = [...Kebab.getExtensionsActionsForKind(CronJobModel), ...common];

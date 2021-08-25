@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { K8sResourceKind } from '../module/k8s';
 import { DetailsPage, ListPage } from './factory';
-import { AsyncComponent, DetailsItem, Kebab, KebabAction, ContainerTable, detailsPage, LabelList, navFactory, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, LoadingInline, TableProps } from './utils';
+import { AsyncComponent, DetailsItem, Kebab, KebabAction, ContainerTable, detailsPage, LabelList, navFactory, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, LoadingInline } from './utils';
 import { ResourceEventStream } from './events';
 import { VolumesTable } from './volumes-table';
 import { DaemonSetModel } from '../models';
 import { PodRingController, PodRing } from '@console/shared';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 import { PodStatus } from './hypercloud/utils/pod-status';
+import { TableProps } from './hypercloud/utils/default-list-component';
 
 export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(DaemonSetModel), EditHealthChecks, ...Kebab.factory.common];
 
