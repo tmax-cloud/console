@@ -81,7 +81,7 @@ interface NewTabLinkProps extends BasicMenuInfo {
 export type MenuInfo = BasicMenuInfo & (ResourceNSLinkProps | ResourceClusterLinkProps | HrefLinkProps | NewTabLinkProps);
 type CustomMenuInfo = BasicCustomMenuInfo & (ResourceNSLinkProps | ResourceClusterLinkProps | HrefLinkProps | NewTabLinkProps);
 
-interface CustomMenusMap {
+interface CustomMenus {
   [key: string]: CustomMenuInfo;
 }
 
@@ -106,7 +106,7 @@ export const MenuContainerLabels = {
 };
 
 // MEMO : CustomMenusMap에 들어갈 커스텀메뉴의 이름은 K8sKind의 kind이름과 중복되면 안됨. (예: Event의 경우 EventModel이 존재함. 이렇게 이름이 겹치면 안됨 => Events로 CustomMenu이름 지정)
-export const CustomMenusMap: CustomMenusMap = {
+export const CustomMenusMap: CustomMenus = {
   Dashboard: {
     kind: 'Dashboard',
     visible: true,

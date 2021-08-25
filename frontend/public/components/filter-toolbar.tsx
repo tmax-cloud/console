@@ -221,10 +221,13 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
     !_.isEmpty(nameFilter) && applyFilter(nameFilter, FilterType.NAME);
     !_.isEmpty(externalNameFilter) && applyFilter(externalNameFilter, FilterType.EXTERNAL_NAME);
 
-    if (!_.isEmpty(defaultSelectedRows)) {
-      applyRowFilter(defaultSelectedRows);
-      setQueryParameters(defaultSelectedRows);
+    if (!hideToolbar) {
+      if (!_.isEmpty(defaultSelectedRows)) {
+        applyRowFilter(defaultSelectedRows);
+        setQueryParameters(defaultSelectedRows);
+      }
     }
+
     if (location.search.indexOf('rowFilter-pod-status') >= 0) {
       defaultRowFilterSetting(location.search.split('rowFilter-pod-status=')[1].split('%2C'));
     }
@@ -309,7 +312,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
           <DataToolbarItem className="co-filter-search--full-width">
             <DataToolbarFilter deleteChipGroup={() => updateLabelFilter([])} chips={!hideLabelFilter ? [...labelFilters] : []} deleteChip={(filter, chip: string) => updateLabelFilter(_.difference(labelFilters, [chip]))} categoryName={t('COMMON:MSG_COMMON_SEARCH_FILTER_2')}>
               <DataToolbarFilter chips={nameFilter?.length ? [nameFilter] : []} deleteChip={() => updateNameFilter('')} categoryName={t('COMMON:MSG_COMMON_SEARCH_FILTER_1')}>
-                <DataToolbarFilter chips={externalNameFilter?.length ? [externalNameFilter] : []} deleteChip={() => updateExternalNameFilter('')} categoryName={t('외부 이름')}>
+                <DataToolbarFilter chips={externalNameFilter?.length ? [externalNameFilter] : []} deleteChip={() => updateExternalNameFilter('')} categoryName={t('COMMON:MSG_COMMON_SEARCH_FILTER_5')}>
                   <div className="pf-c-input-group">
                     {!hideLabelFilter && <DropdownInternal items={searchFilterTitle} onChange={switchFilter} selectedKey={filterType} title={searchFilterTitle[filterType]} />}
                     <AutocompleteInput
