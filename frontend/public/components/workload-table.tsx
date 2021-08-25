@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { K8sResourceKind } from '../module/k8s';
+import { TableProps } from './hypercloud/utils/default-list-component';
 import { PodStatus } from './hypercloud/utils/pod-status';
-import { Kebab, KebabAction, LabelList, ResourceKebab, ResourceLink, Selector, TableProps } from './utils';
+import { Kebab, KebabAction, LabelList, ResourceKebab, ResourceLink, Selector } from './utils';
 
 export const WorkloadTableProps = (customData: WorkloadTableCustomData): TableProps => {
   return {

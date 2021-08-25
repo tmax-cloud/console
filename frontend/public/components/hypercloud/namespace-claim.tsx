@@ -5,9 +5,10 @@ import { Status } from '@console/shared';
 import { K8sResourceKind, modelFor } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
 import { Popover } from '@patternfly/react-core';
-import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab, TableProps } from '../utils';
+import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { NamespaceClaimModel } from '../../models';
+import { TableProps } from './utils/default-list-component';
 
 const { common } = Kebab.factory;
 

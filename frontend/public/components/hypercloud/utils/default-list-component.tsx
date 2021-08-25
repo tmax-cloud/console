@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Table, TableRow, TableData, RowFunctionArgs } from '../factory';
+import { Table, TableRow, TableData, RowFunctionArgs } from '../../factory';
 import { sortable } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
 
@@ -80,6 +80,6 @@ export type TableProps = {
   row: Rows;
 };
 
-export type DefaultListComponentProps = {
+type DefaultListComponentProps = {
   tableProps: TableProps;
 };
