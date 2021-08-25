@@ -160,4 +160,11 @@ const SingleNavMenus = [
   },
 ];
 
-export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus };
+const CustomNavMenus = [
+  {
+    kind: 'Add',
+    menuType: MenuType.REGISTERED_MENU,
+  },
+];
+
+export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus, CustomNavMenus };
