@@ -17,7 +17,6 @@ import { StartedByLabel } from '../components/pipelines/const';
 import { EventListenerModel, PipelineModel, PipelineRunModel } from '../models';
 import { Pipeline, PipelineRun } from './pipeline-augment';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
-import { ResourceStringKeyMap } from '../../../../public/models/hypercloud/resource-plural';
 
 export const handlePipelineRunSubmit = (pipelineRun: PipelineRun) => {
   history.push(
@@ -59,7 +58,7 @@ export const reRunPipelineRun: KebabAction = (kind: K8sKind, pipelineRun: Pipeli
 });
 
 export const editPipeline: KebabAction = (kind: K8sKind, pipeline: Pipeline) => ({
-  label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
+  label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${kind.i18nInfo?.label ?? kind.label}`,
   callback: () => {
     const {
       metadata: { name, namespace },

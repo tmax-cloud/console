@@ -3,7 +3,6 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
-import { Link } from 'react-router-dom';
 import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from './factory';
@@ -12,6 +11,7 @@ import { ResourceEventStream } from './events';
 import { VolumesTable } from './volumes-table';
 import { ReplicaSetModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { PodStatus } from './hypercloud/utils/pod-status';
 
 const { ModifyCount, AddStorage, common } = Kebab.factory;
 
@@ -100,11 +100,7 @@ const tableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children: (
-        <Link to={`${resourcePath(kind, obj.metadata.name, obj.metadata.namespace)}/pods`} title="pods">
-          {obj.status.replicas || 0} of {obj.spec.replicas} pods
-        </Link>
-      ),
+      children: <PodStatus resource={obj} kind={kind} desired={obj.spec.replicas} ready={obj.status.replicas} />,
     },
     {
       children: <LabelList kind={kind} labels={obj.metadata.labels} />,
