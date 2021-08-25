@@ -6,9 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { HorizontalPodAutoscalerModel } from '../models';
 import { Conditions } from './conditions';
 import { DetailsPage, ListPage } from './factory';
-import { DetailsItem, Kebab, LabelList, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, TableProps } from './utils';
+import { DetailsItem, Kebab, LabelList, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory } from './utils';
 import { ResourceEventStream } from './events';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { TableProps } from './hypercloud/utils/default-list-component';
 
 const { common } = Kebab.factory;
 const menuActions = [...Kebab.getExtensionsActionsForKind(HorizontalPodAutoscalerModel), ...common];
