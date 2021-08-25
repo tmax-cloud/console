@@ -28,7 +28,7 @@ const tableProps: TableProps = {
       sortField: 'spec.hosts',
     },
     {
-      title: 'Gateway',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_124',
       sortField: 'spec.gateways',
     },
     {

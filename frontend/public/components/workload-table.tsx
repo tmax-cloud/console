@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { K8sResourceKind } from '../module/k8s';
-import { Kebab, KebabAction, LabelList, ResourceKebab, ResourceLink, resourcePath, Selector, TableProps } from './utils';
+import { PodStatus } from './hypercloud/utils/pod-status';
+import { Kebab, KebabAction, LabelList, ResourceKebab, ResourceLink, Selector, TableProps } from './utils';
 
 export const WorkloadTableProps = (customData: WorkloadTableCustomData): TableProps => {
   return {
@@ -43,11 +43,7 @@ export const WorkloadTableProps = (customData: WorkloadTableCustomData): TablePr
           children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
         },
         {
-          children: (
-            <Link to={`${resourcePath(kind, obj.metadata.name, obj.metadata.namespace)}/pods`} title="pods">
-              {obj.status.replicas || 0} of {obj.spec.replicas} pods
-            </Link>
-          ),
+          children: <PodStatus resource={obj} kind={kind} desired={obj.spec.replicas} ready={obj.status.replicas} />,
         },
         {
           children: <LabelList kind={kind} labels={obj.metadata.labels} />,
