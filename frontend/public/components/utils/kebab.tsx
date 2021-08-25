@@ -15,7 +15,6 @@ import { connectToModel } from '../../kinds';
 import * as plugins from '../../plugins';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 import * as hoistStatics from 'hoist-non-react-statics';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 import { TFApplyClaimModel } from '../../models';
@@ -210,7 +209,7 @@ export const KebabItems: React.FC<KebabItemsProps> = ({ options, ...props }) => 
 
 const kebabFactory: KebabFactory = {
   Delete: (kind, obj) => ({
-    label: `COMMON:MSG_MAIN_ACTIONBUTTON_16**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
+    label: `COMMON:MSG_MAIN_ACTIONBUTTON_16**${kind.i18nInfo?.label ?? kind.label}`,
     callback: () =>
       deleteModal({
         kind,
@@ -219,13 +218,13 @@ const kebabFactory: KebabFactory = {
     accessReview: asAccessReview(kind, obj, 'delete'),
   }),
   Edit: (kind, obj) => ({
-    label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
+    label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${kind.i18nInfo?.label ?? kind.label}`,
     href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/edit`,
     // TODO: Fallback to "View YAML"? We might want a similar fallback for annotations, labels, etc.
     accessReview: asAccessReview(kind, obj, 'update'),
   }),
   EditSecret: (kind, obj) => ({
-    label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${ResourceStringKeyMap[kind.kind]?.label ?? kind.label}`,
+    label: `COMMON:MSG_MAIN_ACTIONBUTTON_15**${kind.i18nInfo?.label ?? kind.label}`,
     href: `${resourceObjPath(obj, kind.kind)}/edit`,
     accessReview: asAccessReview(kind, obj, 'update'),
   }),

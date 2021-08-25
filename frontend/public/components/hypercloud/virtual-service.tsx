@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
-import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, TableProps } from '../utils';
+import { Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { Status } from '@console/shared';
 import { VirtualServiceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { TableProps } from './utils/default-list-component';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(VirtualServiceModel), ...Kebab.factory.common];
 
@@ -28,7 +29,7 @@ const tableProps: TableProps = {
       sortField: 'spec.hosts',
     },
     {
-      title: 'Gateway',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_124',
       sortField: 'spec.gateways',
     },
     {
