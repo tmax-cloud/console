@@ -4,12 +4,13 @@ import * as classNames from 'classnames';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { awxStatusReducer } from '../factory/table-filters';
-import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, TableProps } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { Status } from '@console/shared';
 import { AWXModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { TableProps } from './utils/default-list-component';
 
 const kind = AWXModel.kind;
 
