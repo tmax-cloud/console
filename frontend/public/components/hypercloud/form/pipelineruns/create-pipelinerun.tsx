@@ -164,7 +164,6 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
           ]}
           type="single"
           useHookForm
-          required
         />
       </Section>
     </>
