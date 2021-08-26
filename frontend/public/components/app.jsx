@@ -246,9 +246,10 @@ keycloak.onAuthSuccess = function() {
   })
     .then(policies => {
       const policy = policies?.[0];
-      window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective;
+      window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
     })
     .catch(err => {
+      window.SERVER_FLAGS.showCustomPerspective = false;
       console.log(`No cmp resource.`);
     });
 };
