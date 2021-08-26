@@ -8,13 +8,14 @@ export enum PerspectiveType {
   MULTI = 'MULTI',
   SINGLE = 'SINGLE',
   DEVELOPER = 'DEVELOPER',
+  CUSTOM = 'CUSTOM',
 }
 
 /* 임시 */
 // TODO:  싱글 클러스터 증가시 동적 생성하는 방법 확인
 //        getK8sLandingPageURL, getImportRedirectURL 하는 상황 파악 및 수정
 export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction) => {
-  return window.SERVER_FLAGS.McMode
+  const perspectives: Perspective[] = window.SERVER_FLAGS.McMode
     ? [
         {
           type: 'Perspective',
@@ -87,4 +88,20 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           },
         },
       ];
+
+  if (window.SERVER_FLAGS.showCustomPerspective === undefined || window.SERVER_FLAGS.showCustomPerspective === true) {
+    perspectives.push({
+      type: 'Perspective',
+      properties: {
+        id: PerspectiveType.CUSTOM,
+        name: 'Custom', // 임시. 스트링 나오면 재적용 필요
+        icon: <CogsIcon />,
+        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/custom/add' : '/welcome'),
+        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/custom/add' : '/welcome'),
+        getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+      },
+    });
+  }
+
+  return perspectives;
 };

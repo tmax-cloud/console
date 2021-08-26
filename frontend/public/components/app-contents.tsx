@@ -29,7 +29,7 @@ const RedirectComponent = props => {
 };
 
 const RedirectClusterComponent = props => {
-  const to = props.location.pathname.replace(/^(\/master|\/developer|\/single)/, '');
+  const to = props.location.pathname.replace(/^(\/master|\/developer|\/single|\/custom)/, '');
   return <Redirect to={to} />;
 };
 
@@ -122,7 +122,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
         <Switch>
           {getPluginPageRoutes(activePerspective)}
           <Route path={['/all-namespaces', '/ns/:ns']} component={RedirectComponent} />
-          <Route path={['/single', '/master', '/developer']} component={RedirectClusterComponent} />
+          <Route path={['/single', '/master', '/developer', '/custom']} component={RedirectClusterComponent} />
           <LazyRoute path="/dashboards" loader={() => import('./dashboard/dashboards-page/dashboards' /* webpackChunkName: "dashboards" */).then(m => m.DashboardsPage)} />
           {/* Redirect legacy routes to avoid breaking links */}
           <Redirect from="/cluster-status" to="/dashboards" />
