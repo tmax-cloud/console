@@ -29,9 +29,9 @@ import { Page } from '@patternfly/react-core';
 // import Keycloak from 'keycloak-js';
 import keycloak from '../hypercloud/keycloak';
 import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
-import { k8sGet } from '@console/internal/module/k8s';
+import { k8sList } from '@console/internal/module/k8s';
 import { ClusterMenuPolicyModel } from '@console/internal/models';
-import { CMP_NAME } from '@console/internal/hypercloud/menu/menu-types';
+import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
@@ -239,13 +239,17 @@ keycloak.onAuthSuccess = function() {
       .catch(e => console.warn('Error unregistering service workers', e));
   }
 
-  k8sGet(ClusterMenuPolicyModel, CMP_NAME)
-    .then(res => {
-      window.SERVER_FLAGS.showCustomPerspective = res.showCustomPerspective;
+  k8sList(ClusterMenuPolicyModel, {
+    labelSelector: {
+      [CMP_PRIMARY_KEY]: 'true',
+    },
+  })
+    .then(policies => {
+      const policy = policies?.[0];
+      window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective;
     })
     .catch(err => {
-      // MEMO : CMP CR이 없을 땐 기본메뉴들로 구성하도록 설정함. getNavItems에서 tabs 없을 시 기본메뉴 return함.
-      console.log(`No ${CMP_NAME} cmp resource.`);
+      console.log(`No cmp resource.`);
     });
 };
 keycloak.onAuthError = function() {

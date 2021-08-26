@@ -4,12 +4,12 @@ import * as _ from 'lodash-es';
 import { RootState } from '../../redux';
 import { setPinnedResources } from '../../actions/ui';
 import { getActivePerspective, getPinnedResources } from '../../reducers/ui';
-import { k8sGet } from '@console/internal/module/k8s';
+import { k8sList } from '@console/internal/module/k8s';
 import { ClusterMenuPolicyModel } from '@console/internal/models';
 import { dynamicMenusFactory, basicMenusFactory } from './menus';
 import './_perspective-nav.scss';
 import { PerspectiveType } from '../../hypercloud/perspectives';
-import { CMP_NAME } from '@console/internal/hypercloud/menu/menu-types';
+import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
 
 type StateProps = {
   perspective: string;
@@ -24,10 +24,18 @@ const PerspectiveNav: React.FC<StateProps & DispatchProps> = ({ perspective }) =
   const [cmp, setCmp] = React.useState(null);
 
   React.useEffect(() => {
-    // MEMO : CMP에 대한 CR은 하나만 있어야 해서 'admincmp' 고정된 이름으로 CR 만들었을 때만 적용되도록 이름 고정.
-    k8sGet(ClusterMenuPolicyModel, CMP_NAME)
-      .then(res => {
-        setCmp(res);
+    k8sList(ClusterMenuPolicyModel, {
+      labelSelector: {
+        [CMP_PRIMARY_KEY]: 'true',
+      },
+    })
+      .then(policies => {
+        if (policies.length > 0) {
+          // MEMO : primary=true 레이블 가진 리소스 중 첫번째 리소스내용만 적용되도록 구현.
+          setCmp(policies[0]);
+        } else {
+          setCmp({ tabs: [] });
+        }
       })
       .catch(err => {
         // MEMO : CMP CR이 없을 땐 기본메뉴들로 구성하도록 설정함. getNavItems에서 tabs 없을 시 기본메뉴 return함.
