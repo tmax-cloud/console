@@ -1,7 +1,6 @@
 import startsWith from './starts-with';
 
-// MEMO : 고정된 이름의 CMP 리소스만 LNB구성에 반영돼야 함.
-export const CMP_NAME = 'admincmp';
+export const CMP_PRIMARY_KEY = 'primary';
 
 export enum MenuType {
   CONTAINER = 'CONTAINER',
