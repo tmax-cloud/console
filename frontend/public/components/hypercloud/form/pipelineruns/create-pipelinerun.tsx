@@ -119,7 +119,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id="pipeline" isRequired>
         <ResourceDropdown
           name="spec.pipelineRef.name"
-          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
+          placeholder={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_22')}
           resources={[
             {
               kind: 'Pipeline',
