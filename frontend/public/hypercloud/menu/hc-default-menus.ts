@@ -30,7 +30,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.management,
-    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.CustomResourceDefinitionModel.kind],
+    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.PodSecurityPolicyModel.kind, Models.CustomResourceDefinitionModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -40,7 +40,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
-    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind, Models.PodSecurityPolicyModel.kind],
+    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind],
   },
 ];
 
@@ -48,10 +48,6 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.REGISTERED_MENU,
     kind: CustomMenusMap.Add.kind,
-  },
-  {
-    menuType: MenuType.REGISTERED_MENU,
-    kind: CustomMenusMap.Topology.kind,
   },
   {
     menuType: MenuType.CONTAINER,
@@ -72,11 +68,6 @@ const DeveloperNavMenus = [
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.aidevops,
     innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.image,
-    innerMenus: [Models.RegistryModel.kind, Models.ExternalRegistryModel.kind, Models.ImageSignerModel.kind, Models.ImageSignRequestModel.kind, Models.SignerPolicyModel.kind, Models.ImageReplicateModel.kind],
   },
 ];
 
