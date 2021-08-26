@@ -10,7 +10,7 @@ import CloudShellMastheadButton from '@console/app/src/components/cloud-shell/Cl
 import * as UIActions from '../actions/ui';
 import { connectToFlags, flagPending, featureReducerName } from '../reducers/features';
 import { authSvc } from '../module/auth';
-import { getOCMLink } from '../module/k8s';
+import { getOCMLink, k8sList } from '../module/k8s';
 import { Firehose } from './utils';
 import { openshiftHelpBase } from './utils/documentation';
 import { AboutModal } from './about-modal';
@@ -21,7 +21,8 @@ import { setAccessToken, setIdToken } from '../hypercloud/auth';
 import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
-import { CMP_NAME } from '@console/internal/hypercloud/menu/menu-types';
+import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
+import { ClusterMenuPolicyModel } from '@console/internal/models';
 
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
@@ -44,6 +45,8 @@ class MastheadToolbarContents_ extends React.Component {
       statuspageData: null,
       isKubeAdmin: false,
       showAboutModal: false,
+      adminCmpExists: false,
+      adminCmpName: '',
     };
 
     this._getStatuspageData = this._getStatuspageData.bind(this);
@@ -64,6 +67,7 @@ class MastheadToolbarContents_ extends React.Component {
     this._onAboutModal = this._onAboutModal.bind(this);
     this._closeAboutModal = this._closeAboutModal.bind(this);
     this._tokenRefresh = this._tokenRefresh.bind(this);
+    this._checkCmpResourceExists = this._checkCmpResourceExists.bind(this);
   }
 
   _getStatuspageData(statuspageID) {
@@ -72,6 +76,25 @@ class MastheadToolbarContents_ extends React.Component {
     })
       .then(response => response.json())
       .then(statuspageData => this.setState({ statuspageData }));
+  }
+
+  _checkCmpResourceExists() {
+    k8sList(ClusterMenuPolicyModel, {
+      labelSelector: {
+        [CMP_PRIMARY_KEY]: 'true',
+      },
+    })
+      .then(policies => {
+        if (policies.length > 0) {
+          const policy = policies[0];
+          this.setState({ adminCmpName: policy?.metadata.name, adminCmpExists: true });
+        } else {
+          this.setState({ adminCmpExists: false });
+        }
+      })
+      .catch(err => {
+        this.setState({ adminCmpExists: false });
+      });
   }
 
   _getImportYAMLPath() {
@@ -442,8 +465,12 @@ class MastheadToolbarContents_ extends React.Component {
       });
   };
 
+  componentDidMount() {
+    this._checkCmpResourceExists();
+  }
+
   render() {
-    const { isApplicationLauncherDropdownOpen, isHelpDropdownOpen, showAboutModal, statuspageData } = this.state;
+    const { isApplicationLauncherDropdownOpen, isHelpDropdownOpen, showAboutModal, statuspageData, adminCmpExists, adminCmpName } = this.state;
     const { consoleLinks, drawerToggle, notificationsRead, canAccessNS, keycloak, t } = this.props;
     // TODO: notificatoin 기능 완료 되면 추가하기.
     const alertAccess = false; //canAccessNS && !!window.SERVER_FLAGS.prometheusBaseURL;
@@ -501,10 +528,9 @@ class MastheadToolbarContents_ extends React.Component {
                 </a>
               </Tooltip>
             </ToolbarItem>
-            {/* MJ : admincmp가 없을 땐 생성화면으로 이동? 아니면 기본으로 admincmp리소스 있는 상태로 배포하고 기본메뉴구성내용은 sample로 제공? */}
             <ToolbarItem>
               <Tooltip content="Menu Settings" position={TooltipPosition.bottom}>
-                <Link to={`/k8s/cluster/clustermenupolicies/${CMP_NAME}/edit`} className="pf-c-button pf-m-plain" aria-label="Menu Settings">
+                <Link to={adminCmpExists ? `/k8s/cluster/clustermenupolicies/${adminCmpName}/edit` : '/k8s/cluster/clustermenupolicies/~new'} className="pf-c-button pf-m-plain" aria-label="Menu Settings">
                   <CogIcon className="co-masthead-icon" color="white" />{' '}
                 </Link>
               </Tooltip>
