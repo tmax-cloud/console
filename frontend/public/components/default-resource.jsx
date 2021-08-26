@@ -4,7 +4,7 @@ import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { Conditions } from './conditions';
 import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
-import { referenceFor, kindForReference } from '../module/k8s';
+import { referenceFor, kindForReference, modelFor } from '../module/k8s';
 import { Kebab, kindObj, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from './utils';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
@@ -90,7 +90,7 @@ export const DefaultList = props => {
 };
 DefaultList.displayName = 'DefaultList';
 
-export const DefaultPage = props => <ListPage {...props} ListComponent={DefaultList} canCreate={props.canCreate || _.get(kindObj(props.kind), 'crd')} />;
+export const DefaultPage = props => <ListPage {...props} ListComponent={DefaultList} canCreate={props.canCreate || _.get(modelFor(props.kind), 'crd') !== 'false'} />;
 DefaultPage.displayName = 'DefaultPage';
 
 export const DefaultDetailsPage = props => {
