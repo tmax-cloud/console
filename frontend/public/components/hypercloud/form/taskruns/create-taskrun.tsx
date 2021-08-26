@@ -252,7 +252,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
           <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_6')} id="taskparameter">
             <div>{params}</div>
           </Section>
-          <Section label="워크스페이스" id="workspace">
+          <Section label={t('SINGLE:MSG_TASKRUNS_CREATFORM_DIV2_1')} id="workspace">
             <div>{workspaces}</div>
           </Section>
         </>
@@ -262,8 +262,8 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
           <input ref={methods.register} className="pf-c-form-control" id="time_input" name="spec.timeout" type="number" placeholder={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_14')} /> {t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_15')}
         </div>
       </Section>
-      <Section label={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_14')} id="serviceaccount" description={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_16')}>
-        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_15')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} useHookForm />
+      <Section label={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_17')} id="serviceaccount" description={t('SINGLE:MSG_TASKRUNS_CREATEFORM_DIV2_16')}>
+        <ResourceListDropdown name="spec.serviceAccountName" type="single" kind={ServiceAccountModel.kind} resourceList={serviceAccountList} methods={methods} defaultValue="" placeholder={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_18')} autocompletePlaceholder={t('COMMON:MSG_COMMON_FILTER_2')} useHookForm />
       </Section>
     </>
   );
