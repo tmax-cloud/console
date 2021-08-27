@@ -1,81 +1,60 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 
 import { K8sResourceKind } from '../../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { DetailsPage, ListPage } from '../factory';
 import { Kebab, KebabAction, detailsPage, LabelList, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceIcon, ResourceSummary, SectionHeading } from '../utils';
 import { Status } from '@console/shared';
 import { FederatedStatefulSetModel } from '../../models';
+import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(FederatedStatefulSetModel), ...Kebab.factory.common];
 
 const kind = FederatedStatefulSetModel.kind;
-
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const FederatedStatefulSetTableHeader = (t?: TFunction) => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'statefulsetPhase',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'Annotations',
-      props: { className: tableColumnClasses[3] },
+      title: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12',
+      sortField: '',
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[5] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
-};
-FederatedStatefulSetTableHeader.displayName = 'FederatedStatefulSetTableHeader';
-
-const FederatedStatefulSetTableRow: RowFunction<K8sResourceKind> = ({ obj: statefulset, index, key, style }) => {
-  return (
-    <TableRow id={statefulset.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={statefulset.metadata.name} namespace={statefulset.metadata.namespace} title={statefulset.metadata.uid} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <Status status={statefulset.status.phase} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <LabelList kind={kind} labels={statefulset.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>{_.size(statefulset.metadata.annotations)} comments</TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <Timestamp timestamp={statefulset.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={statefulset} />
-      </TableData>
-    </TableRow>
-  );
+  ],
+  row: (obj: K8sResourceKind) => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    {
+      children: `${_.size(obj.metadata.annotations)} comments`,
+    },
+    {
+      children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
 
 export const ClusterRow: React.FC<ClusterRowProps> = ({ statefulset }) => {
@@ -111,9 +90,6 @@ export const StatefulSetDistributionTable: React.FC<StatefulSetDistributionTable
           <div className="col-lg-1 col-md-2 hidden-sm hidden-xs">{t('COMMON:MSG_DETAILS_TABOVERVIEW_TABLEHEADER_3')}</div>
         </div>
         <div className="co-m-table-grid__body">
-          {/*containers.map((c: any, i: number) => (
-          <ClusterRow key={i} statefulset={statefulset} container={c} />
-        ))*/}
           <ClusterRow statefulset={statefulset} />
         </div>
       </div>
@@ -126,7 +102,7 @@ const FederatedStatefulSetDetails: React.FC<FederatedStatefulSetDetailsProps> = 
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_25') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(statefulset, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={statefulset} />
@@ -141,11 +117,7 @@ const FederatedStatefulSetDetails: React.FC<FederatedStatefulSetDetailsProps> = 
 };
 
 const { details, editResource } = navFactory;
-export const FederatedStatefulSets: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Federated Stateful Sets" Header={FederatedStatefulSetTableHeader.bind(null, t)} Row={FederatedStatefulSetTableRow} virtualize />;
-};
-export const FederatedStatefulSetsPage: React.FC<FederatedStatefulSetsPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedStatefulSets} kind={kind} {...props} />;
+export const FederatedStatefulSetsPage: React.FC<FederatedStatefulSetsPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const FederatedStatefulSetsDetailsPage: React.FC<FederatedStatefulSetsDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedStatefulSetDetails)), editResource()]} />;
 
