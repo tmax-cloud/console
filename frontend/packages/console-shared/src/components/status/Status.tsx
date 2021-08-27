@@ -39,6 +39,7 @@ import * as BoundIcon from '@console/internal/imgs/hypercloud/bound.svg';
 import * as Cash_loop_back_offIcon from '@console/internal/imgs/hypercloud/cash_loop_back_off.svg';
 import * as RunningIcon from '@console/internal/imgs/hypercloud/running.svg';
 import * as UnknownIcon from '@console/internal/imgs/hypercloud/unknown.svg';
+import * as ThrobberIcon from '@console/internal/imgs/hypercloud/throbber.svg';
 //import * as ErrorIcon from '@console/internal/imgs/hypercloud/error.failure.failed.svg';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
@@ -61,7 +62,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Creating':
     case 'UpgradePending':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-creating-icon" src={CreatingIcon} />} />;
-      //return <ProgressStatus {...statusProps} />;
+    //return <ProgressStatus {...statusProps} />;
 
     case 'In Progress':
     case 'InstallReady':
@@ -194,10 +195,10 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Master':
     case 'master':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-master-icon" src={MasterIcon} />} />;
-      case 'Lost':
+    case 'Lost':
     case 'lost':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-lost-icon" src={LostIcon} />} />;
-      case 'Bound':
+    case 'Bound':
     case 'bound':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-bound-icon" src={BoundIcon} />} />;
     case 'Cash_loop_back_off':
@@ -206,7 +207,8 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Running':
     case 'running':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-running-icon" src={RunningIcon} />} />;
-
+    case 'No Status':
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-throbber-icon" src={ThrobberIcon} />} />;
     default:
       return <>{status || DASH}</>;
   }
