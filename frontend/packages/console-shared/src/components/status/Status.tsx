@@ -7,6 +7,7 @@ import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, SuccessStatus } from './statuses';
 //import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
 import * as AwaitingIcon from '@console/internal/imgs/hypercloud/awaiting.svg';
 import * as ChartFetchedIcon from '@console/internal/imgs/hypercloud/chartfetched.svg';
@@ -207,7 +208,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
     case 'Running':
     case 'running':
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-running-icon" src={RunningIcon} />} />;
-    case 'No Status':
+    case NO_STATUS:
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-throbber-icon" src={ThrobberIcon} />} />;
     default:
       return <>{status || DASH}</>;
