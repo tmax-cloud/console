@@ -7,6 +7,7 @@ import { Kebab, KebabAction, detailsPage, LabelList, Timestamp, navFactory, Reso
 import { Status } from '@console/shared';
 import { FederatedHPAModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(FederatedHPAModel), ...Kebab.factory.common];
 
@@ -96,21 +97,24 @@ export const HPADistributionTable: React.FC<HPADistributionTableProps> = ({ head
   );
 };
 
-const FederatedHPADetails: React.FC<FederatedHPADetailsProps> = ({ obj: horizontalpodautoscaler }) => (
-  <>
-    <div className="co-m-pane__body">
-      <SectionHeading text="Federated HPA Details" />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={horizontalpodautoscaler} />
+const FederatedHPADetails: React.FC<FederatedHPADetailsProps> = ({ obj: horizontalpodautoscaler }) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(horizontalpodautoscaler, t) })} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={horizontalpodautoscaler} />
+          </div>
         </div>
       </div>
-    </div>
-    <div className="co-m-pane__body">
-      <HPADistributionTable key="distributionTable" heading="Distribution" horizontalpodautoscaler={horizontalpodautoscaler} />
-    </div>
-  </>
-);
+      <div className="co-m-pane__body">
+        <HPADistributionTable key="distributionTable" heading="Distribution" horizontalpodautoscaler={horizontalpodautoscaler} />
+      </div>
+    </>
+  );
+};
 
 const { details, editResource } = navFactory;
 

@@ -7,6 +7,7 @@ import { Kebab, KebabAction, detailsPage, LabelList, Timestamp, navFactory, Reso
 import { Status } from '@console/shared';
 import { FederatedDaemonSetModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(FederatedDaemonSetModel), ...Kebab.factory.common];
 
@@ -19,15 +20,15 @@ const tableProps: TableProps = {
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
-      sortFunc: 'metadata.namespace',
+      sortField: 'metadata.namespace',
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_16',
-      sortField: 'spec.selector',
+      title: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_12',
+      sortField: '',
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
@@ -107,7 +108,7 @@ const FederatedDaemonSetDetails: React.FC<FederatedDaemonSetDetailsProps> = ({ o
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_30') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(daemonset, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={daemonset} />

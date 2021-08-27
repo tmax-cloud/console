@@ -7,6 +7,7 @@ import { Kebab, KebabAction, detailsPage, LabelList, navFactory, ResourceKebab, 
 import { ResourceEventStream } from '../events';
 import { FederatedDeploymentModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(FederatedDeploymentModel), EditHealthChecks, ...Kebab.factory.common];
 
@@ -61,7 +62,7 @@ const FederatedDeploymentDetails: React.FC<FederatedDeploymentDetailsProps> = ({
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_24') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(deployment, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={deployment} showPodSelector showNodeSelector showTolerations />

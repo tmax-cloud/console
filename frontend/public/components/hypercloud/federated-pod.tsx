@@ -8,6 +8,7 @@ import { Status } from '@console/shared';
 import { FederatedPodModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
 import { podPhase } from '@console/internal/module/k8s/pods';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(FederatedPodModel), ...Kebab.factory.common];
 
@@ -109,7 +110,7 @@ const FederatedPodDetails: React.FC<FederatedPodDetailsProps> = ({ obj: pod }) =
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_23') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(pod, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={pod} />

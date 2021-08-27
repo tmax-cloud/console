@@ -8,6 +8,7 @@ import { DetailsItem, Kebab, KebabAction, detailsPage, LabelList, navFactory, Re
 import { ResourceEventStream } from '../events';
 import { FederatedReplicaSetModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(FederatedReplicaSetModel), EditHealthChecks, ...Kebab.factory.common];
 
@@ -72,7 +73,7 @@ const FederatedReplicaSetDetails: React.FC<FederatedReplicaSetDetailsProps> = ({
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={`${t('COMMON:MSG_MAIN_DIV1_3', { 0: t('COMMON:MSG_LNB_MENU_31') })} ${t('COMMON:MSG_DETAILS_TABOVERVIEW_1')}`} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(replicaset, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={replicaset} showPodSelector showNodeSelector showTolerations />
