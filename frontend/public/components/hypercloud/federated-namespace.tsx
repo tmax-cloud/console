@@ -1,84 +1,71 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
-// import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
+import { useTranslation } from 'react-i18next';
 import { K8sResourceKind } from '../../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { DetailsPage, ListPage } from '../factory';
 import { Kebab, KebabAction, detailsPage, LabelList, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { ResourceEventStream } from '../events';
 import { FederatedNamespaceModel } from '../../models';
+import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(FederatedNamespaceModel), ...Kebab.factory.common];
-// export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(FederatedNamespaceModel), EditHealthChecks, ...Kebab.factory.common];
 
 const kind = FederatedNamespaceModel.kind;
-
-const tableColumnClasses = ['', classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const FederatedNamespaceTableHeader = () => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: 'Name',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'Labels',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'Created',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[3] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
+  ],
+  row: (obj: K8sResourceKind) => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    {
+      children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
-FederatedNamespaceTableHeader.displayName = 'FederatedNamespaceTableHeader';
 
-const FederatedNamespaceTableRow: RowFunction<K8sResourceKind> = ({ obj: namespace, index, key, style }) => {
+const FederatedNamespaceDetails: React.FC<FederatedNamespaceDetailsProps> = ({ obj: namespace }) => {
+  const { t } = useTranslation();
   return (
-    <TableRow id={namespace.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={namespace.metadata.name} namespace={namespace.metadata.namespace} title={namespace.metadata.uid} />
-      </TableData>
-      <TableData className={tableColumnClasses[1]}>
-        <LabelList kind={kind} labels={namespace.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <Timestamp timestamp={namespace.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={namespace} />
-      </TableData>
-    </TableRow>
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(namespace, t) })} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={namespace} />
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
-const FederatedNamespaceDetails: React.FC<FederatedNamespaceDetailsProps> = ({ obj: namespace }) => (
-  <>
-    <div className="co-m-pane__body">
-      <SectionHeading text="Federated Namespace Details" />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={namespace} />
-        </div>
-      </div>
-    </div>
-  </>
-);
-
 const { details, editResource, events } = navFactory;
-export const FederatedNamespaces: React.FC = props => <Table {...props} aria-label="Federated Namespaces" Header={FederatedNamespaceTableHeader} Row={FederatedNamespaceTableRow} virtualize />;
-
-export const FederatedNamespacesPage: React.FC<FederatedNamespacesPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedNamespaces} kind={kind} {...props} />;
+export const FederatedNamespacesPage: React.FC<FederatedNamespacesPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const FederatedNamespacesDetailsPage: React.FC<FederatedNamespacesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedNamespaceDetails)), editResource(), events(ResourceEventStream)]} />;
 
