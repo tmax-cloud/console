@@ -10,6 +10,7 @@ import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow, RowFunction } from '../factory';
 import { DetailsItem, Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { ServiceBrokerStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { common } = Kebab.factory;
 
@@ -30,7 +31,7 @@ const ServiceBrokerDetails: React.FC<ServiceBrokerDetailsProps> = ({ obj: servic
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={serviceBroker} path="status.phase">
-                <Status status={ServiceBrokerPhase(serviceBroker)} />
+                <Status status={ServiceBrokerStatusReducer(serviceBroker)} />
               </DetailsItem>
               <dt>URL</dt>
               <dd>{serviceBroker.spec.url}</dd>
@@ -52,24 +53,8 @@ ServiceBrokersDetailsPage.displayName = 'ServiceBrokersDetailsPage';
 
 const tableColumnClasses = ['', classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-const ServiceBrokerPhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions.forEach(cur => {
-      if (cur.type === 'Ready') {
-        if (cur.status === 'True') {
-          phase = 'Running';
-        } else {
-          phase = 'Error';
-        }
-      }
-    });
-    return phase;
-  }
-};
-
 const ServiceBrokerTableRow: RowFunction<K8sResourceKind> = ({ obj, index, key, style }) => {
-  let phase = ServiceBrokerPhase(obj);
+  let phase = ServiceBrokerStatusReducer(obj);
   return (
     <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -133,10 +118,6 @@ const ServiceBrokerTableHeader = (t?: TFunction) => {
 
 ServiceBrokerTableHeader.displayName = 'ServiceBrokerTableHeader';
 
-const serviceBrokerStatusReducer = (serviceBroker: any): string => {
-  return ServiceBrokerPhase(serviceBroker);
-};
-
 const ServiceBrokersList: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Service Broker" Header={ServiceBrokerTableHeader.bind(null, t)} Row={ServiceBrokerTableRow} virtualize />;
@@ -156,7 +137,7 @@ const ServiceBrokersPage: React.FC<ServiceBrokersPageProps> = props => {
         {
           filterGroupName: 'Status',
           type: 'service-broker-status',
-          reducer: serviceBrokerStatusReducer,
+          reducer: ServiceBrokerStatusReducer,
           items: [
             { id: 'Running', title: t('COMMON:MSG_COMMON_STATUS_1') },
             { id: 'Error', title: 'Error' },

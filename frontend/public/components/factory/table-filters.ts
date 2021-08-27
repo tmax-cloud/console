@@ -18,47 +18,12 @@ import {
 
 import { alertingRuleIsActive, alertDescription, alertState, silenceState } from '../../reducers/monitoring';
 import { pipelineRunFilterReducer } from '@console/dev-console/src/utils/pipeline-filter-reducer';
+import { ServiceBrokerStatusReducer, ClusterServiceBrokerReducer, ServiceInstanceStatusReducer, TemplateInstanceStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const fuzzyCaseInsensitive = (a: string, b: string): boolean => fuzzy(_.toLower(a), _.toLower(b));
 
 const registryStatusReducer = (registry: any): string => {
   return registry.status.phase;
-};
-
-const serviceBrokerStatusReducer = (serviceBroker: any): string => {
-  let phase = '';
-  if (serviceBroker.status) {
-    serviceBroker.status.conditions.forEach(cur => {
-      if (cur.type === 'Ready') {
-        if (cur.status === 'True') {
-          phase = 'Running';
-        } else {
-          phase = 'Error';
-        }
-      }
-    });
-    return phase;
-  }
-};
-
-const serviceInstanceStatusReducer = (serviceInstance: any): string => {
-  return serviceInstance.status.lastConditionState;
-};
-
-const ClusterServiceBrokerPhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions.forEach(cur => {
-      if (cur.type === 'Ready') {
-        if (cur.status === 'True') {
-          phase = 'Running';
-        } else {
-          phase = 'Error';
-        }
-      }
-    });
-    return phase;
-  }
 };
 
 const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
@@ -228,7 +193,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phase = serviceBrokerStatusReducer(serviceBroker);
+    const phase = ServiceBrokerStatusReducer(serviceBroker);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
@@ -237,7 +202,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phase = serviceInstanceStatusReducer(serviceInstance);
+    const phase = ServiceInstanceStatusReducer(serviceInstance);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
   'cluster-service-broker-status': (phases, clusterServiceBroker) => {
@@ -245,7 +210,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phase = ClusterServiceBrokerPhase(clusterServiceBroker);
+    const phase = ClusterServiceBrokerReducer(clusterServiceBroker);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
@@ -367,21 +332,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    // const status = getTemplateInstanceStatus(instance);
-
-    // NOTE: HyperCloud5.0 TemplateInstance phase filter
-    const templateInstancePhase = instance => {
-      let phase = '';
-      if (instance.status) {
-        instance.status.conditions.forEach(cur => {
-          if (cur.type === '') {
-            phase = cur.status;
-          }
-        });
-        return phase;
-      }
-    };
-    const status = templateInstancePhase(instance);
+    const status = TemplateInstanceStatusReducer(instance);
 
     return statuses.selected.has(status) || !_.includes(statuses.all, status);
   },

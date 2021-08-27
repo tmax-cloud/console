@@ -10,24 +10,13 @@ import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { DetailsItem, Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { TemplateInstanceStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { ModifyLabels, ModifyAnnotations, Delete } = Kebab.factory;
 
 const kind = TemplateInstanceModel.kind;
 
 export const templateInstanceMenuActions = [...Kebab.getExtensionsActionsForKind(TemplateInstanceModel), ModifyLabels, ModifyAnnotations, Delete];
-
-const templateInstancePhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions.forEach(cur => {
-      if (cur.type === '') {
-        phase = cur.status;
-      }
-    });
-    return phase;
-  }
-};
 
 const templateObjectsSummary = templateinstance => {
   // NOTE: template instance가 cluster/namespace 스코프에 따라 objects 정보의 위치가 달라서 분기처리함
@@ -56,7 +45,7 @@ const templateObjectsSummary = templateinstance => {
 
 const TemplateInstanceDetails: React.FC<TemplateInstanceDetailsProps> = ({ obj: templateInstance }) => {
   const { t } = useTranslation();
-  let phase = templateInstancePhase(templateInstance);
+  let phase = TemplateInstanceStatusReducer(templateInstance);
   const objectSummary = templateObjectsSummary(templateInstance);
   return (
     <>
@@ -86,7 +75,7 @@ type TemplateInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const TemplateInstancesDetailsPage: React.FC<TemplateInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} getResourceStatus={templateInstancePhase} menuActions={templateInstanceMenuActions} pages={[details(TemplateInstanceDetails), editYaml()]} />;
+const TemplateInstancesDetailsPage: React.FC<TemplateInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} getResourceStatus={TemplateInstanceStatusReducer} menuActions={templateInstanceMenuActions} pages={[details(TemplateInstanceDetails), editYaml()]} />;
 TemplateInstancesDetailsPage.displayName = 'TemplateInstancesDetailsPage';
 
 const tableColumnClasses = [
@@ -99,7 +88,7 @@ const tableColumnClasses = [
 ];
 
 const TemplateInstanceTableRow = ({ obj, index, key, style }) => {
-  let phase = templateInstancePhase(obj);
+  let phase = TemplateInstanceStatusReducer(obj);
   const objectSummary = templateObjectsSummary(obj);
   return (
     <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
@@ -164,7 +153,7 @@ TemplateInstanceTableHeader.displayName = 'TemplateInstanceTableHeader';
 
 const TemplateInstancesList: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Template Instance" Header={TemplateInstanceTableHeader.bind(null, t)} Row={TemplateInstanceTableRow} customSorts={{ templateInstancePhase }} />;
+  return <Table {...props} aria-label="Template Instance" Header={TemplateInstanceTableHeader.bind(null, t)} Row={TemplateInstanceTableRow} customSorts={{ TemplateInstanceStatusReducer }} />;
 };
 TemplateInstancesList.displayName = 'TemplateInstancesList';
 
@@ -182,7 +171,7 @@ const TemplateInstancesPage: React.FC<TemplateInstancesPageProps> = props => {
           filterLabel: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           filterGroupName: 'Status',
           type: 'template-instance-status',
-          reducer: templateInstancePhase,
+          reducer: TemplateInstanceStatusReducer,
           items: [
             { id: 'Succeeded', title: 'Succeeded' },
             { id: 'Error', title: 'Error' },

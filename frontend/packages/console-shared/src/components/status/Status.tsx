@@ -5,6 +5,7 @@ import { YellowExclamationTriangleIcon } from './icons';
 import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
 import * as AwaitingIcon from '@console/internal/imgs/hypercloud/awaiting.svg';
 import * as ThrobberIcon from '@console/internal/imgs/hypercloud/throbber.svg';
@@ -94,7 +95,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
 
     case 'Unknown':
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
-    case 'No Status':
+    case NO_STATUS:
       return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-throbber-icon" src={ThrobberIcon} />} />;
 
     default:
