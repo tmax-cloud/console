@@ -150,7 +150,7 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
   let taskParameterArr = ['name', 'description', 'type', 'defaultStr', 'defaultArr'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
-  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath'];
+  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit', 'mountArr'];
 
   // const paramValidCallback = additionalConditions => {
   //   let type = additionalConditions[0] ? 'array' : 'string';
@@ -169,6 +169,25 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
     return additionalConditions.filter((c, i) => i !== 0).some(cur => (typeof cur === 'string' ? cur.trim().length > 0 : false));
   };
 
+  const stepValidCallback = (additionalConditions: string[]) => {
+    const [type, image, registryRegistry, registryImage, registryTag, mountArr] = additionalConditions;
+    console.log('mountArr: ', mountArr);
+
+    if (mountArr.length > 0 && mountArr.length !== _.uniqBy(mountArr, 'mountName').length) {
+      return false;
+    }
+    if (type === 'internal') {
+      if (registryRegistry && registryImage && registryTag) {
+        return true;
+      }
+      return false;
+    } else {
+      if (image) {
+        return true;
+      }
+      return false;
+    }
+  };
   return (
     <>
       <Section label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_33')} id="label" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_92')}>
@@ -277,8 +296,38 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} id="step" isRequired={true}>
         <>
-          <ModalList list={step} id="step" path="spec.steps" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')} methods={methods} requiredFields={['name', 'image']} children={<StepModal methods={methods} step={step} />} onRemove={removeModalData.bind(null, step, setStep)} handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_88')}></ModalList>
-          <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, path: 'spec.steps', methods: methods, requiredFields: ['name', 'image'], title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26'), id: 'step', handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods), children: <StepModal methods={methods} step={step} />, submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8') })}>
+          <ModalList
+            list={step}
+            id="step"
+            path="spec.steps"
+            title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')}
+            methods={methods}
+            requiredFields={['name']}
+            optionalRequiredField={['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag', 'mountArr']}
+            optionalValidCallback={stepValidCallback}
+            children={<StepModal methods={methods} step={step} />}
+            onRemove={removeModalData.bind(null, step, setStep)}
+            handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)}
+            description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_88')}
+          ></ModalList>
+          <span
+            className="open-modal_text"
+            onClick={() =>
+              ModalLauncher({
+                inProgress: false,
+                path: 'spec.steps',
+                methods: methods,
+                requiredFields: ['name'],
+                optionalRequiredField: ['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag', 'mountArr'],
+                optionalValidCallback: stepValidCallback,
+                title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26'),
+                id: 'step',
+                handleMethod: handleModalData.bind(null, 'step', stepArr, step, setStep, true, methods),
+                children: <StepModal methods={methods} step={step} />,
+                submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8'),
+              })
+            }
+          >
             {`+ ${t('SINGLE:MSG_TASKS_CREATFORM_DIV2_89')}`}
           </span>
         </>
@@ -390,15 +439,13 @@ export const onSubmitCallback = data => {
     }
     delete data.spec.steps[idx].commandTypeToggle;
 
-    if (cur.selectedVolume) {
-      let volumeMounts = [];
-      volumeMounts.push({
+    if (cur.mountArr) {
+      let volumeMounts = cur.mountArr.map(cur => ({
         mountPath: cur.mountPath,
-        name: cur.selectedVolume,
-      });
+        name: cur.mountName,
+      }));
       data.spec.steps[idx].volumeMounts = volumeMounts;
-      delete data.spec.steps[idx].selectedVolume;
-      delete data.spec.steps[idx].mountPath;
+      delete data.spec.steps[idx].mountArr;
     }
     return cur;
   });
