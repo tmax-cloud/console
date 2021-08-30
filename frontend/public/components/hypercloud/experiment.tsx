@@ -11,6 +11,7 @@ import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab
 import { ExperimentModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
+import { ExperimentStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ExperimentModel), ...Kebab.factory.common];
 
@@ -61,11 +62,6 @@ const ExperimentTableHeader = (t?: TFunction) => {
 };
 ExperimentTableHeader.displayName = 'ExperimentTableHeader';
 
-const getConditionStatus = obj => {
-  const conditions = obj.status?.conditions;
-  return !!conditions ? conditions[conditions.length - 1]?.type : '-';
-};
-
 const getOptimizationStatus = obj => {
   const objective = obj.spec?.objective;
   const metrics = obj.status?.currentOptimalTrial?.observation?.metrics;
@@ -115,7 +111,7 @@ const ExperimentTableRow: RowFunction<K8sResourceKind> = ({ obj: experiment, ind
       <TableData className={tableColumnClasses[3]}>{`${trials} / ${maxTrials}`}</TableData>
       <TableData className={tableColumnClasses[4]}>{getOptimizationStatus(experiment)}</TableData>
       <TableData className={tableColumnClasses[5]}>
-        <Status status={getConditionStatus(experiment)} />
+        <Status status={ExperimentStatusReducer(experiment)} />
       </TableData>
       <TableData className={tableColumnClasses[6]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={experiment} />
@@ -131,7 +127,7 @@ export const ExperimentDetailsList: React.FC<ExperimentDetailsListProps> = ({ ex
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')} obj={experiment}>
-        <Status status={getConditionStatus(experiment)} />
+        <Status status={ExperimentStatusReducer(experiment)} />
       </DetailsItem>
       <DetailsItem label={t('알고리즘 이름')} obj={experiment} path="spec.algorithm.algorithmName">
         {experiment.spec?.algorithm?.algorithmName}
