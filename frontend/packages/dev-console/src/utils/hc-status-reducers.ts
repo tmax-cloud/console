@@ -1,4 +1,5 @@
-export const NO_STATUS = 'No Status';
+import { NO_STATUS } from '@console/shared/src/components/status';
+
 export const ServiceBrokerStatusReducer = instance => {
   let phase = '';
   if (instance.status) {
@@ -73,4 +74,3 @@ export const ExperimentStatusReducer = experiment => {
 export const ClusterClaimStatusReducer = (clusterClaim: any): string => {
   return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
 };
-
