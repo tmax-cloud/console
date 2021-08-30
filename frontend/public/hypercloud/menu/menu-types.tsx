@@ -164,7 +164,7 @@ export const CustomMenusMap: CustomMenus = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_195',
-    url: window.SERVER_FLAGS.gitlabURL,
+    url: '',
     isMultiOnly: false,
   },
   Add: {
