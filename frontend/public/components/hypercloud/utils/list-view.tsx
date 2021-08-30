@@ -13,8 +13,9 @@ import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
  * @prop {JSX.Element} headerFragment - 리스트뷰의 header부분을 커스터마이징 할 수 있는 속성. 속성을 설정하지 않으면 기본으로 KEY, VALUE로 구성된 헤더컴포넌트가 들어간다.
  * @prop {string} addButtonText - item 추가버튼의 텍스트. 기본값은 'Add'이다.
  */
-export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText, defaultValues }) => {
-  const { control, register, getValues, setValue } = methods ? methods : useFormContext();
+export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem = { key: '', value: '' }, itemRenderer, headerFragment, addButtonText, defaultValues, deleteButtonText, maxLength }) => {
+  const methods_ = methods || useFormContext();
+  const { control, register, getValues, setValue } = methods_;
   const { fields, append, remove } = useFieldArray({ control, name: name });
 
   const DefaultListHeaderFragment = (
@@ -87,26 +88,34 @@ export const ListView: React.FC<ListViewProps> = ({ name, methods, defaultItem =
     deleteIcon: deleteIcon,
   };
 
-  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(methods, name, item, index, ListActions, ListDefaultIcons)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
-
+  const itemList = itemRenderer ? fields.map((item, index) => itemRenderer(methods_, name, item, index, ListActions, ListDefaultIcons, deleteButtonText)) : fields.map((item, index) => DefaultListItemRenderer(register, name, item, index, ListActions, ListDefaultIcons));
+  const validLength = maxLength => {
+    if (maxLength) {
+      return maxLength > itemList.length;
+    } else {
+      return true;
+    }
+  };
   return (
     <div>
       {headerFragment ? headerFragment : DefaultListHeaderFragment}
       {itemList}
-      <div className="row col-xs-12">
-        <Button
-          className="pf-m-link--align-left"
-          data-test-id="pairs-list__add-btn"
-          onClick={() => {
-            append(defaultItem);
-          }}
-          type="button"
-          variant="link"
-        >
-          <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
-          {!!addButtonText ? addButtonText : 'Add'}
-        </Button>
-      </div>
+      {validLength(maxLength) && (
+        <div className="row col-xs-12">
+          <Button
+            className="pf-m-link--align-left"
+            data-test-id="pairs-list__add-btn"
+            onClick={() => {
+              append(defaultItem);
+            }}
+            type="button"
+            variant="link"
+          >
+            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-r" />
+            {!!addButtonText ? addButtonText : 'Add'}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
@@ -116,7 +125,9 @@ type ListViewProps = {
   defaultItem?: object;
   itemRenderer?: Function;
   headerFragment?: JSX.Element;
+  deleteButtonText?: string;
   addButtonText?: string;
   methods?: any;
+  maxLength?: number;
   defaultValues?: object[];
 };

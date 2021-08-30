@@ -116,6 +116,41 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
+  const mountListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons, deleteButtonText) => {
+    return (
+      <div key={item.id}>
+        <div className="row co-dynamic-form__array-field-group-remove">
+          <Button
+            type="button"
+            data-test-id="pairs-list__delete-btn"
+            className="pairs-list__span-btns"
+            onClick={() => {
+              ListActions.remove(index);
+            }}
+            variant="plain"
+          >
+            {ListDefaultIcons.deleteIcon} {deleteButtonText}
+          </Button>
+        </div>
+        <Section id="mountName">
+          <Dropdown
+            name={`${name}[${index}].mountName`}
+            className="btn-group"
+            defaultValue={item.mountName}
+            title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} // 드롭다운 title 지정
+            methods={methods}
+            items={volumeItems} // (필수)
+            style={{ display: 'block' }}
+            buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
+            itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+          />
+        </Section>
+        <Section id="mountPath">
+          <TextInput id={`${name}[${index}].mountPath`} inputClassName="col-md-12" methods={methods} defaultValue={item.mountPath} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_48')} />
+        </Section>
+      </div>
+    );
+  };
 
   let template;
 
@@ -293,7 +328,8 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           t('SINGLE:MSG_TASKS_CREATFORM_DIV2_46')
         ) : (
           <>
-            <Section id="selectedVolume">
+            <ListView name="mountArr" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} maxLength={_.size(volumeItems)} deleteButtonText={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} headerFragment={<></>} itemRenderer={mountListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.mountArr) : []} defaultItem={{ mountName: '', mountPath: '' }} />
+            {/* <Section id="selectedVolume">
               <Dropdown
                 name="selectedVolume"
                 className="btn-group"
@@ -308,7 +344,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             </Section>
             <Section id="mountPath">
               <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_48')} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
-            </Section>
+            </Section> */}
           </>
         )}
       </Section>
