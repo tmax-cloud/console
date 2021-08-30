@@ -10,6 +10,7 @@ import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab
 import { NotebookModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
+import { NotebookStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
@@ -63,7 +64,7 @@ const NotebookTableRow: RowFunction<K8sResourceKind> = ({ obj: notebook, index, 
         <ResourceLink kind="Namespace" name={notebook.metadata.namespace} title={notebook.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>
-        <Status status={notebook.status?.conditions?.[0]?.type || ''} />
+        <Status status={NotebookStatusReducer(notebook)} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>{notebook.spec?.template.spec.containers[0].image || '-'}</TableData>
       <TableData className={tableColumnClasses[4]}>
@@ -79,7 +80,7 @@ export const NotebookDetailsList: React.FC<NotebookDetailsListProps> = ({ notebo
     <dl className="co-m-pane__details">
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
       <dd>
-        <Status status={notebook.status?.conditions?.[0]?.type || ''} />
+        <Status status={NotebookStatusReducer(notebook)} />
       </dd>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_5')} obj={notebook} path="spec.template.spec.containers[0].image" />
     </dl>
@@ -115,7 +116,7 @@ export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage ca
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
   const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />;
 };
 
 type NotebookDetailsListProps = {

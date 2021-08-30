@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { Checkbox } from '@patternfly/react-core';
+import { Checkbox, FileUpload } from '@patternfly/react-core';
+import { Base64 } from 'js-base64';
 import { WidgetProps } from 'react-jsonschema-form';
 import { NumberSpinner, ListDropdown, Dropdown } from '@console/internal/components/utils';
 import { K8sKind, GroupVersionKind, ImagePullPolicy } from '@console/internal/module/k8s';
@@ -37,6 +38,30 @@ export const K8sResourceWidget: React.FC<K8sResourceWidgetProps> = ({ value, id,
   const selectedKey = value ? `${value}-${model.kind}` : null;
 
   return <div>{!_.isUndefined(model) ? <ListDropdown key={id} id={id} resources={[{ kind: groupVersionKind, namespace: model.namespaced ? namespace : null }]} desc={label} placeholder={`Select ${model.label}`} onChange={next => onChange(next)} selectedKey={selectedKey} /> : <span>Cluster does not have resource {groupVersionKind}</span>}</div>;
+};
+
+export const FileUploadWidget: React.FC<WidgetProps> = props => {
+  const { id, onChange, required, value: v } = props;
+  const [fileName, setFileName] = React.useState('');
+  const [value, setValue] = React.useState(v);
+  const onFileChange = (file, fileName) => {
+    if (file === '') {
+      setFileName(fileName);
+      setValue(file);
+      onChange(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const input = reader.result as string;
+        const encodedInput = Base64.encode(input);
+        setFileName(fileName);
+        setValue(encodedInput);
+        onChange(encodedInput);
+      };
+      reader.readAsText(file, 'UTF-8');
+    }
+  };
+  return <FileUpload id={id} required={required} value={value} filenamePlaceholder="Drag and drop a file or upload one" filename={fileName} browseButtonText="Upload" onChange={onFileChange} />;
 };
 
 export const ImagePullPolicyWidget: React.FC<WidgetProps> = ({ id, value, onChange }) => {

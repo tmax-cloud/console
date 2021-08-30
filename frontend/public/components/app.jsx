@@ -29,9 +29,7 @@ import { Page } from '@patternfly/react-core';
 // import Keycloak from 'keycloak-js';
 import keycloak from '../hypercloud/keycloak';
 import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
-import { k8sList } from '@console/internal/module/k8s';
-import { ClusterMenuPolicyModel } from '@console/internal/models';
-import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
+import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
@@ -239,19 +237,7 @@ keycloak.onAuthSuccess = function() {
       .catch(e => console.warn('Error unregistering service workers', e));
   }
 
-  k8sList(ClusterMenuPolicyModel, {
-    labelSelector: {
-      [CMP_PRIMARY_KEY]: 'true',
-    },
-  })
-    .then(policies => {
-      const policy = policies?.[0];
-      window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
-    })
-    .catch(err => {
-      window.SERVER_FLAGS.showCustomPerspective = false;
-      console.log(`No cmp resource.`);
-    });
+  initializationForMenu();
 };
 keycloak.onAuthError = function() {
   console.log('[keycloak] onAuthError');

@@ -11,6 +11,7 @@ import { ClusterClaimModel } from '../../models';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { ClusterClaimStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const clusterClaimCommonActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common];
 
@@ -84,7 +85,7 @@ const ClusterClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: clusterClaim,
       <TableData className={tableColumnClasses[2]}>{clusterClaim.spec.provider}</TableData>
       <TableData className={tableColumnClasses[3]}>{clusterClaim.spec.version}</TableData>
       <TableData className={classNames(tableColumnClasses[4], 'co-break-word')}>
-        <Status status={clusterClaim.status.phase} />
+        <Status status={ClusterClaimStatusReducer(clusterClaim)} />
       </TableData>
       <TableData className={tableColumnClasses[5]}>{clusterClaim.metadata.annotations.creator}</TableData>
       <TableData className={tableColumnClasses[6]}>
@@ -159,14 +160,11 @@ export const ClusterClaims: React.FC = props => {
   return <Table {...props} aria-label="Cluster Claims" Header={ClusterClaimTableHeader.bind(null, t)} Row={ClusterClaimTableRow} virtualize />;
 };
 
-const clusterClaimStatusReducer = (clusterClaim: any): string => {
-  return clusterClaim.status.phase;
-};
 const filters = [
   {
     filterGroupName: 'Status',
     type: 'registry-status',
-    reducer: clusterClaimStatusReducer,
+    reducer: ClusterClaimStatusReducer,
     items: [
       { id: 'Created', title: 'Created' },
       { id: 'Waiting', title: 'Waiting' },

@@ -130,6 +130,10 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
       jsonSchema.type = 'string';
     }
     delete jsonSchema?.allOf;
+  } else if (jsonSchema?.format === 'data-url' && jsonSchema.type === 'string') {
+    return {
+      'ui:widget': 'fileUploadWidget',
+    };
   }
 
   const handleArray = () => {
