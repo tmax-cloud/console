@@ -7,7 +7,6 @@ import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, SuccessStatus } from './statuses';
 //import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
-import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
 import * as AwaitingIcon from '@console/internal/imgs/hypercloud/awaiting.svg';
 import * as ChartFetchedIcon from '@console/internal/imgs/hypercloud/chartfetched.svg';
@@ -42,6 +41,7 @@ import * as RunningIcon from '@console/internal/imgs/hypercloud/running.svg';
 import * as UnknownIcon from '@console/internal/imgs/hypercloud/unknown.svg';
 import * as ThrobberIcon from '@console/internal/imgs/hypercloud/throbber.svg';
 //import * as ErrorIcon from '@console/internal/imgs/hypercloud/error.failure.failed.svg';
+export const NO_STATUS = 'No Status';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
