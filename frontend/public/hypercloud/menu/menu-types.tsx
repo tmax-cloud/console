@@ -219,4 +219,4 @@ export const CustomMenusMap: CustomMenus = {
     isMultiOnly: false,
   },
 };
-// MEMO : Harbor메뉴는 app.jsx에서 초기 렌더 시 harbor ingress 리소스에서 host주소 가져와서 url로 지정해줌.
+// MEMO : Git, Harbor메뉴는 app.jsx에서 초기 렌더 시 ingress 리소스에서 host주소 가져와서 url로 지정해줌.
