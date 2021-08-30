@@ -11,8 +11,38 @@ import { IntegrationConfigModel } from '../../models/hypercloud';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { integrationConfigPushModal, integrationConfigPullModal } from './modals';
+import { asAccessReview } from '../utils/index';
 
-export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationConfigModel), ...Kebab.factory.common];
+
+export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationConfigModel),
+  //...Kebab.factory.common,
+  //...[() => testWebhook(IntegrationConfigModel, integrationConfig)],  
+  Kebab.factory.ModifyLabels,
+  Kebab.factory.ModifyAnnotations,
+  (kind, integrationConfig) => ({
+    label: 'COMMON:MSG_MAIN_POPUP_20',
+    callback: () =>
+      integrationConfigPushModal({
+        kind,
+        resource: integrationConfig,
+        blocking: true,
+      }),
+    accessReview: asAccessReview(kind, integrationConfig, 'patch'),
+  }),
+  (kind, integrationConfig) => ({
+    label: 'COMMON:MSG_MAIN_POPUP_23',
+    callback: () =>
+      integrationConfigPullModal({
+        kind,
+        resource: integrationConfig,
+        blocking: true,
+      }),
+    accessReview: asAccessReview(kind, integrationConfig, 'patch'),
+  }),
+  Kebab.factory.Edit,
+  Kebab.factory.Delete,
+];
 
 const kind = IntegrationConfigModel.kind;
 
