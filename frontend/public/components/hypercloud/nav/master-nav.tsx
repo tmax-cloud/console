@@ -62,7 +62,7 @@ const MasterNav = () => (
           <ResourceNSLink resource="persistentvolumeclaims" name={t('COMMON:MSG_LNB_MENU_52')} />
           <ResourceClusterLink resource="persistentvolumes" name={t('COMMON:MSG_LNB_MENU_51')} />
         </NavSection>
-        <NavSection title={t('COMMON:MSG_LNB_MENU_79')}>
+        <NavSection title="매니지먼트">
           <ResourceNSLink resource="limitranges" name={t('COMMON:MSG_LNB_MENU_81')} />
           <ResourceNSLink resource="resourcequotas" name={t('COMMON:MSG_LNB_MENU_80')} startsWith={quotaStartsWith} />
           <ResourceClusterLink resource="customresourcedefinitions" name={t('COMMON:MSG_LNB_MENU_82')} />
