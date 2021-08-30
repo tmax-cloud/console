@@ -10,6 +10,7 @@ import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Popover } from '@patternfly/react-core';
+import { ClusterTemplateClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const clusterTemplateClaimCommonActions = [Kebab.factory.Edit, Kebab.factory.Delete];
 
@@ -31,13 +32,13 @@ const ClusterTemplateClaimDetails: React.FC<ClusterTemplateClaimDetailsProps> = 
               <dd>{clusterTemplateClaim.spec?.resourceName}</dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
               <dd>
-                <Status status={clusterTemplateClaim.status?.status} />
+                <Status status={ClusterTemplateClaimReducer(clusterTemplateClaim)} />
               </dd>
               <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_18')}</dt>
               <dd>
                 <Timestamp timestamp={clusterTemplateClaim.status?.lastTransitionTime} />
               </dd>
-              {clusterTemplateClaim.status?.status === 'Rejected' && (
+              {ClusterTemplateClaimReducer(clusterTemplateClaim) === 'Rejected' && (
                 <>
                   <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_20')}</dt>
                   <dd>{clusterTemplateClaim.status.reason}</dd>
@@ -85,14 +86,14 @@ const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        {obj.status?.status === 'Error' ? (
+        {ClusterTemplateClaimReducer(obj) === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
             <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <Status status={obj.status?.status} />
+              <Status status={ClusterTemplateClaimReducer(obj)} />
             </div>
           </Popover>
         ) : (
-          <Status status={obj.status?.status} />
+          <Status status={ClusterTemplateClaimReducer(obj)} />
         )}
       </TableData>
       <TableData className={tableColumnClasses[3]}>
@@ -142,13 +143,9 @@ ClusterTemplateClaimTableHeader.displayName = 'ClusterTemplateClaimTableHeader';
 
 const ClusterTemplateClaimsList: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Cluster Template Claim" Header={ClusterTemplateClaimTableHeader.bind(null, t)} Row={ClusterTemplateClaimTableRow} customSorts={{ clusterTemplateClaimStatusReducer }} />;
+  return <Table {...props} aria-label="Cluster Template Claim" Header={ClusterTemplateClaimTableHeader.bind(null, t)} Row={ClusterTemplateClaimTableRow} customSorts={{ ClusterTemplateClaimReducer }} />;
 };
 ClusterTemplateClaimsList.displayName = 'ClusterTemplateClaimsList';
-
-const clusterTemplateClaimStatusReducer = (csc: any): string => {
-  return csc?.status?.status;
-};
 
 const ClusterTemplateClaimsPage: React.FC<ClusterTemplateClaimsPageProps> = props => {
   const { t } = useTranslation();
@@ -156,7 +153,7 @@ const ClusterTemplateClaimsPage: React.FC<ClusterTemplateClaimsPageProps> = prop
     {
       filterGroupName: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
       type: 'cluster-template-claim-status',
-      reducer: clusterTemplateClaimStatusReducer,
+      reducer: ClusterTemplateClaimReducer,
       items: [
         { id: 'Approved', title: t('COMMON:MSG_COMMON_STATUS_10') },
         { id: 'Rejected', title: t('COMMON:MSG_COMMON_STATUS_11') },
