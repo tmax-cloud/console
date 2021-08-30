@@ -1,18 +1,15 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
-import { K8sResourceKind, K8sResourceKindReference } from '../module/k8s';
+import { K8sResourceKind } from '../module/k8s';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { HorizontalPodAutoscalerModel } from '../models';
 import { Conditions } from './conditions';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
+import { DetailsPage, ListPage } from './factory';
 import { DetailsItem, Kebab, LabelList, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory } from './utils';
 import { ResourceEventStream } from './events';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
-
-const HorizontalPodAutoscalersReference: K8sResourceKindReference = 'HorizontalPodAutoscaler';
+import { TableProps } from './hypercloud/utils/default-list-component';
 
 const { common } = Kebab.factory;
 const menuActions = [...Kebab.getExtensionsActionsForKind(HorizontalPodAutoscalerModel), ...common];
@@ -165,103 +162,78 @@ export const HorizontalPodAutoscalersDetails: React.FC<HorizontalPodAutoscalersD
 };
 
 const pages = [navFactory.details(HorizontalPodAutoscalersDetails), navFactory.editResource(), navFactory.events(ResourceEventStream)];
-export const HorizontalPodAutoscalersDetailsPage: React.FC<HorizontalPodAutoscalersDetailsPageProps> = props => <DetailsPage {...props} kind={HorizontalPodAutoscalersReference} menuActions={menuActions} pages={pages} />;
+export const HorizontalPodAutoscalersDetailsPage: React.FC<HorizontalPodAutoscalersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={pages} />;
 HorizontalPodAutoscalersDetailsPage.displayName = 'HorizontalPodAutoscalersDetailsPage';
 
-const tableColumnClasses = [classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'col-xs-6'), classNames('col-lg-2', 'col-md-3', 'col-sm-4', 'hidden-xs'), classNames('col-lg-2', 'col-md-3', 'hidden-sm', 'hidden-xs'), classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), classNames('col-lg-2', 'hidden-md', 'hidden-sm', 'hidden-xs'), Kebab.columnClass];
+const kind = HorizontalPodAutoscalerModel.kind;
 
-const kind = 'HorizontalPodAutoscaler';
-
-const HorizontalPodAutoscalersTableHeader = (t?: TFunction) => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_23'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_23',
       sortField: 'spec.scaleTargetRef.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_24'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_24',
       sortField: 'spec.minReplicas',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_25'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_25',
       sortField: 'spec.maxReplicas',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[6] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
+  ],
+  row: (obj: K8sResourceKind) => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />,
+    },
+    {
+      className: 'co-break-word',
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    {
+      className: classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'co-break-word'),
+      children: <ResourceLink kind={obj.spec.scaleTargetRef.kind} name={obj.spec.scaleTargetRef.name} namespace={obj.metadata.namespace} title={obj.spec.scaleTargetRef.name} />,
+    },
+    {
+      children: obj.spec.minReplicas,
+    },
+    {
+      children: obj.spec.maxReplicas,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
-HorizontalPodAutoscalersTableHeader.displayName = 'HorizontalPodAutoscalersTableHeader';
 
-const HorizontalPodAutoscalersTableRow: RowFunction<K8sResourceKind> = ({ obj, index, key, style }) => {
-  return (
-    <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={HorizontalPodAutoscalersReference} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.name} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <LabelList kind={kind} labels={obj.metadata.labels} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>
-        <ResourceLink kind={obj.spec.scaleTargetRef.kind} name={obj.spec.scaleTargetRef.name} namespace={obj.metadata.namespace} title={obj.spec.scaleTargetRef.name} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>{obj.spec.minReplicas}</TableData>
-      <TableData className={tableColumnClasses[5]}>{obj.spec.maxReplicas}</TableData>
-      <TableData className={tableColumnClasses[6]}>
-        <ResourceKebab actions={menuActions} kind={HorizontalPodAutoscalersReference} resource={obj} />
-      </TableData>
-    </TableRow>
-  );
-};
-
-const HorizontalPodAutoscalersList: React.SFC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Horizontal Pod Auto Scalers" Header={HorizontalPodAutoscalersTableHeader.bind(null, t)} Row={HorizontalPodAutoscalersTableRow} virtualize />;
-};
-HorizontalPodAutoscalersList.displayName = 'HorizontalPodAutoscalersList';
-
-export const HorizontalPodAutoscalersPage: React.FC<HorizontalPodAutoscalersPageProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage {...props} title={t('COMMON:MSG_LNB_MENU_32')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_32') })} kind={HorizontalPodAutoscalersReference} ListComponent={HorizontalPodAutoscalersList} canCreate={true} />;
+export const HorizontalPodAutoscalersPage: React.FC = props => {
+  return <ListPage {...props} tableProps={tableProps} canCreate={true} kind={kind} />;
 };
 HorizontalPodAutoscalersPage.displayName = 'HorizontalPodAutoscalersListPage';
 
 export type HorizontalPodAutoscalersDetailsProps = {
   obj: any;
-};
-
-export type HorizontalPodAutoscalersPageProps = {
-  showTitle?: boolean;
-  namespace?: string;
-  selector?: any;
 };
 
 export type HorizontalPodAutoscalersDetailsPageProps = {

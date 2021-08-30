@@ -18,6 +18,11 @@ export type BuildConfigOverviewItem = K8sResourceKind & {
   builds: K8sResourceKind[];
 };
 
+export type StatusData = {
+  icon: React.ReactNode;
+  phase: string;
+}
+
 export type OverviewItem<T = K8sResourceKind> = {
   alerts?: OverviewItemAlerts;
   buildConfigs: BuildConfigOverviewItem[];

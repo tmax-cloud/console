@@ -1,4 +1,6 @@
 import { K8sKind } from '../../module/k8s';
+import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
+import startsWith from '@console/internal/hypercloud/menu/starts-with';
 
 export const HyperClusterResourceModel: K8sKind = {
   label: 'Cluster',
@@ -22,6 +24,16 @@ export const ClusterManagerModel: K8sKind = {
   kind: 'ClusterManager',
   id: 'clustermanager',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+    startsWith: startsWith.clustermanagersStartsWith,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_165',
+    labelPlural: 'COMMON:MSG_LNB_MENU_84',
+  },
 };
 
 export const ClusterClaimModel: K8sKind = {
@@ -34,6 +46,10 @@ export const ClusterClaimModel: K8sKind = {
   kind: 'ClusterClaim',
   id: 'clusterclaim',
   namespaced: true,
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_182',
+    labelPlural: 'COMMON:MSG_LNB_MENU_105',
+  },
 };
 
 export const SignerPolicyModel: K8sKind = {
@@ -47,6 +63,15 @@ export const SignerPolicyModel: K8sKind = {
   crd: false,
   id: 'signerpolicy',
   plural: 'signerpolicies',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_175',
+    labelPlural: 'COMMON:MSG_LNB_MENU_96',
+  },
 };
 
 export const ImageReplicateModel: K8sKind = {
@@ -60,6 +85,15 @@ export const ImageReplicateModel: K8sKind = {
   crd: false,
   id: 'imagereplicate',
   plural: 'imagereplicates',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_172',
+    labelPlural: 'COMMON:MSG_LNB_MENU_93',
+  },
 };
 
 export const PodSecurityPolicyModel: K8sKind = {
@@ -73,6 +107,15 @@ export const PodSecurityPolicyModel: K8sKind = {
   labelPlural: 'Pod Security Policies',
   id: 'podsecuritypolicie',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_160',
+    labelPlural: 'COMMON:MSG_LNB_MENU_78',
+  },
 };
 
 export const FederatedConfigMapModel: K8sKind = {
@@ -85,6 +128,15 @@ export const FederatedConfigMapModel: K8sKind = {
   kind: 'FederatedConfigMap',
   id: 'federatedconfigmap',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_120',
+    labelPlural: 'COMMON:MSG_LNB_MENU_27',
+  },
 };
 
 export const FederatedDeploymentModel: K8sKind = {
@@ -97,6 +149,15 @@ export const FederatedDeploymentModel: K8sKind = {
   kind: 'FederatedDeployment',
   id: 'federateddeployment',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_117',
+    labelPlural: 'COMMON:MSG_LNB_MENU_24',
+  },
 };
 
 export const FederatedIngressModel: K8sKind = {
@@ -109,6 +170,15 @@ export const FederatedIngressModel: K8sKind = {
   kind: 'FederatedIngress',
   id: 'federatedingress',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_138',
+    labelPlural: 'COMMON:MSG_LNB_MENU_48',
+  },
 };
 
 export const FederatedJobModel: K8sKind = {
@@ -121,6 +191,15 @@ export const FederatedJobModel: K8sKind = {
   kind: 'FederatedJob',
   id: 'federatedjob',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_122',
+    labelPlural: 'COMMON:MSG_LNB_MENU_29',
+  },
 };
 
 export const FederatedNamespaceModel: K8sKind = {
@@ -133,6 +212,15 @@ export const FederatedNamespaceModel: K8sKind = {
   kind: 'FederatedNamespace',
   id: 'federatednamespace',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_106',
+    labelPlural: 'COMMON:MSG_LNB_MENU_3',
+  },
 };
 
 export const FederatedReplicaSetModel: K8sKind = {
@@ -145,6 +233,15 @@ export const FederatedReplicaSetModel: K8sKind = {
   kind: 'FederatedReplicaSet',
   id: 'federatedreplicaset',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_124',
+    labelPlural: 'COMMON:MSG_LNB_MENU_31',
+  },
 };
 
 export const FederatedSecretModel: K8sKind = {
@@ -157,6 +254,15 @@ export const FederatedSecretModel: K8sKind = {
   kind: 'FederatedSecret',
   id: 'federatedsecret',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_119',
+    labelPlural: 'COMMON:MSG_LNB_MENU_26',
+  },
 };
 
 export const FederatedServiceModel: K8sKind = {
@@ -169,6 +275,15 @@ export const FederatedServiceModel: K8sKind = {
   kind: 'FederatedService',
   id: 'federatedservice',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_137',
+    labelPlural: 'COMMON:MSG_LNB_MENU_47',
+  },
 };
 
 export const FederatedPodModel: K8sKind = {
@@ -181,6 +296,16 @@ export const FederatedPodModel: K8sKind = {
   kind: 'FederatedPod',
   id: 'federatedpod',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+    startsWith: startsWith.clustermanagersStartsWith,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_116',
+    labelPlural: 'COMMON:MSG_LNB_MENU_23',
+  },
 };
 
 export const FederatedHPAModel: K8sKind = {
@@ -193,6 +318,15 @@ export const FederatedHPAModel: K8sKind = {
   kind: 'FederatedHorizontalPodAutoscaler',
   id: 'federatedhorizontalpodautoscaler',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_125',
+    labelPlural: 'COMMON:MSG_LNB_MENU_32',
+  },
 };
 
 export const FederatedDaemonSetModel: K8sKind = {
@@ -205,6 +339,15 @@ export const FederatedDaemonSetModel: K8sKind = {
   kind: 'FederatedDaemonSet',
   id: 'federateddaemonset',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_123',
+    labelPlural: 'COMMON:MSG_LNB_MENU_30',
+  },
 };
 
 export const FederatedStatefulSetModel: K8sKind = {
@@ -217,6 +360,15 @@ export const FederatedStatefulSetModel: K8sKind = {
   kind: 'FederatedStatefulSet',
   id: 'federatedstatefulset',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_118',
+    labelPlural: 'COMMON:MSG_LNB_MENU_25',
+  },
 };
 
 export const FederatedCronJobModel: K8sKind = {
@@ -229,6 +381,15 @@ export const FederatedCronJobModel: K8sKind = {
   kind: 'FederatedCronJob',
   id: 'federatedcronjob',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_121',
+    labelPlural: 'COMMON:MSG_LNB_MENU_28',
+  },
 };
 
 export const RegistryModel: K8sKind = {
@@ -242,6 +403,15 @@ export const RegistryModel: K8sKind = {
   labelPlural: 'Registries',
   id: 'registry',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_188',
+    labelPlural: 'COMMON:MSG_LNB_MENU_187',
+  },
 };
 
 export const ExternalRegistryModel: K8sKind = {
@@ -255,6 +425,15 @@ export const ExternalRegistryModel: K8sKind = {
   labelPlural: 'External Registries',
   id: 'externalregistry',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_190',
+    labelPlural: 'COMMON:MSG_LNB_MENU_189',
+  },
 };
 
 export const RepositoryModel: K8sKind = {
@@ -268,6 +447,10 @@ export const RepositoryModel: K8sKind = {
   labelPlural: 'Repositories',
   id: 'repository',
   crd: false,
+  i18nInfo: {
+    label: 'SINGLE:MSG_CONTAINERREGISTRIES_CONTAINTERREGISTRYDETAILS_TABDETAILS_2',
+    labelPlural: 'SINGLE:MSG_CONTAINERREGISTRIES_CONTAINTERREGISTRYDETAILS_TABDETAILS_1',
+  },
 };
 
 export const NotaryModel: K8sKind = {
@@ -307,6 +490,15 @@ export const ImageSignerModel: K8sKind = {
   id: 'imagesigner',
   labelPlural: 'Image Signers',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_170',
+    labelPlural: 'COMMON:MSG_LNB_MENU_91',
+  },
 };
 
 export const ImageSignRequestModel: K8sKind = {
@@ -320,6 +512,15 @@ export const ImageSignRequestModel: K8sKind = {
   id: 'imagesignrequest',
   labelPlural: 'Image Sign Requests',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_171',
+    labelPlural: 'COMMON:MSG_LNB_MENU_92',
+  },
 };
 export const ImageScanRequestModel: K8sKind = {
   label: 'Image Scan Request',
@@ -332,6 +533,15 @@ export const ImageScanRequestModel: K8sKind = {
   id: 'imagescanrequest',
   labelPlural: 'Image Scan Requests',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_174',
+    labelPlural: 'COMMON:MSG_LNB_MENU_95',
+  },
 };
 
 export const TaskModel: K8sKind = {
@@ -345,6 +555,15 @@ export const TaskModel: K8sKind = {
   labelPlural: 'Tasks',
   id: 'task',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_144',
+    labelPlural: 'COMMON:MSG_LNB_MENU_57',
+  },
 };
 
 export const ClusterTaskModel: K8sKind = {
@@ -358,6 +577,15 @@ export const ClusterTaskModel: K8sKind = {
   labelPlural: 'Cluster Tasks',
   id: 'clustertask',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_173',
+    labelPlural: 'COMMON:MSG_LNB_MENU_94',
+  },
 };
 
 export const TaskRunModel: K8sKind = {
@@ -371,6 +599,15 @@ export const TaskRunModel: K8sKind = {
   labelPlural: 'Task Runs',
   id: 'taskrun',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_145',
+    labelPlural: 'COMMON:MSG_LNB_MENU_58',
+  },
 };
 
 export const PipelineModel: K8sKind = {
@@ -384,6 +621,15 @@ export const PipelineModel: K8sKind = {
   labelPlural: 'Pipelines',
   id: 'pipeline',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_146',
+    labelPlural: 'COMMON:MSG_LNB_MENU_59',
+  },
 };
 
 export const PipelineRunModel: K8sKind = {
@@ -397,6 +643,15 @@ export const PipelineRunModel: K8sKind = {
   labelPlural: 'Pipeline Runs',
   id: 'pipelinerun',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_147',
+    labelPlural: 'COMMON:MSG_LNB_MENU_60',
+  },
 };
 
 export const ApprovalModel: K8sKind = {
@@ -410,6 +665,15 @@ export const ApprovalModel: K8sKind = {
   labelPlural: 'Pipeline Approvals',
   id: 'approval',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_148',
+    labelPlural: 'COMMON:MSG_LNB_MENU_61',
+  },
 };
 
 export const PipelineResourceModel: K8sKind = {
@@ -423,6 +687,15 @@ export const PipelineResourceModel: K8sKind = {
   labelPlural: 'Pipeline Resources',
   id: 'pipelineresource',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_149',
+    labelPlural: 'COMMON:MSG_LNB_MENU_62',
+  },
 };
 
 export const IntegrationJobModel: K8sKind = {
@@ -436,6 +709,15 @@ export const IntegrationJobModel: K8sKind = {
   labelPlural: 'Integration Jobs',
   id: 'integrationjob',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_186',
+    labelPlural: 'COMMON:MSG_LNB_MENU_185',
+  },
 };
 
 export const IntegrationConfigModel: K8sKind = {
@@ -449,6 +731,15 @@ export const IntegrationConfigModel: K8sKind = {
   labelPlural: 'Integration Configs',
   id: 'integrationconfig',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_184',
+    labelPlural: 'COMMON:MSG_LNB_MENU_183',
+  },
 };
 
 export const VirtualMachineModel: K8sKind = {
@@ -461,6 +752,15 @@ export const VirtualMachineModel: K8sKind = {
   kind: 'VirtualMachine',
   id: 'virtualmachine',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_126',
+    labelPlural: 'COMMON:MSG_LNB_MENU_33',
+  },
 };
 
 export const VirtualMachineInstanceModel: K8sKind = {
@@ -473,6 +773,15 @@ export const VirtualMachineInstanceModel: K8sKind = {
   kind: 'VirtualMachineInstance',
   id: 'virtualmachineinstance',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_127',
+    labelPlural: 'COMMON:MSG_LNB_MENU_34',
+  },
 };
 
 export const VirtualServiceModel: K8sKind = {
@@ -485,6 +794,15 @@ export const VirtualServiceModel: K8sKind = {
   kind: 'VirtualService',
   id: 'virtualservice',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_128',
+    labelPlural: 'COMMON:MSG_LNB_MENU_36',
+  },
 };
 
 export const DestinationRuleModel: K8sKind = {
@@ -497,6 +815,15 @@ export const DestinationRuleModel: K8sKind = {
   kind: 'DestinationRule',
   id: 'destinationrule',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_129',
+    labelPlural: 'COMMON:MSG_LNB_MENU_37',
+  },
 };
 
 export const EnvoyFilterModel: K8sKind = {
@@ -509,6 +836,15 @@ export const EnvoyFilterModel: K8sKind = {
   kind: 'EnvoyFilter',
   id: 'envoyfilter',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_130',
+    labelPlural: 'COMMON:MSG_LNB_MENU_38',
+  },
 };
 
 export const GatewayModel: K8sKind = {
@@ -521,6 +857,15 @@ export const GatewayModel: K8sKind = {
   kind: 'Gateway',
   id: 'gateway',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_131',
+    labelPlural: 'COMMON:MSG_LNB_MENU_39',
+  },
 };
 
 export const SidecarModel: K8sKind = {
@@ -533,6 +878,15 @@ export const SidecarModel: K8sKind = {
   kind: 'Sidecar',
   id: 'sidecar',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_132',
+    labelPlural: 'COMMON:MSG_LNB_MENU_40',
+  },
 };
 
 export const ServiceEntryModel: K8sKind = {
@@ -545,6 +899,15 @@ export const ServiceEntryModel: K8sKind = {
   kind: 'ServiceEntry',
   id: 'serviceentry',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_133',
+    labelPlural: 'COMMON:MSG_LNB_MENU_41',
+  },
 };
 
 export const RequestAuthenticationModel: K8sKind = {
@@ -557,6 +920,15 @@ export const RequestAuthenticationModel: K8sKind = {
   kind: 'RequestAuthentication',
   id: 'requestauthentication',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_134',
+    labelPlural: 'COMMON:MSG_LNB_MENU_42',
+  },
 };
 
 export const PeerAuthenticationModel: K8sKind = {
@@ -569,6 +941,15 @@ export const PeerAuthenticationModel: K8sKind = {
   kind: 'PeerAuthentication',
   id: 'peerauthentication',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_135',
+    labelPlural: 'COMMON:MSG_LNB_MENU_43',
+  },
 };
 
 export const AuthorizationPolicyModel: K8sKind = {
@@ -581,6 +962,15 @@ export const AuthorizationPolicyModel: K8sKind = {
   namespaced: true,
   kind: 'AuthorizationPolicy',
   id: 'authorizationpolicy',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_136',
+    labelPlural: 'COMMON:MSG_LNB_MENU_44',
+  },
 };
 
 export const DataVolumeModel: K8sKind = {
@@ -593,7 +983,13 @@ export const DataVolumeModel: K8sKind = {
   kind: 'DataVolume',
   id: 'datavolume',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
 };
+
 export const NamespaceClaimModel: K8sKind = {
   label: 'NamespaceClaim',
   labelPlural: 'NamespaceClaims',
@@ -604,6 +1000,10 @@ export const NamespaceClaimModel: K8sKind = {
   kind: 'NamespaceClaim',
   id: 'namespaceclaim',
   namespaced: false,
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_180',
+    labelPlural: 'COMMON:MSG_LNB_MENU_103',
+  },
 };
 
 export const ResourceQuotaClaimModel: K8sKind = {
@@ -616,6 +1016,10 @@ export const ResourceQuotaClaimModel: K8sKind = {
   kind: 'ResourceQuotaClaim',
   id: 'resourcequotaclaim',
   namespaced: true,
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_179',
+    labelPlural: 'COMMON:MSG_LNB_MENU_102',
+  },
 };
 
 export const RoleBindingClaimModel: K8sKind = {
@@ -628,6 +1032,16 @@ export const RoleBindingClaimModel: K8sKind = {
   kind: 'RoleBindingClaim',
   id: 'rolebindingclaim',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    startsWith: startsWith.rolebindingclaimsStartsWith,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_178',
+    labelPlural: 'COMMON:MSG_LNB_MENU_101',
+  },
 };
 
 export const ServiceBrokerModel: K8sKind = {
@@ -640,6 +1054,15 @@ export const ServiceBrokerModel: K8sKind = {
   kind: 'ServiceBroker',
   id: 'servicebroker',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_107',
+    labelPlural: 'COMMON:MSG_LNB_MENU_11',
+  },
 };
 
 export const ServiceClassModel: K8sKind = {
@@ -652,6 +1075,15 @@ export const ServiceClassModel: K8sKind = {
   kind: 'ServiceClass',
   id: 'serviceclass',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_108',
+    labelPlural: 'COMMON:MSG_LNB_MENU_12',
+  },
 };
 
 export const ServicePlanModel: K8sKind = {
@@ -664,6 +1096,11 @@ export const ServicePlanModel: K8sKind = {
   kind: 'ServicePlan',
   id: 'serviceplan',
   namespaced: true,
+  menuInfo: {
+    visible: false,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
 };
 
 export const ClusterServiceBrokerModel: K8sKind = {
@@ -676,6 +1113,15 @@ export const ClusterServiceBrokerModel: K8sKind = {
   kind: 'ClusterServiceBroker',
   id: 'clusterservicebroker',
   namespaced: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_109',
+    labelPlural: 'COMMON:MSG_LNB_MENU_14',
+  },
 };
 
 export const ClusterServiceClassModel: K8sKind = {
@@ -688,6 +1134,15 @@ export const ClusterServiceClassModel: K8sKind = {
   kind: 'ClusterServiceClass',
   id: 'clusterserviceclass',
   namespaced: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_110',
+    labelPlural: 'COMMON:MSG_LNB_MENU_15',
+  },
 };
 
 export const ClusterServicePlanModel: K8sKind = {
@@ -700,6 +1155,11 @@ export const ClusterServicePlanModel: K8sKind = {
   kind: 'ClusterServicePlan',
   id: 'clusterserviceplan',
   namespaced: false,
+  menuInfo: {
+    visible: false,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
 };
 
 export const ServiceInstanceModel: K8sKind = {
@@ -712,6 +1172,15 @@ export const ServiceInstanceModel: K8sKind = {
   kind: 'ServiceInstance',
   id: 'serviceinstance',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_111',
+    labelPlural: 'COMMON:MSG_LNB_MENU_17',
+  },
 };
 
 export const ServiceBindingModel: K8sKind = {
@@ -724,6 +1193,15 @@ export const ServiceBindingModel: K8sKind = {
   kind: 'ServiceBinding',
   id: 'servicebinding',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_112',
+    labelPlural: 'COMMON:MSG_LNB_MENU_18',
+  },
 };
 
 export const ClusterTemplateClaimModel: K8sKind = {
@@ -736,6 +1214,15 @@ export const ClusterTemplateClaimModel: K8sKind = {
   kind: 'ClusterTemplateClaim',
   id: 'clustertemplateclaim',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_113',
+    labelPlural: 'COMMON:MSG_LNB_MENU_19',
+  },
 };
 
 export const TemplateModel: K8sKind = {
@@ -748,6 +1235,15 @@ export const TemplateModel: K8sKind = {
   kind: 'Template',
   id: 'template',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_114',
+    labelPlural: 'COMMON:MSG_LNB_MENU_20',
+  },
 };
 
 export const TemplateInstanceModel: K8sKind = {
@@ -760,6 +1256,15 @@ export const TemplateInstanceModel: K8sKind = {
   kind: 'TemplateInstance',
   id: 'templateinstance',
   namespaced: true,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_115',
+    labelPlural: 'COMMON:MSG_LNB_MENU_21',
+  },
 };
 
 export const ClusterTemplateModel: K8sKind = {
@@ -772,6 +1277,15 @@ export const ClusterTemplateModel: K8sKind = {
   kind: 'ClusterTemplate',
   id: 'clustertemplate',
   namespaced: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_181',
+    labelPlural: 'COMMON:MSG_LNB_MENU_104',
+  },
 };
 
 export const NotebookModel: K8sKind = {
@@ -785,6 +1299,15 @@ export const NotebookModel: K8sKind = {
   kind: 'Notebook',
   id: 'notebook',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_151',
+    labelPlural: 'COMMON:MSG_LNB_MENU_65',
+  },
 };
 
 export const ExperimentModel: K8sKind = {
@@ -798,6 +1321,15 @@ export const ExperimentModel: K8sKind = {
   kind: 'Experiment',
   id: 'experiment',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_205',
+    labelPlural: 'COMMON:MSG_LNB_MENU_194',
+  },
 };
 
 export const TrainingJobModel: K8sKind = {
@@ -811,6 +1343,17 @@ export const TrainingJobModel: K8sKind = {
   kind: 'TrainingJob',
   id: 'trainingjob',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+    defaultLabel: 'COMMON:MSG_LNB_MENU_196',
+    resource: 'trainingjobs',
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_152',
+    labelPlural: 'COMMON:MSG_LNB_MENU_68',
+  },
 };
 
 export const TFJobModel: K8sKind = {
@@ -824,7 +1367,12 @@ export const TFJobModel: K8sKind = {
   kind: 'TFJob',
   id: 'tfjob',
   crd: false,
+  i18nInfo: {
+    label: 'COMMON:MSG_MAIN_BUTTON_4',
+    labelPlural: 'COMMON:MSG_MAIN_BUTTON_4',
+  },
 };
+
 export const PyTorchJobModel: K8sKind = {
   label: 'PyTorchJob',
   labelPlural: 'PyTorch Jobs',
@@ -836,6 +1384,10 @@ export const PyTorchJobModel: K8sKind = {
   kind: 'PyTorchJob',
   id: 'pytorchjob',
   crd: false,
+  i18nInfo: {
+    label: 'COMMON:MSG_MAIN_BUTTON_5',
+    labelPlural: 'COMMON:MSG_MAIN_BUTTON_5',
+  },
 };
 
 export const InferenceServiceModel: K8sKind = {
@@ -849,6 +1401,15 @@ export const InferenceServiceModel: K8sKind = {
   kind: 'InferenceService',
   id: 'inferenceservice',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_193',
+    labelPlural: 'COMMON:MSG_LNB_MENU_192',
+  },
 };
 
 export const TrainedModelModel: K8sKind = {
@@ -862,6 +1423,15 @@ export const TrainedModelModel: K8sKind = {
   kind: 'TrainedModel',
   id: 'trainedmodel',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_196',
+    labelPlural: 'COMMON:MSG_LNB_MENU_196',
+  },
 };
 
 export const WorkflowTemplateModel: K8sKind = {
@@ -875,6 +1445,11 @@ export const WorkflowTemplateModel: K8sKind = {
   kind: 'WorkflowTemplate',
   id: 'workflowtemplate',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
 };
 
 export const WorkflowModel: K8sKind = {
@@ -888,6 +1463,11 @@ export const WorkflowModel: K8sKind = {
   kind: 'Workflow',
   id: 'workflow',
   crd: false,
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
 };
 
 export const TFApplyClaimModel: K8sKind = {
@@ -900,6 +1480,15 @@ export const TFApplyClaimModel: K8sKind = {
   namespaced: true,
   id: 'tfapplyclaim',
   plural: 'tfapplyclaims',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_201',
+    labelPlural: 'COMMON:MSG_LNB_MENU_200',
+  },
 };
 
 export const HelmReleaseModel: K8sKind = {
@@ -912,6 +1501,15 @@ export const HelmReleaseModel: K8sKind = {
   namespaced: true,
   id: 'helmrelease',
   plural: 'helmreleases',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_204',
+    labelPlural: 'COMMON:MSG_LNB_MENU_203',
+  },
 };
 
 export const AWXModel: K8sKind = {
@@ -924,6 +1522,15 @@ export const AWXModel: K8sKind = {
   namespaced: true,
   id: 'awx',
   plural: 'awxs',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: true,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_199',
+    labelPlural: 'COMMON:MSG_LNB_MENU_198',
+  },
 };
 
 export const ClusterRegistrationModel: K8sKind = {
@@ -936,4 +1543,20 @@ export const ClusterRegistrationModel: K8sKind = {
   kind: 'ClusterRegistration',
   id: 'clusterregistration',
   namespaced: true,
+  i18nInfo: {
+    label: 'COMMON:MSG_MAIN_TAB_4',
+    labelPlural: 'COMMON:MSG_MAIN_TAB_3',
+  },
+};
+
+export const ClusterMenuPolicyModel: K8sKind = {
+  label: 'Cluster Menu Policy',
+  labelPlural: 'Cluster Menu Policies',
+  apiVersion: 'v1',
+  apiGroup: 'ui.tmax.io',
+  plural: 'clustermenupolicies',
+  abbr: 'CMP',
+  kind: 'ClusterMenuPolicy',
+  id: 'clustermenupolicy',
+  namespaced: false,
 };

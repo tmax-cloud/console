@@ -119,7 +119,7 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
       <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_3')} id="pipeline" isRequired>
         <ResourceDropdown
           name="spec.pipelineRef.name"
-          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
+          placeholder={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_22')}
           resources={[
             {
               kind: 'Pipeline',
@@ -151,10 +151,10 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
 
       <div className="co-form-section__separator" />
 
-      <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_7')} id="serviceaccount" >
+      <Section label={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_17')} id="serviceaccount" >
         <ResourceDropdown
           name="spec.serviceAccountName"
-          placeholder={t('COMMON:MSG_COMMON_FILTER_1')}
+          placeholder={t('SINGLE:MSG_TASKRUN_CREATFORM_DIV2_18')}
           resources={[
             {
               kind: 'ServiceAccount',
@@ -164,7 +164,6 @@ const CreatePipelineRunComponent: React.FC<PipelineRunFormProps> = props => {
           ]}
           type="single"
           useHookForm
-          required
         />
       </Section>
     </>

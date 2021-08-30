@@ -1,90 +1,69 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { K8sResourceKind } from '../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from './factory';
+import { DetailsPage, ListPage } from './factory';
 import { AsyncComponent, DetailsItem, Kebab, KebabAction, ContainerTable, detailsPage, LabelList, navFactory, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, LoadingInline } from './utils';
 import { ResourceEventStream } from './events';
 import { VolumesTable } from './volumes-table';
 import { DaemonSetModel } from '../models';
 import { PodRingController, PodRing } from '@console/shared';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { PodStatus } from './hypercloud/utils/pod-status';
+import { TableProps } from './hypercloud/utils/default-list-component';
 
 export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(DaemonSetModel), EditHealthChecks, ...Kebab.factory.common];
 
-const kind = 'DaemonSet';
+const kind = DaemonSetModel.kind;
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const DaemonSetTableHeader = (t?: TFunction) => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
       sortFunc: 'daemonsetNumScheduled',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_16'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_16',
       sortField: 'spec.selector',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[5] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
-};
-DaemonSetTableHeader.displayName = 'DaemonSetTableHeader';
-
-const DaemonSetTableRow: RowFunction<K8sResourceKind> = ({ obj: daemonset, index, key, style }) => {
-  return (
-    <TableRow id={daemonset.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={daemonset.metadata.name} namespace={daemonset.metadata.namespace} title={daemonset.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={daemonset.metadata.namespace} title={daemonset.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <Link to={`/k8s/ns/${daemonset.metadata.namespace}/daemonsets/${daemonset.metadata.name}/pods`} title="pods">
-          {daemonset.status.currentNumberScheduled} of {daemonset.status.desiredNumberScheduled} pods
-        </Link>
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <LabelList kind={kind} labels={daemonset.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <Selector selector={daemonset.spec.selector} namespace={daemonset.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={daemonset} />
-      </TableData>
-    </TableRow>
-  );
+  ],
+  row: (obj: K8sResourceKind) => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      className: 'co-break-word',
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
+      children: <PodStatus resource={obj} kind={kind} desired={obj.status.desiredNumberScheduled} ready={obj.status.currentNumberScheduled} />,
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    { children: <Selector selector={obj.spec.selector} namespace={obj.metadata.namespace} /> },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
 
 export const DaemonSetDetailsList: React.FC<DaemonSetDetailsListProps> = ({ ds }) => {
@@ -135,14 +114,9 @@ const EnvironmentPage: React.FC<EnvironmentPageProps> = props => <AsyncComponent
 const envPath = ['spec', 'template', 'spec', 'containers'];
 const EnvironmentTab: React.FC<EnvironmentTabProps> = props => <EnvironmentPage obj={props.obj} rawEnvData={props.obj.spec.template.spec} envPath={envPath} readOnly={false} />;
 const { details, pods, editResource, envEditor, events } = navFactory;
-export const DaemonSets: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Daemon Sets" Header={DaemonSetTableHeader.bind(null, t)} Row={DaemonSetTableRow} virtualize />;
-};
 
-export const DaemonSetsPage: React.FC<DaemonSetsPageProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_30')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_30') })} canCreate={true} ListComponent={DaemonSets} kind={kind} {...props} />;
+export const DaemonSetsPage: React.FC = props => {
+  return <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 };
 
 const DaemonSetPods: React.FC<DaemonSetPodsProps> = props => <PodsComponent {...props} customData={{ showNodes: true }} />;
@@ -166,12 +140,6 @@ type EnvironmentTabProps = {
 
 type DaemonSetDetailsProps = {
   obj: K8sResourceKind;
-};
-
-type DaemonSetsPageProps = {
-  showTitle?: boolean;
-  namespace?: string;
-  selector?: any;
 };
 
 type DaemonSetPodsProps = {

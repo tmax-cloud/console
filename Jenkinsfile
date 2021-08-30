@@ -36,6 +36,10 @@ pipeline {
     MC_MODE = "${params.MC_MODE}"
 
     GUIDE_URL = "https://github.com/tmax-cloud/install-console/blob/5.0/README.md"
+    
+    USER_TOKEN = "jinsoo-access-token"
+    USER_NAME = "jinsoo-youn"
+    USER_EMAIL = "jinsoo_youn@tmax.co.kr"
 
   }
   agent {
@@ -78,7 +82,7 @@ pipeline {
     // When using SCM, the checkout stage can be completely omitted 
     stage('Git') {
       steps {
-        git branch: "${BRANCH}", credentialsId: 'jinsoo-youn', url: 'https://github.com/tmax-cloud/console.git'
+        git branch: "${BRANCH}", credentialsId: "${USER_NAME}", url: 'https://github.com/tmax-cloud/console.git'
         sh """
         git branch
         git pull origin HEAD:${BRANCH}
@@ -100,19 +104,17 @@ pipeline {
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
-        withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
+        // withCredentials([string(credentialsId: "${USER_NAME}", Variable: 'TOKEN')]) {      
           sh """
-            git config --global user.name ${username}
-            git config --global user.email jinsoo_youn@tmax.co.kr
-            git config --global credential.username ${username}
-            git config --global credential.helper "!echo password=${password}; echo"          
+            git config --global user.name ${USER_NAME}
+            git config --global user.email ${USER_EMAIL}
           """        
           sh """
           git tag ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
           git tag --list "5.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
-        }
+        // }
       }
     }
 
@@ -173,12 +175,10 @@ pipeline {
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
-        withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {      
+        // withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'TOKEN')]) {      
           sh """
-            git config --global user.name ${username}
-            git config --global user.email jinsoo_youn@tmax.co.kr
-            git config --global credential.username ${username}
-            git config --global credential.helper "!echo password=${password}; echo"          
+            git config --global user.name ${USER_NAME}
+            git config --global user.email ${USER_EMAIL}
           """ 
           // Creat CHANGELOG-${VER}.md
           sh """
@@ -191,7 +191,7 @@ pipeline {
             --simplify-merges ${PRE_VER}..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
-        }
+        // }
       }
     }
 
@@ -203,12 +203,12 @@ pipeline {
         }
       }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'jinsoo-youn', usernameVariable: 'username', passwordVariable: 'password')]) {
+        withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'GITHUB_ACCESS_TOKEN')]) { 
           sh """
-            git push origin HEAD:${BRANCH} --tags
+            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH} --tags
             git add -A
             git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
-            git push origin HEAD:${BRANCH}
+            git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
           """        
         }
         emailext (

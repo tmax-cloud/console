@@ -1,86 +1,67 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
-import { Link } from 'react-router-dom';
 import { K8sResourceKind } from '../module/k8s';
-import { TableRow, TableData } from './factory';
-import { TFunction } from 'i18next';
-import { Kebab, KebabAction, LabelList, ResourceKebab, ResourceLink, resourcePath, Selector } from './utils';
+import { TableProps } from './hypercloud/utils/default-list-component';
+import { PodStatus } from './hypercloud/utils/pod-status';
+import { Kebab, KebabAction, LabelList, ResourceKebab, ResourceLink, Selector } from './utils';
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-export const WorkloadTableRow: React.FC<WorkloadTableRowProps> = ({ obj, index, rowKey, style, kind, menuActions }) => {
-  return (
-    <TableRow id={obj.metadata.uid} index={index} trKey={rowKey} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <Link to={`${resourcePath(kind, obj.metadata.name, obj.metadata.namespace)}/pods`} title="pods">
-          {obj.status.replicas || 0} of {obj.spec.replicas} pods
-        </Link>
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <LabelList kind={kind} labels={obj.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <Selector selector={obj.spec.selector} namespace={obj.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={obj} />
-      </TableData>
-    </TableRow>
-  );
+export const WorkloadTableProps = (customData: WorkloadTableCustomData): TableProps => {
+  return {
+    header: [
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+        sortField: 'metadata.name',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+        sortField: 'metadata.namespace',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
+        sortFunc: 'numReplicas',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
+        sortField: 'metadata.labels',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_16',
+        sortField: 'spec.selector',
+      },
+      {
+        title: '',
+        transforms: null,
+        props: { className: Kebab.columnClass },
+      },
+    ],
+    row: (obj: K8sResourceKind) => {
+      const { kind, menuActions } = customData;
+      return [
+        {
+          children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+        },
+        {
+          className: 'co-break-word',
+          children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+        },
+        {
+          children: <PodStatus resource={obj} kind={kind} desired={obj.spec.replicas} ready={obj.status.replicas} />,
+        },
+        {
+          children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+        },
+        {
+          children: <Selector selector={obj.spec.selector} namespace={obj.metadata.namespace} />,
+        },
+        {
+          className: Kebab.columnClass,
+          children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+        },
+      ];
+    },
+  };
 };
-WorkloadTableRow.displayName = 'WorkloadTableRow';
-type WorkloadTableRowProps = {
-  obj: K8sResourceKind;
-  index: number;
-  rowKey: string;
-  style: object;
+
+type WorkloadTableCustomData = {
   kind: string;
   menuActions: KebabAction[];
 };
-
-export const WorkloadTableHeader = (t?: TFunction) => {
-  return [
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-      sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
-      sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'numReplicas',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
-      sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_16'),
-      sortField: 'spec.selector',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
-    },
-    {
-      title: '',
-      props: { className: tableColumnClasses[5] },
-    },
-  ];
-};
-WorkloadTableHeader.displayName = 'WorkloadTableHeader';

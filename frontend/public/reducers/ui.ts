@@ -7,7 +7,7 @@ import { AlertStates, isSilenced, SilenceStates } from '../reducers/monitoring';
 import { legalNamePattern, getNamespace } from '../components/utils/link';
 import { OverviewSpecialGroup } from '../components/overview/constants';
 import { RootState } from '../redux';
-import { getPerspectives } from '../hypercloud/perspectives';
+import { getPerspectives, PerspectiveType } from '../hypercloud/perspectives';
 import { Alert } from '../components/monitoring';
 
 export type UIState = ImmutableMap<string, any>;
@@ -352,7 +352,14 @@ export const getAcitveSchema = ({ UI }: RootState): any => UI.get('activeSchema'
 
 export const getActiveNamespace = ({ UI }: RootState): string => UI.get('activeNamespace');
 
-export const getActivePerspective = ({ UI }: RootState): string => UI.get('activePerspective');
+export const getActivePerspective = ({ UI }: RootState): string => {
+  // MEMO : CUSTON persepctive에 있는 상태에서 ClusterMenuPolicy 리소스 조작을 통해 CUSTOM perspective 숨길 경우(perspectives가 동적으로 변하는 시점 차이남) MASTER로 설정되도록 처리함
+  if (UI.get('activePerspective') === PerspectiveType.CUSTOM && getPerspectives().find(p => p.properties.id === PerspectiveType.CUSTOM) === undefined) {
+    UI.set('activePerspective', PerspectiveType.MULTI);
+    return PerspectiveType.MASTER;
+  }
+  return UI.get('activePerspective');
+};
 
 export const getActiveApplication = ({ UI }: RootState): string => UI.get('activeApplication');
 

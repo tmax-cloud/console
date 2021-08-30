@@ -8,7 +8,7 @@ import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, MultiListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TrainingJobModel } from '../../models';
-import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
 import * as _ from 'lodash';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainingJobModel), ...Kebab.factory.common];
@@ -140,10 +140,18 @@ const TrainingJobTableRow: RowFunction<K8sResourceKind> = ({ obj: tj, index, key
 
 const TrainingJobDetails: React.FC<TrainingJobDetailsProps> = ({ obj: tj }) => {
   const { t } = useTranslation();
+  const makeDetailTitle = kind => {
+    switch (kind) {
+      case 'PyTorchJob':
+        return t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_143', { 0: t('COMMON:MSG_MAIN_BUTTON_5'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+      case 'TFJob':
+        return t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_143', { 0: t('COMMON:MSG_MAIN_BUTTON_4'), 1: ResourceLabel({ kind: 'TrainingJob' }, t) });
+    }
+  };
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(tj, t) })} />
+        <SectionHeading text={makeDetailTitle(tj.kind)} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={tj} />
@@ -154,18 +162,18 @@ const TrainingJobDetails: React.FC<TrainingJobDetailsProps> = ({ obj: tj }) => {
   );
 };
 
-const { details, editYaml } = navFactory;
+const { details, editResource } = navFactory;
 export const TrainingJobs: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="TrainingJobs" Header={TrainingJobTableHeader.bind(null, t)} Row={TrainingJobTableRow} virtualize />;
+  return <Table {...props} label={ResourceLabelPlural(TrainingJobModel, t)} aria-label="TrainingJobs" Header={TrainingJobTableHeader.bind(null, t)} Row={TrainingJobTableRow} virtualize />;
 };
 
 export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
   const { t } = useTranslation();
 
   const createItems = {
-    tfjob: t('TF Job'),
-    pytorchjob: t('PyTorch Job'),
+    tfjob: t('COMMON:MSG_MAIN_BUTTON_4'),
+    pytorchjob: t('COMMON:MSG_MAIN_BUTTON_5'),
   };
 
   const createProps = {
@@ -176,7 +184,7 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
   return (
     <MultiListPage
       showTitle
-      title="Training Jobs"
+      title={ResourceLabelPlural(TrainingJobModel, t)}
       canCreate={true}
       ListComponent={TrainingJobs}
       namespace={props.namespace}
@@ -189,12 +197,12 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
       ]}
       rowFilters={[
         {
-          filterGroupName: 'Training Job',
+          filterGroupName: ResourceLabelPlural(TrainingJobModel, t),
           type: 'trainingjob-kind',
           reducer: tjKind,
           items: [
-            { id: 'tfjob', title: 'TF Job' },
-            { id: 'pytorchjob', title: 'Pytorch Job' },
+            { id: 'tfjob', title: t('COMMON:MSG_MAIN_BUTTON_4') },
+            { id: 'pytorchjob', title: t('COMMON:MSG_MAIN_BUTTON_5') },
           ],
         },
       ]}
@@ -203,7 +211,7 @@ export const TrainingJobsPage: React.FC<TrainingJobsPageProps> = props => {
   );
 };
 
-export const TrainingJobsDetailsPage: React.FC<TrainingJobsDetailsPageProps> = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(TrainingJobDetails)), editYaml()]} />;
+export const TrainingJobsDetailsPage: React.FC<TrainingJobsDetailsPageProps> = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(detailsPage(TrainingJobDetails)), editResource()]} />;
 
 type TrainingJobDetailsProps = {
   obj: K8sResourceKind;

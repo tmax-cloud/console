@@ -1,4 +1,6 @@
 import { K8sResourceCommon, K8sResourceKind } from '../../k8s';
+import { MenuInfo } from '../../../hypercloud/menu/menu-types';
+import { I18nInfo } from '../../../models/hypercloud/resource-plural';
 
 export type ApprovalKind = K8sResourceCommon & {
   namespace?: string;
@@ -9,21 +11,12 @@ export type ClusterTemplateClaimKind = K8sResourceKind & {
   resourceName?: string;
 };
 
-// export type TemplateKind = K8sResourceCommon & {
-
-// }
-
-// export type TemplateInstanceKind = K8sResourceCommon & {
-
-// }
-
 export type K8sClaimResourceKind = K8sResourceKind & {
   resourceName?: string;
-  roleRef? : any;
+  roleRef?: any;
 };
 
-// export type K8sResourceCommon = {
-//     apiVersion?: string;
-//     kind?: string;
-//     metadata?: ObjectMetadata;
-//   };
+export type HyperCloudExtension = {
+  menuInfo?: MenuInfo;
+  i18nInfo?: I18nInfo;
+};

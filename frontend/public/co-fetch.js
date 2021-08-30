@@ -169,7 +169,10 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
     if (response.headers.get('Content-Length') === '0') {
       return Promise.resolve(contentType.indexOf('text/plain') > -1 ? '' : {});
     }
-    if (contentType.indexOf('text/plain') > -1) {
+    // MEMO : /api/kubernetes/openapi/v2로 오는 리스폰스는 application/json 타입으로 와야 하는데 text/plain으로 오고있어서
+    // storeSwagger에서 json파싱을 못하고, swagger-definition을 local storage에 저장못해서 YAML 호버 시 description이 뜨지 않는 이슈있었음.
+    // 리스폰스 타입이 application/json으로 바뀔 때까지 임시로 이렇게 조건추가해놓음.
+    if (contentType.indexOf('text/plain') > -1 && response.url.indexOf('/api/kubernetes/openapi/v2') < 0) {
       return response.text();
     }
     return response.json();

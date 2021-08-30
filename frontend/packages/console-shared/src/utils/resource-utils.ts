@@ -3,7 +3,7 @@ import { DeploymentKind, K8sResourceKind, LabelSelector, PodKind, PodTemplate, R
 import { DeploymentConfigModel, ReplicationControllerModel, ReplicaSetModel, DeploymentModel, DaemonSetModel, StatefulSetModel, PodModel, ServiceModel, PersistentVolumeClaimModel } from '@console/internal/models';
 import { getBuildNumber } from '@console/internal/module/k8s/builds';
 import { FirehoseResource } from '@console/internal/components/utils';
-import { BuildConfigOverviewItem, OverviewItemAlerts, PodControllerOverviewItem, OverviewItem, PodRCData, ExtPodKind, OperatorBackedServiceKindMap } from '../types';
+import { BuildConfigOverviewItem, OverviewItemAlerts, PodControllerOverviewItem, OverviewItem, PodRCData, ExtPodKind, OperatorBackedServiceKindMap, StatusData } from '../types';
 import { DEPLOYMENT_REVISION_ANNOTATION, DEPLOYMENT_CONFIG_LATEST_VERSION_ANNOTATION, TRIGGERS_ANNOTATION, DEPLOYMENT_PHASE_ANNOTATION, CONTAINER_WAITING_STATE_ERROR_REASONS, DEPLOYMENT_STRATEGY, DEPLOYMENT_PHASE, AllPodStatus } from '../constants';
 import { resourceStatus, podStatusIcon } from './ResourceStatus';
 import { isKnativeServing, isIdled } from './pod-utils';
@@ -809,7 +809,7 @@ export const createPodItems = (resources: any): OverviewItem[] => {
       const statusComponent = podStatusIcon(obj);
       const alerts = getPodAlerts(obj);
       const services = getServicesForResource(obj, resources);
-      const status = { phase: phase, icon: statusComponent };
+      const status: StatusData = { phase: phase, icon: statusComponent };
 
       return [
         ...acc,

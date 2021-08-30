@@ -10,6 +10,7 @@ import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { DetailsItem, Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+import { ClusterServiceBrokerReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { common } = Kebab.factory;
 const kind = ClusterServiceBrokerModel.kind;
@@ -28,7 +29,7 @@ const ClusterServiceBrokerDetails: React.FC<ClusterServiceBrokerDetailsProps> = 
           <div className="col-md-6">
             <dl className="co-m-pane__details">
               <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={clusterServiceBroker} path="status.phase">
-                <Status status={ClusterServiceBrokerPhase(clusterServiceBroker)} />
+                <Status status={ClusterServiceBrokerReducer(clusterServiceBroker)} />
               </DetailsItem>
               <dt>URL</dt>
               <dd>{clusterServiceBroker.spec.url}</dd>
@@ -45,7 +46,7 @@ type ClusterServiceBrokerDetailsProps = {
 };
 
 const { details, editResource } = navFactory;
-const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} getResourceStatus={ClusterServiceBrokerPhase} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editResource()]} />;
+const ClusterServiceBrokersDetailsPage: React.FC<ClusterServiceBrokersDetailsPageProps> = props => <DetailsPage {...props} kind={kind} getResourceStatus={ClusterServiceBrokerReducer} menuActions={clusterServiceBrokerMenuActions} pages={[details(ClusterServiceBrokerDetails), editResource()]} />;
 ClusterServiceBrokersDetailsPage.displayName = 'ClusterServiceBrokersDetailsPage';
 
 const tableColumnClasses = [
@@ -56,24 +57,8 @@ const tableColumnClasses = [
   Kebab.columnClass, // MENU ACTIONS
 ];
 
-const ClusterServiceBrokerPhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions.forEach(cur => {
-      if (cur.type === 'Ready') {
-        if (cur.status === 'True') {
-          phase = 'Running';
-        } else {
-          phase = 'Error';
-        }
-      }
-    });
-    return phase;
-  }
-};
-
 const ClusterServiceBrokerTableRow = ({ obj, index, key, style }) => {
-  let phase = ClusterServiceBrokerPhase(obj);
+  let phase = ClusterServiceBrokerReducer(obj);
   return (
     <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -144,7 +129,7 @@ const ClusterServiceBrokersPage: React.FC<ClusterServiceBrokersPageProps> = prop
           filterLabel: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           filterGroupName: 'Status',
           type: 'cluster-service-broker-status',
-          reducer: ClusterServiceBrokerPhase,
+          reducer: ClusterServiceBrokerReducer,
           items: [
             { id: 'Running', title: 'Running' },
             { id: 'Error', title: 'Error' },
