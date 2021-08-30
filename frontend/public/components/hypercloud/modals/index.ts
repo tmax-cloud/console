@@ -12,8 +12,5 @@ export const configureClusterNodesModal = (props) =>
         m.configureClusterNodesModal(props),
     );
 
-export const integrationConfigPushModal = (props) =>
-    import('./push-modal' /* webpackChunkName: "push-modal" */).then((m) => m.pushModal(props));
-
-export const integrationConfigPullModal = (props) =>
-    import('./pull-modal' /* webpackChunkName: "pull-modal" */).then((m) => m.pullModal(props));
+export const integrationConfigRequestModal = (props) =>
+    import('./request-modal' /* webpackChunkName: "request-modal" */).then((m) => m.requestModal(props));
