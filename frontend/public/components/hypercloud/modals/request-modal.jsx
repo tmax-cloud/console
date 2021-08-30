@@ -11,8 +11,8 @@ import { Section } from '../utils/section';
 import { coFetchJSON } from '../../../co-fetch';
 import { withTranslation } from 'react-i18next';
 
-const BasePushModal = withTranslation()(
-    class BasePushModal extends PromiseComponent {
+const BaseRequestModal = withTranslation()(
+    class BaseRequestModal extends PromiseComponent {
         constructor(props) {
             super(props);
             this._submit = this._submit.bind(this);
@@ -74,8 +74,8 @@ const BasePushModal = withTranslation()(
                     branch: branch
                 };
             }
-            coFetchJSON.post(url, body).then(this.successSubmit);
 
+            coFetchJSON.post(url, body).then(this.successSubmit);
         }
 
         successSubmit = () => {
@@ -97,13 +97,9 @@ const BasePushModal = withTranslation()(
             const { kind, resource, description, message, request, t } = this.props;
             const { submitDisabled } = this.state;
             return (
-
                 <form onSubmit={this._submit} name="form" className="modal-content">
-
                     {(request === 'pull') &&
                         <>
-
-
                             <ModalTitle>{t('COMMON:MSG_MAIN_POPUP_23')}</ModalTitle>
                             <ModalBody>
                                 <Section label={t('COMMON:MSG_MAIN_POPUP_24')} id="headBranch" isRequired={true} >
@@ -127,7 +123,6 @@ const BasePushModal = withTranslation()(
                             <ModalSubmitFooter errorMessage={this.state.errorMessage} inProgress={this.state.inProgress} submitText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')} cancel={this._cancel} submitDisabled={submitDisabled} />
                         </>
                     }
-
                 </form>
 
             );
@@ -135,4 +130,4 @@ const BasePushModal = withTranslation()(
     },
 );
 
-export const requestModal = createModalLauncher(props => <BasePushModal {...props} />);
+export const requestModal = createModalLauncher(props => <BaseRequestModal {...props} />);
