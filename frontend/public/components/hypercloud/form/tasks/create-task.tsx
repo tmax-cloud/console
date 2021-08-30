@@ -151,7 +151,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   let taskParameterArr = ['name', 'description', 'type', 'defaultStr', 'defaultArr'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
-  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit'];
+  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit', 'mountArr'];
 
   // const paramValidCallback = additionalConditions => {
   //   let type = additionalConditions[0] ? 'array' : 'string';
@@ -171,7 +171,12 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   };
 
   const stepValidCallback = (additionalConditions: string[]) => {
-    const [type, image, registryRegistry, registryImage, registryTag] = additionalConditions;
+    const [type, image, registryRegistry, registryImage, registryTag, mountArr] = additionalConditions;
+    console.log('mountArr: ', mountArr);
+
+    if (mountArr.length > 0 && mountArr.length !== _.uniqBy(mountArr, 'mountName').length) {
+      return false;
+    }
     if (type === 'internal') {
       if (registryRegistry && registryImage && registryTag) {
         return true;
@@ -300,7 +305,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26')}
             methods={methods}
             requiredFields={['name']}
-            optionalRequiredField={['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag']}
+            optionalRequiredField={['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag', 'mountArr']}
             optionalValidCallback={stepValidCallback}
             children={<StepModal methods={methods} step={step} />}
             onRemove={removeModalData.bind(null, step, setStep)}
@@ -315,7 +320,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
                 path: 'spec.steps',
                 methods: methods,
                 requiredFields: ['name'],
-                optionalRequiredField: ['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag'],
+                optionalRequiredField: ['registryTypeToggle', 'image', 'registryRegistry', 'registryImage', 'registryTag', 'mountArr'],
                 optionalValidCallback: stepValidCallback,
                 title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_26'),
                 id: 'step',
@@ -435,15 +440,23 @@ export const onSubmitCallback = data => {
     }
     delete data.spec.steps[idx].commandTypeToggle;
 
-    if (cur.selectedVolume) {
-      let volumeMounts = [];
-      volumeMounts.push({
+    // if (cur.selectedVolume) {
+    //   let volumeMounts = [];
+    //   volumeMounts.push({
+    //     mountPath: cur.mountPath,
+    //     name: cur.selectedVolume,
+    //   });
+    //   data.spec.steps[idx].volumeMounts = volumeMounts;
+    //   delete data.spec.steps[idx].selectedVolume;
+    //   delete data.spec.steps[idx].mountPath;
+    // }
+    if (cur.mountArr) {
+      let volumeMounts = cur.mountArr.map(cur => ({
         mountPath: cur.mountPath,
-        name: cur.selectedVolume,
-      });
+        name: cur.mountName,
+      }));
       data.spec.steps[idx].volumeMounts = volumeMounts;
-      delete data.spec.steps[idx].selectedVolume;
-      delete data.spec.steps[idx].mountPath;
+      delete data.spec.steps[idx].mountArr;
     }
 
     return cur;
