@@ -210,4 +210,13 @@ export const CustomMenusMap: CustomMenus = {
     activePath: '/topology/',
     isMultiOnly: false,
   },
+  Harbor: {
+    kind: 'Harbor',
+    visible: true,
+    type: MenuLinkType.NewTabLink,
+    defaultLabel: 'COMMON:MSG_LNB_MENU_155',
+    url: '',
+    isMultiOnly: false,
+  },
 };
+// MEMO : Harbor메뉴는 app.jsx에서 초기 렌더 시 harbor ingress 리소스에서 host주소 가져와서 url로 지정해줌.

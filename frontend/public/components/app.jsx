@@ -15,7 +15,7 @@ import { ConnectedNotificationDrawer } from './notification-drawer';
 import { Navigation } from './nav';
 import { history, LoadingBox } from './utils';
 import * as UIActions from '../actions/ui';
-import { fetchSwagger, getCachedResources } from '../module/k8s';
+import { fetchSwagger, getCachedResources, k8sGet } from '../module/k8s';
 import { fetchEventSourcesCrd } from '../../packages/knative-plugin/src/utils/fetch-dynamic-eventsources-utils';
 import { receivedResources, watchAPIServices } from '../actions/k8s';
 // cloud shell imports must come later than features
@@ -30,8 +30,9 @@ import { Page } from '@patternfly/react-core';
 import keycloak from '../hypercloud/keycloak';
 import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
 import { k8sList } from '@console/internal/module/k8s';
-import { ClusterMenuPolicyModel } from '@console/internal/models';
+import { ClusterMenuPolicyModel, IngressModel } from '@console/internal/models';
 import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
@@ -251,6 +252,18 @@ keycloak.onAuthSuccess = function() {
     .catch(err => {
       window.SERVER_FLAGS.showCustomPerspective = false;
       console.log(`No cmp resource.`);
+    });
+
+  // MEMO : Harbor 메뉴 링크 host 조회 및 url 설정
+  k8sGet(IngressModel, 'hr-harbor-ingress', 'hyperregistry')
+    .then(ingress => {
+      const host = ingress?.spec?.rules?.[0]?.host;
+      if (!!host) {
+        CustomMenusMap['Harbor']?.url = `https://${host}`;
+      }
+    })
+    .catch(err => {
+      console.log('No ingress resource for harbor.');
     });
 };
 keycloak.onAuthError = function() {
