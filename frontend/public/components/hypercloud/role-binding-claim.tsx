@@ -12,6 +12,11 @@ import { RoleBindingClaimModel } from '../../models';
 import { Popover } from '@patternfly/react-core';
 import { K8sResourceKind } from '../../module/k8s';
 import { Status } from '@console/shared';
+
+import { RoleBindingClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
+export const RoleBindingClaimStatus: React.FC<RoleBindingClaimStatusProps> = ({ result }) => <Status status={RoleBindingClaimReducer(result)} />;
+
 const { common } = Kebab.factory;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
@@ -82,11 +87,11 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
         {rolebindingclaims.status?.status === 'Error' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{rolebindingclaims.status?.reason}</div>} maxWidth="30rem" position="right">
             <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <Status status={rolebindingclaims?.status?.status} />
+              <RoleBindingClaimStatus result={rolebindingclaims} />
             </div>
           </Popover>
         ) : (
-          <Status status={rolebindingclaims?.status?.status} />
+          <RoleBindingClaimStatus result={rolebindingclaims} />
         )}
       </TableData>
       <TableData className={tableColumnClasses[3]}>
@@ -227,7 +232,7 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
         {resource?.resourceName}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
-        <Status status={resource.status?.status} />
+        <RoleBindingClaimStatus result={resource} />
       </DetailsItem>
       {resource.status?.status === 'Rejected' &&
         <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">
@@ -240,4 +245,8 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
 
 type RoleBindingClaimDetailsListProps = {
   resource: K8sResourceKind;
+};
+
+type RoleBindingClaimStatusProps = {
+  result: any;
 };
