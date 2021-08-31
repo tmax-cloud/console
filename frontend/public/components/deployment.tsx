@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { Status, PodRingController, NO_STATUS } from '@console/shared';
+import { Status, PodRingController } from '@console/shared';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { DeploymentModel } from '../models';
