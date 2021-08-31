@@ -78,7 +78,9 @@ export const DeploymentDetailsList: React.FC<DeploymentDetailsListProps> = ({ de
 DeploymentDetailsList.displayName = 'DeploymentDetailsList';
 
 const getDeploymentStatus = (deployment: any): string => {
-  if (!deployment.status) return NO_STATUS;
+  if (!deployment.status) {
+    return NO_STATUS;
+  }
   return deployment.status.availableReplicas === deployment.status.updatedReplicas && deployment.spec.replicas === deployment.status.availableReplicas ? 'Up to date' : 'Updating';
 };
 
