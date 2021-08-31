@@ -101,7 +101,7 @@ export const PersistentVolumeReducer = (persistentVolume: any): string => {
 export const PersistentVolumeClaimReducer = (persistentVolumeClaim: any): string => {
   let phase = '';
   phase = persistentVolumeClaim.metadata.deletionTimestamp ? 'Terminating' : persistentVolumeClaim.status.phase
-  return !!persistentVolumeClaim.status ? persistentVolumeClaim.status.phase : NO_STATUS;
+  return !!persistentVolumeClaim.status ? phase : NO_STATUS;
 };
 
 export const RoleBindingClaimReducer = (roleBindingClaim: any): string => {
