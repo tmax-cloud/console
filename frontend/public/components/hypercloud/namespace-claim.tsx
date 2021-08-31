@@ -9,6 +9,7 @@ import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, Resou
 import { useTranslation } from 'react-i18next';
 import { NamespaceClaimModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
+import { NamespaceClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { common } = Kebab.factory;
 
@@ -67,11 +68,11 @@ const tableProps: TableProps = {
           obj?.status?.status === 'Error' ? (
             <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
               <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-                <Status status={obj?.status?.status} />
+                <Status status={NamespaceClaimReducer(obj)} />
               </div>
             </Popover>
           ) : (
-            <Status status={obj?.status?.status} />
+            <Status status={NamespaceClaimReducer(obj)} />
           ),
       },
       {
@@ -88,15 +89,11 @@ const tableProps: TableProps = {
   },
 };
 
-const namespaceClaimStatusReducer = (nsc: any): string => {
-  return nsc?.status?.status;
-};
-
 const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'namespace-claim-status',
-    reducer: namespaceClaimStatusReducer,
+    reducer: NamespaceClaimReducer,
     items: [
       { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Approved', title: 'Approved' },
@@ -139,9 +136,8 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
                 <dd>{namespaceclaims.resourceName}</dd>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
-                {/* <dd>{namespaceclaims.status?.status}</dd> */}
                 <dd>
-                  <Status status={namespaceclaims.status?.status} />
+                  <Status status={NamespaceClaimReducer(namespaceclaims)} />
                 </dd>
                 {namespaceclaims.status?.status === 'Rejected' && (
                   <>
