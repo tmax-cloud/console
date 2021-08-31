@@ -108,3 +108,96 @@ export const AwxStatusReducer = (awx: any): string => {
 export const NamespaceClaimReducer = (namespaceClaim: any): string => {
   return !!namespaceClaim.status ? namespaceClaim.status.status : NO_STATUS;
 };
+
+
+export const PersistentVolumeReducer = (persistentVolume: any): string => {
+  let phase = '';
+  phase = persistentVolume.metadata.deletionTimestamp ? 'Terminating' : persistentVolume.status.phase
+  return !!persistentVolume.status ? phase : NO_STATUS;
+};
+
+export const PersistentVolumeClaimReducer = (persistentVolumeClaim: any): string => {
+  let phase = '';
+  phase = persistentVolumeClaim.metadata.deletionTimestamp ? 'Terminating' : persistentVolumeClaim.status.phase
+  return !!persistentVolumeClaim.status ? persistentVolumeClaim.status.phase : NO_STATUS;
+};
+
+export const RoleBindingClaimReducer = (roleBindingClaim: any): string => {
+  return !!roleBindingClaim.status ? roleBindingClaim.status.status : NO_STATUS;
+};
+
+export const PipelineRunReducer = (pipelineRun: any): string => {
+  const conditions = _.get(pipelineRun, ['status', 'conditions'], []);
+  const isCancelled = conditions.find((c) =>
+    ['PipelineRunCancelled', 'TaskRunCancelled'].some((cancel) => cancel === c.reason),
+  );
+  if (isCancelled) {
+    return 'Cancelled';
+  }
+  if (conditions.length === 0) return null;
+
+  const condition = conditions.find((c) => c.type === 'Succeeded');
+  let status =  !condition || !condition.status
+    ? null
+    : condition.status === 'True'
+      ? 'Completed'
+      : condition.status === 'False'
+        ? 'Failed'
+        : 'Running';
+
+  return !!pipelineRun.status.conditions ? status : NO_STATUS;
+};
+
+export const PipelineApprovalReducer = (pipelineApproval: any): string => {
+  return !!pipelineApproval.status ? pipelineApproval.status.result : NO_STATUS;
+};
+
+export const IntegrationConfigReducer = (integrationConfig: any): string => {
+  let phase = '';
+  if (integrationConfig.status) {
+    integrationConfig.status.conditions?.forEach(cur => {
+      if (cur.type === 'ready') {
+        if (cur.status === 'True') {
+          phase = 'Ready';
+        } else {
+          phase = 'UnReady';
+        }
+      }
+    });
+  }
+  return !!integrationConfig.status ? phase : NO_STATUS;
+};
+
+export const InferenceServiceReducer = (inferenceService: any): string => {
+  let phase = '';
+  if (inferenceService.status) {
+    inferenceService.status.conditions?.forEach(cur => {
+      if (cur.type === 'Ready') {
+        if (cur.status === 'True') {
+          phase = 'Ready';
+        } else if (cur.status === 'Unknown') {
+          phase = 'Unknown';
+        } else {
+          phase = 'Not Ready';
+        }
+      }
+    });
+  }
+  return !!inferenceService.status ? phase : NO_STATUS;
+};
+
+export const TrainedModelReducer = (trainedModel: any): string => {
+  let phase = '';
+  if (trainedModel.status) {
+    trainedModel.status.conditions.forEach(cur => {
+      if (cur.type === 'Ready') {
+        if (cur.status === 'True') {
+          phase = 'Ready';
+        } else {
+          phase = 'Not Ready';
+        }
+      }
+    });
+  }
+  return !!trainedModel.status ? phase : NO_STATUS;
+};

@@ -14,6 +14,9 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { integrationConfigRequestModal } from './modals';
 import { asAccessReview } from '../utils/index';
 
+import { IntegrationConfigReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
+export const IntegrationConfigStatus: React.FC<IntegrationConfigStatusProps> = ({ result }) => <Status status={IntegrationConfigReducer(result)} />;
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationConfigModel),
   //...Kebab.factory.common,
@@ -115,7 +118,6 @@ IntegrationConfigTableHeader.displayName = 'IntegrationConfigTableHeader';
 
 
 const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrationConfig, index, key, style }) => {
-  const phase = IntegrationConfigPhase(integrationConfig);
   return (
     <TableRow id={integrationConfig.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -125,7 +127,7 @@ const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrat
         <ResourceLink kind="Namespace" name={integrationConfig.metadata.namespace} title={integrationConfig.metadata.namespace} />
       </TableData>      
       <TableData className={tableColumnClasses[2]}>
-        <Status status={phase} />
+        <IntegrationConfigStatus result={integrationConfig} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={integrationConfig.metadata.creationTimestamp} />
@@ -142,7 +144,6 @@ export const IntegrationConfigDetailsList: React.FC<IntegrationConfigDetailsList
 
   const readyCondition = ds.status.conditions.find(obj => _.lowerCase(obj.type) === 'ready');
   const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
-  const phase = IntegrationConfigPhase(ds);
 
   return (
     <dl className="co-m-pane__details">
@@ -150,7 +151,7 @@ export const IntegrationConfigDetailsList: React.FC<IntegrationConfigDetailsList
         {time}
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
-        <Status status={phase} />
+        <IntegrationConfigStatus result={ds} />
       </DetailsItem>
     </dl>
   );
@@ -232,4 +233,8 @@ type IntegrationConfigDetailsProps = {
 
 type IntegrationConfigsDetailsPageProps = {
   match: any;
+};
+
+type IntegrationConfigStatusProps = {
+  result: any;
 };
