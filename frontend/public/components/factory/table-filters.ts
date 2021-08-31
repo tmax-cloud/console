@@ -18,7 +18,7 @@ import {
 
 import { alertingRuleIsActive, alertDescription, alertState, silenceState } from '../../reducers/monitoring';
 import { pipelineRunFilterReducer } from '@console/dev-console/src/utils/pipeline-filter-reducer';
-import { ServiceBrokerStatusReducer, ClusterServiceBrokerReducer, ServiceInstanceStatusReducer, TemplateInstanceStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import * as reducers from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const fuzzyCaseInsensitive = (a: string, b: string): boolean => fuzzy(_.toLower(a), _.toLower(b));
 
@@ -30,10 +30,15 @@ const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
   return pipelineApproval.status.result;
 };
 
-export const awxStatusReducer = (awx: any): string => {
-  const conditions = _.get(awx, ['status', 'conditions'], []);
-  if (conditions.length === 0) return '-';
-  return conditions[0].reason === 'Successful' ? 'Succeeded' : conditions[0].reason === 'Running' ? 'Deploying' : conditions[0].reason;
+const withTableFilter = reducer => {
+  const tableFilter = (results, obj) => {
+    if (!results || !results.selected || !results.selected.size) {
+      return true;
+    }
+    const result = reducer(obj);
+    return results.selected.has(result) || !_.includes(results.all, result);
+  };
+  return tableFilter;
 };
 
 // TODO: Table filters are undocumented, stringly-typed, and non-obvious. We can change that.
@@ -44,13 +49,8 @@ export const tableFilters: TableFilterMap = {
 
   'catalog-source-name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.name),
 
-  'namespace-claim-status': (results, nameSpaceClaim) => {
-    if (!results || !results.selected || !results.selected.size) {
-      return true;
-    }
-    const result = nameSpaceClaim?.status?.status;
-    return results.selected.has(result) || !_.includes(results.all, result);
-  },
+  'namespace-claim-status': withTableFilter(reducers.NamespaceClaimReducer),
+
   'resource-quota-claim-status': (results, resourceQuotaClaim) => {
     if (!results || !results.selected || !results.selected.size) {
       return true;
@@ -181,76 +181,21 @@ export const tableFilters: TableFilterMap = {
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
-  'pod-status': (phases, pod) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'pod-status': withTableFilter(podPhaseFilterReducer),
 
-    const phase = podPhaseFilterReducer(pod);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
+  'registry-status': withTableFilter(registryStatusReducer),
 
-  'registry-status': (phases, registry) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'service-broker-status': withTableFilter(reducers.ServiceBrokerStatusReducer),
 
-    const phase = registryStatusReducer(registry);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
+  'service-instance-status': withTableFilter(reducers.ServiceInstanceStatusReducer),
 
-  'service-broker-status': (phases, serviceBroker) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'cluster-service-broker-status': withTableFilter(reducers.ClusterServiceBrokerReducer),
 
-    const phase = ServiceBrokerStatusReducer(serviceBroker);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
+  'pipeline-run-status': withTableFilter(pipelineRunFilterReducer),
 
-  'service-instance-status': (phases, serviceInstance) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'pipeline-approval-status': withTableFilter(pipelineApprovalStatusReducer),
 
-    const phase = ServiceInstanceStatusReducer(serviceInstance);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
-  'cluster-service-broker-status': (phases, clusterServiceBroker) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
-
-    const phase = ClusterServiceBrokerReducer(clusterServiceBroker);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
-
-  'pipeline-run-status': (results, pipelineRun) => {
-    if (!results || !results.selected || !results.selected.size) {
-      return true;
-    }
-
-    const result = pipelineRunFilterReducer(pipelineRun);
-    return results.selected.has(result) || !_.includes(results.all, result);
-  },
-
-  'pipeline-approval-status': (results, pipelineApproval) => {
-    if (!results || !results.selected || !results.selected.size) {
-      return true;
-    }
-
-    const result = pipelineApprovalStatusReducer(pipelineApproval);
-    return results.selected.has(result) || !_.includes(results.all, result);
-  },
-
-  'node-status': (statuses, node) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = nodeStatus(node);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'node-status': withTableFilter(nodeStatus),
 
   'node-role': (roles, node) => {
     if (!roles || !roles.selected || !roles.selected.size) {
@@ -287,31 +232,11 @@ export const tableFilters: TableFilterMap = {
     return strategies.selected.has(strategy) || !_.includes(strategies.all, strategy);
   },
 
-  'route-status': (statuses, route) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
+  'route-status': withTableFilter(routeStatus),
 
-    const status = routeStatus(route);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'catalog-status': withTableFilter(serviceCatalogStatus),
 
-  'catalog-status': (statuses, catalog) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = serviceCatalogStatus(catalog);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
-
-  'secret-type': (types, secret) => {
-    if (!types || !types.selected || !types.selected.size) {
-      return true;
-    }
-    const type = secretTypeFilterReducer(secret);
-    return types.selected.has(type) || !_.includes(types.all, type);
-  },
+  'secret-type': withTableFilter(secretTypeFilterReducer),
 
   'project-name': (str: string, project: K8sResourceKind) => {
     const displayName = _.get(project, ['metadata', 'annotations', 'openshift.io/display-name']);
@@ -329,33 +254,11 @@ export const tableFilters: TableFilterMap = {
     return fuzzyCaseInsensitive(str, displayName);
   },
 
-  'cluster-operator-status': (statuses, operator) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
+  'cluster-operator-status': withTableFilter(getClusterOperatorStatus),
 
-    const status = getClusterOperatorStatus(operator);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'template-instance-status': withTableFilter(reducers.TemplateInstanceStatusReducer),
 
-  'template-instance-status': (statuses, instance) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = TemplateInstanceStatusReducer(instance);
-
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
-
-  'awx-status': (statuses, awx) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = awxStatusReducer(awx);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'awx-status': withTableFilter(reducers.AwxStatusReducer),
 
   machine: (str: string, machine: MachineKind): boolean => {
     const node: string = _.get(machine, 'status.nodeRef.name');

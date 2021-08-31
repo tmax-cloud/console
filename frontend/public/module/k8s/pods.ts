@@ -210,7 +210,7 @@ export const podReadiness = (pod: PodKind): { readyCount: number; totalContainer
 // (See https://github.com/kubernetes/kubernetes/blob/release-1.17/pkg/printers/internalversion/printers.go)
 export const podPhase = (pod: PodKind): PodPhase => {
   if (!pod || !pod.status) {
-    return '';
+    return 'No Status';
   }
 
   if (pod.metadata.deletionTimestamp) {
