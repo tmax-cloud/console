@@ -18,7 +18,7 @@ import {
 
 import { alertingRuleIsActive, alertDescription, alertState, silenceState } from '../../reducers/monitoring';
 import { pipelineRunFilterReducer } from '@console/dev-console/src/utils/pipeline-filter-reducer';
-import { ServiceBrokerStatusReducer, ClusterServiceBrokerReducer, ServiceInstanceStatusReducer, TemplateInstanceStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import * as reducers from '@console/dev-console/src/utils/hc-status-reducers';
 
 export const fuzzyCaseInsensitive = (a: string, b: string): boolean => fuzzy(_.toLower(a), _.toLower(b));
 
@@ -30,6 +30,17 @@ const pipelineApprovalStatusReducer = (pipelineApproval: any): string => {
   return pipelineApproval.status.result;
 };
 
+const withTableFilter = reducer => {
+  const tableFilter = (results, obj) => {
+    if (!results || !results.selected || !results.selected.size) {
+      return true;
+    }
+    const result = reducer(obj);
+    return results.selected.has(result) || !_.includes(results.all, result);
+  };
+  return tableFilter;
+};
+
 // TODO: Table filters are undocumented, stringly-typed, and non-obvious. We can change that.
 export const tableFilters: TableFilterMap = {
   name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
@@ -38,13 +49,8 @@ export const tableFilters: TableFilterMap = {
 
   'catalog-source-name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.name),
 
-  'namespace-claim-status': (results, nameSpaceClaim) => {
-    if (!results || !results.selected || !results.selected.size) {
-      return true;
-    }
-    const result = nameSpaceClaim?.status?.status;
-    return results.selected.has(result) || !_.includes(results.all, result);
-  },
+  'namespace-claim-status': withTableFilter(reducers.baseStatusReducer('status', 'status')),
+
   'resource-quota-claim-status': (results, resourceQuotaClaim) => {
     if (!results || !results.selected || !results.selected.size) {
       return true;
@@ -170,14 +176,7 @@ export const tableFilters: TableFilterMap = {
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
-  'pod-status': (phases, pod) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
-
-    const phase = podPhaseFilterReducer(pod);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
+  'pod-status': withTableFilter(podPhaseFilterReducer),
 
   'registry-status': (phases, registry) => {
     if (!phases || !phases.selected || !phases.selected.size) {
@@ -193,7 +192,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phase = ServiceBrokerStatusReducer(serviceBroker);
+    const phase = reducers.ServiceBrokerStatusReducer(serviceBroker);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
@@ -202,7 +201,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phase = ServiceInstanceStatusReducer(serviceInstance);
+    const phase = reducers.ServiceInstanceStatusReducer(serviceInstance);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
   'cluster-service-broker-status': (phases, clusterServiceBroker) => {
@@ -210,7 +209,7 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const phase = ClusterServiceBrokerReducer(clusterServiceBroker);
+    const phase = reducers.ClusterServiceBrokerReducer(clusterServiceBroker);
     return phases.selected.has(phase) || !_.includes(phases.all, phase);
   },
 
@@ -332,10 +331,12 @@ export const tableFilters: TableFilterMap = {
       return true;
     }
 
-    const status = TemplateInstanceStatusReducer(instance);
+    const status = reducers.TemplateInstanceStatusReducer(instance);
 
     return statuses.selected.has(status) || !_.includes(statuses.all, status);
   },
+
+  'awx-status': withTableFilter(reducers.awxStatusReducer),
 
   machine: (str: string, machine: MachineKind): boolean => {
     const node: string = _.get(machine, 'status.nodeRef.name');

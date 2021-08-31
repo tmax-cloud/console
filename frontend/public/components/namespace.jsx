@@ -28,7 +28,7 @@ import { Overview } from './overview';
 import { getNamespaceDashboardConsoleLinks, ProjectDashboard } from './dashboard/project-dashboard/project-dashboard';
 import { removeQueryArgument } from './utils/router';
 import { useTranslation, withTranslation } from 'react-i18next';
-
+import { baseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import NamespaceOverview from './namespace-overview';
 import { RoleBindingClaimsPage } from './hypercloud/role-binding-claim';
 
@@ -120,7 +120,7 @@ const namespacesTableProps = {
       },
       {
         classNames: 'co-break-word',
-        children: <Status status={obj.status.phase} />,
+        children: <Status status={baseStatusReducer('status', 'phase')(obj)} />,
       },
       {
         children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -478,7 +478,7 @@ export const NamespaceSummary = ({ ns }) => {
       <div className="col-sm-6 col-xs-12">
         <dl className="co-m-pane__details">
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={ns} path="status.phase">
-            <Status status={ns.status.phase} />
+            <Status status={baseStatusReducer('status', 'phase')(ns)} />
           </DetailsItem>
           {canListSecrets && (
             <>
