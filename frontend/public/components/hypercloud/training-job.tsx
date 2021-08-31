@@ -8,7 +8,12 @@ import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, MultiListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TrainingJobModel } from '../../models';
+<<<<<<< HEAD
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
+=======
+import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
+import { NO_STATUS } from '@console/shared/src/components/status';
+>>>>>>> a335085c24... [feat] No Status 담당페이지에 추가
 import * as _ from 'lodash';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainingJobModel), ...Kebab.factory.common];
@@ -31,7 +36,11 @@ const tjPhase = tj => {
 const TJStatus = ({ tj }) => {
   const phase = tjPhase(tj);
   if (!phase) {
-    return '-';
+    return (
+      <span className="text-muted">
+        <i className="fa fa-hourglass-half" aria-hidden="true"></i> {NO_STATUS}
+      </span>
+    );
   }
 
   switch (phase) {
