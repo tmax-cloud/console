@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { NO_STATUS, Status } from '@console/shared';
+import { Status } from '@console/shared';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import { getJobTypeAndCompletions, K8sKind, JobKind, K8sResourceKind } from '../module/k8s';
 import { Conditions } from './conditions';
 import { DetailsPage, ListPage } from './factory';

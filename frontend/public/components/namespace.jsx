@@ -9,6 +9,7 @@ import { PencilAltIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 import * as fuzzy from 'fuzzysearch';
 import { Status, getRequester, ALL_NAMESPACES_KEY, KEYBOARD_SHORTCUTS, NAMESPACE_LOCAL_STORAGE_KEY, FLAGS } from '@console/shared';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import { ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 
 import { NamespaceModel, ProjectModel, SecretModel } from '../models';
