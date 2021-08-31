@@ -72,18 +72,10 @@ const ExperimentTableRow: RowFunction<K8sResourceKind> = ({ obj: experiment, ind
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={experiment.metadata.namespace} title={experiment.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        {experiment.spec.algorithm.algorithmName}
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        {experiment.status.trials + '/' + experiment.spec.maxTrialCount}
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        {optimal}
-      </TableData>
-      <TableData className={tableColumnClasses[5]}>
-        {experiment.status.conditions.length ? experiment.status.conditions[experiment.status.conditions.length - 1].type : ''}
-      </TableData>
+      <TableData className={tableColumnClasses[2]}>{experiment.spec.algorithm.algorithmName}</TableData>
+      <TableData className={tableColumnClasses[3]}>{experiment.status.trials + '/' + experiment.spec.maxTrialCount}</TableData>
+      <TableData className={tableColumnClasses[4]}>{optimal}</TableData>
+      <TableData className={tableColumnClasses[5]}>{experiment.status.conditions.length ? experiment.status.conditions[experiment.status.conditions.length - 1].type : ''}</TableData>
       <TableData className={tableColumnClasses[6]}>
         <ResourceKebab actions={menuActions} kind={kind} resource={experiment} />
       </TableData>
@@ -114,14 +106,14 @@ export const ExperimentDetailsList: React.FC<ExperimentDetailsListProps> = ({ ex
       </DetailsItem>
     </dl>
   );
-}
+};
 
 const ExperimentDetails: React.FC<ExperimentDetailsProps> = ({ obj: experiment }) => {
   const { t } = useTranslation();
   return (
     <>
       <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(experiment, t) })}/>
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(experiment, t) })} />
         <div className="row">
           <div className="col-lg-6">
             <ResourceSummary resource={experiment} />
@@ -133,13 +125,13 @@ const ExperimentDetails: React.FC<ExperimentDetailsProps> = ({ obj: experiment }
       </div>
     </>
   );
-}
+};
 
 const { details, editYaml } = navFactory;
 export const Experiments: React.FC = props => {
   const { t } = useTranslation();
   return <Table {...props} aria-label="Experiments" Header={ExperimentTableHeader.bind(null, t)} Row={ExperimentTableRow} virtualize />;
-}
+};
 
 export const ExperimentsPage: React.FC<ExperimentsPageProps> = props => <ListPage canCreate={true} ListComponent={Experiments} kind={kind} {...props} />;
 

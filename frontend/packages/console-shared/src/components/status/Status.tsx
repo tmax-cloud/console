@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { ClipboardListIcon, HourglassStartIcon, HourglassHalfIcon, SyncAltIcon, BanIcon, ExclamationTriangleIcon, UnknownIcon } from '@patternfly/react-icons';
 import { DASH } from '../../constants';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import { YellowExclamationTriangleIcon } from './icons';
 import StatusIconAndText from './StatusIconAndText';
 import { ErrorStatus, InfoStatus, ProgressStatus, SuccessStatus } from './statuses';
 import { StatusComponentProps } from './types';
 import * as DeletedIcon from '@console/internal/imgs/hypercloud/delete.svg';
 import * as AwaitingIcon from '@console/internal/imgs/hypercloud/awaiting.svg';
+import * as ThrobberIcon from '@console/internal/imgs/hypercloud/throbber.svg';
+//import * as ErrorIcon from '@console/internal/imgs/hypercloud/error.failure.failed.svg';
 
 export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnly, noTooltip, className }) => {
   const statusProps = { title: title || status, iconOnly, noTooltip, className };
@@ -93,6 +96,8 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
 
     case 'Unknown':
       return <StatusIconAndText {...statusProps} icon={<UnknownIcon />} />;
+    case NO_STATUS:
+      return <StatusIconAndText {...statusProps} icon={<img className="font-icon co-status-throbber-icon" src={ThrobberIcon} />} />;
 
     default:
       return <>{status || DASH}</>;

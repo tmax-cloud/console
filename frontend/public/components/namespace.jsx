@@ -9,6 +9,7 @@ import { PencilAltIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 import * as fuzzy from 'fuzzysearch';
 import { Status, getRequester, ALL_NAMESPACES_KEY, KEYBOARD_SHORTCUTS, NAMESPACE_LOCAL_STORAGE_KEY, FLAGS } from '@console/shared';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import { ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 
 import { NamespaceModel, ProjectModel, SecretModel } from '../models';
@@ -28,7 +29,6 @@ import { Overview } from './overview';
 import { getNamespaceDashboardConsoleLinks, ProjectDashboard } from './dashboard/project-dashboard/project-dashboard';
 import { removeQueryArgument } from './utils/router';
 import { useTranslation, withTranslation } from 'react-i18next';
-
 import NamespaceOverview from './namespace-overview';
 import { RoleBindingClaimsPage } from './hypercloud/role-binding-claim';
 
@@ -88,6 +88,10 @@ const fetchNamespaceMetrics = () => {
   return Promise.all(promises).then(data => _.assign({}, ...data));
 };
 
+const getNamespaceStatus = namespace => {
+  return !!namespace.status ? namespace.status.phase : NO_STATUS;
+};
+
 const namespacesTableProps = {
   header: [
     {
@@ -120,7 +124,7 @@ const namespacesTableProps = {
       },
       {
         classNames: 'co-break-word',
-        children: <Status status={obj.status.phase} />,
+        children: <Status status={getNamespaceStatus(obj)} />,
       },
       {
         children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -478,7 +482,7 @@ export const NamespaceSummary = ({ ns }) => {
       <div className="col-sm-6 col-xs-12">
         <dl className="co-m-pane__details">
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={ns} path="status.phase">
-            <Status status={ns.status.phase} />
+            <Status status={getNamespaceStatus(ns)} />
           </DetailsItem>
           {canListSecrets && (
             <>

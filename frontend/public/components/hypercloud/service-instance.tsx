@@ -15,6 +15,7 @@ import { ResourceSidebar } from '../sidebars/resource-sidebar';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ResourceIcon } from '../utils/resource-icon';
 import { Link } from 'react-router-dom';
+import { ServiceInstanceStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { ModifyLabels, ModifyAnnotations, Delete } = Kebab.factory;
 
@@ -119,7 +120,7 @@ type ServiceInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={serviceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={ServiceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [
@@ -250,10 +251,6 @@ const ServiceInstancesList: React.FC = props => {
 };
 ServiceInstancesList.displayName = 'ServiceInstancesList';
 
-const serviceInstanceStatusReducer = (serviceInstance: any): string => {
-  return serviceInstance.status?.lastConditionState;
-};
-
 const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
   const { t } = useTranslation();
   return (
@@ -269,7 +266,7 @@ const ServiceInstancesPage: React.FC<ServiceInstancesPageProps> = props => {
           filterLabel: t('COMMON:MSG_COMMON_BUTTON_FILTER_3'),
           filterGroupName: 'Status',
           type: 'service-instance-status',
-          reducer: serviceInstanceStatusReducer,
+          reducer: ServiceInstanceStatusReducer,
           items: [
             { id: 'Ready', title: 'Ready' },
             { id: 'Failed', title: 'Failed' },
