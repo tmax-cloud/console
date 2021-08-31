@@ -63,6 +63,21 @@ export const NotebookStatusReducer = notebook => {
   return !!notebook.status ? notebook.status.conditions?.[0]?.type : NO_STATUS || '';
 };
 
+export const TrainingJobStatusReducer = tj => {
+  if (!tj.status) {
+    return NO_STATUS;
+  }
+
+  const len = tj.status.conditions.length;
+  for (let i = len - 1; i >= 0; i--) {
+    if (tj.status.conditions[i].status) {
+      return tj.status.conditions[i].type;
+    } else {
+      return NO_STATUS;
+    }
+  }
+};
+
 export const ExperimentStatusReducer = experiment => {
   if (experiment.status) {
     const conditions = experiment.status?.conditions;
