@@ -120,7 +120,7 @@ type ServiceInstanceDetailsProps = {
 };
 
 const { details, editYaml } = navFactory;
-const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={ServiceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml(viewYamlComponent)]} />;
+const ServiceInstancesDetailsPage: React.FC<ServiceInstancesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={serviceInstanceMenuActions} getResourceStatus={ServiceInstanceStatusReducer} pages={[details(ServiceInstanceDetails), editYaml()]} />;
 ServiceInstancesDetailsPage.displayName = 'ServiceInstancesDetailsPage';
 
 const tableColumnClasses = [
