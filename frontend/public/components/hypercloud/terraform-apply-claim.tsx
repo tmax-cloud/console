@@ -14,6 +14,7 @@ import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Dropdown } from '../utils';
 import { K8sResourceKind } from '@console/internal/module/k8s';
+import { TerraformClaimStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 import './terraform-apply-claim.scss';
 
@@ -124,7 +125,7 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
   );
 };
 
-export const TFApplyClaimStatus: React.FC<TFApplyClaimStatusStatusProps> = ({ result }) => <Status status={result} />;
+export const TFApplyClaimStatus: React.FC<TFApplyClaimStatusStatusProps> = ({ result }) => <Status status={TerraformClaimStatusReducer(result)} />;
 
 export type ResourcesProps = {
   ds: any;
@@ -138,7 +139,7 @@ export const TFApplyClaimDetailsList: React.FC<TFApplyClaimDetailsListProps> = (
       {/* 상태 */}
       <dt>{t('COMMON:MSG_MAIN_TABLEHEADER_3')}</dt>
       <dd>
-        <TFApplyClaimStatus result={ds?.status?.phase} />
+        <TFApplyClaimStatus result={ds} />
       </dd>
       <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_68')}</dt>
       <dd style={{ display: 'flex', flexDirection: 'column' }}>{ds.spec?.version}</dd>
@@ -437,5 +438,5 @@ type TFApplyClaimsDetailsPageProps = {
   match: any;
 };
 type TFApplyClaimStatusStatusProps = {
-  result: string;
+  result: any;
 };

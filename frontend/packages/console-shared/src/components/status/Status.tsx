@@ -113,7 +113,7 @@ export const Status: React.FC<StatusProps> = ({ status, title, children, iconOnl
       return <ErrorStatus {...statusProps}>{children}</ErrorStatus>;
 
     case 'Accepted':
-    case 'Success':
+    case 'Succeeded':
     case 'Active':
     case 'Bound':
     case 'Complete':
