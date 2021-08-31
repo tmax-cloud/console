@@ -258,6 +258,7 @@ export const InferenceServicesDetailsPage: React.FC<InferenceServicesDetailsPage
       {...props}
       kind={kind}
       menuActions={menuActions}
+      getResourceStatus={InferenceServicePhase}
       pages={[details(detailsPage(InferenceServiceDetails)), editResource()]}
     />
   );
