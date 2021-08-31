@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Status, PodRingController } from '@console/shared';
+import { Status, PodRingController, NO_STATUS } from '@console/shared';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
 import { DeploymentModel } from '../models';
@@ -77,6 +77,11 @@ export const DeploymentDetailsList: React.FC<DeploymentDetailsListProps> = ({ de
 };
 DeploymentDetailsList.displayName = 'DeploymentDetailsList';
 
+const deploymentStatusReducer = (deployment: any): string => {
+  if (!deployment.status) return NO_STATUS;
+  return deployment.status.availableReplicas === deployment.status.updatedReplicas && deployment.spec.replicas === deployment.status.availableReplicas ? 'Up to date' : 'Updating';
+};
+
 const DeploymentDetails: React.FC<DeploymentDetailsProps> = ({ obj: deployment }) => {
   const { t } = useTranslation();
   return (
@@ -96,7 +101,9 @@ const DeploymentDetails: React.FC<DeploymentDetailsProps> = ({ obj: deployment }
             <div className="col-sm-6">
               <ResourceSummary resource={deployment} showPodSelector showNodeSelector showTolerations>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
-                <dd>{deployment.status.availableReplicas === deployment.status.updatedReplicas && deployment.spec.replicas === deployment.status.availableReplicas ? <Status status="Up to date" /> : <Status status="Updating" />}</dd>
+                <dd>
+                  <Status status={deploymentStatusReducer(deployment)} />
+                </dd>
               </ResourceSummary>
             </div>
             <div className="col-sm-6">

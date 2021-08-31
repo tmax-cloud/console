@@ -1,4 +1,9 @@
 import { NO_STATUS } from '@console/shared/src/components/status';
+import * as _ from 'lodash-es';
+
+export const baseStatusReducer = (depth1: string, depth2: string) => (obj: any): string => {
+  return !!obj[depth1] ? obj[depth1][depth2] : NO_STATUS;
+};
 
 export const ServiceBrokerStatusReducer = instance => {
   let phase = '';
@@ -73,4 +78,11 @@ export const ExperimentStatusReducer = experiment => {
 
 export const ClusterClaimStatusReducer = (clusterClaim: any): string => {
   return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
+};
+
+export const awxStatusReducer = (awx: any): string => {
+  if (!awx.status) return NO_STATUS;
+  const conditions = _.get(awx, ['status', 'conditions'], []);
+  if (conditions.length === 0) return '-';
+  return conditions[0].reason === 'Successful' ? 'Succeeded' : conditions[0].reason === 'Running' ? 'Deploying' : conditions[0].reason;
 };

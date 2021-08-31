@@ -1,9 +1,8 @@
-import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { awxStatusReducer } from '../factory/table-filters';
+import { awxStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { Status } from '@console/shared';
 import { AWXModel } from '../../models';
