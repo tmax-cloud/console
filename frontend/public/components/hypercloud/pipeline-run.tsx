@@ -21,6 +21,10 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
+import { PipelineRunReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
+export const PipelineRunStatus: React.FC<PipelineRunStatusProps> = ({ result }) => <Status status={PipelineRunReducer(result)} />;
+
 const kind = PipelineRunModel.kind;
 
 const tableColumnClasses = [
@@ -92,7 +96,7 @@ const PipelineRunTableRow: RowFunction<PipelineRun> = ({ obj: pipelineRun, index
         <ResourceLink kind="Namespace" name={pipelineRun.metadata.namespace} title={pipelineRun.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <Status status={pipelineRunFilterReducer(pipelineRun)} />
+        <PipelineRunStatus result={pipelineRun} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <LinkedPipelineRunTaskStatus pipelineRun={pipelineRun} />
@@ -117,7 +121,7 @@ const PipelineRunInPipelinePageTableRow: RowFunction<PipelineRun> = ({ obj: pipe
         <ResourceLink kind="Namespace" name={pipelineRun.metadata.namespace} title={pipelineRun.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <Status status={pipelineRunFilterReducer(pipelineRun)} />
+        <PipelineRunStatus result={pipelineRun} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <LinkedPipelineRunTaskStatus pipelineRun={pipelineRun} />
@@ -256,4 +260,8 @@ type PipelineRunDetailsProps = {
 
 type PipelineRunsDetailsPageProps = {
   match: any;
+};
+
+type PipelineRunStatusProps = {
+  result: any;
 };
