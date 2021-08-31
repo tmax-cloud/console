@@ -49,7 +49,7 @@ export const tableFilters: TableFilterMap = {
 
   'catalog-source-name': (filter, obj) => fuzzyCaseInsensitive(filter, obj.name),
 
-  'namespace-claim-status': withTableFilter(reducers.baseStatusReducer('status', 'status')),
+  'namespace-claim-status': withTableFilter(reducers.NamespaceClaimReducer),
 
   'resource-quota-claim-status': (results, resourceQuotaClaim) => {
     if (!results || !results.selected || !results.selected.size) {
@@ -253,7 +253,7 @@ export const tableFilters: TableFilterMap = {
 
   'template-instance-status': withTableFilter(reducers.TemplateInstanceStatusReducer),
 
-  'awx-status': withTableFilter(reducers.awxStatusReducer),
+  'awx-status': withTableFilter(reducers.AwxStatusReducer),
 
   machine: (str: string, machine: MachineKind): boolean => {
     const node: string = _.get(machine, 'status.nodeRef.name');
