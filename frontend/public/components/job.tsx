@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Status } from '@console/shared';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 import { getJobTypeAndCompletions, K8sKind, JobKind, K8sResourceKind } from '../module/k8s';
 import { Conditions } from './conditions';
 import { DetailsPage, ListPage } from './factory';
@@ -101,7 +102,7 @@ const tableProps: TableProps = {
 };
 
 const jobStatus = (job: JobKind): string => {
-  return job && job.status ? _.get(job, 'status.conditions[0].type', 'In Progress') : null;
+  return job && job.status ? _.get(job, 'status.conditions[0].type', 'In Progress') : NO_STATUS;
 };
 
 const JobDetails: React.FC<JobsDetailsProps> = ({ obj: job }) => {
