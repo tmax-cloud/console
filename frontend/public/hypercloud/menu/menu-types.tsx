@@ -1,5 +1,7 @@
 import startsWith from './starts-with';
 
+export const CMP_PRIMARY_KEY = 'primary';
+
 export enum MenuType {
   CONTAINER = 'CONTAINER',
   REGISTERED_MENU = 'REGISTERED_MENU',
@@ -162,7 +164,7 @@ export const CustomMenusMap: CustomMenus = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_195',
-    url: window.SERVER_FLAGS.gitlabURL,
+    url: '',
     isMultiOnly: false,
   },
   Add: {
@@ -208,4 +210,13 @@ export const CustomMenusMap: CustomMenus = {
     activePath: '/topology/',
     isMultiOnly: false,
   },
+  Harbor: {
+    kind: 'Harbor',
+    visible: true,
+    type: MenuLinkType.NewTabLink,
+    defaultLabel: 'COMMON:MSG_LNB_MENU_155',
+    url: '',
+    isMultiOnly: false,
+  },
 };
+// MEMO : Git, Harbor메뉴는 app.jsx에서 초기 렌더 시 ingress 리소스에서 host주소 가져와서 url로 지정해줌.

@@ -247,12 +247,12 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
 
   if (kind.kind === 'Namespace') {
     listURL = `${document.location.origin}/api/hypercloud/namespace?userId=${getId()}${getUserGroup()}`;
-    return coFetchJSON(`${listURL}`, 'GET', options).then(result => (raw ? result : result.items));
+    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
   } else if (kind.kind === 'NamespaceClaim') {
     listURL = `${document.location.origin}/api/hypercloud/namespaceClaim?userId=${getId()}${getUserGroup()}`;
-    return coFetchJSON(`${listURL}`, 'GET', options).then(result => (raw ? result : result.items));
+    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
   } else if (isMultiCluster){
-    return coFetchJSON(`${listURL}`, 'GET', options).then(result => (raw ? result : result.items));  
+    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));  
   }
   else {
     return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));

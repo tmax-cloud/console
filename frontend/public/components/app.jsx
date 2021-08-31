@@ -29,6 +29,8 @@ import { Page } from '@patternfly/react-core';
 // import Keycloak from 'keycloak-js';
 import keycloak from '../hypercloud/keycloak';
 import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
+import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
+
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 
@@ -234,6 +236,8 @@ keycloak.onAuthSuccess = function() {
       // eslint-disable-next-line no-console
       .catch(e => console.warn('Error unregistering service workers', e));
   }
+
+  initializationForMenu();
 };
 keycloak.onAuthError = function() {
   console.log('[keycloak] onAuthError');

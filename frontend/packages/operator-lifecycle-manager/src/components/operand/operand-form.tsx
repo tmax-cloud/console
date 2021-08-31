@@ -7,6 +7,7 @@ import { ClusterServiceVersionKind, CRDDescription, APIServiceDefinition } from 
 import { ClusterServiceVersionLogo } from '../index';
 import { DynamicForm } from '@console/shared/src/components/dynamic-form';
 import { getUISchema } from './utils';
+import { FileUploadWidget } from '@console/shared/src/components/dynamic-form/widgets';
 
 export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, model, next, onChange, providedAPI, prune, schema, create }) => {
   const [errors, setErrors] = React.useState<string[]>([]);
@@ -59,7 +60,7 @@ export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, 
           )}
         </div>
         <div className="col-md-12 col-md-pull-0 col-lg-11 col-lg-pull-1">
-          <DynamicForm noValidate errors={errors} formContext={{ namespace: match.params.ns }} uiSchema={uiSchema} formData={formData} onChange={onChange} onError={setErrors} onSubmit={handleSubmit} schema={schema} create={create} />
+          <DynamicForm noValidate errors={errors} formContext={{ namespace: match.params.ns }} uiSchema={uiSchema} formData={formData} onChange={onChange} onError={setErrors} onSubmit={handleSubmit} schema={schema} create={create} widgets={{ fileUploadWidget: FileUploadWidget }} />
         </div>
       </div>
     </div>

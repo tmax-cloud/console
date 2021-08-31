@@ -1,98 +1,60 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
-// import { AddHealthChecks, EditHealthChecks } from '@console/app/src/actions/modify-health-checks';
+import { useTranslation } from 'react-i18next';
 import { K8sResourceKind } from '../../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { DetailsPage, ListPage } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, LabelList, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, ResourceIcon } from '../utils';
 import { ResourceEventStream } from '../events';
 import { FederatedServiceModel } from '../../models';
+import { TableProps } from './utils/default-list-component';
+import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
-// export const menuActions: KebabAction[] = [AddHealthChecks, Kebab.factory.AddStorage, ...Kebab.getExtensionsActionsForKind(FederatedServiceModel), EditHealthChecks, ...Kebab.factory.common];
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(FederatedServiceModel), ...Kebab.factory.common];
 
 const kind = FederatedServiceModel.kind;
-
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const FederatedServiceTableHeader = () => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: 'Name',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'Namespace',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'Labels',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_15',
       sortField: 'metadata.labels',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'Selector',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_16',
       sortField: 'service.spec.template.spec.selector',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
       title: '',
-      props: { className: tableColumnClasses[4] },
+      transforms: null,
+      props: { className: Kebab.columnClass },
     },
-  ];
+  ],
+  row: (obj: K8sResourceKind) => [
+    {
+      children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+    },
+    {
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
+      children: <LabelList kind={kind} labels={obj.metadata.labels} />,
+    },
+    {
+      children: <Selector selector={obj.spec?.template?.spec?.selector} namespace={obj.metadata.namespace} />,
+    },
+    {
+      className: Kebab.columnClass,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
+    },
+  ],
 };
-FederatedServiceTableHeader.displayName = 'FederatedServiceTableHeader';
-
-// const ServiceAddress = ({ s }) => {
-//   const ServiceIPsRow = (name, desc, ips, note = null) => (
-//     <div className="co-ip-row">
-//       <div className="row">
-//         <div className="col-xs-6">
-//           <p className="ip-name">{name}</p>
-//           <p className="ip-desc">{desc}</p>
-//         </div>
-//         <div className="col-xs-6">
-//           {note && <span className="text-muted">{note}</span>}
-//           {ips}
-//         </div>
-//       </div>
-//     </div>
-//   );
-
-//   const ServiceType = type => {
-//     switch (type) {
-//       case 'NodePort':
-//         return ServiceIPsRow('Node Port', 'Accessible outside the cluster', _.map(s.spec?.template?.spec?.ports, 'nodePort'), '(all nodes): ');
-//       case 'LoadBalancer':
-//         return ServiceIPsRow(
-//           'External Load Balancer',
-//           'Ingress point(s) of load balancer',
-//           '', // federated service의 load balancer의 ip는 어떻게 가져오지?
-//         );
-//       case 'ExternalName':
-//         return ServiceIPsRow('External Service Name', 'Location of the resource that backs the service', [s.spec?.template?.spec?.externalName]);
-//       default:
-//         return '';
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <div className="row co-ip-header">
-//         <div className="col-xs-6">Type</div>
-//         <div className="col-xs-6">Location</div>
-//       </div>
-//       <div className="rows">{ServiceType(s.spec?.template?.spec?.type)}</div>
-//     </div>
-//   );
-// };
 
 const ServicePortMapping = ({ ports }) => {
   return (
@@ -142,57 +104,33 @@ const ServicePortMapping = ({ ports }) => {
   );
 };
 
-const FederatedServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: service, index, key, style }) => {
+const FederatedServiceDetails: React.FC<FederatedServiceDetailsProps> = ({ obj: service }) => {
+  const { t } = useTranslation();
   return (
-    <TableRow id={service.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={service.metadata.name} namespace={service.metadata.namespace} title={service.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={service.metadata.namespace} title={service.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[2]}>
-        <LabelList kind={kind} labels={service.metadata.labels} />
-      </TableData>
-      <TableData className={tableColumnClasses[3]}>
-        <Selector selector={service.spec?.template?.spec?.selector} namespace={service.metadata.namespace} />
-      </TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={service} />
-      </TableData>
-    </TableRow>
+    <>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(service, t) })} />
+        <div className="row">
+          <div className="col-lg-6">
+            <ResourceSummary resource={service} />
+          </div>
+          <div className="col-sm-6">
+            <SectionHeading text={t('SINGLE:MSG_SERVICES_SERVICESDETAILS_TABDETAILS_SERVICEROUTING_1')} />
+            <dl>
+              <DetailsItem label={t('SINGLE:MSG_SERVICES_SERVICESDETAILS_TABDETAILS_SERVICEROUTING_5')} obj={service} path="spec.ports">
+                <div className="service-ips">{service.spec?.template?.spec?.ports ? <ServicePortMapping ports={service.spec.template.spec.ports} /> : '-'}</div>
+              </DetailsItem>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
-const FederatedServiceDetails: React.FC<FederatedServiceDetailsProps> = ({ obj: service }) => (
-  <>
-    <div className="co-m-pane__body">
-      <SectionHeading text="Federated Service Details" />
-      <div className="row">
-        <div className="col-lg-6">
-          <ResourceSummary resource={service} />
-        </div>
-        <div className="col-sm-6">
-          <SectionHeading text="Service Routing" />
-          <dl>
-            {/* <dt>Service Address</dt>
-            <dd className="service-ips">
-              <ServiceAddress s={service} />
-            </dd> */}
-            <DetailsItem label="Service Port Mapping" obj={service} path="spec.ports">
-              <div className="service-ips">{service.spec?.template?.spec?.ports ? <ServicePortMapping ports={service.spec.template.spec.ports} /> : '-'}</div>
-            </DetailsItem>
-          </dl>
-        </div>
-      </div>
-    </div>
-  </>
-);
-
 const { details, editResource, events } = navFactory;
-export const FederatedServices: React.FC = props => <Table {...props} aria-label="Federated Services" Header={FederatedServiceTableHeader} Row={FederatedServiceTableRow} virtualize />;
 
-export const FederatedServicesPage: React.FC<FederatedServicesPageProps> = props => <ListPage canCreate={true} ListComponent={FederatedServices} kind={kind} {...props} />;
+export const FederatedServicesPage: React.FC<FederatedServicesPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const FederatedServicesDetailsPage: React.FC<FederatedServicesDetailsPageProps> = props => <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(FederatedServiceDetails)), editResource(), events(ResourceEventStream)]} />;
 

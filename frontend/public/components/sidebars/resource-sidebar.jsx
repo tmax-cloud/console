@@ -17,7 +17,6 @@ const sidebarScrollTop = () => {
 class ResourceSidebarWrapper extends React.Component {
   render() {
     const { label, children, showSidebar, toggleSidebar, isFloat = false, t } = this.props;
-    const resourceLabel = ResourceLabel(modelFor(label?.replace(/ /g, '')) ?? {}, t) || label;
 
     if (!showSidebar) {
       return null;
@@ -30,7 +29,7 @@ class ResourceSidebarWrapper extends React.Component {
           <Button type="button" className="co-p-has-sidebar__sidebar-close" variant="plain" aria-label="Close" onClick={toggleSidebar}>
             <CloseIcon />
           </Button>
-          <h2 className="co-p-has-sidebar__sidebar-heading">{resourceLabel}</h2>
+          <h2 className="co-p-has-sidebar__sidebar-heading">{label}</h2>
           {children}
         </div>
       </div>
@@ -56,7 +55,7 @@ export const ResourceSidebar = props => {
     return null;
   }
 
-  const { label } = kindObj;
+  const label = title || ResourceLabel(kindObj, t);
 
   const showSamples = !_.isEmpty(samples) && isCreateMode;
   const showSnippets = !_.isEmpty(snippets);
@@ -88,7 +87,7 @@ export const ResourceSidebar = props => {
   }
 
   return (
-    <ResourceSidebarWrapper label={title || label} showSidebar={showSidebar} isFloat={isFloat} toggleSidebar={toggleSidebar} t={t}>
+    <ResourceSidebarWrapper label={label} showSidebar={showSidebar} isFloat={isFloat} toggleSidebar={toggleSidebar} t={t}>
       {noTabsOnlyDetails ? <ResourceDetails {...props} /> : <>{tabs.length > 0 ? <SimpleTabNav tabs={tabs} tabProps={{ showName, showID, showDescription, showPodSelector, showNodeSelector, showTolerations, showAnnotations, showOwner, downloadSampleYaml, kindObj, loadSampleYaml, insertSnippetYaml, samples, snippets, resource, customPathId }} additionalClassNames="co-m-horizontal-nav__menu--within-sidebar" /> : <ResourceSchema kindObj={kindObj} definition={definition} />}</>}
     </ResourceSidebarWrapper>
   );

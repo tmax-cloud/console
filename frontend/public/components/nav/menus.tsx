@@ -8,7 +8,7 @@ import { HrefLink, ResourceNSLink, ResourceClusterLink, NewTabLink, Separator } 
 import HyperCloudDefaultMenus from '@console/internal/hypercloud/menu/hc-default-menus';
 import { CustomMenusMap, MenuType, MenuLinkType, MenuContainerLabels } from '@console/internal/hypercloud/menu/menu-types';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
-import { ResourceStringKeyMap } from '@console/internal/models/hypercloud/resource-plural';
+import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 
 type MenuData = {
   menuType: MenuType;
@@ -31,6 +31,9 @@ export const basicMenusFactory = perspective => {
       break;
     case PerspectiveType.DEVELOPER:
       menus = HyperCloudDefaultMenus.DeveloperNavMenus;
+      break;
+    case PerspectiveType.CUSTOM:
+      menus = HyperCloudDefaultMenus.CustomNavMenus;
       break;
     default:
       // Empty
@@ -107,7 +110,7 @@ const getMenuComponent = (menuInfo, labelText) => {
     case MenuLinkType.HrefLink:
       return <HrefLink key={labelText} href={menuInfo.href} activePath={menuInfo.activePath} name={labelText} startsWith={menuInfo.startsWith} />;
     case MenuLinkType.NewTabLink:
-      return <NewTabLink key={labelText} name={labelText} url={menuInfo.url}/>;
+      return <NewTabLink key={labelText} name={labelText} url={menuInfo.url} />;
     case MenuLinkType.ResourceClusterLink:
       return <ResourceClusterLink key={labelText} resource={menuInfo.resource} name={labelText} startsWith={menuInfo.startsWith} />;
     case MenuLinkType.ResourceNSLink:
@@ -129,8 +132,7 @@ const generateMenu = (perspective, data, isInnerMenu, t: TFunction, i18n: i18n) 
     if (!!modelFor(kind)) {
       const model = modelFor(kind);
 
-      // MJ : model에 i18n 키값 속성 추가되면 ResourceStringKeyMap 대신 그 키값 사용하는걸로 리팩토링 하기
-      const label = !!ResourceStringKeyMap[kind]?.label ? t(ResourceStringKeyMap[kind]?.label) : model.label;
+      const label = ResourceLabel(model, t);
       const modelMenuInfo = model.menuInfo;
 
       if (!modelMenuInfo || !modelMenuInfo.visible || (perspective !== PerspectiveType.MULTI && modelMenuInfo.isMultiOnly === true)) {

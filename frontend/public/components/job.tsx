@@ -6,11 +6,12 @@ import { getJobTypeAndCompletions, K8sKind, JobKind, K8sResourceKind } from '../
 import { Conditions } from './conditions';
 import { DetailsPage, ListPage } from './factory';
 import { configureJobParallelismModal } from './modals';
-import { ContainerTable, DetailsItem, Kebab, KebabAction, LabelList, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, pluralize, TableProps } from './utils';
+import { ContainerTable, DetailsItem, Kebab, KebabAction, LabelList, PodsComponent, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp, navFactory, pluralize } from './utils';
 import { ResourceEventStream } from './events';
 import { JobModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 import { PodStatus } from './hypercloud/utils/pod-status';
+import { TableProps } from './hypercloud/utils/default-list-component';
 
 const ModifyJobParallelism: KebabAction = (kind: K8sKind, obj: JobKind) => {
   const { t } = useTranslation();

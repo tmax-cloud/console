@@ -80,6 +80,10 @@ export const ServiceModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_137',
+    labelPlural: 'COMMON:MSG_LNB_MENU_47',
+  },
 };
 
 export const PodModel: K8sKind = {
@@ -95,6 +99,10 @@ export const PodModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_116',
+    labelPlural: 'COMMON:MSG_LNB_MENU_23',
   },
 };
 
@@ -123,6 +131,10 @@ export const DaemonSetModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_123',
+    labelPlural: 'COMMON:MSG_LNB_MENU_30',
   },
 };
 
@@ -153,6 +165,10 @@ export const HorizontalPodAutoscalerModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_125',
+    labelPlural: 'COMMON:MSG_LNB_MENU_32',
+  },
 };
 
 export const ServiceAccountModel: K8sKind = {
@@ -168,6 +184,10 @@ export const ServiceAccountModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_156',
+    labelPlural: 'COMMON:MSG_LNB_MENU_74',
   },
 };
 
@@ -187,6 +207,10 @@ export const ReplicaSetModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_124',
+    labelPlural: 'COMMON:MSG_LNB_MENU_31',
+  },
 };
 
 export const DeploymentModel: K8sKind = {
@@ -204,6 +228,10 @@ export const DeploymentModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_117',
+    labelPlural: 'COMMON:MSG_LNB_MENU_24',
   },
 };
 
@@ -332,6 +360,10 @@ export const JobModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_122',
+    labelPlural: 'COMMON:MSG_LNB_MENU_29',
+  },
 };
 
 export const NodeModel: K8sKind = {
@@ -346,6 +378,10 @@ export const NodeModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceClusterLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_177',
+    labelPlural: 'COMMON:MSG_LNB_MENU_100',
   },
 };
 
@@ -383,6 +419,10 @@ export const NamespaceModel: K8sKind = {
     type: MenuLinkType.ResourceClusterLink,
     isMultiOnly: false,
     startsWith: startsWith.namespaceStartsWith,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_106',
+    labelPlural: 'COMMON:MSG_LNB_MENU_3',
   },
 };
 
@@ -423,6 +463,10 @@ export const IngressModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_138',
+    labelPlural: 'COMMON:MSG_LNB_MENU_48',
+  },
 };
 
 export const RouteModel: K8sKind = {
@@ -451,6 +495,10 @@ export const ConfigMapModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_120',
+    labelPlural: 'COMMON:MSG_LNB_MENU_27',
+  },
 };
 
 export const SecretModel: K8sKind = {
@@ -467,6 +515,10 @@ export const SecretModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_119',
+    labelPlural: 'COMMON:MSG_LNB_MENU_26',
+  },
 };
 
 export const ClusterRoleBindingModel: K8sKind = {
@@ -478,6 +530,10 @@ export const ClusterRoleBindingModel: K8sKind = {
   kind: 'ClusterRoleBinding',
   id: 'clusterrolebinding',
   labelPlural: 'Cluster Role Bindings',
+  i18nInfo: {
+    label: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_123',
+    labelPlural: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_123',
+  },
 };
 
 export const ClusterRoleModel: K8sKind = {
@@ -489,6 +545,10 @@ export const ClusterRoleModel: K8sKind = {
   kind: 'ClusterRole',
   id: 'clusterrole',
   labelPlural: 'Cluster Roles',
+  i18nInfo: {
+    label: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_124',
+    labelPlural: 'COMMON:MSG_DETAILS_TABDETAILS_DETAILS_124',
+  },
 };
 
 export const RoleBindingModel: K8sKind = {
@@ -509,6 +569,10 @@ export const RoleBindingModel: K8sKind = {
     startsWith: startsWith.rolebindingsStartsWith,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_158',
+    labelPlural: 'COMMON:MSG_LNB_MENU_76',
+  },
 };
 
 export const RoleModel: K8sKind = {
@@ -526,6 +590,10 @@ export const RoleModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
     startsWith: startsWith.rolesStartsWith,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_157',
+    labelPlural: 'COMMON:MSG_LNB_MENU_75',
   },
 };
 
@@ -578,6 +646,10 @@ export const PersistentVolumeModel: K8sKind = {
     type: MenuLinkType.ResourceClusterLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_140',
+    labelPlural: 'COMMON:MSG_LNB_MENU_51',
+  },
 };
 
 export const PersistentVolumeClaimModel: K8sKind = {
@@ -593,6 +665,10 @@ export const PersistentVolumeClaimModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_141',
+    labelPlural: 'COMMON:MSG_LNB_MENU_52',
   },
 };
 
@@ -623,6 +699,10 @@ export const StatefulSetModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_118',
+    labelPlural: 'COMMON:MSG_LNB_MENU_25',
+  },
 };
 
 export const ResourceQuotaModel: K8sKind = {
@@ -639,6 +719,10 @@ export const ResourceQuotaModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
     startsWith: startsWith.quotaStartsWith,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_161',
+    labelPlural: 'COMMON:MSG_LNB_MENU_80',
   },
 };
 
@@ -670,6 +754,10 @@ export const NetworkPolicyModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_139',
+    labelPlural: 'COMMON:MSG_LNB_MENU_49',
+  },
 };
 
 export const CustomResourceDefinitionModel: K8sKind = {
@@ -686,6 +774,10 @@ export const CustomResourceDefinitionModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceClusterLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_163',
+    labelPlural: 'COMMON:MSG_LNB_MENU_82',
   },
 };
 
@@ -705,6 +797,10 @@ export const CronJobModel: K8sKind = {
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_121',
+    labelPlural: 'COMMON:MSG_LNB_MENU_28',
+  },
 };
 
 export const StorageClassModel: K8sKind = {
@@ -721,6 +817,10 @@ export const StorageClassModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceClusterLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_142',
+    labelPlural: 'COMMON:MSG_LNB_MENU_53',
   },
 };
 
@@ -804,6 +904,10 @@ export const LimitRangeModel: K8sKind = {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_162',
+    labelPlural: 'COMMON:MSG_LNB_MENU_81',
   },
 };
 

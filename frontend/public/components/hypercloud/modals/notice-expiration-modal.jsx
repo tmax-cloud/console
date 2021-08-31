@@ -55,7 +55,7 @@ class NoticeExpirationModal extends Component {
                 <div className="form-group">
                   <label className="control-label">
                     {t('COMMON:MSG_GNB_SESSION_10', {
-                      count: Math.floor(this.state.time),
+                      0: Math.floor(this.state.time),
                     })}
                   </label>
                 </div>

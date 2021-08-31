@@ -6,7 +6,6 @@ import { PromiseComponent, history, resourceListPathFromModel } from '../utils';
 import { k8sKill } from '../../module/k8s/';
 import { YellowExclamationTriangleIcon } from '@console/shared';
 import { withTranslation, Trans } from 'react-i18next';
-import { ResourceStringKeyMap } from '../../models/hypercloud/resource-plural';
 //Modal for resource deletion and allows cascading deletes if propagationPolicy is provided for the enum
 class DeleteModal extends PromiseComponent {
   constructor(props) {
@@ -43,7 +42,7 @@ class DeleteModal extends PromiseComponent {
   }
   render() {
     const { kind, resource, message, t } = this.props;
-    const resourceStringKey = ResourceStringKeyMap[kind.kind]?.label ?? kind.label;
+    const resourceStringKey = kind.i18nInfo?.label ?? kind.label;
     const ResourceName = () => <strong className="co-break-word">{resource.metadata.name}</strong>;
     const Namespace = () => <strong>{resource.metadata.namespace}</strong>;
     return (

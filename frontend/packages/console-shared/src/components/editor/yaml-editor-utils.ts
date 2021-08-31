@@ -81,7 +81,7 @@ export const createYAMLService = () => {
   yamlService.configure({
     validate: true,
     schemas,
-    hover: true,
+    hover: false,
     completion: true,
   });
   return yamlService;
