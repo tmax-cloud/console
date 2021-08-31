@@ -14,7 +14,9 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { getActiveNamespace } from '@console/internal/reducers/ui';
 import store from '../../redux';
 
+import { InferenceServiceReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
+export const InferenceServiceStatus: React.FC<InferenceServiceStatusProps> = ({ result }) => <Status status={InferenceServiceReducer(result)} />;
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(InferenceServiceModel), ...Kebab.factory.common];
 
@@ -94,7 +96,6 @@ const InferenceServiceTableHeader = (t?: TFunction) => {
 InferenceServiceTableHeader.displayName = 'InferenceServiceTableHeader';
 
 const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, index, key, style }) => {
-  const phase = InferenceServicePhase(isvc);
   const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
   let framework;
   Object.keys(isvc.spec.predictor).forEach(curPredictor => {
@@ -110,7 +111,7 @@ const InferenceServiceTableRow: RowFunction<K8sResourceKind> = ({ obj: isvc, ind
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={isvc.metadata.namespace} title={isvc.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
+      <TableData className={tableColumnClasses[2]}><InferenceServiceStatus result={isvc} /></TableData>
       <TableData className={tableColumnClasses[3]}>{framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{isvc.status?.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{(isvc.spec.predictor[framework]?.storageUri) ? 'N' : 'Y'}</TableData>
@@ -130,7 +131,6 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
   const { t } = useTranslation();
 
   //const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
-  const phase = InferenceServicePhase(ds);
 
   const frameworkList = ['tensorflow', 'onnx', 'sklearn', 'xgboost', 'pytorch', 'tensorrt', 'triton'];
   let framework;
@@ -143,7 +143,7 @@ export const InferenceServiceDetailsList: React.FC<InferenceServiceDetailsListPr
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_COMMON_TABLEHEADER_2')} obj={ds} path="status.result">
-        <Status status={phase} />
+        <InferenceServiceStatus result={ds} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_101')} obj={ds} path="status.url">
         {ds.status?.url}
@@ -342,4 +342,8 @@ type ModelRowProps = {
 
 type ModelTableProps = {
   models: ModelKind[];  
+};
+
+type InferenceServiceStatusProps = {
+  result: any;
 };
