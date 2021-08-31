@@ -9,7 +9,6 @@ import { DetailsPage, MultiListPage, Table, TableRow, TableData, RowFunction } f
 import { Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TrainingJobModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { NO_STATUS } from '@console/shared/src/components/status';
 import * as _ from 'lodash';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainingJobModel), ...Kebab.factory.common];
@@ -32,11 +31,7 @@ const tjPhase = tj => {
 const TJStatus = ({ tj }) => {
   const phase = tjPhase(tj);
   if (!phase) {
-    return (
-      <span className="text-muted">
-        <i className="fa fa-hourglass-half" aria-hidden="true"></i> {NO_STATUS}
-      </span>
-    );
+    return '-';
   }
 
   switch (phase) {
