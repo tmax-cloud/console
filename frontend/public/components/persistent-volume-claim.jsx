@@ -22,6 +22,8 @@ import { ResourceEventStream } from './events';
 import { PersistentVolumeClaimModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 
+import { PersistentVolumeClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
 const { common, ExpandPVC } = Kebab.factory;
 const menuActions = [
   ...Kebab.getExtensionsActionsForKind(PersistentVolumeClaimModel),
@@ -29,9 +31,7 @@ const menuActions = [
   ...common,
 ];
 
-const PVCStatus = ({ pvc }) => (
-  <Status status={pvc.metadata.deletionTimestamp ? 'Terminating' : pvc.status.phase} />
-);
+const PVCStatus = ({ pvc }) => <Status status={PersistentVolumeClaimReducer(pvc)} />;
 
 const tableColumnClasses = [
   '', // name
