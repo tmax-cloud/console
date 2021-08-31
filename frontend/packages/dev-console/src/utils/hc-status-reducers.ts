@@ -81,7 +81,9 @@ export const AwxStatusReducer = (awx: any): string => {
     return NO_STATUS;
   }
   const conditions = _.get(awx, ['status', 'conditions'], []);
-  if (conditions.length === 0) return '-';
+  if (conditions.length === 0) {
+    return '-';
+  }
   return conditions[0].reason === 'Successful' ? 'Succeeded' : conditions[0].reason === 'Running' ? 'Deploying' : conditions[0].reason;
 };
 
