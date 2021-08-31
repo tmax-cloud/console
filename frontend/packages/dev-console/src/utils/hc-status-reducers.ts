@@ -74,3 +74,7 @@ export const ExperimentStatusReducer = experiment => {
 export const ClusterClaimStatusReducer = (clusterClaim: any): string => {
   return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
 };
+
+export const TerraformClaimStatusReducer = (clusterClaim: any): string => {
+  return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
+};
