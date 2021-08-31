@@ -183,67 +183,19 @@ export const tableFilters: TableFilterMap = {
 
   'pod-status': withTableFilter(podPhaseFilterReducer),
 
-  'registry-status': (phases, registry) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'registry-status': withTableFilter(registryStatusReducer),
 
-    const phase = registryStatusReducer(registry);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
+  'service-broker-status': withTableFilter(reducers.ServiceBrokerStatusReducer),
 
-  'service-broker-status': (phases, serviceBroker) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'service-instance-status': withTableFilter(reducers.ServiceInstanceStatusReducer),
 
-    const phase = reducers.ServiceBrokerStatusReducer(serviceBroker);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
+  'cluster-service-broker-status': withTableFilter(reducers.ClusterServiceBrokerReducer),
 
-  'service-instance-status': (phases, serviceInstance) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'pipeline-run-status': withTableFilter(pipelineRunFilterReducer),
 
-    const phase = reducers.ServiceInstanceStatusReducer(serviceInstance);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
-  'cluster-service-broker-status': (phases, clusterServiceBroker) => {
-    if (!phases || !phases.selected || !phases.selected.size) {
-      return true;
-    }
+  'pipeline-approval-status': withTableFilter(pipelineApprovalStatusReducer),
 
-    const phase = reducers.ClusterServiceBrokerReducer(clusterServiceBroker);
-    return phases.selected.has(phase) || !_.includes(phases.all, phase);
-  },
-
-  'pipeline-run-status': (results, pipelineRun) => {
-    if (!results || !results.selected || !results.selected.size) {
-      return true;
-    }
-
-    const result = pipelineRunFilterReducer(pipelineRun);
-    return results.selected.has(result) || !_.includes(results.all, result);
-  },
-
-  'pipeline-approval-status': (results, pipelineApproval) => {
-    if (!results || !results.selected || !results.selected.size) {
-      return true;
-    }
-
-    const result = pipelineApprovalStatusReducer(pipelineApproval);
-    return results.selected.has(result) || !_.includes(results.all, result);
-  },
-
-  'node-status': (statuses, node) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = nodeStatus(node);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'node-status': withTableFilter(nodeStatus),
 
   'node-role': (roles, node) => {
     if (!roles || !roles.selected || !roles.selected.size) {
@@ -280,31 +232,11 @@ export const tableFilters: TableFilterMap = {
     return strategies.selected.has(strategy) || !_.includes(strategies.all, strategy);
   },
 
-  'route-status': (statuses, route) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
+  'route-status': withTableFilter(routeStatus),
 
-    const status = routeStatus(route);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'catalog-status': withTableFilter(serviceCatalogStatus),
 
-  'catalog-status': (statuses, catalog) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = serviceCatalogStatus(catalog);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
-
-  'secret-type': (types, secret) => {
-    if (!types || !types.selected || !types.selected.size) {
-      return true;
-    }
-    const type = secretTypeFilterReducer(secret);
-    return types.selected.has(type) || !_.includes(types.all, type);
-  },
+  'secret-type': withTableFilter(secretTypeFilterReducer),
 
   'project-name': (str: string, project: K8sResourceKind) => {
     const displayName = _.get(project, ['metadata', 'annotations', 'openshift.io/display-name']);
@@ -322,24 +254,9 @@ export const tableFilters: TableFilterMap = {
     return fuzzyCaseInsensitive(str, displayName);
   },
 
-  'cluster-operator-status': (statuses, operator) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
+  'cluster-operator-status': withTableFilter(getClusterOperatorStatus),
 
-    const status = getClusterOperatorStatus(operator);
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
-
-  'template-instance-status': (statuses, instance) => {
-    if (!statuses || !statuses.selected || !statuses.selected.size) {
-      return true;
-    }
-
-    const status = reducers.TemplateInstanceStatusReducer(instance);
-
-    return statuses.selected.has(status) || !_.includes(statuses.all, status);
-  },
+  'template-instance-status': withTableFilter(reducers.TemplateInstanceStatusReducer),
 
   'awx-status': withTableFilter(reducers.awxStatusReducer),
 

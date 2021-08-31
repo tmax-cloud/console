@@ -41,13 +41,9 @@ export const ClusterServiceBrokerReducer = instance => {
   }
 };
 
-export const ServiceInstanceStatusReducer = (serviceInstance: any): string => {
-  return !!serviceInstance.status ? serviceInstance.status.lastConditionState : NO_STATUS;
-};
+export const ServiceInstanceStatusReducer = (serviceInstance: any): string => baseStatusReducer('status', 'lastConditionState')(serviceInstance);
 
-export const ClusterTemplateClaimReducer = (clusterTemplateClaim: any): string => {
-  return !!clusterTemplateClaim.status ? clusterTemplateClaim.status.status : NO_STATUS;
-};
+export const ClusterTemplateClaimReducer = (clusterTemplateClaim: any): string => baseStatusReducer('status', 'status')(clusterTemplateClaim);
 
 export const TemplateInstanceStatusReducer = instance => {
   let phase = '';
@@ -76,9 +72,7 @@ export const ExperimentStatusReducer = experiment => {
   }
 };
 
-export const ClusterClaimStatusReducer = (clusterClaim: any): string => {
-  return !!clusterClaim.status ? clusterClaim.status.phase : NO_STATUS;
-};
+export const ClusterClaimStatusReducer = (clusterClaim: any): string => baseStatusReducer('status', 'phase')(clusterClaim);
 
 export const awxStatusReducer = (awx: any): string => {
   if (!awx.status) return NO_STATUS;
