@@ -1,5 +1,5 @@
-import { NO_STATUS } from '@console/shared/src/components/status';
 import * as _ from 'lodash-es';
+export const NO_STATUS = 'No Status';
 
 export const ServiceBrokerStatusReducer = instance => {
   let phase = '';

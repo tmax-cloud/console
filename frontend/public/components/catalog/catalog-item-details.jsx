@@ -52,6 +52,7 @@ export const CatalogTileDetails = withTranslation()(
 
       const supportUrlLink = <ExternalLink href={supportUrl} text="Get support" />;
       const documentationUrlLink = <ExternalLink href={documentationUrl} additionalClassName="co-break-all" text={documentationUrl} />;
+      const documentationIframe = <iframe src={documentationUrl} target="_blank" style={{ width: '100%', display: 'block', overflowY: 'auto', border: 'solid 1px #cccccc', minHeight: '500px' }} />;
       const sampleRepoLink = <ExternalLink href={sampleRepo} additionalClassName="co-break-all" text={sampleRepo} />;
       const planItems = _.map(plans, plan => <li key={plan.metadata.uid}>{plan.spec.description || plan.spec.externalName}</li>);
       return (
@@ -75,6 +76,7 @@ export const CatalogTileDetails = withTranslation()(
                   {documentationUrl && (
                     <>
                       <h2 className="h5">Documentation</h2>
+                      <p>{documentationIframe}</p>
                       <p>{documentationUrlLink}</p>
                     </>
                   )}
