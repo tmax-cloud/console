@@ -5,7 +5,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.home,
-    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Audit.kind, CustomMenusMap.Events.kind, CustomMenusMap.Grafana.kind, CustomMenusMap.Kibana.kind, CustomMenusMap.Git.kind],
+    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Audit.kind, CustomMenusMap.Events.kind, CustomMenusMap.Grafana.kind, CustomMenusMap.Kibana.kind, CustomMenusMap.Git.kind, CustomMenusMap.Harbor.kind],
   },
   {
     menuType: MenuType.CONTAINER,
