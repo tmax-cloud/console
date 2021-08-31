@@ -19,7 +19,7 @@ export const getErrorMessage = (errorTypes: TaskErrorType[], errorMap: TaskError
 };
 
 export const taskParamIsRequired = (param: PipelineResourceTaskParam): boolean => {
-  return !('default' in param);
+  return !!param.default;
 };
 
 export const convertResourceToTask = (resource: PipelineResourceTask, runAfter?: string[]): PipelineTask => {
