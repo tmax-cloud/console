@@ -77,7 +77,7 @@ export const DeploymentDetailsList: React.FC<DeploymentDetailsListProps> = ({ de
 };
 DeploymentDetailsList.displayName = 'DeploymentDetailsList';
 
-const deploymentStatusReducer = (deployment: any): string => {
+const getDeploymentStatus = (deployment: any): string => {
   if (!deployment.status) return NO_STATUS;
   return deployment.status.availableReplicas === deployment.status.updatedReplicas && deployment.spec.replicas === deployment.status.availableReplicas ? 'Up to date' : 'Updating';
 };
@@ -102,7 +102,7 @@ const DeploymentDetails: React.FC<DeploymentDetailsProps> = ({ obj: deployment }
               <ResourceSummary resource={deployment} showPodSelector showNodeSelector showTolerations>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')}</dt>
                 <dd>
-                  <Status status={deploymentStatusReducer(deployment)} />
+                  <Status status={getDeploymentStatus(deployment)} />
                 </dd>
               </ResourceSummary>
             </div>
