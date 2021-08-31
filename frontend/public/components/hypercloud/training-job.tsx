@@ -9,6 +9,8 @@ import { DetailsPage, MultiListPage, Table, TableRow, TableData, RowFunction } f
 import { Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { TrainingJobModel } from '../../models';
 import { ResourceLabel, ResourceLabelPlural } from '../../models/hypercloud/resource-plural';
+import { Status } from '@console/shared';
+import { TrainingJobStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import * as _ from 'lodash';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainingJobModel), ...Kebab.factory.common];
@@ -18,57 +20,6 @@ export const tjKind = tj => {
 };
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const tjPhase = tj => {
-  let len = tj.status.conditions.length;
-  for (let i = len - 1; i >= 0; i--) {
-    if (tj.status.conditions[i].status) {
-      return tj.status.conditions[i].type;
-    }
-  }
-};
-
-const TJStatus = ({ tj }) => {
-  const phase = tjPhase(tj);
-  if (!phase) {
-    return '-';
-  }
-
-  switch (phase) {
-    case 'Running':
-      return (
-        <span className="text-muted">
-          <i className="fa fa-hourglass-half" aria-hidden="true"></i> Running
-        </span>
-      );
-    case 'Restarting':
-      return (
-        <span className="text-muted">
-          <i className="fa fa-hourglass-half" aria-hidden="true"></i> Restarting
-        </span>
-      );
-    case 'Created':
-      return (
-        <span className="pvc-bound">
-          <i className="fa fa-check" aria-hidden="true"></i> Created
-        </span>
-      );
-    case 'Succeeded':
-      return (
-        <span className="pvc-bound">
-          <i className="fa fa-check" aria-hidden="true"></i> Succeeded
-        </span>
-      );
-    case 'Failed':
-      return (
-        <span className="pvc-lost">
-          <i className="fa fa-minus-circle" aria-hidden="true"></i> Failed
-        </span>
-      );
-    default:
-      return phase;
-  }
-};
 
 const TJComposition = ({ tj }) => {
   const specs = tj?.spec && Object.entries(tj.spec);
@@ -128,7 +79,7 @@ const TrainingJobTableRow: RowFunction<K8sResourceKind> = ({ obj: tj, index, key
         <ResourceLink kind="Namespace" name={tj.metadata.namespace} title={tj.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        <TJStatus tj={tj} />
+        <Status status={TrainingJobStatusReducer(tj)} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>{<TJComposition tj={tj} />}</TableData>
       <TableData className={tableColumnClasses[4]}>
