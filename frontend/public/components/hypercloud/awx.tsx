@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { awxStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { AwxStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { Status } from '@console/shared';
 import { AWXModel } from '../../models';
@@ -27,7 +27,7 @@ const tableProps: TableProps = {
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
-      sortFunc: 'awxStatusReducer',
+      sortFunc: 'AwxStatusReducer',
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
@@ -49,7 +49,7 @@ const tableProps: TableProps = {
     },
     {
       className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
-      children: <Status status={awxStatusReducer(obj)} />,
+      children: <Status status={AwxStatusReducer(obj)} />,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -65,7 +65,7 @@ const filters = (t: TFunction) => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'awx-status',
-    reducer: awxStatusReducer,
+    reducer: AwxStatusReducer,
     items: [
       { id: 'Succeeded', title: 'Succeeded' },
       { id: 'Deploying', title: 'Deploying' },
@@ -95,7 +95,7 @@ export const AWXDetailsList: React.FC<AWXDetailsListProps> = ({ obj: awx }) => {
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_1')} obj={awx}>
-        <Status status={awxStatusReducer(awx)} />
+        <Status status={AwxStatusReducer(awx)} />
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
         {awx.spec?.tower_hostname ? (
@@ -141,7 +141,7 @@ export const AWXsPage: React.FC = props => {
 
 export const AWXsDetailsPage: React.FC<DetailsPageProps> = props => {
   const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={awxStatusReducer} pages={[details(detailsPage(AWXDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={AwxStatusReducer} pages={[details(detailsPage(AWXDetails)), editResource()]} />;
 };
 
 type ImageSummaryProps = {

@@ -9,7 +9,7 @@ import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, Resou
 import { useTranslation } from 'react-i18next';
 import { NamespaceClaimModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
-import { baseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { NamespaceClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const { common } = Kebab.factory;
 
@@ -68,11 +68,11 @@ const tableProps: TableProps = {
           obj?.status?.status === 'Error' ? (
             <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
               <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-                <Status status={baseStatusReducer('status', 'status')(obj)} />
+                <Status status={NamespaceClaimReducer(obj)} />
               </div>
             </Popover>
           ) : (
-            <Status status={baseStatusReducer('status', 'status')(obj)} />
+            <Status status={NamespaceClaimReducer(obj)} />
           ),
       },
       {
@@ -93,7 +93,7 @@ const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'namespace-claim-status',
-    reducer: baseStatusReducer('status', 'status'),
+    reducer: NamespaceClaimReducer,
     items: [
       { id: 'Awaiting', title: 'Awaiting' },
       { id: 'Approved', title: 'Approved' },
@@ -137,7 +137,7 @@ const NamespaceClaimsDetails: React.FC<NamespaceClaimDetailsProps> = ({ obj: nam
                 <dd>{namespaceclaims.resourceName}</dd>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
                 <dd>
-                  <Status status={baseStatusReducer('status', 'status')(namespaceclaims)} />
+                  <Status status={NamespaceClaimReducer(namespaceclaims)} />
                 </dd>
                 {namespaceclaims.status?.status === 'Rejected' && (
                   <>
