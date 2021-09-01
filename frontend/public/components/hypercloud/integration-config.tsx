@@ -96,12 +96,11 @@ export const IntegrationConfigDetailsList: React.FC<IntegrationConfigDetailsList
   const { t } = useTranslation();
 
   const readyCondition = ds.status.conditions?.find(obj => _.lowerCase(obj.type) === 'ready');
-  const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
 
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_109')}`} obj={ds} path="status.transitionTime">
-        {time}
+        <Timestamp timestamp={readyCondition?.lastTransitionTime} />
       </DetailsItem>
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={ds} path="status.result">
         <IntegrationConfigStatus result={ds} />
