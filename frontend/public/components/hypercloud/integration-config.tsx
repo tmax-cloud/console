@@ -126,7 +126,7 @@ const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrat
 export const IntegrationConfigDetailsList: React.FC<IntegrationConfigDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
 
-  const readyCondition = ds.status.conditions?.find(obj => _.lowerCase(obj.type) === 'ready');
+  const readyCondition = ds.status?.conditions?.find(obj => _.lowerCase(obj.type) === 'ready');
 
   return (
     <dl className="co-m-pane__details">
