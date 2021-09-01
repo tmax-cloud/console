@@ -11,6 +11,10 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
+import { PipelineApprovalReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
+export const PipelineApprovalStatus: React.FC<PipelineApprovalStatusProps> = ({ result }) => <Status status={PipelineApprovalReducer(result)} />;
+
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ApprovalModel), Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Delete, Kebab.factory.ModifyStatus];
 
 const kind = ApprovalModel.kind;
@@ -62,7 +66,7 @@ const PipelineApprovalTableRow: RowFunction<K8sResourceKind> = ({ obj: pipelineA
         <ResourceLink kind="Namespace" name={pipelineApproval.metadata.namespace} title={pipelineApproval.metadata.namespace} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>
-        <Status status={pipelineApproval.status.result} />
+        <PipelineApprovalStatus result={pipelineApproval} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={pipelineApproval.metadata.creationTimestamp} />
@@ -85,7 +89,7 @@ export const PipelineApprovalDetailsList: React.FC<PipelineApprovalDetailsListPr
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={ds} path="status.result">
-        <Status status={ds.status.result} />
+        <PipelineApprovalStatus result={ds} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TAB_11')} obj={ds} path="spec.pipelineRun">
         <ResourceLink kind="PipelineRun" namespace={ds.metadata.namespace} name={ds.spec.pipelineRun} title={ds.spec.pipelineRun} />
@@ -174,4 +178,9 @@ type PipelineApprovalDetailsProps = {
 
 type PipelineApprovalsDetailsPageProps = {
   match: any;
+};
+
+
+type PipelineApprovalStatusProps = {
+  result: any;
 };
