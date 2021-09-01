@@ -19,34 +19,34 @@ import { IntegrationConfigReducer } from '@console/dev-console/src/utils/hc-stat
 export const IntegrationConfigStatus: React.FC<IntegrationConfigStatusProps> = ({ result }) => <Status status={IntegrationConfigReducer(result)} />;
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(IntegrationConfigModel),
-  //...Kebab.factory.common,
-  //...[() => testWebhook(IntegrationConfigModel, integrationConfig)],  
-  Kebab.factory.ModifyLabels,
-  Kebab.factory.ModifyAnnotations,
-  (kind, integrationConfig) => ({
-    label: 'COMMON:MSG_MAIN_POPUP_20',
-    callback: () =>
-      integrationConfigRequestModal({
-        kind,
-        request: 'push',
-        resource: integrationConfig,
-        blocking: true,
-      }),
-    accessReview: asAccessReview(kind, integrationConfig, 'patch'),
-  }),
-  (kind, integrationConfig) => ({
-    label: 'COMMON:MSG_MAIN_POPUP_23',
-    callback: () =>
-      integrationConfigRequestModal({
-        kind,
-        request: 'pull',
-        resource: integrationConfig,
-        blocking: true,
-      }),
-    accessReview: asAccessReview(kind, integrationConfig, 'patch'),
-  }),
-  Kebab.factory.Edit,
-  Kebab.factory.Delete,
+//...Kebab.factory.common,
+//...[() => testWebhook(IntegrationConfigModel, integrationConfig)],  
+Kebab.factory.ModifyLabels,
+Kebab.factory.ModifyAnnotations,
+(kind, integrationConfig) => ({
+  label: 'COMMON:MSG_MAIN_POPUP_20',
+  callback: () =>
+    integrationConfigRequestModal({
+      kind,
+      request: 'push',
+      resource: integrationConfig,
+      blocking: true,
+    }),
+  accessReview: asAccessReview(kind, integrationConfig, 'patch'),
+}),
+(kind, integrationConfig) => ({
+  label: 'COMMON:MSG_MAIN_POPUP_23',
+  callback: () =>
+    integrationConfigRequestModal({
+      kind,
+      request: 'pull',
+      resource: integrationConfig,
+      blocking: true,
+    }),
+  accessReview: asAccessReview(kind, integrationConfig, 'patch'),
+}),
+Kebab.factory.Edit,
+Kebab.factory.Delete,
 ];
 
 const kind = IntegrationConfigModel.kind;
@@ -64,24 +64,8 @@ const tableColumnClasses = [
   Kebab.columnClass,
 ];
 
-const IntegrationConfigPhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions?.forEach(cur => {
-      if (cur.type === 'ready') {
-        if (cur.status === 'True') {
-          phase = 'Ready';
-        } else {
-          phase = 'UnReady';
-        }
-      }
-    });
-    return phase;
-  }
-};
 
 const IntegrationConfigTableHeader = (t?: TFunction) => {
-
   return [
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
@@ -94,7 +78,7 @@ const IntegrationConfigTableHeader = (t?: TFunction) => {
       sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
-    },    
+    },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortFunc: 'IntegrationConfigPhase',
@@ -125,7 +109,7 @@ const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrat
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={integrationConfig.metadata.namespace} title={integrationConfig.metadata.namespace} />
-      </TableData>      
+      </TableData>
       <TableData className={tableColumnClasses[2]}>
         <IntegrationConfigStatus result={integrationConfig} />
       </TableData>
@@ -142,7 +126,7 @@ const IntegrationConfigTableRow: RowFunction<K8sResourceKind> = ({ obj: integrat
 export const IntegrationConfigDetailsList: React.FC<IntegrationConfigDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
 
-  const readyCondition = ds.status.conditions.find(obj => _.lowerCase(obj.type) === 'ready');
+  const readyCondition = ds.status.conditions?.find(obj => _.lowerCase(obj.type) === 'ready');
   const time = readyCondition?.lastTransitionTime?.replace('T', ' ').replaceAll('-', '.').replace('Z', '');
 
   return (
@@ -184,19 +168,14 @@ export const IntegrationConfigs: React.FC = props => {
   return <Table {...props} aria-label="IntegrationConfigs" Header={IntegrationConfigTableHeader.bind(null, t)} Row={IntegrationConfigTableRow} virtualize />;
 }
 
-const integrationConfigStatusReducer = (integrationConfig: any): string => {
-  const phase = IntegrationConfigPhase(integrationConfig);
-  return phase;
-};
-
 const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
     type: 'integrationConfig-status',
-    reducer: integrationConfigStatusReducer,
+    reducer: IntegrationConfigReducer,
     items: [
       { id: 'Ready', title: 'Ready' },
-      { id: 'UnReady', title: 'UnReady' },      
+      { id: 'UnReady', title: 'UnReady' },
     ],
   },
 ];
