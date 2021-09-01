@@ -16,9 +16,8 @@ import { CleanupResults, PipelineBuilderTaskGroup, SelectedBuilderTask, UpdateEr
 import { applyChange } from './update-utils';
 import { useTranslation } from 'react-i18next';
 import { Section } from '../../../../../../public/components/hypercloud/utils/section';
-import { useFormContext, Controller } from 'react-hook-form';
 import { SelectorInput } from '../../../../../../public/components/utils';
-import { useFormikContext } from 'formik';
+
 //import { TFunction } from 'i18next';
 
 import './PipelineBuilderForm.scss';
