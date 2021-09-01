@@ -68,8 +68,9 @@ const removeEmptyDefaultParams = (task: PipelineTask): PipelineTask => {
 };
 
 export const convertBuilderFormToPipeline = (formValues: PipelineBuilderFormikValues, namespace: string, existingPipeline?: Pipeline): Pipeline => {
-  const { name, resources, params, workspaces, tasks, listTasks } = formValues;
+  const { name, resources, params, workspaces, tasks, listTasks, metadata } = formValues;
   const listIds = listTasks.map(listTask => listTask.name);
+  const labels = metadata?.labels;
 
   return {
     ...existingPipeline,
@@ -79,6 +80,7 @@ export const convertBuilderFormToPipeline = (formValues: PipelineBuilderFormikVa
       ...existingPipeline?.metadata,
       name,
       namespace,
+      labels,
     },
     spec: {
       ...existingPipeline?.spec,
