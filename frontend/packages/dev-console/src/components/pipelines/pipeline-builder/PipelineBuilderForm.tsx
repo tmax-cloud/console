@@ -16,6 +16,9 @@ import { CleanupResults, PipelineBuilderTaskGroup, SelectedBuilderTask, UpdateEr
 import { applyChange } from './update-utils';
 import { useTranslation } from 'react-i18next';
 import { Section } from '../../../../../../public/components/hypercloud/utils/section';
+import { useFormContext, Controller } from 'react-hook-form';
+import { SelectorInput } from '../../../../../../public/components/utils';
+import { useFormikContext } from 'formik';
 //import { TFunction } from 'i18next';
 
 import './PipelineBuilderForm.scss';
@@ -31,6 +34,8 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
   const selectedTaskRef = React.useRef<SelectedBuilderTask>(null);
   selectedTaskRef.current = selectedTask;
 
+  //const methods = useFormContext();
+  //const { control } = methods;
   const { t } = useTranslation();
 
   const { existingPipeline, status, isSubmitting, dirty, handleReset, handleSubmit, errors, namespace, setFieldValue, setStatus, values, isCreate } = props;
@@ -74,6 +79,8 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
     handleReset();
   }, [handleReset]);
 
+  const labels = SelectorInput.arrayify(_.get(existingPipeline, 'metadata.labels'));
+
   return (
     <>
       <Stack className="odc-pipeline-builder-form">
@@ -89,6 +96,15 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
             </div>
 
             <div>
+              <Section label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_8')} id="labels" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_92')} >
+                <SelectorInput
+                  onChange={(val) => setFieldValue('metadata.labels', SelectorInput.objectify(val))}
+                  tags={labels}
+                />
+              </Section>
+            </div>
+
+            <div>
               <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_2')} id="params" >
                 <PipelineParameters addLabel="Add Parameters" fieldName="params" />
               </Section>
@@ -97,7 +113,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
             <div>
               <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_10')} id="resources" >
                 <PipelineResources addLabel="Add Resources" fieldName="resources" />
-              </Section>  
+              </Section>
             </div>
 
             <div>
