@@ -120,8 +120,7 @@ export const CatalogListPage = withTranslation()(
             tileName: serviceClassDisplayName(serviceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            // tileDescription: serviceClass.spec.description,
-            tileDescription: '',
+            tileDescription: serviceClass.spec.description,
             tileProvider: _.get(serviceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: serviceClass.spec.tags,
             createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
@@ -159,8 +158,7 @@ export const CatalogListPage = withTranslation()(
             tileName: serviceClassDisplayName(clusterServiceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            // tileDescription: clusterServiceClass.spec.description,
-            tileDescription: '',
+            tileDescription: clusterServiceClass.spec.description,
             tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: clusterServiceClass.spec.tags,
             createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
