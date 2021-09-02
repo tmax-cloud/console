@@ -36,11 +36,11 @@ const kindItems = t => [
 const ruleTypeItems = t => [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
-    title: 'Resource',
+    title: t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_33'),
     value: 'Resource',
   },
   {
-    title: 'URL',
+    title: t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_34'),
     value: 'URL',
   },
 ];
@@ -172,7 +172,7 @@ const RuleItem = props => {
   //const [resourceList, setResourceList] = React.useState([]);
   const [resourceListWithApiGroupConvert, setResourceListWithApiGroupConvert] = React.useState([]);
   const { control } = methods;
-  
+
   const apiGroups = useWatch<{ label: string, value: string, checked: boolean, added: boolean }[]>({
     control: control,
     name: `${name}[${index}].apiGroups`,
@@ -213,9 +213,10 @@ const RuleItem = props => {
     });
     resourceListWithApiGroupTemp.forEach((apiGroup) => {
       let apiGroupAndresourceList = [];
-      apiGroupAndresourceList.push({ key: `${apiGroup.apiGroup}-${apiGroup.apiGroup}`, label: apiGroup.apiGroup, value: apiGroup.apiGroup, isCategoryName: true })
+      let isFirstResource = true;
       apiGroup.resourceList.forEach((resource) => {
-        apiGroupAndresourceList.push({ key: `${resource.value}-${resource.value}`, label: resource.value, value: resource.value, isCategoryName: false })
+        apiGroupAndresourceList.push({ key: `${resource.value}-${resource.value}`, label: resource.value, value: resource.value, apiGroup: apiGroup.apiGroup, isFirstResource: isFirstResource })
+        isFirstResource = false;
       });
       convertList = convertList.concat(apiGroupAndresourceList);
     });
@@ -268,7 +269,7 @@ const RuleItem = props => {
   const ruleTypeToggle = useWatch({
     control: methods.control,
     name: `rules[${index}].ruleType`,
-    defaultValue: 'Resource',
+    defaultValue: nonResourceURLs ? 'URL' : 'Resource',
   });
 
   const kindToggle = useWatch({
@@ -281,17 +282,17 @@ const RuleItem = props => {
     <>
       {index === 0 ? null : <div className="co-form-section__separator" />}
       <div className="row" key={item.id}>
-        <Section label={`rules[${index}]`} id={`rules[${index}]`} >
+        <Section id={`rules[${index}]`} >
           <div className="col-xs-12 pairs-list__value-field">
             {kindToggle === 'ClusterRole' &&
-              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_32')} id="urltype" >
+              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_32')} id={`rules[${index}].ruleType`} >
                 <RadioGroup name={`rules[${index}].ruleType`} items={ruleTypeItems.bind(null, t)()} inline={false} initValue={ruleTypeToggle} />
               </Section>
             }
             {ruleTypeToggle === 'Resource' ? (<>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true}>
                 <Controller
-                  as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} />}
+                  as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={true}/>}
                   control={methods.control}
                   name={`${name}[${index}].apiGroups`}
                   onChange={([selected]) => {
@@ -300,22 +301,22 @@ const RuleItem = props => {
                   defaultValue={item.apiGroups}
                 />
               </Section>
-              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resources[${index}]`} isRequired={true}>                
+              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resources[${index}]`} isRequired={true}>
                 <Controller
-                  as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('COMMON:MSG_COMMON_FILTER_2')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} />}
+                  as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} />}
                   control={methods.control}
                   name={`${name}[${index}].resources`}
                   onChange={([selected]) => {
                     return { value: selected };
                   }}
                   defaultValues={item.resources}
-                />                
+                />
               </Section>
-              <Section label={t('resourceNames')} id={`rules[${index}].resourceNames`} >
-                <ListView name={`rules.${index}.resourceNames`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={ResourceNameItemRenderer} defaultItem={{ value: '' }} defaultValues={resourceNames} />
+              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_30')} id={`rules[${index}].resourceNames`} >
+                <ListView name={`rules.${index}.resourceNames`} methods={methods} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_31')} headerFragment={<></>} itemRenderer={ResourceNameItemRenderer} defaultItem={{ value: '' }} defaultValues={resourceNames} />
               </Section>
             </>) : (
-              <Section label={t('nonResourceURLs')} id={`rules[${index}].nonResourceURLs`} isRequired={true}>
+              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_34')} id={`rules[${index}].nonResourceURLs`} isRequired={true}>
                 <ListView name={`rules.${index}.nonResourceURLs`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={URLItemRenderer} defaultItem={{ value: '' }} defaultValues={nonResourceURLs} />
               </Section>
             )}
@@ -349,7 +350,7 @@ const ruleItemRenderer = (methods, name, item, index, ListActions, ListDefaultIc
 const ResourceNameItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
   <div className="row" key={item.id}>
     <div className="col-xs-11 pairs-list__value-field">
-      <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={method} defaultValue={item.value} placeholder='Resource Name' />
+      <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={method} defaultValue={item.value} />
     </div>
     <div className="col-xs-1 pairs-list__action">
       <Button
@@ -370,7 +371,7 @@ const ResourceNameItemRenderer = (method, name, item, index, ListActions, ListDe
 const URLItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
   <div className="row" key={item.id}>
     <div className="col-xs-11 pairs-list__value-field">
-      <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={method} defaultValue={item.value} placeholder='URL' />
+      <TextInput id={`${name}[${index}].value`} inputClassName="col-md-12" methods={method} defaultValue={item.value} />
     </div>
     <div className="col-xs-1 pairs-list__action">
       <Button
@@ -422,7 +423,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
                   apiGroupListWithResourceListTemp = apiGroupListWithResourceSetTemp;
                   apiGroupListWithResourceListTemp.push({ apiGroup: apiGroup.value, resourceList: resourceListInApiGroupTemp });
 
-                  apiGroupListWithResourceSet = apiGroupListWithResourceSetTemp;                  
+                  apiGroupListWithResourceSet = apiGroupListWithResourceSetTemp;
                 },
                 err => {
                   console.log('Fail to get resource list');

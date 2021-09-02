@@ -92,11 +92,14 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     )
   ) : justSelectAllOption && !showSelectAllOnEmpty ? null : (
     <div>
-      {data.isCategoryName ? (
-        <div style={{ marginLeft: '10px', fontWeight: 'bold' }}>
-          {data.label}
-        </div>
-      ) : (
+      {data.isFirstResource &&
+        <>
+          <hr></hr> 
+          <div style={{ marginLeft: '10px', fontWeight: 'bold' }}>
+            {data.apiGroup}
+          </div>
+        </>
+      }
         <Option {...props}>
           <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
             {/*<input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />*/}
@@ -106,8 +109,6 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginLeft: '10px' }} />
           </span>
         </Option>
-      )
-      }
     </div>
   );
 };
@@ -148,16 +149,6 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
     label: 'All',
     value: SELECT_ALL_VALUE,
   };
-
-
-  let categoryCount = 0;
-  items.forEach((data) => {
-    if (data.isCategoryName === true) {
-      categoryCount++
-    }
-  });
-
-  console.log('categoryCount' + categoryCount);
 
   const defaultValuesWithKey = defaultValues?.map(item => {
     return {
@@ -223,7 +214,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
       // MEMO : item마다 고유의 key값이 있어야 delete chip 가능해서 key값 넣어주는 부분.
       // MEMO : key값 규칙은 "[label]-[value]"로 지정해주고 있음. defaultValues로 들어오는 값에 대해서도 이와 같이 key값 만들어서 지정해줌.
       formattedOptions = items?.map(item => {
-        return { key: item.key || `${item.label}-${item.value}`, label: item.label, value: item.value, isCategoryName: item.isCategoryName };
+        return { key: item.key || `${item.label}-${item.value}`, label: item.label, value: item.value, apiGroup: item.apiGroup, isFirstResource: item.isFirstResource };
       });
     }
   }
