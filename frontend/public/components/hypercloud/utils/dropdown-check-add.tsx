@@ -98,19 +98,19 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             </Option>
         )
     ) : justSelectAllOption && !showSelectAllOnEmpty ? null : (
+        <>
         <div>
             <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
-                <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked}
+                { (data.label === 'All') ? <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px', visibility: 'hidden' }} type="checkbox" /> :
+                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked} disabled={!isAdded}
                     onClick={() => {
-                        if (isExist !== true) {
-                            console.log(data.label + " V Checked");
+                        if (isExist !== true) {                            
                             data.checked = true;
                             currentValue.push(data);
                             setValue(currentValue);
                         }
                         else {
                             if (isChecked2 !== true) {
-                                console.log(data.label + " V Checked");
                                 data.checked = true;
                                 data.added = true;
                                 //update checked = ture;
@@ -118,7 +118,6 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                                 setValue(wihtoutItem);
                             }
                             else {
-                                console.log(data.label + " X Unhecked");
                                 if (isAdded !== true) {
                                     //delete
                                     setValue(wihtoutItem);
@@ -132,37 +131,51 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                             }
                         }
                     }} />
+                }
                 <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}
                     onClick={() => {
-                        if (isExist !== true) {
-                            console.log(data.label + " V Added");
-                            data.added = true;
-                            currentValue.push(data);
-                            setValue(currentValue);
+                        if (data.label === 'All') {
+                            setValue([{
+                                label: 'All',
+                                value: '*',
+                                added: true,
+                            }]);
                         }
-                        else {
-                            if (isChecked2 !== true) {
-                                console.log(data.label + " V Added");
+                        else {                            
+                            if (isExist !== true) {
                                 data.added = true;
-                                //update currentValue
-                                wihtoutItem.push(data);
-                                setValue(wihtoutItem);
+                                currentValue.push(data);
+                                //remove All
+                                let wihtoutAll = currentValue.filter(e => { if (e.label !== 'All') return true; });
+                                setValue(wihtoutAll);
                             }
                             else {
-                                console.log(data.label + " V Added");
-                                data.checked = true;
-                                data.added = true;
-                                //update currentValue
-                                wihtoutItem.push(data);
-                                setValue(wihtoutItem);
+                                if (isChecked2 !== true) {
+                                    data.added = true;
+                                    //update currentValue
+                                    wihtoutItem.push(data);
+                                    //remove All
+                                    let wihtoutAll = wihtoutItem.filter(e => { if (e.label !== 'All') return true; });
+                                    setValue(wihtoutAll);
+                                }
+                                else {
+                                    data.checked = true;
+                                    data.added = true;
+                                    //update currentValue
+                                    wihtoutItem.push(data);
+                                    let wihtoutAll = wihtoutItem.filter(e => { if (e.label !== 'All') return true; });
+                                    setValue(wihtoutAll);
+                                }
                             }
-                        }
+                        }                        
                     }}>
-                    <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
+                    <span id={DROPDOWN_SECTION_ID}>{data.label}{(data.label === 'All') }</span>
                     <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" />
                 </span>
             </span>
         </div>
+        { (data.label === 'All') && <hr></hr> }
+        </>
     );
 };
 
@@ -214,6 +227,8 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     });
 
     const selectedValues = watch(name, defaultValuesWithKey);
+    //const addedValues = selectedValues.filter(e => { if (e.added === true) return true; });
+    //setChips(addedValues);
 
     const customStyles = {
         control: (provided, state) => ({
@@ -338,6 +353,8 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
         // MEMO : selectAll의 현 체크여부는 위와 같은 이유로 판단 불가하기 때문에 selectAllChecked state로 관리하게 함.
         const clickSelectAll = action === 'select-option' && option.value === selectAllOption.value;
         const isEqual = value.length === allOptions.length;
+        
+        const addedValues = value.filter(e => { if (e.added === true) return true; });
 
         const caseType = getCaseType(clickSelectAll, selectAllChecked, shrinkOnSelectAll, isEqual);
         switch (caseType) {
@@ -346,24 +363,25 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                 break;
             }
             case CaseType.CHECK_SET_ONE_ALL: {
-                setDropdownSettings(true, selectAllChipObj, [selectAllChipObj]);
+                setDropdownSettings(true, [selectAllChipObj], [selectAllChipObj]);
                 break;
             }
             case CaseType.CHECK_SET_ALL_OPTIONS: {
                 setDropdownSettings(true, allOptions, allOptions);
                 break;
             }
-            case CaseType.UNCHECK_SET_FILTERED_VALUES: {
-                const newValues = allOptions.filter(item => !_.isEqual(option, item));
-                setDropdownSettings(false, newValues, newValues);
-                break;
-            }
+            //case CaseType.UNCHECK_SET_FILTERED_VALUES: {
+            //    const newValues = allOptions.filter(item => !_.isEqual(option, item));
+            //    const newAddedValues = newValues.filter(e => { if (e.added === true) return true; });                
+            //    setDropdownSettings(false, newValues, newAddedValues);
+            //    break;
+            //}
             case CaseType.CHECK_SET_VALUES: {
-                setDropdownSettings(true, value, value);
+                setDropdownSettings(true, value, addedValues);
                 break;
             }
             case CaseType.UNCHECK_SET_VALUES: {
-                setDropdownSettings(false, value, value);
+                setDropdownSettings(false, value, addedValues);
                 break;
             }
             default: {
