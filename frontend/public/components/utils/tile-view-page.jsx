@@ -97,14 +97,6 @@ export const categorizeItems = (t, items, itemsSorter, initCategories) => {
   return categories;
 };
 
-// const clearItemsFromCategories = categories => {
-//   _.forOwn(categories, category => {
-//     category.numItems = 0;
-//     category.items = [];
-//     clearItemsFromCategories(category.subcategories);
-//   });
-// };
-
 const filterByKeyword = (items, filters, compFunction) => {
   const { keyword } = filters;
   if (!keyword || !keyword.active) {
@@ -859,5 +851,13 @@ const categorize = (items, categories) => {
 
   categories.all.numItems = _.size(items);
   categories.all.items = items;
+};
+
+const clearItemsFromCategories = categories => {
+  _.forOwn(categories, category => {
+    category.numItems = 0;
+    category.items = [];
+    clearItemsFromCategories(category.subcategories);
+  });
 };
 */
