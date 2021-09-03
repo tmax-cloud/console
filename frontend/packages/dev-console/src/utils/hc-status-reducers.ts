@@ -1,4 +1,5 @@
 import * as _ from 'lodash-es';
+import { NodeCondition } from '@console/shared/src/types';
 export const NO_STATUS = 'No Status';
 
 export const ServiceBrokerStatusReducer = instance => {
@@ -91,16 +92,15 @@ export const NamespaceClaimReducer = (namespaceClaim: any): string => {
   return !!namespaceClaim.status ? namespaceClaim.status.status : NO_STATUS;
 };
 
-
 export const PersistentVolumeReducer = (persistentVolume: any): string => {
   let phase = '';
-  phase = persistentVolume.metadata.deletionTimestamp ? 'Terminating' : persistentVolume.status.phase
+  phase = persistentVolume.metadata.deletionTimestamp ? 'Terminating' : persistentVolume.status.phase;
   return !!persistentVolume.status ? phase : NO_STATUS;
 };
 
 export const PersistentVolumeClaimReducer = (persistentVolumeClaim: any): string => {
   let phase = '';
-  phase = persistentVolumeClaim.metadata.deletionTimestamp ? 'Terminating' : persistentVolumeClaim.status.phase
+  phase = persistentVolumeClaim.metadata.deletionTimestamp ? 'Terminating' : persistentVolumeClaim.status.phase;
   return !!persistentVolumeClaim.status ? phase : NO_STATUS;
 };
 
@@ -110,22 +110,14 @@ export const RoleBindingClaimReducer = (roleBindingClaim: any): string => {
 
 export const PipelineRunReducer = (pipelineRun: any): string => {
   const conditions = _.get(pipelineRun, ['status', 'conditions'], []);
-  const isCancelled = conditions.find((c) =>
-    ['PipelineRunCancelled', 'TaskRunCancelled'].some((cancel) => cancel === c.reason),
-  );
+  const isCancelled = conditions.find(c => ['PipelineRunCancelled', 'TaskRunCancelled'].some(cancel => cancel === c.reason));
   if (isCancelled) {
     return 'Cancelled';
   }
   if (conditions.length === 0) return null;
 
-  const condition = conditions.find((c) => c.type === 'Succeeded');
-  let status =  !condition || !condition.status
-    ? null
-    : condition.status === 'True'
-      ? 'Completed'
-      : condition.status === 'False'
-        ? 'Failed'
-        : 'Running';
+  const condition = conditions.find(c => c.type === 'Succeeded');
+  let status = !condition || !condition.status ? null : condition.status === 'True' ? 'Completed' : condition.status === 'False' ? 'Failed' : 'Running';
 
   return !!pipelineRun.status.conditions ? status : NO_STATUS;
 };
@@ -182,4 +174,11 @@ export const TrainedModelReducer = (trainedModel: any): string => {
     });
   }
   return !!trainedModel.status ? phase : NO_STATUS;
+};
+
+export const NodeStatusReducer = (node: any): string => {
+  const conditions = _.get(node, 'status.conditions', []);
+  const readyState = _.find(conditions, { type: 'Ready' }) as NodeCondition;
+
+  return readyState ? (readyState.status === 'True' ? 'Ready' : 'Not Ready') : NO_STATUS;
 };
