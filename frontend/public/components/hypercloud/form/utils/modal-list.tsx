@@ -3,7 +3,7 @@ import { ModalLauncher } from './';
 import { PenIcon, MinusIcon } from '@patternfly/react-icons';
 
 export const ModalList = props => {
-  const { handleMethod, path, onRemove, list, description, title, children, id, methods, requiredFields } = props;
+  const { handleMethod, path, onRemove, list, description, title, children, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
   let uId = id + '-list';
   return (
     <>
@@ -19,7 +19,7 @@ export const ModalList = props => {
                   onClick={e => {
                     let target = document.getElementById(`item-modify-${id}-${index}`).closest('li');
                     target.dataset.modify = 'true';
-                    return ModalLauncher({ inProgress: false, path: path, index: index, methods: methods, requiredFields: requiredFields, title: title, id: id, handleMethod: handleMethod, children: children, submitText: '수정' });
+                    return ModalLauncher({ inProgress: false, path: path, index: index, methods: methods, requiredFields: requiredFields, title: title, id: id, handleMethod: handleMethod, children: children, submitText: '수정', optionalValidCallback: optionalValidCallback, optionalRequiredField: optionalRequiredField });
                   }}
                 >
                   <PenIcon />
