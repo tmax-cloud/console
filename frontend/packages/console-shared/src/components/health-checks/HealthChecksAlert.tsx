@@ -35,13 +35,12 @@ const addHealthChecksRefs = [
 
 const HealthChecksAlert: React.FC<HealthChecksAlertProps> = ({ resource }) => {
   const {
-    kind,
     metadata: { name, namespace, uid },
   } = resource;
   const [hideHealthCheckAlertFor, setHideHealthCheckAlertFor] = React.useState([]);
   const kindForCRDResource = referenceFor(resource);
   const resourceModel = modelFor(kindForCRDResource);
-  const resourceKind = resourceModel.crd ? kindForCRDResource : kind;
+  const resourcePlural = resourceModel.crd ? kindForCRDResource : resourceModel.plural;
 
   const canAddHealthChecks = useAccessReview({
     group: resourceModel.apiGroup,
@@ -75,7 +74,7 @@ const HealthChecksAlert: React.FC<HealthChecksAlertProps> = ({ resource }) => {
   const showAlert =
     !healthCheckAdded && !_.includes(hideHealthCheckAlertFor, uid) && canAddHealthChecks;
 
-  const addHealthChecksLink = `/k8s/ns/${namespace}/${resourceKind}/${name}/containers/${containersName[0]}/health-checks`;
+  const addHealthChecksLink = `/k8s/ns/${namespace}/${resourcePlural}/${name}/containers/${containersName[0]}/health-checks`;
 
   return (
     <>
