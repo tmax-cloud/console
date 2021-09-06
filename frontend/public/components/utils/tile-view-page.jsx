@@ -9,6 +9,7 @@ import { history } from './router';
 import { isModalOpen } from '../modals';
 import { Dropdown } from '../utils';
 import { withTranslation } from 'react-i18next';
+import { categorize, pruneCategoriesWithNoItems, processCategories, clearItemsFromCategories } from './hypercloud/tile-view-page';
 
 export const FilterTypes = {
   category: 'category',
@@ -51,41 +52,6 @@ const filterSubcategories = (category, item) => {
   return matchedSubcategories;
 };
 
-// categorize item under sub and main categories
-const addItem = (item, category, subcategory = null) => {
-  // Add the item to the category
-  if (!category.items) {
-    category.items = [item];
-  } else if (!category.items.includes(item)) {
-    category.items = category.items.concat(item);
-  }
-
-  // Add the item to the subcategory
-  if (subcategory) {
-    if (!subcategory.items) {
-      subcategory.items = [item];
-    } else if (!subcategory.items.includes(item)) {
-      subcategory.items = subcategory.items.concat(item);
-    }
-  }
-};
-
-const isCategoryEmpty = ({ items }) => _.isEmpty(items);
-
-const pruneCategoriesWithNoItems = categories => {
-  if (!categories) {
-    return;
-  }
-
-  _.forOwn(categories, (category, key) => {
-    if (isCategoryEmpty(category)) {
-      delete categories[key];
-    } else {
-      pruneCategoriesWithNoItems(category.subcategories);
-    }
-  });
-};
-
 const processSubCategories = (category, itemsSorter) => {
   _.forOwn(category.subcategories, subcategory => {
     if (subcategory.items) {
@@ -109,38 +75,6 @@ const processSubCategories = (category, itemsSorter) => {
   });
 };
 
-// calculate numItems per Category and subcategories, sort items
-const processCategories = (categories, itemsSorter) => {
-  _.forOwn(categories, category => {
-    if (category.items) {
-      category.numItems = _.size(category.items);
-      category.items = itemsSorter(category.items);
-      processSubCategories(category, itemsSorter);
-    }
-  });
-};
-
-const categorize = (items, categories) => {
-  // Categorize each item
-  _.each(items, item => {
-    let itemCategorized = false;
-
-    _.each(categories, category => {
-      const matchedSubcategories = filterSubcategories(category, item);
-      _.each(matchedSubcategories, subcategory => {
-        addItem(item, category, subcategory); // add to subcategory & main category
-        itemCategorized = true;
-      });
-    });
-    if (!itemCategorized) {
-      addItem(item, categories.other); // add to Other category
-    }
-  });
-
-  categories.all.numItems = _.size(items);
-  categories.all.items = items;
-};
-
 /**
  * Creates an items array under each category and subcategory.  If no match, categorizes item
  * under 'Other' main category.
@@ -161,14 +95,6 @@ export const categorizeItems = (t, items, itemsSorter, initCategories) => {
   processCategories(categories, itemsSorter);
 
   return categories;
-};
-
-const clearItemsFromCategories = categories => {
-  _.forOwn(categories, category => {
-    category.numItems = 0;
-    category.items = [];
-    clearItemsFromCategories(category.subcategories);
-  });
 };
 
 const filterByKeyword = (items, filters, compFunction) => {
@@ -853,3 +779,85 @@ TileViewPage.defaultProps = {
   clearFiltersButtonText: 'Clear All Filters',
   language: 'en',
 };
+
+// MEMO : HyperCloud에선 From Catalog tile view 페이지 왼쪽 항목 부분을 one depth로만 제공하고
+// simpleHyperCloudCategories에 정의되어있지 않은 값이 리소스의 spec.categories 필드값으로 있으면 해당 category가 새로 추가되게 해달라는 요청이 있어서
+// categorize 구현부분 수정함. 이후 subcategory제공요청이 있을 것 같아 기존 코드들 주석으로 남겨둠. 리팩토링으로 재구현한 코드는 hypercloud폴더안의 tile-view-pag.jsx에 있음.
+
+/*
+// categorize item under sub and main categories
+const addItem = (item, category, subcategory = null) => {
+  // Add the item to the category
+  if (!category.items) {
+    category.items = [item];
+  } else if (!category.items.includes(item)) {
+    category.items = category.items.concat(item);
+  }
+
+  // Add the item to the subcategory
+  if (subcategory) {
+    if (!subcategory.items) {
+      subcategory.items = [item];
+    } else if (!subcategory.items.includes(item)) {
+      subcategory.items = subcategory.items.concat(item);
+    }
+  }
+};
+
+const isCategoryEmpty = ({ items }) => _.isEmpty(items);
+
+const pruneCategoriesWithNoItems = categories => {
+  if (!categories) {
+    return;
+  }
+
+  _.forOwn(categories, (category, key) => {
+    if (isCategoryEmpty(category)) {
+      delete categories[key];
+    } else {
+      pruneCategoriesWithNoItems(category.subcategories);
+    }
+  });
+};
+
+
+// calculate numItems per Category and subcategories, sort items
+const processCategories = (categories, itemsSorter) => {
+  _.forOwn(categories, category => {
+    if (category.items) {
+      category.numItems = _.size(category.items);
+      category.items = itemsSorter(category.items);
+      processSubCategories(category, itemsSorter);
+    }
+  });
+};
+
+const categorize = (items, categories) => {
+  // Categorize each item
+  _.each(items, item => {
+    let itemCategorized = false;
+
+    _.each(categories, category => {
+      const matchedSubcategories = filterSubcategories(category, item);
+      _.each(matchedSubcategories, subcategory => {
+        addItem(item, category, subcategory); // add to subcategory & main category
+        itemCategorized = true;
+      });
+    });
+    if (!itemCategorized) {
+      addItem(item, categories.other); // add to Other category
+    }
+  });
+
+  categories.all.numItems = _.size(items);
+  categories.all.items = items;
+};
+
+const clearItemsFromCategories = categories => {
+  _.forOwn(categories, category => {
+    category.numItems = 0;
+    category.items = [];
+    clearItemsFromCategories(category.subcategories);
+  });
+};
+*/
