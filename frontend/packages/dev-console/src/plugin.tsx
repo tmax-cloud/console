@@ -504,7 +504,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'Page/Route',
     properties: {
       exact: true,
-      path: ['/k8s/ns/:ns/:kind/:name/containers/:containerName/health-checks'],
+      path: ['/k8s/ns/:ns/:plural/:name/containers/:containerName/health-checks'],
       loader: async () => (await import('./components/health-checks/HealthChecksPage' /* webpackChunkName: "dev-console-healthCheck" */)).default,
     },
   },

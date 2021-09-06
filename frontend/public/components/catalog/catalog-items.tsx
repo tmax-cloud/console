@@ -28,6 +28,7 @@ export type Item = {
   tileProvider?: string;
   tileDescription?: string;
   tags?: string[];
+  categories?: string[];
   longDescription?: string;
   documentationUrl?: string;
   supportUrl?: string;
@@ -70,6 +71,35 @@ type PageFilters = {
   capabilityLevel: CapabilityFilters;
 };
 
+export const simpleHyperCloudCategories: Record<string, Record<string, string | Record<string, string | Record<string, any>> | string[]>> = {
+  languages: {
+    id: 'languages',
+    label: 'Languages',
+    values: ['languages'],
+  },
+  databases: {
+    id: 'databases',
+    label: 'Databases',
+    values: ['databases'],
+  },
+  middleware: {
+    id: 'middleware',
+    label: 'Middleware',
+    values: ['middleware'],
+  },
+  cicd: {
+    id: 'cicd',
+    label: 'CI/CD',
+    values: ['cicd'],
+  },
+  virtualization: {
+    id: 'virtualization',
+    label: 'Virtualization',
+    values: ['virtualization'],
+  },
+};
+
+// MEMO : 기존 오픈쉬프트에서 쓰이던 categories 구성. 이후 HyperCloud에서도 subcategory 추가요청이 있을 수도 있어서 남겨둠.
 export const catalogCategories: Record<string, Record<string, string | Record<string, string | Record<string, any>>>> = {
   languages: {
     id: 'languages',
@@ -306,7 +336,7 @@ export const CatalogTileViewPage = withTranslation()(
           <TileViewPage
             items={items}
             itemsSorter={itemsToSort => _.sortBy(itemsToSort, ({ tileName }) => tileName.toLowerCase())}
-            getAvailableCategories={() => catalogCategories}
+            getAvailableCategories={() => simpleHyperCloudCategories}
             // TODO(alecmerdler): Dynamic filters for each Operator and its provided APIs
             getAvailableFilters={getAvailableFilters}
             filterGroups={filterGroups}

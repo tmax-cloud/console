@@ -272,7 +272,7 @@ const kebabFactory: KebabFactory = {
         resource: obj,
         blocking: true,
       }),
-    accessReview: asAccessReview(kind, obj, 'patch'),
+    accessReview: asAccessReview(kind, obj, 'update', 'status'),
   }),
   ModifyScanning: (kind, obj) => {
     let isExtRegistry = false;
