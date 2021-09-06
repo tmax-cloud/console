@@ -256,11 +256,13 @@ const Details = ({ obj: rq }) => {
       </div>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_80') })} style={{ display: 'block', marginBottom: '20px' }}>
+          {/*
           <FieldLevelHelp>
             <p>Requests are the amount of resources you expect to use. These are used when establishing if the cluster can fulfill your Request.</p>
             <p>Limits are a maximum amount of a resource you can consume. Applications consuming more than the Limit may be terminated.</p>
             <p>A cluster administrator can establish limits on both the amount you can Request and your Limits with a Resource Quota.</p>
           </FieldLevelHelp>
+          */}
         </SectionHeading>
         <div className="co-m-table-grid co-m-table-grid--bordered">
           <div className="row co-m-table-grid__head">
