@@ -2,19 +2,20 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { FirehoseResource, Firehose } from '@console/internal/components/utils';
 import AddHealthChecksForm from './AddHealthChecksForm';
+import { pluralToKind } from '@console/internal/components/hypercloud/form';
 
 type HealthChecksProps = RouteComponentProps<{
   ns: string;
-  kind: string;
+  plural: string;
   name: string;
   containerName: string;
 }>;
 
 const HealthChecksPage: React.FC<HealthChecksProps> = ({ match }) => {
-  const { ns, kind, name, containerName } = match.params;
+  const { ns, plural, name, containerName } = match.params;
   const resource: FirehoseResource[] = [
     {
-      kind,
+      kind: pluralToKind(plural) || plural,
       namespace: ns,
       isList: false,
       name,
