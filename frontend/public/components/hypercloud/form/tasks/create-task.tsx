@@ -65,7 +65,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
       if (_.has(defaultValues, 'spec.params')) {
         let paramDefaultValues = _.get(defaultValues, 'spec.params');
-        paramDefaultValues = paramDefaultValues.map(item => {
+        paramDefaultValues = paramDefaultValues?.map(item => {
           if (item.type === 'array') {
             return _.assign(item, {
               defaultArr: item.default?.map(cur => {
@@ -80,7 +80,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
       if (_.has(defaultValues, 'spec.workspaces')) {
         let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
-        workSpaceDefaultValues = workSpaceDefaultValues.map(item => {
+        workSpaceDefaultValues = workSpaceDefaultValues?.map(item => {
           if (typeof item.readOnly != 'undefined') {
             item.accessMode = 'readOnly';
           } else {
@@ -93,7 +93,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
       if (_.has(defaultValues, 'spec.volumes')) {
         let volumeDefaultValues = _.get(defaultValues, 'spec.volumes');
-        volumeDefaultValues = volumeDefaultValues.map(item => {
+        volumeDefaultValues = volumeDefaultValues?.map(item => {
           let obj = {
             name: item.name,
           };
@@ -112,7 +112,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
       if (_.has(defaultValues, 'spec.steps')) {
         let stepDefaultValues = _.get(defaultValues, 'spec.steps');
-        stepDefaultValues = stepDefaultValues.map(item => {
+        stepDefaultValues = stepDefaultValues?.map(item => {
           return _.assign(item, {
             command: item.command?.map(cur => {
               return { value: cur };
@@ -126,7 +126,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             args: item.args?.map(cur => {
               return { value: cur };
             }),
-            mountArr: item.volumeMounts.map(cur => ({ mountName: cur.name, mountPath: cur.mountPath })),
+            mountArr: item.volumeMounts?.map(cur => ({ mountName: cur.name, mountPath: cur.mountPath })),
             selectedVolume: item.volumeMounts?.[0].name,
             commandTypeToggle: item?.script ? 'script' : 'command',
             registryTypeToggle: 'internal',
@@ -451,7 +451,7 @@ export const onSubmitCallback = data => {
     //   delete data.spec.steps[idx].mountPath;
     // }
     if (cur.mountArr) {
-      let volumeMounts = cur.mountArr.map(cur => ({
+      let volumeMounts = cur.mountArr?.map(cur => ({
         mountPath: cur.mountPath,
         name: cur.mountName,
       }));
