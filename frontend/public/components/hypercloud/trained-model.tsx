@@ -22,23 +22,6 @@ const kind = TrainedModelModel.kind;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
-const TrainedModelPhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions.forEach(cur => {
-      if (cur.type === 'Ready') {
-        if (cur.status === 'True') {
-          phase = 'Ready';
-        } else {
-          phase = 'Not Ready';
-        }
-      }
-    });
-    return phase;
-  }
-};
-
-
 const TrainedModelTableHeader = (t?: TFunction) => {
   return [
     {
@@ -190,7 +173,7 @@ export const TrainedModelsDetailsPage: React.FC<TrainedModelsDetailsPageProps> =
       {...props}
       kind={kind}
       menuActions={menuActions}
-      getResourceStatus={TrainedModelPhase}
+      getResourceStatus={TrainedModelReducer}
       pages={[details(detailsPage(TrainedModelDetails)), editResource()]}
     />
   );
