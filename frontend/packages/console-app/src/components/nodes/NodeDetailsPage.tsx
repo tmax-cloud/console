@@ -30,7 +30,7 @@ const { editResource, events, pods } = navFactory;
 //     component: NodeTerminal,
 //   },
 // ];
-const NodePodsTab: React.FC<NodePodsTabProps> = ({ obj }) => <PodsPage showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />;
+const NodePodsTab: React.FC<NodePodsTabProps> = ({ obj }) => <PodsPage canCreate={false} showTitle={false} fieldSelector={`spec.nodeName=${obj.metadata.name}`} />;
 type NodePodsTabProps = {
   obj: NodeKind;
 };

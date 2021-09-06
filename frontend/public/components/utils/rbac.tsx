@@ -6,14 +6,7 @@ import { getName, getNamespace } from '@console/shared';
 
 import store from '../../redux';
 import { impersonateStateToProps } from '../../reducers/ui';
-import {
-  AccessReviewResourceAttributes,
-  k8sCreate,
-  K8sKind,
-  K8sResourceKind,
-  K8sVerb,
-  SelfSubjectAccessReviewKind,
-} from '../../module/k8s';
+import { AccessReviewResourceAttributes, k8sCreate, K8sKind, K8sResourceKind, K8sVerb, SelfSubjectAccessReviewKind } from '../../module/k8s';
 import { ProjectModel, SelfSubjectAccessReviewModel } from '../../models';
 import { useSafetyFirst } from '../../components/safety-first';
 
@@ -37,8 +30,7 @@ const checkAccessInternal = _.memoize(
   ): Promise<SelfSubjectAccessReviewKind> => {
     // Projects are a special case. `namespace` must be set to the project name
     // even though it's a cluster-scoped resource.
-    const reviewNamespace =
-      group === ProjectModel.apiGroup && resource === ProjectModel.plural ? name : namespace;
+    const reviewNamespace = group === ProjectModel.apiGroup && resource === ProjectModel.plural ? name : namespace;
     const ssar: SelfSubjectAccessReviewKind = {
       apiVersion: 'authorization.k8s.io/v1',
       kind: 'SelfSubjectAccessReview',
@@ -63,46 +55,18 @@ const getImpersonateKey = (impersonate): string => {
   return impersonate ? `${impersonate.kind}~{impersonate.user}` : '';
 };
 
-export const checkAccess = (
-  resourceAttributes: AccessReviewResourceAttributes,
-  impersonate?,
-): Promise<SelfSubjectAccessReviewKind> => {
+export const checkAccess = (resourceAttributes: AccessReviewResourceAttributes, impersonate?): Promise<SelfSubjectAccessReviewKind> => {
   // Destructure the attributes with defaults so we can create a stable cache key.
-  const {
-    group = '',
-    resource = '',
-    subresource = '',
-    verb = '' as K8sVerb,
-    name = '',
-    namespace = '',
-  } = resourceAttributes || {};
-  return checkAccessInternal(
-    group,
-    resource,
-    subresource,
-    verb,
-    name,
-    namespace,
-    getImpersonateKey(impersonate),
-  );
+  const { group = '', resource = '', subresource = '', verb = '' as K8sVerb, name = '', namespace = '' } = resourceAttributes || {};
+  return checkAccessInternal(group, resource, subresource, verb, name, namespace, getImpersonateKey(impersonate));
 };
 
-export const useAccessReview2 = (
-  resourceAttributes: AccessReviewResourceAttributes,
-  impersonate?,
-): [boolean, boolean] => {
+export const useAccessReview2 = (resourceAttributes: AccessReviewResourceAttributes, impersonate?): [boolean, boolean] => {
   const [loading, setLoading] = useSafetyFirst(true);
   const [isAllowed, setAllowed] = useSafetyFirst(false);
   // Destructure the attributes to pass them as dependencies to `useEffect`,
   // which doesn't do deep comparison of object dependencies.
-  const {
-    group = '',
-    resource = '',
-    subresource = '',
-    verb = '' as K8sVerb,
-    name = '',
-    namespace = '',
-  } = resourceAttributes;
+  const { group = '', resource = '', subresource = '', verb = '' as K8sVerb, name = '', namespace = '' } = resourceAttributes;
   const impersonateKey = getImpersonateKey(impersonate);
   React.useEffect(() => {
     checkAccessInternal(group, resource, subresource, verb, name, namespace, impersonateKey)
@@ -110,7 +74,7 @@ export const useAccessReview2 = (
         setAllowed(result.status.allowed);
         setLoading(false);
       })
-      .catch((e) => {
+      .catch(e => {
         // eslint-disable-next-line no-console
         console.warn('SelfSubjectAccessReview failed', e);
         // Default to enabling the action if the access review fails so that we
@@ -124,17 +88,9 @@ export const useAccessReview2 = (
   return [isAllowed, loading];
 };
 
-export const useAccessReview = (
-  resourceAttributes: AccessReviewResourceAttributes,
-  impersonate?,
-): boolean => useAccessReview2(resourceAttributes, impersonate)[0];
+export const useAccessReview = (resourceAttributes: AccessReviewResourceAttributes, impersonate?): boolean => useAccessReview2(resourceAttributes, impersonate)[0];
 
-const RequireCreatePermission_: React.FC<RequireCreatePermissionProps> = ({
-  model,
-  namespace,
-  impersonate,
-  children,
-}) => {
+const RequireCreatePermission_: React.FC<RequireCreatePermissionProps> = ({ model, namespace, impersonate, children }) => {
   const isAllowed = useAccessReview(
     {
       group: model.apiGroup,
@@ -156,11 +112,7 @@ type RequireCreatePermissionProps = {
   children: React.ReactNode;
 };
 
-export const asAccessReview = (
-  kindObj: K8sKind,
-  obj: K8sResourceKind,
-  verb: K8sVerb,
-): AccessReviewResourceAttributes => {
+export const asAccessReview = (kindObj: K8sKind, obj: K8sResourceKind, verb: K8sVerb, subresource?: string): AccessReviewResourceAttributes => {
   if (!obj) {
     console.warn('review obj should not be null'); // eslint-disable-line no-console
     return null;
@@ -168,6 +120,7 @@ export const asAccessReview = (
   return {
     group: kindObj.apiGroup,
     resource: kindObj.plural,
+    subresource: subresource || '',
     name: getName(obj),
     namespace: getNamespace(obj),
     verb,
