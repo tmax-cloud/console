@@ -126,7 +126,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             args: item.args?.map(cur => {
               return { value: cur };
             }),
-            mountArr: item.volumeMounts?.map(cur => ({ mountName: cur.name, mountPath: cur.mountPath })),
+            mountArr: item.volumeMounts?.map(cur => ({ mountName: { value: cur.name, label: cur.name }, mountPath: cur.mountPath })),
             selectedVolume: item.volumeMounts?.[0].name,
             commandTypeToggle: item?.script ? 'script' : 'command',
             registryTypeToggle: 'internal',
@@ -453,7 +453,7 @@ export const onSubmitCallback = data => {
     if (cur.mountArr) {
       let volumeMounts = cur.mountArr?.map(cur => ({
         mountPath: cur.mountPath,
-        name: cur.mountName,
+        name: cur.mountName.value,
       }));
       data.spec.steps[idx].volumeMounts = volumeMounts;
       delete data.spec.steps[idx].mountArr;
