@@ -174,7 +174,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
     const [type, image, registryRegistry, registryImage, registryTag, mountArr] = additionalConditions;
     console.log('mountArr: ', mountArr);
 
-    if (mountArr.length > 0 && mountArr.length !== _.uniqBy(mountArr, 'mountName').length) {
+    if (mountArr.length > 0 && mountArr.length !== _.uniqBy(mountArr, 'mountName.value').length) {
       return false;
     }
     if (type === 'internal') {
@@ -208,6 +208,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             onRemove={removeModalData.bind(null, inputResource, setInputResource)}
             handleMethod={handleModalData.bind(null, 'input-resource', inputResourceArr, inputResource, setInputResource, false, methods)}
             description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_78')}
+            submitText={t('COMMON:MSG_DETAILS_TAB_18')}
           ></ModalList>
           <span
             className="open-modal_text"
@@ -230,6 +231,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             onRemove={removeModalData.bind(null, outputResource, setOutputResource)}
             handleMethod={handleModalData.bind(null, 'output-resource', outputResourceArr, outputResource, setOutputResource, false, methods)}
             description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_80')}
+            submitText={t('COMMON:MSG_DETAILS_TAB_18')}
           ></ModalList>
           <span
             className="open-modal_text"
@@ -252,6 +254,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             onRemove={removeModalData.bind(null, taskParameter, setTaskParameter)}
             handleMethod={handleModalData.bind(null, 'task-parameter', taskParameterArr, taskParameter, setTaskParameter, false, methods)}
             description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_82')}
+            submitText={t('COMMON:MSG_DETAILS_TAB_18')}
           ></ModalList>
           <span
             className="open-modal_text"
@@ -277,7 +280,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57')} id="work-space">
         <>
-          <ModalList list={workSpace} path="spec.workspaces" id="work-space" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57')} methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')}></ModalList>
+          <ModalList list={workSpace} path="spec.workspaces" id="work-space" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57')} methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')} submitText={t('COMMON:MSG_DETAILS_TAB_18')}></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, path: 'spec.workspaces', methods: methods, requiredFields: ['name'], title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57'), id: 'work-space', handleMethod: handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, true, methods), children: <WorkSpaceModal methods={methods} workSpace={workSpace} />, submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8') })}>
             {`+ ${t('SINGLE:MSG_TASKS_CREATFORM_DIV2_85')}`}
           </span>
@@ -285,7 +288,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_68')} id="volume">
         <>
-          <ModalList list={volume} id="volume" path="spec.volumes" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_68')} methods={methods} requiredFields={['name', 'type']} children={<VolumeModal methods={methods} volume={volume} />} onRemove={removeModalData.bind(null, volume, setVolume)} handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_86')}></ModalList>
+          <ModalList list={volume} id="volume" path="spec.volumes" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_68')} methods={methods} requiredFields={['name', 'type']} children={<VolumeModal methods={methods} volume={volume} />} onRemove={removeModalData.bind(null, volume, setVolume)} handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_86')} optionalRequiredField={['type', 'configMap', 'secret']} optionalValidCallback={volumeValidCallback} submitText={t('COMMON:MSG_DETAILS_TAB_18')}></ModalList>
           <span
             className="open-modal_text"
             onClick={() =>
@@ -311,6 +314,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
             onRemove={removeModalData.bind(null, step, setStep)}
             handleMethod={handleModalData.bind(null, 'step', stepArr, step, setStep, false, methods)}
             description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_88')}
+            submitText={t('COMMON:MSG_DETAILS_TAB_18')}
           ></ModalList>
           <span
             className="open-modal_text"
