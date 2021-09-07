@@ -5,7 +5,7 @@ import { PenIcon, MinusIcon } from '@patternfly/react-icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import * as DragIcon from '../../../../imgs/hypercloud/menu.svg';
 export const ModalList = props => {
-  const { handleMethod, path, onRemove, list, description, title, children, id, methods, requiredFields, optionalRequiredField, optionalValidCallback, submitText = '수정' } = props;
+  const { handleMethod, path, onRemove, list, description, title, children, id, methods, requiredFields, optionalRequiredField = [], optionalValidCallback, submitText = '수정' } = props;
   let uId = id + '-list';
 
   const onDragEnd = result => {
