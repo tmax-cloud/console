@@ -129,7 +129,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
           value: param.default,
           description: param.description,
           type: param.type,
-          required: !!param.default,
+          required: false,
         };
       });
 
@@ -186,7 +186,7 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
       lists.paramList.map((item, index) => {
         if (item.type === 'array') {
           return (
-            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={item.required}>
+            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
               <>
                 <input ref={methods.register} type="hidden" id={`params.${index}.name`} name={`params.${index}.name`} value={item.name} />
                 <ListView name={`params.${index}.value`} methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={paramItemRenderer} defaultItem={{ value: '' }} defaultValues={lists.paramValueListData[index]?.value} />
@@ -195,10 +195,10 @@ const CreateTaskRunComponent: React.FC<TaskRunFormProps> = props => {
           );
         } else {
           return (
-            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={item.required}>
+            <Section label={item.name} id={`${selectedTask}_param_${index}`} key={`${selectedTask}_param_${index}`} description={item.description} isRequired={false}>
               <>
                 <input ref={methods.register} type="hidden" id={`params[${index}].name`} name={`params[${index}].name`} value={item.name} />
-                <input ref={methods.register} className="pf-c-form-control" id={`params[${index}].value`} name={`params[${index}].value`} defaultValue={item.value} />
+                <input ref={methods.register} className="pf-c-form-control" id={`params[${index}].value`} name={`params[${index}].value`} defaultValue={item.value} required={false} />
               </>
             </Section>
           );
