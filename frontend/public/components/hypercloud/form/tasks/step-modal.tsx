@@ -135,7 +135,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         </div>
         <Section id="mountName">
           <Controller
-            as={<DropdownWithRef name={`${name}[${index}].mountName`} defaultValue={item.mountName} methods={methods} useResourceItemsFormatter={false} items={volumeItems} />}
+            as={<DropdownWithRef name={`${name}[${index}].mountName`} defaultValue={item.mountName} methods={methods} useResourceItemsFormatter={false} items={volumeItems} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} />}
             control={methods.control}
             name={`${name}[${index}].mountName`}
             onChange={([selected]) => {
