@@ -48,7 +48,7 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
     );
 };
 
-const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, props) => {
+const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, setSelectAllChecked, props) => {
     //const { data, options: allOptions, getValue, isSelected, setValue } = props;
     const { data, options: allOptions, getValue, setValue } = props;
     const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
@@ -100,7 +100,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     ) : justSelectAllOption && !showSelectAllOnEmpty ? null : (
         <>
         <div>
-            <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
+            <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
                 { (data.label === 'All') ? <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px', visibility: 'hidden' }} type="checkbox" /> :
                     <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked} disabled={!isAdded}
                     onClick={() => {
@@ -130,7 +130,9 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                                 }
                             }
                         }
-                    }} />
+                    }}
+                    onChange={() => null}
+                     />
                 }
                 <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}
                     onClick={() => {
@@ -138,8 +140,10 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                             setValue([{
                                 label: 'All',
                                 value: '*',
+                                checked: true,
                                 added: true,
                             }]);
+                            setSelectAllChecked(true);
                         }
                         else {                            
                             if (isExist !== true) {
@@ -169,9 +173,9 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                             }
                         }                        
                     }}>
-                    <span id={DROPDOWN_SECTION_ID}>{data.label}{(data.label === 'All') }</span>
-                    <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" />
+                    <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
                 </span>
+                <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
             </span>
         </div>
         { (data.label === 'All') && <hr></hr> }
@@ -190,22 +194,21 @@ const CaseType = {
 };
 
 /**
- * 다중선택이 가능하고 검색기능이 있는 드롭다운 컴포넌트이다. item 선택 시 드롭다운 하위에 chip의 형태로 선택된 항목이 나타난다.
+ * 다중선택이 가능하고 checked 와 added 로 나누어 선택 가능한 드롭다운 컴포넌트이다. item 선택 시 드롭다운 하위에 chip의 형태로 선택된 항목이 나타난다.
  * @prop {string} name - hook form에 등록할 드롭다운의 name. Controller로 감싸서 사용할 때 Controller에 지정한 name과 같은 값이어야 한다.
- * @prop {string} kind - useResourceItemsFormatter를 true로 지정할 경우 드롭다운 item에 리소스아이콘이 표시 되는데, k8s 리소스리스트에 kind정보가 없을 경우 아이콘이 표시되지 않는다. 이럴 때 대체로 넣어줄 kind 값.
  * @prop {string} placeholder - 드롭다운에 표시되는 placeholder.
  * @prop {string} buttonWidth - 드롭다운 버튼자체의 width 값.
  * @prop {string} menuWidth - 드롭다운 클릭 시 펼쳐지는 menu의 width 값.
  * @prop {string} chipsGroupTitle - chips 컨테이너의 title.
- * @prop {boolean} useResourceItemsFormatter - k8s서비스콜을 통해 받아온 리소스리스트에서 필요한 정보를 사용해 {key, apiVersion, kind, label, value} 형태의 item으로 이루어진 드롭다운을 만들어주는 formatter 사용여부를 결정하는 값. 리소스 kind아이콘이 표시된 형태의 드롭다운을 만들어준다. 해당 옵션을 사용하려면 items props로 k8sList콜을 통해 가져온 리소스리스트를 넣어주어야 한다.
- * @prop {any[]} defaultValues - 드롭다운의 기본 선택값을 지정해주는 속성. [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}] 형태로 설정해주고, 해당 item은 items props에 존재하는 item이어야 한다. (Controller로 감싸서 ListView컴포넌트 안에 사용 시 Controller의 defaultValue속성에도 같은 값을 지정해줘야 한다)
- * @prop {any | any[]} items - 옛버전의 dropdown에서 object로 사용해서 object도 받을 수 있게 처리해놓았으나, object[] 형태의 사용을 권장함. (예: [{lable: 'AAA', value: 'aaa'}, {label: 'BBB', value: 'bbb'}])
+ * @prop {any[]} defaultValues - 드롭다운의 기본 선택값을 지정해주는 속성. [{lable: 'AAA', value: 'aaa', checked: true, added: true }, {label: 'BBB', value: 'bbb', checked: true, added: true }] 형태로 설정해주고, 해당 item은 items props에 존재하는 item이어야 한다. (Controller로 감싸서 ListView컴포넌트 안에 사용 시 Controller의 defaultValue속성에도 같은 값을 지정해줘야 한다)
+ * @prop {any | any[]} items - 옛버전의 dropdown에서 object로 사용해서 object도 받을 수 있게 처리해놓았으나, object[] 형태의 사용을 권장함. (예: [{lable: 'AAA', value: 'aaa', checked: true, added: true }, {label: 'BBB', value: 'bbb', checked: true, added: true }])
  * @prop {boolean} shrinkOnSelectAll - 모든 아이템을 선택했을 때 하나의 All아이템으로 줄어들게할 지 여부를 설정하는 속성.
  * @prop {boolean} showSelectAllOnEmpty - 드롭다운 아이템이 없을 때 SelectAll 버튼만 보여줄 지 여부를 설정하는 속성.
  * @prop {{ label: string; value: string; }} selectAllChipObj - shrinkOnSelectAll=true일 때 모든 아이템 선택시 표시해줄 chip object에 대한 설정. 기본값은 {label: 'All', value: '*'} 이다. defaultValue로 selectAllChipObj와 동일한 형태의 값이 들어왔을 때에도 모든 아이템이 선택된 것으로 처리 된다. 이와 같이 동작하게 하려면 shrinkOnSelectAll=true로 설정해줘야 한다.
+ * @prop {string} clearAllText - Clear all 버튼에 표시되는  text
  */
 export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, DropdownCheckAddComponentProps>((props, ref) => {
-    const { name, defaultValues = [], methods, items, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px', clearAllText = 'Clear all' } = props;
+    const { name, defaultValues = [], methods, items, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*', checked: true, added: true }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px', clearAllText = 'Clear all' } = props;
     const { setValue, watch } = methods ? methods : useFormContext();
     const [chips, setChips] = React.useState([]);
     const [isOpen, setIsOpen] = React.useState(false);
@@ -292,7 +295,11 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     /* 초반 defaultValues를 받았을 때 드롭다운에 반영해주는 부분. */
     React.useEffect(() => {
         const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
-        if (selectAllChip.length > 0) {
+        if (defaultValuesWithKey[0].label === 'All') {
+            setSelectAllChecked(true);
+            setChips([selectAllChipObj]);
+        }
+        else if (selectAllChip.length > 0) {
             // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
             if (shrinkOnSelectAll) {
                 setSelectAllChecked(true);
@@ -465,7 +472,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                                 controlShouldRenderValue={false}
                                 isMulti
                                 components={{
-                                    Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked),
+                                    Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, setSelectAllChecked),
                                     IndicatorSeparator: null,
                                     DropdownIndicator: null,
                                 }}

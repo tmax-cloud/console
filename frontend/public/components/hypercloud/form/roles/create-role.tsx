@@ -143,25 +143,17 @@ const roleFormFactory = (params, obj) => {
             defaultValues.rules[ruleIndex].resources[resourceIndex] = resourceKeyValue;
           }
         });
-        if (rule.resourceNames) {
-          rule.resourceNames.forEach((resourceName, resourceNameIndex) => {
-            let resourceNameValue;
-            if (typeof (resourceName) === 'string') {
-              resourceNameValue = { value: resourceName };
-              defaultValues.rules[ruleIndex].resourceNames[resourceNameIndex] = resourceNameValue;
-            }
-          });
-        }
-      }
-      if (rule.nonResourceURLs) {
-        rule.nonResourceURLs.forEach((nonResourceURL, nonResourceURLIndex) => {
-          let nonResourceURLValue;
-          if (typeof (nonResourceURL) === 'string') {
-            nonResourceURLValue = { value: nonResourceURL };
-            defaultValues.rules[ruleIndex].nonResourceURLs[nonResourceURLIndex] = nonResourceURLValue;
+        rule.resourceNames?.forEach((resourceName, resourceNameIndex) => {
+          if (typeof (resourceName) === 'string') {
+            defaultValues.rules[ruleIndex].resourceNames[resourceNameIndex] = { value: resourceName };
           }
         });
       }
+      rule.nonResourceURLs?.forEach((nonResourceURL, nonResourceURLIndex) => {
+        if (typeof (nonResourceURL) === 'string') {
+          defaultValues.rules[ruleIndex].nonResourceURLs[nonResourceURLIndex] = { value: nonResourceURL };
+        }
+      });
     });
   }
 
@@ -221,47 +213,6 @@ const RuleItem = props => {
       convertList = convertList.concat(apiGroupAndresourceList);
     });
     setResourceListWithApiGroupConvert(convertList);
-
-    /*
-    let allResourceList = [];
-    apiGroups?.forEach(apiGroup => {
-      if (apiGroup?.checked === true) {
-        const apiGroupValue = apiGroup?.value || '*';
-        if (apiGroupValue === '*') {
-          setResourceList([]);
-        } else if (apiGroupValue === 'Core') {
-          setResourceList(coreResources);
-        } else {
-          let newResourceList = [];
-
-          //coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}`).then(
-          coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupValue}`).then(
-            data => {
-              //coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}/${version.version}`).then(
-              coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroupValue}/${data.preferredVersion.version}`).then(
-                data => {
-                  data.resources.sort(compareObjByName);
-                  data.resources.forEach(
-                    resource => {
-                      let Resource = { label: resource.name, value: resource.name };
-                      newResourceList.push(Resource)
-                    })
-                  allResourceList = allResourceList.concat(newResourceList);
-                  setResourceList(allResourceList);
-                },
-                err => {
-                  console.log('Fail to get resource list');
-                },
-              );
-            },
-            err => {
-              console.log('Fail to get resource list');
-            }
-          );
-        }
-      }    
-    });
-    */
   }, [apiGroups]);
 
   const { t } = useTranslation();
@@ -292,7 +243,7 @@ const RuleItem = props => {
             {ruleTypeToggle === 'Resource' ? (<>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true}>
                 <Controller
-                  as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={true}/>}
+                  as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={true}  menuWidth='300px' buttonWidth='300px' />}
                   control={methods.control}
                   name={`${name}[${index}].apiGroups`}
                   onChange={([selected]) => {
@@ -303,13 +254,13 @@ const RuleItem = props => {
               </Section>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resources[${index}]`} isRequired={true}>
                 <Controller
-                  as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} />}
+                  as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} menuWidth='300px' buttonWidth='300px' />}
                   control={methods.control}
                   name={`${name}[${index}].resources`}
                   onChange={([selected]) => {
                     return { value: selected };
                   }}
-                  defaultValues={item.resources}
+                  defaultValue={item.resources}
                 />
               </Section>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_30')} id={`rules[${index}].resourceNames`} >
@@ -320,7 +271,7 @@ const RuleItem = props => {
                 <ListView name={`rules.${index}.nonResourceURLs`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={URLItemRenderer} defaultItem={{ value: '' }} defaultValues={nonResourceURLs} />
               </Section>
             )}
-            <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_12')} id={`verb[${index}]`} isRequired={true}>
+            <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_12')} id={`rules[${index}].verbs`} isRequired={true}>
               <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].verbs`, item.verbs)} />
             </Section>
           </div>
@@ -344,7 +295,7 @@ const ruleItemRenderer = (methods, name, item, index, ListActions, ListDefaultIc
     }
   };
 
-  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} methods={methods} ListActions={ListActions} />;
+  return <RuleItem item={item} name={name} index={index as number} onDeleteClick={onDeleteClick} methods={methods} ListActions={ListActions} key={index}/>;
 };
 
 const ResourceNameItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
@@ -407,7 +358,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       let apiGroupListWithResourceSetTemp = [{ apiGroup: 'Core', resourceList: coreResources }];
       apiGroupList.forEach((apiGroup) => {
-        if (apiGroup.apiGroup !== 'Core') {
+        if (apiGroup.value !== 'Core') {
           coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup.value}`).then(
             data => {
               //`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}/${version.version}
@@ -483,7 +434,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
+          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*', checked: true, added: true  }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
         </Section>
       ) : (
         <LoadingInline />
@@ -515,10 +466,9 @@ export const onSubmitCallback = data => {
     }
     else {
       let apiGroups = new Array;
+      rule.apiGroups = rule.apiGroups.filter( r => {if (r.added === true) return true });
       rule.apiGroups?.forEach((r, index) => {
-        if (r.added === true) {
           apiGroups[index] = r.value;
-        }
       });
       apiGroups = apiGroups.filter(function () { return true });
       let resources = new Array;
@@ -533,7 +483,7 @@ export const onSubmitCallback = data => {
       return {
         apiGroups: apiGroups === ['Core'] ? [''] : apiGroups ?? ['*'],
         resources: resources ?? ['*'],
-        resourceNames: resourceNames,
+        resourceNames: resourceNames ?? [],
         verbs: rule.verbs ?? ['*'],
       };
     }
