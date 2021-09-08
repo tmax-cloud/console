@@ -23,6 +23,7 @@ const removeVolume = (kind: K8sKind, obj: K8sResourceKind, volume: RowVolumeData
         volume,
       }),
     accessReview: asAccessReview(kind, obj, 'patch'),
+    needTranslate: false,
   };
 };
 
