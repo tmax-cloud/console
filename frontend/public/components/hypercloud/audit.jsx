@@ -7,20 +7,103 @@ import * as PropTypes from 'prop-types';
 import * as _ from 'lodash-es';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { SafetyFirst } from '../safety-first';
 import { TextFilter } from '../factory';
 import { Dropdown, Box, Timestamp, PageHeading } from '../utils';
 import { coFetchJSON, coFetch } from '../../co-fetch';
 import { getId, getUserGroup } from '../../hypercloud/auth';
 import { setQueryArgument, getQueryArgument, removeQueryArgument } from '../utils/router.ts';
 import { k8sGet } from '@console/internal/module/k8s';
-import { useTranslation, withTranslation } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
-// TODO
+// TODO: date picker 빼기 - 리뷰 후 결정
 
-// 1. i18n 적용 - 7월 3주차에 나옴
-// 2. date picker 빼기 - 리뷰 후 결정
-// 3. onchange 중복 로직 제거 (코드 리팩토링)
+const Resources = {
+  all: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_RESOURCEFILTER_1',
+    value: 'all',
+  },
+  users: {
+    label: 'users',
+    value: 'users',
+  },
+};
+
+const Actions = {
+  all: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1',
+    value: 'all',
+  },
+  create: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_2',
+    value: 'create',
+  },
+  delete: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_3',
+    value: 'delete',
+  },
+  login: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_4',
+    value: 'LOGIN',
+  },
+  logout: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_5',
+    value: 'LOGOUT',
+  },
+  patch: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6',
+    value: 'patch',
+  },
+  update: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7',
+    value: 'update',
+  },
+  login_error: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_8',
+    value: 'LOGIN_ERROR',
+  },
+};
+
+const Statuses = {
+  all: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_1',
+    value: 'all',
+  },
+  success: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_2',
+    value: 'Success',
+  },
+  failure: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_3',
+    value: 'Failure',
+  },
+};
+
+const Codes = {
+  all: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_1',
+    value: 'all',
+  },
+  100: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_2',
+    value: '100',
+  },
+  200: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_3',
+    value: '200',
+  },
+  300: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_4',
+    value: '300',
+  },
+  400: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_5',
+    value: '400',
+  },
+  500: {
+    label: 'SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_6',
+    value: '500',
+  },
+};
 
 class Inner extends React.PureComponent {
   constructor(props) {
@@ -107,21 +190,18 @@ class AuditPage_ extends React.Component {
     date.setDate(date.getDate() - 7);
     const { t } = props;
 
-    this.codeList = { all: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_1'), 100: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_2'), 200: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_3'), 300: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_4'), 400: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_5'), 500: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_6') };
-    this.statuslist = { all: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_1'), Success: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_2'), Failure: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_3') };
-    this.resourcelist = {
-      all: t('SINGLE:MSG_AUDITLOGS_MAIN_RESOURCEFILTER_1'),
-    };
+    this.codeList = Object.values(Codes);
+    this.statuslist = Object.values(Statuses);
+    this.resourcelist = [Resources.all];
 
     this.state = {
       namespace: '',
-      language: this.props.i18n.language,
       isResourceLoaded: false,
-      actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1') },
-      resourceType: this.resourcelist.all,
-      action: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'),
-      status: this.statuslist.all,
-      code: this.codeList.all,
+      actionList: [Actions.all],
+      resourceType: Resources.all,
+      action: Actions.all,
+      status: Statuses.all,
+      code: Codes.all,
       textFilter: '',
       data: [],
       start: date,
@@ -142,110 +222,35 @@ class AuditPage_ extends React.Component {
     this.onSearch = e => this.onSearch_(e);
   }
 
-  async getResourceList() {
-    const { t } = this.props;
-    // console.log(this.props);
-    // const namespace = props.namespace;
-    await coFetch('/api/webhook/audit/resources')
-      .then(res => res.json())
-      .then(res => {
-        console.log(res);
-        let resourceList = res.sort().forEach(cur => {
-          this.resourcelist[cur] = cur;
-        });
-      })
-      .catch(function(myJson) {
-        console.error(myJson);
-      });
+  makeQuery(uri, queryName, queryValue) {
+    let _uri = uri;
+    const condition = queryName === 'namespace' ? undefined : 'all';
+    if (queryValue !== condition) {
+      _uri += `&${queryName}=${queryValue}`;
+    }
+    return _uri;
   }
 
-  onChangeResourceType_(e) {
-    const { t } = this.props;
-    if (e !== 'all') {
-      this.setState({ resourceType: e });
-    } else {
-      this.setState({ resourceType: this.resourcelist.all });
-    }
-    this.setState({ offset: 0 });
-
-    // 리소스 타입 선택에 따라 액션 드롭다운 항목 설정
-    if (e === 'all') {
-      this.setState({
-        actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1') },
-      });
-    } else if (e === 'users') {
-      this.setState({
-        actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'), patch: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6'), update: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7'), LOGIN: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_4'), LOGOUT: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_5'), LOGIN_ERROR: t('로그인 에러') },
-      });
-    } else {
-      this.setState({
-        actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'), create: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_2'), delete: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_3'), patch: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6'), update: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7') },
-      });
-    }
+  makeSearchQuery(uri) {
+    let _uri = uri;
     const search = getQueryArgument('user');
-
-    let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
-    if (e !== 'all') {
-      uri += `&resource=${e}`;
-    }
     if (search) {
-      uri += `&search=${search}`;
+      _uri += `&search=${search}`;
     }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
-
-    coFetchJSON(uri).then(response => {
-      // console.log(response.items);
-      this.setState({
-        data: response.eventList.Items,
-        pages: Math.ceil(response.rowsCount / 100),
-      });
-    });
+    return _uri;
   }
 
-  onChangeAction_(value) {
-    if (value !== 'all') {
-      this.setState({
-        action: this.state.actionList[value],
-      });
-    } else {
-      this.setState({
-        action: this.state.actionList.all,
-      });
+  makeUri(uri, ...queries) {
+    let _uri = this.makeSearchQuery(uri);
+    for (let i = 0; i < queries.length - 1; i += 2) {
+      _uri = this.makeQuery(_uri, queries[i], queries[i + 1]);
     }
+    return _uri;
+  }
 
-    this.setState({ offset: 0 });
-    const search = getQueryArgument('user');
-
-    let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
-    if (value !== 'all') {
-      uri += `&verb=${value}`;
-    }
-    if (search) {
-      uri += `&search=${search}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
+  fetch(uri) {
     coFetchJSON(uri)
       .then(response => {
-        // console.log(response);
         this.setState({
           data: response.eventList.Items,
           pages: Math.ceil(response.rowsCount / 100),
@@ -256,89 +261,66 @@ class AuditPage_ extends React.Component {
       });
   }
 
-  onChangeStatus_(value) {
-    if (value !== 'all') {
-      this.setState({
-        status: this.statuslist[value],
+  async getResourceList() {
+    await coFetch('/api/webhook/audit/resources')
+      .then(res => res.json())
+      .then(res => {
+        const _resourcelist = res.sort().map(cur => {
+          return { label: cur, value: cur };
+        });
+        this.resourcelist = [...this.resourcelist, ..._resourcelist];
+      })
+      .catch(function(myJson) {
+        console.error(myJson);
       });
-    } else {
-      this.setState({
-        status: this.statuslist.all,
-      });
-    }
-
-    const search = getQueryArgument('user');
-    this.setState({ offset: 0 });
-
-    let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
-    if (value !== 'all') {
-      uri += `&status=${value}`;
-    }
-    if (search) {
-      uri += `&search=${search}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-
-    if (this.state.action !== this.state.actionList.all) {
-      uri += `&verb=${this.state.action}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
-    coFetchJSON(uri).then(response => {
-      // console.log(response.items);
-      this.setState({
-        data: response.eventList.Items,
-        pages: Math.ceil(response.rowsCount / 100),
-      });
-    });
   }
 
-  onChangeCode_(value) {
-    if (value !== 'all') {
+  onChangeResourceType_(resource) {
+    this.setState({ resourceType: resource !== Resources.all.value ? this.resourcelist.find(item => resource === item.value) : Resources.all });
+    this.setState({ offset: 0 });
+
+    // 리소스 타입 선택에 따라 액션 드롭다운 항목 설정
+    if (resource === Resources.all.value) {
       this.setState({
-        code: this.codeList[value],
+        actionList: [Actions.all],
+      });
+    } else if (resource === Resources.users.value) {
+      this.setState({
+        actionList: [Actions.all, Actions.create, Actions.delete, Actions.patch, Actions.update, Actions.login, Actions.logout, Actions.login_error],
       });
     } else {
       this.setState({
-        code: this.codeList.all,
+        actionList: [Actions.all, Actions.create, Actions.delete, Actions.patch, Actions.update],
       });
     }
-
-    this.setState({ offset: 0 });
-    const search = getQueryArgument('user');
-
+    this.setState({ action: Actions.all }); // 액션 초기화
     let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
-    if (value !== 'all') {
-      uri += `&code=${value}`;
-    }
-    if (search) {
-      uri += `&search=${search}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.action !== this.state.actionList.all) {
-      uri += `&verb=${this.state.action}`;
-    }
-    coFetchJSON(uri).then(response => {
-      // console.log(response.items);
-      this.setState({
-        data: response.eventList.Items,
-        pages: Math.ceil(response.rowsCount / 100),
-      });
-    });
+    uri = this.makeUri(uri, 'resource', resource, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', Actions.all.value, 'code', this.state.code.value);
+    this.fetch(uri);
+  }
+
+  onChangeAction_(action) {
+    this.setState({ action: action !== Actions.all.value ? this.state.actionList.find(item => action === item.value) : Actions.all });
+    this.setState({ offset: 0 });
+    let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', action, 'code', this.state.code.value);
+    this.fetch(uri);
+  }
+
+  onChangeStatus_(status) {
+    this.setState({ status: status !== Statuses.all.value ? this.statuslist.find(item => status === item.value) : Statuses.all });
+    this.setState({ offset: 0 });
+    let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', status, 'verb', this.state.action.value, 'code', this.state.code.value);
+    this.fetch(uri);
+  }
+
+  onChangeCode_(code) {
+    this.setState({ code: code !== Codes.all.value ? this.codeList.find(item => code === item.value) : Codes.all });
+    this.setState({ offset: 0 });
+    let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', this.state.action.value, 'code', code);
+    this.fetch(uri);
   }
 
   onChangeStartDate_(value) {
@@ -349,7 +331,6 @@ class AuditPage_ extends React.Component {
     });
 
     this.setState({ offset: 0 });
-    const search = getQueryArgument('user');
 
     let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${date.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
 
@@ -362,32 +343,8 @@ class AuditPage_ extends React.Component {
     } else {
       uri += `&endTime=${this.state.end.getTime() / 1000}`;
     }
-
-    if (search) {
-      uri += `&search=${search}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.action !== this.state.actionList.all) {
-      uri += `&verb=${this.state.action}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
-    coFetchJSON(uri).then(response => {
-      // console.log(response.items);
-      this.setState({
-        data: response.eventList.Items,
-        pages: Math.ceil(response.rowsCount / 100),
-      });
-    });
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', this.state.action.value, 'code', this.state.code.value);
+    this.fetch(uri);
   }
 
   onChangeEndDate_(value) {
@@ -398,7 +355,6 @@ class AuditPage_ extends React.Component {
     });
 
     this.setState({ offset: 0 });
-    const search = getQueryArgument('user');
 
     let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&endTime=${date.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
 
@@ -411,70 +367,19 @@ class AuditPage_ extends React.Component {
       });
       uri += `&startTime=${date_.getTime() / 1000}`;
     }
-
-    if (search) {
-      uri += `&search=${search}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.action !== this.state.actionList.all) {
-      uri += `&verb=${this.state.action}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
-    coFetchJSON(uri).then(response => {
-      // console.log(response.items);
-      this.setState({
-        data: response.eventList.Items,
-        pages: Math.ceil(response.rowsCount / 100),
-      });
-    });
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', this.state.action.value, 'code', this.state.code.value);
+    this.fetch(uri);
   }
 
   onChangePage_(e) {
-    // console.log(e.selected);
     this.setState({
       offset: e.selected,
       textFilter: '',
     });
 
-    const search = getQueryArgument('user');
-    // let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=${e.selected * 100}&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}`;
     let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=${e.selected * 100}&userId=${getId()}${getUserGroup()}`;
-
-    if (search) {
-      uri += `&search=${search}`;
-    }
-    if (this.state.action !== this.state.actionList.all) {
-      uri += `&verb=${this.state.action}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
-    coFetchJSON(uri).then(response => {
-      // console.log(response.items);
-      this.setState({
-        data: response.eventList.Items,
-        pages: Math.ceil(response.rowsCount / 100),
-      });
-    });
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', this.state.action.value, 'code', this.state.code.value);
+    this.fetch(uri);
   }
 
   onSearch_(e) {
@@ -490,27 +395,9 @@ class AuditPage_ extends React.Component {
     });
 
     let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
+    uri = this.makeUri(uri, 'resource', this.state.resourceType.value, 'namespace', this.state.namespace, 'status', this.state.status.value, 'verb', this.state.action.value, 'code', this.state.code.value);
 
-    if (value) {
-      uri += `&search=${value}`;
-    }
-    if (this.state.action !== this.state.actionList.all) {
-      uri += `&verb=${this.state.action}`;
-    }
-    if (this.state.resourceType !== this.resourcelist.all) {
-      uri += `&resource=${this.state.resourceType}`;
-    }
-    if (this.state.namespace !== undefined) {
-      uri += `&namespace=${this.state.namespace}`;
-    }
-    if (this.state.status !== this.statuslist.all) {
-      uri += `&status=${this.state.status}`;
-    }
-    if (this.state.code !== this.codeList.all) {
-      uri += `&code=${this.state.code}`;
-    }
     coFetchJSON(uri).then(response => {
-      // console.log(response.items);
       this.setState({
         data:
           response.eventList?.Items?.filter(cur => {
@@ -527,77 +414,37 @@ class AuditPage_ extends React.Component {
 
   async componentDidUpdate() {
     const namespace = _.get(this.props, 'match.params.ns');
-    const { t, i18n } = this.props;
 
-    if (i18n.language !== this.state.language) {
-      this.resourcelist.all = t('SINGLE:MSG_AUDITLOGS_MAIN_RESOURCEFILTER_1');
-      this.codeList = { all: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_1'), 100: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_2'), 200: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_3'), 300: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_4'), 400: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_5'), 500: t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_6') };
-      this.statuslist = { all: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_1'), Success: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_2'), Failure: t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_3') };
-      if (this.state.resourceType === 'All Resource Types' || '전체 리소스 타입') {
-        this.setState({
-          actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1') },
-        });
-      } else if (this.state.resourceType === 'users') {
-        this.setState({
-          actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'), create: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_2'), delete: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_3'), patch: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6'), update: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7'), login: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_4'), logout: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_5') },
-        });
-      } else {
-        this.setState({
-          actionList: { all: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1'), create: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_2'), delete: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_3'), patch: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_6'), update: t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_7') },
-        });
-      }
-      this.setState({
-        namespace: namespace,
-        offset: 0,
-        resourceType: this.state.resourceType === 'All Resource Types' || '전체 리소스 타입' ? t('SINGLE:MSG_AUDITLOGS_MAIN_RESOURCEFILTER_1') : this.state.resourceType,
-        action: this.state.actionList.all === 'All Actions' || '전체 액션' ? t('SINGLE:MSG_AUDITLOGS_MAIN_ACTIONFILTER_1') : this.state.actionList.all,
-        status: this.statuslist.all === 'All Status' || '전체 상태' ? t('SINGLE:MSG_AUDITLOGS_MAIN_STATUSFILTER_1') : this.state.statuslist.all,
-        code: this.codeList.all === 'All Codes' || '전체 코드' ? t('SINGLE:MSG_AUDITLOGS_MAIN_CODEFILTER_1') : this.state.statuslist.all,
-        language: i18n.language,
-      });
-    }
     if (namespace !== this.state.namespace) {
       this.setState({
         namespace: namespace,
         offset: 0,
-        resourceType: this.resourcelist.all,
-        action: this.state.actionList.all,
-        status: this.statuslist.all,
-        code: this.codeList.all,
+        actionList: [Actions.all],
+        resourceType: Resources.all,
+        action: Actions.all,
+        status: Statuses.all,
+        code: Codes.all,
       });
-      const search = getQueryArgument('user');
-
       let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=0&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
-
-      if (search) {
-        uri += `&search=${search}`;
-      }
+      uri = this.makeSearchQuery(uri);
       if (namespace === undefined) {
         // all namespace
-        await coFetchJSON(uri).then(response => {
-          // console.log(response.items);
-          this.setState({
-            data: response.eventList.Items,
-            pages: Math.ceil(response.rowsCount / 100),
-          });
-        });
+        this.fetch(uri);
       } else if (namespace === 'default') {
         this.setState({
           data: [],
           pages: 0,
-          isResourceLoaded: true,
         });
       } else {
         uri += `&namespace=${namespace}`;
         await coFetchJSON(uri).then(response => {
-          // console.log(response.items);
           this.setState({
             data: response.eventList.Items,
             pages: Math.ceil(response.rowsCount / 100),
-            isResourceLoaded: true,
           });
         });
       }
+      this.setState({ isResourceLoaded: true });
     }
   }
 
@@ -605,43 +452,42 @@ class AuditPage_ extends React.Component {
     const namespace = _.get(this.props, 'match.params.ns');
     await this.getResourceList();
     this.setState({ namespace: namespace });
-    this.setState({ action: this.state.actionList.all });
-    const search = getQueryArgument('user');
     let uri = `${document.location.origin}/api/webhook/audit?limit=100&offset=${this.state.offset}&startTime=${this.state.start.getTime() / 1000}&endTime=${this.state.end.getTime() / 1000}&userId=${getId()}${getUserGroup()}`;
-
-    if (search) {
-      uri += `&search=${search}`;
-    }
+    uri = this.makeSearchQuery(uri);
     if (namespace === undefined) {
       // all namespace
-      await coFetchJSON(uri).then(response => {
-        // console.log(response.items);
-        this.setState({
-          data: response.eventList.Items,
-          pages: Math.ceil(response.rowsCount / 100),
-        });
-      });
+      this.fetch(uri);
     } else if (namespace === 'default') {
       this.setState({
         data: [],
         pages: 0,
-        isResourceLoaded: true,
       });
     } else {
       uri += `&namespace=${namespace}`;
-      await coFetchJSON(uri).then(response => {
-        // console.log(response.items);
-        this.setState({
-          data: response.eventList.Items,
-          pages: Math.ceil(response.rowsCount / 100),
-        });
-      });
+      this.fetch(uri);
     }
     this.setState({ isResourceLoaded: true });
   }
   onIconClick = e => {
     const datePickerElem = e.target.previousElementSibling.firstChild.firstChild;
     datePickerElem.focus();
+  };
+
+  makeItems = (items = [], newItems = {}, isResourceItems = false) => {
+    if (isResourceItems) {
+      items.forEach(item => {
+        newItems[item.value] = item.value === Resources.all.value ? t(item.label) : item.label;
+      });
+    } else {
+      items.forEach(item => {
+        newItems[item.value] = t(item.label);
+      });
+    }
+    return newItems;
+  };
+
+  makeResourceTitle = resource => {
+    return resource.value === Resources.all.value ? t(resource.label) : resource.label;
   };
 
   render() {
@@ -658,10 +504,10 @@ class AuditPage_ extends React.Component {
             <PageHeading detail={true} title={t('COMMON:MSG_LNB_MENU_5')}>
               <div className="co-m-pane__filter-bar" style={{ marginBottom: 0, marginLeft: 0 }}>
                 <div className="co-m-pane__filter-bar-group">
-                  <Dropdown title={this.state.resourceType} className="btn-group btn-group-audit" items={this.resourcelist} onChange={this.onChangeResourceType} />
-                  <Dropdown title={this.state.action} className="btn-group" items={actionList} onChange={this.onChangeAction} />
-                  <Dropdown title={this.state.status} className="btn-group" items={this.statuslist} onChange={this.onChangeStatus} />
-                  <Dropdown style={{ marginRight: '30px' }} title={this.state.code} className="btn-group" items={this.codeList} onChange={this.onChangeCode} />
+                  <Dropdown title={this.makeResourceTitle(this.state.resourceType)} value={this.state.resourceType.value} className="btn-group btn-group-audit" items={this.makeItems(this.resourcelist, {}, true)} onChange={this.onChangeResourceType} />
+                  <Dropdown title={t(this.state.action.label)} value={this.state.action.value} className="btn-group" items={this.makeItems(actionList, {})} onChange={this.onChangeAction} />
+                  <Dropdown title={t(this.state.status.label)} value={this.state.status.value} className="btn-group" items={this.makeItems(this.statuslist, {})} onChange={this.onChangeStatus} />
+                  <Dropdown style={{ marginRight: '30px' }} title={t(this.state.code.label)} value={this.state.code.value} className="btn-group" items={this.makeItems(this.codeList, {})} onChange={this.onChangeCode} />
                   <p style={{ marginRight: '10px', lineHeight: '30px' }}>{t('SINGLE:MSG_AUDITLOGS_MAIN_SEARCHPERIOD_1')}</p>
                   <div className="co-datepicker-wrapper">
                     <DatePicker className="co-datepicker" placeholderText="From" startDate={start} endDate={end} selected={start} onChange={this.onChangeStartDate} />
@@ -775,7 +621,6 @@ class AuditList extends React.Component {
       'co-sysevent-stream__timeline--empty': !count,
     });
 
-    // console.log(items);
     const len = `${items.length * 110 + 51}px`;
     const timelineLen = `${items.length * 110 - 110}px`;
     return (
