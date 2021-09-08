@@ -89,7 +89,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
         <StackItem isFilled className="odc-pipeline-builder-form__content">
           <Form className="odc-pipeline-builder-form__grid" onSubmit={handleSubmit}>
             <div className="odc-pipeline-builder-form__short-section">
-              <Section label={t('SINGLE:MSG_PIPELINES_CREATEFORM_1')} id="name" isRequired={true}>
+              <Section label={t('COMMON:MSG_MAIN_TABLEHEADER_1')} id="name" isRequired={true}>
                 <InputField name="name" type={TextInputTypes.text} isDisabled={!!existingPipeline} required />
               </Section>
             </div>
