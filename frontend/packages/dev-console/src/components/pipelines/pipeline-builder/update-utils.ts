@@ -307,21 +307,29 @@ const applyParamsUpdate = (
   params: UpdateTaskParamData,
 ): PipelineTask => {
   const { newValue, taskParamName } = params;
+  let newParams;
+  let exist = false;
+  
+  newParams = pipelineTask.params.map(
+    (param): PipelineTaskParam => {
+      if (param.name !== taskParamName) {
+        return param;
+      }
+      exist = true;
+
+      return {
+        ...param,
+        value: newValue,
+      };
+    },
+  )
+  if (!exist) {
+    newParams.push({name: taskParamName, value: newValue});
+  }
 
   return {
     ...pipelineTask,
-    params: pipelineTask.params.map(
-      (param): PipelineTaskParam => {
-        if (param.name !== taskParamName) {
-          return param;
-        }
-
-        return {
-          ...param,
-          value: newValue,
-        };
-      },
-    ),
+    params: newParams,
   };
 };
 
