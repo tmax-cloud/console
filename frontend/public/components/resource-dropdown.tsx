@@ -21,6 +21,7 @@ const blacklistResources = ImmutableSet([
   'events.k8s.io/v1beta1.Event',
 ]);
 
+// reducers/k8s.ts - ReceivedResources 액션 참고
 const getAllModels = (models: K8sKind[]): ImmutableMap<K8sResourceKindReference, K8sKind> => {
   return models.reduce((prevState, newModel) => {
     // FIXME: Need to use `kind` as model reference for legacy components accessing k8s primitives
