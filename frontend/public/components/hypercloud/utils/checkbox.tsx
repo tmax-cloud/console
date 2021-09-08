@@ -58,7 +58,7 @@ export const CheckboxGroup: React.SFC<CheckboxGroupProps> = (props) => {
   return <div className="form-group">
     <div className="checkbox-group">
       {useAll && <Checkbox name='*' label='All' onChange={onChange} checked={selectedList.has('*')} />}
-      {items.map((item, index) => <Checkbox name={item.name} label={item.label} onChange={onChange} checked={(useAll && selectedList.has('*')) || selectedList.has(item.name)} />)}
+      {items.map((item, index) => <Checkbox name={item.name} label={item.label} onChange={onChange} checked={(useAll && selectedList.has('*')) || selectedList.has(item.name)} key={index}/>)}
     </div>
   </div>
 };
