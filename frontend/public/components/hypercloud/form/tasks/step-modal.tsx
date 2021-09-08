@@ -224,7 +224,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   // }, [image]);
   return (
     <>
-      <Section label="스텝 이름" id="step-name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_108')} id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <div className="horizontal-line" />
@@ -303,8 +303,8 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           )}
         </>
       )} */}
-      <Section label="이미지" id="step-manual-image" isRequired={true}>
-        <TextInput id="image" placeholder="이미지 경로를 입력해 주세요." inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_33')} id="step-manual-image" isRequired={true}>
+        <TextInput id="image" placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_104')} inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
       </Section>
       <div className="horizontal-line" />
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_95')} id="command-type-toggle">
