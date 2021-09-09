@@ -15,7 +15,7 @@ const WelcomePage = ({ history }) => {
         <p className="welcome__description">시작하기 위해 애플리케이션 용 네임스페이스를 만드세요.</p>
         <p className="welcome__description">
           자세한 내용은{' '}
-          <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/user_guide/console_connect_sub/execution-environment.html" target="_blank">
+          <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/welcome/intro.html" target="_blank">
             HyperCloud 매뉴얼<i className="fas fa-external-link-alt"></i>
           </a>
           을 참조하세요.

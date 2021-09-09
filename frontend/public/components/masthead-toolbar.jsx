@@ -77,7 +77,7 @@ class MastheadToolbarContents_ extends React.Component {
   }
 
   _getManualPath() {
-    return 'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/user_guide/console_connect_sub/execution-environment.html';
+    return 'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/welcome/intro.html';
   }
 
   _updateUser() {
@@ -504,7 +504,7 @@ class MastheadToolbarContents_ extends React.Component {
             {/* TODO: 매뉴얼 5.0버전으로 바꿔야함 */}
             <ToolbarItem className="co-masthead-icon__button">
               <Tooltip content="Manual" position={TooltipPosition.bottom}>
-                <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/user_guide/console_connect_sub/execution-environment.html" target="_blank">
+                <a href="https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/welcome/intro.html" target="_blank">
                 <QuestionCircleIcon className="co-masthead-icon" color="white"/></a>
               </Tooltip>
             </ToolbarItem>
