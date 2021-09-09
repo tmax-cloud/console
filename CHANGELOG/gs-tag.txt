@@ -1,4 +1,5 @@
 Console Version History
+gs.1.13.0
 gs.1.12.0
 gs.1.11.0
 gs.1.10.0
