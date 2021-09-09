@@ -28,7 +28,7 @@ export const OutputResourceModal: React.FC<OutputResourceModalProps> = ({ method
 
   return (
     <>
-      <Section label="아웃풋 리소스 이름" id="outputresource_name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_107')} id="outputresource_name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_21')} id="outputresource-type" isRequired={true}>
