@@ -3,7 +3,8 @@ import * as _ from 'lodash-es';
 import { Section } from '../../utils/section';
 import { RadioGroup } from '../../utils/radio';
 // import { ResourceDropdown } from '../../utils/resource-dropdown';
-import { Dropdown } from '../../utils/dropdown';
+import { Controller } from 'react-hook-form';
+import { DropdownWithRef } from '../../utils/dropdown-new';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
 import { ListView } from '../../utils/list-view';
@@ -134,17 +135,14 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           </Button>
         </div>
         <Section id="mountName">
-          <Dropdown
+          <Controller
+            as={<DropdownWithRef name={`${name}[${index}].mountName`} defaultValue={item.mountName} methods={methods} useResourceItemsFormatter={false} items={volumeItems} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} />}
+            control={methods.control}
             name={`${name}[${index}].mountName`}
-            className="btn-group"
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
             defaultValue={item.mountName}
-            title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} // 드롭다운 title 지정
-            methods={methods}
-            items={volumeItems} // (필수)
-            style={{ display: 'block' }}
-            buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
-            itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-            {...ListActions.registerWithInitValue(`${name}[${index}].mountName`, item.mountName)}
           />
         </Section>
         <Section id="mountPath">
@@ -227,12 +225,12 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
 
   return (
     <>
-      <Section label="스텝 이름" id="step-name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_108')} id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <div className="horizontal-line" />
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_33')} id="step-manual-image" isRequired={true}>
-        <TextInput id="image" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
+        <TextInput id="image" placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_104')} inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
       </Section>
       {/* <Section label="이미지" id="step-image-toggle">
         <RadioGroup
