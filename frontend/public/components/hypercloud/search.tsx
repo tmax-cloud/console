@@ -87,6 +87,7 @@ const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props =>
   const clearSelectedItems = () => {
     setSelectedItems(new Set([]));
     setQueryArgument('kind', '');
+    toggleKindExpanded('');
   };
 
   const clearNameFilter = () => {
