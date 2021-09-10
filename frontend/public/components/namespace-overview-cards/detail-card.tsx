@@ -9,19 +9,28 @@ import DetailsBody from '@console/shared/src/components/dashboard/details-card/D
 import DetailItem from '@console/shared/src/components/dashboard/details-card/DetailItem';
 import '../../components/dashboard/dashboards-page/cluster-dashboard/details-card.scss';
 import { Link } from 'react-router-dom';
+import { LabelList } from '../utils';
+import DashboardCardLink from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardLink';
+import * as _ from 'lodash';
 
-const DetailsList = ({ name, requester, label }) => {
+const DetailsList = ({ name, requester, label, href, kind }) => {
   const { t } = useTranslation();
+  const keys = _.keys(label).sort();
+  const labelsSubset = _.take(keys, 3);
+  const firstThreelabels = _.pick(label, labelsSubset);
   return (
     <div>
       <DetailItem title={t('COMMON:MSG_MAIN_TABLEHEADER_1')}>{name}</DetailItem>
       <DetailItem title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABOVERVIEW_1')}>{requester ? <div>{requester}</div> : <div style={{ color: 'gray' }}>{t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABOVERVIEW_2')}</div>}</DetailItem>
-      <DetailItem title={t('COMMON:MSG_MAIN_TABLEHEADER_15')}>{label ? <div>{label}</div> : <div style={{ color: 'gray' }}>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_SIDEPANEL_4')}</div>}</DetailItem>
+      <DetailItem title={t('COMMON:MSG_MAIN_TABLEHEADER_15')}>
+        <LabelList kind={kind} labels={firstThreelabels} />
+        {keys.length > 3 && <DashboardCardLink to={href}>{t('SINGLE:MSG_OVERVIEW_MAIN_POPOVEROPERATOR_ALL_1')}</DashboardCardLink>}
+      </DetailItem>
     </div>
   );
 };
 
-const DetailCard = ({ href, name, requester, label }) => {
+const DetailCard = ({ href, name, requester, label, kind }) => {
   const { t } = useTranslation();
   return (
     <DashboardCard>
@@ -33,7 +42,7 @@ const DetailCard = ({ href, name, requester, label }) => {
       </DashboardCardHeader>
       <DashboardCardBody className={classNames('details-card__body-style')}>
         <DetailsBody>
-          <DetailsList name={name} requester={requester} label={label} />
+          <DetailsList name={name} requester={requester} label={label} href={href} kind={kind} />
         </DetailsBody>
       </DashboardCardBody>
     </DashboardCard>
