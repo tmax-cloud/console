@@ -2,21 +2,15 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory';
-import {
-  ContainerSpec,
-  getVolumeType,
-  K8sKind,
-  k8sPatch,
-  K8sResourceKind,
-  Volume,
-  VolumeMount,
-} from '../../module/k8s/';
+import { ContainerSpec, getVolumeType, K8sKind, k8sPatch, K8sResourceKind, Volume, VolumeMount } from '../../module/k8s/';
 import { RowVolumeData } from '../volumes-table';
 import { YellowExclamationTriangleIcon } from '@console/shared';
+import { useTranslation, Trans } from 'react-i18next';
 
-export const RemoveVolumeModal: React.FC<RemoveVolumeModalProps> = (props) => {
+export const RemoveVolumeModal: React.FC<RemoveVolumeModalProps> = props => {
   const [inProgress, setInProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const { t } = useTranslation();
 
   const getRemoveVolumePatch = (resource: K8sResourceKind, rowVolumeData: RowVolumeData) => {
     const containers: ContainerSpec[] = _.get(resource, 'spec.template.spec.containers', []);
@@ -28,10 +22,7 @@ export const RemoveVolumeModal: React.FC<RemoveVolumeModalProps> = (props) => {
         if (mount.name !== rowVolumeData.name) {
           return;
         }
-        if (
-          mount.mountPath === rowVolumeData.mountPath &&
-          container.name === rowVolumeData.container
-        ) {
+        if (mount.mountPath === rowVolumeData.mountPath && container.name === rowVolumeData.container) {
           patches.push({
             op: 'remove',
             path: `/spec/template/spec/containers/${i}/volumeMounts/${j}`,
@@ -72,35 +63,26 @@ export const RemoveVolumeModal: React.FC<RemoveVolumeModalProps> = (props) => {
 
   const { kind, resource, volume } = props;
   const type: string = _.get(getVolumeType(volume.volumeDetail), 'id', '');
+  const VolumnName = () => <strong className="co-break-word">{volume.name}</strong>;
+  const From = () => <strong>{`${kind.label}: ${resource.metadata.name}`}</strong>;
+
   return (
     <form onSubmit={submit} className="modal-content">
       <ModalTitle>
-        <YellowExclamationTriangleIcon className="co-icon-space-r" /> Remove Volume?
+        <YellowExclamationTriangleIcon className="co-icon-space-r" />
+        {t('SINGLE:MSG_DEPLOYMENTS_DEPLOYMENTDETAILS_REMOVEVOLUME_1')}
       </ModalTitle>
       <ModalBody className="modal-body">
         <div>
-          Are you sure you want to remove volume{' '}
-          <strong className="co-break-word">{volume.name}</strong>
-          <span>
-            {' '}
-            from <strong>{kind.label}</strong>: <strong>{resource.metadata.name}</strong>?
-          </span>
+          <Trans i18nKey="SINGLE:MSG_DEPLOYMENTS_DEPLOYMENTDETAILS_REMOVEVOLUME_2">{[<VolumnName />, <From />]}</Trans>
         </div>
         {type && (
           <div>
-            <label className="control-label">
-              Note: This will not remove the underlying {type}.
-            </label>
+            <label className="control-label">{t('SINGLE:MSG_DEPLOYMENTS_DEPLOYMENTDETAILS_REMOVEVOLUME_4', { 0: type })}</label>
           </div>
         )}
       </ModalBody>
-      <ModalSubmitFooter
-        errorMessage={errorMessage}
-        inProgress={inProgress}
-        submitDanger
-        submitText="Remove Volume"
-        cancel={props.cancel}
-      />
+      <ModalSubmitFooter errorMessage={errorMessage} inProgress={inProgress} submitDanger submitText={t('SINGLE:MSG_DEPLOYMENTS_DEPLOYMENTDETAILS_REMOVEVOLUME_3')} cancel={props.cancel} />
     </form>
   );
 };

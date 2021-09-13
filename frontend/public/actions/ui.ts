@@ -145,6 +145,9 @@ export const formatNamespaceRoute = (activeNamespace, originalPath, location?) =
   }
 
   if ((previousNS !== activeNamespace && (parts[1] !== 'new' || activeNamespace !== ALL_NAMESPACES_KEY)) || (activeNamespace === ALL_NAMESPACES_KEY && parts[1] === 'new')) {
+    if (parts[0] === 'customresourcedefinitions') {
+      parts.shift();
+    }
     // a given resource will not exist when we switch namespaces, so pop off the tail end
     parts = parts.slice(0, 1);
   }

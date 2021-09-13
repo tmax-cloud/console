@@ -5,7 +5,7 @@ import { PenIcon, MinusIcon } from '@patternfly/react-icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import * as DragIcon from '../../../../imgs/hypercloud/menu.svg';
 export const ModalList = props => {
-  const { handleMethod, path, onRemove, list, description, title, children, id, methods, requiredFields, optionalValidCallback, optionalRequiredField = [] } = props;
+  const { handleMethod, path, onRemove, list, description, title, children, id, methods, requiredFields, optionalRequiredField = [], optionalValidCallback, submitText = '수정' } = props;
   let uId = id + '-list';
 
   const onDragEnd = result => {
@@ -37,7 +37,7 @@ export const ModalList = props => {
               onClick={e => {
                 let target = document.getElementById(`item-modify-${id}-${index}`).closest('li');
                 target.dataset.modify = 'true';
-                return ModalLauncher({ inProgress: false, path: path, index: index, methods: methods, requiredFields: requiredFields, title: title, id: id, handleMethod: handleMethod, children: children, submitText: '수정', optionalRequiredField: optionalRequiredField, optionalValidCallback: optionalValidCallback });
+                return ModalLauncher({ inProgress: false, path: path, index: index, methods: methods, requiredFields: requiredFields, title: title, id: id, handleMethod: handleMethod, children: children, submitText: submitText, optionalRequiredField: optionalRequiredField, optionalValidCallback: optionalValidCallback });
               }}
             >
               <PenIcon />
