@@ -127,6 +127,19 @@ const isClusterClaim = (model) => {
   return false;
 }
 
+const isNamespace = (model) => {
+  return model.kind === 'Namespace';
+}
+
+const isNamespaceClaim = (model) => {
+  return model.kind === 'NamespaceClaim';
+}
+
+const resourceNamespaceURL = (model) => {
+  const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
+  return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+}
+
 export const watchURL = (kind, options) => {
   const opts = options || {};
 
@@ -233,30 +246,16 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
     return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
   }).join('&');
 
-  // if(isCluster(kind) || isClusterClaim(kind)) {
-  //   const listClusterURL = resourceClusterURL(kind);
-  //   return coFetchJSON(`${listClusterURL}`, 'GET').then((result) => raw ? result: result.items);
-  // }
-
   let isMultiCluster = isCluster(kind) || isClusterClaim(kind);
-  let listURL = isMultiCluster ? resourceClusterURL(kind, {ns: params.ns}) : resourceURL(kind, { ns: params.ns });
-  // let listURL = resourceURL(kind, { ns: params.ns });
+  const _isNamespace = isNamespace(kind) || isNamespaceClaim(kind);
+  let listURL = isMultiCluster ? resourceClusterURL(kind, {ns: params.ns}) : _isNamespace ? resourceNamespaceURL(kind) : resourceURL(kind, { ns: params.ns });
+  
   if(localStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
     return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
   }
 
-  if (kind.kind === 'Namespace') {
-    listURL = `${document.location.origin}/api/hypercloud/namespace?userId=${getId()}${getUserGroup()}`;
-    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
-  } else if (kind.kind === 'NamespaceClaim') {
-    listURL = `${document.location.origin}/api/hypercloud/namespaceClaim?userId=${getId()}${getUserGroup()}`;
-    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
-  } else if (isMultiCluster){
-    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));  
-  }
-  else {
-    return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
-  }
+  const url = listURL.includes('?') ? `${listURL}&${query}` : `${listURL}?${query}`
+  return coFetchJSON(url, 'GET', options).then(result => (raw ? result : result.items));
 };
 
 export const k8sListPartialMetadata = (kind, params = {}, raw = false) => {
