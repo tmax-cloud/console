@@ -4,7 +4,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: ingressroutes.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -202,7 +201,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: ingressroutetcps.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -362,7 +360,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: ingressrouteudps.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -446,7 +443,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: middlewares.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -1012,7 +1008,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: middlewaretcps.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -1071,7 +1066,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: serverstransports.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -1176,7 +1170,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: tlsoptions.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -1267,7 +1260,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: tlsstores.traefik.containo.us
 spec:
   group: traefik.containo.us
@@ -1331,7 +1323,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
   name: traefikservices.traefik.containo.us
 spec:
   group: traefik.containo.us

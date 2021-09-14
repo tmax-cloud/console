@@ -29,33 +29,28 @@ spec:
     spec:
       containers:
       - args:
-        - --entryPoints.traefik.address=:8080
+        - --entryPoints.traefik.address=:9000
         - --entryPoints.web.address=:8000
         - --entryPoints.websecure.address=:8443
         - --entryPoints.k8s.address=:6443
         - --serverstransport.insecureskipverify=true
         # Uncomment the below lines to redirect http requests to https.
-        # This specifies the port :443 and not the https entrypoint name for the
-        # redirect as the service is listening on port 443 and directing traffic
-        # to the 8443 target port. If the entrypoint name "websecure" was used,
-        # instead of "to=:443", then the browser would be redirected to port 8443.
-        - --entryPoints.web.http.redirections.entrypoint.to=:433
         - --entryPoints.web.http.redirections.entrypoint.scheme=https
         - --api=true 
         - --api.dashboard=true
-        - --api.insecure=true
         - --ping=true
-        - --ping.entrypoint=traefik
+        # - --ping.entrypoint=traefik
         - --providers.kubernetesingress=true
         # Traefik processes all Ingress objects in the configured namespaces.
         # - --providers.kubernetesingress.labelselector="app=traefik"
         # Value of kubernetes.io/ingress.class annotation that identifies Ingress objects to be processed.
-        - --providers.kubernetesingress.ingressclass=api-gateway
-        - --providers.kubernetesingress.namespaces=console-system,api-gateway-system
+        # - --providers.kubernetesingress.ingressclass=api-gateway
+        - --providers.kubernetesingress.namespaces=console-system,api-gateway-system,hyperregistry
         - --providers.kubernetesingress.ingressendpoint.publishedservice=api-gateway-system/api-gateway
         - --providers.kubernetesingress.allowemptyservices=true 
         - --providers.kubernetescrd
-        - --providers.kubernetescrd.ingressclass=api-gateway
+        # BUG: ingressclass doesn't work 
+        # - --providers.kubernetescrd.ingressclass=api-gateway
         - --providers.kubernetescrd.allowcrossnamespace=true
         - --providers.file
         - --providers.file.directory=/data/config
@@ -76,7 +71,7 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 2
-        name: traefik
+        name: api-gateway
         ports:
         - containerPort: 9000
           name: traefik

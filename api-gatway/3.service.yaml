@@ -10,7 +10,7 @@ metadata:
 spec:
   ports:
   - name: traefik
-    port: 8080
+    port: 9000
     protocol: TCP
     targetPort: traefik
   - name: web
