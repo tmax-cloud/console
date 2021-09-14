@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: console-https-secret-create
+  name: console-https-secret-create-nginx
   namespace: console-system
 spec:
   template:
     metadata:
-      name: console-https-secret-create
+      name: console-https-secret-create-nginx
     spec:
       containers:
         - name: create
@@ -14,9 +14,9 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - create
-            - --host=console,console.$(POD_NAMESPACE).svc
+            - --host=console,console.$(POD_NAMESPACE).svc,console.console-system.192.168.9.148.nip.io
             - --namespace=$(POD_NAMESPACE)
-            - --secret-name=console-https-secret
+            - --secret-name=console-https-secret-nginx
           env:
             - name: POD_NAMESPACE
               valueFrom:

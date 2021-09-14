@@ -528,13 +528,13 @@ class MastheadToolbarContents_ extends React.Component {
                 </a>
               </Tooltip>
             </ToolbarItem>
-            <ToolbarItem>
+            {/* <ToolbarItem>
               <Tooltip content="Menu Settings" position={TooltipPosition.bottom}>
                 <Link to={adminCmpExists ? `/k8s/cluster/clustermenupolicies/${adminCmpName}/edit` : '/k8s/cluster/clustermenupolicies/~new'} className="pf-c-button pf-m-plain" aria-label="Menu Settings">
                   <CogIcon className="co-masthead-icon" color="white" />{' '}
                 </Link>
               </Tooltip>
-            </ToolbarItem>
+            </ToolbarItem> */}
           </ToolbarGroup>
 
           <ToolbarGroup>

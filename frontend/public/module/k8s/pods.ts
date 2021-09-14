@@ -1,6 +1,7 @@
 import * as _ from 'lodash-es';
 
 import { ContainerSpec, ContainerStatus, PodKind, Volume, VolumeMount } from './types';
+import { NO_STATUS } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const getRestartPolicy = (pod: PodKind) =>
   _.find(
@@ -210,7 +211,7 @@ export const podReadiness = (pod: PodKind): { readyCount: number; totalContainer
 // (See https://github.com/kubernetes/kubernetes/blob/release-1.17/pkg/printers/internalversion/printers.go)
 export const podPhase = (pod: PodKind): PodPhase => {
   if (!pod || !pod.status) {
-    return '';
+    return NO_STATUS;
   }
 
   if (pod.metadata.deletionTimestamp) {

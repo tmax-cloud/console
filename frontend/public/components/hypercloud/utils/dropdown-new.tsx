@@ -74,7 +74,7 @@ const TextSingleValue = props => {
  * @prop {FirehoseResult[]} resources - Firehose 결과값을 받아오기 위한 속성으로, 컴포넌트 사용자를 위해 만든 속성은 아니다.
  */
 export const DropdownWithRef = React.forwardRef<HTMLInputElement, DropdownWithRefProps>((props, ref) => {
-  const { name, defaultValue, methods, items, resources: resourcesResult, useResourceItemsFormatter, kind, width } = props;
+  const { name, defaultValue, methods, items, resources: resourcesResult, useResourceItemsFormatter, kind, width, placeholder } = props;
   const { setValue } = methods ? methods : useFormContext();
 
   const [selected, setSelected] = React.useState(defaultValue);
@@ -188,6 +188,7 @@ export const DropdownWithRef = React.forwardRef<HTMLInputElement, DropdownWithRe
       }}
       classNamePrefix="hc-select"
       isSearchable={false}
+      placeholder={placeholder}
     />
   );
 });
@@ -220,6 +221,7 @@ export type DropdownWithRefProps = {
   kind?: string;
   width?: string;
   resources?: FirehoseResult[];
+  placeholder?: string;
 };
 
 export type DropdownFirehoseProps = {

@@ -120,16 +120,16 @@ export const CatalogListPage = withTranslation()(
             tileName: serviceClassDisplayName(serviceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            // tileDescription: serviceClass.spec.description,
-            tileDescription: '',
+            tileDescription: serviceClass.spec.description,
             tileProvider: _.get(serviceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: serviceClass.spec.tags,
+            categories: serviceClass.spec.externalMetadata.categories,
             createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
             // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
             href: `/k8s/ns/${namespace}/serviceinstances/~new?service-class=${serviceClass.metadata.name}`,
             supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
             // longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
-            // documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
+            documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
           });
           return acc;
         },
@@ -159,16 +159,16 @@ export const CatalogListPage = withTranslation()(
             tileName: serviceClassDisplayName(clusterServiceClass),
             tileIconClass: tileImgUrl ? null : iconClass,
             tileImgUrl: tileImgUrl == 'example.com/example.gif' ? null : tileImgUrl, // MEMO : example주소엔 이미지 없어서 기본아이콘으로 뜨게하려고 임시로 조건문 넣어놓음
-            // tileDescription: clusterServiceClass.spec.description,
-            tileDescription: '',
+            tileDescription: clusterServiceClass.spec.description,
             tileProvider: _.get(clusterServiceClass, 'spec.externalMetadata.providerDisplayName'),
             tags: clusterServiceClass.spec.tags,
+            categories: clusterServiceClass.spec.externalMetadata.categories,
             createLabel: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_DIV1_1'),
             // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
             href: `/k8s/ns/${namespace}/serviceinstances/~new?cluster-service-class=${clusterServiceClass.metadata.name}`,
             supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
             // longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
-            documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.documentationUrl'),
+            documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.urlDescription'),
           });
           return acc;
         },

@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/managed-by: tmax-cloud
+    app.kubernetes.io/name: api-gateway
+  name: api-gateway
+  namespace: api-gateway-system
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: traefik
+      app.kubernetes.io/name: api-gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: traefik
+        app.kubernetes.io/managed-by: tmax-cloud
+        app.kubernetes.io/name: api-gateway
+    spec:
+      containers:
+      - args:
+        - --entryPoints.traefik.address=:9000
+        - --entryPoints.web.address=:8000
+        - --entryPoints.websecure.address=:8443
+        - --entryPoints.k8s.address=:6443
+        - --serverstransport.insecureskipverify=true
+        # Uncomment the below lines to redirect http requests to https.
+        - --entryPoints.web.http.redirections.entrypoint.scheme=https
+        - --api=true 
+        - --api.dashboard=true
+        - --ping=true
+        # - --ping.entrypoint=traefik
+        - --providers.kubernetesingress=true
+        # Traefik processes all Ingress objects in the configured namespaces.
+        # - --providers.kubernetesingress.labelselector="app=traefik"
+        # Value of kubernetes.io/ingress.class annotation that identifies Ingress objects to be processed.
+        # - --providers.kubernetesingress.ingressclass=api-gateway
+        - --providers.kubernetesingress.namespaces=console-system,api-gateway-system,hyperregistry
+        - --providers.kubernetesingress.ingressendpoint.publishedservice=api-gateway-system/api-gateway
+        - --providers.kubernetesingress.allowemptyservices=true 
+        - --providers.kubernetescrd
+        # BUG: ingressclass doesn't work 
+        # - --providers.kubernetescrd.ingressclass=api-gateway
+        - --providers.kubernetescrd.allowcrossnamespace=true
+        - --providers.file
+        - --providers.file.directory=/data/config
+        - --providers.file.watch=true
+        - --log.level=DEBUG 
+        # - --accesslog=true
+        # - --accesslog.format=json
+        # - --accesslog.fields.defaultmode=keep
+        image: traefik:v2.5.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ping
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        name: api-gateway
+        ports:
+        - containerPort: 9000
+          name: traefik
+          protocol: TCP
+        - containerPort: 8000
+          name: web
+          protocol: TCP
+        - containerPort: 8443
+          name: websecure
+          protocol: TCP
+        - containerPort: 6443
+          name: k8s
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /ping
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources: {}
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /data/config
+          name: configmap-volume
+          readOnly: true
+        - mountPath: /tmp
+          name: tmp
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 65532
+      serviceAccount: api-gateway
+      serviceAccountName: api-gateway
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - emptyDir: {}
+        name: tmp
+      - name: configmap-volume
+        emptyDir: {}
+        # configMap: 
+        #   name: traefik-config

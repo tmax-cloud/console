@@ -1,0 +1,36 @@
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubernetes-ingressroute
+  namespace: api-gateway-system
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: PathPrefix(`/api/kubernetes`)
+    priority: 100    
+    middlewares:
+    - name: kubernetes-stripprefix
+      namepsace: api-gateway-system    
+    services:
+    - kind: Service
+      name: kubernetes
+      namespace: default
+      port: https
+      scheme: https
+      serversTransport: insecure-transport 
+  tls: {}
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: kubernetes-stripprefix
+  namespace: api-gateway-system
+spec:
+  stripPrefix:
+    prefixes:
+      - "/api/kubernetes"
+    # forceSlash: true

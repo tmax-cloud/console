@@ -27,11 +27,11 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
   const containersByKey = _.keyBy(containers, 'name');
   const pageTitle = healthCheckAdded ? t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_EDITHEALTHCHECKS_1') : t('SINGLE:MSG_DEPLOYMENTS_EDITDEPLOYMENTS_ADDHEALTHCHECKS_1');
   const {
-    kind,
     metadata: { name, namespace },
   } = resource;
   const kindForCRDResource = referenceFor(resource);
-  const resourceKind = modelFor(kindForCRDResource).crd ? kindForCRDResource : kind;
+  const resourceModel = modelFor(kindForCRDResource);
+  const resourcePlural = resourceModel.crd ? kindForCRDResource : resourceModel.plural;
   const isFormClean = _.every(values.healthChecks, { modified: false });
 
   const handleSelectContainer = (containerName: string) => {
@@ -39,7 +39,7 @@ const AddHealthChecks: React.FC<FormikProps<FormikValues> & AddHealthChecksProps
     setCurrentKey(containerName);
     setFieldValue('containerName', containerName);
     setFieldValue('healthChecks', getHealthChecksData(resource, containerIndex));
-    history.replace(`/k8s/ns/${namespace}/${resourceKind}/${name}/containers/${containerName}/health-checks`);
+    history.replace(`/k8s/ns/${namespace}/${resourcePlural}/${name}/containers/${containerName}/health-checks`);
   };
 
   return (

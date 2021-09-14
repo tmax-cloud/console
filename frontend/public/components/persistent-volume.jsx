@@ -19,11 +19,13 @@ import {
 import { PersistentVolumeModel } from '../models';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
 
+import { PersistentVolumeReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
 const { common } = Kebab.factory;
 const menuActions = [...Kebab.getExtensionsActionsForKind(PersistentVolumeModel), ...common];
 
 const PVStatus = ({ pv }) => (
-  <Status status={pv.metadata.deletionTimestamp ? 'Terminating' : pv.status.phase} />
+  <Status status={PersistentVolumeReducer(pv)} />
 );
 
 const tableColumnClasses = [

@@ -4,8 +4,8 @@ import ConsumerPopover from '@console/shared/src/components/dashboard/utilizatio
 import { Status, SecondaryStatus, getNodeSecondaryStatus } from '@console/shared';
 import { NodeKind } from '@console/internal/module/k8s';
 import { humanizeBinaryBytes, humanizeNumber } from '@console/internal/components/utils';
-import { nodeStatus } from '../../status/node';
 import { PressureQueries, Condition } from '../../queries';
+import { NodeStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 const conditionDescriptionMap = Object.freeze({
   [Condition.DISK_PRESSURE]: 'available memory is low',
@@ -32,7 +32,7 @@ const NodeStatus: React.FC<NodeStatusProps> = ({ node, showPopovers = false, cla
   const status = showPopovers ? getDegradedStates(node) : [];
   return (
     <>
-      <Status status={nodeStatus(node)} className={className} />
+      <Status status={NodeStatusReducer(node)} className={className} />
       <SecondaryStatus status={getNodeSecondaryStatus(node)} />
       {status.length > 0 &&
         status.map((item) => (

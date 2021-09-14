@@ -2,33 +2,34 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { Section } from '../../utils/section';
 import { RadioGroup } from '../../utils/radio';
-import { ResourceDropdown } from '../../utils/resource-dropdown';
-import { Dropdown } from '../../utils/dropdown';
+// import { ResourceDropdown } from '../../utils/resource-dropdown';
+import { Controller } from 'react-hook-form';
+import { DropdownWithRef } from '../../utils/dropdown-new';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
 import { ListView } from '../../utils/list-view';
 import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
-import { modelFor, k8sList } from '@console/internal/module/k8s';
-import { makeQuery } from '../../../utils/k8s-watcher';
+// import { modelFor, k8sList } from '@console/internal/module/k8s';
+// import { makeQuery } from '../../../utils/k8s-watcher';
 import { useTranslation } from 'react-i18next';
 
 export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const { t } = useTranslation();
   // const [isOpen, setIsOpen] = React.useState(false);
-  const [imageList, setImageList] = React.useState({});
-  const [imageTagList, setImageTagList] = React.useState({});
+  // const [imageList, setImageList] = React.useState({});
+  // const [imageTagList, setImageTagList] = React.useState({});
 
-  const registryTypeItems = [
-    {
-      title: '내부 레지스트리',
-      value: 'internal',
-    },
-    {
-      title: '외부 레지스트리',
-      value: 'external',
-    },
-  ];
+  // const registryTypeItems = [
+  //   {
+  //     title: '내부 레지스트리',
+  //     value: 'internal',
+  //   },
+  //   {
+  //     title: '외부 레지스트리',
+  //     value: 'external',
+  //   },
+  // ];
 
   const commandTypeItems = [
     {
@@ -115,6 +116,39 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
+  const mountListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons, deleteButtonText) => {
+    return (
+      <div key={item.id}>
+        <div className="row co-dynamic-form__array-field-group-remove">
+          <Button
+            type="button"
+            data-test-id="pairs-list__delete-btn"
+            className="pairs-list__span-btns"
+            onClick={() => {
+              ListActions.remove(index);
+            }}
+            variant="plain"
+          >
+            {ListDefaultIcons.deleteIcon} {deleteButtonText}
+          </Button>
+        </div>
+        <Section id="mountName">
+          <Controller
+            as={<DropdownWithRef name={`${name}[${index}].mountName`} defaultValue={item.mountName} methods={methods} useResourceItemsFormatter={false} items={volumeItems} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} />}
+            control={methods.control}
+            name={`${name}[${index}].mountName`}
+            onChange={([selected]) => {
+              return { value: selected };
+            }}
+            defaultValue={item.mountName}
+          />
+        </Section>
+        <Section id="mountPath">
+          <TextInput id={`${name}[${index}].mountPath`} inputClassName="col-md-12" methods={methods} defaultValue={item.mountPath} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_48')} />
+        </Section>
+      </div>
+    );
+  };
 
   let template;
 
@@ -129,13 +163,13 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       }
     });
   }
-  const [isFirstTimeEdit, setIsFirstTimeEdit] = React.useState(template?.isFirstTimeEdit);
+  // const [isFirstTimeEdit, setIsFirstTimeEdit] = React.useState(template?.isFirstTimeEdit);
 
-  const registryTypeToggle = useWatch({
-    control: methods.control,
-    name: 'registryTypeToggle',
-    defaultValue: template ? template.registryTypeToggle : 'internal',
-  });
+  // const registryTypeToggle = useWatch({
+  //   control: methods.control,
+  //   name: 'registryTypeToggle',
+  //   defaultValue: template ? template.registryTypeToggle : 'internal',
+  // });
 
   // command radio toggle 용
   const commandTypeToggle = useWatch({
@@ -144,57 +178,57 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     defaultValue: template ? template.commandTypeToggle : 'command',
   });
 
-  const imageRegistry = useWatch({
-    control: methods.control,
-    name: 'registryRegistry',
-    defaultValue: template ? template.registryRegistry : null,
-  });
-  const image = useWatch({
-    control: methods.control,
-    name: 'registryImage',
-    defaultValue: template ? template.registryImage : null,
-  });
+  // const imageRegistry = useWatch({
+  //   control: methods.control,
+  //   name: 'registryRegistry',
+  //   defaultValue: template ? template.registryRegistry : null,
+  // });
+  // const image = useWatch({
+  //   control: methods.control,
+  //   name: 'registryImage',
+  //   defaultValue: template ? template.registryImage : null,
+  // });
   // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
-  React.useEffect(() => {
-    if (!isFirstTimeEdit && imageRegistry) {
-      const ko = modelFor('Repository');
-      let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
-      k8sList(ko, query)
-        .then(reponse => reponse)
-        .then(data => {
-          let imageItems = {};
-          data.forEach(cur => {
-            imageItems[cur.spec.name] = cur.spec.name;
-          });
-          setImageList(() => imageItems);
-        });
-    }
-  }, [imageRegistry, isFirstTimeEdit]);
+  // React.useEffect(() => {
+  //   if (!isFirstTimeEdit && imageRegistry) {
+  //     const ko = modelFor('Repository');
+  //     let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
+  //     k8sList(ko, query)
+  //       .then(reponse => reponse)
+  //       .then(data => {
+  //         let imageItems = {};
+  //         data.forEach(cur => {
+  //           imageItems[cur.spec.name] = cur.spec.name;
+  //         });
+  //         setImageList(() => imageItems);
+  //       });
+  //   }
+  // }, [imageRegistry, isFirstTimeEdit]);
 
   // Image 선택되면 ImageTag Dropdown 메뉴 채워주기
-  React.useEffect(() => {
-    if (!isFirstTimeEdit && image) {
-      const ko = modelFor('Repository');
-      let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
-      k8sList(ko, query)
-        .then(reponse => reponse)
-        .then(data => {
-          let imageTagItems = {};
-          let curImage = data.filter(cur => image === cur.spec.name)[0];
-          curImage.spec.versions.forEach(cur => {
-            imageTagItems[cur.version] = cur.version;
-          });
-          setImageTagList(() => imageTagItems);
-        });
-    }
-  }, [image]);
+  // React.useEffect(() => {
+  //   if (!isFirstTimeEdit && image) {
+  //     const ko = modelFor('Repository');
+  //     let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
+  //     k8sList(ko, query)
+  //       .then(reponse => reponse)
+  //       .then(data => {
+  //         let imageTagItems = {};
+  //         let curImage = data.filter(cur => image === cur.spec.name)[0];
+  //         curImage.spec.versions.forEach(cur => {
+  //           imageTagItems[cur.version] = cur.version;
+  //         });
+  //         setImageTagList(() => imageTagItems);
+  //       });
+  //   }
+  // }, [image]);
   return (
     <>
-      <Section label="스텝 이름" id="step-name" isRequired={true}>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_108')} id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <div className="horizontal-line" />
-      {isFirstTimeEdit ? (
+      {/* {isFirstTimeEdit ? (
         <>
           <Section label="이미지" id="step-name" isRequired={true}>
             <TextInput id="image" inputClassName="col-md-12" methods={methods} isDisabled={true} defaultValue={modalType === 'modify' ? template.image : ''} />
@@ -268,8 +302,10 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             </Section>
           )}
         </>
-      )}
-
+      )} */}
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_33')} id="step-manual-image" isRequired={true}>
+        <TextInput id="image" placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_104')} inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
+      </Section>
       <div className="horizontal-line" />
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_95')} id="command-type-toggle">
         <RadioGroup
@@ -304,7 +340,8 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           t('SINGLE:MSG_TASKS_CREATFORM_DIV2_46')
         ) : (
           <>
-            <Section id="selectedVolume">
+            <ListView name="mountArr" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} maxLength={_.size(volumeItems)} deleteButtonText={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} headerFragment={<></>} itemRenderer={mountListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.mountArr) : []} defaultItem={{ name: '', mountPath: '' }} />
+            {/* <Section id="selectedVolume">
               <Dropdown
                 name="selectedVolume"
                 className="btn-group"
@@ -319,7 +356,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             </Section>
             <Section id="mountPath">
               <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_48')} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
-            </Section>
+            </Section> */}
           </>
         )}
       </Section>

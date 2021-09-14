@@ -12,28 +12,15 @@ import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, Re
 import { TrainedModelModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
+import { TrainedModelReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+
+export const TrainedModelStatus: React.FC<TrainedModelStatusProps> = ({ result }) => <Status status={TrainedModelReducer(result)} />;
+
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(TrainedModelModel), ...Kebab.factory.common];
 
 const kind = TrainedModelModel.kind;
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const TrainedModelPhase = instance => {
-  let phase = '';
-  if (instance.status) {
-    instance.status.conditions.forEach(cur => {
-      if (cur.type === 'Ready') {
-        if (cur.status === 'True') {
-          phase = 'Ready';
-        } else {
-          phase = 'Not Ready';
-        }
-      }
-    });
-    return phase;
-  }
-};
-
 
 const TrainedModelTableHeader = (t?: TFunction) => {
   return [
@@ -88,8 +75,6 @@ const TrainedModelTableHeader = (t?: TFunction) => {
 TrainedModelTableHeader.displayName = 'TrainedModelTableHeader';
 
 const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, key, style }) => {
-  const phase = TrainedModelPhase(tm);
-
   return (
     <TableRow id={tm.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
@@ -98,7 +83,7 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={tm.metadata.namespace} title={tm.metadata.namespace} />
       </TableData>
-      <TableData className={tableColumnClasses[2]}><Status status={phase} /></TableData>
+      <TableData className={tableColumnClasses[2]}><TrainedModelStatus result={tm} /></TableData>
       <TableData className={tableColumnClasses[3]}>{tm.spec.model.framework}</TableData>
       <TableData className={tableColumnClasses[4]}>{tm.status.url}</TableData>
       <TableData className={tableColumnClasses[5]}>{tm.spec.model.storageUri}</TableData>
@@ -114,12 +99,10 @@ const TrainedModelTableRow: RowFunction<K8sResourceKind> = ({ obj: tm, index, ke
 
 export const TrainedModelDetailsList: React.FC<TrainedModelDetailsListProps> = ({ ds }) => {
   const { t } = useTranslation();
-  const phase = TrainedModelPhase(ds);
-
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_COMMON_TABLEHEADER_2')} obj={ds} path="status.result">
-        <Status status={phase} />
+        <TrainedModelStatus result={ds} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_LNB_MENU_193')} obj={ds} path="spec.inferenceService">
         <ResourceLink kind="InferenceService" namespace={ds.metadata.namespace} name={ds.spec.inferenceService} title={ds.spec.inferenceService} />
@@ -190,7 +173,7 @@ export const TrainedModelsDetailsPage: React.FC<TrainedModelsDetailsPageProps> =
       {...props}
       kind={kind}
       menuActions={menuActions}
-      getResourceStatus={TrainedModelPhase}
+      getResourceStatus={TrainedModelReducer}
       pages={[details(detailsPage(TrainedModelDetails)), editResource()]}
     />
   );
@@ -213,4 +196,8 @@ type TrainedModelsPageProps = {
 
 type TrainedModelsDetailsPageProps = {
   match: any;
+};
+
+type TrainedModelStatusProps = {
+  result: any;
 };

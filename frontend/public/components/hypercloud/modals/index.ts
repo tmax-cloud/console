@@ -11,3 +11,6 @@ export const configureClusterNodesModal = (props) =>
     import('./configure-count-modal' /* webpackChunkName: "configure-cluster-nodes-modal" */).then((m) =>
         m.configureClusterNodesModal(props),
     );
+
+export const integrationConfigRequestModal = (props) =>
+    import('./request-modal' /* webpackChunkName: "request-modal" */).then((m) => m.requestModal(props));

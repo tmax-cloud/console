@@ -240,6 +240,8 @@ $catalog-tile-width: $co-m-catalog-tile-width;
 
   &__overlay-body {
     margin: 0;
+    position:absolute;
+    width: 100%;
     padding-left: var(--pf-global--spacer--lg);
     padding-right: var(--pf-global--spacer--lg);
     padding-top: var(--pf-global--spacer--md);

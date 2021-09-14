@@ -108,6 +108,7 @@ export interface Pipeline extends K8sResourceKind {
     tasks: PipelineTask[];
     serviceAccountName?: string;
   };
+  metadata?: any;
 }
 
 export type TaskRunKind = { pipelineTaskName?: string } & K8sResourceKind;
