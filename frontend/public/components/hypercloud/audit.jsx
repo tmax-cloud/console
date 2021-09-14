@@ -538,102 +538,105 @@ class AuditPage_ extends React.Component {
   }
 }
 
-class AuditList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filteredEvents: [],
-      items: [],
-    };
+const AuditList = withTranslation()(
+  class AuditList extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        filteredEvents: [],
+        items: [],
+      };
 
-    this.rowRenderer = function rowRenderer({ index, style, key }) {
-      const event = this.state.filteredEvents[index];
-      return <SysEvent {...event} key={key} style={style} index={index} />;
-    }.bind(this);
-  }
+      this.rowRenderer = function rowRenderer({ index, style, key }) {
+        const event = this.state.filteredEvents[index];
+        return <SysEvent {...event} key={key} style={style} index={index} />;
+      }.bind(this);
+    }
 
-  static filterEvents(messages, { textFilter }) {
-    const words = _.uniq(_.toLower(textFilter).match(/\S+/g)).sort((a, b) => {
-      // Sort the longest words first.
-      return b.length - a.length;
-    });
+    static filterEvents(messages, { textFilter }) {
+      const words = _.uniq(_.toLower(textFilter).match(/\S+/g)).sort((a, b) => {
+        // Sort the longest words first.
+        return b.length - a.length;
+      });
 
-    const textMatches = obj => {
-      if (_.isEmpty(words)) {
+      const textMatches = obj => {
+        if (_.isEmpty(words)) {
+          return true;
+        }
+        const message = _.get(obj, 'responseStatus.message', '');
+        return _.every(words, word => message.indexOf(word) !== -1);
+      };
+
+      const f = obj => {
+        if (!textMatches(obj)) {
+          return false;
+        }
         return true;
-      }
-      const message = _.get(obj, 'responseStatus.message', '');
-      return _.every(words, word => message.indexOf(word) !== -1);
-    };
+      };
 
-    const f = obj => {
-      if (!textMatches(obj)) {
-        return false;
-      }
-      return true;
-    };
-
-    return _.filter(messages, f);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { textFilter, filteredEvents, items } = prevState;
-
-    if (textFilter === nextProps.textFilter && filteredEvents === nextProps.data) {
-      return {};
+      return _.filter(messages, f);
     }
 
-    return {
-      filteredEvents: AuditList.filterEvents(nextProps.data, nextProps),
-      items: AuditList.filterEvents(nextProps.data, nextProps).map((item, index) => <SysEvent {...item} key={index} index={index} />),
-      textFilter: nextProps.textFilter,
-    };
-  }
+    static getDerivedStateFromProps(nextProps, prevState) {
+      const { textFilter, filteredEvents, items } = prevState;
 
-  // componentDidMount() {
-  //   super.componentDidMount();
-  // }
+      if (textFilter === nextProps.textFilter && filteredEvents === nextProps.data) {
+        return {};
+      }
 
-  // componentWillUnmount() {
-  //   super.componentWillUnmount();
-  // }
-
-  render() {
-    const { items } = this.state;
-
-    let count;
-    if (this.state.filteredEvents) {
-      count = this.state.filteredEvents.length;
-    } else {
-      count = 0;
+      return {
+        filteredEvents: AuditList.filterEvents(nextProps.data, nextProps),
+        items: AuditList.filterEvents(nextProps.data, nextProps).map((item, index) => <SysEvent {...item} key={index} index={index} />),
+        textFilter: nextProps.textFilter,
+      };
     }
-    const noEvents = count === 0;
-    let sysEventStatus;
-    if (noEvents) {
-      sysEventStatus = (
-        <Box className="co-sysevent-stream__status-box-empty">
-          <div className="text-center cos-status-box__detail">로그가 없습니다. </div>
-        </Box>
+
+    // componentDidMount() {
+    //   super.componentDidMount();
+    // }
+
+    // componentWillUnmount() {
+    //   super.componentWillUnmount();
+    // }
+
+    render() {
+      const { items } = this.state;
+      const { t } = this.props;
+
+      let count;
+      if (this.state.filteredEvents) {
+        count = this.state.filteredEvents.length;
+      } else {
+        count = 0;
+      }
+      const noEvents = count === 0;
+      let sysEventStatus;
+      if (noEvents) {
+        sysEventStatus = (
+          <Box className="co-sysevent-stream__status-box-empty">
+            <div className="text-center cos-status-box__detail">{t('COMMON:MSG_COMMON_NOTIFICATIONS_1')}</div>
+          </Box>
+        );
+      }
+
+      const klass = classNames('co-sysevent-stream__timeline co-sysevent-audit__timeline', {
+        'co-sysevent-stream__timeline--empty': !count,
+      });
+
+      const len = `${items.length * 110 + 51}px`;
+      const timelineLen = `${items.length * 110 - 110}px`;
+      return (
+        <div className="co-m-pane__body" style={{ border: 'none' }}>
+          <div className="co-sysevent-stream co-sysevent-audit" style={{ height: len }}>
+            <div className={klass} style={{ marginLeft: 0, height: timelineLen }}></div>
+            {items !== undefined && items}
+            {sysEventStatus}
+          </div>
+        </div>
       );
     }
-
-    const klass = classNames('co-sysevent-stream__timeline co-sysevent-audit__timeline', {
-      'co-sysevent-stream__timeline--empty': !count,
-    });
-
-    const len = `${items.length * 110 + 51}px`;
-    const timelineLen = `${items.length * 110 - 110}px`;
-    return (
-      <div className="co-m-pane__body" style={{ border: 'none' }}>
-        <div className="co-sysevent-stream co-sysevent-audit" style={{ height: len }}>
-          <div className={klass} style={{ marginLeft: 0, height: timelineLen }}></div>
-          {items !== undefined && items}
-          {sysEventStatus}
-        </div>
-      </div>
-    );
-  }
-}
+  },
+);
 
 AuditList.propTypes = {
   textFilter: PropTypes.string,
