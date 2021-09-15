@@ -5,10 +5,10 @@ metadata:
   name: traefik-forward-auth
   namespace: api-gateway-system
 data:
-  INSECURE_COOKIE: 'false'
-  COOKIE_DOMAIN: "hypercloud.com"
+  INSECURE_COOKIE: 'true'
+  COOKIE_DOMAIN: "dashboard.hypercloud.com"
   DOMAINS: "hypercloud.com"
-  AUTH_HOST: "auth.hypercloud.com"
+  AUTH_HOST: "dashboard.hypercloud.com"
   URL_PATH: "/_oauth"
   DEFAULT_PROVIDER: oidc
   PROVIDERS_OIDC_ISSUER_URL: https://hyperauth.org/auth/realms/tmax

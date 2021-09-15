@@ -2,22 +2,22 @@
 #
 # Auth Ingress
 #
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: traefik-forward-auth
-  namespace: api-gateway-system
-  labels:
-    app: traefik-forward-auth
-spec:
-  entryPoints:
-    - websecure
-  routes:
-  - match: Host(`auth.hypercloud.com`)
-    kind: Rule
-    services:
-    - name: traefik-forward-auth
-      namespace: api-gateway-system
-      port: 4181
-  tls:
-    secretName: api-gateway-server-tls
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: traefik-forward-auth
+#   namespace: api-gateway-system
+#   labels:
+#     app: traefik-forward-auth
+# spec:
+#   entryPoints:
+#     - websecure
+#   routes:
+#   - match: Host(`auth.hypercloud.com`)
+#     kind: Rule
+#     services:
+#     - name: traefik-forward-auth
+#       namespace: api-gateway-system
+#       port: 4181
+#   tls:
+#     secretName: api-gateway-server-tls

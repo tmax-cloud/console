@@ -28,6 +28,24 @@ spec:
           protocol: TCP
           name: http
         env:
+            - name: LOG_LEVEL
+              value: debug
+            # - name: LOGOUT_REDIRECT
+            #   value: /_oauth/logout
+            # - name: DOMAIN
+            #   value: dashboard.hypercloud.com
+            # - name: INSECURE_COOKIE
+            #   value: "true"
+            # - name: COOKIE_DOMAIN
+            #   value: dashboard.hypercloud.com
+            - name: DEFAULT_PROVIDER
+              value: oidc
+            - name: PROVIDERS_OIDC_ISSUER_URL
+              value: https://hyperauth.org/auth/realms/tmax
+            - name: PROVIDERS_OIDC_CLIENT_ID
+              value: traefik 
+            # - name: DEFAULT_ACTION
+            #   value: auth               
             - name: PROVIDERS_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -38,43 +56,28 @@ spec:
                 secretKeyRef:
                   name: traefik-forward-auth
                   key: SECRET
-            - name: DEFAULT_PROVIDER
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: DEFAULT_PROVIDER
-            - name: PROVIDERS_OIDC_ISSUER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: PROVIDERS_OIDC_ISSUER_URL
-            - name: PROVIDERS_OIDC_CLIENT_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: PROVIDERS_OIDC_CLIENT_ID
-            - name: INSECURE_COOKIE
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: INSECURE_COOKIE
-            - name: COOKIE_DOMAIN
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: COOKIE_DOMAIN
-            - name: DOMAINS
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: DOMAINS
-            - name: AUTH_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: AUTH_HOST
-            - name: URL_PATH
-              valueFrom:
-                configMapKeyRef:
-                  name: traefik-forward-auth
-                  key: URL_PATH
+            # - name: DEFAULT_PROVIDER
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: traefik-forward-auth
+            #       key: DEFAULT_PROVIDER
+            # - name: PROVIDERS_OIDC_ISSUER_URL
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: traefik-forward-auth
+            #       key: PROVIDERS_OIDC_ISSUER_URL
+            # - name: PROVIDERS_OIDC_CLIENT_ID
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: traefik-forward-auth
+            #       key: PROVIDERS_OIDC_CLIENT_ID
+            # - name: AUTH_HOST
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: traefik-forward-auth
+            #       key: AUTH_HOST
+            # - name: URL_PATH
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: traefik-forward-auth
+            #       key: URL_PATH
