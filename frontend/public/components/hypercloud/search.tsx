@@ -42,7 +42,7 @@ interface DispatchProps {
 const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props => {
   const { t } = useTranslation();
   const [selectedItems, setSelectedItems] = React.useState(new Set<string>([]));
-  const [collapsedKinds, setCollapsedKinds] = React.useState(new Set<string>([]));
+  const [expendedKind, setExpendedKind] = React.useState('');
   const [labelFilter, setLabelFilter] = React.useState([]);
   const [labelFilterInput, setLabelFilterInput] = React.useState('');
   const [typeaheadNameFilter, setTypeaheadNameFilter] = React.useState('');
@@ -74,6 +74,7 @@ const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props =>
     updateItems.has(selection) ? updateItems.delete(selection) : updateItems.add(selection);
     setSelectedItems(updateItems);
     setQueryArgument('kind', [...updateItems].join(','));
+    toggleKindExpanded(selection);
   };
 
   const updateNewItems = (filter: string, { key }: DataToolbarChip) => {
@@ -86,6 +87,7 @@ const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props =>
   const clearSelectedItems = () => {
     setSelectedItems(new Set([]));
     setQueryArgument('kind', '');
+    toggleKindExpanded('');
   };
 
   const clearNameFilter = () => {
@@ -105,9 +107,7 @@ const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props =>
   };
 
   const toggleKindExpanded = (kindView: string) => {
-    const newCollasped = new Set(collapsedKinds);
-    newCollasped.has(kindView) ? newCollasped.delete(kindView) : newCollasped.add(kindView);
-    setCollapsedKinds(newCollasped);
+    expendedKind === kindView ? setExpendedKind('') : setExpendedKind(kindView);
   };
 
   const updateNameFilter = (value: string) => {
@@ -191,7 +191,7 @@ const SearchPage_: React.FC<SearchProps & StateProps & DispatchProps> = props =>
       <div className="co-search">
         <Accordion className="co-search__accordion" asDefinitionList={false} noBoxShadow>
           {[...selectedItems].map(resource => {
-            const isCollapsed = collapsedKinds.has(resource);
+            const isCollapsed = expendedKind !== resource;
             return (
               <AccordionItem key={resource}>
                 <AccordionToggle className="co-search-group__accordion-toggle" onClick={() => toggleKindExpanded(resource)} isExpanded={!isCollapsed} id={`${resource}-toggle`}>

@@ -22,7 +22,8 @@ const NamespaceOverview = props => {
       href: props.match.url.slice(-1) !== '/' ? `${props.match.url}/details` : `${props.match.url}details`,
       name: props.obj.metadata.name,
       requester: props.obj.metadata?.annotations?.creator,
-      label: props.obj.metadata?.labels?.fromClaim,
+      label: props.obj.metadata?.labels,
+      kind: props.obj.kind,
     },
   };
 
