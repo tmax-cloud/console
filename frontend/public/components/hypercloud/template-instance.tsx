@@ -20,7 +20,7 @@ export const templateInstanceMenuActions = [...Kebab.getExtensionsActionsForKind
 
 const templateObjectsSummary = templateinstance => {
   // NOTE: template instance가 cluster/namespace 스코프에 따라 objects 정보의 위치가 달라서 분기처리함
-  const objects = !!templateinstance.spec?.clustertemplate?.objects ? templateinstance.spec.clustertemplate.objects : !!templateinstance.spec?.template?.objects ? templateinstance.spec.template.objects : [];
+  const objects = !!templateinstance.status?.clustertemplate?.objects ? templateinstance.status.clustertemplate.objects : !!templateinstance.status?.template?.objects ? templateinstance.status.template.objects : [];
   let objMap = new Map();
   for (const i in objects) {
     const kind = !!objects[i].kind ? objects[i].kind : 'unknown kind';

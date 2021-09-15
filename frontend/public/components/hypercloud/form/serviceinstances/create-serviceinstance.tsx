@@ -92,7 +92,7 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
     parameters.push(
       <ul>
         <Section label={key} id={key} description={value.description} isRequired={selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key)}>
-          <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} />
+          <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed}/>
         </Section>
       </ul>,
     );
