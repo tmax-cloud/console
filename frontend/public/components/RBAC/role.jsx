@@ -8,7 +8,7 @@ import { sortable } from '@patternfly/react-table';
 import { flatten as bindingsFlatten } from './bindings';
 import { BindingName, BindingsList, RulesList } from './index';
 import { DetailsPage, MultiListPage, TextFilter, Table, TableRow, TableData } from '../factory';
-import { Kebab, SectionHeading, MsgBox, navFactory, ResourceKebab, ResourceLink, Timestamp } from '../utils';
+import { Kebab, SectionHeading, EmptyBox, navFactory, ResourceKebab, ResourceLink, Timestamp } from '../utils';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
@@ -234,7 +234,7 @@ export const ClusterRolesDetailsPage = RolesDetailsPage;
 
 const EmptyMsg = () => {
   const { t } = useTranslation();
-  return <MsgBox title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: ResourceLabel(RoleModel, t) })} />;
+  return <EmptyBox label={ResourceLabel(RoleModel, t) } />;
 };
 
 const RolesList = props => {
