@@ -6,15 +6,16 @@ metadata:
 spec:
   entryPoints:
   - websecure
+  - web
   routes:
   - kind: Rule
-    match: PathPrefix(`/api/prometheus/api`) || PathPrefix(`/api/prometheus\-tenancy/api`)
+    match: (PathPrefix(`/api/prometheus/api`) || PathPrefix(`/api/prometheus\-tenancy/api`)) && Host(`console.hypercloud.com`)
     priority: 100                      
     middlewares:
     - name: monitoring-stripprefix
       namepsace: api-gateway-system    
-    - name: jwt-decode-auth
-      namespace: default
+    # - name: jwt-decode-auth
+    #   namespace: default
     services:
     - kind: Service
       name: prometheus-k8s
@@ -22,7 +23,7 @@ spec:
       port: web
       scheme: http
   - kind: Rule
-    match: PathPrefix(`/api/alertmanager/api`)
+    match: PathPrefix(`/api/alertmanager/api`) && Host(`console.hypercloud.com`) 
     priority: 100                       
     middlewares:
     - name: monitoring-stripprefix
@@ -33,7 +34,9 @@ spec:
       namespace: monitoring 
       port: web
       scheme: http
-  tls: {}
+  tls: 
+    secretName: api-gateway-server-tls
+    # tls: {}
 
 ---
 
@@ -46,7 +49,7 @@ spec:
   stripPrefix:
     prefixes:
       - "/api/prometheus"
-      - "/api/prometheus-tenancy"
+      - "/api/prometheus\\-tenancy"
       - "/api/alertmanager"
     forceSlash: true
     

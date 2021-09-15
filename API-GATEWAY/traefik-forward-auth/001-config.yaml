@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-forward-auth
+  namespace: api-gateway-system
+data:
+  INSECURE_COOKIE: 'false'
+  COOKIE_DOMAIN: "hypercloud.com"
+  DOMAINS: "hypercloud.com"
+  AUTH_HOST: "auth.hypercloud.com"
+  URL_PATH: "/_oauth"
+  DEFAULT_PROVIDER: oidc
+  PROVIDERS_OIDC_ISSUER_URL: https://hyperauth.org/auth/realms/tmax
+  PROVIDERS_OIDC_CLIENT_ID: traefik
+
+
+  
+  # https://hyperauth.org/auth/realms/tmax/protocol/openid-connect/auth?client_id=traefik&redirect_uri=https%3A%2F%2Fauth.hypercloud.com%2F_oauth&response_type=code&scope=openid+profile+email&state=d593e49b9ad95e4bb8125155ae86f3d0%3Aoidc%3Ahttps%3A%2F%2Fdashboard.hypercloud.com%3A9000%2F

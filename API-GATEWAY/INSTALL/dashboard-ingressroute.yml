@@ -1,0 +1,47 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard-ingressroute
+  namespace: api-gateway-system
+spec:
+  entryPoints:
+  - traefik
+  routes:
+  - match: (PathPrefix(`/api`) || PathPrefix(`/dashboard`) || PathPrefix(`/`)) && Host(`dashboard.hypercloud.com`)
+    kind: Rule
+    services:
+    - name: api@internal
+      kind: TraefikService
+    middlewares:
+      # - name: dashboard-auth
+      #   namepsace: api-gateway-system
+      - name: traefik-forward-auth
+        namepsace: api-gateway-system
+    # - name: jwt-decode-auth
+    #   namespace: default        
+  # tls: {}
+  tls:
+    secretName: api-gateway-server-tls
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: dashboard-auth
+  namespace: api-gateway-system
+spec:
+  basicAuth:
+    secret: dashboard-secret # Kubernetes secret named "secretName"
+
+---
+
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: dashboard-secret
+#   namespace: api-gateway-system
+# data:
+#   # admin/admin
+#   users: |2
+#     YWRtaW46JGFwcjEkMHVOT1Qzc0MkWXovQ1pVdW1ZZTRtS0JTT1c1Yi81MAoK
+  

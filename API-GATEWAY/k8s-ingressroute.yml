@@ -26,5 +26,7 @@ spec:
       port: https
       scheme: https
       serversTransport: insecure-transport 
-  tls: {}
+  tls:
+    secretName: api-gateway-cert-tls      
+  # tls: {}
 ---

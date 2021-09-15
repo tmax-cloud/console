@@ -7,6 +7,7 @@ metadata:
 spec:
   entryPoints:
   - websecure
+  - web
   routes:
   - kind: Rule
     match: PathPrefix(`/api/kubernetes`)
@@ -21,7 +22,8 @@ spec:
       port: https
       scheme: https
       serversTransport: insecure-transport 
-  tls: {}
+  tls: 
+    secretName: api-gateway-server-tls
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -33,4 +35,4 @@ spec:
   stripPrefix:
     prefixes:
       - "/api/kubernetes"
-    # forceSlash: true
+    forceSlash: true

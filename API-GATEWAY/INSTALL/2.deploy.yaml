@@ -30,14 +30,15 @@ spec:
       containers:
       - args:
         - --entryPoints.traefik.address=:9000
-        - --entryPoints.web.address=:8000
-        - --entryPoints.websecure.address=:8443
+        - --entryPoints.web.address=:80
+        - --entryPoints.websecure.address=:443
         - --entryPoints.k8s.address=:6443
-        - --serverstransport.insecureskipverify=true
+        - --serverstransport.insecureskipverify=true # disables SSL certificate verification. (verify ssl certificate beween traefik - backend)
         # Uncomment the below lines to redirect http requests to https.
+        - --entryPoints.web.http.redirections.entrypoint.to=websecure
         - --entryPoints.web.http.redirections.entrypoint.scheme=https
         - --api=true 
-        - --api.dashboard=true
+        # - --api.dashboard=true
         - --ping=true
         # - --ping.entrypoint=traefik
         - --providers.kubernetesingress=true
@@ -76,10 +77,10 @@ spec:
         - containerPort: 9000
           name: traefik
           protocol: TCP
-        - containerPort: 8000
+        - containerPort: 80
           name: web
           protocol: TCP
-        - containerPort: 8443
+        - containerPort: 443
           name: websecure
           protocol: TCP
         - containerPort: 6443
@@ -96,14 +97,15 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
         resources: {}
-        securityContext:
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
+        ## securtContext를 아래와같이하면 80,433 port 이용 못함 2021/09/15 07:35:02 traefik.go:81: command traefik error: error while building entryPoint web: error preparing server: error opening listener: listen tcp :80: bind: permission denied
+        # securityContext:
+        #   capabilities:
+        #     drop:
+        #     - ALL
+        #   readOnlyRootFilesystem: true
+        #   runAsGroup: 65532
+        #   runAsNonRoot: false
+        #   runAsUser: 65532
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
@@ -115,8 +117,8 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext:
-        fsGroup: 65532
+      # securityContext:
+      #   fsGroup: 65532
       serviceAccount: api-gateway
       serviceAccountName: api-gateway
       terminationGracePeriodSeconds: 60

@@ -6,9 +6,11 @@ metadata:
 spec:
   entryPoints:
   - websecure
+  - web
   routes:
   - kind: Rule
-    match: PathPrefix(`/api/hypercloud`) || PathPrefix(`/api/multi-hypercloud`) || PathPrefix(`/api/webhook`)
+    match: (PathPrefix(`/api/hypercloud`) || PathPrefix(`/api/multi-hypercloud`) || PathPrefix(`/api/webhook`)) && Host(`console.hypercloud.com`)
+    priority: 100    
     middlewares:
     - name: hypercloud-stripprefix
       namepsace: api-gateway-system    
@@ -19,7 +21,8 @@ spec:
       port: https
       scheme: https
       serversTransport: insecure-transport 
-  tls: {}
+  tls:
+    secretName: api-gateway-server-tls
 
 ---
 
