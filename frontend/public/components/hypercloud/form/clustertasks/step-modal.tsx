@@ -108,9 +108,9 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
-        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={'키'} />
+        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
         <span style={{ margin: '0 5px' }}>=</span>
-        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={'값'} />
+        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
