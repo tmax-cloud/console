@@ -30,7 +30,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.management,
-    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.CustomResourceDefinitionModel.kind],
+    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.CustomResourceDefinitionModel.kind, Models.PodSecurityPolicyModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -40,7 +40,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
-    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind, Models.PodSecurityPolicyModel.kind],
+    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind],
   },
 ];
 
