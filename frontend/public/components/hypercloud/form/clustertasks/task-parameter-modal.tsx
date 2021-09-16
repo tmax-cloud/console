@@ -83,7 +83,7 @@ export const TaskParameterModal: React.FC<TaskParameterModalProps> = ({ methods,
       )}
       {type === 'array' && (
         <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_24')} id="taskparameter_default" description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_25')}>
-          <ListView name="defaultArr" methods={methods} addButtonText="추가" headerFragment={<></>} itemRenderer={defaultListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.defaultArr) : []} />
+          <ListView name="defaultArr" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={defaultListItemRenderer} defaultItem={{ value: '' }} defaultValues={modalType === 'modify' ? _.cloneDeep(template.defaultArr) : []} />
         </Section>
       )}
     </>
