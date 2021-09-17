@@ -9,7 +9,23 @@ spec:
   - web
   routes:
   - kind: Rule
-    match: (PathPrefix(`/api/prometheus/api`) || PathPrefix(`/api/prometheus\-tenancy/api`)) && Host(`console.hypercloud.com`)
+    # match: (PathPrefix(`/api/prometheus/api`) || PathPrefix(`/api/prometheus-tenancy/api`)) && Host(`console.hypercloud.com`)
+    match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`console.hypercloud.com`)
+    priority: 100                      
+    middlewares:
+    - name: monitoring-stripprefix-tenancy
+      namepsace: api-gateway-system    
+    # - name: jwt-decode-auth
+    #   namespace: default
+    services:
+    - kind: Service
+      name: prometheus-k8s
+      namespace: monitoring
+      port: web
+      scheme: http
+  - kind: Rule
+    # match: (PathPrefix(`/api/prometheus/api`) || PathPrefix(`/api/prometheus-tenancy/api`)) && Host(`console.hypercloud.com`)
+    match: PathPrefix(`/api/prometheus/api`) && Host(`console.hypercloud.com`)
     priority: 100                      
     middlewares:
     - name: monitoring-stripprefix
@@ -21,7 +37,7 @@ spec:
       name: prometheus-k8s
       namespace: monitoring
       port: web
-      scheme: http
+      scheme: http      
   - kind: Rule
     match: PathPrefix(`/api/alertmanager/api`) && Host(`console.hypercloud.com`) 
     priority: 100                       
@@ -49,7 +65,17 @@ spec:
   stripPrefix:
     prefixes:
       - "/api/prometheus"
-      - "/api/prometheus\\-tenancy"
       - "/api/alertmanager"
-    forceSlash: true
+    # forceSlash: true
     
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: monitoring-stripprefix-tenancy
+  namespace: api-gateway-system
+spec:
+  stripPrefix:
+    prefixes:
+      - "/api/prometheus-tenancy"

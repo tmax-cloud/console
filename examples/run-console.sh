@@ -32,7 +32,7 @@ KIALI='kiali.istio-system.172.21.4.152.nip.io'
 KUBEFLOW_IP='192.168.9.141'
 # KUBEFLOW_PORT='80' 
 
-./bin/console gateway \
+./bin/console server \
     --listen=https://$myIP:9000 \
     --base-address=https://$myIP:9000 \
     --dynamic-file=./configs/dynamic-config.yaml \
@@ -41,7 +41,7 @@ KUBEFLOW_IP='192.168.9.141'
     --redirect-port=8080 \
     --keycloak-realm=tmax \
     --keycloak-auth-url=https://hyperauth.org/auth \
-    --keycloak-client-id=ck-integration-hypercloud5 \
+    --keycloak-client-id=hypercloud5 \
     --k8s-endpoint=https://$k8sIP:6443 \
     --hypercloud-endpoint=https://$k8sIP:$HC_PORT/ \
     --multi-hypercloud-endpoint=https://$k8sIP:$MHC_PORT/ \

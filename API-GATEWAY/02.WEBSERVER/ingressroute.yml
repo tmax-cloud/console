@@ -1,0 +1,87 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: console-ingressroute
+  namespace: api-gateway-system
+spec:
+  entryPoints:
+  - websecure
+  - web
+  routes:
+  - kind: Rule
+    # match: Host(`console.console-system.traefik`)
+    # match: Host(`console.console-system.svc`) && (PathPrefix(`/`) || PathPrefix(`/static/`) || PathPrefix(`/api/resource/`) || PathPrefix(`/api/`))
+    match: (PathPrefix(`/`) || PathPrefix(`/static/`) || PathPrefix(`/api/resource/`) || PathPrefix(`/api/`)) && Host(`console.hypercloud.com`)
+    priority: 10
+    # middlewares:
+    # - name: console-stripprefix 
+    #   namespace: api-gateway-system
+    services:
+    - name: console
+      namespace: api-gateway-system
+      port: https
+      scheme: https
+      serversTransport: insecure-transport
+  tls:
+    secretName: api-gateway-server-tls
+    # secretName: console-tls
+    # secretName: console-https-secret
+    # {}
+
+# --- 
+
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: ServersTransport
+# metadata:
+#   name: insecure-transport
+#   namespace: api-gateway-system
+
+# spec:
+#   # serverName: api-gateway
+#   insecureSkipVerify: true
+
+---
+
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: console-stripprefix
+#   namespace: api-gateway-system
+# spec:
+#   stripPrefix:
+#     prefixes:
+#       - "/api/hypercloud"
+#       - "/api/multi-hypercloud"
+#       - "/api/webhook"
+#     forceSlash: true
+
+
+# --- 
+
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   annotations:
+#     kubectl.kubernetes.io/last-applied-configuration: |
+#       {"apiVersion":"traefik.containo.us/v1alpha1","kind":"IngressRoute","metadata":{"annotations":{},"name":"console-ingressroute","namespace":"console-system"},"spec":{"entryPoints":["websecure"],"routes":[{"kind":"Rule","match":"PathPrefix(`/`) || PathPrefix(`/static/`) || PathPrefix(`/api/resource/`) || PathPrefix(`/api/`)","services":[{"name":"console","namespace":"console-system","port":"https","scheme":"https","serversTransport":"insecure-transport"}]}],"tls":{}}}
+#   creationTimestamp: "2021-09-01T02:17:26Z"
+#   generation: 52
+#   name: console-ingressroute
+#   namespace: console-system
+#   resourceVersion: "151830662"
+#   selfLink: /apis/traefik.containo.us/v1alpha1/namespaces/console-system/ingressroutes/console-ingressroute
+#   uid: 56978865-5708-455c-ab8f-df4c3bfcdbf4
+# spec:
+#   entryPoints:
+#   - websecure
+#   routes:
+#   - kind: Rule
+#     match: PathPrefix(`/`) || PathPrefix(`/static/`) || PathPrefix(`/api/resource/`)
+#       || PathPrefix(`/api/`)
+#     services:
+#     - name: console
+#       namespace: console-system
+#       port: https
+#       scheme: https
+#       serversTransport: insecure-transport
+#   tls: {}

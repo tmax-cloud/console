@@ -10,7 +10,7 @@ spec:
   - web
   routes:
   - kind: Rule
-    match: PathPrefix(`/api/kubernetes`)
+    match: PathPrefix(`/api/kubernetes`) && Host(`console.hypercloud.com`)
     priority: 100    
     middlewares:
     - name: kubernetes-stripprefix
