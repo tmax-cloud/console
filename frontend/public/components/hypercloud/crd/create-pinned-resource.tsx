@@ -31,7 +31,7 @@ export const OnlyYamlEditorKinds = [
   models.ClusterTemplateModel.kind,
   models.AWXModel.kind,
   models.ClusterServiceBrokerModel.kind,
-  models.ServiceBindingModel.kind,
+  models.ServiceBrokerModel.kind,
   models.FederatedConfigMapModel.kind,
   models.FederatedDeploymentModel.kind,
   models.FederatedHPAModel.kind,
