@@ -8,7 +8,7 @@ import { sortable } from '@patternfly/react-table';
 import { flatten as bindingsFlatten } from './bindings';
 import { BindingName, BindingsList, RulesList } from './index';
 import { DetailsPage, MultiListPage, TextFilter, Table, TableRow, TableData } from '../factory';
-import { Kebab, SectionHeading, MsgBox, navFactory, ResourceKebab, ResourceLink, Timestamp } from '../utils';
+import { Kebab, SectionHeading, EmptyBox, navFactory, ResourceKebab, ResourceLink, Timestamp } from '../utils';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 
@@ -232,7 +232,10 @@ export const RolesDetailsPage = props => {
 
 export const ClusterRolesDetailsPage = RolesDetailsPage;
 
-const EmptyMsg = () => <MsgBox title="No Roles Found" detail="Roles grant access to types of objects in the cluster. Roles are applied to a team or user via a Role Binding." />;
+const EmptyMsg = () => {
+  const { t } = useTranslation();
+  return <EmptyBox label={ResourceLabel(RoleModel, t) } />;
+};
 
 const RolesList = props => {
   const { t } = useTranslation();
