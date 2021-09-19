@@ -16,6 +16,7 @@ spec:
     # middlewares:
     # - name: console-stripprefix 
     #   namespace: api-gateway-system
+    # - name: api-gateway-system-console-stripprefix@kubernetescrd (이것도 가능) 
     services:
     - name: console
       namespace: console-system
