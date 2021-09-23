@@ -57,6 +57,7 @@ export const basicMenusFactory = perspective => {
               }
               case MenuType.SEPERATOR:
                 return <Separator name="seperator" key={`seperator-${index}`} />;
+              case MenuType.NEW_TAB_LINK:
               case MenuType.REGISTERED_MENU: {
                 return generateMenu(perspective, menuData, false, t, i18n);
               }
@@ -91,6 +92,7 @@ export const dynamicMenusFactory = (perspective, data) => {
               }
               case MenuType.SEPERATOR:
                 return <Separator name={menuData.label || ''} key={`seperator-${index}`} />;
+              case MenuType.NEW_TAB_LINK:
               case MenuType.REGISTERED_MENU: {
                 return generateMenu(perspective, menuData, false, t, i18n);
               }
@@ -128,6 +130,22 @@ const generateMenu = (perspective, data, isInnerMenu, t: TFunction, i18n: i18n) 
   const menuType = typeof data === 'string' ? kind : data.menuType || '';
   if (isInnerMenu && menuType === MenuType.SEPERATOR) {
     return <Separator name="seperator" />;
+  } else if (menuType === MenuType.NEW_TAB_LINK) {
+    const label = data.label || "empty"
+    const menuInfo = {
+      visible: true,
+      type: MenuLinkType.NewTabLink,
+      defaultLabel: label,
+      url: data.linkUrl,
+      isMultiOnly: false,
+    };
+    return isInnerMenu ? (
+      getMenuComponent(menuInfo, label)
+    ) : (
+      <NavSection title={label} isSingleChild={true}>
+        {getMenuComponent(menuInfo, label)}
+      </NavSection>
+    );
   } else {
     if (!!modelFor(kind)) {
       const model = modelFor(kind);

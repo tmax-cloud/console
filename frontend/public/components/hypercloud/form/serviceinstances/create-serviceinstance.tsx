@@ -11,6 +11,7 @@ import { Section } from '../../utils/section';
 import { history, /*resourceObjPath, ButtonBar, */ LoadingInline, ResourceIcon, resourceObjPath, SelectorInput } from '../../../utils';
 import { TextInput } from '../../utils/text-input';
 import { RadioGroup } from '../../utils/radio';
+import { ErrorMessage } from '../../../utils/button-bar';
 import { DevTool } from '@hookform/devtools';
 //import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -84,7 +85,7 @@ const SelectServicePlanComponent = ({ loaded, servicePlanList, defaultPlan }) =>
   );
 };
 
-const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
+const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue, errorMsg }) => {
   const { control } = useFormContext();
   //const { t } = useTranslation();
   const parameters = [];
@@ -92,7 +93,7 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
     parameters.push(
       <ul>
         <Section label={key} id={key} description={value.description} isRequired={selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key)}>
-          <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed}/>
+          <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed} />
         </Section>
       </ul>,
     );
@@ -117,6 +118,7 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
       <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV2_3')} id="label" description={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV2_5')}>
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={_.isEmpty(defaultValue?.metadata?.labels) ? [] : defaultValue?.metadata?.labels} defaultValue={defaultValue?.metadata?.labels} />
       </Section>
+      {!!errorMsg && <ErrorMessage message={errorMsg} />}
     </>
   );
 };
@@ -128,6 +130,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   const [servicePlanList, setServicePlanList] = React.useState([]);
   const [selectedPlan, setSelectedPlan] = React.useState(-1);
   const [data, setData] = React.useState<K8sResourceKind>();
+  const [error, setError] = React.useState('');
 
   const { namespace, serviceClassName, isClusterServiceClass } = React.useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -156,7 +159,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
   const steps = [
     { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV1_1'), component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_5') },
-    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0 },
+    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} errorMsg={error} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0 },
   ];
 
   return (
@@ -176,6 +179,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
         </div>
         <div className="co-m-page__body">
           <Wizard
+            className="hc-create-service-instance__wizard"
             key="service-instance-wizard"
             isInPage
             isFullHeight
@@ -217,7 +221,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
                   history.push(resourceObjPath(submitData, referenceFor(ServiceInstanceModel)));
                 })
                 .catch(e => {
-                  console.error(e.message);
+                  setError(e.message);
                 });
             }}
           />
