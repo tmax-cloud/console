@@ -16,7 +16,7 @@ const injectDisabled = (children, disabled) => {
   });
 };
 
-const ErrorMessage = ({ message }) => (
+export const ErrorMessage = ({ message }) => (
   <Alert
     isInline
     className="co-alert co-alert--scrollable"
