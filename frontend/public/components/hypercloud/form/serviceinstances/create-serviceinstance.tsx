@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 const Description = ({ spec }) => {
   const { t } = useTranslation();
   const [extraInfoOpened, setExtraInfoOpened] = React.useState(false);
-  let showCostSection = !!spec.externalMetadata?.costs ? true : false;
+  let showCostSection = !!spec.externalMetadata?.costs;
   if (spec.free) {
     showCostSection = false;
   }
