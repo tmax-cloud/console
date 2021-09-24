@@ -13,12 +13,15 @@ import { TextInput } from '../../utils/text-input';
 import { RadioGroup } from '../../utils/radio';
 import { ErrorMessage } from '../../../utils/button-bar';
 import { DevTool } from '@hookform/devtools';
-//import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 const Description = ({ spec }) => {
   const { t } = useTranslation();
   const [extraInfoOpened, setExtraInfoOpened] = React.useState(false);
+  let showCostSection = !!spec.externalMetadata?.costs ? true : false;
+  if (spec.free) {
+    showCostSection = false;
+  }
   const parameters = [];
   _.forEach(spec.instanceCreateParameterSchema.properties, (value, key) => {
     parameters.push(<li key={key}>{`${key}: ${value.default}`}</li>);
@@ -27,13 +30,15 @@ const Description = ({ spec }) => {
   return (
     <div className="hc-create-service-instance__plan-desc">
       <span>{spec.description}</span>
-      <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_2')} id="bullets">
-        <div className="hc-create-service-instance__plan-bullets">
-          {spec.externalMetadata.bullets?.map(bullet => (
-            <li>{bullet}</li>
-          ))}
-        </div>
-      </Section>
+      {spec.externalMetadata?.bullets?.length > 0 && (
+        <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_2')} id="bullets">
+          <div className="hc-create-service-instance__plan-bullets">
+            {spec.externalMetadata.bullets.map(bullet => (
+              <li>{bullet}</li>
+            ))}
+          </div>
+        </Section>
+      )}
       <Button variant="plain" className="pf-m-link--align-left hc-create-service-instance__plan-extra-info__more" type="button" onClick={() => setExtraInfoOpened(!extraInfoOpened)}>
         <span>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_11')}</span>
         {extraInfoOpened ? <AngleUpIcon /> : <AngleDownIcon />}
@@ -45,10 +50,11 @@ const Description = ({ spec }) => {
               <div className="hc-create-service-instance__plan-parameters">{parameters}</div>
             </Section>
           )}
-
-          <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_4')} id="bullets">
-            <span className="hc-create-service-instance__plan-costs">{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
-          </Section>
+          {showCostSection && (
+            <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_4')} id="bullets">
+              <span className="hc-create-service-instance__plan-costs">{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
+            </Section>
+          )}
         </div>
       ) : (
         false
