@@ -5,6 +5,7 @@ export const CMP_PRIMARY_KEY = 'primary';
 export enum MenuType {
   CONTAINER = 'CONTAINER',
   REGISTERED_MENU = 'REGISTERED_MENU',
+  NEW_TAB_LINK = 'NEW_TAB_LINK',
   SEPERATOR = 'SEPERATOR',
 }
 
