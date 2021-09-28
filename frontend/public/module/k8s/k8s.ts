@@ -9,7 +9,7 @@ export const multiClusterBasePath = `${window.SERVER_FLAGS.basePath}api/multi-hy
 
 // TODO(alecmerdler): Replace all manual string building with this function
 export const referenceForGroupVersionKind = (group: string) => (version: string) => (kind: string) => {
-  if (kind === 'PipelineResource' || kind === 'ClusterTask' || kind === 'Task' || kind === 'ServiceClass' || kind === 'ClusterServiceClass') {
+  if (kind === 'Task' || kind === 'ClusterTask' || kind === 'TaskRun' || kind === 'Pipeline' || kind === 'PipelineRun' || kind === 'PipelineResource' || kind === 'ServiceClass' || kind === 'ClusterServiceClass') {
     return kind;
   }
   return [group, version, kind].join('~');
