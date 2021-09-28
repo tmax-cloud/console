@@ -56,7 +56,7 @@ export const CatalogTileDetails = withTranslation()(
       const creationTimestamp = _.get(obj, 'metadata.creationTimestamp');
 
       const supportUrlLink = <ExternalLink href={supportUrl} text="Get support" />;
-      const documentationUrlLink = <ExternalLink href={documentationUrl} additionalClassName="co-break-all" text={documentationUrl} />;
+      // const documentationUrlLink = <ExternalLink href={documentationUrl} additionalClassName="co-break-all" text={documentationUrl} />;
       const documentationIframe = <iframe src={documentationUrl} target="_blank" style={{ width: '100%', display: 'block', overflowY: 'auto', border: 'solid 1px #cccccc', minHeight: '500px' }} />;
       const sampleRepoLink = <ExternalLink href={sampleRepo} additionalClassName="co-break-all" text={sampleRepo} />;
       const planItems = _.map(plans, plan => <li key={plan.metadata.uid}>{plan.spec.description || plan.spec.externalName}</li>);
@@ -82,7 +82,7 @@ export const CatalogTileDetails = withTranslation()(
                     <>
                       <h2 className="h5">{t('COMMON:MSG_GNB_MORE_1')}</h2>
                       <p>{documentationIframe}</p>
-                      <p>{documentationUrlLink}</p>
+                      {/* <p>{documentationUrlLink}</p> */}
                     </>
                   )}
                   {!_.isEmpty(plans) && (
