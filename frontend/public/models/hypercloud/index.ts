@@ -1560,3 +1560,25 @@ export const ClusterMenuPolicyModel: K8sKind = {
   id: 'clustermenupolicy',
   namespaced: false,
 };
+
+// MJ : label 부분 string발행되면 수정하기
+export const ApplicationModel: K8sKind = {
+  kind: 'Application',
+  label: 'Application',
+  labelPlural: 'Applications',
+  apiGroup: 'cd.tmax.io',
+  apiVersion: 'v1',
+  abbr: 'A',
+  namespaced: true,
+  id: 'application',
+  plural: 'applications',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: '어플리케이션',
+    labelPlural: '어플리케이션',
+  },
+};
