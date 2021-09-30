@@ -365,12 +365,25 @@ func (c *Console) Gateway() http.Handler {
 
 // Server is server only serving static asset & jsconfig
 func (c *Console) Server() http.Handler {
-	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders, handlers.ProxyHeaders)
+	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
+	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
+
+	// handle := func(path string, handler http.Handler) {
+	// 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, path)).Handler(handler)
+	// }
 	staticHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/"), http.FileServer(http.Dir(c.PublicDir)))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/")).Handler(gzipHandler(staticHandler))
 	k8sApiHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/"), http.FileServer(http.Dir("./api")))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/")).Handler(gzipHandler(securityHeadersMiddleware(k8sApiHandler)))
+
+	k8sProxy := proxy.NewProxy(c.K8sProxyConfig)
+	k8sProxyHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, k8sProxyPath), tokenMiddleware.ThenFunc(func(rw http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+		k8sProxy.ServeHTTP(rw, r)
+	}))
+	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, k8sProxyPath)).Handler(k8sProxyHandler)
+
 	r.PathPrefix(c.BaseURL.Path).HandlerFunc(c.indexHandler)
 
 	r.PathPrefix("/api/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
