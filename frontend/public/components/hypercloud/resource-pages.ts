@@ -74,6 +74,7 @@ import {
   HelmReleaseModel,
   AWXModel,
   ClusterRegistrationModel,
+  ApplicationModel,
 } from '../../models';
 
 type ResourceMapKey = GroupVersionKind | string;
@@ -151,7 +152,8 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsDetailsPage))
   .set(referenceForModel(HelmReleaseModel), () => import('./helm-release' /* webpackChunkName: "helm-release" */).then(m => m.HelmReleaseDetailsPage))
   .set(referenceForModel(AWXModel), () => import('./awx' /* webpackChunkName: "awx" */).then(m => m.AWXsDetailsPage))
-  .set(referenceForModel(ClusterRegistrationModel), () => import('./cluster-registration' /* webpackChunkName: "cluster-registration" */).then(m => m.ClusterRegistrationsDetailsPage));
+  .set(referenceForModel(ClusterRegistrationModel), () => import('./cluster-registration' /* webpackChunkName: "cluster-registration" */).then(m => m.ClusterRegistrationsDetailsPage))
+  .set(referenceForModel(ApplicationModel), () => import('./application' /* webpackChunkName: "application" */).then(m => m.ApplicationsDetailsPage));
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -224,4 +226,5 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(TFApplyClaimModel), () => import('./terraform-apply-claim' /* webpackChunkName: "image-sign-request" */).then(m => m.TFApplyClaimsPage))
   .set(referenceForModel(HelmReleaseModel), () => import('./helm-release' /* webpackChunkName: "helm-release" */).then(m => m.HelmReleasePage))
   .set(referenceForModel(AWXModel), () => import('./awx' /* webpackChunkName: "awx" */).then(m => m.AWXsPage))
-  .set(referenceForModel(ClusterRegistrationModel), () => import('./cluster-registration' /* webpackChunkName: "cluster-registration" */).then(m => m.ClusterRegistrationsPage));
+  .set(referenceForModel(ClusterRegistrationModel), () => import('./cluster-registration' /* webpackChunkName: "cluster-registration" */).then(m => m.ClusterRegistrationsPage))
+  .set(referenceForModel(ApplicationModel), () => import('./application' /* webpackChunkName: "application" */).then(m => m.ApplicationsPage));
