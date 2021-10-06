@@ -164,17 +164,20 @@ keycloak
       keycloak.login();
       return;
     }
-    render(
-      <Provider store={store}>
-        <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-          <Switch>
-            <Route path="/terminal" component={CloudShellTab} />
-            <Route path="/" component={App} />
-          </Switch>
-        </Router>
-      </Provider>,
-      document.getElementById('app'),
-    );
+
+    initializationForMenu().then(() => {
+      render(
+        <Provider store={store}>
+          <Router history={history} basename={window.SERVER_FLAGS.basePath}>
+            <Switch>
+              <Route path="/terminal" component={CloudShellTab} />
+              <Route path="/" component={App} />
+            </Switch>
+          </Router>
+        </Provider>,
+        document.getElementById('app'),
+      );
+    });
   })
   .catch(error => {
     // render(<div>{!!error ? error : 'Failed to initialize Keycloak'}</div>, document.getElementById('app'));
@@ -236,8 +239,6 @@ keycloak.onAuthSuccess = function() {
       // eslint-disable-next-line no-console
       .catch(e => console.warn('Error unregistering service workers', e));
   }
-
-  initializationForMenu();
 };
 keycloak.onAuthError = function() {
   console.log('[keycloak] onAuthError');
