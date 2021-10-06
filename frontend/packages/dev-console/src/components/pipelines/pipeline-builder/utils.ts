@@ -58,9 +58,11 @@ const removeListRunAfters = (task: PipelineTask, listIds: string[]): PipelineTas
 const removeEmptyDefaultParams = (task: PipelineTask): PipelineTask => {
   if (task.params?.length > 0) {
     // Since we can submit, this param has a default; check for empty values and remove
+    // 20210929 Policy changed
+    task.params.forEach(param => {if(param.value === undefined) param.value = '' });
     return {
       ...task,
-      params: task.params.filter(param => !!param.value),
+      //params: task.params.filter(param => !!param.value),
     };
   }
 
