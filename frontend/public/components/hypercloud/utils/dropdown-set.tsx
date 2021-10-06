@@ -48,7 +48,7 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
   );
 };
 
-const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, props) => {  
+const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked, props) => {  
   const { data, options: allOptions, getValue, isSelected, setValue } = props;
   const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
   const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
@@ -77,6 +77,9 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
   const wihtoutApiGroupItemList = currentValue.filter(e => { if (data.apiGroup !== e.apiGroup) return true; });
 
   const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isSelected;
+
+  const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
+  const isExist = !(itemList.length === 0);  
 
   return isResourceItem ? (
     justSelectAllOption && !showSelectAllOnEmpty ? null : (
@@ -109,18 +112,35 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
           </div>
         </>
-      }
-        <Option {...props}>
-          <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}}>
-            {/*<input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />*/}
-            <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}>
-              <span id={DROPDOWN_SECTION_ID} >
-                {data.label}
-                <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
-              </span>
+        }
+
+        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
+          {/*<input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />*/}
+          <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}>
+            <span id={DROPDOWN_SECTION_ID}
+              onClick={() => {
+                if (data.label === 'All') {
+                  setValue([{
+                    label: 'All',
+                    value: '*',
+                  }]);
+                  
+                }
+                else {
+                  if (isExist !== true) {
+                    data.added = true;
+                    currentValue.push(data);
+                    //remove All
+                    let wihtoutAll = currentValue.filter(e => { if (e.label !== 'All') return true; });
+                    setValue(wihtoutAll);
+                  }
+                }
+              }}>
+              {data.label}
+              <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
             </span>
           </span>
-        </Option>
+      </span>
     </div>
   );
 };
@@ -403,7 +423,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
                 controlShouldRenderValue={false}
                 isMulti
                 components={{
-                  Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items),
+                  Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked ),
                   IndicatorSeparator: null,
                   DropdownIndicator: null,
                 }}
