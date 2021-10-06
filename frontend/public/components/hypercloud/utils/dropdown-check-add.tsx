@@ -101,7 +101,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
         <>
         <div>
             <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
-                { (data.label === 'All') ? <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px', visibility: 'hidden' }} type="checkbox" /> :
+                 
                     <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked} disabled={!isAdded}
                     onClick={() => {
                         if (isExist !== true) {                            
@@ -132,8 +132,9 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                         }
                     }}
                     onChange={() => null}
+                    data-test-id="checkbox"
                      />
-                }
+                
                 <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}
                     onClick={() => {
                         if (data.label === 'All') {
@@ -174,8 +175,8 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                         }                        
                     }}>
                     <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
+                    <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
                 </span>
-                <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
             </span>
         </div>
         { (data.label === 'All') && <hr></hr> }
@@ -295,7 +296,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     /* 초반 defaultValues를 받았을 때 드롭다운에 반영해주는 부분. */
     React.useEffect(() => {
         const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
-        if (defaultValuesWithKey[0].label === 'All') {
+        if (defaultValuesWithKey[0]?.label === 'All') {
             setSelectAllChecked(true);
             setChips([selectAllChipObj]);
         }
