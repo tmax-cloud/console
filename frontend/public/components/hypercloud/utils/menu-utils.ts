@@ -4,55 +4,68 @@ import { k8sList, k8sGet } from '@console/internal/module/k8s';
 import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 const initializeCmpFlag = () => {
-  k8sList(ClusterMenuPolicyModel, {
-    labelSelector: {
-      [CMP_PRIMARY_KEY]: 'true',
-    },
-  })
-    .then(policies => {
-      const policy = policies?.[0];
-      window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
+  return new Promise((resolve, reject) => {
+    k8sList(ClusterMenuPolicyModel, {
+      labelSelector: {
+        [CMP_PRIMARY_KEY]: 'true',
+      },
     })
-    .catch(err => {
-      window.SERVER_FLAGS.showCustomPerspective = false;
-      console.log(`No cmp resource.`);
-    });
+      .then(policies => {
+        const policy = policies?.[0];
+        window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
+        resolve('done');
+      })
+      .catch(err => {
+        window.SERVER_FLAGS.showCustomPerspective = false;
+        console.log(`No cmp resource.`);
+        // MEMO : 링크나 메뉴생성에 에러가 나도 일단 app 화면은 떠야 되니 resolve처리함.
+        resolve('done');
+      });
+  });
 };
 
 const initializeHarborUrl = () => {
-  k8sList(IngressModel, { ns: 'hyperregistry' })
-    .then(ingresses => {
-      const regex = /-harbor-ingress$/;
-      const matchedIngresses = ingresses?.filter(ingress => regex.test(ingress.metadata?.name));
-      if (matchedIngresses?.length > 0) {
-        const host = matchedIngresses[0]?.spec?.rules?.[0]?.host;
-        if (!!host) {
-          const harborMenu = _.get(CustomMenusMap, 'Harbor');
-          !!harborMenu && _.assign(harborMenu, { url: `https://${host}` });
+  return new Promise((resolve, reject) => {
+    k8sList(IngressModel, { ns: 'hyperregistry' })
+      .then(ingresses => {
+        const regex = /-harbor-ingress$/;
+        const matchedIngresses = ingresses?.filter(ingress => regex.test(ingress.metadata?.name));
+        if (matchedIngresses?.length > 0) {
+          const host = matchedIngresses[0]?.spec?.rules?.[0]?.host;
+          if (!!host) {
+            const harborMenu = _.get(CustomMenusMap, 'Harbor');
+            !!harborMenu && _.assign(harborMenu, { url: `https://${host}` });
+          }
         }
-      }
-    })
-    .catch(err => {
-      console.log('No ingress resource for harbor.');
-    });
+        resolve('done');
+      })
+      .catch(err => {
+        console.log('No ingress resource for harbor.');
+        resolve('done');
+      });
+  });
 };
 
 const initializeGitlabUrl = () => {
-  k8sGet(IngressModel, 'gitlab-ingress', 'gitlab-system')
-    .then(ingress => {
-      const host = ingress?.spec?.rules?.[0]?.host;
-      if (!!host) {
-        const gitlabMenu = _.get(CustomMenusMap, 'Git');
-        !!gitlabMenu && _.assign(gitlabMenu, { url: `https://${host}` });
-      }
-    })
-    .catch(err => {
-      console.log('No ingress resource for gitlab.');
-    });
+  return new Promise((resolve, reject) => {
+    k8sGet(IngressModel, 'gitlab-ingress', 'gitlab-system')
+      .then(ingress => {
+        const host = ingress?.spec?.rules?.[0]?.host;
+        if (!!host) {
+          const gitlabMenu = _.get(CustomMenusMap, 'Git');
+          !!gitlabMenu && _.assign(gitlabMenu, { url: `https://${host}` });
+          resolve('done');
+        }
+      })
+      .catch(err => {
+        console.log('No ingress resource for gitlab.');
+        resolve('done');
+      });
+  });
 };
 
-export const initializationForMenu = () => {
-  initializeCmpFlag();
-  initializeHarborUrl();
-  initializeGitlabUrl();
+export const initializationForMenu = async () => {
+  await initializeCmpFlag();
+  await initializeHarborUrl();
+  await initializeGitlabUrl();
 };
