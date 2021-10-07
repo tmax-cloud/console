@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { ResourceLink } from '@console/internal/components/utils';
-import { TaskModel, ClusterTaskModel } from '../../../../models';
+import { TaskModel, ClusterTaskModel } from '../../../../../../../public/models';
 import DynamicResourceLinkList from '../DynamicResourceLinkList';
 
 type ResourceLinkListProps = React.ComponentProps<typeof DynamicResourceLinkList>;

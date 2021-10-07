@@ -6,7 +6,7 @@ import {
   PipelineRunReferenceResource,
   pipelineRefExists,
 } from '../../../utils/pipeline-augment';
-import { PipelineModel, PipelineResourceModel } from '../../../models';
+import { PipelineModel, PipelineResourceModel } from '../../../../../../public/models';
 import ResourceLinkList from '../../pipelines/resource-overview/ResourceLinkList';
 import PipelineRunVisualization from './PipelineRunVisualization';
 import TriggeredBySection from './TriggeredBySection';

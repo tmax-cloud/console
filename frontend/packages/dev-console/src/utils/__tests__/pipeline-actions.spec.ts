@@ -1,4 +1,4 @@
-import { PipelineModel, PipelineRunModel } from '../../models';
+import { PipelineModel, PipelineRunModel } from '../../../../../public/models';
 import {
   stopPipelineRun,
   rerunPipelineAndRedirect,

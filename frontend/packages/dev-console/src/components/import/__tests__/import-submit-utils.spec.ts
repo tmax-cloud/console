@@ -13,7 +13,7 @@ import { Resources } from '../import-types';
 import * as submitUtils from '../import-submit-utils';
 import * as pipelineUtils from '../pipeline/pipeline-template-utils';
 import { defaultData, nodeJsBuilderImage as buildImage } from './import-submit-utils-data';
-import { PipelineModel } from '../../../models';
+import { PipelineModel } from '../../../../../../public/models';
 
 const { createOrUpdateDeployment, createOrUpdateResources } = submitUtils;
 

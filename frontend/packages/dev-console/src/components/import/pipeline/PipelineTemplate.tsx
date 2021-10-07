@@ -5,7 +5,7 @@ import { useFormikContext, FormikValues } from 'formik';
 import { Alert, Expandable } from '@patternfly/react-core';
 import { CheckboxField } from '@console/shared';
 import { CLUSTER_PIPELINE_NS } from '../../../const';
-import { PipelineModel } from '../../../models';
+import { PipelineModel } from '../../../../../../public/models';
 import PipelineVisualization from '../../pipelines/detail-page-tabs/pipeline-details/PipelineVisualization';
 import { Pipeline } from '../../../utils/pipeline-augment';
 import { NormalizedBuilderImages } from '../../../utils/imagestream-utils';

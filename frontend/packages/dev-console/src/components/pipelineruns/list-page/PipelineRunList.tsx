@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
 import { Table } from '@console/internal/components/factory';
-import { PipelineRunModel } from '../../../models';
+import { PipelineRunModel } from '../../../../../../public/models';
 import PipelineRunHeader from './PipelineRunHeader';
 import PipelineRunRow from './PipelineRunRow';
 

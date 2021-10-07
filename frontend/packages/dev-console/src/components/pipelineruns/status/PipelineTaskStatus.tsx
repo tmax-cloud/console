@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Firehose } from '@console/internal/components/utils';
 import { PipelineRun, Pipeline } from '../../../utils/pipeline-augment';
-import { PipelineModel } from '../../../models';
+import { PipelineModel } from '../../../../../../public/models';
 import { PipelineBars } from './PipelineBars';
 
 export interface PipelineTaskStatusProps {
