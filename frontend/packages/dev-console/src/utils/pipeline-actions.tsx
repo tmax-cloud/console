@@ -14,7 +14,8 @@ import {
 } from '../components/pipelines/modals';
 import { getPipelineRunData } from '../components/pipelines/modals/common/utils';
 import { StartedByLabel } from '../components/pipelines/const';
-import { EventListenerModel, PipelineModel, PipelineRunModel } from '../models';
+import { EventListenerModel } from '../models';
+import { PipelineModel, PipelineRunModel } from '../../../../public/models';
 import { Pipeline, PipelineRun } from './pipeline-augment';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
 

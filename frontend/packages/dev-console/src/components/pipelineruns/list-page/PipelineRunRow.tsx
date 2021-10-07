@@ -7,7 +7,7 @@ import { pipelineRunFilterReducer } from '../../../utils/pipeline-filter-reducer
 import { getPipelineRunKebabActions } from '../../../utils/pipeline-actions';
 import { pipelineRunDuration } from '../../../utils/pipeline-utils';
 import { PipelineRun } from '../../../utils/pipeline-augment';
-import { PipelineRunModel } from '../../../models';
+import { PipelineRunModel } from '../../../../../../public/models';
 import LinkedPipelineRunTaskStatus from '../status/LinkedPipelineRunTaskStatus';
 import { ResourceKebabWithUserLabel } from '../triggered-by';
 import { tableColumnClasses } from './pipelinerun-table';

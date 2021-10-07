@@ -8,12 +8,19 @@ import {
 } from '@patternfly/react-tokens';
 import { K8sKind, K8sResourceKind, referenceForModel } from '@console/internal/module/k8s';
 import {
-  ClusterTaskModel,
+  //ClusterTaskModel,
   ClusterTriggerBindingModel,
-  PipelineRunModel,
-  TaskModel,
+  //PipelineRunModel,
+  //TaskModel,
   TriggerBindingModel,
 } from '../models';
+import {
+  ClusterTaskModel,
+  //ClusterTriggerBindingModel,
+  PipelineRunModel,
+  TaskModel,
+  //TriggerBindingModel,
+} from '../../../../public/models';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
 
 interface Metadata {

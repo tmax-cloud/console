@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { k8sCreate, K8sResourceKind } from '@console/internal/module/k8s';
 import { SecretModel } from '@console/internal/models';
 import { getRandomChars } from '@console/shared/src/utils/utils';
-import { PipelineResourceModel } from '../../../models';
+import { PipelineResourceModel } from '../../../../../../public/models';
 import { convertMapToNameValueArray } from '../modals/common/utils';
 
 export interface ParamData {

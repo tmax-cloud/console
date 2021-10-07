@@ -12,7 +12,7 @@ import {
   getResourceModelFromTask,
   pipelineRefExists,
 } from '../pipeline-augment';
-import { ClusterTaskModel, PipelineRunModel, TaskModel } from '../../models';
+import { ClusterTaskModel, PipelineRunModel, TaskModel } from '../../../../../public/models';
 import { testData } from './pipeline-augment-test-data';
 
 describe('PipelineAugment test getResources create correct resources for firehose', () => {
