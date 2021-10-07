@@ -584,6 +584,12 @@ button.pf-c-dropdown__menu-item.hover {
 .pf-c-nav__simple-list .pf-c-nav__link.pf-m-current,
 .pf-c-nav.pf-m-dark .pf-c-nav__item.pf-m-current {
   background-color: #31475e !important;
+  border: 1px solid #31475e;
+  border-radius: 3px;
+}
+.pf-c-nav__subnav {
+  margin-left: 26px;
+  margin-right: 14px;
 }
 .pagination-div {
   text-align: center;
