@@ -219,7 +219,7 @@ describe("DropdownCheckAddComponent test", () => {
     expect(getByText("Apple")).toBeTruthy();
     //userEvent.click(getByTestId("delete-chip"));    
     userEvent.click(getByTestId('remove_pf-random-id-15'));
-    //userEvent.click(getByTestId('remove_pf-random-id-16'));
+    userEvent.click(getByTestId('remove_pf-random-id-16'));
     
     expect(getValues()).toEqual({
       test1: []
@@ -266,11 +266,10 @@ describe("DropdownCheckAddComponent test", () => {
     );
     expect(getByText("Apple")).toBeTruthy();
     //userEvent.click(getByTestId("delete-chip"));    
-    userEvent.click(getByTestId('remove_pf-random-id-18'));
-    //userEvent.click(getByTestId('remove_pf-random-id-16'));
+    userEvent.click(getByTestId('remove_pf-random-id-18'));    
     
     expect(getValues()).toEqual({
-      test1: [{ label: "Banana", value: "Banana" }]
+      test1: [{ label: "Apple", value: "Apple" }, { label: "Banana", value: "Banana" }]
     });
     
 
@@ -314,7 +313,7 @@ describe("DropdownCheckAddComponent test", () => {
     );
     expect(getByText("Apple")).toBeTruthy();
     //userEvent.click(getByTestId("delete-chip"));    
-    userEvent.click(getByTestId('remove_group_pf-random-id-20'));
+    userEvent.click(getByTestId('remove_group_pf-random-id-22'));
     
     expect(getValues()).toEqual({
       test1: []
