@@ -151,12 +151,12 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
   ];
 
   const dropdownSetItemList = [
-    { label: "Pod", value: "Pod" , apiGroup: "Core", isFirstResource: true},
-    { label: "Secret", value: "Secret" , apiGroup: "Core", isFirstResource: false},
-    { label: "Node", value: "Node" , apiGroup: "Core", isFirstResource: false},
-    { label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true},
-    { label: "Banana", value: "Banana" , apiGroup: "Fruit", isFirstResource: false},
-    { label: "Coconut", value: "Coconut" , apiGroup: "Fruit", isFirstResource: false},
+    { label: "Pod", value: "Pod" , category: "Core", isFirstItem: true},
+    { label: "Secret", value: "Secret" , category: "Core", isFirstItem: false},
+    { label: "Node", value: "Node" , category: "Core", isFirstItem: false},
+    { label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true},
+    { label: "Banana", value: "Banana" , category: "Fruit", isFirstItem: false},
+    { label: "Coconut", value: "Coconut" , category: "Fruit", isFirstItem: false},
   ];
 
   const listHeaderFragment = (
@@ -481,7 +481,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
                 name="dropdownCheckAddComponent-plain"
                 shrinkOnSelectAll={false}
                 useResourceItemsFormatter={false}
-                defaultValues={[{ label: 'Apple', value: 'Apple' }]}
+                defaultValues={[{ label: 'Apple', value: 'Apple' }, { label: 'Banana', value: 'Banana' }]}
                 items={dropdownCheckAddItemList}
                 menuWidth="250px"
                 buttonWidth="200px"
