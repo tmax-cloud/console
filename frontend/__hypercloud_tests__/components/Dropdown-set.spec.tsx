@@ -9,12 +9,12 @@ configure({ testIdAttribute: 'data-test-id' });
 
 const mockSubmit = jest.fn(data => {});
 const resources = [
-  { label: "Pod", value: "Pod" , apiGroup: "Core", isFirstResource: true},
-  { label: "Secret", value: "Secret" , apiGroup: "Core", isFirstResource: false},
-  { label: "Node", value: "Node" , apiGroup: "Core", isFirstResource: false},
-  { label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true},
-  { label: "Banana", value: "Banana" , apiGroup: "Fruit", isFirstResource: false},
-  { label: "Coconut", value: "Coconut" , apiGroup: "Fruit", isFirstResource: false},
+  { label: "Pod", value: "Pod" , category: "Core", isFirstItem: true},
+  { label: "Secret", value: "Secret" , category: "Core", isFirstItem: false},
+  { label: "Node", value: "Node" , category: "Core", isFirstItem: false},
+  { label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true},
+  { label: "Banana", value: "Banana" , category: "Fruit", isFirstItem: false},
+  { label: "Coconut", value: "Coconut" , category: "Fruit", isFirstItem: false},
 ];
 
 const renderDropdownSetComponent = (props: DropdownSetComponentProps) => {  
@@ -56,7 +56,7 @@ describe('DropdownSetComponent test', () => {
   it("defaultValue 프로퍼티 추가시에 정상동작 테스트입니다.", () => {
     const { getByText } = renderDropdownSetComponent({
       ...defaultParameters,
-      defaultValues: [{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}],
+      defaultValues: [{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}],
     });
 
     expect(getByText("Apple")).toBeTruthy();
@@ -117,7 +117,7 @@ describe('DropdownSetComponent test', () => {
     expect(getAllByText("Apple")[1]).toBeTruthy();
     
     expect(getValues()).toEqual({
-      test1: [{ label: "Apple", value: "Apple", added: true, key: "Apple-Apple", apiGroup: "Fruit", isFirstResource: true}]
+      test1: [{ label: "Apple", value: "Apple", added: true, key: "Apple-Apple", category: "Fruit", isFirstItem: true}]
     });
   });  
 
@@ -129,7 +129,7 @@ describe('DropdownSetComponent test', () => {
         name="test1"
         useResourceItemsFormatter={false}
         items={resources}
-        defaultValues = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+        defaultValues = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
       />,
       {
         wrapper: ({ children }) => {
@@ -146,7 +146,7 @@ describe('DropdownSetComponent test', () => {
                   as={children}
                   control={methods.control}
                   name="test1"
-                  defaultValue = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+                  defaultValue = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
                   onChange={([selected]) => {
                     return { value: selected };
                   }}
@@ -159,7 +159,7 @@ describe('DropdownSetComponent test', () => {
     );
     //expect(getAllByText("Apple")[1]).toBeTruthy();
     expect(getValues()).toEqual({
-      test1: [{ label: "Apple", value: "Apple", apiGroup: "Fruit", isFirstResource: true}]
+      test1: [{ label: "Apple", value: "Apple", category: "Fruit", isFirstItem: true}]
     });
   });
   it("delete 클릭", () => {
@@ -170,7 +170,7 @@ describe('DropdownSetComponent test', () => {
         name="test1"
         useResourceItemsFormatter={false}
         items={resources}
-        defaultValues = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+        defaultValues = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
       />,
       {
         wrapper: ({ children }) => {
@@ -187,7 +187,7 @@ describe('DropdownSetComponent test', () => {
                   as={children}
                   control={methods.control}
                   name="test1"
-                  defaultValue = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+                  defaultValue = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
                   onChange={([selected]) => {
                     return { value: selected };
                   }}
@@ -219,7 +219,7 @@ describe('DropdownSetComponent test', () => {
         name="test1"
         useResourceItemsFormatter={false}
         items={resources}
-        defaultValues = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+        defaultValues = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
       />,
       {
         wrapper: ({ children }) => {
@@ -236,7 +236,7 @@ describe('DropdownSetComponent test', () => {
                   as={children}
                   control={methods.control}
                   name="test1"
-                  defaultValue = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+                  defaultValue = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
                   onChange={([selected]) => {
                     return { value: selected };
                   }}
@@ -265,7 +265,7 @@ describe('DropdownSetComponent test', () => {
         name="test1"
         useResourceItemsFormatter={false}
         items={resources}
-        defaultValues = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+        defaultValues = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
       />,
       {
         wrapper: ({ children }) => {
@@ -282,7 +282,7 @@ describe('DropdownSetComponent test', () => {
                   as={children}
                   control={methods.control}
                   name="test1"
-                  defaultValue = {[{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}]}
+                  defaultValue = {[{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}]}
                   onChange={([selected]) => {
                     return { value: selected };
                   }}
@@ -304,7 +304,7 @@ describe('DropdownSetComponent test', () => {
   it("Submit 시 보내지는 value 형식 테스트", async () => {
     const { getByText } = renderDropdownSetComponent({
       ...defaultParameters,
-      defaultValues: [{ label: "Apple", value: "Apple" , apiGroup: "Fruit", isFirstResource: true}],
+      defaultValues: [{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}],
     });    
     await act(async () => {
       console.log("눌렸니?");
@@ -312,7 +312,7 @@ describe('DropdownSetComponent test', () => {
     });
 
     expect(mockSubmit).toHaveBeenCalledTimes(1);
-    expect(mockSubmit).toHaveBeenCalledWith({ test1: [{ label: "Apple", value: "Apple", apiGroup: "Fruit", isFirstResource: true }] });
+    expect(mockSubmit).toHaveBeenCalledWith({ test1: [{ label: "Apple", value: "Apple", category: "Fruit", isFirstItem: true }] });
   });
   it("Submit 시 보내지는 value 형식 테스트", async () => {
     const { getByText } = renderDropdownSetComponent({
