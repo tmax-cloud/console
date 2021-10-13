@@ -170,16 +170,21 @@ export const NavSection = connect(navSectionStateToProps)(
           return null;
         }
 
-        const { title, isSingleChild } = this.props;
+        const { title, isSingleChild, type } = this.props;
         const { isOpen, activeChild } = this.state;
         const isActive = !!activeChild;
         const children = this.getChildren();
+        console.log('menu type? ', type);
+        const prettyType = type
+          .toLowerCase()
+          .replace(' ', '_')
+          .replace('/', '_');
 
         if (isSingleChild) {
-          return children.length > 0 ? <> {children} </> : null;
+          return children.length > 0 ? <div className={`navIcon ${prettyType}`}> {children} </div> : null;
         }
         return children.length > 0 ? (
-          <NavExpandable title={title} isActive={isActive} isExpanded={isOpen} onExpand={this.toggle}>
+          <NavExpandable className={`navIcon ${prettyType}`} title={title} isActive={isActive} isExpanded={isOpen} onExpand={this.toggle}>
             {children}
           </NavExpandable>
         ) : null;
@@ -208,6 +213,7 @@ type NavSectionProps = {
   title: NavSectionTitle | string;
   required?: string;
   isSingleChild?: boolean;
+  type?: string;
 };
 
 type Props = NavSectionProps & NavSectionStateProps & NavSectionExtensionProps;
