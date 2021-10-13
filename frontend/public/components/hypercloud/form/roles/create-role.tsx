@@ -119,7 +119,7 @@ const roleFormFactory = (params, obj) => {
               apiGroup = 'Core';
             }
             if (apiGroup === '*') {
-              apiGroupKeyValue = { label: 'All', value: '*', checked: true, added: true };
+              apiGroupKeyValue = { label: 'All', value: '*', checked: false, added: true };
             }
             else if (apiGroup === 'Core') {
               apiGroupKeyValue = { label: 'Core', value: 'Core', checked: true, added: true };
@@ -186,29 +186,37 @@ const RuleItem = props => {
 
   React.useEffect(() => {
     let convertList = [];
-    let resourceListWithApiGroupTemp = [];
+    let resourceListWithApiGroupTemp = [];    
+    let resourceListWithApiGroupCore = [];
+
     apiGroups?.forEach(apiGroup => {
       if (apiGroup?.checked === true) {
         const apiGroupValue = apiGroup?.value || '*';
-        if (apiGroupValue === '*') {
-          resourceListWithApiGroupTemp = [];
-        } else if (apiGroupValue === 'Core') {
-          resourceListWithApiGroupTemp = [{ apiGroup: 'Core', resourceList: coreResources }];
+        if (apiGroupValue === "*") {
+          resourceListWithApiGroupTemp = apiGroupListWithResourceSet;
         } else {
-          apiGroupListWithResourceSet.forEach(r => {
-            if (r.apiGroup === apiGroup.value) {
-              resourceListWithApiGroupTemp.push(r);
-            }
-          });
+          if (apiGroupValue === "Core") {
+            resourceListWithApiGroupCore = [
+              { apiGroup: "Core", resourceList: coreResources },
+            ];
+            resourceListWithApiGroupTemp = resourceListWithApiGroupTemp.concat(resourceListWithApiGroupCore);
+          } else {
+            apiGroupListWithResourceSet.forEach((r) => {
+              if (r.apiGroup === apiGroup.value) {
+                resourceListWithApiGroupTemp.push(r);
+              }
+            });
+          }
         }
       }
     });
-    resourceListWithApiGroupTemp.forEach((apiGroup) => {
+    
+    resourceListWithApiGroupTemp?.forEach((apiGroup) => {
       let apiGroupAndresourceList = [];
-      let isFirstResource = true;
+      let isFirstItem = true;
       apiGroup.resourceList.forEach((resource) => {
-        apiGroupAndresourceList.push({ key: `${resource.value}-${resource.value}`, label: resource.value, value: resource.value, apiGroup: apiGroup.apiGroup, isFirstResource: isFirstResource })
-        isFirstResource = false;
+        apiGroupAndresourceList.push({ key: `${resource.value}-${resource.value}`, label: resource.value, value: resource.value, category: apiGroup.apiGroup, isFirstItem: isFirstItem })
+        isFirstItem = false;
       });
       convertList = convertList.concat(apiGroupAndresourceList);
     });
@@ -243,7 +251,7 @@ const RuleItem = props => {
             {ruleTypeToggle === 'Resource' ? (<>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true}>
                 <Controller
-                  as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={true} showSelectAllOnEmpty={true}  menuWidth='300px' buttonWidth='300px' />}
+                  as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false}  menuWidth='300px' buttonWidth='300px' />}
                   control={methods.control}
                   name={`${name}[${index}].apiGroups`}
                   onChange={([selected]) => {
@@ -254,7 +262,7 @@ const RuleItem = props => {
               </Section>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resources[${index}]`} isRequired={true}>
                 <Controller
-                  as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} menuWidth='300px' buttonWidth='300px' />}
+                  as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth='300px' buttonWidth='300px' />}
                   control={methods.control}
                   name={`${name}[${index}].resources`}
                   onChange={([selected]) => {
@@ -365,14 +373,13 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
               coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup.value}/${data.preferredVersion.version}`).then(
                 data => {
                   let resourceListInApiGroupTemp = [];
-                  let apiGroupListWithResourceListTemp = [];
+                  //let apiGroupListWithResourceListTemp = [];
                   data.resources.sort(compareObjByName);
                   data.resources.forEach(
                     resource => {
                       resourceListInApiGroupTemp.push({ label: resource.name, value: resource.name });
                     });
-                  apiGroupListWithResourceListTemp = apiGroupListWithResourceSetTemp;
-                  apiGroupListWithResourceListTemp.push({ apiGroup: apiGroup.value, resourceList: resourceListInApiGroupTemp });
+                  apiGroupListWithResourceSetTemp.push({ apiGroup: apiGroup.value, resourceList: resourceListInApiGroupTemp });
 
                   apiGroupListWithResourceSet = apiGroupListWithResourceSetTemp;
                 },
@@ -434,7 +441,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*', checked: true, added: true  }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
+          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*', checked: false, added: true  }], resources: [{ label: 'All', value: '*' }], verbs: ['*'] }} defaultValues={defaultValues.rules} />
         </Section>
       ) : (
         <LoadingInline />
