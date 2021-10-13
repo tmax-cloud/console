@@ -62,137 +62,19 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             allSelected = true;
         }
     }
-    /*
-    if (isSelectAllCheckbox) {
-        if (allOptions.length === 1) {
-            // MEMO : selectall 옵션 외에 다른 item이 없는 경우
-            allSelected = selectAllChecked;
-        } else {
-            // MEMO : selectall 옵션과 다른 item들이 있는 경우
-            // MEMO : allOptions엔 selectall 옵션 item도 존재해서 하나 빼줘야 함
-            if (allOptions.length - 1 === currentValue?.length) {
-                allSelected = true;
-            }
-        }
-    }
-    */
 
     const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
     const wihtoutItem = currentValue.filter(e => { if (data.label !== e.label) return true; });
     const isExist = !(itemList.length === 0);
     const isAdded = itemList[0]?.added;
-    const isChecked2 = itemList[0]?.checked;
+    const isChecked = itemList[0]?.checked;
 
-    //const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isChecked2;
-
-    /*
-    return isResourceItem ? (
-        justSelectAllOption && !showSelectAllOnEmpty ? null : (
-            <Option {...props}>
-                <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
-                    <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked2} onChange={() => null} />
-
-                    <span className="co-resource-icon--fixed-width" id={DROPDOWN_SECTION_ID}>
-                        <ResourceIcon kind={isSelectAllCheckbox ? 'All' : props.data.kind} />
-                    </span>
-                    <span id={DROPDOWN_SECTION_ID} className="co-resource-item__resource-name" style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden' }}>
-                        <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
-                    </span>
-                </span>
-            </Option>
-        )
-    ) : justSelectAllOption && !showSelectAllOnEmpty ? null : (
-        <>
-        <div>
-            <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
-                 
-                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked2} disabled={!isAdded}
-                    onClick={() => {
-                        if (isExist !== true) {                            
-                            data.checked = true;
-                            currentValue.push(data);
-                            setValue(currentValue);
-                        }
-                        else {
-                            if (isChecked2 !== true) {
-                                data.checked = true;
-                                data.added = true;
-                                //update checked = ture;
-                                wihtoutItem.push(data);
-                                setValue(wihtoutItem);
-                            }
-                            else {
-                                if (isAdded !== true) {
-                                    //delete
-                                    setValue(wihtoutItem);
-                                }
-                                else {
-                                    data.added = true;
-                                    //update checked = false;
-                                    wihtoutItem.push(data);
-                                    setValue(wihtoutItem);
-                                }
-                            }
-                        }
-                    }}
-                    onChange={() => null}
-                    data-test-id="checkbox"
-                     />
-                
-                <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}
-                    onClick={() => {
-                        if (data.label === 'All' && data.value === '*') {
-                            setValue([{
-                                label: 'All',
-                                value: '*',
-                                checked: false,
-                                added: true,
-                            }]);
-                            setSelectAllChecked(true);
-                        }
-                        else {                            
-                            if (isExist !== true) {
-                                data.added = true;
-                                currentValue.push(data);
-                                //remove All
-                                let wihtoutAll = currentValue.filter(e => { if (e.label !== 'All') return true; });
-                                setValue(wihtoutAll);
-                            }
-                            else {
-                                if (isChecked2 !== true) {
-                                    data.added = true;
-                                    //update currentValue
-                                    wihtoutItem.push(data);
-                                    //remove All
-                                    let wihtoutAll = wihtoutItem.filter(e => { if (e.label !== 'All') return true; });
-                                    setValue(wihtoutAll);
-                                }
-                                else {
-                                    data.checked = true;
-                                    data.added = true;
-                                    //update currentValue
-                                    wihtoutItem.push(data);
-                                    let wihtoutAll = wihtoutItem.filter(e => { if (e.label !== 'All') return true; });
-                                    setValue(wihtoutAll);
-                                }
-                            }
-                        }                        
-                    }}>
-                    <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
-                    <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
-                </span>
-            </span>
-        </div>
-        { (data.label === 'All') && <hr></hr> }
-        </>
-    );
-    */
     return (
         <>
         <div>
             <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
                  
-                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked2} disabled={!isAdded}
+                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked} disabled={!isAdded}
                     onClick={() => {
                         if (isExist !== true) {                            
                             data.checked = true;
@@ -201,7 +83,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                                                        
                         }
                         else {
-                            if (isChecked2 !== true) {
+                            if (isChecked !== true) {
                                 data.checked = true;
                                 data.added = true;
                                 //update checked = ture;
@@ -252,7 +134,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                                 setValue(wihtoutAll);
                             }
                             else {
-                                if (isChecked2 !== true) {
+                                if (isChecked !== true) {
                                     data.added = true;
                                     //update currentValue
                                     wihtoutItem.push(data);
@@ -329,8 +211,6 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     });
 
     const selectedValues = watch(name, defaultValuesWithKey);
-    //const addedValues = selectedValues.filter(e => { if (e.added === true) return true; });
-    //setChips(addedValues);
 
     const customStyles = {
         control: (provided, state) => ({
