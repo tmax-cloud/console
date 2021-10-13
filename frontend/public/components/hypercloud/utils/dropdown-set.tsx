@@ -56,97 +56,12 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
   //const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
   //let allSelected = false;
   const currentValue = getValue();
-/*
-  if (shrinkOnSelectAll) {
-    if (_.isEqual(currentValue?.[0], selectAllChipObj)) {
-      allSelected = true;
-    }
-  }
-  if (isSelectAllCheckbox) {
-    if (allOptions.length === 1) {
-      // MEMO : selectall 옵션 외에 다른 item이 없는 경우
-      allSelected = selectAllChecked;
-    } else {
-      // MEMO : selectall 옵션과 다른 item들이 있는 경우
-      // MEMO : allOptions엔 selectall 옵션 item도 존재해서 하나 빼줘야 함
-      if (allOptions.length - 1 === currentValue?.length) {
-        allSelected = true;
-      }
-    }
-  }
-*/
   const categoryItemList = items.filter(e => { if (data.category === e.category) return true; });
   const wihtoutApiGroupItemList = currentValue.filter(e => { if (data.category !== e.category) return true; });
 
-  //const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isSelected;
-
   const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
   const isExist = !(itemList.length === 0);  
-  /*
-  return isResourceItem ? (
-    justSelectAllOption && !showSelectAllOnEmpty ? null : (
-      <Option {...props}>
-        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
-          <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked} onChange={() => null} />
 
-          <span className="co-resource-icon--fixed-width" id={DROPDOWN_SECTION_ID}>
-            <ResourceIcon kind={isSelectAllCheckbox ? 'All' : props.data.kind} />
-          </span>
-          <span id={DROPDOWN_SECTION_ID} className="co-resource-item__resource-name" style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden' }}>
-            <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
-          </span>
-        </span>
-      </Option>
-    )
-  ) : justSelectAllOption && !showSelectAllOnEmpty ? null : (
-    <div>
-      {data.isFirstItem &&
-        <>
-          <hr></hr> 
-          <div style={{ marginLeft: '10px', fontWeight: 'bold' }} onClick={() => {            
-            //Add resources in categorys
-            setValue(wihtoutApiGroupItemList.concat(categoryItemList));
-
-                    }}
-                    onChange={() => null}
-                    >
-            {data.category}
-            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
-          </div>
-        </>
-        }
-
-        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
-          {//<input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />}
-          <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}>
-            <span id={DROPDOWN_SECTION_ID}
-              onClick={() => {
-                if (data.label === 'All') {
-                  setValue([{
-                    label: 'All',
-                    value: '*',
-                  }]);
-                  setSelectAllChecked(true);
-                  
-                }
-                else {
-                  if (isExist !== true) {
-                    data.added = true;
-                    currentValue.push(data);
-                    //remove All
-                    let wihtoutAll = currentValue.filter(e => { if (e.label !== 'All') return true; });
-                    setValue(wihtoutAll);
-                  }
-                }
-              }}>
-              {data.label}
-              <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
-            </span>
-          </span>
-      </span>
-    </div>
-  );
-  */
   return (
     <div>
       {data.isFirstItem &&
@@ -167,7 +82,6 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
         }
 
         <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
-          {/*<input id={DROPDOWN_SECTION_ID} style={{ marginRight: '10px' }} type="checkbox" checked={isChecked} onChange={() => null} />*/}
           <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px' }}>
             <span id={DROPDOWN_SECTION_ID}
               onClick={() => {
@@ -304,26 +218,6 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
   }
 
   /* 초반 defaultValues를 받았을 때 드롭다운에 반영해주는 부분. */
-/*  React.useEffect(() => {
-    const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
-    if (selectAllChip.length > 0) {
-      // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
-      if (shrinkOnSelectAll) {
-        setSelectAllChecked(true);
-        setChips([selectAllChipObj]);
-      } else {
-        // EMPTY : defaultValue에 all관련 chip이 있는데 shrinkOnSelectAll은 false일 경우는 있으면 안된다. defaultValue로 all관련 chip이 들어올 경우엔 해당 드롭다운의 shrinkOnSelectAll=true로 설정해줘야 한다.
-      }
-    } else if (formattedOptions?.length > 0 && defaultValuesWithKey.length > 0 && formattedOptions.length === defaultValuesWithKey.length) {
-      // MEMO : defaultValues의 길이와 items의 길이가 같은 경우 모든 요소들이 선택된걸로 간주
-      setSelectAllChecked(true);
-      setChips(defaultValuesWithKey);
-    } else {
-      setSelectAllChecked(false);
-      setChips(defaultValuesWithKey);
-    }
-  }, []);
-*/
   React.useEffect(() => {
     const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
     if (defaultValuesWithKey[0]?.label === 'All') {
@@ -479,29 +373,6 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
     >
       <DataToolbarContent>
         <DataToolbarItem>
-          {/*chips.map((chip: any, i: number) => (
-            <div id={"test-id-datatoolbar-" + i}>{chip.label}</div>
-          ))*/}
-          {/*categories.map((category: any) => (
-            <DataToolbarFilter
-              deleteChipGroup={clearAll}
-              chips={category?.items.map((item) => {
-                return {
-                  key: item.key || SELECT_ALL_VALUE,
-                  node: (
-                    <>
-                      <ResourceIcon kind={item.kind ?? ""} />
-                      {item.label ?? ""}
-                    </>
-                  ),
-                };
-              })}
-              deleteChip={()=>{console.log("delete"+ category.category)}}
-              categoryName={category.category}
-            >
-
-            </DataToolbarFilter>
-            ))*/}
           <DataToolbarFilter
             deleteChipGroup={clearAll}
             chips={chips?.map((item) => {

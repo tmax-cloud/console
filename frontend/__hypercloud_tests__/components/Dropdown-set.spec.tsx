@@ -307,7 +307,6 @@ describe('DropdownSetComponent test', () => {
       defaultValues: [{ label: "Apple", value: "Apple" , category: "Fruit", isFirstItem: true}],
     });    
     await act(async () => {
-      console.log("눌렸니?");
       userEvent.click(getByText("Submit"));
     });
 
@@ -321,7 +320,6 @@ describe('DropdownSetComponent test', () => {
     });
 
     await act(async () => {
-      console.log("눌렸니?");
       userEvent.click(getByText("Submit"));
     });
 
