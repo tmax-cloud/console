@@ -200,3 +200,17 @@ export const NodeStatusReducer = (node: any): string => {
 
   return readyState ? (readyState.status === 'True' ? 'Ready' : 'Not Ready') : NO_STATUS;
 };
+
+export const ClusterRegistrationStatusReducer = (cr: any): string => {
+  const status = _.get(cr, 'status');
+  if (!!status) {
+    const phase = status.phase || '';
+    if (phase === 'Failed' || phase === 'Success') {
+      return phase;
+    } else {
+      return 'Validation/Validated';
+    }
+  } else {
+    return NO_STATUS;
+  }
+};
