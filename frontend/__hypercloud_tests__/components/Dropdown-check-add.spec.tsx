@@ -372,7 +372,6 @@ describe("DropdownCheckAddComponent test", () => {
     });
 
     await act(async () => {
-      console.log("눌렸니?");
       userEvent.click(getByText("Submit"));
     });
 
@@ -386,7 +385,6 @@ describe("DropdownCheckAddComponent test", () => {
     });
 
     await act(async () => {
-      console.log("눌렸니?");
       userEvent.click(getByText("Submit"));
     });
 
