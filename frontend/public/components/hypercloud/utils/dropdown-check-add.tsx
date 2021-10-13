@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { useFormContext } from 'react-hook-form';
-import Select, { components } from 'react-select';
+//import Select, { components } from 'react-select';
+import Select from 'react-select';
 import { CaretDownIcon, PlusCircleIcon } from '@patternfly/react-icons';
 
 import { DataToolbar, DataToolbarContent, DataToolbarFilter, DataToolbarItem } from '@patternfly/react-core';
@@ -11,7 +12,7 @@ const DROPDOWN_SECTION_ID = 'hc-multidropdown-item';
 const SELECT_ALL_VALUE = '<SELECT_ALL>';
 
 /* 드롭다운 부위별 styling을 위해 만든 컴포넌트들 */
-const { Option } = components;
+//const { Option } = components;
 
 const MenuContainer = props => {
     const shadow = 'hsla(218, 50%, 10%, 0.1)';
@@ -50,9 +51,9 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
 
 const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, setSelectAllChecked, props) => {
     //const { data, options: allOptions, getValue, isSelected, setValue } = props;
-    const { data, options: allOptions, getValue, setValue } = props;
-    const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
-    const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
+    const { data, getValue, setValue } = props;
+    //const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
+    //const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
     let allSelected = false;
     const currentValue = getValue();
 
@@ -61,6 +62,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             allSelected = true;
         }
     }
+    /*
     if (isSelectAllCheckbox) {
         if (allOptions.length === 1) {
             // MEMO : selectall 옵션 외에 다른 item이 없는 경우
@@ -73,6 +75,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             }
         }
     }
+    */
 
     const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
     const wihtoutItem = currentValue.filter(e => { if (data.label !== e.label) return true; });
@@ -80,13 +83,14 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     const isAdded = itemList[0]?.added;
     const isChecked2 = itemList[0]?.checked;
 
-    const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isChecked2;
+    //const isChecked = shrinkOnSelectAll && allSelected ? true : isSelectAllCheckbox ? allSelected : isChecked2;
 
+    /*
     return isResourceItem ? (
         justSelectAllOption && !showSelectAllOnEmpty ? null : (
             <Option {...props}>
                 <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID}>
-                    <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked} onChange={() => null} />
+                    <input id={DROPDOWN_SECTION_ID} type="checkbox" style={{ marginRight: '3px' }} checked={isChecked2} onChange={() => null} />
 
                     <span className="co-resource-icon--fixed-width" id={DROPDOWN_SECTION_ID}>
                         <ResourceIcon kind={isSelectAllCheckbox ? 'All' : props.data.kind} />
@@ -102,7 +106,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
         <div>
             <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
                  
-                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked} disabled={!isAdded}
+                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked2} disabled={!isAdded}
                     onClick={() => {
                         if (isExist !== true) {                            
                             data.checked = true;
@@ -137,11 +141,104 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                 
                 <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}
                     onClick={() => {
-                        if (data.label === 'All') {
+                        if (data.label === 'All' && data.value === '*') {
                             setValue([{
                                 label: 'All',
                                 value: '*',
-                                checked: true,
+                                checked: false,
+                                added: true,
+                            }]);
+                            setSelectAllChecked(true);
+                        }
+                        else {                            
+                            if (isExist !== true) {
+                                data.added = true;
+                                currentValue.push(data);
+                                //remove All
+                                let wihtoutAll = currentValue.filter(e => { if (e.label !== 'All') return true; });
+                                setValue(wihtoutAll);
+                            }
+                            else {
+                                if (isChecked2 !== true) {
+                                    data.added = true;
+                                    //update currentValue
+                                    wihtoutItem.push(data);
+                                    //remove All
+                                    let wihtoutAll = wihtoutItem.filter(e => { if (e.label !== 'All') return true; });
+                                    setValue(wihtoutAll);
+                                }
+                                else {
+                                    data.checked = true;
+                                    data.added = true;
+                                    //update currentValue
+                                    wihtoutItem.push(data);
+                                    let wihtoutAll = wihtoutItem.filter(e => { if (e.label !== 'All') return true; });
+                                    setValue(wihtoutAll);
+                                }
+                            }
+                        }                        
+                    }}>
+                    <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
+                    <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
+                </span>
+            </span>
+        </div>
+        { (data.label === 'All') && <hr></hr> }
+        </>
+    );
+    */
+    return (
+        <>
+        <div>
+            <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
+                 
+                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked2} disabled={!isAdded}
+                    onClick={() => {
+                        if (isExist !== true) {                            
+                            data.checked = true;
+                            currentValue.push(data);
+                            setValue(currentValue);
+                                                       
+                        }
+                        else {
+                            if (isChecked2 !== true) {
+                                data.checked = true;
+                                data.added = true;
+                                //update checked = ture;
+                                wihtoutItem.push(data);
+                                setValue(wihtoutItem);
+                                if (data.label === 'All' && data.value === '*') {
+                                    setSelectAllChecked(true);
+                                }
+                            }
+                            else {
+                                if (isAdded !== true) {
+                                    //delete
+                                    setValue(wihtoutItem);
+                                }
+                                else {
+                                    data.added = true;
+                                    //update checked = false;
+                                    wihtoutItem.push(data);
+                                    setValue(wihtoutItem);
+                                    if (data.label === 'All' && data.value === '*') {
+                                        setSelectAllChecked(true);
+                                    }
+                                }
+                            }
+                        }
+                    }}
+                    onChange={() => null}
+                    data-test-id="checkbox"
+                     />
+                
+                <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}
+                    onClick={() => {
+                        if (data.label === 'All' && data.value === '*') {
+                            setValue([{
+                                label: 'All',
+                                value: '*',
+                                checked: false,
                                 added: true,
                             }]);
                             setSelectAllChecked(true);
@@ -217,7 +314,8 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     const dropdownElement = React.useRef<HTMLDivElement>();
     const selectAllOption = {
         label: 'All',
-        value: SELECT_ALL_VALUE,
+        value: '*',
+        //value: SELECT_ALL_VALUE,
     };
 
     const defaultValuesWithKey = defaultValues?.map(item => {
