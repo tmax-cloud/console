@@ -10,18 +10,27 @@ import { FLAGS } from '@console/shared/src/constants';
 import { Disabled, HintBlock, HyperCloudManualLink } from './utils';
 import { connectToFlags } from '../reducers/features';
 import { ProjectModel, RoleModel, StorageClassModel } from '../models';
+import { useTranslation, Trans } from 'react-i18next';
 // import { createProjectModal } from './modals/create-namespace-modal';
 
 const WHITELIST = [RoleModel.kind, StorageClassModel.kind];
 
-export const HypercloudGettingStarted = () => (
-  <>
-    <p>HyperCloud helps you quickly develop, host, and scale applications. To get started, you'll need a namespace. Currently, you can't create or access any namespaces. You'll need to contact a cluster administrator for help.</p>
-    <p>
-      To learn more, visit the HyperCloud <HyperCloudManualLink href={'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/welcome/intro.html'} text="manual" />
-    </p>
-  </>
-);
+export const HypercloudManualLinkButton = () => {
+  const { t } = useTranslation();
+  return <HyperCloudManualLink href={'https://technet.tmaxsoft.com/upload/download/online/hypercloud/pver-20210701-000003/hypercloud/21-ko/welcome/intro.html'} text={t('COMMON:MSG_COMMON_DIV2_DESCRIPTION_3')} />;
+};
+
+export const HypercloudGettingStarted = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <p>{t('COMMON:MSG_COMMON_DIV2_DESCRIPTION_1')}</p>
+      <p>
+        <Trans i18nKey="COMMON:MSG_COMMON_DIV2_DESCRIPTION_2">{[<HypercloudManualLinkButton />]}</Trans>
+      </p>
+    </>
+  );
+};
 
 // export const OpenShiftGettingStarted = () => (
 //   <>
@@ -58,6 +67,7 @@ export const withStartGuide = (WrappedComponent, disable: boolean = true) =>
     FLAGS.SHOW_OPENSHIFT_START_GUIDE,
     FLAGS.CAN_CREATE_PROJECT,
   )(({ flags, ...rest }: any) => {
+    const { t } = useTranslation();
     const { kindObj } = rest;
     const kind = _.get(kindObj, 'kind', rest.kind);
 
@@ -76,7 +86,7 @@ export const withStartGuide = (WrappedComponent, disable: boolean = true) =>
           ) : (
             <>
               <div className="co-m-pane__body">
-                <HintBlock title="Getting Started">
+                <HintBlock title={t('COMMON:MSG_COMMON_DIV1_DESCRIPTION_2')}>
                   <HypercloudGettingStarted />
                 </HintBlock>
               </div>
