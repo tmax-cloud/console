@@ -43,7 +43,8 @@ spec:
             - name: PROVIDERS_OIDC_ISSUER_URL
               value: https://hyperauth.org/auth/realms/tmax
             - name: PROVIDERS_OIDC_CLIENT_ID
-              value: traefik 
+              # value: traefik 
+              value: grafana
             # - name: DEFAULT_ACTION
             #   value: auth               
             - name: PROVIDERS_OIDC_CLIENT_SECRET

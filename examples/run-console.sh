@@ -33,15 +33,15 @@ KUBEFLOW_IP='192.168.9.141'
 # KUBEFLOW_PORT='80' 
 
 ./bin/console server \
-    --listen=https://$myIP:9000 \
-    --base-address=https://$myIP:9000 \
+    --listen=https://$myIP:9001 \
+    --base-address=https://$myIP:9001 \
     --dynamic-file=./configs/dynamic-config.yaml \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
     --redirect-port=8080 \
     --keycloak-realm=tmax \
     --keycloak-auth-url=https://hyperauth.org/auth \
-    --keycloak-client-id=hypercloud5 \
+    --keycloak-client-id=ck-integration-hypercloud5 \
     --k8s-endpoint=https://$k8sIP:6443 \
     --hypercloud-endpoint=https://$k8sIP:$HC_PORT/ \
     --multi-hypercloud-endpoint=https://$k8sIP:$MHC_PORT/ \
@@ -53,9 +53,9 @@ KUBEFLOW_IP='192.168.9.141'
     --kibana-endpoint=https://$k8sIP:$KIBANA_PORT/api/kibana/ \
     --kubeflow-endpoint=http://$KUBEFLOW_IP/api/kubeflow/ \
     --mc-mode=true \
-    --release-mode=true \
     --public-dir=./frontend/public/dist \
     --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/ \
+    # --release-mode=true \
 
     # --k8s-mode=off-cluster \
     # --k8s-mode-off-cluster-endpoint=https://$k8sIP:6443 \
