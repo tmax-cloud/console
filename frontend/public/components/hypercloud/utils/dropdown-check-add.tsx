@@ -54,14 +54,8 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     const { data, getValue, setValue } = props;
     //const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
     //const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
-    let allSelected = false;
+    //let allSelected = false;
     const currentValue = getValue();
-
-    if (shrinkOnSelectAll) {
-        if (_.isEqual(currentValue?.[0], selectAllChipObj)) {
-            allSelected = true;
-        }
-    }
 
     const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
     const wihtoutItem = currentValue.filter(e => { if (data.label !== e.label) return true; });
