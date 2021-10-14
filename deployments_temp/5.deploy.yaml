@@ -37,7 +37,7 @@ spec:
             - --kibana-endpoint=http://kibana.kube-logging.svc.cluster.local:5601/api/kibana/
             - --kubeflow-endpoint=http://istio-ingressgateway.istio-system.svc/api/kubeflow/
             - --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/
-          image: tmaxcloudck/hypercloud-console:v21.0.3.1
+          image: tmaxcloudck/hypercloud-console:5.0.32.0
           imagePullPolicy: Always
           name: console
           ports:

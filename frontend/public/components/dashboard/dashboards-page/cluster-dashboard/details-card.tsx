@@ -6,12 +6,12 @@ import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboa
 import DetailsBody from '@console/shared/src/components/dashboard/details-card/DetailsBody';
 import DetailItem from '@console/shared/src/components/dashboard/details-card/DetailItem';
 import { DashboardItemProps, withDashboardResources } from '../../with-dashboard-resources';
-import { getIdToken } from '../../../../hypercloud/auth';
 import { getActivePerspective, getActiveCluster } from '../../../../actions/ui';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { useTranslation } from 'react-i18next';
 import * as _ from 'lodash';
 import * as classNames from 'classnames';
+import { coFetchJSON } from '@console/internal/co-fetch';
 import './details-card.scss';
 
 import { GreenCheckCircleIcon, RedExclamationCircleIcon } from '../../../../../../frontend/packages/console-shared/src/components/status/icons';
@@ -76,16 +76,13 @@ export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: Details
   React.useEffect(() => {
     const fetchHcVersion = async () => {
       let url;
-      let headers;
       if (getActivePerspective() === PerspectiveType.MASTER) {
         url = 'api/hypercloud/version';
       } else {
         url = `api/${getActiveCluster()}/version`;
-        headers = new Headers();
-        headers.append('Authorization', `Bearer ${getIdToken()}`);
       }
       try {
-        let version = await (await fetch(url)).json();
+        let version = await coFetchJSON(url);
         setHcVersion(version);
       } catch (error) {
         setHcVersionError(error);
