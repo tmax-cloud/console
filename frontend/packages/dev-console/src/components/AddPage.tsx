@@ -126,7 +126,7 @@ export const AddPage: React.FC<AddPageProps> = ({ match }) => {
   return (
     <>
       <Helmet>
-        <title>+Add</title>
+        <title>{t('COMMON:MSG_LNB_MENU_217')}</title>
       </Helmet>
       <NamespacedPage>
         <Firehose resources={[{ kind: 'Namespace', prop: 'projects', isList: true }]}>

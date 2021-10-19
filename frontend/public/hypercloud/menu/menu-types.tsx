@@ -172,7 +172,7 @@ export const CustomMenusMap: CustomMenus = {
     kind: 'Add',
     visible: true,
     type: MenuLinkType.HrefLink,
-    defaultLabel: '+ Add',
+    defaultLabel: 'COMMON:MSG_LNB_MENU_217',
     href: '/add',
     activePath: '/add/',
     isMultiOnly: false,
