@@ -10,7 +10,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       .oc-nav-pinned-item__unpin-button {
         .oc-nav-pinned-item__icon {
           opacity: 1;
@@ -34,10 +35,135 @@
       opacity: 0;
     }
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       .oc-nav-pinned-item__icon {
         opacity: 1;
       }
+    }
+  }
+}
+
+.navIcon {
+  background-repeat: no-repeat;
+  background-position: left 21px top 17px;
+  // multi cluster
+  &.cluster {
+    background-image: url('../../imgs/hypercloud/lnb/cluster.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/cluster_filled.svg');
+    }
+  }
+  &.terraform_claim {
+    background-image: url('../../imgs/hypercloud/lnb/terraform_claim.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/terraform_claim_filled.svg');
+    }
+  }
+  &.federation {
+    background-image: url('../../imgs/hypercloud/lnb/ferderation.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/ferderation_filled.svg');
+    }
+  }
+  &.ansible {
+    background-image: url('../../imgs/hypercloud/lnb/ansible_lnb.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/ansible_filled_lnb.svg');
+    }
+  }
+
+  // master cluster
+  &.home {
+    background-image: url('../../imgs/hypercloud/lnb/home.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/home_filled.svg');
+    }
+  }
+  &.workload {
+    background-image: url('../../imgs/hypercloud/lnb/workload.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/workload_filled.svg');
+    }
+  }
+  &.helm {
+    background-image: url('../../imgs/hypercloud/lnb/helm_lnb.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/helm_filled_lnb.svg');
+    }
+  }
+  &.networking {
+    background-image: url('../../imgs/hypercloud/lnb/network.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/network_filled.svg');
+    }
+  }
+  &.storage {
+    background-image: url('../../imgs/hypercloud/lnb/storage.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/storage_filled.svg');
+    }
+  }
+  &.administration {
+    background-image: url('../../imgs/hypercloud/lnb/management.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/management_filled.svg');
+    }
+  }
+  &.hosts {
+    background-image: url('../../imgs/hypercloud/lnb/host.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/host_filled.svg');
+    }
+  }
+  &.authentications {
+    background-image: url('../../imgs/hypercloud/lnb/authentication_authorization.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/authentication_authorization_filled.svg');
+    }
+  }
+
+  // developer
+  &.add {
+    background-image: url('../../imgs/hypercloud/lnb/add.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/add_filled.svg');
+    }
+  }
+  &.topology {
+    background-image: url('../../imgs/hypercloud/lnb/topology.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/topology_filled.svg');
+    }
+  }
+  &.service_catalogs {
+    background-image: url('../../imgs/hypercloud/lnb/service_catalog.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/service_catalog_filled.svg');
+    }
+  }
+  &.service_mesh {
+    background-image: url('../../imgs/hypercloud/lnb/service_mesh.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/service_mesh_filled.svg');
+    }
+  }
+  &.ci_cd {
+    background-image: url('../../imgs/hypercloud/lnb/ci_cd.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/ci_cd_filled.svg');
+    }
+  }
+  &.ai_devops {
+    background-image: url('../../imgs/hypercloud/lnb/ai_devops.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/ai_devops_filled.svg');
+    }
+  }
+  &.image {
+    background-image: url('../../imgs/hypercloud/lnb/image.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/image_filled.svg');
     }
   }
 }
