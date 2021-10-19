@@ -50,14 +50,18 @@
   // multi cluster
   &.cluster {
     background-image: url('../../imgs/hypercloud/lnb/cluster.svg');
-    &.pf-m-current {
+    .pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/cluster_filled.svg');
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
     }
   }
   &.terraform_claim {
     background-image: url('../../imgs/hypercloud/lnb/terraform_claim.svg');
-    &.pf-m-current {
+    .pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/terraform_claim_filled.svg');
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
     }
   }
   &.federation {
@@ -126,14 +130,18 @@
   // developer
   &.add {
     background-image: url('../../imgs/hypercloud/lnb/add.svg');
-    &.pf-m-current {
+    .pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/add_filled.svg');
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
     }
   }
   &.topology {
     background-image: url('../../imgs/hypercloud/lnb/topology.svg');
-    &.pf-m-current {
+    .pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/topology_filled.svg');
+      background-repeat: no-repeat;
+      background-position: left 17px top 17px;
     }
   }
   &.service_catalogs {

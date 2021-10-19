@@ -394,11 +394,12 @@ h6 {
       text-overflow: ellipsis;
     }
   }
-
   .pf-c-nav {
     --pf-c-nav__list-link--PaddingRight: var(--pf-global--spacer--sm);
     --pf-c-nav__list-link--PaddinLeft: var(--pf-global--spacer--md);
     --pf-c-nav__list-link--after--Left: var(--pf-global--spacer--md);
+    //newtablink로 만들어진 메뉴 클릭시 배경색 바뀌도록 오버라이딩
+    --pf-c-nav--m-dark__simple-list-link--focus--BackgroundColor: #31475e;
     @media screen and (min-width: $grid-float-breakpoint) {
       --pf-c-nav__list-link--PaddingRight: var(--pf-global--spacer--md);
       --pf-c-nav__list-link--PaddinLeft: var(--pf-global--spacer--lg);
@@ -419,7 +420,7 @@ h6 {
       }
       &:focus:hover,
       &.pf-m-current:focus {
-        background-color: var(--pf-c-nav__simple-list-link--focus--BackgroundColor);
+        background-color: #31475e;
         color: var(--pf-c-nav__simple-list-link--focus--Color);
         font-weight: var(--pf-c-nav__simple-list-link--m-current--FontWeight);
       }
@@ -587,10 +588,40 @@ button.pf-c-dropdown__menu-item.hover {
   border: 1px solid #31475e;
   border-radius: 3px;
 }
-.pf-c-nav__subnav {
-  margin-left: 26px;
-  margin-right: 14px;
+//2 dpth menu
+.navIcon.pf-c-nav__item > a:first-of-type {
+  padding-left: 48px !important;
+  padding-top: 17px !important;
+  height: 48px;
 }
+//1 dpth menu
+div.navIcon .pf-c-nav__item > a:first-of-type {
+  padding-left: 48px !important;
+  padding-top: 17px !important;
+  height: 48px;
+}
+.pf-c-nav__list > .pf-c-nav__item > .pf-c-nav__link::after {
+  //선택된 1depth 메뉴의 아래 줄 없애기 위한 설정
+  width: 0px !important;
+}
+//2 dpth menu
+.navIcon.pf-c-nav__item.pf-m-current > a:first-of-type {
+  border-left: 4px solid #00a4c3;
+}
+//1 dpth menu
+div.navIcon > .pf-c-nav__item.pf-m-current > a:first-of-type {
+  border-left: 4px solid #00a4c3;
+  background-color: #213a53;
+}
+
+.pf-c-nav__subnav {
+  margin-left: 20px;
+  margin-right: 20px;
+  .pf-c-nav__link {
+    padding-left: 36px !important;
+  }
+}
+
 .pagination-div {
   text-align: center;
   position: absolute;
