@@ -80,7 +80,7 @@ export const CatalogTileDetails = withTranslation()(
                   {sampleRepo && <p>Sample repository: {sampleRepoLink}</p>}
                   {documentationUrl && (
                     <>
-                      <h2 className="h5">{t('COMMON:MSG_GNB_MORE_1')}</h2>
+                      <h2 className="h5">{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_SIDEPANEL_4')}</h2>
                       <p>{documentationIframe}</p>
                       {/* <p>{documentationUrlLink}</p> */}
                     </>
