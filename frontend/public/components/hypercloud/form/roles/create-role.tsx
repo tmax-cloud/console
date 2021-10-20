@@ -491,7 +491,7 @@ export const onSubmitCallback = data => {
       });
 
       return {
-        apiGroups: apiGroups === ['Core'] ? [''] : apiGroups ?? ['*'],
+        apiGroups: apiGroups ?? ['*'],
         resources: resources ?? ['*'],
         resourceNames: resourceNames ?? [],
         verbs: rule.verbs ?? ['*'],
