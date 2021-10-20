@@ -174,7 +174,6 @@ export const NavSection = connect(navSectionStateToProps)(
         const { isOpen, activeChild } = this.state;
         const isActive = !!activeChild;
         const children = this.getChildren();
-        console.log('menu type? ', type);
         const prettyType = type
           .toLowerCase()
           .replace(' ', '_')

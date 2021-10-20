@@ -55,6 +55,7 @@ export const basicMenusFactory = perspective => {
                   containerLabel = t(menuData.label);
                   type = en(menuData.label);
                 } else {
+                  //user가 추가한 menu이거나 i18n키가 없는경우
                   containerLabel = menuData.label;
                   type = '@@customlabel@@';
                 }
