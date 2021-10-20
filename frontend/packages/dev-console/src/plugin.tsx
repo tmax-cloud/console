@@ -338,6 +338,7 @@ const plugin: Plugin<ConsumedExtensions> = [
       id: 'dev',
       name: 'Developer',
       icon: <CodeIcon />,
+      selectedIcon : <CodeIcon />,
       defaultPins: [ConfigMapModel.kind, SecretModel.kind],
       getLandingPageURL: () => '/topology',
       getK8sLandingPageURL: () => '/add',
