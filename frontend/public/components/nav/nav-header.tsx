@@ -72,13 +72,13 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
 
   const { t } = useTranslation();
   const perspectives = getPerspectives.bind(null, t)();
-  const { icon, name } = React.useMemo(() => perspectives.find(p => p.properties.id === activePerspective).properties, [activePerspective, perspectives]);
+  const { selectedIcon, name } = React.useMemo(() => perspectives.find(p => p.properties.id === activePerspective).properties, [activePerspective, perspectives]);
 
   return (
     <>
       <div className="oc-nav-header">
         <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_1')}</div>
-        <Dropdown isOpen={isPerspectiveDropdownOpen} toggle={renderToggle(icon, name)} dropdownItems={getPerspectiveItems(perspectives)} data-test-id="perspective-switcher-menu" />
+        <Dropdown isOpen={isPerspectiveDropdownOpen} toggle={renderToggle(selectedIcon, name)} dropdownItems={getPerspectiveItems(perspectives)} data-test-id="perspective-switcher-menu" />
         {activePerspective == PerspectiveType.SINGLE && (
           <>
             <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_2')}</div>

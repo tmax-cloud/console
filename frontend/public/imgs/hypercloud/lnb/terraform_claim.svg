@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>lnb/terraform_claim</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.474510 0 0 0 0 0.533333 0 0 0 0 0.592157 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="lnb/terraform_claim" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g filter="url(#filter-1)">
+            <g>
+                <rect id="Rectangle" x="0" y="0" width="17.25" height="18"></rect>
+                <g id="Group" transform="translate(2.250000, 2.250000)" fill="#000000" fill-rule="nonzero">
+                    <rect id="Rectangle" opacity="0.3" x="1.41666667" y="1.5" width="2.83333333" height="10.5"></rect>
+                    <rect id="Rectangle" opacity="0.3" x="8.5" y="9" width="2.83333333" height="3"></rect>
+                    <rect id="Rectangle" opacity="0.3" x="8.5" y="1.5" width="2.83333333" height="3"></rect>
+                    <path d="M0,1.5 L0,12 C0,12.825 0.630416667,13.5 1.41666667,13.5 L5.66666667,13.5 L5.66666667,0 L1.41666667,0 C0.630416667,0 0,0.675 0,1.5 Z M4.25,12 L1.41666667,12 L1.41666667,1.5 L4.25,1.5 L4.25,12 Z" id="Shape"></path>
+                    <path d="M11.3333333,0 L7.08333333,0 L7.08333333,6 L12.75,6 L12.75,1.5 C12.75,0.675 12.1125,0 11.3333333,0 Z M11.3333333,4.5 L8.5,4.5 L8.5,1.5 L11.3333333,1.5 L11.3333333,4.5 Z" id="Shape"></path>
+                    <path d="M7.08333333,13.5 L11.3333333,13.5 C12.1125,13.5 12.75,12.825 12.75,12 L12.75,7.5 L7.08333333,7.5 L7.08333333,13.5 Z M8.5,9 L11.3333333,9 L11.3333333,12 L8.5,12 L8.5,9 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

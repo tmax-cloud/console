@@ -10,6 +10,8 @@ namespace ExtensionProperties {
     name: string;
     /** The perspective display icon. */
     icon: React.ReactElement;
+    /** The perspective display selected icon. */
+    selectedIcon: React.ReactElement;
     /** Whether the perspective is the default. There can only be one default. */
     default?: boolean;
     /** Default pinned resources on the nav */
