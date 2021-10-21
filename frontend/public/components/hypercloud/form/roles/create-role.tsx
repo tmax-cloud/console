@@ -239,7 +239,7 @@ const RuleItem = props => {
 
   return (
     <>
-      {index === 0 ? null : <div className="co-form-section__separator" />}
+      <div className="co-form-section__separator" />
       <div className="row" key={item.id}>
         <Section id={`rules[${index}]`} >
           <div className="col-xs-12 pairs-list__value-field">
@@ -475,7 +475,10 @@ export const onSubmitCallback = data => {
       let apiGroups = new Array;
       rule.apiGroups = rule.apiGroups.filter( r => {if (r.added === true) return true });
       rule.apiGroups?.forEach((r, index) => {
-          apiGroups[index] = r.value;
+        if(r.value==='Core') {
+          r.value = '';
+        }
+        apiGroups[index] = r.value;
       });
       apiGroups = apiGroups.filter(function () { return true });
       let resources = new Array;
@@ -488,7 +491,7 @@ export const onSubmitCallback = data => {
       });
 
       return {
-        apiGroups: apiGroups === ['Core'] ? [''] : apiGroups ?? ['*'],
+        apiGroups: apiGroups ?? ['*'],
         resources: resources ?? ['*'],
         resourceNames: resourceNames ?? [],
         verbs: rule.verbs ?? ['*'],
