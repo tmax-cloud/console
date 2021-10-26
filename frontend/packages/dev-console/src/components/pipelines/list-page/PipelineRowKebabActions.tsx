@@ -3,7 +3,7 @@ import { referenceForModel } from '@console/internal/module/k8s';
 import { ResourceKebab } from '@console/internal/components/utils';
 import { getPipelineKebabActions } from '../../../utils/pipeline-actions';
 import { Pipeline, PipelineRun } from '../../../utils/pipeline-augment';
-import { PipelineModel } from '../../../../../../public/models';
+import { PipelineModel } from '@console/internal/models';
 import { usePipelineTriggerTemplateNames } from '../utils/triggers';
 
 type PipelineRowKebabActionsProps = {

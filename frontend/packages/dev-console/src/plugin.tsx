@@ -18,7 +18,7 @@ import {
 } from '@console/internal/models';
 // import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
 import * as models from './models';
-import * as hypercloudModels from '../../../public/models';
+import * as hypercloudModels from '@console/internal/models';
 import { getKebabActionsForKind } from './utils/kebab-actions';
 import { tknPipelineAndPipelineRunsResources, getPipelinesAndPipelineRunsForResource } from './utils/pipeline-plugin-utils';
 import { FLAG_OPENSHIFT_PIPELINE, ALLOW_SERVICE_BINDING } from './const';

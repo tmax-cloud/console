@@ -5,7 +5,7 @@ import { LoadingBox } from '@console/internal/components/utils';
 import { k8sGet, referenceForModel } from '@console/internal/module/k8s';
 import PipelineBuilderPage from './PipelineBuilderPage';
 import { Pipeline } from '../../../utils/pipeline-augment';
-import { PipelineModel } from '../../../../../../public/models';
+import { PipelineModel } from '@console/internal/models';
 
 import './PipelineBuilderEditPage.scss';
 

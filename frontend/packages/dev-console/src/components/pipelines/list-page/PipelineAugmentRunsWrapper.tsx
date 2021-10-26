@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ListPageWrapper_ as ListPageWrapper } from '@console/internal/components/factory';
 import { Firehose } from '@console/internal/components/utils';
 import { Resource, getResources } from '../../../utils/pipeline-augment';
-import { PipelineModel } from '../../../../../../public/models';
+import { PipelineModel } from '@console/internal/models';
 import PipelineAugmentRuns, { filters } from './PipelineAugmentRuns';
 import PipelineList from './PipelineList';
 

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { k8sCreate } from '@console/internal/module/k8s';
-import { PipelineModel } from '../../../../../../public/models';
+import { PipelineModel } from '@console/internal/models';
 import { GitImportFormData } from '../import-types';
 import { createPipelineResource } from '../../pipelines/pipeline-resource/pipelineResource-utils';
 

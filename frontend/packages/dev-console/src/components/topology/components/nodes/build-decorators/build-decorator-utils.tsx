@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Status } from '@console/shared';
 import { resourcePathFromModel } from '@console/internal/components/utils';
 import { BuildModel } from '@console/internal/models';
-import { PipelineRunModel } from '../../../../../../../../public/models';
+import { PipelineRunModel } from '@console/internal/models';
 import { constructCurrentPipeline } from '../../../../../utils/pipeline-utils';
 import { WorkloadData } from '../../../topology-types';
 import PipelineBuildDecoratorTooltip from './PipelineBuildDecoratorTooltip';

@@ -6,7 +6,7 @@ import { referenceForModel } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import { fromNow } from '@console/internal/components/utils/datetime';
 import { pipelineRunStatus } from '../../../utils/pipeline-filter-reducer';
-import { PipelineRunModel } from '../../../../../../public/models';
+import { PipelineRunModel } from '@console/internal/models';
 import { PipelineRun } from '../../../utils/pipeline-augment';
 
 type PipelineRunItemProps = {
