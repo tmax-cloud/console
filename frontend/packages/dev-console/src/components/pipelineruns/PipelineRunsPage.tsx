@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { getBadgeFromType } from '@console/shared';
-import { PipelineRunModel } from '../../../../../public/models';
+import { PipelineRunModel } from '@console/internal/models';
 import ProjectListPage from '../projects/ProjectListPage';
 import PipelineRunsResourceList from './PipelineRunsResourceList';
 

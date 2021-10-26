@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { k8sList } from '@console/internal/module/k8s';
-import { ClusterTaskModel, TaskModel } from '../../../../../../public/models';
+import { ClusterTaskModel, TaskModel } from '@console/internal/models';
 import {
   PipelineResource,
   PipelineResourceTask,

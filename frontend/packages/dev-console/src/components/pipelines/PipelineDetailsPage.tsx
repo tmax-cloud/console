@@ -5,7 +5,7 @@ import { k8sGet, k8sList } from '@console/internal/module/k8s';
 import { ErrorPage404 } from '@console/internal/components/error';
 import { getPipelineKebabActions } from '../../utils/pipeline-actions';
 import { getLatestRun, PipelineRun } from '../../utils/pipeline-augment';
-import { PipelineRunModel, PipelineModel } from '../../../../../public/models';
+import { PipelineRunModel, PipelineModel } from '@console/internal/models';
 import { useMenuActionsWithUserLabel } from '../pipelineruns/triggered-by';
 import {
   PipelineDetails,

@@ -13,7 +13,7 @@ import {
   WatchK8sResultsObject,
 } from '@console/internal/components/utils/k8s-watch-hook';
 import { EventListenerModel, TriggerTemplateModel } from '../../../models';
-import { PipelineRunModel } from '../../../../../../public/models'
+import { PipelineRunModel } from '@console/internal/models';
 import { getResourceModelFromBindingKind, PipelineRun } from '../../../utils/pipeline-augment';
 import {
   EventListenerKind,

@@ -5,7 +5,7 @@ import { getActiveNamespace } from '@console/internal/actions/ui';
 import { useAccessReview } from '@console/internal/components/utils';
 import { TechPreviewBadge } from '@console/shared';
 import { useFormikContext, FormikValues } from 'formik';
-import { PipelineModel, PipelineResourceModel } from '../../../../../../public/models';
+import { PipelineModel, PipelineResourceModel } from '@console/internal/models';
 import { FLAG_OPENSHIFT_PIPELINE, CLUSTER_PIPELINE_NS } from '../../../const';
 import { NormalizedBuilderImages } from '../../../utils/imagestream-utils';
 import FormSection from '../section/FormSection';

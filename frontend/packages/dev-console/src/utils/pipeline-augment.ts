@@ -20,7 +20,7 @@ import {
   PipelineRunModel,
   TaskModel,
   //TriggerBindingModel,
-} from '../../../../public/models';
+} from '@console/internal/models';
 import { pipelineRunFilterReducer } from './pipeline-filter-reducer';
 
 interface Metadata {
