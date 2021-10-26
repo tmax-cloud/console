@@ -150,7 +150,6 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
 
   const defaultValuesWithKey = defaultValues?.map(item => {
     return {
-      key: `${item.label}-${item.value}`,
       label: item.label,
       value: item.value,
     };
@@ -333,7 +332,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
     if (chip.key === SELECT_ALL_VALUE) {
       setDropdownSettings(false, [], []);
     } else {
-      const newValues = selectedValues?.filter(item => chip.key !== item.key);
+      const newValues = selectedValues?.filter(item => chip.key !== item.label);
       setDropdownSettings(false, newValues, newValues);
     }
   };
@@ -377,7 +376,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
             deleteChipGroup={clearAll}
             chips={chips?.map((item) => {
               return {
-                key: item.key || SELECT_ALL_VALUE,
+                key: item.label || SELECT_ALL_VALUE,
                 node: (
                   <>
                     <ResourceIcon kind={item.kind ?? ""} />

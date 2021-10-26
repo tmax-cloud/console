@@ -493,7 +493,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
             onChange={([selected]) => {
               return { value: selected };
             }}
-            defaultValue={[{ label: 'Apple', value: 'Apple' }]}
+            defaultValue={[{ label: 'Apple', value: 'Apple' }, { label: 'Banana', value: 'Banana' }]}
           />
         </Section>
         <Section id="dropdown-set" label=" Dropdown set">
