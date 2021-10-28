@@ -1,6 +1,6 @@
 import { history, resourcePathFromModel } from '@console/internal/components/utils';
 import { apiVersionForModel } from '@console/internal/module/k8s';
-import { ClusterTaskModel, PipelineModel } from '../../../models';
+import { ClusterTaskModel, PipelineModel } from '@console/internal/models';
 import { Pipeline, PipelineResourceTask, PipelineResourceTaskParam, PipelineTask } from '../../../utils/pipeline-augment';
 import { getTaskParameters } from '../resource-utils';
 import { TASK_ERROR_STRINGS, TaskErrorType } from './const';
