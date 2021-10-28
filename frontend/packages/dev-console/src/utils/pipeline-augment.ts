@@ -48,6 +48,7 @@ export interface PipelineTaskRef {
 export interface PipelineTaskParam {
   name: string;
   value: any;
+  type?: string;
 }
 export interface PipelineTaskResources {
   inputs?: PipelineTaskResource[];
