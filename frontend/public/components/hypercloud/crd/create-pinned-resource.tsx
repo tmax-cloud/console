@@ -55,6 +55,7 @@ export const OnlyYamlEditorKinds = [
   models.PeerAuthenticationModel.kind,
   models.AuthorizationPolicyModel.kind,
   models.ClusterManagerModel.kind,
+  models.CustomResourceDefinitionModel.kind,
 ];
 
 export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, create }) => {
