@@ -37,8 +37,6 @@ func (c *Console) TokenHandler(next http.Handler) http.Handler {
 				r.URL.Query().Del("token")
 				c.StaticUser.Token = queryToken
 			}
-		} else {
-			log.Info("release-mode=false, so use console token")
 		}
 		next.ServeHTTP(w, r)
 	})

@@ -4,8 +4,8 @@ metadata:
   name: traefik
   labels: 
     app.kubernetes.io/instance: traefik 
-    app.kubernetes.io/managed-by: tmax-cloud
-    app.kubernetes.io/name: api-gateway 
+    app.kubernetes.io/managed-by: tmax 
+    app.kubernetes.io/name: traefik 
 rules:
   - apiGroups:
       - ""
@@ -56,8 +56,8 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/instance: traefik 
-    app.kubernetes.io/managed-by: tmax-cloud
-    app.kubernetes.io/name: api-gateway
+    app.kubernetes.io/managed-bu: tmax 
+    app.kubernetes.io/name: traefik 
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

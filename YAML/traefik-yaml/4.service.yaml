@@ -3,14 +3,15 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/instance: traefik
-    app.kubernetes.io/managed-by: tmax-cloud
-    app.kubernetes.io/name: api-gateway
-  name: api-gateway
-  namespace: api-gateway-system
+    app.kubernetes.io/managed-by: tmax
+    app.kubernetes.io/name: traefik
+  name: traefik
+  namespace: traefik
 spec:
+  externalTrafficPolicy: Cluster
   ports:
   - name: traefik
-    port: 8080
+    port: 9000
     protocol: TCP
     targetPort: traefik
   - name: web
@@ -27,6 +28,6 @@ spec:
     targetPort: k8s
   selector:
     app.kubernetes.io/instance: traefik
-    app.kubernetes.io/name: api-gateway
+    app.kubernetes.io/name: traefik
   sessionAffinity: None
   type: LoadBalancer
