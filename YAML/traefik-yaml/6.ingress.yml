@@ -1,0 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations: 
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure,web
+    traefik.ingress.kubernetes.io/router.pathmatcher: "/"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: mytransport
+  name: console-ingress
+  namespace: console-system
+spec:
+  rules:
+    - host: console.console-system.svc
+      http:
+        paths:
+          - backend:
+              service:
+                name: console-clusterip
+                port:
+                  name: https
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - console.console-system.svc
+      secretName: console-tls

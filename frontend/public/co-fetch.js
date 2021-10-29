@@ -115,8 +115,11 @@ export const coFetch = (url, options = {}, timeout = 60000) => {
     delete allOptions.headers['X-CSRFToken'];
   }
 
+  const headers = new Headers(allOptions.headers);
   if (!!getIdToken()) {
-    allOptions.headers.Authorization = 'Bearer ' + getIdToken();
+    // allOptions.headers.Authorization = 'Bearer ' + getIdToken();
+    headers.append(`Authorization`, `Bearer ${getIdToken()}`);
+    allOptions.headers = headers;
     const fetchPromise = fetch(url, allOptions).then(response => validateStatus(response, url));
 
     // return fetch promise directly if timeout <= 0

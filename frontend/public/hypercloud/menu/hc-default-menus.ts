@@ -50,10 +50,6 @@ const DeveloperNavMenus = [
     kind: CustomMenusMap.Add.kind,
   },
   {
-    menuType: MenuType.REGISTERED_MENU,
-    kind: CustomMenusMap.Topology.kind,
-  },
-  {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicecatalogs,
     innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, , Models.ServiceBindingModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.TemplateInstanceModel.kind],
@@ -72,11 +68,6 @@ const DeveloperNavMenus = [
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.aidevops,
     innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.image,
-    innerMenus: [Models.RegistryModel.kind, Models.ExternalRegistryModel.kind, Models.ImageSignerModel.kind, Models.ImageSignRequestModel.kind, Models.SignerPolicyModel.kind, Models.ImageReplicateModel.kind],
   },
 ];
 

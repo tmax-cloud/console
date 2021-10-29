@@ -3,10 +3,10 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/instance: traefik
-    app.kubernetes.io/managed-by: tmax
-    app.kubernetes.io/name: traefik
-  name: traefik
-  namespace: traefik
+    app.kubernetes.io/managed-by: tmax-cloud
+    app.kubernetes.io/name: api-gateway
+  name: api-gateway
+  namespace: api-gateway-system
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -14,7 +14,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/instance: traefik
-      app.kubernetes.io/name: traefik
+      app.kubernetes.io/name: api-gateway
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -22,35 +22,49 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app.kubernetes.io/instance: traefik
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.19.1
+        app.kubernetes.io/managed-by: tmax-cloud
+        app.kubernetes.io/name: api-gateway
     spec:
       containers:
       - args:
-        - --global.checknewversion
-        - --global.sendanonymoususage
-        - --entryPoints.traefik.address=:9000/tcp
-        - --entryPoints.web.address=:8000/tcp
-        - --entryPoints.websecure.address=:8443/tcp
-        - --entryPoints.k8s.address=:6443/tcp
+        - --entryPoints.traefik.address=:8080
+        - --entryPoints.web.address=:8000
+        - --entryPoints.websecure.address=:8443
+        - --entryPoints.k8s.address=:6443
+        - --serverstransport.insecureskipverify=true
+        # Uncomment the below lines to redirect http requests to https.
+        # This specifies the port :443 and not the https entrypoint name for the
+        # redirect as the service is listening on port 443 and directing traffic
+        # to the 8443 target port. If the entrypoint name "websecure" was used,
+        # instead of "to=:443", then the browser would be redirected to port 8443.
+        - --entryPoints.web.http.redirections.entrypoint.to=:433
+        - --entryPoints.web.http.redirections.entrypoint.scheme=https
+        - --api=true 
         - --api.dashboard=true
+        - --api.insecure=true
         - --ping=true
+        - --ping.entrypoint=traefik
+        - --providers.kubernetesingress=true
+        # Traefik processes all Ingress objects in the configured namespaces.
+        # - --providers.kubernetesingress.labelselector="app=traefik"
+        # Value of kubernetes.io/ingress.class annotation that identifies Ingress objects to be processed.
+        - --providers.kubernetesingress.ingressclass=api-gateway
+        - --providers.kubernetesingress.namespaces=console-system,api-gateway-system
+        - --providers.kubernetesingress.ingressendpoint.publishedservice=api-gateway-system/api-gateway
+        - --providers.kubernetesingress.allowemptyservices=true 
         - --providers.kubernetescrd
-        - --providers.kubernetesingress
-        - --providers.kubernetesingress.labelselector="app=traefik"
-        - --providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik
+        - --providers.kubernetescrd.ingressclass=api-gateway
+        - --providers.kubernetescrd.allowcrossnamespace=true
         - --providers.file
         - --providers.file.directory=/data/config
         - --providers.file.watch=true
-        - --accesslog=true
-        - --accesslog.format=json
-        - --accesslog.fields.defaultmode=keep
-        - --serverstransport.insecureskipverify=true
-        image: traefik:2.4.8
+        - --log.level=DEBUG 
+        # - --accesslog=true
+        # - --accesslog.format=json
+        # - --accesslog.fields.defaultmode=keep
+        image: traefik:v2.5.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -108,12 +122,13 @@ spec:
       schedulerName: default-scheduler
       securityContext:
         fsGroup: 65532
-      serviceAccount: traefik
-      serviceAccountName: traefik
+      serviceAccount: api-gateway
+      serviceAccountName: api-gateway
       terminationGracePeriodSeconds: 60
       volumes:
       - emptyDir: {}
         name: tmp
       - name: configmap-volume
-        configMap: 
-          name: traefik-config
+        emptyDir: {}
+        # configMap: 
+        #   name: traefik-config
