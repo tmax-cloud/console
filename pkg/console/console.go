@@ -1,11 +1,9 @@
 package console
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"html/template"
-	"k8s.io/client-go/kubernetes"
 	"net/http"
 	"net/url"
 	"os"
@@ -25,8 +23,8 @@ import (
 	"console/pkg/version"
 
 	helmhandlerspkg "console/pkg/helm/handlers"
+
 	"github.com/sirupsen/logrus"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
@@ -48,6 +46,8 @@ const (
 	multiHypercloudServerPath = "/api/multi-hypercloud/"
 	kibanaPath                = "/api/kibana/"
 	kubeflowPath              = "/api/kubeflow/"
+
+	consolePath = "/api/console"
 )
 
 type jsGlobals struct {
@@ -117,7 +117,7 @@ func New(cfg *v1.Config) (*Console, error) {
 // Gateway is API gateway like reverse proxy server related in k8s, Prometheus, Grafana, and hypercloud-operator
 func (c *Console) Gateway() http.Handler {
 	// standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.JwtHandler, handlers.ProxyHeaders)
-	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
+	// standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
 	// tokenMiddleware := alice.New(c.jwtHandler, c.tokenHandler) // jwt validation handler + token handler
 	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
@@ -133,6 +133,20 @@ func (c *Console) Gateway() http.Handler {
 			k8sProxy.ServeHTTP(w, r)
 		})),
 	)
+	// handle(consolePath, http.StripPrefix(
+	// 	proxy.SingleJoiningSlash(c.BaseURL.Path, consolePath),
+	// 	tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+	// 		k8sProxy.ServeHTTP(w, r)
+	// 	})),
+	// )
+	r.Methods("GET").PathPrefix(consolePath + "/apis/networking.k8s.io/").Handler(http.StripPrefix(consolePath,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Info("CHECK TOKEN: ", c.StaticUser.Token)
+			r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+			k8sProxy.ServeHTTP(w, r)
+		})))
+
 	if c.PrometheusProxyConfig != nil {
 		// Only proxy requests to the Prometheus API, not the UI.
 		var (
@@ -363,13 +377,7 @@ func (c *Console) Gateway() http.Handler {
 		fmt.Fprintln(w, "not found")
 	})
 
-	r.PathPrefix("/test/ingress").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, "ok")
-	})
-
-	//r.PathPrefix("/test").HandlerFunc(c.IngressHandler)
-	return standardMiddleware.Then(r)
+	return r
 }
 
 // Server is server only serving static asset & jsconfig
@@ -471,8 +479,6 @@ func kubeVersion(config *rest.Config) (string, error) {
 		return "", err
 	}
 
-	//test := client.RESTClient()
-
 	kubeVersion, err := client.ServerVersion()
 	if err != nil {
 		return "", err
@@ -484,23 +490,28 @@ func kubeVersion(config *rest.Config) (string, error) {
 	return "", errors.New("failed to get kubernetes version")
 }
 
-func (c *Console) IngressHandler(w http.ResponseWriter, r *http.Request) {
-	res := c.getIngress()
-	w.Write([]byte(res))
-}
+// func (c *Console) IngressHandler(w http.ResponseWriter, r *http.Request) {
+// 	res := c.getIngress()
+// 	w.Write([]byte(res))
+// }
 
-func (c *Console) getIngress() string {
-	config := &rest.Config{
-		Host:      c.K8sProxyConfig.Endpoint.String(),
-		Transport: c.K8sClient.Transport,
-	}
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		fmt.Println("Err")
-	}
-	ingresses, err := clientset.NetworkingV1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		fmt.Println("Err")
-	}
-	return ingresses.String()
-}
+// func (c *Console) getIngress() string {
+// 	config := &rest.Config{
+// 		Host:        c.K8sProxyConfig.Endpoint.String(),
+// 		Transport:   c.K8sClient.Transport,
+// 		BearerToken: c.StaticUser.Token,
+// 	}
+// 	clientset, err := kubernetes.NewForConfig(config)
+// 	if err != nil {
+// 		fmt.Printf("%+v", err.Error())
+// 	}
+// 	ingresses, err := clientset.NetworkingV1().Ingresses("").List(context.TODO(), metav1.ListOptions{
+// 		// LabelSelector: "kubernetes.io=test",
+// 		// ,metav1.LabelSelector,
+// 	})
+// 	if err != nil {
+// 		fmt.Printf("%+v", err.Error())
+// 		fmt.Println(c.StaticUser.Token)
+// 	}
+// 	return ingresses.Items[0].Status.String()
+// }

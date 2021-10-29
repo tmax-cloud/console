@@ -108,7 +108,7 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 		}
 		log.Infof("buildHandler : %v  \n", config.Routers)
 		c := staticServer
-		//standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders)
+		standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders)
 		tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 
 		for name, value := range config.Routers {
@@ -166,7 +166,7 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 		if defaultServer.Switcher.GetHandler() == nil {
 			defaultServer.Switcher.UpdateHandler(http.NotFoundHandler())
 		}
-		defaultServer.Switcher.UpdateHandler(routerTemp)
+		defaultServer.Switcher.UpdateHandler(standardMiddleware.Then(routerTemp))
 		// defaultServer.Switcher.UpdateHandler(routerTemp)
 
 	}
