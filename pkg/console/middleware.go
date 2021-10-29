@@ -34,12 +34,15 @@ func (c *Console) TokenHandler(next http.Handler) http.Handler {
 					r.URL.Query().Del("token")
 					c.StaticUser.Token = queryToken
 				} else {
-					w.WriteHeader(http.StatusUnauthorized)
+					log.Warn("Not exist token " + r.RequestURI)
+					c.StaticUser.Token = ""
 				}
 			} else {
 				authHeader := r.Header.Clone().Get(authHeaderKey)
 				c.StaticUser.Token = strings.TrimPrefix(authHeader, "Bearer ")
 			}
+		} else {
+			log.Info("release-mode=false, so use console token")
 		}
 		next.ServeHTTP(w, r)
 	})
