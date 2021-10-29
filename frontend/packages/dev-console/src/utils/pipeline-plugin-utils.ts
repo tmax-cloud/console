@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { referenceForModel, K8sResourceKind } from '@console/internal/module/k8s';
 import { FirehoseResource } from '@console/internal/components/utils';
-import { PipelineRunModel, PipelineModel } from '../models';
+import { PipelineRunModel, PipelineModel } from '@console/internal/models';
 import { Pipeline, PipelineRun } from './pipeline-augment';
 
 // label to get the pipelines

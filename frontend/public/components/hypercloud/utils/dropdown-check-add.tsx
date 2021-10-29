@@ -54,14 +54,8 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     const { data, getValue, setValue } = props;
     //const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
     //const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
-    let allSelected = false;
+    //let allSelected = false;
     const currentValue = getValue();
-
-    if (shrinkOnSelectAll) {
-        if (_.isEqual(currentValue?.[0], selectAllChipObj)) {
-            allSelected = true;
-        }
-    }
 
     const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
     const wihtoutItem = currentValue.filter(e => { if (data.label !== e.label) return true; });
@@ -202,7 +196,6 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
 
     const defaultValuesWithKey = defaultValues?.map(item => {
         return {
-            key: `${item.label}-${item.value}`,
             label: item.label,
             value: item.value,
             checked: item.checked,
@@ -390,7 +383,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
         if (chip.key === SELECT_ALL_VALUE) {
             setDropdownSettings(false, [], []);
         } else {
-            const newValues = selectedValues?.filter(item => chip.key !== item.key);
+            const newValues = selectedValues?.filter(item => chip.key !== item.label);
             setDropdownSettings(false, newValues, newValues);
         }
     };
@@ -429,7 +422,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                         deleteChipGroup={clearAll}
                         chips={chips?.map(item => {
                             return {
-                                key: item.key || SELECT_ALL_VALUE,
+                                key: item.label || SELECT_ALL_VALUE,
                                 node: (
                                     <>
                                         <ResourceIcon kind={item.kind ?? ''} />

@@ -9,7 +9,7 @@ import {
   PipelineRunReferenceResource,
   PipelineRunResource,
 } from '../../../../utils/pipeline-augment';
-import { PipelineRunModel } from '../../../../models';
+import { PipelineRunModel } from '@console/internal/models';
 import { getPipelineRunParams, getPipelineRunWorkspaces } from '../../../../utils/pipeline-utils';
 import { CREATE_PIPELINE_RESOURCE, initialResourceFormValues } from './const';
 import { CommonPipelineModalFormikValues, PipelineModalFormResource } from './types';

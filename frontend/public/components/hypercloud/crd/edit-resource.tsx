@@ -115,11 +115,11 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 
 // edit탭에 경우 customresourcedefinitions 경로일 경우 url params에 plural 값이 의도한 것과 다르게 들어옴.
 const getMatchedPlural = (type, spec, match) => {
-  if (type === 'customresourcedefinitions') {
-    return spec.group + '~' + spec.version + '~' + spec.names.kind;
-  } else {
-    return match.params.plural;
-  }
+  // if (type === 'customresourcedefinitions') {
+  //   return spec.group + '~' + spec.version + '~' + spec.names.kind;
+  // } else {
+  return match.params.plural;
+  // }
 };
 
 const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model'>) => {
