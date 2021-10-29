@@ -134,6 +134,10 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     return {
       'ui:widget': 'fileUploadWidget',
     };
+  } else if (jsonSchemaName === 'provider') {
+    return {
+      'ui:field': 'ProviderDropdownField',
+    };
   }
 
   const handleArray = () => {
