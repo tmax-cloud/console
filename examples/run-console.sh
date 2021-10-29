@@ -32,7 +32,7 @@ KIALI='kiali.istio-system.172.21.4.152.nip.io'
 KUBEFLOW_IP='192.168.9.141'
 # KUBEFLOW_PORT='80' 
 
-./bin/console server \
+./bin/console gateway \
     --listen=https://$myIP:9001 \
     --base-address=https://$myIP:9001 \
     --dynamic-file=./configs/dynamic-config.yaml \

@@ -1,9 +1,11 @@
 package console
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"html/template"
+	"k8s.io/client-go/kubernetes"
 	"net/http"
 	"net/url"
 	"os"
@@ -22,9 +24,9 @@ import (
 	"console/pkg/serverutils"
 	"console/pkg/version"
 
-	"github.com/sirupsen/logrus"
-
 	helmhandlerspkg "console/pkg/helm/handlers"
+	"github.com/sirupsen/logrus"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
@@ -360,6 +362,13 @@ func (c *Console) Gateway() http.Handler {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "not found")
 	})
+
+	r.PathPrefix("/test/ingress").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "ok")
+	})
+
+	//r.PathPrefix("/test").HandlerFunc(c.IngressHandler)
 	return standardMiddleware.Then(r)
 }
 
@@ -462,6 +471,8 @@ func kubeVersion(config *rest.Config) (string, error) {
 		return "", err
 	}
 
+	//test := client.RESTClient()
+
 	kubeVersion, err := client.ServerVersion()
 	if err != nil {
 		return "", err
@@ -471,4 +482,25 @@ func kubeVersion(config *rest.Config) (string, error) {
 		return kubeVersion.String(), nil
 	}
 	return "", errors.New("failed to get kubernetes version")
+}
+
+func (c *Console) IngressHandler(w http.ResponseWriter, r *http.Request) {
+	res := c.getIngress()
+	w.Write([]byte(res))
+}
+
+func (c *Console) getIngress() string {
+	config := &rest.Config{
+		Host:      c.K8sProxyConfig.Endpoint.String(),
+		Transport: c.K8sClient.Transport,
+	}
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		fmt.Println("Err")
+	}
+	ingresses, err := clientset.NetworkingV1().Ingresses("").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		fmt.Println("Err")
+	}
+	return ingresses.String()
 }
