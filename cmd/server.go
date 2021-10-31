@@ -33,6 +33,7 @@ var proxyCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := v1.ValidateConfig(cfg)
+		log.Infof("On SERVER: %v \n", *cfg)
 		if err != nil {
 			log.WithField("FILE", "root.go").Errorf("Validate Error: v1.ValidateConfig, line: 56 %v \n", err)
 			os.Exit(1)

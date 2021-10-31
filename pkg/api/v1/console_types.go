@@ -49,6 +49,7 @@ type AuthInfo struct {
 // ClusterInfo holds information the about the cluster such as master public URL and console public URL.
 type ClusterInfo struct {
 	K8sEndpoint string `yaml:"masterPublicURL,omitempty"`
+	BearerToken string `yaml:"bearerToken,omitempty"`
 	// main app
 	HypercloudEndpoint      string `yaml:"hypercloudEndpoint,omitempty"`
 	MultiHypercloudEndpoint string `yaml:"multiHypercloudEndpoint,omitempty"`
