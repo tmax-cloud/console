@@ -205,7 +205,7 @@ export const ClusterRegistrationStatusReducer = (cr: any): string => {
   const status = _.get(cr, 'status');
   if (!!status) {
     const phase = status.phase || '';
-    if (phase === 'Failed' || phase === 'Success') {
+    if (phase === 'Failed' || phase === 'Success' || phase === 'Deleted') {
       return phase;
     } else {
       return 'Validation/Validated';
