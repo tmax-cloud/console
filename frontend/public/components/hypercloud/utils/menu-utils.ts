@@ -1,7 +1,18 @@
 import * as _ from 'lodash-es';
 import { ClusterMenuPolicyModel, IngressModel } from '@console/internal/models';
-import { k8sList, k8sGet } from '@console/internal/module/k8s';
+import { k8sList, k8sGet, Selector } from '@console/internal/module/k8s';
 import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+import { coFetchJSON } from '@console/internal/co-fetch';
+import { selectorToString } from '@console/internal/module/k8s/selector';
+
+const ingressUrlWithLabelSelector = labelSelector => {
+  const { apiGroup, apiVersion, plural } = IngressModel;
+  const labelSelectorString = selectorToString(labelSelector as Selector);
+  const query = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent(labelSelectorString)}`;
+  return `api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
+};
+
+const doneMessage = 'done';
 
 const initializeCmpFlag = () => {
   return new Promise((resolve, reject) => {
@@ -13,13 +24,13 @@ const initializeCmpFlag = () => {
       .then(policies => {
         const policy = policies?.[0];
         window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
-        resolve('done');
+        resolve(doneMessage);
       })
       .catch(err => {
         window.SERVER_FLAGS.showCustomPerspective = false;
         console.log(`No cmp resource.`);
         // MEMO : 링크나 메뉴생성에 에러가 나도 일단 app 화면은 떠야 되니 resolve처리함.
-        resolve('done');
+        resolve(doneMessage);
       });
   });
 };
@@ -37,11 +48,11 @@ const initializeHarborUrl = () => {
             !!harborMenu && _.assign(harborMenu, { url: `https://${host}` });
           }
         }
-        resolve('done');
+        resolve(doneMessage);
       })
       .catch(err => {
         console.log('No ingress resource for harbor.');
-        resolve('done');
+        resolve(doneMessage);
       });
   });
 };
@@ -54,12 +65,36 @@ const initializeGitlabUrl = () => {
         if (!!host) {
           const gitlabMenu = _.get(CustomMenusMap, 'Git');
           !!gitlabMenu && _.assign(gitlabMenu, { url: `https://${host}` });
-          resolve('done');
+          resolve(doneMessage);
         }
       })
       .catch(err => {
         console.log('No ingress resource for gitlab.');
-        resolve('done');
+        resolve(doneMessage);
+      });
+  });
+};
+
+const initializeGrafanaUrl = () => {
+  return new Promise((resolve, reject) => {
+    const url = ingressUrlWithLabelSelector({
+      'tmaxcloud.org/ingress': 'grafana',
+    });
+    coFetchJSON(url)
+      .then(res => {
+        const { items } = res;
+        if (items?.length > 0) {
+          const ingress = items[0];
+          const host = ingress.spec?.rules?.[0]?.host;
+          if (!!host) {
+            const grafanaMenu = _.get(CustomMenusMap, 'Grafana');
+            !!grafanaMenu && _.assign(grafanaMenu, { url: `https://${host}` });
+          }
+        }
+        resolve(doneMessage);
+      })
+      .catch(err => {
+        resolve(doneMessage);
       });
   });
 };
@@ -68,4 +103,5 @@ export const initializationForMenu = async () => {
   await initializeCmpFlag();
   await initializeHarborUrl();
   await initializeGitlabUrl();
+  await initializeGrafanaUrl();
 };
