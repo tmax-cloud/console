@@ -386,9 +386,6 @@ func (c *Console) Server() http.Handler {
 	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
 
-	// handle := func(path string, handler http.Handler) {
-	// 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, path)).Handler(handler)
-	// }
 	staticHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/"), http.FileServer(http.Dir(c.PublicDir)))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/")).Handler(gzipHandler(staticHandler))
 	k8sApiHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/"), http.FileServer(http.Dir("./api")))
@@ -400,6 +397,13 @@ func (c *Console) Server() http.Handler {
 		k8sProxy.ServeHTTP(rw, r)
 	}))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, k8sProxyPath)).Handler(k8sProxyHandler)
+
+	r.Methods("GET").PathPrefix(consolePath + "/apis/networking.k8s.io/").Handler(http.StripPrefix(consolePath,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Info("Use default serviceaccount token")
+			r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+			k8sProxy.ServeHTTP(w, r)
+		})))
 
 	r.PathPrefix(c.BaseURL.Path).HandlerFunc(c.indexHandler)
 
