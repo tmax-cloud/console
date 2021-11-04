@@ -1,0 +1,63 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hypercloud-ingressroute
+  namespace: api-gateway-system
+spec:
+  entryPoints:
+  - websecure
+  - web
+  routes:
+  - kind: Rule
+    match: (PathPrefix(`/api/hypercloud`) || PathPrefix(`/api/multi-hypercloud`) || PathPrefix(`/api/webhook`)) && Host(`console.hypercloud.com`)
+    priority: 100    
+    middlewares:
+    - name: hypercloud-stripprefix
+      namepsace: api-gateway-system    
+    services:
+    - kind: Service
+      name: api-server-service-for-traefik
+      namespace: hypercloud5-system
+      port: https
+      scheme: https
+      serversTransport: insecure-transport 
+  tls:
+    secretName: api-gateway-server-tls
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: insecure-transport
+  namespace: api-gateway-system
+
+spec:
+  # serverName: api-gateway
+  insecureSkipVerify: true
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: insecure-transport
+  namespace: api-gateway-system
+
+spec:
+  # serverName: api-gateway
+  insecureSkipVerify: true
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: hypercloud-stripprefix
+  namespace: api-gateway-system
+spec:
+  stripPrefix:
+    prefixes:
+      - "/api/hypercloud"
+      - "/api/multi-hypercloud"
+      - "/api/webhook"
+    # forceSlash: true

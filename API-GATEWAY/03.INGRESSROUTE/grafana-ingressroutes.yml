@@ -1,0 +1,40 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana-ingressroute
+  namespace: api-gateway-system
+spec:
+  entryPoints:
+  - websecure
+  - web
+  routes:
+  - kind: Rule
+    # match: (PathPrefix(`/api/prometheus/api`) || PathPrefix(`/api/prometheus-tenancy/api`)) && Host(`console.hypercloud.com`)
+    match: PathPrefix(`/api/grafana`)
+    priority: 100                      
+    # middlewares:
+    # - name: monitoring-stripprefix-grafana
+    #   namepsace: api-gateway-system    
+    # - name: jwt-decode-auth
+    #   namespace: default
+    services:
+    - kind: Service
+      name: grafana
+      namespace: monitoring
+      port: 3000
+      scheme: http
+  tls: 
+    secretName: api-gateway-server-tls
+    # tls: {}
+
+---
+
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: monitoring-stripprefix-grafana
+#   namespace: api-gateway-system
+# spec:
+#   stripPrefix:
+#     prefixes:
+#       - "/api/grafana"

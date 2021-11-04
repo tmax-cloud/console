@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+const (
+	authHeaderKey = "Authorization"
+)
+
 func (c *Console) JwtHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// c.KeycloakAuthURL
@@ -21,22 +25,24 @@ func (c *Console) JwtHandler(next http.Handler) http.Handler {
 
 func (c *Console) TokenHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if c.ReleaseModeFlag {
-			token := r.Header.Clone().Get("Authorization")
-			temp := strings.Split(token, "Bearer ")
-			if len(temp) > 1 {
-				token = temp[1]
-			} else {
-				token = temp[0]
-			}
-			c.StaticUser.Token = token
 
-			// NOTE: query에 token 정보가 있을 시 해당 token으로 설정
-			queryToken := r.URL.Query().Get("token")
-			if queryToken != "" && token == "" {
-				r.URL.Query().Del("token")
-				c.StaticUser.Token = queryToken
+		if c.ReleaseModeFlag {
+			if _, ok := r.Header[authHeaderKey]; !ok {
+				// NOTE: query에 token 정보가 있을 시 해당 token으로 설정
+				queryToken := r.URL.Query().Get("token")
+				if queryToken != "" {
+					r.URL.Query().Del("token")
+					c.StaticUser.Token = queryToken
+				} else {
+					log.Warn("Not exist token " + r.RequestURI)
+					c.StaticUser.Token = ""
+				}
+			} else {
+				authHeader := r.Header.Clone().Get(authHeaderKey)
+				c.StaticUser.Token = strings.TrimPrefix(authHeader, "Bearer ")
 			}
+		} else {
+			log.Info("release-mode=false, so use console token")
 		}
 		next.ServeHTTP(w, r)
 	})

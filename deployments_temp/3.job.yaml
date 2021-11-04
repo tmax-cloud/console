@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: console-https-secret-create
-  namespace: console-system
+  namespace: api-gateway-system
 spec:
   template:
     metadata:
@@ -14,7 +14,7 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - create
-            - --host=console,console.$(POD_NAMESPACE).svc
+            - --host=console,console.$(POD_NAMESPACE).svc,console.console-system.192.168.9.148.nip.io
             - --namespace=$(POD_NAMESPACE)
             - --secret-name=console-https-secret
           env:
@@ -23,7 +23,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
       restartPolicy: OnFailure
-      serviceAccountName: console-system-admin
+      serviceAccountName: api-gateway
       securityContext:
         runAsNonRoot: true
         runAsUser: 2000

@@ -17,13 +17,13 @@ pipeline {
     
   }
   environment { 
-    BRANCH = "hc-dev-v5.1"
+    BRANCH = "hc-release-v21"
     BUILD_MODE = "${params.BUILD_MODE}"
     DEPLOY = "${params.DEPLOY}"
 
     DOCKER_REGISTRY="tmaxcloudck"
     PRODUCT = "hypercloud-console"
-    MAJOR_VER="5"
+    MAJOR_VER="v21"
     MINOR_VER="0"
     PATCH_VER="0"
     HOTFIX_VER="0"
@@ -112,7 +112,7 @@ pipeline {
           sh """
           git tag ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
-          git tag --list "5.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
+          git tag --list "v21.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
         // }
       }
@@ -175,7 +175,7 @@ pipeline {
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
-        // withCredentials([string(credentialsId: "${USER_TOKEN}", variable: 'TOKEN')]) {      
+        // withCredentials([string(credentialsId: "${USER_TOKEN}", Variable: 'TOKEN')]) {      
           sh """
             git config --global user.name ${USER_NAME}
             git config --global user.email ${USER_EMAIL}

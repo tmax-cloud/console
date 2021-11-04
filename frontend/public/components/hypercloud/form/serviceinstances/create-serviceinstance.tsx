@@ -137,6 +137,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   const [selectedPlan, setSelectedPlan] = React.useState(-1);
   const [data, setData] = React.useState<K8sResourceKind>();
   const [error, setError] = React.useState('');
+  const [enableSaveButton, setEnableSaveButton] = React.useState(true);
 
   const { namespace, serviceClassName, isClusterServiceClass } = React.useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -165,7 +166,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
   const steps = [
     { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV1_1'), component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_5') },
-    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} errorMsg={error} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0 },
+    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} errorMsg={error} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0, enableNext: enableSaveButton },
   ];
 
   return (
@@ -212,6 +213,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
               history.goBack();
             }}
             onSave={() => {
+              setEnableSaveButton(false);
               let submitData = methods.getValues();
 
               let apiVersion = `${ServiceInstanceModel.apiGroup}/${ServiceInstanceModel.apiVersion}`;

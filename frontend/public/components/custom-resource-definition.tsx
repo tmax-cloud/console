@@ -228,7 +228,9 @@ export const CustomResourceDefinitionsList: React.FC<CustomResourceDefinitionsLi
 };
 
 export const CustomResourceDefinitionsPage: React.FC<CustomResourceDefinitionsPageProps> = props => <ListPage {...props} ListComponent={CustomResourceDefinitionsList} kind="CustomResourceDefinition" canCreate={true} />;
-export const CustomResourceDefinitionsDetailsPage: React.FC<CustomResourceDefinitionsDetailsPageProps> = props => <DetailsPage {...props} kind="CustomResourceDefinition" menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource(), { name: 'COMMON:MSG_DETAILS_TAB_15', href: 'instances', component: Instances }]} />;
+export const CustomResourceDefinitionsDetailsPage: React.FC<CustomResourceDefinitionsDetailsPageProps> = props => {
+  return <DetailsPage {...props} kind="CustomResourceDefinition" menuActions={menuActions} pages={[navFactory.details(Details), navFactory.editResource(), { name: 'COMMON:MSG_DETAILS_TAB_15', href: 'instances', component: Instances }]} />;
+};
 
 export type CustomResourceDefinitionsListProps = {};
 
