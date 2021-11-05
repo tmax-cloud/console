@@ -1,9 +1,12 @@
 import * as _ from 'lodash-es';
 import { ClusterMenuPolicyModel, IngressModel } from '@console/internal/models';
-import { k8sList, k8sGet, Selector } from '@console/internal/module/k8s';
+import { k8sList, k8sGet, Selector, modelFor } from '@console/internal/module/k8s';
 import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { selectorToString } from '@console/internal/module/k8s/selector';
+import i18next, { TFunction } from 'i18next';
+import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
+import { MenuContainerLabels } from '@console/internal/hypercloud/menu/menu-types';
 
 const ingressUrlWithLabelSelector = labelSelector => {
   const { apiGroup, apiVersion, plural } = IngressModel;
@@ -104,4 +107,32 @@ export const initializationForMenu = async () => {
   await initializeHarborUrl();
   await initializeGitlabUrl();
   await initializeGrafanaUrl();
+};
+
+export const getMenuTitle = (kind, t: TFunction) => {
+  if (!!modelFor(kind)) {
+    return getLabelTextByModel(kind, t);
+  } else {
+    const menuInfo = CustomMenusMap[kind];
+    if (!!menuInfo) {
+      return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t);
+    } else {
+      return '';
+    }
+  }
+};
+
+export const getLabelTextByModel = (kind, t: TFunction) => {
+  const model = modelFor(kind);
+  return ResourceLabel(model, t);
+};
+
+export const getLabelTextByDefaultLabel = (defaultLabel, t: TFunction) => {
+  const i18nExists = i18next.exists(defaultLabel);
+  return i18nExists ? t(defaultLabel) : defaultLabel;
+};
+
+export const getContainerLabel = (label, t: TFunction) => {
+  const labelText = label?.toLowerCase().replace(' ', '') || '';
+  return !!MenuContainerLabels[labelText] ? t(MenuContainerLabels[labelText]) : label;
 };
