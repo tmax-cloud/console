@@ -7,7 +7,7 @@ import {
   pipelineRunStatusFilter,
 } from '../../../utils/pipeline-filter-reducer';
 import { ListFilterId, ListFilterLabels } from '../../../utils/pipeline-utils';
-import { PipelineRunModel } from '../../../models';
+import { PipelineRunModel } from '@console/internal/models';
 
 export const runFilters = [
   {

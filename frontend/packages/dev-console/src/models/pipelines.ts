@@ -3,7 +3,7 @@ import { K8sKind } from '@console/internal/module/k8s';
 import { BadgeType } from '@console/shared/src/components/badges/badge-factory';
 
 const color = tektonGroupColor.value;
-
+/*
 export const PipelineModel: K8sKind = {
   apiGroup: 'tekton.dev',
   apiVersion: 'v1beta1',
@@ -93,7 +93,7 @@ export const ClusterTaskModel: K8sKind = {
   badge: BadgeType.TECH,
   color,
 };
-
+*/
 export const ConditionModel: K8sKind = {
   apiGroup: 'tekton.dev',
   apiVersion: 'v1alpha1',

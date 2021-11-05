@@ -107,7 +107,8 @@ const Resources = connect(({ k8s }) => ({ allModels: k8s.getIn(['RESOURCES', 'mo
         return false;
       }
       URLs.push(
-        <div className="rbac-rule-row" key={r}>
+        <div className="rbac-rule-row" key={r} style={{marginRight: '10px'}}>
+          <ResourceIcon kind="URL" />
           {r}
         </div>,
       );
@@ -126,6 +127,7 @@ const DeleteRule = (name, namespace, i) => {
         title: t('COMMON:MSG_COMMON_ACTIONBUTTON_65'),
         message: t('SINGLE:MSG_ROLES_ROLEDETAILS_TABDETAILS_RULES_2', { 0: `#${i}` }),
         btnText: t('COMMON:MSG_COMMON_ACTIONBUTTON_65'),
+        cancelText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_2'),
         executeFn: () => {
           const kind = namespace ? RoleModel : ClusterRoleModel;
           return k8sPatch(kind, { metadata: { name, namespace } }, [

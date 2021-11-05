@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    createdTime: "2021-09-13T14:59:34.758648106+09:00"
+    creator: system:serviceaccount:template:template-operator
+    kubernetes.io/ingress.class: nginx-shd
+    updatedTime: "2021-09-13T14:59:34.758648106+09:00"
+    updater: system:serviceaccount:template:template-operator
+  creationTimestamp: "2021-09-13T05:59:34Z"
+  generation: 3
+  name: gitlab-ingress
+  namespace: gitlab-system
+  ownerReferences:
+  - apiVersion: tmax.io/v1
+    blockOwnerDeletion: true
+    controller: false
+    kind: TemplateInstance
+    name: gitlab
+    uid: 1d594170-970d-4859-be1f-2b10bb8e1492
+  resourceVersion: "158534705"
+  selfLink: /apis/extensions/v1beta1/namespaces/gitlab-system/ingresses/gitlab-ingress
+  uid: acf5151e-0736-4213-95a2-a07020b20d38
+spec:
+  rules:
+  - host: waiting.ip
+    http:
+      paths:
+      - backend:
+          serviceName: gitlab-service
+          servicePort: 80
+        pathType: ImplementationSpecific
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.9.148

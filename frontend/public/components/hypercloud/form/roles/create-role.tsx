@@ -75,6 +75,17 @@ const defaultVerbs = [
   { name: 'update', label: 'Update' },
   { name: 'watch', label: 'Watch' },
 ];
+const urlVerbs = [
+  { name: 'get', label: 'get' },
+  { name: 'head', label: 'head' },
+  { name: 'post', label: 'post' },
+  { name: 'put', label: 'put' },
+  { name: 'delete', label: 'delete' },
+  { name: 'connect', label: 'connect' },
+  { name: 'options', label: 'options' },
+  { name: 'trace', label: 'trace' },
+  { name: 'patch', label: 'patch' },
+];
 
 const defaultValuesTemplate = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
@@ -239,7 +250,7 @@ const RuleItem = props => {
 
   return (
     <>
-      {index === 0 ? null : <div className="co-form-section__separator" />}
+      <div className="co-form-section__separator" />
       <div className="row" key={item.id}>
         <Section id={`rules[${index}]`} >
           <div className="col-xs-12 pairs-list__value-field">
@@ -274,14 +285,17 @@ const RuleItem = props => {
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_30')} id={`rules[${index}].resourceNames`} >
                 <ListView name={`rules.${index}.resourceNames`} methods={methods} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_31')} headerFragment={<></>} itemRenderer={ResourceNameItemRenderer} defaultItem={{ value: '' }} defaultValues={resourceNames} />
               </Section>
-            </>) : (
+              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_12')} id={`rules[${index}].verbs`} isRequired={false}>
+                <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].verbs`, item.verbs)} />
+              </Section>
+            </>) : (<>
               <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_34')} id={`rules[${index}].nonResourceURLs`} isRequired={true}>
                 <ListView name={`rules.${index}.nonResourceURLs`} methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={URLItemRenderer} defaultItem={{ value: '' }} defaultValues={nonResourceURLs} />
               </Section>
-            )}
-            <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_12')} id={`rules[${index}].verbs`} isRequired={true}>
-              <CheckboxGroup name={`${name}[${index}].verbs`} items={defaultVerbs} useAll defaultValue={item.verbs} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].verbs`, item.verbs)} />
-            </Section>
+              <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_12')} id={`rules[${index}].verbs`} isRequired={false}>
+                <CheckboxGroup name={`${name}[${index}].verbs`} items={urlVerbs} useAll defaultValue={item.verbs} methods={methods} {...ListActions.registerWithInitValue(`${name}[${index}].verbs`, item.verbs)} />
+              </Section>
+            </>)}
           </div>
           <div className="col-xs-1 pairs-list__action">
             <Button type="button" data-test-id="pairs-list__delete-btn" className="pairs-list__span-btns" onClick={onDeleteClick} variant="plain">
@@ -468,14 +482,17 @@ export const onSubmitCallback = data => {
       });
       return {
         nonResourceURLs: nonResourceURLs,
-        verbs: rule.verbs ?? ['*'],
+        verbs: rule.verbs ?? [''],
       };
     }
     else {
       let apiGroups = new Array;
       rule.apiGroups = rule.apiGroups.filter( r => {if (r.added === true) return true });
       rule.apiGroups?.forEach((r, index) => {
-          apiGroups[index] = r.value;
+        if(r.value==='Core') {
+          r.value = '';
+        }
+        apiGroups[index] = r.value;
       });
       apiGroups = apiGroups.filter(function () { return true });
       let resources = new Array;
@@ -488,10 +505,10 @@ export const onSubmitCallback = data => {
       });
 
       return {
-        apiGroups: apiGroups === ['Core'] ? [''] : apiGroups ?? ['*'],
+        apiGroups: apiGroups ?? ['*'],
         resources: resources ?? ['*'],
         resourceNames: resourceNames ?? [],
-        verbs: rule.verbs ?? ['*'],
+        verbs: rule.verbs ?? [''],
       };
     }
   });

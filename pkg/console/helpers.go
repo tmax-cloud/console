@@ -105,7 +105,7 @@ func createConsole(config *v1.Config) (*Console, error) {
 		}
 		// Console Off Cluster
 	} else {
-		k8sAuthServiceAccountBearerToken = ""
+		k8sAuthServiceAccountBearerToken = config.ClusterInfo.BearerToken
 		k8sURL = validateURL("k8sEndpoint", config.K8sEndpoint)
 		k8sProxyConfig = &proxy.Config{
 			HeaderBlacklist: []string{"Cookie", "X-CSRFToken"},

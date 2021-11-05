@@ -1,0 +1,120 @@
+## ref https://cert-manager.io/next-docs/reference/api-docs/#cert-manager.io%2fv1alpha3
+--- 
+
+apiVersion: cert-manager.io/v1alpha3
+kind: ClusterIssuer
+metadata:
+  name: hypercloud-selfsigned-clusterissuer
+spec:
+  selfSigned: {}
+
+---
+
+# apiVersion: cert-manager.io/v1
+# kind: Issuer
+# metadata:
+#   name: selfsigned-issuer
+#   namespace: api-gateway-system
+# spec:
+#   selfSigned: {}
+
+# ---
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: api-gateway-ca
+  namespace: api-gateway-system
+spec:
+  secretName: api-gateway-ca-tls
+  duration: 2880h # 120d
+  renewBefore: 360h # 15d
+  commonName: hypercloud-api-gateway
+  # dnsNames:
+  #   - api-gateway.api-gateway-system.svc
+  #   - traefik.traefik.svc
+  # ipAddresses:
+  #   - 192.168.9.144
+  isCA: true
+  # keySize: 2048
+  # keyAlgorithm: rsa
+  # keyEncoding: pkcs1
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+    - client auth 
+  issuerRef:
+    kind: ClusterIssuer
+    group: cert-manager.io
+    name: hypercloud-selfsigned-clusterissuer
+    # kind: Issuer
+    # name: ck-selfsigned-clusterissuer
+
+---
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: api-gateway-ca-issuer
+  namespace: api-gateway-system
+spec:
+  ca:
+    secretName: api-gateway-ca-tls
+
+--- 
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: api-gateway-server-tls
+  namespace: api-gateway-system
+spec:
+  secretName: api-gateway-server-tls
+  isCA: false
+  usages:
+    - digital signature
+    - key encipherment    
+    - server auth
+    # - client auth
+  dnsNames:
+  - "*.hypercloud.com"
+  - "api-gateway.api-gateway-system.svc"
+  issuerRef:
+    name: api-gateway-ca-issuer
+
+---
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: api-gateway-client-tls
+  namespace: api-gateway-system
+spec:
+  secretName: api-gateway-server-tls
+  isCA: false
+  usages:
+    - digital signature
+    - key encipherment    
+    # - server auth
+    - client auth
+  dnsNames:
+  - "*.hypercloud.com"
+  - "api-gateway.api-gateway-system.svc"
+  issuerRef:
+    kind: ClusterIssuer
+    group: cert-manager.io    
+    name: api-gateway-ca-issuer
+
+---
+# https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-tlsoption
+# Traefik currently only uses the TLS Store named "default". This means that if you have two stores that are named default in different kubernetes namespaces, they may be randomly chosen. For the time being, please only configure one TLSSTore named default.
+## TLSSTore : Allows to configure the default TLS store
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+  namespace: api-gateway-system
+spec:
+  defaultCertificate:
+    secretName: api-gateway-server-tls
