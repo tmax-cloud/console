@@ -282,6 +282,7 @@ h6 {
   .pf-c-page__sidebar {
     background-color: #31475e;
     --pf-c-page__sidebar--Transition: all 100ms ease;
+    overflow-y: hidden;
   }
 }
 
@@ -359,19 +360,9 @@ h6 {
     --pf-c-page__sidebar--BoxShadow: none;
   }
 
-  &::-webkit-scrollbar {
-    width: 7px;
-    background: none;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #d8dadb;
-    border-radius: 7.5px;
-    opacity: 1;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: none;
+  &-body {
+    padding-bottom: 0 !important;
+    height: 100%;
   }
 
   &.pf-m-expanded {
@@ -409,6 +400,7 @@ h6 {
     }
 
     font-size: 13px;
+    height: 100%;
     .pf-c-nav__item .pf-c-nav__separator .pf-c-nav__simple-list .pf-c-nav__link {
       font-size: 13px;
       // fix bug where nav items retain focus after navigation
@@ -433,6 +425,25 @@ h6 {
     // override list styles, necessary due to setting $pf-global--enable-reset to false
     ul {
       list-style: none;
+    }
+
+    &__list-container {
+      height: calc(100% - 35px);
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 7px;
+        background: none;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #d8dadb;
+        border-radius: 7.5px;
+        opacity: 1;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: none;
+      }
     }
   }
 
