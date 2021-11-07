@@ -1,39 +1,35 @@
 import * as _ from 'lodash-es';
 import { ClusterMenuPolicyModel, IngressModel } from '@console/internal/models';
-import { k8sList, k8sGet, Selector, modelFor } from '@console/internal/module/k8s';
+import { k8sList, k8sGet, modelFor, Selector } from '@console/internal/module/k8s';
 import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { coFetchJSON } from '@console/internal/co-fetch';
-import { selectorToString } from '@console/internal/module/k8s/selector';
 import i18next, { TFunction } from 'i18next';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 import { MenuContainerLabels } from '@console/internal/hypercloud/menu/menu-types';
-
-const ingressUrlWithLabelSelector = labelSelector => {
-  const { apiGroup, apiVersion, plural } = IngressModel;
-  const labelSelectorString = selectorToString(labelSelector as Selector);
+import { ingressUrlWithLabelSelector, DoneMessage } from './ingress-utils';
+import { selectorToString } from '@console/internal/module/k8s/selector';
+export const getCmpListFetchUrl = () => {
+  const { apiGroup, apiVersion, plural } = ClusterMenuPolicyModel;
+  const labelSelectorString = selectorToString({
+    [CMP_PRIMARY_KEY]: 'true',
+  } as Selector);
   const query = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent(labelSelectorString)}`;
-  return `api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
+
+  return `${location.origin}/api/kubernetes/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
 };
-
-const doneMessage = 'done';
-
 const initializeCmpFlag = () => {
   return new Promise((resolve, reject) => {
-    k8sList(ClusterMenuPolicyModel, {
-      labelSelector: {
-        [CMP_PRIMARY_KEY]: 'true',
-      },
-    })
-      .then(policies => {
-        const policy = policies?.[0];
+    coFetchJSON(getCmpListFetchUrl())
+      .then(res => {
+        const policy = res?.items?.[0];
         window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
-        resolve(doneMessage);
+        resolve(DoneMessage);
       })
       .catch(err => {
         window.SERVER_FLAGS.showCustomPerspective = false;
         console.log(`No cmp resource.`);
         // MEMO : 링크나 메뉴생성에 에러가 나도 일단 app 화면은 떠야 되니 resolve처리함.
-        resolve(doneMessage);
+        resolve(DoneMessage);
       });
   });
 };
@@ -51,11 +47,11 @@ const initializeHarborUrl = () => {
             !!harborMenu && _.assign(harborMenu, { url: `https://${host}` });
           }
         }
-        resolve(doneMessage);
+        resolve(DoneMessage);
       })
       .catch(err => {
         console.log('No ingress resource for harbor.');
-        resolve(doneMessage);
+        resolve(DoneMessage);
       });
   });
 };
@@ -68,12 +64,12 @@ const initializeGitlabUrl = () => {
         if (!!host) {
           const gitlabMenu = _.get(CustomMenusMap, 'Git');
           !!gitlabMenu && _.assign(gitlabMenu, { url: `https://${host}` });
-          resolve(doneMessage);
+          resolve(DoneMessage);
         }
       })
       .catch(err => {
         console.log('No ingress resource for gitlab.');
-        resolve(doneMessage);
+        resolve(DoneMessage);
       });
   });
 };
@@ -94,10 +90,10 @@ const initializeGrafanaUrl = () => {
             !!grafanaMenu && _.assign(grafanaMenu, { url: `https://${host}` });
           }
         }
-        resolve(doneMessage);
+        resolve(DoneMessage);
       })
       .catch(err => {
-        resolve(doneMessage);
+        resolve(DoneMessage);
       });
   });
 };
