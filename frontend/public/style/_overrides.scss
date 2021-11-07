@@ -445,6 +445,10 @@ h6 {
         background: none;
       }
     }
+
+    .without-footer {
+      height: 100%;
+    }
   }
 
   // fix bug where nav items retain focus after navigation
