@@ -182,7 +182,7 @@ const MenuPreviewTable = ({ obj: cmp }) => {
             const childrenMenus = menu.innerMenus?.map(menu => {
               return menu.type === MenuType.NEW_TAB_LINK ? menu.label : getMenuTitle(menu.kind || '', t);
             });
-            return { title: getContainerLabel(menu.label, t), childrenMenus };
+            return { title: getContainerLabel(menu.label, t)?.containerLabel, childrenMenus };
           default:
         }
       });

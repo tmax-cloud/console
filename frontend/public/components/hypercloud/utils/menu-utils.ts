@@ -4,10 +4,13 @@ import { k8sList, k8sGet, modelFor, Selector } from '@console/internal/module/k8
 import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import i18next, { TFunction } from 'i18next';
-import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
-import { MenuContainerLabels } from '@console/internal/hypercloud/menu/menu-types';
+import { ResourceLabel, getI18nInfo } from '@console/internal/models/hypercloud/resource-plural';
+import { MenuContainerLabels, CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 import { ingressUrlWithLabelSelector, DoneMessage } from './ingress-utils';
 import { selectorToString } from '@console/internal/module/k8s/selector';
+
+const en = i18next.getFixedT('en');
+
 export const getCmpListFetchUrl = () => {
   const { apiGroup, apiVersion, plural } = ClusterMenuPolicyModel;
   const labelSelectorString = selectorToString({
@@ -107,28 +110,52 @@ export const initializationForMenu = async () => {
 
 export const getMenuTitle = (kind, t: TFunction) => {
   if (!!modelFor(kind)) {
-    return getLabelTextByModel(kind, t);
+    return getLabelTextByKind(kind, t)?.label;
   } else {
     const menuInfo = CustomMenusMap[kind];
     if (!!menuInfo) {
-      return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t);
+      return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t)?.label;
     } else {
       return '';
     }
   }
 };
 
-export const getLabelTextByModel = (kind, t: TFunction) => {
+export const getLabelTextByKind = (kind, t: TFunction) => {
   const model = modelFor(kind);
-  return ResourceLabel(model, t);
+  const label = ResourceLabel(model, t);
+  const key = getI18nInfo(model)?.label;
+  const type = i18next.exists(key) ? en(key) : CUSTOM_LABEL_TYPE;
+  return { label, type };
 };
 
 export const getLabelTextByDefaultLabel = (defaultLabel, t: TFunction) => {
   const i18nExists = i18next.exists(defaultLabel);
-  return i18nExists ? t(defaultLabel) : defaultLabel;
+  let label = '';
+  let type = '';
+  if (i18nExists) {
+    label = t(defaultLabel);
+    type = en(defaultLabel);
+  } else {
+    //user가 추가한 menu이거나 i18n키가 없는경우
+    label = defaultLabel;
+    type = CUSTOM_LABEL_TYPE;
+  }
+  return { label, type };
 };
 
 export const getContainerLabel = (label, t: TFunction) => {
   const labelText = label?.toLowerCase().replace(' ', '') || '';
-  return !!MenuContainerLabels[labelText] ? t(MenuContainerLabels[labelText]) : label;
+  const containerKeyOrLabel = !!MenuContainerLabels[labelText] ? MenuContainerLabels[labelText] : label;
+  const i18nExist = i18next.exists(containerKeyOrLabel);
+  let containerLabel = '';
+  let type = '';
+  if (i18nExist) {
+    containerLabel = t(containerKeyOrLabel);
+    type = en(containerKeyOrLabel);
+  } else {
+    containerLabel = labelText;
+    type = CUSTOM_LABEL_TYPE;
+  }
+  return { containerLabel, type };
 };
