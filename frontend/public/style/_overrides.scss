@@ -746,3 +746,8 @@ div.navIcon > .pf-c-nav__item.pf-m-current > a:first-of-type {
     margin-bottom: 5px;
   }
 }
+
+.hc-cmp-detail-accrodion {
+  --pf-c-accordion--BoxShadow: none !important;
+  --pf-c-accordion--PaddingTop: 0px !important;
+}
