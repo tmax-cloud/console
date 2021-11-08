@@ -3,14 +3,15 @@ import { coFetchJSON } from '../../co-fetch';
 import { k8sBasePath, multiClusterBasePath } from './k8s';
 import { selectorToString } from './selector';
 import { WSFactory } from '../ws-factory';
-import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
+import { PerspectiveType, isSingleClusterPerspective, getSingleClusterFullBasePath } from '@console/internal/hypercloud/perspectives';
 import { getActivePerspective, getActiveCluster } from '../../actions/ui';
 import { getId, getUserGroup } from '../../hypercloud/auth';
 import { resourceSchemaBasedMenuMap } from '../../components/hypercloud/form'
 
+
 export const getDynamicProxyPath = (cluster) => {
-  if (window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE) {
-    return `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
+  if (isSingleClusterPerspective()) {
+    return getSingleClusterFullBasePath();
   } else if (cluster) {
     return `${window.SERVER_FLAGS.basePath}api/${cluster}`;
   } else {
@@ -45,8 +46,8 @@ const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
   let p = multiClusterBasePath;
 
-  if (window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE) {
-    p = `${window.SERVER_FLAGS.basePath}api/${getActiveCluster()}`;
+  if (isSingleClusterPerspective()) {
+    p = getSingleClusterFullBasePath();
   } else if (cluster) {
     p = `${window.SERVER_FLAGS.basePath}api/${cluster}`;
   }
@@ -137,7 +138,11 @@ const isNamespaceClaim = (model) => {
 
 const resourceNamespaceURL = (model) => {
   const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
-  return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+  if (isSingleClusterPerspective()) {
+    return `${getSingleClusterFullBasePath()}/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+  } else {
+    return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+  }
 }
 
 export const watchURL = (kind, options) => {

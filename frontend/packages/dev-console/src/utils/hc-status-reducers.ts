@@ -1,5 +1,6 @@
 import * as _ from 'lodash-es';
 import { NodeCondition } from '@console/shared/src/types';
+import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
 export const NO_STATUS = 'No Status';
 
 export const ServiceBrokerStatusReducer = instance => {
@@ -212,5 +213,15 @@ export const ClusterRegistrationStatusReducer = (cr: any): string => {
     }
   } else {
     return NO_STATUS;
+  }
+};
+
+export const ClusterMenuPolicyStatusReducer = (cmp: any): string => {
+  const labels = cmp?.metadata?.labels;
+  const primaryValue = _.get(labels, CMP_PRIMARY_KEY);
+  if (primaryValue === 'true') {
+    return '활성화 됨';
+  } else {
+    return '활성화되지 않음';
   }
 };

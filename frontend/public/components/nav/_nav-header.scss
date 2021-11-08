@@ -1,5 +1,5 @@
 .oc-nav-header {
-  padding: 3px 20px 20px 25px;
+  padding: 3px 20px 10px 25px;
 
   .hc-dropdown__title {
     font-size: 10px;
@@ -22,7 +22,7 @@
     border: 1px solid #ffffff;
     border-radius: 5px;
   }
-  .pf-c-dropdown__menu-item  {
+  .pf-c-dropdown__menu-item {
     padding-left: 7px;
   }
 
@@ -37,10 +37,9 @@
   .pf-c-dropdown__menu-item:hover,
   .pf-c-dropdown__menu-item.pf-m-hover {
     h1 {
-      color: #0066CC;
+      color: #0066cc;
     }
   }
-  
 
   .pf-c-dropdown__toggle {
     font-size: $co-side-nav-font-size;
@@ -62,5 +61,4 @@
       border: none;
     }
   }
-
 }

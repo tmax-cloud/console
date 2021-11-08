@@ -5,9 +5,14 @@
  */
 /* eslint-disable no-console */
 import { getIdToken } from '../hypercloud/auth';
+import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
+import { getActivePerspective, getActiveCluster } from '../actions/ui';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 function createURL(host, path) {
   let url;
+
+  path = path.replace('https://', '').replace('http://', '');
 
   if (host === 'auto') {
     if (location.protocol === 'https:') {
@@ -15,9 +20,17 @@ function createURL(host, path) {
     } else {
       url = 'ws://';
     }
-    url += location.host;
+    if (isSingleClusterPerspective()) {
+      // MEMO : SingleCluster일 경우 path로 들어오는 window.SERVER_FLAGS.singleClusterBasePath에 도멘인 주소 들어가있어서 별도 처리 해주지 않음.
+    } else {
+      url += location.host;
+    }
   } else {
-    url = host;
+    if (isSingleClusterPerspective()) {
+      // MEMO : SingleCluster일 경우 path로 들어오는 window.SERVER_FLAGS.singleClusterBasePath에 도멘인 주소 들어가있어서 별도 처리 해주지 않음.
+    } else {
+      url = host;
+    }
   }
 
   if (path) {
@@ -30,7 +43,6 @@ function createURL(host, path) {
     } else {
       url += path;
     }
-    // url += path;
   }
 
   return url;

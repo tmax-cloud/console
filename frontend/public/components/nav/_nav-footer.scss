@@ -1,0 +1,28 @@
+.hc-nav-footer {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+
+  .hc-settings-button {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    color: $color-pf-black-500;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #24405c;
+    }
+  }
+
+  .hc-settings-icon {
+    font-size: 15px;
+  }
+}
