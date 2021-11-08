@@ -108,15 +108,15 @@ export const initializationForMenu = async () => {
   await initializeGrafanaUrl();
 };
 
-export const getMenuTitle = (kind, t: TFunction) => {
+export const getMenuTitle = (kind, t: TFunction): { label: string; type: string } => {
   if (!!modelFor(kind)) {
-    return getLabelTextByKind(kind, t)?.label;
+    return getLabelTextByKind(kind, t);
   } else {
     const menuInfo = CustomMenusMap[kind];
     if (!!menuInfo) {
-      return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t)?.label;
+      return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t);
     } else {
-      return '';
+      return { label: '', type: CUSTOM_LABEL_TYPE };
     }
   }
 };

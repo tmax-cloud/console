@@ -8,10 +8,12 @@ import { ClusterMenuPolicyModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
 import { ClusterMenuPolicyStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { SelectorInput } from '@console/internal/components/utils';
-import { MenuType } from '@console/internal/hypercloud/menu/menu-types';
+import { MenuType, CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 import { errorModal } from '../modals/error-modal';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 import { getMenuTitle, getContainerLabel } from '@console/internal/components/hypercloud/utils/menu-utils';
+import { MenuIconTitle } from '@console/internal/hypercloud/menu/MenuIcon';
+import { PerspectiveLabelKeys } from '@console/internal/hypercloud/perspectives';
 
 const kind = ClusterMenuPolicyModel.kind;
 
@@ -114,6 +116,7 @@ const tableProps: TableProps = {
 
 type MenuContentItem = {
   title: string;
+  type: string;
   childrenMenus: string[];
 };
 
@@ -132,12 +135,14 @@ const AccordionBlock = (props: AccordionBlockProps) => {
 
   const menuDetails = contentData?.map(data => {
     return (
-      <>
-        <div style={{ fontSize: 15, borderBottom: '1px solid' }}>{data.title}</div>
-        {data.childrenMenus?.map(menuString => (
-          <span style={{ marginLeft: 20 }}>{menuString}</span>
-        ))}
-      </>
+      <div style={{ display: 'flex', justifyContent: 'start', marginBottom: 15 }}>
+        <MenuIconTitle type={data.type} title={data.title} />
+        <div style={{ display: 'inline-block', width: 300 }}>
+          {data.childrenMenus?.map(menuString => (
+            <div style={{ marginLeft: 20, color: 'black', fontSize: '13px' }}>{menuString}</div>
+          ))}
+        </div>
+      </div>
     );
   });
   return (
@@ -175,23 +180,25 @@ const MenuPreviewTable = ({ obj: cmp }) => {
         const menuType = menu.menuType;
         switch (menuType) {
           case MenuType.NEW_TAB_LINK:
-            return { title: menu.label || '', childrenMenus: null };
+            return { title: menu.label || '', childrenMenus: null, type: CUSTOM_LABEL_TYPE };
           case MenuType.REGISTERED_MENU:
-            return { title: getMenuTitle(menu.kind || '', t), childrenMenus: null };
+            const { label, type: registeredMenuType } = getMenuTitle(menu.kind || '', t);
+            return { title: label, childrenMenus: null, type: registeredMenuType };
           case MenuType.CONTAINER:
             const childrenMenus = menu.innerMenus?.map(menu => {
-              return menu.type === MenuType.NEW_TAB_LINK ? menu.label : getMenuTitle(menu.kind || '', t);
+              return menu.type === MenuType.NEW_TAB_LINK ? menu.label : getMenuTitle(menu.kind || '', t)?.label;
             });
-            return { title: getContainerLabel(menu.label, t)?.containerLabel, childrenMenus };
+            const { containerLabel, type: containerType } = getContainerLabel(menu.label, t);
+            return { title: containerLabel, childrenMenus, type: containerType };
           default:
         }
       });
-      return <AccordionBlock key={menuTab.name} title={menuTab.name} onToggle={toggle} expanded={expanded} index={index} contentData={contentData} />;
+      return <AccordionBlock key={menuTab.name} title={t(PerspectiveLabelKeys[menuTab.name])} onToggle={toggle} expanded={expanded} index={index} contentData={contentData} />;
     });
     setContents(menuContents);
   }, [cmp, expanded]);
 
-  return <Accordion>{contents}</Accordion>;
+  return <Accordion className="hc-cmp-detail-accrodion">{contents}</Accordion>;
 };
 
 const ClusterMenuPolicyDetails: React.FC<ClusterMenuPolicyDetailsProps> = ({ obj: cmp }) => {

@@ -20,6 +20,14 @@ export enum PerspectiveType {
   CUSTOM = 'CUSTOM',
 }
 
+export const PerspectiveLabelKeys = {
+  [PerspectiveType.MASTER]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_3',
+  [PerspectiveType.MULTI]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_2',
+  [PerspectiveType.SINGLE]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_1',
+  [PerspectiveType.DEVELOPER]: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2',
+  [PerspectiveType.CUSTOM]: 'CUSTOM',
+};
+
 export const isSingleClusterPerspective = () => {
   return window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE;
 };
@@ -37,7 +45,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.MULTI,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_2') : 'Multi-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MULTI]) : 'Multi-Cluster',
             icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
             default: true,
@@ -50,7 +58,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.MASTER,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_3') : 'Master-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
@@ -62,7 +70,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.SINGLE,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_1') : 'Single-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SINGLE]) : 'Single-Cluster',
             icon: <img src={SingleClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedSingleClusterIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
@@ -74,7 +82,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.DEVELOPER,
-            name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') : 'Developer', // 임시. 스트링 나오면 재적용 필요
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
@@ -88,7 +96,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.MASTER,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_3') : 'Master-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
             default: true,
@@ -101,7 +109,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.DEVELOPER,
-            name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') : 'Developer', // 임시. 스트링 나오면 재적용 필요
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),

@@ -1,13 +1,16 @@
 .hc-nav-footer {
   width: 100%;
+  display: flex;
+  justify-content: end;
 
   .hc-settings-button {
     display: flex;
-    width: 100%;
-    background-color: #213a53;
+    width: 20px;
+    height: 20px;
+    margin-bottom: 5px;
+    margin-right: 10px;
     color: $color-pf-black-500;
-    height: 35px;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     align-items: center;
     justify-content: center;
     position: absolute;

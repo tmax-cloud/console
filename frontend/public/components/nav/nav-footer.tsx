@@ -6,11 +6,9 @@ import { CogIcon } from '@patternfly/react-icons';
 const NavFooter = props => {
   return (
     <div className="hc-nav-footer">
-      <Tooltip content="Menu Settings" position={TooltipPosition.bottom}>
+      <Tooltip content="Menu Settings" position={TooltipPosition.top}>
         <Link to="/k8s/cluster/clustermenupolicies" className="hc-settings-button" aria-label="Menu Settings">
-          {/* <div className="hc-settings-button"> */}
-          <CogIcon className="hc-settings-icon" color="white" />
-          {/* </div> */}
+          <CogIcon className="hc-settings-icon" color="#F9F9F9" />
         </Link>
       </Tooltip>
     </div>
