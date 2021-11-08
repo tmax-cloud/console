@@ -58,7 +58,12 @@
   margin-right: 2px;
 }
 
+.hc-menu-preview-icon {
+  margin-top: -3px;
+  margin-right: 8px;
+  filter: invert(38%) sepia(2%) saturate(18%) hue-rotate(31deg) brightness(98%) contrast(86%);
+}
 
-.co-console-dropdowntoggle-icon{
+.co-console-dropdowntoggle-icon {
   filter: invert(57%) sepia(12%) saturate(492%) hue-rotate(169deg) brightness(90%) contrast(86%);
 }

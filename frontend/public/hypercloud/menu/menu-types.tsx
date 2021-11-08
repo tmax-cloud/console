@@ -1,6 +1,7 @@
 import startsWith from './starts-with';
 
 export const CMP_PRIMARY_KEY = 'primary';
+export const CUSTOM_LABEL_TYPE = '@@customlabel@@';
 
 export enum MenuType {
   CONTAINER = 'CONTAINER',

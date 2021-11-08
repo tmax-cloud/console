@@ -4,6 +4,7 @@ import { getIdToken } from './hypercloud/auth';
 import { authSvc } from './module/auth';
 import store from './redux';
 import keycloak from './hypercloud/keycloak';
+import { isSingleClusterPerspective, getSingleClusterFullBasePath } from './hypercloud/perspectives';
 
 const initDefaults = {
   headers: {},
@@ -156,6 +157,11 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
     if (kind === 'Group') {
       headers['Impersonate-Group'] = name;
     }
+  }
+
+  if (url.indexOf('https://') < 0 && url.indexOf('http://') < 0 && isSingleClusterPerspective()) {
+    // MEMO : 도메인 뒷부분만 url로 들어오는 경우, singlecluster perspective면 ingress 도메인 주소로 설정해줘야함.
+    url = `${getSingleClusterFullBasePath()}${url}`;
   }
   // Pass headers last to let callers to override Accept.
   const allOptions = _.defaultsDeep({ method }, options, { headers });
