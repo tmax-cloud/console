@@ -122,7 +122,7 @@ const ClusterTemplateClaimTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
-      sortFunc: 'clusterTemplateClaimStatusReducer',
+      sortFunc: 'ClusterTemplateClaimReducer',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },

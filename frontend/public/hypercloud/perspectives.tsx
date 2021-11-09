@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CogsIcon } from '@patternfly/react-icons';
 import { Perspective } from '@console/plugin-sdk';
 import { FLAGS } from '@console/shared/src/constants';
+import { getActivePerspective, getActiveCluster } from '@console/internal/actions/ui';
 import { TFunction } from 'i18next';
 import * as MultiClusterIcon from '@console/internal/imgs/hypercloud/lnb/multi_cluster.svg';
 import * as MasterClusterIcon from '@console/internal/imgs/hypercloud/lnb/master_cluster.svg';
@@ -20,6 +21,21 @@ export enum PerspectiveType {
   CUSTOM = 'CUSTOM',
 }
 
+export const PerspectiveLabelKeys = {
+  [PerspectiveType.MASTER]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_3',
+  [PerspectiveType.MULTI]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_2',
+  [PerspectiveType.SINGLE]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_1',
+  [PerspectiveType.DEVELOPER]: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2',
+  [PerspectiveType.CUSTOM]: 'CUSTOM',
+};
+
+export const isSingleClusterPerspective = () => {
+  return window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE;
+};
+export const getSingleClusterFullBasePath = () => {
+  return `${window.SERVER_FLAGS.singleClusterBasePath}api/${getActiveCluster()}`;
+};
+
 /* 임시 */
 // TODO:  싱글 클러스터 증가시 동적 생성하는 방법 확인
 //        getK8sLandingPageURL, getImportRedirectURL 하는 상황 파악 및 수정
@@ -30,7 +46,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.MULTI,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_2') : 'Multi-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MULTI]) : 'Multi-Cluster',
             icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
             default: true,
@@ -43,11 +59,12 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.MASTER,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_3') : 'Master-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
             getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -55,7 +72,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.SINGLE,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_1') : 'Single-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.SINGLE]) : 'Single-Cluster',
             icon: <img src={SingleClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedSingleClusterIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
@@ -67,7 +84,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.DEVELOPER,
-            name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') : 'Developer', // 임시. 스트링 나오면 재적용 필요
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
@@ -81,7 +98,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.MASTER,
-            name: t ? t('COMMON:MSG_LNB_MENU_CONSOLE_LIST_3') : 'Master-Cluster',
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
             default: true,
@@ -94,7 +111,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
           type: 'Perspective',
           properties: {
             id: PerspectiveType.DEVELOPER,
-            name: t ? t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2') : 'Developer', // 임시. 스트링 나오면 재적용 필요
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
             getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),

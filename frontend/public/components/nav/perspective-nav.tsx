@@ -4,14 +4,12 @@ import * as _ from 'lodash-es';
 import { RootState } from '../../redux';
 import { setPinnedResources } from '../../actions/ui';
 import { getActivePerspective, getPinnedResources } from '../../reducers/ui';
-import { k8sList } from '@console/internal/module/k8s';
-import { ClusterMenuPolicyModel } from '@console/internal/models';
+import { getCmpListFetchUrl } from '@console/internal/components/hypercloud/utils/menu-utils';
+import { coFetchJSON } from '@console/internal/co-fetch';
 import { dynamicMenusFactory, basicMenusFactory } from './menus';
 import './_perspective-nav.scss';
 import { FlagsObject, getFlagsObject } from '@console/internal/reducers/features';
 import { PerspectiveType } from '../../hypercloud/perspectives';
-import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
-
 import { FLAGS } from '@console/shared';
 
 type StateProps = {
@@ -28,15 +26,11 @@ const PerspectiveNav: React.FC<StateProps & DispatchProps> = ({ perspective, fla
   const [cmp, setCmp] = React.useState(null);
 
   React.useEffect(() => {
-    k8sList(ClusterMenuPolicyModel, {
-      labelSelector: {
-        [CMP_PRIMARY_KEY]: 'true',
-      },
-    })
-      .then(policies => {
-        if (policies.length > 0) {
+    coFetchJSON(getCmpListFetchUrl())
+      .then(res => {
+        if (res?.items?.length > 0) {
           // MEMO : primary=true 레이블 가진 리소스 중 첫번째 리소스내용만 적용되도록 구현.
-          setCmp(policies[0]);
+          setCmp(res.items[0]);
         } else {
           setCmp({ tabs: [] });
         }
