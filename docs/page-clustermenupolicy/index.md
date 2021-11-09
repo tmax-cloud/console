@@ -12,8 +12,8 @@ description: Cluster Menu Policy 사용 가이드입니다.
 
 CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 있는 리소스이다.
 
-- [ClusterMenuPolicy CRD YAML](yaml/ClusterMenuPolicy_CRD.yaml)
-- [기본 메뉴구성 Sample YAML](yaml/cmp-default-menus-sample.yaml)
+- [ClusterMenuPolicy CRD YAML](https://raw.githubusercontent.com/tmax-cloud/console/hc-dev-v5.1/docs/page-clustermenupolicy/yaml/ClusterMenuPolicy_CRD.yaml)
+- [기본 메뉴구성 Sample YAML](https://raw.githubusercontent.com/tmax-cloud/console/hc-dev-v5.1/docs/page-clustermenupolicy/yaml/cmp-default-menus-sample.yaml)
 
 ## Spec 간단 설명
 
