@@ -62,7 +62,6 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
 RoleBindingClaimTableHeader.displayName = 'RoleBindingClaimTableHeader';
 
 const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: rolebindingclaims, index, key, style }) => {
-  const { t } = useTranslation();
   const menuActions = getMenuActions(rolebindingclaims?.status?.status)
   return (
     <TableRow id={rolebindingclaims.metadata.uid} index={index} trKey={key} style={style}>
