@@ -229,6 +229,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
                   history.push(resourceObjPath(submitData, referenceFor(ServiceInstanceModel)));
                 })
                 .catch(e => {
+                  setEnableSaveButton(true);
                   setError(e.message);
                 });
             }}

@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
-import { ClusterMenuPolicyModel, IngressModel } from '@console/internal/models';
-import { k8sList, k8sGet, modelFor, Selector } from '@console/internal/module/k8s';
+import { ClusterMenuPolicyModel } from '@console/internal/models';
+import { modelFor, Selector } from '@console/internal/module/k8s';
 import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import i18next, { TFunction } from 'i18next';
@@ -37,51 +37,9 @@ const initializeCmpFlag = () => {
   });
 };
 
-const initializeHarborUrl = () => {
+const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
   return new Promise((resolve, reject) => {
-    k8sList(IngressModel, { ns: 'hyperregistry' })
-      .then(ingresses => {
-        const regex = /-harbor-ingress$/;
-        const matchedIngresses = ingresses?.filter(ingress => regex.test(ingress.metadata?.name));
-        if (matchedIngresses?.length > 0) {
-          const host = matchedIngresses[0]?.spec?.rules?.[0]?.host;
-          if (!!host) {
-            const harborMenu = _.get(CustomMenusMap, 'Harbor');
-            !!harborMenu && _.assign(harborMenu, { url: `https://${host}` });
-          }
-        }
-        resolve(DoneMessage);
-      })
-      .catch(err => {
-        console.log('No ingress resource for harbor.');
-        resolve(DoneMessage);
-      });
-  });
-};
-
-const initializeGitlabUrl = () => {
-  return new Promise((resolve, reject) => {
-    k8sGet(IngressModel, 'gitlab-ingress', 'gitlab-system')
-      .then(ingress => {
-        const host = ingress?.spec?.rules?.[0]?.host;
-        if (!!host) {
-          const gitlabMenu = _.get(CustomMenusMap, 'Git');
-          !!gitlabMenu && _.assign(gitlabMenu, { url: `https://${host}` });
-          resolve(DoneMessage);
-        }
-      })
-      .catch(err => {
-        console.log('No ingress resource for gitlab.');
-        resolve(DoneMessage);
-      });
-  });
-};
-
-const initializeGrafanaUrl = () => {
-  return new Promise((resolve, reject) => {
-    const url = ingressUrlWithLabelSelector({
-      'tmaxcloud.org/ingress': 'grafana',
-    });
+    const url = ingressUrlWithLabelSelector(labelSelector);
     coFetchJSON(url)
       .then(res => {
         const { items } = res;
@@ -89,8 +47,8 @@ const initializeGrafanaUrl = () => {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
           if (!!host) {
-            const grafanaMenu = _.get(CustomMenusMap, 'Grafana');
-            !!grafanaMenu && _.assign(grafanaMenu, { url: `https://${host}` });
+            const menu = _.get(CustomMenusMap, menuKey);
+            !!menu && _.assign(menu, { url: `https://${host}` });
           }
         }
         resolve(DoneMessage);
@@ -103,9 +61,30 @@ const initializeGrafanaUrl = () => {
 
 export const initializationForMenu = async () => {
   await initializeCmpFlag();
-  await initializeHarborUrl();
-  await initializeGitlabUrl();
-  await initializeGrafanaUrl();
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'hyperregistry ',
+    },
+    'Harbor',
+  );
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'gitlab ',
+    },
+    'Git',
+  );
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'grafana ',
+    },
+    'Grafana',
+  );
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'kiali ',
+    },
+    'Kiali',
+  );
 };
 
 export const getMenuTitle = (kind, t: TFunction): { label: string; type: string } => {
