@@ -36,12 +36,6 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
-      sortField: 'resourceName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortField: 'status.status',
       transforms: [sortable],
@@ -68,20 +62,12 @@ const RoleBindingClaimTableHeader = (t?: TFunction) => {
 RoleBindingClaimTableHeader.displayName = 'RoleBindingClaimTableHeader';
 
 const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: rolebindingclaims, index, key, style }) => {
+  const { t } = useTranslation();
   const menuActions = getMenuActions(rolebindingclaims?.status?.status)
   return (
     <TableRow id={rolebindingclaims.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={rolebindingclaims.metadata.name} namespace={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>  
-        <ResourceLink 
-            kind='RoleBinding'
-            namespace={rolebindingclaims.metadata.namespace}
-            name={rolebindingclaims.resourceName}
-            title={rolebindingclaims.resourceName}
-            linkTo={rolebindingclaims.status?.status === 'Approved'}
-        />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         {rolebindingclaims.status?.status === 'Error' ? (
@@ -228,9 +214,6 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={`${t('COMMON:MSG_MAIN_TABLEHEADER_98')}`} obj={resource} path="resourceName">
-        {resource?.resourceName}
-      </DetailsItem>
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
         <RoleBindingClaimStatus result={resource} />
       </DetailsItem>
