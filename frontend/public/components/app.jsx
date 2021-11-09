@@ -30,6 +30,8 @@ import { Page } from '@patternfly/react-core';
 import keycloak from '../hypercloud/keycloak';
 import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
+import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
@@ -134,7 +136,7 @@ class App extends React.PureComponent {
       <>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <ConsoleNotifier location="BannerTop" />
-        <Page header={<Masthead keycloak={keycloak} onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} />}>
+        <Page header={<Masthead keycloak={keycloak} onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isSingleClusterPerspective={isSingleClusterPerspective()} />}>
           <ConnectedNotificationDrawer isDesktop={isDrawerInline} onDrawerChange={this._onNotificationDrawerToggle}>
             <AppContents />
           </ConnectedNotificationDrawer>
@@ -145,14 +147,6 @@ class App extends React.PureComponent {
     );
   }
 }
-
-// export const keycloak = new Keycloak({
-//   realm: window.SERVER_FLAGS.KeycloakRealm,
-//   url: window.SERVER_FLAGS.KeycloakAuthURL,
-//   clientId: window.SERVER_FLAGS.KeycloakClientId,
-// });
-
-// keycloak.logout = keycloak.logout.bind(keycloak, { redirectUri: document.location.origin });
 
 keycloak
   .init({
@@ -165,7 +159,48 @@ keycloak
       return;
     }
 
-    initializationForMenu().then(() => {
+    setIdToken(keycloak.idToken);
+    setAccessToken(keycloak.token);
+    setId(keycloak.idTokenParsed.preferred_username);
+    setUrlFromIngresses().then(() => {
+      const startDiscovery = () => store.dispatch(watchAPIServices());
+      // Load cached API resources from localStorage to speed up page load.
+      getCachedResources()
+        .then(resources => {
+          if (resources) {
+            store.dispatch(receivedResources(resources));
+          }
+          // Still perform discovery to refresh the cache.
+          startDiscovery();
+        })
+        .catch(startDiscovery);
+
+      store.dispatch(detectFeatures());
+
+      // Global timer to ensure all <Timestamp> components update in sync
+      setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
+
+      fetchEventSourcesCrd();
+
+      // Fetch swagger on load if it's stale.
+      fetchSwagger();
+
+      // Used by GUI tests to check for unhandled exceptions
+      window.windowError = false;
+      window.onerror = window.onunhandledrejection = e => {
+        // eslint-disable-next-line no-console
+        console.error('Uncaught error', e);
+        window.windowError = e || true;
+      };
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(registrations => registrations.forEach(reg => reg.unregister()))
+          // eslint-disable-next-line no-console
+          .catch(e => console.warn('Error unregistering service workers', e));
+      }
+
       render(
         <Provider store={store}>
           <Router history={history} basename={window.SERVER_FLAGS.basePath}>
@@ -196,49 +231,6 @@ keycloak.onReady = function() {
 };
 keycloak.onAuthSuccess = function() {
   console.log('[keycloak] onAuthSuccess');
-
-  setIdToken(keycloak.idToken);
-  setAccessToken(keycloak.token);
-  setId(keycloak.idTokenParsed.preferred_username);
-
-  const startDiscovery = () => store.dispatch(watchAPIServices());
-
-  // Load cached API resources from localStorage to speed up page load.
-  getCachedResources()
-    .then(resources => {
-      if (resources) {
-        store.dispatch(receivedResources(resources));
-      }
-      // Still perform discovery to refresh the cache.
-      startDiscovery();
-    })
-    .catch(startDiscovery);
-
-  store.dispatch(detectFeatures());
-
-  // Global timer to ensure all <Timestamp> components update in sync
-  setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
-
-  fetchEventSourcesCrd();
-
-  // Fetch swagger on load if it's stale.
-  fetchSwagger();
-
-  // Used by GUI tests to check for unhandled exceptions
-  window.windowError = false;
-  window.onerror = window.onunhandledrejection = e => {
-    // eslint-disable-next-line no-console
-    console.error('Uncaught error', e);
-    window.windowError = e || true;
-  };
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .getRegistrations()
-      .then(registrations => registrations.forEach(reg => reg.unregister()))
-      // eslint-disable-next-line no-console
-      .catch(e => console.warn('Error unregistering service workers', e));
-  }
 };
 keycloak.onAuthError = function() {
   console.log('[keycloak] onAuthError');

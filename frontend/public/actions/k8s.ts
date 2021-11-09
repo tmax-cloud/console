@@ -2,11 +2,7 @@ import * as _ from 'lodash-es';
 import { Dispatch } from 'react-redux';
 import { ActionType as Action, action } from 'typesafe-actions';
 
-import {
-  cacheResources,
-  getResources as getResources_,
-  DiscoveryResources,
-} from '../module/k8s/get-resources';
+import { cacheResources, getResources as getResources_, DiscoveryResources } from '../module/k8s/get-resources';
 import { k8sList, k8sWatch, k8sGet } from '../module/k8s/resource';
 import { makeReduxID } from '../components/utils/k8s-watcher';
 import { APIServiceModel } from '../models';
@@ -35,51 +31,38 @@ const WS = {} as { [id: string]: WebSocket & any };
 const POLLs = {};
 const REF_COUNTS = {};
 
-const nop = () => { };
+const nop = () => {};
 const paginationLimit = 250;
 const apiGroups = 'apiGroups';
 
 type K8sEvent = { type: 'ADDED' | 'DELETED' | 'MODIFIED'; object: K8sResourceKind };
 
-export const updateListFromWS = (id: string, k8sObjects: K8sEvent[]) =>
-  action(ActionType.UpdateListFromWS, { id, k8sObjects });
-export const bulkAddToList = (id: string, k8sObjects: K8sResourceKind[]) =>
-  action(ActionType.BulkAddToList, { id, k8sObjects });
-export const loaded = (id: string, k8sObjects: K8sResourceKind | K8sResourceKind[]) =>
-  action(ActionType.Loaded, { id, k8sObjects });
-export const errored = (id: string, k8sObjects: any) =>
-  action(ActionType.Errored, { id, k8sObjects });
-export const modifyObject = (id: string, k8sObjects: K8sResourceKind) =>
-  action(ActionType.ModifyObject, { id, k8sObjects });
+export const updateListFromWS = (id: string, k8sObjects: K8sEvent[]) => action(ActionType.UpdateListFromWS, { id, k8sObjects });
+export const bulkAddToList = (id: string, k8sObjects: K8sResourceKind[]) => action(ActionType.BulkAddToList, { id, k8sObjects });
+export const loaded = (id: string, k8sObjects: K8sResourceKind | K8sResourceKind[]) => action(ActionType.Loaded, { id, k8sObjects });
+export const errored = (id: string, k8sObjects: any) => action(ActionType.Errored, { id, k8sObjects });
+export const modifyObject = (id: string, k8sObjects: K8sResourceKind) => action(ActionType.ModifyObject, { id, k8sObjects });
 
 export const getResourcesInFlight = () => action(ActionType.GetResourcesInFlight);
-export const receivedResources = (resources: DiscoveryResources) =>
-  action(ActionType.ReceivedResources, { resources });
+export const receivedResources = (resources: DiscoveryResources) => action(ActionType.ReceivedResources, { resources });
 
 export const getResources = () => (dispatch: Dispatch) => {
   dispatch(getResourcesInFlight());
   getResources_()
-    .then((resources) => {
+    .then(resources => {
       // Cache the resources whenever discovery completes to improve console load times.
       cacheResources(resources);
       dispatch(receivedResources(resources));
     })
     // eslint-disable-next-line no-console
-    .catch((err) => console.error(err));
+    .catch(err => console.error(err));
 };
 
-export const filterList = (id: string, name: string, value: string) =>
-  action(ActionType.FilterList, { id, name, value });
+export const filterList = (id: string, name: string, value: string) => action(ActionType.FilterList, { id, name, value });
 
 export const startWatchK8sObject = (id: string) => action(ActionType.StartWatchK8sObject, { id });
 
-export const watchK8sObject = (
-  id: string,
-  name: string,
-  namespace: string,
-  query: { [key: string]: string },
-  k8sType: K8sKind,
-) => (dispatch: Dispatch, getState) => {
+export const watchK8sObject = (id: string, name: string, namespace: string, query: { [key: string]: string }, k8sType: K8sKind) => (dispatch: Dispatch, getState) => {
   if (id in REF_COUNTS) {
     REF_COUNTS[id] += 1;
     return nop;
@@ -94,8 +77,8 @@ export const watchK8sObject = (
 
   const poller = () => {
     k8sGet(k8sType, name, namespace).then(
-      (o) => dispatch(modifyObject(id, o)),
-      (e) => dispatch(errored(id, e)),
+      o => dispatch(modifyObject(id, o)),
+      e => dispatch(errored(id, e)),
     );
   };
   POLLs[id] = setInterval(poller, 30 * 1000);
@@ -109,9 +92,7 @@ export const watchK8sObject = (
 
   const { subprotocols } = getState().UI.get('impersonate', {});
 
-  WS[id] = k8sWatch(k8sType, { ...query, subprotocols }).onbulkmessage((events) =>
-    events.forEach((e) => dispatch(modifyObject(id, e.object))),
-  );
+  WS[id] = k8sWatch(k8sType, { ...query, subprotocols }).onbulkmessage(events => events.forEach(e => dispatch(modifyObject(id, e.object))));
 };
 
 export const stopWatchK8s = (id: string) => action(ActionType.StopWatchK8s, { id });
@@ -134,8 +115,7 @@ export const stopK8sWatch = (id: string) => (dispatch: Dispatch) => {
   dispatch(stopWatchK8s(id));
 };
 
-export const startWatchK8sList = (id: string, query: { [key: string]: string }) =>
-  action(ActionType.StartWatchK8sList, { id, query });
+export const startWatchK8sList = (id: string, query: { [key: string]: string }) => action(ActionType.StartWatchK8sList, { id, query });
 
 export const watchK8sList = (
   id: string,
@@ -177,7 +157,7 @@ export const watchK8sList = (
     }
 
     if (!continueToken) {
-      [loaded, extraAction].forEach((f) => f && dispatch(f(id, response.items)));
+      [loaded, extraAction].forEach(f => f && dispatch(f(id, response.items)));
     } else {
       dispatch(bulkAddToList(id, response.items));
     }
@@ -221,11 +201,7 @@ export const watchK8sList = (
       }
 
       const { subprotocols } = getState().UI.get('impersonate', {});
-      WS[id] = k8sWatch(
-        k8skind,
-        { ...query, resourceVersion },
-        { subprotocols, timeout: 60 * 1000 },
-      );
+      WS[id] = k8sWatch(k8skind, { ...query, resourceVersion }, { subprotocols, timeout: 60 * 1000 });
     } catch (e) {
       if (!REF_COUNTS[id]) {
         // eslint-disable-next-line no-console
@@ -244,7 +220,7 @@ export const watchK8sList = (
     }
 
     WS[id]
-      .onclose((event) => {
+      .onclose(event => {
         // Close Frame Status Codes: https://tools.ietf.org/html/rfc6455#section-7.4.1
         if (event.code !== 1006) {
           return;
@@ -255,7 +231,7 @@ export const watchK8sList = (
         const timedOut = true;
         ws && ws.destroy(timedOut);
       })
-      .ondestroy((timedOut) => {
+      .ondestroy(timedOut => {
         if (!timedOut) {
           return;
         }
@@ -272,9 +248,7 @@ export const watchK8sList = (
 
         POLLs[id] = setTimeout(pollAndWatch, 15 * 1000);
       })
-      .onbulkmessage((events) =>
-        [updateListFromWS, extraAction].forEach((f) => f && dispatch(f(id, events))),
-      );
+      .onbulkmessage(events => [updateListFromWS, extraAction].forEach(f => f && dispatch(f(id, events))));
   };
   pollAndWatch();
 };
@@ -290,22 +264,17 @@ export const watchAPIServices = () => (dispatch, getState) => {
   k8sList(APIServiceModel, {})
     .then(() =>
       dispatch(
-        watchK8sList(
-          makeReduxID(APIServiceModel, {}),
-          {},
-          APIServiceModel,
-          (id: string, events: K8sEvent[]) => {
-            // Only re-run API discovery on added or removed API services. A
-            // misbehaving API service can trigger frequent watch updates,
-            // which could cause console to thrash.
-            return events.some(({ type }) => type !== 'MODIFIED') ? getResources() : _.noop;
-          },
-        ),
+        watchK8sList(makeReduxID(APIServiceModel, {}), {}, APIServiceModel, (id: string, events: K8sEvent[]) => {
+          // Only re-run API discovery on added or removed API services. A
+          // misbehaving API service can trigger frequent watch updates,
+          // which could cause console to thrash.
+          return events.some(({ type }) => type !== 'MODIFIED') ? getResources() : _.noop;
+        }),
       ),
     )
     .catch(() => {
       const poller = () =>
-        coFetchJSON('api/kubernetes/apis').then((d) => {
+        coFetchJSON('api/kubernetes/apis').then(d => {
           if (d.groups.length !== getState().k8s.getIn(['RESOURCES', apiGroups], 0)) {
             dispatch(getResources());
           }

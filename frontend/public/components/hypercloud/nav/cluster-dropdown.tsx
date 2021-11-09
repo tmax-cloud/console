@@ -84,7 +84,8 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
   React.useEffect(() => {
     if (clusters.length == 0 || isClusterDropdownOpen) {
       setLoaded(false);
-      coFetchJSON(`/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
+      // MEMO : 마스터클러스터용 콜을 할 땐 location.origin 붙여줘야 함.
+      coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
         .then(result => result.items)
         .then(res => {
           const clusterList: clusterItemProps[] = res.reduce((list, cluster) => {

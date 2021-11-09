@@ -174,4 +174,10 @@
       background-image: url('../../imgs/hypercloud/lnb/filled/image_filled.svg');
     }
   }
+  &.custom_menu {
+    background-image: url('../../imgs/hypercloud/lnb/add_menu.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/add_menu_filled.svg');
+    }
+  }
 }
