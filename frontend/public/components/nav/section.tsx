@@ -9,6 +9,7 @@ import { featureReducerName, flagPending, FeatureState } from '../../reducers/fe
 import { stripBasePath } from '../utils';
 import { stripNS, createLink } from './items';
 import { getActivePerspective } from '../../reducers/ui';
+import { CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 
 const navSectionStateToProps = (state: RootState, { required }: NavSectionProps): NavSectionStateProps => {
   const flags = state[featureReducerName];
@@ -174,10 +175,13 @@ export const NavSection = connect(navSectionStateToProps)(
         const { isOpen, activeChild } = this.state;
         const isActive = !!activeChild;
         const children = this.getChildren();
-        const prettyType = type
-          .toLowerCase()
-          .replace(' ', '_')
-          .replace('/', '_');
+        const prettyType =
+          type === CUSTOM_LABEL_TYPE
+            ? 'custom_menu'
+            : type
+                .toLowerCase()
+                .replace(' ', '_')
+                .replace('/', '_');
 
         if (isSingleChild) {
           return children.length > 0 ? <div className={`navIcon ${prettyType}`}> {children} </div> : null;

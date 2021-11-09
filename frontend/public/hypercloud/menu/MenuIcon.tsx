@@ -18,6 +18,7 @@ import * as ClusterIcon from '@console/internal/imgs/hypercloud/lnb/filled/clust
 import * as TerraformClaimIcon from '@console/internal/imgs/hypercloud/lnb/filled/terraform_claim_filled.svg';
 import * as FederationIcon from '@console/internal/imgs/hypercloud/lnb/filled/ferderation_filled.svg';
 import * as AnsibleIcon from '@console/internal/imgs/hypercloud/lnb/filled/ansible_filled_lnb.svg';
+import * as DefaultIcon from '@console/internal/imgs/hypercloud/lnb/filled/add_menu_filled.svg';
 
 const MenuIconContainer = (props: MenuIconContainerProps) => {
   const { icon, title } = props;
@@ -76,8 +77,7 @@ export const MenuIconTitle = (props: MenuIconTitleProps) => {
     case 'ansible':
       return <MenuIconContainer title={title} icon={AnsibleIcon} />;
     default:
-      // TODO : defualt 아이콘 발행되면 교체하기
-      return <MenuIconContainer title={title} icon={ManagementIcon} />;
+      return <MenuIconContainer title={title} icon={DefaultIcon} />;
   }
 };
 
