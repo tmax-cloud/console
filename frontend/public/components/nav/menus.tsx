@@ -9,7 +9,6 @@ import HyperCloudDefaultMenus from '@console/internal/hypercloud/menu/hc-default
 import { CustomMenusMap, MenuType, MenuLinkType, MenuContainerLabels } from '@console/internal/hypercloud/menu/menu-types';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
 import { ResourceLabel, getI18nInfo } from '@console/internal/models/hypercloud/resource-plural';
-
 const en = i18next.getFixedT('en');
 
 type MenuData = {
@@ -19,7 +18,7 @@ type MenuData = {
   innerMenus?: Array<{ menuType: string; kind: string; label?: string }>;
 };
 
-export const basicMenusFactory = perspective => {
+export const basicMenusFactory = (perspective, canListNS) => {
   let menus = [];
   switch (perspective) {
     case PerspectiveType.MASTER:
@@ -62,6 +61,10 @@ export const basicMenusFactory = perspective => {
                 return (
                   <NavSection title={containerLabel} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map(innerMenuKind => {
+                      if (innerMenuKind === 'Dashboard' && !canListNS) {
+                        // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
+                        return;
+                      }
                       return generateMenu(perspective, innerMenuKind, true, t, i18n);
                     })}
                   </NavSection>

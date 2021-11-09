@@ -8,19 +8,23 @@ import { k8sList } from '@console/internal/module/k8s';
 import { ClusterMenuPolicyModel } from '@console/internal/models';
 import { dynamicMenusFactory, basicMenusFactory } from './menus';
 import './_perspective-nav.scss';
+import { FlagsObject, getFlagsObject } from '@console/internal/reducers/features';
 import { PerspectiveType } from '../../hypercloud/perspectives';
 import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
+
+import { FLAGS } from '@console/shared';
 
 type StateProps = {
   perspective: string;
   pinnedResources: string[];
+  flags: FlagsObject;
 };
 
 interface DispatchProps {
   onPinnedResourcesChange: (resources: string[]) => void;
 }
 
-const PerspectiveNav: React.FC<StateProps & DispatchProps> = ({ perspective }) => {
+const PerspectiveNav: React.FC<StateProps & DispatchProps> = ({ perspective, flags }) => {
   const [cmp, setCmp] = React.useState(null);
 
   React.useEffect(() => {
@@ -43,10 +47,10 @@ const PerspectiveNav: React.FC<StateProps & DispatchProps> = ({ perspective }) =
       });
   }, [perspective]);
 
-  return !!cmp ? getNavItems(perspective, cmp) : <></>;
+  return !!cmp ? getNavItems(perspective, cmp, flags) : <></>;
 };
 
-const getNavItems = (perspective, cmp) => {
+const getNavItems = (perspective, cmp, flags) => {
   const tabs = cmp.menuTabs;
 
   switch (perspective) {
@@ -55,7 +59,7 @@ const getNavItems = (perspective, cmp) => {
       if (multiMenus?.length > 0) {
         return dynamicMenusFactory(perspective, multiMenus[0]);
       } else {
-        return basicMenusFactory(PerspectiveType.MULTI);
+        return basicMenusFactory(PerspectiveType.MULTI, flags(FLAGS.CAN_LIST_NS));
       }
     }
     case PerspectiveType.MASTER: {
@@ -64,7 +68,7 @@ const getNavItems = (perspective, cmp) => {
         // MEMO : CR안에 Master메뉴에 대한 정의가 여러 개여도 0번째만 가져와서 반영 되도록.
         return dynamicMenusFactory(perspective, masterMenus[0]);
       } else {
-        return basicMenusFactory(PerspectiveType.MASTER);
+        return basicMenusFactory(PerspectiveType.MASTER, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.SINGLE: {
@@ -72,7 +76,7 @@ const getNavItems = (perspective, cmp) => {
       if (singleMenus?.length > 0) {
         return dynamicMenusFactory(perspective, singleMenus[0]);
       } else {
-        return basicMenusFactory(PerspectiveType.SINGLE);
+        return basicMenusFactory(PerspectiveType.SINGLE, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.DEVELOPER: {
@@ -80,7 +84,7 @@ const getNavItems = (perspective, cmp) => {
       if (developerMenus?.length > 0) {
         return dynamicMenusFactory(perspective, developerMenus[0]);
       } else {
-        return basicMenusFactory(PerspectiveType.DEVELOPER);
+        return basicMenusFactory(PerspectiveType.DEVELOPER, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.CUSTOM: {
@@ -88,7 +92,7 @@ const getNavItems = (perspective, cmp) => {
       if (customMenus?.length > 0) {
         return dynamicMenusFactory(perspective, customMenus[0]);
       } else {
-        return basicMenusFactory(PerspectiveType.CUSTOM);
+        return basicMenusFactory(PerspectiveType.CUSTOM, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     default:
@@ -100,6 +104,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   return {
     perspective: getActivePerspective(state),
     pinnedResources: getPinnedResources(state),
+    flags: getFlagsObject(state),
   };
 };
 

@@ -13,6 +13,7 @@ import { AlertmanagerModel } from '../models';
 import { referenceForModel } from '../module/k8s';
 import * as plugins from '../plugins';
 import { getActivePerspective } from '../reducers/ui';
+import { getFlagsObject } from '../reducers/features';
 import { NamespaceRedirect } from './utils/namespace-redirect';
 import { RootState } from '../redux';
 import { pluralToKind, isCreateManual } from './hypercloud/form';
@@ -65,21 +66,23 @@ _.each(namespacedPrefixes, p => {
 
 type DefaultPageProps = {
   activePerspective: string;
+  flags;
 };
 
-const DefaultPage_: React.FC<DefaultPageProps> = ({ activePerspective }) => {
+const DefaultPage_: React.FC<DefaultPageProps> = ({ activePerspective, flags }) => {
   // support redirecting to perspective landing page
   return (
     <Redirect
       to={getPerspectives()
         .find(p => p.properties.id === activePerspective)
-        .properties.getLandingPageURL()}
+        .properties.getLandingPageURL(flags)}
     />
   );
 };
 
 const DefaultPage = connect((state: RootState) => ({
   activePerspective: getActivePerspective(state),
+  flags: getFlagsObject(state),
 }))(DefaultPage_);
 
 const LazyRoute = props => {
