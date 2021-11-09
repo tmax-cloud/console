@@ -11,7 +11,9 @@ export const ingressUrlWithLabelSelector = labelSelector => {
   const { apiGroup, apiVersion, plural } = IngressModel;
   const labelSelectorString = selectorToString(labelSelector as Selector);
   const query = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent(labelSelectorString)}`;
-  return `api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
+  // MEMO : ingress 조회를 위해 필요한 콜은 마스터클러스터 콜이여서 직접 location.origin으로 도메인 설정해줌.
+  // MEMO : (직접적인 https://가 포함된 도메인 설정 없을 경우 co-fetch.js의 coFetchCommon에서 perspective 상태에 따라 도메인을 바꿔줌)
+  return `${location.origin}/api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
 };
 
 const setSingleClusterBasePath = () => {
@@ -19,9 +21,7 @@ const setSingleClusterBasePath = () => {
     const url = ingressUrlWithLabelSelector({
       'ingress.tmaxcloud.org/name': 'multicluster',
     });
-    // MEMO : singleClusterBasePath설정을 위해 필요한 콜은 마스터클러스터 콜이여서 직접 location.origin으로 도메인 설정해줌.
-    // MEMO : (직접적인 https://가 포함된 도메인 설정 없을 경우 co-fetch.js의 coFetchCommon에서 perspective 상태에 따라 도메인을 바꿔줌)
-    coFetchJSON(`${location.origin}/${url}`)
+    coFetchJSON(url)
       .then(res => {
         const { items } = res;
         if (items?.length > 0) {
