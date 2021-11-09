@@ -28,12 +28,6 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
-      sortField: 'resourceName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
       sortField: 'status.status',
       transforms: [sortable],
@@ -73,9 +67,6 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
     <TableRow id={resourcequotaclaims.metadata.uid} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={resourcequotaclaims.metadata.name} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="ResourceQuota" name={resourcequotaclaims.resourceName} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.resourceName} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         {resourcequotaclaims?.status?.status === 'Error' ? (
@@ -154,8 +145,6 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
-                <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
-                <dd>{resourcequotaclaims.resourceName}</dd>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
                 <dd>
                   <Status status={resourcequotaclaims.status?.status} />
