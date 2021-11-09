@@ -2,18 +2,19 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { FLAGS } from '@console/shared';
 
 import { GlobalNotifications } from './global-notifications';
 import { NamespaceBar } from './namespace';
 import { SearchPage } from './hypercloud/search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
-import { AsyncComponent } from './utils';
+import { AsyncComponent, LoadingBox } from './utils';
 import { namespacedPrefixes } from './utils/link';
 import { AlertmanagerModel } from '../models';
 import { referenceForModel } from '../module/k8s';
 import * as plugins from '../plugins';
 import { getActivePerspective } from '../reducers/ui';
-import { getFlagsObject } from '../reducers/features';
+import { connectToFlags, flagPending, FlagsObject } from '../reducers/features';
 import { NamespaceRedirect } from './utils/namespace-redirect';
 import { RootState } from '../redux';
 import { pluralToKind, isCreateManual } from './hypercloud/form';
@@ -66,11 +67,15 @@ _.each(namespacedPrefixes, p => {
 
 type DefaultPageProps = {
   activePerspective: string;
-  flags;
+  flags: FlagsObject;
 };
 
 const DefaultPage_: React.FC<DefaultPageProps> = ({ activePerspective, flags }) => {
+  if (Object.keys(flags).some(key => flagPending(flags[key]))) {
+    return <LoadingBox />;
+  }
   // support redirecting to perspective landing page
+  console.log(getPerspectives());
   return (
     <Redirect
       to={getPerspectives()
@@ -82,8 +87,7 @@ const DefaultPage_: React.FC<DefaultPageProps> = ({ activePerspective, flags }) 
 
 const DefaultPage = connect((state: RootState) => ({
   activePerspective: getActivePerspective(state),
-  flags: getFlagsObject(state),
-}))(DefaultPage_);
+}))(connectToFlags(FLAGS.CAN_LIST_NS)(DefaultPage_));
 
 const LazyRoute = props => {
   const plural = props.computedMatch.params.plural;
