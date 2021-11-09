@@ -19,10 +19,12 @@ description: >-
 
 - ### [(WSL2) Linux 개발환경 구축 가이드]({{'/page-wsl' | relative_url}})
 - ### [Console YAML Samples 사용 가이드]({{'/page-consoleYAMLsamples' | relative_url}})
-- ### [Helm]({{'/page-helm' | relative_url}})
+- ### [Helm 가이드]({{'/page-helm' | relative_url}})
+- ### [Cluster Menu Policy 사용 가이드]({{'/page-clustermenupolicy' | relative_url}})
 <br/>
 
 ---
+
 # 🧐 메뉴 담당자
 
 <div class="menuHandlerTable-container">
@@ -88,4 +90,3 @@ description: >-
 </div>
 
 </div>
-
