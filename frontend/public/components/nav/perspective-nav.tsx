@@ -53,7 +53,7 @@ const getNavItems = (perspective, cmp, flags) => {
       if (multiMenus?.length > 0) {
         return dynamicMenusFactory(perspective, multiMenus[0]);
       } else {
-        return basicMenusFactory(PerspectiveType.MULTI, flags(FLAGS.CAN_LIST_NS));
+        return basicMenusFactory(PerspectiveType.MULTI, flags[FLAGS.CAN_LIST_NS]);
       }
     }
     case PerspectiveType.MASTER: {
