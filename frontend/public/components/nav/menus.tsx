@@ -78,7 +78,7 @@ export const basicMenusFactory = (perspective, canListNS) => {
   );
 };
 
-export const dynamicMenusFactory = (perspective, data) => {
+export const dynamicMenusFactory = (perspective, data, canListNS) => {
   return (
     <Translation>
       {(t, { i18n }) => (
@@ -90,6 +90,10 @@ export const dynamicMenusFactory = (perspective, data) => {
                 return (
                   <NavSection title={containerLabel || ''} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map(innerMenuData => {
+                      if (innerMenuData.kind === 'Dashboard' && !canListNS) {
+                        // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
+                        return;
+                      }
                       return generateMenu(perspective, innerMenuData, true, t, i18n);
                     })}
                   </NavSection>
