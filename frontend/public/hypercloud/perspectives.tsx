@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { CogsIcon } from '@patternfly/react-icons';
 import { Perspective } from '@console/plugin-sdk';
+import { FLAGS } from '@console/shared/src/constants';
 import { getActivePerspective, getActiveCluster } from '@console/internal/actions/ui';
 import { TFunction } from 'i18next';
 import * as MultiClusterIcon from '@console/internal/imgs/hypercloud/lnb/multi_cluster.svg';
@@ -61,8 +62,9 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
+            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -73,8 +75,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.SINGLE]) : 'Single-Cluster',
             icon: <img src={SingleClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedSingleClusterIcon} className="font-icon" />,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/single/dashboards' : '/welcome'),
+            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },

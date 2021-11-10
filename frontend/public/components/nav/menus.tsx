@@ -17,7 +17,7 @@ type MenuData = {
   innerMenus?: Array<{ menuType: string; kind: string; label?: string }>;
 };
 
-export const basicMenusFactory = perspective => {
+export const basicMenusFactory = (perspective, canListNS) => {
   let menus = [];
   switch (perspective) {
     case PerspectiveType.MASTER:
@@ -50,6 +50,10 @@ export const basicMenusFactory = perspective => {
                 return (
                   <NavSection title={containerLabel} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map(innerMenuKind => {
+                      if (innerMenuKind === 'Dashboard' && !canListNS) {
+                        // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
+                        return;
+                      }
                       // MEMO : generateMenu()에서 data를 동일하게 object형식으로 받게하기 위해 정제해줌. (kind와 menuType모두 innerMenuKind로 값 동일함)
                       const d = { kind: innerMenuKind, menuType: innerMenuKind };
                       return generateMenu(perspective, d, true, t, i18n);
@@ -74,7 +78,7 @@ export const basicMenusFactory = perspective => {
   );
 };
 
-export const dynamicMenusFactory = (perspective, data) => {
+export const dynamicMenusFactory = (perspective, data, canListNS) => {
   return (
     <Translation>
       {(t, { i18n }) => (
@@ -86,6 +90,10 @@ export const dynamicMenusFactory = (perspective, data) => {
                 return (
                   <NavSection title={containerLabel || ''} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map(innerMenuData => {
+                      if (innerMenuData.kind === 'Dashboard' && !canListNS) {
+                        // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
+                        return;
+                      }
                       return generateMenu(perspective, innerMenuData, true, t, i18n);
                     })}
                   </NavSection>
