@@ -9,7 +9,7 @@ import { history } from './router';
 import { isModalOpen } from '../modals';
 import { Dropdown } from '../utils';
 import { withTranslation } from 'react-i18next';
-import { categorize, pruneCategoriesWithNoItems, processCategories, clearItemsFromCategories } from './hypercloud/tile-view-page';
+import { categorize, pruneCategoriesWithNoItems, processCategories, clearItemsFromCategories } from './hypercloud/tile-view-utils';
 
 export const FilterTypes = {
   category: 'category',
