@@ -352,7 +352,6 @@ class ResourceLog_ extends React.Component {
     const { resource, containerName, dropdown, bufferSize, t } = this.props;
     const { error, lines, linesBehind, stale, status, isFullscreen, podLogLinks, namespaceUID } = this.state;
     const bufferFull = lines.length === bufferSize;
-
     return (
       <>
         {error && <Alert isInline className="co-alert" variant="danger" title={t('COMMON:MSG_DETAILS_TABLOGS_4')} action={<AlertActionLink onClick={this._restartStream}>{t('COMMON:MSG_DETAILS_TABLOGS_15')}</AlertActionLink>} />}
