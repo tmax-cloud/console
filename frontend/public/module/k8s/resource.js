@@ -137,10 +137,12 @@ const isNamespaceClaim = (model) => {
 }
 
 const resourceNamespaceURL = (model) => {
-  const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
   if (isSingleClusterPerspective()) {
-    return `${getSingleClusterFullBasePath()}/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+    // MEMO : 싱글클러스터의 경우 네임스페이스 조회콜은 kubernetes 콜로 보냄
+    const plural = isNamespace(model) ? 'namespaces' : 'namespaceclaims';
+    return `${getSingleClusterFullBasePath()}/api/v1/${plural}`;
   } else {
+    const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
     return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
   }
 }
