@@ -40,6 +40,12 @@ export const getSingleClusterFullBasePath = () => {
 // TODO:  싱글 클러스터 증가시 동적 생성하는 방법 확인
 //        getK8sLandingPageURL, getImportRedirectURL 하는 상황 파악 및 수정
 export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction) => {
+  let isFirstTime;
+  if (localStorage.getItem('flag/first-time-login')) {
+    isFirstTime = localStorage.getItem('flag/first-time-login') === 'true' ? true : false;
+  } else {
+    isFirstTime = false;
+  }
   const perspectives: Perspective[] = window.SERVER_FLAGS.McMode
     ? [
         {
@@ -62,8 +68,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.MASTER]) : 'Master-Cluster',
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
 
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
@@ -75,8 +81,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.SINGLE]) : 'Single-Cluster',
             icon: <img src={SingleClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedSingleClusterIcon} className="font-icon" />,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/single/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -87,8 +93,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
+            getLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -102,8 +108,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             icon: <img src={MasterClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedMasterClusterIcon} className="font-icon" />,
             default: true,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/master/dashboards' : '/welcome'),
+            getLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? (flags[FLAGS.CAN_LIST_NS] ? '/master/dashboards' : '/k8s/cluster/namespaces') : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -114,8 +120,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             name: t ? t(PerspectiveLabelKeys[PerspectiveType.DEVELOPER]) : 'Developer', // 임시. 스트링 나오면 재적용 필요
             icon: <img src={DeveloperIcon} className="font-icon co-console-dropdowntoggle-icon" />,
             selectedIcon: <img src={SelectedDeveloperIcon} className="font-icon" />,
-            getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
-            getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/developer/add' : '/welcome'),
+            getLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
           },
         },
@@ -129,8 +135,8 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
         name: 'Custom', // 임시. 스트링 나오면 재적용 필요
         icon: <CogsIcon className="font-icon co-console-dropdowntoggle-icon" />,
         selectedIcon: <CogsIcon className="font-icon " />,
-        getLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/custom/add' : '/welcome'),
-        getK8sLandingPageURL: flags => (localStorage.getItem('flag/first-time-login') ? '/custom/add' : '/welcome'),
+        getLandingPageURL: flags => (isFirstTime ? '/custom/add' : '/welcome'),
+        getK8sLandingPageURL: flags => (isFirstTime ? '/custom/add' : '/welcome'),
         getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
       },
     });
