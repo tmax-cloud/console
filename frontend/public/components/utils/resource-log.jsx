@@ -15,7 +15,7 @@ import * as screenfull from 'screenfull';
 import { k8sGet, k8sList } from '@console/internal/module/k8s';
 import { ConsoleExternalLogLinkModel, ProjectModel } from '@console/internal/models';
 import { connectToFlags } from '../../reducers/features';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 
 export const STREAM_EOF = 'eof';
 export const STREAM_LOADING = 'loading';
@@ -349,14 +349,14 @@ class ResourceLog_ extends React.Component {
   }
 
   render() {
-    const { resource, containerName, dropdown, bufferSize } = this.props;
+    const { resource, containerName, dropdown, bufferSize, t } = this.props;
     const { error, lines, linesBehind, stale, status, isFullscreen, podLogLinks, namespaceUID } = this.state;
     const bufferFull = lines.length === bufferSize;
 
     return (
       <>
-        {error && <Alert isInline className="co-alert" variant="danger" title="An error occurred while retrieving the requested logs." action={<AlertActionLink onClick={this._restartStream}>Retry</AlertActionLink>} />}
-        {stale && <Alert isInline className="co-alert" variant="info" title={`The logs for this ${resource.kind} may be stale.`} action={<AlertActionLink onClick={this._restartStream}>Refresh</AlertActionLink>} />}
+        {error && <Alert isInline className="co-alert" variant="danger" title={t('COMMON:MSG_DETAILS_TABLOGS_4')} action={<AlertActionLink onClick={this._restartStream}>{t('COMMON:MSG_DETAILS_TABLOGS_15')}</AlertActionLink>} />}
+        {stale && <Alert isInline className="co-alert" variant="info" title={t('COMMON:MSG_DETAILS_TABLOGS_3', { something: resource.kind })} action={<AlertActionLink onClick={this._restartStream}>{t('COMMON:MSG_DETAILS_TABLOGS_13')}</AlertActionLink>} />}
         <div ref={this._resourceLogRef} className={classNames('resource-log', { 'resource-log--fullscreen': isFullscreen })}>
           <LogControls dropdown={dropdown} isFullscreen={isFullscreen} onDownload={this._download} status={status} toggleFullscreen={this._toggleFullscreen} toggleStreaming={this._toggleStreaming} resource={resource} containerName={containerName} podLogLinks={podLogLinks} namespaceUID={namespaceUID} />
           <LogWindow lines={lines} linesBehind={linesBehind} bufferFull={bufferFull} isFullscreen={isFullscreen} status={status} updateStatus={this._updateStatus} />
@@ -367,7 +367,7 @@ class ResourceLog_ extends React.Component {
 }
 
 /** @type {React.FC<{bufferSize?: number, containerName?: string, dropdown?: React.ReactNode, resource: any, resourceStatus: string}}>} */
-export const ResourceLog = connectToFlags(FLAGS.CONSOLE_EXTERNAL_LOG_LINK)(ResourceLog_);
+export const ResourceLog = connectToFlags(FLAGS.CONSOLE_EXTERNAL_LOG_LINK)(withTranslation()(ResourceLog_));
 
 ResourceLog.defaultProps = {
   bufferSize: 1000,
