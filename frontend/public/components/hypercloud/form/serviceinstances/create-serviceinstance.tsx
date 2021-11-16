@@ -112,8 +112,7 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue, errorMsg, 
       const error = _.get(errors, id);
       const errorMsg = error ? validationError[error.type] : null;
       const isRequired = selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key);
-      // TODO : regex도 값으로 들어오면 'pattern'키값으로 validationRule설정해주기
-      const validationRule = { required: isRequired };
+      const validationRule = { required: isRequired, pattern: new RegExp(value.regex) };
       newParams.push(
         <ul key={key}>
           <Section label={key} id={key} description={value.description} isRequired={isRequired} valid={!error} validationErrorDesc={errorMsg}>

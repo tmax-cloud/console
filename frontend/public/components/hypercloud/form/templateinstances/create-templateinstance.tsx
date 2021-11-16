@@ -86,8 +86,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
           const id = `params.${paramObj.name}`;
           const error = _.get(errors, id);
           const errorMsg = error ? validationError[error.type] : null;
-          // TODO : regex 대한 조건도 들어오면 validationRule에 추가해주기
-          const validationRule = { required: paramObj.required };
+          const validationRule = { required: paramObj.required, pattern: new RegExp(paramObj.regex) };
           if (inputType === 'number') {
             // MEMO : input의 type을 number로 해도 submit 시에 data엔 string으로 들어가있어서 number로 변환해주기 위해 Controller사용하고 input onChange부분에서 숫자로 변환해줌.
             return (
@@ -128,7 +127,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
           const id = `params.${paramObj.name}`;
           const error = _.get(errors, id);
           const errorMsg = error ? validationError[error.type] : null;
-          const validationRule = { required: paramObj.required };
+          const validationRule = { required: paramObj.required, pattern: new RegExp(paramObj.regex) };
           if (inputType === 'number') {
             return (
               <Section key={sectionId} id={sectionId} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required} valid={!error} validationErrorDesc={errorMsg}>
