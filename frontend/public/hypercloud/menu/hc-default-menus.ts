@@ -121,7 +121,7 @@ const SingleNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.home,
-    innerMenus: [CustomMenusMap.Dashboard.kind, CustomMenusMap.Search.kind, CustomMenusMap.Events.kind],
+    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Events.kind],
   },
   {
     menuType: MenuType.CONTAINER,

@@ -33,15 +33,15 @@ KUBEFLOW_IP='192.168.9.141'
 # KUBEFLOW_PORT='80' 
 
 ./bin/console gateway \
-    --listen=https://$myIP:9001 \
-    --base-address=https://$myIP:9001 \
+    --listen=https://$myIP:9000\
+    --base-address=https://$myIP:9000 \
     --dynamic-file=./configs/dynamic-config.yaml \
     --tls-cert-file=tls/tls.crt \
     --tls-key-file=tls/tls.key \
     --redirect-port=8080 \
     --keycloak-realm=tmax \
     --keycloak-auth-url=https://hyperauth.org/auth \
-    --keycloak-client-id=ck-integration-hypercloud5 \
+    --keycloak-client-id=hypercloud5 \
     --k8s-endpoint=https://$k8sIP:6443 \
     --bearer-token="eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJYYjBuTlgwUXh6ZWttZlVmd09zVXBsX0R5dUlLcjh3UnhLcFpTeVpxTjNzIn0.eyJleHAiOjE2MzU1MjI3ODcsImlhdCI6MTYzNTQ4Njc4NywiYXV0aF90aW1lIjoxNjM1NDg2NzM5LCJqdGkiOiIzZmY2YTI4MC0yM2M2LTQ2NmMtOGNiZi03NTZhNjVhZWZlMTciLCJpc3MiOiJodHRwczovL2h5cGVyYXV0aC5vcmcvYXV0aC9yZWFsbXMvdG1heCIsImF1ZCI6ImNrLWludGVncmF0aW9uLWh5cGVyY2xvdWQ1Iiwic3ViIjoiMmQ3ZWZiYTktMTgyMC00MDc5LWJmMzUtYmJhMTRhNzk4OWNjIiwidHlwIjoiSUQiLCJhenAiOiJjay1pbnRlZ3JhdGlvbi1oeXBlcmNsb3VkNSIsIm5vbmNlIjoiYzJmZDUzMzUtODdmNS00YjE2LWFjNmMtYjNlNDE5YmU2ODMwIiwic2Vzc2lvbl9zdGF0ZSI6IjJjZjBmMzY5LTNkNDMtNGJiNy05M2UyLTkxOTgwZTBiZDQ0YyIsImF0X2hhc2giOiJzaHVNeDRaTllrSWZYdm9uTlBDc1RBIiwiYWNyIjoiMCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJ1c2VyX25hbWUiOiLsmrDtg5zqsbQiLCJuYW1lIjoiYWRtaW4gYWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbkB0bWF4LmNvLmtyIiwibG9jYWxlIjoia28iLCJnaXZlbl9uYW1lIjoiYWRtaW4iLCJmYW1pbHlfbmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkB0bWF4LmNvLmtyIiwiZ3JvdXAiOlsiaHlwZXJjbG91ZDUiXX0.WDgnKupuiLlz-uA1H5ll0_dJugd0lYxqmTjX6vYijHLKs9U4gu9Z7CPbYSZQzI-s_rHWFnt8Mf4HSkm40HYfq75qWsJWM-yhIoYR7GnrrBxOBbISw7OD8krBjqz_XEcvfaWh2jCWA8NPj-5uvo80yd3bQ6ajJrXs3Ew5ejrbjXueLZhw8hsW3l_Bq4JiuI13rLO0oxi4X3jb8FRUVDjHdqOerMM9b-ZYi3zxgaF-iMDZCi98qQBdRRx3AOeEEzbuTaSeyF79OpQgLgYbPMbIUOiaJSn7qfBrTCCQo3ANDFarf-nOeAlkI-ISuVBVTcYWz6Aufj9TQQYQeQqRhbJHnw" \
     --hypercloud-endpoint=https://$k8sIP:$HC_PORT/ \
