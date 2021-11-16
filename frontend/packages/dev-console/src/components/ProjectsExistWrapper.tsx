@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { HintBlock, LoadingBox, FirehoseResult } from '@console/internal/components/utils';
+import { useTranslation } from 'react-i18next';
 import ODCEmptyState from './EmptyState';
 
 export interface ProjectsExistWrapperProps {
@@ -10,6 +11,7 @@ export interface ProjectsExistWrapperProps {
 }
 
 const ProjectsExistWrapper: React.FC<ProjectsExistWrapperProps> = ({ title, projects, children }) => {
+  const { t } = useTranslation();
   if (!projects.loaded) {
     return <LoadingBox />;
   }
@@ -19,8 +21,8 @@ const ProjectsExistWrapper: React.FC<ProjectsExistWrapperProps> = ({ title, proj
       <ODCEmptyState
         title={title}
         hintBlock={
-          <HintBlock title="No projects exist">
-            <p>Select one of the following options to create an application, component or service. As part of the creation process a project and application will be created.</p>
+          <HintBlock title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_51')}>
+            <p>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_52')}</p>
           </HintBlock>
         }
       />
