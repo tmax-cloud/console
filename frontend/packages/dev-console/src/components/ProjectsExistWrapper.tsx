@@ -9,11 +9,7 @@ export interface ProjectsExistWrapperProps {
   children: React.ReactElement;
 }
 
-const ProjectsExistWrapper: React.FC<ProjectsExistWrapperProps> = ({
-  title,
-  projects,
-  children,
-}) => {
+const ProjectsExistWrapper: React.FC<ProjectsExistWrapperProps> = ({ title, projects, children }) => {
   if (!projects.loaded) {
     return <LoadingBox />;
   }
@@ -24,10 +20,7 @@ const ProjectsExistWrapper: React.FC<ProjectsExistWrapperProps> = ({
         title={title}
         hintBlock={
           <HintBlock title="No projects exist">
-            <p>
-              Select one of the following options to create an application, component or service. As
-              part of the creation process a project and application will be created.
-            </p>
+            <p>Select one of the following options to create an application, component or service. As part of the creation process a project and application will be created.</p>
           </HintBlock>
         }
       />
