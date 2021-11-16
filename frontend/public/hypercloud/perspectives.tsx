@@ -32,6 +32,10 @@ export const PerspectiveLabelKeys = {
 export const isSingleClusterPerspective = () => {
   return window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE;
 };
+
+export const isMasterClusterPerspective = () => {
+  return getActivePerspective() == PerspectiveType.MASTER;
+};
 export const getSingleClusterFullBasePath = () => {
   return `${window.SERVER_FLAGS.singleClusterBasePath}api/${getActiveCluster()}`;
 };
