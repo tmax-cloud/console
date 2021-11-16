@@ -134,7 +134,7 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     return {
       'ui:widget': 'fileUploadWidget',
     };
-  } else if (jsonSchemaName === 'provider') {
+  } else if (jsonSchemaName === 'provider' && jsonSchema.enum?.length > 0) {
     return {
       'ui:field': 'ProviderDropdownField',
     };

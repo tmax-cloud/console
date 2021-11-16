@@ -65,7 +65,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ statefulset }) => {
         {statefulset.metadata.name}
       </div>
       <div className="col-lg-2 col-md-3 col-sm-5 col-xs-7">
-        <ResourceLink kind="Cluster" name={statefulset.spec.placement.clusters[0].name} />
+        <ResourceLink kind="Cluster" name={statefulset.spec?.placement?.clusters?.[0]?.name} />
       </div>
       <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">
         <Status status={statefulset.status.phase} />

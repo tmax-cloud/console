@@ -782,7 +782,7 @@ TileViewPage.defaultProps = {
 
 // MEMO : HyperCloud에선 From Catalog tile view 페이지 왼쪽 항목 부분을 one depth로만 제공하고
 // simpleHyperCloudCategories에 정의되어있지 않은 값이 리소스의 spec.categories 필드값으로 있으면 해당 category가 새로 추가되게 해달라는 요청이 있어서
-// categorize 구현부분 수정함. 이후 subcategory제공요청이 있을 것 같아 기존 코드들 주석으로 남겨둠. 리팩토링으로 재구현한 코드는 hypercloud폴더안의 tile-view-pag.jsx에 있음.
+// categorize 구현부분 수정함. 이후 subcategory제공요청이 있을 것 같아 기존 코드들 주석으로 남겨둠. 리팩토링으로 재구현한 코드는 hypercloud폴더안의 tile-view-utils.jsx에 있음.
 
 /*
 // categorize item under sub and main categories

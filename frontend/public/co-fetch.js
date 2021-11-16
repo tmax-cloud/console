@@ -161,6 +161,11 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
 
   if (url.indexOf('https://') < 0 && url.indexOf('http://') < 0 && isSingleClusterPerspective()) {
     // MEMO : 도메인 뒷부분만 url로 들어오는 경우, singlecluster perspective면 ingress 도메인 주소로 설정해줘야함.
+
+    // MEMO : 마스터클러스터에선 /api/kubernets/ prefix로 쏘는 콜은 hypercloud-api-server를 타는 콜인데, 싱글클러스터의 경우엔 kube로 직접 콜을 해줘야 함.
+    // MEMO : 콜의 명세는 kube docs나 openshift docs를 참조해서 작업하고 있다고 하셔서(서버담당자분이) 프론트쪽 콜들도 /api/kubernetes/부분 제거한 뒷부분은
+    // MEMO : kube 콜과 형식 동일한 경우가 대부분이라 /api/kubernetes/부분만 없애줌.
+    url = url.replace('api/kubernetes/', '/');
     url = `${getSingleClusterFullBasePath()}${url}`;
   }
   // Pass headers last to let callers to override Accept.
@@ -178,7 +183,7 @@ export const coFetchCommon = (url, method = 'GET', options = {}, timeout) => {
     // MEMO : /api/kubernetes/openapi/v2로 오는 리스폰스는 application/json 타입으로 와야 하는데 text/plain으로 오고있어서
     // storeSwagger에서 json파싱을 못하고, swagger-definition을 local storage에 저장못해서 YAML 호버 시 description이 뜨지 않는 이슈있었음.
     // 리스폰스 타입이 application/json으로 바뀔 때까지 임시로 이렇게 조건추가해놓음.
-    if (contentType.indexOf('text/plain') > -1 && response.url.indexOf('/api/kubernetes/openapi/v2') < 0) {
+    if (contentType.indexOf('text/plain') > -1 && response.url.indexOf('/openapi/v2') < 0) {
       return response.text();
     }
     return response.json();
