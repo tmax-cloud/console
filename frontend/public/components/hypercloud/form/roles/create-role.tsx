@@ -379,10 +379,10 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
       let apiGroupListWithResourceSetTemp = [{ apiGroup: 'Core', resourceList: coreResources }];
       apiGroupList.forEach(apiGroup => {
         if (apiGroup.value !== 'Core') {
-          coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup.value}`).then(
+          coFetchJSON(`api/kubernetes/apis/${apiGroup.value}`).then(
             data => {
-              //`${document.location.origin}/api/kubernetes/apis/${apiGroupList[apiGroupValue]}/${version.version}
-              coFetchJSON(`${document.location.origin}/api/kubernetes/apis/${apiGroup.value}/${data.preferredVersion.version}`).then(
+              //`api/kubernetes/apis/${apiGroupList[apiGroupValue]}/${version.version}
+              coFetchJSON(`api/kubernetes/apis/${apiGroup.value}/${data.preferredVersion.version}`).then(
                 data => {
                   let resourceListInApiGroupTemp = [];
                   //let apiGroupListWithResourceListTemp = [];

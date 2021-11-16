@@ -62,13 +62,13 @@ const BaseRequestModal = withTranslation()(
       let url;
       let body;
       if (request === 'pull') {
-        url = `${document.location.origin}/api/kubernetes/apis/cicdapi.tmax.io/v1/namespaces/${namespace}/integrationconfigs/${name}/runpre`;
+        url = `api/kubernetes/apis/cicdapi.tmax.io/v1/namespaces/${namespace}/integrationconfigs/${name}/runpre`;
         body = {
           base_branch: baseBranch,
           head_branch: headBranch,
         };
       } else if (request === 'push') {
-        url = `${document.location.origin}/api/kubernetes/apis/cicdapi.tmax.io/v1/namespaces/${namespace}/integrationconfigs/${name}/runpost`;
+        url = `api/kubernetes/apis/cicdapi.tmax.io/v1/namespaces/${namespace}/integrationconfigs/${name}/runpost`;
         body = {
           branch: branch,
         };
