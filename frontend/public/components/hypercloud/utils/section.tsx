@@ -1,6 +1,7 @@
 import * as _ from 'lodash-es';
 import classNames from 'classnames';
 import * as React from 'react';
+import { FieldLevelHelp } from '../../utils';
 
 const Node = ({ className, children, description, valid, validationErrorDesc }) => (
   <div className={className}>
@@ -18,7 +19,7 @@ const CombineNodes = (id, description, children, valid, validationErrorDesc) => 
   return isArray ? children.map((cur, idx) => <Node className={className} key={`${id}-${idx}`} children={cur} description={description} valid={valid} validationErrorDesc={validationErrorDesc} />) : <Node className={className} children={children} description={description} valid={valid} validationErrorDesc={validationErrorDesc} />;
 };
 
-export const Section: React.FC<SectionProps> = ({ id, label, description, children, isRequired = false, valid = true, validationErrorDesc }) => {
+export const Section: React.FC<SectionProps> = ({ id, label, description, children, isRequired = false, valid = true, validationErrorDesc, help = false, helpText, helpTitle }) => {
   let result = CombineNodes(id, description, children, valid, validationErrorDesc);
   return (
     <div className="form-group">
@@ -26,6 +27,14 @@ export const Section: React.FC<SectionProps> = ({ id, label, description, childr
         <label className={'control-label ' + (isRequired ? 'co-required' : '')} htmlFor={id}>
           {label}
         </label>
+      )}
+      {help && (
+        <div style={{display: 'inline-block', marginLeft: 5}}>
+          <FieldLevelHelp>
+            <h2>{helpTitle}</h2>
+            <p>{helpText}</p>
+          </FieldLevelHelp>
+        </div>
       )}
       <div className="row" key={id}>
         {result}
@@ -42,4 +51,7 @@ type SectionProps = {
   isRequired?: boolean;
   valid?: boolean;
   validationErrorDesc?: string;
+  help?: boolean;
+  helpTitle?: string;
+  helpText?: string;
 };

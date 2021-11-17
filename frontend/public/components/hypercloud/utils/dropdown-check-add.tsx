@@ -68,7 +68,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
         <div>
             <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block'}} >
                  
-                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked} disabled={!isAdded}
+                    <input id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px', marginRight: '10px' }} type="checkbox" checked={isChecked}
                     onClick={() => {
                         if (isExist !== true) {                            
                             data.checked = true;
