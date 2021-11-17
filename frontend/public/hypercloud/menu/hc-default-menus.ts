@@ -73,11 +73,6 @@ const DeveloperNavMenus = [
     label: MenuContainerLabels.aidevops,
     innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
   },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.image,
-    innerMenus: [Models.RegistryModel.kind, Models.ExternalRegistryModel.kind, Models.ImageSignerModel.kind, Models.ImageSignRequestModel.kind, Models.SignerPolicyModel.kind, Models.ImageReplicateModel.kind],
-  },
 ];
 
 const MultiNavMenus = [
