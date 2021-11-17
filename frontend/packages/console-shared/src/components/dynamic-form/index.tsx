@@ -70,7 +70,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
           <div style={{ paddingBottom: '30px' }}>
             <ActionGroup className="pf-c-form">
               {!!isButtonDisabled ? (
-                <Tooltip content={saveButtonDisabledString()} maxWidth="30rem" position="bottom">
+                <Tooltip content={saveButtonDisabledString(t)} maxWidth="30rem" position="bottom">
                   <div>
                     <Button type="submit" variant="primary" isDisabled={true}>
                       {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}

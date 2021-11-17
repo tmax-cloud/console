@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router';
-import { HyperCloudManualLink } from '../../utils'
-const WelcomePage = ({ history }) => {
+import * as UIActions from '../../../actions/ui';
+import { HyperCloudManualLink } from '../../utils';
+const WelcomePage = ({ history, setActivePerspective }) => {
   localStorage.setItem('flag/first-time-login', true);
   return (
     <>
@@ -15,7 +17,7 @@ const WelcomePage = ({ history }) => {
         <p className="welcome__description">시작하기 위해 애플리케이션 용 네임스페이스를 만드세요.</p>
         <p className="welcome__description">
           자세한 내용은{' '}
-          <a className='co-external-link' href={HyperCloudManualLink} target="_blank" rel="noopener noreferrer">
+          <a className="co-external-link" href={HyperCloudManualLink} target="_blank" rel="noopener noreferrer">
             HyperCloud 매뉴얼
           </a>
           을 참조하세요.
@@ -24,6 +26,7 @@ const WelcomePage = ({ history }) => {
           className="welcome__button"
           onClick={() => {
             history.push('/k8s/cluster/namespaces');
+            setActivePerspective('MASTER');
           }}
         >
           HyperCloud 시작하기
@@ -33,4 +36,4 @@ const WelcomePage = ({ history }) => {
   );
 };
 
-export default withRouter(WelcomePage);
+export default withRouter(connect(null, { setActivePerspective: UIActions.setActivePerspective })(WelcomePage));

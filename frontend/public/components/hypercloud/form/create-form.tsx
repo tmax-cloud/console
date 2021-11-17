@@ -108,7 +108,7 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
             <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
               <ActionGroup className="pf-c-form">
                 {!!isButtonDisabled ? (
-                  <Tooltip content={saveButtonDisabledString()} maxWidth="30rem" position="bottom">
+                  <Tooltip content={saveButtonDisabledString(t)} maxWidth="30rem" position="bottom">
                     <div>
                       <Button type="button" variant="primary" id="save-changes" onClick={onClick} isDisabled={true}>
                         {isCreatePage(defaultValues) ? props.saveButtonText || `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}` : `${t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}`}
