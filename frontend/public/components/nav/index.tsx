@@ -10,21 +10,21 @@ type NavigationProps = {
   onPerspectiveSelected: () => void;
   onClusterSelected: () => void;
   isNavOpen: boolean;
-  isSingleClusterPerspective: boolean;
+  isMasterPerspective: boolean;
 };
 
-export const Navigation: React.FC<NavigationProps> = React.memo(({ isNavOpen, onNavSelect, onPerspectiveSelected, onClusterSelected, isSingleClusterPerspective }) => (
+export const Navigation: React.FC<NavigationProps> = React.memo(({ isNavOpen, onNavSelect, onPerspectiveSelected, onClusterSelected, isMasterPerspective }) => (
   <PageSidebar
     nav={
       <>
         <Nav aria-label="Nav" onSelect={onNavSelect} theme="dark">
-          <div className={classNames('pf-c-nav__list-container', { 'without-footer': isSingleClusterPerspective })}>
+          <div className={classNames('pf-c-nav__list-container', { 'without-footer': !isMasterPerspective })}>
             <NavHeader onPerspectiveSelected={onPerspectiveSelected} onClusterSelected={onClusterSelected} />
             <NavList>
               <PerspectiveNav />
             </NavList>
           </div>
-          {!isSingleClusterPerspective && <NavFooter />}
+          {isMasterPerspective && <NavFooter />}
         </Nav>
       </>
     }
