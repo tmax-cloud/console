@@ -39,9 +39,9 @@ const Dropdown = React.forwardRef<HTMLDivElement, any>(({ children, isOpen, targ
   </div>
 ));
 
-const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth }) => {
+const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disabled }) => {
   return (
-    <div className="hc-dropdown-main-button" style={{ width: buttonWidth }} onClick={toggleOpen}>
+    <div className="hc-dropdown-main-button" style={disabled ? { width: buttonWidth , backgroundColor: '#ededed' } : { width: buttonWidth }} onClick={disabled ? null :toggleOpen}>
       <span style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden', width: 'calc(100% - 60px)' }}>{label}</span>
       <span className="pf-c-badge pf-m-read">{count}</span>
       <CaretDownIcon className="hc-dropdown-select_toggle-icon" style={{ marginLeft: '10px', position: 'absolute', right: '0px' }} />
@@ -397,6 +397,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
             onClose={toggleOpen}
             target={
               <DropdownMainButton
+                disabled={items.length === 0}
                 label={placeholder}
                 toggleOpen={toggleOpen}
                 count={
