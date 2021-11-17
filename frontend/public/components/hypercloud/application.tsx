@@ -7,7 +7,6 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
 
-// MJ : i18n 나오면 적용하기
 const kind = ApplicationModel.kind;
 
 const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ApplicationModel), ...Kebab.factory.common];
@@ -51,28 +50,29 @@ const tableProps: TableProps = {
 };
 
 const SourceSummary: React.FC<SourceSummaryProps> = ({ obj }) => {
+  const { t } = useTranslation();
   const { repoURL, path, targetRevision } = obj.spec?.source;
   return (
     <>
       <div>
-        <span>Git 리포지터리 URL : </span>
+        <span>{t('SINGLE:MSG_APPLICATIONS_APPLICATIONDETAILS_2')} : </span>
         <a href={repoURL} target="_blank">
           {repoURL}
         </a>
       </div>
       <div>
-        <span>리비전 : </span>
+        <span>{t('SINGLE:MSG_APPLICATIONS_APPLICATIONDETAILS_3')} : </span>
         <span>{targetRevision}</span>
       </div>
       <div>
-        <span>경로 : </span>
+        <span>{t('SINGLE:MSG_APPLICATIONS_APPLICATIONDETAILS_4')} : </span>
         <span>{path}</span>
       </div>
     </>
   );
 };
 
-// MJ : 리소스 부분 서버구현 완료돼면 리소스테이블 추가하기
+// TODO : 리소스 부분 서버구현 완료돼면 리소스테이블 추가하기
 // const ResourceTable: React.FC<ResourceTableProps> = props => {
 //   const { t } = useTranslation();
 //   const resources = [];
@@ -101,10 +101,10 @@ export const ApplicationDetailsList: React.FC<ApplicationDetailsListProps> = ({ 
   const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('소스')} obj={app}>
+      <DetailsItem label={t('SINGLE:MSG_APPLICATIONS_APPLICATIONDETAILS_1')} obj={app}>
         <SourceSummary obj={app} />
       </DetailsItem>
-      <DetailsItem label={t('타겟')} obj={app}>
+      <DetailsItem label={t('SINGLE:MSG_APPLICATIONS_APPLICATIONDETAILS_5')} obj={app}>
         {app.spec?.destination?.name}
       </DetailsItem>
     </dl>
