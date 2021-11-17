@@ -88,13 +88,16 @@ export const DetailsForKind = kind =>
 
 export const DefaultList = props => {
   const { kinds } = props;
-
   const { t } = useTranslation();
   return <Table {...props} aria-label="Default Resource" kinds={[kinds[0]]} customData={{ kind: kinds[0] }} Header={TableHeader.bind(null, t)} Row={TableRowForKind} virtualize />;
 };
 DefaultList.displayName = 'DefaultList';
 
-export const DefaultPage = props => <ListPage {...props} ListComponent={DefaultList} canCreate={props.canCreate || _.get(modelFor(props.kind), 'crd') !== 'false'} />;
+export const DefaultPage = props => {
+  const exceptionKindList = ['ClusterRole'];  
+  const canCreate = exceptionKindList.includes(props.kind) ? false : props.canCreate || _.get(modelFor(props.kind), 'crd') !== 'false';
+  return <ListPage {...props} ListComponent={DefaultList} canCreate={canCreate} />;
+};
 DefaultPage.displayName = 'DefaultPage';
 
 export const DefaultDetailsPage = props => {
