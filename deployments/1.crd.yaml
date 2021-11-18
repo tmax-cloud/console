@@ -187,12 +187,6 @@ spec:
                 - yaml
               type: object
           required:
-                - description
-                - targetResource
-                - title
-                - yaml
-              type: object
-          required:
             - metadata
             - spec
           type: object
