@@ -107,7 +107,6 @@ spec:
     singular: consoleyamlsample
   preserveUnknownFields: false
   scope: Cluster
-  version: v1
   versions:
     - name: v1
       served: true
