@@ -3,6 +3,8 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { Conditions } from './conditions';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { referenceFor, kindForReference, modelFor } from '../module/k8s';
 import { Kebab, kindObj, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from './utils';
@@ -39,6 +41,7 @@ const TableHeader = t => {
     },
   ];
 };
+
 TableHeader.displayName = 'TableHeader';
 
 const TableRowForKind = ({ obj, index, key, style, customData }) => {

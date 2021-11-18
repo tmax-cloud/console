@@ -2,10 +2,10 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { TFApplyClaimModel, ResourceQuotaClaimModel, NamespaceClaimModel, ClusterClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel } from '@console/internal/models';
 
-export const saveButtonDisabledString = () => {
+export const saveButtonDisabledString = t => {
   return (
     <div>
-      <span>수정할 수 없는 상태의 리소스입니다.</span>
+      <span>{t('COMMON:MSG_DETAILS_TABEDIT_1')}</span>
     </div>
   );
 };
