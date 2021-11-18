@@ -220,8 +220,8 @@ export const ClusterMenuPolicyStatusReducer = (cmp: any): string => {
   const labels = cmp?.metadata?.labels;
   const primaryValue = _.get(labels, CMP_PRIMARY_KEY);
   if (primaryValue === 'true') {
-    return '활성화 됨';
+    return 'Activated';
   } else {
-    return '활성화되지 않음';
+    return 'Deactivated';
   }
 };

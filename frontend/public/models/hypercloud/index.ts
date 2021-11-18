@@ -1559,6 +1559,10 @@ export const ClusterMenuPolicyModel: K8sKind = {
   kind: 'ClusterMenuPolicy',
   id: 'clustermenupolicy',
   namespaced: false,
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_164',
+    labelPlural: 'COMMON:MSG_LNB_MENU_83',
+  },
 };
 
 export const ApplicationModel: K8sKind = {
