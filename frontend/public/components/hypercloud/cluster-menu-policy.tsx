@@ -60,7 +60,7 @@ const deactivateCmp = (model: K8sKind, obj: K8sResourceKind) => {
 const ActivateAction: KebabAction = (kind: K8sKind, obj: any) => {
   const primaryValue = obj?.metadata?.labels?.primary;
   return {
-    label: primaryValue === 'true' ? '비활성화' : '활성화',
+    label: primaryValue === 'true' ? 'COMMON:MSG_MAIN_ACTIONBUTTON_49' : 'COMMON:MSG_MAIN_ACTIONBUTTON_48',
     callback: () => (primaryValue === 'true' ? deactivateCmp(kind, obj).catch(err => errorModal({ error: err.message })) : toggleActivated(kind, obj).catch(err => errorModal({ error: err.message }))),
     accessReview: {
       group: kind.apiGroup,
@@ -81,7 +81,7 @@ const tableProps: TableProps = {
       sortField: 'metadata.name',
     },
     {
-      title: '활성화 여부',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_125',
       sortFunc: 'ClusterMenuPolicyStatusReducer',
     },
     {
@@ -215,7 +215,7 @@ const ClusterMenuPolicyDetails: React.FC<ClusterMenuPolicyDetailsProps> = ({ obj
         </div>
       </div>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('메뉴')} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_104')} />
         <MenuPreviewTable obj={cmp} />
       </div>
     </>
