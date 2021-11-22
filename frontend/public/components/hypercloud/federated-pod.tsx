@@ -76,10 +76,10 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ pod }) => {
         <ResourceLink kind="Cluster" name={pod.spec?.placement?.clusters?.[0]?.name} />
       </div>
       <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">
-        <Status status={pod.status.phase} />
+        <Status status={pod.status?.phase} />
       </div>
       <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
-        <Timestamp timestamp={pod.metadata.creationTimestamp} />
+        <Timestamp timestamp={pod.metadata?.creationTimestamp} />
       </div>
     </div>
   );

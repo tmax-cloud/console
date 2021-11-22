@@ -74,7 +74,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ daemonset }) => {
         <ResourceLink kind="Cluster" name={daemonset.spec?.placement?.clusters?.[0]?.name} />
       </div>
       <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">
-        <Status status={daemonset.status.phase} />
+        <Status status={daemonset.status?.phase} />
       </div>
       <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
         <Timestamp timestamp={daemonset.metadata.creationTimestamp} />
