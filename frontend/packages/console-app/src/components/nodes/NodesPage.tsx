@@ -16,9 +16,8 @@ import { getPrometheusURL, PrometheusEndpoint } from '@console/internal/componen
 import { nodeStatus } from '../../status/node';
 import NodeRoles from './NodeRoles';
 import { menuActions } from './menu-actions';
-import { Status } from '@console/shared';
 import { useTranslation } from 'react-i18next';
-import { NodeStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import NodeStatus from './NodeStatus';
 
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-xl'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 
@@ -107,7 +106,7 @@ const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProp
         <ResourceLink kind={referenceForModel(NodeModel)} name={nodeName} title={nodeUID} />
       </TableData>
       <TableData className={tableColumnClasses[1]}>
-        <Status status={NodeStatusReducer(node)} />
+        <NodeStatus node={node} showPopovers />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
         <NodeRoles node={node} />
