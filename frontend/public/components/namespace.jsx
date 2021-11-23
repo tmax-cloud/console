@@ -34,6 +34,7 @@ import { RoleBindingClaimsPage } from './hypercloud/role-binding-claim';
 
 import * as classNames from 'classnames';
 import './namespace-details.scss';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
@@ -191,16 +192,19 @@ export const NamespacesPage = props => {
   //     // `/k8s/ns/${props.namespace || 'default'}/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   //     `/k8s/cluster/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   // };
-  const pages = [
-    {
-      href: 'namespaces',
-      name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
-    },
-    {
-      href: 'namespaceclaims',
-      name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
-    },
-  ];
+  const pages = isSingleClusterPerspective()
+    ? null
+    : [
+        {
+          href: 'namespaces',
+          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
+        },
+        {
+          href: 'namespaceclaims',
+          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
+        },
+      ];
+
   return (
     <ListPage
       {...props}
@@ -527,7 +531,7 @@ const RolesPage = ({ obj: { metadata } }) => {
   return (
     <>
       <div className={classNames('namespace-details_role-binding')}>{rolebindingspage}</div>
-      <div className={classNames('namespace-details_role-binding')}>{rolebindingclaimspage}</div>
+      {!isSingleClusterPerspective() && <div className={classNames('namespace-details_role-binding')}>{rolebindingclaimspage}</div>}
     </>
   );
 };
