@@ -60,7 +60,7 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ cronjob }) => {
         <ResourceLink kind="Cluster" name={cronjob.spec?.placement?.clusters?.[0]?.name} />
       </div>
       <div className="col-lg-2 col-md-2 col-sm-3 hidden-xs">
-        <Status status={cronjob.status.phase} />
+        <Status status={cronjob.status?.phase} />
       </div>
       <div className="col-lg-2 hidden-md hidden-sm hidden-xs">
         <Timestamp timestamp={cronjob.metadata.creationTimestamp} />

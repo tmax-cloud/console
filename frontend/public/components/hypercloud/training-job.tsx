@@ -56,7 +56,7 @@ const TrainingJobTableHeader = (t?: TFunction) => {
       props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_15'),
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_126'),
       sortFunc: 'tjComposition',
       transforms: [sortable],
       props: { className: tableColumnClasses[3] },
