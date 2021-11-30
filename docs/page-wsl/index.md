@@ -68,17 +68,19 @@ description: WSL2를 사용한 Linux 개발환경 구축방법 가이드입니�
 
   6. install go (1.15 +)
 
-     ```shell
-     sudo apt-get install golang-go
-     ```
-
-     [https://www.tecmint.com/install-go-in-ubuntu/](https://www.tecmint.com/install-go-in-ubuntu/) go버전 1.15.5
+     (Latest Version) `sudo apt-get install golang-go ` 
+     <br/>
+     go버전 1.15.5 아래 링크 가이드를 통해 설치 (root에 설치 권장)
+     👉 [https://www.tecmint.com/install-go-in-ubuntu/](https://www.tecmint.com/install-go-in-ubuntu/)
+     <br/>
 
   7. install jq
 
      ```shell
      sudo apt-get install jq
      ```
+       **✅ 7번 까지 설치하면 프로젝트 실행 가능 kubectl 설치는 필수 아님**
+   <br/>
 
   8. install kubectl ([https://kubernetes.io/ko/docs/tasks/tools/install-kubectl/#리눅스에-kubectl-설치](https://kubernetes.io/ko/docs/tasks/tools/install-kubectl/#%EB%A6%AC%EB%88%85%EC%8A%A4%EC%97%90-kubectl-%EC%84%A4%EC%B9%98))
 
