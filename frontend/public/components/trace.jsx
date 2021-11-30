@@ -8,7 +8,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 
 const DoneMessage = 'done';
 
-const initializeMenuUrl = (urlMap) => {
+const initializeMenuUrl = (urlsMap) => {
   const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=jaeger-query')}`;  
   const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&${ingressQuery}`;
   return new Promise((resolve, reject) => {
@@ -19,7 +19,7 @@ const initializeMenuUrl = (urlMap) => {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
           if (!!host) {              
-            urlMap.set('jaeger', `https://${host}`);
+            urlsMap.set('jaeger', `https://${host}`);
           }
         }          
         resolve(DoneMessage);
@@ -32,24 +32,65 @@ const initializeMenuUrl = (urlMap) => {
 
 export const TracePage = ({ namespace: namespace, name: name }) => {
   //const { t } = useTranslation();
+  const [serviceName, setServiceName] = React.useState(name);
   const [limit, setLimit] = React.useState('20');
   const [statusCode, setStatusCode] = React.useState('');
   const statusCodeRef = React.useRef();
   const [display, setDisplay] = React.useState('All');
   const [operationList, setOperationList] = React.useState([]);
+  const [urlsMap, setUrlsMap] = React.useState(new Map());
 
-  const urlMap = new Map();
+  const [jaegerURL, setJaegerURL] = React.useState('https://jaeger-query.tmaxcloud.org');
 
 
   React.useEffect(() => {
-    //coFetch(`/api/jaeger/api/services/${name}/operations`)    
-    initializeMenuUrl(urlMap);
-    coFetch(urlMap.get('jaeger') + `/api/services/${name}/operations`)
+    (async () => {
+      const response = await initializeMenuUrl(urlsMap);
+      console.log(response);
+      console.log(urlsMap);
+      setJaegerURL(urlsMap.get('jaeger'));
+    })();
+  }, [jaegerURL]);
+
+
+  React.useEffect(() => {
+    if (name === 'jaeger-query' || name === 'istio-ingressgateway' || name === 'istio-egressgateway') {
+      setServiceName(name);
+    } else {
+      coFetch(`/api/kubernetes/api/v1/namespaces/${namespace}/services/${name}`)
+        .then(res => res.json())
+        .then(res => {
+          if (!res.spec.selector || res.spec.selector.length === 0) return;
+          const appValue = res.spec.selector.app;
+          if (!!appValue) {
+            setServiceName(`${appValue}.${namespace}`);
+          } else {
+            const key = Object.entries(res.spec.selector)[0][0];
+            const value = Object.entries(res.spec.selector)[0][1];
+            coFetch(`/api/kubernetes/api/v1/namespaces/${namespace}/pods?labelSelector=${key}%3D${value}`)
+              .then(res => res.json())
+              .then(res => {
+                if (!res.items || res.items.length === 0) return;
+                const proxyContainer = res.items.reduce((acc, item) => {
+                  const proxy = item.spec.containers.find(cont => cont.name === 'istio-proxy');
+                  return !!acc ? acc : proxy;
+                }, null);
+                const serviceClusterIdx = proxyContainer && proxyContainer.args.findIndex(str => str.includes('--serviceCluster'));
+                const serviceCluster = serviceClusterIdx && proxyContainer.args[serviceClusterIdx + 1];
+                serviceCluster && setServiceName(serviceCluster.replace('$(POD_NAMESPACE)', namespace));
+              });
+          }
+        });
+    }
+  }, []);
+
+  React.useEffect(() => {
+    coFetch(`${jaegerURL}/api/services/${serviceName}/operations`)
       .then(res => res.json())
       .then(res => {
         res.data && setOperationList(res.data);
       });
-  }, []);
+  }, [serviceName]);
 
   return (
     <div className="co-m-pane__body">
@@ -81,33 +122,14 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
           </select>
         </span>
       </div>
-      <TraceGraphs namespace={namespace} name={name} limit={limit} statusCode={statusCode} display={display} />
+      <Trace serviceName={serviceName} limit={limit} statusCode={statusCode} display={display} jaegerURL={jaegerURL} />
     </div>
   );
 };
 
-const TraceGraphs = requirePrometheus(({ name, limit, statusCode, display }) => {
-  //const iframeRef = React.useRef();
-  const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${name}`;
-  //const jaegerURL = `${document.location.origin}/api/jaeger/search${query}`;
-  //const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=jaeger-query')}`;
-  //const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&labelSelector=ingress.tmaxcloud.org%2Fname%3Djaeger-query`;
-  //const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&${ingressQuery}`;
-  //const jaegerURL = `/api/jaeger/search${query}`;
-  const urlMap = new Map();  
-  
-  initializeMenuUrl(urlMap);
-
-  const jaegerURL = urlMap.get('jaeger') + `${query}`;
-  
-  /*
-  const onLoad = () => {
-    iframeRef.current.contentWindow.document.body.style.height = 'auto';
-    iframeRef.current.style.height = iframeRef.current.contentDocument.documentElement.scrollHeight + 'px';
-  };
-  */
-  
-  return <iframe style={{ width: '100%', height: '100vh', border: 0 }} src={jaegerURL} target="_blank" />
-
-  //return <iframe ref={iframeRef} width="100%" height="500px" style={{ border: 0 }} src={jaegerURL} target="_blank" onLoad={onLoad}></iframe>;
-});
+const Trace = ({ serviceName, limit, statusCode, display, jaegerURL}) => {
+  const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${serviceName}`;
+  const jaegerURLwithQuery = `${jaegerURL}/search${query}`;
+ 
+  return <iframe width="100%" height="750px" style={{ border: 0 }} src={jaegerURLwithQuery} target="_blank"></iframe>;
+};
