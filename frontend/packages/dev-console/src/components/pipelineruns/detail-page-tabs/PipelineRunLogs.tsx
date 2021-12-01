@@ -113,7 +113,7 @@ class PipelineRunLogs_ extends React.Component<any, PipelineRunLogsState> {
           {taskCount > 0 ? (
             <Nav onSelect={this.onNavSelect}>
               <NavList className="odc-pipeline-run-logs__nav">
-                {taskRuns.map((task, i) => {
+                {taskRuns.map((task) => {
                   return (
                     <NavItem
                       key={task}
@@ -124,7 +124,6 @@ class PipelineRunLogs_ extends React.Component<any, PipelineRunLogsState> {
                       <Link to={path + _.get(taskRunFromYaml, [task, `pipelineTaskName`], '-')}>
                         <StatusIcon
                           status={taskReducer(
-                            i,
                             _.merge(_.get(obj, ['status', 'taskRuns'], {}), _.get(obj, ['status', 'runs'], {})),
                             task,
                           )}
@@ -173,7 +172,7 @@ type PipelineRunLogsWithActiveTaskProps = {
   params?: RouteComponentProps;
 };
 
-const taskStatus = (i, tasks, taskName): string => {  
+const taskStatus = (tasks, taskName): string => {  
   const conditions = _.get(tasks, [taskName, 'status', 'conditions'], []);
   const isCancelled = conditions.find((c) =>
     ['PipelineRunCancelled', 'TaskRunCancelled'].some((cancel) => cancel === c.reason),
@@ -193,8 +192,8 @@ const taskStatus = (i, tasks, taskName): string => {
     : 'Running';
 };
 
-const taskReducer = (i, tasks, taskName): string => {
-  const status = taskStatus(i, tasks, taskName);
+const taskReducer = (tasks, taskName): string => {
+  const status = taskStatus(tasks, taskName);
   return status || '-';
 };
 
