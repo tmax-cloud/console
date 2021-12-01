@@ -126,6 +126,7 @@ class PipelineRunLogs_ extends React.Component<any, PipelineRunLogsState> {
                           status={taskReducer(
                             i,
                             _.merge(_.get(obj, ['status', 'taskRuns'], {}), _.get(obj, ['status', 'runs'], {})),
+                            task,
                           )}
                         />
                         <span className="odc-pipeline-run-logs__namespan">
@@ -172,8 +173,8 @@ type PipelineRunLogsWithActiveTaskProps = {
   params?: RouteComponentProps;
 };
 
-const taskStatus = (i, task): string => {  
-  const conditions = _.get(task, [Object.keys(task)[i], 'status', 'conditions'], []);
+const taskStatus = (i, tasks, taskName): string => {  
+  const conditions = _.get(tasks, [taskName, 'status', 'conditions'], []);
   const isCancelled = conditions.find((c) =>
     ['PipelineRunCancelled', 'TaskRunCancelled'].some((cancel) => cancel === c.reason),
   );
@@ -192,8 +193,8 @@ const taskStatus = (i, task): string => {
     : 'Running';
 };
 
-const taskReducer = (i, task): string => {
-  const status = taskStatus(i, task);
+const taskReducer = (i, tasks, taskName): string => {
+  const status = taskStatus(i, tasks, taskName);
   return status || '-';
 };
 
