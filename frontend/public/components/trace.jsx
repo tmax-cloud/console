@@ -9,7 +9,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 const DoneMessage = 'done';
 
 const initializeMenuUrl = (urlsMap) => {
-  const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=jaeger-query')}`;  
+  const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=jaeger-query')}`;
   const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&${ingressQuery}`;
   return new Promise((resolve, reject) => {
     coFetchJSON(ingressQeuryURL)
@@ -18,10 +18,10 @@ const initializeMenuUrl = (urlsMap) => {
         if (items?.length > 0) {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {              
+          if (!!host) {
             urlsMap.set('jaeger', `https://${host}`);
           }
-        }          
+        }
         resolve(DoneMessage);
       })
       .catch(err => {
@@ -127,9 +127,9 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   );
 };
 
-const Trace = ({ serviceName, limit, statusCode, display, jaegerURL}) => {
+const Trace = ({ serviceName, limit, statusCode, display, jaegerURL }) => {
   const query = `?uiEmbed=v0` + (limit.toLowerCase() === 'all' ? '' : `&limit=${limit}`) + (!parseInt(statusCode) ? '' : `&tags={"http.status_code":"${statusCode}"}`) + (display.toLowerCase() === 'all' ? '' : `&operation=${display}`) + `&service=${serviceName}`;
   const jaegerURLwithQuery = `${jaegerURL}/search${query}`;
- 
+
   return <iframe width="100%" height="750px" style={{ border: 0 }} src={jaegerURLwithQuery} target="_blank"></iframe>;
 };
