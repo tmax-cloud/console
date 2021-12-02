@@ -469,6 +469,7 @@ export const CreateRole: React.FC<CreateRoleProps> = ({ match: { params }, kind,
 
 export const onSubmitCallback = data => {
   let apiVersion = data.kind === 'Role' ? `${RoleModel.apiGroup}/${RoleModel.apiVersion}` : `${ClusterRoleModel.apiGroup}/${ClusterRoleModel.apiVersion}`;
+  delete data?.rules;
 
   let rules = data.rules.map(rule => {
     if (data.kind === 'ClusterRole' && rule.nonResourceURLs) {
