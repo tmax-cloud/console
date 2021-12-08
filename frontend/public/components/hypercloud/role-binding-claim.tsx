@@ -214,7 +214,15 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
-        <RoleBindingClaimStatus result={resource} />
+        {RoleBindingClaimReducer(resource) === 'Error' ? (
+          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{resource.status?.reason}</div>} maxWidth="30rem" position="right">
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
+              <RoleBindingClaimStatus result={resource} />
+            </div>
+          </Popover>
+        ) : (
+          <RoleBindingClaimStatus result={resource} />
+        )}
       </DetailsItem>
       {resource.status?.status === 'Rejected' &&
         <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">
