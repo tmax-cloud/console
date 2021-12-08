@@ -22,12 +22,12 @@ const tableProps: TableProps = {
       sortField: 'metadata.name',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
-      sortFunc: 'ClusterRegistrationStatusReducer',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+      sortField: 'metadata.namespace',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_11',
-      sortFunc: 'metadata.annotations.creator',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
+      sortFunc: 'ClusterRegistrationStatusReducer',
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
@@ -44,6 +44,10 @@ const tableProps: TableProps = {
       children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
     },
     {
+      className: 'co-break-word',
+      children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+    },
+    {
       children:
         ClusterRegistrationStatusReducer(obj) === 'Failed' ? (
           <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
@@ -56,32 +60,28 @@ const tableProps: TableProps = {
         ),
     },
     {
-      children: obj.metadata?.annotations?.creator,
-    },
-    {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
     },
     {
       className: Kebab.columnClass,
-      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'URL', url: obj.spec?.tower_hostname ? `https://${obj.spec?.tower_hostname}` : null }} />,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
     },
   ],
 };
 
-export const ClusterRegistrationsPage: React.FC<ClusterRegistrationsPageProps> = props => {
-  const { t } = useTranslation();
+export const ClusterRegistrationsPage: React.FC = props => {
   const pages = [
     {
       href: 'clustermanagers',
-      name: t('COMMON:MSG_LNB_MENU_84'),
+      name: 'COMMON:MSG_LNB_MENU_84',
     },
     {
       href: 'clusterclaims',
-      name: t('COMMON:MSG_LNB_MENU_105'),
+      name: 'COMMON:MSG_LNB_MENU_105',
     },
     {
       href: 'clusterregistrations',
-      name: t('COMMON:MSG_MAIN_TAB_3'),
+      name: 'COMMON:MSG_MAIN_TAB_3',
     },
   ];
   return <ListPage canCreate={true} multiNavPages={pages} tableProps={tableProps} kind={kind} {...props} />;
@@ -122,10 +122,6 @@ export const ClusterRegistrationsDetailsPage: React.FC<ClusterRegistrationsDetai
 
 type ClusterRegistrationDetailsProps = {
   obj: K8sResourceKind;
-};
-
-type ClusterRegistrationsPageProps = {
-  namespace: string;
 };
 
 type ClusterRegistrationsDetailsPageProps = {
