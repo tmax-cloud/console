@@ -89,6 +89,12 @@ export const initializationForMenu = async () => {
     },
     'Kiali',
   );
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'kibana',
+    },
+    'Kibana',
+  );
 };
 
 export const getMenuTitle = (kind, t: TFunction): { label: string; type: string } => {
