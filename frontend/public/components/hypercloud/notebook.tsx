@@ -10,6 +10,7 @@ import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
 import { NotebookStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { TableProps } from './utils/default-list-component';
+import * as classNames from 'classnames';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
@@ -47,15 +48,15 @@ const tableProps:TableProps = {
       children :  <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />
     },
     {
-      className : 'co-break-word',
+      className :classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
       children : <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
     },
     {
-      className : 'co-break-word',
+      className : classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
       children :  <Status status={NotebookStatusReducer(obj)} />
     },
     {
-      className : 'co-break-word',
+      className :classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
       children : obj.spec?.template.spec.containers[0].image || '-'
     },
     {
