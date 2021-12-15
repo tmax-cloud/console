@@ -1,78 +1,70 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
+
 
 import { K8sResourceKind } from '../../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction, DetailsPageProps } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
+import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
+import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading} from '../utils';
 import { NotebookModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
 import { NotebookStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { TableProps } from './utils/default-list-component';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
 const id = NotebookModel.id;
 const kind = NotebookModel.kind;
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const NotebookTableHeader = (t?: TFunction) => {
-  return [
+const tableProps:TableProps = {
+  header :[
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title:'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
+      title:'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_61'),
+      title:'COMMON:MSG_MAIN_TABLEHEADER_61',
       sortField: 'status.conditions[0].type',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_38'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_38',
       sortField: 'spec.template.spec.containers[0].image',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: '',
-      props: { className: tableColumnClasses[4] },
+      title:'',
+      transforms:null,
+      props:{className:Kebab.columnClass}, 
+    }
+  ],
+  row : (obj:K8sResourceKind) =>{ 
+    const url =`/api/kubeflow/${id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+    return[
+    {
+      children :  <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />
     },
-  ];
-};
-NotebookTableHeader.displayName = 'NotebookTableHeader';
+    {
+      className : 'co-break-word',
+      children : <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
+    },
+    {
+      className : 'co-break-word',
+      children :  <Status status={NotebookStatusReducer(obj)} />
+    },
+    {
+      className : 'co-break-word',
+      children : obj.spec?.template.spec.containers[0].image || '-'
+    },
+    {
+      classNames : Kebab.columnClass,
+      children : <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'Connect', url }} />
+    }
+  ]}
 
-const NotebookTableRow: RowFunction<K8sResourceKind> = ({ obj: notebook, index, key, style }) => {
-  const url = `/api/kubeflow/${id}/${notebook.metadata.namespace}/${notebook.metadata.name}/`;
-  return (
-    <TableRow id={notebook.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={notebook.metadata.name} namespace={notebook.metadata.namespace} title={notebook.metadata.uid} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={notebook.metadata.namespace} title={notebook.metadata.namespace} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>
-        <Status status={NotebookStatusReducer(notebook)} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>{notebook.spec?.template.spec.containers[0].image || '-'}</TableData>
-      <TableData className={tableColumnClasses[4]}>
-        <ResourceKebab actions={menuActions} kind={kind} resource={notebook} customData={{ label: 'Connect', url }} />
-      </TableData>
-    </TableRow>
-  );
-};
+}
 
 export const NotebookDetailsList: React.FC<NotebookDetailsListProps> = ({ notebook }) => {
   const { t } = useTranslation();
@@ -107,12 +99,9 @@ const NotebookDetails: React.FC<NotebookDetailsProps> = ({ obj: notebook }) => {
 };
 
 const { details, editResource } = navFactory;
-export const Notebooks: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Notebooks" Header={NotebookTableHeader.bind(null, t)} Row={NotebookTableRow} virtualize />;
-};
 
-export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} ListComponent={Notebooks} kind={kind} {...props} />;
+export const NotebooksPage: React.FC<NotebooksPageProps> = props =>
+ <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
   const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
