@@ -26,7 +26,7 @@ KIALI='kiali.istio-system.172.21.4.152.nip.io'
 # kubectl get svc -n istio-system ingressgateway  (kubectl get gateway -n kubeflow로 어떤 포트를 이용하는지 정확히 확인)
 KUBEFLOW_IP='192.168.9.141'
 # KUBEFLOW_PORT='80'
-./bin/console gateway \
+./bin/console server \
     --listen=https://$myIP:9000\
     --base-address=https://$myIP:9000 \
     --dynamic-file=./configs/dynamic-config.yaml \
