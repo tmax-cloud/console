@@ -7,6 +7,7 @@ import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { DetailsItem, Kebab, LabelList, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, navFactory } from './utils';
 import { ServiceModel } from '../models';
 import { useTranslation } from 'react-i18next';
+//import { TracePage } from './trace' //remove trace tab
 
 export const menuActions = [Kebab.factory.ModifyPodSelector, ...Kebab.getExtensionsActionsForKind(ServiceModel), ...Kebab.factory.common];
 
@@ -230,9 +231,24 @@ const Details = ({ obj: s }) => {
     </div>
   );
 };
+//remove trace tab
+/*
+const TraceTab = props => {
+  return <TracePage namespace={props.obj.metadata.namespace} name={props.obj.metadata.name} />
+};
+*/
 
 const { details, pods, editResource } = navFactory;
-const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods()]} />;
+const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods(),]} />;
+//remove trace tab
+ /*
+const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods(),
+{
+  href: 'trace',
+  name: 'Trace',
+  component: TraceTab,
+},]} />;
+*/
 
 const ServicesList = props => {
   const { t } = useTranslation();

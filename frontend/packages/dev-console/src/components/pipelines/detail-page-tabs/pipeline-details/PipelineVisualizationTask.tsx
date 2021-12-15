@@ -61,6 +61,7 @@ export const PipelineVisualizationTask: React.FC<PipelineVisualizationTaskProp> 
     if (
       task.status &&
       task.status.reason !== runStatus.Succeeded &&
+      task.status.reason !== runStatus.Completed &&
       task.status.reason !== runStatus.Failed
     ) {
       taskStatus.reason = runStatus.Cancelled;
