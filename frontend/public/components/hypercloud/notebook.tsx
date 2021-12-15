@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading} from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
 import { NotebookModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
@@ -17,18 +16,18 @@ export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(
 const id = NotebookModel.id;
 const kind = NotebookModel.kind;
 
-const tableProps:TableProps = {
-  header :[
+const tableProps: TableProps = {
+  header: [
     {
-      title:'COMMON:MSG_MAIN_TABLEHEADER_1',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'metadata.name',
     },
     {
-      title:'COMMON:MSG_MAIN_TABLEHEADER_2',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
       sortField: 'metadata.namespace',
     },
     {
-      title:'COMMON:MSG_MAIN_TABLEHEADER_61',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_61',
       sortField: 'status.conditions[0].type',
     },
     {
@@ -36,36 +35,36 @@ const tableProps:TableProps = {
       sortField: 'spec.template.spec.containers[0].image',
     },
     {
-      title:'',
-      transforms:null,
-      props:{className:Kebab.columnClass}, 
-    }
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
   ],
-  row : (obj:K8sResourceKind) =>{ 
-    const url =`/api/kubeflow/${id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
-    return[
-    {
-      children :  <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />
-    },
-    {
-      className :classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
-      children : <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
-    },
-    {
-      className : classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
-      children :  <Status status={NotebookStatusReducer(obj)} />
-    },
-    {
-      className :classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
-      children : obj.spec?.template.spec.containers[0].image || '-'
-    },
-    {
-      classNames : Kebab.columnClass,
-      children : <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'Connect', url }} />
-    }
-  ]}
-
-}
+  row: (obj: K8sResourceKind) => {
+    const url = `/api/kubeflow/${id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+    return [
+      {
+        children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
+      },
+      {
+        className: 'co-break-word',
+        children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
+      },
+      {
+        className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
+        children: <Status status={NotebookStatusReducer(obj)} />,
+      },
+      {
+        className: classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'co-break-word'),
+        children: obj.spec?.template.spec.containers[0].image || '-',
+      },
+      {
+        className: Kebab.columnClass,
+        children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'Connect', url }} />,
+      },
+    ];
+  },
+};
 
 export const NotebookDetailsList: React.FC<NotebookDetailsListProps> = ({ notebook }) => {
   const { t } = useTranslation();
@@ -101,8 +100,7 @@ const NotebookDetails: React.FC<NotebookDetailsProps> = ({ obj: notebook }) => {
 
 const { details, editResource } = navFactory;
 
-export const NotebooksPage: React.FC<NotebooksPageProps> = props =>
- <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
+export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
   const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
