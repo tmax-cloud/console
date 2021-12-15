@@ -91,21 +91,38 @@ const SelectServicePlanComponent = ({ loaded, servicePlanList, defaultPlan }) =>
   );
 };
 
-const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue, errorMsg }) => {
+const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue, errorMsg, methods }) => {
   const { control } = useFormContext();
-  //const { t } = useTranslation();
-  const parameters = [];
-  _.forEach(selectedPlan.spec.instanceCreateParameterSchema.properties, (value, key) => {
-    parameters.push(
-      <ul>
-        <Section label={key} id={key} description={value.description} isRequired={selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key)}>
-          <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed} />
-        </Section>
-      </ul>,
-    );
-  });
-
+  const {
+    formState: { errors },
+  } = methods;
   const { t } = useTranslation();
+  const [parameters, setParameters] = React.useState([]);
+
+  // TODO : 번역 string 나오면 적용하기
+  const validationError = {
+    required: '필수 값을 입력해주세요.',
+    pattern: '형식이 맞지 않습니다.',
+  };
+
+  React.useEffect(() => {
+    const newParams = [];
+    _.forEach(selectedPlan.spec.instanceCreateParameterSchema.properties, (value, key) => {
+      const id = `spec.parameters.${key}`;
+      const error = _.get(errors, id);
+      const errorMsg = error ? validationError[error.type] : null;
+      const isRequired = selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key);
+      const validationRule = { required: isRequired, pattern: new RegExp(value.regex) };
+      newParams.push(
+        <ul key={key}>
+          <Section label={key} id={key} description={value.description} isRequired={isRequired} valid={!error} validationErrorDesc={errorMsg}>
+            <TextInput id={id} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed} valid={!error} validation={validationRule} />
+          </Section>
+        </ul>,
+      );
+    });
+    setParameters(newParams);
+  }, [errors]);
 
   return (
     <>
@@ -166,7 +183,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
   const steps = [
     { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV1_1'), component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_5') },
-    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} errorMsg={error} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0, enableNext: enableSaveButton },
+    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} errorMsg={error} methods={methods} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0, enableNext: enableSaveButton },
   ];
 
   return (
@@ -192,27 +209,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
             isFullHeight
             isFullWidth
             steps={steps}
-            backButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_4')}
-            cancelButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-            onNext={() => {
-              const planData = methods.getValues()['service-plan'];
-              planData && setSelectedPlan(planData);
-            }}
-            onBack={() => {
-              setData(methods.getValues());
-            }}
-            onGoToStep={() => {
-              const formData = methods.getValues();
-              if (formData['service-plan']) {
-                setSelectedPlan(formData['service-plan']);
-              } else {
-                setData(formData);
-              }
-            }}
-            onClose={() => {
-              history.goBack();
-            }}
-            onSave={() => {
+            onSave={methods.handleSubmit(() => {
               setEnableSaveButton(false);
               let submitData = methods.getValues();
 
@@ -232,6 +229,26 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
                   setEnableSaveButton(true);
                   setError(e.message);
                 });
+            })}
+            backButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_4')}
+            cancelButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
+            onNext={() => {
+              const planData = methods.getValues()['service-plan'];
+              planData && setSelectedPlan(planData);
+            }}
+            onBack={() => {
+              setData(methods.getValues());
+            }}
+            onGoToStep={() => {
+              const formData = methods.getValues();
+              if (formData['service-plan']) {
+                setSelectedPlan(formData['service-plan']);
+              } else {
+                setData(formData);
+              }
+            }}
+            onClose={() => {
+              history.goBack();
             }}
           />
         </div>

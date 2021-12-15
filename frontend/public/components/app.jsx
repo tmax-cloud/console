@@ -31,7 +31,7 @@ import keycloak from '../hypercloud/keycloak';
 import { setAccessToken, setIdToken, setId, resetLoginState } from '../hypercloud/auth';
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
-import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
+import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
@@ -136,7 +136,7 @@ class App extends React.PureComponent {
       <>
         <Helmet titleTemplate={`%s · ${productName}`} defaultTitle={productName} />
         <ConsoleNotifier location="BannerTop" />
-        <Page header={<Masthead keycloak={keycloak} onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isSingleClusterPerspective={isSingleClusterPerspective()} />}>
+        <Page header={<Masthead keycloak={keycloak} onNavToggle={this._onNavToggle} />} sidebar={<Navigation isNavOpen={isNavOpen} onNavSelect={this._onNavSelect} onPerspectiveSelected={this._onNavSelect} onClusterSelected={this._onNavSelect} isMasterPerspective={isMasterClusterPerspective()} />}>
           <ConnectedNotificationDrawer isDesktop={isDrawerInline} onDrawerChange={this._onNotificationDrawerToggle}>
             <AppContents />
           </ConnectedNotificationDrawer>

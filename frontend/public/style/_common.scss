@@ -386,6 +386,10 @@ $co-external-link-padding-right: 15px;
   margin-bottom: 0;
 }
 
+.help-block-short-margin-top {
+  margin-top: 0;
+}
+
 // Note: include .co-select-to-copy to enable single click selection of full text
 .co-truncate {
   @include co-truncate;

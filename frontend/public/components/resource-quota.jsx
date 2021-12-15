@@ -14,6 +14,7 @@ import { referenceForModel } from '../module/k8s';
 import { ResourceQuotaModel, ClusterResourceQuotaModel } from '../models';
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../models/hypercloud/resource-plural';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const { common } = Kebab.factory;
 const resourceQuotaMenuActions = [...Kebab.getExtensionsActionsForKind(ResourceQuotaModel), ...common];
@@ -325,16 +326,18 @@ export const ResourceQuotasPage = connectToFlags(FLAGS.OPENSHIFT)(props => {
   //   ];
   // }
 
-  const pages = [
-    {
-      href: 'resourcequotas',
-      name: t('COMMON:MSG_LNB_MENU_80'),
-    },
-    {
-      href: 'resourcequotaclaims',
-      name: t('COMMON:MSG_LNB_MENU_102'),
-    },
-  ];
+  const pages = isSingleClusterPerspective()
+    ? null
+    : [
+        {
+          href: 'resourcequotas',
+          name: t('COMMON:MSG_LNB_MENU_80'),
+        },
+        {
+          href: 'resourcequotaclaims',
+          name: t('COMMON:MSG_LNB_MENU_102'),
+        },
+      ];
 
   return <ListPage title={t('COMMON:MSG_LNB_MENU_80')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel(ResourceQuotaModel, t) })} canCreate={true} ListComponent={ResourceQuotasList} kind="ResourceQuota" {...props} multiNavPages={pages} />;
 });

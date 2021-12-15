@@ -19,13 +19,10 @@ const humanizeMap = Object.freeze({
   [Condition.PID_PRESSURE]: humanizeNumber,
 });
 
-const isMonitoredCondition = (condition: Condition): boolean =>
-  [Condition.DISK_PRESSURE, Condition.MEM_PRESSURE, Condition.PID_PRESSURE].includes(condition);
+const isMonitoredCondition = (condition: Condition): boolean => [Condition.DISK_PRESSURE, Condition.MEM_PRESSURE, Condition.PID_PRESSURE].includes(condition);
 
 const getDegradedStates = (node: NodeKind): Condition[] => {
-  return node.status.conditions
-    .filter(({ status, type }) => status === 'True' && isMonitoredCondition(type as Condition))
-    .map(({ type }) => type as Condition);
+  return node.status.conditions.filter(({ status, type }) => status === 'True' && isMonitoredCondition(type as Condition)).map(({ type }) => type as Condition);
 };
 
 const NodeStatus: React.FC<NodeStatusProps> = ({ node, showPopovers = false, className }) => {
@@ -35,15 +32,9 @@ const NodeStatus: React.FC<NodeStatusProps> = ({ node, showPopovers = false, cla
       <Status status={NodeStatusReducer(node)} className={className} />
       <SecondaryStatus status={getNodeSecondaryStatus(node)} />
       {status.length > 0 &&
-        status.map((item) => (
+        status.map(item => (
           <div key={item}>
-            <ConsumerPopover
-              title={_.startCase(item)}
-              current={_.startCase(item)}
-              consumers={PressureQueries[item](node.metadata.name)}
-              humanize={humanizeMap[item]}
-              description={`This node's ${conditionDescriptionMap[item]}. Performance may be degraded.`}
-            />
+            <ConsumerPopover title={_.startCase(item)} current={_.startCase(item)} consumers={PressureQueries[item](node.metadata.name)} humanize={humanizeMap[item]} description={`This node's ${conditionDescriptionMap[item]}. Performance may be degraded.`} />
           </div>
         ))}
     </>

@@ -5,11 +5,6 @@ import { Brand, PageHeader } from '@patternfly/react-core';
 import { MastheadToolbar } from './masthead-toolbar';
 import { history } from './utils';
 import hcLogoImg from '../imgs/logo_symbol_text.svg';
-import okdLogoImg from '../imgs/okd-logo.svg';
-import openshiftLogoImg from '../imgs/openshift-logo.svg';
-import ocpLogoImg from '../imgs/openshift-platform-logo.svg';
-import onlineLogoImg from '../imgs/openshift-online-logo.svg';
-import dedicatedLogoImg from '../imgs/openshift-dedicated-logo.svg';
 
 export const getBrandingDetails = () => {
   let logoImg, productName;
@@ -37,7 +32,7 @@ export const Masthead = React.memo(({ onNavToggle, keycloak }) => {
     },
   };
 
-  return <PageHeader id="page-main-header" logo={<Brand src={details.logoImg} alt={details.productName} />} logoProps={logoProps} toolbar={<MastheadToolbar keycloak={keycloak}/>} showNavToggle onNavToggle={onNavToggle} />;
+  return <PageHeader id="page-main-header" logo={<Brand src={details.logoImg} alt={details.productName} />} logoProps={logoProps} toolbar={<MastheadToolbar keycloak={keycloak} />} showNavToggle onNavToggle={onNavToggle} />;
 });
 
 Masthead.propTypes = {

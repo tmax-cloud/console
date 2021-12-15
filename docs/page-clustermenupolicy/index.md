@@ -23,6 +23,23 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
     - **innerMenus** : 두번째 depth의 메뉴를 정의할 수 있는 블럭이다. (각 속성설명에 대한 부분은 CRD의 description 참조)
 - **showCustomPerspective** : perspective 드롭다운에 custom 탭을 보여줄지에 대한 boolean 속성이다.
 
+## 메뉴 추가 방법
+
+### 하이퍼클라우드에 등록된 메뉴 추가 방법
+
+- menuType은 REGISTERED_MENU로 설정하고, kind 값을 설정해준다. kind값으로 [kind로 설정 가능한 값들](#kind로-설정-가능한-값들) 목록에 있는 값을 설정해주어야 메뉴 타이틀에 번역이 적용되고, 정상적으로 뜬다.  
+  [![image](images/registered_menu.png)](images/registered_menu.png)
+
+### 링크 메뉴 추가 방법
+
+- menuType은 NEW_TAB_LINK로 설정하고, label(메뉴 타이틀)과 linkUrl(새 탭으로 열릴 링크 주소) 값을 설정해준다.  
+   [![image](images/new_tab_link.png)](images/new_tab_link.png)
+
+### 컨테이너 메뉴로 감싸는 방법
+
+- menuType은 CONTAINER로 설정하고, label(컨테이너 타이틀) 값을 설정해준다. 번역이 적용된 텍스트값을 사용하려면 [번역 적용되는 컨테이너 Text](#번역-적용되는-컨테이너-Text) 목록에 있는 text로 설정해주어야 한다. 컨테이너 안에 들어갈 메뉴들은 innerMenus 속성으로 지정해준다. (innerMenus의 메뉴추가방법은 위와 동일)
+  [![image](images/container.png)](images/container.png)
+
 ## kind로 설정 가능한 값들
 
 ### k8s 리소스 메뉴 kind
@@ -139,7 +156,7 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - Dashboard (개요)
 </div>
 
-## 번역 적용 되는 Container title 값
+## 번역 적용되는 컨테이너 Text
 
 #### (이 외의 text로 Container title값 설정하면 번역 없이 text 그대로 출력 됨)
 

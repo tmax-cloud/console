@@ -1559,9 +1559,12 @@ export const ClusterMenuPolicyModel: K8sKind = {
   kind: 'ClusterMenuPolicy',
   id: 'clustermenupolicy',
   namespaced: false,
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_164',
+    labelPlural: 'COMMON:MSG_LNB_MENU_83',
+  },
 };
 
-// MJ : label 부분 string발행되면 수정하기
 export const ApplicationModel: K8sKind = {
   kind: 'Application',
   label: 'Application',
@@ -1578,7 +1581,7 @@ export const ApplicationModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: '어플리케이션',
-    labelPlural: '어플리케이션',
+    label: 'COMMON:MSG_LNB_MENU_216',
+    labelPlural: 'COMMON:MSG_LNB_MENU_215',
   },
 };

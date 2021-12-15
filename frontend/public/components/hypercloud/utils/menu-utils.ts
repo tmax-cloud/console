@@ -48,7 +48,11 @@ const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
           const host = ingress.spec?.rules?.[0]?.host;
           if (!!host) {
             const menu = _.get(CustomMenusMap, menuKey);
-            !!menu && _.assign(menu, { url: `https://${host}` });
+            if (menuKey === 'Grafana') {
+              !!menu && _.assign(menu, { url: `https://${host}/login/generic_oauth` });
+            } else {
+              !!menu && _.assign(menu, { url: `https://${host}` });
+            }
           }
         }
         resolve(DoneMessage);
@@ -84,6 +88,12 @@ export const initializationForMenu = async () => {
       'ingress.tmaxcloud.org/name': 'kiali ',
     },
     'Kiali',
+  );
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'kibana',
+    },
+    'Kibana',
   );
 };
 

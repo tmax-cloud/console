@@ -1,18 +1,16 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { sortable } from '@patternfly/react-table';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 
 import { Status } from '@console/shared';
 import { K8sResourceKind, K8sKind } from '../../module/k8s';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { DetailsPage, ListPage } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { ClusterManagerModel } from '../../models';
 import { configureClusterNodesModal } from './modals';
 import { MembersPage } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ResourceEventStream } from '../events';
+import { TableProps } from './utils/default-list-component';
 
 const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
   const { t } = useTranslation();
@@ -37,75 +35,6 @@ const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
 
 const kind = ClusterManagerModel.kind;
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-const ClusterType = {
-  CREATED: 'created',
-  REGISTERED: 'registered',
-};
-const ClusterTableHeader = (t?: TFunction) => {
-  return [
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_58'),
-      sortField: 'metadata.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_59'),
-      sortField: 'spec.provider',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_60'),
-      sortField: 'spec.provider',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_61'),
-      sortField: 'status.ready',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_62'),
-      sortField: 'spec.version',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
-    },
-    {
-      title: 'Master Node',
-      sortField: 'spec.masterNum',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
-    },
-    {
-      title: 'Worker Node',
-      sortField: 'spec.workerNum',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[6] },
-    },
-    {
-      title: 'Owner',
-      // sortField: 'status.owner',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[7] },
-    },
-    {
-      title: 'Created',
-      sortField: 'metadata.creationTimestamp',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[8] },
-    },
-    {
-      title: '',
-      props: { className: tableColumnClasses[9] },
-    },
-  ];
-};
-ClusterTableHeader.displayName = 'ClusterTableHeader';
-
 const getMenuActions = type => {
   let menuActions: any[];
   if (type === ClusterType.CREATED) {
@@ -116,30 +45,98 @@ const getMenuActions = type => {
   return menuActions;
 };
 
-const ClusterTableRow: RowFunction<IClusterTableRow> = ({ obj: cluster, index, key, style }) => {
-  const owner = cluster.metadata?.annotations?.creator;
-  let type = cluster.metadata.labels?.type;
+const ClusterType = {
+  CREATED: 'created',
+  REGISTERED: 'registered',
+};
 
-  return (
-    <TableRow id={cluster.metadata.uid} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1])}>{cluster.spec.provider}</TableData>
-      <TableData className={classNames(tableColumnClasses[2])}>{type === ClusterType.CREATED ? '생성' : type === ClusterType.REGISTERED ? '등록' : '-'}</TableData>
-      <TableData className={tableColumnClasses[3]}>{cluster.status?.phase}</TableData>
-      <TableData className={tableColumnClasses[4]}>{cluster.spec.version}</TableData>
-      <TableData className={tableColumnClasses[5]}>{`${cluster.status?.masterRun ?? 0} / ${cluster.spec?.masterNum ?? 0}`}</TableData>
-      <TableData className={tableColumnClasses[6]}>{`${cluster.status?.workerRun ?? 0} / ${cluster.spec?.workerNum ?? 0}`}</TableData>
-      <TableData className={tableColumnClasses[7]}>{owner}</TableData>
-      <TableData className={tableColumnClasses[8]}>
-        <Timestamp timestamp={cluster.metadata.creationTimestamp} />
-      </TableData>
-      <TableData className={tableColumnClasses[9]}>
-        <ResourceKebab actions={getMenuActions(type)} kind={kind} resource={cluster} />
-      </TableData>
-    </TableRow>
-  );
+const TypeColumnItem = (props: TypeColumnItemProps) => {
+  const { type } = props;
+  const { t } = useTranslation();
+  return <>{type === ClusterType.CREATED ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_TYPE_1') : type === ClusterType.REGISTERED ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_TYPE_2') : '-'}</>;
+};
+
+const tableProps: TableProps = {
+  header: [
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_58',
+      sortField: 'metadata.name',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+      sortField: 'metadata.namespace',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_59',
+      sortField: 'spec.provider',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_60',
+      sortField: 'spec.provider',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_61',
+      sortField: 'status.ready',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_62',
+      sortField: 'spec.version',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_94',
+      sortField: 'spec.masterNum',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_95',
+      sortField: 'spec.workerNum',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
+      sortField: 'metadata.creationTimestamp',
+    },
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
+  ],
+  row: (cluster: K8sResourceKind) => {
+    const type = cluster.metadata.labels?.type;
+    return [
+      {
+        children: <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />,
+      },
+      {
+        className: 'co-break-word',
+        children: <ResourceLink kind="Namespace" name={cluster.metadata.namespace} title={cluster.metadata.namespace} />,
+      },
+      {
+        children: cluster.spec.provider,
+      },
+      {
+        children: <TypeColumnItem type={type} />,
+      },
+      {
+        children: cluster.status?.phase,
+      },
+      {
+        children: cluster.spec.version,
+      },
+      {
+        children: `${cluster.status?.masterRun ?? 0} / ${cluster.spec?.masterNum ?? 0}`,
+      },
+      {
+        children: `${cluster.status?.workerRun ?? 0} / ${cluster.spec?.workerNum ?? 0}`,
+      },
+      {
+        children: <Timestamp timestamp={cluster.metadata.creationTimestamp} />,
+      },
+      {
+        className: Kebab.columnClass,
+        children: <ResourceKebab actions={getMenuActions(type)} kind={kind} resource={cluster} />,
+      },
+    ];
+  },
 };
 
 export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) => {
@@ -167,6 +164,10 @@ export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) =>
     </dl>
   );
 };
+
+interface TypeColumnItemProps {
+  type: string;
+}
 
 interface KeyValuePrintProps {
   obj: any;
@@ -202,28 +203,23 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
 };
 
 const { /* nodes, */ editResource, events } = navFactory;
-export const Clusters: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label="Clusters" Header={ClusterTableHeader.bind(null, t)} Row={ClusterTableRow} virtualize />;
-};
 
-export const ClustersPage: React.FC<ClustersPageProps> = props => {
-  const { t } = useTranslation();
+export const ClustersPage: React.FC = props => {
   const pages = [
     {
       href: 'clustermanagers',
-      name: t('COMMON:MSG_LNB_MENU_84'),
+      name: 'COMMON:MSG_LNB_MENU_84',
     },
     {
       href: 'clusterclaims',
-      name: t('COMMON:MSG_LNB_MENU_105'),
+      name: 'COMMON:MSG_LNB_MENU_105',
     },
     {
       href: 'clusterregistrations',
-      name: t('COMMON:MSG_MAIN_TAB_3'),
+      name: 'COMMON:MSG_MAIN_TAB_3',
     },
   ];
-  return <ListPage title={t('COMMON:MSG_LNB_MENU_84')} multiNavPages={pages} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_84') })} ListComponent={Clusters} kind={kind} {...props} />;
+  return <ListPage multiNavPages={pages} tableProps={tableProps} kind={kind} {...props} />;
 };
 
 export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => {
@@ -270,22 +266,12 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
   );
 };
 
-interface IClusterTableRow extends K8sResourceKind {
-  fakeMetadata: any;
-}
-
 type ClusterDetailsListProps = {
   cl: K8sResourceKind;
 };
 
 type ClusterDetailsProps = {
   obj: K8sResourceKind;
-};
-
-type ClustersPageProps = {
-  showTitle?: boolean;
-  namespace?: string;
-  selector?: any;
 };
 
 type ClustersDetailsPageProps = {
