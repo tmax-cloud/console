@@ -12,7 +12,7 @@ spec:
       match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`hyowook.tmaxcloud.org`)
       priority: 20
       services:
-        - name: eunkyeng-service
+        - name: hyowook-service
           namespace: api-gateway-system
           kind: Service
           port: 9000
