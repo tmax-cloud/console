@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - 000_crd.yaml
+  - 000_serviceaccount.yaml
+  - 001_deploy.yaml
+  - 002_service.yaml
+namespace: api-gateway-system
+images:
+  - name: tmaxcloudck/hypercloud-console
+    newName: docker.io/tmaxcloudck/hypercloud-console
+    newTag: 5.0.42.2
+commonLabels:
+  app.kubernetes.io/managed-by: tmax-cloud
+  app.kubernetes.io/component: webserver
+  app.kubernetes.io/name: console
+  app.kubernetes.io/part-of: api-gateway
