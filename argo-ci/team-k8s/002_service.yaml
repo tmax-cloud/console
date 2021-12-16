@@ -4,7 +4,7 @@ metadata:
   name: console
   namespace: api-gateway-system
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: console
   ports:
