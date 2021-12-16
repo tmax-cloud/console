@@ -4,10 +4,10 @@ metadata:
   name: console
   namespace: api-gateway-system
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: console
   ports:
-  - port: 31303
-    targetPort: console
-    name: console
+    - port: 31303
+      targetPort: console
+      name: console
