@@ -9,7 +9,7 @@ namespace: api-gateway-system
 images:
   - name: tmaxcloudck/hypercloud-console
     newName: docker.io/tmaxcloudck/hypercloud-console
-    newTag: 5.0.42.0
+    newTag: 5.0.42.4
 commonLabels:
   app.kubernetes.io/managed-by: tmax-cloud
   app.kubernetes.io/component: webserver
