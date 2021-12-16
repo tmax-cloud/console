@@ -152,7 +152,7 @@ pipeline {
           sh """
             rm -rf argo-ci_temp 
             cp -r argo-ci argo-ci_temp 
-            find argo-ci -name "*.yaml" -exec perl -pi -e "s/@@VER@@/${VER}/g" {} \;
+            find argo-ci_temp -name "*.yaml" -exec perl -pi -e "s/@@VER@@/${VER}/g" {} ;
           """
         // }
       }
