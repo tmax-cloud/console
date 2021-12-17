@@ -1,14 +1,22 @@
-# Default values for helm-chart.
+# Default values for console.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: docker.io/tmaxcloudck/hypercloud-console
+  repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+
+console:
+  auth:
+    realm: "tmax"
+    hyperauth: "hyperauth.org"
+    clientid: "hypercloud5"
+  config:
+    mcmode: true
 
 imagePullSecrets: []
 nameOverride: ""
@@ -22,6 +30,9 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+rbac:
+  enable: true
 
 podAnnotations: {}
 
@@ -38,23 +49,30 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 31303
 
 ingress:
-  enabled: enable
-  className: "tmax-cloud"
+  enabled: false
+  className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: test.172.23.4.206.nip.io
+    - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: {}
+  tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+# Create an Ingressroutes for the console
+ingressRoute:
+  enable: true
+  annotations: {}
+  labels: {}
+  domainName: "tmaxcloud.org"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

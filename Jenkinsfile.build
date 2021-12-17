@@ -152,7 +152,8 @@ pipeline {
           sh """
             rm -rf argo-ci_temp 
             cp -r argo-ci argo-ci_temp 
-            find argo-ci_temp -name "*.yaml" -exec perl -pi -e "s/@@VER@@/${VER}/g" {} ;
+            sed -i "s/@@VER@@/${VER}/g" ./argo-ci_temp/team-k8s/kustomization.yaml
+            sed -i "s/@@VER@@/${VER}/g" ./argo-ci_temp/ck-k8s/kustomization.yaml
           """
         // }
       }
