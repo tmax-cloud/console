@@ -17,7 +17,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`) && Host(`{{ include "console.name" . }}.{{ include .Values.ingressRoute.domainName }}`)
+    - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`) && Host(`{{ include "console.name" . }}.{{ .Values.ingressRoute.domainName }}`)
       kind: Rule
       services:
         - name: api@internal
