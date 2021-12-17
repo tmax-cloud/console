@@ -72,7 +72,7 @@ ingressRoute:
   enable: true
   annotations: {}
   labels: {}
-  domainName: "tmaxcloud.org"
+  domainName: "172.23.4.206.nip.io"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
