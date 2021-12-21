@@ -12,7 +12,7 @@ spec:
       match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`gyeongmin.tmaxcloud.org`)
       priority: 20
       services:
-        - name: eunkyeng-service
+        - name: gyeongmin-service
           namespace: api-gateway-system
           kind: Service
           port: 9000
