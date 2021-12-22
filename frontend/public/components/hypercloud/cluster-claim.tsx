@@ -12,6 +12,7 @@ import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ClusterClaimStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { TableProps } from './utils/default-list-component';
+import { Popover } from '@patternfly/react-core';
 
 export const clusterClaimCommonActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common];
 
@@ -113,6 +114,17 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ pod }) => {
 export const ClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = ({ clcl, t }) => {
   return (
     <dl className="co-m-pane__details">
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_61')} obj={clcl}>
+        {clcl?.status?.phase === 'Error' ? (
+          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{clcl.status?.reason}</div>} maxWidth="30rem" position="right">
+            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
+              <Status status={ClusterClaimStatusReducer(clcl)} />
+            </div>
+          </Popover>
+        ) : (
+          <Status status={ClusterClaimStatusReducer(clcl)} />
+        )}
+      </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={clcl} path="spec.version" />
