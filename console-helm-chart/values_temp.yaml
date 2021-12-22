@@ -6,16 +6,16 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: hypercloud.org
-    realm: tmax
-    clientid: hypercloud5
-  mcMode: false
+    hyperauth: @@HYPERAUTH@@
+    realm: @@REALM@@
+    clientid: @@CLIENTID@@
+  mcMode: @@MC_MODE@@
 
 image:
   repository: docker.io/tmaxcloudck/hypercloud-console
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "@@TAG@@"
+  tag: "@@VER@@"
 
 imagePullSecrets: []
 nameOverride: ""
