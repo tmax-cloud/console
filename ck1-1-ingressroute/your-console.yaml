@@ -12,7 +12,7 @@ spec:
       match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 20
       services:
-        - name: eunkyeng-service
+        - name: {{NAME}}-service
           namespace: api-gateway-system
           kind: Service
           port: 9000
