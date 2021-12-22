@@ -6,10 +6,10 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: @@HYPERAUTH@@
-    realm: @@REALM@@
-    clientid: @@CLIENTID@@
-  mcMode: @@MC_MODE@@
+    hyperauth: hyperauth.192.168.9.141.nip.io
+    realm: tmax
+    clientid: hypercloud5
+  mcMode: true
 
 image:
   repository: docker.io/tmaxcloudck/hypercloud-console

@@ -150,11 +150,10 @@ pipeline {
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh """ 
-            cp -r ./console-helm-chart/values_temp.yaml ./console-helm-chart/values.yaml 
-            sed -i "s/@@HYPERAUTH@@/${HYPERAUTH}/g" ./console-helm-chart/values.yaml 
-            sed -i "s/@@REALM@@/${REALM}/g" ./console-helm-chart/values.yaml 
-            sed -i "s/@@CLIENTID@@/${CLIENTID}/g" ./console-helm-chart/values.yaml 
-            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values.yaml                         
+            cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml 
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_ck.yaml                       
+            cp -r ./console-helm-chart/values_team_temp.yaml ./console-helm-chart/values_team.yaml 
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_team.yaml                         
           """
         // }
       }
