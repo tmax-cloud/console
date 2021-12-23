@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+nameOverride: "console"
+fullnameOverride: "console"
+
 replicaCount: 1
 
 console:
@@ -18,8 +21,6 @@ image:
   tag: "5.0.42.5"
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 podAnnotations: {}
 
