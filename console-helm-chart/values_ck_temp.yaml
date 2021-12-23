@@ -39,10 +39,10 @@ securityContext:
 ingressroute:
   enabled: true
   domain:
-    enabled: false
+    enabled: true
     name: tmaxcloud.org
   ip:
-    enabled: true
+    enabled: false
 
 service:
   type: ClusterIP
