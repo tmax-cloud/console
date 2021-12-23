@@ -9,7 +9,7 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: hyperauth.192.168.9.141.nip.io
+    hyperauth: hyperauth.tmaxcloud.org
     realm: tmax
     clientid: hypercloud5
   mcMode: true
