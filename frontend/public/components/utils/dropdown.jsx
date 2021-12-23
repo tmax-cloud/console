@@ -373,7 +373,7 @@ export class Dropdown extends DropdownMixin {
     const noBookmark = this.props.noBookmark || false;
 
     const addItem = (key, content) => {
-      console.log(`add Item content : ${content}`)
+   
       const selected = key === selectedKey && !this.props.noSelection;
       const hover = key === keyboardHoverKey;
       const klass = classNames({ active: selected });
