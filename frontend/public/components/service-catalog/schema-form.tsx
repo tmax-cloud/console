@@ -1,27 +1,23 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 import Form, { FieldTemplateProps, FormProps, UiSchema } from 'react-jsonschema-form';
 
 import { SecretModel } from '../../models';
 import { k8sCreate, K8sResourceKind } from '../../module/k8s';
 
-const getSchema = (plan: K8sResourceKind, path: string): JSONSchema6 => {
+const getSchema = (plan: K8sResourceKind, path: string): JSONSchema7 => {
   const schema = _.get(plan, path);
   // Make sure there is `properties` in the schema, even if empty, or `Form` displays an error.
   return _.assign({ type: 'object', properties: {} }, schema);
 };
 
-export const getInstanceCreateSchema = (plan: K8sResourceKind) =>
-  getSchema(plan, 'spec.instanceCreateParameterSchema');
-export const getInstanceCreateParametersForm = (plan: K8sResourceKind) =>
-  _.get(plan, 'spec.externalMetadata.schemas.service_instance.create.openshift_form_definition');
+export const getInstanceCreateSchema = (plan: K8sResourceKind) => getSchema(plan, 'spec.instanceCreateParameterSchema');
+export const getInstanceCreateParametersForm = (plan: K8sResourceKind) => _.get(plan, 'spec.externalMetadata.schemas.service_instance.create.openshift_form_definition');
 
-export const getBindingCreateSchema = (plan: K8sResourceKind) =>
-  getSchema(plan, 'spec.serviceBindingCreateParameterSchema');
-export const getBindingParametersForm = (plan: K8sResourceKind) =>
-  _.get(plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
+export const getBindingCreateSchema = (plan: K8sResourceKind) => getSchema(plan, 'spec.serviceBindingCreateParameterSchema');
+export const getBindingParametersForm = (plan: K8sResourceKind) => _.get(plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
 
 // Flatten items from fieldsets into a single list of parameters. Fieldsets aren't supported.
 const flattenParameters = (parametersForm: ParameterFormItem[]): ParameterFormItem[] => {
@@ -73,12 +69,7 @@ export const getUISchema = (parametersForm: ParameterFormItem[]): UiSchema => {
   );
 };
 
-export const createParametersSecret = (
-  secretName: string,
-  key: string,
-  parameters: any,
-  owner: K8sResourceKind,
-): Promise<K8sResourceKind> => {
+export const createParametersSecret = (secretName: string, key: string, parameters: any, owner: K8sResourceKind): Promise<K8sResourceKind> => {
   const secret = {
     apiVersion: 'v1',
     kind: 'Secret',
@@ -106,17 +97,7 @@ export const createParametersSecret = (
 
 // Override react-jsonschema-form rendering of fields so we can use different required and description styles.
 // https://github.com/mozilla-services/react-jsonschema-form#field-template
-const CustomFieldTemplate: React.SFC<FieldTemplateProps> = ({
-  id,
-  classNames: klass,
-  displayLabel,
-  label,
-  help,
-  required,
-  description,
-  errors,
-  children,
-}) => (
+const CustomFieldTemplate: React.SFC<FieldTemplateProps> = ({ id, classNames: klass, displayLabel, label, help, required, description, errors, children }) => (
   <div className={klass}>
     {displayLabel && (
       <label htmlFor={id} className={classNames('control-label', { 'co-required': required })}>
@@ -133,7 +114,7 @@ const CustomFieldTemplate: React.SFC<FieldTemplateProps> = ({
 // Override the base input `onChange` handler to return an empty string instead of undefined when a user clears a string input.
 // https://github.com/mozilla-services/react-jsonschema-form#customizing-widgets-text-input
 // https://github.com/mozilla-services/react-jsonschema-form/blob/master/src/components/widgets/BaseInput.js
-const CustomBaseInput = (props) => {
+const CustomBaseInput = props => {
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!props.id) {
@@ -141,32 +122,10 @@ const CustomBaseInput = (props) => {
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  const {
-    value,
-    readonly,
-    disabled,
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-    options,
-    ...inputProps
-  } = props;
+  const { value, readonly, disabled, autofocus, onChange, onBlur, onFocus, options, ...inputProps } = props;
   inputProps.type = options.inputType || inputProps.type || 'text';
 
-  return (
-    <input
-      className="pf-c-form-control"
-      readOnly={readonly}
-      disabled={disabled}
-      autoFocus={autofocus}
-      value={value == null ? '' : value}
-      {...inputProps}
-      onChange={(event) => onChange(event.target.value)}
-      onBlur={onBlur && ((event) => onBlur(inputProps.id, event.target.value))}
-      onFocus={onFocus && ((event) => onFocus(inputProps.id, event.target.value))}
-    />
-  );
+  return <input className="pf-c-form-control" readOnly={readonly} disabled={disabled} autoFocus={autofocus} value={value == null ? '' : value} {...inputProps} onChange={event => onChange(event.target.value)} onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))} onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))} />;
 };
 
 // Create a custom checkbox widget to prevent any checkbox from receiving a `required` attribute.
@@ -185,14 +144,7 @@ const widgets: any = {
   CheckboxWidget: CustomCheckbox,
 };
 
-export const ServiceCatalogParametersForm: React.SFC<FormProps<any>> = (props) => (
-  <Form
-    className="co-service-catalog-parameters"
-    FieldTemplate={CustomFieldTemplate}
-    widgets={widgets}
-    {...props}
-  />
-);
+export const ServiceCatalogParametersForm: React.SFC<FormProps<any>> = props => <Form className="co-service-catalog-parameters" FieldTemplate={CustomFieldTemplate} widgets={widgets} {...props} />;
 
 export type ParameterFormItem =
   | {

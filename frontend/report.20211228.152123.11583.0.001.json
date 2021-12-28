@@ -1,0 +1,615 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20211228.152123.11583.0.001.json",
+    "dumpEventTime": "2021-12-28T15:21:23Z",
+    "dumpEventTimeStamp": "1640672483225",
+    "processId": 11583,
+    "cwd": "/home/min9120/console/frontend",
+    "commandLine": [
+      "/home/min9120/.nvm/versions/node/v12.13.0/bin/node",
+      "--max-old-space-size=2048",
+      "/home/min9120/console/frontend/node_modules/fork-ts-checker-webpack-plugin/lib/service.js"
+    ],
+    "nodejsVersion": "v12.13.0",
+    "glibcVersionRuntime": "2.27",
+    "glibcVersionCompiler": "2.17",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.13.0",
+      "v8": "7.7.299.13-node.12",
+      "uv": "1.32.0",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.39.2",
+      "napi": "5",
+      "llhttp": "1.1.4",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1d",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019a",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.13.0/node-v12.13.0-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.13.0/node-v12.13.0.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "4.4.0-19041-Microsoft",
+    "osVersion": "#1237-Microsoft Sat Sep 11 14:32:00 PST 2021",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 34309600,
+        "nice": 0,
+        "sys": 47227600,
+        "idle": 2114205300,
+        "irq": 2930600
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 18955700,
+        "nice": 0,
+        "sys": 19166000,
+        "idle": 2157620900,
+        "irq": 257500
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 54585600,
+        "nice": 0,
+        "sys": 48045400,
+        "idle": 2093111700,
+        "irq": 580900
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 21095100,
+        "nice": 0,
+        "sys": 20788700,
+        "idle": 2153859000,
+        "irq": 232100
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 39570300,
+        "nice": 0,
+        "sys": 37114000,
+        "idle": 2119058500,
+        "irq": 501800
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 20246000,
+        "nice": 0,
+        "sys": 20606000,
+        "idle": 2154890700,
+        "irq": 265300
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 35087100,
+        "nice": 0,
+        "sys": 39163700,
+        "idle": 2121492000,
+        "irq": 453100
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+        "speed": 3601,
+        "user": 24895900,
+        "nice": 0,
+        "sys": 26320600,
+        "idle": 2144526400,
+        "irq": 275300
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "eth0",
+        "internal": false,
+        "mac": "b0:6e:bf:35:b4:08",
+        "address": "192.168.8.101",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "eth0",
+        "internal": false,
+        "mac": "b0:6e:bf:35:b4:08",
+        "address": "fe80::c4e2:cebe:b111:7699",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 8
+      },
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      }
+    ],
+    "host": "DESKTOP-VJN1VPI"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x0000000000b027f5",
+      "symbol": "report::TriggerNodeReport(v8::Isolate*, node::Environment*, char const*, char const*, std::string const&, v8::Local<v8::String>) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x00000000009d9fc3",
+      "symbol": "node::OnFatalError(char const*, char const*) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000b37dbe",
+      "symbol": "v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000b38139",
+      "symbol": "v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000ce34f5",
+      "symbol": " [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000ce3b86",
+      "symbol": "v8::internal::Heap::RecomputeLimits(v8::internal::GarbageCollector) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000cefa1a",
+      "symbol": "v8::internal::Heap::PerformGarbageCollection(v8::internal::GarbageCollector, v8::GCCallbackFlags) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000cf0925",
+      "symbol": "v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000cf3338",
+      "symbol": "v8::internal::Heap::AllocateRawWithRetryOrFail(int, v8::internal::AllocationType, v8::internal::AllocationAlignment) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000cb9c67",
+      "symbol": "v8::internal::Factory::NewFillerObject(int, bool, v8::internal::AllocationType) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x0000000000fefb9b",
+      "symbol": "v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    },
+    {
+      "pc": "0x00000000013725d9",
+      "symbol": " [/home/min9120/.nvm/versions/node/v12.13.0/bin/node]"
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2172489728,
+    "totalCommittedMemory": 2171166304,
+    "usedMemory": 2071930312,
+    "availableMemory": 58067848,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 32568,
+        "capacity": 261872,
+        "used": 32296,
+        "available": 229576
+      },
+      "new_space": {
+        "memorySize": 33554432,
+        "committedMemory": 33027384,
+        "capacity": 16759808,
+        "used": 1179376,
+        "available": 15580432
+      },
+      "old_space": {
+        "memorySize": 2003677184,
+        "committedMemory": 2003541760,
+        "capacity": 1938583080,
+        "used": 1938410616,
+        "available": 172464
+      },
+      "code_space": {
+        "memorySize": 12746752,
+        "committedMemory": 12413408,
+        "capacity": 10760736,
+        "used": 10760736,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 1052672,
+        "committedMemory": 954640,
+        "capacity": 755840,
+        "used": 755840,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 121147392,
+        "committedMemory": 121147392,
+        "capacity": 120787896,
+        "used": 120787896,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 49152,
+        "committedMemory": 49152,
+        "capacity": 3552,
+        "used": 3552,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 16759808,
+        "used": 0,
+        "available": 16759808
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 486.156,
+    "kernelCpuSeconds": 28.4219,
+    "cpuConsumptionPercent": 11.1792,
+    "maxRss": 2276995072,
+    "pageFaults": {
+      "IORequired": 0,
+      "IONotRequired": 1689189
+    },
+    "fsActivity": {
+      "reads": 0,
+      "writes": 0
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 323.812,
+    "kernelCpuSeconds": 20.5625,
+    "cpuConsumptionPercent": 7.48153,
+    "fsActivity": {
+      "reads": 0,
+      "writes": 0
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "LESSOPEN": "| /usr/bin/lesspipe %s",
+    "npm_package_devDependencies_ts_node": "5.x",
+    "npm_package_devDependencies__types_node": "^9.6.52",
+    "npm_package_devDependencies_chalk": "2.3.x",
+    "npm_package_devDependencies__types_react_transition_group": "2.x",
+    "npm_package_devDependencies__types_react_router_dom": "4.2.7",
+    "npm_package_dependencies_url_polyfill": "^1.1.5",
+    "npm_package_dependencies_text_encoding": "0.x",
+    "npm_package_dependencies_screenfull": "4.x",
+    "npm_package_dependencies_react_draggable": "4.x",
+    "npm_package_scripts_webdriver_update_macos": "CHROME_VERSION=$(/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --version) && yarn webdriver-update --versions.chrome=\"${CHROME_VERSION}\"",
+    "USER": "min9120",
+    "npm_package_devDependencies_webpack_cli": "^3.3.9",
+    "npm_package_devDependencies_webpack_bundle_analyzer": "^3.5.0",
+    "npm_package_devDependencies_redux_mock_store": "^1.5.3",
+    "npm_package_devDependencies_jest": "^27.0.6",
+    "npm_package_devDependencies__testing_library_jest_dom": "^5.14.1",
+    "npm_package_dependencies_react_dnd_html5_backend": "^9.4.0",
+    "npm_package_dependencies_monaco_languageclient": "^0.9.0",
+    "npm_package_dependencies_focus_trap_react": "^6.0.0",
+    "npm_package_dependencies__patternfly_react_virtualized_extension": "1.4.59",
+    "npm_package_scripts_debug_test_suite": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' node -r ts-node/register --inspect-brk ./node_modules/.bin/protractor integration-tests/protractor.conf.ts",
+    "npm_config_version_commit_hooks": "true",
+    "npm_config_user_agent": "yarn/1.21.0 npm/? node/v12.13.0 linux x64",
+    "npm_package_devDependencies_read_pkg": "5.x",
+    "npm_package_devDependencies__testing_library_user_event": "^13.2.1",
+    "npm_package_dependencies_immutable": "3.x",
+    "npm_package_dependencies_formik": "2.0.3",
+    "npm_config_bin_links": "true",
+    "GIT_ASKPASS": "/home/min9120/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/extensions/git/dist/askpass.sh",
+    "npm_node_execpath": "/home/min9120/.nvm/versions/node/v12.13.0/bin/node",
+    "npm_package_devDependencies_file_loader": "1.x",
+    "npm_package_devDependencies__types_react_jsonschema_form": "^1.0.8",
+    "npm_package_dependencies_point_in_svg_path": "1.0.1",
+    "npm_config_init_version": "1.0.0",
+    "SHLVL": "3",
+    "npm_package_devDependencies_protractor": "5.4.x",
+    "npm_package_devDependencies__types_jasminewd2": "2.0.x",
+    "npm_package_dependencies_react_hook_form": "^6.11.3",
+    "LESS": "-R",
+    "OLDPWD": "/home/min9120/console",
+    "HOME": "/home/min9120",
+    "npm_package_dependencies_whatwg_fetch": "2.x",
+    "TERM_PROGRAM_VERSION": "1.63.2",
+    "VSCODE_IPC_HOOK_CLI": "/tmp/vscode-ipc-e32976a2-b344-4c4a-884c-73286a5cd8e9.sock",
+    "NVM_BIN": "/home/min9120/.nvm/versions/node/v12.13.0/bin",
+    "npm_package_scripts_prettier_all": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
+    "npm_package_scripts_check_cycles": "CHECK_CYCLES=true yarn dev-once",
+    "ZSH": "/home/min9120/.oh-my-zsh",
+    "LSCOLORS": "Gxfxcxdxbxegedabagacad",
+    "NVM_INC": "/home/min9120/.nvm/versions/node/v12.13.0/include/node",
+    "npm_package_engines_node": ">=8.x",
+    "npm_package_devDependencies_jasmine_core": "2.x",
+    "npm_package_devDependencies_enzyme_adapter_react_16": "1.15.2",
+    "npm_package_devDependencies__types_enzyme": "3.10.x",
+    "npm_package_scripts_test_gui_tap": "TAP=true yarn run test-gui",
+    "npm_config_init_license": "MIT",
+    "PAGER": "less",
+    "VSCODE_GIT_ASKPASS_MAIN": "/home/min9120/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/extensions/git/dist/askpass-main.js",
+    "YARN_WRAP_OUTPUT": "false",
+    "npm_package_devDependencies__types_jasmine": "2.8.x",
+    "npm_config_version_tag_prefix": "v",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "VSCODE_GIT_ASKPASS_NODE": "/home/min9120/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/node",
+    "npm_package_devDependencies_resolve_url_loader": "2.x",
+    "npm_package_devDependencies_protractor_jasmine2_screenshot_reporter": "0.5.x",
+    "npm_package_devDependencies_cache_loader": "1.x",
+    "npm_package_dependencies_showdown": "1.8.x",
+    "npm_package_dependencies_react_virtualized": "9.x",
+    "npm_package_dependencies_react_i18next": "^11.7.3",
+    "npm_package_dependencies__react_keycloak_web": "3.4.0",
+    "P9K_TTY": "old",
+    "npm_package_devDependencies__types_react_redux": "6.0.2",
+    "COLORTERM": "truecolor",
+    "WSL_DISTRO_NAME": "Ubuntu-18.04",
+    "npm_package_devDependencies_typescript": "3.8.3",
+    "npm_package_dependencies_react_transition_group": "2.3.x",
+    "npm_package_dependencies_react_router_dom": "5.0.1",
+    "npm_package_dependencies_openshift_logos_icon": "1.7.1",
+    "npm_package_dependencies_i18next": "^19.8.2",
+    "npm_package_dependencies_ansi_to_html": "^0.6.14",
+    "npm_package_dependencies__patternfly_react_topology": "2.14.58",
+    "npm_package_dependencies__patternfly_react_core": "3.153.13",
+    "npm_package_scripts_test_suite": "ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/protractor integration-tests/protractor.conf.ts",
+    "npm_package_description": "OpenShift Web Console",
+    "NVM_DIR": "/home/min9120/.nvm",
+    "npm_package_devDependencies__types_react_dom": "16.8.4",
+    "npm_package_dependencies_semver": "^6.0.0",
+    "npm_package_dependencies_d3": "^5.9.2",
+    "npm_package_dependencies__patternfly_react_tokens": "2.8.13",
+    "npm_package_scripts_build_dev": "yarn clean && NODE_ENV=development NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=development --watch --progress",
+    "npm_package_devDependencies_ts_loader": "^6.2.2",
+    "npm_package_devDependencies_prettier": "1.19.1",
+    "npm_package_dependencies_react_dnd": "^9.4.0",
+    "npm_package_scripts_dev": "yarn clean && NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack-dev-server",
+    "LOGNAME": "min9120",
+    "npm_package_devDependencies__testing_library_dom": "^8.1.0",
+    "npm_package_dependencies_typesafe_actions": "^4.2.1",
+    "npm_package_dependencies_reselect": "4.x",
+    "npm_package_dependencies_react_jsonschema_form": "1.7.0",
+    "npm_package_dependencies_react_datepicker": "^3.3.0",
+    "npm_package_dependencies_keycloak_js": "11.0.2",
+    "npm_package_scripts_clean": "rm -rf ./public/dist",
+    "NAME": "DESKTOP-VJN1VPI",
+    "_": "/home/min9120/.nvm/versions/node/v12.13.0/bin/yarn",
+    "npm_package_devDependencies_ts_jest": "^27.0.3",
+    "npm_package_devDependencies_node_sass": "^6.0.1",
+    "npm_package_devDependencies_circular_dependency_plugin": "5.x",
+    "npm_package_devDependencies__types_jest": "^26.0.24",
+    "npm_package_scripts_debug_test": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "npm_package_private": "true",
+    "npm_config_yarn_path": "/home/min9120/console/frontend/.yarn/releases/yarn-1.21.0.js",
+    "npm_package_devDependencies__types_lodash_es": "4.x",
+    "npm_package_dependencies_yup": "^0.27.0",
+    "npm_package_dependencies_sanitize_html": "1.x",
+    "npm_package_dependencies_null_loader": "^3.0.0",
+    "npm_package_dependencies__rjsf_core": "^3.2.1",
+    "npm_package_scripts_test_gui": "yarn run test-suite --suite all",
+    "npm_package_scripts_webdriver_update_fedora": "CHROME_VERSION=$(/usr/bin/google-chrome-stable --version) && yarn webdriver-update --versions.chrome=\"${CHROME_VERSION}\"",
+    "npm_package_scripts_lint": "NODE_OPTIONS=--max-old-space-size=4096 yarn eslint .",
+    "npm_config_registry": "https://registry.yarnpkg.com",
+    "TERM": "xterm-256color",
+    "npm_package_dependencies_core_js": "2.x",
+    "npm_package_workspaces_0": "packages/*",
+    "npm_package_devDependencies_jest_cli": "^27.0.6",
+    "npm_package_devDependencies_html_webpack_plugin": "3.x",
+    "npm_package_devDependencies_browser_env": "3.x",
+    "npm_package_workspaces_1": "public",
+    "npm_config_ignore_scripts": "",
+    "npm_package_devDependencies_monaco_editor_core": "0.14.0",
+    "npm_package_devDependencies__types_react_helmet": "5.x",
+    "npm_package_devDependencies__types_classnames": "^2.2.7",
+    "npm_package_workspaces_2": "integration-tests",
+    "PATH": "/tmp/yarn--1640667865463-0.23020679917364495:/home/min9120/console/frontend/node_modules/.bin:/home/min9120/.config/yarn/link/node_modules/.bin:/home/min9120/console/frontend/node_modules/.bin:/home/min9120/.yarn/bin:/home/min9120/.nvm/versions/node/v12.13.0/libexec/lib/node_modules/npm/bin/node-gyp-bin:/home/min9120/.nvm/versions/node/v12.13.0/lib/node_modules/npm/bin/node-gyp-bin:/home/min9120/.nvm/versions/node/v12.13.0/bin/node_modules/npm/bin/node-gyp-bin:/home/min9120/.nvm/versions/node/v12.13.0/bin:/home/min9120/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Python39/Scripts/:/mnt/c/Python39/:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Java/jdk-16.0.2/bin/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/TortoiseGit/bin:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/nodejs:/mnt/c/Users/tmax/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/tmax/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Program Files/Bandizip/:/mnt/c/Users/tmax/AppData/Roaming/npm:/usr/local/go/bin",
+    "NODE": "/home/min9120/.nvm/versions/node/v12.13.0/bin/node",
+    "npm_package_name": "",
+    "npm_package_devDependencies_react_beautiful_dnd_test_utils": "^3.2.1",
+    "npm_package_devDependencies__hookform_devtools": "^2.2.1",
+    "npm_package_dependencies_popper_js": "^1.15.0",
+    "npm_package_dependencies_patternfly_react": "2.39.16",
+    "npm_package_dependencies_file_saver": "1.3.x",
+    "npm_package_repository_type": "git",
+    "npm_package_dependencies_url_search_params_polyfill": "2.x",
+    "npm_package_dependencies_react_redux": "7.1.0",
+    "npm_package_scripts_analyze": "NODE_ENV=production NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=production --profile --json | awk '{if(NR>2)print}' > public/dist/stats.json && ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack-bundle-analyzer --mode static -r public/dist/report.html public/dist/stats.json",
+    "npm_package_devDependencies_protractor_fail_fast": "3.x",
+    "npm_package_devDependencies_glob": "7.x",
+    "npm_package_dependencies_patternfly": "^3.59.5",
+    "npm_package_dependencies_fuzzysearch": "1.0.x",
+    "npm_package_dependencies__patternfly_patternfly": "2.71.5",
+    "npm_package_scripts_dev_once": "yarn clean && NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=development",
+    "npm_config_ignore_path": "1",
+    "LANG": "C.UTF-8",
+    "npm_package_devDependencies_webpack": "4.40.2",
+    "npm_package_devDependencies__types_prop_types": "15.5.6",
+    "npm_package_dependencies_redux": "4.0.1",
+    "npm_package_dependencies_react_dom": "^16.9.0",
+    "npm_package_dependencies_history": "4.x",
+    "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:",
+    "TERM_PROGRAM": "vscode",
+    "VSCODE_GIT_IPC_HANDLE": "/tmp/vscode-git-c4ecd7330a.sock",
+    "npm_lifecycle_script": "yarn clean && NODE_ENV=development NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=development --watch --progress",
+    "npm_package_devDependencies_thread_loader": "1.x",
+    "npm_package_devDependencies_monaco_editor_webpack_plugin": "^1.7.0",
+    "npm_package_devDependencies_moment": "2.22.x",
+    "npm_package_dependencies_abort_controller": "3.0.0",
+    "npm_package_devDependencies_webpack_dev_server": "^3.8.1",
+    "npm_package_dependencies_react_router": "5.0.1",
+    "npm_package_dependencies_react_copy_to_clipboard": "5.x",
+    "npm_package_scripts_test": "jest",
+    "npm_config_version_git_message": "v%s",
+    "SHELL": "/usr/bin/zsh",
+    "npm_lifecycle_event": "build-dev",
+    "npm_package_version": "0.0.0",
+    "npm_package_devDependencies__types_react": "16.8.13",
+    "npm_package_devDependencies__testing_library_react": "^12.0.0",
+    "npm_package_dependencies_pluralize": "^8.0.0",
+    "npm_package_repository_url": "https://github.com/openshift/console",
+    "npm_config_argv": "{\"remain\":[],\"cooked\":[\"run\",\"build-dev\"],\"original\":[\"run\",\"build-dev\"]}",
+    "npm_package_dependencies_lodash_es": "4.x",
+    "npm_package_dependencies_js_yaml": "^3.13.1",
+    "npm_package_dependencies__fortawesome_fontawesome_free": "^5.9.0",
+    "npm_package_scripts_build": "yarn clean && NODE_ENV=production NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=production",
+    "LESSCLOSE": "/usr/bin/lesspipe %s %s",
+    "YARN_IGNORE_PATH": "1",
+    "npm_package_devDependencies_jasmine_console_reporter": "2.x",
+    "npm_package_dependencies_react_measure": "^2.2.6",
+    "npm_package_dependencies__patternfly_react_table": "2.28.39",
+    "npm_package_dependencies__patternfly_react_catalog_view_extension": "1.4.58",
+    "npm_package_devDependencies_sass_loader": "6.x",
+    "npm_package_dependencies_vscode_languageserver_types": "^3.10.0",
+    "npm_package_dependencies_react_monaco_editor": "0.20.x",
+    "npm_package_dependencies_murmurhash_js": "1.0.x",
+    "npm_config_version_git_tag": "true",
+    "npm_config_version_git_sign": "",
+    "P9K_SSH": "0",
+    "npm_package_devDependencies_react_beautiful_dnd": "13.0.0",
+    "npm_package_devDependencies_fork_ts_checker_webpack_plugin": "0.x",
+    "npm_package_devDependencies__types_immutable": "3.x",
+    "npm_package_dependencies_react_helmet": "^5.2.1",
+    "npm_package_dependencies_classnames": "2.x",
+    "npm_package_license": "Apache-2.0",
+    "npm_config_strict_ssl": "true",
+    "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "",
+    "npm_package_devDependencies_style_loader": "^0.23.1",
+    "npm_package_devDependencies_find_up": "4.x",
+    "npm_package_dependencies_xterm": "^3.12.2",
+    "npm_package_dependencies_react_tagsinput": "3.19.x",
+    "npm_package_dependencies_react_select": "^4.3.0",
+    "npm_package_dependencies_js_base64": "^2.5.1",
+    "npm_package_scripts_coverage": "jest --coverage .",
+    "PWD": "/home/min9120/console/frontend",
+    "npm_execpath": "/home/min9120/console/frontend/.yarn/releases/yarn-1.21.0.js",
+    "npm_package_devDependencies_enzyme": "3.10.x",
+    "npm_package_dependencies_react_linkify": "^0.2.2",
+    "NVM_CD_FLAGS": "-q",
+    "_P9K_TTY": "/dev/pts/0",
+    "npm_package_resolutions_jquery": "3.5.1",
+    "npm_package_devDependencies_webpack_virtual_modules": "^0.1.10",
+    "npm_package_devDependencies_css_loader": "0.28.x",
+    "npm_package_dependencies_react_modal": "^3.4.1",
+    "npm_package_devDependencies_jasmine_reporters": "2.x",
+    "npm_package_devDependencies_geckodriver": "1.x",
+    "npm_package_devDependencies_chromedriver": "77.x",
+    "npm_package_dependencies_prop_types": "15.7.x",
+    "npm_package_scripts_test_gui_openshift": "yarn run test-suite --suite crud --params.openshift true",
+    "npm_config_save_prefix": "^",
+    "npm_config_ignore_optional": "",
+    "npm_package_devDependencies_mini_css_extract_plugin": "0.4.x",
+    "npm_package_dependencies_yaml_language_server": "0.5.4",
+    "HOSTTYPE": "x86_64",
+    "npm_package_devDependencies__types_glob": "7.x",
+    "npm_package_dependencies__patternfly_react_charts": "5.3.19",
+    "NODE_ENV": "development",
+    "INIT_CWD": "/home/min9120/console/frontend",
+    "WSLENV": "VSCODE_WSL_EXT_LOCATION/up",
+    "npm_package_devDependencies_glslify_loader": "1.x",
+    "npm_package_devDependencies_bootstrap_sass": "^3.3.7",
+    "npm_package_devDependencies__types_webpack": "4.x",
+    "npm_package_devDependencies__types_react_virtualized": "9.x",
+    "npm_package_dependencies_react_paginate": "^6.5.0",
+    "npm_package_dependencies_react": "^16.9.0",
+    "npm_package_scripts_webdriver_update": "webdriver-manager update",
+    "npm_package_scripts_test_hypercloud": "jest './__hypercloud_tests__/.*\\.spec\\.(ts|tsx|js|jsx)$'",
+    "npm_package_scripts_eslint": "eslint --ext .js,.jsx,.ts,.tsx,.json --color",
+    "TSCONFIG": "/home/min9120/console/frontend/tsconfig.json",
+    "TSLINT": "",
+    "WATCH": "",
+    "WORK_DIVISION": "1",
+    "MEMORY_LIMIT": "2048",
+    "CHECK_SYNTACTIC_ERRORS": "true",
+    "VUE": "false"
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": 0,
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": 8388608
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": 7823,
+      "hard": 7823
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "linux-vdso.so.1",
+    "/lib/x86_64-linux-gnu/libdl.so.2",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+    "/lib/x86_64-linux-gnu/libm.so.6",
+    "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+    "/lib/x86_64-linux-gnu/libpthread.so.0",
+    "/lib/x86_64-linux-gnu/libc.so.6",
+    "/lib64/ld-linux-x86-64.so.2"
+  ]
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { Dropdown } from '@console/internal/components/utils';
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 
 export const ProviderDropdownFields: React.FC<ProviderDropdownFieldsProps> = props => {
   const { id, formData, items, onChange } = props;
@@ -49,5 +49,5 @@ type ProviderDropdownFieldsProps = {
   items: any;
   id: string;
   onChange: any;
-  schema?: JSONSchema6;
+  schema?: JSONSchema7;
 };

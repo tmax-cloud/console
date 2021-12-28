@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { Dropdown } from '@console/internal/components/utils';
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 // import { useTranslation } from 'react-i18next';
 
 export const OneOfFields: React.FC<OneOfFieldsProps> = props => {
@@ -39,5 +39,5 @@ export type OneOfFieldsProps = {
   onChange?: ({}) => void;
   onBlur?: ({}) => void;
   uid?: string;
-  schema?: JSONSchema6;
+  schema?: JSONSchema7;
 };

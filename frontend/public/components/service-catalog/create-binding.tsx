@@ -3,7 +3,7 @@ import * as _ from 'lodash-es';
 import { Helmet } from 'react-helmet';
 import { ActionGroup, Button } from '@patternfly/react-core';
 import { IChangeEvent, ISubmitEvent } from 'react-jsonschema-form';
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 
 import { LoadingBox } from '../utils/status-box';
 import { ServiceInstanceModel, ServiceBindingModel, ClusterServicePlanModel } from '../../models';
@@ -25,7 +25,7 @@ const BindingParametersForm: React.SFC<BindingParametersFormProps> = ({ plan, ..
     return <LoadingBox />;
   }
 
-  const schema: JSONSchema6 = getBindingCreateSchema(plan.data);
+  const schema: JSONSchema7 = getBindingCreateSchema(plan.data);
   const parametersForm = getBindingParametersForm(plan.data);
   const uiSchema = getUISchema(parametersForm);
   return <ServiceCatalogParametersForm schema={schema} uiSchema={uiSchema} {...rest} />;
