@@ -1,8 +1,9 @@
-{{/*{{-if .Values.rbac.enable -}}*/}}
-kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
   name: {{ include "console.fullname" . }}
+  labels:
+  {{- include "console.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -24,4 +25,3 @@ rules:
       - get
       - list
       - watch
-{{/*{{- end -}}*/}}

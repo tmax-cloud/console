@@ -30,7 +30,7 @@ pipeline {
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
   
-    string(name: 'KEYCLOAK', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
+    string(name: 'HYPERAUTH', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
     string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
     string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')    
@@ -149,11 +149,11 @@ pipeline {
             --simplify-merges ${PRE_VER}..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
           """
-          sh """
-            rm -rf argo-ci_temp 
-            cp -r argo-ci argo-ci_temp 
-            sed -i "s/@@VER@@/${VER}/g" ./argo-ci_temp/team-k8s/kustomization.yaml
-            sed -i "s/@@VER@@/${VER}/g" ./argo-ci_temp/ck-k8s/kustomization.yaml
+          sh """ 
+            cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml 
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_ck.yaml                       
+            cp -r ./console-helm-chart/values_team_temp.yaml ./console-helm-chart/values_team.yaml 
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_team.yaml                         
           """
         // }
       }

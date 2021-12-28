@@ -7,7 +7,7 @@ myIP=$(hostname -I | awk '{print $1}')
 # k8sIP='172.22.6.2'
 # k8sIP='172.23.4.201'
 # k8sIP='192.168.6.171'
-k8sIP='192.168.9.194'
+k8sIP='192.168.9.189'
 # BRIDGE_K8S_AUTH_BEARER_TOKEN=$(ssh root@$k8sIP "secretname=\$(kubectl get serviceaccount console-system-admin --namespace=console-system -o jsonpath='{.secrets[0].name}'); kubectl get secret "\$secretname" --namespace=console-system -o template --template='{{.data.token}}' | base64 --decode; ")
 #BRIDGE_K8S_AUTH_BEARER_TOKEN=$(ssh root@$k8sIP "secretname=\$(kubectl get serviceaccount default --namespace=kube-system -o jsonpath='{.secrets[0].name}'); kubectl get secret "\$secretname" --namespace=kube-system -o template --template='{{.data.token}}' | base64 --decode; ")
 # Should verify port number which corresponding to Service in yourself!!
