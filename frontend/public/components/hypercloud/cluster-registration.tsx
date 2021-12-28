@@ -30,6 +30,10 @@ const tableProps: TableProps = {
       sortFunc: 'ClusterRegistrationStatusReducer',
     },
     {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_69',
+      sortFunc: 'spec.clusterName',
+    },
+    {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'metadata.creationTimestamp',
     },
@@ -58,6 +62,9 @@ const tableProps: TableProps = {
         ) : (
           <Status status={ClusterRegistrationStatusReducer(obj)} />
         ),
+    },
+    {
+      children: obj.spec.clusterName,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
