@@ -150,17 +150,17 @@ export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) =>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={cl} path="status.ready">
         <Status status={cl.status.ready ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_1') : t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_2')} />
       </DetailsItem>
-      <DetailsItem label="Version" obj={cl} path="spec.version" />
-      <DetailsItem label="Region" obj={cl} path="spec.region" />
-      <DetailsItem label="Master Node" obj={cl} path="spec.masterNum">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={cl} path="spec.version" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_56')} obj={cl} path="spec.region" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={cl} path="spec.masterNum">
         {`${cl.status?.masterRun ?? 0} / ${cl.spec.masterNum ?? 0}`}
       </DetailsItem>
-      <DetailsItem label="Master Node Type" obj={cl} path="spec.masterType" />
-      <DetailsItem label="Worker Node" obj={cl} path="spec.workerNum">
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_59')} obj={cl} path="spec.masterType" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={cl} path="spec.workerNum">
         {`${cl.status?.workerRun ?? 0} / ${cl.spec.workerNum ?? 0}`}
       </DetailsItem>
-      <DetailsItem label="Worker Node Type" obj={cl} path="spec.workerType" />
-      <DetailsItem label="SSH Key" obj={cl} path="spec.sshKey" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_60')} obj={cl} path="spec.workerType" />
+      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_61')} obj={cl} path="spec.sshKey" />
     </dl>
   );
 };
