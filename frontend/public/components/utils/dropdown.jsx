@@ -371,7 +371,9 @@ export class Dropdown extends DropdownMixin {
     const rows = [];
     const bookMarkRows = [];
     const noBookmark = this.props.noBookmark || false;
+
     const addItem = (key, content) => {
+   
       const selected = key === selectedKey && !this.props.noSelection;
       const hover = key === keyboardHoverKey;
       const klass = classNames({ active: selected });
@@ -394,7 +396,12 @@ export class Dropdown extends DropdownMixin {
           </li>,
         );
       }
-      rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
+      if(content=="모든 네임스페이스"){
+        rows.unshift(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />)
+      }else{
+
+        rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
+      }
     };
 
     _.each(items, (v, k) => addItem(k, v));

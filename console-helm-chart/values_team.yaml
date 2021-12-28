@@ -2,50 +2,48 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+nameOverride: "console"
+fullnameOverride: "console"
+
 replicaCount: 1
+
+console:
+  auth:
+    hyperauth: keycloak.172.23.4.206.nip.io
+    realm: tmax
+    clientid: hypercloud5
+  mcMode: false
 
 image:
   repository: docker.io/tmaxcloudck/hypercloud-console
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-console:
-  auth:
-    realm: "tmax"
-    hyperauth: "hyperauth.org"
-    clientid: "hypercloud5"
-  config:
-    mcmode: true
+  tag: "5.0.43.0"
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-rbac:
-  enable: true
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+ingressroute:
+  enabled: true
+  domain:
+    enabled: false
+    name: tmaxcloud.org
+  ip:
+    enabled: true
 
 service:
   type: ClusterIP
@@ -54,7 +52,8 @@ service:
 ingress:
   enabled: false
   className: ""
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
@@ -67,14 +66,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# Create an Ingressroutes for the console
-ingressRoute:
-  enable: true
-  annotations: {}
-  labels: {}
-  domainName: "172.23.4.206.nip.io"
-
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

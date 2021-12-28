@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "console.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "console.labels" . | nindent 4 }}
 spec:
@@ -35,26 +36,28 @@ spec:
             - --public-dir=/opt/bridge/static
             - --listen=http://0.0.0.0:31303
             - --base-address=http://0.0.0.0:31303
-            - --keycloak-realm={{ .Values.console.auth.realm }}
-            - --keycloak-auth-url=https://{{ .Values.console.auth.hyperauth }}/auth
-            - --keycloak-client-id={{ .Values.console.auth.clientid }}
-            - --mc-mode={{ .Values.console.config.mcmode }}
+            {{- with .Values.console }}
+            - --keycloak-realm={{ .auth.realm }}
+            - --keycloak-auth-url=https://{{ .auth.hyperauth }}/auth
+            - --keycloak-client-id={{ .auth.clientid }}
+            - --mc-mode={{ .mcMode }}
+            {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: console
+            - name: http
               containerPort: 31303
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: console
+              port: http
           readinessProbe:
             httpGet:
               path: /
-              port: console
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
