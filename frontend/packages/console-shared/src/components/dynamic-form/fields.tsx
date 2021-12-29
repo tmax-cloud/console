@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { JSONSchema6 } from 'json-schema';
-import { getUiOptions } from 'react-jsonschema-form/lib/utils';
-import { FieldProps, UiSchema } from 'react-jsonschema-form';
-import SchemaField, { SchemaFieldProps } from 'react-jsonschema-form/lib/components/fields/SchemaField';
+import { JSONSchema7 } from 'json-schema';
+import { getUiOptions } from '@rjsf/core/lib/utils';
+import { FieldProps, UiSchema } from '@rjsf/core';
+//import { FieldProps, UiSchema } from 'react-jsonschema-form';
+//import SchemaField, { SchemaFieldProps } from 're';
 import { LinkifyExternal, SelectorInput, Dropdown } from '@console/internal/components/utils';
 import { ClusterClaimModel } from '@console/internal/models';
 import { AccordionContent, AccordionItem, AccordionToggle, Switch } from '@patternfly/react-core';
@@ -17,6 +18,8 @@ import { ConfigureUpdateStrategy, UPDATE_STRATEGY_DESCRIPTION } from '@console/i
 import { NodeAffinity, PodAffinity } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/affinity';
 import { getSchemaErrors, useSchemaDescription, useSchemaLabel } from './utils';
 import { useTranslation } from 'react-i18next';
+import SchemaField, { SchemaFieldProps } from '@rjsf/core/lib/components/fields/SchemaField';
+
 const Description = ({ id, description }) =>
   description ? (
     <span id={id} className="help-block">
@@ -228,7 +231,7 @@ type FormFieldProps = {
   id: string;
   defaultLabel?: string;
   required: boolean;
-  schema: JSONSchema6;
+  schema: JSONSchema7;
   uiSchema: UiSchema;
 };
 

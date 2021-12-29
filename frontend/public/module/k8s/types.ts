@@ -1,4 +1,4 @@
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 import { BadgeType, NodeAddress } from '@console/shared';
 import { EventInvolvedObject } from './event';
 import { HyperCloudExtension } from '@console/internal/module/hypercloud/k8s/types';
@@ -473,7 +473,7 @@ export type CustomResourceDefinitionKind = {
     scope?: 'Namespaced';
     validation?: {
       // NOTE: Actually a subset of JSONSchema, but using this type for convenience
-      openAPIV3Schema: JSONSchema6;
+      openAPIV3Schema: JSONSchema7;
     };
     versions?: CRDVersion[];
   };
