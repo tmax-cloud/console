@@ -5,11 +5,11 @@ import { SpecCapability, Descriptor } from '../descriptors/types';
 import { modelFor } from '@console/internal/module/k8s';
 import { capabilityFieldMap, capabilityWidgetMap } from '../descriptors/spec/spec-descriptor-input';
 import { HIDDEN_UI_SCHEMA, REGEXP_K8S_RESOURCE_SUFFIX, REGEXP_SELECT_OPTION, REGEXP_FIELD_DEPENDENCY_PATH_VALUE, SORT_WEIGHT_SCALE_1, SORT_WEIGHT_SCALE_2, SORT_WEIGHT_SCALE_3 } from './const';
-import { UiSchema } from 'react-jsonschema-form';
 import { SchemaType } from '@console/shared/src/components/dynamic-form';
 import { getSchemaType } from '@rjsf/core/lib/utils';
 import { getSchemaErrors } from '@console/shared/src/components/dynamic-form/utils';
 import { isArray } from 'lodash';
+import { UiSchema } from '@rjsf/core';
 
 // Transform a path string from a descriptor to a JSON schema path array
 export const descriptorPathToUISchemaPath = (path: string): string[] =>

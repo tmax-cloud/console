@@ -2,21 +2,15 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Helmet } from 'react-helmet';
 import { ActionGroup, Button } from '@patternfly/react-core';
-import { IChangeEvent, ISubmitEvent } from 'react-jsonschema-form';
 import { JSONSchema7 } from 'json-schema';
 
 import { LoadingBox } from '../utils/status-box';
 import { ServiceInstanceModel, ServiceBindingModel, ClusterServicePlanModel } from '../../models';
 import { k8sCreate, K8sResourceKind, referenceForModel } from '../../module/k8s';
 import { ButtonBar } from '../utils/button-bar';
-import {
-  createParametersSecret,
-  getBindingCreateSchema,
-  getBindingParametersForm,
-  getUISchema,
-  ServiceCatalogParametersForm,
-} from './schema-form';
+import { createParametersSecret, getBindingCreateSchema, getBindingParametersForm, getUISchema, ServiceCatalogParametersForm } from './schema-form';
 import { Firehose, history, PageHeading, resourcePathFromModel } from '../utils';
+import { IChangeEvent, ISubmitEvent } from '@rjsf/core';
 
 const PARAMETERS_SECRET_KEY = 'parameters';
 
@@ -28,18 +22,16 @@ const BindingParametersForm: React.SFC<BindingParametersFormProps> = ({ plan, ..
   const schema: JSONSchema7 = getBindingCreateSchema(plan.data);
   const parametersForm = getBindingParametersForm(plan.data);
   const uiSchema = getUISchema(parametersForm);
-  return <ServiceCatalogParametersForm schema={schema} uiSchema={uiSchema} {...rest} />;
+  return <ServiceCatalogParametersForm schema={schema as any} uiSchema={uiSchema} {...rest} />;
 };
 
-const BindingParameters: React.SFC<BindingParametersProps> = (props) => {
+const BindingParameters: React.SFC<BindingParametersProps> = props => {
   const planName = _.get(props.instance, 'spec.clusterServicePlanRef.name');
   if (!planName) {
     return null;
   }
 
-  const resources = [
-    { kind: referenceForModel(ClusterServicePlanModel), name: planName, prop: 'plan' },
-  ];
+  const resources = [{ kind: referenceForModel(ClusterServicePlanModel), name: planName, prop: 'plan' }];
   return (
     <Firehose resources={resources}>
       <BindingParametersForm {...(props as any)} />
@@ -58,14 +50,12 @@ class CreateBindingForm extends React.Component<CreateBindingProps, CreateBindin
     };
   }
 
-  onNameChange: React.ReactEventHandler<HTMLInputElement> = (event) => {
+  onNameChange: React.ReactEventHandler<HTMLInputElement> = event => {
     this.setState({ name: event.currentTarget.value });
   };
 
   createBinding = (secretName: string): Promise<K8sResourceKind> => {
-    const parametersFrom = secretName
-      ? [{ secretKeyRef: { name: secretName, key: PARAMETERS_SECRET_KEY } }]
-      : [];
+    const parametersFrom = secretName ? [{ secretKeyRef: { name: secretName, key: PARAMETERS_SECRET_KEY } }] : [];
     const serviceBinding = {
       apiVersion: 'servicecatalog.k8s.io/v1beta1',
       kind: 'ServiceBinding',
@@ -95,20 +85,14 @@ class CreateBindingForm extends React.Component<CreateBindingProps, CreateBindin
     this.setState({ inProgress: true });
     const secretName = _.isEmpty(formData) ? null : `${bindingName}-bind-parameters`;
     this.createBinding(secretName)
-      .then((binding) =>
-        secretName
-          ? createParametersSecret(secretName, PARAMETERS_SECRET_KEY, formData, binding)
-          : null,
-      )
+      .then(binding => (secretName ? createParametersSecret(secretName, PARAMETERS_SECRET_KEY, formData, binding) : null))
       .then(
         () => {
           this.setState({ inProgress: false });
           const instance = this.props.obj.data;
-          history.push(
-            resourcePathFromModel(ServiceBindingModel, bindingName, instance.metadata.namespace),
-          );
+          history.push(resourcePathFromModel(ServiceBindingModel, bindingName, instance.metadata.namespace));
         },
-        (err) => this.setState({ error: err.message, inProgress: false }),
+        err => this.setState({ error: err.message, inProgress: false }),
       );
   };
 
@@ -133,47 +117,27 @@ class CreateBindingForm extends React.Component<CreateBindingProps, CreateBindin
           breadcrumbsFor={() => [
             {
               name: serviceInstance.metadata.name,
-              path: resourcePathFromModel(
-                ServiceInstanceModel,
-                serviceInstance.metadata.name,
-                serviceInstance.metadata.namespace,
-              ),
+              path: resourcePathFromModel(ServiceInstanceModel, serviceInstance.metadata.name, serviceInstance.metadata.namespace),
             },
             { name: `${title}`, path: `${match.url}` },
           ]}
         />
         <div className="co-m-pane__body">
-          <p className="co-m-pane__explanation">
-            Service bindings create a secret containing the necessary information for an application
-            to use a service.
-          </p>
+          <p className="co-m-pane__explanation">Service bindings create a secret containing the necessary information for an application to use a service.</p>
           <div className="row">
             <div className="col-md-5">
               <p>
-                Create a binding for <strong>{serviceInstance.metadata.name}</strong> in{' '}
-                <strong>{serviceInstance.metadata.namespace}</strong>.
+                Create a binding for <strong>{serviceInstance.metadata.name}</strong> in <strong>{serviceInstance.metadata.namespace}</strong>.
               </p>
               <form className="co-create-service-binding co-m-pane__form">
                 <div className="form-group co-create-service-binding__name">
                   <label className="control-label co-required" htmlFor="name">
                     Service Binding Name
                   </label>
-                  <input
-                    className="pf-c-form-control"
-                    type="text"
-                    onChange={this.onNameChange}
-                    value={name}
-                    id="name"
-                    required
-                  />
+                  <input className="pf-c-form-control" type="text" onChange={this.onNameChange} value={name} id="name" required />
                 </div>
               </form>
-              <BindingParameters
-                instance={serviceInstance}
-                onSubmit={this.save}
-                formData={formData}
-                onChange={this.onFormChange}
-              >
+              <BindingParameters instance={serviceInstance} onSubmit={this.save} formData={formData} onChange={this.onFormChange}>
                 <ButtonBar errorMessage={error} inProgress={inProgress}>
                   <ActionGroup className="pf-c-form">
                     <Button type="submit" variant="primary">
@@ -193,7 +157,7 @@ class CreateBindingForm extends React.Component<CreateBindingProps, CreateBindin
   }
 }
 
-export const CreateBindingPage: React.SFC<CreateBindingPageProps> = (props) => {
+export const CreateBindingPage: React.SFC<CreateBindingPageProps> = props => {
   const resources = [
     {
       kind: referenceForModel(ServiceInstanceModel),

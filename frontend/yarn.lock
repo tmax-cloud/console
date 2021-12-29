@@ -2899,11 +2899,6 @@
   resolved "https://registry.yarnpkg.com/@types/js-combinatorics/-/js-combinatorics-0.5.31.tgz#a61a3f625009e2e693492c158ac8afb243efecad"
   integrity sha512-0JGeWYJdHIpX2gttyxqnzpKwK3KmyFZysWI8+fnXdiOo/kEFxDMdo/pwhrtBrHvYgRAsDNJCSQzgA+m8vbHvFw==
 
-"@types/json-schema@*":
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.4.tgz#38fd73ddfd9b55abb1e1b2ed578cb55bd7b7d339"
-  integrity sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
-
 "@types/json-schema@^7.0.3":
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
@@ -2996,14 +2991,6 @@
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/@types/react-helmet/-/react-helmet-5.0.5.tgz#30a12b0431732a20882f0fa9b75bf56ff91700d3"
   dependencies:
-    "@types/react" "*"
-
-"@types/react-jsonschema-form@^1.0.8":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@types/react-jsonschema-form/-/react-jsonschema-form-1.7.1.tgz#3068a53a6b77d75ba223fd0f6b95fa07297d42fe"
-  integrity sha512-mUU3efUOfEupoDSlCgJTOHEXJ90ZClQLThmoobkV6e8wnkSDP9EiUYza5br/QaJF8EAQFS/l/STfb/WDiUVr1w==
-  dependencies:
-    "@types/json-schema" "*"
     "@types/react" "*"
 
 "@types/react-redux@6.0.2":

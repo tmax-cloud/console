@@ -2,10 +2,9 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import * as classNames from 'classnames';
 import { JSONSchema7 } from 'json-schema';
-import Form, { FieldTemplateProps, FormProps, UiSchema } from 'react-jsonschema-form';
-
 import { SecretModel } from '../../models';
 import { k8sCreate, K8sResourceKind } from '../../module/k8s';
+import Form, { FieldTemplateProps, FormProps, UiSchema } from '@rjsf/core';
 
 const getSchema = (plan: K8sResourceKind, path: string): JSONSchema7 => {
   const schema = _.get(plan, path);
