@@ -9,7 +9,7 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: hypercloud.org
+    hyperauth: hyperauth.org
     realm: tmax
     clientid: hypercloud5
   mcMode: false
