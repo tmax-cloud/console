@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>lnb/export copy 2</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-4:-Component" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0_1_01_Common/LNB/GNB_03" transform="translate(-1865.000000, -745.000000)">
+            <g id="@Guide_03" transform="translate(1297.000000, 0.000000)">
+                <g id="Group-4" transform="translate(324.000000, 604.000000)">
+                    <g id="Group-3-Copy" transform="translate(14.000000, 128.000000)">
+                        <g id="lnb/export" transform="translate(228.000000, 11.000000)" filter="url(#filter-1)">
+                            <g>
+                                <polygon id="Path" points="0 0 16 0 16 16 0 16"></polygon>
+                                <path d="M12.6666667,12.6666667 L3.33333333,12.6666667 L3.33333333,3.33333333 L8,3.33333333 L8,2 L3.33333333,2 C2.59333333,2 2,2.6 2,3.33333333 L2,12.6666667 C2,13.4 2.59333333,14 3.33333333,14 L12.6666667,14 C13.4,14 14,13.4 14,12.6666667 L14,8 L12.6666667,8 L12.6666667,12.6666667 Z M9.33333333,2 L9.33333333,3.33333333 L11.7266667,3.33333333 L5.17333333,9.88666667 L6.11333333,10.8266667 L12.6666667,4.27333333 L12.6666667,6.66666667 L14,6.66666667 L14,2 L9.33333333,2 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
