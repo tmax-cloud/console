@@ -21,7 +21,7 @@ image:
   tag: "5.0.44.0"
 
 imagePullSecrets:
-  - name: regcred
+- name: regcred
 
 podAnnotations: {}
 
