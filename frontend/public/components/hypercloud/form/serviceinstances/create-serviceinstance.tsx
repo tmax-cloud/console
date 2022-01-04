@@ -99,10 +99,9 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue, errorMsg, 
   const { t } = useTranslation();
   const [parameters, setParameters] = React.useState([]);
 
-  // TODO : 번역 string 나오면 적용하기
   const validationError = {
-    required: '필수 값을 입력해주세요.',
-    pattern: '형식이 맞지 않습니다.',
+    required: 'COMMON:MSG_COMMON_ERROR_MESSAGE_53',
+    pattern: 'COMMON:MSG_COMMON_ERROR_MESSAGE_54',
   };
 
   React.useEffect(() => {
