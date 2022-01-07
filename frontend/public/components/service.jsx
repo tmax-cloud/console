@@ -231,24 +231,17 @@ const Details = ({ obj: s }) => {
     </div>
   );
 };
-//remove trace tab
-/*
 const TraceTab = props => {
   return <TracePage namespace={props.obj.metadata.namespace} name={props.obj.metadata.name} />
 };
-*/
 
 const { details, pods, editResource } = navFactory;
-const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods(),]} />;
-//remove trace tab
- /*
 const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods(),
 {
   href: 'trace',
   name: 'Trace',
   component: TraceTab,
 },]} />;
-*/
 
 const ServicesList = props => {
   const { t } = useTranslation();
