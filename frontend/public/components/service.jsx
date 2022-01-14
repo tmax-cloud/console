@@ -7,7 +7,7 @@ import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { DetailsItem, Kebab, LabelList, ResourceIcon, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Selector, navFactory } from './utils';
 import { ServiceModel } from '../models';
 import { useTranslation } from 'react-i18next';
-//import { TracePage } from './trace' //remove trace tab
+import { TracePage } from './trace'
 
 export const menuActions = [Kebab.factory.ModifyPodSelector, ...Kebab.getExtensionsActionsForKind(ServiceModel), ...Kebab.factory.common];
 
