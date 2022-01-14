@@ -76,7 +76,6 @@ export const CatalogTileDetails = withTranslation()(
                   {tileDescription ? <p>{tileDescription}</p> : <p>No Description</p>}
                   {markdownLoading && <LoadingBox message="Loading Markdown..." />}
                   {markdown && <SyncMarkdownView content={markdown} />}
-                  {longDescription && <p>{longDescription}</p>}
                   {sampleRepo && <p>Sample repository: {sampleRepoLink}</p>}
                   {documentationUrl && (
                     <>
@@ -112,6 +111,14 @@ export const CatalogTileDetails = withTranslation()(
                           An optional <span className="co-catalog-item-details__kind-label">route</span> to expose your workload outside the cluster.
                         </li>
                       </ul>
+                    </>
+                  )}
+                  {longDescription && (
+                    <>
+                      <hr />
+                      <p>
+                        <ExternalLink href={longDescription} text={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_SIDEPANEL_5')} />
+                      </p>
                     </>
                   )}
                 </div>

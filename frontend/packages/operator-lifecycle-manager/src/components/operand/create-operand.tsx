@@ -1,24 +1,10 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { JSONSchema6 } from 'json-schema';
-import {
-  K8sKind,
-  K8sResourceKind,
-  K8sResourceKindReference,
-  kindForReference,
-  referenceForModel,
-  nameForModel,
-  CustomResourceDefinitionKind,
-  definitionFor,
-} from '@console/internal/module/k8s';
+import { JSONSchema7 } from 'json-schema';
+import { K8sKind, K8sResourceKind, K8sResourceKindReference, kindForReference, referenceForModel, nameForModel, CustomResourceDefinitionKind, definitionFor } from '@console/internal/module/k8s';
 import { CustomResourceDefinitionModel } from '@console/internal/models';
 import { Firehose } from '@console/internal/components/utils/firehose';
-import {
-  StatusBox,
-  FirehoseResult,
-  BreadCrumbs,
-  resourcePathFromModel,
-} from '@console/internal/components/utils';
+import { StatusBox, FirehoseResult, BreadCrumbs, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
 import { getActivePerspective } from '@console/internal/reducers/ui';
@@ -37,32 +23,13 @@ import { hasNoFields } from './utils';
 // eslint-disable-next-line @typescript-eslint/camelcase
 import { DEPRECATED_CreateOperandForm } from './DEPRECATED_operand-form';
 
-export const CreateOperand: React.FC<CreateOperandProps> = ({
-  clusterServiceVersion,
-  customResourceDefinition,
-  initialEditorType,
-  loaded,
-  loadError,
-  match,
-  model,
-  activePerspective,
-}) => {
+export const CreateOperand: React.FC<CreateOperandProps> = ({ clusterServiceVersion, customResourceDefinition, initialEditorType, loaded, loadError, match, model, activePerspective }) => {
   const { data: csv } = clusterServiceVersion;
   const { data: crd } = customResourceDefinition;
   const [helpText, setHelpText] = React.useState(FORM_HELP_TEXT);
-  const next =
-    activePerspective === 'dev'
-      ? '/topology'
-      : `${resourcePathFromModel(
-          ClusterServiceVersionModel,
-          match.params.appName,
-          match.params.ns,
-        )}/${match.params.plural}`;
+  const next = activePerspective === 'dev' ? '/topology' : `${resourcePathFromModel(ClusterServiceVersionModel, match.params.appName, match.params.ns)}/${match.params.plural}`;
 
-  const providedAPI = React.useMemo<ProvidedAPI>(() => providedAPIForModel(csv, model), [
-    csv,
-    model,
-  ]);
+  const providedAPI = React.useMemo<ProvidedAPI>(() => providedAPIForModel(csv, model), [csv, model]);
 
   // TODO This logic should be removed in 4.6 and we should only be using
   // the OperandForm component. We are providing a temporary fallback
@@ -71,25 +38,19 @@ export const CreateOperand: React.FC<CreateOperandProps> = ({
   // the fallback will no longer be necessary/provided. If no structural schema
   // is provided in 4.6, a form will not be generated.
   const [schema, FormComponent] = React.useMemo(() => {
-    const baseSchema =
-      crd?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema6);
-    const useFallback =
-      getSchemaErrors(baseSchema).length ||
-      hasNoFields((baseSchema?.properties?.spec ?? {}) as JSONSchema6);
+    const baseSchema = crd?.spec?.validation?.openAPIV3Schema ?? (definitionFor(model) as JSONSchema7);
+    const useFallback = getSchemaErrors(baseSchema).length || hasNoFields((baseSchema?.properties?.spec ?? {}) as JSONSchema7);
     return useFallback
       ? // eslint-disable-next-line @typescript-eslint/camelcase
         [baseSchema, DEPRECATED_CreateOperandForm]
-      : [
-          _.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')),
-          OperandForm,
-        ];
+      : [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
   }, [crd, model]);
 
   const sample = React.useMemo<K8sResourceKind>(() => exampleForModel(csv, model), [csv, model]);
 
-  const pruneFunc = React.useCallback((data) => prune(data, sample), [sample]);
+  const pruneFunc = React.useCallback(data => prune(data, sample), [sample]);
 
-  const onChangeEditorType = React.useCallback((newMethod) => {
+  const onChangeEditorType = React.useCallback(newMethod => {
     setHelpText(newMethod === EditorType.Form ? FORM_HELP_TEXT : YAML_HELP_TEXT);
   }, []);
 
@@ -103,11 +64,7 @@ export const CreateOperand: React.FC<CreateOperandProps> = ({
                 breadcrumbs={[
                   {
                     name: csv.spec.displayName,
-                    path: resourcePathFromModel(
-                      ClusterServiceVersionModel,
-                      csv.metadata.name,
-                      csv.metadata.namespace,
-                    ),
+                    path: resourcePathFromModel(ClusterServiceVersionModel, csv.metadata.name, csv.metadata.namespace),
                   },
                   { name: `Create ${model.label}`, path: window.location.pathname },
                 ]}
@@ -164,12 +121,7 @@ export const CreateOperandPage = connect(stateToProps)((props: CreateOperandPage
         ]}
       >
         {/* FIXME(alecmerdler): Hack because `Firehose` injects props without TypeScript knowing about it */}
-        <CreateOperand
-          {...(props as any)}
-          model={props.model}
-          match={props.match}
-          initialEditorType={EditorType.Form}
-        />
+        <CreateOperand {...(props as any)} model={props.model} match={props.match} initialEditorType={EditorType.Form} />
       </Firehose>
     )}
   </>

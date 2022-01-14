@@ -1,16 +1,21 @@
 import * as _ from 'lodash-es';
 import classNames from 'classnames';
 import * as React from 'react';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { FieldLevelHelp } from '../../utils';
 
-const Node = ({ className, children, description, valid, validationErrorDesc }) => (
-  <div className={className}>
-    <div>{children}</div>
-    <div className="row" />
-    {!valid && <p className="error-string">{validationErrorDesc}</p>}
-    <p className={classNames('help-block', { 'help-block-short-margin-top': !valid })}>{description}</p>
-  </div>
-);
+const Node = ({ className, children, description, valid, validationErrorDesc }) => {
+  const { t } = useTranslation();
+  return (
+    <div className={className}>
+      <div>{children}</div>
+      <div className="row" />
+      {!valid && <p className="error-string">{i18next.exists(validationErrorDesc) ? t(validationErrorDesc) : validationErrorDesc}</p>}
+      <p className={classNames('help-block', { 'help-block-short-margin-top': !valid })}>{description}</p>
+    </div>
+  );
+};
 
 const CombineNodes = (id, description, children, valid, validationErrorDesc) => {
   // children node 개수에 따라 가로 분할 class 적용
@@ -29,7 +34,7 @@ export const Section: React.FC<SectionProps> = ({ id, label, description, childr
         </label>
       )}
       {help && (
-        <div style={{display: 'inline-block', marginLeft: 5}}>
+        <div style={{ display: 'inline-block', marginLeft: 5 }}>
           <FieldLevelHelp>
             <h2>{helpTitle}</h2>
             <p>{helpText}</p>
