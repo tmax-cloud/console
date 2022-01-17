@@ -9,11 +9,11 @@ import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, Resou
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { RoleBindingClaimModel } from '../../models';
-import { Popover } from '@patternfly/react-core';
 import { K8sResourceKind } from '../../module/k8s';
 import { Status } from '@console/shared';
 
 import { RoleBindingClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 export const RoleBindingClaimStatus: React.FC<RoleBindingClaimStatusProps> = ({ result }) => <Status status={RoleBindingClaimReducer(result)} />;
 
@@ -69,15 +69,7 @@ const RoleBindingClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: role
         <ResourceLink kind={kind} name={rolebindingclaims.metadata.name} namespace={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.uid} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        {rolebindingclaims.status?.status === 'Error' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{rolebindingclaims.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <RoleBindingClaimStatus result={rolebindingclaims} />
-            </div>
-          </Popover>
-        ) : (
-          <RoleBindingClaimStatus result={rolebindingclaims} />
-        )}
+        <ErrorPopoverStatus error={rolebindingclaims.status?.status === 'Error'} reason={rolebindingclaims.status?.reason} children={<RoleBindingClaimStatus result={rolebindingclaims} />} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <ResourceLink kind="Namespace" name={rolebindingclaims.metadata.namespace} title={rolebindingclaims.metadata.namespace} />
@@ -124,7 +116,7 @@ export const RoleBindingClaimsPage: React.FC<RoleBindingClaimsPageProps> = props
     {
       href: 'rolebindings',
       name: t('COMMON:MSG_LNB_MENU_76'),
-
+      
     },
     {
       href: 'rolebindingclaims',
@@ -214,15 +206,7 @@ export const RoleBindingClaimDetailsList: React.FC<RoleBindingClaimDetailsListPr
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={`${t('COMMON:MSG_COMMON_TABLEHEADER_2')}`} obj={resource} path="status.status">
-        {RoleBindingClaimReducer(resource) === 'Error' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{resource.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <RoleBindingClaimStatus result={resource} />
-            </div>
-          </Popover>
-        ) : (
-          <RoleBindingClaimStatus result={resource} />
-        )}
+        <ErrorPopoverStatus error={RoleBindingClaimReducer(resource) === 'Error'} reason={resource.status?.reason} children={<RoleBindingClaimStatus result={resource} />} />
       </DetailsItem>
       {resource.status?.status === 'Rejected' &&
         <DetailsItem label={`${t('COMMON:MSG_DETAILS_TABDETAILS_20')}`} obj={resource} path="spec.reason">

@@ -9,8 +9,8 @@ import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableData, TableRow } from '../factory';
 import { Kebab, navFactory, SectionHeading, ResourceSummary, ResourceLink, ResourceKebab, Timestamp } from '../utils';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { Popover } from '@patternfly/react-core';
 import { ClusterTemplateClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 const clusterTemplateClaimCommonActions = [Kebab.factory.Edit, Kebab.factory.Delete];
 
@@ -86,15 +86,7 @@ const ClusterTemplateClaimTableRow = ({ obj, index, key, style }) => {
         <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />
       </TableData>
       <TableData className={tableColumnClasses[2]}>
-        {ClusterTemplateClaimReducer(obj) === 'Error' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <Status status={ClusterTemplateClaimReducer(obj)} />
-            </div>
-          </Popover>
-        ) : (
-          <Status status={ClusterTemplateClaimReducer(obj)} />
-        )}
+        <ErrorPopoverStatus error={ClusterTemplateClaimReducer(obj) === 'Error'} status={ClusterTemplateClaimReducer(obj)} reason={obj.status?.reason} />
       </TableData>
       <TableData className={tableColumnClasses[3]}>
         <Timestamp timestamp={obj.metadata.creationTimestamp} />
