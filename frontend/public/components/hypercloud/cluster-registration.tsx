@@ -2,14 +2,13 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { ClusterRegistrationStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { K8sResourceKind } from '../../module/k8s';
-import { Status } from '@console/shared';
-import { Popover } from '@patternfly/react-core';
 import { DetailsPage, ListPage } from '../factory';
 import { Kebab, KebabAction, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, DetailsItem } from '../utils';
 import { ClusterRegistrationModel } from '../../models';
 import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { TableProps } from './utils/default-list-component';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 const { details, editResource } = navFactory;
 export const menuActions: KebabAction[] = [...Kebab.factory.common];
@@ -52,16 +51,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children:
-        ClusterRegistrationStatusReducer(obj) === 'Failed' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <Status status={ClusterRegistrationStatusReducer(obj)} />
-            </div>
-          </Popover>
-        ) : (
-          <Status status={ClusterRegistrationStatusReducer(obj)} />
-        ),
+      children: <ErrorPopoverStatus error={ClusterRegistrationStatusReducer(obj) === 'Failed'} status={ClusterRegistrationStatusReducer(obj)} reason={obj.status?.reason} />,
     },
     {
       children: obj.spec.clusterName,
@@ -108,7 +98,7 @@ const ClusterRegistrationDetails: React.FC<ClusterRegistrationDetailsProps> = ({
           <div className="col-md-6">
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
             <dd>
-              <Status status={ClusterRegistrationStatusReducer(clr)} />
+              <ErrorPopoverStatus error={ClusterRegistrationStatusReducer(clr) === 'Failed'} status={ClusterRegistrationStatusReducer(clr)} reason={clr.status?.reason} />
             </dd>
             {ClusterRegistrationStatusReducer(clr) === 'Failed' && (
               <>
