@@ -195,15 +195,15 @@ export const NamespacesPage = props => {
   const pages = isSingleClusterPerspective()
     ? null
     : [
-        {
-          href: 'namespaces',
-          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
-        },
-        {
-          href: 'namespaceclaims',
-          name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
-        },
-      ];
+      {
+        href: 'namespaces',
+        name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
+      },
+      {
+        href: 'namespaceclaims',
+        name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
+      },
+    ];
 
   return (
     <ListPage
@@ -211,8 +211,8 @@ export const NamespacesPage = props => {
       tableProps={namespacesTableProps}
       canCreate={true}
       multiNavPages={pages}
-      // createProps={createProps}
-      // createHandler={() => createNamespaceModal({ blocking: true })}
+    // createProps={createProps}
+    // createHandler={() => createNamespaceModal({ blocking: true })}
     />
   );
 };
@@ -258,19 +258,19 @@ const projectTableHeader = ({ showMetrics, showActions }) => {
     },
     ...(showMetrics
       ? [
-          {
-            title: 'Memory',
-            sortFunc: 'namespaceMemory',
-            transforms: [sortable],
-            props: { className: projectColumnClasses[4] },
-          },
-          {
-            title: 'CPU',
-            sortFunc: 'namespaceCPU',
-            transforms: [sortable],
-            props: { className: projectColumnClasses[5] },
-          },
-        ]
+        {
+          title: 'Memory',
+          sortFunc: 'namespaceMemory',
+          transforms: [sortable],
+          props: { className: projectColumnClasses[4] },
+        },
+        {
+          title: 'CPU',
+          sortFunc: 'namespaceCPU',
+          transforms: [sortable],
+          props: { className: projectColumnClasses[5] },
+        },
+      ]
       : []),
     {
       title: 'Created',
@@ -582,6 +582,19 @@ class NamespaceBarDropdowns_ extends React.Component {
       .sort()
       .forEach(name => (items[name] = name));
 
+    const sortFuntion = (items, index) => {
+      let sortedItems = []
+      items.forEach(([key, value], index) => {
+        if (key === ALL_NAMESPACES_KEY) {
+          sortedItems.unshift([key, value])
+        } else {
+          sortedItems.push([key, value])
+        }
+      })
+
+      return sortedItems;
+    }
+
     let title = activeNamespace;
     if (activeNamespace === ALL_NAMESPACES_KEY) {
       title = allNamespacesTitle;
@@ -593,11 +606,11 @@ class NamespaceBarDropdowns_ extends React.Component {
     }
     const defaultActionItem = canCreateProject
       ? [
-          {
-            actionTitle: `Create ${model.label}`,
-            actionKey: CREATE_NEW_RESOURCE,
-          },
-        ]
+        {
+          actionTitle: `Create ${model.label}`,
+          actionKey: CREATE_NEW_RESOURCE,
+        },
+      ]
       : [];
 
     const onChange = newNamespace => {
@@ -624,6 +637,7 @@ class NamespaceBarDropdowns_ extends React.Component {
           menuClassName="co-namespace-selector__menu"
           buttonClassName="pf-m-plain"
           // canFavorite
+          sortFunction={sortFuntion}
           items={items}
           actionItems={defaultActionItem}
           titlePrefix={t('COMMON:MSG_NNB__2')}

@@ -12,7 +12,7 @@ import { TFunction } from 'i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { ClusterClaimStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { TableProps } from './utils/default-list-component';
-import { Popover } from '@patternfly/react-core';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 export const clusterClaimCommonActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(ClusterClaimModel), ...Kebab.factory.common];
 
@@ -75,7 +75,7 @@ const tableProps: TableProps = {
       },
       {
         className: classNames('pf-m-hidden', 'pf-m-visible-on-xl', 'co-break-word'),
-        children: <Status status={ClusterClaimStatusReducer(clusterClaim)} />,
+        children: <ErrorPopoverStatus error={clusterClaim?.status?.phase === 'Error'} status={ClusterClaimStatusReducer(clusterClaim)} reason={clusterClaim.status?.reason} />,
       },
       {
         children: clusterClaim.spec.version,
@@ -115,15 +115,7 @@ export const ClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = (
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_61')} obj={clcl}>
-        {clcl?.status?.phase === 'Error' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{clcl.status?.reason}</div>} maxWidth="30rem" position="right">
-            <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-              <Status status={ClusterClaimStatusReducer(clcl)} />
-            </div>
-          </Popover>
-        ) : (
-          <Status status={ClusterClaimStatusReducer(clcl)} />
-        )}
+        <ErrorPopoverStatus error={clcl?.status?.phase === 'Error'} status={ClusterClaimStatusReducer(clcl)} reason={clcl.status?.reason} />
       </DetailsItem>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />

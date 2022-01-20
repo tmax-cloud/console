@@ -128,7 +128,7 @@ export const CatalogListPage = withTranslation()(
             // href: `/catalog/create-service-instance?service-class=${serviceClass.metadata.name}&preselected-ns=${namespace}`,
             href: `/k8s/ns/${namespace}/serviceinstances/~new?service-class=${serviceClass.metadata.name}`,
             supportUrl: _.get(serviceClass, 'spec.externalMetadata.supportUrl'),
-            // longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
+            longDescription: _.get(serviceClass, 'spec.externalMetadata.longDescription'),
             documentationUrl: _.get(serviceClass, 'spec.externalMetadata.urlDescription'),
           });
           return acc;
@@ -167,7 +167,7 @@ export const CatalogListPage = withTranslation()(
             // href: `/catalog/create-service-instance?cluster-service-class=${clusterServiceClass.metadata.name}&preselected-ns=${namespace}`,
             href: `/k8s/ns/${namespace}/serviceinstances/~new?cluster-service-class=${clusterServiceClass.metadata.name}`,
             supportUrl: _.get(clusterServiceClass, 'spec.externalMetadata.supportUrl'),
-            // longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
+            longDescription: _.get(clusterServiceClass, 'spec.externalMetadata.longDescription'),
             documentationUrl: _.get(clusterServiceClass, 'spec.externalMetadata.urlDescription'),
           });
           return acc;
