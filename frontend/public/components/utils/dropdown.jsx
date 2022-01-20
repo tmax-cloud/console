@@ -396,12 +396,7 @@ export class Dropdown extends DropdownMixin {
           </li>,
         );
       }
-      if (content == "모든 네임스페이스") {
-        rows.unshift(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />)
-      } else {
-
-        rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
-      }
+      rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
     };
     if (this.props.sortFunction) {
 
