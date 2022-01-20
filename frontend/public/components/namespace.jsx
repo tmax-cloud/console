@@ -585,7 +585,7 @@ class NamespaceBarDropdowns_ extends React.Component {
     const sortFuntion = (items, index) => {
       let sortedItems = []
       items.forEach(([key, value], index) => {
-        if ([key] == ALL_NAMESPACES_KEY) {
+        if (key === ALL_NAMESPACES_KEY) {
           sortedItems.unshift([key, value])
         } else {
           sortedItems.push([key, value])
