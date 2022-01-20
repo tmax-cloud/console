@@ -373,7 +373,7 @@ export class Dropdown extends DropdownMixin {
     const noBookmark = this.props.noBookmark || false;
 
     const addItem = (key, content) => {
-   
+
       const selected = key === selectedKey && !this.props.noSelection;
       const hover = key === keyboardHoverKey;
       const klass = classNames({ active: selected });
@@ -396,15 +396,22 @@ export class Dropdown extends DropdownMixin {
           </li>,
         );
       }
-      if(content=="모든 네임스페이스"){
+      if (content == "모든 네임스페이스") {
         rows.unshift(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />)
-      }else{
+      } else {
 
         rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
       }
     };
-
-    _.each(items, (v, k) => addItem(k, v));
+    if (this.props.sortFunction) {
+      let namespaceArray = Object.entries(items)
+      let sortedNamespace = this.props.sortFunction(namespaceArray)
+      sortedNamespace.forEach(([key, value], index) => addItem([key], [value]))
+      //namespaceArray.map(([key, value], index)=> addItem([key], [value]))
+    }
+    else {
+      _.each(items, (v, k) => addItem(k, v));
+    }
 
     //render PF4 dropdown markup if this is not the autocomplete filter
     if (autocompleteFilter) {
@@ -587,9 +594,9 @@ export const ContainerDropdown = withTranslation()(
       const { t } = this.props;
       return initContainer
         ? {
-            [container.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_5'),
-            [initContainer.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_6'),
-          }
+          [container.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_5'),
+          [initContainer.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_6'),
+        }
         : {};
     }
 
