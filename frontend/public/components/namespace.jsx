@@ -583,12 +583,15 @@ class NamespaceBarDropdowns_ extends React.Component {
       .forEach(name => (items[name] = name));
 
     const sortFuntion = (items, index) => {
-      let sortedItems = items.map(([key, value], index) => {
+      let sortedItems = []
+      items.forEach(([key, value], index) => {
         if ([key] == ALL_NAMESPACES_KEY) {
-          items.splice(index, 1)
-          items.unshift([ALL_NAMESPACES_KEY, allNamespacesTitle])
+          sortedItems.unshift([key, value])
+        } else {
+          sortedItems.push([key, value])
         }
       })
+
       return sortedItems;
     }
 

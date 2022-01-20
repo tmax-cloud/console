@@ -404,10 +404,11 @@ export class Dropdown extends DropdownMixin {
       }
     };
     if (this.props.sortFunction) {
+
       let namespaceArray = Object.entries(items)
       let sortedNamespace = this.props.sortFunction(namespaceArray)
       sortedNamespace.forEach(([key, value], index) => addItem([key], [value]))
-      //namespaceArray.map(([key, value], index)=> addItem([key], [value]))
+
     }
     else {
       _.each(items, (v, k) => addItem(k, v));
