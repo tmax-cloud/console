@@ -41,12 +41,13 @@ const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.
 const CREATE_NEW_RESOURCE = '#CREATE_RESOURCE_ACTION#';
 
 export const deleteModal = (kind, ns) => {
+  const {t} = useTranslation()
   let { label, weight, accessReview } = Kebab.factory.Delete(kind, ns);
   let callback = undefined;
   let tooltip;
-
+ 
   if (ns.metadata.name === 'default') {
-    tooltip = `${kind.label} default cannot be deleted`;
+    tooltip = `${t('COMMON:MSG_MAIN_TOOTIP_1', {0:kind.label})}`;
   } else if (ns.status.phase === 'Terminating') {
     tooltip = `${kind.label} is already terminating`;
   } else {
