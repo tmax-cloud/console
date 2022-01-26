@@ -37,7 +37,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
     .then(res => {
       res.forEach((cluster)=>{
         if (cluster.status.ready) {
-         cluster.metadata.name ==undefined ? setIsClusterExist(false) :  setIsClusterExist(true)
+         cluster.metadata ==={} ? setIsClusterExist(false) :  setIsClusterExist(true)
         }
       })
 
