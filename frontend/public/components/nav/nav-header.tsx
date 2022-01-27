@@ -31,7 +31,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
   const [isClusterExist, setIsClusterExist] = React.useState(false)
 
   React.useEffect(() => {
-    if (isClusterExist===false || isPerspectiveDropdownOpen) {
+    if (isPerspectiveDropdownOpen) {
     coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
     .then(result => result.items)
     .then(res => {
@@ -95,7 +95,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
       
       ));
     },
-    [activePerspective, onPerspectiveSelect],
+    [activePerspective, onPerspectiveSelect,isClusterExist],
   );
 
   const { t } = useTranslation();
