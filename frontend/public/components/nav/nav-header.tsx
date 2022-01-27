@@ -76,7 +76,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
 
       return perspectives.map((nextPerspective: Perspective) => (
         isClusterExist===false && nextPerspective.properties.id=="SINGLE" ? 
-        <Tooltip position ="top" content ={t('COMMON:MSG_LNB_CONSOLE_1')} >
+        <Tooltip key={nextPerspective.properties.id} position ="top" content ={t('COMMON:MSG_LNB_CONSOLE_1')} >
         <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} component="button" isDisabled ={true}>
           <Title size="md">
             <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
