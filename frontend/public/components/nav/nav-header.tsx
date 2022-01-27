@@ -31,7 +31,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
   const [isClusterExist, setIsClusterExist] = React.useState(false)
 
   React.useEffect(() => {
-    if (isClusterExist===false || isPerspectiveDropdownOpen) {
+    if (isPerspectiveDropdownOpen) {
     coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
     .then(result => result.items)
     .then(res => {
@@ -76,7 +76,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
 
       return perspectives.map((nextPerspective: Perspective) => (
         isClusterExist===false && nextPerspective.properties.id=="SINGLE" ? 
-        <Tooltip position ="top" content ={t('COMMON:MSG_LNB_CONSOLE_1')} >
+        <Tooltip key={nextPerspective.properties.id} position ="top" content ={t('COMMON:MSG_LNB_CONSOLE_1')} >
         <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} component="button" isDisabled ={true}>
           <Title size="md">
             <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
@@ -95,7 +95,7 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
       
       ));
     },
-    [activePerspective, onPerspectiveSelect],
+    [activePerspective, onPerspectiveSelect,isClusterExist],
   );
 
   const { t } = useTranslation();
