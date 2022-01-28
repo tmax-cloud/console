@@ -1,11 +1,11 @@
 import * as _ from 'lodash-es';
-import { ClusterMenuPolicyModel } from '@console/internal/models';
-import { modelFor, Selector } from '@console/internal/module/k8s';
-import { CMP_PRIMARY_KEY, CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+import { ClusterMenuPolicyModel, ServiceModel } from '@console/internal/models';
+import { modelFor, Selector, k8sGet } from '@console/internal/module/k8s';
+import { CMP_PRIMARY_KEY, CustomMenusMap, MenuContainerLabels, CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import i18next, { TFunction } from 'i18next';
 import { ResourceLabel, getI18nInfo } from '@console/internal/models/hypercloud/resource-plural';
-import { MenuContainerLabels, CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
+
 import { ingressUrlWithLabelSelector, DoneMessage } from './ingress-utils';
 import { selectorToString } from '@console/internal/module/k8s/selector';
 
@@ -45,15 +45,16 @@ const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
     coFetchJSON(url)
       .then(res => {
         const { items } = res;
+        const portNum = window.SERVER_FLAGS.websecurePortNum;
         if (items?.length > 0) {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
           if (host) {
             const menu = _.get(CustomMenusMap, menuKey);
             if (menuKey === 'Grafana') {
-              !!menu && _.assign(menu, { url: `https://${host}/login/generic_oauth` });
+              !!menu && _.assign(menu, { url: `https://${host}:${portNum}/login/generic_oauth` });
             } else {
-              !!menu && _.assign(menu, { url: `https://${host}` });
+              !!menu && _.assign(menu, { url: `https://${host}:${portNum}` });
             }
           }
         }
@@ -65,7 +66,19 @@ const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
   });
 };
 
+const getWebSecurePortNum = ports => {
+  const webSecureIdx = _.findIndex(ports, ({ name }) => name === 'websecure');
+  return ports[webSecureIdx].port.toString();
+};
+
+const initializePortNum = async () => {
+  await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system').then(({ spec: { type, ports } }) => {
+    window.SERVER_FLAGS.websecurePortNum = type === 'LoadBalancer' ? '443' : getWebSecurePortNum(ports);
+  });
+};
+
 export const initializationForMenu = async () => {
+  await initializePortNum();
   await initializeCmpFlag();
   await initializeMenuUrl(
     {
