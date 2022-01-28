@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    createdTime: "2021-09-10T17:02:45.201607007+09:00"
+    creator: kubernetes-admin
+    meta.helm.sh/release-name: traefik-jwt-decode
+    meta.helm.sh/release-namespace: default
+    updatedTime: "2021-09-10T17:02:45.201607007+09:00"
+    updater: kubernetes-admin
+  creationTimestamp: "2021-09-10T08:02:45Z"
+  labels:
+    app.kubernetes.io/instance: traefik-jwt-decode
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: traefik-jwt-decode
+    helm.sh/chart: traefik-jwt-decode-0.1.0
+  name: traefik-jwt-decode
+  namespace: default
+  resourceVersion: "153680162"
+  selfLink: /api/v1/namespaces/default/services/traefik-jwt-decode
+  uid: ccb6f375-1be1-47eb-b089-3ec38ed35d0f
+spec:
+  clusterIP: 10.96.166.129
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    nodePort: 30956
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/instance: traefik-jwt-decode
+    app.kubernetes.io/name: traefik-jwt-decode
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

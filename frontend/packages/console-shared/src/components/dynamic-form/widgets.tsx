@@ -2,12 +2,14 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { Checkbox, FileUpload } from '@patternfly/react-core';
 import { Base64 } from 'js-base64';
-import { WidgetProps } from 'react-jsonschema-form';
+
+//import { WidgetProps } from 'react-jsonschema-form';
 import { NumberSpinner, ListDropdown, Dropdown } from '@console/internal/components/utils';
 import { K8sKind, GroupVersionKind, ImagePullPolicy } from '@console/internal/module/k8s';
 import { RadioGroup } from '@console/internal/components/radio';
 import { JSON_SCHEMA_NUMBER_TYPES } from './const';
-import { getSchemaType } from 'react-jsonschema-form/lib/utils';
+import { getSchemaType } from '@rjsf/core/lib/utils';
+import { WidgetProps } from '@rjsf/core';
 
 export const TextWidget: React.FC<WidgetProps> = props => {
   const { disabled = false, id, onBlur, onChange, onFocus, readonly = false, required = false, schema = {}, value = '' } = props;

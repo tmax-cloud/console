@@ -4,12 +4,12 @@ import { fromNow } from '@console/internal/components/utils/datetime';
 import { Status } from '@console/shared';
 import { K8sResourceKind, modelFor } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
-import { Popover } from '@patternfly/react-core';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { NamespaceClaimModel } from '../../models';
 import { TableProps } from './utils/default-list-component';
 import { NamespaceClaimReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 const { common } = Kebab.factory;
 
@@ -64,16 +64,7 @@ const tableProps: TableProps = {
         children: <ResourceLink kind="Namespace" name={obj?.resourceName} title={obj?.resourceName} linkTo={obj.status?.status === 'Approved'} />,
       },
       {
-        children:
-          obj?.status?.status === 'Error' ? (
-            <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{obj.status?.reason}</div>} maxWidth="30rem" position="right">
-              <div style={{ width: 'fit-content', cursor: 'pointer', color: '#0066CC' }}>
-                <Status status={NamespaceClaimReducer(obj)} />
-              </div>
-            </Popover>
-          ) : (
-            <Status status={NamespaceClaimReducer(obj)} />
-          ),
+        children: <ErrorPopoverStatus error={obj?.status?.status === 'Error'} status={NamespaceClaimReducer(obj)} reason={obj.status?.reason} />,
       },
       {
         children: obj.metadata?.annotations?.owner,

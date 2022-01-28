@@ -1,20 +1,25 @@
 import * as _ from 'lodash';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { JSONSchema6 } from 'json-schema';
-import { getUiOptions } from 'react-jsonschema-form/lib/utils';
-import { FieldProps, UiSchema } from 'react-jsonschema-form';
-import SchemaField, { SchemaFieldProps } from 'react-jsonschema-form/lib/components/fields/SchemaField';
+import { JSONSchema7 } from 'json-schema';
+import { getUiOptions } from '@rjsf/core/lib/utils';
+import { FieldProps, UiSchema } from '@rjsf/core';
+//import { FieldProps, UiSchema } from 'react-jsonschema-form';
+//import SchemaField, { SchemaFieldProps } from 're';
 import { LinkifyExternal, SelectorInput, Dropdown } from '@console/internal/components/utils';
+import { ClusterClaimModel } from '@console/internal/models';
 import { AccordionContent, AccordionItem, AccordionToggle, Switch } from '@patternfly/react-core';
 import { MatchExpressions } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/match-expressions';
 import { ResourceRequirements } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/resource-requirements';
 import { AdditionalPropertyFields } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/additional-properties';
 import { OneOfFields } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/oneOf';
+import { ProviderDropdownFields } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/providerDropdown';
 import { ConfigureUpdateStrategy, UPDATE_STRATEGY_DESCRIPTION } from '@console/internal/components/modals/configure-update-strategy-modal';
 import { NodeAffinity, PodAffinity } from '@console/operator-lifecycle-manager/src/components/descriptors/spec/affinity';
 import { getSchemaErrors, useSchemaDescription, useSchemaLabel } from './utils';
 import { useTranslation } from 'react-i18next';
+import SchemaField, { SchemaFieldProps } from '@rjsf/core/lib/components/fields/SchemaField';
+
 const Description = ({ id, description }) =>
   description ? (
     <span id={id} className="help-block">
@@ -162,6 +167,26 @@ export const OneOfField: React.FC<FieldProps> = props => {
   );
 };
 
+export const ProviderDropdownField: React.FC<FieldProps> = props => {
+  const { formData, idSchema, name, schema, formContext, onChange } = props;
+  const kind = _.get(formContext, 'formData', 'kind');
+  if (!name) {
+    return <NullField />;
+  }
+  if (kind?.kind === ClusterClaimModel.kind) {
+    // MEMO : ClusterClaim의 provider속성에 대해서만 provider선택 시 하위 spec필드 변경되도록 드롭다운 예외처리
+    const items = {};
+    if (Array.isArray(schema?.enum)) {
+      schema?.enum?.forEach((item: string) => {
+        items[item] = item;
+      });
+    }
+    return <ProviderDropdownFields key={idSchema.$id} id={idSchema.$id} formData={formData} onChange={onChange} items={items} schema={schema} />;
+  } else {
+    return <DropdownField {...props} key={idSchema.$id} />;
+  }
+};
+
 export const DropdownField: React.FC<FieldProps> = ({ formData, idSchema, name, onChange, schema, uiSchema = {} }) => {
   const { items, title } = getUiOptions(uiSchema);
   return <Dropdown id={idSchema.$id} key={idSchema.$id} title={`Select ${title || schema?.title || name}`} selectedKey={formData} items={items ?? {}} onChange={val => onChange(val)} />;
@@ -194,6 +219,7 @@ export default {
   MatchExpressionsField,
   NodeAffinityField,
   OneOfField,
+  ProviderDropdownField,
   NullField,
   PodAffinityField,
   ResourceRequirementsField,
@@ -205,7 +231,7 @@ type FormFieldProps = {
   id: string;
   defaultLabel?: string;
   required: boolean;
-  schema: JSONSchema6;
+  schema: JSONSchema7;
   uiSchema: UiSchema;
 };
 

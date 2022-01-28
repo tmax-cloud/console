@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SectionHeading, ResourceSummary } from '@console/internal/components/utils';
-import { EventListenerModel, PipelineModel } from '../../../models';
+import { EventListenerModel } from '../../../models';
+import { PipelineModel } from '@console/internal/models';
 import ResourceLinkList from '../resource-overview/ResourceLinkList';
 import {
   useTriggerTemplateEventListenerNames,

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure,web
+    traefik.ingress.kubernetes.io/router.pathmatcher: "/"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: insecure-transport
+  name: gitlab-ingress-api-gateway
+  namespace: gitlab-system
+spec:
+  rules:
+  - host: waiting.ip
+    http:
+      paths:
+      - backend:
+              service:
+                name: gitlab-service
+                port:
+                  number: 80    
+        pathType: ImplementationSpecific                  
+  tls:
+    - hosts:
+        - waiting.ip
+      secretName: api-gateway-server-tls

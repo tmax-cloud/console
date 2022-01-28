@@ -11,13 +11,17 @@ import { Section } from '../../utils/section';
 import { history, /*resourceObjPath, ButtonBar, */ LoadingInline, ResourceIcon, resourceObjPath, SelectorInput } from '../../../utils';
 import { TextInput } from '../../utils/text-input';
 import { RadioGroup } from '../../utils/radio';
+import { ErrorMessage } from '../../../utils/button-bar';
 import { DevTool } from '@hookform/devtools';
-//import * as classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 const Description = ({ spec }) => {
   const { t } = useTranslation();
   const [extraInfoOpened, setExtraInfoOpened] = React.useState(false);
+  let showCostSection = !!spec.externalMetadata?.costs;
+  if (spec.free) {
+    showCostSection = false;
+  }
   const parameters = [];
   _.forEach(spec.instanceCreateParameterSchema.properties, (value, key) => {
     parameters.push(<li key={key}>{`${key}: ${value.default}`}</li>);
@@ -26,13 +30,15 @@ const Description = ({ spec }) => {
   return (
     <div className="hc-create-service-instance__plan-desc">
       <span>{spec.description}</span>
-      <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_2')} id="bullets">
-        <div className="hc-create-service-instance__plan-bullets">
-          {spec.externalMetadata.bullets?.map(bullet => (
-            <li>{bullet}</li>
-          ))}
-        </div>
-      </Section>
+      {spec.externalMetadata?.bullets?.length > 0 && (
+        <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_2')} id="bullets">
+          <div className="hc-create-service-instance__plan-bullets">
+            {spec.externalMetadata.bullets.map(bullet => (
+              <li>{bullet}</li>
+            ))}
+          </div>
+        </Section>
+      )}
       <Button variant="plain" className="pf-m-link--align-left hc-create-service-instance__plan-extra-info__more" type="button" onClick={() => setExtraInfoOpened(!extraInfoOpened)}>
         <span>{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP1_DIV2_11')}</span>
         {extraInfoOpened ? <AngleUpIcon /> : <AngleDownIcon />}
@@ -44,10 +50,11 @@ const Description = ({ spec }) => {
               <div className="hc-create-service-instance__plan-parameters">{parameters}</div>
             </Section>
           )}
-
-          <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_4')} id="bullets">
-            <span className="hc-create-service-instance__plan-costs">{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
-          </Section>
+          {showCostSection && (
+            <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV2_4')} id="bullets">
+              <span className="hc-create-service-instance__plan-costs">{`${spec.externalMetadata.costs.amount}${spec.externalMetadata.costs.unit}`}</span>
+            </Section>
+          )}
         </div>
       ) : (
         false
@@ -84,21 +91,37 @@ const SelectServicePlanComponent = ({ loaded, servicePlanList, defaultPlan }) =>
   );
 };
 
-const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
+const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue, errorMsg, methods }) => {
   const { control } = useFormContext();
-  //const { t } = useTranslation();
-  const parameters = [];
-  _.forEach(selectedPlan.spec.instanceCreateParameterSchema.properties, (value, key) => {
-    parameters.push(
-      <ul>
-        <Section label={key} id={key} description={value.description} isRequired={selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key)}>
-          <TextInput id={`spec.parameters.${key}`} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed}/>
-        </Section>
-      </ul>,
-    );
-  });
-
+  const {
+    formState: { errors },
+  } = methods;
   const { t } = useTranslation();
+  const [parameters, setParameters] = React.useState([]);
+
+  const validationError = {
+    required: 'COMMON:MSG_COMMON_ERROR_MESSAGE_53',
+    pattern: 'COMMON:MSG_COMMON_ERROR_MESSAGE_54',
+  };
+
+  React.useEffect(() => {
+    const newParams = [];
+    _.forEach(selectedPlan.spec.instanceCreateParameterSchema.properties, (value, key) => {
+      const id = `spec.parameters.${key}`;
+      const error = _.get(errors, id);
+      const errorMsg = error ? validationError[error.type] : null;
+      const isRequired = selectedPlan.spec.instanceCreateParameterSchema.required?.find(k => k === key);
+      const validationRule = { required: isRequired, pattern: new RegExp(value.regex) };
+      newParams.push(
+        <ul key={key}>
+          <Section label={key} id={key} description={value.description} isRequired={isRequired} valid={!error} validationErrorDesc={errorMsg}>
+            <TextInput id={id} defaultValue={defaultValue?.spec?.parameters?.[key] ?? value.default} isDisabled={value?.fixed} valid={!error} validation={validationRule} />
+          </Section>
+        </ul>,
+      );
+    });
+    setParameters(newParams);
+  }, [errors]);
 
   return (
     <>
@@ -117,6 +140,7 @@ const CreateServiceInstanceComponent = ({ selectedPlan, defaultValue }) => {
       <Section label={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV2_3')} id="label" description={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV2_5')}>
         <Controller name="metadata.labels" id="label" labelClassName="co-text-sample" as={SelectorInput} control={control} tags={_.isEmpty(defaultValue?.metadata?.labels) ? [] : defaultValue?.metadata?.labels} defaultValue={defaultValue?.metadata?.labels} />
       </Section>
+      {!!errorMsg && <ErrorMessage message={errorMsg} />}
     </>
   );
 };
@@ -128,6 +152,8 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
   const [servicePlanList, setServicePlanList] = React.useState([]);
   const [selectedPlan, setSelectedPlan] = React.useState(-1);
   const [data, setData] = React.useState<K8sResourceKind>();
+  const [error, setError] = React.useState('');
+  const [enableSaveButton, setEnableSaveButton] = React.useState(true);
 
   const { namespace, serviceClassName, isClusterServiceClass } = React.useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -156,7 +182,7 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
 
   const steps = [
     { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP2_DIV1_1'), component: <SelectServicePlanComponent loaded={loaded} servicePlanList={servicePlanList} defaultPlan={selectedPlan} />, enableNext: selectedPlan >= 0, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_5') },
-    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0 },
+    { name: t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_STEP3_DIV1_1'), component: <CreateServiceInstanceComponent selectedPlan={servicePlanList[selectedPlan]} defaultValue={data} errorMsg={error} methods={methods} />, nextButtonText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_1'), canJumpTo: selectedPlan >= 0, enableNext: enableSaveButton },
   ];
 
   return (
@@ -176,11 +202,33 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
         </div>
         <div className="co-m-page__body">
           <Wizard
+            className="hc-create-service-instance__wizard"
             key="service-instance-wizard"
             isInPage
             isFullHeight
             isFullWidth
             steps={steps}
+            onSave={methods.handleSubmit(() => {
+              setEnableSaveButton(false);
+              let submitData = methods.getValues();
+
+              let apiVersion = `${ServiceInstanceModel.apiGroup}/${ServiceInstanceModel.apiVersion}`;
+              let labels = SelectorInput.objectify(submitData.metadata.labels);
+              let spec = { [isClusterServiceClass ? 'clusterServicePlanExternalName' : 'servicePlanExternalName']: servicePlanList[selectedPlan].spec.externalName, [isClusterServiceClass ? 'clusterServiceClassExternalName' : 'serviceClassExternalName']: serviceClass.spec.externalName };
+
+              delete submitData.metadata.labels;
+
+              submitData = _.defaultsDeep({ apiVersion: apiVersion, kind: 'ServiceInstance', metadata: { namespace: namespace, labels: labels }, spec: spec }, submitData);
+
+              k8sCreate(ServiceInstanceModel, submitData)
+                .then(() => {
+                  history.push(resourceObjPath(submitData, referenceFor(ServiceInstanceModel)));
+                })
+                .catch(e => {
+                  setEnableSaveButton(true);
+                  setError(e.message);
+                });
+            })}
             backButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_4')}
             cancelButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
             onNext={() => {
@@ -200,25 +248,6 @@ export const CreateServiceInstance: React.FC<CreateServiceInstanceProps> = ({ ma
             }}
             onClose={() => {
               history.goBack();
-            }}
-            onSave={() => {
-              let submitData = methods.getValues();
-
-              let apiVersion = `${ServiceInstanceModel.apiGroup}/${ServiceInstanceModel.apiVersion}`;
-              let labels = SelectorInput.objectify(submitData.metadata.labels);
-              let spec = { [isClusterServiceClass ? 'clusterServicePlanExternalName' : 'servicePlanExternalName']: servicePlanList[selectedPlan].spec.externalName, [isClusterServiceClass ? 'clusterServiceClassExternalName' : 'serviceClassExternalName']: serviceClass.spec.externalName };
-
-              delete submitData.metadata.labels;
-
-              submitData = _.defaultsDeep({ apiVersion: apiVersion, kind: 'ServiceInstance', metadata: { namespace: namespace, labels: labels }, spec: spec }, submitData);
-
-              k8sCreate(ServiceInstanceModel, submitData)
-                .then(() => {
-                  history.push(resourceObjPath(submitData, referenceFor(ServiceInstanceModel)));
-                })
-                .catch(e => {
-                  console.error(e.message);
-                });
             }}
           />
         </div>

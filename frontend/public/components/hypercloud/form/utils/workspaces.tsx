@@ -6,6 +6,7 @@ import { RadioGroup } from '../../utils/radio';
 import { Dropdown } from '../../utils/dropdown';
 import { TextInput } from '../../utils/text-input';
 import { ResourceDropdown } from '../../utils/resource-dropdown';
+import { useTranslation } from 'react-i18next';
 
 const workspaceType = {
   VolumeClaimTemplate: 'Volume Claim Template',
@@ -31,6 +32,7 @@ const accessItems = [
 ];
 
 export const Workspace = props => {
+  const { t } = useTranslation();
   const workspace = useWatch<string>({
     control: props.methods.control,
     name: `${props.id}.name.${props.name}`,
@@ -39,19 +41,19 @@ export const Workspace = props => {
   const workspaceDetail = {
     VolumeClaimTemplate: (
       <>
-        <Section label='접근 모드' id='accessMode'>
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_14')} id='accessMode'>
           <RadioGroup name={`${props.id}.volumeClaimTemplate.spec.accessModes`} items={accessItems} methods={props.methods} />
         </Section>
-        <Section label='스토리지 크기' id='storage'>
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_12')} id='storage'>
           <TextInput className='pf-c-form-control' id={`${props.id}.volumeClaimTemplate.spec.resources.requests.storage`} methods={props.methods} />
         </Section>
-        <Section label='스토리지 클래스 이름' id='storageClass'>
+        <Section label={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_13')} id='storageClass'>
           <TextInput className='pf-c-form-control' id={`${props.id}.volumeClaimTemplate.spec.storageClassName`} methods={props.methods} />
         </Section>
       </>),
     PVC: (
       <>
-        <Section label='영구 볼륨 클레임' id='pvc'>
+        <Section label={t('COMMON:MSG_LNB_MENU_141')} id='pvc'>
           <ResourceDropdown
             name={`${props.id}.persistentVolumeClaim.claimName`}
             resources={[
@@ -70,7 +72,7 @@ export const Workspace = props => {
     ),
     ConfigMap: (
       <>
-        <Section label='컨피그 맵' id='configmap'>
+        <Section label={t('COMMON:MSG_LNB_MENU_120')} id='configmap'>
           <ResourceDropdown
             name={`${props.id}.configmap.name`}
             resources={[
@@ -89,7 +91,7 @@ export const Workspace = props => {
     ),
     Secret: (
       <>
-        <Section label='시크릿' id='secret'>
+        <Section label={t('COMMON:MSG_LNB_MENU_119')} id='secret'>
           <ResourceDropdown
             name={`${props.id}.secret.secretName`}
             resources={[
@@ -113,7 +115,7 @@ export const Workspace = props => {
     <Section label={props.name} id={props.name}>
       <Dropdown
         name={`${props.id}.name.${props.name}`}
-        title='워크스페이스 타입 선택'
+        title={t('SINGLE:MSG_PIPELINERUNS_CREATEFORM_10')}
         items={workspaceType}
       />
     </Section>

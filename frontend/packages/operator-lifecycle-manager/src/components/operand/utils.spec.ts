@@ -8,7 +8,7 @@ import { testCRD } from '../../../integration-tests/mocks';
 import { getJSONSchemaOrder, capabilitiesToUISchema, hasNoFields } from './utils';
 import { ServiceAccountModel } from '@console/internal/models';
 import { SpecCapability } from '../descriptors/types';
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 import { SchemaType } from '@console/shared/src/components/dynamic-form';
 // import { HIDDEN_UI_SCHEMA } from './const';
 
@@ -41,7 +41,7 @@ describe('capabilitiesToUISchema', () => {
     expect(uiSchema['ui:options'].groupVersionKind).toEqual('ServiceAccount');
   });
   it('Handles SpecCapablitiy.select', () => {
-    const uiSchema = capabilitiesToUISchema([`${SpecCapability.select}DEBUG`, `${SpecCapability.select}INFO`, `${SpecCapability.select}WARN`, `${SpecCapability.select}ERROR`, `${SpecCapability.select}FATAL`] as SpecCapability[]);
+    const uiSchema = capabilitiesToUISchema([`${SpecCapability.select}DEBUG`, `${SpecCapability.select}INFO`, `${SpecCapability.select}WARN`, `${SpecCapability.select}ERROR`, `${SpecCapability.select}FATAL`] as unknown as SpecCapability[]);
     expect(uiSchema['ui:items']).toEqual({
       DEBUG: 'DEBUG',
       INFO: 'INFO',
@@ -55,7 +55,7 @@ describe('capabilitiesToUISchema', () => {
 
 describe('hasNoFields', () => {
   it('Applies hidden widget and label properties to empty schemas', () => {
-    const schema: JSONSchema6 = {
+    const schema: JSONSchema7 = {
       type: SchemaType.object,
       properties: {
         shown: {
@@ -85,15 +85,15 @@ describe('hasNoFields', () => {
         },
       },
     };
-    expect(hasNoFields(schema.properties.shown as JSONSchema6)).toBeFalsy();
-    expect(hasNoFields(schema.properties.alsoShown as JSONSchema6)).toBeFalsy();
-    expect(hasNoFields(schema.properties.hidden as JSONSchema6)).toBeTruthy();
+    expect(hasNoFields(schema.properties.shown as JSONSchema7)).toBeFalsy();
+    expect(hasNoFields(schema.properties.alsoShown as JSONSchema7)).toBeFalsy();
+    expect(hasNoFields(schema.properties.hidden as JSONSchema7)).toBeTruthy();
   });
 });
 
 // describe('getDefaultUISchema', () => {
 //   it('Creates correct ui schema for empty schema property', () => {
-//     const uiSchema = getDefaultUISchema(testCRD.spec.validation.openAPIV3Schema as JSONSchema6);
+//     const uiSchema = getDefaultUISchema(testCRD.spec.validation.openAPIV3Schema as JSONSchema7);
 //     expect(uiSchema.spec.hiddenFieldGroup).toEqual(HIDDEN_UI_SCHEMA);
 //   });
 // });

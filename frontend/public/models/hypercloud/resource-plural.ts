@@ -5,7 +5,7 @@ const translateLabel = (str: string, t: TFunction) => {
   return !!str && i18next.exists(str) ? t(str) : str;
 };
 
-const getI18nInfo = (kindObj: any) => {
+export const getI18nInfo = (kindObj: any) => {
   const ref = referenceForModel(kindObj);
   const model = modelFor(ref);
   return model?.i18nInfo || model;

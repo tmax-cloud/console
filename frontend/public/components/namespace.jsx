@@ -34,33 +34,26 @@ import { RoleBindingClaimsPage } from './hypercloud/role-binding-claim';
 
 import * as classNames from 'classnames';
 import './namespace-details.scss';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
 
 const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
 const CREATE_NEW_RESOURCE = '#CREATE_RESOURCE_ACTION#';
 
 export const deleteModal = (kind, ns) => {
+  const {t} = useTranslation()
   let { label, weight, accessReview } = Kebab.factory.Delete(kind, ns);
   let callback = undefined;
   let tooltip;
-
+ 
   if (ns.metadata.name === 'default') {
-    tooltip = `${kind.label} default cannot be deleted`;
+    tooltip = `${t('COMMON:MSG_MAIN_TOOTIP_1', {0:kind.label})}`;
   } else if (ns.status.phase === 'Terminating') {
     tooltip = `${kind.label} is already terminating`;
   } else {
     callback = () => deleteNamespaceModal({ kind, resource: ns });
   }
-  if (tooltip) {
-    label = (
-      <div className="dropdown__disabled">
-        <Tooltip content={tooltip}>
-          <span>{label}</span>
-        </Tooltip>
-      </div>
-    );
-  }
-  return { label, weight, callback, accessReview };
+  return { label, weight, callback, accessReview, tooltip };
 };
 
 const nsMenuActions = [Kebab.factory.ModifyLabels, Kebab.factory.ModifyAnnotations, Kebab.factory.Edit, deleteModal];
@@ -191,24 +184,27 @@ export const NamespacesPage = props => {
   //     // `/k8s/ns/${props.namespace || 'default'}/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   //     `/k8s/cluster/namespaces/~new/${type !== 'yaml' ? type : ''}`,
   // };
-  const pages = [
-    {
-      href: 'namespaces',
-      name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
-    },
-    {
-      href: 'namespaceclaims',
-      name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
-    },
-  ];
+  const pages = isSingleClusterPerspective()
+    ? null
+    : [
+      {
+        href: 'namespaces',
+        name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACES_1',
+      },
+      {
+        href: 'namespaceclaims',
+        name: 'SINGLE:MSG_NAMESPACES_MAIN_TABNAMESPACECLAIMS_1',
+      },
+    ];
+
   return (
     <ListPage
       {...props}
       tableProps={namespacesTableProps}
       canCreate={true}
       multiNavPages={pages}
-      // createProps={createProps}
-      // createHandler={() => createNamespaceModal({ blocking: true })}
+    // createProps={createProps}
+    // createHandler={() => createNamespaceModal({ blocking: true })}
     />
   );
 };
@@ -254,19 +250,19 @@ const projectTableHeader = ({ showMetrics, showActions }) => {
     },
     ...(showMetrics
       ? [
-          {
-            title: 'Memory',
-            sortFunc: 'namespaceMemory',
-            transforms: [sortable],
-            props: { className: projectColumnClasses[4] },
-          },
-          {
-            title: 'CPU',
-            sortFunc: 'namespaceCPU',
-            transforms: [sortable],
-            props: { className: projectColumnClasses[5] },
-          },
-        ]
+        {
+          title: 'Memory',
+          sortFunc: 'namespaceMemory',
+          transforms: [sortable],
+          props: { className: projectColumnClasses[4] },
+        },
+        {
+          title: 'CPU',
+          sortFunc: 'namespaceCPU',
+          transforms: [sortable],
+          props: { className: projectColumnClasses[5] },
+        },
+      ]
       : []),
     {
       title: 'Created',
@@ -527,7 +523,7 @@ const RolesPage = ({ obj: { metadata } }) => {
   return (
     <>
       <div className={classNames('namespace-details_role-binding')}>{rolebindingspage}</div>
-      <div className={classNames('namespace-details_role-binding')}>{rolebindingclaimspage}</div>
+      {!isSingleClusterPerspective() && <div className={classNames('namespace-details_role-binding')}>{rolebindingclaimspage}</div>}
     </>
   );
 };
@@ -578,6 +574,19 @@ class NamespaceBarDropdowns_ extends React.Component {
       .sort()
       .forEach(name => (items[name] = name));
 
+    const sortFuntion = (items, index) => {
+      let sortedItems = []
+      items.forEach(([key, value], index) => {
+        if (key === ALL_NAMESPACES_KEY) {
+          sortedItems.unshift([key, value])
+        } else {
+          sortedItems.push([key, value])
+        }
+      })
+
+      return sortedItems;
+    }
+
     let title = activeNamespace;
     if (activeNamespace === ALL_NAMESPACES_KEY) {
       title = allNamespacesTitle;
@@ -589,11 +598,11 @@ class NamespaceBarDropdowns_ extends React.Component {
     }
     const defaultActionItem = canCreateProject
       ? [
-          {
-            actionTitle: `Create ${model.label}`,
-            actionKey: CREATE_NEW_RESOURCE,
-          },
-        ]
+        {
+          actionTitle: `Create ${model.label}`,
+          actionKey: CREATE_NEW_RESOURCE,
+        },
+      ]
       : [];
 
     const onChange = newNamespace => {
@@ -620,6 +629,7 @@ class NamespaceBarDropdowns_ extends React.Component {
           menuClassName="co-namespace-selector__menu"
           buttonClassName="pf-m-plain"
           // canFavorite
+          sortFunction={sortFuntion}
           items={items}
           actionItems={defaultActionItem}
           titlePrefix={t('COMMON:MSG_NNB__2')}

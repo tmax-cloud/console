@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
-import { Tooltip, Popover } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core';
 // import { Link, withRouter } from 'react-router-dom';
 
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
@@ -20,6 +20,7 @@ import './terraform-apply-claim.scss';
 
 import '../../../packages/dev-console/src/components/pipelineruns/detail-page-tabs/PipelineRunLogs.scss';
 import '../../../packages/dev-console/src/components/pipelineruns/logs/MultiStreamLogs.scss';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 const kind = TFApplyClaimModel.kind;
 const tableColumnClasses = ['', '', '', classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'IR__button'), Kebab.columnClass];
@@ -106,13 +107,7 @@ const TFApplyClaimTableRow: RowFunction<K8sResourceKind> = ({ obj: tfapplyclaim,
       </TableData>
       <TableData className={tableColumnClasses[2]}> {tfapplyclaim.spec?.url}</TableData>
       <TableData className={tableColumnClasses[3]}>
-        {tfapplyclaim?.status?.phase === 'Error' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{tfapplyclaim.status?.reason}</div>} maxWidth="30rem" position="right">
-            <Status status={tfapplyclaim?.status?.phase} />
-          </Popover>
-        ) : (
-          <Status status={tfapplyclaim?.status?.phase} />
-        )}
+        <ErrorPopoverStatus error={tfapplyclaim?.status?.phase === 'Error'} status={tfapplyclaim?.status?.phase} reason={tfapplyclaim.status?.reason} />
       </TableData>
       <TableData className={tableColumnClasses[4]}>{tfapplyclaim.metadata.annotations.creator}</TableData>
       <TableData className={tableColumnClasses[5]}>

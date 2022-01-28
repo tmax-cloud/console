@@ -37,7 +37,6 @@ import (
 
 	oscrypto "github.com/openshift/library-go/pkg/crypto"
 
-	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -109,7 +108,7 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 		}
 		log.Infof("buildHandler : %v  \n", config.Routers)
 		c := staticServer
-		standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders, handlers.ProxyHeaders)
+		standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders)
 		tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 
 		for name, value := range config.Routers {
@@ -131,28 +130,6 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 				r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
 				dhproxy.ServeHTTP(w, r)
 			})))
-
-			// err = routerTemp.AddRoute(value.Rule, 0, http.StripPrefix(value.Path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// 	tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
-			// 		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
-			// 		dhproxy.ServeHTTP(w, r)
-			// 	})
-			// 	// token := r.Header.Clone().Get("Authorization")
-			// 	// temp := strings.Split(token, "Bearer ")
-			// 	// if len(temp) > 1 {
-			// 	// 	token = temp[1]
-			// 	// } else {
-			// 	// 	token = temp[0]
-			// 	// }
-			// 	// // NOTE: query에 token 정보가 있을 시 해당 token으로 설정
-			// 	// queryToken := r.URL.Query().Get("token")
-			// 	// if queryToken != "" && token == "" {
-			// 	// 	r.URL.Query().Del("token")
-			// 	// 	token = queryToken
-			// 	// }
-			// 	// r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-			// 	// dhproxy.ServeHTTP(w, r)
-			// })))
 			if err != nil {
 				log.Error("failed to put proxy handler into Router", err)
 			}
@@ -172,6 +149,9 @@ func switchRouter(staticServer *console.Console, defaultServer *pServer.HttpServ
 		if err != nil {
 			log.Error("/api/console/dynamic has a problem", err)
 		}
+		// routerTemp.AddRoute("PathPrefix(`/api/console/ingress`)", 0, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// 	c.IngressHandler(w, r)
+		// }))
 
 		err = routerTemp.AddRoute("PathPrefix(`/`)", 0, staticServer.Gateway())
 		if err != nil {

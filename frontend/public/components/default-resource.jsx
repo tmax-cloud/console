@@ -3,6 +3,8 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
 import { Conditions } from './conditions';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { referenceFor, kindForReference, modelFor } from '../module/k8s';
 import { Kebab, kindObj, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from './utils';
@@ -13,22 +15,22 @@ const { common } = Kebab.factory;
 
 const tableColumnClasses = [classNames('col-xs-6', 'col-sm-4'), classNames('col-xs-6', 'col-sm-4'), classNames('col-sm-4', 'hidden-xs'), Kebab.columnClass];
 
-const TableHeader = () => {
+const TableHeader = t => {
   return [
     {
-      title: 'Name',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
       sortField: 'metadata.name',
       transforms: [sortable],
       props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'Namespace',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
       sortField: 'metadata.namespace',
       transforms: [sortable],
       props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'Created',
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
       sortField: 'metadata.creationTimestamp',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
@@ -39,6 +41,7 @@ const TableHeader = () => {
     },
   ];
 };
+
 TableHeader.displayName = 'TableHeader';
 
 const TableRowForKind = ({ obj, index, key, style, customData }) => {
@@ -85,12 +88,16 @@ export const DetailsForKind = kind =>
 
 export const DefaultList = props => {
   const { kinds } = props;
-
-  return <Table {...props} aria-label="Default Resource" kinds={[kinds[0]]} customData={{ kind: kinds[0] }} Header={TableHeader} Row={TableRowForKind} virtualize />;
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="Default Resource" kinds={[kinds[0]]} customData={{ kind: kinds[0] }} Header={TableHeader.bind(null, t)} Row={TableRowForKind} virtualize />;
 };
 DefaultList.displayName = 'DefaultList';
 
-export const DefaultPage = props => <ListPage {...props} ListComponent={DefaultList} canCreate={props.canCreate || _.get(modelFor(props.kind), 'crd') !== 'false'} />;
+export const DefaultPage = props => {
+  const exceptionKindList = ['ClusterRole'];  
+  const canCreate = exceptionKindList.includes(props.kind) ? false : props.canCreate || _.get(modelFor(props.kind), 'crd') !== 'false';
+  return <ListPage {...props} ListComponent={DefaultList} canCreate={canCreate} />;
+};
 DefaultPage.displayName = 'DefaultPage';
 
 export const DefaultDetailsPage = props => {

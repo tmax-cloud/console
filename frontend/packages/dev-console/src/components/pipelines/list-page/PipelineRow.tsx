@@ -5,7 +5,7 @@ import { ResourceLink, Timestamp } from '@console/internal/components/utils';
 import { referenceForModel } from '@console/internal/module/k8s';
 import { pipelineFilterReducer } from '../../../utils/pipeline-filter-reducer';
 import { Pipeline } from '../../../utils/pipeline-augment';
-import { PipelineModel, PipelineRunModel } from '../../../models';
+import { PipelineModel, PipelineRunModel } from '@console/internal/models';
 import LinkedPipelineRunTaskStatus from '../../pipelineruns/status/LinkedPipelineRunTaskStatus';
 import { tableColumnClasses } from './pipeline-table';
 import PipelineRowKebabActions from './PipelineRowKebabActions';

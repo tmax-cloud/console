@@ -1,5 +1,6 @@
 import * as _ from 'lodash-es';
 import { NodeCondition } from '@console/shared/src/types';
+import { CMP_PRIMARY_KEY } from '@console/internal/hypercloud/menu/menu-types';
 export const NO_STATUS = 'No Status';
 
 export const ServiceBrokerStatusReducer = instance => {
@@ -199,4 +200,28 @@ export const NodeStatusReducer = (node: any): string => {
   const readyState = _.find(conditions, { type: 'Ready' }) as NodeCondition;
 
   return readyState ? (readyState.status === 'True' ? 'Ready' : 'Not Ready') : NO_STATUS;
+};
+
+export const ClusterRegistrationStatusReducer = (cr: any): string => {
+  const status = _.get(cr, 'status');
+  if (!!status) {
+    const phase = status.phase || '';
+    if (phase === 'Failed' || phase === 'Success' || phase === 'Deleted') {
+      return phase;
+    } else {
+      return 'Validation/Validated';
+    }
+  } else {
+    return NO_STATUS;
+  }
+};
+
+export const ClusterMenuPolicyStatusReducer = (cmp: any): string => {
+  const labels = cmp?.metadata?.labels;
+  const primaryValue = _.get(labels, CMP_PRIMARY_KEY);
+  if (primaryValue === 'true') {
+    return 'Activated';
+  } else {
+    return 'Deactivated';
+  }
 };

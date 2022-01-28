@@ -28,8 +28,17 @@ const templateInstanceFormFactory = params => {
 const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = props => {
   const { t } = useTranslation();
   const methods = useFormContext();
+  const {
+    formState: { errors },
+  } = methods;
   const namespace = getActiveNamespace(store.getState());
   const [paramList, setParamList] = useState([]);
+
+  const validationError = {
+    required: 'COMMON:MSG_COMMON_ERROR_MESSAGE_53',
+    pattern: 'COMMON:MSG_COMMON_ERROR_MESSAGE_54',
+  };
+
   const typeItems = [
     {
       title: t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV3_1'),
@@ -72,14 +81,20 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
         const template = await k8sGet(TemplateModel, selectedTemplateName, namespace);
         const parametersList = template?.parameters?.map((paramObj, index) => {
           const inputType = !!paramObj.valueType ? paramObj.valueType : 'text';
+          const sectionId = `param-${paramObj.name}`;
+          const id = `params.${paramObj.name}`;
+          const error = _.get(errors, id);
+          const errorMsg = error ? validationError[error.type] : null;
+          const validationRule = { required: paramObj.required, pattern: new RegExp(paramObj.regex) };
           if (inputType === 'number') {
             // MEMO : input의 type을 number로 해도 submit 시에 data엔 string으로 들어가있어서 number로 변환해주기 위해 Controller사용하고 input onChange부분에서 숫자로 변환해줌.
             return (
-              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
+              <Section key={sectionId} id={sectionId} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required} valid={!error} validationErrorDesc={errorMsg}>
                 <Controller
                   control={methods.control}
-                  name={`params.${paramObj.name}`}
+                  name={id}
                   defaultValue={paramObj.value}
+                  rules={validationRule}
                   render={props => (
                     <input
                       {...props}
@@ -96,8 +111,8 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
             );
           } else {
             return (
-              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
-                <TextInput id={`params.${paramObj.name}`} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} />
+              <Section key={sectionId} id={sectionId} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required} valid={!error} validationErrorDesc={errorMsg}>
+                <TextInput id={id} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} valid={!error} validation={validationRule} />
               </Section>
             );
           }
@@ -107,13 +122,19 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
         const clusterTemplate = await k8sGet(ClusterTemplateModel, selectedTemplateName);
         const parametersList = clusterTemplate?.parameters?.map((paramObj, index) => {
           const inputType = !!paramObj.valueType ? paramObj.valueType : 'text';
+          const sectionId = `param-${paramObj.name}`;
+          const id = `params.${paramObj.name}`;
+          const error = _.get(errors, id);
+          const errorMsg = error ? validationError[error.type] : null;
+          const validationRule = { required: paramObj.required, pattern: new RegExp(paramObj.regex) };
           if (inputType === 'number') {
             return (
-              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
+              <Section key={sectionId} id={sectionId} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required} valid={!error} validationErrorDesc={errorMsg}>
                 <Controller
                   control={methods.control}
-                  name={`params.${paramObj.name}`}
+                  name={id}
                   defaultValue={paramObj.value}
+                  rules={validationRule}
                   render={props => (
                     <input
                       {...props}
@@ -130,8 +151,8 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
             );
           } else {
             return (
-              <Section key={`param-${paramObj.name}`} id={`param-${paramObj.name}`} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required}>
-                <TextInput id={`params.${paramObj.name}`} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} />
+              <Section key={sectionId} id={sectionId} label={paramObj.name} description={paramObj.description} isRequired={paramObj.required} valid={!error} validationErrorDesc={errorMsg}>
+                <TextInput id={id} type={inputType} inputClassName="pf-c-form-control" methods={methods} defaultValue={paramObj.value} placeholder={t('SINGLE:MSG_TEMPLATEINSTANCES_CREATEFORM_DIV14_1')} valid={!error} validation={validationRule} />
               </Section>
             );
           }
@@ -148,7 +169,7 @@ const CreateTemplateInstanceComponent: React.FC<TemplateInstanceFormProps> = pro
   useEffect(() => {
     const templateName = selectedTemplate.split('~~')[1];
     getTemplateParameters(templateName);
-  }, [selectedTemplate]);
+  }, [selectedTemplate, errors]);
 
   return (
     <>

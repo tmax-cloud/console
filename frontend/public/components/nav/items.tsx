@@ -12,6 +12,8 @@ import { featureReducerName } from '../../reducers/features';
 import { RootState } from '../../redux';
 import { getActiveNamespace } from '../../reducers/ui';
 import { NavItemSeparator } from '@patternfly/react-core';
+import * as OpenInNewIcon from '@console/internal/imgs/hypercloud/lnb/export.svg';
+import * as OpenInNewFilledIcon from '@console/internal/imgs/hypercloud/lnb/filled/export_filled.svg';
 
 export const matchesPath = (resourcePath, prefix) => resourcePath === prefix || _.startsWith(resourcePath, `${prefix}/`);
 export const matchesModel = (resourcePath, model) => model && matchesPath(resourcePath, referenceForModel(model));
@@ -105,7 +107,13 @@ export class HrefLink extends NavLink<HrefLinkProps> {
 }
 
 // MEMO : document.location.origin 뒤에 path붙여서 띄워주는 url 링크의 경우 해당 path에 대한 프록시처리가 되어있어야만 함.
-export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P> {
+export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P, NewTabLinkState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hover: false,
+    };
+  }
   render() {
     const { name, url } = this.props;
     // MEMO : type Props가 없을 경우, default NewTabLink는 url로 들어온 값 그대로를 새탭으로 띄워주게끔 처리함.
@@ -120,8 +128,18 @@ export class NewTabLink<P extends NewTabLinkProps> extends React.PureComponent<P
             e.preventDefault();
           }}
           className="pf-c-nav__link"
+          style={{ paddingRight: 'var(--pf-c-nav__list-toggle--PaddingRight)' }}
+          onMouseOver={() => {
+            this.setState({ hover: true });
+          }}
+          onMouseOut={() => {
+            this.setState({ hover: false });
+          }}
         >
-          {name}
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>{name}</div>
+            <img src={this.state.hover ? OpenInNewFilledIcon : OpenInNewIcon} alt="OpenInNew" />
+          </div>
         </Link>
       </NavItem>
     );
@@ -160,6 +178,10 @@ export type HrefLinkProps = NavLinkProps & {
 export type NewTabLinkProps = NavLinkProps & {
   name: string;
   url?: string;
+};
+
+type NewTabLinkState = {
+  hover: boolean;
 };
 
 export type NavLinkComponent<T extends NavLinkProps = NavLinkProps> = React.ComponentType<T> & {

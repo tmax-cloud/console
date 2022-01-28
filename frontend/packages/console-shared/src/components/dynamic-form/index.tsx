@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import Form, { FormProps } from 'react-jsonschema-form';
+import Form, { FormProps } from '@rjsf/core';
+// import Form, { FormProps } from 'react-jsonschema-form';
 import { Accordion, ActionGroup, Button, Alert } from '@patternfly/react-core';
 import { history } from '@console/internal/components/utils';
 import defaultWidgets from './widgets';
@@ -70,7 +71,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = props => {
           <div style={{ paddingBottom: '30px' }}>
             <ActionGroup className="pf-c-form">
               {!!isButtonDisabled ? (
-                <Tooltip content={saveButtonDisabledString()} maxWidth="30rem" position="bottom">
+                <Tooltip content={saveButtonDisabledString(t)} maxWidth="30rem" position="bottom">
                   <div>
                     <Button type="submit" variant="primary" isDisabled={true}>
                       {create ? t('COMMON:MSG_COMMON_BUTTON_COMMIT_1') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_3')}

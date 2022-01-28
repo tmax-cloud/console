@@ -1,6 +1,6 @@
 import { history, resourcePathFromModel } from '@console/internal/components/utils';
 import { apiVersionForModel } from '@console/internal/module/k8s';
-import { ClusterTaskModel, PipelineModel } from '../../../models';
+import { ClusterTaskModel, PipelineModel } from '@console/internal/models';
 import { Pipeline, PipelineResourceTask, PipelineResourceTaskParam, PipelineTask } from '../../../utils/pipeline-augment';
 import { getTaskParameters } from '../resource-utils';
 import { TASK_ERROR_STRINGS, TaskErrorType } from './const';
@@ -33,6 +33,7 @@ export const convertResourceToTask = (resource: PipelineResourceTask, runAfter?:
     params: getTaskParameters(resource).map(param => ({
       name: param.name,
       value: param.default,
+      type: param.type
     })),
   };
 };
@@ -58,9 +59,11 @@ const removeListRunAfters = (task: PipelineTask, listIds: string[]): PipelineTas
 const removeEmptyDefaultParams = (task: PipelineTask): PipelineTask => {
   if (task.params?.length > 0) {
     // Since we can submit, this param has a default; check for empty values and remove
+    // 20210929 Policy changed
+    task.params.forEach(param => { if (param.value === undefined) { param.value = (param.type && param.type === 'array') ?  [''] : ''; }; delete param.type; });
     return {
       ...task,
-      params: task.params.filter(param => !!param.value),
+      //params: task.params.filter(param => !!param.value),
     };
   }
 

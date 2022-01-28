@@ -22,9 +22,9 @@ import (
 	"console/pkg/serverutils"
 	"console/pkg/version"
 
-	"github.com/sirupsen/logrus"
-
 	helmhandlerspkg "console/pkg/helm/handlers"
+
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -46,6 +46,8 @@ const (
 	multiHypercloudServerPath = "/api/multi-hypercloud/"
 	kibanaPath                = "/api/kibana/"
 	kubeflowPath              = "/api/kubeflow/"
+
+	consolePath = "/api/console"
 )
 
 type jsGlobals struct {
@@ -115,7 +117,7 @@ func New(cfg *v1.Config) (*Console, error) {
 // Gateway is API gateway like reverse proxy server related in k8s, Prometheus, Grafana, and hypercloud-operator
 func (c *Console) Gateway() http.Handler {
 	// standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.JwtHandler, handlers.ProxyHeaders)
-	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
+	// standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
 	// tokenMiddleware := alice.New(c.jwtHandler, c.tokenHandler) // jwt validation handler + token handler
 	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
@@ -131,6 +133,20 @@ func (c *Console) Gateway() http.Handler {
 			k8sProxy.ServeHTTP(w, r)
 		})),
 	)
+	// handle(consolePath, http.StripPrefix(
+	// 	proxy.SingleJoiningSlash(c.BaseURL.Path, consolePath),
+	// 	tokenMiddleware.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+	// 		k8sProxy.ServeHTTP(w, r)
+	// 	})),
+	// )
+	r.Methods("GET").PathPrefix(consolePath + "/apis/networking.k8s.io/").Handler(http.StripPrefix(consolePath,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Info("CHECK TOKEN: ", c.StaticUser.Token)
+			r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+			k8sProxy.ServeHTTP(w, r)
+		})))
+
 	if c.PrometheusProxyConfig != nil {
 		// Only proxy requests to the Prometheus API, not the UI.
 		var (
@@ -360,17 +376,35 @@ func (c *Console) Gateway() http.Handler {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintln(w, "not found")
 	})
-	return standardMiddleware.Then(r)
+
+	return r
 }
 
 // Server is server only serving static asset & jsconfig
 func (c *Console) Server() http.Handler {
-	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, c.SecureHeaders, handlers.ProxyHeaders)
+	standardMiddleware := alice.New(c.RecoverPanic, c.LogRequest, handlers.ProxyHeaders)
+	tokenMiddleware := alice.New(c.TokenHandler) // select token depending on release-mode
 	r := mux.NewRouter()
+
 	staticHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/"), http.FileServer(http.Dir(c.PublicDir)))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/static/")).Handler(gzipHandler(staticHandler))
 	k8sApiHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/"), http.FileServer(http.Dir("./api")))
 	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, "/api/resource/")).Handler(gzipHandler(securityHeadersMiddleware(k8sApiHandler)))
+
+	k8sProxy := proxy.NewProxy(c.K8sProxyConfig)
+	k8sProxyHandler := http.StripPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, k8sProxyPath), tokenMiddleware.ThenFunc(func(rw http.ResponseWriter, r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+		k8sProxy.ServeHTTP(rw, r)
+	}))
+	r.PathPrefix(proxy.SingleJoiningSlash(c.BaseURL.Path, k8sProxyPath)).Handler(k8sProxyHandler)
+
+	r.Methods("GET").PathPrefix(consolePath + "/apis/networking.k8s.io/").Handler(http.StripPrefix(consolePath,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Info("Use default serviceaccount token")
+			r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
+			k8sProxy.ServeHTTP(w, r)
+		})))
+
 	r.PathPrefix(c.BaseURL.Path).HandlerFunc(c.indexHandler)
 
 	r.PathPrefix("/api/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -459,3 +493,29 @@ func kubeVersion(config *rest.Config) (string, error) {
 	}
 	return "", errors.New("failed to get kubernetes version")
 }
+
+// func (c *Console) IngressHandler(w http.ResponseWriter, r *http.Request) {
+// 	res := c.getIngress()
+// 	w.Write([]byte(res))
+// }
+
+// func (c *Console) getIngress() string {
+// 	config := &rest.Config{
+// 		Host:        c.K8sProxyConfig.Endpoint.String(),
+// 		Transport:   c.K8sClient.Transport,
+// 		BearerToken: c.StaticUser.Token,
+// 	}
+// 	clientset, err := kubernetes.NewForConfig(config)
+// 	if err != nil {
+// 		fmt.Printf("%+v", err.Error())
+// 	}
+// 	ingresses, err := clientset.NetworkingV1().Ingresses("").List(context.TODO(), metav1.ListOptions{
+// 		// LabelSelector: "kubernetes.io=test",
+// 		// ,metav1.LabelSelector,
+// 	})
+// 	if err != nil {
+// 		fmt.Printf("%+v", err.Error())
+// 		fmt.Println(c.StaticUser.Token)
+// 	}
+// 	return ingresses.Items[0].Status.String()
+// }

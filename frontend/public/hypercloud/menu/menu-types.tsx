@@ -1,10 +1,12 @@
 import startsWith from './starts-with';
 
 export const CMP_PRIMARY_KEY = 'primary';
+export const CUSTOM_LABEL_TYPE = '@@customlabel@@';
 
 export enum MenuType {
   CONTAINER = 'CONTAINER',
   REGISTERED_MENU = 'REGISTERED_MENU',
+  NEW_TAB_LINK = 'NEW_TAB_LINK',
   SEPERATOR = 'SEPERATOR',
 }
 
@@ -148,7 +150,7 @@ export const CustomMenusMap: CustomMenus = {
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_98',
-    url: `${document.location.origin}/api/grafana/login/generic_oauth`,
+    url: '',
     isMultiOnly: false,
   },
   Kibana: {
@@ -171,7 +173,7 @@ export const CustomMenusMap: CustomMenus = {
     kind: 'Add',
     visible: true,
     type: MenuLinkType.HrefLink,
-    defaultLabel: '+ Add',
+    defaultLabel: 'COMMON:MSG_LNB_MENU_217',
     href: '/add',
     activePath: '/add/',
     isMultiOnly: false,
@@ -219,4 +221,4 @@ export const CustomMenusMap: CustomMenus = {
     isMultiOnly: false,
   },
 };
-// MEMO : Git, Harbor메뉴는 app.jsx에서 초기 렌더 시 ingress 리소스에서 host주소 가져와서 url로 지정해줌.
+// MEMO : url이 ''로 지정된 메뉴들은 app.jsx에서 초기 렌더 시 ingress 리소스에서 host주소 가져와서 url로 지정해줌.

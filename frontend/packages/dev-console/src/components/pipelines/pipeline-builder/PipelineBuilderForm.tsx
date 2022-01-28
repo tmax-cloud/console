@@ -57,6 +57,13 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = props => {
 
   const updateTasks = (changes: CleanupResults): void => {
     const { tasks, listTasks, errors: taskErrors } = changes;
+    tasks.forEach(task => {
+      task?.params?.forEach(param => {
+        if ( param.value === undefined) {
+          param.value = (param.type &&  param.type === 'array')  ? [''] : '';
+        }
+      });
+    });
 
     setFieldValue('tasks', tasks);
     setFieldValue('listTasks', listTasks);

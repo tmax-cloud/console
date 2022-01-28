@@ -30,7 +30,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.management,
-    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.CustomResourceDefinitionModel.kind, Models.PodSecurityPolicyModel.kind],
+    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.PodSecurityPolicyModel.kind, Models.CustomResourceDefinitionModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -66,17 +66,12 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels['ci/cd'],
-    innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind, , Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind],
+    innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind, , Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind, Models.ApplicationModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.aidevops,
     innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.image,
-    innerMenus: [Models.RegistryModel.kind, Models.ExternalRegistryModel.kind, Models.ImageSignerModel.kind, Models.ImageSignRequestModel.kind, Models.SignerPolicyModel.kind, Models.ImageReplicateModel.kind],
   },
 ];
 
@@ -121,7 +116,7 @@ const SingleNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.home,
-    innerMenus: [CustomMenusMap.Dashboard.kind, CustomMenusMap.Search.kind, CustomMenusMap.Events.kind],
+    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Events.kind],
   },
   {
     menuType: MenuType.CONTAINER,

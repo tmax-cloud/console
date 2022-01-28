@@ -1,0 +1,18 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"traefik.containo.us/v1alpha1","kind":"Middleware","metadata":{"annotations":{},"name":"jwt-decode-auth","namespace":"default"},"spec":{"forwardAuth":{"address":"http://traefik-jwt-decode.default.svc:8080","authResponseHeaders":["jwt-token-validated","jwt-token-email","jwt-token-scopes"],"trustForwardHeader":true}}}
+  creationTimestamp: "2021-09-10T08:03:55Z"
+  generation: 6
+  name: jwt-decode-auth
+  namespace: default
+  resourceVersion: "153675079"
+  selfLink: /apis/traefik.containo.us/v1alpha1/namespaces/default/middlewares/jwt-decode-auth
+  uid: 630fcccf-769a-4b5f-9b95-cc348d3fbec7
+spec:
+  forwardAuth:
+    address: http://traefik-jwt-decode.default.svc:8080
+    authResponseHeadersRegex: ^X-
+    trustForwardHeader: true

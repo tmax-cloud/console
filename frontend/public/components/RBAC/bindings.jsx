@@ -18,6 +18,8 @@ import { connectToFlags, flagPending } from '../../reducers/features';
 import { useTranslation, withTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { pluralToKind } from '../hypercloud/form';
+import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
+
 const bindingKind = binding => (binding.metadata.namespace ? 'RoleBinding' : 'ClusterRoleBinding');
 
 // Split each binding into one row per subject
@@ -74,22 +76,22 @@ const menuActions = ({ subjectIndex, subjects }, startImpersonate) => {
     subjects.length === 1
       ? Kebab.factory.Delete
       : (kind, binding) => ({
-        label: t('COMMON:MSG_MAIN_ACTIONBUTTON_40', { 0: ResourceLabel(kind, t) }),
-        callback: () =>
-          confirmModal({
-            title: t('COMMON:MSG_MAIN_ACTIONBUTTON_40', { 0: ResourceLabel(kind, t) }),
-            message: t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_2', { 0: subject.name, 1: ResourceLabel(modelFor(subject.kind), t) }),
-            btnText: t('COMMON:MSG_MAIN_ACTIONBUTTON_41'),
-            executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
-          }),
-        accessReview: {
-          group: kind.apiGroup,
-          resource: kind.plural,
-          name: binding.metadata.name,
-          namespace: binding.metadata.namespace,
-          verb: 'patch',
-        },
-      }),
+          label: t('COMMON:MSG_MAIN_ACTIONBUTTON_40', { 0: ResourceLabel(kind, t) }),
+          callback: () =>
+            confirmModal({
+              title: t('COMMON:MSG_MAIN_ACTIONBUTTON_40', { 0: ResourceLabel(kind, t) }),
+              message: t('COMMON:MSG_MAIN_POPUP_DESCRIPTION_2', { 0: subject.name, 1: ResourceLabel(modelFor(subject.kind), t) }),
+              btnText: t('COMMON:MSG_MAIN_ACTIONBUTTON_41'),
+              executeFn: () => k8sPatch(kind, binding, [{ op: 'remove', path: `/subjects/${subjectIndex}` }]),
+            }),
+          accessReview: {
+            group: kind.apiGroup,
+            resource: kind.plural,
+            name: binding.metadata.name,
+            namespace: binding.metadata.namespace,
+            verb: 'patch',
+          },
+        }),
   ];
 
   if (subject.kind === 'User' || subject.kind === 'Group') {
@@ -228,16 +230,18 @@ const rowFilters = t => {
 export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock = false, staticFilters = undefined, createPath = '/k8s/cluster/rolebindings/~new', single = false, displayTitleRow = true }) => {
   const { t } = useTranslation();
 
-  const pages = [
-    {
-      href: 'rolebindings',
-      name: t('COMMON:MSG_LNB_MENU_76'),
-    },
-    {
-      href: 'rolebindingclaims',
-      name: t('COMMON:MSG_LNB_MENU_101'),
-    },
-  ];
+  const pages = isSingleClusterPerspective()
+    ? null
+    : [
+        {
+          href: 'rolebindings',
+          name: t('COMMON:MSG_LNB_MENU_76'),
+        },
+        {
+          href: 'rolebindingclaims',
+          name: t('COMMON:MSG_LNB_MENU_101'),
+        },
+      ];
 
   const ko = kindObj(pluralToKind('rolebindings'));
   const { namespaced, plural } = ko;
@@ -279,9 +283,7 @@ export const RoleBindingsPage = ({ namespace = undefined, showTitle = true, mock
         isClusterScope
       />
     );
-
   }
-
 
   return (
     <MultiListPage

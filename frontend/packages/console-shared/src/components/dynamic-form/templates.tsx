@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { ArrayFieldTemplateProps, FieldTemplateProps, ObjectFieldTemplateProps } from 'react-jsonschema-form';
+import { ArrayFieldTemplateProps, FieldTemplateProps, ObjectFieldTemplateProps } from '@rjsf/core';
+//import { ArrayFieldTemplateProps, FieldTemplateProps, ObjectFieldTemplateProps } from 'react-jsonschema-form';
 import { Button, Alert, FormHelperText } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { JSON_SCHEMA_GROUP_TYPES } from './const';
-import { getUiOptions, getSchemaType } from 'react-jsonschema-form/lib/utils';
+import { getUiOptions, getSchemaType } from '@rjsf/core/lib/utils';
 import { ExpandCollapse } from '@console/internal/components/utils';
 import { FieldSet, FormField } from './fields';
 import { useSchemaLabel } from './utils';

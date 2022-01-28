@@ -1,36 +1,19 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Helmet } from 'react-helmet';
-import { IChangeEvent, ISubmitEvent } from 'react-jsonschema-form';
 import { ActionGroup, Button } from '@patternfly/react-core';
 
-import {
-  ServiceInstanceModel,
-  ClusterServiceClassModel,
-} from '../../models';
+import { ServiceInstanceModel, ClusterServiceClassModel } from '../../models';
 import { ClusterServiceClassInfo } from '../cluster-service-class-info';
 import { ButtonBar } from '../utils/button-bar';
 import { k8sCreate, K8sResourceKind, referenceForModel } from '../../module/k8s';
-import {
-  createParametersSecret,
-  getInstanceCreateParametersForm,
-  getInstanceCreateSchema,
-  getUISchema,
-  ServiceCatalogParametersForm,
-} from './schema-form';
-import {
-  Firehose,
-  history,
-  NsDropdown,
-  PageHeading,
-  resourcePathFromModel,
-  StatusBox,
-} from '../utils';
+import { createParametersSecret, getInstanceCreateParametersForm, getInstanceCreateSchema, getUISchema, ServiceCatalogParametersForm } from './schema-form';
+import { Firehose, history, NsDropdown, PageHeading, resourcePathFromModel, StatusBox } from '../utils';
+import { IChangeEvent, ISubmitEvent } from '@rjsf/core';
 
 const PARAMETERS_SECRET_KEY = 'parameters';
 
-const getAvailablePlans = (plans: any): any[] =>
-  _.reject(plans?.data, 'status.removedFromBrokerCatalog');
+const getAvailablePlans = (plans: any): any[] => _.reject(plans?.data, 'status.removedFromBrokerCatalog');
 
 class CreateInstance extends React.Component<CreateInstanceProps, CreateInstanceState> {
   constructor(props) {
@@ -68,18 +51,16 @@ class CreateInstance extends React.Component<CreateInstanceProps, CreateInstance
     this.setState({ namespace });
   };
 
-  onNameChange: React.ReactEventHandler<HTMLInputElement> = (event) => {
+  onNameChange: React.ReactEventHandler<HTMLInputElement> = event => {
     this.setState({ name: event.currentTarget.value });
   };
 
-  onPlanChange: React.ReactEventHandler<HTMLInputElement> = (event) => {
+  onPlanChange: React.ReactEventHandler<HTMLInputElement> = event => {
     this.setState({ plan: event.currentTarget.value });
   };
 
   createInstance = (secretName: string): Promise<K8sResourceKind> => {
-    const parametersFrom = secretName
-      ? [{ secretKeyRef: { name: secretName, key: PARAMETERS_SECRET_KEY } }]
-      : [];
+    const parametersFrom = secretName ? [{ secretKeyRef: { name: secretName, key: PARAMETERS_SECRET_KEY } }] : [];
     const serviceInstance: K8sResourceKind = {
       apiVersion: 'servicecatalog.k8s.io/v1beta1',
       kind: 'ServiceInstance',
@@ -111,17 +92,13 @@ class CreateInstance extends React.Component<CreateInstanceProps, CreateInstance
 
     // Create the instance first so we can set an ownerRef from the parameters secret to the instance.
     this.createInstance(secretName)
-      .then((instance) =>
-        secretName
-          ? createParametersSecret(secretName, PARAMETERS_SECRET_KEY, formData, instance)
-          : null,
-      )
+      .then(instance => (secretName ? createParametersSecret(secretName, PARAMETERS_SECRET_KEY, formData, instance) : null))
       .then(
         () => {
           this.setState({ inProgress: false });
           history.push(resourcePathFromModel(ServiceInstanceModel, name, namespace));
         },
-        (err) => this.setState({ error: err.message, inProgress: false }),
+        err => this.setState({ error: err.message, inProgress: false }),
       );
   };
 
@@ -138,18 +115,11 @@ class CreateInstance extends React.Component<CreateInstanceProps, CreateInstance
     const parametersForm = getInstanceCreateParametersForm(selectedPlan);
     const uiSchema = getUISchema(parametersForm);
 
-    const planOptions = _.map(availablePlans, (plan) => {
+    const planOptions = _.map(availablePlans, plan => {
       return (
         <div className="radio co-create-service-instance__plan" key={plan.spec.externalName}>
           <label>
-            <input
-              type="radio"
-              name="plan"
-              id="plan"
-              value={plan.spec.externalName}
-              checked={selectedPlanName === plan.spec.externalName}
-              onChange={this.onPlanChange}
-            />
+            <input type="radio" name="plan" id="plan" value={plan.spec.externalName} checked={selectedPlanName === plan.spec.externalName} onChange={this.onPlanChange} />
             {_.get(plan.spec, ['externalMetadata', 'displayName']) || plan.spec.externalName}
             {plan.spec.description && <div className="text-muted">{plan.spec.description}</div>}
           </label>
@@ -175,41 +145,20 @@ class CreateInstance extends React.Component<CreateInstanceProps, CreateInstance
                     <label className="control-label co-required" htmlFor="dropdown-selectbox">
                       Namespace
                     </label>
-                    <NsDropdown
-                      selectedKey={this.state.namespace}
-                      onChange={this.onNamespaceChange}
-                      id="dropdown-selectbox"
-                    />
+                    <NsDropdown selectedKey={this.state.namespace} onChange={this.onNamespaceChange} id="dropdown-selectbox" />
                   </div>
                   <div className="form-group co-create-service-instance__name">
                     <label className="control-label co-required" htmlFor="name">
                       Service Instance Name
                     </label>
-                    <input
-                      className="pf-c-form-control"
-                      type="text"
-                      onChange={this.onNameChange}
-                      value={this.state.name}
-                      id="name"
-                      required
-                    />
+                    <input className="pf-c-form-control" type="text" onChange={this.onNameChange} value={this.state.name} id="name" required />
                   </div>
                   <div className="form-group co-create-service-instance__plans">
                     <label className="control-label">Plans</label>
-                    {_.isEmpty(availablePlans) ? (
-                      <p>There are no plans currently available for this service.</p>
-                    ) : (
-                      planOptions
-                    )}
+                    {_.isEmpty(availablePlans) ? <p>There are no plans currently available for this service.</p> : planOptions}
                   </div>
                 </form>
-                <ServiceCatalogParametersForm
-                  schema={schema}
-                  uiSchema={uiSchema}
-                  onSubmit={this.save}
-                  formData={this.state.formData}
-                  onChange={this.onFormChange}
-                >
+                <ServiceCatalogParametersForm schema={schema as any} uiSchema={uiSchema} onSubmit={this.save} formData={this.state.formData} onChange={this.onFormChange}>
                   <ButtonBar errorMessage={this.state.error} inProgress={this.state.inProgress}>
                     <ActionGroup className="pf-c-form">
                       <Button type="submit" variant="primary">
@@ -230,7 +179,7 @@ class CreateInstance extends React.Component<CreateInstanceProps, CreateInstance
   }
 }
 
-export const CreateInstancePage = (props) => {
+export const CreateInstancePage = props => {
   const searchParams = new URLSearchParams(location.search);
   const name = searchParams.get('cluster-service-class');
   const preselectedNamespace = searchParams.get('preselected-ns');

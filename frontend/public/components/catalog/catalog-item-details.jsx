@@ -56,7 +56,7 @@ export const CatalogTileDetails = withTranslation()(
       const creationTimestamp = _.get(obj, 'metadata.creationTimestamp');
 
       const supportUrlLink = <ExternalLink href={supportUrl} text="Get support" />;
-      const documentationUrlLink = <ExternalLink href={documentationUrl} additionalClassName="co-break-all" text={documentationUrl} />;
+      // const documentationUrlLink = <ExternalLink href={documentationUrl} additionalClassName="co-break-all" text={documentationUrl} />;
       const documentationIframe = <iframe src={documentationUrl} target="_blank" style={{ width: '100%', display: 'block', overflowY: 'auto', border: 'solid 1px #cccccc', minHeight: '500px' }} />;
       const sampleRepoLink = <ExternalLink href={sampleRepo} additionalClassName="co-break-all" text={sampleRepo} />;
       const planItems = _.map(plans, plan => <li key={plan.metadata.uid}>{plan.spec.description || plan.spec.externalName}</li>);
@@ -76,13 +76,12 @@ export const CatalogTileDetails = withTranslation()(
                   {tileDescription ? <p>{tileDescription}</p> : <p>No Description</p>}
                   {markdownLoading && <LoadingBox message="Loading Markdown..." />}
                   {markdown && <SyncMarkdownView content={markdown} />}
-                  {longDescription && <p>{longDescription}</p>}
                   {sampleRepo && <p>Sample repository: {sampleRepoLink}</p>}
                   {documentationUrl && (
                     <>
-                      <h2 className="h5">{t('COMMON:MSG_GNB_MORE_1')}</h2>
+                      <h2 className="h5">{t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_SIDEPANEL_4')}</h2>
                       <p>{documentationIframe}</p>
-                      <p>{documentationUrlLink}</p>
+                      {/* <p>{documentationUrlLink}</p> */}
                     </>
                   )}
                   {!_.isEmpty(plans) && (
@@ -112,6 +111,14 @@ export const CatalogTileDetails = withTranslation()(
                           An optional <span className="co-catalog-item-details__kind-label">route</span> to expose your workload outside the cluster.
                         </li>
                       </ul>
+                    </>
+                  )}
+                  {longDescription && (
+                    <>
+                      <hr />
+                      <p>
+                        <ExternalLink href={longDescription} text={t('SINGLE:MSG_SERVICEINSTANCES_CREATEFORM_SIDEPANEL_5')} />
+                      </p>
                     </>
                   )}
                 </div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dropdown, DropdownItem, DropdownToggle, Title } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownToggle, Title, Tooltip } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { Perspective } from '@console/plugin-sdk';
 import { getPerspectives, PerspectiveType } from '../../hypercloud/perspectives';
@@ -11,6 +11,9 @@ import * as UIActions from '../../actions/ui';
 import { history } from '../utils';
 import ClusterDropdown from '../hypercloud/nav/cluster-dropdown';
 import { useTranslation } from 'react-i18next';
+import { coFetchJSON } from '../../co-fetch';
+import {getId, getUserGroup} from '../../hypercloud/auth'
+
 
 type StateProps = {
   activePerspective: string;
@@ -25,6 +28,17 @@ export type NavHeaderProps = {
 
 const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspective, onPerspectiveSelected, activePerspective, onClusterSelected, flags }) => {
   const [isPerspectiveDropdownOpen, setPerspectiveDropdownOpen] = React.useState(false);
+  const [isClusterExist, setIsClusterExist] = React.useState(false)
+
+  React.useEffect(() => {
+    if (isPerspectiveDropdownOpen) {
+    coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
+    .then(result => result.items)
+    .then(res => {
+      !res.length ? setIsClusterExist(false) :  setIsClusterExist(true)
+      })}
+    
+  },[isPerspectiveDropdownOpen]);
 
   const togglePerspectiveOpen = React.useCallback(() => {
     setPerspectiveDropdownOpen(!isPerspectiveDropdownOpen);
@@ -58,27 +72,41 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
 
   const getPerspectiveItems = React.useCallback(
     (perspectives: Perspective[]) => {
+      const {t} = useTranslation();
+
       return perspectives.map((nextPerspective: Perspective) => (
-        <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} isHovered={nextPerspective.properties.id === activePerspective} component="button">
+        isClusterExist===false && nextPerspective.properties.id=="SINGLE" ? 
+        <Tooltip key={nextPerspective.properties.id} position ="top" content ={t('COMMON:MSG_LNB_CONSOLE_1')} >
+        <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} component="button" isDisabled ={true}>
           <Title size="md">
             <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
             {nextPerspective.properties.name}
           </Title>
         </DropdownItem>
+        </Tooltip>
+        :
+        <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} isHovered={nextPerspective.properties.id === activePerspective} component="button">
+        <Title size="md">
+          <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
+          {nextPerspective.properties.name}
+        </Title>
+      </DropdownItem>
+      
+      
       ));
     },
-    [activePerspective, onPerspectiveSelect],
+    [activePerspective, onPerspectiveSelect,isClusterExist],
   );
 
   const { t } = useTranslation();
   const perspectives = getPerspectives.bind(null, t)();
-  const { icon, name } = React.useMemo(() => perspectives.find(p => p.properties.id === activePerspective).properties, [activePerspective, perspectives]);
+  const { selectedIcon, name } = React.useMemo(() => perspectives.find(p => p.properties.id === activePerspective).properties, [activePerspective, perspectives]);
 
   return (
     <>
       <div className="oc-nav-header">
         <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_1')}</div>
-        <Dropdown isOpen={isPerspectiveDropdownOpen} toggle={renderToggle(icon, name)} dropdownItems={getPerspectiveItems(perspectives)} data-test-id="perspective-switcher-menu" />
+        <Dropdown isOpen={isPerspectiveDropdownOpen} toggle={renderToggle(selectedIcon, name)} dropdownItems={getPerspectiveItems(perspectives)} data-test-id="perspective-switcher-menu" />
         {activePerspective == PerspectiveType.SINGLE && (
           <>
             <div className="hc-dropdown__title">{t('COMMON:MSG_LNB_MENU_CONSOLE_2')}</div>

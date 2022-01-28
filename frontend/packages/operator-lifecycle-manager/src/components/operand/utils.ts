@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
 import * as Immutable from 'immutable';
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 import { SpecCapability, Descriptor } from '../descriptors/types';
 import { modelFor } from '@console/internal/module/k8s';
 import { capabilityFieldMap, capabilityWidgetMap } from '../descriptors/spec/spec-descriptor-input';
 import { HIDDEN_UI_SCHEMA, REGEXP_K8S_RESOURCE_SUFFIX, REGEXP_SELECT_OPTION, REGEXP_FIELD_DEPENDENCY_PATH_VALUE, SORT_WEIGHT_SCALE_1, SORT_WEIGHT_SCALE_2, SORT_WEIGHT_SCALE_3 } from './const';
-import { UiSchema } from 'react-jsonschema-form';
 import { SchemaType } from '@console/shared/src/components/dynamic-form';
-import { getSchemaType } from 'react-jsonschema-form/lib/utils';
+import { getSchemaType } from '@rjsf/core/lib/utils';
 import { getSchemaErrors } from '@console/shared/src/components/dynamic-form/utils';
 import { isArray } from 'lodash';
+import { UiSchema } from '@rjsf/core';
 
 // Transform a path string from a descriptor to a JSON schema path array
 export const descriptorPathToUISchemaPath = (path: string): string[] =>
@@ -18,7 +18,7 @@ export const descriptorPathToUISchemaPath = (path: string): string[] =>
   });
 
 // Determine if a given path is defined on a JSONSchema
-export const jsonSchemaHas = (jsonSchema: JSONSchema6, schemaPath: string[]): boolean => {
+export const jsonSchemaHas = (jsonSchema: JSONSchema7, schemaPath: string[]): boolean => {
   const [next, ...rest] = schemaPath;
   const nextSchema = jsonSchema?.[next] ?? jsonSchema?.properties?.[next];
   if (rest.length && !!nextSchema) {
@@ -29,7 +29,7 @@ export const jsonSchemaHas = (jsonSchema: JSONSchema6, schemaPath: string[]): bo
 
 // Applies a hidden widget and label configuration to every property of the given schema.
 // This is useful for whitelisting only a few schema properties when all properties are not known.
-export const hideAllExistingProperties = (schema: JSONSchema6) => {
+export const hideAllExistingProperties = (schema: JSONSchema7) => {
   return _.reduce(
     schema?.properties,
     (acc, _unused, propertyName) => ({
@@ -41,7 +41,7 @@ export const hideAllExistingProperties = (schema: JSONSchema6) => {
 };
 
 // Determine if a schema will produce an empty form field.
-export const hasNoFields = (jsonSchema: JSONSchema6 = {}): boolean => {
+export const hasNoFields = (jsonSchema: JSONSchema7 = {}): boolean => {
   // If schema is empty or has unsupported properties, it will not render any fields on the form
   if (getSchemaErrors(jsonSchema).length > 0) {
     return true;
@@ -49,11 +49,11 @@ export const hasNoFields = (jsonSchema: JSONSchema6 = {}): boolean => {
 
   const type = getSchemaType(jsonSchema) ?? '';
   const handleArray = () => {
-    return hasNoFields(jsonSchema.items as JSONSchema6);
+    return hasNoFields(jsonSchema.items as JSONSchema7);
   };
   const handleObject = () => {
     return _.every(jsonSchema?.properties, hasNoFields) && !jsonSchema?.additionalProperties;
-    //  && hasNoFields(jsonSchema?.additionalProperties as JSONSchema6);
+    //  && hasNoFields(jsonSchema?.additionalProperties as JSONSchema7);
   };
 
   switch (type) {
@@ -77,7 +77,7 @@ const isValidOneofComponent = target => {
 };
 
 // Map json schema to default ui schema
-export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: string): UiSchema => {
+export const getDefaultUISchema = (jsonSchema: JSONSchema7, jsonSchemaName: string): UiSchema => {
   const type = getSchemaType(jsonSchema ?? {});
   if (hasNoFields(jsonSchema)) {
     return HIDDEN_UI_SCHEMA;
@@ -134,17 +134,21 @@ export const getDefaultUISchema = (jsonSchema: JSONSchema6, jsonSchemaName: stri
     return {
       'ui:widget': 'fileUploadWidget',
     };
+  } else if (jsonSchemaName === 'provider' && jsonSchema.enum?.length > 0) {
+    return {
+      'ui:field': 'ProviderDropdownField',
+    };
   }
 
   const handleArray = () => {
-    const itemsUISchema = getDefaultUISchema(jsonSchema.items as JSONSchema6, '');
+    const itemsUISchema = getDefaultUISchema(jsonSchema.items as JSONSchema7, '');
     return !_.isEmpty(itemsUISchema) ? { items: itemsUISchema } : {};
   };
 
   const handleObject = () => {
     return _.reduce(
       jsonSchema.properties,
-      (uiSchemaAccumulator: UiSchema, property: JSONSchema6, name: string) => {
+      (uiSchemaAccumulator: UiSchema, property: JSONSchema7, name: string) => {
         const propertyUISchema = getDefaultUISchema(property, name);
         return _.isEmpty(propertyUISchema)
           ? uiSchemaAccumulator
@@ -257,7 +261,7 @@ export const capabilitiesToUISchema = (capabilities: SpecCapability[] = []) => {
 export const getJSONSchemaOrder = (jsonSchema, uiSchema) => {
   const type = getSchemaType(jsonSchema ?? {});
   const handleArray = () => {
-    const descendantOrder = getJSONSchemaOrder(jsonSchema?.items as JSONSchema6, uiSchema?.items);
+    const descendantOrder = getJSONSchemaOrder(jsonSchema?.items as JSONSchema7, uiSchema?.items);
     return !_.isEmpty(descendantOrder) ? { items: descendantOrder } : {};
   };
 
@@ -368,7 +372,7 @@ export const getJSONSchemaOrder = (jsonSchema, uiSchema) => {
 };
 
 // Map a set of spec descriptors to a ui schema
-export const descriptorsToUISchema = (descriptors: Descriptor<SpecCapability>[], jsonSchema: JSONSchema6) => {
+export const descriptorsToUISchema = (descriptors: Descriptor<SpecCapability>[], jsonSchema: JSONSchema7) => {
   const uiSchemaFromDescriptors = _.reduce(
     descriptors,
     (uiSchemaAccumulator, { path, description, displayName, 'x-descriptors': capabilities = [] }) => {
@@ -409,7 +413,7 @@ export const getUISchema = (jsonSchema, providedAPI) => {
   return _.defaultsDeep(
     {
       metadata: {
-        ...hideAllExistingProperties(jsonSchema?.properties?.metadata as JSONSchema6),
+        ...hideAllExistingProperties(jsonSchema?.properties?.metadata as JSONSchema7),
         name: {
           'ui:title': 'Name',
           'ui:widget': 'TextWidget',

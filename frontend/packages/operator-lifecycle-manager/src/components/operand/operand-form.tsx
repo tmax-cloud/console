@@ -1,4 +1,5 @@
-import { JSONSchema6 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
+// import { JSONSchema7 } from '@rjsf/core';
 import { k8sCreate, k8sUpdate, K8sKind, K8sResourceKind } from '@console/internal/module/k8s';
 import { history, useScrollToTopOnMount } from '@console/internal/components/utils';
 import * as _ from 'lodash';
@@ -60,7 +61,7 @@ export const OperandForm: React.FC<OperandFormProps> = ({ csv, formData, match, 
           )}
         </div>
         <div className="col-md-12 col-md-pull-0 col-lg-11 col-lg-pull-1">
-          <DynamicForm noValidate errors={errors} formContext={{ namespace: match.params.ns }} uiSchema={uiSchema} formData={formData} onChange={onChange} onError={setErrors} onSubmit={handleSubmit} schema={schema} create={create} widgets={{ fileUploadWidget: FileUploadWidget }} />
+          <DynamicForm noValidate errors={errors} formContext={{ namespace: match.params.ns }} uiSchema={uiSchema} formData={formData} onChange={onChange} onError={setErrors} onSubmit={handleSubmit} schema={schema as any} create={create} widgets={{ fileUploadWidget: FileUploadWidget }} />
         </div>
       </div>
     </div>
@@ -78,6 +79,6 @@ export type OperandFormProps = {
   model: K8sKind;
   providedAPI: ProvidedAPI;
   prune?: (data: any) => any;
-  schema: JSONSchema6;
+  schema: JSONSchema7;
   create?: boolean;
 };

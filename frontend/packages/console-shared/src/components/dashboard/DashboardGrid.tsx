@@ -4,6 +4,7 @@ import { global_breakpoint_lg as breakpointLG } from '@patternfly/react-tokens';
 import { DashboardCardSpan } from '@console/plugin-sdk';
 import { useRefWidth } from '@console/internal/components/utils/ref-width-hook';
 
+
 export enum GridPosition {
   MAIN = 'MAIN',
   LEFT = 'LEFT',
@@ -18,13 +19,14 @@ const mapCardsToGrid = (cards: GridDashboardCard[] = [], keyPrefix: string, igno
     </GridItem>
   ));
 
-const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards, leftCards, rightCards }) => {
+const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards, leftCards, rightCards, isSingleCluster }) => {
   const [containerRef, width] = useRefWidth();
   const smallGrid = !!containerRef.current && width <= parseInt(breakpointLG.value, 10);
 
   const mainGridCards = React.useMemo(() => mapCardsToGrid(mainCards, 'main', smallGrid), [mainCards, smallGrid]);
   const leftGridCards = React.useMemo(() => mapCardsToGrid(leftCards, 'left', smallGrid), [leftCards, smallGrid]);
   const rightGridCards = React.useMemo(() => mapCardsToGrid(rightCards, 'right', smallGrid), [rightCards, smallGrid]);
+
 
   return (
     <div ref={containerRef}>
@@ -33,25 +35,38 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({ mainCards, leftCards, rig
           <GridItem lg={12} md={12} sm={12}>
             <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
           </GridItem>
-          <GridItem lg={12} md={12} sm={12}>
-            <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
-          </GridItem>
+          {isSingleCluster ? null :
+            <GridItem lg={12} md={12} sm={12}>
+              <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
+            </GridItem>}
           <GridItem lg={12} md={12} sm={12}>
             <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
           </GridItem>
         </Grid>
       ) : (
-        <Grid className="co-dashboard-grid">
-          <GridItem lg={3} md={3} sm={3}>
-            <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
-          </GridItem>
-          <GridItem lg={6} md={6} sm={6}>
-            <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
-          </GridItem>
-          <GridItem lg={3} md={3} sm={3}>
-            <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
-          </GridItem>
-        </Grid>
+        isSingleCluster ?
+          (
+            <Grid className="co-dashboard-grid">
+              <GridItem lg={9} md={9} sm={9}>
+                <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
+              </GridItem>
+              <GridItem lg={3} md={3} sm={3}>
+                <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
+              </GridItem>
+            </Grid>
+          ) : (
+            <Grid className="co-dashboard-grid">
+              <GridItem lg={3} md={3} sm={3}>
+                <Grid className="co-dashboard-grid">{leftGridCards}</Grid>
+              </GridItem>
+              <GridItem lg={6} md={6} sm={6}>
+                <Grid className="co-dashboard-grid">{mainGridCards}</Grid>
+              </GridItem>
+              <GridItem lg={3} md={3} sm={3}>
+                <Grid className="co-dashboard-grid">{rightGridCards}</Grid>
+              </GridItem>
+            </Grid>
+          )
       )}
     </div>
   );
@@ -69,4 +84,5 @@ type DashboardGridProps = {
   mainCards: GridDashboardCard[];
   leftCards?: GridDashboardCard[];
   rightCards?: GridDashboardCard[];
+  isSingleCluster?: boolean;
 };

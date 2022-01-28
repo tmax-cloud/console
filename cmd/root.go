@@ -85,6 +85,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&cfg.KeycloakUseHiddenIframe, "keycloak-use-hidden-iframe", false, "Use keycloak Hidden Iframe")
 	// clusterInfo
 	rootCmd.PersistentFlags().StringVar(&cfg.K8sEndpoint, "k8s-endpoint", "", "when addr is empty, we consider console installed in k8s")
+	rootCmd.PersistentFlags().StringVar(&cfg.BearerToken, "bearer-token", "", "when off-cluster, you should fill out bearer-token")
 	rootCmd.PersistentFlags().StringVar(&cfg.HypercloudEndpoint, "hypercloud-endpoint", "", "URL of the Hypercloud Server API server")
 	rootCmd.PersistentFlags().StringVar(&cfg.MultiHypercloudEndpoint, "multi-hypercloud-endpoint", "", "URL of the Multi Hypercloud Server API server")
 	rootCmd.PersistentFlags().StringVar(&cfg.WebhookEndpoint, "webhook-endpoint", "", "URL of the hypercloud webhook endpoint")

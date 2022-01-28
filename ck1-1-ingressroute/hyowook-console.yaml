@@ -1,0 +1,106 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: console-ingressroute-hyowook
+  namespace: api-gateway-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`hyowook.tmaxcloud.org`)
+      priority: 20
+      services:
+        - name: hyowook-service
+          namespace: api-gateway-system
+          kind: Service
+          port: 9000
+          scheme: https
+          serversTransport: insecure@file
+    - kind: Rule
+      match: PathPrefix(`/api/hypercloud`, `/api/multi-hypercloud`,`/api/webhook`) && Host(`hyowook.tmaxcloud.org`)
+      priority: 100
+      middlewares:
+        - name: jwt-decode-auth@file
+        - name: hypercloud-stripprefix@file
+      services:
+        - kind: Service
+          name: hypercloud5-api-server-service
+          namespace: hypercloud5-system
+          port: https
+          scheme: https
+          serversTransport: insecure@file
+    - kind: Rule
+      match: PathPrefix(`/api/kubernetes`) && Host(`hyowook.tmaxcloud.org`)
+      priority: 100
+      middlewares:
+        - name: jwt-decode-auth@file
+        - name: kubernetes-stripprefix@file
+      services:
+        - kind: Service
+          name: kubernetes
+          namespace: default
+          port: https
+          scheme: https
+          serversTransport: kubernetes@file
+    - kind: Rule
+      match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`hyowook.tmaxcloud.orgg`)
+      priority: 100
+      middlewares:
+        - name: jwt-decode-auth@file
+        - name: monitoring-stripprefix-tenancy@file
+      services:
+        - kind: Service
+          name: prometheus-k8s
+          namespace: monitoring
+          port: web
+          scheme: http
+    - kind: Rule
+      match: PathPrefix(`/api/prometheus/api`) && Host(`hyowook.tmaxcloud.org`)
+      priority: 100
+      middlewares:
+        - name: jwt-decode-auth@file
+        - name: monitoring-stripprefix@file
+      services:
+        - kind: Service
+          name: prometheus-k8s
+          namespace: monitoring
+          port: web
+          scheme: http
+    - kind: Rule
+      match: PathPrefix(`/api/alertmanager/api`) && Host(`hyowook.tmaxcloud.org`)
+      priority: 100
+      middlewares:
+        - name: jwt-decode-auth@file
+        - name: monitoring-stripprefix@file
+      services:
+        - kind: Service
+          name: alertmanager-main
+          namespace: monitoring
+          port: web
+          scheme: http
+  tls:
+    secretName: gateway-tls-acme
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "hyowook-service"
+  namespace: api-gateway-system
+spec:
+  ports:
+    - port: 9000
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: "hyowook-service"
+  namespace: api-gateway-system
+subsets:
+  - addresses:
+      - ip: 192.168.8.103
+    ports:
+      - port: 9000

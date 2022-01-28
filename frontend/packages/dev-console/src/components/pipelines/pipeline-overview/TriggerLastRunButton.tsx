@@ -6,7 +6,7 @@ import { impersonateStateToProps } from '@console/internal/reducers/ui';
 import { useAccessReview } from '@console/internal/components/utils';
 import { AccessReviewResourceAttributes } from '@console/internal/module/k8s';
 import { rerunPipelineAndStay } from '../../../utils/pipeline-actions';
-import { PipelineRunModel } from '../../../models';
+import { PipelineRunModel } from '@console/internal/models';
 import { usePipelineRunWithUserLabel } from '../../pipelineruns/triggered-by';
 import { getLatestRun, PipelineRun } from '../../../utils/pipeline-augment';
 import { useTranslation } from 'react-i18next';

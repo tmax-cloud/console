@@ -5,11 +5,11 @@ import { Status } from '@console/shared';
 import { K8sResourceKind, K8sClaimResourceKind, modelFor } from '../../module/k8s';
 import { fromNow } from '@console/internal/components/utils/datetime';
 import { sortable } from '@patternfly/react-table';
-import { Popover } from '@patternfly/react-core';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { Kebab, navFactory, ResourceSummary, SectionHeading, ResourceLink, ResourceKebab } from '../utils';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { ErrorPopoverStatus } from './utils/error-popover-status';
 
 const { common } = Kebab.factory;
 
@@ -26,12 +26,6 @@ const ResourceQuotaClaimTableHeader = (t?: TFunction) => {
       sortField: 'metadata.name',
       transforms: [sortable],
       props: { className: tableColumnClasses[0] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_98'),
-      sortField: 'resourceName',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_3'),
@@ -74,17 +68,8 @@ const ResourceQuotaClaimTableRow: RowFunction<K8sClaimResourceKind> = ({ obj: re
       <TableData className={tableColumnClasses[0]}>
         <ResourceLink kind={kind} name={resourcequotaclaims.metadata.name} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.uid} />
       </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="ResourceQuota" name={resourcequotaclaims.resourceName} namespace={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.resourceName} linkTo={resourcequotaclaims.status?.status === 'Approved'} />
-      </TableData>
       <TableData className={tableColumnClasses[2]}>
-        {resourcequotaclaims?.status?.status === 'Error' ? (
-          <Popover headerContent={<div>에러 상세</div>} bodyContent={<div>{resourcequotaclaims.status?.reason}</div>} maxWidth="30rem" position="right">
-            <Status status={resourcequotaclaims?.status?.status} />
-          </Popover>
-        ) : (
-          <Status status={resourcequotaclaims?.status?.status} />
-        )}
+        <ErrorPopoverStatus error={resourcequotaclaims?.status?.status === 'Error'} status={resourcequotaclaims?.status?.status} reason={resourcequotaclaims.status?.reason} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
         <ResourceLink kind="Namespace" name={resourcequotaclaims.metadata.namespace} title={resourcequotaclaims.metadata.namespace} />
@@ -154,8 +139,6 @@ const ResourceQuotaClaimsDetails: React.FC<ResourceQuotaClaimDetailsProps> = ({ 
             </div>
             <div className="col-md-6">
               <dl className="co-m-pane__details">
-                <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_118')}</dt>
-                <dd>{resourcequotaclaims.resourceName}</dd>
                 <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
                 <dd>
                   <Status status={resourcequotaclaims.status?.status} />

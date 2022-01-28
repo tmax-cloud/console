@@ -6,9 +6,9 @@ import { modelFor } from '@console/internal/module/k8s';
 import { NavSection } from '@console/internal/components/nav/section';
 import { HrefLink, ResourceNSLink, ResourceClusterLink, NewTabLink, Separator } from '@console/internal/components/nav/items';
 import HyperCloudDefaultMenus from '@console/internal/hypercloud/menu/hc-default-menus';
-import { CustomMenusMap, MenuType, MenuLinkType, MenuContainerLabels } from '@console/internal/hypercloud/menu/menu-types';
+import { CustomMenusMap, MenuType, MenuLinkType, CUSTOM_LABEL_TYPE } from '@console/internal/hypercloud/menu/menu-types';
 import { PerspectiveType } from '@console/internal/hypercloud/perspectives';
-import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
+import { getContainerLabel, getLabelTextByDefaultLabel, getLabelTextByKind } from '@console/internal/components/hypercloud/utils/menu-utils';
 
 type MenuData = {
   menuType: MenuType;
@@ -17,7 +17,7 @@ type MenuData = {
   innerMenus?: Array<{ menuType: string; kind: string; label?: string }>;
 };
 
-export const basicMenusFactory = perspective => {
+export const basicMenusFactory = (perspective, canListNS) => {
   let menus = [];
   switch (perspective) {
     case PerspectiveType.MASTER:
@@ -46,17 +46,24 @@ export const basicMenusFactory = perspective => {
           {menus?.map((menuData, index) => {
             switch (menuData.menuType) {
               case MenuType.CONTAINER: {
-                const containerLabel = t(menuData.label);
+                const { label: containerLabel, type } = getLabelTextByDefaultLabel(menuData.label, t);
                 return (
-                  <NavSection title={containerLabel} key={containerLabel}>
+                  <NavSection title={containerLabel} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map(innerMenuKind => {
-                      return generateMenu(perspective, innerMenuKind, true, t, i18n);
+                      if (innerMenuKind === 'Dashboard' && !canListNS) {
+                        // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
+                        return;
+                      }
+                      // MEMO : generateMenu()에서 data를 동일하게 object형식으로 받게하기 위해 정제해줌. (kind와 menuType모두 innerMenuKind로 값 동일함)
+                      const d = { kind: innerMenuKind, menuType: innerMenuKind };
+                      return generateMenu(perspective, d, true, t, i18n);
                     })}
                   </NavSection>
                 );
               }
               case MenuType.SEPERATOR:
                 return <Separator name="seperator" key={`seperator-${index}`} />;
+              case MenuType.NEW_TAB_LINK:
               case MenuType.REGISTERED_MENU: {
                 return generateMenu(perspective, menuData, false, t, i18n);
               }
@@ -71,7 +78,7 @@ export const basicMenusFactory = perspective => {
   );
 };
 
-export const dynamicMenusFactory = (perspective, data) => {
+export const dynamicMenusFactory = (perspective, data, canListNS) => {
   return (
     <Translation>
       {(t, { i18n }) => (
@@ -79,11 +86,14 @@ export const dynamicMenusFactory = (perspective, data) => {
           {data.menus?.map((menuData: MenuData, index) => {
             switch (menuData.menuType) {
               case MenuType.CONTAINER: {
-                const labelText = menuData.label?.toLowerCase().replace(' ', '') || '';
-                const containerLabel = !!MenuContainerLabels[labelText] ? t(MenuContainerLabels[labelText]) : menuData.label;
+                const { containerLabel, type } = getContainerLabel(menuData.label, t);
                 return (
-                  <NavSection title={containerLabel || ''} key={containerLabel}>
+                  <NavSection title={containerLabel || ''} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map(innerMenuData => {
+                      if (innerMenuData.kind === 'Dashboard' && !canListNS) {
+                        // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
+                        return;
+                      }
                       return generateMenu(perspective, innerMenuData, true, t, i18n);
                     })}
                   </NavSection>
@@ -91,6 +101,7 @@ export const dynamicMenusFactory = (perspective, data) => {
               }
               case MenuType.SEPERATOR:
                 return <Separator name={menuData.label || ''} key={`seperator-${index}`} />;
+              case MenuType.NEW_TAB_LINK:
               case MenuType.REGISTERED_MENU: {
                 return generateMenu(perspective, menuData, false, t, i18n);
               }
@@ -121,18 +132,31 @@ const getMenuComponent = (menuInfo, labelText) => {
   }
 };
 
-const generateMenu = (perspective, data, isInnerMenu, t: TFunction, i18n: i18n) => {
-  // MEMO : BasicMenus는 string으로 들어오고, DynamicMenus는 object형태로 데이타가 들어옴.
-  const kind = typeof data === 'string' ? data : data.kind || '';
-  // MEMO : data가 string타입일 땐 data값이 kind와 menuType으로 동일함.
-  const menuType = typeof data === 'string' ? kind : data.menuType || '';
+const generateMenu = (perspective, data: any, isInnerMenu, t: TFunction, i18n: i18n) => {
+  const kind = data.kind || '';
+  const menuType = data.menuType || '';
   if (isInnerMenu && menuType === MenuType.SEPERATOR) {
     return <Separator name="seperator" />;
+  } else if (menuType === MenuType.NEW_TAB_LINK) {
+    const label = data.label || 'label empty';
+    const menuInfo = {
+      visible: true,
+      type: MenuLinkType.NewTabLink,
+      defaultLabel: label,
+      url: data.linkUrl,
+      isMultiOnly: false,
+    };
+    return isInnerMenu ? (
+      getMenuComponent(menuInfo, label)
+    ) : (
+      <NavSection title={label} isSingleChild={true} type={CUSTOM_LABEL_TYPE}>
+        {getMenuComponent(menuInfo, label)}
+      </NavSection>
+    );
   } else {
     if (!!modelFor(kind)) {
+      const { label, type } = getLabelTextByKind(kind, t);
       const model = modelFor(kind);
-
-      const label = ResourceLabel(model, t);
       const modelMenuInfo = model.menuInfo;
 
       if (!modelMenuInfo || !modelMenuInfo.visible || (perspective !== PerspectiveType.MULTI && modelMenuInfo.isMultiOnly === true)) {
@@ -145,7 +169,7 @@ const generateMenu = (perspective, data, isInnerMenu, t: TFunction, i18n: i18n) 
         return isInnerMenu ? (
           getMenuComponent(menuInfo, label)
         ) : (
-          <NavSection title={label} isSingleChild={true}>
+          <NavSection title={label} isSingleChild={true} type={type}>
             {getMenuComponent(menuInfo, label)}
           </NavSection>
         );
@@ -155,11 +179,11 @@ const generateMenu = (perspective, data, isInnerMenu, t: TFunction, i18n: i18n) 
       if (!menuInfo || !menuInfo.visible) {
         return <></>;
       } else {
-        const label = i18n.exists(menuInfo.defaultLabel) ? t(menuInfo.defaultLabel) : menuInfo.defaultLabel;
+        const { label, type } = getLabelTextByDefaultLabel(menuInfo.defaultLabel, t);
         return isInnerMenu ? (
           getMenuComponent(menuInfo, label)
         ) : (
-          <NavSection title={label} isSingleChild={true}>
+          <NavSection title={label} isSingleChild={true} type={type}>
             {getMenuComponent(menuInfo, label)}
           </NavSection>
         );

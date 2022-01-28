@@ -1559,4 +1559,29 @@ export const ClusterMenuPolicyModel: K8sKind = {
   kind: 'ClusterMenuPolicy',
   id: 'clustermenupolicy',
   namespaced: false,
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_164',
+    labelPlural: 'COMMON:MSG_LNB_MENU_83',
+  },
+};
+
+export const ApplicationModel: K8sKind = {
+  kind: 'Application',
+  label: 'Application',
+  labelPlural: 'Applications',
+  apiGroup: 'cd.tmax.io',
+  apiVersion: 'v1',
+  abbr: 'A',
+  namespaced: true,
+  id: 'application',
+  plural: 'applications',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_216',
+    labelPlural: 'COMMON:MSG_LNB_MENU_215',
+  },
 };
