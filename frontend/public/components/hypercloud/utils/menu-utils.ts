@@ -21,15 +21,16 @@ export const getCmpListFetchUrl = () => {
   return `${location.origin}/api/kubernetes/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
 };
 const initializeCmpFlag = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     coFetchJSON(getCmpListFetchUrl())
       .then(res => {
         const policy = res?.items?.[0];
         window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
         resolve(DoneMessage);
       })
-      .catch(err => {
+      .catch(() => {
         window.SERVER_FLAGS.showCustomPerspective = false;
+        // eslint-disable-next-line no-console
         console.log(`No cmp resource.`);
         // MEMO : 링크나 메뉴생성에 에러가 나도 일단 app 화면은 떠야 되니 resolve처리함.
         resolve(DoneMessage);
@@ -38,15 +39,16 @@ const initializeCmpFlag = () => {
 };
 
 const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const url = ingressUrlWithLabelSelector(labelSelector);
+    // const getNodePort;
     coFetchJSON(url)
       .then(res => {
         const { items } = res;
         if (items?.length > 0) {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
+          if (host) {
             const menu = _.get(CustomMenusMap, menuKey);
             if (menuKey === 'Grafana') {
               !!menu && _.assign(menu, { url: `https://${host}/login/generic_oauth` });
@@ -57,7 +59,7 @@ const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
         }
         resolve(DoneMessage);
       })
-      .catch(err => {
+      .catch(() => {
         resolve(DoneMessage);
       });
   });
@@ -97,19 +99,6 @@ export const initializationForMenu = async () => {
   );
 };
 
-export const getMenuTitle = (kind, t: TFunction): { label: string; type: string } => {
-  if (!!modelFor(kind)) {
-    return getLabelTextByKind(kind, t);
-  } else {
-    const menuInfo = CustomMenusMap[kind];
-    if (!!menuInfo) {
-      return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t);
-    } else {
-      return { label: '', type: CUSTOM_LABEL_TYPE };
-    }
-  }
-};
-
 export const getLabelTextByKind = (kind, t: TFunction) => {
   const model = modelFor(kind);
   const label = ResourceLabel(model, t);
@@ -132,10 +121,20 @@ export const getLabelTextByDefaultLabel = (defaultLabel, t: TFunction) => {
   }
   return { label, type };
 };
+export const getMenuTitle = (kind, t: TFunction): { label: string; type: string } => {
+  if (modelFor(kind)) {
+    return getLabelTextByKind(kind, t);
+  }
+  const menuInfo = CustomMenusMap[kind];
+  if (menuInfo) {
+    return getLabelTextByDefaultLabel(menuInfo.defaultLabel, t);
+  }
+  return { label: '', type: CUSTOM_LABEL_TYPE };
+};
 
 export const getContainerLabel = (label, t: TFunction) => {
   const labelText = label?.toLowerCase().replace(' ', '') || '';
-  const containerKeyOrLabel = !!MenuContainerLabels[labelText] ? MenuContainerLabels[labelText] : label;
+  const containerKeyOrLabel = MenuContainerLabels[labelText] ? MenuContainerLabels[labelText] : label;
   const i18nExist = i18next.exists(containerKeyOrLabel);
   let containerLabel = '';
   let type = '';
