@@ -71,7 +71,7 @@ type jsGlobals struct {
 	KeycloakClientId        string `json:keycloakClientId`
 	KeycloakUseHiddenIframe bool   `json:keycloakUseHiddenIframe`
 
-	McMode            bool   `json:"mcMode"`
+	McMode            bool   `json:mcMode`
 	ReleaseModeFlag   bool   `json:"releaseModeFlag"`
 	CustomProductName string `json:"customProductName"`
 }
