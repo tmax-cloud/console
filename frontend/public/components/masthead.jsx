@@ -4,21 +4,27 @@ import { Brand, PageHeader } from '@patternfly/react-core';
 
 import { MastheadToolbar } from './masthead-toolbar';
 import { history } from './utils';
-import hcLogoImg from '../imgs/logo_symbol_text.svg';
+import hcLogoImg from '../imgs/logo_hyper_cloud_text.svg';
+import scLogoImg from '../imgs/logo_super_cloud_text.svg';
 
-export const getBrandingDetails = () => {
-  let logoImg, productName;
-  // Webpack won't bundle these images if we don't directly reference them, hence the switch
-  logoImg = hcLogoImg;
-  productName = 'HyperCloud';
-  if (window.SERVER_FLAGS.customLogoURL) {
-    logoImg = window.SERVER_FLAGS.customLogoURL;
+export const getBrandingDetails = productName => {
+  switch (productName) {
+    case 'hypercloud': {
+      return { productName: 'HyperCloud', logoImg: hcLogoImg };
+    }
+    case 'supercloud': {
+      return { productName: 'SuperCloud', logoImg: scLogoImg };
+    }
+    default: {
+      return { productName: 'HyperCloud', logoImg: hcLogoImg };
+    }
   }
-  if (window.SERVER_FLAGS.customProductName) {
-    productName = window.SERVER_FLAGS.customProductName;
-  }
-  return { logoImg, productName };
 };
+
+// export const getBrandingDetails = () => {
+//   const { logoImg, productName } = getProductLogo(window.SERVER_FLAGS.customProductName);
+//   return { logoImg, productName };
+// };
 
 export const Masthead = React.memo(({ onNavToggle, keycloak }) => {
   const details = getBrandingDetails();
