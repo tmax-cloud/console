@@ -18,6 +18,7 @@ export enum PerspectiveType {
   MULTI = 'MULTI',
   SINGLE = 'SINGLE',
   DEVELOPER = 'DEVELOPER',
+  BAREMETAL = 'BAREMETAL',
   CUSTOM = 'CUSTOM',
 }
 
@@ -26,6 +27,7 @@ export const PerspectiveLabelKeys = {
   [PerspectiveType.MULTI]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_2',
   [PerspectiveType.SINGLE]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_1',
   [PerspectiveType.DEVELOPER]: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2',
+  [PerspectiveType.BAREMETAL]: 'BAREMETAL',
   [PerspectiveType.CUSTOM]: 'CUSTOM',
 };
 
