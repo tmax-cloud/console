@@ -373,7 +373,7 @@ export class Dropdown extends DropdownMixin {
     const noBookmark = this.props.noBookmark || false;
 
     const addItem = (key, content) => {
-   
+
       const selected = key === selectedKey && !this.props.noSelection;
       const hover = key === keyboardHoverKey;
       const klass = classNames({ active: selected });
@@ -396,16 +396,19 @@ export class Dropdown extends DropdownMixin {
           </li>,
         );
       }
-      if(content=="모든 네임스페이스"){
-        rows.unshift(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />)
-      }else{
-
-        rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
-      }
+      rows.push(<DropDownRow className={klass} key={key} itemKey={key} content={content} onBookmark={!noBookmark && storageKey && this.onBookmark} onclick={this.onClick} selected={selected} hover={hover} autocompleteFilter={autocompleteFilter} />);
     };
+    if (this.props.sortFunction) {
 
-    _.each(items, (v, k) => addItem(k, v));
+      let namespaceArray = Object.entries(items)
+      let sortedNamespace = this.props.sortFunction(namespaceArray)
+      sortedNamespace.forEach(([key, value], index) => addItem(key, value))
 
+    }
+    else {
+      _.each(items, (v, k) => addItem(k, v));
+    }
+    //_.each(items, (v, k) => addItem(k, v));
     //render PF4 dropdown markup if this is not the autocomplete filter
     if (autocompleteFilter) {
       return (
@@ -554,7 +557,9 @@ const ActionsMenu_ = ({ actions, impersonate, title = undefined }) => {
     }
 
     Promise.all(promises)
-      .then(results => setVisible(_.some(results, 'status.allowed')))
+      .then(results => {
+        setVisible(_.some(results, 'status.allowed'))
+      })
       .catch(() => setVisible(true));
   }, [actions, impersonate, setVisible]);
 
@@ -587,9 +592,9 @@ export const ContainerDropdown = withTranslation()(
       const { t } = this.props;
       return initContainer
         ? {
-            [container.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_5'),
-            [initContainer.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_6'),
-          }
+          [container.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_5'),
+          [initContainer.name]: t('SINGLE:MSG_PODS_PODDETAILS_TABENVIRONMENTVARIABLE_6'),
+        }
         : {};
     }
 
