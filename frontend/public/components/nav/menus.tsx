@@ -32,6 +32,9 @@ export const basicMenusFactory = (perspective, canListNS) => {
     case PerspectiveType.DEVELOPER:
       menus = HyperCloudDefaultMenus.DeveloperNavMenus;
       break;
+    case PerspectiveType.BAREMETAL:
+      menus = HyperCloudDefaultMenus.BaremetalNavMenus;
+      break;
     case PerspectiveType.CUSTOM:
       menus = HyperCloudDefaultMenus.CustomNavMenus;
       break;
