@@ -7,6 +7,8 @@
     <title>[[ .CustomProductName ]]</title>
     [[ if eq .CustomProductName "SuperCloud" ]]
     <link rel="shortcut icon" href="<%= require('./imgs/BI_Logo_Supercloud.png') %>" />
+    [[ end ]] [[ if eq .CustomProductName "supercloud" ]]
+    <link rel="shortcut icon" href="<%= require('./imgs/BI_Logo_Supercloud.png') %>" />
     [[ else ]]
     <link rel="shortcut icon" href="<%= require('./imgs/favicon_128x128.png') %>" />
     [[ end ]]

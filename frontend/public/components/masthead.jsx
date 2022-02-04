@@ -7,7 +7,8 @@ import { history } from './utils';
 import hcLogoImg from '../imgs/logo_hyper_cloud_text.svg';
 import scLogoImg from '../imgs/logo_super_cloud_text.svg';
 
-export const getBrandingDetails = productName => {
+export const getBrandingDetails = () => {
+  const productName = window.SERVER_FLAGS.customProductName.toLocaleLowerCase();
   switch (productName) {
     case 'hypercloud': {
       return { productName: 'HyperCloud', logoImg: hcLogoImg };
