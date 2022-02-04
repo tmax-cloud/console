@@ -64,7 +64,7 @@ export const ClusterDashboard: React.FC<{}> = () => {
 
   const mainCards = [{ Card: StatusCard }, { Card: UtilizationCard }];
   const leftCards = [{ Card: DetailsCard }];
-  const rightCards = isSingleCluster ? [{ Card: ActivityCard }] : [{ Card: InventoryCard }, { Card: ActivityCard }];
+  const rightCards = [{ Card: InventoryCard }, { Card: ActivityCard }];
 
   const dashboard = <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} isSingleCluster={isSingleCluster} />;
   const loading = <div></div>;

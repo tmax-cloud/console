@@ -10,6 +10,8 @@ import { AsyncComponent } from '../../../utils';
 import { useExtensions, DashboardsOverviewInventoryItem, isDashboardsOverviewInventoryItem, LazyLoader } from '@console/plugin-sdk';
 import { useK8sWatchResource, useK8sWatchResources, WatchK8sResources } from '../../../utils/k8s-watch-hook';
 import { useTranslation } from 'react-i18next';
+import { getActivePerspective } from '@console/internal/actions/ui';
+import { isSingleClusterPerspective } from '../../../../hypercloud/perspectives';
 // import { find } from 'lodash';
 import { NamespaceClaimModel, ResourceQuotaClaimModel } from '../../../../models/hypercloud';
 import { NodeModel, PersistentVolumeClaimModel, PodModel, ServiceModel } from '../../../../models';
@@ -75,7 +77,12 @@ const RCCard: React.FC<RCCardProps> = React.memo(({ rcItems }) => {
 export const InventoryCard = () => {
   const itemExtensions = useExtensions<DashboardsOverviewInventoryItem>(isDashboardsOverviewInventoryItem);
   const { resourceItems, claimItems } = React.useMemo(() => splitItems(itemExtensions), [itemExtensions]);
+  const [isSingleCluster, setSingleCluster] = React.useState(isSingleClusterPerspective());
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    setSingleCluster(isSingleClusterPerspective());
+  }, [getActivePerspective()]);
 
   return (
     <DashboardCard data-test-id="inventory-card">
@@ -84,9 +91,9 @@ export const InventoryCard = () => {
       </DashboardCardHeader>
       <DashboardCardBody>
         <RCCard rcItems={resourceItems} />
-        <div className={classNames('co-status-card__alerts-body', 'co-dashboard-card__body--top-margin')}>
+        {isSingleCluster ? null : <div className={classNames('co-status-card__alerts-body', 'co-dashboard-card__body--top-margin')}>
           <RCCard rcItems={claimItems} />
-        </div>
+        </div> }
       </DashboardCardBody>
     </DashboardCard>
   );
