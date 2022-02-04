@@ -71,8 +71,9 @@ type jsGlobals struct {
 	KeycloakClientId        string `json:keycloakClientId`
 	KeycloakUseHiddenIframe bool   `json:keycloakUseHiddenIframe`
 
-	McMode          bool `json:mcMode`
-	ReleaseModeFlag bool `json:"releaseModeFlag"`
+	McMode            bool   `json:"mcMode"`
+	ReleaseModeFlag   bool   `json:"releaseModeFlag"`
+	CustomProductName string `json:"customProductName"`
 }
 
 type Console struct {
@@ -84,9 +85,10 @@ type Console struct {
 	GOOS        string
 	KubeVersion string
 	// customization
-	McMode          bool
-	ReleaseModeFlag bool
-	GitlabURL       string
+	McMode            bool
+	ReleaseModeFlag   bool
+	GitlabURL         string
+	CustomProductName string
 	// Keycloak (Hyperauth) information for logging to console
 	KeycloakRealm           string
 	KeycloakAuthURL         string
@@ -434,9 +436,10 @@ func (c *Console) indexHandler(w http.ResponseWriter, r *http.Request) {
 		KeycloakClientId:        c.KeycloakClientId,
 		KeycloakUseHiddenIframe: c.KeycloakUseHiddenIframe,
 
-		GitlabURL:       c.GitlabURL,
-		McMode:          c.McMode,
-		ReleaseModeFlag: c.ReleaseModeFlag,
+		GitlabURL:         c.GitlabURL,
+		McMode:            c.McMode,
+		ReleaseModeFlag:   c.ReleaseModeFlag,
+		CustomProductName: c.CustomProductName,
 	}
 	if c.PrometheusProxyConfig != nil {
 		jsg.PrometheusBaseURL = proxy.SingleJoiningSlash(c.BaseURL.Path, prometheusProxyPath)
