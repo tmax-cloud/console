@@ -40,6 +40,7 @@ declare interface Window {
     GOOS: string;
     McMode: boolean;
     showCustomPerspective: boolean;
+    websecurePortNum: string;
     KeycloakAuthURL: string;
     KeycloakRealm: string;
     gitlabURL: string;
