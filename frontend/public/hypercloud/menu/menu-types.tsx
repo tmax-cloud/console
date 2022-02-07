@@ -145,6 +145,15 @@ export const CustomMenusMap: CustomMenus = {
     resource: 'events',
     isMultiOnly: false,
   },
+  ArgoCD: {
+    kind: 'ArgoCD',
+    visible: true,
+    type: MenuLinkType.NewTabLink,
+    defaultLabel: 'ArgoCD',
+    url: '',
+    // url: 'argocd.ckcloud.org',
+    isMultiOnly: false,
+  },
   Grafana: {
     kind: 'Grafana',
     visible: true,
