@@ -95,7 +95,7 @@ export const Area: React.FC<AreaProps> = ({ namespace, query, samples = DEFAULT_
   return <AreaChart data={[data]} loading={loading} {...rest} />;
 };
 
-type AreaChartProps = {
+export type AreaChartProps = {
   className?: string;
   formatDate?: (date: Date) => string;
   humanize?: Humanize;
