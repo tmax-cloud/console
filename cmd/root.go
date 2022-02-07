@@ -101,6 +101,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&cfg.ReleaseMode, "release-mode", true, "when true, use jwt token given by keycloak")
 	rootCmd.PersistentFlags().StringVar(&cfg.PublicDir, "public-dir", "./frontend/public/dist", "listen Address")
 	rootCmd.PersistentFlags().StringVar(&cfg.DynamicFile, "dynamic-file", "./configs/dynamic-config.yaml", "dynamic config file (default is ./configs/dynamic-config.yaml")
+	rootCmd.PersistentFlags().StringVar(&cfg.CustomProductName, "custom-product-name", "hypercloud", "prduct name for console | default hypercloud")
 
 	err := viper.BindPFlags(rootCmd.Flags())
 	if err != nil {

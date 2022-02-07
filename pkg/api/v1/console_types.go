@@ -67,8 +67,9 @@ type ClusterInfo struct {
 
 // +k8s:deepcopy-gen=true
 type AppInfo struct {
-	McMode      bool   `yaml:"mcMode,omitempty"`
-	ReleaseMode bool   `yaml:"releaseMode,omitempty"`
-	PublicDir   string `yaml:"publicDir,omitempty"`
-	DynamicFile string `yaml:"dynamicFile,omitempty"`
+	McMode            bool   `yaml:"mcMode,omitempty"`
+	ReleaseMode       bool   `yaml:"releaseMode,omitempty"`
+	PublicDir         string `yaml:"publicDir,omitempty"`
+	DynamicFile       string `yaml:"dynamicFile,omitempty"`
+	CustomProductName string `yaml:"customProductName,omitempty"`
 }
