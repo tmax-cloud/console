@@ -1525,7 +1525,7 @@ export const AWXModel: K8sKind = {
   menuInfo: {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
-    isMultiOnly: true,
+    isMultiOnly: false,
   },
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_199',
@@ -1583,5 +1583,48 @@ export const ApplicationModel: K8sKind = {
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_216',
     labelPlural: 'COMMON:MSG_LNB_MENU_215',
+  },
+};
+
+//임시값, apiVersion, apiGroup 등 추가 정보 필요
+export const NodeConfigModel: K8sKind = {
+  label: 'Node Config',
+  labelPlural: 'Node Configs',
+  apiVersion: 'v1',
+  apiGroup: 'nodeconfig.tmax.io',
+  plural: 'nodeconfigs',
+  abbr: 'NC',
+  namespaced: false,
+  kind: 'NodeConfig',
+  id: 'nodeconfig',  
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'NodeConfig',
+    labelPlural: 'NodeConfig',
+  },
+};
+
+export const BareMetalHostModel: K8sKind = {
+  label: 'Bare Metal Host',
+  labelPlural: 'Bare Metal Hosts',
+  apiVersion: 'v1',
+  apiGroup: 'baremetal.tmax.io',
+  plural: 'baremetalhosts',
+  abbr: 'BMH',
+  namespaced: false,
+  kind: 'BareMetalHost',
+  id: 'baremetalhost',  
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceClusterLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'BareMetalHost',
+    labelPlural: 'BareMetalHost',
   },
 };
