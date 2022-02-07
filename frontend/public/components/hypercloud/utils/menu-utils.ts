@@ -88,6 +88,12 @@ export const initializationForMenu = async () => {
   );
   await initializeMenuUrl(
     {
+      'ingress.tmaxcloud.org/name': 'argocd ',
+    },
+    'ArgoCD',
+  );
+  await initializeMenuUrl(
+    {
       'ingress.tmaxcloud.org/name': 'gitlab ',
     },
     'Git',
