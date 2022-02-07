@@ -35,6 +35,7 @@ import { RoleBindingClaimsPage } from './hypercloud/role-binding-claim';
 import * as classNames from 'classnames';
 import './namespace-details.scss';
 import { isSingleClusterPerspective } from '@console/internal/hypercloud/perspectives';
+import { Metering } from './hypercloud/metering';
 
 const getModel = useProjects => (useProjects ? ProjectModel : NamespaceModel);
 const getDisplayName = obj => _.get(obj, ['metadata', 'annotations', 'openshift.io/display-name']);
@@ -683,6 +684,7 @@ export const NamespacesDetailsPage = props => (
       },
       navFactory.editResource(),
       navFactory.roles(RolesPage),
+      navFactory.metering(),
     ]}
   />
 );
