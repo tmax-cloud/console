@@ -9,8 +9,8 @@ import { AreaChart, AreaChartProps } from '../graphs/area';
 
 const DEFAULT_DELAY = 15000; // 15 seconds
 const DEFAULT_TIMESPAN = 60 * 60 * 1000; // 1 hour
-const DEFAULT_LIMIT = 10;
 const DEFAULT_SORT = '-metering_time';
+const DEFAULT_LIMIT = 10;
 
 const getHCMeteringURL = (props: MeteringURLProps): string => {
   const params = new URLSearchParams();
