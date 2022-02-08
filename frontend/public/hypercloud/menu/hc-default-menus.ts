@@ -5,12 +5,12 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.home,
-    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Audit.kind, CustomMenusMap.Events.kind, CustomMenusMap.Grafana.kind, CustomMenusMap.Kibana.kind, CustomMenusMap.Git.kind, CustomMenusMap.Harbor.kind],
+    innerMenus: [CustomMenusMap.Dashboard.kind, Models.NamespaceModel.kind, CustomMenusMap.Search.kind, CustomMenusMap.Audit.kind, CustomMenusMap.Events.kind, CustomMenusMap.ArgoCD.kind, CustomMenusMap.Grafana.kind, CustomMenusMap.Kibana.kind, CustomMenusMap.Git.kind, CustomMenusMap.Harbor.kind],
   },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.workload,
-    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind, Models.DaemonSetModel.kind, , Models.StatefulSetModel.kind, Models.ConfigMapModel.kind, Models.SecretModel.kind, Models.JobModel.kind, Models.CronJobModel.kind],
+    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind, Models.DaemonSetModel.kind, Models.StatefulSetModel.kind, Models.ConfigMapModel.kind, Models.SecretModel.kind, Models.JobModel.kind, Models.CronJobModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,

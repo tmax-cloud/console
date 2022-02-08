@@ -164,9 +164,10 @@ func createConsole(config *v1.Config) (*Console, error) {
 		// Branding:          config.Branding,
 		// CustomProductName: config.CustomProductName,
 		// CustomLogoFile:    config.CustomLogoFile,
-		McMode:          config.McMode,
-		ReleaseModeFlag: config.ReleaseMode,
-		GitlabURL:       config.GitlabURL,
+		McMode:            config.McMode,
+		ReleaseModeFlag:   config.ReleaseMode,
+		GitlabURL:         config.GitlabURL,
+		CustomProductName: config.CustomProductName,
 
 		KeycloakRealm:    config.KeycloakRealm,
 		KeycloakAuthURL:  config.KeycloakAuthURL,

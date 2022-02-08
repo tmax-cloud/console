@@ -50,6 +50,7 @@ KUBEFLOW_IP='192.168.9.141'
     --mc-mode=true \
     --public-dir=./frontend/public/dist \
     --managed-gitlab-url=http://gitlab-test-deploy.ck1-2.192.168.6.151.nip.io/ \
+    --custom-product-name="ck1-1" \
     # --k8s-mode-off-cluster-skip-verify-tls=true \
     # --release-mode=true \
     # --release-mode=false \

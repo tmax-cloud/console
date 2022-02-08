@@ -23,6 +23,7 @@ import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, resourceSchema
 import { getIdToken } from '../../hypercloud/auth';
 import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
 import { useTranslation } from 'react-i18next';
+import { Metering } from '../hypercloud/metering';
 
 const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
 export const viewYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} readOnly={true} />;
@@ -49,6 +50,10 @@ export class PodsComponent extends React.PureComponent<PodsComponentProps> {
     return <PodsPage showTitle={false} namespace={namespace} selector={selector} canCreate={false} customData={customData} />;
   }
 }
+
+const MeteringComponent = props => {
+  return <Metering namespace={props.obj.metadata?.name} />;
+};
 
 export type Page = {
   href?: string;
@@ -163,6 +168,11 @@ export const navFactory: NavFactory = {
   notaryTab: component => ({
     href: 'notary',
     name: 'COMMON:MSG_DETAILS_TABNOTARY_1',
+    component: component,
+  }),
+  metering: (component = MeteringComponent) => ({
+    href: 'metering',
+    name: '미터링',
     component: component,
   }),
 };
