@@ -6,20 +6,13 @@ import { K8sKind, referenceForModel } from './';
 
 const SWAGGER_LOCAL_STORAGE_KEY = `${STORAGE_PREFIX}/swagger-definitions`;
 
-export const getDefinitionKey = _.memoize(
-  (model: K8sKind, definitions: SwaggerDefinitions): string => {
-    return _.findKey(definitions, (def: SwaggerDefinition) => {
-      return _.some(def['x-kubernetes-group-version-kind'], ({ group, version, kind }) => {
-        return (
-          (model.apiGroup || '') === (group || '') &&
-          model.apiVersion === version &&
-          model.kind === kind
-        );
-      });
+export const getDefinitionKey = _.memoize((model: K8sKind, definitions: SwaggerDefinitions): string => {
+  return _.findKey(definitions, (def: SwaggerDefinition) => {
+    return _.some(def['x-kubernetes-group-version-kind'], ({ group, version, kind }) => {
+      return (model.apiGroup || '') === (group || '') && model.apiVersion === version && model.kind === kind;
     });
-  },
-  referenceForModel,
-);
+  });
+}, referenceForModel);
 
 // Cache parsed swagger to avoid reparsing the JSON each call.
 let swagger: SwaggerDefinitions;
@@ -27,7 +20,7 @@ export const getStoredSwagger = (): SwaggerDefinitions => {
   if (swagger) {
     return swagger;
   }
-  const json = window.localStorage.getItem(SWAGGER_LOCAL_STORAGE_KEY);
+  const json = atob(window.localStorage.getItem(SWAGGER_LOCAL_STORAGE_KEY));
   if (!json) {
     return null;
   }
@@ -41,11 +34,11 @@ export const getStoredSwagger = (): SwaggerDefinitions => {
   }
 };
 
-const storeSwagger = (definitions: SwaggerDefinitions) => {
+const storeSwagger = (definitions: SwaggerDefinitions | string) => {
   // Only store definitions to reduce the document size.
-  const json = JSON.stringify(definitions);
+  const json = JSON.stringify(btoa(definitions as string));
   window.localStorage.setItem(SWAGGER_LOCAL_STORAGE_KEY, json);
-  swagger = definitions;
+  swagger = definitions as SwaggerDefinitions;
 };
 
 export const fetchSwagger = async (): Promise<SwaggerDefinitions> => {
@@ -86,12 +79,7 @@ const getRef = (definition: SwaggerDefinition): string => {
 // - A reference to another top-level definition
 // - Inline property declartions
 // - Inline property declartions for array items
-export const getSwaggerPath = (
-  allProperties: SwaggerDefinitions,
-  currentPath: string[],
-  name: string,
-  followRef: boolean,
-): string[] => {
+export const getSwaggerPath = (allProperties: SwaggerDefinitions, currentPath: string[], name: string, followRef: boolean): string[] => {
   const nextPath = [...currentPath, 'properties', name];
   const definition = _.get(allProperties, nextPath) as SwaggerDefinition;
   if (!definition) {
@@ -123,10 +111,7 @@ const findDefinition = (kindObj: K8sKind, propertyPath: string[]): SwaggerDefini
   return path ? (_.get(allDefinitions, path) as SwaggerDefinition) : null;
 };
 
-export const getPropertyDescription = (
-  kindObj: K8sKind,
-  propertyPath: string | string[],
-): string => {
+export const getPropertyDescription = (kindObj: K8sKind, propertyPath: string | string[]): string => {
   const path: string[] = _.toPath(propertyPath);
   const definition = findDefinition(kindObj, path);
   return definition ? definition.description : null;
