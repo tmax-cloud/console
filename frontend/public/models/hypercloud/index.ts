@@ -1590,41 +1590,83 @@ export const ApplicationModel: K8sKind = {
 export const NodeConfigModel: K8sKind = {
   label: 'Node Config',
   labelPlural: 'Node Configs',
-  apiVersion: 'v1',
-  apiGroup: 'nodeconfig.tmax.io',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'bootstrap.tmax.io',
   plural: 'nodeconfigs',
   abbr: 'NC',
-  namespaced: false,
+  namespaced: true,
   kind: 'NodeConfig',
   id: 'nodeconfig',  
   menuInfo: {
     visible: true,
-    type: MenuLinkType.ResourceClusterLink,
+    type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
   i18nInfo: {
     label: 'NodeConfig',
-    labelPlural: 'NodeConfig',
+    labelPlural: 'NodeConfigs',
   },
 };
 
 export const BareMetalHostModel: K8sKind = {
   label: 'Bare Metal Host',
   labelPlural: 'Bare Metal Hosts',
-  apiVersion: 'v1',
-  apiGroup: 'baremetal.tmax.io',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'metal3.io',
   plural: 'baremetalhosts',
   abbr: 'BMH',
-  namespaced: false,
+  namespaced: true,
   kind: 'BareMetalHost',
   id: 'baremetalhost',  
   menuInfo: {
     visible: true,
-    type: MenuLinkType.ResourceClusterLink,
+    type: MenuLinkType.ResourceNSLink,
     isMultiOnly: false,
   },
   i18nInfo: {
     label: 'BareMetalHost',
-    labelPlural: 'BareMetalHost',
+    labelPlural: 'BareMetalHosts',
+  },
+};
+
+export const NodeConfig2Model: K8sKind = {
+  label: 'Node Config2',
+  labelPlural: 'Node Configs2',
+  apiVersion: 'v1',
+  apiGroup: 'ui.tmax.io',
+  plural: 'nodeconfig2s',
+  abbr: 'NC2',
+  namespaced: true,
+  kind: 'NodeConfig2',
+  id: 'nodeconfig2',  
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'NodeConfig2',
+    labelPlural: 'NodeConfig2s',
+  },
+};
+
+export const BareMetalHost2Model: K8sKind = {
+  label: 'Bare Metal Host2',
+  labelPlural: 'Bare Metal Hosts2',
+  apiVersion: 'v1',
+  apiGroup: 'ui.tmax.io',
+  plural: 'baremetalhost2s',
+  abbr: 'BMH2',
+  namespaced: true,
+  kind: 'BareMetalHost2',
+  id: 'baremetalhost2',  
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'BareMetalHost2',
+    labelPlural: 'BareMetalHost2s',
   },
 };
