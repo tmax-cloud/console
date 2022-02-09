@@ -33,10 +33,8 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
   React.useEffect(() => {
     if (isPerspectiveDropdownOpen) {
     coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
-    .then(result => result.items)
-    .then(res => {
-      !res.length ? setIsClusterExist(false) :  setIsClusterExist(true)
-      })}
+   .then(res => !res.items?.length ? setIsClusterExist(false) :  setIsClusterExist(true))
+  }
     
   },[isPerspectiveDropdownOpen]);
 

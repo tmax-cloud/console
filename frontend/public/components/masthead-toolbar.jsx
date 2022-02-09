@@ -298,7 +298,7 @@ class MastheadToolbarContents_ extends React.Component {
 
     const logout = e => {
       e.preventDefault();
-
+     sessionStorage.clear();
       keycloak.logout();
     };
 
