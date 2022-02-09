@@ -257,7 +257,8 @@ export const k8sList = (kind, params = {}, raw = false, options = {}) => {
   const _isNamespace = isNamespace(kind) || isNamespaceClaim(kind);
   let listURL = isMultiCluster ? resourceClusterURL(kind, {ns: params.ns}) : _isNamespace ? resourceNamespaceURL(kind) : resourceURL(kind, { ns: params.ns });
   
-  if(localStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
+  //if(localStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
+  if(sessionStorage.getItem('bridge/last-perspective') === PerspectiveType.SINGLE) {
     return coFetchJSON(`${listURL}?${query}`, 'GET', options).then(result => (raw ? result : result.items));
   }
 

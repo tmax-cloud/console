@@ -185,7 +185,8 @@ export const setActiveNamespace = (namespace: string = '') => {
     }
     // remember the most recently-viewed project, which is automatically
     // selected when returning to the console
-    localStorage.setItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, namespace);
+   // localStorage.setItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, namespace);
+    sessionStorage.setItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, namespace);
   }
 
   return action(ActionType.SetActiveNamespace, { namespace });
@@ -204,14 +205,16 @@ export const getActivePerspective = (): string => store.getState().UI.get('activ
 export const setActivePerspective = (perspective: string) => {
   // remember the most recently-viewed perspective, which is automatically
   // selected when returning to the console
-  localStorage.setItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, perspective);
+  //localStorage.setItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, perspective);
+  sessionStorage.setItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY, perspective);
   return action(ActionType.SetActivePerspective, { perspective });
 };
 
 export const getActiveCluster = (): string => store.getState().UI.get('activeCluster');
 
 export const setActiveCluster = (cluster: string) => {
-  localStorage.setItem(LAST_CLUSTER_LOCAL_STORAGE_KEY, cluster);
+  //localStorage.setItem(LAST_CLUSTER_LOCAL_STORAGE_KEY, cluster);
+  sessionStorage.setItem(LAST_CLUSTER_LOCAL_STORAGE_KEY, cluster);
 
   return action(ActionType.SetActiveCluster, { cluster });
 };
