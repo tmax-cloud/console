@@ -184,6 +184,7 @@ const CaseType = {
 export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, DropdownCheckAddComponentProps>((props, ref) => {
     const { name, defaultValues = [], methods, items, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*', checked: true, added: true }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px', clearAllText = 'Clear all' } = props;
     const { setValue, watch } = methods ? methods : useFormContext();
+    const [inputValue, setInputValue] = React.useState('')
     const [chips, setChips] = React.useState([]);
     const [isOpen, setIsOpen] = React.useState(false);
     const [selectAllChecked, setSelectAllChecked] = React.useState(false);
@@ -367,7 +368,16 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
             }
         }
     };
-
+    const handelInputChange = (value, action)=>{
+        if (action.action === "set-value" ||
+        action.action === "input-blur" ||
+        action.action === "menu-close") {
+          return;
+        }
+        setInputValue(value)
+      
+    
+    }
     const getOptions = options => [selectAllOption, ...options];
 
     const toggleOpen = () => {
@@ -439,7 +449,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                                 name={name}
                                 autoFocus
                                 styles={customStyles}
-                                value={selectedValues || []}
+                                //value={selectedValues || []}
                                 options={getOptions(formattedOptions)}
                                 controlShouldRenderValue={false}
                                 isMulti
@@ -452,6 +462,9 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                                 onChange={(value, action) => {
                                     handleChange(value, action, formattedOptions);
                                 }}
+                                inputValue = {inputValue}
+                                onInputChange ={(value, action)=>handelInputChange(value, action)}
+                                blurInputOnSelect ={false}
                                 menuIsOpen
                                 classNamePrefix="hc-select"
                                 isSearchable={true}
