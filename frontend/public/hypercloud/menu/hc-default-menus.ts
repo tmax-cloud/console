@@ -166,6 +166,11 @@ const BaremetalNavMenus = [
     label: MenuContainerLabels.provisioning,
     innerMenus: [Models.NodeConfigModel.kind, Models.BareMetalHostModel.kind],
   },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.provisioning2,
+    innerMenus: [Models.NodeConfig2Model.kind, Models.BareMetalHost2Model.kind],
+  },
 ];
 
 const CustomNavMenus = [
