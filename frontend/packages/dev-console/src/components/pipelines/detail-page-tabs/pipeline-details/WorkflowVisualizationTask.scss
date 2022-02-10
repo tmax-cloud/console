@@ -58,7 +58,7 @@ $border-color: #b8bbbe;
   &__title-wrapper {
     width: 81px;
     margin-left: 6px;
-    flex: 0 0 98px;
+    flex: 0 0 80px;
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -76,7 +76,9 @@ $border-color: #b8bbbe;
     font-size: 13px;
     flex: 0 0 auto;
     overflow: auto;
-    text-overflow: initial;
     white-space: nowrap;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
