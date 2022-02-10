@@ -2,12 +2,12 @@ import * as React from 'react';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { NodeConfig2Model } from '../../models';
+import { NodeConfigModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
 
-const kind = NodeConfig2Model.kind;
+const kind = NodeConfigModel.kind;
 
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
