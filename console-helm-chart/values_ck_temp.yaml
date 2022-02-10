@@ -9,7 +9,7 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: hyperauth.192.168.9.141.nip.io
+    hyperauth: hyperauth.tmaxcloud.org
     realm: tmax
     clientid: hypercloud5
   mcMode: true
@@ -20,7 +20,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "@@VER@@"
 
-imagePullSecrets: []
+imagePullSecrets: 
+- name: regcred
 
 podAnnotations: {}
 

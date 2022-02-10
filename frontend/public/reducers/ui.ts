@@ -13,7 +13,8 @@ import { Alert } from '../components/monitoring';
 export type UIState = ImmutableMap<string, any>;
 
 export function getDefaultPerspective() {
-  let activePerspective = localStorage.getItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY);
+  //let activePerspective = localStorage.getItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY);
+  let activePerspective = sessionStorage.getItem(LAST_PERSPECTIVE_LOCAL_STORAGE_KEY);
   if (activePerspective && !getPerspectives().some(p => p.properties.id === activePerspective)) {
     // invalid saved perspective
     activePerspective = undefined;
@@ -68,7 +69,8 @@ export default (state: UIState, action: UIAction): UIState => {
     const storedPins = localStorage.getItem(PINNED_RESOURCES_LOCAL_STORAGE_KEY);
     const pinnedResources = storedPins ? JSON.parse(storedPins) : {};
 
-    const activeCluster = window.SERVER_FLAGS.McMode ? localStorage.getItem(LAST_CLUSTER_LOCAL_STORAGE_KEY) : undefined;
+    //const activeCluster = window.SERVER_FLAGS.McMode ? localStorage.getItem(LAST_CLUSTER_LOCAL_STORAGE_KEY) : undefined;
+    const activeCluster = window.SERVER_FLAGS.McMode ? sessionStorage.getItem(LAST_CLUSTER_LOCAL_STORAGE_KEY) : undefined;
 
     return ImmutableMap({
       activeNavSectionId: 'workloads',
