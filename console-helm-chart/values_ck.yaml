@@ -20,7 +20,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "5.0.51.0"
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: regcred
 
 podAnnotations: {}
 
