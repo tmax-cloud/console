@@ -1586,7 +1586,6 @@ export const ApplicationModel: K8sKind = {
   },
 };
 
-//임시값, apiVersion, apiGroup 등 추가 정보 필요
 export const NodeConfigModel: K8sKind = {
   label: 'Node Config',
   labelPlural: 'Node Configs',
@@ -1626,47 +1625,5 @@ export const BareMetalHostModel: K8sKind = {
   i18nInfo: {
     label: 'BareMetalHost',
     labelPlural: 'BareMetalHosts',
-  },
-};
-
-export const NodeConfig2Model: K8sKind = {
-  label: 'Node Config2',
-  labelPlural: 'Node Configs2',
-  apiVersion: 'v1',
-  apiGroup: 'ui.tmax.io',
-  plural: 'nodeconfig2s',
-  abbr: 'NC2',
-  namespaced: true,
-  kind: 'NodeConfig2',
-  id: 'nodeconfig2',  
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.ResourceNSLink,
-    isMultiOnly: false,
-  },
-  i18nInfo: {
-    label: 'NodeConfig2',
-    labelPlural: 'NodeConfig2s',
-  },
-};
-
-export const BareMetalHost2Model: K8sKind = {
-  label: 'Bare Metal Host2',
-  labelPlural: 'Bare Metal Hosts2',
-  apiVersion: 'v1',
-  apiGroup: 'ui.tmax.io',
-  plural: 'baremetalhost2s',
-  abbr: 'BMH2',
-  namespaced: true,
-  kind: 'BareMetalHost2',
-  id: 'baremetalhost2',  
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.ResourceNSLink,
-    isMultiOnly: false,
-  },
-  i18nInfo: {
-    label: 'BareMetalHost2',
-    labelPlural: 'BareMetalHost2s',
   },
 };

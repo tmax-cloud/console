@@ -77,9 +77,7 @@ import {
   ApplicationModel,
   ClusterMenuPolicyModel,
   NodeConfigModel,
-  NodeConfig2Model,
   BareMetalHostModel,
-  BareMetalHost2Model,
 } from '../../models';
 
 type ResourceMapKey = GroupVersionKind | string;
@@ -161,9 +159,7 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(ApplicationModel), () => import('./application' /* webpackChunkName: "application" */).then(m => m.ApplicationsDetailsPage))
   .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "cluster-menu-policy" */).then(m => m.ClusterMenuPoliciesDetailsPage))
   .set(referenceForModel(NodeConfigModel), () => import('./nodeconfig' /* webpackChunkName: "nodeconfig" */).then(m => m.NodeConfigsDetailsPage))
-  .set(referenceForModel(NodeConfig2Model), () => import('./nodeconfig' /* webpackChunkName: "nodeconfig" */).then(m => m.NodeConfigsDetailsPage))
-  .set(referenceForModel(BareMetalHostModel), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsDetailsPage))
-  .set(referenceForModel(BareMetalHost2Model), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsDetailsPage));
+  .set(referenceForModel(BareMetalHostModel), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsDetailsPage));
 
 export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(PodSecurityPolicyModel), () => import('./pod-security-policy' /* webpackChunkName: "pod-security-policy" */).then(m => m.PodSecurityPoliciesPage))
@@ -240,6 +236,4 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(ApplicationModel), () => import('./application' /* webpackChunkName: "application" */).then(m => m.ApplicationsPage))
   .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "cluster-menu-policy" */).then(m => m.ClusterMenuPoliciesPage))
   .set(referenceForModel(NodeConfigModel), () => import('./nodeconfig' /* webpackChunkName: "nodeconfig" */).then(m => m.NodeConfigsPage))
-  .set(referenceForModel(NodeConfig2Model), () => import('./nodeconfig' /* webpackChunkName: "nodeconfig" */).then(m => m.NodeConfigsPage))
-  .set(referenceForModel(BareMetalHostModel), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsPage))
-  .set(referenceForModel(BareMetalHost2Model), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsPage));
+  .set(referenceForModel(BareMetalHostModel), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsPage));

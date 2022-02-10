@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { BareMetalHost2Model } from '../../models';
+import { BareMetalHostModel } from '../../models';
 import { BareMetalHostStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { TableProps } from './utils/default-list-component';
 
-const kind = BareMetalHost2Model.kind;
+const kind = BareMetalHostModel.kind;
 
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
@@ -96,16 +96,18 @@ export const BareMetalHostDetailsList: React.FC<BareMetalHostDetailsListProps> =
         {bmh.spec?.online ? 'true' : 'false'}
       </DetailsItem>      
       <DetailsItem label={'BMC'} obj={bmh}>
-        <ResourceLink kind="Secret" name={bmh.spec?.bmc?.address} namespace={bmh.metadata.namespace} title={bmh.spec?.bmc?.address} />        
+        <ResourceLink kind="Secret" name={bmh.spec?.bmc?.credentialsName} namespace={bmh.metadata.namespace} title={bmh.spec?.bmc?.credentialsName} />        
       </DetailsItem>
       <DetailsItem label={"imageURL"} obj={bmh}>
         {bmh.spec?.image.url}
       </DetailsItem>
       <DetailsItem label={'userdata'} obj={bmh}>
-        <ResourceLink kind="Secret" name={bmh.spec?.userdata} namespace={bmh.metadata.namespace} title={bmh.spec?.userdata} />        
+        <ResourceLink kind="Secret" name={bmh.spec?.userData?.name} namespace={bmh.spec?.userData?.namespace} title={bmh.spec?.userData?.name} />        
       </DetailsItem>
       <DetailsItem label={'hardwareprofile'} obj={bmh}>
-        {bmh.spec?.hardwareProfile}
+        <div>호스트이름 : {bmh.status?.hardware?.hostname}</div>        
+        <div>Nics IP : {bmh.status?.hardware?.nics?.map((nic, index) => { return <div key={`nic-ip-${index}`} style={{display: 'inline'}}>{nic.ip + ' '}</div> })}</div>        
+        <div>시스템 벤더 : {bmh.status?.hardware?.systemVendor?.manufacturer + ' ' + bmh.status?.hardware?.systemVendor?.productName}</div>
       </DetailsItem>
       <DetailsItem label={'updateTime'} obj={bmh}>
         <Timestamp timestamp={bmh.status?.lastUpdated} />

@@ -105,11 +105,6 @@ const MultiNavMenus = [
       Models.FederatedNamespaceModel.kind,
     ],
   },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.ansible,
-    innerMenus: [Models.AWXModel.kind],
-  },
 ];
 
 const SingleNavMenus = [
@@ -165,11 +160,6 @@ const BaremetalNavMenus = [
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.provisioning,
     innerMenus: [Models.NodeConfigModel.kind, Models.BareMetalHostModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.provisioning2,
-    innerMenus: [Models.NodeConfig2Model.kind, Models.BareMetalHost2Model.kind],
   },
 ];
 
