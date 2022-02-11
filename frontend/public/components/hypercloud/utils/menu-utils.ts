@@ -38,14 +38,13 @@ const initializeCmpFlag = () => {
   });
 };
 
-const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
+const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
+  const portNum = await initializePortNum();
   return new Promise(resolve => {
     const url = ingressUrlWithLabelSelector(labelSelector);
-    // const getNodePort;
     coFetchJSON(url)
       .then(res => {
         const { items } = res;
-        const portNum = window.SERVER_FLAGS.websecurePortNum;
         if (items?.length > 0) {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
@@ -66,19 +65,17 @@ const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
   });
 };
 
-const getWebSecurePortNum = ports => {
-  const webSecureIdx = _.findIndex(ports, ({ name }) => name === 'websecure');
-  return ports[webSecureIdx].port.toString();
-};
-
 const initializePortNum = async () => {
-  await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system').then(({ spec: { type, ports } }) => {
-    window.SERVER_FLAGS.websecurePortNum = type === 'LoadBalancer' ? '443' : getWebSecurePortNum(ports);
-  });
+  try {
+    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/kubernetes` });
+    return spec.type === 'LoadBalancer' ? 443 : spec.ports.find((port: any) => port.name === 'websecure').port;
+  } catch (error) {
+    console.error('[TEST]', error);
+    return 443;
+  }
 };
 
 export const initializationForMenu = async () => {
-  await initializePortNum();
   await initializeCmpFlag();
   await initializeMenuUrl(
     {

@@ -19,12 +19,12 @@ export const getDynamicProxyPath = (cluster) => {
   }
 };
 
-/** @type {(model: K8sKind) => string} */
-export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
+/** @type {(model: K8sKind, cluster?: string, basePath?: string) => string} */
+export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster, basePath)
 => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
-  let p = getDynamicProxyPath(cluster);
+  let p = basePath || getDynamicProxyPath(cluster);
 
   if (isLegacy) {
     p += '/api/';
@@ -54,11 +54,10 @@ const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
   return p;
 };
 
-/** @type {(model: GroupVersionKind, options: {ns?: string, name?: string, path?: string, queryParams?: {[k: string]: string}}) => string} */
-// export const resourceURL = (model, options, listName) => {
+/** @type {(model: GroupVersionKind, options: {ns?: string, name?: string, path?: string, queryParams?: {[k: string]: string}, cluster?: string, basePath?: string}) => string} */
 export const resourceURL = (model, options) => {
   let q = '';
-  let u = getK8sAPIPath(model, options.cluster);
+  let u = getK8sAPIPath(model, options.cluster, options.basePath);
 
   if (options.ns) {
     u += `/namespaces/${options.ns}`;
