@@ -41,7 +41,6 @@ const initializeCmpFlag = () => {
 const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
   return new Promise(resolve => {
     const url = ingressUrlWithLabelSelector(labelSelector);
-    // const getNodePort;
     coFetchJSON(url)
       .then(res => {
         const { items } = res;
@@ -72,7 +71,7 @@ const getWebSecurePortNum = ports => {
 };
 
 const initializePortNum = async () => {
-  await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system').then(({ spec: { type, ports } }) => {
+  await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` }).then(({ spec: { type, ports } }) => {
     window.SERVER_FLAGS.websecurePortNum = type === 'LoadBalancer' ? '443' : getWebSecurePortNum(ports);
   });
 };
