@@ -23,9 +23,73 @@ import { isSaveButtonDisabled } from '../utils/button-state';
 import { OnlyYamlEditorKinds } from './create-pinned-resource';
 
 export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, obj, create }) => {
+  const [loaded, setLoaded] = React.useState(false);
+  const [template, setTemplate] = React.useState({} as any);
+
+  React.useEffect(() => {
+    const kind = pluralToKind(model.plural);
+    const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
+    let url;
+    if (isCustomResourceType) {
+      url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
+      url = `${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+    } else {
+      const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
+      const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
+      url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
+    }
+    const xhrTest = new XMLHttpRequest();
+    xhrTest.open('GET', url);
+    xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
+    xhrTest.onreadystatechange = function() {
+      if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
+        const rawTemplate = xhrTest.response;
+        const parsingTemplate = JSON.parse(rawTemplate);
+        setTemplate(parsingTemplate);
+        setLoaded(true);
+      }
+    };
+    xhrTest.send();
+  }, [model.apiGroup, model.kind, model.plural, template]);
+
+  const [, setHelpText] = React.useState(FORM_HELP_TEXT);
+  const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
+
+  const [schema, FormComponent] = React.useMemo(() => {
+    const baseSchema = (template?.spec?.versions?.[0]?.schema?.openAPIV3Schema as JSONSchema7) ?? (template?.spec?.validation?.openAPIV3Schema as JSONSchema7) ?? template;
+    return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
+  }, [template]);
+  const sample = obj;
+  const pruneFunc = React.useCallback(data => prune(data, sample), [sample]);
+
+  const onChangeEditorType = React.useCallback(newMethod => {
+    setHelpText(newMethod === EditorType.Form ? FORM_HELP_TEXT : YAML_HELP_TEXT);
+  }, []);
+
   if (!model) {
     return null;
   }
+
+  return (
+    <StatusBox loaded={loaded} loadError={loadError} data={template}>
+      {loaded ? (
+        <>
+          <SyncedEditor
+            context={{
+              formContext: { match, model, next, schema, create },
+              yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
+            }}
+            FormEditor={FormComponent}
+            initialData={sample}
+            initialType={initialEditorType}
+            onChangeEditorType={onChangeEditorType}
+            prune={pruneFunc}
+            YAMLEditor={OperandYAML}
+          />
+        </>
+      ) : null}
+    </StatusBox>
+  );
 
   if (OnlyYamlEditorKinds.includes(model.kind)) {
     const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
@@ -45,71 +109,6 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
         />
       </>
     );
-  } else {
-    const [loaded, setLoaded] = React.useState(false);
-    const [template, setTemplate] = React.useState({} as any);
-
-    React.useEffect(() => {
-      let kind = pluralToKind(model.plural);
-      const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
-      let url;
-      if (isCustomResourceType) {
-        url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
-        url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-      } else {
-        const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
-        const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
-        url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
-      }
-      const xhrTest = new XMLHttpRequest();
-      xhrTest.open('GET', url);
-      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-      xhrTest.onreadystatechange = function() {
-        if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
-          let template = xhrTest.response;
-          template = JSON.parse(template);
-          setTemplate(template);
-          setLoaded(true);
-        }
-      };
-      xhrTest.send();
-    }, []);
-
-    const [, setHelpText] = React.useState(FORM_HELP_TEXT);
-    const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
-    let definition;
-
-    const [schema, FormComponent] = React.useMemo(() => {
-      const baseSchema = (template?.spec?.versions?.[0]?.schema?.openAPIV3Schema as JSONSchema7) ?? (template?.spec?.validation?.openAPIV3Schema as JSONSchema7) ?? template;
-      return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
-    }, [template, definition, model]);
-    const sample = obj;
-    const pruneFunc = React.useCallback(data => prune(data, sample), [sample]);
-
-    const onChangeEditorType = React.useCallback(newMethod => {
-      setHelpText(newMethod === EditorType.Form ? FORM_HELP_TEXT : YAML_HELP_TEXT);
-    }, []);
-
-    return (
-      <StatusBox loaded={loaded} loadError={loadError} data={template}>
-        {loaded ? (
-          <>
-            <SyncedEditor
-              context={{
-                formContext: { match, model, next, schema, create },
-                yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
-              }}
-              FormEditor={FormComponent}
-              initialData={sample}
-              initialType={initialEditorType}
-              onChangeEditorType={onChangeEditorType}
-              prune={pruneFunc}
-              YAMLEditor={OperandYAML}
-            />
-          </>
-        ) : null}
-      </StatusBox>
-    );
   }
 };
 
@@ -123,7 +122,7 @@ const getMatchedPlural = (type, spec, match) => {
 };
 
 const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model'>) => {
-  let {
+  const {
     obj: { spec },
     match,
   } = props;
@@ -132,7 +131,7 @@ const stateToProps = (state: RootState, props: Omit<EditDefaultPageProps, 'model
     plural = 'roles';
   }
   let kind = pluralToKind(plural);
-  let model = kind && modelFor(kind);
+  const model = kind && modelFor(kind);
   // crd중에 hypercloud에서 사용안하는 경우에는 redux에서 관리하는 plural과 kind 값으로 model 참조해야함.
   if (kind && model) {
     plural = referenceForModel(model);
