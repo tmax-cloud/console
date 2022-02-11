@@ -71,8 +71,13 @@ const getWebSecurePortNum = ports => {
 };
 
 const initializePortNum = async () => {
-  const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
-  return spec.type === 'LoadBalancer' ? '443' : getWebSecurePortNum(spec.ports);
+  try {
+    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
+    return spec.type === 'LoadBalancer' ? '443' : getWebSecurePortNum(spec.ports);
+  } catch (error) {
+    console.error('[TEST]', error);
+    return '443';
+  }
 };
 
 export const initializationForMenu = async () => {
