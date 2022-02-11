@@ -38,13 +38,13 @@ const initializeCmpFlag = () => {
   });
 };
 
-const initializeMenuUrl = (labelSelector: any, menuKey: string) => {
+const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
+  const portNum = await initializePortNum();
   return new Promise(resolve => {
     const url = ingressUrlWithLabelSelector(labelSelector);
     coFetchJSON(url)
       .then(res => {
         const { items } = res;
-        const portNum = window.SERVER_FLAGS.websecurePortNum;
         if (items?.length > 0) {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
@@ -71,13 +71,11 @@ const getWebSecurePortNum = ports => {
 };
 
 const initializePortNum = async () => {
-  await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` }).then(({ spec: { type, ports } }) => {
-    window.SERVER_FLAGS.websecurePortNum = type === 'LoadBalancer' ? '443' : getWebSecurePortNum(ports);
-  });
+  const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
+  return spec.type === 'LoadBalancer' ? '443' : getWebSecurePortNum(spec.ports);
 };
 
 export const initializationForMenu = async () => {
-  await initializePortNum();
   await initializeCmpFlag();
   await initializeMenuUrl(
     {
