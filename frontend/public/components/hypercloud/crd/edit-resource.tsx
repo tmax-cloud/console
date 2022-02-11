@@ -22,7 +22,7 @@ import { AsyncComponent } from '../../utils/async';
 import { isSaveButtonDisabled } from '../utils/button-state';
 import { OnlyYamlEditorKinds } from './create-pinned-resource';
 
-export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, activePerspective, obj, create }) => {
+export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, obj, create }) => {
   const [loaded, setLoaded] = React.useState(false);
   const [template, setTemplate] = React.useState({} as any);
 
@@ -31,36 +31,35 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
     const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
     let url;
     if (isCustomResourceType) {
-      url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
-      url = `${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+      const { apiGroup, apiVersion } = CustomResourceDefinitionModel;
+      url = `${getK8sAPIPath({ apiGroup, apiVersion })}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
     } else {
-      const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
-      const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
+      const { directory, file } = resourceSchemaBasedMenuMap.get(model.kind);
       url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
     }
-    const xhrTest = new XMLHttpRequest();
-    xhrTest.open('GET', url);
-    xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-    xhrTest.onreadystatechange = function() {
-      if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
-        const rawTemplate = xhrTest.response;
-        const parsingTemplate = JSON.parse(rawTemplate);
+    const xhrObj = new XMLHttpRequest();
+    xhrObj.open('GET', url);
+    xhrObj.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
+    xhrObj.onreadystatechange = function() {
+      const { readyState, status } = xhrObj;
+      const isOK = readyState === XMLHttpRequest.DONE && status === 200;
+      if (isOK) {
+        const parsingTemplate = JSON.parse(xhrObj.response);
         setTemplate(parsingTemplate);
         setLoaded(true);
       }
     };
-    xhrTest.send();
+    xhrObj.send();
   }, [model.apiGroup, model.kind, model.plural, template]);
 
   const [, setHelpText] = React.useState(FORM_HELP_TEXT);
-  const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
+  let next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
 
   const [schema, FormComponent] = React.useMemo(() => {
     const baseSchema = (template?.spec?.versions?.[0]?.schema?.openAPIV3Schema as JSONSchema7) ?? (template?.spec?.validation?.openAPIV3Schema as JSONSchema7) ?? template;
     return [_.defaultsDeep({}, DEFAULT_K8S_SCHEMA, _.omit(baseSchema, 'properties.status')), OperandForm];
   }, [template]);
-  const sample = obj;
-  const pruneFunc = React.useCallback(data => prune(data, sample), [sample]);
+  const pruneFunc = React.useCallback(data => prune(data, obj), [obj]);
 
   const onChangeEditorType = React.useCallback(newMethod => {
     setHelpText(newMethod === EditorType.Form ? FORM_HELP_TEXT : YAML_HELP_TEXT);
@@ -68,6 +67,25 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
 
   if (!model) {
     return null;
+  }
+
+  if (OnlyYamlEditorKinds.includes(model.kind)) {
+    next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
+    return (
+      <>
+        <SyncedEditor
+          context={{
+            formContext: { create },
+            yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
+          }}
+          initialData={obj}
+          initialType={EditorType.YAML}
+          FormEditor={null}
+          YAMLEditor={OperandYAML}
+          supplyEditorToggle={false}
+        />
+      </>
+    );
   }
 
   return (
@@ -80,7 +98,7 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
               yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
             }}
             FormEditor={FormComponent}
-            initialData={sample}
+            initialData={obj}
             initialType={initialEditorType}
             onChangeEditorType={onChangeEditorType}
             prune={pruneFunc}
@@ -90,26 +108,6 @@ export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loa
       ) : null}
     </StatusBox>
   );
-
-  if (OnlyYamlEditorKinds.includes(model.kind)) {
-    const next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;
-    const sample = obj;
-    return (
-      <>
-        <SyncedEditor
-          context={{
-            formContext: { create },
-            yamlContext: { next, match, create, readOnly: isSaveButtonDisabled(obj) },
-          }}
-          initialData={sample}
-          initialType={EditorType.YAML}
-          FormEditor={null}
-          YAMLEditor={OperandYAML}
-          supplyEditorToggle={false}
-        />
-      </>
-    );
-  }
 };
 
 // edit탭에 경우 customresourcedefinitions 경로일 경우 url params에 plural 값이 의도한 것과 다르게 들어옴.
