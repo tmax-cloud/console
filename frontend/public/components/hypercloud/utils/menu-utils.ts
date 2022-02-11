@@ -70,7 +70,7 @@ const initializePortNum = async () => {
     const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/kubernetes` });
     return spec.type === 'LoadBalancer' ? 443 : spec.ports.find((port: any) => port.name === 'websecure').port;
   } catch (error) {
-    console.error('[TEST]', error);
+    // console.error('[TEST]', error);
     return 443;
   }
 };
