@@ -65,18 +65,13 @@ const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
   });
 };
 
-const getWebSecurePortNum = ports => {
-  const webSecureIdx = _.findIndex(ports, ({ name }) => name === 'websecure');
-  return ports[webSecureIdx].port.toString();
-};
-
 const initializePortNum = async () => {
   try {
-    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
-    return spec.type === 'LoadBalancer' ? '443' : getWebSecurePortNum(spec.ports);
+    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/kubernetes` });
+    return spec.type === 'LoadBalancer' ? 443 : spec.ports.find((port: any) => port.name === 'websecure').port;
   } catch (error) {
     console.error('[TEST]', error);
-    return '443';
+    return 443;
   }
 };
 
