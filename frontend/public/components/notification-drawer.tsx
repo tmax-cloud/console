@@ -105,7 +105,7 @@ export const ConnectedNotificationDrawer_: React.FC<ConnectedNotificationDrawerP
     }
 
     if (alertManagerBaseURL) {
-      poll(`${alertManagerBaseURL}/api/v1/silences`, 'silences', ({ data }) => {
+      poll(`${location.origin}${alertManagerBaseURL}/api/v1/silences`, 'silences', ({ data }) => {
         // Set a name field on the Silence to make things easier
         _.each(data, s => {
           s.name = _.get(_.find(s.matchers, { name: 'alertname' }), 'value');
