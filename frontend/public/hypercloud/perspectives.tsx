@@ -18,6 +18,7 @@ export enum PerspectiveType {
   MULTI = 'MULTI',
   SINGLE = 'SINGLE',
   DEVELOPER = 'DEVELOPER',
+  BAREMETAL = 'BAREMETAL',
   CUSTOM = 'CUSTOM',
 }
 
@@ -26,6 +27,7 @@ export const PerspectiveLabelKeys = {
   [PerspectiveType.MULTI]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_2',
   [PerspectiveType.SINGLE]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_1',
   [PerspectiveType.DEVELOPER]: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2',
+  [PerspectiveType.BAREMETAL]: 'BAREMETAL',
   [PerspectiveType.CUSTOM]: 'CUSTOM',
 };
 
@@ -100,6 +102,19 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
             getLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
             getK8sLandingPageURL: flags => (isFirstTime ? '/developer/add' : '/welcome'),
             getImportRedirectURL: project => `/k8s/cluster/projects/${project}/workloads`,
+          },
+        },
+        {
+          type: 'Perspective',
+          properties: {
+            id: PerspectiveType.BAREMETAL,
+            name: t ? t(PerspectiveLabelKeys[PerspectiveType.BAREMETAL]) : 'Baremetal',
+            icon: <img src={MultiClusterIcon} className="font-icon co-console-dropdowntoggle-icon" />,
+            selectedIcon: <img src={SelectedMultiClusterIcon} className="font-icon" />,
+            default: true,
+            getLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
+            getK8sLandingPageURL: flags => (isFirstTime ? '/k8s/all-namespaces/awxs' : '/welcome'),
+            getImportRedirectURL: project => `/k8s/all-namespaces/projects/${project}/workloads`,
           },
         },
       ]

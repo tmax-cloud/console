@@ -225,3 +225,7 @@ export const ClusterMenuPolicyStatusReducer = (cmp: any): string => {
     return 'Deactivated';
   }
 };
+
+export const BareMetalHostStatusReducer = (bmh: any): string => {
+  return bmh.status?.provisioning?.state;
+};

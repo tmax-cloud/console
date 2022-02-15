@@ -1525,7 +1525,7 @@ export const AWXModel: K8sKind = {
   menuInfo: {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
-    isMultiOnly: true,
+    isMultiOnly: false,
   },
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_199',
@@ -1583,5 +1583,47 @@ export const ApplicationModel: K8sKind = {
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_216',
     labelPlural: 'COMMON:MSG_LNB_MENU_215',
+  },
+};
+
+export const NodeConfigModel: K8sKind = {
+  label: 'Node Config',
+  labelPlural: 'Node Configs',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'bootstrap.tmax.io',
+  plural: 'nodeconfigs',
+  abbr: 'NC',
+  namespaced: true,
+  kind: 'NodeConfig',
+  id: 'nodeconfig',  
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'NodeConfig',
+    labelPlural: 'NodeConfigs',
+  },
+};
+
+export const BareMetalHostModel: K8sKind = {
+  label: 'Bare Metal Host',
+  labelPlural: 'Bare Metal Hosts',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'metal3.io',
+  plural: 'baremetalhosts',
+  abbr: 'BMH',
+  namespaced: true,
+  kind: 'BareMetalHost',
+  id: 'baremetalhost',  
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'BareMetalHost',
+    labelPlural: 'BareMetalHosts',
   },
 };

@@ -105,11 +105,6 @@ const MultiNavMenus = [
       Models.FederatedNamespaceModel.kind,
     ],
   },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.ansible,
-    innerMenus: [Models.AWXModel.kind],
-  },
 ];
 
 const SingleNavMenus = [
@@ -155,6 +150,19 @@ const SingleNavMenus = [
   },
 ];
 
+const BaremetalNavMenus = [
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.ansible,
+    innerMenus: [Models.AWXModel.kind],
+  },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.provisioning,
+    innerMenus: [Models.NodeConfigModel.kind, Models.BareMetalHostModel.kind],
+  },
+];
+
 const CustomNavMenus = [
   {
     kind: 'Add',
@@ -162,4 +170,4 @@ const CustomNavMenus = [
   },
 ];
 
-export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus, CustomNavMenus };
+export default { MasterNavMenus, DeveloperNavMenus, MultiNavMenus, SingleNavMenus, BaremetalNavMenus, CustomNavMenus };
