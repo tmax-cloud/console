@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { timeFormat } from 'd3-time-format';
+import { ChartAxis } from '@patternfly/react-charts';
 import { Dropdown, usePoll, useSafeFetch } from '../utils';
 import { humanizeBinaryBytes, humanizeCpuCores } from '../utils/units';
 import { twentyFourHourTime } from '../utils/datetime';
@@ -11,6 +12,7 @@ const DEFAULT_DELAY = 15000; // 15 seconds
 const DEFAULT_TIMESPAN = 60 * 60 * 1000; // 1 hour
 const DEFAULT_SORT = '-metering_time';
 const DEFAULT_LIMIT = 10;
+const DEFAULT_TICK_COUNT = 3;
 
 const getHCMeteringURL = (props: MeteringURLProps): string => {
   const params = new URLSearchParams();
@@ -64,9 +66,9 @@ const getFormatDate = (timeUnit: TimeUnit) => {
     case 'day':
       return timeFormat('%m/%d');
     case 'month':
-      return timeFormat('%B');
+      return timeFormat('%b %d');
     case 'year':
-      return timeFormat('%Y');
+      return timeFormat('%b, %Y');
     default:
       return twentyFourHourTime;
   }
@@ -75,7 +77,7 @@ const getFormatDate = (timeUnit: TimeUnit) => {
 const Area: React.FC<AreaProps> = ({ target, delay, timespan, timeUnit, namespace, sort, limit, ...rest }) => {
   const [response, , loading] = useMeteringPoll({ delay, timespan, timeUnit, namespace, sort, limit });
   const data = getRangeVectorStats(response, target);
-  return <AreaChart data={[data]} loading={loading} formatDate={getFormatDate(timeUnit)} {...rest} />;
+  return <AreaChart data={[data]} loading={loading} formatDate={getFormatDate(timeUnit)} xAxisComponent={<ChartAxis tickCount={DEFAULT_TICK_COUNT} />} {...rest} />;
 };
 
 const MeteringPage = (props: MeteringPageProps) => {
