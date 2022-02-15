@@ -5,7 +5,9 @@ import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, Re
 import { NodeConfigModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
+import { Button, Modal } from '@patternfly/react-core';
 import { TableProps } from './utils/default-list-component';
+import { CopyToClipboard } from '../utils'
 
 const kind = NodeConfigModel.kind;
 
@@ -44,23 +46,45 @@ const tableProps: TableProps = {
     },
     {
       className: Kebab.columnClass,
-      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'URL', url: obj.spec?.tower_hostname ? `https://${obj.spec?.tower_hostname}` : null }} />,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
     },
   ],
 };
 
-const CloudInitCommands = ({ commands }) => {  
-  return (
-    <>
-      {commands.map((command, index) => {
-        return <div key={`command-${index}`}>{command}</div>;
-      })}
-    </>
-  );
-};
-
 export const NodeConfigDetailsList: React.FC<NodeConfigDetailsListProps> = ({ obj: nc }) => {
-  //const { t } = useTranslation();
+  const { t } = useTranslation();
+  let commands = '';
+  nc.spec?.cloudInitCommands.map((command) => {
+    commands = commands + command + '\n';
+  })
+  const CloudInitCommandsModal = () => {
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+    const handleModalToggle = () => {
+      setIsModalOpen(!isModalOpen);
+    };
+    return (
+      <React.Fragment>
+        <Button isInline variant="link" onClick={handleModalToggle}>
+          {t('open')}
+        </Button>
+        <Modal
+          isSmall={true}
+          title="Cloud Init Commands"
+          isOpen={isModalOpen}
+          onClose={handleModalToggle}
+          actions={[
+            <Button key="confirm" variant="primary" onClick={handleModalToggle}>
+              {t('COMMON:MSG_MAIN_POPUP_6')}
+            </Button>
+          ]}
+        >
+          <CopyToClipboard value={commands} />
+        </Modal>
+      </React.Fragment>
+    );
+  }
+
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={"imageURL"} obj={nc}>
@@ -73,8 +97,8 @@ export const NodeConfigDetailsList: React.FC<NodeConfigDetailsListProps> = ({ ob
         {nc.spec?.files.map((file, index)  => { return <div key={`file-${index}`}>{file.path}</div> })}
       </DetailsItem>
       <DetailsItem label={"cloudInitCommands"} obj={nc}>
-        <CloudInitCommands commands={nc.spec?.cloudInitCommands} />        
-      </DetailsItem>      
+        <CloudInitCommandsModal />
+      </DetailsItem>
     </dl>
   );
 };
@@ -105,8 +129,7 @@ export const NodeConfigsPage: React.FC = props => {
 };
 
 export const NodeConfigsDetailsPage: React.FC<DetailsPageProps> = props => {
-  const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} pages={[details(detailsPage(NodeConfigDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(NodeConfigDetails)), editResource()]} />;
 };
 
 type NodeConfigDetailsListProps = {
