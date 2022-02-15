@@ -149,6 +149,7 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - Add (Add)
 - Git (관리 Gitlab)
 - Kibana (키바나)
+- ArgoCD (아르고씨디)
 - Grafana (그라파나)
 - Events (이벤트)
 - Audit (감사 로그)
