@@ -56,7 +56,7 @@ const tableProps: TableProps = {
     },
     {
       className: Kebab.columnClass,
-      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} customData={{ label: 'URL', url: obj.spec?.tower_hostname ? `https://${obj.spec?.tower_hostname}` : null }} />,
+      children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
     },
   ],
 };
@@ -105,9 +105,9 @@ export const BareMetalHostDetailsList: React.FC<BareMetalHostDetailsListProps> =
         <ResourceLink kind="Secret" name={bmh.spec?.userData?.name} namespace={bmh.spec?.userData?.namespace} title={bmh.spec?.userData?.name} />        
       </DetailsItem>
       <DetailsItem label={'hardwareprofile'} obj={bmh}>
-        <div>호스트이름 : {bmh.status?.hardware?.hostname}</div>        
-        <div>Nics IP : {bmh.status?.hardware?.nics?.map((nic, index) => { return <div key={`nic-ip-${index}`} style={{display: 'inline'}}>{nic.ip + ' '}</div> })}</div>        
-        <div>시스템 벤더 : {bmh.status?.hardware?.systemVendor?.manufacturer + ' ' + bmh.status?.hardware?.systemVendor?.productName}</div>
+        <div>{t('Hostname') + ' : '+ bmh.status?.hardware?.hostname}</div>
+        <div>{t('Nics IP') + ' : '}{bmh.status?.hardware?.nics?.map((nic, index) => { return <div key={`nic-ip-${index}`} style={{display: 'inline'}}>{nic.ip + ' '}</div> })}</div>        
+        <div>{t('System Vendor') + ' : '+ bmh.status?.hardware?.systemVendor?.manufacturer + ' ' + bmh.status?.hardware?.systemVendor?.productName}</div>
       </DetailsItem>
       <DetailsItem label={'updateTime'} obj={bmh}>
         <Timestamp timestamp={bmh.status?.lastUpdated} />
@@ -143,8 +143,7 @@ export const BareMetalHostsPage: React.FC = props => {
 };
 
 export const BareMetalHostsDetailsPage: React.FC<DetailsPageProps> = props => {
-  const [url, setUrl] = React.useState(null);
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'URL', url: url ? `https://${url}` : null }} customStatePath="spec.tower_hostname" setCustomState={setUrl} getResourceStatus={BareMetalHostStatusReducer} pages={[details(detailsPage(BareMetalHostDetails)), editResource()]} />;
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} getResourceStatus={BareMetalHostStatusReducer} pages={[details(detailsPage(BareMetalHostDetails)), editResource()]} />;
 };
 
 type BareMetalHostDetailsListProps = {
