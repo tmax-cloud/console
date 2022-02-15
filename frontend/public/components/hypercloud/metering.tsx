@@ -77,7 +77,8 @@ const getFormatDate = (timeUnit: TimeUnit) => {
 const Area: React.FC<AreaProps> = ({ target, delay, timespan, timeUnit, namespace, sort, limit, ...rest }) => {
   const [response, , loading] = useMeteringPoll({ delay, timespan, timeUnit, namespace, sort, limit });
   const data = getRangeVectorStats(response, target);
-  return <AreaChart data={[data]} loading={loading} formatDate={getFormatDate(timeUnit)} xAxisComponent={<ChartAxis tickCount={DEFAULT_TICK_COUNT} />} {...rest} />;
+  const tickCount = data.length > 1 ? DEFAULT_TICK_COUNT : 1;
+  return <AreaChart data={[data]} loading={loading} formatDate={getFormatDate(timeUnit)} xAxisComponent={<ChartAxis tickCount={tickCount} />} {...rest} />;
 };
 
 const MeteringPage = (props: MeteringPageProps) => {
