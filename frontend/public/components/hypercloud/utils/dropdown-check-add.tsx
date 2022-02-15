@@ -386,10 +386,21 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     }
     setInputValue(value);
   };
+  const getChipsCount = ()=>{
+    const isAllSelected = chips.filter(chip=> chip.label.includes('All')).length
+
+    if(selectAllChecked ||isAllSelected){
+      return formattedOptions.length
+    }
+    else{
+      return chips.length
+    }
+  }
   const getOptions = options => [selectAllOption, ...options];
 
   const toggleOpen = () => {
     window.addEventListener('click', onWindowClick);
+   
     setIsOpen(!isOpen);
   };
 
@@ -401,7 +412,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     if (chip.key === SELECT_ALL_VALUE) {
       setDropdownSettings(false, [], []);
     } else {
-      const newValues = selectedValues?.filter(item => chip.key !== item.label);
+      const newValues = chips?.filter(item => chip.key !== item.label);
       setDropdownSettings(false, newValues, newValues);
     }
   };
@@ -417,11 +428,13 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
       return;
     }
     hide(event);
+    setInputValue('')
   };
 
   const hide = e => {
     e && e.stopPropagation();
     window.removeEventListener('click', onWindowClick);
+    
     setIsOpen(false);
   };
 
@@ -452,12 +465,12 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
           >
-            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={ getChipsCount() } buttonWidth={buttonWidth} />}>
               <Select
                 name={name}
                 autoFocus
                 styles={customStyles}
-                //value={selectedValues || []}
+                value={selectedValues || []}
                 options={getOptions(formattedOptions)}
                 controlShouldRenderValue={false}
                 isMulti
