@@ -387,9 +387,13 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     setInputValue(value);
   };
   const getChipsCount = ()=>{
-    const isAllSelected = chips.filter(chip=> chip.label.includes('All')).length
+    
+    const returnIsAllSelected = ()=>{
+      const isAll = chips.findIndex(chip=>chip.label==="All")
+      return isAll ===-1 ? false : true 
+    }
 
-    if(selectAllChecked ||isAllSelected){
+    if(selectAllChecked ||returnIsAllSelected()){
       return formattedOptions.length
     }
     else{
