@@ -386,13 +386,12 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     }
     setInputValue(value);
   };
+  const returnIsAllSelected = ()=>{
+    const isAllSelected = chips.findIndex(chip=>chip.label==="All")
+    return isAllSelected ===-1 ? false : true 
+  }
+  
   const getChipsCount = ()=>{
-    
-    const returnIsAllSelected = ()=>{
-      const isAll = chips.findIndex(chip=>chip.label==="All")
-      return isAll ===-1 ? false : true 
-    }
-
     if(selectAllChecked ||returnIsAllSelected()){
       return formattedOptions.length
     }
