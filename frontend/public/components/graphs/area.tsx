@@ -27,7 +27,7 @@ export const chartStatusColors = {
   [AreaChartStatus.WARNING]: warningColor.value,
 };
 
-export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], formatDate = twentyFourHourTime, height = DEFAULT_HEIGHT, humanize = humanizeNumber, loading = true, padding, query, theme = getCustomTheme(ChartThemeColor.blue, ChartThemeVariant.light, areaTheme), tickCount = DEFAULT_TICK_COUNT, title, xAxis = true, yAxis = true, chartStyle, byteDataType = '' }) => {
+export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], formatDate = twentyFourHourTime, height = DEFAULT_HEIGHT, humanize = humanizeNumber, loading = true, padding, query, theme = getCustomTheme(ChartThemeColor.blue, ChartThemeVariant.light, areaTheme), tickCount = DEFAULT_TICK_COUNT, title, xAxis = true, yAxis = true, chartStyle, byteDataType = '', xAxisComponent }) => {
   const [containerRef, width] = useRefWidth();
   const [processedData, setProcessedData] = React.useState(data);
   const [unit, setUnit] = React.useState('');
@@ -60,13 +60,14 @@ export const AreaChart: React.FC<AreaChartProps> = ({ className, data = [], form
   const multiLine = data && data.filter(d => !!d).length > 1;
 
   const container = <ChartVoronoiContainer voronoiDimension="x" labels={getLabel} activateData={false} labelComponent={<ChartTooltip centerOffset={multiLine ? { x: 0, y: -40 } : undefined} pointerLength={multiLine ? 40 : undefined} />} />;
+  const XAxisComponent = xAxisComponent || <ChartAxis tickCount={tickCount} tickFormat={formatDate} />;
 
   return (
     <PrometheusGraph className={className} ref={containerRef} title={title}>
       {data && data[0] && data[0].length ? (
         <PrometheusGraphLink query={query}>
           <Chart containerComponent={container} domainPadding={{ y: 20 }} height={height} width={width} theme={theme} scale={{ x: 'time', y: 'linear' }} padding={padding}>
-            {xAxis && <ChartAxis tickCount={tickCount} tickFormat={formatDate} />}
+            {xAxis && XAxisComponent}
             {yAxis && <ChartAxis dependentAxis tickCount={tickCount} tickFormat={tickFormat} />}
             <ChartGroup>
               {processedData.map((datum, index) => (
@@ -111,6 +112,7 @@ export type AreaChartProps = {
   padding?: object;
   chartStyle?: object[];
   byteDataType?: ByteDataTypes; //Use this to process the whole data frame at once
+  xAxisComponent?: React.ReactNode;
 };
 
 type AreaProps = AreaChartProps & {
