@@ -46,8 +46,6 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   React.useEffect(() => {
     (async () => {
       const response = await initializeMenuUrl(urlsMap);
-      console.log(response);
-      console.log(urlsMap);
       setJaegerURL(urlsMap.get('jaeger'));
     })();
   }, [jaegerURL]);
