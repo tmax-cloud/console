@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-
+import { k8sList } from '@console/internal/module/k8s';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
@@ -10,11 +10,44 @@ import { Status } from '@console/shared';
 import { NotebookStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { TableProps } from './utils/default-list-component';
 import * as classNames from 'classnames';
+import { coFetchJSON } from '@console/internal/co-fetch';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
-const id = NotebookModel.id;
+//const id = NotebookModel.id;
 const kind = NotebookModel.kind;
+
+const DoneMessage = 'done';
+
+const initializeMenuUrl = (urlsMap, name) => {
+  const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=' + name)}`;  
+  const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&${ingressQuery}`;
+  return new Promise((resolve, reject) => {
+    coFetchJSON(ingressQeuryURL)
+      .then(res => {
+        const { items } = res;
+        if (items?.length > 0) {
+          const ingress = items[0];
+          const host = ingress.spec?.rules?.[0]?.host;
+          if (!!host) {
+            urlsMap.set(name, `https://${host}`);
+          }
+        }
+        resolve(DoneMessage);
+      })
+      .catch(err => {
+        resolve(DoneMessage);
+      });
+  });
+};
+
+const getNotebookURLMap = async (URLMap) => {
+  const notebooks = await k8sList(NotebookModel);
+  if (notebooks.length !== 0) notebooks.map(notebook => initializeMenuUrl(URLMap, notebook.metadata.name));
+};
+
+const notebookURLMap = new Map();
+getNotebookURLMap(notebookURLMap);
 
 const tableProps: TableProps = {
   header: [
@@ -41,7 +74,8 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: K8sResourceKind) => {
-    const url = `/api/kubeflow/${id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+    //const url = `/api/kubeflow/${id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
+    const url = notebookURLMap.get(obj.metadata.name);
     return [
       {
         children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
@@ -103,7 +137,8 @@ const { details, editResource } = navFactory;
 export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
-  const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
+  //const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
+  const url = notebookURLMap.get(props.name);
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />;
 };
 
