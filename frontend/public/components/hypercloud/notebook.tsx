@@ -14,7 +14,6 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
-//const id = NotebookModel.id;
 const kind = NotebookModel.kind;
 
 const DoneMessage = 'done';
@@ -74,7 +73,6 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: K8sResourceKind) => {
-    //const url = `/api/kubeflow/${id}/${obj.metadata.namespace}/${obj.metadata.name}/`;
     const url = notebookURLMap.get(obj.metadata.name);
     return [
       {
@@ -137,7 +135,6 @@ const { details, editResource } = navFactory;
 export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
-  //const url = props?.namespace && props?.name ? `/api/kubeflow/${id}/${props.namespace}/${props.name}/` : null;
   const url = notebookURLMap.get(props.name);
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />;
 };
