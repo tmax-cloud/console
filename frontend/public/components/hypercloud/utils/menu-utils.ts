@@ -118,6 +118,7 @@ export const initializationForMenu = async () => {
       'ingress.tmaxcloud.org/name': 'jaeger-query ',
     },
     'Trace',
+    port,
   );
 };
 
