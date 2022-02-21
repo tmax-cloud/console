@@ -407,7 +407,7 @@ func (c *Console) Server() http.Handler {
 			k8sProxy.ServeHTTP(w, r)
 		})))
 
-	r.Methods("GET").PathPrefix(consolePath + "/apis/v1/").Handler(http.StripPrefix(consolePath,
+	r.Methods("GET").PathPrefix(consolePath + "/api/v1/").Handler(http.StripPrefix(consolePath,
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			log.Info("Use default serviceaccount token")
 			r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.StaticUser.Token))
