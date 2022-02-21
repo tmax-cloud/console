@@ -38,8 +38,7 @@ const initializeCmpFlag = () => {
   });
 };
 
-const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
-  const portNum = await initializePortNum();
+const initializeMenuUrl = async (labelSelector: any, menuKey: string, port: string) => {
   return new Promise(resolve => {
     const url = ingressUrlWithLabelSelector(labelSelector);
     coFetchJSON(url)
@@ -51,9 +50,9 @@ const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
           if (host) {
             const menu = _.get(CustomMenusMap, menuKey);
             if (menuKey === 'Grafana') {
-              !!menu && _.assign(menu, { url: `https://${host}:${portNum}/login/generic_oauth` });
+              !!menu && _.assign(menu, { url: `https://${host}${port}/login/generic_oauth` });
             } else {
-              !!menu && _.assign(menu, { url: `https://${host}:${portNum}` });
+              !!menu && _.assign(menu, { url: `https://${host}${port}` });
             }
           }
         }
@@ -65,53 +64,61 @@ const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
   });
 };
 
-const initializePortNum = async () => {
+const initializePort = async () => {
   try {
-    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/kubernetes` });
-    return spec.type === 'LoadBalancer' ? 443 : spec.ports.find((port: any) => port.name === 'websecure').port;
+    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
+    const port = spec.type === 'LoadBalancer' ? 443 : spec.ports.find((port: any) => port.name === 'websecure').port;
+    return `:${port}`;
   } catch (error) {
-    // console.error('[TEST]', error);
-    return 443;
+    console.error(`Failed to get api-gateway service:\n${error}`);
+    return '';
   }
 };
 
 export const initializationForMenu = async () => {
   await initializeCmpFlag();
+  const port = await initializePort();
   await initializeMenuUrl(
     {
       'ingress.tmaxcloud.org/name': 'hyperregistry ',
     },
     'Harbor',
+    port,
   );
   await initializeMenuUrl(
     {
       'ingress.tmaxcloud.org/name': 'argocd ',
     },
     'ArgoCD',
+    port,
   );
   await initializeMenuUrl(
     {
       'ingress.tmaxcloud.org/name': 'gitlab ',
     },
     'Git',
+    port,
   );
   await initializeMenuUrl(
     {
       'ingress.tmaxcloud.org/name': 'grafana ',
     },
     'Grafana',
+    port,
   );
   await initializeMenuUrl(
     {
       'ingress.tmaxcloud.org/name': 'kiali ',
     },
     'Kiali',
+    port,
   );
   await initializeMenuUrl(
     {
       'ingress.tmaxcloud.org/name': 'kibana',
     },
     'Kibana',
+    port,
   );
 };
 
