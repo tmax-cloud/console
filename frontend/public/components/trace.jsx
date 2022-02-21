@@ -5,30 +5,10 @@ import { requirePrometheus } from './graphs';
 import { SectionHeading } from './utils';
 import { coFetch } from '../co-fetch';
 import { coFetchJSON } from '@console/internal/co-fetch';
+import { initializeMenuUrl } from '@console/internal/components/hypercloud/utils/menu-utils'
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 const DoneMessage = 'done';
-
-const initializeMenuUrl = (urlsMap) => {
-  const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=jaeger-query')}`;
-  const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&${ingressQuery}`;
-  return new Promise((resolve, reject) => {
-    coFetchJSON(ingressQeuryURL)
-      .then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            urlsMap.set('jaeger', `https://${host}`);
-          }
-        }
-        resolve(DoneMessage);
-      })
-      .catch(err => {
-        resolve(DoneMessage);
-      });
-  });
-};
 
 export const TracePage = ({ namespace: namespace, name: name }) => {
   //const { t } = useTranslation();
@@ -40,13 +20,18 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   const [operationList, setOperationList] = React.useState([]);
   const [urlsMap, setUrlsMap] = React.useState(new Map());
 
-  const [jaegerURL, setJaegerURL] = React.useState('https://jaeger-query.tmaxcloud.org');
+  const [jaegerURL, setJaegerURL] = React.useState('');
 
 
   React.useEffect(() => {
     (async () => {
-      const response = await initializeMenuUrl(urlsMap);
-      setJaegerURL(urlsMap.get('jaeger'));
+      const response = await initializeMenuUrl(
+        {
+          'ingress.tmaxcloud.org/name': 'jaeger-query ',
+        },
+        'Trace',
+      );
+      setJaegerURL(_.get(CustomMenusMap, 'Trace').url);
     })();
   }, [jaegerURL]);
 
@@ -83,11 +68,11 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   }, []);
 
   React.useEffect(() => {
-    coFetch(`${jaegerURL}/api/services/${serviceName}/operations`).catch(e=>{console.log('caught', e);})
-      .then(res => res.json()).catch(e=>{console.log('caught', e);})
+    coFetch(`${jaegerURL}/api/services/${serviceName}/operations`).catch(e => { console.log('caught', e); })
+      .then(res => res.json()).catch(e => { console.log('caught', e); })
       .then(res => {
         res.data && setOperationList(res.data);
-      }).catch(e=>{console.log('caught', e);});
+      }).catch(e => { console.log('caught', e); });
   }, [serviceName]);
 
   return (
