@@ -38,7 +38,7 @@ const initializeCmpFlag = () => {
   });
 };
 
-export const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
+const initializeMenuUrl = async (labelSelector: any, menuKey: string) => {
   const portNum = await initializePortNum();
   return new Promise(resolve => {
     const url = ingressUrlWithLabelSelector(labelSelector);

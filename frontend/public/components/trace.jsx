@@ -5,7 +5,6 @@ import { requirePrometheus } from './graphs';
 import { SectionHeading } from './utils';
 import { coFetch } from '../co-fetch';
 import { coFetchJSON } from '@console/internal/co-fetch';
-import { initializeMenuUrl } from '@console/internal/components/hypercloud/utils/menu-utils'
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
 const DoneMessage = 'done';
