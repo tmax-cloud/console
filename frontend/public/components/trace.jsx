@@ -25,12 +25,6 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
 
   React.useEffect(() => {
     (async () => {
-      const response = await initializeMenuUrl(
-        {
-          'ingress.tmaxcloud.org/name': 'jaeger-query ',
-        },
-        'Trace',
-      );
       setJaegerURL(_.get(CustomMenusMap, 'Trace').url);
     })();
   }, [jaegerURL]);
