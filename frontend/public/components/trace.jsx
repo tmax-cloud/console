@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { requirePrometheus } from './graphs';
 import { SectionHeading } from './utils';
 import { coFetch } from '../co-fetch';
@@ -11,7 +11,7 @@ import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 const DoneMessage = 'done';
 
 export const TracePage = ({ namespace: namespace, name: name }) => {
-  //const { t } = useTranslation();
+  const { t } = useTranslation();
   const [serviceName, setServiceName] = React.useState(name);
   const [limit, setLimit] = React.useState('20');
   const [statusCode, setStatusCode] = React.useState('');
@@ -77,25 +77,25 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
 
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text='Trace' />
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABTRACE_1')} />
       <div>
         <span style={{ marginRight: '15px' }}>
-          <label style={{ marginRight: '10px' }}>Limit Results</label>
+          <label style={{ marginRight: '10px' }}>{t('COMMON:MSG_DETAILS_TABTRACE_2')}</label>
           <select name="limit" onChange={e => setLimit(e.target.value)}>
             <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
-            <option value="all">All</option>
+            <option value="all">{t('COMMON:MSG_DETAILS_TABTRACE_3')}</option>
           </select>
         </span>
         <span style={{ marginRight: '15px' }}>
-          <label style={{ marginRight: '10px' }}>Status Code</label>
+          <label style={{ marginRight: '10px' }}>{t('COMMON:MSG_DETAILS_TABTRACE_4')}</label>
           <input style={{ display: 'inline-block' }} ref={statusCodeRef} className="form-control" name="statusCode" type="number" onChange={e => (statusCodeRef.current = e.target.value)} onKeyDown={e => e.keyCode === 13 && setStatusCode(statusCodeRef.current)} />
         </span>
         <span style={{ marginRight: '15px' }}>
-          <label style={{ marginRight: '10px' }}>Display</label>
+          <label style={{ marginRight: '10px' }}>{t('COMMON:MSG_DETAILS_TABTRACE_5')}</label>
           <select name="display" onChange={e => setDisplay(e.target.value)}>
-            <option value="all">All</option>
+            <option value="all">{t('COMMON:MSG_DETAILS_TABTRACE_3')}</option>
             {!!operationList &&
               operationList.map(ops => (
                 <option key={ops} value={ops}>
@@ -105,7 +105,9 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
           </select>
         </span>
       </div>
-      <Trace serviceName={serviceName} limit={limit} statusCode={statusCode} display={display} jaegerURL={jaegerURL} />
+      {true ? //iframe 내부 문구도 i18n string 이 있어서 기획 검토 필요, 현재는 query 결과 관계 없이 무조건 iframe 으로 나오게 함
+        <Trace serviceName={serviceName} limit={limit} statusCode={statusCode} display={display} jaegerURL={jaegerURL} />
+        : <>{t('COMMON:MSG_DETAILS_TABTRACE_6')}</>}
     </div>
   );
 };
