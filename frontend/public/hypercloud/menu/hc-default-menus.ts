@@ -105,11 +105,6 @@ const MultiNavMenus = [
   //     Models.FederatedNamespaceModel.kind,
   //   ],
   // },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.ansible,
-    innerMenus: [Models.AWXModel.kind],
-  },
 ];
 
 const SingleNavMenus = [
