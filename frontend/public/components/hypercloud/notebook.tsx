@@ -44,7 +44,7 @@ const initializeUrlsMap = (urlsMap, name) => {
 
 const getNotebookUrlsMap = async (UrlsMap) => {
   const notebooks = await k8sList(NotebookModel);
-  if (notebooks.length !== 0) notebooks.map(notebook => initializeUrlsMap(UrlsMap, notebook.metadata.name));
+  if (notebooks.length !== 0) notebooks.map(notebook => initializeUrlsMap(UrlsMap, notebook.metadata.name + '-' + notebook.metadata.namespace));
 };
 
 const notebookUrlsMap = new Map();
@@ -137,7 +137,7 @@ const { details, editResource } = navFactory;
 export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
-  const url = notebookUrlsMap.get(props.name);
+  const url = notebookUrlsMap.get(props.name + '-' + props.namespace);
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />;
 };
 
