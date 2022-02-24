@@ -75,7 +75,7 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: K8sResourceKind) => {
-    const url = notebookUrlsMap.get(obj.metadata.name);
+    const url = notebookUrlsMap.get(obj.metadata.name + '-' + obj.metadata.namespace);
     return [
       {
         children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
