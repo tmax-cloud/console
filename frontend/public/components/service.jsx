@@ -239,7 +239,7 @@ const { details, pods, editResource } = navFactory;
 const ServicesDetailsPage = props => <DetailsPage {...props} menuActions={menuActions} pages={[details(Details), editResource(), pods(),
 {
   href: 'trace',
-  name: 'Trace',
+  name: 'COMMON:MSG_DETAILS_TABTRACE_1',
   component: TraceTab,
 },]} />;
 

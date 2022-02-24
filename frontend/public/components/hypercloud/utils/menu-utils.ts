@@ -120,6 +120,13 @@ export const initializationForMenu = async () => {
     'Kibana',
     port,
   );
+  await initializeMenuUrl(
+    {
+      'ingress.tmaxcloud.org/name': 'jaeger-query ',
+    },
+    'Trace',
+    port,
+  );
 };
 
 export const getLabelTextByKind = (kind, t: TFunction) => {
