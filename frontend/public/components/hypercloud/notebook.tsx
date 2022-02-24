@@ -11,6 +11,7 @@ import { NotebookStatusReducer } from '@console/dev-console/src/utils/hc-status-
 import { TableProps } from './utils/default-list-component';
 import * as classNames from 'classnames';
 import { coFetchJSON } from '@console/internal/co-fetch';
+import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
@@ -18,11 +19,12 @@ const kind = NotebookModel.kind;
 
 const DoneMessage = 'done';
 
-const initializeMenuUrl = (urlsMap, name) => {
-  const ingressQuery = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent('ingress.tmaxcloud.org/name=' + name)}`;  
-  const ingressQeuryURL = `${document.location.origin}/api/console/apis/networking.k8s.io/v1/ingresses?&${ingressQuery}`;
+const initializeUrlsMap = (urlsMap, name) => {
   return new Promise((resolve, reject) => {
-    coFetchJSON(ingressQeuryURL)
+    const url = ingressUrlWithLabelSelector({
+      'ingress.tmaxcloud.org/name': name,
+    });
+    coFetchJSON(url)
       .then(res => {
         const { items } = res;
         if (items?.length > 0) {
@@ -40,13 +42,13 @@ const initializeMenuUrl = (urlsMap, name) => {
   });
 };
 
-const getNotebookURLMap = async (URLMap) => {
+const getNotebookUrlsMap = async (UrlsMap) => {
   const notebooks = await k8sList(NotebookModel);
-  if (notebooks.length !== 0) notebooks.map(notebook => initializeMenuUrl(URLMap, notebook.metadata.name));
+  if (notebooks.length !== 0) notebooks.map(notebook => initializeUrlsMap(UrlsMap, notebook.metadata.name));
 };
 
-const notebookURLMap = new Map();
-getNotebookURLMap(notebookURLMap);
+const notebookUrlsMap = new Map();
+getNotebookUrlsMap(notebookUrlsMap);
 
 const tableProps: TableProps = {
   header: [
@@ -73,7 +75,7 @@ const tableProps: TableProps = {
     },
   ],
   row: (obj: K8sResourceKind) => {
-    const url = notebookURLMap.get(obj.metadata.name);
+    const url = notebookUrlsMap.get(obj.metadata.name);
     return [
       {
         children: <ResourceLink kind={kind} name={obj.metadata.name} namespace={obj.metadata.namespace} title={obj.metadata.uid} />,
@@ -135,7 +137,7 @@ const { details, editResource } = navFactory;
 export const NotebooksPage: React.FC<NotebooksPageProps> = props => <ListPage canCreate={true} tableProps={tableProps} kind={kind} {...props} />;
 
 export const NotebooksDetailsPage: React.FC<DetailsPageProps> = props => {
-  const url = notebookURLMap.get(props.name);
+  const url = notebookUrlsMap.get(props.name);
   return <DetailsPage {...props} kind={kind} menuActions={menuActions} customData={{ label: 'Connect', url }} pages={[details(detailsPage(NotebookDetails)), editResource()]} />;
 };
 
