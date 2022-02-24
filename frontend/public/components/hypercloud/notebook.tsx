@@ -19,7 +19,7 @@ const kind = NotebookModel.kind;
 
 const DoneMessage = 'done';
 
-const initializeUrlsMap = (urlsMap, name) => {
+const initializeUrlsMap = (urlsMap, name, namespace) => {
   return new Promise((resolve, reject) => {
     const url = ingressUrlWithLabelSelector({
       'ingress.tmaxcloud.org/name': name,
@@ -31,7 +31,7 @@ const initializeUrlsMap = (urlsMap, name) => {
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
           if (!!host) {
-            urlsMap.set(name, `https://${host}`);
+            urlsMap.set(name + '-' + namespace, `https://${host}`);
           }
         }
         resolve(DoneMessage);
@@ -44,7 +44,7 @@ const initializeUrlsMap = (urlsMap, name) => {
 
 const getNotebookUrlsMap = async (UrlsMap) => {
   const notebooks = await k8sList(NotebookModel);
-  if (notebooks.length !== 0) notebooks.map(notebook => initializeUrlsMap(UrlsMap, notebook.metadata.name + '-' + notebook.metadata.namespace));
+  if (notebooks.length !== 0) notebooks.map(notebook => initializeUrlsMap(UrlsMap, notebook.metadata.name, notebook.metadata.namespace));
 };
 
 const notebookUrlsMap = new Map();
