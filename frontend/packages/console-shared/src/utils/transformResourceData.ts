@@ -1,7 +1,7 @@
 import { DeploymentKind, K8sResourceKind, RouteKind } from '@console/internal/module/k8s';
 import { BuildConfigOverviewItem, PodControllerOverviewItem, OverviewItem, PodRCData } from '../types';
 import { ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
-import { createDaemonSetItems, createPersistentVolumeClaimItems, createDeploymentConfigItems, createDeploymentItems, createPodItems, createStatefulSetItems, createReplicaSetItems, createServiceItems, getBuildConfigsForResource, getPodsForDeploymentConfigs, getPodsForDeployments, getReplicaSetsForResource, getRoutesForServices, getServicesForResource } from './resource-utils';
+import { createDaemonSetItems, createPersistentVolumeClaimItems, createDeploymentConfigItems, createIngressItems, createDeploymentItems, createPodItems, createStatefulSetItems, createReplicaSetItems, createServiceItems, getBuildConfigsForResource, getPodsForDeploymentConfigs, getPodsForDeployments, getReplicaSetsForResource, getRoutesForServices, getServicesForResource } from './resource-utils';
 
 export class TransformResourceData {
   private resources: any;
@@ -29,6 +29,8 @@ export class TransformResourceData {
   public createReplicaSetItems = (replicaSets: K8sResourceKind[], operatorsFilter?: boolean): OverviewItem[] => createReplicaSetItems(replicaSets, this.resources, this.installedOperators, this.utils, operatorsFilter);
 
   public createServiceItems = (services: K8sResourceKind[], operatorsFilter?: boolean): OverviewItem[] => createServiceItems(services, this.resources, this.installedOperators, this.utils, operatorsFilter);
+
+  public createIngressItems = (ingresses: K8sResourceKind[]): OverviewItem[] => createIngressItems(ingresses);
 
   public createPersistentVolumeClaimItems = (persistentVolumeClaims: K8sResourceKind[], operatorsFilter?: boolean): OverviewItem[] => createPersistentVolumeClaimItems(persistentVolumeClaims, this.resources, this.installedOperators, this.utils, operatorsFilter);
 

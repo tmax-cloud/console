@@ -21,7 +21,7 @@ export type BuildConfigOverviewItem = K8sResourceKind & {
 export type StatusData = {
   icon: React.ReactNode;
   phase: string;
-}
+};
 
 export type OverviewItem<T = K8sResourceKind> = {
   alerts?: OverviewItemAlerts;
@@ -32,7 +32,7 @@ export type OverviewItem<T = K8sResourceKind> = {
   pods?: PodKind[];
   previous?: PodControllerOverviewItem;
   routes?: RouteKind[];
-  services: K8sResourceKind[];
+  services?: K8sResourceKind[];
   status?: React.ReactNode;
   ksroutes?: K8sResourceKind[];
   configurations?: K8sResourceKind[];
