@@ -61,7 +61,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   }, []);
 
   React.useEffect(() => {
-    coFetch(`${jaegerURL}/api/services/${serviceName}/operations`).catch(e => { console.error; })
+    coFetch(`${jaegerURL}/api/services/${serviceName}/operations`)
       .then(res => res.json()).catch(e => { console.error; })
       .then(res => {
         res.data && setOperationList(res.data);
