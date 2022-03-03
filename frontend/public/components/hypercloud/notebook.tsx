@@ -22,7 +22,7 @@ const DoneMessage = 'done';
 const initializeUrlsMap = (urlsMap, name, namespace) => {
   return new Promise((resolve, reject) => {
     const url = ingressUrlWithLabelSelector({
-      'ingress.tmaxcloud.org/name': name,
+      'ingress.tmaxcloud.org/name': name + '-' + namespace,
     });
     coFetchJSON(url)
       .then(res => {
