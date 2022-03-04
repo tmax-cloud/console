@@ -74,8 +74,8 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
             const children = getChildrenResources(obj, resources);
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind), children));
-            if (!!item.services) {
-              const childServices = transformResourceData['services'](item.services);
+            if (item.services) {
+              const childServices = transformResourceData.services(item.services);
               deploymentToService(childServices, typedDataModel, item);
             }
             break;
@@ -100,6 +100,11 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             break;
           }
           case 'persistentVolumeClaims': {
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
+            break;
+          }
+          case 'ingresses': {
             typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
             break;
