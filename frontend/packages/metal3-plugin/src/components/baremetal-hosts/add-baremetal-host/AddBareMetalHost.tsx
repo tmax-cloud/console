@@ -7,7 +7,7 @@ import { nameValidationSchema } from '@console/dev-console/src/components/import
 import { getName } from '@console/shared/src';
 import { K8sResourceKind } from '@console/internal/module/k8s';
 import { createBareMetalHost, updateBareMetalHost } from '../../../k8s/requests/bare-metal-host';
-import { BareMetalHostModel } from '../../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostKind } from '../../../types';
 import {
   getHostBMCAddress,

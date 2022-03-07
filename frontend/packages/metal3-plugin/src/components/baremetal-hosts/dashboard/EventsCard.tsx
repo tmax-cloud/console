@@ -23,7 +23,7 @@ import {
   withDashboardResources,
 } from '@console/internal/components/dashboard/with-dashboard-resources';
 import { getName, getNamespace, getMachineNodeName } from '@console/shared';
-import { BareMetalHostModel } from '../../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostKind } from '../../../types';
 import { isHostInProgressState, getBareMetalHostStatus } from '../../../status/host-status';
 import { BareMetalHostDashboardContext } from './BareMetalHostDashboardContext';
