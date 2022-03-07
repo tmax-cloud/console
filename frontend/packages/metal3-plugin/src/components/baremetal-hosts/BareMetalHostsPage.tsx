@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { getName, createLookup, getNodeMachineName } from '@console/shared';
-import { MachineModel, MachineSetModel, NodeModel } from '@console/internal/models';
+import { MachineModel, MachineSetModel, NodeModel, BareMetalHostModel } from '@console/internal/models';
 import { MultiListPage } from '@console/internal/components/factory';
 import { FirehoseResource, FirehoseResult } from '@console/internal/components/utils';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@console/internal/module/k8s';
 import { useFlag } from '@console/shared/src/hooks/flag';
 import { NodeMaintenanceModel } from '../../models';
-import { BareMetalHostModel } from '@console/internal/models';
 import { getHostMachine, getNodeMaintenanceNodeName } from '../../selectors';
 import { getHostStatus } from '../../status/host-status';
 import { BareMetalHostBundle } from '../types';

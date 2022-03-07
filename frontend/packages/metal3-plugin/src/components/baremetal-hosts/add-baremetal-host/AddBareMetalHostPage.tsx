@@ -3,8 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Firehose, FirehoseResource } from '@console/internal/components/utils';
 import { referenceForModel } from '@console/internal/module/k8s';
-import { SecretModel } from '@console/internal/models';
-import { BareMetalHostModel } from '@console/internal/models';
+import { SecretModel, BareMetalHostModel } from '@console/internal/models';
 import { getSecretName } from '../../../k8s/objects/bare-metal-host';
 import AddBareMetalHost from './AddBareMetalHost';
 
