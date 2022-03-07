@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
 import { timeFormat } from 'd3-time-format';
+import { useTranslation } from 'react-i18next';
 import { ChartAxis } from '@patternfly/react-charts';
 import { Dropdown, usePoll, useSafeFetch } from '../utils';
 import { humanizeBinaryBytes, humanizeCpuCores } from '../utils/units';
@@ -83,23 +84,24 @@ const Area: React.FC<AreaProps> = ({ target, delay, timespan, timeUnit, namespac
 
 const MeteringPage = (props: MeteringPageProps) => {
   const { namespace, timeUnit } = props;
+  const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
       <div className="row">
         <div className="col-md-4">
-          <Area title="CPU Shares" target="cpu" humanize={humanizeCpuCores} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
+          <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_6')} target="cpu" humanize={humanizeCpuCores} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
         </div>
         <div className="col-md-4">
-          <Area title="Memory" target="memory" humanize={humanizeBinaryBytes} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
+          <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_7')} target="memory" humanize={humanizeBinaryBytes} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
         </div>
         <div className="col-md-4">
-          <Area title="Storage" target="storage" humanize={humanizeBinaryBytes} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
+          <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_8')} target="storage" humanize={humanizeBinaryBytes} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
         </div>
         <div className="col-md-4">
-          <Area title="LoadBalancer IP" target="publicIp" humanize={humanizeBinaryBytes} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
+          <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_9')} target="publicIp" humanize={humanizeBinaryBytes} namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
         </div>
         <div className="col-md-4">
-          <Area title="GPU" target="gpu" namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
+          <Area title={t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_10')} target="gpu" namespace={namespace} timeUnit={timeUnit} sort={DEFAULT_SORT} limit={DEFAULT_LIMIT} />
         </div>
       </div>
     </div>
@@ -108,12 +110,13 @@ const MeteringPage = (props: MeteringPageProps) => {
 
 export const Metering = (props: MeteringProps) => {
   const { namespace } = props;
+  const { t } = useTranslation();
 
   const timeUnitLabels = {
-    hour: 'Hour',
-    day: 'Day',
-    month: 'Month',
-    year: 'Year',
+    hour: t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_2'),
+    day: t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_3'),
+    month: t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_4'),
+    year: t('SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_5'),
   };
 
   const [timeUnit, setTimeUnit] = React.useState<TimeUnit>('hour');
