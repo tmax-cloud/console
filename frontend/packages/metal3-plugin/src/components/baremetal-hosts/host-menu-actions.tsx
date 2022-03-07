@@ -23,7 +23,8 @@ import {
   getHostPowerStatus,
   isHostScheduledForRestart,
 } from '../../selectors';
-import { BareMetalHostModel, NodeMaintenanceModel } from '../../models';
+import { NodeMaintenanceModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { getHostStatus } from '../../status/host-status';
 import {
   HOST_POWER_STATUS_POWERED_OFF,

@@ -16,7 +16,7 @@ import NodeRoles from '@console/app/src/components/nodes/NodeRoles';
 import { useTranslation } from 'react-i18next';
 
 import { BareMetalNodeDashboardContext } from './BareMetalNodeDashboardContext';
-import { BareMetalHostModel } from '../../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 
 const DetailsCard: React.FC = () => {
   const { obj } = React.useContext(NodeDashboardContext);

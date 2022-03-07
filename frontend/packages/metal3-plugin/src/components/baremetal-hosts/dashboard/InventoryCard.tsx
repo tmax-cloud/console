@@ -12,7 +12,7 @@ import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watc
 import { PodKind } from '@console/internal/module/k8s/types';
 import { Link } from 'react-router-dom';
 import { getHostStorage, getHostNICs, getHostCPU } from '../../../selectors';
-import { BareMetalHostModel } from '../../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostDashboardContext } from './BareMetalHostDashboardContext';
 
 const PodInventoryItem: React.FC = () => {

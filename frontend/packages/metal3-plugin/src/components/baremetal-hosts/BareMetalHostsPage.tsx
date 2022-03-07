@@ -11,7 +11,8 @@ import {
   referenceForModel,
 } from '@console/internal/module/k8s';
 import { useFlag } from '@console/shared/src/hooks/flag';
-import { BareMetalHostModel, NodeMaintenanceModel } from '../../models';
+import { NodeMaintenanceModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { getHostMachine, getNodeMaintenanceNodeName } from '../../selectors';
 import { getHostStatus } from '../../status/host-status';
 import { BareMetalHostBundle } from '../types';

@@ -10,7 +10,7 @@ import { useFlag } from '@console/shared/src/hooks/flag';
 import { MachineModel, NodeModel } from '@console/internal/models';
 import { BareMetalNodeBundle } from '../types';
 import { getHostBMCAddress } from '../../selectors';
-import { BareMetalHostModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { baremetalNodeSecondaryStatus } from '../../status/baremetal-node-status';
 import { menuActions } from './menu-actions';
 import BareMetalNodeStatus from './BareMetalNodeStatus';

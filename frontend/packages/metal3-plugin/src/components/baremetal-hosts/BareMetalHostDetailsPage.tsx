@@ -5,7 +5,8 @@ import { navFactory, FirehoseResource } from '@console/internal/components/utils
 import { MachineModel, MachineSetModel, NodeModel } from '@console/internal/models';
 import { ResourceEventStream } from '@console/internal/components/events';
 import { useFlag } from '@console/shared/src/hooks/flag';
-import { BareMetalHostModel, NodeMaintenanceModel } from '../../models';
+import { NodeMaintenanceModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import BareMetalHostDashboard from './dashboard/BareMetalHostDashboard';
 import BareMetalHostNICs from './BareMetalHostNICs';
 import { menuActionsCreator } from './host-menu-actions';

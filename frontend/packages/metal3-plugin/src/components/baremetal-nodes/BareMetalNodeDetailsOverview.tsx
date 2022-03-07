@@ -7,7 +7,7 @@ import { Button, pluralize } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
 import { getNodeMachineNameAndNamespace, getNodeAddresses, getName, getNamespace } from '@console/shared';
 import NodeIPList from '@console/app/src/components/nodes/NodeIPList';
-import { BareMetalHostModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostKind } from '../../types';
 import BareMetalNodeStatus from './BareMetalNodeStatus';
 import { bareMetalNodeStatus } from '../../status/baremetal-node-status';
