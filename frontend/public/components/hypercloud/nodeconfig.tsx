@@ -66,16 +66,16 @@ export const NodeConfigDetailsList: React.FC<NodeConfigDetailsListProps> = ({ ob
     return (
       <React.Fragment>
         <Button isInline variant="link" onClick={handleModalToggle}>
-          {t('open')}
+          {t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_6')}
         </Button>
         <Modal
           isSmall={true}
-          title="Cloud Init Commands"
+          title={t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_5')}
           isOpen={isModalOpen}
           onClose={handleModalToggle}
           actions={[
             <Button key="confirm" variant="primary" onClick={handleModalToggle}>
-              {t('COMMON:MSG_MAIN_POPUP_6')}
+              {t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_7')}
             </Button>
           ]}
         >
@@ -87,16 +87,16 @@ export const NodeConfigDetailsList: React.FC<NodeConfigDetailsListProps> = ({ ob
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={"imageURL"} obj={nc}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_1')} obj={nc}>
         {nc.spec?.image.url}
       </DetailsItem>
-      <DetailsItem label={"users"} obj={nc}>        
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_2')} obj={nc}>        
         {nc.spec?.users.map((user, index)  => { return <div key={`user-${index}`}>{user.name}</div> })}
       </DetailsItem>
-      <DetailsItem label={"files"} obj={nc}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_3')} obj={nc}>
         {nc.spec?.files.map((file, index)  => { return <div key={`file-${index}`}>{file.path}</div> })}
       </DetailsItem>
-      <DetailsItem label={"cloudInitCommands"} obj={nc}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_4')} obj={nc}>
         <CloudInitCommandsModal />
       </DetailsItem>
     </dl>
