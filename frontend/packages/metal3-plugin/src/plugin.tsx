@@ -3,12 +3,11 @@ import * as React from 'react';
 import { MaintenanceIcon } from '@patternfly/react-icons';
 import { DashboardsOverviewInventoryItem, Plugin, HrefNavItem, ResourceListPage, ResourceDetailsPage, RoutePage, ModelFeatureFlag, ModelDefinition, DashboardsOverviewResourceActivity, DashboardsOverviewInventoryItemReplacement, DashboardsInventoryItemGroup, CustomFeatureFlag, ResourceTabPage } from '@console/plugin-sdk';
 import { referenceForModel } from '@console/internal/module/k8s';
-import { MachineModel, NodeModel } from '@console/internal/models';
+import { MachineModel, NodeModel, BareMetalHostModel } from '@console/internal/models';
 // TODO(jtomasek): change this to '@console/shared/src/utils' once @console/shared/src/utils modules
 // no longer import from @console/internal (cyclic deps issues)
 import { formatNamespacedRouteForResource } from '@console/shared/src/utils/namespace';
 import { NodeMaintenanceModel } from './models';
-import { BareMetalHostModel } from '@console/internal/models';
 import { getBMHStatusGroups } from './components/baremetal-hosts/dashboard/utils';
 import { getBMNStatusGroups } from './components/baremetal-nodes/dashboard/utils';
 import { getHostPowerStatus } from './selectors';

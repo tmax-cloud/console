@@ -1,5 +1,4 @@
-import { SecretModel } from '@console/internal/models';
-import { BareMetalHostModel } from '@console/internal/models';
+import { SecretModel, BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostKind } from '../../types';
 
 export const getSecretName = (name: string): string => `${name}-bmc-secret`;
