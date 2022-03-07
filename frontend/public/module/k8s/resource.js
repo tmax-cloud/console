@@ -204,7 +204,11 @@ export const k8sUpdateClaim = (kind, clusterClaim, admit, reason = '', userName,
 
   const resourceClusterURL = `api/multi-hypercloud/namespaces/${nameSpace}/clusterclaims/${clusterClaim}?userId=${getId()}${getUserGroup()}`;
 
-  const url = resourceClusterURL + `&admit=${admit}&reason=${reason}&userName=${userName}&memberName=cho`;
+  const params = new URLSearchParams();
+  const queryParams = { admit: admit.toString(), reason, userName, memberName: 'cho'};
+  _.each(queryParams, (value, key) => value && params.append(key, value.toString()));
+
+  const url = `${resourceClusterURL}&${params.toString()}`;
 
   return coFetchJSON.put(url);
 }

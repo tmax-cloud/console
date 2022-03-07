@@ -32,7 +32,7 @@ class BaseClaimModal extends PromiseComponent {
 
     const { kind, resource } = this.props;
     const clusterClaim = resource.metadata.name;
-    const userName = resource.metadata.annotations.creator;
+    const userName = resource.metadata.annotations?.creator;
 
     // resourceURL
     const admit = this.state.status === 'Approved' ? true : false;
