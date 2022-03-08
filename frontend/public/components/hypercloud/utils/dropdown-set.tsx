@@ -41,7 +41,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, any>(({ children, isOpen, targ
 
 const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disabled }) => {
   return (
-    <div className="hc-dropdown-main-button" style={disabled ? { width: buttonWidth , backgroundColor: '#ededed' } : { width: buttonWidth }} onClick={disabled ? null :toggleOpen}>
+    <div className="hc-dropdown-main-button" style={disabled ? { width: buttonWidth, backgroundColor: '#ededed' } : { width: buttonWidth }} onClick={disabled ? null : toggleOpen}>
       <span style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden', width: 'calc(100% - 60px)' }}>{label}</span>
       <span className="pf-c-badge pf-m-read">{count}</span>
       <CaretDownIcon className="hc-dropdown-select_toggle-icon" style={{ marginLeft: '10px', position: 'absolute', right: '0px' }} />
@@ -49,64 +49,58 @@ const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disable
   );
 };
 
-const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked, props) => {  
+const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked, props) => {
   //const { data, options: allOptions, getValue, isSelected, setValue } = props;
   const { data, getValue, setValue } = props;
   //const justSelectAllOption = allOptions.length === 1 && allOptions[0].value === SELECT_ALL_VALUE;
   //const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
   //let allSelected = false;
   const currentValue = getValue();
-  const categoryItemList = items.filter(e => { if (data.category === e.category) return true; });
-  const wihtoutApiGroupItemList = currentValue.filter(e => { if (data.category !== e.category) return true; });
+  const categoryItemList = items.filter(e => {
+    if (data.category === e.category) return true;
+  });
+  const wihtoutApiGroupItemList = currentValue.filter(e => {
+    if (data.category !== e.category) return true;
+  });
 
-  const itemList = currentValue.filter(e => { if (data.label === e.label) return true; });
-  const isExist = !(itemList.length === 0);  
+  const itemList = currentValue.filter(e => {
+    if (data.label === e.label) return true;
+  });
+  const isExist = !(itemList.length === 0);
 
   return (
     <div>
-      {data.isFirstItem &&
-        <>
-          <hr></hr> 
-          <div style={{ marginLeft: '20px', fontWeight: 'bold' }} onClick={() => {            
-            //Add resources in categorys
-            
-            setValue(wihtoutApiGroupItemList.concat(categoryItemList).filter(e => { if (e.label !== 'All') return true; }));
-
-                    }}
-                    onChange={() => null}
-                    >
-            {data.category}
-            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
-          </div>
-        </>
-        }
-
-        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
-          <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px' }}>
-            <span id={DROPDOWN_SECTION_ID}
-              onClick={() => {
-                if (data.label === 'All') {
-                  setValue([{
+      <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
+        <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px' }}>
+          <span
+            id={DROPDOWN_SECTION_ID}
+            onClick={() => {
+              if (data.label === 'All') {
+                setValue([
+                  {
                     label: 'All',
                     value: '*',
-                  }]);
-                  setSelectAllChecked(true);
-                  
+                  },
+                ]);
+                setSelectAllChecked(true);
+              } else {
+                if (isExist !== true) {
+                  data.added = true;
+                  currentValue.push(data);
+                  //remove All
+                  let wihtoutAll = currentValue.filter(e => {
+                    if (e.label !== 'All') return true;
+                  });
+                  setValue(wihtoutAll);
                 }
-                else {
-                  if (isExist !== true) {
-                    data.added = true;
-                    currentValue.push(data);
-                    //remove All
-                    let wihtoutAll = currentValue.filter(e => { if (e.label !== 'All') return true; });
-                    setValue(wihtoutAll);
-                  }
-                }
-              }}>
-              {data.label}
-              <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '20px', float: 'right' }} />
-            </span>
+              }
+            }}
+          >
+            {data.label}
+            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '20px', float: 'right' }} />
           </span>
+          {data.label === 'All' && <hr />}
+        </span>
       </span>
     </div>
   );
@@ -220,26 +214,25 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
   React.useEffect(() => {
     const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
     if (defaultValuesWithKey[0]?.label === 'All') {
+      setSelectAllChecked(true);
+      setChips([selectAllChipObj]);
+    } else if (selectAllChip.length > 0) {
+      // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
+      if (shrinkOnSelectAll) {
         setSelectAllChecked(true);
         setChips([selectAllChipObj]);
-    }
-    else if (selectAllChip.length > 0) {
-        // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
-        if (shrinkOnSelectAll) {
-            setSelectAllChecked(true);
-            setChips([selectAllChipObj]);
-        } else {
-            // EMPTY : defaultValue에 all관련 chip이 있는데 shrinkOnSelectAll은 false일 경우는 있으면 안된다. defaultValue로 all관련 chip이 들어올 경우엔 해당 드롭다운의 shrinkOnSelectAll=true로 설정해줘야 한다.
-        }
+      } else {
+        // EMPTY : defaultValue에 all관련 chip이 있는데 shrinkOnSelectAll은 false일 경우는 있으면 안된다. defaultValue로 all관련 chip이 들어올 경우엔 해당 드롭다운의 shrinkOnSelectAll=true로 설정해줘야 한다.
+      }
     } else if (formattedOptions?.length > 0 && defaultValuesWithKey.length > 0 && formattedOptions.length === defaultValuesWithKey.length) {
-        // MEMO : defaultValues의 길이와 items의 길이가 같은 경우 모든 요소들이 선택된걸로 간주
-        setSelectAllChecked(true);
-        setChips(defaultValuesWithKey);
+      // MEMO : defaultValues의 길이와 items의 길이가 같은 경우 모든 요소들이 선택된걸로 간주
+      setSelectAllChecked(true);
+      setChips(defaultValuesWithKey);
     } else {
-        setSelectAllChecked(false);
-        setChips(defaultValuesWithKey);
+      setSelectAllChecked(false);
+      setChips(defaultValuesWithKey);
     }
-}, []);
+  }, []);
 
   const setDropdownSettings = (isSelectAll, formValues, chips) => {
     setSelectAllChecked(isSelectAll);
@@ -318,7 +311,43 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
   };
 
   const getOptions = options => [selectAllOption, ...options];
+  const getCategoryCount = item => {
+    const categorys = item.reduce((current, next) => {
+      current[next.category] = ++current[next.category] || 0;
+      return current;
+    }, {});
+    const categoryCount = Object.keys(categorys).length;
 
+    return categoryCount;
+  };
+
+  const getResourceItem = item => {
+    const categoryCount = getCategoryCount(item);
+
+    if (categoryCount === 1) {
+      return item;
+    } else {
+      let resourceCountObject = item.reduce((current, next) => {
+        current[next.label] = ++current[next.label] || 0;
+        return current;
+      }, {});
+      Object.keys(resourceCountObject).map(key => {
+        if (resourceCountObject[key] !== categoryCount - 1) {
+          resourceCountObject[key] = 0;
+        }
+      });
+
+      let duplicates = item
+        .filter(e => resourceCountObject[e.label])
+        .reduce(function(acc, current) {
+          if (acc.findIndex(({ label }) => label === current.label) === -1) {
+            acc.push(current);
+          }
+          return acc;
+        }, []);
+      return duplicates;
+    }
+  };
   const toggleOpen = () => {
     window.addEventListener('click', onWindowClick);
     setIsOpen(!isOpen);
@@ -365,69 +394,37 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
   //const categories = [{category: "Fruit", items: [{label: "AAA", value: "AAA"}, {label: "BBB", value: "BBB"}]}, {category: "Book", items: [{label: "Comic", value: "Comic"}, {label: "Novel", value: "Novel"}]}];
 
   return (
-    <DataToolbar
-      id="multidropdown-toolbar"
-      clearAllFilters={clearAll}
-      clearFiltersButtonText={clearAllText}
-    >
+    <DataToolbar id="multidropdown-toolbar" clearAllFilters={clearAll} clearFiltersButtonText={clearAllText}>
       <DataToolbarContent>
         <DataToolbarItem>
           <DataToolbarFilter
             deleteChipGroup={clearAll}
-            chips={chips?.map((item) => {
+            chips={chips?.map(item => {
               return {
                 key: item.label || SELECT_ALL_VALUE,
                 node: (
                   <>
-                    <ResourceIcon kind={item.kind ?? ""} />
-                    {item.label ?? ""}
+                    <ResourceIcon kind={item.kind ?? ''} />
+                    {item.label ?? ''}
                   </>
                 ),
               };
             })}
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
-          >
+          ></DataToolbarFilter>
 
-          </DataToolbarFilter>
-
-          <Dropdown
-            ref={dropdownElement}
-            isOpen={isOpen}
-            onClose={toggleOpen}
-            target={
-              <DropdownMainButton
-                disabled={items.length === 0}
-                label={placeholder}
-                toggleOpen={toggleOpen}
-                count={
-                  selectAllChecked
-                    ? formattedOptions.length
-                    : selectedValues.length || 0
-                }
-                buttonWidth={buttonWidth}
-              />
-            }
-          >
+          <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton disabled={items.length === 0} label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
             <Select
               name={name}
               autoFocus
               styles={customStyles}
               value={selectedValues || []}
-              options={getOptions(formattedOptions)}
+              options={getOptions(getResourceItem(formattedOptions))}
               controlShouldRenderValue={false}
               isMulti
               components={{
-                Option: ResourceItem.bind(
-                  null,
-                  useResourceItemsFormatter,
-                  shrinkOnSelectAll,
-                  selectAllChipObj,
-                  showSelectAllOnEmpty,
-                  selectAllChecked,
-                  items,
-                  setSelectAllChecked
-                ),
+                Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked),
                 IndicatorSeparator: null,
                 DropdownIndicator: null,
               }}
@@ -465,7 +462,7 @@ export type DropdownSetComponentProps = {
   buttonWidth?: string;
   shrinkOnSelectAll?: boolean;
   showSelectAllOnEmpty?: boolean;
-  selectAllChipObj?: { label: string; value: string;[key: string]: string };
+  selectAllChipObj?: { label: string; value: string; [key: string]: string };
   clearAllText?: string;
   category?: any[];
 };
