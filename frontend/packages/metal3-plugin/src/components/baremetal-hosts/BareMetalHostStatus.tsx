@@ -19,7 +19,7 @@ import {
   NODE_STATUS_STARTING_MAINTENANCE,
   NODE_STATUS_STOPPING_MAINTENANCE,
 } from '../../constants';
-import { BareMetalHostModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { getHostErrorMessage } from '../../selectors';
 import { StatusProps } from '../types';
 import MaintenancePopover from '../maintenance/MaintenancePopover';

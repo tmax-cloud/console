@@ -16,14 +16,14 @@ import {
   getAnnotations,
 } from '@console/shared';
 import { confirmModal, deleteModal } from '@console/internal/components/modals';
-import { MachineModel, MachineSetModel } from '@console/internal/models';
+import { MachineModel, MachineSetModel, BareMetalHostModel } from '@console/internal/models';
 import {
   findNodeMaintenance,
   getHostMachine,
   getHostPowerStatus,
   isHostScheduledForRestart,
 } from '../../selectors';
-import { BareMetalHostModel, NodeMaintenanceModel } from '../../models';
+import { NodeMaintenanceModel } from '../../models';
 import { getHostStatus } from '../../status/host-status';
 import {
   HOST_POWER_STATUS_POWERED_OFF,

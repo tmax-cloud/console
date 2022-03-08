@@ -4,7 +4,7 @@ import DashboardCardBody from '@console/shared/src/components/dashboard/dashboar
 import DashboardCardHeader from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardHeader';
 import DashboardCardTitle from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardTitle';
 import InventoryItem, { ResourceInventoryItem } from '@console/shared/src/components/dashboard/inventory-card/InventoryItem';
-import { PodModel, NodeModel } from '@console/internal/models';
+import { PodModel, NodeModel, BareMetalHostModel } from '@console/internal/models';
 import { getNamespace, getName } from '@console/shared/src/selectors/common';
 import { getPodStatusGroups } from '@console/shared/src/components/dashboard/inventory-card/utils';
 import { resourcePathFromModel } from '@console/internal/components/utils/resource-link';
@@ -12,7 +12,6 @@ import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watc
 import { PodKind } from '@console/internal/module/k8s/types';
 import { Link } from 'react-router-dom';
 import { getHostStorage, getHostNICs, getHostCPU } from '../../../selectors';
-import { BareMetalHostModel } from '../../../models';
 import { BareMetalHostDashboardContext } from './BareMetalHostDashboardContext';
 
 const PodInventoryItem: React.FC = () => {

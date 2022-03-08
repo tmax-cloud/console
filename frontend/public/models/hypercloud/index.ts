@@ -1602,8 +1602,8 @@ export const NodeConfigModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'NodeConfig',
-    labelPlural: 'NodeConfigs',
+    label: 'COMMON:MSG_LNB_MENU_220',
+    labelPlural: 'COMMON:MSG_LNB_MENU_219',
   },
 };
 
@@ -1623,7 +1623,7 @@ export const BareMetalHostModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'BareMetalHost',
-    labelPlural: 'BareMetalHosts',
+    label: 'COMMON:MSG_LNB_MENU_222',
+    labelPlural: 'COMMON:MSG_LNB_MENU_221',
   },
 };

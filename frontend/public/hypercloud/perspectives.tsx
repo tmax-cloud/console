@@ -26,7 +26,7 @@ export const PerspectiveLabelKeys = {
   [PerspectiveType.MASTER]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_3',
   [PerspectiveType.MULTI]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_2',
   [PerspectiveType.SINGLE]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_1',
-  [PerspectiveType.DEVELOPER]: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2',
+  [PerspectiveType.DEVELOPER]: 'COMMON:MSG_LNB_MENU_CONSOLE_LIST_4',
   [PerspectiveType.BAREMETAL]: 'BAREMETAL',
   [PerspectiveType.CUSTOM]: 'CUSTOM',
 };

@@ -6,7 +6,7 @@ import {
   ResourceLink,
   resourcePathFromModel,
 } from '@console/internal/components/utils';
-import { EventModel, MachineModel, NodeModel } from '@console/internal/models';
+import { EventModel, MachineModel, NodeModel, BareMetalHostModel } from '@console/internal/models';
 import DashboardCard from '@console/shared/src/components/dashboard/dashboard-card/DashboardCard';
 import DashboardCardBody from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardBody';
 import DashboardCardHeader from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardHeader';
@@ -23,7 +23,6 @@ import {
   withDashboardResources,
 } from '@console/internal/components/dashboard/with-dashboard-resources';
 import { getName, getNamespace, getMachineNodeName } from '@console/shared';
-import { BareMetalHostModel } from '../../../models';
 import { BareMetalHostKind } from '../../../types';
 import { isHostInProgressState, getBareMetalHostStatus } from '../../../status/host-status';
 import { BareMetalHostDashboardContext } from './BareMetalHostDashboardContext';
