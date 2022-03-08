@@ -4,7 +4,7 @@ import ActivityItem from '@console/shared/src/components/dashboard/activity-card
 import { ResourceLink } from '@console/internal/components/utils';
 import { referenceForModel } from '@console/internal/module/k8s';
 import { getHostPowerStatus } from '../../../selectors';
-import { BareMetalHostModel } from '../../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostKind } from '../../../types';
 
 import './status-activity.scss';

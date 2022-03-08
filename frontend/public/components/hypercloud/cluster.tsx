@@ -45,6 +45,8 @@ const getMenuActions = type => {
   return menuActions;
 };
 
+const CLUSTER_TYPE_LABEL = 'clustermanager.cluster.tmax.io/cluster-type';
+
 const ClusterType = {
   CREATED: 'created',
   REGISTERED: 'registered',
@@ -101,7 +103,7 @@ const tableProps: TableProps = {
     },
   ],
   row: (cluster: K8sResourceKind) => {
-    const type = cluster.metadata.labels?.type;
+    const type = cluster.metadata.labels[CLUSTER_TYPE_LABEL] || '';
     return [
       {
         children: <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />,

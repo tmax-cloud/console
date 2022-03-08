@@ -16,7 +16,7 @@ import { resourcePathFromModel } from '@console/internal/components/utils';
 import NodeLink from '../NodeLink';
 import BareMetalHostRole from '../BareMetalHostRole';
 import { BareMetalHostKind } from '../../../types';
-import { BareMetalHostModel } from '../../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostDashboardContext } from './BareMetalHostDashboardContext';
 
 const DetailsCard: React.FC<DetailsCardProps> = () => {

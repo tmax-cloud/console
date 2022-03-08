@@ -8,7 +8,7 @@ import DetailItem from '@console/shared/src/components/dashboard/details-card/De
 import DashboardCardLink from '@console/shared/src/components/dashboard/dashboard-card/DashboardCardLink';
 import { getNodeAddresses } from '@console/shared/src/selectors/node';
 import { resourcePathFromModel, ResourceLink } from '@console/internal/components/utils';
-import { NodeModel } from '@console/internal/models';
+import { NodeModel, BareMetalHostModel } from '@console/internal/models';
 import { referenceForModel } from '@console/internal/module/k8s';
 import NodeIPList from '@console/app/src/components/nodes/NodeIPList';
 import { NodeDashboardContext } from '@console/app/src/components/nodes/node-dashboard/NodeDashboardContext';
@@ -16,7 +16,6 @@ import NodeRoles from '@console/app/src/components/nodes/NodeRoles';
 import { useTranslation } from 'react-i18next';
 
 import { BareMetalNodeDashboardContext } from './BareMetalNodeDashboardContext';
-import { BareMetalHostModel } from '../../../models';
 
 const DetailsCard: React.FC = () => {
   const { obj } = React.useContext(NodeDashboardContext);

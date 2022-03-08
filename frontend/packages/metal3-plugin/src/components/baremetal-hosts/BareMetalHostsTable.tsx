@@ -14,7 +14,7 @@ import { referenceForModel } from '@console/internal/module/k8s';
 import { useFlag } from '@console/shared/src/hooks/flag';
 import { BareMetalHostBundle } from '../types';
 import { getHostBMCAddress, getHostVendorInfo } from '../../selectors';
-import { BareMetalHostModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import NodeLink from './NodeLink';
 import BareMetalHostStatus from './BareMetalHostStatus';
 import BareMetalHostRole from './BareMetalHostRole';
