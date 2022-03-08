@@ -70,8 +70,8 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
   return (
     <>
       <div>
-        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
-          <input
+        <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block', paddingLeft: '20px' }}>
+          {/* <input
             id={DROPDOWN_SECTION_ID}
             style={{ marginLeft: '10px', marginRight: '10px' }}
             type="checkbox"
@@ -109,57 +109,106 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             }}
             onChange={() => null}
             data-test-id="checkbox"
-          />
+          /> */}
 
           <span
             className="co-resource-item__resource-name"
             id={DROPDOWN_SECTION_ID}
-            onClick={() => {
-              if (data.label === 'All' && data.value === '*') {
-                setValue([
-                  {
-                    label: 'All',
-                    value: '*',
-                    checked: false,
-                    added: true,
-                  },
-                ]);
-                setSelectAllChecked(true);
-              } else {
-                if (isExist !== true) {
-                  data.added = true;
-                  currentValue.push(data);
-                  //remove All
-                  let wihtoutAll = currentValue.filter(e => {
-                    if (e.label !== 'All') return true;
-                  });
-                  setValue(wihtoutAll);
+            // onClick={() => {
+            //   if (data.label === 'All' && data.value === '*') {
+            //     setValue([
+            //       {
+            //         label: 'All',
+            //         value: '*',
+            //         checked: false,
+            //         added: true,
+            //       },
+            //     ]);
+            //     setSelectAllChecked(true);
+            //   } else {
+            //     if (isExist !== true) {
+            //       data.checked = true;
+            //       data.added = true;
+            //       currentValue.push(data);
+            //       //remove All
+            //       let wihtoutAll = currentValue.filter(e => {
+            //         if (e.label !== 'All') return true;
+            //       });
+            //       setValue(wihtoutAll);
+            //     } else {
+            //       if (isChecked !== true) {
+            //         data.added = true;
+            //         //update currentValue
+            //         wihtoutItem.push(data);
+            //         //remove All
+            //         let wihtoutAll = wihtoutItem.filter(e => {
+            //           if (e.label !== 'All') return true;
+            //         });
+            //         setValue(wihtoutAll);
+            //       } else {
+            //         data.checked = true;
+            //         data.added = true;
+            //         //update currentValue
+            //         wihtoutItem.push(data);
+            //         let wihtoutAll = wihtoutItem.filter(e => {
+            //           if (e.label !== 'All') return true;
+            //         });
+            //         setValue(wihtoutAll);
+            //       }
+            //     }
+            //   }
+            // }}
+          >
+            <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
+            <PlusCircleIcon
+              data-test-id="pairs-list__add-icon"
+              className="co-icon-space-l"
+              style={{ marginRight: '10px', float: 'right', cursor: 'pointer' }}
+              onClick={() => {
+                if (data.label === 'All' && data.value === '*') {
+                  setValue([
+                    {
+                      label: 'All',
+                      value: '*',
+                      checked: false,
+                      added: true,
+                    },
+                  ]);
+                  setSelectAllChecked(true);
                 } else {
-                  if (isChecked !== true) {
+                  if (isExist !== true) {
+                    data.checked = true;
                     data.added = true;
-                    //update currentValue
-                    wihtoutItem.push(data);
+                    currentValue.push(data);
                     //remove All
-                    let wihtoutAll = wihtoutItem.filter(e => {
+                    let wihtoutAll = currentValue.filter(e => {
                       if (e.label !== 'All') return true;
                     });
                     setValue(wihtoutAll);
                   } else {
-                    data.checked = true;
-                    data.added = true;
-                    //update currentValue
-                    wihtoutItem.push(data);
-                    let wihtoutAll = wihtoutItem.filter(e => {
-                      if (e.label !== 'All') return true;
-                    });
-                    setValue(wihtoutAll);
+                    if (isChecked !== true) {
+                      data.added = true;
+                      //update currentValue
+                      wihtoutItem.push(data);
+                      //remove All
+                      let wihtoutAll = wihtoutItem.filter(e => {
+                        if (e.label !== 'All') return true;
+                      });
+                      setValue(wihtoutAll);
+                    } else {
+                      data.checked = true;
+                      data.added = true;
+                      //update currentValue
+                      wihtoutItem.push(data);
+                      let wihtoutAll = wihtoutItem.filter(e => {
+                        if (e.label !== 'All') return true;
+                      });
+                      setValue(wihtoutAll);
+                    }
                   }
                 }
-              }
-            }}
-          >
-            <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
-            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
+              }}
+            />
           </span>
         </span>
       </div>
@@ -280,8 +329,8 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
   React.useEffect(() => {
     const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
     if (defaultValuesWithKey[0]?.label === 'All') {
-      setSelectAllChecked(true);
-      setChips([selectAllChipObj]);
+      // setSelectAllChecked(true);
+      // setChips([selectAllChipObj]);
     } else if (selectAllChip.length > 0) {
       // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
       if (shrinkOnSelectAll) {
@@ -386,24 +435,23 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
     }
     setInputValue(value);
   };
-  const returnIsAllSelected = ()=>{
-    const isAllSelected = chips.findIndex(chip=>chip.label==="All")
-    return isAllSelected ===-1 ? false : true 
-  }
-  
-  const getChipsCount = ()=>{
-    if(selectAllChecked ||returnIsAllSelected()){
-      return formattedOptions.length
+  const returnIsAllSelected = () => {
+    const isAllSelected = chips.findIndex(chip => chip.label === 'All');
+    return isAllSelected === -1 ? false : true;
+  };
+
+  const getChipsCount = () => {
+    if (selectAllChecked || returnIsAllSelected()) {
+      return formattedOptions.length;
+    } else {
+      return chips.length;
     }
-    else{
-      return chips.length
-    }
-  }
+  };
   const getOptions = options => [selectAllOption, ...options];
 
   const toggleOpen = () => {
     window.addEventListener('click', onWindowClick);
-   
+
     setIsOpen(!isOpen);
   };
 
@@ -431,13 +479,13 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
       return;
     }
     hide(event);
-    setInputValue('')
+    setInputValue('');
   };
 
   const hide = e => {
     e && e.stopPropagation();
     window.removeEventListener('click', onWindowClick);
-    
+
     setIsOpen(false);
   };
 
@@ -468,7 +516,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
           >
-            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={ getChipsCount() } buttonWidth={buttonWidth} />}>
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={getChipsCount()} buttonWidth={buttonWidth} />}>
               <Select
                 name={name}
                 autoFocus
@@ -488,7 +536,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                 }}
                 inputValue={inputValue}
                 onInputChange={(value, action) => handelInputChange(value, action)}
-                blurInputOnSelect={false}
+                //blurInputOnSelect={false}
                 menuIsOpen
                 classNamePrefix="hc-select"
                 isSearchable={true}
