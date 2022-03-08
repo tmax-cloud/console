@@ -70,27 +70,6 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
 
   return (
     <div>
-      {/* {data.isFirstItem && (
-        <>
-          <hr></hr>
-          <div
-            style={{ marginLeft: '20px', fontWeight: 'bold' }}
-            onClick={() => {
-              //Add resources in categorys
-
-              setValue(
-                wihtoutApiGroupItemList.concat(categoryItemList).filter(e => {
-                  if (e.label !== 'All') return true;
-                }),
-              );
-            }}
-            onChange={() => null}
-          >
-            {data.category}
-            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '10px', float: 'right' }} />
-          </div>
-        </>
-      )} */}
       <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block' }}>
         <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID} style={{ marginLeft: '10px' }}>
           <span

@@ -71,7 +71,8 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     <>
       <div>
         <span className={'co-resource-item'} id={DROPDOWN_SECTION_ID} style={{ display: 'block', paddingLeft: '20px' }}>
-          {/* <input
+          {/* MEMO : API 그룹 컴포넌트 내부 체크박스를 삭제해달라는 요청으로 주석처리 해놓음. 후에 다시 추가해야한다면 주석만 풀어주면 됨. 
+          <input
             id={DROPDOWN_SECTION_ID}
             style={{ marginLeft: '10px', marginRight: '10px' }}
             type="checkbox"
@@ -111,54 +112,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             data-test-id="checkbox"
           /> */}
 
-          <span
-            className="co-resource-item__resource-name"
-            id={DROPDOWN_SECTION_ID}
-            // onClick={() => {
-            //   if (data.label === 'All' && data.value === '*') {
-            //     setValue([
-            //       {
-            //         label: 'All',
-            //         value: '*',
-            //         checked: false,
-            //         added: true,
-            //       },
-            //     ]);
-            //     setSelectAllChecked(true);
-            //   } else {
-            //     if (isExist !== true) {
-            //       data.checked = true;
-            //       data.added = true;
-            //       currentValue.push(data);
-            //       //remove All
-            //       let wihtoutAll = currentValue.filter(e => {
-            //         if (e.label !== 'All') return true;
-            //       });
-            //       setValue(wihtoutAll);
-            //     } else {
-            //       if (isChecked !== true) {
-            //         data.added = true;
-            //         //update currentValue
-            //         wihtoutItem.push(data);
-            //         //remove All
-            //         let wihtoutAll = wihtoutItem.filter(e => {
-            //           if (e.label !== 'All') return true;
-            //         });
-            //         setValue(wihtoutAll);
-            //       } else {
-            //         data.checked = true;
-            //         data.added = true;
-            //         //update currentValue
-            //         wihtoutItem.push(data);
-            //         let wihtoutAll = wihtoutItem.filter(e => {
-            //           if (e.label !== 'All') return true;
-            //         });
-            //         setValue(wihtoutAll);
-            //       }
-            //     }
-            //   }
-            // }}
-          >
+          <span className="co-resource-item__resource-name" id={DROPDOWN_SECTION_ID}>
             <span id={DROPDOWN_SECTION_ID}>{data.label}</span>
             <PlusCircleIcon
               data-test-id="pairs-list__add-icon"
@@ -329,6 +283,7 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
   React.useEffect(() => {
     const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
     if (defaultValuesWithKey[0]?.label === 'All') {
+      //MEMO : 기획상 defaultValue가 빈 값이여야 함. 추후 all이 default가 된다면 주석 풀어서 사용
       // setSelectAllChecked(true);
       // setChips([selectAllChipObj]);
     } else if (selectAllChip.length > 0) {
@@ -536,7 +491,6 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
                 }}
                 inputValue={inputValue}
                 onInputChange={(value, action) => handelInputChange(value, action)}
-                //blurInputOnSelect={false}
                 menuIsOpen
                 classNamePrefix="hc-select"
                 isSearchable={true}

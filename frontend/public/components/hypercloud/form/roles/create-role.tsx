@@ -117,7 +117,6 @@ const roleFormFactory = (params, obj) => {
   const defaultValues = obj || defaultValuesTemplate;
 
   if (!defaultValues.rules) {
-    //defaultValues.rules = [{ apiGroups: ['*'], resources: [], verbs: ['*'] }];
     defaultValues.rules = [{ apiGroups: [], resources: [], verbs: ['*'] }];
   }
   if (defaultValues.rules) {
