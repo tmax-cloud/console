@@ -56,12 +56,6 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
   //const isSelectAllCheckbox = data.value === SELECT_ALL_VALUE;
   //let allSelected = false;
   const currentValue = getValue();
-  const categoryItemList = items.filter(e => {
-    if (data.category === e.category) return true;
-  });
-  const wihtoutApiGroupItemList = currentValue.filter(e => {
-    if (data.category !== e.category) return true;
-  });
 
   const itemList = currentValue.filter(e => {
     if (data.label === e.label) return true;
@@ -412,36 +406,36 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
             })}
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
-          ></DataToolbarFilter>
-
-          <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton disabled={items.length === 0} label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
-            <Select
-              name={name}
-              autoFocus
-              styles={customStyles}
-              value={selectedValues || []}
-              options={getOptions(getResourceItem(formattedOptions))}
-              controlShouldRenderValue={false}
-              isMulti
-              components={{
-                Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked),
-                IndicatorSeparator: null,
-                DropdownIndicator: null,
-              }}
-              ref={ref}
-              onChange={(value, action) => {
-                handleChange(value, action, formattedOptions);
-              }}
-              menuIsOpen
-              classNamePrefix="hc-select"
-              isSearchable={true}
-              tabSelectsValue={false}
-              isClearable={false}
-              backspaceRemovesValue={false}
-              hideSelectedOptions={false}
-              closeMenuOnSelect={false}
-            />
-          </Dropdown>
+          >
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton disabled={items.length === 0} label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
+              <Select
+                name={name}
+                autoFocus
+                styles={customStyles}
+                value={selectedValues || []}
+                options={getOptions(getResourceItem(formattedOptions))}
+                controlShouldRenderValue={false}
+                isMulti
+                components={{
+                  Option: ResourceItem.bind(null, useResourceItemsFormatter, shrinkOnSelectAll, selectAllChipObj, showSelectAllOnEmpty, selectAllChecked, items, setSelectAllChecked),
+                  IndicatorSeparator: null,
+                  DropdownIndicator: null,
+                }}
+                ref={ref}
+                onChange={(value, action) => {
+                  handleChange(value, action, formattedOptions);
+                }}
+                menuIsOpen
+                classNamePrefix="hc-select"
+                isSearchable={true}
+                tabSelectsValue={false}
+                isClearable={false}
+                backspaceRemovesValue={false}
+                hideSelectedOptions={false}
+                closeMenuOnSelect={false}
+              />
+            </Dropdown>
+          </DataToolbarFilter>
         </DataToolbarItem>
       </DataToolbarContent>
     </DataToolbar>
