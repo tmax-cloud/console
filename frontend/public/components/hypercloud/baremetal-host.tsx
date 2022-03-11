@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { BareMetalHostModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { BareMetalHostStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Status } from '@console/shared';
@@ -89,27 +89,27 @@ export const BareMetalHostDetailsList: React.FC<BareMetalHostDetailsListProps> =
       <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={bmh}>
         <Status status={bmh.status?.provisioning.state} />
       </DetailsItem>
-      <DetailsItem label={'power'} obj={bmh}>
-        {bmh.status?.poweredOn ? t('on') : t('off')}
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_1')} obj={bmh}>
+        {bmh.status?.poweredOn ? t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_2') : t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_3')}
       </DetailsItem>
-      <DetailsItem label={'online'} obj={bmh}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_4')} obj={bmh}>
         {bmh.spec?.online ? 'true' : 'false'}
       </DetailsItem>      
       <DetailsItem label={'BMC'} obj={bmh}>
         <ResourceLink kind="Secret" name={bmh.spec?.bmc?.credentialsName} namespace={bmh.metadata.namespace} title={bmh.spec?.bmc?.credentialsName} />        
       </DetailsItem>
-      <DetailsItem label={"imageURL"} obj={bmh}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_NODECONFIGS_NODECONFIGDETAILS_TABDETAILS_1')} obj={bmh}>
         {bmh.spec?.image.url}
       </DetailsItem>
-      <DetailsItem label={'userdata'} obj={bmh}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_9')} obj={bmh}>
         <ResourceLink kind="Secret" name={bmh.spec?.userData?.name} namespace={bmh.spec?.userData?.namespace} title={bmh.spec?.userData?.name} />        
       </DetailsItem>
-      <DetailsItem label={'hardwareprofile'} obj={bmh}>
-        <div>{t('Hostname') + ' : '+ bmh.status?.hardware?.hostname}</div>
-        <div>{t('Nics IP') + ' : '}{bmh.status?.hardware?.nics?.map((nic, index) => { return <div key={`nic-ip-${index}`} style={{display: 'inline'}}>{nic.ip + ' '}</div> })}</div>        
-        <div>{t('System Vendor') + ' : '+ bmh.status?.hardware?.systemVendor?.manufacturer + ' ' + bmh.status?.hardware?.systemVendor?.productName}</div>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_5')} obj={bmh}>
+        <div>{t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_6') + ' : '+ bmh.status?.hardware?.hostname}</div>
+        <div>{'Nics IP : '}{bmh.status?.hardware?.nics?.map((nic, index) => { return <div key={`nic-ip-${index}`} style={{display: 'inline'}}>{nic.ip + ' '}</div> })}</div>        
+        <div>{t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_7') + ' : '+ bmh.status?.hardware?.systemVendor?.manufacturer + ' ' + bmh.status?.hardware?.systemVendor?.productName}</div>
       </DetailsItem>
-      <DetailsItem label={'updateTime'} obj={bmh}>
+      <DetailsItem label={t('MULTI:MSG_BAREMETAL_BAREMETALHOSTS_BAREMETALHOSTDETAILS_TABDETAILS_8')} obj={bmh}>
         <Timestamp timestamp={bmh.status?.lastUpdated} />
       </DetailsItem>
     </dl>

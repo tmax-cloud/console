@@ -481,7 +481,7 @@ export const ResourceEventStream = ({
 }) => {
   const { t } = useTranslation();
   const fieldSelector = kind === NodeModel.kind ? `involvedObject.name=${name},involvedObject.kind=${kind}` : `involvedObject.uid=${uid},involvedObject.name=${name},involvedObject.kind=${kind}`;
-  return <_EventStream t={t} fieldSelector={fieldSelector} namespace={namespace} cluster={kind === 'ClusterManager' && name} resourceEventStream />;
+  return <_EventStream t={t} fieldSelector={fieldSelector} namespace={namespace} resourceEventStream />;
 };
 export const ResourcesEventStream = ({ filters, namespace }) => {
   const { t } = useTranslation();

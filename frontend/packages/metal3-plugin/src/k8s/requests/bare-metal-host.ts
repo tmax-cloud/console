@@ -6,10 +6,9 @@ import {
   MachineSetKind,
   k8sKill,
 } from '@console/internal/module/k8s';
-import { MachineModel, MachineSetModel, SecretModel } from '@console/internal/models';
+import { MachineModel, MachineSetModel, SecretModel, BareMetalHostModel } from '@console/internal/models';
 import { PatchBuilder } from '@console/shared/src/k8s';
 import { getAnnotations } from '@console/shared/src';
-import { BareMetalHostModel } from '../../models';
 import { BareMetalHostKind } from '../../types';
 import { DELETE_MACHINE_ANNOTATION } from '../../constants/machine';
 import { getReplicas } from '../../selectors/machine-set';

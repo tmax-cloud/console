@@ -109,7 +109,7 @@ const BaseStatusModal = withTranslation()(
         }
         case ClusterClaimModel.kind: {
           const clusterClaim = resource.metadata.name;
-          const userName = resource.metadata.annotations.creator;
+          const userName = resource.metadata.annotations?.creator;
           const admit = this.state.status === 'Approved' ? true : false;
           const reason = this.state.reason;
           const ns = resource.metadata.namespace;

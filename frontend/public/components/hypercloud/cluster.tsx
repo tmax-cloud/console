@@ -45,6 +45,8 @@ const getMenuActions = type => {
   return menuActions;
 };
 
+const CLUSTER_TYPE_LABEL = 'clustermanager.cluster.tmax.io/cluster-type';
+
 const ClusterType = {
   CREATED: 'created',
   REGISTERED: 'registered',
@@ -101,7 +103,7 @@ const tableProps: TableProps = {
     },
   ],
   row: (cluster: K8sResourceKind) => {
-    const type = cluster.metadata.labels?.type;
+    const type = cluster.metadata.labels[CLUSTER_TYPE_LABEL] || '';
     return [
       {
         children: <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />,
@@ -150,17 +152,6 @@ export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) =>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={cl} path="status.ready">
         <Status status={cl.status.ready ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_1') : t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_2')} />
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={cl} path="spec.version" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_56')} obj={cl} path="spec.region" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={cl} path="spec.masterNum">
-        {`${cl.status?.masterRun ?? 0} / ${cl.spec.masterNum ?? 0}`}
-      </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_59')} obj={cl} path="spec.masterType" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={cl} path="spec.workerNum">
-        {`${cl.status?.workerRun ?? 0} / ${cl.spec.workerNum ?? 0}`}
-      </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_60')} obj={cl} path="spec.workerType" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_61')} obj={cl} path="spec.sshKey" />
     </dl>
   );
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watch-hook';
 import { BareMetalHostKind } from '../../types';
-import { BareMetalHostModel } from '../../models';
+import { BareMetalHostModel } from '@console/internal/models';
 import { getNodeMachineName, createBasicLookup } from '@console/shared';
 import { getHostMachineName } from '../../selectors';
 import BareMetalHostDisks from '../baremetal-hosts/BareMetalHostDisks';

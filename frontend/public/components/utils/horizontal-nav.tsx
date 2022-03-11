@@ -172,7 +172,7 @@ export const navFactory: NavFactory = {
   }),
   metering: (component = MeteringComponent) => ({
     href: 'metering',
-    name: '미터링',
+    name: 'SINGLE:MSG_NAMESPACES_NAMESPACEDETAILS_TABMETERING_1',
     component: component,
   }),
 };
