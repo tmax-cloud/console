@@ -64,7 +64,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     if (data.label !== e.label) return true;
   });
   const isExist = !(itemList.length === 0);
-  const isAdded = itemList[0]?.added;
+  //const isAdded = itemList[0]?.added;
   const isChecked = itemList[0]?.checked;
 
   return (
