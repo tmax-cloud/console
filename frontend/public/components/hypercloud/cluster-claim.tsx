@@ -174,6 +174,7 @@ const VSphereClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = (
 const ClusterClaimDetails: React.FC<ClusterClaimDetailsProps> = ({ obj: clusterClaim }) => {
   const { t } = useTranslation();
   const provider = _.get(clusterClaim, 'spec.provider', '-');
+
   return (
     <>
       <div className="co-m-pane__body">
