@@ -111,39 +111,80 @@ export const ClusterRow: React.FC<ClusterRowProps> = ({ pod }) => {
   );
 };
 
-export const ClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = ({ clcl, t }) => {
+const Provider = {
+  AWS: 'AWS',
+  VSPHERE: 'vSphere',
+};
+
+// 프로바이더가 AWS인 경우
+const AwsClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = ({ clcl, t }) => {
   return (
-    <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_61')} obj={clcl}>
-        <ErrorPopoverStatus error={clcl?.status?.phase === 'Error'} status={ClusterClaimStatusReducer(clcl)} reason={clcl.status?.reason} />
-      </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={clcl} path="spec.version" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_56')} obj={clcl} path="spec.region" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={clcl} path="spec.masterNum" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_59')} obj={clcl} path="spec.masterType" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={clcl} path="spec.workerNum" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_60')} obj={clcl} path="spec.workerType" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_61')} obj={clcl} path="spec.sshKey" />
-    </dl>
+    <div className="col-lg-6">
+      <dl className="co-m-pane__details">
+        <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_61')} obj={clcl}>
+          <ErrorPopoverStatus error={clcl?.status?.phase === 'Error'} status={ClusterClaimStatusReducer(clcl)} reason={clcl.status?.reason} />
+        </DetailsItem>
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={clcl} path="spec.version" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_56')} obj={clcl} path="spec.providerAwsSpec.region" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={clcl} path="spec.masterNum" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_59')} obj={clcl} path="spec.providerAwsSpec.masterType" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={clcl} path="spec.workerNum" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_60')} obj={clcl} path="spec.providerAwsSpec.workerType" />
+        <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_61')} obj={clcl} path="spec.providerAwsSpec.sshKey" />
+      </dl>
+    </div>
+  );
+};
+
+// 프로바이더가 vphere인 경우
+const VSphereClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = ({ clcl, t }) => {
+  return (
+    <>
+      <div className="col-lg-4">
+        <dl className="co-m-pane__details">
+          <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_61')} obj={clcl}>
+            <ErrorPopoverStatus error={clcl?.status?.phase === 'Error'} status={ClusterClaimStatusReducer(clcl)} reason={clcl.status?.reason} />
+          </DetailsItem>
+          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
+          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_3')} obj={clcl} path="spec.providerVsphereSpec.vcenterKcpIp" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_4')} obj={clcl} path="spec.providerVsphereSpec.podCidr" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_5')} obj={clcl} path="spec.providerVsphereSpec.vcenterIp" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_6')} obj={clcl} path="spec.providerVsphereSpec.vcenterDataCenter" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_7')} obj={clcl} path="spec.providerVsphereSpec.vcenterDataStore" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_8')} obj={clcl} path="spec.providerVsphereSpec.vcenterResourcePool" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_9')} obj={clcl} path="spec.providerVsphereSpec.vcenterNetwork" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_10')} obj={clcl} path="spec.providerVsphereSpec.vcenterFolder" />
+        </dl>
+      </div>
+      <div className="col-lg-4">
+        <dl className="co-m-pane__details">
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_11')} obj={clcl} path="spec.providerVsphereSpec.vcenterCpuNum" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_12')} obj={clcl} path="spec.providerVsphereSpec.vcenterMemSize" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_13')} obj={clcl} path="spec.providerVsphereSpec.vcenterDiskSize" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_14')} obj={clcl} path="spec.providerVsphereSpec.vcenterTemplate" />
+        </dl>
+      </div>
+    </>
   );
 };
 
 const ClusterClaimDetails: React.FC<ClusterClaimDetailsProps> = ({ obj: clusterClaim }) => {
   const { t } = useTranslation();
+  const provider = _.get(clusterClaim, 'spec.provider', '-');
+
   return (
     <>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(clusterClaim, t) })} />
         <div className="row">
-          <div className="col-lg-6">
+          <div className={provider === Provider.VSPHERE ? 'col-lg-4' : 'col-lg-6'}>
             <ResourceSummary resource={clusterClaim} showOwner={false} />
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={clusterClaim} path="metadata.annotations.creator" />
           </div>
-          <div className="col-lg-6">
-            <ClusterClaimDetailsList clcl={clusterClaim} t={t} />
-          </div>
+          {provider === Provider.VSPHERE ? <VSphereClusterClaimDetailsList clcl={clusterClaim} t={t} /> : <AwsClusterClaimDetailsList clcl={clusterClaim} t={t} />}
         </div>
       </div>
     </>
