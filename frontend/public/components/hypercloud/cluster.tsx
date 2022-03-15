@@ -4,12 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { Status } from '@console/shared';
 import { K8sResourceKind, K8sKind } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { ClusterManagerModel } from '../../models';
 import { configureClusterNodesModal } from './modals';
 import { MembersPage } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { ResourceEventStream } from '../events';
 import { TableProps } from './utils/default-list-component';
 
 const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
@@ -193,8 +192,6 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
   );
 };
 
-const { /* nodes, */ editResource, events } = navFactory;
-
 export const ClustersPage: React.FC = props => {
   const pages = [
     {
@@ -230,23 +227,6 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
           name: 'COMMON:MSG_DETAILS_TABOVERVIEW_3',
           component: detailsPage(ClusterDetails),
         },
-        editResource() /* nodes(ClusterNodes),  events(ResourceEventStream) */,
-        /*{
-          href: 'node',
-          name: 'Node',
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" userHeading="Users" userGroupHeading="User Groups" />,
-        },
-        {
-          href: 'namespace',
-          name: 'Namespace',
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" userHeading="Users" userGroupHeading="User Groups" />,
-        },
-        {
-          href: 'federation',
-          name: 'Federation',
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" userHeading="Users" userGroupHeading="User Groups" />,
-        },*/
-        events(ResourceEventStream),
         {
           href: 'access',
           name: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1',
