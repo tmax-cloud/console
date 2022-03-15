@@ -3,7 +3,7 @@ import { switchPerspective } from 'packages/dev-console/integration-tests/views/
 import { ValidTabGuard } from 'packages/kubevirt-plugin/src/components/create-vm-wizard/tabs/valid-tab-guard';
 import * as React from 'react';
 import { NamespaceClaimModel, ResourceQuotaClaimModel, ClusterTemplateClaimModel, RoleBindingClaimModel, ClusterClaimModel, TFApplyClaimModel } from '../../../models';
-import { k8sUpdateApproval, k8sUpdateClaim, referenceForModel } from '../../../module/k8s';
+import { k8sUpdateApproval, referenceForModel } from '../../../module/k8s';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../../factory/modal';
 import { PromiseComponent, ResourceIcon, SelectorInput } from '../../utils';

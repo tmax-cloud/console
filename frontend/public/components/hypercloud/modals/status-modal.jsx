@@ -109,12 +109,11 @@ const BaseStatusModal = withTranslation()(
         }
         case ClusterClaimModel.kind: {
           const clusterClaim = resource.metadata.name;
-          const userName = resource.metadata.annotations?.creator;
           const admit = this.state.status === 'Approved' ? true : false;
           const reason = this.state.reason;
           const ns = resource.metadata.namespace;
 
-          const promise = k8sUpdateClaim(kind, clusterClaim, admit, reason, userName, ns);
+          const promise = k8sUpdateClaim(kind, clusterClaim, admit, reason, ns);
           this.handlePromise(promise).then(this.successSubmit);
           break;
         }
