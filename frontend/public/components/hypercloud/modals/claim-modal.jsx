@@ -32,7 +32,6 @@ class BaseClaimModal extends PromiseComponent {
 
     const { kind, resource } = this.props;
     const clusterClaim = resource.metadata.name;
-    const userName = resource.metadata.annotations?.creator;
 
     // resourceURL
     const admit = this.state.status === 'Approved' ? true : false;
@@ -41,7 +40,7 @@ class BaseClaimModal extends PromiseComponent {
 
     const nameSpace = resource.metadata.namespace;
 
-    const promise = k8sUpdateClaim(kind, clusterClaim, admit, reason, userName, nameSpace);
+    const promise = k8sUpdateClaim(kind, clusterClaim, admit, reason, nameSpace);
     this.handlePromise(promise).then(this.successSubmit);
   }
 
