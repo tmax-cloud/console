@@ -11,7 +11,7 @@ import { Button } from '@patternfly/react-core';
 import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 
-const defaultServerURL = 'https://console.tmaxcloud.org/helm';
+const defaultHost = 'https://console.tmaxcloud.org';
 
 export const HelmchartPage = () => {
   const { t } = useTranslation();
@@ -19,30 +19,27 @@ export const HelmchartPage = () => {
   const [entries, setEntries] = React.useState([]);
 
   React.useEffect(() => {
-    let ignore = false;
     const fetchHelmChart = async () => {
-      let res;
-      try {
-        res = await coFetchJSON(ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }))
-      } catch { }
       let serverURL = '';
-      const { items } = res;
-      if (items?.length > 0) {
-        const ingress = items[0];
-        const host = ingress.spec?.rules?.[0]?.host;
-        if (!!host) {
-          serverURL = `https://${host}/helm/charts`;
+      await coFetchJSON(ingressUrlWithLabelSelector({
+        'ingress.tmaxcloud.org/name': 'helm-apiserver',
+      })).then((res) => {
+        const { items } = res;
+        if (items?.length > 0) {
+          const ingress = items[0];
+          const host = ingress.spec?.rules?.[0]?.host;
+          if (!!host) {
+            serverURL = `https://${host}/helm/charts`;
+          }
         }
-      }
-      try {
-        res = await coFetchJSON(serverURL !== '' ? serverURL : defaultServerURL);
-      } catch { }
-      if (ignore) return;
+      });
+
       let tempList = [];
-      let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
-      entriesvalues.map((value) => { tempList.push(value); });
+      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + '/helm/charts')
+        .then((res) => {
+          let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
+          entriesvalues.map((value) => { tempList.push(value); });
+        });
 
       setEntries(tempList);
       setLoading(true);
@@ -123,48 +120,40 @@ export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
   const repoURL = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.url : '';
 
   const [loading, setLoading] = React.useState(false);
-  const [host, setHost] = React.useState(defaultServerURL);
+  const [host, setHost] = React.useState(defaultHost);
   const [postName, setPostName] = React.useState(name);
   const [postRepoURL, setPostRepoURL] = React.useState(repoURL);
+  const [inProgress, setProgress] = React.useState(false);
+  const [errorMessage, setError] = React.useState('');
 
   React.useEffect(() => {
-    let ignore = false;
     const fetchHelmChart = async () => {
-      let res;
-      try {
-        res = await coFetchJSON(ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }))
-      } catch { }
-      if (ignore) return;
-      const { items } = res;
-      const ingress = items[0];
-      setHost(ingress.spec?.rules?.[0]?.host);
-      setLoading(true);
+      await coFetchJSON(ingressUrlWithLabelSelector({
+        'ingress.tmaxcloud.org/name': 'helm-apiserver',
+      })).then((res) => {
+        const { items } = res;
+        const ingress = items[0];
+        setHost(ingress.spec?.rules?.[0]?.host);
+        setLoading(true);
+      });
     }
     fetchHelmChart();
   }, []);
 
-  const [inProgress, setProgress] = React.useState(false);
-  const [errorMessage, setError] = React.useState('');
-
   const onClick = () => {
     setProgress(true);
-    let ignore = false;
     const putHelmChart = async () => {
       const url = `https://${host}/helm/repos`;
       const payload = {
         name: postName,
         repoURL: postRepoURL,
       };
-      try {
-        await coFetchJSON.post(url, payload);
-        history.goBack();
-      } catch (e) {
-        setProgress(false);
-        setError("error : " + e.json.error + '\ndescription : ' + e.json.description);
-      }
-      if (ignore) return;
+      await coFetchJSON.post(url, payload)
+        .then(() => { history.goBack() })
+        .catch((e) => {
+          setProgress(false);
+          setError("error : " + e.json.error + '\ndescription : ' + e.json.description);
+        });
     }
     putHelmChart();
   };
@@ -194,7 +183,7 @@ export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
     </div>
   );
 }
-export const HelmchartCratePage = () => {
+export const HelmchartCreatePage = () => {
   const { t } = useTranslation();
   return (
     <>
@@ -218,29 +207,27 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
     values: {}
   });
   React.useEffect(() => {
-    let ignore = false;
     const fetchHelmChart = async () => {
-      let res;
-      try {
-        res = await coFetchJSON(ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }))
-      } catch { }
       let serverURL = '';
-      const { items } = res;
-      if (items?.length > 0) {
-        const ingress = items[0];
-        const host = ingress.spec?.rules?.[0]?.host;
-        if (!!host) {
-          serverURL = `https://${host}/helm/charts/${name}`;
+      await coFetchJSON(ingressUrlWithLabelSelector({
+        'ingress.tmaxcloud.org/name': 'helm-apiserver',
+      })).then((res) => {
+        const { items } = res;
+        if (items?.length > 0) {
+          const ingress = items[0];
+          const host = ingress.spec?.rules?.[0]?.host;
+          if (!!host) {
+            serverURL = `https://${host}/helm/charts/${name}`;
+          }
         }
-      }
-      try {
-        res = await coFetchJSON(serverURL !== '' ? serverURL : defaultServerURL);
-      } catch { }
-      if (ignore) return;
-      setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
-      setLoading(true);
+      });
+
+      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `helm/charts/${name}`)
+        .then((res) => {
+          setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
+          setLoading(true);
+
+        });
     }
     fetchHelmChart();
   }, []);
@@ -317,29 +304,27 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
     values: {}
   });
   React.useEffect(() => {
-    let ignore = false;
     const fetchHelmChart = async () => {
-      let res;
-      try {
-        res = await coFetchJSON(ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }))
-      } catch { }
       let serverURL = '';
-      const { items } = res;
-      if (items?.length > 0) {
-        const ingress = items[0];
-        const host = ingress.spec?.rules?.[0]?.host;
-        if (!!host) {
-          serverURL = `https://${host}/helm/charts/${name}`;
+
+      await coFetchJSON(ingressUrlWithLabelSelector({
+        'ingress.tmaxcloud.org/name': 'helm-apiserver',
+      })).then((res) => {
+        const { items } = res;
+        if (items?.length > 0) {
+          const ingress = items[0];
+          const host = ingress.spec?.rules?.[0]?.host;
+          if (!!host) {
+            serverURL = `https://${host}/helm/charts/${name}`;
+          }
         }
-      }
-      try {
-        res = await coFetchJSON(serverURL !== '' ? serverURL : defaultServerURL);
-      } catch { }
-      if (ignore) return;
-      setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
-      setLoading(true);
+      });
+
+      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `/helm/charts/${name}`)
+        .then((res) => {
+          setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
+          setLoading(true);
+        });
     }
     fetchHelmChart();
   }, []);
