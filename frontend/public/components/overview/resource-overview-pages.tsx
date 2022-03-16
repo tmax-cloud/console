@@ -12,4 +12,4 @@ export const resourceOverviewPages = ImmutableMap<GroupVersionKind | string, () 
   .set(referenceForModel(ServiceModel), () => import('./service-overview' /* webpackChunkName: "service"*/).then(m => m.ServiceOverview))
   .set(referenceForModel(ReplicaSetModel), () => import('./replica-set-overview' /* webpackChunkName: "replica-set"*/).then(m => m.ReplicaSetOverview))
   .set(referenceForModel(PersistentVolumeClaimModel), () => import('./persistent-volume-claim-overview' /* webpackChunkName: "persistent-volume-claim"*/).then(m => m.PersistentVolumeClaimOverview))
-  .set(referenceForModel(IngressModel), () => import('./persistent-volume-claim-overview' /* webpackChunkName: "persistent-volume-claim"*/).then(m => m.PersistentVolumeClaimOverview));
+  .set(referenceForModel(IngressModel), () => import('./ingress-overview' /* webpackChunkName: "ingress-volume-claim"*/).then(m => m.IngressOverview));
