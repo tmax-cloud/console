@@ -105,8 +105,15 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             break;
           }
           case 'ingresses': {
-            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-ingress`));
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
+
+            const linkedServiceList = obj.spec.rules.flatMap(rule => rule.http.paths.map(path => path.backend.service.name));
+            const svcUIDList = resources.services.data.filter(service => linkedServiceList.findIndex(cur => cur === service.metadata.name) >= 0).map(service => service.metadata.uid);
+
+            svcUIDList.forEach(svcUID => {
+              typedDataModel.graph.edges.push({ id: `${obj.metadata.uid}_${obj.metadata.name}`, type: TYPE_CONNECTS_TO, source: obj.metadata.uid, target: svcUID });
+            });
             break;
           }
           default: {
