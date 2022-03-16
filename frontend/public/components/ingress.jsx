@@ -5,7 +5,7 @@ import { sortable } from '@patternfly/react-table';
 import { DetailsPage, ListPage, Table, TableRow, TableData } from './factory';
 import { Kebab, SectionHeading, LabelList, ResourceKebab, ResourceIcon, detailsPage, EmptyBox, navFactory, ResourceLink, ResourceSummary } from './utils';
 import { useTranslation } from 'react-i18next';
-const menuActions = Kebab.factory.common;
+export const menuActions = Kebab.factory.common;
 
 export const ingressValidHosts = ingress => _.map(_.get(ingress, 'spec.rules', []), 'host').filter(_.isString);
 
