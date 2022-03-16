@@ -2,17 +2,16 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { SectionHeading, Timestamp } from '../utils';
-import { NavBar } from '../utils/horizontal-nav';
+import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
-import { ButtonBar } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 
-const defaultServerURL = 'https://console.tmaxcloud.org/helm/charts';
+const defaultServerURL = 'https://console.tmaxcloud.org/helm';
 
 export const HelmchartPage = () => {
   const { t } = useTranslation();
@@ -74,19 +73,19 @@ type EntriesTableProps = {
 const EntriesTable: React.FC<EntriesTableProps> = props => {
   const { t } = useTranslation();
   const { entries } = props;
-  
+
   return (
     <div>
       {/*<div>filter</div>*/}
-      {/*<div>search</div>*/}      
+      {/*<div>search</div>*/}
       <table >
         <thead>
           <tr>
-            <th style={{padding: '5px'}} >{t('COMMON:MSG_MAIN_TABLEHEADER_1')}</th>
-            <th style={{padding: '5px'}} >{t('COMMON:MSG_MAIN_TABLEHEADER_130')}</th>
-            <th style={{padding: '5px'}} >{t('COMMON:MSG_MAIN_TABLEHEADER_131')}</th>
-            <th style={{padding: '5px'}} >{t('COMMON:MSG_MAIN_TABLEHEADER_53')}</th>
-            <th style={{padding: '5px'}} >{t('COMMON:MSG_MAIN_TABLEHEADER_12')}</th>
+            <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_1')}</th>
+            <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_130')}</th>
+            <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_131')}</th>
+            <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_53')}</th>
+            <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_12')}</th>
           </tr>
         </thead>
         <tbody>
@@ -95,15 +94,15 @@ const EntriesTable: React.FC<EntriesTableProps> = props => {
               const { name, repo, version, created } = e;
               return (
                 <tr key={'row-' + name}>
-                  <td style={{padding: '5px'}} >
+                  <td style={{ padding: '5px' }} >
                     <Link key={'link' + name} to={`/helmchart/${name}`}>
                       {name}
                     </Link>
                   </td>
-                  <td style={{padding: '5px'}} >{repo.name}</td>
-                  <td style={{padding: '5px'}} >{repo.url}</td>
-                  <td style={{padding: '5px'}} >{version}</td>
-                  <td style={{padding: '5px'}} ><Timestamp timestamp={created} /></td>
+                  <td style={{ padding: '5px' }} >{repo.name}</td>
+                  <td style={{ padding: '5px' }} >{repo.url}</td>
+                  <td style={{ padding: '5px' }} >{version}</td>
+                  <td style={{ padding: '5px' }} ><Timestamp timestamp={created} /></td>
                 </tr>
               )
             });
