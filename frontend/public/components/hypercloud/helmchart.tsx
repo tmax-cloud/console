@@ -142,13 +142,13 @@ export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
 
   const onClick = () => {
     setProgress(true);
-    const putHelmChart = async () => {
+    const putHelmChart = () => {
       const url = `https://${host}/helm/repos`;
       const payload = {
         name: postName,
         repoURL: postRepoURL,
       };
-      await coFetchJSON.post(url, payload)
+      coFetchJSON.post(url, payload)
         .then(() => { history.goBack() })
         .catch((e) => {
           setProgress(false);
