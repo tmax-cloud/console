@@ -15,7 +15,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.helm,
-    innerMenus: [Models.HelmReleaseModel.kind],
+    innerMenus: [CustomMenusMap.HelmChart.kind, Models.HelmReleaseModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,

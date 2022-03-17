@@ -157,6 +157,10 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/catalog/create-service-instance" exact loader={() => import('./service-catalog/create-instance' /* webpackChunkName: "create-service-instance" */).then(m => m.CreateInstancePage)} />
           <LazyRoute path="/k8s/ns/:ns/serviceinstances/:name/create-binding" exact loader={() => import('./service-catalog/create-binding' /* webpackChunkName: "create-binding" */).then(m => m.CreateBindingPage)} />
           <LazyRoute path="/catalog/instantiate-template" exact loader={() => import('./instantiate-template' /* webpackChunkName: "instantiate-template" */).then(m => m.InstantiateTemplatePage)} />
+          <LazyRoute path="/helmchart" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartPage)} />
+          <LazyRoute path="/helmchart/~new" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartCreatePage)} />
+          <LazyRoute path="/helmchart/:name" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartDetailsPage)} />
+          <LazyRoute path="/helmchart/:name/edit" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartEditPage)} />
           <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({ match }) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
           <LazyRoute path="/k8s/all-namespaces/events" exact loader={() => import('./events' /* webpackChunkName: "events" */).then(m => NamespaceFromURL(m.EventStreamPage))} />
           <LazyRoute path="/k8s/ns/:ns/events" exact loader={() => import('./events' /* webpackChunkName: "events" */).then(m => NamespaceFromURL(m.EventStreamPage))} />
