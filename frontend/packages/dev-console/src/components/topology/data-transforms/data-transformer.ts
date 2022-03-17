@@ -109,7 +109,7 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
 
             const linkedServiceList = obj.spec.rules.flatMap(rule => rule.http.paths.map(path => path.backend.service.name));
-            const svcUIDList = resources.services.data.filter(service => linkedServiceList.findIndex(cur => cur === service.metadata.name) >= 0).map(service => service.metadata.uid);
+            const svcUIDList = [...new Set(resources.services.data.filter(service => linkedServiceList.findIndex(cur => cur === service.metadata.name) >= 0).map(service => service.metadata.uid))];
 
             svcUIDList.forEach(svcUID => {
               typedDataModel.graph.edges.push({ id: `${obj.metadata.uid}_${obj.metadata.name}`, type: TYPE_CONNECTS_TO, source: obj.metadata.uid, target: svcUID });
