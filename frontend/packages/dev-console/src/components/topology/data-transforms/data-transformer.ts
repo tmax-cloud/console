@@ -74,8 +74,8 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
             typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pod`));
             const children = getChildrenResources(obj, resources);
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind), children));
-            if (!!item.services) {
-              const childServices = transformResourceData['services'](item.services);
+            if (item.services) {
+              const childServices = transformResourceData.services(item.services);
               deploymentToService(childServices, typedDataModel, item);
             }
             break;
@@ -102,6 +102,18 @@ const getBaseTopologyDataModel = (resources: TopologyDataResources, allResources
           case 'persistentVolumeClaims': {
             typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-pvc`));
             typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
+            break;
+          }
+          case 'ingresses': {
+            typedDataModel.topology[uid] = createTopologyNodeData(item, getComponentType(obj.kind), getImageForIconClass(`icon-hc-ingress`));
+            typedDataModel.graph.nodes.push(getTopologyNodeItem(obj, getComponentType(obj.kind)));
+
+            const linkedServiceList = obj.spec.rules.flatMap(rule => rule.http.paths.map(path => path.backend.service.name));
+            const svcUIDList = [...new Set(resources.services.data.filter(service => linkedServiceList.findIndex(cur => cur === service.metadata.name) >= 0).map(service => service.metadata.uid))];
+
+            svcUIDList.forEach(svcUID => {
+              typedDataModel.graph.edges.push({ id: `${obj.metadata.uid}_${obj.metadata.name}`, type: TYPE_CONNECTS_TO, source: obj.metadata.uid, target: svcUID });
+            });
             break;
           }
           default: {

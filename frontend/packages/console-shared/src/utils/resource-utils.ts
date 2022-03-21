@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { DeploymentKind, K8sResourceKind, LabelSelector, PodKind, PodTemplate, RouteKind, apiVersionForModel, referenceForModel, K8sKind, ObjectMetadata } from '@console/internal/module/k8s';
-import { DeploymentConfigModel, ReplicationControllerModel, ReplicaSetModel, DeploymentModel, DaemonSetModel, StatefulSetModel, PodModel, ServiceModel, PersistentVolumeClaimModel } from '@console/internal/models';
+import { DeploymentConfigModel, ReplicationControllerModel, ReplicaSetModel, DeploymentModel, DaemonSetModel, StatefulSetModel, PodModel, ServiceModel, IngressModel, PersistentVolumeClaimModel } from '@console/internal/models';
 import { getBuildNumber } from '@console/internal/module/k8s/builds';
 import { FirehoseResource } from '@console/internal/components/utils';
 import { BuildConfigOverviewItem, OverviewItemAlerts, PodControllerOverviewItem, OverviewItem, PodRCData, ExtPodKind, OperatorBackedServiceKindMap, StatusData } from '../types';
@@ -10,7 +10,7 @@ import { isKnativeServing, isIdled } from './pod-utils';
 import { ClusterServiceVersionModel, ClusterServiceVersionKind } from '@console/operator-lifecycle-manager';
 
 export const getResourceList = (namespace: string, resList?: any) => {
-  let resources: FirehoseResource[] = [
+  const resources: FirehoseResource[] = [
     {
       isList: true,
       kind: 'Deployment',
@@ -76,6 +76,13 @@ export const getResourceList = (namespace: string, resList?: any) => {
     },
     {
       isList: true,
+      kind: 'Ingress',
+      namespace,
+      prop: 'ingresses',
+      optional: true,
+    },
+    {
+      isList: true,
       kind: referenceForModel(ClusterServiceVersionModel),
       namespace,
       prop: 'clusterServiceVersions',
@@ -83,7 +90,7 @@ export const getResourceList = (namespace: string, resList?: any) => {
     },
   ];
 
-  let utils = [];
+  const utils = [];
   // if (resList) {
   //   resList.forEach((resource) => {
   //     resources = [...resources, ...resource.properties.resources(namespace)];
@@ -771,6 +778,22 @@ export const createServiceItems = (services: K8sResourceKind[], resources: any, 
   return items;
 };
 
+export const createIngressItems = (ingresses: K8sResourceKind[]): OverviewItem[] => {
+  const items = _.map(ingresses, s => {
+    const obj: K8sResourceKind = {
+      ...s,
+      apiVersion: apiVersionForModel(IngressModel),
+      kind: IngressModel.kind,
+    };
+    return {
+      obj,
+      ingresses: null,
+      buildConfigs: null,
+    };
+  });
+  return items;
+};
+
 export const createPersistentVolumeClaimItems = (services: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[], utils?: Function[], operatorsFilter?: boolean): OverviewItem[] => {
   const items = _.map(services, s => {
     const obj: K8sResourceKind = {
@@ -809,7 +832,7 @@ export const createPodItems = (resources: any): OverviewItem[] => {
       const statusComponent = podStatusIcon(obj);
       const alerts = getPodAlerts(obj);
       const services = getServicesForResource(obj, resources);
-      const status: StatusData = { phase: phase, icon: statusComponent };
+      const status: StatusData = { phase, icon: statusComponent };
 
       return [
         ...acc,

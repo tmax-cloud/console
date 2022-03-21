@@ -98,6 +98,7 @@ import * as zendImg from '../../imgs/logos/zend.svg';
 import * as PodImg from '../../imgs/logos/pod.svg';
 import * as ServiceImg from '../../imgs/logos/service.svg';
 import * as PVCImage from '../../imgs/logos/pvc.svg';
+import * as IngressImg from '../../imgs/logos/ingress.svg';
 import * as menuImg from '../../imgs/hypercloud/menu.svg';
 
 const logos = new Map()
@@ -200,7 +201,8 @@ const logos = new Map()
   .set('icon-zend', zendImg)
   .set('icon-hc-pod', PodImg)
   .set('icon-hc-service', ServiceImg)
-  .set('icon-hc-pvc', PVCImage);
+  .set('icon-hc-pvc', PVCImage)
+  .set('icon-hc-ingress', IngressImg);
 
 export const normalizeIconClass = (iconClass: string): string => {
   return _.startsWith(iconClass, 'icon-') ? `font-icon ${iconClass}` : iconClass;

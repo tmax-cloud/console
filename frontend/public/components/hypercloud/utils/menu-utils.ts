@@ -66,13 +66,17 @@ const initializeMenuUrl = async (labelSelector: any, menuKey: string, port: stri
 
 const initializePort = async () => {
   try {
-    const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
-    const port = spec.type === 'LoadBalancer' ? 443 : spec.ports.find((port: any) => port.name === 'websecure').port;
-    return `:${port}`;
+    // 서비스 타입이 nodeport일 경우 websecure의 port 값 매핑
+    if (window.SERVER_FLAGS.svcType === 'NodePort') {
+      const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
+      if (spec.type === 'NodePort') {
+        return `:${spec.ports.find((port: any) => port.name === 'websecure').port}`;
+      }
+    }
   } catch (error) {
     console.error(`Failed to get api-gateway service:\n${error}`);
-    return '';
   }
+  return '';
 };
 
 export const initializationForMenu = async () => {

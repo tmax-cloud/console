@@ -4,12 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { Status } from '@console/shared';
 import { K8sResourceKind, K8sKind } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
-import { DetailsItem, Kebab, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
+import { DetailsItem, Kebab, KebabAction, detailsPage, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { ClusterManagerModel } from '../../models';
 import { configureClusterNodesModal } from './modals';
 import { MembersPage } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { ResourceEventStream } from '../events';
 import { TableProps } from './utils/default-list-component';
 
 const ModifyClusterNodes: KebabAction = (kind: K8sKind, obj: any) => {
@@ -44,6 +43,8 @@ const getMenuActions = type => {
   }
   return menuActions;
 };
+
+const CLUSTER_TYPE_LABEL = 'clustermanager.cluster.tmax.io/cluster-type';
 
 const ClusterType = {
   CREATED: 'created',
@@ -101,7 +102,7 @@ const tableProps: TableProps = {
     },
   ],
   row: (cluster: K8sResourceKind) => {
-    const type = cluster.metadata.labels?.type;
+    const type = cluster.metadata.labels[CLUSTER_TYPE_LABEL] || '';
     return [
       {
         children: <ResourceLink kind={kind} name={cluster.metadata.name} displayName={cluster.metadata.name} title={cluster.metadata.uid} namespace={cluster.metadata.namespace} />,
@@ -150,17 +151,6 @@ export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) =>
       <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_13')} obj={cl} path="status.ready">
         <Status status={cl.status.ready ? t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_1') : t('MULTI:MSG_MULTI_CLUSTERS_TABLECONTENTS_STATUS_2')} />
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_55')} obj={cl} path="spec.version" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_56')} obj={cl} path="spec.region" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={cl} path="spec.masterNum">
-        {`${cl.status?.masterRun ?? 0} / ${cl.spec.masterNum ?? 0}`}
-      </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_59')} obj={cl} path="spec.masterType" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={cl} path="spec.workerNum">
-        {`${cl.status?.workerRun ?? 0} / ${cl.spec.workerNum ?? 0}`}
-      </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_60')} obj={cl} path="spec.workerType" />
-      <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_61')} obj={cl} path="spec.sshKey" />
     </dl>
   );
 };
@@ -202,8 +192,6 @@ const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
   );
 };
 
-const { /* nodes, */ editResource, events } = navFactory;
-
 export const ClustersPage: React.FC = props => {
   const pages = [
     {
@@ -239,23 +227,6 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
           name: 'COMMON:MSG_DETAILS_TABOVERVIEW_3',
           component: detailsPage(ClusterDetails),
         },
-        editResource() /* nodes(ClusterNodes),  events(ResourceEventStream) */,
-        /*{
-          href: 'node',
-          name: 'Node',
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" userHeading="Users" userGroupHeading="User Groups" />,
-        },
-        {
-          href: 'namespace',
-          name: 'Namespace',
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" userHeading="Users" userGroupHeading="User Groups" />,
-        },
-        {
-          href: 'federation',
-          name: 'Federation',
-          component: pageProps => <MembersPage resource={pageProps.obj} title="Members" userHeading="Users" userGroupHeading="User Groups" />,
-        },*/
-        events(ResourceEventStream),
         {
           href: 'access',
           name: 'COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_1',

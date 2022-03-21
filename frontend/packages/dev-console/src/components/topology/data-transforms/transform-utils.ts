@@ -33,6 +33,7 @@ export const createInstanceForResource = (resources: HyperCloudTopologyDataResou
     replicaSets: transformResourceData.createReplicaSetItems,
     pods: transformResourceData.createPodItems,
     services: transformResourceData.createServiceItems,
+    ingresses: transformResourceData.createIngressItems,
     persistentVolumeClaims: transformResourceData.createPersistentVolumeClaimItems,
   };
 };
@@ -92,7 +93,7 @@ export const getTopologyNodeItem = (dc: K8sResourceKind, type?: string, children
   return {
     id: uid,
     type: type || TYPE_WORKLOAD,
-    name: name,
+    name,
     ...(children && children.length && { children }),
   };
 };
