@@ -149,6 +149,8 @@ const VSphereClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = (
           </DetailsItem>
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
+          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={clcl} path="spec.masterNum" />
+          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={clcl} path="spec.workerNum" />
           <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_3')} obj={clcl} path="spec.providerVsphereSpec.vcenterKcpIp" />
           <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_4')} obj={clcl} path="spec.providerVsphereSpec.podCidr" />
           <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_5')} obj={clcl} path="spec.providerVsphereSpec.vcenterIp" />
