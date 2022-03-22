@@ -61,11 +61,11 @@ export const HelmReleasesPage: React.FC<HelmReleasesPageProps> = ({ match }) => 
           const ingress = items[0];
           const host = ingress.spec?.rules?.[0]?.host;
           if (!!host) {
-            serverURL = `https://${host}/helm/ns/${namespace}/releases`;
+            serverURL = (namespace) ? `https://${host}/helm/ns/${namespace}/releases` : `https://${host}/helm/all-namespaces/releases`;
           }
         }
       });
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${namespace}/releases`)
+      await coFetchJSON(serverURL !== '' ? serverURL : (namespace) ? `https://${defaultHost}/helm/ns/${namespace}/releases` : `https://${defaultHost}/helm/all-namespaces/releases`)
         .then((res) => {
           setHelmReleases(_.get(res, 'release') || []);
           setLoading(true);
@@ -80,21 +80,17 @@ export const HelmReleasesPage: React.FC<HelmReleasesPageProps> = ({ match }) => 
         <title>{t('COMMON:MSG_LNB_MENU_203')}</title>
       </Helmet>
       <NamespacedPage>
-        {namespace ? (
-          <div style={{ background: 'white', height: '100%' }}>
-            <div style={{ padding: '30px 15px 0', display: 'flex', justifyContent: 'space-between' }}>
-              <h1 style={{ margin: '0 0 30px' }}>{t('COMMON:MSG_LNB_MENU_203')}</h1>
-              <Link to={`/helmreleases/ns/${namespace}/~new`}>
-                <Button type="button" variant="primary" id="create" style={{ alignSelf: 'letf' }}>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })}</Button>
-              </Link>
-            </div>
-            <div style={{ padding: '0px 30px 30px' }}>
-              {loading ? <HelmReleasesTable helmReleases={helmReleases} /> : <LoadingInline />}
-            </div>
+        <div style={{ background: 'white', height: '100%' }}>
+          <div style={{ padding: '30px 15px 0', display: 'flex', justifyContent: 'space-between' }}>
+            <h1 style={{ margin: '0 0 30px' }}>{t('COMMON:MSG_LNB_MENU_203')}</h1>
+            <Link to={`/helmreleases/ns/${namespace}/~new`}>
+              <Button type="button" variant="primary" id="create" style={{ alignSelf: 'letf' }}>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })}</Button>
+            </Link>
           </div>
-        ) : (
-          <SelectNamespacePage />
-        )}
+          <div style={{ padding: '0px 30px 30px' }}>
+            {loading ? <HelmReleasesTable helmReleases={helmReleases} /> : <LoadingInline />}
+          </div>
+        </div>
       </NamespacedPage>
     </>
   );
