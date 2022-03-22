@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Helmet } from 'react-helmet';
 import { match as RMatch } from 'react-router';
 import { useTranslation, Trans } from 'react-i18next';
-import { safeLoad, safeDump } from 'js-yaml';
+import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import NamespacedPage from '@console/dev-console/src/components/NamespacedPage';
 import { HelmreleasesStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
@@ -23,7 +23,7 @@ import { Button, Modal, Badge } from '@patternfly/react-core';
 
 const capitalize = (text: string) => { return text.charAt(0).toUpperCase() + text.slice(1); }
 
-const defaultHost = 'https://console.tmaxcloud.org';
+const defaultHost = 'console.tmaxcloud.org';
 
 const SelectNamespacePage = () => {
   const { t } = useTranslation();
@@ -65,7 +65,7 @@ export const HelmReleasesPage: React.FC<HelmReleasesPageProps> = ({ match }) => 
           }
         }
       });
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `/helm/ns/${namespace}/releases`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${namespace}/releases`)
         .then((res) => {
           setHelmReleases(_.get(res, 'release') || []);
           setLoading(true);
@@ -258,7 +258,7 @@ export const HelmReleasesDetailsPage: React.FC<HelmReleasesPageProps> = ({ match
           }
         }
       });
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `/helm/ns/${namespace}/releases/${name}`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${namespace}/releases/${name}`)
         .then((res) => {
           setHelmReleases(_.get(res, 'release') || []);
           setLoading(true);
@@ -516,10 +516,9 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
         const { items } = res;
         const ingress = items[0];
         setHost(ingress.spec?.rules?.[0]?.host);
-        //setLoading(true);
       });
 
-      await coFetchJSON(host !== '' ? `${host}/helm/charts` : defaultHost + '/helm/charts')
+      await coFetchJSON(host !== '' ? `https://${host}/helm/charts` : `https://${defaultHost}/helm/charts`)
         .then((res) => {
           let tempEntriesList = [];
           let tempChartObject = {};
@@ -661,7 +660,7 @@ export const HelmReleasesEditPage: React.FC<HelmReleasesPageProps> = ({ match })
           }
         }
       });
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `/helm/ns/${namespace}/releases/${name}`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${namespace}/releases/${name}`)
         .then((res) => {
           setHelmReleases(_.get(res, 'release') || []);
           setLoading(true);

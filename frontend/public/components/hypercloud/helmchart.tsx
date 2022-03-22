@@ -11,7 +11,7 @@ import { Button } from '@patternfly/react-core';
 import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 
-const defaultHost = 'https://console.tmaxcloud.org';
+const defaultHost = 'console.tmaxcloud.org';
 
 export const HelmchartPage = () => {
   const { t } = useTranslation();
@@ -35,7 +35,7 @@ export const HelmchartPage = () => {
       });
 
       let tempList = [];
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + '/helm/charts')
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts`)
         .then((res) => {
           let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
           entriesvalues.map((value) => { tempList.push(value); });
@@ -222,7 +222,7 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
         }
       });
 
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `helm/charts/${name}`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}helm/charts/${name}`)
         .then((res) => {
           setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
           setLoading(true);
@@ -320,7 +320,7 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
         }
       });
 
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `/helm/charts/${name}`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts/${name}`)
         .then((res) => {
           setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
           setLoading(true);
