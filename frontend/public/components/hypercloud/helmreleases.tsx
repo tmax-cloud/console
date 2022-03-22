@@ -298,7 +298,7 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
 
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_223') })} />
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} />
       <div className="row">
         <div className="col-lg-6">
           <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')}</dt>
