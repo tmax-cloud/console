@@ -147,10 +147,10 @@ const VSphereClusterClaimDetailsList: React.FC<ClusterClaimDetailsListProps> = (
           <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_61')} obj={clcl}>
             <ErrorPopoverStatus error={clcl?.status?.phase === 'Error'} status={ClusterClaimStatusReducer(clcl)} reason={clcl.status?.reason} />
           </DetailsItem>
-          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
-          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_64')} obj={clcl} path="spec.clusterName" />
-          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_62')} obj={clcl} path="spec.masterNum" />
-          <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_63')} obj={clcl} path="spec.workerNum" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_1')} obj={clcl} path="spec.provider" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_2')} obj={clcl} path="spec.clusterName" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_15')} obj={clcl} path="spec.masterNum" />
+          <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_16')} obj={clcl} path="spec.workerNum" />
           <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_3')} obj={clcl} path="spec.providerVsphereSpec.vcenterKcpIp" />
           <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_4')} obj={clcl} path="spec.providerVsphereSpec.podCidr" />
           <DetailsItem label={t('MULTI:MSG_MULTI_CLUSTERS_CLUSTERCLAIMDETAILS_TABDETAILS_5')} obj={clcl} path="spec.providerVsphereSpec.vcenterIp" />
