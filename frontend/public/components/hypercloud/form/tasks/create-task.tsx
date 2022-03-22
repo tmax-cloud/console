@@ -112,17 +112,31 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       }
       if (_.has(defaultValues, 'spec.steps')) {
         let stepDefaultValues = _.get(defaultValues, 'spec.steps');
+        const setEnv = item => {
+          return item.env?.map(cur => {
+            const envKey = cur.name;
+            let envValue = cur.value;
+            let envType = 'normal';
+            if (_.has(cur, 'valueFrom')) {
+              // secretRef, configMap 등
+              if (_.has(cur, ['valueFrom', 'secretKeyRef'])) {
+                envValue = _.get(cur, 'valueFrom.secretKeyRef.key') + '.' + _.get(cur, 'valueFrom.secretKeyRef.name');
+                envType = 'secret';
+              } else if (_.has(cur, ['valueFrom', 'configMapKeyRef '])) {
+                envValue = _.get(cur, 'valueFrom.configMapKeyRef.key') + '.' + _.get(cur, 'valueFrom.configMapKeyRef.name');
+                envType = 'configMap';
+              }
+            }
+            return { envKey, envValue, envType };
+          });
+        };
         stepDefaultValues = stepDefaultValues?.map(item => {
+          const env = setEnv(item);
           return _.assign(item, {
             command: item.command?.map(cur => {
               return { value: cur };
             }),
-            env: item.env?.map(cur => {
-              return {
-                envKey: cur.name,
-                envValue: cur.value,
-              };
-            }),
+            env: env,
             args: item.args?.map(cur => {
               return { value: cur };
             }),
@@ -151,7 +165,7 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
   let taskParameterArr = ['name', 'description', 'type', 'defaultStr', 'defaultArr'];
   let workspaceArr = ['name', 'description', 'mountPath', 'accessMode', 'optional'];
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
-  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit', 'mountArr'];
+  let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'envType', 'selectedVolume', 'mountPath', 'isFirstTimeEdit', 'mountArr'];
 
   // const paramValidCallback = additionalConditions => {
   //   let type = additionalConditions[0] ? 'array' : 'string';
@@ -280,7 +294,19 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57')} id="work-space">
         <>
-          <ModalList list={workSpace} path="spec.workspaces" id="work-space" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57')} methods={methods} requiredFields={['name']} children={<WorkSpaceModal methods={methods} workSpace={workSpace} />} onRemove={removeModalData.bind(null, workSpace, setWorkSpace)} handleMethod={handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')} submitText={t('COMMON:MSG_DETAILS_TAB_18')}></ModalList>
+          <ModalList
+            list={workSpace}
+            path="spec.workspaces"
+            id="work-space"
+            title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57')}
+            methods={methods}
+            requiredFields={['name']}
+            children={<WorkSpaceModal methods={methods} workSpace={workSpace} />}
+            onRemove={removeModalData.bind(null, workSpace, setWorkSpace)}
+            handleMethod={handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, false, methods)}
+            description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_84')}
+            submitText={t('COMMON:MSG_DETAILS_TAB_18')}
+          ></ModalList>
           <span className="open-modal_text" onClick={() => ModalLauncher({ inProgress: false, path: 'spec.workspaces', methods: methods, requiredFields: ['name'], title: t('SINGLE:MSG_TASKS_CREATFORM_DIV2_57'), id: 'work-space', handleMethod: handleModalData.bind(null, 'work-space', workspaceArr, workSpace, setWorkSpace, true, methods), children: <WorkSpaceModal methods={methods} workSpace={workSpace} />, submitText: t('COMMON:MSG_COMMON_BUTTON_COMMIT_8') })}>
             {`+ ${t('SINGLE:MSG_TASKS_CREATFORM_DIV2_85')}`}
           </span>
@@ -288,7 +314,21 @@ const CreateTaskComponent: React.FC<TaskFormProps> = props => {
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_68')} id="volume">
         <>
-          <ModalList list={volume} id="volume" path="spec.volumes" title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_68')} methods={methods} requiredFields={['name', 'type']} children={<VolumeModal methods={methods} volume={volume} />} onRemove={removeModalData.bind(null, volume, setVolume)} handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)} description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_86')} optionalRequiredField={['type', 'configMap', 'secret']} optionalValidCallback={volumeValidCallback} submitText={t('COMMON:MSG_DETAILS_TAB_18')}></ModalList>
+          <ModalList
+            list={volume}
+            id="volume"
+            path="spec.volumes"
+            title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_68')}
+            methods={methods}
+            requiredFields={['name', 'type']}
+            children={<VolumeModal methods={methods} volume={volume} />}
+            onRemove={removeModalData.bind(null, volume, setVolume)}
+            handleMethod={handleModalData.bind(null, 'volume', volumeArr, volume, setVolume, false, methods)}
+            description={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_86')}
+            optionalRequiredField={['type', 'configMap', 'secret']}
+            optionalValidCallback={volumeValidCallback}
+            submitText={t('COMMON:MSG_DETAILS_TAB_18')}
+          ></ModalList>
           <span
             className="open-modal_text"
             onClick={() =>
@@ -434,7 +474,19 @@ export const onSubmitCallback = data => {
     //args
     cur.args = cur?.args?.map(curArg => curArg?.value);
     //env
-    cur.env = cur?.env?.map(curEnv => ({ name: curEnv?.envKey, value: curEnv?.envValue }));
+    if (cur.envType === 'normal') {
+      cur.env = cur?.env?.map(curEnv => ({ name: curEnv?.envKey, value: curEnv?.envValue }));
+    } else {
+      cur.env = cur?.env?.map(curEnv => ({
+        name: curEnv?.envKey,
+        valueFrom: {
+          [`${curEnv.envType}KeyRef`]: {
+            key: curEnv.envValue.split('.')[0],
+            name: curEnv.envValue.split('.')[1],
+          },
+        },
+      }));
+    }
 
     if (cur.commandTypeToggle === 'command') {
       delete data.spec.steps[idx].script;

@@ -261,7 +261,7 @@ class OverviewMainContent_ extends React.Component<OverviewMainContentProps, Ove
       //   this.props?.clusterServiceVersions?.data,
       //   this.props.utils,
       // ),
-      ...createStatefulSetItems(this.props.statefulSets.data, this.props, this.props?.clusterServiceVersions?.data, this.props.utils),
+      ...createStatefulSetItems(this.props.statefulSets.data, this.props, this.props?.clusterServiceVersions?.data),
       ...createPodItems(this.props),
     ];
 

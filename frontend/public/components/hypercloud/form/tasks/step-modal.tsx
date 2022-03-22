@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 import { DropdownWithRef } from '../../utils/dropdown-new';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
+import { Dropdown } from '../../utils/dropdown';
 import { ListView } from '../../utils/list-view';
 import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
@@ -83,6 +84,17 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
         <span style={{ margin: '0 5px' }}>=</span>
         <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
+        <Dropdown
+          name={`${name}[${index}].envType`}
+          className="btn-group"
+          title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
+          methods={methods}
+          items={{ normal: '일반 텍스트', secret: '시크릿', configMap: '컨피그맵' }} // (필수)
+          style={{ display: 'block', marginLeft: '5px' }}
+          buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
+          itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+          defaultValue={item.envType || ''}
+        />
       </div>
       <div className="col-xs-1 pairs-list__action">
         <Button
