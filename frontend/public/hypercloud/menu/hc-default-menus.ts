@@ -14,11 +14,6 @@ const MasterNavMenus = [
   },
   {
     menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.helm,
-    innerMenus: [CustomMenusMap.HelmChart.kind, CustomMenusMap.HelmReleases.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.networking,
     innerMenus: [Models.ServiceModel.kind, Models.IngressModel.kind, Models.NetworkPolicyModel.kind],
   },
@@ -57,6 +52,11 @@ const DeveloperNavMenus = [
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicecatalogs,
     innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, , Models.ServiceBindingModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.TemplateInstanceModel.kind],
+  },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.helm,
+    innerMenus: [CustomMenusMap.HelmChart.kind, CustomMenusMap.HelmReleases.kind],
   },
   {
     menuType: MenuType.CONTAINER,
