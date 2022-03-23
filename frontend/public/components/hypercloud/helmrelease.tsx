@@ -6,7 +6,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import NamespacedPage from '@console/dev-console/src/components/NamespacedPage';
-import { HelmreleasesStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { PageHeading, SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown } from '@console/internal/components/utils';
@@ -37,14 +37,14 @@ const SelectNamespacePage = () => {
   );
 };
 
-export interface HelmReleasesPageProps {
+export interface HelmReleasePageProps {
   match: RMatch<{
     ns?: string;
     name?: string;
   }>;
 }
 
-export const HelmReleasesPage: React.FC<HelmReleasesPageProps> = ({ match }) => {
+export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const { t } = useTranslation();
   const namespace = match.params.ns;
   const [loading, setLoading] = React.useState(false);
@@ -215,7 +215,7 @@ const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
                     </Link>
                   </td>
                   <td style={{ padding: '5px' }} ><ResourceLink kind="Namespace" name={namespace} /></td>
-                  <td style={{ padding: '5px' }} ><Status status={capitalize(HelmreleasesStatusReducer(helmRelease))} /></td>
+                  <td style={{ padding: '5px' }} ><Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} /></td>
                   <td style={{ padding: '5px' }} >{Object.keys(objects).map(k => { return <div key={'resource-' + k}>{t(modelFor(k).i18nInfo.label)}</div> })}</td>
                   <td style={{ padding: '5px' }} >{version}</td>
                   <td style={{ padding: '5px' }} ><Timestamp timestamp={info.first_deployed} /></td>
@@ -231,7 +231,7 @@ const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
   );
 }
 
-export const HelmReleasesDetailsPage: React.FC<HelmReleasesPageProps> = ({ match }) => {
+export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
   const name = match.params.name;
   const { t } = useTranslation();
@@ -311,12 +311,12 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
         <div className="col-lg-6">
           <dl className="co-m-pane__details">
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
-            <dd><Status status={capitalize(HelmreleasesStatusReducer(helmRelease))} /></dd>
+            <dd><Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} /></dd>
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
             <dd>{helmRelease.chart.metadata.description}</dd>
             <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
             <dd>
-              <Link to={`/helmchart/${helmRelease.chart.metadata.name}`}>
+              <Link to={`/helmcharts/${helmRelease.chart.metadata.name}`}>
                 {helmRelease.chart.metadata.name}
               </Link>
             </dd>
@@ -461,7 +461,7 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
           <h1>{name}</h1>
           <div style={{ paddingTop: '25px', paddingLeft: '5px' }}>
             <Badge className="co-resource-item__resource-status-badge" isRead>
-              <Status status={capitalize(HelmreleasesStatusReducer(helmrelease))} />
+              <Status status={capitalize(HelmReleaseStatusReducer(helmrelease))} />
             </Badge>
           </div>
         </div>
@@ -506,15 +506,21 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
+      let serverURL = '';
       await coFetchJSON(ingressUrlWithLabelSelector({
         'ingress.tmaxcloud.org/name': 'helm-apiserver',
       })).then((res) => {
         const { items } = res;
-        const ingress = items[0];
-        setHost(ingress.spec?.rules?.[0]?.host);
+        if (items?.length > 0) {
+          const ingress = items[0];          
+          if (!!ingress.spec?.rules?.[0]?.host) {
+            serverURL = `https://${ingress.spec?.rules?.[0]?.host}/helm/charts`;
+            setHost(ingress.spec?.rules?.[0]?.host);
+          }
+        }
       });
 
-      await coFetchJSON(host !== '' ? `https://${host}/helm/charts` : `https://${defaultHost}/helm/charts`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts`)
         .then((res) => {
           let tempEntriesList = [];
           let tempChartObject = {};
@@ -612,7 +618,7 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
   );
 }
 
-export const HelmReleasesCreatePage: React.FC<HelmReleasesPageProps> = ({ match }) => {
+export const HelmReleaseCreatePage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
   const { t } = useTranslation();
   return (
@@ -633,7 +639,7 @@ export const HelmReleasesCreatePage: React.FC<HelmReleasesPageProps> = ({ match 
     </>
   );
 };
-export const HelmReleasesEditPage: React.FC<HelmReleasesPageProps> = ({ match }) => {
+export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
   const name = match.params.name;
   const { t } = useTranslation();
@@ -685,7 +691,7 @@ export const HelmReleasesEditPage: React.FC<HelmReleasesPageProps> = ({ match })
   );
 };
 
-export default HelmReleasesPage;
+export default HelmReleasePage;
 
 const allPages = [
   {
@@ -696,6 +702,6 @@ const allPages = [
   {
     name: 'COMMON:MSG_DETAILS_TAB_18',
     href: 'edit',
-    component: HelmReleasesEditPage,
+    component: HelmReleaseEditPage,
   }
 ];

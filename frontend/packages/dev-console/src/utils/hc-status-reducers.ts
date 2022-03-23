@@ -230,6 +230,6 @@ export const BareMetalHostStatusReducer = (bmh: any): string => {
   return bmh.status?.provisioning?.state;
 };
 
-export const HelmreleasesStatusReducer = (hr: any): string => {
+export const HelmReleaseStatusReducer = (hr: any): string => {
   return hr === null ? NO_STATUS : hr?.info?.status;
 };
