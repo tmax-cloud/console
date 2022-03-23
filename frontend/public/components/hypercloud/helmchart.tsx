@@ -53,7 +53,7 @@ export const HelmchartPage = () => {
       </Helmet>
       <div style={{ padding: '30px 15px 0', display: 'flex', justifyContent: 'space-between' }}>
         <h1 style={{ margin: '0 0 30px' }}>{t('COMMON:MSG_LNB_MENU_223')}</h1>
-        <Link to={`/helmchart/~new`}>
+        <Link to={`/helmcharts/~new`}>
           <Button type="button" variant="primary" id="create" style={{ alignSelf: 'letf' }}>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</Button>
         </Link>
       </div>
@@ -92,7 +92,7 @@ const EntriesTable: React.FC<EntriesTableProps> = props => {
               return (
                 <tr key={'row-' + name}>
                   <td style={{ padding: '5px' }} >
-                    <Link key={'link' + name} to={`/helmchart/${name}`}>
+                    <Link key={'link' + name} to={`/helmcharts/${name}`}>
                       {name}
                     </Link>
                   </td>
@@ -235,7 +235,7 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
   return (
     <>
       <HelmchartDetailsHeader name={name} />
-      <NavBar pages={allPages} baseURL={`/helmchart/${name}`} basePath='' />
+      <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath='' />
       <div>
         {loading && <ChartDetailsTapPage chart={chart} />}
       </div>
@@ -332,7 +332,7 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
   return (
     <>
       <HelmchartDetailsHeader name={name} />
-      <NavBar pages={allPages} baseURL={`/helmchart/${name}`} basePath='' />
+      <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath='' />
       {loading && <HelmchartFrom defaultValue={chart} />}
     </>
   );
@@ -347,7 +347,7 @@ export const HelmchartDetailsHeader: React.FC<HelmchartDetailsHeaderProps> = pro
   return (
     <div style={{ padding: '30px', borderBottom: '1px solid #ccc' }}>
       <div style={{ display: 'inline-block' }}>
-        <Link to={'/helmchart'}>
+        <Link to={'/helmcharts'}>
           {t('COMMON:MSG_LNB_MENU_223')}
         </Link>
         {' > ' + t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}

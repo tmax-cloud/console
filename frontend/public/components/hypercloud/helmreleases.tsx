@@ -316,7 +316,7 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
             <dd>{helmRelease.chart.metadata.description}</dd>
             <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
             <dd>
-              <Link to={`/helmchart/${helmRelease.chart.metadata.name}`}>
+              <Link to={`/helmcharts/${helmRelease.chart.metadata.name}`}>
                 {helmRelease.chart.metadata.name}
               </Link>
             </dd>
