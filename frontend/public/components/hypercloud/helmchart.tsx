@@ -152,7 +152,7 @@ export const HelmchartFrom: React.FC<HelmchartFromProps> = props => {
         .then(() => { history.goBack() })
         .catch((e) => {
           setProgress(false);
-          setErrorMessage("error : " + e.json.error + '\ndescription : ' + e.json.description);
+          setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
         });
     }
     putHelmChart();
