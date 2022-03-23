@@ -506,15 +506,21 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
+      let serverURL = '';
       await coFetchJSON(ingressUrlWithLabelSelector({
         'ingress.tmaxcloud.org/name': 'helm-apiserver',
       })).then((res) => {
         const { items } = res;
-        const ingress = items[0];
-        setHost(ingress.spec?.rules?.[0]?.host);
+        if (items?.length > 0) {
+          const ingress = items[0];          
+          if (!!ingress.spec?.rules?.[0]?.host) {
+            serverURL = `https://${ingress.spec?.rules?.[0]?.host}/helm/charts`;
+            setHost(ingress.spec?.rules?.[0]?.host);
+          }
+        }
       });
 
-      await coFetchJSON(host !== '' ? `https://${host}/helm/charts` : `https://${defaultHost}/helm/charts`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts`)
         .then((res) => {
           let tempEntriesList = [];
           let tempChartObject = {};
