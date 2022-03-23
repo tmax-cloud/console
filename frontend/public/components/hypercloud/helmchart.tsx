@@ -11,7 +11,7 @@ import { Button } from '@patternfly/react-core';
 import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 
-const defaultHost = 'https://console.tmaxcloud.org';
+const defaultHost = 'console.tmaxcloud.org';
 
 export const HelmchartPage = () => {
   const { t } = useTranslation();
@@ -35,7 +35,7 @@ export const HelmchartPage = () => {
       });
 
       let tempList = [];
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + '/helm/charts')
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts`)
         .then((res) => {
           let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
           entriesvalues.map((value) => { tempList.push(value); });
@@ -110,10 +110,10 @@ const EntriesTable: React.FC<EntriesTableProps> = props => {
   );
 }
 
-type HelmchartFrom = {
+type HelmchartFromProps = {
   defaultValue?: any
 };
-export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
+export const HelmchartFrom: React.FC<HelmchartFromProps> = props => {
   const { t } = useTranslation();
   const { defaultValue } = props;
   const name = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.name : '';
@@ -124,7 +124,7 @@ export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
   const [postName, setPostName] = React.useState(name);
   const [postRepoURL, setPostRepoURL] = React.useState(repoURL);
   const [inProgress, setProgress] = React.useState(false);
-  const [errorMessage, setError] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
@@ -152,7 +152,7 @@ export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
         .then(() => { history.goBack() })
         .catch((e) => {
           setProgress(false);
-          setError("error : " + e.json.error + '\ndescription : ' + e.json.description);
+          setErrorMessage("error : " + e.json.error + '\ndescription : ' + e.json.description);
         });
     }
     putHelmChart();
@@ -176,7 +176,7 @@ export const HelmchartFrom: React.FC<HelmchartFrom> = props => {
               <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
             </Section>
             <Button type="button" variant="primary" id="save" onClick={onClick}>{defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}</Button>
-            <Button type="button" variant="secondary" id="cancel" onClick={() => { history.goBack(); }}>{t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}</Button>
+            <Button style={{ marginLeft: '10px' }} type="button" variant="secondary" id="cancel" onClick={() => { history.goBack(); }}>{t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}</Button>
           </form>
         </ButtonBar>
       }
@@ -222,7 +222,7 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
         }
       });
 
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `helm/charts/${name}`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}helm/charts/${name}`)
         .then((res) => {
           setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
           setLoading(true);
@@ -320,7 +320,7 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
         }
       });
 
-      await coFetchJSON(serverURL !== '' ? serverURL : defaultHost + `/helm/charts/${name}`)
+      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts/${name}`)
         .then((res) => {
           setChart((prevState) => { return { ...prevState, indexfile: res.indexfile, values: res.values } });
           setLoading(true);
@@ -333,7 +333,6 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
     <>
       <HelmchartDetailsHeader name={name} />
       <NavBar pages={allPages} baseURL={`/helmchart/${name}`} basePath='' />
-      {/*<HorizontalNav pages={allPages} match={props.match} />*/}
       {loading && <HelmchartFrom defaultValue={chart} />}
     </>
   );
@@ -351,7 +350,7 @@ export const HelmchartDetailsHeader: React.FC<HelmchartDetailsHeaderProps> = pro
         <Link to={'/helmchart'}>
           {t('COMMON:MSG_LNB_MENU_223')}
         </Link>
-        {' > ' + t('COMMON:MSG_LNB_MENU_223') + ' ' + t('SINGLE:MSG_NODES_NODEDETAILS_TABOVERVIEW_1')}
+        {' > ' + t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}
       </div>
       <h1>{name}</h1>
     </div>

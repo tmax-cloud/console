@@ -161,6 +161,13 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/helmchart/~new" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartCreatePage)} />
           <LazyRoute path="/helmchart/:name" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartDetailsPage)} />
           <LazyRoute path="/helmchart/:name/edit" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartEditPage)} />
+          <LazyRoute path="/helmreleases/all-namespaces" exact loader={() => import('./hypercloud/helmreleases' /* webpackChunkName: "helmreleases" */).then(m => NamespaceFromURL(m.HelmReleasesPage))} />
+          <LazyRoute path="/helmreleases/all-namespaces/:name" exact loader={() => import('./hypercloud/helmreleases' /* webpackChunkName: "helmreleases" */).then(m => NamespaceFromURL(m.HelmReleasesPage))} />
+          <LazyRoute path="/helmreleases/ns/:ns" exact loader={() => import('./hypercloud/helmreleases' /* webpackChunkName: "helmreleases" */).then(m => NamespaceFromURL(m.HelmReleasesPage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/~new" exact loader={() => import('./hypercloud/helmreleases' /* webpackChunkName: "helmreleases" */).then(m => NamespaceFromURL(m.HelmReleasesCreatePage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/:name" exact loader={() => import('./hypercloud/helmreleases' /* webpackChunkName: "helmreleases" */).then(m => NamespaceFromURL(m.HelmReleasesDetailsPage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/:name/edit" exact loader={() => import('./hypercloud/helmreleases' /* webpackChunkName: "helmreleases" */).then(m => NamespaceFromURL(m.HelmReleasesEditPage))} />
+          <Route path="/helmreleases" exact component={NamespaceRedirect} />
           <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({ match }) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
           <LazyRoute path="/k8s/all-namespaces/events" exact loader={() => import('./events' /* webpackChunkName: "events" */).then(m => NamespaceFromURL(m.EventStreamPage))} />
           <LazyRoute path="/k8s/ns/:ns/events" exact loader={() => import('./events' /* webpackChunkName: "events" */).then(m => NamespaceFromURL(m.EventStreamPage))} />
