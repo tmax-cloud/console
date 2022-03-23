@@ -109,6 +109,8 @@ export type K8sResourceKind = K8sResourceCommon & {
     selector?: Selector | MatchLabels;
     [key: string]: any;
   };
+  //samples
+  samples?: [{ [key: string]: any }];
   status?: { [key: string]: any };
   type?: { [key: string]: any };
   data?: { [key: string]: any };
@@ -852,7 +854,7 @@ export type K8sKind = {
   labelPlural: string;
   plural: string;
   propagationPolicy?: 'Foreground' | 'Background';
-
+  samples?: any;
   id?: string;
   crd?: boolean;
   apiVersion: string;

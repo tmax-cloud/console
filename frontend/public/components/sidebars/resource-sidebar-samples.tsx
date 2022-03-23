@@ -198,14 +198,16 @@ export const getResourceSidebarSamples = (kindObj: K8sKind, yamlSamplesList: Fir
   const yamlSamplesData = !_.isEmpty(yamlSamplesList) ? _.filter(yamlSamplesList.data, (sample: K8sResourceKind) => sample.spec.targetResource.apiVersion === apiVersionForModel(kindObj) && sample.spec.targetResource.kind === kindObj.kind) : [];
   // const existingSamples = hyperCloudSamples.get(referenceForModel(kindObj)) || defaultSamples.get(referenceForModel(kindObj)) || [];
   const existingSamples = defaultSamples.get(referenceForModel(kindObj)) || []; //  Sample 지원 일단 보류 (hypercloud 6이후일듯.)
-  const extensionSamples = !_.isEmpty(yamlSamplesData)
-    ? yamlSamplesData.map((sample: K8sResourceKind) => {
-        return {
-          id: sample.metadata.uid,
-          ...sample.spec,
-        };
-      })
-    : [];
+  const extensionSamples = [];
+  if (!_.isEmpty(yamlSamplesData)) {
+    yamlSamplesData.map((sample: K8sResourceKind) => {
+      if (sample.hasOwnProperty('samples')) {
+        sample.samples.map(current => extensionSamples.push({ ...current, targetResource: sample.spec.targetResource }));
+      } else {
+        extensionSamples.push({ id: sample.metadata.uid, ...sample.spec });
+      }
+    });
+  }
 
   const allSamples = [...existingSamples, ...extensionSamples];
 

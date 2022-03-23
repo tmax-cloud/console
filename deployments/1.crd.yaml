@@ -133,6 +133,26 @@ spec:
               type: string
             metadata:
               type: object
+            file:
+              format: data-url
+              type: string
+            samples:
+              items:
+                properties:
+                  description:
+                    description: this is description
+                    type: string
+                  file:
+                    format: data-url
+                    type: string
+                  title:
+                    description: this is title
+                    type: string
+                  yaml:
+                    description: this is yaml
+                    type: string
+                type: object
+              type: array
             spec:
               description: >-
                 ConsoleYAMLSampleSpec is the desired YAML sample configuration.
@@ -179,6 +199,7 @@ spec:
                   description: yaml is the YAML sample to display.
                   pattern: ^(.|\s)*\S(.|\s)*$
                   type: string
+
               required:
                 - description
                 - targetResource
