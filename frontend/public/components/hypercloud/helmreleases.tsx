@@ -145,7 +145,7 @@ const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
           .then(() => { setOpen(!open); location.reload(); })
           .catch((e) => {
             setProgress(false);
-            setErrorMessage("error : " + e.json.error + '\ndescription : ' + e.json.description);
+            setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
           });
       }
       deleteHelmreleases();
@@ -416,7 +416,7 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
           .then(() => { setOpen(!open); })
           .catch((e) => {
             setProgress(false);
-            setErrorMessage("error : " + e.json.error + '\ndescription : ' + e.json.description);
+            setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
           });
       }
       deleteHelmreleases();
@@ -500,7 +500,7 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
   const [postVersion, setPostVersion] = React.useState(version);
   const [postValues, setPostValues] = React.useState(safeDump(values));
   const [inProgress, setProgress] = React.useState(false);
-  const [errorMessage, setError] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
   const [entries, setEntries] = React.useState([]);
   const [chartNameList, setChartNameList] = React.useState({});
 
@@ -553,7 +553,7 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
         .then(() => { history.goBack() })
         .catch((e) => {
           setProgress(false);
-          setError("error : " + e.json.error + '\ndescription : ' + e.json.description);
+          setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
         });
     }
     putHelmChart();
