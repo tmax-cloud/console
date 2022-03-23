@@ -84,35 +84,35 @@ export const initializationForMenu = async () => {
   const port = await initializePort();
   await initializeMenuUrl(
     {
-      'ingress.tmaxcloud.org/name': 'hyperregistry ',
+      'ingress.tmaxcloud.org/name': 'hyperregistry',
     },
     'Harbor',
     port,
   );
   await initializeMenuUrl(
     {
-      'ingress.tmaxcloud.org/name': 'argocd ',
+      'ingress.tmaxcloud.org/name': 'argocd',
     },
     'ArgoCD',
     port,
   );
   await initializeMenuUrl(
     {
-      'ingress.tmaxcloud.org/name': 'gitlab ',
+      'ingress.tmaxcloud.org/name': 'gitlab',
     },
     'Git',
     port,
   );
   await initializeMenuUrl(
     {
-      'ingress.tmaxcloud.org/name': 'grafana ',
+      'ingress.tmaxcloud.org/name': 'grafana',
     },
     'Grafana',
     port,
   );
   await initializeMenuUrl(
     {
-      'ingress.tmaxcloud.org/name': 'kiali ',
+      'ingress.tmaxcloud.org/name': 'kiali',
     },
     'Kiali',
     port,
@@ -126,7 +126,7 @@ export const initializationForMenu = async () => {
   );
   await initializeMenuUrl(
     {
-      'ingress.tmaxcloud.org/name': 'jaeger-query ',
+      'ingress.tmaxcloud.org/name': 'jaeger',
     },
     'Trace',
     port,
