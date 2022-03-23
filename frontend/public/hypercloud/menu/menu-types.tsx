@@ -243,7 +243,7 @@ export const CustomMenusMap: CustomMenus = {
     visible: true,
     type: MenuLinkType.HrefLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_224',
-    href: '/helmchart',
+    href: '/helmcharts',
     isMultiOnly: false,
   },
   HelmReleases: {
