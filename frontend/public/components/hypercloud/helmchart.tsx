@@ -75,7 +75,7 @@ const EntriesTable: React.FC<EntriesTableProps> = props => {
     <div>
       {/*<div>filter</div>*/}
       {/*<div>search</div>*/}
-      <table >
+      <table className='pf-c-table' >
         <thead>
           <tr>
             <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_1')}</th>

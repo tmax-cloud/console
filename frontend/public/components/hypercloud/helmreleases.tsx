@@ -182,7 +182,7 @@ const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
       <div key={'table'}>
         {/*<div>filter</div>*/}
         {/*<div>search</div>*/}
-        <table >
+        <table className='pf-c-table' >
           <thead>
             <tr>
               <th style={{ padding: '5px' }} >{t('COMMON:MSG_MAIN_TABLEHEADER_1')}</th>
@@ -328,7 +328,7 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
       <div className="row">
         <div style={{ paddingTop: '30px' }}>
           <h1>{t('COMMON:MSG_MAIN_TABLEHEADER_110')}</h1>
-          <table>
+          <table className='pf-c-table'>
             <thead>
               <tr>
                 <th style={{ padding: '5px' }} >{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_4')}</th>
