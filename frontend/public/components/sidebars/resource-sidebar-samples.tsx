@@ -204,7 +204,7 @@ export const getResourceSidebarSamples = (kindObj: K8sKind, yamlSamplesList: Fir
       if (sample.hasOwnProperty('samples')) {
         sample.samples.map(current => extensionSamples.push({ ...current, targetResource: sample.spec.targetResource }));
       } else {
-        extensionSamples.push({ id: sample.metadata.uid, ...sample.spec });
+        extensionSamples.push({ id: sample.metadata.uid, ...sample.spec, image: sample.image });
       }
     });
   }
@@ -219,15 +219,17 @@ export const getResourceSidebarSamples = (kindObj: K8sKind, yamlSamplesList: Fir
 };
 
 const ResourceSidebarSample: React.FC<ResourceSidebarSampleProps> = ({ sample, loadSampleYaml, downloadSampleYaml }) => {
-  const { highlightText, title, img, description, id, yaml, targetResource } = sample;
+  const { highlightText, title, img, description, id, yaml, targetResource, image } = sample;
   const reference = referenceFor(targetResource);
-  // const reference = null;
+
+  console.log(`data:image/jpeg;base64,${image}`);
   return (
     <li className="co-resource-sidebar-item">
       <h3 className="h4">
         <span className="text-uppercase">{highlightText}</span> {title}
       </h3>
       {img && <img src={img} className="co-resource-sidebar-item__img img-responsive" />}
+      {image && <img src={`data:image/jpeg;base64,${image}`} className="co-resource-sidebar-item__img img-responsive" />}
       <p>{description}</p>
       <Button type="button" variant="link" isInline onClick={() => loadSampleYaml(id, yaml, reference)}>
         <PasteIcon className="co-icon-space-r" />
@@ -319,6 +321,7 @@ type Sample = {
   highlightText?: string;
   title: string;
   img?: string;
+  image?: string;
   description: string;
   id: string;
   yaml?: string;

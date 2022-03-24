@@ -51,11 +51,14 @@ spec:
                   yaml:
                     description: this is yaml
                     type: string
+                  image:
+                    type: string
+                    format: base64
                 type: object
               type: array
             image:
               type: string
-              format: data-url
+              format: base64
             spec:
               description: >-
                 ConsoleYAMLSampleSpec is the desired YAML sample configuration.
@@ -112,4 +115,6 @@ spec:
             - metadata
             - spec
           type: object
-
+      encoding:
+        image:
+          contentType: image/png, image/jpeg
