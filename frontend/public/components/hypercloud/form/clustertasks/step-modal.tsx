@@ -229,7 +229,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         </>
       )}
       <div className="horizontal-line" />
-      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env" help={true} helpTitle="환경 변수" helpText='환경 변수는 키-값 페어 입력 또는 리소스를 참조할 수 있습니다. 시크릿 또는 컨피그맵 선택 시 환경 변수 키, 리소스 이름, 리소스 키를 입력해야 합니다. 예를 들어 키에 "EnvName", 값에 "SecretName", 리소스 키에 "SecretData"를 지정할 수 있습니다.'>
         <ListView name="env" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.env) : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} id="step-mountPath">
