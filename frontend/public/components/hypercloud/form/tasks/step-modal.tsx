@@ -87,7 +87,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         {(item.envType === 'secret' || item.envType === 'configMap') && (
           <>
             <span style={{ margin: '0 5px' }}>/</span>
-            <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder="리소스 키" />
+            <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder="리소스 키" />
           </>
         )}
         <Dropdown

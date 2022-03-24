@@ -116,18 +116,21 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
           return item.env?.map(cur => {
             const envKey = cur.name;
             let envValue = cur.value;
+            let resourceKey = '';
             let envType = 'normal';
             if (_.has(cur, 'valueFrom')) {
               // secretRef, configMap 등
               if (_.has(cur, ['valueFrom', 'secretKeyRef'])) {
-                envValue = _.get(cur, 'valueFrom.secretKeyRef.key') + '.' + _.get(cur, 'valueFrom.secretKeyRef.name');
+                envValue = _.get(cur, 'valueFrom.secretKeyRef.name');
+                resourceKey = _.get(cur, 'valueFrom.secretKeyRef.key');
                 envType = 'secret';
               } else if (_.has(cur, ['valueFrom', 'configMapKeyRef '])) {
-                envValue = _.get(cur, 'valueFrom.configMapKeyRef.key') + '.' + _.get(cur, 'valueFrom.configMapKeyRef.name');
+                envValue = _.get(cur, 'valueFrom.configMapKeyRef.name');
+                resourceKey = _.get(cur, 'valueFrom.configMapKeyRef.key');
                 envType = 'configMap';
               }
             }
-            return { envKey, envValue, envType };
+            return { envKey, envValue, resourceKey, envType };
           });
         };
         stepDefaultValues = stepDefaultValues?.map(item => {
@@ -472,8 +475,8 @@ export const onSubmitCallback = data => {
         name: curEnv?.envKey,
         valueFrom: {
           [`${curEnv.envType}KeyRef`]: {
-            key: curEnv.envValue.split('.')[0],
-            name: curEnv.envValue.split('.')[1],
+            key: curEnv.resourceKey,
+            name: curEnv.envValue,
           },
         },
       }));
