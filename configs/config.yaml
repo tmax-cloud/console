@@ -1,0 +1,21 @@
+servingInfo:
+  listen: "http://0.0.0.0:31303"
+  baseAddress: "http://192.168.0.111:31303"
+  certFile: ""
+  keyFile: ""
+  redirectPort: 31300
+
+app:
+  keycloakAuthURL: "https://hyperauth.tmaxcloud.org/auth"
+  keycloakRealm: "tmax"
+  keycloakClientId: "hypercloud5"
+
+  mcMode: true
+  releaseMode: true
+  basePath: "/"
+  publicDir: "./frontend/public/dist"
+  customProductName: "hypercloud"
+
+clusterInfo:
+  kubeAPIServerURL: https://192.168.9.189:6443
+  kubeToken: ""
