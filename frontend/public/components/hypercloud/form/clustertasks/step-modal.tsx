@@ -37,6 +37,24 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     }
     return false;
   };
+
+  let template;
+
+  // modify 기능 용
+  let target = document.getElementById('step-list');
+  let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
+  if (modalType === 'modify') {
+    let list = target.childNodes;
+    list.forEach((cur, idx) => {
+      if (cur['dataset']['modify'] === 'true') {
+        template = step[idx];
+      }
+    });
+  }
+  const envDefaultForm = { envKey: '', envValue: '', resourceKey: '', envType: 'normal' };
+
+  const [env, setEnv] = React.useState(modalType === 'modify' ? (template.env ? [...template.env] : [envDefaultForm]) : [{ envKey: '', envValue: '', resourceKey: '', envType: 'normal' }]);
+
   const commandListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
@@ -78,13 +96,17 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     </div>
   );
   const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => {
+    if (!env[index]) {
+      setEnv(env => [...env, { envKey: '', envValue: '', envType: 'normal', resourceKey: '' }]);
+      return;
+    }
     return (
       <div className="row" key={item.id}>
         <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex', position: 'relative' }}>
           <TextInput id={`${name}[${index}].envKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
           <span style={{ margin: '0 5px' }}>=</span>
           <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
-          {(item.envType === 'secret' || item.envType === 'configMap') && (
+          {(env[index].envType === 'secret' || env[index].envType === 'configMap') && (
             <>
               <span style={{ margin: '0 5px' }}>/</span>
               <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder="리소스 키" />
@@ -100,6 +122,17 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
             itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
             defaultValue={item.envType || ''}
+            callback={selectItem => {
+              const { envValue, envKey, resourceKey } = methods.getValues().env[index];
+              setEnv(
+                env.map((cur, cidx) => {
+                  if (cidx === index) {
+                    return { ...cur, envValue, envKey, resourceKey, envType: selectItem };
+                  }
+                  return { ...cur };
+                }),
+              );
+            }}
           />
         </div>
         <div className="col-xs-1 pairs-list__action">
@@ -152,20 +185,6 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     );
   };
-
-  let template;
-
-  // modify 기능 용
-  let target = document.getElementById('step-list');
-  let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
-  if (modalType === 'modify') {
-    let list = target.childNodes;
-    list.forEach((cur, idx) => {
-      if (cur['dataset']['modify'] === 'true') {
-        template = step[idx];
-      }
-    });
-  }
 
   // command radio toggle 용
   const commandTypeToggle = useWatch({

@@ -477,20 +477,19 @@ export const onSubmitCallback = data => {
     //args
     cur.args = cur?.args?.map(curArg => curArg?.value);
     //env
-    if (cur.envType === 'normal') {
-      cur.env = cur?.env?.map(curEnv => ({ name: curEnv?.envKey, value: curEnv?.envValue }));
-    } else {
-      cur.env = cur?.env?.map(curEnv => ({
-        name: curEnv?.envKey,
-        valueFrom: {
-          [`${curEnv.envType}KeyRef`]: {
-            key: curEnv.resourceKey,
-            name: curEnv.envValue,
+    cur.env = cur?.env?.map(curEnv =>
+      curEnv.envType === 'normal'
+        ? { name: curEnv?.envKey, value: curEnv?.envValue }
+        : {
+            name: curEnv?.envKey,
+            valueFrom: {
+              [`${curEnv.envType}KeyRef`]: {
+                key: curEnv.resourceKey,
+                name: curEnv.envValue,
+              },
+            },
           },
-        },
-      }));
-    }
-
+    );
     if (cur.commandTypeToggle === 'command') {
       delete data.spec.steps[idx].script;
     } else {
@@ -520,6 +519,8 @@ export const onSubmitCallback = data => {
 
     return cur;
   });
+
+  return;
 
   return data;
 };
