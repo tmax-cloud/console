@@ -39,6 +39,23 @@ spec:
               type: string
             metadata:
               type: object
+            samples:
+              items:
+                properties:
+                  description:
+                    description: this is description
+                    type: string
+                  title:
+                    description: this is title
+                    type: string
+                  yaml:
+                    description: this is yaml
+                    type: string
+                type: object
+              type: array
+            image:
+              type: string
+              format: data-url
             spec:
               description: >-
                 ConsoleYAMLSampleSpec is the desired YAML sample configuration.
@@ -95,3 +112,4 @@ spec:
             - metadata
             - spec
           type: object
+
