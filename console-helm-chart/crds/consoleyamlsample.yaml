@@ -59,6 +59,7 @@ spec:
             image:
               type: string
               format: base64
+              contentMediaType: image/jpeg
             spec:
               description: >-
                 ConsoleYAMLSampleSpec is the desired YAML sample configuration.
