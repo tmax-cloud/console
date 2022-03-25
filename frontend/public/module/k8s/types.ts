@@ -111,6 +111,7 @@ export type K8sResourceKind = K8sResourceCommon & {
   };
   //samples
   samples?: [{ [key: string]: any }];
+  image?: any;
   status?: { [key: string]: any };
   type?: { [key: string]: any };
   data?: { [key: string]: any };
