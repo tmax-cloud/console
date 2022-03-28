@@ -1,4 +1,4 @@
-include .env
+#include .env
 SHELL=/bin/bash
 export
 
@@ -21,6 +21,7 @@ build-backend:
 .PHONY: build-frontend
 build-frontend:
 	@. ${NVM_DIR}/nvm.sh && nvm install v14.16.0 --default && nvm use v14.16.0 && ./scripts/build-frontend.sh
+
 
 .PHONY: run-console
 run-console:
