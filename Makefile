@@ -1,3 +1,57 @@
+include .env
+SHELL=/bin/bash
+export
+
+BUILD_ID ?= console
+REGISTRY ?= docker.io
+CONSOLE_VERSION ?= 5.0.40.0
+CONSOLE_IMG ?= $(REGISTRY)/tmax-cloud/hypercloud-console:$(CONSOLE_VERSION)
+
+.PHONY: build
+build:
+	@make build-backend
+	@make build-frontend
+
+.PHONY: build-backend
+build-backend:
+	@./scripts/build-backend.sh
+#
+.PHONY: build-frontend
+build-frontend:
+	@make nvm
+	@./scripts/build-frontend.sh
+
+run-console:
+	@./scripts/run-console.sh
+
+nvm:
+	@.  ${NVM_DIR}/nvm.sh && nvm install v14.15.0 && nvm use v14.15.0
+
+docker-build:
+	@docker build --rm=true --build-arg=BUILD_ID=$(BUILD_ID) -t $(REGISTRY)/$(DOCKER_IMAGE) -f ./Dockerfile .
+	@docker image prune --filter label=stage=builder --filter label=build=$(BUILD_ID)
+
+docker-push:
+
+#build:
+#
+#build-frontend:
+#
+#
+#build-backend:
+#
+#run:
+#
+#clean:
+#
+#docker-build:
+#
+#docker-push:
+
+
+
+
+
 
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
