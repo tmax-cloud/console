@@ -16,7 +16,7 @@ import {
   // ImageStreamImportsModel,
   ConfigMapModel,
 } from '@console/internal/models';
-import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
+// import * as helmIcon from '@console/internal/imgs/logos/helm.svg';
 import * as models from './models';
 import * as hypercloudModels from '@console/internal/models';
 import { getKebabActionsForKind } from './utils/kebab-actions';
@@ -684,16 +684,16 @@ const plugin: Plugin<ConsumedExtensions> = [
   //     icon: <BoltIcon />,
   //   },
   // },
-  {
-    type: 'AddAction',
-    properties: {
-      id: 'helm',
-      url: '/catalog?kind=%5B"HelmChart"%5D',
-      label: 'Helm Chart',
-      description: 'Browse the catalog to discover and install Helm Charts',
-      icon: helmIcon,
-    },
-  },
+  // {
+  //   type: 'AddAction',
+  //   properties: {
+  //     id: 'helm',
+  //     url: '/catalog?kind=%5B"HelmChart"%5D',
+  //     label: 'Helm Chart',
+  //     description: 'Browse the catalog to discover and install Helm Charts',
+  //     icon: helmIcon,
+  //   },
+  // },
   {
     type: 'AddAction',
     flags: {
