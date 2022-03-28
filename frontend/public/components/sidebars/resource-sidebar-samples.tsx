@@ -198,14 +198,16 @@ export const getResourceSidebarSamples = (kindObj: K8sKind, yamlSamplesList: Fir
   const yamlSamplesData = !_.isEmpty(yamlSamplesList) ? _.filter(yamlSamplesList.data, (sample: K8sResourceKind) => sample.spec.targetResource.apiVersion === apiVersionForModel(kindObj) && sample.spec.targetResource.kind === kindObj.kind) : [];
   // const existingSamples = hyperCloudSamples.get(referenceForModel(kindObj)) || defaultSamples.get(referenceForModel(kindObj)) || [];
   const existingSamples = defaultSamples.get(referenceForModel(kindObj)) || []; //  Sample 지원 일단 보류 (hypercloud 6이후일듯.)
-  const extensionSamples = !_.isEmpty(yamlSamplesData)
-    ? yamlSamplesData.map((sample: K8sResourceKind) => {
-        return {
-          id: sample.metadata.uid,
-          ...sample.spec,
-        };
-      })
-    : [];
+  const extensionSamples = [];
+  if (!_.isEmpty(yamlSamplesData)) {
+    yamlSamplesData.map((sample: K8sResourceKind) => {
+      if (sample.hasOwnProperty('samples')) {
+        sample.samples.map(current => extensionSamples.push({ ...current, targetResource: sample.spec.targetResource }));
+      } else {
+        extensionSamples.push({ id: sample.metadata.uid, ...sample.spec, image: sample.image });
+      }
+    });
+  }
 
   const allSamples = [...existingSamples, ...extensionSamples];
 
@@ -217,15 +219,17 @@ export const getResourceSidebarSamples = (kindObj: K8sKind, yamlSamplesList: Fir
 };
 
 const ResourceSidebarSample: React.FC<ResourceSidebarSampleProps> = ({ sample, loadSampleYaml, downloadSampleYaml }) => {
-  const { highlightText, title, img, description, id, yaml, targetResource } = sample;
+  const { highlightText, title, img, description, id, yaml, targetResource, image } = sample;
   const reference = referenceFor(targetResource);
-  // const reference = null;
+
+  console.log(`data:image/jpeg;base64,${image}`);
   return (
     <li className="co-resource-sidebar-item">
       <h3 className="h4">
         <span className="text-uppercase">{highlightText}</span> {title}
       </h3>
       {img && <img src={img} className="co-resource-sidebar-item__img img-responsive" />}
+      {image && <img src={`data:image/jpeg;base64,${image}`} className="co-resource-sidebar-item__img img-responsive" />}
       <p>{description}</p>
       <Button type="button" variant="link" isInline onClick={() => loadSampleYaml(id, yaml, reference)}>
         <PasteIcon className="co-icon-space-r" />
@@ -317,6 +321,7 @@ type Sample = {
   highlightText?: string;
   title: string;
   img?: string;
+  image?: string;
   description: string;
   id: string;
   yaml?: string;

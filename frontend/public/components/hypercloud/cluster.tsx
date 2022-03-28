@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-
+import { TFunction } from 'i18next';
 import { Status } from '@console/shared';
+import { coFetchJSON } from '@console/internal/co-fetch';
+import { getId, getUserGroup } from '@console/internal/hypercloud/auth';
 import { K8sResourceKind, K8sKind } from '../../module/k8s';
 import { DetailsPage, ListPage } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { ClusterManagerModel } from '../../models';
 import { configureClusterNodesModal } from './modals';
-import { MembersPage } from './members';
+import { MembersPage, RowMemberData } from './members';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { TableProps } from './utils/default-list-component';
 
@@ -140,7 +142,7 @@ const tableProps: TableProps = {
   },
 };
 
-export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) => {
+const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) => {
   const { t } = useTranslation();
   return (
     <dl className="co-m-pane__details">
@@ -155,33 +157,75 @@ export const ClusterDetailsList: React.FC<ClusterDetailsListProps> = ({ cl }) =>
   );
 };
 
-interface TypeColumnItemProps {
-  type: string;
-}
-
-interface KeyValuePrintProps {
-  obj: any;
-  key: string;
-}
-
-const KeyValuePrint: React.FC<KeyValuePrintProps> = ({ obj, key }) => {
-  return <div>{`${key} / ${obj[key]}`}</div>;
+const KeyValuePrint: React.FC<KeyValuePrintProps> = ({ id, memberId, role, t }) => {
+  const translateRole = (value: string) => {
+    switch (value) {
+      case 'admin':
+        return t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_1');
+      case 'developer':
+        return t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_2');
+      case 'guest':
+        return t('COMMON:MSG_DETAILS_TABACCESSPERMISSIONS_RADIOBUTTON_3');
+      default:
+        return value;
+    }
+  };
+  return <div key={id}>{`${memberId} / ${translateRole(role)}`}</div>;
 };
 
 const ClusterDetails: React.FC<ClusterDetailsProps> = ({ obj: cluster }) => {
-  // const owner = cluster.status.owner && Object.keys(cluster.status.owner)[0];
-  const members = cluster.status.members && Object.keys(cluster.status.members);
-  const groups = cluster.status.groups && Object.keys(cluster.status.groups);
   const { t } = useTranslation();
+  const [members, setMembers] = React.useState<RowMemberData[]>();
+  const [groups, setGroups] = React.useState<RowMemberData[]>();
+
+  React.useEffect(() => {
+    const fetchMembers = async () => {
+      const url = `/api/hypercloud/namespaces/${cluster.metadata.namespace}/clustermanagers/${cluster.metadata.name}/member/invited?userId=${getId()}${getUserGroup()}`;
+      try {
+        const data = await coFetchJSON(url);
+        setMembers(data);
+      } catch (error) {
+        console.error('Error fetching members', error);
+        setMembers(undefined);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  React.useEffect(() => {
+    const fetchGroups = async () => {
+      const url = `/api/hypercloud/namespaces/${cluster.metadata.namespace}/clustermanagers/${cluster.metadata.name}/member/group?userId=${getId()}${getUserGroup()}`;
+      try {
+        const data = await coFetchJSON(url);
+        setGroups(data);
+      } catch (error) {
+        console.error('Error fetching groups', error);
+        setGroups(undefined);
+      }
+    };
+    fetchGroups();
+  }, []);
+
+  const getChildren = (data: RowMemberData[]) => {
+    if (!data) {
+      return <div>-</div>;
+    }
+    if (data.length === 0) {
+      return <span className="text-muted">{t('COMMON:MSG_DETAILS_TABDETAILS_41')}</span>;
+    } else {
+      return data.map(d => KeyValuePrint({ id: d.Id, memberId: d.MemberId, role: d.Role, t }));
+    }
+  };
+
   return (
     <>
       <div className="co-m-pane__body">
         <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(cluster, t) })} />
         <div className="row">
           <div className="col-lg-6">
-            <ResourceSummary resource={cluster} />
-            {cluster.status.members && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={members.map(member => KeyValuePrint({ obj: cluster.status.members, key: member }))} />}
-            {cluster.status.groups && <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={groups.map(group => KeyValuePrint({ obj: cluster.status.groups, key: group }))} />}
+            <ResourceSummary resource={cluster} showOwnerRole />
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_39')} obj={cluster} children={getChildren(members)} />
+            <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_40')} obj={cluster} children={getChildren(groups)} />
           </div>
           <div className="col-lg-6">
             <ClusterDetailsList cl={cluster} />
@@ -236,6 +280,17 @@ export const ClustersDetailsPage: React.FC<ClustersDetailsPageProps> = props => 
     />
   );
 };
+
+interface TypeColumnItemProps {
+  type: string;
+}
+
+interface KeyValuePrintProps {
+  id: number;
+  memberId: string;
+  role: string;
+  t: TFunction;
+}
 
 type ClusterDetailsListProps = {
   cl: K8sResourceKind;

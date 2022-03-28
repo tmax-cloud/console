@@ -40,7 +40,7 @@ const getDescriptionStringKey = (obj: K8sResourceKind): string => {
   }
 };
 
-export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, resource, customPathName, customPathId, showName = true, showOwner = true, useHcOwnerPath = true, showID = false, showDescription = false, showPodSelector = false, showNodeSelector = false, showAnnotations = true, showTolerations = false, podSelector = 'spec.selector', nodeSelector = 'spec.template.spec.nodeSelector' }) => {
+export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, resource, customPathName, customPathId, showName = true, showOwner = true, useHcOwnerPath = true, showID = false, showDescription = false, showPodSelector = false, showNodeSelector = false, showAnnotations = true, showTolerations = false, podSelector = 'spec.selector', nodeSelector = 'spec.template.spec.nodeSelector', showOwnerRole = false }) => {
   const { metadata, type } = resource;
   const reference = referenceFor(resource);
   const model = modelFor(reference);
@@ -112,7 +112,7 @@ export const ResourceSummary: React.SFC<ResourceSummaryProps> = ({ children, res
           </DetailsItem>
           {showOwner && (
             <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_44')} obj={resource} path="metadata.ownerReferences">
-              <OwnerReferences resource={resource} useHcOwnerPath={useHcOwnerPath} />
+              <OwnerReferences resource={resource} useHcOwnerPath={useHcOwnerPath} showOwnerRole={showOwnerRole} />
             </DetailsItem>
           )}
         </dl>
@@ -148,6 +148,7 @@ export type ResourceSummaryProps = {
   customPathName?: string;
   customPathId?: string;
   useHcOwnerPath?: boolean;
+  showOwnerRole?: boolean;
 };
 
 export type ResourcePodCountProps = {
