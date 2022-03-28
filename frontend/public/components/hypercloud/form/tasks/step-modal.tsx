@@ -115,7 +115,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           )}
           <Dropdown
             name={`${name}[${index}].envType`}
-            className="btn-group col-md-3"
+            className="btn-group"
             title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
             methods={methods}
             items={{ normal: '일반 텍스트', secret: '시크릿', configMap: '컨피그맵' }} // (필수)
