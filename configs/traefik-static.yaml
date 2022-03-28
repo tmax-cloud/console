@@ -1,0 +1,23 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: true
+serversTransport:
+  insecureSkipVerify: true
+entryPoints:
+  websecure:
+    address: :443/tcp
+accessLog:
+  format: common
+log:
+  format: common
+  level: INFO
+#  level: DEBUG
+api:
+  dashboard: true
+  debug: true
+  insecure: true
+providers:
+  file:
+    filename: ./configs/traefik-dynamic.yaml
+    watch: true
+
