@@ -9,7 +9,6 @@ app:
   keycloakAuthURL: "https://hyperauth.tmaxcloud.org/auth"
   keycloakRealm: "tmax"
   keycloakClientId: "hypercloud5"
-
   mcMode: true
   releaseMode: true
   basePath: "/"

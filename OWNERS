@@ -1,12 +1,4 @@
-reviewers:
-  - alecmerdler
-  - benjaminapetersen
-  - jhadvig
-  - rhamilto
-  - spadgett
-approvers:
-  - benjaminapetersen
-  - bparees
-  - rhamilto
-  - spadgett
+maintainer:
+  - jinsoo youn
+  - dongmin jung
 component: Management Console
