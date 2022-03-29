@@ -700,7 +700,7 @@ export const createDaemonSetItems = (daemonSets: K8sResourceKind[], resources: a
   return items;
 };
 
-export const createStatefulSetItems = (statefulSets: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[], utils?: Function[], operatorsFilter?: boolean): OverviewItem[] => {
+export const createStatefulSetItems = (statefulSets: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[]): OverviewItem[] => {
   const items = _.map(statefulSets, ss => {
     const obj: K8sResourceKind = {
       ...ss,
@@ -731,7 +731,7 @@ export const createStatefulSetItems = (statefulSets: K8sResourceKind[], resource
   return items;
 };
 
-export const createReplicaSetItems = (replicaSets: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[], utils?: Function[], operatorsFilter?: boolean): OverviewItem[] => {
+export const createReplicaSetItems = (replicaSets: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[]): OverviewItem[] => {
   const items = _.map(replicaSets, rs => {
     const obj: K8sResourceKind = {
       ...rs,
@@ -762,7 +762,7 @@ export const createReplicaSetItems = (replicaSets: K8sResourceKind[], resources:
   return items;
 };
 
-export const createServiceItems = (services: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[], utils?: Function[], operatorsFilter?: boolean): OverviewItem[] => {
+export const createServiceItems = (services: K8sResourceKind[]): OverviewItem[] => {
   const items = _.map(services, s => {
     const obj: K8sResourceKind = {
       ...s,
@@ -794,7 +794,7 @@ export const createIngressItems = (ingresses: K8sResourceKind[]): OverviewItem[]
   return items;
 };
 
-export const createPersistentVolumeClaimItems = (services: K8sResourceKind[], resources: any, installedOperators: ClusterServiceVersionKind[], utils?: Function[], operatorsFilter?: boolean): OverviewItem[] => {
+export const createPersistentVolumeClaimItems = (services: K8sResourceKind[]): OverviewItem[] => {
   const items = _.map(services, s => {
     const obj: K8sResourceKind = {
       ...s,
