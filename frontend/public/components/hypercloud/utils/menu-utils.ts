@@ -92,13 +92,13 @@ const labelMenuMatchingList = [
 const initializeMenuUrlsPromise = (labeMatchingList: any[], port: string) => {
   const promiesList = [];
   labeMatchingList.map((m) => {
-    promiesList.push(new Promise(() => {
+    promiesList.push(
       initializeMenuUrl(
         { [(m.labelKey) ? m.labelKey : defaultIngressLabelKey]: m.labelValue },
         m.menuKey,
         port,
-      );
-    }));
+      )
+    );
   });
   return promiesList;
 }
