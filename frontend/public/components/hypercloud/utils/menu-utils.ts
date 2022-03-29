@@ -78,6 +78,7 @@ const initializePort = async () => {
   }
   return '';
 };
+
 const defaultIngressLabelKey = 'ingress.tmaxcloud.org/name';
 const labelMenuMatchingList = [
   { labelValue: 'hyperregistry', menuKey: 'Harbor' },
@@ -88,20 +89,23 @@ const labelMenuMatchingList = [
   { labelValue: 'kibana', menuKey: 'Kibana' },
   { labelValue: 'jaeger', menuKey: 'Trace' },
 ];
-const initializeMenuUrls = async (labeMatchingList: any[], port: string) => {
-  labeMatchingList.map(async (m) => {
-    await initializeMenuUrl(
-      { [(m.labelKey) ? m.labelKey : defaultIngressLabelKey]: m.labelValue },
-      m.menuKey,
-      port,
-    );
+const initializeMenuUrlsPromise = (labeMatchingList: any[], port: string) => {
+  const promiesList = [];
+  labeMatchingList.map((m) => {
+    promiesList.push(new Promise(() => {
+      initializeMenuUrl(
+        { [(m.labelKey) ? m.labelKey : defaultIngressLabelKey]: m.labelValue },
+        m.menuKey,
+        port,
+      );
+    }));
   });
+  return promiesList;
 }
-
 export const initializationForMenu = async () => {
   await initializeCmpFlag();
   const port = await initializePort();
-  await initializeMenuUrls(labelMenuMatchingList, port);
+  Promise.all(initializeMenuUrlsPromise(labelMenuMatchingList, port));
 };
 
 export const getLabelTextByKind = (kind, t: TFunction) => {
