@@ -79,58 +79,33 @@ const initializePort = async () => {
   return '';
 };
 
+const defaultIngressLabelKey = 'ingress.tmaxcloud.org/name';
+const labelMenuMatchingList = [
+  { labelValue: 'hyperregistry', menuKey: 'Harbor' },
+  { labelValue: 'argocd', menuKey: 'ArgoCD' },
+  { labelValue: 'gitlab', menuKey: 'Git' },
+  { labelValue: 'grafana', menuKey: 'Grafana' },
+  { labelValue: 'kiali', menuKey: 'Kiali' },
+  { labelValue: 'kibana', menuKey: 'Kibana' },
+  { labelValue: 'jaeger', menuKey: 'Trace' },
+];
+const initializeMenuUrlsPromise = (labeMatchingList: any[], port: string) => {
+  const promiesList = [];
+  labeMatchingList.map((m) => {
+    promiesList.push(
+      initializeMenuUrl(
+        { [(m.labelKey) ? m.labelKey : defaultIngressLabelKey]: m.labelValue },
+        m.menuKey,
+        port,
+      )
+    );
+  });
+  return promiesList;
+}
 export const initializationForMenu = async () => {
   await initializeCmpFlag();
   const port = await initializePort();
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'hyperregistry',
-    },
-    'Harbor',
-    port,
-  );
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'argocd',
-    },
-    'ArgoCD',
-    port,
-  );
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'gitlab',
-    },
-    'Git',
-    port,
-  );
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'grafana',
-    },
-    'Grafana',
-    port,
-  );
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'kiali',
-    },
-    'Kiali',
-    port,
-  );
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'kibana',
-    },
-    'Kibana',
-    port,
-  );
-  await initializeMenuUrl(
-    {
-      'ingress.tmaxcloud.org/name': 'jaeger',
-    },
-    'Trace',
-    port,
-  );
+  Promise.all(initializeMenuUrlsPromise(labelMenuMatchingList, port));
 };
 
 export const getLabelTextByKind = (kind, t: TFunction) => {
