@@ -16,24 +16,23 @@ HYPERAUTH_URL='hyperauth.tmaxcloud.org'
 REALM='tmax'
 CLIENT_ID='hypercloud5'
 # GET id_token
-#read -p "Enter the hyperauth admin ID : " admin_id
-#read -sp "Enter the $admin_id : " admin_password
-#echo ""
-#TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/auth/realms/tmax/protocol/openid-connect/token" \
-#  -d grant_type=password \
-#  -d response_type=id_token \
-#  -d scope=openid \
-#  -d client_id=$CLIENT_ID \
-#  -d username="$admin_id" \
-#  -d password="$admin_password")
-#ERROR=$(echo "$TOKEN" | jq .error -r)
-#if [ "$ERROR" != "null" ];then
-#  echo "[$(date)][ERROR]  $TOKEN" >&2
-#  exit 1
-#fi
-#id_token=$(echo $TOKEN | jq .id_token -r)
-#echo $id_token
-id_token=tete
+read -p "Enter the hyperauth admin ID : " admin_id
+read -sp "Enter the $admin_id : " admin_password
+echo ""
+TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/auth/realms/tmax/protocol/openid-connect/token" \
+  -d grant_type=password \
+  -d response_type=id_token \
+  -d scope=openid \
+  -d client_id=$CLIENT_ID \
+  -d username="$admin_id" \
+  -d password="$admin_password")
+ERROR=$(echo "$TOKEN" | jq .error -r)
+if [ "$ERROR" != "null" ];then
+  echo "[$(date)][ERROR]  $TOKEN" >&2
+  exit 1
+fi
+id_token=$(echo $TOKEN | jq .id_token -r)
+echo $id_token
 #
 ./bin/console \
     --servingInfo.listen=http://$myIP:9000 \
@@ -48,8 +47,8 @@ id_token=tete
     --clusterInfo.kubeAPIServerURL=https://$k8sIP:6443 \
     --clusterInfo.kubeToken="$id_token" \
     --public-dir=/opt/bridge/static \
-    --listen=http://0.0.0.0:31303test \
-    --base-address=http://0.0.0.0:31303test \
+    --listen=http://0.0.0.0:31303 \
+    --base-address=http://0.0.0.0:31303 \
     --keycloak-realm=test \
     --keycloak-auth-url=https://test/auth \
     --keycloak-client-id=test \

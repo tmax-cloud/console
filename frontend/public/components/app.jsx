@@ -158,10 +158,11 @@ keycloak
       keycloak.login();
       return;
     }
-
+    
     setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
+    
     setUrlFromIngresses().then(() => {
       const startDiscovery = () => store.dispatch(watchAPIServices());
       // Load cached API resources from localStorage to speed up page load.

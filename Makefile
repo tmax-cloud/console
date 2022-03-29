@@ -22,7 +22,6 @@ build-backend:
 build-frontend:
 	@. ${NVM_DIR}/nvm.sh && nvm install v14.16.0 --default && nvm use v14.16.0 && ./scripts/build-frontend.sh
 
-
 .PHONY: run-console
 run-console:
 	@./scripts/run-console.sh
@@ -31,7 +30,6 @@ run-traefik-mac:
 	@./traefik-darwin --configfile ./configs/traefik-static.yaml
 run-traefik-linux:
 	@./traefik-linux --configfile ./configs/traefik-static.yaml
-
 
 docker-build:
 	@docker build --rm=true --build-arg=BUILD_ID=$(BUILD_ID) -t $(REGISTRY)/$(DOCKER_IMAGE) -f ./Dockerfile .

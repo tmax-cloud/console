@@ -87,6 +87,7 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 				token, _  = fs.GetString("clusterInfo.kubeToken")
 			)
 			k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
+			fmt.Printf("%v \n",app)
 
 			var logger kitlog.Logger
 			logger = kitlog.NewLogfmtLogger(kitlog.NewSyncWriter(os.Stderr))
