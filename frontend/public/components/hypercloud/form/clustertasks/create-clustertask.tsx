@@ -2,8 +2,9 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { match as RMatch } from 'react-router';
 import { useFormContext, Controller } from 'react-hook-form';
-import { WithCommonForm, isCreatePage } from '../create-form';
+import { WithCommonForm } from '../create-form';
 import { Section } from '../../utils/section';
+import { useSetTaskHook } from '../utils/useInitData';
 import { SelectorInput } from '../../../utils';
 import { ModalLauncher, ModalList, useInitModal, handleModalData, removeModalData } from '../utils';
 import { InputResourceModal } from './input-resource-modal';
@@ -13,6 +14,7 @@ import { WorkSpaceModal } from './work-space-modal';
 import { VolumeModal } from './volume-modal';
 import { StepModal } from './step-modal';
 import { ClusterTaskModel } from '../../../../models';
+import { volumeValidCallback, stepValidCallback } from '../utils/validCallback';
 import { useTranslation } from 'react-i18next';
 
 const defaultValuesTemplate = {
@@ -44,116 +46,8 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
   const [volume, setVolume] = React.useState([]);
   const [step, setStep] = React.useState([]);
 
-  // 이 페이지가 처음 마운트 되었을 때 한번 되어야 함. (나중에 modal 별로 다 한거를 custom hook으로 묶어주면 좋을듯.)
-  React.useEffect(() => {
-    if (!isCreatePage(defaultValues)) {
-      if (_.has(defaultValues, 'metadata.labels')) {
-        let labelObj = _.get(defaultValues, 'metadata.labels');
-        let labelTemp = [];
-        for (let key in labelObj) {
-          labelTemp.push(`${key}=${labelObj[key]}`);
-        }
-        setLabels(labelTemp);
-      }
-      if (_.has(defaultValues, 'spec.resources.inputs')) {
-        let inputResources = _.get(defaultValues, 'spec.resources.inputs');
-        setInputResource(inputResources);
-      }
-      if (_.has(defaultValues, 'spec.resources.outputs')) {
-        let outputResources = _.get(defaultValues, 'spec.resources.outputs');
-        setOutputResource(outputResources);
-      }
-      if (_.has(defaultValues, 'spec.params')) {
-        let paramDefaultValues = _.get(defaultValues, 'spec.params');
-        paramDefaultValues = paramDefaultValues?.map(item => {
-          if (item.type === 'array') {
-            return _.assign(item, {
-              defaultArr: item.default?.map(cur => {
-                return { value: cur };
-              }),
-            });
-          } else {
-            return _.assign(item, { defaultStr: item.default });
-          }
-        });
-        setTaskParameter(paramDefaultValues);
-      }
-      if (_.has(defaultValues, 'spec.workspaces')) {
-        let workSpaceDefaultValues = _.get(defaultValues, 'spec.workspaces');
-        workSpaceDefaultValues = workSpaceDefaultValues?.map(item => {
-          if (typeof item.readOnly != 'undefined') {
-            item.accessMode = 'readOnly';
-          } else {
-            item.accessMode = 'readWrite';
-          }
-          delete item.readOnly;
-          return item;
-        });
-        setWorkSpace(workSpaceDefaultValues);
-      }
-      if (_.has(defaultValues, 'spec.volumes')) {
-        let volumeDefaultValues = _.get(defaultValues, 'spec.volumes');
-        volumeDefaultValues = volumeDefaultValues.map(item => {
-          let obj = {
-            name: item.name,
-          };
-          if (item.configMap) {
-            obj['type'] = 'configMap';
-            obj['configMap'] = item.configMap.name;
-          } else if (item.secret) {
-            obj['type'] = 'secret';
-            obj['secret'] = item.secret.secretName;
-          } else if (item.emptyDir) {
-            obj['type'] = 'emptyDir';
-          }
-          return obj;
-        });
-        setVolume(volumeDefaultValues);
-      }
-      if (_.has(defaultValues, 'spec.steps')) {
-        let stepDefaultValues = _.get(defaultValues, 'spec.steps');
-        const setEnv = item => {
-          return item.env?.map(cur => {
-            const envKey = cur.name;
-            let envValue = cur.value;
-            let resourceKey = '';
-            let envType = 'normal';
-            if (_.has(cur, 'valueFrom')) {
-              // secretRef, configMap 등
-              if (_.has(cur, ['valueFrom', 'secretKeyRef'])) {
-                envValue = _.get(cur, 'valueFrom.secretKeyRef.name');
-                resourceKey = _.get(cur, 'valueFrom.secretKeyRef.key');
-                envType = 'secret';
-              } else if (_.has(cur, ['valueFrom', 'configMapKeyRef '])) {
-                envValue = _.get(cur, 'valueFrom.configMapKeyRef.name');
-                resourceKey = _.get(cur, 'valueFrom.configMapKeyRef.key');
-                envType = 'configMap';
-              }
-            }
-            return { envKey, envValue, resourceKey, envType };
-          });
-        };
-        stepDefaultValues = stepDefaultValues?.map(item => {
-          const env = setEnv(item);
-          return _.assign(item, {
-            command: item.command?.map(cur => {
-              return { value: cur };
-            }),
-            env: env,
-            args: item.args?.map(cur => {
-              return { value: cur };
-            }),
-            mountArr: item.volumeMounts?.map(cur => ({ mountName: { value: cur.name, label: cur.name }, mountPath: cur.mountPath })),
-            selectedVolume: item.volumeMounts?.[0].name,
-            commandTypeToggle: item?.script ? 'script' : 'command',
-            registryTypeToggle: 'internal',
-            isFirstTimeEdit: true,
-          });
-        });
-        setStep(stepDefaultValues);
-      }
-    }
-  }, []);
+  // 각 필드 별 default value 세팅
+  useSetTaskHook({ defaultValues, setLabels, setInputResource, setOutputResource, setTaskParameter, setWorkSpace, setVolume, setStep });
 
   // Modal Form 초기 세팅위한 Hook들 Custom Hook으로 정리
   useInitModal(methods, inputResource, 'spec.resources.inputs');
@@ -171,42 +65,6 @@ const CreateClusterTaskComponent: React.FC<TaskFormProps> = props => {
   let volumeArr = ['name', 'type', 'configMap', 'secret'];
   let stepArr = ['name', 'imageToggle', 'commandTypeToggle', 'registryTypeToggle', 'registryRegistry', 'registryImage', 'registryTag', 'image', 'command', 'args', 'script', 'env', 'selectedVolume', 'mountPath', 'isFirstTimeEdit', 'mountArr'];
 
-  // const paramValidCallback = additionalConditions => {
-  //   let type = additionalConditions[0] ? 'array' : 'string';
-  //   let target = type === 'string' ? additionalConditions[1] : additionalConditions[0];
-  //   if (type === 'string') {
-  //     return target.trim().length > 0;
-  //   } else {
-  //     return target ? target.length > 0 : false;
-  //   }
-  // };
-
-  const volumeValidCallback = additionalConditions => {
-    if (additionalConditions[0] === 'emptyDir') {
-      return true;
-    }
-    return additionalConditions.filter((c, i) => i !== 0).some(cur => (typeof cur === 'string' ? cur.trim().length > 0 : false));
-  };
-
-  const stepValidCallback = (additionalConditions: string[]) => {
-    const [type, image, registryRegistry, registryImage, registryTag, mountArr] = additionalConditions;
-    console.log('mountArr: ', mountArr);
-
-    if (mountArr.length > 0 && mountArr.length !== _.uniqBy(mountArr, 'mountName.value').length) {
-      return false;
-    }
-    if (type === 'internal') {
-      if (registryRegistry && registryImage && registryTag) {
-        return true;
-      }
-      return false;
-    } else {
-      if (image) {
-        return true;
-      }
-      return false;
-    }
-  };
   return (
     <>
       <Section label={t('SINGLE:MSG_IMAGEREGISTRIES_CREATEFORM_DIV2_33')} id="label" description={t('SINGLE:MSG_CLUSTERTASK_CREATFORM_DIV2_21')}>
