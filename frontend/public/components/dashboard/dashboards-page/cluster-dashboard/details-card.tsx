@@ -21,7 +21,7 @@ const ModuleStatus = ({ status }) => {
   switch (status) {
     case 'Normal':
       return <GreenCheckCircleIcon />;
-    case 'Not Installed':
+    case 'Abnoraml':
       return <RedExclamationCircleIcon />;
     default:
       return <div></div>;
@@ -46,7 +46,7 @@ const DetailsSubHeader: React.FC<DetailsSubHeaderProps> = React.memo(({ hcVersio
   return (
     <DashboardCardHeader>
       <div className={classNames('details-card__popup-style')}>{t('SINGLE:MSG_OVERVIEW_MAIN_CARDSOFTWARE_INSTALLATION_1')}</div>
-      <DetailsCardPopup list={_.filter(hcVersion, item => item.status === 'Not Installed')} />
+      <DetailsCardPopup list={hcVersion} />
     </DashboardCardHeader>
   );
 });
@@ -73,6 +73,7 @@ export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: Details
   const [hcVersion, setHcVersion] = React.useState<Response[]>([]);
   const [hcVersionError, setHcVersionError] = React.useState();
   const { t } = useTranslation();
+  const [notInstalled, setNotInstalled] = React.useState([]);
   React.useEffect(() => {
     const fetchHcVersion = async () => {
       let url;
@@ -83,7 +84,9 @@ export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: Details
       }
       try {
         let version = await coFetchJSON(url);
-        setHcVersion(version);
+        let notInstalledItems = _.filter(version, item => item.status === 'Not Installed');
+        setHcVersion(_.filter(version, item => item.status !== 'Not Installed'));
+        setNotInstalled(notInstalledItems);
       } catch (error) {
         setHcVersionError(error);
       }
@@ -97,7 +100,7 @@ export const DetailsCard_ = ({ watchK8sResource, stopWatchK8sResource }: Details
         <DashboardCardTitle>{t('COMMON:MSG_DETAILS_TAB_1')}</DashboardCardTitle>
         {/* <DashboardCardLink to="/settings/cluster/">View settings</DashboardCardLink> */}
       </DashboardCardHeader>
-      <DetailsSubHeader hcVersion={hcVersion} />
+      {notInstalled.length !== 0 && <DetailsSubHeader hcVersion={notInstalled} />}
       <DashboardCardBody isLoading={hcVersion.length > 0 ? false : true} className={classNames('details-card__body-style')}>
         <DetailsBody>{hcVersion.length > 0 && <DetailsModuleList hcVersion={hcVersion} hcVersionError={hcVersionError} />}</DetailsBody>
       </DashboardCardBody>

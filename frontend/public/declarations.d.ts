@@ -44,6 +44,7 @@ declare interface Window {
     KeycloakRealm: string;
     gitlabURL: string;
     singleClusterBasePath: string;
+    svcType: string;
   };
   windowError?: boolean | string;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: Function;

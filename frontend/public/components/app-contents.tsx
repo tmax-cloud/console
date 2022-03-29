@@ -157,6 +157,17 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/catalog/create-service-instance" exact loader={() => import('./service-catalog/create-instance' /* webpackChunkName: "create-service-instance" */).then(m => m.CreateInstancePage)} />
           <LazyRoute path="/k8s/ns/:ns/serviceinstances/:name/create-binding" exact loader={() => import('./service-catalog/create-binding' /* webpackChunkName: "create-binding" */).then(m => m.CreateBindingPage)} />
           <LazyRoute path="/catalog/instantiate-template" exact loader={() => import('./instantiate-template' /* webpackChunkName: "instantiate-template" */).then(m => m.InstantiateTemplatePage)} />
+          <LazyRoute path="/helmcharts" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartPage)} />
+          <LazyRoute path="/helmcharts/~new" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartCreatePage)} />
+          <LazyRoute path="/helmcharts/:name" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartDetailsPage)} />
+          <LazyRoute path="/helmcharts/:name/edit" exact loader={() => import('./hypercloud/helmchart' /* webpackChunkName: "helmchart" */).then(m => m.HelmchartEditPage)} />
+          <LazyRoute path="/helmreleases/all-namespaces" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
+          <LazyRoute path="/helmreleases/all-namespaces/:name" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
+          <LazyRoute path="/helmreleases/ns/:ns" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/~new" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseCreatePage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/:name" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseDetailsPage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/:name/edit" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseEditPage))} />
+          <Route path="/helmreleases" exact component={NamespaceRedirect} />
           <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({ match }) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
           <LazyRoute path="/k8s/all-namespaces/events" exact loader={() => import('./events' /* webpackChunkName: "events" */).then(m => NamespaceFromURL(m.EventStreamPage))} />
           <LazyRoute path="/k8s/ns/:ns/events" exact loader={() => import('./events' /* webpackChunkName: "events" */).then(m => NamespaceFromURL(m.EventStreamPage))} />
