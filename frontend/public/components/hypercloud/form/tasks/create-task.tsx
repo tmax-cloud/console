@@ -356,16 +356,6 @@ export const onSubmitCallback = data => {
     }
     delete data.spec.steps[idx].commandTypeToggle;
 
-    // if (cur.selectedVolume) {
-    //   let volumeMounts = [];
-    //   volumeMounts.push({
-    //     mountPath: cur.mountPath,
-    //     name: cur.selectedVolume,
-    //   });
-    //   data.spec.steps[idx].volumeMounts = volumeMounts;
-    //   delete data.spec.steps[idx].selectedVolume;
-    //   delete data.spec.steps[idx].mountPath;
-    // }
     if (cur.mountArr) {
       let volumeMounts = cur.mountArr?.map(cur => ({
         mountPath: cur.mountPath,
@@ -377,8 +367,6 @@ export const onSubmitCallback = data => {
 
     return cur;
   });
-
-  return;
 
   return data;
 };
