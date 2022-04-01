@@ -4,8 +4,19 @@ import { initReactI18next } from 'react-i18next';
 import en from './en.json';
 import ko from './ko.json';
 
+export const LANGUAGE_LOCAL_STORAGE_KEY = 'i18nextLng';
+
+export const setLanguage = lang => localStorage.setItem(LANGUAGE_LOCAL_STORAGE_KEY, lang);
+
+export const getLanguage = () => {
+  if (!localStorage.getItem(LANGUAGE_LOCAL_STORAGE_KEY)) {
+    setLanguage('ko'); // 기본 언어는 ko
+  }
+  return localStorage.getItem(LANGUAGE_LOCAL_STORAGE_KEY);
+};
+
 const options = {
-  lookupLocalStorage: 'i18nextLng',
+  lookupLocalStorage: LANGUAGE_LOCAL_STORAGE_KEY,
   caches: ['localStorage'],
   cookieMinutes: 7 * 24 * 60 * 60 * 1000,
 };
@@ -28,8 +39,7 @@ const resource = {
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    lng: 'ko',
-    //lng: window.localStorage.getItem('i18nextLng') || navigator.language || 'ko',
+    lng: getLanguage(),
     debug: true,
     detection: options,
     resources: resource,
