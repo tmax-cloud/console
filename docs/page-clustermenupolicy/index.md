@@ -46,6 +46,7 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 
 <div style="display: flex; flex-direction: row; margin-top: -15px">
 <div style="white-space: pre-line; font-size: 13px; display: inline-block; width: 50%;">
+
 - Pod (파드)
 - DaemonSet (데몬셋)
 - HorizontalPodAutoscaler (HPA)
@@ -132,15 +133,17 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - InferenceService (추론 서비스)
 - TrainedModel (학습 모델)
 - TFApplyClaim (테라폼 클레임)
-- HelmRelease (헬름 릴리스)
 - AWX (AWX 인스턴스)
 - Application (어플리케이션)
+- NodeConfig(노드 컨피그)
+- BareMetalHost (베어메탈 호스트)
 </div>
 </div>
 
 ### 그 외의 메뉴 kind
 
 <div  style="white-space: pre-line; font-size: 13px; margin-top: -15px">
+
 - Harbor (이미지 레지스트리)
 - Topology (토폴로지)
 - ClusterServiceVersion (설치된 오퍼레이터)
@@ -155,6 +158,8 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - Audit (감사 로그)
 - Search (검색)
 - Dashboard (개요)
+- HelmChart (헬름 차트)
+- HelmRelease (헬름 릴리스)
 </div>
 
 ## 번역 적용되는 컨테이너 Text
