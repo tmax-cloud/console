@@ -21,6 +21,7 @@ import { setAccessToken, setIdToken } from '../hypercloud/auth';
 import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
+import { setLanguage } from './hypercloud/utils/langs/i18n';
 
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
@@ -298,7 +299,7 @@ class MastheadToolbarContents_ extends React.Component {
 
     const logout = e => {
       e.preventDefault();
-     sessionStorage.clear();
+      sessionStorage.clear();
       keycloak.logout();
     };
 
@@ -364,12 +365,12 @@ class MastheadToolbarContents_ extends React.Component {
     const enChange = e => {
       e.preventDefault();
       i18n.changeLanguage('en');
-      window.localStorage.setItem('i18nextLng', 'en');
+      setLanguage('en');
     };
     const koChange = e => {
       e.preventDefault();
       i18n.changeLanguage('ko');
-      window.localStorage.setItem('i18nextLng', 'ko');
+      setLanguage('ko');
     };
 
     i18nActions.push({

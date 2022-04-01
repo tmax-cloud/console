@@ -60,10 +60,10 @@ export const DeploymentDetailsList: React.FC<DeploymentDetailsListProps> = ({ de
       {deployment.spec.strategy.type === 'RollingUpdate' && (
         <>
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_26')} obj={deployment} path="spec.strategy.rollingUpdate.maxUnavailable">
-            {deployment.spec.strategy.rollingUpdate.maxUnavailable || 1} of {pluralize(deployment.spec.replicas, 'pod')}
+            {deployment.spec.strategy.rollingUpdate.maxUnavailable ?? 1} of {pluralize(deployment.spec.replicas, 'pod')}
           </DetailsItem>
           <DetailsItem label={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_27')} obj={deployment} path="spec.strategy.rollingUpdate.maxSurge">
-            {deployment.spec.strategy.rollingUpdate.maxSurge || 1} greater than {pluralize(deployment.spec.replicas, 'pod')}
+            {deployment.spec.strategy.rollingUpdate.maxSurge ?? 1} greater than {pluralize(deployment.spec.replicas, 'pod')}
           </DetailsItem>
         </>
       )}
