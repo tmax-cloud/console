@@ -107,11 +107,11 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex', position: 'relative' }}>
           <TextInput id={`${name}[${index}].envKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
           <span style={{ margin: '0 5px' }}>=</span>
-          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={isKeyValueType ? t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44') : '리소스 이름'} />
+          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={isKeyValueType ? t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44') : t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_9')} />
           {isKeyValueType && (
             <>
               <span style={{ margin: '0 5px' }}>/</span>
-              <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder="리소스 키" />
+              <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder={t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_5')} />
             </>
           )}
           <Dropdown
@@ -119,7 +119,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             className="btn-group"
             title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
             methods={methods}
-            items={{ normal: '키/값', secret: '시크릿', configMap: '컨피그맵' }} // (필수)
+            items={{ normal: t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_4'), secret: t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_2'), configMap: t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_3') }} // (필수)
             style={{ display: 'block', marginLeft: '5px', right: 0, position: 'absolute' }}
             buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
             itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
@@ -228,7 +228,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         </>
       )}
       <div className="horizontal-line" />
-      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env" help={true} helpTitle="환경 변수" helpText='환경 변수는 키-값 페어 입력 또는 리소스를 참조할 수 있습니다. 시크릿 또는 컨피그맵 선택 시 환경 변수 키, 리소스 이름, 리소스 키를 입력해야 합니다. 예를 들어 키에 "EnvName", 값에 "SecretName", 리소스 키에 "SecretData"를 지정할 수 있습니다.'>
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env" help={true} helpTitle={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} helpText={t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_6')}>
         <ListView name="env" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.env) : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} id="step-mountPath">
