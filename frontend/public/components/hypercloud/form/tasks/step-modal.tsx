@@ -101,13 +101,14 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       setEnv(env => [...env, { envKey: '', envValue: '', envType: 'normal', resourceKey: '' }]);
       return;
     }
+    const isKeyValueType = env[index].envType !== 'secret' && env[index].envType !== 'configMap';
     return (
       <div className="row" key={item.id}>
         <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex', position: 'relative' }}>
           <TextInput id={`${name}[${index}].envKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
           <span style={{ margin: '0 5px' }}>=</span>
-          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
-          {(env[index].envType === 'secret' || env[index].envType === 'configMap') && (
+          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={isKeyValueType ? t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44') : '리소스 이름'} />
+          {isKeyValueType && (
             <>
               <span style={{ margin: '0 5px' }}>/</span>
               <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder="리소스 키" />
@@ -118,7 +119,7 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
             className="btn-group"
             title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
             methods={methods}
-            items={{ normal: '일반 텍스트', secret: '시크릿', configMap: '컨피그맵' }} // (필수)
+            items={{ normal: '키/값', secret: '시크릿', configMap: '컨피그맵' }} // (필수)
             style={{ display: 'block', marginLeft: '5px', right: 0, position: 'absolute' }}
             buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
             itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
