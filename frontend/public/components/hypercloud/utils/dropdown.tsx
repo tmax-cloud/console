@@ -27,7 +27,7 @@ type DropdownRowProps = {
 };
 
 const Dropdown_: React.SFC<DropdownProps> = props => {
-  const { name, ariaLabel, className, buttonClassName, menuClassName, dropDownClassName, titlePrefix, describedBy, disabled, required, methods, defaultValue } = props;
+  const { name, ariaLabel, className, buttonClassName, menuClassName, dropDownClassName, titlePrefix, describedBy, disabled, required, methods, defaultValue, callback } = props;
   const { register, unregister, setValue, watch } = methods ? methods : useFormContext();
 
   const selectedKey = watch(name, defaultValue);
@@ -86,6 +86,7 @@ const Dropdown_: React.SFC<DropdownProps> = props => {
 
     setValue(name, selected);
     setKeyboardHoverKey(selected);
+    callback(selected);
 
     hide(e);
   };
@@ -230,4 +231,5 @@ export type DropdownProps = {
   required?: boolean;
   disabled?: boolean;
   methods?: any;
+  callback?: (selectItem: string) => void;
 };

@@ -2,34 +2,18 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { Section } from '../../utils/section';
 import { RadioGroup } from '../../utils/radio';
-// import { ResourceDropdown } from '../../utils/resource-dropdown';
 import { Controller } from 'react-hook-form';
 import { DropdownWithRef } from '../../utils/dropdown-new';
 import { TextInput } from '../../utils/text-input';
 import { TextArea } from '../../utils/text-area';
+import { Dropdown } from '../../utils/dropdown';
 import { ListView } from '../../utils/list-view';
 import { useWatch } from 'react-hook-form';
 import { Button } from '@patternfly/react-core';
-// import { modelFor, k8sList } from '@console/internal/module/k8s';
-// import { makeQuery } from '../../../utils/k8s-watcher';
 import { useTranslation } from 'react-i18next';
 
 export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
   const { t } = useTranslation();
-  // const [isOpen, setIsOpen] = React.useState(false);
-  // const [imageList, setImageList] = React.useState({});
-  // const [imageTagList, setImageTagList] = React.useState({});
-
-  // const registryTypeItems = [
-  //   {
-  //     title: '내부 레지스트리',
-  //     value: 'internal',
-  //   },
-  //   {
-  //     title: '외부 레지스트리',
-  //     value: 'external',
-  //   },
-  // ];
 
   const commandTypeItems = [
     {
@@ -54,6 +38,24 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     }
     return false;
   };
+
+  let template;
+
+  // modify 기능 용
+  let target = document.getElementById('step-list');
+  let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
+  if (modalType === 'modify') {
+    let list = target.childNodes;
+    list.forEach((cur, idx) => {
+      if (cur['dataset']['modify'] === 'true') {
+        template = step[idx];
+      }
+    });
+  }
+  const envDefaultForm = { envKey: '', envValue: '', resourceKey: '', envType: 'normal' };
+
+  const [env, setEnv] = React.useState(modalType === 'modify' ? (template.env ? [...template.env] : [envDefaultForm]) : [{ envKey: '', envValue: '', resourceKey: '', envType: 'normal' }]);
+
   const commandListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
     <div className="row" key={item.id}>
       <div className="col-xs-11 pairs-list__value-field">
@@ -94,28 +96,62 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
       </div>
     </div>
   );
-  const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => (
-    <div className="row" key={item.id}>
-      <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex' }}>
-        <TextInput id={`${name}[${index}].envKey`} inputClassName="col-md-6" methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
-        <span style={{ margin: '0 5px' }}>=</span>
-        <TextInput id={`${name}[${index}].envValue`} inputClassName="col-md-6" methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
+  const envListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons) => {
+    if (!env[index]) {
+      setEnv(env => [...env, { envKey: '', envValue: '', envType: 'normal', resourceKey: '' }]);
+      return;
+    }
+    return (
+      <div className="row" key={item.id}>
+        <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex', position: 'relative' }}>
+          <TextInput id={`${name}[${index}].envKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
+          <span style={{ margin: '0 5px' }}>=</span>
+          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44')} />
+          {(env[index].envType === 'secret' || env[index].envType === 'configMap') && (
+            <>
+              <span style={{ margin: '0 5px' }}>/</span>
+              <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder="리소스 키" />
+            </>
+          )}
+          <Dropdown
+            name={`${name}[${index}].envType`}
+            className="btn-group"
+            title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
+            methods={methods}
+            items={{ normal: '일반 텍스트', secret: '시크릿', configMap: '컨피그맵' }} // (필수)
+            style={{ display: 'block', marginLeft: '5px', right: 0, position: 'absolute' }}
+            buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
+            itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+            defaultValue={item.envType || ''}
+            callback={selectItem => {
+              const { envValue, envKey, resourceKey } = methods.getValues().env[index];
+              setEnv(
+                env.map((cur, cidx) => {
+                  if (cidx === index) {
+                    return { ...cur, envValue, envKey, resourceKey, envType: selectItem };
+                  }
+                  return { ...cur };
+                }),
+              );
+            }}
+          />
+        </div>
+        <div className="col-xs-1 pairs-list__action">
+          <Button
+            type="button"
+            data-test-id="pairs-list__delete-btn"
+            className="pairs-list__span-btns"
+            onClick={() => {
+              ListActions.remove(index);
+            }}
+            variant="plain"
+          >
+            {ListDefaultIcons.deleteIcon}
+          </Button>
+        </div>
       </div>
-      <div className="col-xs-1 pairs-list__action">
-        <Button
-          type="button"
-          data-test-id="pairs-list__delete-btn"
-          className="pairs-list__span-btns"
-          onClick={() => {
-            ListActions.remove(index);
-          }}
-          variant="plain"
-        >
-          {ListDefaultIcons.deleteIcon}
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  };
   const mountListItemRenderer = (method, name, item, index, ListActions, ListDefaultIcons, deleteButtonText) => {
     return (
       <div key={item.id}>
@@ -150,159 +186,18 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
     );
   };
 
-  let template;
-
-  // modify 기능 용
-  let target = document.getElementById('step-list');
-  let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
-  if (modalType === 'modify') {
-    let list = target.childNodes;
-    list.forEach((cur, idx) => {
-      if (cur['dataset']['modify'] === 'true') {
-        template = step[idx];
-      }
-    });
-  }
-  // const [isFirstTimeEdit, setIsFirstTimeEdit] = React.useState(template?.isFirstTimeEdit);
-
-  // const registryTypeToggle = useWatch({
-  //   control: methods.control,
-  //   name: 'registryTypeToggle',
-  //   defaultValue: template ? template.registryTypeToggle : 'internal',
-  // });
-
   // command radio toggle 용
   const commandTypeToggle = useWatch({
     control: methods.control,
     name: 'commandTypeToggle',
     defaultValue: template ? template.commandTypeToggle : 'command',
   });
-
-  // const imageRegistry = useWatch({
-  //   control: methods.control,
-  //   name: 'registryRegistry',
-  //   defaultValue: template ? template.registryRegistry : null,
-  // });
-  // const image = useWatch({
-  //   control: methods.control,
-  //   name: 'registryImage',
-  //   defaultValue: template ? template.registryImage : null,
-  // });
-  // Image Registry 선택되면 Image Dropdown 메뉴 채워주기
-  // React.useEffect(() => {
-  //   if (!isFirstTimeEdit && imageRegistry) {
-  //     const ko = modelFor('Repository');
-  //     let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
-  //     k8sList(ko, query)
-  //       .then(reponse => reponse)
-  //       .then(data => {
-  //         let imageItems = {};
-  //         data.forEach(cur => {
-  //           imageItems[cur.spec.name] = cur.spec.name;
-  //         });
-  //         setImageList(() => imageItems);
-  //       });
-  //   }
-  // }, [imageRegistry, isFirstTimeEdit]);
-
-  // Image 선택되면 ImageTag Dropdown 메뉴 채워주기
-  // React.useEffect(() => {
-  //   if (!isFirstTimeEdit && image) {
-  //     const ko = modelFor('Repository');
-  //     let query = makeQuery('', { matchLabels: { registry: imageRegistry } });
-  //     k8sList(ko, query)
-  //       .then(reponse => reponse)
-  //       .then(data => {
-  //         let imageTagItems = {};
-  //         let curImage = data.filter(cur => image === cur.spec.name)[0];
-  //         curImage.spec.versions.forEach(cur => {
-  //           imageTagItems[cur.version] = cur.version;
-  //         });
-  //         setImageTagList(() => imageTagItems);
-  //       });
-  //   }
-  // }, [image]);
   return (
     <>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_108')} id="step-name" isRequired={true}>
         <TextInput id="name" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.name : ''} />
       </Section>
       <div className="horizontal-line" />
-      {/* {isFirstTimeEdit ? (
-        <>
-          <Section label="이미지" id="step-name" isRequired={true}>
-            <TextInput id="image" inputClassName="col-md-12" methods={methods} isDisabled={true} defaultValue={modalType === 'modify' ? template.image : ''} />
-          </Section>
-          <span className="open-modal_text" onClick={() => setIsFirstTimeEdit(false)}>
-            {`+ 제거하고 다시 선택`}
-          </span>
-        </>
-      ) : (
-        <>
-          <Section label="이미지" id="registry-type-toggle" isRequired={true}>
-            <RadioGroup
-              methods={methods}
-              name="registryTypeToggle" // 서버에 보낼 데이터에서의 path (필수)
-              items={registryTypeItems} // [{title: '', value: ''}] (필수)
-              initValue={registryTypeToggle}
-            />
-          </Section>
-          {registryTypeToggle === 'internal' ? (
-            <>
-              <Section id="registrydropdown" label="컨테이너 레지스트리">
-                <ResourceDropdown
-                  name="registryRegistry"
-                  placeholder="컨테이너 레지스트리 선택"
-                  methods={methods}
-                  defaultValue={modalType === 'modify' ? imageRegistry : ''}
-                  resources={[
-                    {
-                      kind: 'Registry',
-                      prop: 'deployment',
-                    },
-                  ]}
-                  type="single"
-                  useHookForm
-                />
-              </Section>
-              {imageRegistry && (
-                <Section id="imagedropdown" label="이미지">
-                  <Dropdown
-                    name="registryImage"
-                    className="btn-group"
-                    title="이미지 선택" // 드롭다운 title 지정
-                    methods={methods}
-                    defaultValue={modalType === 'modify' ? image : ''}
-                    items={_.cloneDeep(imageList)} // (필수)
-                    style={{ display: 'block' }}
-                    buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
-                    itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-                  />
-                </Section>
-              )}
-              {image && (
-                <Section id="imagetagdropdown" label="이미지 태그">
-                  <Dropdown
-                    name="registryTag"
-                    className="btn-group"
-                    title="이미지 선택" // 드롭다운 title 지정
-                    methods={methods}
-                    defaultValue={modalType === 'modify' ? template.registryTag : ''}
-                    items={_.cloneDeep(imageTagList)} // (필수)
-                    style={{ display: 'block' }}
-                    buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
-                    itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-                  />
-                </Section>
-              )}
-            </>
-          ) : (
-            <Section label="이미지" id="step-manual-image" isRequired={true}>
-              <TextInput id="image" placeholder="이미지 경로를 입력해 주세요." inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
-            </Section>
-          )}
-        </>
-      )} */}
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_33')} id="step-manual-image" isRequired={true}>
         <TextInput id="image" placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_104')} inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.image : ''} />
       </Section>
@@ -332,33 +227,11 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         </>
       )}
       <div className="horizontal-line" />
-      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env">
+      <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_42')} id="step-env" help={true} helpTitle="환경 변수" helpText='환경 변수는 키-값 페어 입력 또는 리소스를 참조할 수 있습니다. 시크릿 또는 컨피그맵 선택 시 환경 변수 키, 리소스 이름, 리소스 키를 입력해야 합니다. 예를 들어 키에 "EnvName", 값에 "SecretName", 리소스 키에 "SecretData"를 지정할 수 있습니다.'>
         <ListView name="env" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} headerFragment={<></>} itemRenderer={envListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.env) : []} defaultItem={{ envKey: '', envValue: '' }} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} id="step-mountPath">
-        {!isVolumeExist() ? (
-          t('SINGLE:MSG_TASKS_CREATFORM_DIV2_46')
-        ) : (
-          <>
-            <ListView name="mountArr" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} maxLength={_.size(volumeItems)} deleteButtonText={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} headerFragment={<></>} itemRenderer={mountListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.mountArr) : []} defaultItem={{ name: '', mountPath: '' }} />
-            {/* <Section id="selectedVolume">
-              <Dropdown
-                name="selectedVolume"
-                className="btn-group"
-                defaultValue={template ? template.selectedVolume : ''}
-                title={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_47')} // 드롭다운 title 지정
-                methods={methods}
-                items={volumeItems} // (필수)
-                style={{ display: 'block' }}
-                buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
-                itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-              />
-            </Section>
-            <Section id="mountPath">
-              <TextInput id="mountPath" inputClassName="col-md-12" methods={methods} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_48')} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
-            </Section> */}
-          </>
-        )}
+        {!isVolumeExist() ? t('SINGLE:MSG_TASKS_CREATFORM_DIV2_46') : <ListView name="mountArr" methods={methods} addButtonText={t('COMMON:MSG_COMMON_BUTTON_COMMIT_8')} maxLength={_.size(volumeItems)} deleteButtonText={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_45')} headerFragment={<></>} itemRenderer={mountListItemRenderer} defaultValues={modalType === 'modify' ? _.cloneDeep(template.mountArr) : []} defaultItem={{ name: '', mountPath: '' }} />}
       </Section>
     </>
   );
