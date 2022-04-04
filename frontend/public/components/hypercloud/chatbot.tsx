@@ -7,6 +7,7 @@ const INJECTION_URL = '/assets/modules/channel-web/inject.js';
 const INJECTION_ID = 'hypercloud-console-chatbot';
 const WRAPPER_ID = `${INJECTION_ID}-wrapper`;
 const BOT_ID = 'hypercloud-console-bot';
+const CHAT_ID = 'bp-widget';
 
 let host = '';
 let intervalId: ReturnType<typeof setInterval>;
@@ -82,8 +83,14 @@ const Chatbot = () => {
     if (!chatbotLoaded) {
       return;
     }
+
+    // init chatbot
     const chatbotInitConfig: Config = { host, botId: BOT_ID };
     window.botpressWebChat.init(chatbotInitConfig, `#${WRAPPER_ID}`);
+
+    // GNB보다 z-index 높도록 설정
+    const wrapper = window.document.getElementById(CHAT_ID);
+    wrapper.style.zIndex = '301';
   }, [chatbotLoaded]);
 
   return <div id={WRAPPER_ID} />;
