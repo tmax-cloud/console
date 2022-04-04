@@ -23,8 +23,8 @@ const Chatbot = () => {
     }
 
     // 인그레스 host 조회
-    const ingressUurl = ingressUrlWithLabelSelector({ 'ingress.tmaxcloud.org/name': 'chatbot' });
-    const { items } = await coFetchJSON(ingressUurl);
+    const ingressUrl = ingressUrlWithLabelSelector({ 'ingress.tmaxcloud.org/name': 'chatbot' });
+    const { items } = await coFetchJSON(ingressUrl);
     if (items?.length > 0) {
       const hostUrl = items[0].spec?.rules?.[0]?.host;
       if (!!hostUrl) {
