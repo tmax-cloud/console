@@ -45,11 +45,19 @@ declare interface Window {
     gitlabURL: string;
     singleClusterBasePath: string;
     svcType: string;
+    chatbotEmbed: boolean;
   };
   windowError?: boolean | string;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: Function;
   store?: {}; // Redux store
   pluginStore?: {}; // Console plugin store
+  botpressWebChat: {
+    init: (config: any, targetSelector?: string) => void;
+    configure: (payload: any, chatId?: string) => void;
+    sendEvent: (payload: any, webchatId?: string) => void;
+    mergeConfig: (payload: any, chatId?: string) => void;
+    sendPayload: (payload: any, chatId?: string) => void;
+  };
 }
 
 // From https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
