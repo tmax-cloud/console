@@ -11,8 +11,6 @@ const BOT_ID = 'hypercloud-console-bot';
 let host = '';
 let intervalId: ReturnType<typeof setInterval>;
 
-window.SERVER_FLAGS.chatbotEmbed = true; // TODO: 서버 플래그 등록작업 완료되면 제거
-
 export const hideChatbot = () => window.SERVER_FLAGS.chatbotEmbed && window.botpressWebChat.sendEvent({ type: 'hide' });
 
 const Chatbot = () => {
