@@ -6,7 +6,7 @@ import i18next from 'i18next';
 
 import { ErrorBoundaryFallbackProps } from '@console/shared/src/components/error/error-boundary';
 import { CopyToClipboard, getQueryArgument, PageHeading, ExpandCollapse } from './utils';
-import * as img404 from '../imgs/hypercloud/img_404.svg';
+import * as restrictedSignImg from '../imgs/restricted-sign.svg';
 
 const getMessage = (type: string, id: string): string => {
   // User messages for error_types returned in auth.go
@@ -53,7 +53,7 @@ const ErrorComponent: React.SFC<ErrorComponentProps> = ({ title, message, errMes
     <>
       <PageHeading title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_5')} detail />
       <div className="co-m-pane__body" data-test-id="error-page">
-        <img className="co-m-pane__heading-img" src={img} />
+        {img && <img className="co-m-pane__heading-img" src={img} />}
         <h1 className="co-m-pane__heading co-m-pane__heading--center co-m-pane__heading-error-h1">{title}</h1>
         {message && <div className="text-center">{message}</div>}
         {errMessage && <div className="text-center text-muted">{errMessage}</div>}
@@ -81,19 +81,7 @@ export const ErrorPage404: React.SFC<ErrorPage404Props> = props => {
       <Helmet>
         <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_7')}</title>
       </Helmet>
-      <ErrorComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_45')} message={props.message || t('COMMON:MSG_COMMON_ERROR_MESSAGE_46')} errMessage={props.errMessage} img={img404} />
-    </div>
-  );
-};
-
-export const ErrorPageClusterPermissionDenied: React.SFC<ErrorPageClusterPermissionDeniedProps> = () => {
-  const { t } = useTranslation();
-  return (
-    <div>
-      <Helmet>
-        <title>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_5')}</title>
-      </Helmet>
-      <ErrorComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_24')} message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_44')} img={img404} />
+      <ErrorComponent title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_45')} message={props.message || t('COMMON:MSG_COMMON_ERROR_MESSAGE_46')} errMessage={props.errMessage} img={restrictedSignImg} />
     </div>
   );
 };
