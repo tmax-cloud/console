@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getAccessToken } from '@console/internal/hypercloud/auth';
 import { ingressUrlWithLabelSelector } from './utils/ingress-utils';
 import { coFetchJSON } from '@console/internal/co-fetch';
 
@@ -66,7 +65,6 @@ const Chatbot = () => {
         break;
       case 'webchatReady':
         // Triggered when the webchat is ready to accept events, like proactive triggers
-        window.botpressWebChat.sendEvent({ type: 'token_event', channel: 'web', somedata: getAccessToken() });
         break;
       default:
         break;
