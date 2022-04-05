@@ -1,5 +1,7 @@
 .co-alert {
   margin-bottom: var(--pf-global--spacer--lg);
+  margin-left: var(--pf-global--spacer--3xl);
+  margin-right: var(--pf-global--spacer--3xl);
   text-align: left;
   // overrides Bootstrap-related line-height issue that causes the title and icon to go out of alignment
   h4 {
