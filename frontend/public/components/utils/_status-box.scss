@@ -1,10 +1,11 @@
 .cos-status-box {
   padding: 20px;
+  padding-bottom: 15px;
 
   &__title {
     color: #333;
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     text-align: center;
 
     .cos-error-title {
@@ -21,6 +22,7 @@
 
   &__access-denied-icon {
     margin: 10px;
+    margin-top: 40px;
   }
 
   &__loading-message {
