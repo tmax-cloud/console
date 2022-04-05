@@ -45,7 +45,7 @@ spec:
           scheme: https
           serversTransport: kubernetes@file
     - kind: Rule
-      match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`yunhee.tmaxcloud.orgg`)
+      match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`yunhee.tmaxcloud.org`)
       priority: 100
       middlewares:
         - name: jwt-decode-auth@file
