@@ -2,9 +2,9 @@
 
 set -exuo pipefail
 
-# myIP=$(hostname -I | awk '{print $1}')
-myIP=$(ipconfig getifaddr en0)
-myIP=localhost
+myIP=$(hostname -I | awk '{print $1}')
+# myIP=$(ipconfig getifaddr en0)
+# myIP=localhost
 ## Default K8S Endpoint is public POC environment
 # k8sIP='220.90.208.100'
 # k8sIP='172.22.6.2'
@@ -35,9 +35,11 @@ id_token=$(echo $TOKEN | jq .id_token -r)
 echo $id_token
 #
 ./bin/console \
-    --servingInfo.listen=http://$myIP:9000 \
-    --servingInfo.baseAddress=http://$myIP:9000 \
+    --servingInfo.listen=https://$myIP:9000 \
+    --servingInfo.baseAddress=https://$myIP:9000 \
     --servingInfo.redirectPort=9001 \
+    --servingInfo.certFile=./tls/tls.crt \
+    --servingInfo.keyFile=./tls/tls.key \
     --app.keycloakRealm=tmax \
     --app.keycloakAuthUrl=https://hyperauth.tmaxcloud.org/auth \
     --app.keycloakClientId=hypercloud5 \
@@ -46,11 +48,11 @@ echo $id_token
     --app.customProductName="hypercloud" \
     --clusterInfo.kubeAPIServerURL=https://$k8sIP:6443 \
     --clusterInfo.kubeToken="$id_token" \
-    --public-dir=/opt/bridge/static \
-    --listen=http://0.0.0.0:31303 \
-    --base-address=http://0.0.0.0:31303 \
-    --keycloak-realm=test \
-    --keycloak-auth-url=https://test/auth \
-    --keycloak-client-id=test \
-    --mc-mode=true \
-    --custom-product-name=test \
+    # --public-dir=/opt/bridge/static \
+    # --listen=http://0.0.0.0:31303 \
+    # --base-address=http://0.0.0.0:31303 \
+    # --keycloak-realm=test \
+    # --keycloak-auth-url=https://test/auth \
+    # --keycloak-client-id=test \
+    # --mc-mode=true \
+    # --custom-product-name=test \
