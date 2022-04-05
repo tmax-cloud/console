@@ -116,6 +116,15 @@ $co-external-link-padding-right: 15px;
   font-size: $font-size-base;
 }
 
+.co-m-pane__heading-img {
+  display: flex;
+  margin: 60px auto 30px auto;
+}
+
+.co-m-pane__heading-error-h1 {
+  margin-bottom: 16px;
+}
+
 .co-inline-block {
   display: inline-block;
 }
