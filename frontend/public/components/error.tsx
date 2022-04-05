@@ -120,4 +120,3 @@ export type ErrorComponentProps = {
 
 export type ErrorPageProps = {};
 export type ErrorPage404Props = Omit<ErrorComponentProps, 'title'>;
-export type ErrorPageClusterPermissionDeniedProps = {};
