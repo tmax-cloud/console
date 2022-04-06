@@ -38,7 +38,7 @@ declare interface Window {
     statuspageID: string;
     GOARCH: string;
     GOOS: string;
-    McMode: boolean;
+    mcMode: boolean;
     showCustomPerspective: boolean;
     KeycloakAuthURL: string;
     KeycloakRealm: string;

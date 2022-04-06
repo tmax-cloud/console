@@ -32,7 +32,7 @@ export const PerspectiveLabelKeys = {
 };
 
 export const isSingleClusterPerspective = () => {
-  return window.SERVER_FLAGS.McMode && getActivePerspective() == PerspectiveType.SINGLE;
+  return window.SERVER_FLAGS.mcMode && getActivePerspective() == PerspectiveType.SINGLE;
 };
 
 export const isMasterClusterPerspective = () => {
@@ -52,7 +52,7 @@ export const getPerspectives: (t?: TFunction) => Perspective[] = (t?: TFunction)
   } else {
     isFirstTime = false;
   }
-  const perspectives: Perspective[] = window.SERVER_FLAGS.McMode
+  const perspectives: Perspective[] = window.SERVER_FLAGS.mcMode
     ? [
         {
           type: 'Perspective',

@@ -16,8 +16,8 @@ HYPERAUTH_URL='hyperauth.tmaxcloud.org'
 REALM='tmax'
 CLIENT_ID='hypercloud5'
 # GET id_token
-read -p "Enter the hyperauth admin ID : " admin_id
-read -sp "Enter the $admin_id : " admin_password
+read -p "HyperAuth Admin ID : " admin_id
+read -sp "HyperAuth Admin Password : " admin_password
 echo ""
 TOKEN=$(curl -k -s --insecure "https://$HYPERAUTH_URL/auth/realms/tmax/protocol/openid-connect/token" \
   -d grant_type=password \
@@ -43,16 +43,8 @@ echo $id_token
     --app.keycloakRealm=tmax \
     --app.keycloakAuthUrl=https://hyperauth.tmaxcloud.org/auth \
     --app.keycloakClientId=hypercloud5 \
-    --app.mcMode=false \
+    --app.mcMode=true \
     --app.publicDir=./frontend/public/dist \
     --app.customProductName="hypercloud" \
     --clusterInfo.kubeAPIServerURL=https://$k8sIP:6443 \
     --clusterInfo.kubeToken="$id_token" \
-    # --public-dir=/opt/bridge/static \
-    # --listen=http://0.0.0.0:31303 \
-    # --base-address=http://0.0.0.0:31303 \
-    # --keycloak-realm=test \
-    # --keycloak-auth-url=https://test/auth \
-    # --keycloak-client-id=test \
-    # --mc-mode=true \
-    # --custom-product-name=test \
