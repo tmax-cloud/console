@@ -34,7 +34,7 @@ fi
 id_token=$(echo $TOKEN | jq .id_token -r)
 echo $id_token
 #
-./bin/console \
+./bin/console server \
     --servingInfo.listen=https://$myIP:9000 \
     --servingInfo.baseAddress=https://$myIP:9000 \
     --servingInfo.redirectPort=9001 \
