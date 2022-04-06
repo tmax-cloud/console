@@ -1,0 +1,9 @@
+routers:
+  master@file:
+    server: https://220.90.208.100:6443
+    rule: PathPrefix(`/api/master/`)
+    path: "/api/master/"
+  poc-prometheus@file:
+    server: https://poc-prometheus-apiserver-2131168657.us-east-2.elb.amazonaws.com:6443
+    rule: PathPrefix(`/api/poc-prometheus/`)
+    path: "/api/poc-prometheus/"

@@ -161,20 +161,8 @@ github.com/form3tech-oss/jwt-go
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
 github.com/fsnotify/fsnotify
-# github.com/go-chi/chi/v5 v5.0.7
-## explicit
-github.com/go-chi/chi/v5
-github.com/go-chi/chi/v5/middleware
-# github.com/go-chi/cors v1.2.0
-## explicit
-github.com/go-chi/cors
 # github.com/go-errors/errors v1.0.1
 github.com/go-errors/errors
-# github.com/go-kit/log v0.2.0
-## explicit
-github.com/go-kit/log
-# github.com/go-logfmt/logfmt v0.5.1
-github.com/go-logfmt/logfmt
 # github.com/go-logr/logr v0.4.0
 github.com/go-logr/logr
 # github.com/go-openapi/jsonpointer v0.19.3
@@ -343,7 +331,6 @@ github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/prometheus/client_golang v1.7.1
-## explicit
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
@@ -380,7 +367,6 @@ github.com/spf13/cobra
 ## explicit
 github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.5
-## explicit
 github.com/spf13/pflag
 # github.com/spf13/viper v1.7.1
 ## explicit
