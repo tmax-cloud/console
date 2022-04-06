@@ -37,8 +37,12 @@ func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-	r.Get(s.App.BasePath, s.App.indexHandler)
-	r.Get(s.App.BasePath+"dashboards", s.App.indexHandler)
+	r.Mount(s.App.BasePath, http.HandlerFunc(s.App.indexHandler))
+	//r.Use(middleware.PageRoute("/*",s.App.indexHandler))
+	//r.Get(s.App.BasePath, s.App.indexHandler)
+
+	r.Get("/api/", http.NotFound)
+	//r.NotFound(s.App.redirectHandler)?
 
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/static"), http.Dir(s.App.PublicDir))
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/api/resource"), http.Dir("./api"))
