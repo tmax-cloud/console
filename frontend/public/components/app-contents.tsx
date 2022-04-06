@@ -10,6 +10,7 @@ import { SearchPage } from './hypercloud/search';
 import { ResourceDetailsPage, ResourceListPage } from './resource-list';
 import { AsyncComponent, LoadingBox } from './utils';
 import { namespacedPrefixes } from './utils/link';
+import { MultiClusterRedirect } from './utils/hypercloud/multi-cluster-redirect';
 import { AlertmanagerModel } from '../models';
 import { referenceForModel } from '../module/k8s';
 import * as plugins from '../plugins';
@@ -250,6 +251,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <Route path="/k8s/cluster/:plural" exact component={ResourceListPage} />
           <Route path="/k8s/cluster/:plural/:name" component={ResourceDetailsPage} />
           <LazyRoute path="/k8s/ns/:ns/pods/:podName/containers/:name" loader={() => import('./container').then(m => m.ContainersDetailsPage)} />
+          <Route path="/k8s/ns/:ns/clustermanagers/:clusterName/access/accept" exact component={MultiClusterRedirect} />
           <Route path="/k8s/ns/:ns/:plural/:name" component={ResourceDetailsPage} />
           <Route path="/k8s/ns/:ns/:plural" exact component={ResourceListPage} />
           <Route path="/k8s/all-namespaces/:plural" exact component={ResourceListPage} />

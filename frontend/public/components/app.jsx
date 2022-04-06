@@ -32,6 +32,7 @@ import { setAccessToken, setIdToken, setId, resetLoginState } from '../hyperclou
 import { initializationForMenu } from '@console/internal/components/hypercloud/utils/menu-utils';
 import { setUrlFromIngresses } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { isMasterClusterPerspective } from '@console/internal/hypercloud/perspectives';
+import Chatbot from './hypercloud/chatbot';
 
 const breakpointMD = 768;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
@@ -143,6 +144,7 @@ class App extends React.PureComponent {
         </Page>
         <CloudShell />
         <ConsoleNotifier location="BannerBottom" />
+        {window.SERVER_FLAGS.chatbotEmbed && <Chatbot />}
       </>
     );
   }
