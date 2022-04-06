@@ -16,7 +16,7 @@ type Server struct {
 	router chi.Router
 }
 
-func NewServer(app *App, k8sHandler *K8sHandler,) *Server {
+func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 	s := &Server{
 		App:        app,
 		K8sHandler: k8sHandler,
@@ -30,25 +30,25 @@ func NewServer(app *App, k8sHandler *K8sHandler,) *Server {
 	r.Use(middleware.Logger)
 	// Basic CORS // for more ideas, see: https://developer.github.com/v3/#cross-origin-resource-sharing
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"https://*", "http://*"},
+		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-
 	r.Get(s.App.BasePath, s.App.indexHandler)
+	r.Get(s.App.BasePath+"dashboards", s.App.indexHandler)
 
-	fileServer(r, singleJoiningSlash(s.App.BasePath,"/static"),http.Dir(s.App.PublicDir))
-	fileServer(r, singleJoiningSlash(s.App.BasePath,"/api/resource"),http.Dir("./api"))
+	fileServer(r, singleJoiningSlash(s.App.BasePath, "/static"), http.Dir(s.App.PublicDir))
+	fileServer(r, singleJoiningSlash(s.App.BasePath, "/api/resource"), http.Dir("./api"))
 
 	consoleProxyPath := singleJoiningSlash(s.App.BasePath, "/api/console")
 	r.Route(consoleProxyPath, func(r chi.Router) {
-		r.Method("GET","/apis/networking.k8s.io/*",
-			http.StripPrefix(consoleProxyPath,http.HandlerFunc(s.ConsoleProxyHandler)))
-		r.Method("GET","/api/v1/*",
-			http.StripPrefix(consoleProxyPath,http.HandlerFunc(s.ConsoleProxyHandler)))
+		r.Method("GET", "/apis/networking.k8s.io/*",
+			http.StripPrefix(consoleProxyPath, http.HandlerFunc(s.ConsoleProxyHandler)))
+		r.Method("GET", "/api/v1/*",
+			http.StripPrefix(consoleProxyPath, http.HandlerFunc(s.ConsoleProxyHandler)))
 	})
 
 	//proxyK8SPath := singleJoiningSlash(s.App.BasePath, "/api/kubernetes")
@@ -65,7 +65,7 @@ func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
-func fileServer(r chi.Router, path string, root http.FileSystem){
+func fileServer(r chi.Router, path string, root http.FileSystem) {
 	if strings.ContainsAny(path, "{}*") {
 		panic("FileServer does not permit any URL parameters.")
 	}
@@ -83,4 +83,3 @@ func fileServer(r chi.Router, path string, root http.FileSystem){
 		fs.ServeHTTP(w, r)
 	})
 }
-
