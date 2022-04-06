@@ -6,11 +6,6 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	kitlog "github.com/go-kit/log"
-	oscrypto "github.com/openshift/library-go/pkg/crypto"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 	"net/http"
 	"net/url"
 	"os"
@@ -18,6 +13,12 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	kitlog "github.com/go-kit/log"
+	oscrypto "github.com/openshift/library-go/pkg/crypto"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -87,7 +88,7 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 				token, _  = fs.GetString("clusterInfo.kubeToken")
 			)
 			k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
-			fmt.Printf("%v \n",app)
+			fmt.Printf("%v \n", app)
 
 			var logger kitlog.Logger
 			logger = kitlog.NewLogfmtLogger(kitlog.NewSyncWriter(os.Stderr))
@@ -199,16 +200,15 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 	}
 )
 
-
 func init() {
 	rootCmd.AddCommand(serverCmd)
 
 }
 
 var serverCmd = &cobra.Command{
-	Use: "server",
+	Use:   "server",
 	Short: "consider of backwardcompatability",
-	Run: func(cmd *cobra.Command, args []string){
+	Run: func(cmd *cobra.Command, args []string) {
 		fs := cmd.Flags()
 
 		// backward compatibility
@@ -242,7 +242,7 @@ var serverCmd = &cobra.Command{
 			token, _  = fs.GetString("clusterInfo.kubeToken")
 		)
 		k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
-		fmt.Printf("%v \n",app)
+		fmt.Printf("%v \n", app)
 
 		var logger kitlog.Logger
 		logger = kitlog.NewLogfmtLogger(kitlog.NewSyncWriter(os.Stderr))
@@ -370,7 +370,7 @@ func NewConsoleCommand() *cobra.Command {
 
 	rootCmd.PersistentFlags().StringVar(&app.BasePath, "app.basePath", "/", "basePath")
 	rootCmd.PersistentFlags().StringVar(&app.PublicDir, "app.publicDir", "./frontend/public/dist", "listen Address")
-	rootCmd.PersistentFlags().BoolVar(&app.McMode, "app.mcMode", true, "Choose Cluster Mode (multi | single)")
+	rootCmd.PersistentFlags().BoolVar(&app.McMode, "app.mcMode", false, "Choose Cluster Mode (multi | single)")
 	rootCmd.PersistentFlags().BoolVar(&app.ReleaseMode, "app.releaseMode", true, "when true, use jwt token given by keycloak")
 	rootCmd.PersistentFlags().StringVar(&app.CustomProductName, "app.customProductName", "hypercloud", "prduct name for console | default hypercloud")
 
