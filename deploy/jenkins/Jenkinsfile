@@ -1,9 +1,40 @@
 pipeline {
+  agent {
+    kubernetes {
+      cloud 'team-k8s'
+      // yamlFile './KubernetesPod.yaml'
+      yaml '''
+        apiVersion: v1
+        kind: Pod      
+        metadata:
+          name: jenkins-slave
+          namespace: jenkins-slave
+          labels:
+            class: KubernetesDeclarativeAgentTest
+        spec:
+          imagePullSecretes:
+          - name: regcred
+          containers:
+          - name: docker 
+            image: docker:20.10.12
+            command: 
+            - cat 
+            tty: true
+            volumeMounts: 
+            - mountPath: /var/run/docker.sock
+              name: docker-volume
+          volumes:
+          - name: docker-volume 
+            hostPath: 
+              path: /var/run/docker.sock 
+              type: ""  
+        '''.stripIndent()      
+    }
+  }  
   parameters {
     choice(name: 'BUILD_MODE', choices:['PATCH','HOTFIX','IMAGE'], description: 'Select the mode you want to act')
-    choice(name: 'DEPLOY', choices:['team-k8s', 'ck-k8s', 'keycloak'], description: 'Select k8s env you want to deploy the console')
-
-    string(name: 'KEYCLOAK', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
+  
+    string(name: 'HYPERAUTH', defaultValue: 'hyperauth.org', description: 'hyperauth url for login')
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
     string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
     string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')    
@@ -14,22 +45,19 @@ pipeline {
     parameterizedCron('''
     0 9 * * 4 %BUILD_MODE=PATCH
     ''')
-    
   }
   environment { 
-    BRANCH = "hc-release-v21"
+    BRANCH = "hc-dev-v5.1"
     BUILD_MODE = "${params.BUILD_MODE}"
-    DEPLOY = "${params.DEPLOY}"
-
+  
     DOCKER_REGISTRY="tmaxcloudck"
     PRODUCT = "hypercloud-console"
-    MAJOR_VER="v21"
+    MAJOR_VER="5"
     MINOR_VER="0"
     PATCH_VER="0"
     HOTFIX_VER="0"
     VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
 
-    // OPERATOR_VER = "5.1.0.1" // fixed at 5.1.0.1
     KEYCLOAK = "${params.KEYCLOAK}"
     REALM = "${params.REALM}"
     CLIENTID = "${params.CLIENTID}"
@@ -40,71 +68,30 @@ pipeline {
     USER_TOKEN = "jinsoo-access-token"
     USER_NAME = "jinsoo-youn"
     USER_EMAIL = "jinsoo_youn@tmax.co.kr"
-
   }
-  agent {
-    kubernetes {
-      cloud 'team-k8s'
-      // yamlFile './KubernetesPod.yaml'
-      yaml '''\
-        apiVersion: v1
-        kind: Pod      
-        metadata:
-          labels:
-            some-label: some-label-value
-            class: KubernetesDeclarativeAgentTest
-        spec:
-          containers:
-          - name: docker 
-            image: docker 
-            command: 
-            - cat 
-            tty: true
-            volumeMounts: 
-            - mountPath: /var/run/docker.sock
-              name: docker-volume
-          - name: kubectl
-            image: lachlanevenson/k8s-kubectl:v1.19.1
-            command:
-            - sh
-            tty: true
-          volumes:
-          - name: docker-volume 
-            hostPath: 
-              path: /var/run/docker.sock 
-              type: ""  
-        '''.stripIndent()      
-    }
-  }
-
   stages {
-
     // When using SCM, the checkout stage can be completely omitted 
     stage('Git') {
       steps {
         git branch: "${BRANCH}", credentialsId: "${USER_NAME}", url: 'https://github.com/tmax-cloud/console.git'
         sh """
         git branch
-        git pull origin HEAD:${BRANCH}
+        git pull origin ${BRANCH}:${BRANCH}
         """
          script {
             PATCH_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=3', returnStdout: true).trim()
             HOTFIX_VER = sh(script: 'cat ./CHANGELOG/tag.txt | head -2 | tail -1 | cut --delimiter="." --fields=4', returnStdout: true).trim()
           if (BUILD_MODE == 'PATCH') {
-            //   (("${params.PATCH_VER}" as int) -1).toString()
             def number = (PATCH_VER as int) + 1
             PATCH_VER = number.toString()
-            // PATCH_VER++
             HOTFIX_VER = "0"
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
             def hotfix_number = (HOTFIX_VER as int) + 1
             HOTFIX_VER = hotfix_number.toString()
-            // HOTFIX_VER++
             VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
-        // withCredentials([string(credentialsId: "${USER_NAME}", Variable: 'TOKEN')]) {      
           sh """
             git config --global user.name ${USER_NAME}
             git config --global user.email ${USER_EMAIL}
@@ -112,9 +99,8 @@ pipeline {
           sh """
           git tag ${VER}
           echo "Console Version History" > ./CHANGELOG/tag.txt
-          git tag --list "v21.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
+          git tag --list "5.0.*" --sort=-version:refname >> ./CHANGELOG/tag.txt
           """
-        // }
       }
     }
 
@@ -133,24 +119,6 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
-      when {
-        anyOf {
-          environment name: 'BUILD_MODE', value: 'PATCH'
-          environment name: 'BUILD_MODE', value: 'HOTFIX'
-        }
-      }
-      steps {
-        container('kubectl') {
-          withKubeConfig([credentialsId: "${DEPLOY}"]) {
-          //   sh "export VER=${VER}"
-          sh "echo ${VER}"
-          sh "./install.sh ${VER}"
-          }
-        }
-      }
-    }
-        
     stage('Changelog'){
       when {
         anyOf {
@@ -161,26 +129,20 @@ pipeline {
       steps {
         script {
           if (BUILD_MODE == 'PATCH') {
-            // TEMP = (("${params.PATCH_VER}" as int) -1).toString()
             def number = (PATCH_VER as int) -1
             PATCH_VER = number.toString()
-            // PATCH_VER--
             HOTFIX_VER = "0"
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           } else if (BUILD_MODE == 'HOTFIX') {
-            // TEMP = (("${params.HOTFIX_VER}" as int) -1).toString()
             def hotfix_number = (HOTFIX_VER as int) - 1
             HOTFIX_VER = hotfix_number.toString()
-            // HOTFIX_VER--
             PRE_VER = "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}.${HOTFIX_VER}"
           }
         }
-        // withCredentials([string(credentialsId: "${USER_TOKEN}", Variable: 'TOKEN')]) {      
           sh """
             git config --global user.name ${USER_NAME}
             git config --global user.email ${USER_EMAIL}
           """ 
-          // Creat CHANGELOG-${VER}.md
           sh """
             echo '# hypercloud-console patch note' > ./CHANGELOG/CHANGELOG-${VER}.md
             echo '## hypercloud-console_[major].[minor].[patch].[hotfix]' >> ./CHANGELOG/CHANGELOG-${VER}.md
@@ -190,6 +152,12 @@ pipeline {
             --pretty=format:\"- %s (%cn) %n    Message: %b\" \
             --simplify-merges ${PRE_VER}..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
+          """
+          sh """ 
+            cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml 
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_ck.yaml                       
+            cp -r ./console-helm-chart/values_team_temp.yaml ./console-helm-chart/values_team.yaml 
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_team.yaml                         
           """
         // }
       }

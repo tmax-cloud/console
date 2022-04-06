@@ -199,6 +199,160 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 	}
 )
 
+
+func init() {
+	rootCmd.AddCommand(serverCmd)
+
+}
+
+var serverCmd = &cobra.Command{
+	Use: "server",
+	Short: "consider of backwardcompatability",
+	Run: func(cmd *cobra.Command, args []string){
+		fs := cmd.Flags()
+
+		// backward compatibility
+		if fBaseAddress, _ := fs.GetString("base-address"); fBaseAddress != "" {
+			servingInfo.BaseAddress = fBaseAddress
+		}
+		if fListen, _ := fs.GetString("listen"); fListen != "" {
+			servingInfo.Listen = fListen
+		}
+		if fKeycloakRealm, _ := fs.GetString("keycloak-realm"); fKeycloakRealm != "" {
+			app.KeycloakRealm = fKeycloakRealm
+		}
+		if fKeycloakAuthURL, _ := fs.GetString("keycloak-auth-url"); fKeycloakAuthURL != "" {
+			app.KeycloakAuthURL = fKeycloakAuthURL
+		}
+		if fKeycloakClientId, _ := fs.GetString("keycloak-client-id"); fKeycloakClientId != "" {
+			app.KeycloakClientId = fKeycloakClientId
+		}
+		if fPublicDir, _ := fs.GetString("public-dir"); fPublicDir != "" {
+			app.PublicDir = fPublicDir
+		}
+		if fMcMode, _ := fs.GetBool("mc-mode"); fMcMode == true {
+			app.McMode = fMcMode
+		}
+		if fCustomProductName, _ := fs.GetString("custom-product-name"); fCustomProductName != "" {
+			app.CustomProductName = fCustomProductName
+		}
+
+		var (
+			k8sApi, _ = fs.GetString("clusterInfo.kubeAPIServerURL")
+			token, _  = fs.GetString("clusterInfo.kubeToken")
+		)
+		k8sHandler := server.NewK8sHandlerConfig(k8sApi, token)
+		fmt.Printf("%v \n",app)
+
+		var logger kitlog.Logger
+		logger = kitlog.NewLogfmtLogger(kitlog.NewSyncWriter(os.Stderr))
+		logger = kitlog.With(logger, "ts", kitlog.DefaultTimestampUTC)
+
+		app.AddLogger(kitlog.With(logger, "component", "App"))
+		k8sHandler.AddLogger(kitlog.With(logger, "component", "k8sHandler"))
+
+		httpHandler := server.NewServer(app, k8sHandler)
+
+		listenURL := console.ValidateFlagIsURL("listen", servingInfo.Listen)
+		baseURL := console.ValidateFlagIsURL("baseAddress", servingInfo.BaseAddress)
+		switch listenURL.Scheme {
+		case "http":
+		case "https":
+			console.ValidateFlagNotEmpty("tls-cert-file", servingInfo.CertFile)
+			console.ValidateFlagNotEmpty("tls-key-file", servingInfo.KeyFile)
+		default:
+			console.FlagFatalf("listen", "scheme must be one of: http, https")
+		}
+		httpsrv := &http.Server{
+			Addr:    listenURL.Host,
+			Handler: httpHandler,
+			// Disable HTTP/2, which breaks WebSockets.
+			TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
+			TLSConfig:    oscrypto.SecureTLSConfig(&tls.Config{}),
+		}
+		//Run the server
+		go func() {
+			if listenURL.Scheme == "https" {
+				err := httpsrv.ListenAndServeTLS(servingInfo.CertFile, servingInfo.KeyFile)
+				if err != nil && err != http.ErrServerClosed {
+					logger.Log("Error", err)
+					os.Exit(1)
+				}
+			} else {
+				err := httpsrv.ListenAndServe()
+				if err != nil && err != http.ErrServerClosed {
+					logger.Log("Error", err)
+					os.Exit(1)
+				}
+			}
+		}()
+
+		redirectServer := &http.Server{}
+		if servingInfo.RedirectPort != 0 {
+			mux := http.NewServeMux()
+			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				redirectURL := &url.URL{
+					Scheme:   baseURL.Scheme,
+					Host:     baseURL.Host,
+					RawQuery: r.URL.RawQuery,
+					Path:     r.URL.Path,
+				}
+				http.Redirect(w, r, redirectURL.String(), http.StatusMovedPermanently)
+			})
+			redirectPort := fmt.Sprintf(":%d", servingInfo.RedirectPort)
+			redirectServer = &http.Server{
+				Addr:    redirectPort,
+				Handler: mux,
+			}
+			go func() {
+				err := redirectServer.ListenAndServe()
+				if err != nil && err != http.ErrServerClosed {
+					logger.Log("Error", err)
+					os.Exit(1)
+				}
+			}()
+		}
+
+		serverCtx, serverStopCtx := context.WithCancel(context.Background())
+		sig := make(chan os.Signal, 1)
+		signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+		go func() {
+			<-sig
+
+			logger.Log("msg", "Shutdown signal received")
+			// Shutdown signal with grace period of 30 seconds
+			shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
+
+			go func() {
+				<-shutdownCtx.Done()
+				if shutdownCtx.Err() == context.DeadlineExceeded {
+					logger.Log("Error", "graceful shutdown timed out.. forcing exit.")
+					os.Exit(1)
+				}
+			}()
+
+			// Trigger graceful shutdown
+			logger.Log("msg", "graceful Shutdown httpsrv")
+			err := httpsrv.Shutdown(shutdownCtx)
+			if err != nil {
+				logger.Log("Error", err)
+				os.Exit(1)
+			}
+			logger.Log("msg", "graceful Shutdown redirectServer")
+			if servingInfo.RedirectPort != 0 {
+				err := redirectServer.Shutdown(shutdownCtx)
+				if err != nil {
+					logger.Log("Error", err)
+					os.Exit(1)
+				}
+			}
+			serverStopCtx()
+		}()
+
+		<-serverCtx.Done()
+	},
+}
+
 func NewConsoleCommand() *cobra.Command {
 	rootCmd.PersistentFlags().StringVar(&servingInfo.Listen, "servingInfo.listen", "http://0.0.0.0:9000", "listen Address")
 	rootCmd.PersistentFlags().StringVar(&servingInfo.BaseAddress, "servingInfo.baseAddress", "http://0.0.0.0:9000", "Format: <http | https>://domainOrIPAddress[:port]. Example: https://console.hypercloud.com.")
