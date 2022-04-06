@@ -117,13 +117,12 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
           <Dropdown
             name={`${name}[${index}].envType`}
             className="btn-group"
-            title={t('SINGLE:MSG_PODSECURITYPOLICIES_CREATEFORM_DIV2_21')} // 드롭다운 title 지정
             methods={methods}
             items={{ normal: t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_4'), secret: t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_2'), configMap: t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_3') }} // (필수)
             style={{ display: 'block', marginLeft: '5px', right: 0, position: 'absolute' }}
             buttonClassName="dropdown-btn col-md-12" // 선택된 아이템 보여주는 button (title) 부분 className
             itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-            defaultValue={item.envType || ''}
+            defaultValue={item.envType || 'normal'}
             callback={selectItem => {
               const { envValue, envKey, resourceKey } = methods.getValues().env[index];
               setEnv(
