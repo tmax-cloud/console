@@ -1,16 +1,15 @@
-FROM golang:1.16 AS golang
+FROM quay.io/coreos/tectonic-console-builder:v23 AS build
+
+ARG BUILD_ID
+LABEL stage=builder
+LABEL build=$BUILD_ID
 RUN mkdir -p /go/src/github.com/openshift/console/
 ADD . /go/src/github.com/openshift/console/
 WORKDIR /go/src/github.com/openshift/console/
-RUN ./build-backend.sh
-
-FROM quay.io/coreos/tectonic-console-builder:v22 AS build
-RUN mkdir -p /go/src/github.com/openshift/console/
-COPY --from=golang /go/src/github.com/openshift/console/ /go/src/github.com/openshift/console/
-WORKDIR /go/src/github.com/openshift/console/
-RUN ./build-frontend.sh
+RUN ./build.sh
 
 FROM openshift/origin-base
+
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
 COPY --from=build /go/src/github.com/openshift/console/bin/console /opt/bridge/bin/console
 RUN mkdir -p /opt/bridge/api/
@@ -25,6 +24,6 @@ LABEL io.k8s.display-name="Hypercloud Console" \
       maintainer="Jinsoo Youn <jinsoo_youn@tmax.co.kr>"
 
 # doesn't require a root user.
-# USER 1001:1001
+USER 1001:1001
 
-CMD [ "/opt/bridge/bin/console", "gateway --public-dir=/opt/bridge/static" ]
+CMD [ "/opt/bridge/bin/console", "--public-dir=/opt/bridge/static" ]
