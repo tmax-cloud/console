@@ -22,6 +22,7 @@ import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
 import { setLanguage } from './hypercloud/utils/langs/i18n';
+import { hideChatbot } from './hypercloud/chatbot';
 
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (
@@ -366,11 +367,13 @@ class MastheadToolbarContents_ extends React.Component {
       e.preventDefault();
       i18n.changeLanguage('en');
       setLanguage('en');
+      hideChatbot();
     };
     const koChange = e => {
       e.preventDefault();
       i18n.changeLanguage('ko');
       setLanguage('ko');
+      hideChatbot();
     };
 
     i18nActions.push({
