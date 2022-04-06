@@ -5,20 +5,18 @@ import { CaretDownIcon } from '@patternfly/react-icons';
 import { Perspective } from '@console/plugin-sdk';
 import { getPerspectives, PerspectiveType } from '../../hypercloud/perspectives';
 import { RootState } from '../../redux';
-import { featureReducerName, getFlagsObject, FlagsObject } from '../../reducers/features';
+import { featureReducerName } from '../../reducers/features';
 import { getActivePerspective } from '../../reducers/ui';
 import * as UIActions from '../../actions/ui';
 import { history } from '../utils';
 import ClusterDropdown from '../hypercloud/nav/cluster-dropdown';
 import { useTranslation } from 'react-i18next';
 import { coFetchJSON } from '../../co-fetch';
-import {getId, getUserGroup} from '../../hypercloud/auth'
-
+import { getId, getUserGroup } from '../../hypercloud/auth';
 
 type StateProps = {
   activePerspective: string;
   setActivePerspective?: (id: string) => void;
-  flags: FlagsObject;
 };
 
 export type NavHeaderProps = {
@@ -26,17 +24,15 @@ export type NavHeaderProps = {
   onClusterSelected: () => void;
 };
 
-const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspective, onPerspectiveSelected, activePerspective, onClusterSelected, flags }) => {
+const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspective, onPerspectiveSelected, activePerspective, onClusterSelected }) => {
   const [isPerspectiveDropdownOpen, setPerspectiveDropdownOpen] = React.useState(false);
-  const [isClusterExist, setIsClusterExist] = React.useState(false)
+  const [isClusterExist, setIsClusterExist] = React.useState(false);
 
   React.useEffect(() => {
     if (isPerspectiveDropdownOpen) {
-    coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET')
-   .then(res => !res.items?.length ? setIsClusterExist(false) :  setIsClusterExist(true))
-  }
-    
-  },[isPerspectiveDropdownOpen]);
+      coFetchJSON(`${location.origin}/api/multi-hypercloud/clustermanagers/access?userId=${getId()}${getUserGroup()}`, 'GET').then(res => (!res.items?.length ? setIsClusterExist(false) : setIsClusterExist(true)));
+    }
+  }, [isPerspectiveDropdownOpen]);
 
   const togglePerspectiveOpen = React.useCallback(() => {
     setPerspectiveDropdownOpen(!isPerspectiveDropdownOpen);
@@ -47,13 +43,13 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
       event.preventDefault();
       if (perspective.properties.id !== activePerspective) {
         setActivePerspective(perspective.properties.id);
-        history.push(perspective.properties.getLandingPageURL(flags));
+        history.push('/'); // 루트로 이동하고 Default 페이지에서 리다이렉트 되도록 함
       }
 
       setPerspectiveDropdownOpen(false);
       onPerspectiveSelected && onPerspectiveSelected();
     },
-    [activePerspective, flags, onPerspectiveSelected, setActivePerspective],
+    [activePerspective, onPerspectiveSelected, setActivePerspective],
   );
 
   const renderToggle = React.useCallback(
@@ -70,30 +66,29 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
 
   const getPerspectiveItems = React.useCallback(
     (perspectives: Perspective[]) => {
-      const {t} = useTranslation();
+      const { t } = useTranslation();
 
-      return perspectives.map((nextPerspective: Perspective) => (
-        isClusterExist===false && nextPerspective.properties.id=="SINGLE" ? 
-        <Tooltip key={nextPerspective.properties.id} position ="top" content ={t('COMMON:MSG_LNB_CONSOLE_1')} >
-        <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} component="button" isDisabled ={true}>
-          <Title size="md">
-            <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
-            {nextPerspective.properties.name}
-          </Title>
-        </DropdownItem>
-        </Tooltip>
-        :
-        <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} isHovered={nextPerspective.properties.id === activePerspective} component="button">
-        <Title size="md">
-          <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
-          {nextPerspective.properties.name}
-        </Title>
-      </DropdownItem>
-      
-      
-      ));
+      return perspectives.map((nextPerspective: Perspective) =>
+        isClusterExist === false && nextPerspective.properties.id == 'SINGLE' ? (
+          <Tooltip key={nextPerspective.properties.id} position="top" content={t('COMMON:MSG_LNB_CONSOLE_1')}>
+            <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} component="button" isDisabled={true}>
+              <Title size="md">
+                <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
+                {nextPerspective.properties.name}
+              </Title>
+            </DropdownItem>
+          </Tooltip>
+        ) : (
+          <DropdownItem key={nextPerspective.properties.id} onClick={(event: React.MouseEvent<HTMLLinkElement>) => onPerspectiveSelect(event, nextPerspective)} isHovered={nextPerspective.properties.id === activePerspective} component="button">
+            <Title size="md">
+              <span className="oc-nav-header__icon">{nextPerspective.properties.icon}</span>
+              {nextPerspective.properties.name}
+            </Title>
+          </DropdownItem>
+        ),
+      );
     },
-    [activePerspective, onPerspectiveSelect,isClusterExist],
+    [activePerspective, onPerspectiveSelect, isClusterExist],
   );
 
   const { t } = useTranslation();
@@ -118,7 +113,6 @@ const NavHeader_: React.FC<NavHeaderProps & StateProps> = ({ setActivePerspectiv
 
 const mapStateToProps = (state: RootState): StateProps => ({
   activePerspective: getActivePerspective(state),
-  flags: getFlagsObject(state),
 });
 
 export default connect<StateProps, {}, NavHeaderProps, RootState>(mapStateToProps, { setActivePerspective: UIActions.setActivePerspective }, null, {
