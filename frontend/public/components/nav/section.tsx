@@ -74,8 +74,10 @@ export const NavSection = connect(navSectionStateToProps)(
           return stripBasePath(location).startsWith(this.props.activePath);
         }
 
-        const resourcePath = location ? stripNS(location) : '';
-
+        let resourcePath = location ? stripNS(location) : '';
+        if (resourcePath.includes('rolebindingclaims')) {
+          resourcePath = 'rolebindings';
+        }
         //current bug? - we should be checking if children is a single item or .filter is undefined
         return (children as any[])
           .filter(c => {
