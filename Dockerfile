@@ -6,7 +6,8 @@ LABEL build=$BUILD_ID
 RUN mkdir -p /go/src/github.com/openshift/console/
 ADD . /go/src/github.com/openshift/console/
 WORKDIR /go/src/github.com/openshift/console/
-RUN ./build.sh
+RUN ./scripts/build-backend.sh
+RUN ./scripts/build-frontend.sh
 
 FROM openshift/origin-base
 
