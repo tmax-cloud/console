@@ -9,9 +9,9 @@ import { getId, getUserGroup } from '../../hypercloud/auth';
 import { resourceSchemaBasedMenuMap } from '../../components/hypercloud/form'
 
 
-export const getDynamicProxyPath = (cluster) => {
+const getDynamicProxyPath = cluster => {
   if (isSingleClusterPerspective()) {
-    return getSingleClusterFullBasePath();
+    return `${getSingleClusterFullBasePath()}/api/kubernetes`;
   } else if (cluster) {
     return `${window.SERVER_FLAGS.basePath}api/${cluster}`;
   } else {
@@ -20,8 +20,7 @@ export const getDynamicProxyPath = (cluster) => {
 };
 
 /** @type {(model: K8sKind, cluster?: string, basePath?: string) => string} */
-export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster, basePath)
-=> {
+export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster, basePath) => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
 
   let p = basePath || getDynamicProxyPath(cluster);
@@ -41,8 +40,7 @@ export const getK8sAPIPath = ({ apiGroup = 'core', apiVersion}, cluster, basePat
 };
 
 /** @type {(model: K8sKind) => string} */
-const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster)
-=> {
+const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster) => {
   const isLegacy = apiGroup === 'core' && apiVersion === 'v1';
   let p = multiClusterBasePath;
 
@@ -139,7 +137,7 @@ const resourceNamespaceURL = (model) => {
   if (isSingleClusterPerspective()) {
     // MEMO : 싱글클러스터의 경우 네임스페이스 조회콜은 kubernetes 콜로 보냄
     const plural = isNamespace(model) ? 'namespaces' : 'namespaceclaims';
-    return `${getSingleClusterFullBasePath()}/api/v1/${plural}`;
+    return `${getSingleClusterFullBasePath()}/api/kubernetes/api/v1/${plural}`;
   } else {
     const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
     return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
