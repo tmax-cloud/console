@@ -5,7 +5,7 @@ LABEL stage=builder
 LABEL build=$BUILD_ID
 RUN mkdir -p /go/src/github.com/openshift/console/
 ADD . /go/src/github.com/openshift/console/
-WORKDIR /go/src/github.com/openshift/console/
+WORKDIR /go/src/github.com/openshift/console/scripts
 RUN ./build.sh
 
 FROM openshift/origin-base
