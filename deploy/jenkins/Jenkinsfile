@@ -142,24 +142,26 @@ pipeline {
           sh """
             git config --global user.name ${USER_NAME}
             git config --global user.email ${USER_EMAIL}
-          """ 
+          """
           sh """
             echo '# hypercloud-console patch note' > ./CHANGELOG/CHANGELOG-${VER}.md
             echo '## hypercloud-console_[major].[minor].[patch].[hotfix]' >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo 'Version: ${PRODUCT}_${VER}' >> ./CHANGELOG/CHANGELOG-${VER}.md
-            date '+%F  %r' >> ./CHANGELOG/CHANGELOG-${VER}.md
+            TZ=Asia/Seoul date '+%F  %r' >> ./CHANGELOG/CHANGELOG-${VER}.md
             git log --grep=[patch] -F --all-match --no-merges --date-order --reverse \
-            --pretty=format:\"- %s (%cn) %n    Message: %b\" \
+            --date=format:'%Y-%m-%d' \
+            --pretty=format:'- %s (%ad %cn) %n    Note: %b' \
             --simplify-merges ${PRE_VER}..${VER} \
             >> ./CHANGELOG/CHANGELOG-${VER}.md
+            sed -i '/Note: \r/d' ./CHANGELOG/CHANGELOG-${VER}.md
+            sed -i 's/\[patch\]//g' ./CHANGELOG/CHANGELOG-${VER}.md
           """
-          sh """ 
-            cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml 
-            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_ck.yaml                       
-            cp -r ./console-helm-chart/values_team_temp.yaml ./console-helm-chart/values_team.yaml 
-            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_team.yaml                         
+          sh """
+            cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_ck.yaml
+            cp -r ./console-helm-chart/values_team_temp.yaml ./console-helm-chart/values_team.yaml
+            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_team.yaml
           """
-        // }
       }
     }
 
@@ -175,7 +177,7 @@ pipeline {
           sh """
             git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH} --tags
             git add -A
-            git commit -m '[FEAT] ADD the console version ${PRODUCT}_${VER} on tag.txt'
+            git commit -m '[FEAT] Added changelog and updated history'
             git push https://${GITHUB_ACCESS_TOKEN}@github.com/tmax-cloud/console.git HEAD:${BRANCH}
           """        
         }
