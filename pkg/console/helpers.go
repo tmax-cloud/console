@@ -165,6 +165,7 @@ func createConsole(config *v1.Config) (*Console, error) {
 		// CustomProductName: config.CustomProductName,
 		// CustomLogoFile:    config.CustomLogoFile,
 		McMode:            config.McMode,
+		ChatbotEmbed:      config.ChatbotEmbed,
 		ReleaseModeFlag:   config.ReleaseMode,
 		GitlabURL:         config.GitlabURL,
 		CustomProductName: config.CustomProductName,

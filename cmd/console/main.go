@@ -79,6 +79,9 @@ Finally, we provide a proxy function for querying the kubernetes resource API`,
 			if fMcMode, _ := fs.GetBool("mc-mode"); fMcMode == true {
 				app.McMode = fMcMode
 			}
+			if fChatbotEmbed, _ := fs.GetBool("mc-mode"); fChatbotEmbed == true {
+				app.ChatbotEmbed = fChatbotEmbed
+			}
 			if fCustomProductName, _ := fs.GetString("custom-product-name"); fCustomProductName != "" {
 				app.CustomProductName = fCustomProductName
 			}
@@ -233,6 +236,9 @@ var serverCmd = &cobra.Command{
 		if fMcMode, _ := fs.GetBool("mc-mode"); fMcMode == true {
 			app.McMode = fMcMode
 		}
+		if fChatbotEmbed, _ := fs.GetBool("mc-mode"); fChatbotEmbed == true {
+			app.ChatbotEmbed = fChatbotEmbed
+		}
 		if fCustomProductName, _ := fs.GetString("custom-product-name"); fCustomProductName != "" {
 			app.CustomProductName = fCustomProductName
 		}
@@ -371,6 +377,7 @@ func NewConsoleCommand() *cobra.Command {
 	rootCmd.PersistentFlags().StringVar(&app.BasePath, "app.basePath", "/", "basePath")
 	rootCmd.PersistentFlags().StringVar(&app.PublicDir, "app.publicDir", "./frontend/public/dist", "listen Address")
 	rootCmd.PersistentFlags().BoolVar(&app.McMode, "app.mcMode", false, "Choose Cluster Mode (multi | single)")
+	rootCmd.PersistentFlags().BoolVar(&app.ChatbotEmbed, "app.chatbotEmbed", false, "when true, enable chatbot")
 	rootCmd.PersistentFlags().BoolVar(&app.ReleaseMode, "app.releaseMode", true, "when true, use jwt token given by keycloak")
 	rootCmd.PersistentFlags().StringVar(&app.CustomProductName, "app.customProductName", "hypercloud", "prduct name for console | default hypercloud")
 
@@ -384,6 +391,7 @@ func NewConsoleCommand() *cobra.Command {
 	rootCmd.PersistentFlags().String("keycloak-auth-url", "", "backward compatibility for app.keycloakAuthUrl")
 	rootCmd.PersistentFlags().String("keycloak-client-id", "", "backward compatibility for app.keycloakClientId")
 	rootCmd.PersistentFlags().Bool("mc-mode", false, "backward compatibility for app.mcMode")
+	rootCmd.PersistentFlags().Bool("chatbot-embed", false, "backward compatibility for app.chatbotEmbed")
 	rootCmd.PersistentFlags().String("public-dir", "", "backward compatibility for app.publicDir")
 	rootCmd.PersistentFlags().String("custom-product-name", "", "backward compatibility for app.customProductName")
 

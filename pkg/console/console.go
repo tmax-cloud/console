@@ -72,6 +72,7 @@ type jsGlobals struct {
 	KeycloakUseHiddenIframe bool   `json:keycloakUseHiddenIframe`
 
 	McMode            bool   `json:mcMode`
+	ChatbotEmbed      bool   `json:chatbotEmbed`
 	ReleaseModeFlag   bool   `json:"releaseModeFlag"`
 	CustomProductName string `json:"customProductName"`
 }
@@ -86,6 +87,7 @@ type Console struct {
 	KubeVersion string
 	// customization
 	McMode            bool
+	ChatbotEmbed      bool
 	ReleaseModeFlag   bool
 	GitlabURL         string
 	CustomProductName string
@@ -445,6 +447,7 @@ func (c *Console) indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		GitlabURL:         c.GitlabURL,
 		McMode:            c.McMode,
+		ChatbotEmbed:      c.ChatbotEmbed,
 		ReleaseModeFlag:   c.ReleaseModeFlag,
 		CustomProductName: c.CustomProductName,
 	}
