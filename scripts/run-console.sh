@@ -44,6 +44,7 @@ echo $id_token
     --app.keycloakAuthUrl=https://hyperauth.tmaxcloud.org/auth \
     --app.keycloakClientId=hypercloud5 \
     --app.mcMode=true \
+    --app.chatbotEmbed=true \
     --app.publicDir=./frontend/public/dist \
     --app.customProductName="hypercloud" \
     --clusterInfo.kubeAPIServerURL=https://$k8sIP:6443 \
