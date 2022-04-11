@@ -147,14 +147,14 @@ pipeline {
             echo "# ${PRODUCT}_${VER} Patch Note" > ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "Version Info: ${VER} ([ major ].[ minor ].[ patch ].[ hotfix ])" >> ./CHANGELOG/CHANGELOG-${VER}.md
-            echo "Released Time: $(TZ=Asia/Seoul date '+%F %H:%M:%S')" >> ./CHANGELOG/CHANGELOG-${VER}.md
+            echo "Released Time: \$(TZ=Asia/Seoul date '+%F %H:%M:%S')" >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
             git log ${PRE_VER}..${VER} --grep=[patch] -F --all-match --no-merges --simplify-merges \
-            --after=$(git show -s --format=%ct ${PRE_VER}) --date-order --reverse --date=format:'%Y-%m-%d' \
+            --after=\$(git show -s --format=%ct ${PRE_VER}) --date-order --reverse --date=format:'%Y-%m-%d' \
             --pretty=format:'- %ad %s (by %cn) %n    Note: %b' >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
-            sed -i 's/\[patch\]//g' ./CHANGELOG/CHANGELOG-${VER}.md
-            sed -i '/^    Note: $/d' ./CHANGELOG/CHANGELOG-${VER}.md
+            sed -i "s/[patch]//g" ./CHANGELOG/CHANGELOG-${VER}.md
+            sed -i "/^    Note: \$/d" ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh """
             cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml
