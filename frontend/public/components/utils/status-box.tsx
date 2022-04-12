@@ -5,7 +5,7 @@ import { Alert, Button } from '@patternfly/react-core';
 
 import * as restrictedSignImg from '../../imgs/restricted-sign.svg';
 import { TimeoutError } from '../../co-fetch';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export const Box: React.FC<BoxProps> = ({ children, className }) => <div className={classNames('cos-status-box', className)}>{children}</div>;
 
@@ -16,13 +16,9 @@ export const LoadError: React.FC<LoadErrorProps> = ({ label, className, message,
       <div className="text-center cos-error-title">{_.isString(message) ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_62', { 0: label, 1: message }) : t('COMMON:MSG_COMMON_ERROR_MESSAGE_61', { 0: label })}</div>
       {canRetry && (
         <div className="text-center">
-          <Trans i18nKey="MSG_COMMON_ERROR_MESSAGE_63">
-            {[
-              <Button type="button" onClick={window.location.reload.bind(window.location)} variant="link" isInline>
-                {t('COMMON:MSG_COMMON_ERROR_MESSAGE_26')}
-              </Button>,
-            ]}
-          </Trans>
+          <Button type="button" onClick={window.location.reload.bind(window.location)} variant="link" isInline>
+            {t('COMMON:MSG_COMMON_ERROR_MESSAGE_26')}
+          </Button>
         </div>
       )}
     </Box>
