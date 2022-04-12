@@ -116,6 +116,6 @@ spec:
             - metadata
             - spec
           type: object
-      encoding:
-        image:
-          contentType: image/png, image/jpeg
+      # encoding:
+      #   image:
+      #     contentType: image/png, image/jpeg
