@@ -99,22 +99,16 @@ description: WSL2를 사용한 Linux 개발환경 구축방법 가이드입니�
 1. 빌드 스크립트 실행
 
    ```shell
-   ./build-dev.sh
+   make build-dev
    ```
 
 2. 새 터미널 열고 run-console 스크립트 실행
 
    ```shell
-   ./examples/run-console.sh
+   ./scripts/run-console.sh
    ```
 
-3. HyperCloud 페이지 접속
-
-- [WSL2 외부 네트워크로 연결](#wsl2-외부-네트워크로-연결) 미적용인 경우, run-console 실행할 때 나오는 IP로 접속
-
-  [![image](images/wsl_image_2.png)](images/wsl_image_2.png)
-
-- [WSL2 외부 네트워크로 연결](#wsl2-외부-네트워크로-연결) 적용한 경우, 본인 IP로 접속. ex) https://192.168.8.57:9000
+3. HyperCloud 페이지 `https://{이름}.tmaxcloud.org/` 접속 (호스트명은 서버 담당자에게 문의)
 
 ## 발생할 수 있는 에러 유형 및 해결법
 
