@@ -9,23 +9,21 @@ import { useTranslation } from 'react-i18next';
 
 export const Box: React.FC<BoxProps> = ({ children, className }) => <div className={classNames('cos-status-box', className)}>{children}</div>;
 
-export const LoadError: React.FC<LoadErrorProps> = ({ label, className, message, canRetry = true }) => (
-  <Box className={className}>
-    <div className="text-center cos-error-title">
-      Error Loading {label}
-      {_.isString(message) ? `: ${message}` : ''}
-    </div>
-    {canRetry && (
-      <div className="text-center">
-        Please{' '}
-        <Button type="button" onClick={window.location.reload.bind(window.location)} variant="link" isInline>
-          try again
-        </Button>
-        .
-      </div>
-    )}
-  </Box>
-);
+export const LoadError: React.FC<LoadErrorProps> = ({ label, className, message, canRetry = true }) => {
+  const { t } = useTranslation();
+  return (
+    <Box className={className}>
+      <div className="text-center cos-error-title">{_.isString(message) ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_62', { 0: label, 1: message }) : t('COMMON:MSG_COMMON_ERROR_MESSAGE_61', { 0: label })}</div>
+      {canRetry && (
+        <div className="text-center">
+          <Button type="button" onClick={window.location.reload.bind(window.location)} variant="link" isInline>
+            {t('COMMON:MSG_COMMON_ERROR_MESSAGE_26')}
+          </Button>
+        </div>
+      )}
+    </Box>
+  );
+};
 LoadError.displayName = 'LoadError';
 
 export const Loading: React.FC<LoadingProps> = ({ className }) => (
@@ -100,13 +98,14 @@ Data.displayName = 'Data';
 
 export const StatusBox: React.FC<StatusBoxProps> = props => {
   const { loadError, loaded, skeleton, ...dataProps } = props;
+  const { t } = useTranslation();
 
   if (loadError) {
     const status = _.get(loadError, 'response.status');
     if (status === 404) {
       return (
         <div className="co-m-pane__body">
-          <h1 className="co-m-pane__heading co-m-pane__heading--center">404: Not Found</h1>
+          <h1 className="co-m-pane__heading co-m-pane__heading--center">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_2')}</h1>
         </div>
       );
     }
@@ -117,7 +116,7 @@ export const StatusBox: React.FC<StatusBoxProps> = props => {
     if (loaded && loadError instanceof TimeoutError) {
       return (
         <Data {...dataProps}>
-          <div className="co-m-timeout-error text-muted">Timed out fetching new data. The data below is stale.</div>
+          <div className="co-m-timeout-error text-muted">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_25')}</div>
           {props.children}
         </Data>
       );
