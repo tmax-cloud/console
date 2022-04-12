@@ -105,7 +105,7 @@ description: WSL2를 사용한 Linux 개발환경 구축방법 가이드입니�
 2. 새 터미널 열고 run-console 스크립트 실행
 
    ```shell
-   ./scripts/run-console.sh
+   make run-console
    ```
 
 3. HyperCloud 페이지 `https://{이름}.tmaxcloud.org/` 접속 (호스트명은 서버 담당자에게 문의)
