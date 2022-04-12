@@ -170,7 +170,7 @@ export const HelmchartFrom: React.FC<HelmchartFromProps> = props => {
         <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
           <form className="co-m-pane__body-group co-m-pane__form" method='post' action={`https://${host}/helm/repos`}>
             <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
-            <div style={{marginLeft: '10px'}}>
+            <div className="co-form-subsection">
               <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
                 <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
               </Section>
@@ -194,7 +194,7 @@ export const HelmchartCreatePage = () => {
       <Helmet>
         <title>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</title>
       </Helmet>
-      <div style={{marginLeft: '15px'}}>
+      <div style={{ marginLeft: '15px' }}>
         <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</h1>
       </div>
       <HelmchartFrom />
