@@ -169,12 +169,16 @@ export const HelmchartFrom: React.FC<HelmchartFromProps> = props => {
       {loading &&
         <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
           <form className="co-m-pane__body-group co-m-pane__form" method='post' action={`https://${host}/helm/repos`}>
-            <Section label={t('COMMON:MSG_MAIN_TABLEHEADER_130')} id="name" isRequired={true}>
-              <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
-            </Section>
-            <Section label={t('COMMON:MSG_MAIN_TABLEHEADER_131')} id="repoURL" isRequired={true}>
-              <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
-            </Section>
+            <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
+            <div style={{marginLeft: '10px'}}>
+              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
+                <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
+              </Section>
+              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
+                <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
+              </Section>
+            </div>
+            <div className="co-form-section__separator" />
             <Button type="button" variant="primary" id="save" onClick={onClick}>{defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}</Button>
             <Button style={{ marginLeft: '10px' }} type="button" variant="secondary" id="cancel" onClick={() => { history.goBack(); }}>{t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}</Button>
           </form>
@@ -190,7 +194,9 @@ export const HelmchartCreatePage = () => {
       <Helmet>
         <title>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</title>
       </Helmet>
-      <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</h1>
+      <div style={{marginLeft: '15px'}}>
+        <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</h1>
+      </div>
       <HelmchartFrom />
     </>
   );
