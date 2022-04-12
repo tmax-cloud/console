@@ -16,7 +16,7 @@ const getMessage = (type: string, id: string): string => {
       oauth_error: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_9'),
       login_state_error: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_8'),
       cookie_error: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_13'),
-      missing_code: 'Auth code is missing in query param.',
+      missing_code: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_13'),
       missing_state: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_12'),
       invalid_code: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_10'),
       invalid_state: i18next.t('COMMON:MSG_COMMON_ERROR_MESSAGE_14'),
@@ -86,30 +86,33 @@ export const ErrorPage404: React.SFC<ErrorPage404Props> = props => {
   );
 };
 
-export const ErrorBoundaryFallback: React.SFC<ErrorBoundaryFallbackProps> = props => (
-  <div className="co-m-pane__body">
-    <h1 className="co-m-pane__heading co-m-pane__heading--center">Oh no! Something went wrong.</h1>
-    <ExpandCollapse textCollapsed="Show Details" textExpanded="Hide Details">
-      <h3 className="co-section-heading-tertiary">{props.title}</h3>
-      <div className="form-group">
-        <label htmlFor="description">Description: </label>
-        <p>{props.errorMessage}</p>
-      </div>
-      <div className="form-group">
-        <label htmlFor="componentTrace">Component Trace: </label>
-        <div className="co-copy-to-clipboard__stacktrace-width-height">
-          <CopyToClipboard value={props.componentStack.trim()} />
+export const ErrorBoundaryFallback: React.SFC<ErrorBoundaryFallbackProps> = props => {
+  const { t } = useTranslation();
+  return (
+    <div className="co-m-pane__body">
+      <h1 className="co-m-pane__heading co-m-pane__heading--center">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_6')}</h1>
+      <ExpandCollapse textCollapsed={t('COMMON:MSG_COMMON_ERROR_MESSAGE_56')} textExpanded={t('COMMON:MSG_COMMON_ERROR_MESSAGE_57')}>
+        <h3 className="co-section-heading-tertiary">{props.title}</h3>
+        <div className="form-group">
+          <label htmlFor="description">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_58')}</label>
+          <p>{props.errorMessage}</p>
         </div>
-      </div>
-      <div className="form-group">
-        <label htmlFor="stackTrace">Stack Trace: </label>
-        <div className="co-copy-to-clipboard__stacktrace-width-height">
-          <CopyToClipboard value={props.stack.trim()} />
+        <div className="form-group">
+          <label htmlFor="componentTrace">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_59')}</label>
+          <div className="co-copy-to-clipboard__stacktrace-width-height">
+            <CopyToClipboard value={props.componentStack.trim()} />
+          </div>
         </div>
-      </div>
-    </ExpandCollapse>
-  </div>
-);
+        <div className="form-group">
+          <label htmlFor="stackTrace">{t('COMMON:MSG_COMMON_ERROR_MESSAGE_60')}</label>
+          <div className="co-copy-to-clipboard__stacktrace-width-height">
+            <CopyToClipboard value={props.stack.trim()} />
+          </div>
+        </div>
+      </ExpandCollapse>
+    </div>
+  );
+};
 
 export type ErrorComponentProps = {
   title: string;
