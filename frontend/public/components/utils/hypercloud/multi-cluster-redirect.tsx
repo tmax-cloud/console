@@ -2,32 +2,24 @@ import * as React from 'react';
 import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ClusterManagerModel } from '@console/internal/models';
-// import { coFetchJSON } from '@console/internal/co-fetch';
-// import { getId, getUserGroup } from '@console/internal/hypercloud/auth';
+import { coFetchJSON } from '@console/internal/co-fetch';
+import { getId, getUserGroup } from '@console/internal/hypercloud/auth';
 
 export const MultiClusterRedirect = (props: MultiClusterRedirectProps) => {
   const { match } = props;
   const { t } = useTranslation();
   const [resolved, setResolved] = React.useState(false);
 
-  // React.useEffect(() => {
-  //   (async () => {
-  //     /**
-  //      * 초대 수락 api call
-  //      * TODO: admit query parameter 필요
-  //      * TODO: 서버에서 초대 링크를 받은 사용자와 api 콜을 보내는 사용자가 같은지 구분 필요
-  //      */
-  //     const url = `/api/hypercloud/namespaces/${match.params.ns}/${ClusterManagerModel.plural}/${match.params.clusterName}/member_invitation?userId=${getId()}${getUserGroup()}`;
-  //     setResolved(Boolean(await coFetchJSON(url, 'POST')));
-  //   })();
-  // }, [setResolved]);
-
-  // TODO: 임시용. api 명세 나오는대로 교체
   React.useEffect(() => {
-    let timeout = setTimeout(() => setResolved(true), 500);
-    return () => {
-      clearTimeout(timeout);
-    };
+    (async () => {
+      try {
+        const url = `/api/hypercloud/namespaces/${match.params.ns}/${ClusterManagerModel.plural}/${match.params.clusterName}/member_invitation/accept?userId=${getId()}${getUserGroup()}`;
+        await coFetchJSON(url);
+      } catch {
+      } finally {
+        setResolved(true);
+      }
+    })();
   }, [setResolved]);
 
   if (resolved) {
