@@ -107,8 +107,8 @@ export const StepModal: React.FC<StepModalProps> = ({ methods, step }) => {
         <div className="col-xs-11 pairs-list__value-field" style={{ display: 'flex', position: 'relative' }}>
           <TextInput id={`${name}[${index}].envKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.envKey} placeholder={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_43')} />
           <span style={{ margin: '0 5px' }}>=</span>
-          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={isKeyValueType ? t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44') : t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_9')} />
-          {isKeyValueType && (
+          <TextInput id={`${name}[${index}].envValue`} style={{ width: '110px' }} methods={methods} defaultValue={item.envValue} placeholder={!isKeyValueType ? t('SINGLE:MSG_TASKS_CREATFORM_DIV2_44') : t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_9')} />
+          {!isKeyValueType && (
             <>
               <span style={{ margin: '0 5px' }}>/</span>
               <TextInput id={`${name}[${index}].resourceKey`} style={{ width: '110px' }} methods={methods} defaultValue={item.resourceKey} placeholder={t('SINGLE:MSG_TASKS_CREATEFORM_DIV2_5')} />
