@@ -512,7 +512,7 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
       })).then((res) => {
         const { items } = res;
         if (items?.length > 0) {
-          const ingress = items[0];          
+          const ingress = items[0];
           if (!!ingress.spec?.rules?.[0]?.host) {
             serverURL = `https://${ingress.spec?.rules?.[0]?.host}/helm/charts`;
             setHost(ingress.spec?.rules?.[0]?.host);
@@ -582,35 +582,36 @@ export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
       {loading &&
         <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
           <form className="co-m-pane__body-group co-m-pane__form" method='post' action={`https://${host}/helm/repos`}>
+            <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
+              <input className="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={releaseName} onChange={updatePostReleaseName} disabled={defaultValue} />
+            </Section>
             <Section label={t('COMMON:MSG_LNB_MENU_223')} id="chartName" isRequired={true}>
               <Dropdown
                 name="chartName"
                 className="btn-group"
+                title={selectChartName || t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_3')}
                 items={chartNameList} // (필수)
                 required={true}
-                placeholder={t('COMMON:MSG_LNB_MENU_223')}
                 onChange={updateChartName}
                 buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
                 itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
               />
-              <Section label={t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_2')} id="chartName" >
-                <div>{selectChartName}</div>
-              </Section>
-              <Section label='Package URL' id="Package URL" >
-                <div>{postPackageURL}</div>
-              </Section>
-              <Section label={t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_3')} id="version" >
-                <div>{postVersion}</div>
-              </Section>
             </Section>
-            <Section label={t('COMMON:MSG_LNB_MENU_203')} id="releaseName" isRequired={true}>
-              <input className="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={releaseName} onChange={updatePostReleaseName} disabled={defaultValue} />
-            </Section>
-            <Section label='values' id="values" isRequired={true}>
-              <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} />
-            </Section>
-            <Button type="button" variant="primary" id="save" onClick={onClick}>{defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}</Button>
-            <Button style={{ marginLeft: '10px' }} type="button" variant="secondary" id="cancel" onClick={() => { history.goBack(); }}>{t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}</Button>
+            {selectChartName &&
+              <>
+                <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL" >
+                  <div>{postPackageURL}</div>
+                </Section>
+                <Section label={t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_3')} id="version" >
+                  <div>{postVersion}</div>
+                </Section>
+              </>
+            }
+            <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />
+            <div style={{ marginTop: '10px' }}>
+              <Button type="button" variant="primary" id="save" onClick={onClick}>{defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}</Button>
+              <Button style={{ marginLeft: '10px' }} type="button" variant="secondary" id="cancel" onClick={() => { history.goBack(); }}>{t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}</Button>
+            </div>
           </form>
         </ButtonBar>
       }
@@ -629,7 +630,9 @@ export const HelmReleaseCreatePage: React.FC<HelmReleasePageProps> = ({ match })
       <NamespacedPage>
         {namespace ? (
           <div style={{ background: 'white', height: '100%' }}>
-            <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })}</h1>
+            <div style={{marginLeft: '15px'}}>
+              <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })}</h1>
+            </div>
             <HelmreleasesFrom namespace={namespace} />
           </div>
         ) : (
