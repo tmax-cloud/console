@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ClusterManagerModel } from '@console/internal/models';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { getId, getUserGroup } from '@console/internal/hypercloud/auth';
+import { history } from '@console/internal/components/utils';
 
 export const MultiClusterRedirect = (props: MultiClusterRedirectProps) => {
   const { match } = props;
@@ -23,7 +23,7 @@ export const MultiClusterRedirect = (props: MultiClusterRedirectProps) => {
   }, [setResolved]);
 
   if (resolved) {
-    return <Redirect to={`/k8s/ns/${match.params.ns}/${ClusterManagerModel.plural}/${match.params.clusterName}`} />;
+    history.replace(`/k8s/ns/${match.params.ns}/${ClusterManagerModel.plural}/${match.params.clusterName}`);
   }
 
   return <div className="co-m-pane__body">{`${t('COMMON:MSG_DETAILS_TABLOGS_6')}...`}</div>;
