@@ -150,7 +150,7 @@ pipeline {
             echo "Released Time: \$(TZ=Asia/Seoul date '+%F %H:%M:%S')" >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
             git log ${PRE_VER}..${VER} --grep=[patch] -F --all-match --no-merges --simplify-merges \
-            --after=\$(git show -s --format=%ct ${PRE_VER}) --date-order --reverse --date=format:'%Y-%m-%d' \
+            --date-order --reverse --date=format:'%Y-%m-%d' \
             --pretty=format:'- %ad %s (by %cn) %n    Note: %b' >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
             sed -i "s/[patch]//g" ./CHANGELOG/CHANGELOG-${VER}.md
