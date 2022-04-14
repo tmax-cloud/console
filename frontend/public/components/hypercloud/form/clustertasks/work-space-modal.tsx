@@ -21,11 +21,13 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
 
   //modify 기능 용
   const target = document.getElementById('work-space-list');
-  const modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
+  // eslint-disable-next-line dot-notation
+  const modalType = target && [...target.childNodes].some(cur => cur['dataset'].modify === 'true') ? 'modify' : 'add';
   if (modalType === 'modify') {
     const list = target.childNodes;
     list.forEach((cur, idx) => {
-      if (cur['dataset']['modify'] === 'true') {
+      // eslint-disable-next-line dot-notation
+      if (cur['dataset'].modify === 'true') {
         template = workSpace[idx];
         // index = idx;
       }
@@ -43,7 +45,7 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
         <TextInput id="description" inputClassName="col-md-12" methods={methods} defaultValue={modalType === 'modify' ? template.description : ''} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_60')} id="workspace_mountPath">
-        <TextInput id="mountPath" inputClassName="col-md-12" placeholder="/workspace/<name>" methods={methods} defaultValue={modalType === 'modify' ? template.mountPath : '/workspace/<name>'} />
+        <TextInput id="mountPath" inputClassName="col-md-12" placeholder="/workspace/<name>" methods={methods} defaultValue={modalType === 'modify' ? template.mountPath : ''} />
       </Section>
       <Section label={t('SINGLE:MSG_TASKS_CREATFORM_DIV2_63')} id="workspace_access">
         <RadioGroup
