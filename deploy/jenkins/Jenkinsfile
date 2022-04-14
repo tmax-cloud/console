@@ -154,7 +154,7 @@ pipeline {
             --date-order --reverse --date=format:'%Y-%m-%d' \
             --pretty=format:'- %ad %s (by %cn) %n    Note: %b' >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
-            sed -i "s/[patch]//g" ./CHANGELOG/CHANGELOG-${VER}.md
+            sed -i "s/\[patch]\//g" ./CHANGELOG/CHANGELOG-${VER}.md
             sed -i "/^    Note: \$/d" ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh """
