@@ -38,12 +38,13 @@ pipeline {
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
     string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
     string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')
+    string(name: 'CHATBOT_EMBED', defaultValue: 'true', description: 'Enable chatbot')
   }
   triggers {
     // ref https://plugins.jenkins.io/parameterized-scheduler/
     // trigger at 9:00 every Thursday 
     parameterizedCron('''
-    0 9 * * 4 %BUILD_MODE=PATCH
+    H 9 * * 4 %BUILD_MODE=PATCH
     ''')
   }
   environment {
@@ -150,17 +151,17 @@ pipeline {
             echo "Released Time: \$(TZ=Asia/Seoul date '+%F %H:%M:%S')" >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
             git log ${PRE_VER}..${VER} --grep=[patch] -F --all-match --no-merges --simplify-merges \
-            --after=\$(git show -s --format=%ct ${PRE_VER}) --date-order --reverse --date=format:'%Y-%m-%d' \
+            --date-order --reverse --date=format:'%Y-%m-%d' \
             --pretty=format:'- %ad %s (by %cn) %n    Note: %b' >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
-            sed -i "s/[patch]//g" ./CHANGELOG/CHANGELOG-${VER}.md
+             sed -i "s/\\[patch\\]//g" ./CHANGELOG/CHANGELOG-${VER}.md
             sed -i "/^    Note: \$/d" ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh """
-            cp -r ./console-helm-chart/values_ck_temp.yaml ./console-helm-chart/values_ck.yaml
-            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_ck.yaml
-            cp -r ./console-helm-chart/values_team_temp.yaml ./console-helm-chart/values_team.yaml
-            sed -i "s/@@VER@@/${VER}/g" ./console-helm-chart/values_team.yaml
+            cp -r ./deploy/helm-charts/values_ck_temp.yaml ./deploy/helm-charts/values_ck.yaml
+            sed -i "s/@@VER@@/${VER}/g" ./deploy/helm-charts/values_ck.yaml
+            cp -r ./deploy/helm-charts/values_team_temp.yaml ./deploy/helm-charts/values_team.yaml
+            sed -i "s/@@VER@@/${VER}/g" ./deploy/helm-charts/values_team.yaml
           """
       }
     }

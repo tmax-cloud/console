@@ -20,12 +20,14 @@ export const WorkSpaceModal: React.FC<WorkSpaceModalProps> = ({ methods, workSpa
   let template;
 
   //modify 기능 용
-  let target = document.getElementById('work-space-list');
-  let modalType = target && [...target.childNodes].some(cur => cur['dataset']['modify'] === 'true') ? 'modify' : 'add';
+  const target = document.getElementById('work-space-list');
+  // eslint-disable-next-line dot-notation
+  const modalType = target && [...target.childNodes].some(cur => cur['dataset'].modify === 'true') ? 'modify' : 'add';
   if (modalType === 'modify') {
-    let list = target.childNodes;
+    const list = target.childNodes;
     list.forEach((cur, idx) => {
-      if (cur['dataset']['modify'] === 'true') {
+      // eslint-disable-next-line dot-notation
+      if (cur['dataset'].modify === 'true') {
         template = workSpace[idx];
         // index = idx;
       }

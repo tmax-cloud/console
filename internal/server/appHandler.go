@@ -12,7 +12,11 @@ import (
 )
 
 const (
-	indexPageTemplateName = "index.html"
+	indexPageTemplateName            = "index.html"
+	prometheusProxyEndpoint          = "/api/prometheus"
+	prometheusTenancyProxyEndpoint   = "/api/prometheus-tenancy"
+	alertManagerProxyEndpoint        = "/api/alertmanager"
+	alertManagerTenancyProxyEndpoint = "/api/alertmanager-tenancy"
 )
 
 type App struct {
@@ -33,14 +37,21 @@ type App struct {
 	ReleaseMode       bool   `yaml:"releaseMode,omitempty" json:"releaseMode"`
 	CustomProductName string `yaml:"customProductName,omitempty" json:"customProductName"`
 
+	PrometheusBaseURL        string `json:"prometheusBaseURL"`
+	PrometheusTenancyBaseURL string `json:"prometheusTenancyBaseURL"`
+	AlertManagerBaseURL      string `json:"alertManagerBaseURL"`
+
 	logger kitlog.Logger
 }
 
 func NewAppConfig() *App {
 	return &App{
-		ConsoleVersion: version.Version,
-		GOARCH:         runtime.GOARCH,
-		GOOS:           runtime.GOOS,
+		ConsoleVersion:           version.Version,
+		GOARCH:                   runtime.GOARCH,
+		GOOS:                     runtime.GOOS,
+		PrometheusBaseURL:        prometheusProxyEndpoint,
+		PrometheusTenancyBaseURL: prometheusTenancyProxyEndpoint,
+		AlertManagerBaseURL:      alertManagerProxyEndpoint,
 	}
 }
 
