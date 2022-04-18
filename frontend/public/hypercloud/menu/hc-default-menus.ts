@@ -20,7 +20,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.storage,
-    innerMenus: [Models.PersistentVolumeModel.kind, Models.PersistentVolumeClaimModel.kind,Models.StorageClassModel.kind, ],
+    innerMenus: [Models.PersistentVolumeModel.kind, Models.PersistentVolumeClaimModel.kind,Models.StorageClassModel.kind ],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -30,7 +30,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
-    innerMenus: [ Models.ServiceAccountModel.kind,Models.RoleModel.kind, Models.RoleBindingModel.kind,],
+    innerMenus: [ Models.ServiceAccountModel.kind,Models.RoleModel.kind, Models.RoleBindingModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -51,7 +51,7 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicecatalogs,
-    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind, , Models.ServiceBindingModel.kind],
+    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind, Models.ServiceBindingModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -61,12 +61,12 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicemesh,
-    innerMenus: [Models.VirtualServiceModel.kind, Models.DestinationRuleModel.kind, Models.EnvoyFilterModel.kind, Models.GatewayModel.kind, Models.SidecarModel.kind, , Models.ServiceEntryModel.kind, Models.RequestAuthenticationModel.kind, Models.PeerAuthenticationModel.kind, Models.AuthorizationPolicyModel.kind, CustomMenusMap.Kiali.kind],
+    innerMenus: [Models.VirtualServiceModel.kind, Models.DestinationRuleModel.kind, Models.EnvoyFilterModel.kind, Models.GatewayModel.kind, Models.SidecarModel.kind, Models.ServiceEntryModel.kind, Models.RequestAuthenticationModel.kind, Models.PeerAuthenticationModel.kind, Models.AuthorizationPolicyModel.kind, CustomMenusMap.Kiali.kind],
   },
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels['ci/cd'],
-    innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind, , Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind, Models.ApplicationModel.kind],
+    innerMenus: [Models.TaskModel.kind, Models.ClusterTaskModel.kind, Models.TaskRunModel.kind, Models.PipelineModel.kind, Models.PipelineRunModel.kind,  Models.ApprovalModel.kind, Models.PipelineResourceModel.kind, Models.IntegrationJobModel.kind, Models.IntegrationConfigModel.kind, Models.ApplicationModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -121,7 +121,7 @@ const SingleNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.workload,
-    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.StatefulSetModel.kind, Models.SecretModel.kind, Models.ConfigMapModel.kind, Models.CronJobModel.kind, Models.JobModel.kind, Models.DaemonSetModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind, ],
+    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.StatefulSetModel.kind, Models.SecretModel.kind, Models.ConfigMapModel.kind, Models.CronJobModel.kind, Models.JobModel.kind, Models.DaemonSetModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind ],
   },
   {
     menuType: MenuType.CONTAINER,
