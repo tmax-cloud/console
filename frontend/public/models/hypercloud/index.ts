@@ -1595,7 +1595,7 @@ export const NodeConfigModel: K8sKind = {
   abbr: 'NC',
   namespaced: true,
   kind: 'NodeConfig',
-  id: 'nodeconfig',  
+  id: 'nodeconfig',
   menuInfo: {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
@@ -1616,7 +1616,7 @@ export const BareMetalHostModel: K8sKind = {
   abbr: 'BMH',
   namespaced: true,
   kind: 'BareMetalHost',
-  id: 'baremetalhost',  
+  id: 'baremetalhost',
   menuInfo: {
     visible: true,
     type: MenuLinkType.ResourceNSLink,
@@ -1625,5 +1625,89 @@ export const BareMetalHostModel: K8sKind = {
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_222',
     labelPlural: 'COMMON:MSG_LNB_MENU_221',
+  },
+};
+
+export const KafkaBrokerModel: K8sKind = {
+  label: 'Kafka Broker',
+  labelPlural: 'Kafka Brokers',
+  apiVersion: 'v1beta2',
+  apiGroup: 'kafka.strimzi.io',
+  plural: 'kafkas',
+  abbr: 'KB',
+  namespaced: true,
+  kind: 'Kafka',
+  id: 'kafka',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_225',
+    labelPlural: 'COMMON:MSG_LNB_MENU_225',
+  },
+};
+
+export const KafkaRebalanceModel: K8sKind = {
+  label: 'Kafka Rebalance',
+  labelPlural: 'Kafka Rebalances',
+  apiVersion: 'v1beta2',
+  apiGroup: 'kafka.strimzi.io',
+  plural: 'kafkarebalances',
+  abbr: 'KR',
+  namespaced: true,
+  kind: 'KafkaRebalance',
+  id: 'kafkarebalance',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_226',
+    labelPlural: 'COMMON:MSG_LNB_MENU_226',
+  },
+};
+
+export const KafkaMirrormaker2Model: K8sKind = {
+  label: 'Kafka Mirror Maker2',
+  labelPlural: 'Kafka Mirror Maker2s',
+  apiVersion: 'v1beta2',
+  apiGroup: 'kafka.strimzi.io',
+  plural: 'kafkamirrormaker2s',
+  abbr: 'KM2',
+  namespaced: true,
+  kind: 'KafkaMirrorMaker2',
+  id: 'kafkamirrormaker2',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_227',
+    labelPlural: 'COMMON:MSG_LNB_MENU_227',
+  },
+};
+
+export const KafkaBridgesModel: K8sKind = {
+  label: 'Kafka Bridges',
+  labelPlural: 'Kafka Bridges',
+  apiVersion: 'v1beta2',
+  apiGroup: 'kafka.strimzi.io',
+  plural: 'kafkabridges',
+  abbr: 'KB',
+  namespaced: true,
+  kind: 'KafkaBridge',
+  id: 'kafkabridge',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_228',
+    labelPlural: 'COMMON:MSG_LNB_MENU_228',
   },
 };

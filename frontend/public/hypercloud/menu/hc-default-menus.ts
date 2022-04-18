@@ -73,6 +73,11 @@ const DeveloperNavMenus = [
     label: MenuContainerLabels.aidevops,
     innerMenus: [Models.NotebookModel.kind, Models.ExperimentModel.kind, Models.TrainingJobModel.kind, Models.InferenceServiceModel.kind, Models.TrainedModelModel.kind],
   },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.kafka,
+    innerMenus: [Models.KafkaBrokerModel.kind, Models.KafkaRebalanceModel.kind, Models.KafkaMirrormaker2Model.kind, Models.KafkaBridgesModel.kind],
+  },
 ];
 
 const MultiNavMenus = [
