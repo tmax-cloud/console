@@ -10,7 +10,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.workload,
-    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind, Models.DaemonSetModel.kind, Models.StatefulSetModel.kind, Models.ConfigMapModel.kind, Models.SecretModel.kind, Models.JobModel.kind, Models.CronJobModel.kind],
+    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.StatefulSetModel.kind, Models.SecretModel.kind, Models.ConfigMapModel.kind, Models.CronJobModel.kind, Models.JobModel.kind, Models.DaemonSetModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -20,12 +20,7 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.storage,
-    innerMenus: [Models.StorageClassModel.kind, Models.PersistentVolumeClaimModel.kind, Models.PersistentVolumeModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.management,
-    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.PodSecurityPolicyModel.kind, Models.CustomResourceDefinitionModel.kind],
+    innerMenus: [Models.PersistentVolumeModel.kind, Models.PersistentVolumeClaimModel.kind,Models.StorageClassModel.kind, ],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -35,7 +30,12 @@ const MasterNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
-    innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind],
+    innerMenus: [ Models.ServiceAccountModel.kind,Models.RoleModel.kind, Models.RoleBindingModel.kind,],
+  },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.management,
+    innerMenus: [ Models.ResourceQuotaModel.kind, Models.LimitRangeModel.kind, Models.CustomResourceDefinitionModel.kind,Models.PodSecurityPolicyModel.kind],
   },
 ];
 
@@ -51,7 +51,7 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicecatalogs,
-    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, , Models.ServiceBindingModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.TemplateInstanceModel.kind],
+    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind, , Models.ServiceBindingModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -121,12 +121,7 @@ const SingleNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.workload,
-    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind, Models.DaemonSetModel.kind, , Models.StatefulSetModel.kind, Models.ConfigMapModel.kind, Models.SecretModel.kind, Models.JobModel.kind, Models.CronJobModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.helm,
-    innerMenus: [Models.HelmReleaseModel.kind],
+    innerMenus: [Models.PodModel.kind, Models.DeploymentModel.kind, Models.StatefulSetModel.kind, Models.SecretModel.kind, Models.ConfigMapModel.kind, Models.CronJobModel.kind, Models.JobModel.kind, Models.DaemonSetModel.kind, Models.ReplicaSetModel.kind, Models.HorizontalPodAutoscalerModel.kind, ],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -140,11 +135,6 @@ const SingleNavMenus = [
   },
   {
     menuType: MenuType.CONTAINER,
-    label: MenuContainerLabels.management,
-    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.CustomResourceDefinitionModel.kind],
-  },
-  {
-    menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.host,
     innerMenus: [Models.NodeModel.kind],
   },
@@ -152,6 +142,11 @@ const SingleNavMenus = [
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.authentications,
     innerMenus: [Models.RoleModel.kind, Models.RoleBindingModel.kind, Models.ServiceAccountModel.kind, Models.PodSecurityPolicyModel.kind],
+  },
+  {
+    menuType: MenuType.CONTAINER,
+    label: MenuContainerLabels.management,
+    innerMenus: [Models.LimitRangeModel.kind, Models.ResourceQuotaModel.kind, Models.CustomResourceDefinitionModel.kind],
   },
 ];
 
