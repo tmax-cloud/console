@@ -1728,7 +1728,7 @@ export const KafkaConnectorModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_229',
+    label: 'COMMON:MSG_LNB_MENU_236',
     labelPlural: 'COMMON:MSG_LNB_MENU_229',
   },
 };
@@ -1749,7 +1749,7 @@ export const KafkaConnectModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_230',
+    label: 'COMMON:MSG_LNB_MENU_237',
     labelPlural: 'COMMON:MSG_LNB_MENU_230',
   },
 };
