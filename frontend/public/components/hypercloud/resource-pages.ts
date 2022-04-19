@@ -78,6 +78,10 @@ import {
   ClusterMenuPolicyModel,
   NodeConfigModel,
   BareMetalHostModel,
+  KafkaBrokerModel,
+  KafkaRebalanceModel,
+  KafkaMirrorMaker2Model,
+  KafkaBridgeModel,
   KafkaConnectorModel,
   KafkaConnectModel,
 } from '../../models';
@@ -162,6 +166,10 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "cluster-menu-policy" */).then(m => m.ClusterMenuPoliciesDetailsPage))
   .set(referenceForModel(NodeConfigModel), () => import('./nodeconfig' /* webpackChunkName: "nodeconfig" */).then(m => m.NodeConfigsDetailsPage))
   .set(referenceForModel(BareMetalHostModel), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsDetailsPage))
+  .set(referenceForModel(KafkaBrokerModel), () => import('./kafkabroker' /* webpackChunkName: "kafkabroker" */).then(m => m.KafkaBrokersDetailsPage))
+  .set(referenceForModel(KafkaRebalanceModel), () => import('./kafkarebalance' /* webpackChunkName: "kafkarebalance" */).then(m => m.KafkaRebalancesDetailsPage))
+  .set(referenceForModel(KafkaMirrorMaker2Model), () => import('./kafkamirrormaker2' /* webpackChunkName: "kafkamirrormaker2" */).then(m => m.KafkaMirrorMaker2sDetailsPage))
+  .set(referenceForModel(KafkaBridgeModel), () => import('./kafkabridge' /* webpackChunkName: "kafkabridge" */).then(m => m.KafkaBridgesDetailsPage))
   .set(referenceForModel(KafkaConnectorModel), () => import('./kafka-connector' /* webpackChunkName: "kafka-connector" */).then(m => m.KafkaConnectorsDetailsPage))
   .set(referenceForModel(KafkaConnectModel), () => import('./kafka-connect' /* webpackChunkName: "kafka-connect" */).then(m => m.KafkaConnectsDetailsPage));
 
@@ -241,5 +249,9 @@ export const hyperCloudListPages = ImmutableMap<ResourceMapKey, ResourceMapValue
   .set(referenceForModel(ClusterMenuPolicyModel), () => import('./cluster-menu-policy' /* webpackChunkName: "cluster-menu-policy" */).then(m => m.ClusterMenuPoliciesPage))
   .set(referenceForModel(NodeConfigModel), () => import('./nodeconfig' /* webpackChunkName: "nodeconfig" */).then(m => m.NodeConfigsPage))
   .set(referenceForModel(BareMetalHostModel), () => import('./baremetal-host' /* webpackChunkName: "baremetal-host" */).then(m => m.BareMetalHostsPage))
+  .set(referenceForModel(KafkaBrokerModel), () => import('./kafkabroker' /* webpackChunkName: "kafkabroker" */).then(m => m.KafkaBrokersPage))
+  .set(referenceForModel(KafkaRebalanceModel), () => import('./kafkarebalance' /* webpackChunkName: "kafkarebalance" */).then(m => m.KafkaRebalancesPage))
+  .set(referenceForModel(KafkaMirrorMaker2Model), () => import('./kafkamirrormaker2' /* webpackChunkName: "kafkamirrormaker2" */).then(m => m.KafkaMirrorMaker2sPage))
+  .set(referenceForModel(KafkaBridgeModel), () => import('./kafkabridge' /* webpackChunkName: "kafkabridge" */).then(m => m.KafkaBridgesPage))
   .set(referenceForModel(KafkaConnectorModel), () => import('./kafka-connector' /* webpackChunkName: "kafka-connector" */).then(m => m.KafkaConnectorsPage))
   .set(referenceForModel(KafkaConnectModel), () => import('./kafka-connect' /* webpackChunkName: "kafka-connect" */).then(m => m.KafkaConnectsPage));
