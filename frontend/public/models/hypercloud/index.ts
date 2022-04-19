@@ -1644,7 +1644,7 @@ export const KafkaBrokerModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_225',
+    label: 'COMMON:MSG_LNB_MENU_232',
     labelPlural: 'COMMON:MSG_LNB_MENU_225',
   },
 };
@@ -1665,7 +1665,7 @@ export const KafkaRebalanceModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_226',
+    label: 'COMMON:MSG_LNB_MENU_233',
     labelPlural: 'COMMON:MSG_LNB_MENU_226',
   },
 };
@@ -1686,7 +1686,7 @@ export const KafkaMirrorMaker2Model: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_227',
+    label: 'COMMON:MSG_LNB_MENU_234',
     labelPlural: 'COMMON:MSG_LNB_MENU_227',
   },
 };
@@ -1707,7 +1707,7 @@ export const KafkaBridgeModel: K8sKind = {
     isMultiOnly: false,
   },
   i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_228',
+    label: 'COMMON:MSG_LNB_MENU_235',
     labelPlural: 'COMMON:MSG_LNB_MENU_228',
   },
 };
