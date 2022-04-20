@@ -16,6 +16,7 @@ import { history } from '@console/internal/components/utils/router';
 import { LoadingInline } from '@console/internal/components/utils/status-box';
 import { getIdToken } from '@console/internal/hypercloud/auth';
 import { coFetchJSON } from '@console/internal/co-fetch';
+import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 import { modelFor } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
@@ -216,7 +217,7 @@ const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
                   </td>
                   <td style={{ padding: '5px' }} ><ResourceLink kind="Namespace" name={namespace} /></td>
                   <td style={{ padding: '5px' }} ><Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} /></td>
-                  <td style={{ padding: '5px' }} >{Object.keys(objects).map(k => { return <div key={'resource-' + k}>{t(modelFor(k).i18nInfo.label)}</div> })}</td>
+                  <td style={{ padding: '5px' }} >{Object.keys(objects).map(k => { return <div key={'resource-' + k}>{modelFor(k) ? ResourceLabel(modelFor(k), t) : k}</div> })}</td>
                   <td style={{ padding: '5px' }} >{version}</td>
                   <td style={{ padding: '5px' }} ><Timestamp timestamp={info.first_deployed} /></td>
                   <td style={{ padding: '5px' }} ><Kebab options={options} /></td>
@@ -630,7 +631,7 @@ export const HelmReleaseCreatePage: React.FC<HelmReleasePageProps> = ({ match })
       <NamespacedPage>
         {namespace ? (
           <div style={{ background: 'white', height: '100%' }}>
-            <div style={{marginLeft: '15px'}}>
+            <div style={{ marginLeft: '15px' }}>
               <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })}</h1>
             </div>
             <HelmreleasesFrom namespace={namespace} />
