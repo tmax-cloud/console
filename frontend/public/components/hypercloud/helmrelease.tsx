@@ -217,7 +217,7 @@ const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
                   </td>
                   <td style={{ padding: '5px' }} ><ResourceLink kind="Namespace" name={namespace} /></td>
                   <td style={{ padding: '5px' }} ><Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} /></td>
-                  <td style={{ padding: '5px' }} >{Object.keys(objects).map(k => { return <div key={'resource-' + k}>{modelFor(k) ?  ResourceLabel(modelFor(k), t) : k}</div> })}</td>
+                  <td style={{ padding: '5px' }} >{Object.keys(objects).map(k => { return <div key={'resource-' + k}>{modelFor(k) ? ResourceLabel(modelFor(k), t) : k}</div> })}</td>
                   <td style={{ padding: '5px' }} >{version}</td>
                   <td style={{ padding: '5px' }} ><Timestamp timestamp={info.first_deployed} /></td>
                   <td style={{ padding: '5px' }} ><Kebab options={options} /></td>
