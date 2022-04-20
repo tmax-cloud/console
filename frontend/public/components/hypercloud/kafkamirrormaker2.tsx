@@ -68,13 +68,13 @@ export const KafkaMirrorMaker2DetailsList: React.FC<KafkaMirrorMaker2DetailsList
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_138')} obj={km2}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_1')} obj={km2}>
         {km2.spec?.clusters?.bootstrapServers}
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_139')} obj={km2}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_2')} obj={km2}>
         {km2.spec?.replicas}
       </DetailsItem>
-      <DetailsItem label='트레이싱 타입' obj={km2}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAMIRRORMAKER2_KAFKAMIRRORMAKER2DETAILS_TABDETAILS_3')} obj={km2}>
         {km2.spec?.tracing?.type}
       </DetailsItem>
     </dl>

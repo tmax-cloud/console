@@ -87,24 +87,24 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_137')} obj={kr}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_1')} obj={kr}>
         {kr.metadata?.labels['strimzi.io/cluster']}
       </DetailsItem>
-      <DetailsItem label='브로커 내 파티션 최대 이동 횟수' obj={kr}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_2')} obj={kr}>
         {kr.spec?.concurrentIntraBrokerPartitionMovements}
       </DetailsItem>
-      <DetailsItem label='파티션 리더 최대 변경 수' obj={kr}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_3')} obj={kr}>
         {kr.spec?.concurrentLeaderMovements}
       </DetailsItem>
-      <DetailsItem label='브로커 간 파티션 최대 이동 수' obj={kr}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_4')} obj={kr}>
         {kr.spec?.concurrentPartitionMovementsPerBroker}
       </DetailsItem>
-      <DetailsItem label='목표' obj={kr}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_5')} obj={kr}>
         {kr.spec?.goals?.map((goal) => {return <p key={`key-${goal}`}>{goal}</p>} )}
       </DetailsItem>
       {loading && config && config.get('hard.goals') &&
-        <DetailsItem label='카프카 클러스터 목표' obj={kr}>
-          {kr.spec?.skipHardGoalCheck ? '확인함' : '확인하지 않음'}
+        <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_6')} obj={kr}>
+          {kr.spec?.skipHardGoalCheck ? t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_7') : t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_8')}
         </DetailsItem>
       }
     </dl>

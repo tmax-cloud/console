@@ -75,31 +75,31 @@ export const KafkaBrokerDetailsList: React.FC<KafkaBrokerDetailsListProps> = ({ 
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label='kafka config' obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_1')} obj={kb}>
         {kb.spec?.kafka?.config && Object.keys(kb.spec?.kafka?.config).map(key => {return <p>{`${key} : ${kb.spec?.kafka?.config[key]}`}</p>})}
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_134')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_2')} obj={kb}>
         {kb.spec?.kafka?.replicas}
       </DetailsItem>
-      <DetailsItem label='kafka storage type' obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_3')} obj={kb}>
         {kb.spec?.kafka?.storage?.type}
       </DetailsItem>
-      <DetailsItem label='kafka storage size' obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_4')} obj={kb}>
         {kb.spec?.kafka?.storage?.size}
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_135')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_5')} obj={kb}>
         {kb.spec?.kafka?.version}
       </DetailsItem>
-      <DetailsItem label='zookeeper config' obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_6')} obj={kb}>
         {kb.spec?.zookeeper?.config && Object.keys(kb.spec?.zookeeper?.config).map(key => {return <p>{`${key} : ${kb.spec?.zookeeper?.config[key]}`}</p>})}
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_136')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_7')} obj={kb}>
         {kb.spec?.zookeeper?.replicas}
       </DetailsItem>
-      <DetailsItem label='zookeeper storage type' obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_8')} obj={kb}>
         {kb.spec?.zookeeper?.storage?.type}
       </DetailsItem>
-      <DetailsItem label='kafka storage size' obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_9')} obj={kb}>
         {kb.spec?.zookeeper?.storage?.size}
       </DetailsItem>
     </dl>

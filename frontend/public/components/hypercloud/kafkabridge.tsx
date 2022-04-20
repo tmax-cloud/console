@@ -68,10 +68,10 @@ export const KafkaBridgeDetailsList: React.FC<KafkaBridgeDetailsListProps> = ({ 
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_138')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABRIDGES_KAFKABRIDGEDETAILS_TABDETAILS_1')} obj={kb}>
         {kb.spec?.bootstrapServers}
       </DetailsItem>
-      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_139')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABRIDGES_KAFKABRIDGEDETAILS_TABDETAILS_2')} obj={kb}>
         {kb.spec?.replicas}
       </DetailsItem>
     </dl>
