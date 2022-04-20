@@ -68,10 +68,10 @@ const KafkaConnectorsDetails: React.FC<KafkaConnectorsDetailsProps> = ({ obj }) 
           </div>
           <div className="col-sm-6">
             <dl className="co-m-pane__details">
-              <DetailsItem label="클래스" obj={obj}>
+              <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACONNECTORS_KAFKACONNECTORDETAILS_TABDETAILS_1')} obj={obj}>
                 {obj.spec.class}
               </DetailsItem>
-              <DetailsItem label="컨피그" obj={obj}>
+              <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACONNECTORS_KAFKACONNECTORDETAILS_TABDETAILS_2')} obj={obj}>
                 {/* TODO */}
               </DetailsItem>
             </dl>
