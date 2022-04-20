@@ -6,6 +6,7 @@ import { KafkaConnectModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
+import { CodeContainer } from '../utils/hypercloud/code-container';
 
 const kind = KafkaConnectModel.kind;
 
@@ -74,12 +75,13 @@ const KafkaConnectsDetails: React.FC<KafkaConnectsDetailsProps> = ({ obj }) => {
               <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACONNECTS_KAFKACONNECTDETAILS_TABDETAILS_2')} obj={obj}>
                 {obj.spec.bootstrapServers}
               </DetailsItem>
-              <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACONNECTS_KAFKACONNECTDETAILS_TABDETAILS_3')} obj={obj}>
-                {/* TODO */}
-              </DetailsItem>
             </dl>
           </div>
         </div>
+      </div>
+      <div className="co-m-pane__body">
+        <SectionHeading text={t('MULTI:MSG_DEVELOPER_KAFKACONNECTS_KAFKACONNECTDETAILS_TABDETAILS_3')} />
+        <CodeContainer label={t('MULTI:MSG_DEVELOPER_KAFKACONNECTS_KAFKACONNECTDETAILS_TABDETAILS_3')} value={obj.spec?.config} />
       </div>
     </>
   );
