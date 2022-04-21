@@ -490,6 +490,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { defaultValue, namespace } = props;
   const chartName = defaultValue ? defaultValue.chart.metadata.name : '';
   const releaseName = defaultValue ? defaultValue.name : '';
+  const packageURL = defaultValue ? defaultValue.chart.metadata.version : '';
   const version = defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
 
@@ -534,7 +535,8 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             })
           });
           if (defaultValue) {
-            setPostPackageURL(tempEntriesList.filter((e) => { if (e.name === tempChartObject[chartName]) return true; })[0].urls[0]);
+            const entry = tempEntriesList.filter((e) => { if (e.name === tempChartObject[chartName]) return true; })[0]
+            setPostPackageURL(entry ? entry.urls[0] : 'This chart is not on the server');
           }
           setEntries(tempEntriesList);
           setChartNameList(tempChartObject);
