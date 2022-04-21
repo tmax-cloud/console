@@ -110,10 +110,10 @@ const EntriesTable: React.FC<EntriesTableProps> = props => {
   );
 }
 
-type HelmchartFromProps = {
+type HelmchartFormProps = {
   defaultValue?: any
 };
-export const HelmchartFrom: React.FC<HelmchartFromProps> = props => {
+export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
   const { t } = useTranslation();
   const { defaultValue } = props;
   const name = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.name : '';
@@ -197,7 +197,7 @@ export const HelmchartCreatePage = () => {
       <div style={{ marginLeft: '15px' }}>
         <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</h1>
       </div>
-      <HelmchartFrom />
+      <HelmchartForm />
     </>
   );
 }
@@ -269,16 +269,32 @@ export const ChartDetailsTapPage: React.FC<ChartDetailsTapPageProps> = props => 
         </div>
         <div className="col-lg-6">
           <dl className="co-m-pane__details">
+            <dt>{t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_2')}</dt>
+            <dd>
+              <div>{entry.version}</div>
+            </dd>
+            <dt>{t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_3')}</dt>
+            <dd>
+              <div>{entry.appVersion}</div>
+            </dd>
+            {entry.sources &&
+              <>
+                <dt>{t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_4')}</dt>
+                <dd>
+                  <div>{entry.sources.map((source) => { return (<p key={`source-${source}`}>{source}</p>) })}</div>
+                </dd>
+              </>
+            }
             <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1')}</dt>
             <dd>
               <div>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_2') + ' : ' + entry.repo.name}</div>
               <div>{'URL : ' + entry.repo.url}</div>
             </dd>
-            <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_3')}</dt>
+            <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_6')}</dt>
             <dd>
-              {entry.version}
+              {entry.maintainers.map((m) => { return (<div key={'mainatainer-key-' + m.name}>{m.name}</div>) })}
             </dd>
-            <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_4')}</dt>
+            <dt>{t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_9')}</dt>
             <dd>
               <a href={entry.home} target='_blank'>
                 {entry.home}
@@ -287,10 +303,6 @@ export const ChartDetailsTapPage: React.FC<ChartDetailsTapPageProps> = props => 
             <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_5')}</dt>
             <dd>
               <Timestamp timestamp={entry.created} />
-            </dd>
-            <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_6')}</dt>
-            <dd>
-              {entry.maintainers.map((m) => { return (<div key={'mainatainer-key-' + m.name}>{m.name}</div>) })}
             </dd>
           </dl>
         </div>
@@ -339,7 +351,7 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
     <>
       <HelmchartDetailsHeader name={name} />
       <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath='' />
-      {loading && <HelmchartFrom defaultValue={chart} />}
+      {loading && <HelmchartForm defaultValue={chart} />}
     </>
   );
 }
