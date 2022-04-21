@@ -110,10 +110,10 @@ const EntriesTable: React.FC<EntriesTableProps> = props => {
   );
 }
 
-type HelmchartFromProps = {
+type HelmchartFormProps = {
   defaultValue?: any
 };
-export const HelmchartFrom: React.FC<HelmchartFromProps> = props => {
+export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
   const { t } = useTranslation();
   const { defaultValue } = props;
   const name = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.name : '';
@@ -197,7 +197,7 @@ export const HelmchartCreatePage = () => {
       <div style={{ marginLeft: '15px' }}>
         <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}</h1>
       </div>
-      <HelmchartFrom />
+      <HelmchartForm />
     </>
   );
 }
@@ -339,7 +339,7 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
     <>
       <HelmchartDetailsHeader name={name} />
       <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath='' />
-      {loading && <HelmchartFrom defaultValue={chart} />}
+      {loading && <HelmchartForm defaultValue={chart} />}
     </>
   );
 }

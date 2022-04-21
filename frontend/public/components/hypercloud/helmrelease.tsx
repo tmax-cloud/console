@@ -481,11 +481,11 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
   );
 };
 
-type HelmreleasesFromProps = {
+type HelmreleasesFormProps = {
   namespace: string;
   defaultValue?: any;
 };
-export const HelmreleasesFrom: React.FC<HelmreleasesFromProps> = props => {
+export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { t } = useTranslation();
   const { defaultValue, namespace } = props;
   const chartName = defaultValue ? defaultValue.chart.metadata.name : '';
@@ -634,7 +634,7 @@ export const HelmReleaseCreatePage: React.FC<HelmReleasePageProps> = ({ match })
             <div style={{ marginLeft: '15px' }}>
               <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })}</h1>
             </div>
-            <HelmreleasesFrom namespace={namespace} />
+            <HelmreleasesForm namespace={namespace} />
           </div>
         ) : (
           <SelectNamespacePage />
@@ -685,7 +685,7 @@ export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) =
           <div style={{ background: 'white', height: '100%' }}>
             <HelmreleasestDetailsHeader namespace={namespace} name={name} helmrelease={loading ? helmReleases[0] : null} />
             <NavBar pages={allPages} baseURL={`/helmreleases/ns/${namespace}/${name}`} basePath='' />
-            {loading ? <HelmreleasesFrom namespace={namespace} defaultValue={helmReleases[0]} /> : <LoadingInline />}
+            {loading ? <HelmreleasesForm namespace={namespace} defaultValue={helmReleases[0]} /> : <LoadingInline />}
           </div>
         ) : (
           <SelectNamespacePage />
