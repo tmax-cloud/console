@@ -490,7 +490,6 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { defaultValue, namespace } = props;
   const chartName = defaultValue ? defaultValue.chart.metadata.name : '';
   const releaseName = defaultValue ? defaultValue.name : '';
-  const packageURL = defaultValue ? defaultValue.chart.metadata.version : '';
   const version = defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
 
@@ -610,7 +609,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                 </Section>
               </>
             }
-            <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />
+            <YAMLEditor value={postValues && undefined} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />
             <div style={{ marginTop: '10px' }}>
               <Button type="button" variant="primary" id="save" onClick={onClick}>{defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}</Button>
               <Button style={{ marginLeft: '10px' }} type="button" variant="secondary" id="cancel" onClick={() => { history.goBack(); }}>{t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}</Button>
