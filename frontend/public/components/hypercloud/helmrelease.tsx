@@ -490,7 +490,6 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { defaultValue, namespace } = props;
   const chartName = defaultValue ? defaultValue.chart.metadata.name : '';
   const releaseName = defaultValue ? defaultValue.name : '';
-  const packageURL = defaultValue ? defaultValue.chart.metadata.version : '';
   const version = defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
 
@@ -500,7 +499,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const [postPackageURL, setPostPackageURL] = React.useState('');
   const [postReleaseName, setPostReleaseName] = React.useState(releaseName);
   const [postVersion, setPostVersion] = React.useState(version);
-  const [postValues, setPostValues] = React.useState(safeDump(values));
+  const [postValues, setPostValues] = React.useState(values ? safeDump(values) : '');
   const [inProgress, setProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [entries, setEntries] = React.useState([]);
