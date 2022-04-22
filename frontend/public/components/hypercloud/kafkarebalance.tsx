@@ -6,9 +6,7 @@ import { KafkaBrokerModel, KafkaRebalanceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
-import { coFetchJSON } from '@console/internal/co-fetch';
-import { Selector } from '@console/internal/module/k8s';
-import { selectorToString } from '@console/internal/module/k8s/selector';
+import { k8sList } from '@console/internal/module/k8s';
 
 const kind = KafkaRebalanceModel.kind;
 
@@ -25,8 +23,8 @@ const tableProps: TableProps = {
       sortField: 'metadata.namespace',
     },
     {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_137',
-        sortField: `obj.metadata.labels['strimzi.io/cluster']`,
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_137',
+      sortField: `obj.metadata.labels['strimzi.io/cluster']`,
     },
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
@@ -61,23 +59,22 @@ const tableProps: TableProps = {
 
 export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps> = ({ obj: kr }) => {
   const { t } = useTranslation();
-  const [config, setConfig] = React.useState(new Map);  
+  const [config, setConfig] = React.useState(new Map);
   const [loading, setLoading] = React.useState(false);
+  const kafkaName = kr.metadata?.labels['strimzi.io/cluster'];
+  const namespace = kr.metadata?.namespace;
 
-  const kafkaWithLabelSelector = labelSelector => {
-    const { apiGroup, apiVersion, plural } = KafkaBrokerModel;
-    const labelSelectorString = selectorToString(labelSelector as Selector);
-    const query = `&${encodeURIComponent('labelSelector')}=${encodeURIComponent(labelSelectorString)}`;    
-    return `${location.origin}/api/console/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
-  };
-  
   React.useEffect(() => {
     const fetchKafkaConfig = async () => {
-      await coFetchJSON(kafkaWithLabelSelector({
-        'strimzi.io/cluster': kr.metadata?.labels['strimzi.io/cluster'],
-      })).then((res) => {
-        const { items } = res;
-        const kafka = items[0];
+      await k8sList(KafkaBrokerModel, {
+        ns: namespace,
+        labelSelector: {
+          matchLabels: {
+            'strimzi.io/cluster': kafkaName,
+          },
+        },
+      }).then((res) => {
+        const kafka = res[0];
         setConfig(kafka.spec?.cruiseControl?.config);
         setLoading(true);
       });
@@ -100,7 +97,7 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
         {kr.spec?.concurrentPartitionMovementsPerBroker}
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_5')} obj={kr}>
-        {kr.spec?.goals?.map((goal) => {return <p key={`key-${goal}`}>{goal}</p>} )}
+        {kr.spec?.goals?.map((goal) => { return <p key={`key-${goal}`}>{goal}</p> })}
       </DetailsItem>
       {loading && config && config.get('hard.goals') &&
         <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_6')} obj={kr}>
