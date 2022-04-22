@@ -53,8 +53,6 @@ func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 			http.StripPrefix(consoleProxyPath, http.HandlerFunc(s.ConsoleProxyHandler)))
 		r.Method("GET", "/api/v1/*",
 			http.StripPrefix(consoleProxyPath, http.HandlerFunc(s.ConsoleProxyHandler)))
-		r.Method("GET", "/apis/kafka.strimzi.io/*",
-			http.StripPrefix(consoleProxyPath, http.HandlerFunc(s.ConsoleProxyHandler)))	
 	})
 
 	//proxyK8SPath := singleJoiningSlash(s.App.BasePath, "/api/kubernetes")
