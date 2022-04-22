@@ -38,14 +38,12 @@ pipeline {
     string(name: 'REALM', defaultValue: 'tmax', description: 'hyperauth realm info')
     string(name: 'CLIENTID', defaultValue: 'ck-integration-hypercloud5', description: 'hyperauth client id info')
     string(name: 'MC_MODE', defaultValue: 'true', description: 'Choice multi cluster mode')
-    string(name: 'CHATBOT_EMBED', defaultValue: 'true', description: 'Enable chatbot')
+    string(name: 'CHATBOT_EMBED', defaultValue: 'false', description: 'Enable chatbot')
   }
   triggers {
     // ref https://plugins.jenkins.io/parameterized-scheduler/
     // trigger at 9:00 every Thursday 
-    parameterizedCron('''
-    H 9 * * 4 %BUILD_MODE=PATCH
-    ''')
+    parameterizedCron('H 9 * * 4 %BUILD_MODE=PATCH')
   }
   environment {
     BRANCH = "hc-dev-v5.1"
@@ -154,7 +152,7 @@ pipeline {
             --date-order --reverse --date=format:'%Y-%m-%d' \
             --pretty=format:'- %ad %s (by %cn) %n    Note: %b' >> ./CHANGELOG/CHANGELOG-${VER}.md
             echo "" >> ./CHANGELOG/CHANGELOG-${VER}.md
-             sed -i "s/\\[patch\\]//g" ./CHANGELOG/CHANGELOG-${VER}.md
+            sed -i "s/\\[patch\\]//g" ./CHANGELOG/CHANGELOG-${VER}.md
             sed -i "/^    Note: \$/d" ./CHANGELOG/CHANGELOG-${VER}.md
           """
           sh """
