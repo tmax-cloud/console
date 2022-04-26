@@ -76,7 +76,7 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.kafka,
-    innerMenus: [Models.KafkaBrokerModel.kind, Models.KafkaRebalanceModel.kind, Models.KafkaMirrorMaker2Model.kind, Models.KafkaBridgeModel.kind, Models.KafkaConnectorModel.kind, Models.KafkaConnectModel.kind],
+    innerMenus: [Models.KafkaClusterModel.kind, Models.KafkaRebalanceModel.kind, Models.KafkaMirrorMaker2Model.kind, Models.KafkaBridgeModel.kind, Models.KafkaConnectorModel.kind, Models.KafkaConnectModel.kind],
   },
 ];
 
