@@ -5,21 +5,16 @@ import * as fuzzy from 'fuzzysearch';
 import { toLower } from 'lodash';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { Tooltip, Button, TextInput } from '@patternfly/react-core';
+import { Tooltip, Button } from '@patternfly/react-core';
 import { NavBar } from '../utils/horizontal-nav';
 import { useTranslation } from 'react-i18next';
-import { Firehose, history, inject, kindObj, makeQuery, makeReduxID, PageHeading, RequireCreatePermission } from '../utils';
+import { PageHeading, } from '../utils';
 import { Dropdown as DropdownInternal } from '@console/internal/components/utils';
-import NamespacedPage from '@console/dev-console/src/components/NamespacedPage';
-import { FilterToolbar } from '../filter-toolbar';
-import { DefaultListComponent } from '../hypercloud/utils/default-list-component';
 import { Checkbox, DataToolbar, DataToolbarContent, DataToolbarFilter, DataToolbarChip, DataToolbarItem, Dropdown, DropdownItem, DropdownToggle, DropdownGroup, Badge } from '@patternfly/react-core';
-import { withRouter, RouteComponentProps } from 'react-router';
 import { CaretDownIcon, FilterIcon } from '@patternfly/react-icons';
 import AutocompleteInput from '../autocomplete';
 import { storagePrefix } from '../row-filter';
 import { setQueryArgument, getQueryArgument, removeQueryArgument } from '../utils';
-import { isString } from 'util';
 
 export type NonK8SListPageProps = {
     namespace?: string;
@@ -36,7 +31,6 @@ export type NonK8SListPageProps = {
     helpText?: string;
     badge?: React.ReactNode;
     ListComponent?: React.ComponentType<any>;
-    tableProps?: any;
     hideToolbar?: boolean;
     hideLabelFilter?: boolean;
     kind?: string;
@@ -45,7 +39,7 @@ export type NonK8SListPageProps = {
     reducer?: Function;
 };
 export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
-    const { namespace, title, displayTitleRow = true, items, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, tableProps, hideToolbar = false, hideLabelFilter = false, kind, kinds = [kind], reducer
+    const { namespace, title, displayTitleRow = true, items, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, hideLabelFilter = false, kind, kinds = [kind], reducer
     } = props;
     const { t } = useTranslation();
 
@@ -90,13 +84,12 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
         </div>
     );
     const data = items ? items : [];
-    const [filteredData, setFilteredData] = React.useState(data);
     const [checkedRowFilter, setCheckedRowFilter] = React.useState(getQueryArgument(`rowFilter-${rowFilters[0].type}`));
     const [nameFilterText, setNameFilterText] = React.useState(getQueryArgument('name'));
-    const [filteredData2, setFilteredData2] = React.useState(data);
+    const [filteredData, setFilteredData] = React.useState(data);
 
     React.useEffect(() => {
-        setFilteredData2(data.filter((d) => {
+        setFilteredData(data.filter((d) => {
             if (nameFilterFunction(d, nameFilterText) && rowFilterFunction(d, checkedRowFilter)) {
                 return true;
             }
@@ -117,10 +110,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
             else { return false; }
         }
     };
-
-    //const data = items ? items : [];
-    console.log(filteredData);
-    const Filter = <FilterToolbar2 rowFilters={rowFilters} data={data} setFilteredData={setFilteredData} setCheckedRowFilter={setCheckedRowFilter} setNameFilterText={setNameFilterText} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} kinds={kinds} reducer={reducer} {...props} />;
+    const Filter = <FilterToolbar rowFilters={rowFilters} setCheckedRowFilter={setCheckedRowFilter} setNameFilterText={setNameFilterText} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} kinds={kinds} reducer={reducer} {...props} />;
     //const Filter = <></>;
     //const List = tableProps ? <DefaultListComponent {...props} data={data} /> : <ListComponent data={data} />;
 
@@ -147,7 +137,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
                     {!_.isEmpty(data) && Filter}
                     <div className="row">
                         <div className="col-xs-12">
-                            <ListComponent data={filteredData2} loaded={true} />
+                            <ListComponent data={filteredData} loaded={true} />
                         </div>
                     </div>
                 </div>
@@ -159,7 +149,6 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
 type FilterToolbarProps = {
     rowFilters?: RowFilter[];
     data?: any;
-    setFilteredData?: Function;
     reduxIDs?: string[];
     filterList?: any;
     textFilter?: string;
@@ -227,13 +216,12 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
         );
     });
 
-const FilterToolbar2: React.FC<FilterToolbarProps> = props => {
-    const { rowFilters = [], data, setFilteredData, hideToolbar, hideLabelFilter, textFilter = filterTypeMap[FilterType.NAME], storeSelectedRows = new Set(), defaultSelectedRows = [], reducer, setCheckedRowFilter, setNameFilterText } = props;
+const FilterToolbar: React.FC<FilterToolbarProps> = props => {
+    const { rowFilters = [], data, hideToolbar, hideLabelFilter, textFilter = filterTypeMap[FilterType.NAME], setCheckedRowFilter, setNameFilterText } = props;
     const { t } = useTranslation();
     const [inputText, setInputText] = React.useState('');
     const [filterType, setFilterType] = React.useState(FilterType.NAME);
     const [isOpen, setOpen] = React.useState(false);
-    const [rowFilteredData, setRowFilteredData] = React.useState(data);
 
     // (rowFilters) => {'rowFilterTypeA': ['staA', 'staB'], 'rowFilterTypeB': ['stbA'] }
     const filters: Filter = rowFilters.reduce((acc, curr) => {
@@ -285,7 +273,7 @@ const FilterToolbar2: React.FC<FilterToolbarProps> = props => {
             removeQueryArgument('label');
         }
         setInputText('');
-        applyFilter(filterValues, FilterType.LABEL);
+        // applyFilter(filterValues, FilterType.LABEL);
     };
 
     const updateNameFilter = (filterValue: string) => {
@@ -296,7 +284,7 @@ const FilterToolbar2: React.FC<FilterToolbarProps> = props => {
         }
         setInputText(filterValue);
         setNameFilterText(filterValue);
-        applyFilter(filterValue, FilterType.NAME);
+        // applyFilter(filterValue, FilterType.NAME);
     };
 
     const updateExternalNameFilter = (filterValue: string) => {
@@ -306,7 +294,7 @@ const FilterToolbar2: React.FC<FilterToolbarProps> = props => {
             removeQueryArgument(filterTypeMap[FilterType.EXTERNAL_NAME]);
         }
         setInputText(filterValue);
-        applyFilter(filterValue, FilterType.EXTERNAL_NAME);
+        // applyFilter(filterValue, FilterType.EXTERNAL_NAME);
     };
 
     const updateSearchFilter = (value: string) => {
@@ -337,73 +325,27 @@ const FilterToolbar2: React.FC<FilterToolbarProps> = props => {
 
     const updateRowFilterSelected = (id: string[]) => {
         const selectedNew = _.xor(selectedRowFilters, id);
-        applyRowFilter(selectedNew);
+        // applyRowFilter(selectedNew);
         setQueryParameters(selectedNew);
         setCheckedRowFilter(selectedNew.join())
         setOpen(false);
     };
 
-    const applyFilter = (input: string | string[], type: FilterType) => {
-        const filter = filterTypeMap[type];
-        const value = type === FilterType.LABEL ? { all: input } : input;
-        if (filter === 'name') {
-            if (value === '') { setFilteredData(data) }
-            else {
-                const valueString = isString(value) ? value : '';
-                setFilteredData(data.filter(
-                    (d) => {
-                        if (fuzzy(toLower(valueString), toLower(d.name))) {
-                            return true;
-                        }
-                    }
-                ));
-            }
-        }
-        // if (filter === 'name') {
-        //     if (value === '') { setFilteredData(rowFilteredData) }
-        //     else {
-        //         const valueString = isString(value) ? value : '';
-        //         setFilteredData(rowFilteredData.filter(
-        //             (d) => {
-        //                 if (fuzzy(toLower(valueString), toLower(d.name))) {
-        //                     return true;
-        //                 }
-        //             }
-        //         ));
-        //     }
-        // }
-        //props.reduxIDs.forEach(id => props.filterList(id, filter, value));
-    };
+    // const applyFilter = (input: string | string[], type: FilterType) => {
+    //     const filter = filterTypeMap[type];
+    //     const value = type === FilterType.LABEL ? { all: input } : input;
+    //     //props.reduxIDs.forEach(id => props.filterList(id, filter, value));
+    // };
 
-    const applyRowFilter = (selected: string[]) => {
-        rowFilters.forEach(filter => {
-            const rowItems = filter.itemsGenerator ? filter.itemsGenerator(props, props?.kinds) : filter.items;
-            const all = _.map(rowItems, 'id');
-            const recognized = _.intersection(selected, all);
-            if (recognized.length === 0) { setFilteredData(data) }
-            else {
-                setFilteredData(data.filter(
-                    (d) => {
-                        if (recognized.indexOf(reducer(d)) > -1) {
-                            return true;
-                        }
-                    }
-                ));
-            }
-            // if (recognized.length === 0) { setRowFilteredData(data) }
-            // else {
-            //     setRowFilteredData(data.filter(
-            //         (d) => {
-            //             if (recognized.indexOf(reducer(d)) > -1) {
-            //                 return true;
-            //             }
-            //         }
-            //     ));
-            // }
-            //(props.reduxIDs || []).forEach(id => props.filterList(id, filter.type, { selected: new Set(recognized), all }));
-        });
-        // updateNameFilter(inputText);
-    };
+    // const applyRowFilter = (selected: string[]) => {
+    //     rowFilters.forEach(filter => {
+    //         const rowItems = filter.itemsGenerator ? filter.itemsGenerator(props, props?.kinds) : filter.items;
+    //         const all = _.map(rowItems, 'id');
+    //         const recognized = _.intersection(selected, all);
+    //         //(props.reduxIDs || []).forEach(id => props.filterList(id, filter.type, { selected: new Set(recognized), all }));
+    //     });
+    //     // updateNameFilter(inputText);
+    // };
 
     const setQueryParameters = (selected: string[]) => {
         if (!_.isEmpty(selectedRowFilters) || !_.isEmpty(selected)) {
@@ -446,7 +388,6 @@ const FilterToolbar2: React.FC<FilterToolbarProps> = props => {
         event.preventDefault();
         updateRowFilterSelected([event?.target?.id]);
     };
-
 
     return (
         !hideToolbar && (

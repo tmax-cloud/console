@@ -23,13 +23,10 @@ import { Button, Modal, Badge } from '@patternfly/react-core';
 
 import * as classNames from 'classnames';
 import { sortable } from '@patternfly/react-table';
-import { K8sResourceKind } from '../../module/k8s';
-import { DetailsItem, KebabAction, detailsPage, navFactory, ResourceKebab, ResourceSummary } from '../utils';
-import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
+import { KebabAction, ResourceKebab } from '../utils';
+import { Table, TableRow, TableData, RowFunction } from '../factory';
 import { TFunction } from 'i18next';
-import { Popover } from '@patternfly/react-core';
 import { NonK8SListPage } from '../factory/NonK8SListPage';
-import { TableProps } from './utils/default-list-component';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
 
 const capitalize = (text: string) => { return text.charAt(0).toUpperCase() + text.slice(1); }
@@ -718,7 +715,6 @@ const allPages = [
 ];
 
 export const menuActions: KebabAction[] = [...Kebab.factory.common];
-const kind = 'HelmReleases'
 
 const filters = t => [
   {
@@ -774,7 +770,6 @@ export const HelmReleasePage2: React.FC<HelmReleasePageProps> = ({ match }) => {
           canCreate={true}
           items={helmReleases}
           rowFilters={filters.bind(null, t)()}
-          tableProps={tableProps}
           kind='helmreleases2'
           ListComponent={Helmreleases}
           namespace={namespace}
@@ -785,78 +780,6 @@ export const HelmReleasePage2: React.FC<HelmReleasePageProps> = ({ match }) => {
     </>
   );
 };
-
-const tableProps: TableProps = {
-    header: [
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
-        sortField: 'name',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
-        sortField: 'namespace',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_112',
-        sortFunc: 'HelmReleaseStatusReducer',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_110',        
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_132',
-        sortField: 'version',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
-        sortField: 'info.first_deployed',
-      },
-      {
-        title: '',
-        transforms: null,
-        props: { className: Kebab.columnClass },
-      },
-    ],
-    row: (obj: any) => {
-      const { t } = useTranslation();
-      const Resources = (objects) => {
-          return (
-            <>
-                {Object.keys(objects).map(k => { return <div key={'resource-' + k}>{t(modelFor(k).i18nInfo.label)}</div> })}
-            </>
-          );
-      }        
-      return [
-        {
-          children: <Link key={'link' + obj.name} to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
-        },
-        {
-          className: 'co-break-word',
-          children: <ResourceLink kind="Namespace" name={obj.namespace} title={obj.namespace} />,
-        },
-        {
-          className: classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'co-break-word'),
-          children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
-        },
-        {
-          className: classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'co-break-word'),
-          children: <Resources objects={obj.objects} />,
-        },
-        {
-          className: classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'co-break-word'),
-          children: obj.version,
-        },
-        {
-          className: classNames('pf-m-hidden', 'pf-m-visible-on-lg', 'co-break-word'),
-          children: <Timestamp timestamp={obj.info.first_deployed} />,
-        },  
-        {
-          className: Kebab.columnClass,
-          children: <ResourceKebab actions={menuActions} kind={kind} resource={obj} />,
-        },
-      ];
-    },
-  };
 
 const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
 const HelmreleaseTableHeader = (t?: TFunction) => {
