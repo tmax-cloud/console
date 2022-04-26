@@ -2,7 +2,7 @@ import * as React from 'react';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { KafkaBrokerModel, KafkaRebalanceModel } from '../../models';
+import { KafkaClusterModel, KafkaRebalanceModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
@@ -45,7 +45,7 @@ const tableProps: TableProps = {
       children: <ResourceLink kind="Namespace" name={obj.metadata.namespace} title={obj.metadata.namespace} />,
     },
     {
-      children: obj.metadata.labels['strimzi.io/cluster'],
+      children: <ResourceLink kind={KafkaClusterModel.kind} name={obj.metadata.labels['strimzi.io/cluster']} namespace={obj.metadata.namespace} />,
     },
     {
       children: <Timestamp timestamp={obj.metadata.creationTimestamp} />,
@@ -66,7 +66,7 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
 
   React.useEffect(() => {
     const fetchKafkaConfig = async () => {
-      await k8sList(KafkaBrokerModel, {
+      await k8sList(KafkaClusterModel, {
         ns: namespace,
         labelSelector: {
           matchLabels: {
@@ -85,7 +85,7 @@ export const KafkaRebalanceDetailsList: React.FC<KafkaRebalanceDetailsListProps>
   return (
     <dl className="co-m-pane__details">
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_1')} obj={kr}>
-        {kr.metadata?.labels['strimzi.io/cluster']}
+        <ResourceLink kind={KafkaClusterModel.kind} name={kr.metadata.labels['strimzi.io/cluster']} namespace={kr.metadata.namespace} />
       </DetailsItem>
       <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKAREBALANCES_KAFKAREBALANCEDETAILS_TABDETAILS_2')} obj={kr}>
         {kr.spec?.concurrentIntraBrokerPartitionMovements}
