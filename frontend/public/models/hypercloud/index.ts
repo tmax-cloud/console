@@ -1628,13 +1628,13 @@ export const BareMetalHostModel: K8sKind = {
   },
 };
 
-export const KafkaBrokerModel: K8sKind = {
-  label: 'Kafka Broker',
-  labelPlural: 'Kafka Brokers',
+export const KafkaClusterModel: K8sKind = {
+  label: 'Kafka Cluster',
+  labelPlural: 'Kafka Clusters',
   apiVersion: 'v1beta2',
   apiGroup: 'kafka.strimzi.io',
   plural: 'kafkas',
-  abbr: 'KB',
+  abbr: 'KC',
   namespaced: true,
   kind: 'Kafka',
   id: 'kafka',

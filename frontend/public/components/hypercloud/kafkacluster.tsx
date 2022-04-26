@@ -2,12 +2,12 @@ import * as React from 'react';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { KafkaBrokerModel } from '../../models';
+import { KafkaClusterModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
 import { TableProps } from './utils/default-list-component';
 
-const kind = KafkaBrokerModel.kind;
+const kind = KafkaClusterModel.kind;
 
 const menuActions: KebabAction[] = [...Kebab.factory.common];
 
@@ -70,43 +70,43 @@ const tableProps: TableProps = {
   ],
 };
 
-export const KafkaBrokerDetailsList: React.FC<KafkaBrokerDetailsListProps> = ({ obj: kb }) => {
+export const KafkaClusterDetailsList: React.FC<KafkaClusterDetailsListProps> = ({ obj: kb }) => {
   const { t } = useTranslation();
 
   return (
     <dl className="co-m-pane__details">
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_1')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_1')} obj={kb}>
         {kb.spec?.kafka?.config && Object.keys(kb.spec?.kafka?.config).map(key => {return <p>{`${key} : ${kb.spec?.kafka?.config[key]}`}</p>})}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_2')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_2')} obj={kb}>
         {kb.spec?.kafka?.replicas}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_3')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_3')} obj={kb}>
         {kb.spec?.kafka?.storage?.type}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_4')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_4')} obj={kb}>
         {kb.spec?.kafka?.storage?.size}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_5')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_5')} obj={kb}>
         {kb.spec?.kafka?.version}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_6')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_6')} obj={kb}>
         {kb.spec?.zookeeper?.config && Object.keys(kb.spec?.zookeeper?.config).map(key => {return <p>{`${key} : ${kb.spec?.zookeeper?.config[key]}`}</p>})}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_7')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_7')} obj={kb}>
         {kb.spec?.zookeeper?.replicas}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_8')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_8')} obj={kb}>
         {kb.spec?.zookeeper?.storage?.type}
       </DetailsItem>
-      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKABROKERS_KAFKABROKERDETAILS_TABDETAILS_9')} obj={kb}>
+      <DetailsItem label={t('MULTI:MSG_DEVELOPER_KAFKACLUSTERS_KAFKACLUSTERDETAILS_TABDETAILS_9')} obj={kb}>
         {kb.spec?.zookeeper?.storage?.size}
       </DetailsItem>
     </dl>
   );
 };
 
-const KafkaBrokerDetails: React.FC<KafkaBrokerDetailsProps> = ({ obj: kb }) => {
+const KafkaClusterDetails: React.FC<KafkaClusterDetailsProps> = ({ obj: kb }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -117,7 +117,7 @@ const KafkaBrokerDetails: React.FC<KafkaBrokerDetailsProps> = ({ obj: kb }) => {
             <ResourceSummary resource={kb} showOwner={false} />
           </div>
           <div className="col-sm-6">
-            <KafkaBrokerDetailsList obj={kb} />
+            <KafkaClusterDetailsList obj={kb} />
           </div>
         </div>
       </div>
@@ -127,18 +127,18 @@ const KafkaBrokerDetails: React.FC<KafkaBrokerDetailsProps> = ({ obj: kb }) => {
 
 const { details, editResource } = navFactory;
 
-export const KafkaBrokersPage: React.FC = props => {
+export const KafkaClustersPage: React.FC = props => {
   return <ListPage {...props} canCreate={true} kind={kind} tableProps={tableProps} />;
 };
 
-export const KafkaBrokersDetailsPage: React.FC<DetailsPageProps> = props => {
-  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(KafkaBrokerDetails)), editResource()]} />;
+export const KafkaClustersDetailsPage: React.FC<DetailsPageProps> = props => {
+  return <DetailsPage {...props} kind={kind} menuActions={menuActions} pages={[details(detailsPage(KafkaClusterDetails)), editResource()]} />;
 };
 
-type KafkaBrokerDetailsListProps = {
+type KafkaClusterDetailsListProps = {
   obj: K8sResourceKind;
 };
 
-type KafkaBrokerDetailsProps = {
+type KafkaClusterDetailsProps = {
   obj: K8sResourceKind;
 };
