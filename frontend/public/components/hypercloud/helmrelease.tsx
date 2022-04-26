@@ -587,7 +587,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
               <input className="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={releaseName} onChange={updatePostReleaseName} disabled={defaultValue} />
             </Section>
-            <Section label={t('COMMON:MSG_LNB_MENU_223')} id="chartName" isRequired={true}>
+            <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_2')} id="chartName" isRequired={true}>
               <Dropdown
                 name="chartName"
                 className="btn-group"
@@ -604,7 +604,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                 <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL" >
                   <div>{postPackageURL}</div>
                 </Section>
-                <Section label={t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_3')} id="version" >
+                <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')} id="version" >
                   <div>{postVersion}</div>
                 </Section>
               </>
