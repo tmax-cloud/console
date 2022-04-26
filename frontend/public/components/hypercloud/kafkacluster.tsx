@@ -139,7 +139,6 @@ export const KafkaClusterDetailsList: React.FC<KafkaClusterDetailsListProps> = (
           )
         }
       </DetailsItem>
-
     </dl>
   );
 };
