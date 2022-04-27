@@ -897,7 +897,7 @@ const HelmreleaseTableRow: RowFunction<any> = ({ obj: helmrelease, index, key, s
         <Status status={capitalize(HelmReleaseStatusReducer(helmrelease))} />
       </TableData>
       <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>
-        {Object.keys(helmrelease.objects).map(k => {
+        {Object.keys(helmrelease.objects).sort((a, b)=>{ return resourceSortFunction(a)-resourceSortFunction(b)}).map(k => {
           return <ResourceKind key={'resource-' + k} kind={k} />;
         })}
       </TableData>
@@ -910,6 +910,9 @@ const HelmreleaseTableRow: RowFunction<any> = ({ obj: helmrelease, index, key, s
       </TableData>
     </TableRow>
   );
+};
+const resourceSortFunction = (resource: string) => {
+  return resource.length;
 };
 type ResourceKindProps = {
   kind: string;
