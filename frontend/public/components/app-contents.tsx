@@ -171,9 +171,9 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/helmreleases2/all-namespaces" exact loader={() => import('./hypercloud/helmrelease2' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmReleasePage2))} />
           <LazyRoute path="/helmreleases2/all-namespaces/:name" loader={() => import('./hypercloud/helmrelease2' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmReleasePage2))} />
           <LazyRoute path="/helmreleases2/ns/:ns" loader={() => import('./hypercloud/helmrelease2' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmReleasePage2))} />
-          <LazyRoute path="/helmreleases2/ns/:ns/~new" loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmReleaseCreatePage))} />
-          <LazyRoute path="/helmreleases2/ns/:ns/:name" loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmReleaseDetailsPage))} />
-          <LazyRoute path="/helmreleases2/ns/:ns/:name/edit" loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmReleaseEditPage))} />
+          <LazyRoute path="/helmreleases2/ns/:ns/~new" loader={() => import('./hypercloud/helmrelease2' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmRelease2CreatePage))} />
+          <LazyRoute path="/helmreleases2/ns/:ns/:name" loader={() => import('./hypercloud/helmrelease2' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmRelease2DetailsPage))} />
+          <LazyRoute path="/helmreleases2/ns/:ns/:name/edit" loader={() => import('./hypercloud/helmrelease2' /* webpackChunkName: "helmrelease2" */).then(m => NamespaceFromURL(m.HelmRelease2EditPage))} />
           <Route path="/helmreleases2" component={NamespaceRedirect} />
           <Route path="/helmreleases" exact component={NamespaceRedirect} />
           <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({ match }) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
