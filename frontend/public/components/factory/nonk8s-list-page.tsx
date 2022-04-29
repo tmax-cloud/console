@@ -91,7 +91,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
         }
       }),
     );
-  }, [checkedRowFilter, nameFilterText]);
+  }, [data, checkedRowFilter, nameFilterText]);
   const nameFilterFunction = (data: any, name: string) => {
     if (!name || name === '') {
       return true;
