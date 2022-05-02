@@ -10,7 +10,6 @@ import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-stat
 import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown } from '@console/internal/components/utils';
-import { ErrorMessage } from '@console/internal/components/utils/button-bar';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { history } from '@console/internal/components/utils/router';
 import { LoadingInline } from '@console/internal/components/utils/status-box';
@@ -20,7 +19,7 @@ import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plur
 import { modelFor } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
-import { Button, Modal, Badge } from '@patternfly/react-core';
+import { Button, Badge } from '@patternfly/react-core';
 import { Table, TableRow, TableData, RowFunction } from '../factory';
 import { NonK8SListPage } from '../factory/nonk8s-list-page';
 import { sortable } from '@patternfly/react-table';
@@ -202,173 +201,6 @@ export const Helmreleases: React.FC = props => {
   return <Table {...props} aria-label={t('COMMON:MSG_LNB_MENU_203')} Header={HelmreleaseTableHeader.bind(null, t)} Row={HelmreleaseTableRow} virtualize />;
 };
 
-type HelmReleasesTableProps = {
-  helmReleases: any[];
-};
-const HelmReleasesTable: React.FC<HelmReleasesTableProps> = props => {
-  const { t } = useTranslation();
-  const { helmReleases } = props;
-  const [deleteNamesapce, setDeleteNamespace] = React.useState('');
-  const [deleteName, setDeleteName] = React.useState('');
-  const [open, setOpen] = React.useState(false);
-
-  type DeleteModalProps = {
-    namespace: string;
-    name: string;
-  };
-  const DeleteModal: React.FC<DeleteModalProps> = props => {
-    const { namespace, name } = props;
-    const { t } = useTranslation();
-    const [loading, setLoading] = React.useState(false);
-    const [host, setHost] = React.useState(defaultHost);
-    const ResourceName = () => (
-      <strong key={'ResourceName' + name} className="co-break-word">
-        {name}
-      </strong>
-    );
-    const Namespace = () => <strong key={'Namespace' + namespace}>{namespace}</strong>;
-    const [inProgress, setProgress] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState('');
-
-    React.useEffect(() => {
-      const fetchHelmChart = async () => {
-        await coFetchJSON(
-          ingressUrlWithLabelSelector({
-            'ingress.tmaxcloud.org/name': 'helm-apiserver',
-          }),
-        ).then(res => {
-          const { items } = res;
-          const ingress = items[0];
-          setHost(ingress.spec?.rules?.[0]?.host);
-          setLoading(true);
-        });
-      };
-      fetchHelmChart();
-    }, []);
-
-    const handleModalToggle = () => {
-      setOpen(!open);
-    };
-    const deleteAction = () => {
-      setProgress(true);
-      const deleteHelmreleases = () => {
-        const url = `https://${host}/helm/ns/${namespace}/releases/${name}`;
-        coFetchJSON
-          .delete(url)
-          .then(() => {
-            setOpen(!open);
-            location.reload();
-          })
-          .catch(e => {
-            setProgress(false);
-            setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
-          });
-      };
-      deleteHelmreleases();
-    };
-
-    return (
-      <React.Fragment>
-        <Modal
-          isSmall={true}
-          title={t('COMMON:MSG_MAIN_ACTIONBUTTON_16', { 0: t('COMMON:MSG_LNB_MENU_203') })}
-          isOpen={open}
-          onClose={handleModalToggle}
-          actions={[
-            <Button key="cancel" variant="secondary" onClick={handleModalToggle}>
-              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-            </Button>,
-            <Button key="delete" variant="danger" onClick={deleteAction} isActive={loading}>
-              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_13')}
-            </Button>,
-          ]}
-        >
-          <div>
-            {inProgress && <LoadingInline />}
-            {errorMessage && errorMessage !== '' && <ErrorMessage message={errorMessage} />}
-          </div>
-          <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName key={name} />, <Namespace key={namespace} />]}</Trans>
-        </Modal>
-      </React.Fragment>
-    );
-  };
-
-  return (
-    <>
-      {helmReleases.length === 0 ? (
-        <div style={{ textAlign: 'center' }}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: t('COMMON:MSG_LNB_MENU_203') })}</div>
-      ) : (
-        <div key={'table'}>
-          {/*<div>filter</div>*/}
-          {/*<div>search</div>*/}
-          <table className="pf-c-table">
-            <thead>
-              <tr>
-                <th style={{ padding: '5px' }}>{t('COMMON:MSG_MAIN_TABLEHEADER_1')}</th>
-                <th style={{ padding: '5px' }}>{t('COMMON:MSG_MAIN_TABLEHEADER_2')}</th>
-                <th style={{ padding: '5px' }}>{t('COMMON:MSG_MAIN_TABLEHEADER_112')}</th>
-                <th style={{ padding: '5px' }}>{t('COMMON:MSG_MAIN_TABLEHEADER_110')}</th>
-                <th style={{ padding: '5px' }}>{t('COMMON:MSG_MAIN_TABLEHEADER_132')}</th>
-                <th style={{ padding: '5px' }}>{t('COMMON:MSG_MAIN_TABLEHEADER_12')}</th>
-                <th style={{ padding: '5px' }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {helmReleases.map(helmRelease => {
-                const { name, namespace, info, objects, version } = helmRelease;
-                const options: KebabOption[] = [
-                  {
-                    label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-                    callback: () => {
-                      location.href = `/helmreleases/ns/${namespace}/${name}/edit`;
-                    },
-                  },
-                  {
-                    label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-                    callback: () => {
-                      setDeleteNamespace(namespace);
-                      setDeleteName(name);
-                      setOpen(true);
-                    },
-                  },
-                ];
-                return (
-                  <tr key={'row-' + name}>
-                    <td style={{ padding: '5px' }}>
-                      <Link key={'link' + name} to={`/helmreleases/ns/${namespace}/${name}`}>
-                        {name}
-                      </Link>
-                    </td>
-                    <td style={{ padding: '5px' }}>
-                      <ResourceLink kind="Namespace" name={namespace} />
-                    </td>
-                    <td style={{ padding: '5px' }}>
-                      <Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} />
-                    </td>
-                    <td style={{ padding: '5px' }}>
-                      {Object.keys(objects).map(k => {
-                        return <div key={'resource-' + k}>{modelFor(k) ? ResourceLabel(modelFor(k), t) : k}</div>;
-                      })}
-                    </td>
-                    <td style={{ padding: '5px' }}>{version}</td>
-                    <td style={{ padding: '5px' }}>
-                      <Timestamp timestamp={info.first_deployed} />
-                    </td>
-                    <td style={{ padding: '5px' }}>
-                      <Kebab options={options} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <DeleteModal namespace={deleteNamesapce} name={deleteName} />
-        </div>
-      )}
-    </>
-  );
-};
-
 export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
   const name = match.params.name;
@@ -496,9 +328,6 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
   const { t } = useTranslation();
   const showActions = true;
   const hasMenuActions = true;
-  const [deleteNamesapce, setDeleteNamespace] = React.useState('');
-  const [deleteName, setDeleteName] = React.useState('');
-  const [open, setOpen] = React.useState(false);
 
   const options: KebabOption[] = [
     {
@@ -518,103 +347,6 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
         }),
     },
   ];
-
-  // const options: KebabOption[] = [
-  //   {
-  //     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-  //     callback: () => {
-  //       location.href = `/helmreleases/ns/${namespace}/${name}/edit`;
-  //     },
-  //   },
-  //   {
-  //     label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-  //     callback: () => {
-  //       setDeleteNamespace(namespace);
-  //       setDeleteName(name);
-  //       setOpen(true);
-  //     },
-  //   },
-  // ];
-
-  type DeleteModalProps = {
-    namespace: string;
-    name: string;
-  };
-  const DeleteModal: React.FC<DeleteModalProps> = props => {
-    const { namespace, name } = props;
-    const { t } = useTranslation();
-    const [loading, setLoading] = React.useState(false);
-    const [host, setHost] = React.useState(defaultHost);
-    const ResourceName = () => (
-      <strong key={'ResourceName' + name} className="co-break-word">
-        {name}
-      </strong>
-    );
-    const Namespace = () => <strong key={'Namespace' + namespace}>{namespace}</strong>;
-    const [inProgress, setProgress] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState('');
-
-    React.useEffect(() => {
-      const fetchHelmChart = async () => {
-        await coFetchJSON(
-          ingressUrlWithLabelSelector({
-            'ingress.tmaxcloud.org/name': 'helm-apiserver',
-          }),
-        ).then(res => {
-          const { items } = res;
-          const ingress = items[0];
-          setHost(ingress.spec?.rules?.[0]?.host);
-          setLoading(true);
-        });
-      };
-      fetchHelmChart();
-    }, []);
-
-    const handleModalToggle = () => {
-      setOpen(!open);
-    };
-    const deleteAction = () => {
-      setProgress(true);
-      const deleteHelmreleases = () => {
-        const url = `https://${host}/helm/ns/${namespace}/releases/${name}`;
-        coFetchJSON
-          .delete(url)
-          .then(() => {
-            setOpen(!open);
-          })
-          .catch(e => {
-            setProgress(false);
-            setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
-          });
-      };
-      deleteHelmreleases();
-    };
-
-    return (
-      <React.Fragment>
-        <Modal
-          isSmall={true}
-          title={t('COMMON:MSG_MAIN_ACTIONBUTTON_16', { 0: t('COMMON:MSG_LNB_MENU_203') })}
-          isOpen={open}
-          onClose={handleModalToggle}
-          actions={[
-            <Button key="cancel" variant="secondary" onClick={handleModalToggle}>
-              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-            </Button>,
-            <Button key="delete" variant="danger" onClick={deleteAction} isActive={loading}>
-              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_13')}
-            </Button>,
-          ]}
-        >
-          <div>
-            {inProgress && <LoadingInline />}
-            {errorMessage && errorMessage !== '' && <ErrorMessage message={errorMessage} />}
-          </div>
-          <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName key={name} />, <Namespace key={namespace} />]}</Trans>
-        </Modal>
-      </React.Fragment>
-    );
-  };
 
   return (
     <div style={{ padding: '30px', borderBottom: '1px solid #ccc' }}>
@@ -637,7 +369,6 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
           </div>
         )}
       </div>
-      <DeleteModal namespace={deleteNamesapce} name={deleteName} />
     </div>
   );
 };
