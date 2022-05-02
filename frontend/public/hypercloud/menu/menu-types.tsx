@@ -255,13 +255,5 @@ export const CustomMenusMap: CustomMenus = {
     href: '/helmreleases',
     isMultiOnly: false,
   },
-  HelmReleases2: {
-    kind: 'HelmReleases2',
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    defaultLabel: 'HelmReleases2',
-    href: '/helmreleases2',
-    isMultiOnly: false,
-  },
 };
 // MEMO : url이 ''로 지정된 메뉴들은 app.jsx에서 초기 렌더 시 ingress 리소스에서 host주소 가져와서 url로 지정해줌.
