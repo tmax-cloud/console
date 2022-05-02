@@ -33,12 +33,13 @@ export type NonK8SListPageProps = {
   kinds?: string[];
   data?: any;
   reducer?: Function;
+  clusterScope?: boolean;
 };
 export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
-  const { namespace, title, displayTitleRow = true, items, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, hideLabelFilter = false, kind, kinds = [kind], reducer } = props;
+  const { namespace, title, displayTitleRow = true, items, clusterScope, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, hideLabelFilter = false, kind, kinds = [kind], reducer } = props;
   const { t } = useTranslation();
 
-  const isNSSelected = namespace;
+  const isNSSelected = clusterScope || namespace;
   let unclickableMsg = !isNSSelected ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
   unclickableMsg = window.location.pathname.startsWith('/k8s/cluster/customresourcedefinitions') ? undefined : unclickableMsg;
 
@@ -79,7 +80,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
     </div>
   );
   const data = items ? items : [];
-  const [checkedRowFilter, setCheckedRowFilter] = React.useState(getQueryArgument(`rowFilter-${rowFilters[0].type}`));
+  const [checkedRowFilter, setCheckedRowFilter] = React.useState(getQueryArgument(rowFilters ? `rowFilter-${rowFilters[0].type}` : ''));
   const [nameFilterText, setNameFilterText] = React.useState(getQueryArgument('name'));
   const [filteredData, setFilteredData] = React.useState(data);
 
