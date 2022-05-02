@@ -104,25 +104,23 @@ const HelmreleaseTableHeader = (t?: TFunction) => {
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_112'),
-      sortField: 'namespace',
+      sortFunc: 'HelmReleaseStatusReducer',
       transforms: [sortable],
       props: { className: tableColumnClasses[2] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_110'),
-      sortField: 'namespace',
-      transforms: [sortable],
       props: { className: tableColumnClasses[3] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_132'),
-      sortField: 'namespace',
+      sortField: 'version',
       transforms: [sortable],
       props: { className: tableColumnClasses[4] },
     },
     {
       title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'namespace',
+      sortField: 'info.first_deployed',
       transforms: [sortable],
       props: { className: tableColumnClasses[5] },
     },
