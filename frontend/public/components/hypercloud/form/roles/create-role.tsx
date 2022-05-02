@@ -255,7 +255,7 @@ const RuleItem = props => {
             )}
             {ruleTypeToggle === 'Resource' ? (
               <>
-                <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true} help={true} helpTitle="API 그룹" helpText="API 그룹은 리소스 타입으로 구성되어 있습니다. □ 체크시, 선택한 API 그룹의 리소스 목록을 리소스 필드에서 조회합니다.">
+                <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true} help={true} helpTitle={t("SINGLE:MSG_ROLES_CREATEFORM_DIV2_36")} helpText={t("SINGLE:MSG_ROLES_CREATEFORM_DIV2_37")}>
                   <Controller
                     as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
                     control={methods.control}
