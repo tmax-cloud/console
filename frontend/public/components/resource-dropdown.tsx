@@ -6,7 +6,7 @@ import * as classNames from 'classnames';
 import * as fuzzy from 'fuzzysearch';
 
 import { Dropdown, ResourceIcon } from './utils';
-import { apiVersionForReference, K8sKind, K8sResourceKindReference, modelFor, referenceForModel, getResources, allModels } from '../module/k8s';
+import { apiVersionForReference, K8sKind, K8sResourceKindReference, modelFor, referenceForModel } from '../module/k8s';
 import { Badge, Checkbox } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 
@@ -20,20 +20,6 @@ const blacklistResources = ImmutableSet([
   // Prefer core/v1
   'events.k8s.io/v1beta1.Event',
 ]);
-
-// reducers/k8s.ts - ReceivedResources 액션 참고
-const getAllModels = (models: K8sKind[]): ImmutableMap<K8sResourceKindReference, K8sKind> => {
-  return models.reduce((prevState, newModel) => {
-    // FIXME: Need to use `kind` as model reference for legacy components accessing k8s primitives
-    const [modelRef, model] = allModels().findEntry(staticModel => referenceForModel(staticModel) === referenceForModel(newModel)) || [referenceForModel(newModel), newModel];
-    // Verbs and short names are not part of the static model definitions, so use the values found during discovery.
-    return prevState.set(modelRef, {
-      ...model,
-      verbs: newModel.verbs,
-      shortNames: newModel.shortNames,
-    });
-  }, ImmutableMap<K8sResourceKindReference, K8sKind>());
-};
 
 const DropdownItem: React.SFC<DropdownItemProps> = ({ model, showGroup, checked }) => (
   <>
@@ -74,24 +60,6 @@ const DropdownResourceItem: React.SFC<DropdownResourceItemProps> = ({ name, chec
 const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
   const { selected, onChange, allModels, showAll, className, preferredVersions, type } = props;
   const { t } = useTranslation();
-  const [newModels, setNewModels] = React.useState(ImmutableMap<K8sResourceKindReference, K8sKind>());
-
-  React.useEffect(() => {
-    let ignore = false;
-    getResources()
-      .then(resources => {
-        if (ignore) {
-          return;
-        }
-        setNewModels(getAllModels(resources.models));
-      })
-      .catch(e => {
-        ignore = true;
-      });
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   const resources = allModels
     .filter(({ apiGroup, apiVersion, kind, verbs }) => {
@@ -102,11 +70,6 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = props => {
 
       // Only show resources that can be listed.
       if (!_.isEmpty(verbs) && !_.includes(verbs, 'list')) {
-        return false;
-      }
-
-      // 삭제된 리소스일 경우 드롭다운 리스트에서 삭제.
-      if (!newModels.find(m => kind === m.kind)) {
         return false;
       }
 
