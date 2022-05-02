@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { match as RMatch } from 'react-router';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
@@ -144,13 +144,29 @@ const HelmreleaseTableRow: RowFunction<any> = ({ obj: helmrelease, index, key, s
     },
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-      callback: () =>
+      callback: async () => {
+        let serverURL = '';
+        await coFetchJSON(
+          ingressUrlWithLabelSelector({
+            'ingress.tmaxcloud.org/name': 'helm-apiserver',
+          }),
+        ).then(res => {
+          const { items } = res;
+          if (items?.length > 0) {
+            const ingress = items[0];
+            const host = ingress.spec?.rules?.[0]?.host;
+            if (!!host) {
+              serverURL = `https://${host}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`;
+            }
+          }
+        });
         nonk8sdeleteModal({
-          deleteServiceURL: `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
+          deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
           resourceStringKey: 'COMMON:MSG_LNB_MENU_203',
           namespace: helmrelease.namespace,
           name: helmrelease.name,
-        }),
+        });
+      },
     },
   ];
   return (
@@ -338,13 +354,29 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
     },
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-      callback: () =>
+      callback: async () => {
+        let serverURL = '';
+        await coFetchJSON(
+          ingressUrlWithLabelSelector({
+            'ingress.tmaxcloud.org/name': 'helm-apiserver',
+          }),
+        ).then(res => {
+          const { items } = res;
+          if (items?.length > 0) {
+            const ingress = items[0];
+            const host = ingress.spec?.rules?.[0]?.host;
+            if (!!host) {
+              serverURL = `https://${host}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`;
+            }
+          }
+        });
         nonk8sdeleteModal({
-          deleteServiceURL: `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
+          deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
           resourceStringKey: 'COMMON:MSG_LNB_MENU_203',
           namespace: helmrelease.namespace,
           name: helmrelease.name,
-        }),
+        });
+      },
     },
   ];
 
