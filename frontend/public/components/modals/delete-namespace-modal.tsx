@@ -1,21 +1,26 @@
 import * as React from 'react';
-import { k8sKill } from '../../module/k8s';
-import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
-import { history } from '../utils';
+import { k8sKill, K8sKind, K8sResourceKind } from '../../module/k8s';
+import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter, ModalComponentProps } from '../factory/modal';
+import { HandlePromiseProps, history } from '../utils';
 import { YellowExclamationTriangleIcon } from '@console/shared';
 import { Trans, useTranslation } from 'react-i18next';
 import { withHandlePromise } from '../utils';
 
-export const DeleteNamespaceModal = withHandlePromise(({ cancel, close, kind, resource, handlePromise, errorMessage, inProgress }) => {
+export const DeleteNamespaceModal = withHandlePromise((props: DeleteNamespaceModalProps) => {
+  const { cancel, close, kind, resource, handlePromise, errorMessage, inProgress } = props;
   const { t } = useTranslation();
   const [confirmed, setConfirmed] = React.useState(false);
 
   const onSubmit = event => {
     event.preventDefault();
-    handlePromise(k8sKill(kind, resource)).then(() => {
-      close?.();
-      history.push(`/k8s/cluster/${kind.plural}`);
-    });
+    handlePromise(k8sKill(kind, resource))
+      .then(() => {
+        close?.();
+        history.push(`/k8s/cluster/${kind.plural}`);
+      })
+      .catch(() => {
+        /* do nothing */
+      });
   };
 
   const onKeyUp = e => {
@@ -42,3 +47,9 @@ export const DeleteNamespaceModal = withHandlePromise(({ cancel, close, kind, re
 });
 
 export const deleteNamespaceModal = createModalLauncher(DeleteNamespaceModal);
+
+type DeleteNamespaceModalProps = {
+  resource: K8sResourceKind;
+  kind: K8sKind;
+} & ModalComponentProps &
+  HandlePromiseProps;
