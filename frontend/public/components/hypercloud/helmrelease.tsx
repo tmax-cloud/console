@@ -460,7 +460,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
           const entry = tempEntriesList.filter(e => {
             if (e.name === tempChartObject[chartName]) return true;
           })[0];
-          setPostPackageURL(entry ? entry.urls[0] : 'This chart is not on the server');
+          setPostPackageURL(entry ? entry.urls[0] : null);
         }
         setEntries(tempEntriesList);
         setChartNameList(tempChartObject);
@@ -554,16 +554,16 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             {selectChartName && (
               <>
                 <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL">
-                  <div>{postPackageURL}</div>
+                  <div>{postPackageURL ? postPackageURL : 'This chart is not on the server'}</div>
                 </Section>
                 <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')} id="version">
                   <div>{postVersion}</div>
                 </Section>
               </>
             )}
-            <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />
+            {postValues && <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />}
             <div style={{ marginTop: '10px' }}>
-              <Button type="button" variant="primary" id="save" onClick={onClick}>
+              <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!postPackageURL}>
                 {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
               </Button>
               <Button
@@ -578,7 +578,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                 {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
               </Button>
             </div>
-          </form>
+          </form>          
         </ButtonBar>
       )}
     </div>
