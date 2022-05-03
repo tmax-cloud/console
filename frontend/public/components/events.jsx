@@ -135,7 +135,7 @@ class _EventsList extends React.Component {
     } else {
       const updateItems = new Set(this.state.selected);
       updateItems.has(selection) ? updateItems.delete(selection) : updateItems.add(selection);
-      this.setState({ selected: updateItems });
+      updateItems.size === 0 ? this.clearSelection() : this.setState({ selected: updateItems });
     }
   };
 
