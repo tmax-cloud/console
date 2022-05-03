@@ -6,6 +6,7 @@ import { PromiseComponent, history, resourceListPathFromModel } from '../utils';
 import { k8sKill } from '../../module/k8s/';
 import { YellowExclamationTriangleIcon } from '@console/shared';
 import { withTranslation, Trans } from 'react-i18next';
+import { coFetchJSON } from '@console/internal/co-fetch';
 //Modal for resource deletion and allows cascading deletes if propagationPolicy is provided for the enum
 class DeleteModal extends PromiseComponent {
   constructor(props) {
@@ -19,32 +20,38 @@ class DeleteModal extends PromiseComponent {
 
   _submit(event) {
     event.preventDefault();
-    const { kind, resource } = this.props;
+    const { kind, resource, nonk8sProps } = this.props;
+    if (nonk8sProps) {
+      const url = this.props.nonk8sProps.deleteServiceURL;
+      this.handlePromise(coFetchJSON.delete(url)).then(() => {
+        this.props.close();
+      });
+    } else {
+      //https://kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/
+      const propagationPolicy = this.state.isChecked ? kind.propagationPolicy : 'Orphan';
+      const json = propagationPolicy ? { kind: 'DeleteOptions', apiVersion: 'v1', propagationPolicy } : null;
 
-    //https://kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/
-    const propagationPolicy = this.state.isChecked ? kind.propagationPolicy : 'Orphan';
-    const json = propagationPolicy ? { kind: 'DeleteOptions', apiVersion: 'v1', propagationPolicy } : null;
+      this.handlePromise(k8sKill(kind, resource, {}, json)).then(() => {
+        this.props.close();
 
-    this.handlePromise(k8sKill(kind, resource, {}, json)).then(() => {
-      this.props.close();
-
-      // If we are currently on the deleted resource's page, redirect to the resource list page
-      const re = new RegExp(`/${resource.metadata.name}(/|$)`);
-      if (re.test(window.location.pathname)) {
-        const listPath = this.props.redirectTo ? this.props.redirectTo : resourceListPathFromModel(kind, _.get(resource, 'metadata.namespace'));
-        history.push(listPath);
-      }
-    });
+        // If we are currently on the deleted resource's page, redirect to the resource list page
+        const re = new RegExp(`/${resource.metadata.name}(/|$)`);
+        if (re.test(window.location.pathname)) {
+          const listPath = this.props.redirectTo ? this.props.redirectTo : resourceListPathFromModel(kind, _.get(resource, 'metadata.namespace'));
+          history.push(listPath);
+        }
+      });
+    }
   }
 
   _onChecked() {
     this.checked = !this.checked;
   }
   render() {
-    const { kind, resource, message, t } = this.props;
-    const resourceStringKey = kind.i18nInfo?.label ?? kind.label;
-    const ResourceName = () => <strong className="co-break-word">{resource.metadata.name}</strong>;
-    const Namespace = () => <strong>{resource.metadata.namespace}</strong>;
+    const { kind, resource, message, t, nonk8sProps } = this.props;
+    const resourceStringKey = nonk8sProps ? nonk8sProps.stringKey : kind.i18nInfo?.label ?? kind.label;
+    const ResourceName = () => <strong className="co-break-word">{nonk8sProps ? nonk8sProps.name : resource.metadata.name}</strong>;
+    const Namespace = () => <strong>{nonk8sProps ? nonk8sProps.namespace : resource.metadata.namespace}</strong>;
     return (
       <form onSubmit={this._submit} name="form" className="modal-content ">
         <ModalTitle>
@@ -54,7 +61,7 @@ class DeleteModal extends PromiseComponent {
         <ModalBody className="modal-body">
           {message}
           <div>
-            {_.has(resource.metadata, 'namespace') ? <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName />, <Namespace />]}</Trans> : <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_25">{[<ResourceName />]}</Trans>}
+            {nonk8sProps.namespace || _.has(resource.metadata, 'namespace') ? <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName />, <Namespace />]}</Trans> : <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_25">{[<ResourceName />]}</Trans>}
             {_.has(kind, 'propagationPolicy') && (
               <div className="checkbox">
                 <label className="control-label">

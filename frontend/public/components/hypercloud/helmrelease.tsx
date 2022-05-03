@@ -24,7 +24,7 @@ import { Table, TableRow, TableData, RowFunction } from '../factory';
 import { NonK8SListPage } from '../factory/nonk8s-list-page';
 import { sortable } from '@patternfly/react-table';
 import { TFunction } from 'i18next';
-import { nonk8sdeleteModal } from '../modals';
+import { deleteModal } from '../modals';
 
 const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -158,11 +158,13 @@ const HelmreleaseTableRow: RowFunction<any> = ({ obj: helmrelease, index, key, s
             }
           }
         });
-        nonk8sdeleteModal({
-          deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
-          resourceStringKey: 'COMMON:MSG_LNB_MENU_203',
-          namespace: helmrelease.namespace,
-          name: helmrelease.name,
+        deleteModal({
+          nonk8sProps: {
+            deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_203',
+            namespace: helmrelease.namespace,
+            name: helmrelease.name,
+          },
         });
       },
     },
@@ -368,11 +370,13 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
             }
           }
         });
-        nonk8sdeleteModal({
-          deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
-          resourceStringKey: 'COMMON:MSG_LNB_MENU_203',
-          namespace: helmrelease.namespace,
-          name: helmrelease.name,
+        deleteModal({
+          nonk8sProps: {
+            deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_203',
+            namespace: helmrelease.namespace,
+            name: helmrelease.name,
+          },
         });
       },
     },
@@ -578,7 +582,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                 {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
               </Button>
             </div>
-          </form>          
+          </form>
         </ButtonBar>
       )}
     </div>
