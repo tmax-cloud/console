@@ -10,7 +10,7 @@ import { NavBar } from '../utils/horizontal-nav';
 import { useTranslation } from 'react-i18next';
 import { PageHeading } from '../utils';
 import { getQueryArgument } from '../utils';
-import { NonK8SFilterToolbar } from '../nonk8s-filter-toolbar';
+import { FilterToolbar } from '../filter-toolbar';
 
 export type NonK8SListPageProps = {
   namespace?: string;
@@ -28,7 +28,6 @@ export type NonK8SListPageProps = {
   badge?: React.ReactNode;
   ListComponent?: React.ComponentType<any>;
   hideToolbar?: boolean;
-  hideLabelFilter?: boolean;
   kind?: string;
   kinds?: string[];
   data?: any;
@@ -36,7 +35,7 @@ export type NonK8SListPageProps = {
   clusterScope?: boolean;
 };
 export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
-  const { namespace, title, displayTitleRow = true, items, clusterScope, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, hideLabelFilter = false, kind, kinds = [kind], reducer } = props;
+  const { namespace, title, displayTitleRow = true, items, clusterScope, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, kind, kinds = [kind], reducer } = props;
   const { t } = useTranslation();
 
   const isNSSelected = clusterScope || namespace;
@@ -116,9 +115,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
       }
     }
   };
-  const Filter = <NonK8SFilterToolbar rowFilters={rowFilters} setCheckedRowFilter={setCheckedRowFilter} setNameFilterText={setNameFilterText} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} kinds={kinds} reducer={reducer} {...props} />;
-  //const Filter = <></>;
-  //const List = tableProps ? <DefaultListComponent {...props} data={data} /> : <ListComponent data={data} />;
+  const Filter = <FilterToolbar rowFilters={rowFilters} setCheckedRowFilter={setCheckedRowFilter} setNameFilterText={setNameFilterText} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={true} kinds={kinds} {...props} />;
 
   return (
     <div className="co-m-list">
