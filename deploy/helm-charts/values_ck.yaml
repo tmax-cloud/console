@@ -9,7 +9,7 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: hyperauth.ckcloud.org
+    hyperauth: hyperauth.tmaxcloud.org
     realm: tmax
     clientid: hypercloud5
   mcMode: true
@@ -43,7 +43,7 @@ ingressroute:
   enabled: true
   domain:
     enabled: true
-    name: ckcloud.org
+    name: tmaxcloud.org
   ip:
     enabled: false
 

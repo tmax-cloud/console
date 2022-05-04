@@ -158,8 +158,8 @@ pipeline {
           sh """
             cp -r ./deploy/helm-charts/values_ck_temp.yaml ./deploy/helm-charts/values_ck.yaml
             sed -i "s/@@VER@@/${VER}/g" ./deploy/helm-charts/values_ck.yaml
-            cp -r ./deploy/helm-charts/values_team_temp.yaml ./deploy/helm-charts/values_team.yaml
-            sed -i "s/@@VER@@/${VER}/g" ./deploy/helm-charts/values_team.yaml
+            cp -r ./deploy/helm-charts/values_ckcloud_temp.yaml ./deploy/helm-charts/values_ckcloud.yaml
+            sed -i "s/@@VER@@/${VER}/g" ./deploy/helm-charts/values_ckcloud.yaml
           """
       }
     }
