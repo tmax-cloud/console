@@ -9,7 +9,7 @@ replicaCount: 1
 
 console:
   auth:
-    hyperauth: hyperauth.tmaxcloud.org
+    hyperauth: hyperauth.ckcloud.org
     realm: tmax
     clientid: hypercloud5
   mcMode: true
@@ -21,8 +21,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "@@VER@@"
 
-imagePullSecrets:
-- name: regcred
+#imagePullSecrets:
+#- name: regcred
 
 podAnnotations: {}
 
@@ -43,7 +43,7 @@ ingressroute:
   enabled: true
   domain:
     enabled: true
-    name: tmaxcloud.org
+    name: ckcloud.org
   ip:
     enabled: false
 
