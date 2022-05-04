@@ -134,7 +134,7 @@ export const Integer: React.FC<IntegerProps> = ({
             }),
           );
         }
-      }, 0);
+      }, 1);
       return true;
     },
     [additionalValidation, allowedKeys, fixAfterValue, validRegex],

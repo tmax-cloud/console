@@ -70,7 +70,7 @@ export const ArrayParam: React.FC<ParameterProps> = (props) => {
                   setDirty(true);
                   setTimeout(
                     () => onChange([...values.slice(0, index), ...values.slice(index + 1)]),
-                    0,
+                    1,
                   );
                 }}
               />

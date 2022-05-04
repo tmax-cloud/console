@@ -100,7 +100,7 @@ class LogWindow_ extends React.PureComponent {
         if (this.scrollPane && this.props.status === STREAM_ACTIVE) {
           this.scrollPane.scrollTop = this.scrollPane.scrollHeight;
         }
-      }, 0);
+      }, 1);
     }
   }
 
