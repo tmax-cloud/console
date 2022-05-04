@@ -57,7 +57,7 @@ description: WSL2를 사용한 Linux 개발환경 구축방법 가이드입니�
   4. install node (12 +)
 
      ```shell
-     nvm install 12.13.0
+     nvm install 14.15.0
      ```
 
   5. install yarn (1.3.2 +)
