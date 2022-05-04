@@ -9,7 +9,7 @@ import { CatalogTileViewPage, Item } from './catalog-items';
 import { k8sListPartialMetadata, referenceForModel, serviceClassDisplayName, K8sResourceCommon, K8sResourceKind, PartialObjectMetadata, TemplateKind } from '../../module/k8s';
 import { withStartGuide } from '../start-guide';
 import { connectToFlags, flagPending, FlagsObject } from '../../reducers/features';
-import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, ExternalLink, Box, MsgBox } from '../utils';
+import { Firehose, LoadError, PageHeading, skeletonCatalog, StatusBox, FirehoseResult, Box, MsgBox, Timestamp } from '../utils';
 import { getAnnotationTags, getMostRecentBuilderTag, isBuilder } from '../image-stream';
 import { getImageForIconClass, getImageStreamIcon, getServiceClassIcon, getServiceClassImage, getTemplateIcon } from './catalog-item-icon';
 import { ClusterServiceClassModel, TemplateModel, ServiceClassModel } from '../../models';
@@ -18,6 +18,7 @@ import { coFetch, coFetchJSON } from '../../co-fetch';
 import { useTranslation, withTranslation } from 'react-i18next';
 import * as noResourceImg from '../../imgs/hypercloud/img_no_resource.svg';
 import { Link } from 'react-router-dom';
+import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 
 export const CatalogPageType = {
   SERVICE_INSTANCE: 'ServiceInstance',
@@ -210,7 +211,7 @@ export const CatalogListPage = withTranslation()(
     }
 
     normalizeHelmCharts(chartEntries: HelmChartEntries): Item[] {
-      const { namespace: currentNamespace = '' } = this.props;
+      const { namespace: currentNamespace = '', t } = this.props;
 
       return _.reduce(
         chartEntries,
@@ -223,7 +224,7 @@ export const CatalogListPage = withTranslation()(
             const tileName = `${_.startCase(chartName)} v${chart.version}`;
             const tileImgUrl = chart.icon || getImageForIconClass('icon-helm');
             const chartURL = _.get(chart, 'urls.0');
-            const encodedChartURL = encodeURIComponent(chartURL);
+            // const encodedChartURL = encodeURIComponent(chartURL);
             const markdownDescription = async () => {
               let chartData;
               try {
@@ -249,20 +250,22 @@ export const CatalogListPage = withTranslation()(
               </>
             );
 
-            const homePage = chart.home && <ExternalLink href={chart.home} additionalClassName="co-break-all" text={chart.home} />;
-
-            const customProperties = (
-              <>
-                <PropertyItem label="Chart Version" value={chartVersion} />
-                <PropertyItem label="App Version" value={appVersion} />
-                {homePage && <PropertyItem label="Home Page" value={homePage} />}
-                {maintainers && <PropertyItem label="Maintainers" value={maintainers} />}
-              </>
-            );
+            const customProperties = t => {
+              return (
+                <>
+                  <PropertyItem label={t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_2')} value={chartVersion} />
+                  <PropertyItem label={t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_3')} value={appVersion} />
+                  {chart.sources && <PropertyItem label={t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_4')} value={chart.sources.join()} />}
+                  {chart.repo.name && <PropertyItem label={t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_5')} value={chart.repo.name} />}
+                  {maintainers && <PropertyItem label={t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_6')} value={maintainers} />}
+                  {chart.created && <PropertyItem label={t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_7')} value={<Timestamp timestamp={chart.created} />} />}
+                </>
+              );
+            };
 
             const obj = {
               ...chart,
-              ...{ metadata: { uid: chart.digest, creationTimestamp: chart.created } },
+              ...{ metadata: { uid: chart.digest } },
             };
 
             normalizedCharts.push({
@@ -271,13 +274,16 @@ export const CatalogListPage = withTranslation()(
               tileName,
               tileIconClass: null,
               tileImgUrl,
-              // tileDescription: chart.description,
-              tileDescription: '',
+              tileDescription: chart.description,
               tags,
-              createLabel: 'Install Helm Chart',
+              createLabel: t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_1'),
               markdownDescription,
-              customProperties,
-              href: `/catalog/helm-install?chartName=${chartName}&chartURL=${encodedChartURL}&preselected-ns=${currentNamespace}`,
+              customProperties: customProperties(t),
+              // hypercloud
+              href: `/helmreleases/ns/${currentNamespace}/~new`,
+              // openshift
+              // href: `/catalog/helm-install?chartName=${chartName}&chartURL=${encodedChartURL}&preselected-ns=${currentNamespace}`,
+              documentationUrl: chart.home,
             });
           });
           return normalizedCharts;
@@ -400,11 +406,29 @@ export const Catalog = connectToFlags<CatalogProps>(
   }, [loadTemplates, namespace]);
 
   React.useEffect(() => {
-    coFetch('/api/helm/charts/index.yaml').then(async res => {
-      const yaml = await res.text();
-      const json = safeLoad(yaml);
-      setHelmCharts(json.entries);
-    });
+    const fetchHelmChart = async () => {
+      let serverURL = '';
+      await coFetchJSON(
+        ingressUrlWithLabelSelector({
+          'ingress.tmaxcloud.org/name': 'helm-apiserver',
+        }),
+      ).then(res => {
+        const { items } = res;
+        if (items?.length > 0) {
+          const ingress = items[0];
+          const host = ingress.spec?.rules?.[0]?.host;
+          if (!!host) {
+            serverURL = `https://${host}/helm/charts`;
+          }
+        }
+      });
+      await coFetch(serverURL).then(async res => {
+        const yaml = await res.text();
+        const json = safeLoad(yaml);
+        setHelmCharts(json.indexfile.entries);
+      });
+    };
+    fetchHelmChart();
   }, []);
 
   const error = templateError || projectTemplateError;
@@ -542,6 +566,8 @@ export type HelmChart = {
   tillerVersion: string;
   urls: string[];
   version: string;
+  repo: { name: string; url: string };
+  sources?: string[];
 };
 
 CatalogPage.displayName = 'CatalogPage';

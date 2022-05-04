@@ -210,11 +210,11 @@ const getAvailableFilters = (initialFilters): PageFilters => {
       //   value: 'InstalledOperator',
       //   active: true,
       // },
-      // HelmChart: {
-      //   label: 'Helm Charts',
-      //   value: 'HelmChart',
-      //   active: false,
-      // },
+      HelmChart: {
+        label: 'Helm Charts',
+        value: 'HelmChart',
+        active: false,
+      },
       // ImageStream: {
       //   label: 'Builder Image',
       //   value: 'ImageStream',
