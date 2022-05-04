@@ -30,7 +30,8 @@
     "test-suite": "ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/protractor integration-tests/protractor.conf.ts",
     "debug-test-suite": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' node -r ts-node/register --inspect-brk ./node_modules/.bin/protractor integration-tests/protractor.conf.ts",
     "analyze": "NODE_ENV=production NODE_OPTIONS=--max-old-space-size=4096 ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack --mode=production --profile --json | awk '{if(NR>2)print}' > public/dist/stats.json && ts-node -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/webpack-bundle-analyzer --mode static -r public/dist/report.html public/dist/stats.json",
-    "prettier-all": "prettier --write '**/*.{js,jsx,ts,tsx,json}'"
+    "prettier-all": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
+    "prepare": "cd .. && husky install frontend/.husky"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
@@ -148,11 +149,13 @@
     "glob": "7.x",
     "glslify-loader": "1.x",
     "html-webpack-plugin": "3.x",
+    "husky": "^7.0.4",
     "jasmine-console-reporter": "2.x",
     "jasmine-core": "2.x",
     "jasmine-reporters": "2.x",
     "jest": "^27.0.6",
     "jest-cli": "^27.0.6",
+    "lint-staged": "^12.4.1",
     "mini-css-extract-plugin": "0.4.x",
     "moment": "2.22.x",
     "monaco-editor-core": "0.14.0",
@@ -186,5 +189,16 @@
   "resolutions": {
     "jquery": "3.5.1"
   },
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": [
+      "eslint --color --fix",
+      "prettier --write"
+    ]
+  }
 }
