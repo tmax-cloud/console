@@ -117,7 +117,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             <PlusCircleIcon
               data-test-id="pairs-list__add-icon"
               className="co-icon-space-l"
-              style={{ marginRight: '10px', float: 'right', cursor: 'pointer' }}
+              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
               onClick={() => {
                 if (data.label === 'All' && data.value === '*') {
                   setValue([
