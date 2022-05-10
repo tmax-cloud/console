@@ -64,7 +64,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     if (data.label !== e.label) return true;
   });
   const isExist = !(itemList.length === 0);
-  const isAdded = itemList[0]?.added;
+  //const isAdded = itemList[0]?.added;
   const isChecked = itemList[0]?.checked;
 
   return (
@@ -117,7 +117,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             <PlusCircleIcon
               data-test-id="pairs-list__add-icon"
               className="co-icon-space-l"
-              style={isExist || selectAllChecked || isAdded ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
+              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
               onClick={() => {
                 if (data.label === 'All' && data.value === '*') {
                   setValue([
