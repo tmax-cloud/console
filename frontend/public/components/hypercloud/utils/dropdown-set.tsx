@@ -91,7 +91,11 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             }}
           >
             {data.label}
-            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={{ marginRight: '20px', float: 'right' }} />
+            <PlusCircleIcon
+              data-test-id="pairs-list__add-icon"
+              className="co-icon-space-l"
+              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
+            />
           </span>
           {data.label === 'All' && <hr />}
         </span>

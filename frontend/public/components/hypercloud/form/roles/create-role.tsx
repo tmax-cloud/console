@@ -95,7 +95,7 @@ const defaultValuesTemplate = {
   rules: [
     {
       verbs: ['*'],
-      apiGroups: ['*'],
+      apiGroups: [],
       resources: [],
     },
   ],
