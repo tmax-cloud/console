@@ -184,6 +184,7 @@ const sorts = {
     }
   },
   HelmReleaseStatusReducer: Helmreleases => HelmReleaseStatusReducer(Helmreleases),
+  helmResourcesNumber: Helmreleases => Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0,
 };
 
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {

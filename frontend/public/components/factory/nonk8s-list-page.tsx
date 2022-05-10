@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeading } from '../utils';
 import { getQueryArgument } from '../utils';
 import { FilterToolbar } from '../filter-toolbar';
+import { DefaultListComponent } from '../hypercloud/utils/default-list-component';
 
 export type NonK8SListPageProps = {
   namespace?: string;
@@ -33,9 +34,10 @@ export type NonK8SListPageProps = {
   data?: any;
   reducer?: Function;
   clusterScope?: boolean;
+  tableProps?: any
 };
 export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
-  const { namespace, title, displayTitleRow = true, items, clusterScope, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, kind, kinds = [kind], reducer } = props;
+  const { namespace, title, displayTitleRow = true, items, clusterScope, canCreate, createProps, createButtonText, textFilter, rowFilters, multiNavPages, multiNavBaseURL, helpText, badge, ListComponent, hideToolbar = false, kind, kinds = [kind], reducer, tableProps } = props;
   const { t } = useTranslation();
 
   const isNSSelected = clusterScope || namespace;
@@ -116,6 +118,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
     }
   };
   const Filter = <FilterToolbar rowFilters={rowFilters} setCheckedRowFilter={setCheckedRowFilter} setNameFilterText={setNameFilterText} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={true} kinds={kinds} {...props} />;
+  const List = tableProps ? <DefaultListComponent tableProps={tableProps} data={filteredData} loaded={true} /> : <ListComponent data={filteredData} loaded={true} />;
 
   return (
     <div className="co-m-list">
@@ -139,7 +142,7 @@ export const NonK8SListPage: React.FC<NonK8SListPageProps> = props => {
           {!_.isEmpty(data) && Filter}
           <div className="row">
             <div className="col-xs-12">
-              <ListComponent data={filteredData} loaded={true} />
+              {List}
             </div>
           </div>
         </div>

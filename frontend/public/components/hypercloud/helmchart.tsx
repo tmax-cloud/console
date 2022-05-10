@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import * as classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
@@ -11,10 +10,8 @@ import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
 import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
-import { Table, TableRow, TableData, RowFunction } from '../factory';
 import { NonK8SListPage } from '../factory/nonk8s-list-page';
-import { sortable } from '@patternfly/react-table';
-import { TFunction } from 'i18next';
+import { TableProps } from './utils/default-list-component';
 
 const defaultHost = 'console.tmaxcloud.org';
 
@@ -54,67 +51,51 @@ export const HelmchartPage = () => {
     };
     fetchHelmChart();
   }, []);
-  return <>{loading && <NonK8SListPage title={t('COMMON:MSG_LNB_MENU_223')} clusterScope={true} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })} canCreate={true} items={entries} kind="helmrcharts" ListComponent={Helmcharts} createProps={{ to: '/helmcharts/~new', items: [] }} />}</>;
+  return <>{loading && <NonK8SListPage title={t('COMMON:MSG_LNB_MENU_223')} clusterScope={true} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} />}</>;
 };
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg')];
-
-const HelmchartTableHeader = (t?: TFunction) => {
-  return [
+const tableProps: TableProps = {
+  header: [
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
       sortField: 'name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_130'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_130',
       sortField: 'repo.name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_131'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_131',
       sortField: 'repo.url',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_53'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_53',
       sortField: 'version',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[3] },
     },
     {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
       sortField: 'created',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
     },
-  ];
-};
-HelmchartTableHeader.displayName = 'HelmchartTableHeader';
-
-const HelmchartTableRow: RowFunction<any> = ({ obj: helmchart, index, key, style }) => {
-  return (
-    <TableRow id={helmchart.name} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <Link key={'link' + helmchart.name} to={`/helmcharts/${helmchart.name}`}>
-          {helmchart.name}
-        </Link>
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>{helmchart.repo.name}</TableData>
-      <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>{helmchart.repo.url}</TableData>
-      <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>{helmchart.version}</TableData>
-      <TableData className={classNames(tableColumnClasses[4], 'co-break-word')}>
-        <Timestamp timestamp={helmchart.created} />
-      </TableData>
-    </TableRow>
-  );
-};
-export const Helmcharts: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label={t('COMMON:MSG_LNB_MENU_223')} Header={HelmchartTableHeader.bind(null, t)} Row={HelmchartTableRow} virtualize />;
+  ],
+  row: (obj: any) => {
+    return [
+      {
+        children: <Link key={'link' + obj.name} to={`/helmcharts/${obj.name}`}>{obj.name}</Link>,
+      },
+      {
+        children: obj.repo.name,
+      },
+      {
+        children: obj.repo.url,
+      },
+      {
+        children: obj.version,
+      },
+      {
+        children: <Timestamp timestamp={obj.created} />,
+      },
+    ];
+  },
 };
 
 type HelmchartFormProps = {

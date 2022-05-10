@@ -37,11 +37,11 @@ const makeTableRow = (row: Rows) => {
     const { obj, index, key, style, customData } = props;
     const _row = row(obj, customData);
     return (
-      <TableRow id={obj.metadata.uid} index={index} trKey={key} style={style}>
+      <TableRow id={obj.metadata?.uid ? obj.metadata?.uid : obj.name} index={index} trKey={key} style={style}>
         {_row.map((value, index) => {
           const className = value.className || generateTableClassName(index);
           return (
-            <TableData key={`${obj.metadata.uid}-${index}`} className={className}>
+            <TableData key={`${obj.metadata?.uid ? obj.metadata?.uid : obj.name}-${index}`} className={className}>
               {value.children}
             </TableData>
           );
@@ -83,4 +83,6 @@ export type TableProps = {
 
 type DefaultListComponentProps = {
   tableProps: TableProps;
+  data?: any;
+  loaded?: boolean;
 };
