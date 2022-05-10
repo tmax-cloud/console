@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import * as classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { match as RMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -20,11 +19,9 @@ import { modelFor } from '@console/internal/module/k8s';
 import { Status } from '@console/shared';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { Button, Badge } from '@patternfly/react-core';
-import { Table, TableRow, TableData, RowFunction } from '../factory';
 import { NonK8SListPage } from '../factory/nonk8s-list-page';
-import { sortable } from '@patternfly/react-table';
-import { TFunction } from 'i18next';
 import { deleteModal } from '../modals';
+import { TableProps } from './utils/default-list-component';
 
 const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -83,122 +80,11 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
     fetchHelmChart();
   }, [namespace]);
 
-  return <>{loading && <NonK8SListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" ListComponent={Helmreleases} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} reducer={HelmReleaseStatusReducer} />}</>;
+  // return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" ListComponent={Helmreleases} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} />}</>;
+  //return <>{loading && <NonK8SListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" ListComponent={Helmreleases} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} reducer={HelmReleaseStatusReducer} />}</>;
+  return <>{loading && <NonK8SListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} reducer={HelmReleaseStatusReducer} tableProps={tableProps} />}</>;
 };
 
-const tableColumnClasses = ['', '', classNames('pf-m-hidden', 'pf-m-visible-on-sm', 'pf-u-w-16-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), classNames('pf-m-hidden', 'pf-m-visible-on-lg'), Kebab.columnClass];
-
-const HelmreleaseTableHeader = (t?: TFunction) => {
-  return [
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
-      sortField: 'name',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[0] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_2'),
-      sortField: 'namespace',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[1] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_112'),
-      sortFunc: 'HelmReleaseStatusReducer',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[2] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_110'),
-      props: { className: tableColumnClasses[3] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_132'),
-      sortField: 'version',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[4] },
-    },
-    {
-      title: t('COMMON:MSG_MAIN_TABLEHEADER_12'),
-      sortField: 'info.first_deployed',
-      transforms: [sortable],
-      props: { className: tableColumnClasses[5] },
-    },
-    {
-      title: '',
-      props: { className: tableColumnClasses[6] },
-    },
-  ];
-};
-HelmreleaseTableHeader.displayName = 'HelmreleaseTableHeader';
-
-const HelmreleaseTableRow: RowFunction<any> = ({ obj: helmrelease, index, key, style }) => {
-  const options: KebabOption[] = [
-    {
-      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-      callback: () => {
-        location.href = `/helmreleases/ns/${helmrelease.namespace}/${helmrelease.name}/edit`;
-      },
-    },
-    {
-      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-      callback: async () => {
-        let serverURL = '';
-        await coFetchJSON(
-          ingressUrlWithLabelSelector({
-            'ingress.tmaxcloud.org/name': 'helm-apiserver',
-          }),
-        ).then(res => {
-          const { items } = res;
-          if (items?.length > 0) {
-            const ingress = items[0];
-            const host = ingress.spec?.rules?.[0]?.host;
-            if (!!host) {
-              serverURL = `https://${host}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`;
-            }
-          }
-        });
-        deleteModal({
-          nonk8sProps: {
-            deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
-            stringKey: 'COMMON:MSG_LNB_MENU_203',
-            namespace: helmrelease.namespace,
-            name: helmrelease.name,
-          },
-        });
-      },
-    },
-  ];
-  return (
-    <TableRow id={helmrelease.name} index={index} trKey={key} style={style}>
-      <TableData className={tableColumnClasses[0]}>
-        <Link to={`/helmreleases/ns/${helmrelease.namespace}/${helmrelease.name}`}>{helmrelease.name}</Link>
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[1], 'co-break-word')}>
-        <ResourceLink kind="Namespace" name={helmrelease.namespace} title={helmrelease.namespace} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[2], 'co-break-word')}>
-        <Status status={capitalize(HelmReleaseStatusReducer(helmrelease))} />
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[3], 'co-break-word')}>
-        {Object.keys(helmrelease.objects)
-          .sort((a, b) => {
-            return resourceSortFunction(a) - resourceSortFunction(b);
-          })
-          .map(k => {
-            return <ResourceKind key={'resource-' + k} kind={k} />;
-          })}
-      </TableData>
-      <TableData className={classNames(tableColumnClasses[4], 'co-break-word')}>{helmrelease.version}</TableData>
-      <TableData className={classNames(tableColumnClasses[5], 'co-break-word')}>
-        <Timestamp timestamp={helmrelease.info.first_deployed} />
-      </TableData>
-      <TableData className={tableColumnClasses[6]}>
-        <Kebab options={options} />
-      </TableData>
-    </TableRow>
-  );
-};
 
 const resourceSortFunction = (resource: string) => {
   return resource.length;
@@ -212,10 +98,109 @@ type ResourceKindProps = {
   kind: string;
 };
 
-export const Helmreleases: React.FC = props => {
-  const { t } = useTranslation();
-  return <Table {...props} aria-label={t('COMMON:MSG_LNB_MENU_203')} Header={HelmreleaseTableHeader.bind(null, t)} Row={HelmreleaseTableRow} virtualize />;
+const tableProps: TableProps = {
+  header: [
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+      sortField: 'name',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+      sortField: 'namespace',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_112',
+      sortFunc: 'HelmReleaseStatusReducer',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_110',
+      sortFunc: 'helmResourcesNumber',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_132',
+      sortField: 'version',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
+      sortField: 'info.first_deployed',
+    },
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
+  ],
+  row: (obj: any) => {    
+    const options: KebabOption[] = [
+      {
+        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
+        callback: () => {
+          location.href = `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`;
+        },
+      },
+      {
+        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
+        callback: async () => {
+          let serverURL = '';
+          await coFetchJSON(
+            ingressUrlWithLabelSelector({
+              'ingress.tmaxcloud.org/name': 'helm-apiserver',
+            }),
+          ).then(res => {
+            const { items } = res;
+            if (items?.length > 0) {
+              const ingress = items[0];
+              const host = ingress.spec?.rules?.[0]?.host;
+              if (!!host) {
+                serverURL = `https://${host}/helm/ns/${obj.namespace}/releases/${obj.name}`;
+              }
+            }
+          });
+          deleteModal({
+            nonk8sProps: {
+              deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+              stringKey: 'COMMON:MSG_LNB_MENU_203',
+              namespace: obj.namespace,
+              name: obj.name,
+            },
+          });
+        },
+      },
+    ];
+    return [
+      {
+        children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
+      },
+      {
+        className: 'co-break-word',
+        children: <ResourceLink kind="Namespace" name={obj.namespace} title={obj.namespace} />,
+      },
+      {
+        children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
+      },
+      {
+        children: Object.keys(obj.objects)
+          .sort((a, b) => {
+            return resourceSortFunction(a) - resourceSortFunction(b);
+          })
+          .map(k => {
+            return <ResourceKind key={'resource-' + k} kind={k} />;
+          }),
+      },
+      {
+        children: obj.version
+      },
+      {
+        children: <Timestamp timestamp={obj.info.first_deployed} />
+      },
+      {
+        className: Kebab.columnClass,
+        children: <Kebab options={options} />,
+      },
+    ];
+  },
 };
+
 
 export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
