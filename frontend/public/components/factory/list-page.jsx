@@ -437,8 +437,10 @@ export const MultiListPage = props => {
     prop: r.prop || r.kind,
   }));
 
-  return isK8SResource ? (
-    (<FireMan_
+  const ListPageWrapper_ = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} isK8SResource={isK8SResource} />
+
+  return (
+    <FireMan_
       autoFocus={autoFocus}
       canCreate={canCreate}
       createAccessReview={createAccessReview}
@@ -456,31 +458,8 @@ export const MultiListPage = props => {
       multiNavPages={multiNavPages}
       baseURL={multiNavBaseURL}
     >
-      <Firehose resources={mock ? [] : resources}>
-        <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} />
-      </Firehose>
-    </FireMan_>)
-  ) : (
-    (<FireMan_
-      autoFocus={autoFocus}
-      canCreate={canCreate}
-      createAccessReview={createAccessReview}
-      createButtonText={createButtonText || 'Create'}
-      createProps={createProps}
-      filterLabel={filterLabel || 'by name'}
-      helpText={helpText}
-      resources={mock ? [] : resources}
-      selectorFilterLabel="Filter by selector (app=nginx) ..."
-      textFilter={textFilter}
-      title={showTitle ? title : undefined}
-      displayTitleRow={displayTitleRow}
-      badge={badge}
-      unclickableMsg={unclickableMsg}
-      multiNavPages={multiNavPages}
-      baseURL={multiNavBaseURL}
-    >
-      <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} isK8SResource={isK8SResource} />
-    </FireMan_>)
+      {isK8SResource ? <Firehose resources={mock ? [] : resources}>{ListPageWrapper_}</Firehose> : ListPageWrapper_}
+    </FireMan_>
   );
 };
 
