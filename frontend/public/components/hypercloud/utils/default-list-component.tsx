@@ -83,6 +83,4 @@ export type TableProps = {
 
 type DefaultListComponentProps = {
   tableProps: TableProps;
-  data?: any;
-  loaded?: boolean;
 };
