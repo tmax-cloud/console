@@ -3,7 +3,6 @@ import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import * as fuzzy from 'fuzzysearch';
-import { toLower } from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Tooltip, Button, TextInput } from '@patternfly/react-core';
@@ -75,7 +74,7 @@ export const ListPageWrapper_ = props => {
       if (!name || name === '') {
         return true;
       } else {
-        if (fuzzy(toLower(name), toLower(data.name))) {
+        if (fuzzy(_.toLower(name), _.toLower(data.name))) {
           return true;
         } else {
           return false;
