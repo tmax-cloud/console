@@ -437,7 +437,7 @@ export const MultiListPage = props => {
     prop: r.prop || r.kind,
   }));
 
-  const ListPageWrapper_ = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} isK8SResource={isK8SResource} />
+  const listPageWrapper = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} isK8SResource={isK8SResource} />
 
   return (
     <FireMan_
@@ -458,7 +458,7 @@ export const MultiListPage = props => {
       multiNavPages={multiNavPages}
       baseURL={multiNavBaseURL}
     >
-      {isK8SResource ? <Firehose resources={mock ? [] : resources}>{ListPageWrapper_}</Firehose> : ListPageWrapper_}
+      {isK8SResource ? <Firehose resources={mock ? [] : resources}>{listPageWrapper}</Firehose> : listPageWrapper}
     </FireMan_>
   );
 };
