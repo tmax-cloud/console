@@ -10,8 +10,8 @@ import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
 import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
-import { NonK8SListPage } from '../factory/nonk8s-list-page';
 import { TableProps } from './utils/default-list-component';
+import { ListPage } from '../factory';
 
 const defaultHost = 'console.tmaxcloud.org';
 
@@ -51,7 +51,7 @@ export const HelmchartPage = () => {
     };
     fetchHelmChart();
   }, []);
-  return <>{loading && <NonK8SListPage title={t('COMMON:MSG_LNB_MENU_223')} clusterScope={true} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_223') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} />}</>;
+  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} />}</>;
 };
 
 const tableProps: TableProps = {
