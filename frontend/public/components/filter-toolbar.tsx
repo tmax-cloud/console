@@ -60,8 +60,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   });
 
 const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props => {
-  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], storeSelectedRows = new Set(), defaultSelectedRows = [], setCheckedRowFilter, setNameFilterText } = props;
-  const isK8SResource = !!props.reduxIDs;
+  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], storeSelectedRows = new Set(), defaultSelectedRows = [], setCheckedRowFilter, setNameFilterText, isK8SResource = true } = props;
 
   const [inputText, setInputText] = React.useState('');
   const [filterType, setFilterType] = React.useState(FilterType.NAME);
@@ -354,6 +353,7 @@ type FilterToolbarProps = {
   defaultSelectedRows?: string[];
   setCheckedRowFilter?: Function;
   setNameFilterText?: Function;
+  isK8SResource?: boolean;
 };
 
 export type RowFilter = {
