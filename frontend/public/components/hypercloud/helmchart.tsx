@@ -5,15 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
-import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
 import { SectionHeading, Timestamp, ButtonBar } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 
-const defaultHost = 'console.tmaxcloud.org';
+const helmHost: string = (CustomMenusMap as any).Helm.url;
 
 export const HelmchartPage = () => {
   const { t } = useTranslation();
@@ -22,24 +22,8 @@ export const HelmchartPage = () => {
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            serverURL = `https://${host}/helm/charts`;
-          }
-        }
-      });
-
       let tempList = [];
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/charts`).then(res => {
         let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
         entriesvalues.map(value => {
           tempList.push(value[0]);
@@ -80,7 +64,11 @@ const tableProps: TableProps = {
   row: (obj: any) => {
     return [
       {
-        children: <Link key={'link' + obj.name} to={`/helmcharts/${obj.name}`}>{obj.name}</Link>,
+        children: (
+          <Link key={'link' + obj.name} to={`/helmcharts/${obj.name}`}>
+            {obj.name}
+          </Link>
+        ),
       },
       {
         children: obj.repo.name,
@@ -106,34 +94,15 @@ export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
   const { defaultValue } = props;
   const name = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.name : '';
   const repoURL = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.url : '';
-
-  const [loading, setLoading] = React.useState(false);
-  const [host, setHost] = React.useState(defaultHost);
   const [postName, setPostName] = React.useState(name);
   const [postRepoURL, setPostRepoURL] = React.useState(repoURL);
   const [inProgress, setProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  React.useEffect(() => {
-    const fetchHelmChart = async () => {
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        const ingress = items[0];
-        setHost(ingress.spec?.rules?.[0]?.host);
-        setLoading(true);
-      });
-    };
-    fetchHelmChart();
-  }, []);
-
   const onClick = () => {
     setProgress(true);
     const putHelmChart = () => {
-      const url = `https://${host}/helm/repos`;
+      const url = `${helmHost}/helm/repos`;
       const payload = {
         name: postName,
         repoURL: postRepoURL,
@@ -159,36 +128,34 @@ export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
 
   return (
     <div style={{ padding: '30px' }}>
-      {loading && (
-        <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
-          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`https://${host}/helm/repos`}>
-            <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
-            <div className="co-form-subsection">
-              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
-                <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
-              </Section>
-              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
-                <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
-              </Section>
-            </div>
-            <div className="co-form-section__separator" />
-            <Button type="button" variant="primary" id="save" onClick={onClick}>
-              {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
-            </Button>
-            <Button
-              style={{ marginLeft: '10px' }}
-              type="button"
-              variant="secondary"
-              id="cancel"
-              onClick={() => {
-                history.goBack();
-              }}
-            >
-              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-            </Button>
-          </form>
-        </ButtonBar>
-      )}
+      <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
+        <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${helmHost}/helm/repos`}>
+          <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
+          <div className="co-form-subsection">
+            <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
+              <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
+            </Section>
+            <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
+              <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
+            </Section>
+          </div>
+          <div className="co-form-section__separator" />
+          <Button type="button" variant="primary" id="save" onClick={onClick}>
+            {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
+          </Button>
+          <Button
+            style={{ marginLeft: '10px' }}
+            type="button"
+            variant="secondary"
+            id="cancel"
+            onClick={() => {
+              history.goBack();
+            }}
+          >
+            {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
+          </Button>
+        </form>
+      </ButtonBar>
     </div>
   );
 };
@@ -219,23 +186,7 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
   });
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            serverURL = `https://${host}/helm/charts/${name}`;
-          }
-        }
-      });
-
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}helm/charts/${name}`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/charts/${name}`).then(res => {
         setChart(prevState => {
           return { ...prevState, indexfile: res.indexfile, values: res.values };
         });
@@ -332,24 +283,7 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
   });
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            serverURL = `https://${host}/helm/charts/${name}`;
-          }
-        }
-      });
-
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts/${name}`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/charts/${name}`).then(res => {
         setChart(prevState => {
           return { ...prevState, indexfile: res.indexfile, values: res.values };
         });

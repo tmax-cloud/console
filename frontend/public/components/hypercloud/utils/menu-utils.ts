@@ -88,6 +88,7 @@ const labelMenuMatchingList = [
   { labelValue: 'kiali', menuKey: 'Kiali' },
   { labelValue: 'kibana', menuKey: 'Kibana' },
   { labelValue: 'jaeger', menuKey: 'Trace' },
+  { labelValue: 'helm-apiserver', menuKey: 'Helm' },
 ];
 const initializeMenuUrlsPromise = (labeMatchingList: any[], port: string) => {
   const promiesList = [];

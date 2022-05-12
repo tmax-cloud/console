@@ -247,12 +247,21 @@ export const CustomMenusMap: CustomMenus = {
     href: '/helmcharts',
     isMultiOnly: false,
   },
-  HelmReleases: {
-    kind: 'HelmReleases',
+  HelmRelease: {
+    kind: 'HelmRelease',
     visible: true,
     type: MenuLinkType.HrefLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_204',
     href: '/helmreleases',
+    isMultiOnly: false,
+  },
+  //Helm 은 HelmChart, HelmRelease 메뉴에서 Helm 서버 주소를 ingress 를 통해 한번 조회하고 계속 사용할 목적으로 추가
+  Helm: {
+    kind: 'Helm',
+    visible: true,
+    type: MenuLinkType.NewTabLink,
+    defaultLabel: 'COMMON:MSG_LNB_MENU_202',
+    url: '',
     isMultiOnly: false,
   },
 };
