@@ -247,8 +247,8 @@ export const CustomMenusMap: CustomMenus = {
     href: '/helmcharts',
     isMultiOnly: false,
   },
-  HelmReleases: {
-    kind: 'HelmReleases',
+  HelmRelease: {
+    kind: 'HelmRelease',
     visible: true,
     type: MenuLinkType.HrefLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_204',
