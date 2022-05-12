@@ -39,7 +39,7 @@ export const TextFilter = props => {
 TextFilter.displayName = 'TextFilter';
 
 // TODO (jon) make this into "withListPageFilters" HOC
-/** @augments {React.PureComponent<{ListComponent?: React.ComponentType<any>, kinds: string[], filters?:any, flatten?: function, data?: any[], rowFilters?: any[], hideToolbar?: boolean, hideLabelFilter?: boolean, tableProps?: any, items?: any[], isK8SResource?: boolean }>} */
+/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kinds: string[], filters?:any, flatten?: function, data?: any[], rowFilters?: any[], hideToolbar?: boolean, hideLabelFilter?: boolean, tableProps?: any, items?: any[], isK8SResource?: boolean }>} */
 export const ListPageWrapper_ = props => {
   const { flatten, ListComponent, reduxIDs, rowFilters, textFilter, hideToolbar, hideLabelFilter, tableProps, items, isK8SResource = true } = props;
   const data = flatten ? flatten(props.resources) : [];
