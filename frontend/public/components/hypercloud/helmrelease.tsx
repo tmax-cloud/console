@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
-import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown } from '@console/internal/components/utils';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
@@ -22,12 +21,13 @@ import { Button, Badge } from '@patternfly/react-core';
 import { deleteModal } from '../modals';
 import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
+import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+
+const helmHost: string = (CustomMenusMap as any).Helm.url;
 
 const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
-
-const defaultHost = 'console.tmaxcloud.org';
 export interface HelmReleasePageProps {
   match: RMatch<{
     ns?: string;
@@ -57,22 +57,7 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            serverURL = namespace ? `https://${host}/helm/ns/${namespace}/releases` : `https://${host}/helm/all-namespaces/releases`;
-          }
-        }
-      });
-      await coFetchJSON(serverURL !== '' ? serverURL : namespace ? `https://${defaultHost}/helm/ns/${namespace}/releases` : `https://${defaultHost}/helm/all-namespaces/releases`).then(res => {
+      await coFetchJSON(namespace ? `${helmHost}/helm/ns/${namespace}/releases` : `${helmHost}/helm/all-namespaces/releases`).then(res => {
         setHelmReleases(_.get(res, 'release') || []);
         setLoading(true);
       });
@@ -80,9 +65,8 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
     fetchHelmChart();
   }, [namespace]);
 
-  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false}/>}</>;
+  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} />}</>;
 };
-
 
 const resourceSortFunction = (resource: string) => {
   return resource.length;
@@ -128,7 +112,7 @@ const tableProps: TableProps = {
       props: { className: Kebab.columnClass },
     },
   ],
-  row: (obj: any) => {    
+  row: (obj: any) => {
     const options: KebabOption[] = [
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
@@ -139,24 +123,9 @@ const tableProps: TableProps = {
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
         callback: async () => {
-          let serverURL = '';
-          await coFetchJSON(
-            ingressUrlWithLabelSelector({
-              'ingress.tmaxcloud.org/name': 'helm-apiserver',
-            }),
-          ).then(res => {
-            const { items } = res;
-            if (items?.length > 0) {
-              const ingress = items[0];
-              const host = ingress.spec?.rules?.[0]?.host;
-              if (!!host) {
-                serverURL = `https://${host}/helm/ns/${obj.namespace}/releases/${obj.name}`;
-              }
-            }
-          });
           deleteModal({
             nonk8sProps: {
-              deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+              deleteServiceURL: `${helmHost}/helm/ns/${obj.namespace}/releases/${obj.name}`,
               stringKey: 'COMMON:MSG_LNB_MENU_203',
               namespace: obj.namespace,
               name: obj.name,
@@ -186,10 +155,10 @@ const tableProps: TableProps = {
           }),
       },
       {
-        children: obj.version
+        children: obj.version,
       },
       {
-        children: <Timestamp timestamp={obj.info.first_deployed} />
+        children: <Timestamp timestamp={obj.info.first_deployed} />,
       },
       {
         className: Kebab.columnClass,
@@ -198,7 +167,6 @@ const tableProps: TableProps = {
     ];
   },
 };
-
 
 export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
@@ -210,22 +178,7 @@ export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            serverURL = `https://${host}/helm/ns/${namespace}/releases/${name}`;
-          }
-        }
-      });
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${namespace}/releases/${name}`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/ns/${namespace}/releases/${name}`).then(res => {
         setHelmReleases(_.get(res, 'release') || []);
         setLoading(true);
       });
@@ -338,24 +291,9 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
       callback: async () => {
-        let serverURL = '';
-        await coFetchJSON(
-          ingressUrlWithLabelSelector({
-            'ingress.tmaxcloud.org/name': 'helm-apiserver',
-          }),
-        ).then(res => {
-          const { items } = res;
-          if (items?.length > 0) {
-            const ingress = items[0];
-            const host = ingress.spec?.rules?.[0]?.host;
-            if (!!host) {
-              serverURL = `https://${host}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`;
-            }
-          }
-        });
         deleteModal({
           nonk8sProps: {
-            deleteServiceURL: serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
+            deleteServiceURL: `${helmHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
             stringKey: 'COMMON:MSG_LNB_MENU_203',
             namespace: helmrelease.namespace,
             name: helmrelease.name,
@@ -403,7 +341,6 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const values = defaultValue ? defaultValue.chart.values : null;
 
   const [loading, setLoading] = React.useState(false);
-  const [host, setHost] = React.useState(defaultHost);
   const [selectChartName, setSelectChartName] = React.useState(chartName);
   const [postPackageURL, setPostPackageURL] = React.useState('');
   const [postReleaseName, setPostReleaseName] = React.useState(releaseName);
@@ -416,23 +353,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          if (!!ingress.spec?.rules?.[0]?.host) {
-            serverURL = `https://${ingress.spec?.rules?.[0]?.host}/helm/charts`;
-            setHost(ingress.spec?.rules?.[0]?.host);
-          }
-        }
-      });
-
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/charts`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/charts`).then(res => {
         let tempEntriesList = [];
         let tempChartObject = {};
         let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
@@ -459,7 +380,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
 
   const setValues = (selection: string) => {
     const getChartValues = () => {
-      const url = `https://${host}/helm/charts/${selection}`;
+      const url = `${helmHost}/helm/charts/${selection}`;
       coFetchJSON(url)
         .then(res => {
           setPostValues(safeDump(res.values));
@@ -475,7 +396,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const onClick = () => {
     setProgress(true);
     const putHelmChart = () => {
-      const url = `https://${host}/helm/ns/${namespace}/releases`;
+      const url = `${helmHost}/helm/ns/${namespace}/releases`;
       const payload = {
         releaseRequestSpec: {
           packageURL: postPackageURL,
@@ -522,7 +443,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     <div style={{ padding: '30px' }}>
       {loading && (
         <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
-          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`https://${host}/helm/repos`}>
+          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${helmHost}/helm/repos`}>
             <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
               <input className="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={releaseName} onChange={updatePostReleaseName} disabled={defaultValue} />
             </Section>
@@ -599,22 +520,7 @@ export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) =
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      let serverURL = '';
-      await coFetchJSON(
-        ingressUrlWithLabelSelector({
-          'ingress.tmaxcloud.org/name': 'helm-apiserver',
-        }),
-      ).then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            serverURL = `https://${host}/helm/ns/${namespace}/releases/${name}`;
-          }
-        }
-      });
-      await coFetchJSON(serverURL !== '' ? serverURL : `https://${defaultHost}/helm/ns/${namespace}/releases/${name}`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/ns/${namespace}/releases/${name}`).then(res => {
         setHelmReleases(_.get(res, 'release') || []);
         setLoading(true);
       });
