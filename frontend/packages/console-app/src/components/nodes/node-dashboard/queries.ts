@@ -104,33 +104,33 @@ const resourceQuotaQueries = {
   ),
 };
 
-// export const getMultilineQueries = (node: string): { [key: string]: QueryWithDescription[] } => ({
-//   [NodeQueries.NETWORK_UTILIZATION]: [
-//     {
-//       query: queries[NodeQueries.NETWORK_IN_UTILIZATION]({ node }),
-//       desc: 'In',
-//     },
-//     {
-//       query: queries[NodeQueries.NETWORK_OUT_UTILIZATION]({ node }),
-//       desc: 'Out',
-//     },
-//   ],
-// });
-export const getMultilineQueries = (node: string, ipAddress: string): { [key: string]: QueryWithDescription[] } => {
-  ipAddress = ipAddress + ':9100';
-  return {
-    [NodeQueries.NETWORK_UTILIZATION]: [
-      {
-        query: queries[NodeQueries.NETWORK_IN_UTILIZATION]({ node }),
-        desc: 'In',
-      },
-      {
-        query: queries[NodeQueries.NETWORK_OUT_UTILIZATION]({ node }),
-        desc: 'Out',
-      },
-    ],
-  };
-};
+export const getMultilineQueries = (node: string): { [key: string]: QueryWithDescription[] } => ({
+  [NodeQueries.NETWORK_UTILIZATION]: [
+    {
+      query: queries[NodeQueries.NETWORK_IN_UTILIZATION]({ node }),
+      desc: 'In',
+    },
+    {
+      query: queries[NodeQueries.NETWORK_OUT_UTILIZATION]({ node }),
+      desc: 'Out',
+    },
+  ],
+});
+// export const getMultilineQueries = (node: string, ipAddress: string): { [key: string]: QueryWithDescription[] } => {
+//   ipAddress = ipAddress + ':9100';
+//   return {
+//     [NodeQueries.NETWORK_UTILIZATION]: [
+//       {
+//         query: queries[NodeQueries.NETWORK_IN_UTILIZATION]({ ipAddress }),
+//         desc: 'In',
+//       },
+//       {
+//         query: queries[NodeQueries.NETWORK_OUT_UTILIZATION]({ ipAddress }),
+//         desc: 'Out',
+//       },
+//     ],
+//   };
+// };
 
 export const getResourceQutoaQueries = (node: string) => ({
   [NodeQueries.POD_RESOURCE_LIMIT_CPU]: resourceQuotaQueries[NodeQueries.POD_RESOURCE_LIMIT_CPU]({
