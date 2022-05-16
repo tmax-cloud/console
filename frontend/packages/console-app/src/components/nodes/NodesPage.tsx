@@ -3,7 +3,8 @@ import * as classNames from 'classnames';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import { sortable } from '@patternfly/react-table';
-import { getName, getUID, getNodeAddresses } from '@console/shared';
+//import { getName, getUID, getNodeAddresses } from '@console/shared';
+import { getName, getUID } from '@console/shared';
 import { getNodeRole } from '@console/shared/src/selectors/node';
 import { NodeModel } from '@console/internal/models';
 import { NodeKind, referenceForModel } from '@console/internal/module/k8s';
@@ -90,14 +91,15 @@ type NodesRowMapFromStateProps = {
 const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProps>(mapStateToProps)(({ obj: node, index, rowKey, style, metrics }: NodesTableRowProps & NodesRowMapFromStateProps) => {
   const nodeName = getName(node);
   const nodeUID = getUID(node);
-  const nodeAddress = getNodeAddresses(node).find(addr => addr.type === 'InternalIP')?.address;
+  //key 를 Ip 에서 node name 으로 변경하므로 아래 nodeAddress 사용 안함
+  //const nodeAddress = getNodeAddresses(node).find(addr => addr.type === 'InternalIP')?.address;
 
-  const usedMem = metrics?.usedMemory?.[`${nodeAddress}:9100`];
-  const totalMem = metrics?.totalMemory?.[`${nodeAddress}:9100`];
+  const usedMem = metrics?.usedMemory?.[nodeName];
+  const totalMem = metrics?.totalMemory?.[nodeName];
   const memory = Number.isFinite(usedMem) && Number.isFinite(totalMem) ? `${humanizeBinaryBytes(usedMem).string} / ${humanizeBinaryBytes(totalMem).string}` : '-';
-  const cores = metrics?.cpu?.[`${nodeAddress}:9100`];
-  const usedStrg = metrics?.usedStorage?.[`${nodeAddress}:9100`];
-  const totalStrg = metrics?.totalStorage?.[`${nodeAddress}:9100`];
+  const cores = metrics?.cpu?.[nodeName];
+  const usedStrg = metrics?.usedStorage?.[nodeName];
+  const totalStrg = metrics?.totalStorage?.[nodeName];
   const storage = Number.isFinite(usedStrg) && Number.isFinite(totalStrg) ? `${humanizeBinaryBytes(usedStrg).string} / ${humanizeBinaryBytes(totalStrg).string}` : '-';
   const pods = metrics?.pods?.[nodeName] ?? '-';
   return (
