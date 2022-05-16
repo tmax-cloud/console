@@ -91,6 +91,7 @@ const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProp
   const nodeName = getName(node);
   const nodeUID = getUID(node);
 
+  //node exporter 변경시 확인 필요
   const usedMem = metrics?.usedMemory?.[nodeName];
   const totalMem = metrics?.totalMemory?.[nodeName];
   const memory = Number.isFinite(usedMem) && Number.isFinite(totalMem) ? `${humanizeBinaryBytes(usedMem).string} / ${humanizeBinaryBytes(totalMem).string}` : '-';

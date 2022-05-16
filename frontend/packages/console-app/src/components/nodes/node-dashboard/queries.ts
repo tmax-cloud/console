@@ -27,7 +27,7 @@ export enum NodeQueries {
   POD_RESOURCE_REQUEST_CPU = 'POD_RESOURCE_REQUEST_CPU',
   POD_RESOURCE_REQUEST_MEMORY = 'POD_RESOURCE_REQUEST_MEMORY',
 }
-
+//node exporter 변경시 확인 필요
 const queries = {
   [NodeQueries.CPU_USAGE]: _.template(`instance:node_cpu:rate:sum{instance='<%= node %>'}`),
   [NodeQueries.CPU_TOTAL]: _.template(`instance:node_num_cpu:sum{instance='<%= node %>'}`),
@@ -91,7 +91,7 @@ const resourceQuotaQueries = {
     )`,
   ),
 };
-
+//node exporter 변경시 확인 필요
 export const getMultilineQueries = (node: string): { [key: string]: QueryWithDescription[] } => ({
   [NodeQueries.NETWORK_UTILIZATION]: [
     {
@@ -115,7 +115,7 @@ export const getResourceQutoaQueries = (node: string) => ({
   }),
   [NodeQueries.POD_RESOURCE_REQUEST_MEMORY]: resourceQuotaQueries[NodeQueries.POD_RESOURCE_REQUEST_MEMORY]({ node }),
 });
-
+//node exporter 변경시 확인 필요
 export const getUtilizationQueries = (node: string, ipAddress: string) => {
   ipAddress = ipAddress.indexOf(':') < 0 ? ipAddress + ':9100' : ipAddress;
   let hostIp = ipAddress.split(':')[0];
