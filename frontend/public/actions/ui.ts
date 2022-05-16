@@ -122,8 +122,7 @@ export const getPodMetric = (pod: PodKind, metric: string): number => {
 
 export const getNodeMetric = (node: NodeKind, metric: string): number => {
   const metrics = store.getState().UI.getIn(['metrics', 'node']);
-  const nodeAddress = (node as any).status?.addresses?.find(addr => addr.type === 'InternalIP')?.address;
-  return metrics?.[metric]?.[node.metadata.name] ?? metrics?.[metric]?.[`${nodeAddress}:9100`] ?? 0;
+  return metrics?.[metric]?.[node.metadata.name] ?? 0;
 };
 
 export const formatNamespaceRoute = (activeNamespace, originalPath, location?) => {
