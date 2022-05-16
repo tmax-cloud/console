@@ -3,7 +3,6 @@ import * as classNames from 'classnames';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import { sortable } from '@patternfly/react-table';
-//import { getName, getUID, getNodeAddresses } from '@console/shared';
 import { getName, getUID } from '@console/shared';
 import { getNodeRole } from '@console/shared/src/selectors/node';
 import { NodeModel } from '@console/internal/models';
@@ -91,8 +90,6 @@ type NodesRowMapFromStateProps = {
 const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProps>(mapStateToProps)(({ obj: node, index, rowKey, style, metrics }: NodesTableRowProps & NodesRowMapFromStateProps) => {
   const nodeName = getName(node);
   const nodeUID = getUID(node);
-  //key 를 Ip 에서 node name 으로 변경하므로 아래 nodeAddress 사용 안함
-  //const nodeAddress = getNodeAddresses(node).find(addr => addr.type === 'InternalIP')?.address;
 
   const usedMem = metrics?.usedMemory?.[nodeName];
   const totalMem = metrics?.totalMemory?.[nodeName];
