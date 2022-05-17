@@ -16,7 +16,8 @@ import { Button } from '@patternfly/react-core';
 import { ListView } from '../../utils/list-view';
 import { CheckboxGroup } from '../../utils/checkbox';
 import { MinusCircleIcon } from '@patternfly/react-icons';
-import { DropdownAddComponent } from '../../utils/dropdown-add';
+import { DropdownCheckAddComponent } from '../../utils/dropdown-check-add';
+import { DropdownSetComponent } from '../../utils/dropdown-set';
 import { useTranslation } from 'react-i18next';
 
 const kindItems = t => [
@@ -94,7 +95,7 @@ const defaultValuesTemplate = {
   rules: [
     {
       verbs: ['*'],
-      apiGroups: [],
+      apiGroups: ['*'],
       resources: [],
     },
   ],
@@ -129,11 +130,11 @@ const roleFormFactory = (params, obj) => {
               apiGroup = 'Core';
             }
             if (apiGroup === '*') {
-              apiGroupKeyValue = { label: 'All', value: '*' };
+              apiGroupKeyValue = { label: 'All', value: '*', checked: false, added: true };
             } else if (apiGroup === 'Core') {
-              apiGroupKeyValue = { label: 'Core', value: 'Core' };
+              apiGroupKeyValue = { label: 'Core', value: 'Core', checked: true, added: true };
             } else {
-              apiGroupKeyValue = { label: apiGroup, value: apiGroup };
+              apiGroupKeyValue = { label: apiGroup, value: apiGroup, checked: true, added: true };
             }
             defaultValues.rules[ruleIndex].apiGroups[apiGroupIndex] = apiGroupKeyValue;
           }
@@ -171,7 +172,7 @@ const RuleItem = props => {
   const [resourceListWithApiGroupConvert, setResourceListWithApiGroupConvert] = React.useState([]);
   const { control } = methods;
 
-  const apiGroups = useWatch<{ label: string; value: string }[]>({
+  const apiGroups = useWatch<{ label: string; value: string; checked: boolean; added: boolean }[]>({
     control: control,
     name: `${name}[${index}].apiGroups`,
   });
@@ -196,43 +197,34 @@ const RuleItem = props => {
     let resourceListWithApiGroupCore = [];
 
     apiGroups?.forEach(apiGroup => {
-      const apiGroupValue = apiGroup?.value || '*';
-      if (apiGroupValue === '*') {
-        resourceListWithApiGroupTemp = apiGroupListWithResourceSet;
-      } else {
-        if (apiGroupValue === 'Core') {
-          resourceListWithApiGroupCore = [{ apiGroup: 'Core', resourceList: coreResources }];
-          resourceListWithApiGroupTemp = resourceListWithApiGroupTemp.concat(resourceListWithApiGroupCore);
+      if (apiGroup?.checked === true) {
+        const apiGroupValue = apiGroup?.value || '*';
+
+        if (apiGroupValue === '*') {
+          resourceListWithApiGroupTemp = apiGroupListWithResourceSet;
         } else {
-          apiGroupListWithResourceSet.forEach(r => {
-            if (r.apiGroup === apiGroup.value) {
-              resourceListWithApiGroupTemp.push(r);
-            }
-          });
+          if (apiGroupValue === 'Core') {
+            resourceListWithApiGroupCore = [{ apiGroup: 'Core', resourceList: coreResources }];
+            resourceListWithApiGroupTemp = resourceListWithApiGroupTemp.concat(resourceListWithApiGroupCore);
+          } else {
+            apiGroupListWithResourceSet.forEach(r => {
+              if (r.apiGroup === apiGroup.value) {
+                resourceListWithApiGroupTemp.push(r);
+              }
+            });
+          }
         }
       }
     });
-    let isFirstGroup = true;
 
     resourceListWithApiGroupTemp?.forEach(apiGroup => {
       let apiGroupAndresourceList = [];
-      if (isFirstGroup) {
-        apiGroup.resourceList.forEach(resource => {
-          apiGroupAndresourceList.push({ label: resource.value, value: resource.value });
-        });
-        convertList = convertList.concat(apiGroupAndresourceList);
-        isFirstGroup = false;
-      } else {
-        convertList = convertList.filter(r => {
-          if (
-            apiGroup.resourceList.find(resource => {
-              return r.label === resource.label;
-            })
-          ) {
-            return true;
-          }
-        });
-      }
+      let isFirstItem = true;
+      apiGroup.resourceList.forEach(resource => {
+        apiGroupAndresourceList.push({ key: `${resource.value}-${resource.value}`, label: resource.value, value: resource.value, category: apiGroup.apiGroup, isFirstItem: isFirstItem });
+        isFirstItem = false;
+      });
+      convertList = convertList.concat(apiGroupAndresourceList);
     });
     setResourceListWithApiGroupConvert(convertList);
   }, [apiGroups]);
@@ -263,9 +255,9 @@ const RuleItem = props => {
             )}
             {ruleTypeToggle === 'Resource' ? (
               <>
-                <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true} help={true} helpTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_36')} helpText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_37')}>
+                <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_10')} id={`apiGroups[${index}]`} isRequired={true} help={true} helpTitle={t("SINGLE:MSG_ROLES_CREATEFORM_DIV2_36")} helpText={t("SINGLE:MSG_ROLES_CREATEFORM_DIV2_37")}>
                   <Controller
-                    as={<DropdownAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
+                    as={<DropdownCheckAddComponent name={`${name}[${index}].apiGroups`} defaultValues={item.apiGroups} methods={methods} useResourceItemsFormatter={false} items={apiGroupList} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_27')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_29')} chipsGroupTitle={t('COMMON:MSG_DETAILS_TABDETAILS_RULES_TABLEHEADER_2')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
                     control={methods.control}
                     name={`${name}[${index}].apiGroups`}
                     onChange={([selected]) => {
@@ -276,7 +268,7 @@ const RuleItem = props => {
                 </Section>
                 <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resources[${index}]`} isRequired={true}>
                   <Controller
-                    as={<DropdownAddComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
+                    as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
                     control={methods.control}
                     name={`${name}[${index}].resources`}
                     onChange={([selected]) => {
@@ -459,7 +451,7 @@ const CreateRoleComponent: React.FC<RoleFormProps> = props => {
 
       {loaded ? (
         <Section id="rules" isRequired={true}>
-          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*' }], resources: [], verbs: ['*'] }} defaultValues={defaultValues.rules} />
+          <ListView methods={methods} name={`rules`} addButtonText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_22')} headerFragment={<></>} itemRenderer={ruleItemRenderer} defaultItem={{ apiGroups: [{ label: 'All', value: '*', checked: false, added: true }], resources: [], verbs: ['*'] }} defaultValues={defaultValues.rules} />
         </Section>
       ) : (
         <LoadingInline />
@@ -490,6 +482,9 @@ export const onSubmitCallback = data => {
       };
     } else {
       let apiGroups = new Array();
+      rule.apiGroups = rule.apiGroups.filter(r => {
+        if (r.added === true) return true;
+      });
       rule.apiGroups?.forEach((r, index) => {
         if (r.value === 'Core') {
           r.value = '';
