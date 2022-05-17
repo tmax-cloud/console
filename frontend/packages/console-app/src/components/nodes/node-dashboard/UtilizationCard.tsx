@@ -65,7 +65,7 @@ const UtilizationCard: React.FC = () => {
     const topConsumerQueries = getTopConsumerQueries(nodeIp);
     return [
       getUtilizationQueries(nodeName, nodeIp),
-      getMultilineQueries(nodeName, nodeIp),
+      getMultilineQueries(nodeName),
       // getResourceQutoaQueries(nodeName),
       [
         [getProjectConsumers(topConsumerQueries[NodeQueries.PROJECTS_BY_FILESYSTEM]), getPodConsumers(topConsumerQueries[NodeQueries.PODS_BY_FILESYSTEM], nodeName)],
