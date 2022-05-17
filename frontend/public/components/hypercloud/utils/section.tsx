@@ -24,7 +24,7 @@ const CombineNodes = (id, description, children, valid, validationErrorDesc) => 
   return isArray ? children.map((cur, idx) => <Node className={className} key={`${id}-${idx}`} children={cur} description={description} valid={valid} validationErrorDesc={validationErrorDesc} />) : <Node className={className} children={children} description={description} valid={valid} validationErrorDesc={validationErrorDesc} />;
 };
 
-export const Section: React.FC<SectionProps> = ({ id, label, description, children, isRequired = false, valid = true, validationErrorDesc, help = false, helpText, helpTitle }) => {
+export const Section: React.FC<SectionProps> = ({ id, label, description, children, isRequired = false, valid = true, validationErrorDesc = '', help = false, helpText, helpTitle }) => {
   let result = CombineNodes(id, description, children, valid, validationErrorDesc);
   return (
     <div className="form-group">
