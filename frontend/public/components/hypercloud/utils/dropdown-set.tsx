@@ -308,43 +308,6 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
   };
 
   const getOptions = options => [selectAllOption, ...options];
-  const getCategoryCount = item => {
-    const categorys = item.reduce((current, next) => {
-      current[next.category] = ++current[next.category] || 0;
-      return current;
-    }, {});
-    const categoryCount = Object.keys(categorys).length;
-
-    return categoryCount;
-  };
-
-  const getResourceItem = item => {
-    const categoryCount = getCategoryCount(item);
-
-    if (categoryCount === 1) {
-      return item;
-    } else {
-      let resourceCountObject = item.reduce((current, next) => {
-        current[next.label] = ++current[next.label] || 0;
-        return current;
-      }, {});
-      Object.keys(resourceCountObject).map(key => {
-        if (resourceCountObject[key] !== categoryCount - 1) {
-          resourceCountObject[key] = 0;
-        }
-      });
-
-      let duplicates = item
-        .filter(e => resourceCountObject[e.label])
-        .reduce(function(acc, current) {
-          if (acc.findIndex(({ label }) => label === current.label) === -1) {
-            acc.push(current);
-          }
-          return acc;
-        }, []);
-      return duplicates;
-    }
-  };
   const toggleOpen = () => {
     window.addEventListener('click', onWindowClick);
     setIsOpen(!isOpen);
@@ -416,7 +379,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
                 autoFocus
                 styles={customStyles}
                 value={selectedValues || []}
-                options={getOptions(getResourceItem(formattedOptions))}
+                options={getOptions(formattedOptions)}
                 controlShouldRenderValue={false}
                 isMulti
                 components={{
