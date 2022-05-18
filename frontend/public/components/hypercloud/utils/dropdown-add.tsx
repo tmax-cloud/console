@@ -64,6 +64,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     if (data.label !== e.label) return true;
   });
   const isExist = !(itemList.length === 0);
+  const isDisabled = isExist || selectAllChecked;
 
   return (
     <>
@@ -74,31 +75,33 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             <PlusCircleIcon
               data-test-id="pairs-list__add-icon"
               className="co-icon-space-l"
-              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
+              style={isDisabled ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
               onClick={() => {
-                if (data.label === 'All' && data.value === '*') {
-                  setValue([
-                    {
-                      label: 'All',
-                      value: '*',
-                    },
-                  ]);
-                  setSelectAllChecked(true);
-                } else {
-                  if (isExist !== true) {
-                    currentValue.push(data);
-                    //remove All
-                    let wihtoutAll = currentValue.filter(e => {
-                      if (e.label !== 'All') return true;
-                    });
-                    setValue(wihtoutAll);
+                if (!isDisabled) {
+                  if (data.label === 'All' && data.value === '*') {
+                    setValue([
+                      {
+                        label: 'All',
+                        value: '*',
+                      },
+                    ]);
+                    setSelectAllChecked(true);
                   } else {
-                    //update currentValue
-                    wihtoutItem.push(data);
-                    let wihtoutAll = wihtoutItem.filter(e => {
-                      if (e.label !== 'All') return true;
-                    });
-                    setValue(wihtoutAll);
+                    if (isExist !== true) {
+                      currentValue.push(data);
+                      //remove All
+                      let wihtoutAll = currentValue.filter(e => {
+                        if (e.label !== 'All') return true;
+                      });
+                      setValue(wihtoutAll);
+                    } else {
+                      //update currentValue
+                      wihtoutItem.push(data);
+                      let wihtoutAll = wihtoutItem.filter(e => {
+                        if (e.label !== 'All') return true;
+                      });
+                      setValue(wihtoutAll);
+                    }
                   }
                 }
               }}
@@ -135,7 +138,7 @@ const CaseType = {
  * @prop {{ label: string; value: string; }} selectAllChipObj - shrinkOnSelectAll=true일 때 모든 아이템 선택시 표시해줄 chip object에 대한 설정. 기본값은 {label: 'All', value: '*'} 이다. defaultValue로 selectAllChipObj와 동일한 형태의 값이 들어왔을 때에도 모든 아이템이 선택된 것으로 처리 된다. 이와 같이 동작하게 하려면 shrinkOnSelectAll=true로 설정해줘야 한다.
  * @prop {string} clearAllText - Clear all 버튼에 표시되는  text
  */
-export const DropdownAddComponent = React.forwardRef<HTMLInputElement, DropdownCheckAddComponentProps>((props, ref) => {
+export const DropdownAddComponent = React.forwardRef<HTMLInputElement, DropdownAddComponentProps>((props, ref) => {
   const { name, defaultValues = [], methods, items, useResourceItemsFormatter, shrinkOnSelectAll = true, showSelectAllOnEmpty = true, selectAllChipObj = { label: 'All', value: '*' }, kind, menuWidth = '200px', placeholder = 'Select Resources', chipsGroupTitle = 'Resources', buttonWidth = '200px', clearAllText = 'Clear all' } = props;
   const { setValue, watch } = methods ? methods : useFormContext();
   const [inputValue, setInputValue] = React.useState('');
@@ -242,7 +245,7 @@ export const DropdownAddComponent = React.forwardRef<HTMLInputElement, DropdownC
     }
   }, []);
   // React.useEffect(() => {
-  //   clearAll();    
+  //   clearAll();
   // }, [items]);
 
   const setDropdownSettings = (isSelectAll, formValues, chips) => {
@@ -407,7 +410,7 @@ export const DropdownAddComponent = React.forwardRef<HTMLInputElement, DropdownC
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
           >
-            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={getChipsCount()} buttonWidth={buttonWidth} isAll={returnIsAllSelected()}/>}>
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={getChipsCount()} buttonWidth={buttonWidth} isAll={returnIsAllSelected()} />}>
               <Select
                 name={name}
                 autoFocus
@@ -444,7 +447,7 @@ export const DropdownAddComponent = React.forwardRef<HTMLInputElement, DropdownC
   );
 });
 
-export type DropdownCheckAddComponentProps = {
+export type DropdownAddComponentProps = {
   id?: string;
   name: string;
   defaultValues?: any[];
