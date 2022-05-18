@@ -39,7 +39,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, any>(({ children, isOpen, targ
   </div>
 ));
 
-const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disabled }) => {
+const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disabled = false }) => {
   return (
     <div className="hc-dropdown-main-button" style={disabled ? { width: buttonWidth, backgroundColor: '#ededed' } : { width: buttonWidth }} onClick={disabled ? null : toggleOpen}>
       <span style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden', width: 'calc(100% - 60px)' }}>{label}</span>
@@ -411,7 +411,7 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
           >
-            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton disabled={items.length === 0} label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
               <Select
                 name={name}
                 autoFocus

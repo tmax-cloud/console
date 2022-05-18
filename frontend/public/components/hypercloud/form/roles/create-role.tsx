@@ -17,6 +17,7 @@ import { ListView } from '../../utils/list-view';
 import { CheckboxGroup } from '../../utils/checkbox';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { DropdownCheckAddComponent } from '../../utils/dropdown-check-add';
+import { DropdownSetComponent } from '../../utils/dropdown-set';
 import { useTranslation } from 'react-i18next';
 
 const kindItems = t => [
@@ -191,49 +192,51 @@ const RuleItem = props => {
   });
 
   React.useEffect(() => {
-    let convertList = [];
     let resourceListWithApiGroupTemp = [];
-    let resourceListWithApiGroupCore = [];
-
-    apiGroups?.forEach(apiGroup => {
-      const apiGroupValue = apiGroup?.value || '*';
-      if (apiGroupValue === '*') {
+    if (!apiGroups || apiGroups.length === 0) {
+      setResourceListWithApiGroupConvert([]);
+    } else {
+      if (apiGroups[0].value === '*') {
         resourceListWithApiGroupTemp = apiGroupListWithResourceSet;
       } else {
-        if (apiGroupValue === 'Core') {
-          resourceListWithApiGroupCore = [{ apiGroup: 'Core', resourceList: coreResources }];
-          resourceListWithApiGroupTemp = resourceListWithApiGroupTemp.concat(resourceListWithApiGroupCore);
-        } else {
-          apiGroupListWithResourceSet.forEach(r => {
-            if (r.apiGroup === apiGroup.value) {
-              resourceListWithApiGroupTemp.push(r);
-            }
-          });
-        }
-      }
-    });
-    let isFirstGroup = true;
-    resourceListWithApiGroupTemp?.forEach(apiGroup => {
-      let apiGroupAndresourceList = [];
-      if (isFirstGroup) {
-        apiGroup.resourceList.forEach(resource => {
-          apiGroupAndresourceList.push({ label: resource.value, value: resource.value });
-        });
-        convertList = convertList.concat(apiGroupAndresourceList);
-        isFirstGroup = false;
-      } else {
-        convertList = convertList.filter(r => {
-          if (
-            apiGroup.resourceList.find(resource => {
-              return r.label === resource.label;
-            })
-          ) {
-            return true;
+        apiGroups?.forEach(apiGroup => {
+          if (apiGroup.value === 'Core') {
+            resourceListWithApiGroupTemp = resourceListWithApiGroupTemp.concat([{ apiGroup: 'Core', resourceList: coreResources }]);
+          } else {
+            apiGroupListWithResourceSet.forEach(r => {
+              if (r.apiGroup === apiGroup.value) {
+                resourceListWithApiGroupTemp.push(r);
+              }
+            });
           }
         });
       }
-    });
-    setResourceListWithApiGroupConvert(convertList);
+      let convertList = [];
+      let isFirstGroup = true;
+      resourceListWithApiGroupTemp?.forEach(apiGroup => {
+        let apiGroupAndresourceList = [];
+        let isFirstItem = true;
+        if (isFirstGroup) {
+          apiGroup.resourceList.forEach(resource => {
+            apiGroupAndresourceList.push({ key: `${resource.value}-${resource.value}`, label: resource.value, value: resource.value, category: apiGroup.apiGroup, isFirstItem: isFirstItem });
+            isFirstItem = false;
+          });
+          convertList = convertList.concat(apiGroupAndresourceList);
+          isFirstGroup = false;
+        } else {
+          convertList = convertList.filter(r => {
+            if (
+              apiGroup.resourceList.find(resource => {
+                return r.label === resource.label;
+              })
+            ) {
+              return true;
+            }
+          });
+        }
+      });
+      setResourceListWithApiGroupConvert(convertList);
+    }
   }, [apiGroups]);
 
   const { t } = useTranslation();
@@ -275,7 +278,7 @@ const RuleItem = props => {
                 </Section>
                 <Section label={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_11')} id={`resources[${index}]`} isRequired={true}>
                   <Controller
-                    as={<DropdownCheckAddComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
+                    as={<DropdownSetComponent name={`${name}[${index}].resources`} defaultValues={item.resources} methods={methods} useResourceItemsFormatter={false} items={resourceListWithApiGroupConvert} placeholder={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_28')} clearAllText={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_25')} chipsGroupTitle={t('SINGLE:MSG_ROLES_CREATEFORM_DIV2_26')} shrinkOnSelectAll={false} showSelectAllOnEmpty={false} menuWidth="300px" buttonWidth="300px" />}
                     control={methods.control}
                     name={`${name}[${index}].resources`}
                     onChange={([selected]) => {
