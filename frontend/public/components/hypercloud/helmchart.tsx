@@ -35,7 +35,7 @@ export const HelmchartPage = () => {
     };
     fetchHelmChart();
   }, []);
-  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} />}</>;
+  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} />}</>;
 };
 
 const tableProps: TableProps = {
@@ -236,7 +236,7 @@ export const ChartDetailsTapPage: React.FC<ChartDetailsTapPageProps> = props => 
                 <dt>{t('MULTI:MSG_DEVELOPER_ADD_CREATEFORM_SIDEPANEL_4')}</dt>
                 <dd>
                   <div>
-                    {entry.sources.map(source => {
+                    {entry.sources?.map(source => {
                       return <p key={`source-${source}`}>{source}</p>;
                     })}
                   </div>
@@ -250,7 +250,7 @@ export const ChartDetailsTapPage: React.FC<ChartDetailsTapPageProps> = props => 
             </dd>
             <dt>{t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_6')}</dt>
             <dd>
-              {entry.maintainers.map(m => {
+              {entry.maintainers?.map(m => {
                 return <div key={'mainatainer-key-' + m.name}>{m.name}</div>;
               })}
             </dd>
@@ -324,9 +324,9 @@ const allPages = [
     href: '',
     component: ChartDetailsTapPage,
   },
-  {
-    name: 'COMMON:MSG_DETAILS_TAB_18',
-    href: 'edit',
-    component: HelmchartEditPage,
-  },
+  // {
+  //   name: 'COMMON:MSG_DETAILS_TAB_18',
+  //   href: 'edit',
+  //   component: HelmchartEditPage,
+  // },
 ];
