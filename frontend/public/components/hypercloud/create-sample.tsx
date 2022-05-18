@@ -20,7 +20,6 @@ import { Button } from '@patternfly/react-core';
 import { TextInput } from './utils/text-input';
 import { DropdownSetComponent } from './utils/dropdown-set';
 import { DropdownCheckAddComponent } from './utils/dropdown-check-add';
-import { DropdownAddComponent } from './utils/dropdown-add';
 
 const defaultValues = {
   // requestDo에 넣어줄 형식으로 defaultValues 작성
@@ -160,11 +159,6 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     { label: 'Coconut', value: 'Coconut', category: 'Fruit', isFirstItem: false },
   ];
 
-  const dropdownAddItemList = [
-    { label: 'Core', value: 'Core' },
-    { label: 'Apple', value: 'Apple' },
-    { label: 'Banana', value: 'Banana' },
-  ];
 
   const listHeaderFragment = (
     <div className="row pairs-list__heading">
@@ -507,47 +501,6 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
               return { value: selected };
             }}
             defaultValue={[{ label: 'Apple', value: 'Apple', apiGroup: 'Fruit', isFirstResource: true }]}
-          />
-        </Section>
-      </Section>
-      <Section id="dropdown-add-section" label="<< Dropdown add>>">
-        <Section id="dropdown-add-defalut" label=" Dropdown add defalut">
-          <Controller
-            as={<DropdownAddComponent name="dropdownAddComponent-plain-defalut" shrinkOnSelectAll={false} useResourceItemsFormatter={false} defaultValues={[{ label: 'All', value: '*' }]} items={dropdownAddItemList} menuWidth="250px" buttonWidth="200px" chipsGroupTitle="ABC" />}
-            control={methods.control}
-            name="dropdownAddComponent-plain-defalut"
-            onChange={([selected]) => {
-              return { value: selected };
-            }}
-            defaultValue={[{ label: 'All', value: '*' }]}
-          />
-        </Section>
-        <Section id="dropdown-add" label=" Dropdown add">
-          <Controller
-            as={
-              <DropdownAddComponent
-                name="dropdownAddComponent-plain"
-                shrinkOnSelectAll={false}
-                useResourceItemsFormatter={false}
-                defaultValues={[
-                  { label: 'Apple', value: 'Apple' },
-                  { label: 'Banana', value: 'Banana' },
-                ]}
-                items={dropdownAddItemList}
-                menuWidth="250px"
-                buttonWidth="200px"
-                chipsGroupTitle="ABC"
-              />
-            }
-            control={methods.control}
-            name="dropdownAddComponent-plain"
-            onChange={([selected]) => {
-              return { value: selected };
-            }}
-            defaultValue={[
-              { label: 'Apple', value: 'Apple' },
-              { label: 'Banana', value: 'Banana' },
-            ]}
           />
         </Section>
       </Section>
