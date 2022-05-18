@@ -61,6 +61,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     if (data.label === e.label) return true;
   });
   const isExist = !(itemList.length === 0);
+  const isDisabled = isExist || selectAllChecked;
 
   return (
     <div>
@@ -69,33 +70,31 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
           <span
             id={DROPDOWN_SECTION_ID}
             onClick={() => {
-              if (data.label === 'All') {
-                setValue([
-                  {
-                    label: 'All',
-                    value: '*',
-                  },
-                ]);
-                setSelectAllChecked(true);
-              } else {
-                if (isExist !== true) {
-                  data.added = true;
-                  currentValue.push(data);
-                  //remove All
-                  let wihtoutAll = currentValue.filter(e => {
-                    if (e.label !== 'All') return true;
-                  });
-                  setValue(wihtoutAll);
+              if (!isDisabled) {
+                if (data.label === 'All') {
+                  setValue([
+                    {
+                      label: 'All',
+                      value: '*',
+                    },
+                  ]);
+                  setSelectAllChecked(true);
+                } else {
+                  if (isExist !== true) {
+                    data.added = true;
+                    currentValue.push(data);
+                    //remove All
+                    let wihtoutAll = currentValue.filter(e => {
+                      if (e.label !== 'All') return true;
+                    });
+                    setValue(wihtoutAll);
+                  }
                 }
               }
             }}
           >
             {data.label}
-            <PlusCircleIcon
-              data-test-id="pairs-list__add-icon"
-              className="co-icon-space-l"
-              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
-            />
+            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={isDisabled ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }} />
           </span>
           {data.label === 'All' && <hr />}
         </span>
