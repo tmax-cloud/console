@@ -39,7 +39,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, any>(({ children, isOpen, targ
   </div>
 ));
 
-const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disabled }) => {
+const DropdownMainButton = ({ label, toggleOpen, count = 0, buttonWidth, disabled = false }) => {
   return (
     <div className="hc-dropdown-main-button" style={disabled ? { width: buttonWidth, backgroundColor: '#ededed' } : { width: buttonWidth }} onClick={disabled ? null : toggleOpen}>
       <span style={{ margin: '0 3px', textOverflow: 'ellipsis', display: 'block', whiteSpace: 'nowrap', overflowX: 'hidden', width: 'calc(100% - 60px)' }}>{label}</span>
@@ -61,6 +61,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
     if (data.label === e.label) return true;
   });
   const isExist = !(itemList.length === 0);
+  const isDisabled = isExist || selectAllChecked;
 
   return (
     <div>
@@ -69,33 +70,31 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
           <span
             id={DROPDOWN_SECTION_ID}
             onClick={() => {
-              if (data.label === 'All') {
-                setValue([
-                  {
-                    label: 'All',
-                    value: '*',
-                  },
-                ]);
-                setSelectAllChecked(true);
-              } else {
-                if (isExist !== true) {
-                  data.added = true;
-                  currentValue.push(data);
-                  //remove All
-                  let wihtoutAll = currentValue.filter(e => {
-                    if (e.label !== 'All') return true;
-                  });
-                  setValue(wihtoutAll);
+              if (!isDisabled) {
+                if (data.label === 'All') {
+                  setValue([
+                    {
+                      label: 'All',
+                      value: '*',
+                    },
+                  ]);
+                  setSelectAllChecked(true);
+                } else {
+                  if (isExist !== true) {
+                    data.added = true;
+                    currentValue.push(data);
+                    //remove All
+                    let wihtoutAll = currentValue.filter(e => {
+                      if (e.label !== 'All') return true;
+                    });
+                    setValue(wihtoutAll);
+                  }
                 }
               }
             }}
           >
             {data.label}
-            <PlusCircleIcon
-              data-test-id="pairs-list__add-icon"
-              className="co-icon-space-l"
-              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
-            />
+            <PlusCircleIcon data-test-id="pairs-list__add-icon" className="co-icon-space-l" style={isDisabled ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }} />
           </span>
           {data.label === 'All' && <hr />}
         </span>
@@ -309,43 +308,6 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
   };
 
   const getOptions = options => [selectAllOption, ...options];
-  const getCategoryCount = item => {
-    const categorys = item.reduce((current, next) => {
-      current[next.category] = ++current[next.category] || 0;
-      return current;
-    }, {});
-    const categoryCount = Object.keys(categorys).length;
-
-    return categoryCount;
-  };
-
-  const getResourceItem = item => {
-    const categoryCount = getCategoryCount(item);
-
-    if (categoryCount === 1) {
-      return item;
-    } else {
-      let resourceCountObject = item.reduce((current, next) => {
-        current[next.label] = ++current[next.label] || 0;
-        return current;
-      }, {});
-      Object.keys(resourceCountObject).map(key => {
-        if (resourceCountObject[key] !== categoryCount - 1) {
-          resourceCountObject[key] = 0;
-        }
-      });
-
-      let duplicates = item
-        .filter(e => resourceCountObject[e.label])
-        .reduce(function(acc, current) {
-          if (acc.findIndex(({ label }) => label === current.label) === -1) {
-            acc.push(current);
-          }
-          return acc;
-        }, []);
-      return duplicates;
-    }
-  };
   const toggleOpen = () => {
     window.addEventListener('click', onWindowClick);
     setIsOpen(!isOpen);
@@ -411,13 +373,13 @@ export const DropdownSetComponent = React.forwardRef<HTMLInputElement, DropdownS
             deleteChip={onDeleteChip}
             categoryName={chipsGroupTitle}
           >
-            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton disabled={items.length === 0} label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
+            <Dropdown ref={dropdownElement} isOpen={isOpen} onClose={toggleOpen} target={<DropdownMainButton label={placeholder} toggleOpen={toggleOpen} count={selectAllChecked ? formattedOptions.length : selectedValues.length || 0} buttonWidth={buttonWidth} />}>
               <Select
                 name={name}
                 autoFocus
                 styles={customStyles}
                 value={selectedValues || []}
-                options={getOptions(getResourceItem(formattedOptions))}
+                options={getOptions(formattedOptions)}
                 controlShouldRenderValue={false}
                 isMulti
                 components={{

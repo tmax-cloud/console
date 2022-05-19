@@ -66,6 +66,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
   const isExist = !(itemList.length === 0);
   //const isAdded = itemList[0]?.added;
   const isChecked = itemList[0]?.checked;
+  const isDisabled = isExist || selectAllChecked;
 
   return (
     <>
@@ -117,47 +118,49 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
             <PlusCircleIcon
               data-test-id="pairs-list__add-icon"
               className="co-icon-space-l"
-              style={isExist || selectAllChecked ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
+              style={isDisabled ? { marginRight: '10px', float: 'right', cursor: 'pointer', color: '#ededed' } : { marginRight: '10px', float: 'right', cursor: 'pointer' }}
               onClick={() => {
-                if (data.label === 'All' && data.value === '*') {
-                  setValue([
-                    {
-                      label: 'All',
-                      value: '*',
-                      checked: false,
-                      added: true,
-                    },
-                  ]);
-                  setSelectAllChecked(true);
-                } else {
-                  if (isExist !== true) {
-                    data.checked = true;
-                    data.added = true;
-                    currentValue.push(data);
-                    //remove All
-                    let wihtoutAll = currentValue.filter(e => {
-                      if (e.label !== 'All') return true;
-                    });
-                    setValue(wihtoutAll);
+                if (!isDisabled) {
+                  if (data.label === 'All' && data.value === '*') {
+                    setValue([
+                      {
+                        label: 'All',
+                        value: '*',
+                        checked: false,
+                        added: true,
+                      },
+                    ]);
+                    setSelectAllChecked(true);
                   } else {
-                    if (isChecked !== true) {
+                    if (isExist !== true) {
+                      data.checked = true;
                       data.added = true;
-                      //update currentValue
-                      wihtoutItem.push(data);
+                      currentValue.push(data);
                       //remove All
-                      let wihtoutAll = wihtoutItem.filter(e => {
+                      let wihtoutAll = currentValue.filter(e => {
                         if (e.label !== 'All') return true;
                       });
                       setValue(wihtoutAll);
                     } else {
-                      data.checked = true;
-                      data.added = true;
-                      //update currentValue
-                      wihtoutItem.push(data);
-                      let wihtoutAll = wihtoutItem.filter(e => {
-                        if (e.label !== 'All') return true;
-                      });
-                      setValue(wihtoutAll);
+                      if (isChecked !== true) {
+                        data.added = true;
+                        //update currentValue
+                        wihtoutItem.push(data);
+                        //remove All
+                        let wihtoutAll = wihtoutItem.filter(e => {
+                          if (e.label !== 'All') return true;
+                        });
+                        setValue(wihtoutAll);
+                      } else {
+                        data.checked = true;
+                        data.added = true;
+                        //update currentValue
+                        wihtoutItem.push(data);
+                        let wihtoutAll = wihtoutItem.filter(e => {
+                          if (e.label !== 'All') return true;
+                        });
+                        setValue(wihtoutAll);
+                      }
                     }
                   }
                 }
@@ -283,9 +286,8 @@ export const DropdownCheckAddComponent = React.forwardRef<HTMLInputElement, Drop
   React.useEffect(() => {
     const selectAllChip = defaultValuesWithKey.filter(item => selectAllChipObj.label === item.label && selectAllChipObj.value === item.value);
     if (defaultValuesWithKey[0]?.label === 'All') {
-      //MEMO : 기획상 defaultValue가 빈 값이여야 함. 추후 all이 default가 된다면 주석 풀어서 사용
-      // setSelectAllChecked(true);
-      // setChips([selectAllChipObj]);
+      setSelectAllChecked(true);
+      setChips([selectAllChipObj]);
     } else if (selectAllChip.length > 0) {
       // MEMO : defaultValues에 selectAll관련 chip이 있는 경우
       if (shrinkOnSelectAll) {

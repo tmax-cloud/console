@@ -159,6 +159,7 @@ const CreateSampleComponent: React.FC<SampleFormProps> = props => {
     { label: 'Coconut', value: 'Coconut', category: 'Fruit', isFirstItem: false },
   ];
 
+
   const listHeaderFragment = (
     <div className="row pairs-list__heading">
       <div className="col-xs-4 text-secondary text-uppercase">NAME</div>
