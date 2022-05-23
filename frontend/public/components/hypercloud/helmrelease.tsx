@@ -433,7 +433,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     })[0];
     setPostVersion(selectedEntry ? selectedEntry.version : noEntryMessageTest);
     setPostPackageURL(selectedEntry ? selectedEntry.urls[0] : noEntryMessageTest);
-    setValues(selectedEntry ? selectedEntry.repo.name : null, selection);
+    setValues(selectedEntry ? selectedEntry.repo?.name : null, selection);
   };
 
   return (
