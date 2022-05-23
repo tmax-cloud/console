@@ -383,14 +383,16 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const setValues = (repoName: string, chartName: string) => {
     const getChartValues = () => {
       const url = repoName ? `${helmHost}/helm/charts/${repoName}_${chartName}` : null;
-      coFetchJSON(url)
-        .then(res => {
-          setPostValues(safeDump(res.values));
-        })
-        .catch(e => {
-          setProgress(false);
-          setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
-        });
+      if (url !== null) {
+        coFetchJSON(url)
+          .then(res => {
+            setPostValues(safeDump(res.values));
+          })
+          .catch(e => {
+            setProgress(false);
+            setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
+          });
+      }
     };
     getChartValues();
   };
