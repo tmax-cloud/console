@@ -448,17 +448,21 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
               <input className="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={releaseName} onChange={updatePostReleaseName} disabled={defaultValue} />
             </Section>
             <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_2')} id="chartName" isRequired={true}>
-              <Dropdown
-                name="chartName"
-                className="btn-group"
-                title={selectChartName || t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_3')}
-                items={chartNameList} // (필수)
-                required={true}
-                onChange={updateChartName}
-                buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
-                itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
-                disabled={defaultValue}
-              />
+              {defaultValue ? (
+                <p>{selectChartName}</p>
+              ) : (
+                <Dropdown
+                  name="chartName"
+                  className="btn-group"
+                  title={selectChartName || t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_3')}
+                  items={chartNameList} // (필수)
+                  required={true}
+                  onChange={updateChartName}
+                  buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
+                  itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+                  disabled={defaultValue}
+                />
+              )}
             </Section>
             {selectChartName && (
               <>
