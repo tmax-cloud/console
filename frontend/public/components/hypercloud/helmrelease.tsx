@@ -378,9 +378,9 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     fetchHelmChart();
   }, []);
 
-  const setValues = (selection: string) => {
+  const setValues = (repoName: string, chartName: string) => {
     const getChartValues = () => {
-      const url = `${helmHost}/helm/charts/${selection}`;
+      const url = `${helmHost}/helm/charts/${repoName}_${chartName}`;
       coFetchJSON(url)
         .then(res => {
           setPostValues(safeDump(res.values));
@@ -426,17 +426,12 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   };
   const updateChartName = (selection: string) => {
     setSelectChartName(selection);
-    setPostVersion(
-      entries.filter(e => {
-        if (e.name === chartNameList[selection]) return true;
-      })[0].version,
-    );
-    setPostPackageURL(
-      entries.filter(e => {
-        if (e.name === chartNameList[selection]) return true;
-      })[0].urls[0],
-    );
-    setValues(selection);
+    const selectedEntry = entries.filter(e => {
+      if (e.name === chartNameList[selection]) return true;
+    })[0];
+    setPostVersion(selectedEntry.version);
+    setPostPackageURL(selectedEntry.urls[0]);
+    setValues(selectedEntry.repo.name, selection);
   };
 
   return (
