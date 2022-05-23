@@ -351,6 +351,8 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const [entries, setEntries] = React.useState([]);
   const [chartNameList, setChartNameList] = React.useState({});
 
+  const noEntryMessageTest = 'This chart is not on the server';
+
   React.useEffect(() => {
     const fetchHelmChart = async () => {
       await coFetchJSON(`${helmHost}/helm/charts`).then(res => {
@@ -380,7 +382,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
 
   const setValues = (repoName: string, chartName: string) => {
     const getChartValues = () => {
-      const url = `${helmHost}/helm/charts/${repoName}_${chartName}`;
+      const url = repoName ? `${helmHost}/helm/charts/${repoName}_${chartName}` : null;
       coFetchJSON(url)
         .then(res => {
           setPostValues(safeDump(res.values));
@@ -429,9 +431,9 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     const selectedEntry = entries.filter(e => {
       if (e.name === chartNameList[selection]) return true;
     })[0];
-    setPostVersion(selectedEntry.version);
-    setPostPackageURL(selectedEntry.urls[0]);
-    setValues(selectedEntry.repo.name, selection);
+    setPostVersion(selectedEntry ? selectedEntry.version : noEntryMessageTest);
+    setPostPackageURL(selectedEntry ? selectedEntry.urls[0] : noEntryMessageTest);
+    setValues(selectedEntry ? selectedEntry.repo.name : null, selection);
   };
 
   return (
@@ -462,7 +464,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             {selectChartName && (
               <>
                 <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL">
-                  <div>{postPackageURL ? postPackageURL : 'This chart is not on the server'}</div>
+                  <div>{postPackageURL}</div>
                 </Section>
                 <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')} id="version">
                   <div>{postVersion}</div>
