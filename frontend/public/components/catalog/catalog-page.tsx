@@ -280,7 +280,7 @@ export const CatalogListPage = withTranslation()(
               markdownDescription,
               customProperties: customProperties(t),
               // hypercloud
-              href: `/helmreleases/ns/${currentNamespace}/~new`,
+              href: `/helmreleases/ns/${currentNamespace}/~new?chartName=${chartName}&chartVersion=${chartVersion}&chartRepo=${chart.repo.name}&chartUrl=${chart.repo.url}`,
               // openshift
               // href: `/catalog/helm-install?chartName=${chartName}&chartURL=${encodedChartURL}&preselected-ns=${currentNamespace}`,
               documentationUrl: chart.home,
