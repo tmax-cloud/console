@@ -5,7 +5,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 const INJECTION_URL = '/assets/modules/channel-web/inject.js';
 const INJECTION_ID = 'hypercloud-console-chatbot';
 const WRAPPER_ID = `${INJECTION_ID}-wrapper`;
-const BOT_ID = 'hypercloud-console-bot';
+const BOT_ID = 'console-bot'; // 봇 아이디는 서버와 맞춰야 함. 변경 시 서버 담당자와 협의 필요
 const CHAT_ID = 'bp-widget';
 
 let host = '';
@@ -65,6 +65,12 @@ const Chatbot = () => {
         break;
       case 'webchatReady':
         // Triggered when the webchat is ready to accept events, like proactive triggers
+        // 챗봇 오픈시 웰컴 메시지 띄워지도록 수정
+        window.botpressWebChat.sendEvent({
+          type: 'proactive-trigger',
+          channel: 'web',
+          payload: { text: 'fake message' },
+        });
         break;
       default:
         break;
