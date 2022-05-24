@@ -65,6 +65,11 @@ const Chatbot = () => {
         break;
       case 'webchatReady':
         // Triggered when the webchat is ready to accept events, like proactive triggers
+        window.botpressWebChat.sendEvent({
+          type: 'proactive-trigger',
+          channel: 'web',
+          payload: { text: 'fake message' },
+        });
         break;
       default:
         break;
