@@ -65,6 +65,7 @@ const Chatbot = () => {
         break;
       case 'webchatReady':
         // Triggered when the webchat is ready to accept events, like proactive triggers
+        // 챗봇 오픈시 웰컴 메시지 띄워지도록 수정
         window.botpressWebChat.sendEvent({
           type: 'proactive-trigger',
           channel: 'web',
