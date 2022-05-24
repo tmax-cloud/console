@@ -102,7 +102,7 @@ const setStepField = (defaultValues, setStep) => {
             envValue = _.get(cur, 'valueFrom.secretKeyRef.name');
             resourceKey = _.get(cur, 'valueFrom.secretKeyRef.key');
             envType = 'secret';
-          } else if (_.has(cur, ['valueFrom', 'configMapKeyRef '])) {
+          } else if (_.has(cur, ['valueFrom', 'configMapKeyRef'])) {
             envValue = _.get(cur, 'valueFrom.configMapKeyRef.name');
             resourceKey = _.get(cur, 'valueFrom.configMapKeyRef.key');
             envType = 'configMap';
