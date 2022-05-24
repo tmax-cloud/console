@@ -688,7 +688,7 @@ export const TileViewPage = withTranslation()(
       return (
         <Gallery gutter="sm" className="co-catalog-tile-view">
           {_.map(items, item => (
-            <GalleryItem>{renderTile(item)}</GalleryItem>
+            <GalleryItem key={item.uid ? `gallery-${item.uid}` : `gallery-${item.obj?.repo?.name}_${item.obj?.metadata?.uid}`}>{renderTile(item)}</GalleryItem>
           ))}
         </Gallery>
       );
