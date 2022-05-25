@@ -12,6 +12,7 @@ import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+import { LoadingBox } from '../utils';
 
 const helmHost: string = (CustomMenusMap as any).Helm.url;
 
@@ -35,7 +36,7 @@ export const HelmchartPage = () => {
     };
     fetchHelmChart();
   }, []);
-  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} />}</>;
+  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} /> : <LoadingBox />}</>;
 };
 
 const tableProps: TableProps = {
@@ -65,7 +66,7 @@ const tableProps: TableProps = {
     return [
       {
         children: (
-          <Link key={'link' + obj.name} to={`/helmcharts/${obj.name}`}>
+          <Link key={'link' + obj.name} to={`/helmcharts/${obj.repo?.name}/${obj.name}`}>
             {obj.name}
           </Link>
         ),
@@ -178,6 +179,7 @@ type HelmchartDetailsPagetProps = {
   match?: any;
 };
 export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props => {
+  const repo = props.match.params.repo;
   const name = props.match.params.name;
   const [loading, setLoading] = React.useState(false);
   const [chart, setChart] = React.useState({
@@ -186,7 +188,7 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
   });
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmHost}/helm/charts/${name}`).then(res => {
+      await coFetchJSON(`${helmHost}/helm/charts/${repo}_${name}`).then(res => {
         setChart(prevState => {
           return { ...prevState, indexfile: res.indexfile, values: res.values };
         });
@@ -199,8 +201,8 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
   return (
     <>
       <HelmchartDetailsHeader name={name} />
-      <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath="" />
-      <div>{loading && <ChartDetailsTapPage chart={chart} />}</div>
+      <NavBar pages={allPages} baseURL={`/helmcharts/${repo}/${name}`} basePath="" />
+      <div>{loading ? <ChartDetailsTapPage chart={chart} /> : <LoadingBox />}</div>
     </>
   );
 };
