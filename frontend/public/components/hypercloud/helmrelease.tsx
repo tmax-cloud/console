@@ -22,6 +22,7 @@ import { deleteModal } from '../modals';
 import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
+import { getQueryArgument } from '../utils';
 
 const helmHost: string = (CustomMenusMap as any).Helm.url;
 
@@ -335,9 +336,13 @@ type HelmreleasesFormProps = {
 export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { t } = useTranslation();
   const { defaultValue, namespace } = props;
-  const chartName = defaultValue ? defaultValue.chart.metadata.name : '';
+  const queryChartName = getQueryArgument('chartName');  
+  const queryVersion = getQueryArgument('chartVersion');
+  const queryChartRepo = getQueryArgument('chartRepo');
+  const queryUrl = getQueryArgument('chartUrl');
+  const chartName = queryChartName ? queryChartName : defaultValue ? defaultValue.chart.metadata.name : '';
   const releaseName = defaultValue ? defaultValue.name : '';
-  const version = defaultValue ? defaultValue.chart.metadata.version : '';
+  const version = queryVersion? queryVersion : defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
 
   const [loading, setLoading] = React.useState(false);
@@ -378,6 +383,9 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
       });
     };
     fetchHelmChart();
+    if (queryVersion) setPostVersion(queryVersion);
+    if (queryUrl) setPostPackageURL(queryUrl);
+    if (queryChartName) setValues(queryChartRepo , queryChartName);
   }, []);
 
   const setValues = (repoName: string, chartName: string) => {
