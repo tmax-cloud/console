@@ -10,7 +10,6 @@ import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown } from '@console/internal/components/utils';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { history } from '@console/internal/components/utils/router';
-import { LoadingInline } from '@console/internal/components/utils/status-box';
 import { getIdToken } from '@console/internal/hypercloud/auth';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { ResourceLabel } from '@console/internal/models/hypercloud/resource-plural';
@@ -23,6 +22,7 @@ import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
+import { LoadingBox } from '../utils';
 
 const helmHost: string = (CustomMenusMap as any).Helm.url;
 
@@ -66,7 +66,7 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
     fetchHelmChart();
   }, [namespace]);
 
-  return <>{loading && <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} />}</>;
+  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
 };
 
 const resourceSortFunction = (resource: string) => {
@@ -195,7 +195,7 @@ export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }
       <div style={{ background: 'white', height: '100%' }}>
         <HelmreleasestDetailsHeader namespace={namespace} name={name} helmrelease={loading ? helmReleases[0] : null} />
         <NavBar pages={allPages} baseURL={`/helmreleases/ns/${namespace}/${name}`} basePath="" />
-        {loading ? <>{helmReleases.length === 0 ? <div style={{ textAlign: 'center' }}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: t('COMMON:MSG_LNB_MENU_203') })}</div> : <ReleasesDetailsTapPage helmRelease={helmReleases[0]} />}</> : <LoadingInline />}
+        {loading ? <>{helmReleases.length === 0 ? <div style={{ textAlign: 'center' }}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: t('COMMON:MSG_LNB_MENU_203') })}</div> : <ReleasesDetailsTapPage helmRelease={helmReleases[0]} />}</> : <LoadingBox />}
       </div>
     </>
   );
@@ -336,13 +336,13 @@ type HelmreleasesFormProps = {
 export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { t } = useTranslation();
   const { defaultValue, namespace } = props;
-  const queryChartName = getQueryArgument('chartName');  
+  const queryChartName = getQueryArgument('chartName');
   const queryVersion = getQueryArgument('chartVersion');
   const queryChartRepo = getQueryArgument('chartRepo');
   const queryUrl = getQueryArgument('chartUrl');
   const chartName = queryChartName ? queryChartName : defaultValue ? defaultValue.chart.metadata.name : '';
   const releaseName = defaultValue ? defaultValue.name : '';
-  const version = queryVersion? queryVersion : defaultValue ? defaultValue.chart.metadata.version : '';
+  const version = queryVersion ? queryVersion : defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
 
   const [loading, setLoading] = React.useState(false);
@@ -385,7 +385,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     fetchHelmChart();
     if (queryVersion) setPostVersion(queryVersion);
     if (queryUrl) setPostPackageURL(queryUrl);
-    if (queryChartName) setValues(queryChartRepo , queryChartName);
+    if (queryChartName) setValues(queryChartRepo, queryChartName);
   }, []);
 
   const setValues = (repoName: string, chartName: string) => {
@@ -548,7 +548,7 @@ export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) =
       <div style={{ background: 'white', height: '100%' }}>
         <HelmreleasestDetailsHeader namespace={namespace} name={name} helmrelease={loading ? helmReleases[0] : null} />
         <NavBar pages={allPages} baseURL={`/helmreleases/ns/${namespace}/${name}`} basePath="" />
-        {loading ? <HelmreleasesForm namespace={namespace} defaultValue={helmReleases[0]} /> : <LoadingInline />}
+        {loading ? <HelmreleasesForm namespace={namespace} defaultValue={helmReleases[0]} /> : <LoadingBox />}
       </div>
     </>
   );
