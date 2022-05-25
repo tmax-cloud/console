@@ -28,7 +28,7 @@ class DeleteModal extends PromiseComponent {
         if (nonk8sProps.listPath) {
           history.push(nonk8sProps.listPath);
         } else {
-          window.location.reload();
+          nonk8sProps.setIsRefresh(false);
         }
       });
     } else {

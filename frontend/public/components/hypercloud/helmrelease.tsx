@@ -18,7 +18,7 @@ import { Status } from '@console/shared';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { Button, Badge } from '@patternfly/react-core';
 import { deleteModal } from '../modals';
-import { TableProps } from './utils/default-list-component';
+// import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
@@ -55,18 +55,20 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
   const namespace = match.params.ns;
   const [loading, setLoading] = React.useState(false);
   const [helmReleases, setHelmReleases] = React.useState([]);
+  const [isRefresh, setIsRefresh] = React.useState(true);
 
   React.useEffect(() => {
-    const fetchHelmChart = async () => {
+    const updateHelmReleases = async () => {
       await coFetchJSON(namespace ? `${helmHost}/helm/ns/${namespace}/releases` : `${helmHost}/helm/all-namespaces/releases`).then(res => {
         setHelmReleases(_.get(res, 'release') || []);
         setLoading(true);
+        setIsRefresh(true);
       });
     };
-    fetchHelmChart();
-  }, [namespace]);
+    updateHelmReleases();
+  }, [namespace, isRefresh]);
 
-  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
+  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps(setIsRefresh)} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
 };
 
 const resourceSortFunction = (resource: string) => {
@@ -81,90 +83,93 @@ type ResourceKindProps = {
   kind: string;
 };
 
-const tableProps: TableProps = {
-  header: [
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
-      sortField: 'name',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
-      sortField: 'namespace',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_112',
-      sortFunc: 'HelmReleaseStatusReducer',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_110',
-      sortFunc: 'helmResourcesNumber',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_132',
-      sortField: 'version',
-    },
-    {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
-      sortField: 'info.first_deployed',
-    },
-    {
-      title: '',
-      transforms: null,
-      props: { className: Kebab.columnClass },
-    },
-  ],
-  row: (obj: any) => {
-    const options: KebabOption[] = [
+const tableProps = (setIsRefresh: Function) => {
+  return {
+    header: [
       {
-        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-        href: `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`,
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+        sortField: 'name',
       },
       {
-        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-        callback: async () => {
-          deleteModal({
-            nonk8sProps: {
-              deleteServiceURL: `${helmHost}/helm/ns/${obj.namespace}/releases/${obj.name}`,
-              stringKey: 'COMMON:MSG_LNB_MENU_203',
-              namespace: obj.namespace,
-              name: obj.name,
-            },
-          });
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+        sortField: 'namespace',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_112',
+        sortFunc: 'HelmReleaseStatusReducer',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_110',
+        sortFunc: 'helmResourcesNumber',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_132',
+        sortField: 'version',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
+        sortField: 'info.first_deployed',
+      },
+      {
+        title: '',
+        transforms: null,
+        props: { className: Kebab.columnClass },
+      },
+    ],
+    row: (obj: any) => {
+      const options: KebabOption[] = [
+        {
+          label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
+          href: `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`,
         },
-      },
-    ];
-    return [
-      {
-        children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
-      },
-      {
-        className: 'co-break-word',
-        children: <ResourceLink kind="Namespace" name={obj.namespace} title={obj.namespace} />,
-      },
-      {
-        children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
-      },
-      {
-        children: Object.keys(obj.objects)
-          .sort((a, b) => {
-            return resourceSortFunction(a) - resourceSortFunction(b);
-          })
-          .map(k => {
-            return <ResourceKind key={'resource-' + k} kind={k} />;
-          }),
-      },
-      {
-        children: obj.version,
-      },
-      {
-        children: <Timestamp timestamp={obj.info.first_deployed} />,
-      },
-      {
-        className: Kebab.columnClass,
-        children: <Kebab options={options} />,
-      },
-    ];
-  },
+        {
+          label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
+          callback: async () => {
+            deleteModal({
+              nonk8sProps: {
+                deleteServiceURL: `${helmHost}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+                stringKey: 'COMMON:MSG_LNB_MENU_203',
+                namespace: obj.namespace,
+                name: obj.name,
+                setIsRefresh: setIsRefresh,
+              },
+            });
+          },
+        },
+      ];
+      return [
+        {
+          children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
+        },
+        {
+          className: 'co-break-word',
+          children: <ResourceLink kind="Namespace" name={obj.namespace} title={obj.namespace} />,
+        },
+        {
+          children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
+        },
+        {
+          children: Object.keys(obj.objects)
+            .sort((a, b) => {
+              return resourceSortFunction(a) - resourceSortFunction(b);
+            })
+            .map(k => {
+              return <ResourceKind key={'resource-' + k} kind={k} />;
+            }),
+        },
+        {
+          children: obj.version,
+        },
+        {
+          children: <Timestamp timestamp={obj.info.first_deployed} />,
+        },
+        {
+          className: Kebab.columnClass,
+          children: <Kebab options={options} />,
+        },
+      ];
+    },
+  };
 };
 
 export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
@@ -294,7 +299,7 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
             stringKey: 'COMMON:MSG_LNB_MENU_203',
             namespace: namespace,
             name: name,
-            listPath: `/helmreleases/ns/${namespace}`
+            listPath: `/helmreleases/ns/${namespace}`,
           },
         });
       },
