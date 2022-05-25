@@ -8,7 +8,7 @@ import { DetailsCard } from './details-card';
 import { InventoryCard } from './inventory-card';
 import { UtilizationCard } from './utilization-card';
 import { ActivityCard } from './activity-card';
-import { AccessDenied } from '../../../utils';
+import { AccessDenied, LoadingBox } from '../../../utils';
 // import { useK8sGet } from '../../../utils/k8s-get-hook';
 // import { InfrastructureModel } from '../../../../models';
 // import { K8sResourceKind } from '../../../../module/k8s';
@@ -17,7 +17,6 @@ import { k8sCreate } from '@console/internal/module/k8s';
 import { SelfSubjectAccessReviewModel } from '../../../../models';
 import { useTranslation } from 'react-i18next';
 import { isSingleClusterPerspective } from '../../../../hypercloud/perspectives';
-
 
 // const isSingleCluster = isSingleClusterPerspective()
 /*
@@ -40,7 +39,8 @@ export const ClusterDashboard: React.FC<{}> = () => {
 
   const { t } = useTranslation();
 
-  const [response, setResponse] = React.useState();
+  const [response, setResponse] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [isSingleCluster, setSingleCluster] = React.useState(isSingleClusterPerspective());
   const payload = {
     spec: {
@@ -53,8 +53,15 @@ export const ClusterDashboard: React.FC<{}> = () => {
   };
   React.useEffect(() => {
     const checkAuth = async () => {
-      let res = await k8sCreate(SelfSubjectAccessReviewModel, payload);
-      setResponse(res.status.allowed);
+      try {
+        const res = await k8sCreate(SelfSubjectAccessReviewModel, payload);
+        setResponse(res.status.allowed);
+      } catch (error) {
+        console.error(error);
+        setResponse(false);
+      } finally {
+        setLoading(false);
+      }
     };
     checkAuth();
   }, []);
@@ -67,23 +74,11 @@ export const ClusterDashboard: React.FC<{}> = () => {
   const rightCards = [{ Card: InventoryCard }, { Card: ActivityCard }];
 
   const dashboard = <DashboardGrid mainCards={mainCards} leftCards={leftCards} rightCards={rightCards} isSingleCluster={isSingleCluster} />;
-  const loading = <div></div>;
   const error = <AccessDenied message={t('COMMON:MSG_COMMON_ERROR_MESSAGE_27')} />;
-  let content;
-
-  if (response !== undefined) {
-    if (response === true) {
-      content = dashboard;
-    } else {
-      content = error;
-    }
-  } else {
-    content = loading;
-  }
 
   return (
     // <ClusterDashboardContext.Provider value={context}>
-    <Dashboard>{content}</Dashboard>
+    <Dashboard>{loading ? <LoadingBox /> : response ? dashboard : error}</Dashboard>
     // </ClusterDashboardContext.Provider>
   );
 };
