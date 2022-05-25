@@ -298,6 +298,7 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
             stringKey: 'COMMON:MSG_LNB_MENU_203',
             namespace: helmrelease.namespace,
             name: helmrelease.name,
+            listPath: `/helmreleases/ns/${helmrelease.namespace}`
           },
         });
       },
