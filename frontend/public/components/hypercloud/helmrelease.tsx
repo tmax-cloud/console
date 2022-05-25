@@ -117,9 +117,7 @@ const tableProps: TableProps = {
     const options: KebabOption[] = [
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-        callback: () => {
-          location.href = `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`;
-        },
+        href: `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`,
       },
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
@@ -285,20 +283,18 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
   const options: KebabOption[] = [
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-      callback: () => {
-        location.href = `/helmreleases/ns/${helmrelease.namespace}/${helmrelease.name}/edit`;
-      },
+      href: `/helmreleases/ns/${namespace}/${name}/edit`,
     },
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
       callback: async () => {
         deleteModal({
           nonk8sProps: {
-            deleteServiceURL: `${helmHost}/helm/ns/${helmrelease.namespace}/releases/${helmrelease.name}`,
+            deleteServiceURL: `${helmHost}/helm/ns/${namespace}/releases/${name}`,
             stringKey: 'COMMON:MSG_LNB_MENU_203',
-            namespace: helmrelease.namespace,
-            name: helmrelease.name,
-            listPath: `/helmreleases/ns/${helmrelease.namespace}`
+            namespace: namespace,
+            name: name,
+            listPath: `/helmreleases/ns/${namespace}`
           },
         });
       },
