@@ -332,7 +332,7 @@ export default (state: UIState, action: UIAction): UIState => {
     case ActionType.SetActiveCluster:
       return state.set('activeCluster', action.payload.cluster);
 
-    case ActionType.setServicePort:
+    case ActionType.SetServicePort:
       return state.set('servicePort', action.payload.servicePort);
 
     default:

@@ -62,7 +62,7 @@ export enum ActionType {
   SetNodeMetrics = 'setNodeMetrics',
   SetPinnedResources = 'setPinnedResources',
   SetActiveCluster = 'setActiveCluster',
-  setServicePort = 'setServicePort',
+  SetServicePort = 'setServicePort',
 }
 
 type MetricValuesByName = {
@@ -332,7 +332,7 @@ export const setPodMetrics = (podMetrics: PodMetrics) => action(ActionType.SetPo
 export const setNamespaceMetrics = (namespaceMetrics: NamespaceMetrics) => action(ActionType.SetNamespaceMetrics, { namespaceMetrics });
 export const setNodeMetrics = (nodeMetrics: NodeMetrics) => action(ActionType.SetNodeMetrics, { nodeMetrics });
 
-export const setServicePort = (servicePort: string) => action(ActionType.setServicePort, { servicePort });
+export const setServicePort = (servicePort: string) => action(ActionType.SetServicePort, { servicePort });
 export const getServicePort = (): string => store.getState().UI.get('servicePort');
 
 // TODO(alecmerdler): Implement all actions using `typesafe-actions` and add them to this export
