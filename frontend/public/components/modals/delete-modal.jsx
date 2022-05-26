@@ -25,6 +25,11 @@ class DeleteModal extends PromiseComponent {
       const url = this.props.nonk8sProps.deleteServiceURL;
       this.handlePromise(coFetchJSON.delete(url)).then(() => {
         this.props.close();
+        if (nonk8sProps.listPath) {
+          history.push(nonk8sProps.listPath);
+        } else {
+          nonk8sProps.setIsRefresh(false);
+        }
       });
     } else {
       //https://kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/
