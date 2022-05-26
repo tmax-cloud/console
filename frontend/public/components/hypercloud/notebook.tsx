@@ -10,45 +10,23 @@ import { Status } from '@console/shared';
 import { NotebookStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { TableProps } from './utils/default-list-component';
 import * as classNames from 'classnames';
-import { coFetchJSON } from '@console/internal/co-fetch';
-import { ingressUrlWithLabelSelector } from '@console/internal/components/hypercloud/utils/ingress-utils';
+import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(NotebookModel), ...Kebab.factory.common, Kebab.factory.Connect];
 
 const kind = NotebookModel.kind;
 
-const DoneMessage = 'done';
-
-const initializeUrlsMap = (urlsMap, name, namespace) => {
-  return new Promise((resolve, reject) => {
-    const url = ingressUrlWithLabelSelector({
-      'ingress.tmaxcloud.org/name': name + '-' + namespace,
-    });
-    coFetchJSON(url)
-      .then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (!!host) {
-            urlsMap.set(name + '-' + namespace, `https://${host}`);
-          }
-        }
-        resolve(DoneMessage);
-      })
-      .catch(err => {
-        resolve(DoneMessage);
-      });
-  });
-};
-
-const getNotebookUrlsMap = async (UrlsMap) => {
-  const notebooks = await k8sList(NotebookModel);
-  if (notebooks.length !== 0) notebooks.map(notebook => initializeUrlsMap(UrlsMap, notebook.metadata.name, notebook.metadata.namespace));
-};
-
 const notebookUrlsMap = new Map();
-getNotebookUrlsMap(notebookUrlsMap);
+
+const initializeUrlsMap = async (name: string, namespace: string) => {
+  const url = await getIngressUrl(`${name}-${namespace}`);
+  notebookUrlsMap.set(`${name}-${namespace}`, url);
+};
+
+(async () => {
+  const notebooks = await k8sList(NotebookModel);
+  await Promise.all(notebooks?.map(notebook => initializeUrlsMap(notebook.metadata.name, notebook.metadata.namespace)));
+})();
 
 const tableProps: TableProps = {
   header: [

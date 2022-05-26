@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { ingressUrlWithLabelSelector } from './utils/ingress-utils';
-import { coFetchJSON } from '@console/internal/co-fetch';
+import { getIngressUrl } from './utils/ingress-utils';
 
 const INJECTION_URL = '/assets/modules/channel-web/inject.js';
 const INJECTION_ID = 'hypercloud-console-chatbot';
@@ -23,13 +22,9 @@ const Chatbot = () => {
     }
 
     // 인그레스 host 조회
-    const ingressUrl = ingressUrlWithLabelSelector({ 'ingress.tmaxcloud.org/name': 'chatbot' });
-    const { items } = await coFetchJSON(ingressUrl);
-    if (items?.length > 0) {
-      const hostUrl = items[0].spec?.rules?.[0]?.host;
-      if (!!hostUrl) {
-        host = `https://${hostUrl}`;
-      }
+    const url = await getIngressUrl('chatbot');
+    if (url) {
+      host = url;
     }
 
     const script = window.document.createElement('script');
