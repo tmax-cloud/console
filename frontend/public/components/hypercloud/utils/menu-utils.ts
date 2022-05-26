@@ -6,10 +6,23 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import i18next, { TFunction } from 'i18next';
 import { ResourceLabel, getI18nInfo } from '@console/internal/models/hypercloud/resource-plural';
 
-import { ingressUrlWithLabelSelector, DoneMessage } from './ingress-utils';
+import { getIngressUrl } from './ingress-utils';
 import { selectorToString } from '@console/internal/module/k8s/selector';
+import { setServicePort } from '@console/internal/actions/ui';
+import store from '@console/internal/redux';
 
 const en = i18next.getFixedT('en');
+
+const INGRESS_LABEL_VALUES = [
+  { labelValue: 'hyperregistry', menuKey: CustomMenusMap.Harbor.kind },
+  { labelValue: 'argocd', menuKey: CustomMenusMap.ArgoCD.kind },
+  { labelValue: 'gitlab', menuKey: CustomMenusMap.Git.kind },
+  { labelValue: 'grafana', menuKey: CustomMenusMap.Grafana.kind },
+  { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind },
+  { labelValue: 'kibana', menuKey: CustomMenusMap.Kibana.kind },
+  { labelValue: 'jaeger', menuKey: CustomMenusMap.Trace.kind },
+  { labelValue: 'helm-apiserver', menuKey: CustomMenusMap.Helm.kind },
+];
 
 export const getCmpListFetchUrl = () => {
   const { apiGroup, apiVersion, plural } = ClusterMenuPolicyModel;
@@ -20,93 +33,56 @@ export const getCmpListFetchUrl = () => {
 
   return `${location.origin}/api/kubernetes/apis/${apiGroup}/${apiVersion}/${plural}?${query}`;
 };
+
 const initializeCmpFlag = () => {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     coFetchJSON(getCmpListFetchUrl())
       .then(res => {
         const policy = res?.items?.[0];
         window.SERVER_FLAGS.showCustomPerspective = policy?.showCustomPerspective || false;
-        resolve(DoneMessage);
+        resolve();
       })
       .catch(() => {
         window.SERVER_FLAGS.showCustomPerspective = false;
         // eslint-disable-next-line no-console
         console.log(`No cmp resource.`);
         // MEMO : 링크나 메뉴생성에 에러가 나도 일단 app 화면은 떠야 되니 resolve처리함.
-        resolve(DoneMessage);
+        resolve();
       });
   });
 };
 
-const initializeMenuUrl = async (labelSelector: any, menuKey: string, port: string) => {
-  return new Promise(resolve => {
-    const url = ingressUrlWithLabelSelector(labelSelector);
-    coFetchJSON(url)
-      .then(res => {
-        const { items } = res;
-        if (items?.length > 0) {
-          const ingress = items[0];
-          const host = ingress.spec?.rules?.[0]?.host;
-          if (host) {
-            const menu = _.get(CustomMenusMap, menuKey);
-            if (menuKey === 'Grafana') {
-              !!menu && _.assign(menu, { url: `https://${host}${port}/login/generic_oauth` });
-            } else {
-              !!menu && _.assign(menu, { url: `https://${host}${port}` });
-            }
-          }
-        }
-        resolve(DoneMessage);
-      })
-      .catch(() => {
-        resolve(DoneMessage);
-      });
-  });
+const initializeMenuUrl = async (label: string, menuKey: string) => {
+  const ingressUrl = menuKey === CustomMenusMap.Grafana.kind ? await getIngressUrl(label, '/login/generic_oauth') : await getIngressUrl(label);
+  const url = ingressUrl || '';
+  const menu = _.get(CustomMenusMap, menuKey);
+  !!menu && _.assign(menu, { url });
 };
 
 const initializePort = async () => {
-  try {
-    // 서비스 타입이 nodeport일 경우 websecure의 port 값 매핑
-    if (window.SERVER_FLAGS.svcType === 'NodePort') {
+  let port = '';
+  // 서비스 타입이 nodeport일 경우 websecure의 port 값 매핑
+  if (window.SERVER_FLAGS.svcType === 'NodePort') {
+    try {
       const { spec } = await k8sGet(ServiceModel, 'api-gateway', 'api-gateway-system', { basePath: `${location.origin}/api/console` });
       if (spec.type === 'NodePort') {
-        return `:${spec.ports.find((port: any) => port.name === 'websecure').port}`;
+        port = `:${spec.ports.find((port: any) => port.name === 'websecure').port}`;
       }
+    } catch (error) {
+      console.error(`Failed to get api-gateway service:\n${error}`);
     }
-  } catch (error) {
-    console.error(`Failed to get api-gateway service:\n${error}`);
   }
-  return '';
+  store.dispatch(setServicePort(port));
 };
 
-const defaultIngressLabelKey = 'ingress.tmaxcloud.org/name';
-const labelMenuMatchingList = [
-  { labelValue: 'hyperregistry', menuKey: 'Harbor' },
-  { labelValue: 'argocd', menuKey: 'ArgoCD' },
-  { labelValue: 'gitlab', menuKey: 'Git' },
-  { labelValue: 'grafana', menuKey: 'Grafana' },
-  { labelValue: 'kiali', menuKey: 'Kiali' },
-  { labelValue: 'kibana', menuKey: 'Kibana' },
-  { labelValue: 'jaeger', menuKey: 'Trace' },
-  { labelValue: 'helm-apiserver', menuKey: 'Helm' },
-];
-const initializeMenuUrlsPromise = (labeMatchingList: any[], port: string) => {
-  const promiesList = [];
-  labeMatchingList.map((m) => {
-    promiesList.push(
-      initializeMenuUrl(
-        { [(m.labelKey) ? m.labelKey : defaultIngressLabelKey]: m.labelValue },
-        m.menuKey,
-        port,
-      )
-    );
-  });
-  return promiesList;
-}
+const initializeMenuUrls = async () => {
+  await Promise.all(INGRESS_LABEL_VALUES.map(m => initializeMenuUrl(m.labelValue, m.menuKey)));
+};
+
 export const initializationForMenu = async () => {
   await initializeCmpFlag();
-  const port = await initializePort();
-  Promise.all(initializeMenuUrlsPromise(labelMenuMatchingList, port));
+  await initializePort();
+  await initializeMenuUrls();
 };
 
 export const getLabelTextByKind = (kind, t: TFunction) => {

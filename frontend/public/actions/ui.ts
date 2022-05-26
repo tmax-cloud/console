@@ -62,6 +62,7 @@ export enum ActionType {
   SetNodeMetrics = 'setNodeMetrics',
   SetPinnedResources = 'setPinnedResources',
   SetActiveCluster = 'setActiveCluster',
+  setServicePort = 'setServicePort',
 }
 
 type MetricValuesByName = {
@@ -186,7 +187,7 @@ export const setActiveNamespace = (namespace: string = '') => {
     }
     // remember the most recently-viewed project, which is automatically
     // selected when returning to the console
-   // localStorage.setItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, namespace);
+    // localStorage.setItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, namespace);
     sessionStorage.setItem(LAST_NAMESPACE_NAME_LOCAL_STORAGE_KEY, namespace);
   }
 
@@ -331,6 +332,9 @@ export const setPodMetrics = (podMetrics: PodMetrics) => action(ActionType.SetPo
 export const setNamespaceMetrics = (namespaceMetrics: NamespaceMetrics) => action(ActionType.SetNamespaceMetrics, { namespaceMetrics });
 export const setNodeMetrics = (nodeMetrics: NodeMetrics) => action(ActionType.SetNodeMetrics, { nodeMetrics });
 
+export const setServicePort = (servicePort: string) => action(ActionType.setServicePort, { servicePort });
+export const getServicePort = (): string => store.getState().UI.get('servicePort');
+
 // TODO(alecmerdler): Implement all actions using `typesafe-actions` and add them to this export
 const uiActions = {
   setCurrentLocation,
@@ -383,6 +387,7 @@ const uiActions = {
   notificationDrawerToggleRead,
   setPinnedResources,
   setActiveCluster,
+  setServicePort,
 };
 
 export type UIAction = Action<typeof uiActions>;
