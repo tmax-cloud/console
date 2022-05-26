@@ -160,62 +160,63 @@ keycloak
       keycloak.login();
       return;
     }
-    
+
     setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
-    
-    setUrlFromIngresses().then(() => {
-      const startDiscovery = () => store.dispatch(watchAPIServices());
-      // Load cached API resources from localStorage to speed up page load.
-      getCachedResources()
-        .then(resources => {
-          if (resources) {
-            store.dispatch(receivedResources(resources));
-          }
-          // Still perform discovery to refresh the cache.
-          startDiscovery();
-        })
-        .catch(startDiscovery);
 
-      store.dispatch(detectFeatures());
+    const startDiscovery = () => store.dispatch(watchAPIServices());
+    // Load cached API resources from localStorage to speed up page load.
+    getCachedResources()
+      .then(resources => {
+        if (resources) {
+          store.dispatch(receivedResources(resources));
+        }
+        // Still perform discovery to refresh the cache.
+        startDiscovery();
+      })
+      .catch(startDiscovery);
 
-      // Global timer to ensure all <Timestamp> components update in sync
-      setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
+    store.dispatch(detectFeatures());
 
-      fetchEventSourcesCrd();
+    // Global timer to ensure all <Timestamp> components update in sync
+    setInterval(() => store.dispatch(UIActions.updateTimestamps(Date.now())), 10000);
 
-      // Fetch swagger on load if it's stale.
-      fetchSwagger();
+    fetchEventSourcesCrd();
 
-      // Used by GUI tests to check for unhandled exceptions
-      window.windowError = false;
-      window.onerror = window.onunhandledrejection = e => {
+    // Fetch swagger on load if it's stale.
+    fetchSwagger();
+
+    // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
+    setUrlFromIngresses();
+
+    // Used by GUI tests to check for unhandled exceptions
+    window.windowError = false;
+    window.onerror = window.onunhandledrejection = e => {
+      // eslint-disable-next-line no-console
+      console.error('Uncaught error', e);
+      window.windowError = e || true;
+    };
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then(registrations => registrations.forEach(reg => reg.unregister()))
         // eslint-disable-next-line no-console
-        console.error('Uncaught error', e);
-        window.windowError = e || true;
-      };
+        .catch(e => console.warn('Error unregistering service workers', e));
+    }
 
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .getRegistrations()
-          .then(registrations => registrations.forEach(reg => reg.unregister()))
-          // eslint-disable-next-line no-console
-          .catch(e => console.warn('Error unregistering service workers', e));
-      }
-
-      render(
-        <Provider store={store}>
-          <Router history={history} basename={window.SERVER_FLAGS.basePath}>
-            <Switch>
-              <Route path="/terminal" component={CloudShellTab} />
-              <Route path="/" component={App} />
-            </Switch>
-          </Router>
-        </Provider>,
-        document.getElementById('app'),
-      );
-    });
+    render(
+      <Provider store={store}>
+        <Router history={history} basename={window.SERVER_FLAGS.basePath}>
+          <Switch>
+            <Route path="/terminal" component={CloudShellTab} />
+            <Route path="/" component={App} />
+          </Switch>
+        </Router>
+      </Provider>,
+      document.getElementById('app'),
+    );
   })
   .catch(error => {
     // render(<div>{!!error ? error : 'Failed to initialize Keycloak'}</div>, document.getElementById('app'));
