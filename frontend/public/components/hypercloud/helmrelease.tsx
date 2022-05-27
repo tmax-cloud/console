@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
+import * as fuzzy from 'fuzzysearch';
 import { Helmet } from 'react-helmet';
 import { match as RMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -477,6 +478,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                   buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
                   itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
                   disabled={defaultValue}
+                  autocompleteFilter={fuzzy}
                 />
               )}
             </Section>
