@@ -339,13 +339,12 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const { t } = useTranslation();
   const { defaultValue, namespace } = props;
   const queryChartName = getQueryArgument('chartName');
-  const queryVersion = getQueryArgument('chartVersion');
   const queryChartRepo = getQueryArgument('chartRepo');
-  const queryUrl = getQueryArgument('chartUrl');
   const chartName = queryChartName ? queryChartName : defaultValue ? defaultValue.chart.metadata.name : '';
   const releaseName = defaultValue ? defaultValue.name : '';
-  const version = queryVersion ? queryVersion : defaultValue ? defaultValue.chart.metadata.version : '';
+  const version = defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
+  const repoName = queryChartRepo ? queryChartRepo : defaultValue ? defaultValue.chart.values : '';
 
   const [loading, setLoading] = React.useState(false);
   const [selectChartName, setSelectChartName] = React.useState(chartName);
@@ -357,6 +356,8 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const [entries, setEntries] = React.useState([]);
   const [chartNameList, setChartNameList] = React.useState({});
+  const [versions, setVersions] = React.useState({});
+  const [selectRepoName, setSelectRepoName] = React.useState(repoName);
 
   const noEntryMessageTest = 'This chart is not on the server';
 
@@ -365,7 +366,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
       await coFetchJSON(`${helmHost}/helm/charts`).then(res => {
         let tempEntriesList = [];
         let tempChartObject = {};
-        let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
+        const entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
         entriesvalues.map((entries: any) => {
           entries.map(e => {
             tempEntriesList.push(e);
@@ -385,27 +386,23 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
       });
     };
     fetchHelmChart();
-    if (queryVersion) setPostVersion(queryVersion);
-    if (queryUrl) setPostPackageURL(queryUrl);
-    if (queryChartName) setValues(queryChartRepo, queryChartName);
   }, []);
-
-  const setValues = (repoName: string, chartName: string) => {
-    const getChartValues = () => {
-      const url = repoName ? `${helmHost}/helm/charts/${repoName}_${chartName}` : null;
-      if (url !== null) {
-        coFetchJSON(url)
-          .then(res => {
-            setPostValues(safeDump(res.values));
-          })
-          .catch(e => {
-            setProgress(false);
-            setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
+  React.useEffect(() => {
+    const getVersions = async () => {
+      await coFetchJSON(`${helmHost}/helm/charts/${selectRepoName}_${selectChartName}`).then(res => {
+        const tempVersionsList = _.get(res, 'versions');
+        if (tempVersionsList) {
+          let tempVersionsObject = {};
+          tempVersionsList.map((version: any) => {
+            let tempObject = { [version]: version };
+            _.merge(tempVersionsObject, tempObject);
           });
-      }
+          setVersions(tempVersionsList);
+        }
+      });
     };
-    getChartValues();
-  };
+    getVersions();
+  }, [selectChartName]);
 
   const onClick = () => {
     setProgress(true);
@@ -443,9 +440,19 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     const selectedEntry = entries.filter(e => {
       if (e.name === chartNameList[selection]) return true;
     })[0];
-    setPostVersion(selectedEntry ? selectedEntry.version : noEntryMessageTest);
-    setPostPackageURL(selectedEntry ? selectedEntry.urls[0] : noEntryMessageTest);
-    setValues(selectedEntry ? selectedEntry.repo?.name : null, selection);
+    setSelectRepoName(selectedEntry.repo?.name);
+  };
+  const updateVersion = (selection: string) => {
+    const selectedVersion = versions[selection];
+    setPostVersion(selectedVersion ? selectedVersion : noEntryMessageTest);
+    const setChartVersion = async () => {
+      await coFetchJSON(`${helmHost}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
+        const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
+        setPostPackageURL(entryValue[0].urls[0]);
+        setPostValues(safeDump(_.get(res, 'values')));
+      });
+    };
+    setChartVersion();
   };
 
   return (
@@ -475,12 +482,28 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             </Section>
             {selectChartName && (
               <>
-                <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL">
-                  <div>{postPackageURL}</div>
-                </Section>
                 <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')} id="version">
-                  <div>{postVersion}</div>
+                  {defaultValue ? (
+                    <p>{postVersion}</p>
+                  ) : (
+                    <Dropdown
+                      name="chartName"
+                      className="btn-group"
+                      title={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_6')}
+                      items={versions} // (필수)
+                      required={true}
+                      onChange={updateVersion}
+                      buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
+                      itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
+                      disabled={defaultValue}
+                    />
+                  )}
                 </Section>
+                {postPackageURL && (
+                  <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_4')} id="Package URL">
+                    <p>{postPackageURL}</p>
+                  </Section>
+                )}
               </>
             )}
             {postValues && <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />}
