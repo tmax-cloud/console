@@ -344,7 +344,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const releaseName = defaultValue ? defaultValue.name : '';
   const version = defaultValue ? defaultValue.chart.metadata.version : '';
   const values = defaultValue ? defaultValue.chart.values : null;
-  const repoName = queryChartRepo ? queryChartRepo : defaultValue ? defaultValue.chart.values : '';
+  const repoName = queryChartRepo ? queryChartRepo : '';
 
   const [loading, setLoading] = React.useState(false);
   const [selectChartName, setSelectChartName] = React.useState(chartName);
