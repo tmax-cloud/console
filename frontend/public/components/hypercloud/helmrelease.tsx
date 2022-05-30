@@ -24,6 +24,7 @@ import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
+import { resourceSortFunction } from './utils/resource-sort'
 
 const helmHost: string = (CustomMenusMap as any).Helm.url;
 
@@ -70,10 +71,6 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
   }, [namespace, isRefresh]);
 
   return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps(setIsRefresh)} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
-};
-
-const resourceSortFunction = (resource: string) => {
-  return resource.length;
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {
@@ -257,16 +254,20 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
               </tr>
             </thead>
             <tbody>
-              {Object.keys(helmRelease.objects).map(k => {
-                return (
-                  <tr key={'row-' + k}>
-                    <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
-                    <td style={{ padding: '5px' }}>
-                      <ResourceLink kind={k} name={helmRelease.objects[k] as string} namespace={helmRelease.namespace} />
-                    </td>
-                  </tr>
-                );
-              })}
+              {Object.keys(helmRelease.objects)
+                .sort((a, b) => {
+                  return resourceSortFunction(a) - resourceSortFunction(b);
+                })
+                .map(k => {
+                  return (
+                    <tr key={'row-' + k}>
+                      <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
+                      <td style={{ padding: '5px' }}>
+                        <ResourceLink kind={k} name={helmRelease.objects[k] as string} namespace={helmRelease.namespace} />
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
