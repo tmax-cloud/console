@@ -22,7 +22,7 @@ import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { HyperCloudManualLink } from './utils';
 import { setLanguage } from './hypercloud/utils/langs/i18n';
-import { hideChatbot } from './hypercloud/chatbot';
+import { hideChatbot } from './hypercloud/chatbot/chatbot';
 
 const SystemStatusButton = ({ statuspageData, className }) =>
   !_.isEmpty(_.get(statuspageData, 'incidents')) ? (

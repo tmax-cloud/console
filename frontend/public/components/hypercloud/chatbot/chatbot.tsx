@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { getIngressUrl } from './utils/ingress-utils';
-import { Action } from './chatbot/action';
-import { EventType } from './chatbot/types';
+import { getIngressUrl } from '../utils/ingress-utils';
+import { Action } from './action';
+import { EventType } from './types';
 
 const INJECTION_URL = '/assets/modules/channel-web/inject.js';
 const INJECTION_ID = 'hypercloud-console-chatbot';
