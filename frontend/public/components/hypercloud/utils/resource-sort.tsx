@@ -6,7 +6,8 @@ const getResourceSortList = () => {
   let sortList = [];
   const perspectives = getPerspectives();
   perspectives.map((perspective: Perspective) => {
-    const menus = getMenusInPerspective(perspective?.properties?.id);
+    let menus = [];
+    menus = getMenusInPerspective(perspective?.properties?.id);
     menus?.map(menu => {
       sortList = sortList.concat(menu.innerMenus ? menu.innerMenus : []);
     });

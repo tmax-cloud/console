@@ -110,7 +110,8 @@ export const getMenusInPerspective = perspective => {
 };
 
 export const basicMenusFactory = (perspective, canListNS) => {
-  const menus = getMenusInPerspective(perspective);
+  let menus = []
+  menus = getMenusInPerspective(perspective);
 
   return (
     <Translation>
