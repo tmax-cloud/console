@@ -118,6 +118,10 @@ export interface Config {
   extraStylesheet?: string;
   /** Defaults to 'true' */
   showConversationsButton?: boolean;
+  /** 레이아웃 높이 조절하는 버튼 활성화 유무
+   * Defaults to 'true'
+   */
+  showResizeLayoutHeightButton?: boolean;
   /** Defaults to 'false' */
   showUserName?: boolean;
   /** Defaults to 'false' */
