@@ -14,7 +14,7 @@ type MenuData = {
   menuType: MenuType;
   label?: string;
   kind?: string;
-  innerMenus?: string[];
+  innerMenus?: Array<string | { menuType: string; kind: string; label?: string }>;
 };
 
 const getMenuComponent = (menuInfo, labelText) => {
@@ -163,7 +163,7 @@ export const dynamicMenusFactory = (perspective, data, canListNS) => {
                 return (
                   <NavSection title={containerLabel || ''} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map((innerMenuData, idx) => {
-                      if (innerMenuData === 'Dashboard' && !canListNS) {
+                      if (typeof innerMenuData === 'object' && innerMenuData.kind === 'Dashboard' && !canListNS) {
                         // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
                         return;
                       }
