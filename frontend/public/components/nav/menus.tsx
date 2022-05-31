@@ -89,31 +89,29 @@ const generateMenu = (perspective, data: any, isInnerMenu, t: TFunction, i18n: i
   );
 };
 
-export const basicMenusFactory = (perspective, canListNS) => {
-  let menus = [];
+export const getMenusInPerspective = perspective => {
   switch (perspective) {
     case PerspectiveType.MASTER:
-      menus = HyperCloudDefaultMenus.MasterNavMenus;
-      break;
+      return HyperCloudDefaultMenus.MasterNavMenus;
     case PerspectiveType.MULTI:
-      menus = HyperCloudDefaultMenus.MultiNavMenus;
-      break;
+      return HyperCloudDefaultMenus.MultiNavMenus;
     case PerspectiveType.SINGLE:
-      menus = HyperCloudDefaultMenus.SingleNavMenus;
-      break;
+      return HyperCloudDefaultMenus.SingleNavMenus;
     case PerspectiveType.DEVELOPER:
-      menus = HyperCloudDefaultMenus.DeveloperNavMenus;
-      break;
+      return HyperCloudDefaultMenus.DeveloperNavMenus;
     case PerspectiveType.BAREMETAL:
-      menus = HyperCloudDefaultMenus.BaremetalNavMenus;
-      break;
+      return HyperCloudDefaultMenus.BaremetalNavMenus;
     case PerspectiveType.CUSTOM:
-      menus = HyperCloudDefaultMenus.CustomNavMenus;
-      break;
+      return HyperCloudDefaultMenus.CustomNavMenus;
     default:
       // Empty
-      break;
+      return [];
   }
+};
+
+export const basicMenusFactory = (perspective, canListNS) => {
+  const menus = getMenusInPerspective(perspective);
+
   return (
     <Translation>
       {(t, { i18n }) => (
