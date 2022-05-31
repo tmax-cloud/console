@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
+import * as fuzzy from 'fuzzysearch';
 import { Helmet } from 'react-helmet';
 import { match as RMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,7 @@ import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
+import { resourceSortFunction } from './utils/resource-sort'
 
 const helmHost: string = (CustomMenusMap as any).Helm.url;
 
@@ -69,10 +71,6 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
   }, [namespace, isRefresh]);
 
   return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps(setIsRefresh)} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
-};
-
-const resourceSortFunction = (resource: string) => {
-  return resource.length;
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {
@@ -256,16 +254,20 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
               </tr>
             </thead>
             <tbody>
-              {Object.keys(helmRelease.objects).map(k => {
-                return (
-                  <tr key={'row-' + k}>
-                    <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
-                    <td style={{ padding: '5px' }}>
-                      <ResourceLink kind={k} name={helmRelease.objects[k] as string} namespace={helmRelease.namespace} />
-                    </td>
-                  </tr>
-                );
-              })}
+              {Object.keys(helmRelease.objects)
+                .sort((a, b) => {
+                  return resourceSortFunction(a) - resourceSortFunction(b);
+                })
+                .map(k => {
+                  return (
+                    <tr key={'row-' + k}>
+                      <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
+                      <td style={{ padding: '5px' }}>
+                        <ResourceLink kind={k} name={helmRelease.objects[k] as string} namespace={helmRelease.namespace} />
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
@@ -477,6 +479,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                   buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
                   itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
                   disabled={defaultValue}
+                  autocompleteFilter={fuzzy}
                 />
               )}
             </Section>
@@ -496,6 +499,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
                       buttonClassName="dropdown-btn" // 선택된 아이템 보여주는 button (title) 부분 className
                       itemClassName="dropdown-item" // 드롭다운 아이템 리스트 전체의 className - 각 row를 의미하는 것은 아님
                       disabled={defaultValue}
+                      autocompleteFilter={fuzzy}
                     />
                   )}
                 </Section>

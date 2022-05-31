@@ -14,7 +14,7 @@ type MenuData = {
   menuType: MenuType;
   label?: string;
   kind?: string;
-  innerMenus?: Array<{ menuType: string; kind: string; label?: string }>;
+  innerMenus?: Array<string | { menuType: string; kind: string; label?: string }>;
 };
 
 const getMenuComponent = (menuInfo, labelText) => {
@@ -89,31 +89,29 @@ const generateMenu = (perspective, data: any, isInnerMenu, t: TFunction, i18n: i
   );
 };
 
-export const basicMenusFactory = (perspective, canListNS) => {
-  let menus = [];
+export const getMenusInPerspective = (perspective: PerspectiveType): MenuData[] => {
   switch (perspective) {
     case PerspectiveType.MASTER:
-      menus = HyperCloudDefaultMenus.MasterNavMenus;
-      break;
+      return HyperCloudDefaultMenus.MasterNavMenus;
     case PerspectiveType.MULTI:
-      menus = HyperCloudDefaultMenus.MultiNavMenus;
-      break;
+      return HyperCloudDefaultMenus.MultiNavMenus;
     case PerspectiveType.SINGLE:
-      menus = HyperCloudDefaultMenus.SingleNavMenus;
-      break;
+      return HyperCloudDefaultMenus.SingleNavMenus;
     case PerspectiveType.DEVELOPER:
-      menus = HyperCloudDefaultMenus.DeveloperNavMenus;
-      break;
+      return HyperCloudDefaultMenus.DeveloperNavMenus;
     case PerspectiveType.BAREMETAL:
-      menus = HyperCloudDefaultMenus.BaremetalNavMenus;
-      break;
+      return HyperCloudDefaultMenus.BaremetalNavMenus;
     case PerspectiveType.CUSTOM:
-      menus = HyperCloudDefaultMenus.CustomNavMenus;
-      break;
+      return HyperCloudDefaultMenus.CustomNavMenus;
     default:
       // Empty
-      break;
+      return [];
   }
+};
+
+export const basicMenusFactory = (perspective, canListNS) => {
+  const menus = getMenusInPerspective(perspective);
+
   return (
     <Translation>
       {(t, { i18n }) => (
@@ -165,7 +163,7 @@ export const dynamicMenusFactory = (perspective, data, canListNS) => {
                 return (
                   <NavSection title={containerLabel || ''} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map((innerMenuData, idx) => {
-                      if (innerMenuData.kind === 'Dashboard' && !canListNS) {
+                      if (typeof innerMenuData === 'object' && innerMenuData.kind === 'Dashboard' && !canListNS) {
                         // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
                         return;
                       }
