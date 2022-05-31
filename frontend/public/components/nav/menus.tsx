@@ -14,7 +14,7 @@ type MenuData = {
   menuType: MenuType;
   label?: string;
   kind?: string;
-  innerMenus?: Array<{ menuType: string; kind: string; label?: string }>;
+  innerMenus?: string[];
 };
 
 const getMenuComponent = (menuInfo, labelText) => {
@@ -89,7 +89,7 @@ const generateMenu = (perspective, data: any, isInnerMenu, t: TFunction, i18n: i
   );
 };
 
-export const getMenusInPerspective = perspective => {
+export const getMenusInPerspective = (perspective: PerspectiveType): MenuData[] => {
   switch (perspective) {
     case PerspectiveType.MASTER:
       return HyperCloudDefaultMenus.MasterNavMenus;
@@ -110,8 +110,7 @@ export const getMenusInPerspective = perspective => {
 };
 
 export const basicMenusFactory = (perspective, canListNS) => {
-  let menus = []
-  menus = getMenusInPerspective(perspective);
+  const menus = getMenusInPerspective(perspective);
 
   return (
     <Translation>
@@ -164,7 +163,7 @@ export const dynamicMenusFactory = (perspective, data, canListNS) => {
                 return (
                   <NavSection title={containerLabel || ''} key={containerLabel} type={type}>
                     {menuData.innerMenus?.map((innerMenuData, idx) => {
-                      if (innerMenuData.kind === 'Dashboard' && !canListNS) {
+                      if (innerMenuData === 'Dashboard' && !canListNS) {
                         // all Namespace 조회 권한 없으면 Dashboard lnb상에서 제거 기획 반영
                         return;
                       }
