@@ -16,11 +16,10 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isResourceSchemaBasedMenu, resourceSchemaBasedMenuMap } from '../form';
-import { getIdToken } from '../../../hypercloud/auth';
-import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
+import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl } from '../form';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 import { useTranslation } from 'react-i18next';
+import { coFetchJSON } from '@console/internal/co-fetch';
 // import { safeDump } from 'js-yaml';
 
 // MEMO : YAML Editor만 제공돼야 되는 리소스 kind
@@ -98,29 +97,13 @@ export const CreateDefault: React.FC<CreateDefaultProps> = ({ initialEditorType,
     const [template, setTemplate] = React.useState({} as any);
 
     React.useEffect(() => {
-      let kind = pluralToKind(model.plural);
-      const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
-      let url;
-      if (isCustomResourceType) {
-        url = getK8sAPIPath({ apiGroup: models.CustomResourceDefinitionModel.apiGroup, apiVersion: models.CustomResourceDefinitionModel.apiVersion });
-        url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-      } else {
-        const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
-        const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
-        url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
-      }
-      const xhrTest = new XMLHttpRequest();
-      xhrTest.open('GET', url);
-      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-      xhrTest.onreadystatechange = function() {
-        if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
-          let template = xhrTest.response;
-          template = JSON.parse(template);
+      const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
+      const url = getResourceSchemaUrl(model, isCustomResourceType);
+      url &&
+        coFetchJSON(url).then(template => {
           setTemplate(template);
           setLoaded(true);
-        }
-      };
-      xhrTest.send();
+        });
     }, []);
     const formHelpText = t('COMMON:MSG_COMMON_CREATEFORM_DESCRIPTION_1');
     const yamlHelpText = t('COMMON:MSG_COMMON_CREATEYMAL_DESCRIPTION_1');

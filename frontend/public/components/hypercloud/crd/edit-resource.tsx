@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { JSONSchema7 } from 'json-schema';
 import { K8sKind, modelFor, K8sResourceKind, K8sResourceKindReference, referenceForModel } from '@console/internal/module/k8s';
-import { CustomResourceDefinitionModel } from '@console/internal/models';
 import { StatusBox, resourcePathFromModel } from '@console/internal/components/utils';
 import { RootState } from '@console/internal/redux';
 import { SyncedEditor } from '@console/shared/src/components/synced-editor';
@@ -15,42 +14,25 @@ import { OperandForm } from '@console/operator-lifecycle-manager/src/components/
 import { OperandYAML } from '@console/operator-lifecycle-manager/src/components/operand/operand-yaml';
 import { FORM_HELP_TEXT, YAML_HELP_TEXT, DEFAULT_K8S_SCHEMA } from '@console/operator-lifecycle-manager/src/components/operand/const';
 import { prune } from '@console/shared/src/components/dynamic-form/utils';
-import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, resourceSchemaBasedMenuMap } from '../form';
-import { getIdToken } from '../../../hypercloud/auth';
-import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
+import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, getResourceSchemaUrl } from '../form';
 import { AsyncComponent } from '../../utils/async';
 import { isSaveButtonDisabled } from '../utils/button-state';
 import { OnlyYamlEditorKinds } from './create-pinned-resource';
+import { coFetchJSON } from '../../../co-fetch';
 
 export const EditDefault: React.FC<EditDefaultProps> = ({ initialEditorType, loadError, match, model, obj, create }) => {
   const [loaded, setLoaded] = React.useState(false);
   const [template, setTemplate] = React.useState({} as any);
 
   React.useEffect(() => {
-    const kind = pluralToKind(model.plural);
-    const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
-    let url;
-    if (isCustomResourceType) {
-      const { apiGroup, apiVersion } = CustomResourceDefinitionModel;
-      url = `${getK8sAPIPath({ apiGroup, apiVersion })}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-    } else {
-      const { directory, file } = resourceSchemaBasedMenuMap.get(model.kind);
-      url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
-    }
-    const xhrObj = new XMLHttpRequest();
-    xhrObj.open('GET', url);
-    xhrObj.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-    xhrObj.onreadystatechange = function() {
-      const { readyState, status } = xhrObj;
-      const isOK = readyState === XMLHttpRequest.DONE && status === 200;
-      if (isOK) {
-        const parsingTemplate = JSON.parse(xhrObj.response);
-        setTemplate(parsingTemplate);
+    const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
+    const url = getResourceSchemaUrl(model, isCustomResourceType);
+    url &&
+      coFetchJSON(url).then(template => {
+        setTemplate(template);
         setLoaded(true);
-      }
-    };
-    xhrObj.send();
-  }, [model.apiGroup, model.kind, model.plural, template]);
+      });
+  }, [model.apiGroup, model.kind, model.plural]);
 
   const [, setHelpText] = React.useState(FORM_HELP_TEXT);
   let next = `${resourcePathFromModel(model, match.params.appName, match.params.ns)}`;

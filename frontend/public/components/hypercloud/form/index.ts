@@ -1,5 +1,6 @@
 import * as models from '../../../models';
-import { allModels } from '../../../module/k8s';
+import { CustomResourceDefinitionModel } from '../../../models';
+import { allModels, getK8sAPIPath, K8sKind } from '../../../module/k8s';
 
 enum SCHEMA_DIRECTORY {
   MANAGEMENT = 'management',
@@ -45,3 +46,19 @@ export const pluralToKind = (plural: string) => allModels().find(model => model.
 export const isCreateManual = (kind: string) => isCreateManualSet.has(kind);
 
 export const isResourceSchemaBasedMenu = (kind: string) => resourceSchemaBasedMenuMap.has(kind);
+
+export const getResourceSchemaUrl = (model: K8sKind, isCustomResourceType: boolean) => {
+  let url = null;
+  if (isCustomResourceType) {
+    // structural schema로 해야하는 거
+    const { apiGroup, apiVersion } = CustomResourceDefinitionModel;
+    url = `${getK8sAPIPath({ apiGroup, apiVersion })}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+  } else {
+    // github에 저장해둔거로 해야하는 거
+    const { directory, file } = resourceSchemaBasedMenuMap.get(model.kind);
+    if (directory && file) {
+      url = `/api/resource/${directory}/key-mapping/${file}`;
+    }
+  }
+  return url;
+};
