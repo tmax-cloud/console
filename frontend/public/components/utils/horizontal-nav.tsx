@@ -18,12 +18,10 @@ import { K8sResourceKind, K8sResourceCommon } from '../../module/k8s';
 import { referenceForModel, referenceFor } from '../../module/k8s/k8s';
 import { useExtensions, HorizontalNavTab, isHorizontalNavTab } from '@console/plugin-sdk';
 import { EditDefaultPage } from '../hypercloud/crd/edit-resource';
-import { CustomResourceDefinitionModel } from '@console/internal/models';
-import { pluralToKind, isResourceSchemaBasedMenu, isCreateManual, resourceSchemaBasedMenuMap } from '../hypercloud/form';
-import { getIdToken } from '../../hypercloud/auth';
-import { getK8sAPIPath } from '@console/internal/module/k8s/resource.js';
+import { pluralToKind, isResourceSchemaBasedMenu, getResourceSchemaUrl } from '../hypercloud/form';
 import { useTranslation } from 'react-i18next';
 import { Metering } from '../hypercloud/metering';
+import { coFetchJSON } from '@console/internal/co-fetch';
 
 const editYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} />;
 export const viewYamlComponent = props => <AsyncComponent loader={() => import('../edit-yaml').then(c => c.EditYAML)} obj={props.obj} readOnly={true} />;
@@ -243,40 +241,15 @@ const HorizontalNav_ = React.memo((props: HorizontalNavProps) => {
   };
 
   React.useEffect(() => {
-    // let kind = pluralToKind(props.match.params.plural);
-    // kind = 'AWSCluster';
-    // if (kind) {
     let model = props.model;
     if (model) {
-      let kind = model.kind;
-      const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
-      const isStructuralSchemaType = !(isResourceSchemaBasedMenu(kind) || isCreateManual(kind));
-      let url;
-      if (isStructuralSchemaType) {
-        // structural schema로 해야하는 거
-        url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
-        url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-      } else if (!isCreateManual(kind)) {
-        // github에 저장해둔거로 해야하는 거
-        const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
-        const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
-        url = `${document.location.origin}/api/resource/${directory}/${file}`;
-      } else {
-        // 직접 만든거
-        return;
-      }
-      const xhrTest = new XMLHttpRequest();
-      xhrTest.open('GET', url);
-      xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-      xhrTest.onreadystatechange = function() {
-        if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
-          let template = xhrTest.response;
-          template = JSON.parse(template);
+      const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
+      const url = getResourceSchemaUrl(model, isCustomResourceType);
+      url &&
+        coFetchJSON(url).then(template => {
           template = isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template;
           props.setActiveSchema(template);
-        }
-      };
-      xhrTest.send();
+        });
     }
   }, []);
 

@@ -12,18 +12,17 @@ import { FLAGS, ALL_NAMESPACES_KEY, getBadgeFromType } from '@console/shared';
 import { connectToFlags } from '../reducers/features';
 import { errorModal } from './modals';
 import { Firehose, checkAccess, history, Loading, resourceObjPath } from './utils';
-import { referenceForModel, k8sCreate, getK8sAPIPath, k8sUpdate, referenceFor, groupVersionFor } from '../module/k8s';
-import { ConsoleYAMLSampleModel, CustomResourceDefinitionModel } from '../models';
+import { referenceForModel, k8sCreate, k8sUpdate, referenceFor, groupVersionFor } from '../module/k8s';
+import { ConsoleYAMLSampleModel } from '../models';
 import { getResourceSidebarSamples } from './sidebars/resource-sidebar-samples';
 import { ResourceSidebar } from './sidebars/resource-sidebar';
 import { yamlTemplates } from '../models/yaml-templates';
 
-import { definitionFor } from '../module/k8s/swagger';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { withTranslation } from 'react-i18next';
-import { getIdToken } from '../hypercloud/auth';
 
-import { pluralToKind, isResourceSchemaBasedMenu, resourceSchemaBasedMenuMap } from './hypercloud/form';
+import { isResourceSchemaBasedMenu, getResourceSchemaUrl } from './hypercloud/form';
+import { coFetchJSON } from '../co-fetch';
 
 const generateObjToLoad = (kind, id, yaml, namespace = 'default') => {
   const sampleObj = safeLoad(yaml ? yaml : yamlTemplates.getIn([kind, id]));
@@ -86,28 +85,7 @@ export const EditYAML_ = connect(stateToProps)(
     componentDidMount() {
       const model = this.getModel(this.props.obj);
       if (model) {
-        const kind = model.kind;
-        const isCustomResourceType = !isResourceSchemaBasedMenu(kind);
-        let url;
-        if (isCustomResourceType) {
-          url = getK8sAPIPath({ apiGroup: CustomResourceDefinitionModel.apiGroup, apiVersion: CustomResourceDefinitionModel.apiVersion });
-          url = `${document.location.origin}${url}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
-        } else {
-          const directory = resourceSchemaBasedMenuMap.get(model.kind)?.['directory'];
-          const file = resourceSchemaBasedMenuMap.get(model.kind)?.['file'];
-          url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
-        }
-        const xhrTest = new XMLHttpRequest();
-        xhrTest.open('GET', url);
-        xhrTest.setRequestHeader('Authorization', `Bearer ${getIdToken()}`);
-        xhrTest.onreadystatechange = () => {
-          if (xhrTest.readyState == XMLHttpRequest.DONE && xhrTest.status == 200) {
-            let template = xhrTest.response;
-            template = JSON.parse(template);
-            this.setState({ definition: isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template });
-          }
-        };
-        xhrTest.send();
+        this.loadResourceSchema(model);
         this.loadYaml();
       }
     }
@@ -198,6 +176,15 @@ export const EditYAML_ = connect(stateToProps)(
       }
 
       return yaml;
+    }
+
+    loadResourceSchema(model) {
+      const isCustomResourceType = !isResourceSchemaBasedMenu(model.kind);
+      const url = getResourceSchemaUrl(model, isCustomResourceType);
+      url &&
+        coFetchJSON(url).then(template => {
+          this.setState({ definition: isCustomResourceType ? template?.spec?.validation?.openAPIV3Schema : template });
+        });
     }
 
     loadYaml(reload = false, obj = this.props.obj) {

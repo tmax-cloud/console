@@ -19,10 +19,10 @@ export const isSaveButtonDisabled = obj => {
   let status = ''; // 리소스마다 status 위치 다름
   switch (kind) {
     case TFApplyClaimModel.kind:
-      status = obj.status.phase;
+      status = obj.status?.phase;
       return isNotAllowedStatus(['Approved', 'Planned', 'Applied', 'Destroyed'], status);
     case ResourceQuotaClaimModel.kind:
-      status = obj.status.status;
+      status = obj.status?.status;
       return isNotAllowedStatus(['Approved', 'Resource Quota Deleted'], status);
     case NamespaceClaimModel.kind:
       status = obj?.status?.status;
