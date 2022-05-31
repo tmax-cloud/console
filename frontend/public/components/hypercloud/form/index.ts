@@ -52,12 +52,12 @@ export const getResourceSchemaUrl = (model: K8sKind, isCustomResourceType: boole
   if (isCustomResourceType) {
     // structural schema로 해야하는 거
     const { apiGroup, apiVersion } = CustomResourceDefinitionModel;
-    url = `${getK8sAPIPath({ apiGroup, apiVersion })}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
+    url = `${document.location.origin}${getK8sAPIPath({ apiGroup, apiVersion })}/customresourcedefinitions/${model.plural}.${model.apiGroup}`;
   } else {
     // github에 저장해둔거로 해야하는 거
     const { directory, file } = resourceSchemaBasedMenuMap.get(model.kind);
     if (directory && file) {
-      url = `/api/resource/${directory}/key-mapping/${file}`;
+      url = `${document.location.origin}/api/resource/${directory}/key-mapping/${file}`;
     }
   }
   return url;
