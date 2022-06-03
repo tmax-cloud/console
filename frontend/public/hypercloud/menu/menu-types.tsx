@@ -232,7 +232,7 @@ export const CustomMenusMap: CustomMenus = {
     isMultiOnly: false,
   },
   Trace: {
-    kind: 'trace',
+    kind: 'Trace',
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_DETAILS_TABTRACE_1',

@@ -17,16 +17,7 @@ export const TracePage = ({ namespace: namespace, name: name }) => {
   const statusCodeRef = React.useRef();
   const [display, setDisplay] = React.useState('All');
   const [operationList, setOperationList] = React.useState([]);
-  const [urlsMap, setUrlsMap] = React.useState(new Map());
-
-  const [jaegerURL, setJaegerURL] = React.useState('');
-
-
-  React.useEffect(() => {
-    (async () => {
-      setJaegerURL(_.get(CustomMenusMap, 'Trace').url);
-    })();
-  }, [jaegerURL]);
+  const jaegerURL = _.get(CustomMenusMap, 'Trace').url;
 
 
   React.useEffect(() => {
