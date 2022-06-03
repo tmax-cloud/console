@@ -22,7 +22,7 @@ spec:
       match: PathPrefix(`/api/hypercloud`, `/api/multi-hypercloud`,`/api/webhook`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: jwt-decode-auth@file
+        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
         - name: hypercloud-stripprefix@file
       services:
         - kind: Service
@@ -35,7 +35,7 @@ spec:
       match: PathPrefix(`/api/kubernetes`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: jwt-decode-auth@file
+        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
         - name: kubernetes-stripprefix@file
       services:
         - kind: Service
@@ -48,7 +48,7 @@ spec:
       match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: jwt-decode-auth@file
+        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
         - name: monitoring-stripprefix-tenancy@file
       services:
         - kind: Service
@@ -60,7 +60,7 @@ spec:
       match: PathPrefix(`/api/prometheus/api`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: jwt-decode-auth@file
+        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
         - name: monitoring-stripprefix@file
       services:
         - kind: Service
@@ -72,7 +72,7 @@ spec:
       match: PathPrefix(`/api/alertmanager/api`) && Host(`{{NAME}}.tmaxcloud.org`)
       priority: 100
       middlewares:
-        - name: jwt-decode-auth@file
+        - name: api-gateway-system-jwt-decode-auth@kubernetescrd
         - name: monitoring-stripprefix@file
       services:
         - kind: Service
