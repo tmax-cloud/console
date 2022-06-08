@@ -103,7 +103,9 @@ const config: Configuration = {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
-              outputStyle: 'compressed',
+              sassOptions: {
+                outputStyle: 'compressed',
+              },
             },
           },
         ],
