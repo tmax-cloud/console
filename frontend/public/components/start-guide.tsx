@@ -36,35 +36,35 @@ export const HypercloudGettingStarted = () => {
   );
 };
 
-// export const OpenShiftGettingStarted = () => (
-//   <>
-//     <p>we don't have any namespace. </p>
-//     {canCreateProject ? (
-//       <p>OpenShift helps you quickly develop, host, and scale applications. To get started, create a project for your application.</p>
-//     ) : (
-//       <p>
-//         OpenShift helps you quickly develop, host, and scale applications. To get started, you'll need a project. Currently, you can't create or access any projects.
-//         {!createProjectMessage && " You'll need to contact a cluster administrator for help."}
-//       </p>
-//     )}
-//     {createProjectMessage && (
-//       <p className="co-pre-line">
-//         <LinkifyExternal>{createProjectMessage}</LinkifyExternal>
-//       </p>
-//     )}
-//     <p>
-//       To learn more, visit the OpenShift <ExternalLink href={openshiftHelpBase} text="documentation" />.
-//     </p>
-//     <p>
-//       Download the <Link to="/command-line-tools">command-line tools</Link>
-//     </p>
-//     {canCreateProject && (
-//       <Button variant="link" onClick={() => createProjectModal({ blocking: true })}>
-//         Create a new project
-//       </Button>
-//     )}
-//   </>
-// );
+export const OpenShiftGettingStarted = () => (
+  <>
+    <p>we don't have any namespace. </p>
+    {/* {canCreateProject ? (
+      <p>OpenShift helps you quickly develop, host, and scale applications. To get started, create a project for your application.</p>
+    ) : (
+      <p>
+        OpenShift helps you quickly develop, host, and scale applications. To get started, you'll need a project. Currently, you can't create or access any projects.
+        {!createProjectMessage && " You'll need to contact a cluster administrator for help."}
+      </p>
+    )}
+    {createProjectMessage && (
+      <p className="co-pre-line">
+        <LinkifyExternal>{createProjectMessage}</LinkifyExternal>
+      </p>
+    )}
+    <p>
+      To learn more, visit the OpenShift <ExternalLink href={openshiftHelpBase} text="documentation" />.
+    </p>
+    <p>
+      Download the <Link to="/command-line-tools">command-line tools</Link>
+    </p>
+    {canCreateProject && (
+      <Button variant="link" onClick={() => createProjectModal({ blocking: true })}>
+        Create a new project
+      </Button>
+    )} */}
+  </>
+);
 
 export const withStartGuide = (WrappedComponent, disable: boolean = true) =>
   connectToFlags(
