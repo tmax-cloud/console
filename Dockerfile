@@ -12,6 +12,7 @@ RUN ./scripts/build-frontend.sh
 FROM openshift/origin-base
 
 COPY --from=build /go/src/github.com/openshift/console/frontend/public/dist /opt/bridge/static
+COPY --from=build /go/src/github.com/openshift/console/frontend/usermanual /opt/bridge/static/usermanual
 COPY --from=build /go/src/github.com/openshift/console/bin/console /opt/bridge/bin/console
 RUN mkdir -p /opt/bridge/api/
 COPY --from=build /go/src/github.com/openshift/console/api /opt/bridge/api
