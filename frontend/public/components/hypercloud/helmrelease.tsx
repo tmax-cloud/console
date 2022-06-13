@@ -196,7 +196,7 @@ export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }
         .then(res => {
           setHelmReleases(_.get(res, 'release') || []);
           if (!_.get(res, 'release')) {
-            history.push('/helmreleases/all-namespaces');
+            history.push(`/helmreleases/ns/${namespace}`);
           }
           setLoading(true);
         })
