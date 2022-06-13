@@ -33,7 +33,7 @@ const getHost = async () => {
 };
 
 const capitalize = (text: string) => {
-  return text.charAt(0).toUpperCase() + text.slice(1);
+  return typeof text === 'string' ? text.charAt(0).toUpperCase() + text.slice(1) : text;
 };
 export interface HelmReleasePageProps {
   match: RMatch<{
@@ -195,6 +195,9 @@ export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }
       await coFetchJSON(`${host}/helm/ns/${namespace}/releases/${name}`)
         .then(res => {
           setHelmReleases(_.get(res, 'release') || []);
+          if (!_.get(res, 'release')) {
+            history.push('/helmreleases/all-namespaces');
+          }
           setLoading(true);
         })
         .catch(e => {
