@@ -24,9 +24,13 @@ import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
-import { resourceSortFunction } from './utils/resource-sort'
+import { resourceSortFunction } from './utils/resource-sort';
+import { getIngressUrl } from './utils/ingress-utils';
 
-const helmHost: string = (CustomMenusMap as any).Helm.url;
+const getHost = async () => {
+  const mapUrl = (CustomMenusMap as any).Helm.url;
+  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
+};
 
 const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -61,11 +65,16 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
 
   React.useEffect(() => {
     const updateHelmReleases = async () => {
-      await coFetchJSON(namespace ? `${helmHost}/helm/ns/${namespace}/releases` : `${helmHost}/helm/all-namespaces/releases`).then(res => {
-        setHelmReleases(_.get(res, 'release') || []);
-        setLoading(true);
-        setIsRefresh(true);
-      });
+      const host = await getHost();
+      await coFetchJSON(namespace ? `${host}/helm/ns/${namespace}/releases` : `${host}/helm/all-namespaces/releases`)
+        .then(res => {
+          setHelmReleases(_.get(res, 'release') || []);
+          setLoading(true);
+          setIsRefresh(true);
+        })
+        .catch(e => {
+          setIsRefresh(false);
+        });
     };
     updateHelmReleases();
   }, [namespace, isRefresh]);
@@ -123,9 +132,10 @@ const tableProps = (setIsRefresh: Function) => {
         {
           label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
           callback: async () => {
+            const host = await getHost();
             deleteModal({
               nonk8sProps: {
-                deleteServiceURL: `${helmHost}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+                deleteServiceURL: `${host}/helm/ns/${obj.namespace}/releases/${obj.name}`,
                 stringKey: 'COMMON:MSG_LNB_MENU_203',
                 namespace: obj.namespace,
                 name: obj.name,
@@ -177,16 +187,22 @@ export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }
 
   const [loading, setLoading] = React.useState(false);
   const [helmReleases, setHelmReleases] = React.useState([]);
+  const [isRefresh, setIsRefresh] = React.useState(true);
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmHost}/helm/ns/${namespace}/releases/${name}`).then(res => {
-        setHelmReleases(_.get(res, 'release') || []);
-        setLoading(true);
-      });
+      const host = await getHost();
+      await coFetchJSON(`${host}/helm/ns/${namespace}/releases/${name}`)
+        .then(res => {
+          setHelmReleases(_.get(res, 'release') || []);
+          setLoading(true);
+        })
+        .catch(e => {
+          setIsRefresh(false);
+        });
     };
     fetchHelmChart();
-  }, [namespace]);
+  }, [namespace, isRefresh]);
   return (
     <>
       <Helmet>
@@ -295,9 +311,10 @@ export const HelmreleasestDetailsHeader: React.FC<HelmreleasestDetailsHeaderProp
     {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
       callback: async () => {
+        const host = await getHost();
         deleteModal({
           nonk8sProps: {
-            deleteServiceURL: `${helmHost}/helm/ns/${namespace}/releases/${name}`,
+            deleteServiceURL: `${host}/helm/ns/${namespace}/releases/${name}`,
             stringKey: 'COMMON:MSG_LNB_MENU_203',
             namespace: namespace,
             name: name,
@@ -361,11 +378,18 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const [versions, setVersions] = React.useState({});
   const [selectRepoName, setSelectRepoName] = React.useState(repoName);
 
+  const [host, setHost] = React.useState('');
+
   const noEntryMessageTest = 'This chart is not on the server';
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmHost}/helm/charts`).then(res => {
+      const tempHost = await getHost();
+      if (!tempHost || tempHost === '') {
+        setErrorMessage('Helm Server is not found');
+      }
+      setHost(tempHost);
+      await coFetchJSON(`${tempHost}/helm/charts`).then(res => {
         let tempEntriesList = [];
         let tempChartObject = {};
         const entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
@@ -391,7 +415,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   }, []);
   React.useEffect(() => {
     const getVersions = async () => {
-      await coFetchJSON(`${helmHost}/helm/charts/${selectRepoName}_${selectChartName}`).then(res => {
+      await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}`).then(res => {
         const tempVersionsList = _.get(res, 'versions');
         if (tempVersionsList) {
           let tempVersionsObject = {};
@@ -409,7 +433,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   const onClick = () => {
     setProgress(true);
     const putHelmChart = () => {
-      const url = `${helmHost}/helm/ns/${namespace}/releases`;
+      const url = `${host}/helm/ns/${namespace}/releases`;
       const payload = {
         releaseRequestSpec: {
           packageURL: postPackageURL,
@@ -448,7 +472,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     const selectedVersion = versions[selection];
     setPostVersion(selectedVersion ? selectedVersion : noEntryMessageTest);
     const setChartVersion = async () => {
-      await coFetchJSON(`${helmHost}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
+      await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}/versions/${selectedVersion}`).then(res => {
         const entryValue = Object.values(_.get(res, 'indexfile.entries'))[0];
         setPostPackageURL(entryValue[0].urls[0]);
         setPostValues(safeDump(_.get(res, 'values')));
@@ -461,7 +485,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
     <div style={{ padding: '30px' }}>
       {loading && (
         <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
-          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${helmHost}/helm/repos`}>
+          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${host}/helm/repos`}>
             <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
               {defaultValue ? <p>{releaseName}</p> : <input className="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={releaseName} onChange={updatePostReleaseName} disabled={defaultValue} />}
             </Section>
@@ -512,7 +536,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             )}
             {postValues && <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />}
             <div style={{ marginTop: '10px' }}>
-              <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!postPackageURL}>
+              <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!postPackageURL && !host}>
                 {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
               </Button>
               <Button
@@ -558,16 +582,22 @@ export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) =
 
   const [loading, setLoading] = React.useState(false);
   const [helmReleases, setHelmReleases] = React.useState([]);
+  const [isRefresh, setIsRefresh] = React.useState(true);
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmHost}/helm/ns/${namespace}/releases/${name}`).then(res => {
-        setHelmReleases(_.get(res, 'release') || []);
-        setLoading(true);
-      });
+      const host = await getHost();
+      await coFetchJSON(`${host}/helm/ns/${namespace}/releases/${name}`)
+        .then(res => {
+          setHelmReleases(_.get(res, 'release') || []);
+          setLoading(true);
+        })
+        .catch(e => {
+          setIsRefresh(false);
+        });
     };
     fetchHelmChart();
-  }, [namespace]);
+  }, [namespace, isRefresh]);
 
   return (
     <>

@@ -13,29 +13,39 @@ import { TableProps } from './utils/default-list-component';
 import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { LoadingBox } from '../utils';
+import { getIngressUrl } from './utils/ingress-utils';
 
-const helmHost: string = (CustomMenusMap as any).Helm.url;
+const getHost = async () => {
+  const mapUrl = (CustomMenusMap as any).Helm.url;
+  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
+};
 
 export const HelmchartPage = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = React.useState(false);
   const [entries, setEntries] = React.useState([]);
+  const [isRefresh, setIsRefresh] = React.useState(true);
 
   React.useEffect(() => {
     const fetchHelmChart = async () => {
       let tempList = [];
-      await coFetchJSON(`${helmHost}/helm/charts`).then(res => {
-        let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
-        entriesvalues.map(value => {
-          tempList.push(value[0]);
+      const host = await getHost();
+      await coFetchJSON(`${host}/helm/charts`)
+        .then(res => {
+          let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
+          entriesvalues.map(value => {
+            tempList.push(value[0]);
+          });
+          setEntries(tempList);
+          setLoading(true);
+          setIsRefresh(true);
+        })
+        .catch(e => {
+          setIsRefresh(false);
         });
-      });
-
-      setEntries(tempList);
-      setLoading(true);
     };
     fetchHelmChart();
-  }, []);
+  }, [isRefresh]);
   return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} /> : <LoadingBox />}</>;
 };
 
@@ -99,11 +109,25 @@ export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
   const [postRepoURL, setPostRepoURL] = React.useState(repoURL);
   const [inProgress, setProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [host, setHost] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const updateHost = async () => {
+      const tempHost = await getHost();
+      if (!tempHost || tempHost === '') {
+        setErrorMessage('Helm Server is not found');
+      }
+      setHost(tempHost);
+      setLoading(true);
+    };
+    updateHost();
+  }, []);
 
   const onClick = () => {
     setProgress(true);
     const putHelmChart = () => {
-      const url = `${helmHost}/helm/repos`;
+      const url = `${host}/helm/repos`;
       const payload = {
         name: postName,
         repoURL: postRepoURL,
@@ -129,34 +153,38 @@ export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
 
   return (
     <div style={{ padding: '30px' }}>
-      <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
-        <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${helmHost}/helm/repos`}>
-          <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
-          <div className="co-form-subsection">
-            <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
-              <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
-            </Section>
-            <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
-              <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
-            </Section>
-          </div>
-          <div className="co-form-section__separator" />
-          <Button type="button" variant="primary" id="save" onClick={onClick}>
-            {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
-          </Button>
-          <Button
-            style={{ marginLeft: '10px' }}
-            type="button"
-            variant="secondary"
-            id="cancel"
-            onClick={() => {
-              history.goBack();
-            }}
-          >
-            {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-          </Button>
-        </form>
-      </ButtonBar>
+      {loading ? (
+        <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
+          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${host}/helm/repos`}>
+            <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
+            <div className="co-form-subsection">
+              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
+                <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
+              </Section>
+              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
+                <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
+              </Section>
+            </div>
+            <div className="co-form-section__separator" />
+            <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!host}>
+              {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
+            </Button>
+            <Button
+              style={{ marginLeft: '10px' }}
+              type="button"
+              variant="secondary"
+              id="cancel"
+              onClick={() => {
+                history.goBack();
+              }}
+            >
+              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
+            </Button>
+          </form>
+        </ButtonBar>
+      ) : (
+        <LoadingBox />
+      )}
     </div>
   );
 };
@@ -186,17 +214,24 @@ export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props 
     indexfile: {},
     values: {},
   });
+  const [isRefresh, setIsRefresh] = React.useState(true);
+
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmHost}/helm/charts/${repo}_${name}`).then(res => {
-        setChart(prevState => {
-          return { ...prevState, indexfile: res.indexfile, values: res.values };
+      const host = await getHost();
+      await coFetchJSON(`${host}/helm/charts/${repo}_${name}`)
+        .then(res => {
+          setChart(prevState => {
+            return { ...prevState, indexfile: res.indexfile, values: res.values };
+          });
+          setLoading(true);
+        })
+        .catch(e => {
+          setIsRefresh(false);
         });
-        setLoading(true);
-      });
     };
     fetchHelmChart();
-  }, []);
+  }, [isRefresh]);
 
   return (
     <>
@@ -283,17 +318,24 @@ export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
     indexfile: {},
     values: {},
   });
+  const [isRefresh, setIsRefresh] = React.useState(true);
+
   React.useEffect(() => {
     const fetchHelmChart = async () => {
-      await coFetchJSON(`${helmHost}/helm/charts/${name}`).then(res => {
-        setChart(prevState => {
-          return { ...prevState, indexfile: res.indexfile, values: res.values };
+      const host = await getHost();
+      await coFetchJSON(`${host}/helm/charts/${name}`)
+        .then(res => {
+          setChart(prevState => {
+            return { ...prevState, indexfile: res.indexfile, values: res.values };
+          });
+          setLoading(true);
+        })
+        .catch(e => {
+          setIsRefresh(false);
         });
-        setLoading(true);
-      });
     };
     fetchHelmChart();
-  }, []);
+  }, [isRefresh]);
 
   return (
     <>
