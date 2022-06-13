@@ -1,12 +1,13 @@
 package server
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net/http"
-	"strings"
 )
 
 type Server struct {
@@ -46,6 +47,7 @@ func NewServer(app *App, k8sHandler *K8sHandler) *Server {
 
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/static"), http.Dir(s.App.PublicDir))
 	fileServer(r, singleJoiningSlash(s.App.BasePath, "/api/resource"), http.Dir("./api"))
+	fileServer(r, singleJoiningSlash(s.App.BasePath, "/usermanual"), http.Dir(singleJoiningSlash(s.App.PublicDir, "/usermanual")))
 
 	consoleProxyPath := singleJoiningSlash(s.App.BasePath, "/api/console")
 	r.Route(consoleProxyPath, func(r chi.Router) {
