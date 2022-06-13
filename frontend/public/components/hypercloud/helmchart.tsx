@@ -115,10 +115,11 @@ export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
   React.useEffect(() => {
     const updateHost = async () => {
       const tempHost = await getHost();
-      if (tempHost !== '') {
-        setHost(tempHost);
-        setLoading(true);
+      if (!tempHost || tempHost === '') {
+        setErrorMessage('Helm Server is not found');
       }
+      setHost(tempHost);
+      setLoading(true);
     };
     updateHost();
   }, []);
@@ -151,40 +152,40 @@ export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
   };
 
   return (
-    <>
-      {loading && (
-        <div style={{ padding: '30px' }}>
-          <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
-            <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${host}/helm/repos`}>
-              <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
-              <div className="co-form-subsection">
-                <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
-                  <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
-                </Section>
-                <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
-                  <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
-                </Section>
-              </div>
-              <div className="co-form-section__separator" />
-              <Button type="button" variant="primary" id="save" onClick={onClick}>
-                {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
-              </Button>
-              <Button
-                style={{ marginLeft: '10px' }}
-                type="button"
-                variant="secondary"
-                id="cancel"
-                onClick={() => {
-                  history.goBack();
-                }}
-              >
-                {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-              </Button>
-            </form>
-          </ButtonBar>
-        </div>
+    <div style={{ padding: '30px' }}>
+      {loading ? (
+        <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
+          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${host}/helm/repos`}>
+            <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
+            <div className="co-form-subsection">
+              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
+                <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
+              </Section>
+              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
+                <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
+              </Section>
+            </div>
+            <div className="co-form-section__separator" />
+            <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!host}>
+              {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
+            </Button>
+            <Button
+              style={{ marginLeft: '10px' }}
+              type="button"
+              variant="secondary"
+              id="cancel"
+              onClick={() => {
+                history.goBack();
+              }}
+            >
+              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
+            </Button>
+          </form>
+        </ButtonBar>
+      ) : (
+        <LoadingBox />
       )}
-    </>
+    </div>
   );
 };
 export const HelmchartCreatePage = () => {

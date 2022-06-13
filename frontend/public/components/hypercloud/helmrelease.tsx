@@ -385,9 +385,10 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
   React.useEffect(() => {
     const fetchHelmChart = async () => {
       const tempHost = await getHost();
-      if (tempHost !== '') {
-        setHost(tempHost);
+      if (!tempHost || tempHost === '') {
+        setErrorMessage('Helm Server is not found');
       }
+      setHost(tempHost);
       await coFetchJSON(`${tempHost}/helm/charts`).then(res => {
         let tempEntriesList = [];
         let tempChartObject = {};
@@ -535,7 +536,7 @@ export const HelmreleasesForm: React.FC<HelmreleasesFormProps> = props => {
             )}
             {postValues && <YAMLEditor value={postValues} minHeight="300px" onChange={updatePostValues} showShortcuts={true} />}
             <div style={{ marginTop: '10px' }}>
-              <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!postPackageURL}>
+              <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!postPackageURL && !host}>
                 {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
               </Button>
               <Button
