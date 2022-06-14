@@ -50,9 +50,7 @@ const setSingleClusterBasePath = async () => {
   }
 };
 
-export const setUrlFromIngresses = () => {
-  return new Promise<void>(async resolve => {
-    await Promise.all([setSingleClusterBasePath(), initializationForMenu()]);
-    resolve();
-  });
+export const setUrlFromIngresses = async () => {
+  await setSingleClusterBasePath();
+  await initializationForMenu();
 };

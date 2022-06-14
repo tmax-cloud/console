@@ -160,10 +160,14 @@ keycloak
       keycloak.login();
       return;
     }
-
+  })
+  .then(async () => {
     setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
+
+    // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
+    await setUrlFromIngresses();
 
     const startDiscovery = () => store.dispatch(watchAPIServices());
     // Load cached API resources from localStorage to speed up page load.
@@ -186,9 +190,6 @@ keycloak
 
     // Fetch swagger on load if it's stale.
     fetchSwagger();
-
-    // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
-    setUrlFromIngresses();
 
     // Used by GUI tests to check for unhandled exceptions
     window.windowError = false;
