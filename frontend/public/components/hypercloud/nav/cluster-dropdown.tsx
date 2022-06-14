@@ -1,14 +1,16 @@
 import * as React from 'react';
+import * as _ from 'lodash-es';
 import { connect } from 'react-redux';
 import { Dropdown, DropdownItem, DropdownToggle, Title } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
-import { LoadingInline } from '@console/internal/components/utils';
+import { history, Loading } from '@console/internal/components/utils';
 import { RootState } from '../../../redux';
 import { featureReducerName } from '../../../reducers/features';
 import { getActiveCluster } from '../../../reducers/ui';
 import * as UIActions from '../../../actions/ui';
 import { coFetchJSON } from '../../../co-fetch';
 import { getId, getUserGroup } from '../../../hypercloud/auth';
+import { useTranslation } from 'react-i18next';
 
 type clusterItemProps = {
   displayName: string;
@@ -41,8 +43,7 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
 
       if (clusterName !== activeCluster) {
         setActiveCluster(clusterName);
-        window.location.reload();
-        // TODO: rerendering 고도화...
+        history.push('/');
       }
 
       setClusterDropdownOpen(false);
@@ -54,12 +55,15 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
   const renderClusterToggle = React.useCallback(
     (name: string) => {
       const isClusterExists = !!name && clusters.find(cl => `${cl.namespace}/${cl.name}` === name);
+      const { t } = useTranslation();
       return loaded ? (
         <DropdownToggle isOpen={isClusterDropdownOpen} onToggle={toggleClusterOpen} iconComponent={CaretDownIcon} data-test-id="perspective-switcher-toggle">
-          <Title size="md">{isClusterExists ? name : 'undefined'}</Title>
+          <Title size="md" style={{ color: _.isEmpty(clusters) && 'var(--pf-global--disabled-color--200)' }}>
+            {isClusterExists ? name : t('COMMON:MSG_LNB_CONSOLE_1')}
+          </Title>
         </DropdownToggle>
       ) : (
-        <LoadingInline />
+        <Loading className="hc-cluster-dropdown--loading" />
       );
     },
     [isClusterDropdownOpen, toggleClusterOpen, clusters, loaded],
@@ -95,7 +99,9 @@ const ClusterDropdown_: React.FC<ClusterDropdownProps & StateProps> = ({ setActi
             return list;
           }, []);
 
-          setClusters(clusterList);
+          if (!_.isEqual(clusterList, clusters)) {
+            setClusters(clusterList);
+          }
 
           const hasCluster = activeCluster && clusterList.find(cl => `${cl.namespace}/${cl.name}` === activeCluster);
 
