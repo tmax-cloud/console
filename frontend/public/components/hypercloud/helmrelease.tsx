@@ -26,7 +26,9 @@ import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
+import { HelmReleaseModel } from '@console/internal/models/hypercloud';
 
+const kind = HelmReleaseModel.kind;
 const getHost = async () => {
   const mapUrl = (CustomMenusMap as any).Helm.url;
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
@@ -41,6 +43,11 @@ export interface HelmReleasePageProps {
     name?: string;
   }>;
 }
+// type NotebooksPageProps = {
+//   showTitle?: boolean;
+//   namespace?: string;
+//   selector?: any;
+// };
 
 const filters = t => [
   {
@@ -56,8 +63,9 @@ const filters = t => [
   },
 ];
 
-export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
+export const HelmReleasePage: React.FC<HelmReleasePageProps> = props => {
   const { t } = useTranslation();
+  const { match } = props;
   const namespace = match.params.ns;
   const [loading, setLoading] = React.useState(false);
   const [helmReleases, setHelmReleases] = React.useState([]);
@@ -79,7 +87,18 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
     updateHelmReleases();
   }, [namespace, isRefresh]);
 
-  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps(setIsRefresh)} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
+  return (
+    <>
+      {loading ? (
+        <>
+          <ListPage {...props} canCreate={true} tableProps={tableProps(setIsRefresh)} kind={kind} />
+          <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps(setIsRefresh)} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} />
+        </>
+      ) : (
+        <LoadingBox />
+      )}
+    </>
+  );
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {
@@ -157,7 +176,7 @@ const tableProps = (setIsRefresh: Function) => {
           children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
         },
         {
-          children: Object.keys(obj.objects)
+          children: obj.objects && Object.keys(obj.objects)
             .sort((a, b) => {
               return resourceSortFunction(a) - resourceSortFunction(b);
             })
@@ -169,7 +188,7 @@ const tableProps = (setIsRefresh: Function) => {
           children: obj.version,
         },
         {
-          children: <Timestamp timestamp={obj.info.first_deployed} />,
+          children: obj.info?.first_deployed && <Timestamp timestamp={obj.info?.first_deployed} />,
         },
         {
           className: Kebab.columnClass,
