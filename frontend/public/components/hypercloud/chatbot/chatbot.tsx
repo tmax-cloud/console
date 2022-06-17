@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getIngressUrl } from '../utils/ingress-utils';
-import { Action } from './action';
-import { EventType } from './types';
+import { ActionFactory } from './action';
+import { Config } from './types';
 
 const INJECTION_URL = '/assets/modules/channel-web/inject.js';
 const INJECTION_ID = 'hypercloud-console-chatbot';
@@ -45,38 +45,8 @@ const Chatbot = () => {
 
   const chatbotEventListener = (message: MessageEvent) => {
     const { data } = message;
-    switch (data?.name) {
-      case 'webchatLoaded':
-        // Triggered when the webchat is loaded and ready to be opened
-        break;
-      case 'webchatOpened':
-        // Triggered when the webchat button bubble is clicked
-        const chatbotConfig: Config = {
-          botName: '하콘', // TODO: i18n 적용
-          locale: window.localStorage.getItem('i18nextLng'),
-          showPoweredBy: false,
-        };
-        window.botpressWebChat.configure(chatbotConfig);
-        break;
-      case 'webchatClosed':
-        // Triggered when the webchat close button is clicked
-        break;
-      case 'webchatReady':
-        // Triggered when the webchat is ready to accept events, like proactive triggers
-        // 챗봇 오픈시 웰컴 메시지 띄워지도록 수정
-        window.botpressWebChat.sendEvent({
-          type: 'proactive-trigger',
-          channel: 'web',
-          payload: { text: 'fake message' },
-        });
-        break;
-      default:
-        if (data?.payload?.type === EventType.QUICK_REPLY) {
-          const action = Action.createActionHandler(data);
-          action.execute();
-        }
-        break;
-    }
+    const action = ActionFactory.createActionHandler(data);
+    action.execute();
   };
 
   React.useEffect(() => {
@@ -101,109 +71,5 @@ const Chatbot = () => {
 
   return <div id={WRAPPER_ID} />;
 };
-
-// https://github.com/botpress/botpress/blob/master/modules/channel-web/src/views/lite/typings.d.ts
-export interface Config {
-  host?: string;
-  botId?: string;
-  externalAuthToken?: string;
-  userId?: string;
-  conversationId?: uuid;
-  /** Allows to set a different user id for different windows (eg: studio, specific bot, etc) */
-  userIdScope?: string;
-  /** Defaults to 'true' */
-  enableReset?: boolean;
-  stylesheet?: string;
-  isEmulator?: boolean;
-  extraStylesheet?: string;
-  /** Defaults to 'true' */
-  showConversationsButton?: boolean;
-  /** 레이아웃 높이 조절하는 버튼 활성화 유무
-   * Defaults to 'true'
-   */
-  showResizeLayoutHeightButton?: boolean;
-  /** Defaults to 'false' */
-  showUserName?: boolean;
-  /** Defaults to 'false' */
-  showUserAvatar?: boolean;
-  /** Defaults to 'false' */
-  showTimestamp?: boolean;
-  /** Defaults to 'true' */
-  enableTranscriptDownload?: boolean;
-  /** Defaults to 'false' */
-  enableConversationDeletion?: boolean;
-  /** Defaults to 'false' */
-  enableArrowNavigation?: boolean;
-  /** Defaults to 'true' */
-  closeOnEscape?: boolean;
-  botName?: string;
-  composerPlaceholder?: string;
-  avatarUrl?: string;
-  /** Force the display language of the webchat (en, fr, ar, ru, etc..)
-   * Defaults to the user's browser language if not set
-   * Set to 'browser' to force use the browser's language
-   */
-  locale?: 'browser' | string;
-  /** Small description written under the bot's name */
-  botConvoDescription?: string;
-  /** Replace or insert components at specific locations */
-  overrides?: Overrides;
-  /** When true, the widget button is hidden
-   * Defaults to 'false'
-   */
-  hideWidget?: boolean;
-  /** Disable the slide in / out animations of the webchat
-   * Defaults to 'false'
-   */
-  disableAnimations?: boolean;
-  /** When true, sets ctrl+Enter as shortcut for reset session then send
-   * Defaults to 'false'
-   */
-  enableResetSessionShortcut?: boolean;
-  /** When true, webchat tries to use native webspeech api (uses hosted mozilla and google voice services)
-   * Defaults to 'false'
-   */
-  enableVoiceComposer?: boolean;
-  recentConversationLifetime?: string;
-  startNewConvoOnTimeout?: boolean;
-  /** Use sessionStorage instead of localStorage, which means the session expires when tab is closed
-   * Defaults to 'false'
-   */
-  useSessionStorage?: boolean;
-  containerWidth?: string | number;
-  layoutWidth?: string | number;
-  showPoweredBy?: boolean;
-  /** When enabled, sent messages are persisted to local storage (recall previous messages)
-   * Defaults to 'true'
-   */
-  enablePersistHistory?: boolean;
-  /** Experimental: expose the store to the parent frame for more control on the webchat's behavior */
-  exposeStore?: boolean;
-  /** Reference ensures that a specific value and its signature are valid */
-  reference?: string;
-  /** If true, Websocket is created when the Webchat is opened. Bot cannot be proactive. */
-  lazySocket?: boolean;
-  /** If true, chat will no longer play the notification sound for new messages. */
-  disableNotificationSound?: boolean;
-  /** Refers to a specific webchat reference in parent window. Useful when using multiple chat window */
-  chatId?: string;
-  /** CSS class to be applied to iframe */
-  className?: string;
-  /** Force the display to use a specific mode (Fullscreen or Embedded)
-   * Defaults to 'Embedded'
-   */
-  viewMode?: 'Embedded' | 'Fullscreen';
-}
-
-type uuid = string;
-
-interface Overrides {
-  [componentToOverride: string]: [
-    {
-      module: string;
-      component: string;
-    },
-  ];
-}
 
 export default Chatbot;
