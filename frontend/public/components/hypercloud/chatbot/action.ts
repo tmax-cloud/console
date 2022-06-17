@@ -14,6 +14,8 @@ export class ActionFactory {
         return new WebchatReadyActionHandler();
       default:
         switch (message?.payload?.type) {
+          case PayloadType.SESSION_RESET:
+            return new SessionResetActionHandler();
           case PayloadType.QUICK_REPLY:
             return new RouteActionHandler(message.payload);
           default:
@@ -57,6 +59,12 @@ class WebchatClosedActionHandler implements ActionHandler {
 
 // Triggered when the webchat is ready to accept events, like proactive triggers
 class WebchatReadyActionHandler implements ActionHandler {
+  execute(): void {
+    showWelcomeMsg();
+  }
+}
+
+class SessionResetActionHandler implements ActionHandler {
   execute(): void {
     showWelcomeMsg();
   }

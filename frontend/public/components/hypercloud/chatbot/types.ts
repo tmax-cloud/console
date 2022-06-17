@@ -8,6 +8,7 @@ export enum MessageName {
 }
 
 export enum PayloadType {
+  SESSION_RESET = 'session_reset',
   QUICK_REPLY = 'quick_reply',
 }
 
