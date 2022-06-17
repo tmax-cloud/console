@@ -5934,11 +5934,7 @@ kbd {
 @font-face {
 	font-family: FontAwesome;
 	font-display: block;
-	src: url(https://cdn2.hubspot.net/hubfs/4305976/fonts/font-awesome/fontawesome-webfont.eot?v=4.1.0);
-	src: url(https://cdn2.hubspot.net/hubfs/4305976/fonts/font-awesome/fontawesome-webfont.eot?#iefix&v=4.1.0) format('embedded-opentype'),
-		url(https://cdn2.hubspot.net/hubfs/4305976/fonts/font-awesome/fontawesome-webfont.woff?v=4.1.0) format('woff'),
-		url(https://cdn2.hubspot.net/hubfs/4305976/fonts/font-awesome/fontawesome-webfont.ttf?v=4.1.0) format('truetype'),
-		url(https://cdn2.hubspot.net/hubfs/4305976/fonts/font-awesome/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular) format('svg');
+	src: url(./fonts/fontawesome-webfont.woff) format('woff');
 	font-weight: 400;
 	font-style: normal;
 }
