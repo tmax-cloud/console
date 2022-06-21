@@ -147,7 +147,7 @@ export const tableFilters: TableFilterMap = {
   },
 
   // Filter Helm Release by Phase
-  'helmReleases-status': (filter, binding) => {
+  'helmRelease-status': (filter, binding) => {
     return filter.selected.has(binding.info?.status) || filter.selected.size === 0;
   },
 

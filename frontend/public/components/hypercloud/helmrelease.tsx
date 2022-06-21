@@ -46,7 +46,7 @@ export interface HelmReleasePageProps {
 const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
-    type: 'helmReleases-status',
+    type: 'helmRelease-status',
     reducer: HelmReleaseStatusReducer,
     items: [
       { id: 'unknown', title: 'Unknown' },
