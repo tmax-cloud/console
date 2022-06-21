@@ -63,10 +63,11 @@ const loadList = (oldList, resources, id?) => {
     });
     existingKeys.forEach((k) => {
       const r = list.get(k);
-      const metadata = r.get('metadata').toJSON();
+      const metadata = isNonK8SResource(id) ? {} : r.get('metadata').toJSON();
       if (!metadata.deletionTimestamp) {
         // eslint-disable-next-line no-console
-        console.warn(`${metadata.namespace}-${metadata.name} is gone with no deletion timestamp!`);
+        const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name : getQN(r);
+        console.warn(`${qualifiedName} is gone with no deletion timestamp!`);
       }
       list.delete(k);
     });
