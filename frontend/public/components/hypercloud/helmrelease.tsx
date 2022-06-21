@@ -61,7 +61,7 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = props => {
   const { t } = useTranslation();
   const { match } = props;
   const namespace = match.params.ns;
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmcharts/ns/${namespace}/~new`, items: [] }} />;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} hideLabelFilter={true} />;
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {

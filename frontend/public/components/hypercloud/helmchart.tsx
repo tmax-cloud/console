@@ -23,12 +23,12 @@ const getHost = async () => {
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
 
-type HelmchartDetailsPagetProps = {
+type HelmchartPagetProps = {
   match?: any;
 };
-export const HelmchartPage: React.FC<HelmchartDetailsPagetProps> = props => {
+export const HelmchartPage: React.FC<HelmchartPagetProps> = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} />;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} />;
 };
 
 const tableProps: TableProps = {
@@ -185,7 +185,7 @@ export const HelmchartCreatePage = () => {
   );
 };
 
-export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props => {
+export const HelmchartDetailsPage: React.FC<HelmchartPagetProps> = props => {
   const repo = props.match.params.repo;
   const name = props.match.params.name;
   const [loading, setLoading] = React.useState(false);

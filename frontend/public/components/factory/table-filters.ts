@@ -43,7 +43,7 @@ const withTableFilter = reducer => {
 
 // TODO: Table filters are undocumented, stringly-typed, and non-obvious. We can change that.
 export const tableFilters: TableFilterMap = {
-  name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata.name),
+  name: (filter, obj) => fuzzyCaseInsensitive(filter, obj.metadata?.name || obj.name),
 
   externalName: (filter, obj) => fuzzyCaseInsensitive(filter, obj.spec?.externalName),
 
@@ -148,7 +148,7 @@ export const tableFilters: TableFilterMap = {
 
   // Filter Helm Release by Phase
   'helmReleases-status': (filter, binding) => {
-    return filter.selected.has(binding.status?.phase) || filter.selected.size === 0;
+    return filter.selected.has(binding.info?.status) || filter.selected.size === 0;
   },
 
   selector: (selector, obj) => {
@@ -159,7 +159,7 @@ export const tableFilters: TableFilterMap = {
   },
 
   labels: (values, obj) => {
-    const labels = getLabelsAsString(obj);
+    const labels = obj.metadata ? getLabelsAsString(obj) : [];
     if (!values.all) {
       return true;
     }
