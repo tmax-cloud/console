@@ -142,8 +142,6 @@ export const Firehose = connect(
     stopK8sWatch: k8sActions.stopK8sWatch,
     watchK8sObject: k8sActions.watchK8sObject,
     watchK8sList: k8sActions.watchK8sList,
-    watchNonK8sObject: k8sActions.watchNonK8sObject,
-    watchNonK8sList: k8sActions.watchNonK8sList,
   },
   null,
   {
@@ -198,7 +196,7 @@ export const Firehose = connect(
     }
 
     start() {
-      const { watchK8sList, watchK8sObject, watchNonK8sList, watchNonK8sObject, resources, k8sModels, inFlight } = this.props;
+      const { watchK8sList, watchK8sObject, resources, k8sModels, inFlight } = this.props;
 
       let firehoses = [];
       if (!(inFlight && _.some(resources, ({ kind }) => !k8sModels.get(kind)))) {
@@ -256,13 +254,9 @@ export const Firehose = connect(
       //     : watchK8sObject(id, name, namespace, query, k8sKind),
       // );
       firehoses.forEach(({ id, query, k8sKind, isList, name, namespace, nonK8SResource }) => (
-        nonK8SResource
-          ? isList
-            ? watchNonK8sList(id, query, k8sKind)
-            : watchNonK8sObject(id, name, namespace, query, k8sKind)
-          : isList
-            ? watchK8sList(id, query, k8sKind)
-            : watchK8sObject(id, name, namespace, query, k8sKind)
+        isList
+          ? watchK8sList(id, query, k8sKind, null, nonK8SResource)
+          : watchK8sObject(id, name, namespace, query, k8sKind)
       ));
       this.setState({ firehoses });
     }

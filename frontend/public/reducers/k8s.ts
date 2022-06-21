@@ -4,6 +4,7 @@ import { Map as ImmutableMap, fromJS } from 'immutable';
 import { ActionType, K8sAction } from '../actions/k8s';
 import { getQN, referenceForModel, allModels, K8sResourceKind, K8sKind } from '../module/k8s';
 import { namespacedResources } from '../actions/ui';
+import { isNonK8SResource } from './utils/nonk8s-utils';
 
 const moreRecent = (a, b) => {
   const metaA = a.get('metadata').toJSON();
@@ -12,9 +13,6 @@ const moreRecent = (a, b) => {
     return new Date(metaA.creationTimestamp) > new Date(metaB.creationTimestamp);
   }
   return parseInt(metaA.resourceVersion, 10) > parseInt(metaB.resourceVersion, 10);
-};
-const moreRecent2 = (a, b) => {
-  return false;
 };
 
 const removeFromList = (list, resource) => {
@@ -51,38 +49,15 @@ const updateList = (list: ImmutableMap<string, any>, nextJS: K8sResourceKind) =>
   return list.set(qualifiedName, next);
 };
 
-const loadList = (oldList, resources) => {
+const loadList = (oldList, resources, id?) => {
   const existingKeys = new Set(oldList.keys());
   return oldList.withMutations((list) => {
     (resources || []).forEach((r) => {
-      const qualifiedName = getQN(r);
+      const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name : getQN(r);
       existingKeys.delete(qualifiedName);
       const next = fromJS(r);
       const current = list.get(qualifiedName);
-      if (!current || moreRecent(next, current)) {
-        list.set(qualifiedName, next);
-      }
-    });
-    existingKeys.forEach((k) => {
-      const r = list.get(k);
-      const metadata = r.get('metadata').toJSON();
-      if (!metadata.deletionTimestamp) {
-        // eslint-disable-next-line no-console
-        console.warn(`${metadata.namespace}-${metadata.name} is gone with no deletion timestamp!`);
-      }
-      list.delete(k);
-    });
-  });
-};
-const loadList2 = (oldList, resources) => {
-  const existingKeys = new Set(oldList.keys());
-  return oldList.withMutations((list) => {
-    (resources || []).forEach((r) => {
-      const qualifiedName = (r.namespace ? `(${r.namespace})-` : '') + r.name;
-      existingKeys.delete(qualifiedName);
-      const next = fromJS(r);
-      const current = list.get(qualifiedName);
-      if (!current || moreRecent2(next, current)) {
+      if (!current || isNonK8SResource(id) ? true : moreRecent(next, current)) {
         list.set(qualifiedName, next);
       }
     });
@@ -216,18 +191,7 @@ export default (state: K8sState, action: K8sAction): K8sState => {
       state = state.mergeDeep({
         [action.payload.id]: { loaded: true, loadError: '' },
       });
-      newList = loadList(state.getIn([action.payload.id, 'data']), action.payload.k8sObjects);
-      break;
-    case ActionType.NonK8sLoaded:
-      if (!state.getIn([action.payload.id, 'data'])) {
-        return state;
-      }
-      // eslint-disable-next-line no-console
-      console.info(`loaded ${action.payload.id}`);
-      state = state.mergeDeep({
-        [action.payload.id]: { loaded: true, loadError: '' },
-      });
-      newList = loadList2(state.getIn([action.payload.id, 'data']), action.payload.k8sObjects);
+      newList = loadList(state.getIn([action.payload.id, 'data']), action.payload.k8sObjects, action.payload.id);
       break;
     case ActionType.UpdateListFromWS:
       newList = state.getIn([action.payload.id, 'data']);
