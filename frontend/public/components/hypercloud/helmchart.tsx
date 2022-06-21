@@ -14,39 +14,21 @@ import { ListPage } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
+import { HelmChartModel } from '@console/internal/models/hypercloud';
+
+const kind = HelmChartModel.kind;
 
 const getHost = async () => {
   const mapUrl = (CustomMenusMap as any).Helm.url;
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
 
-export const HelmchartPage = () => {
+type HelmchartDetailsPagetProps = {
+  match?: any;
+};
+export const HelmchartPage: React.FC<HelmchartDetailsPagetProps> = props => {
   const { t } = useTranslation();
-  const [loading, setLoading] = React.useState(false);
-  const [entries, setEntries] = React.useState([]);
-  const [isRefresh, setIsRefresh] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchHelmChart = async () => {
-      let tempList = [];
-      const host = await getHost();
-      await coFetchJSON(`${host}/helm/charts`)
-        .then(res => {
-          let entriesvalues = Object.values(_.get(res, 'indexfile.entries'));
-          entriesvalues.map(value => {
-            tempList.push(value[0]);
-          });
-          setEntries(tempList);
-          setLoading(true);
-          setIsRefresh(true);
-        })
-        .catch(e => {
-          setIsRefresh(false);
-        });
-    };
-    fetchHelmChart();
-  }, [isRefresh]);
-  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_223')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} canCreate={true} items={entries} kind="helmrcharts" createProps={{ to: '/helmcharts/~new', items: [] }} tableProps={tableProps} isK8SResource={false} isClusterScope={true} /> : <LoadingBox />}</>;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} />;
 };
 
 const tableProps: TableProps = {
@@ -82,10 +64,10 @@ const tableProps: TableProps = {
         ),
       },
       {
-        children: obj.repo.name,
+        children: obj.repo?.name,
       },
       {
-        children: obj.repo.url,
+        children: obj.repo?.url,
       },
       {
         children: obj.version,
@@ -203,9 +185,6 @@ export const HelmchartCreatePage = () => {
   );
 };
 
-type HelmchartDetailsPagetProps = {
-  match?: any;
-};
 export const HelmchartDetailsPage: React.FC<HelmchartDetailsPagetProps> = props => {
   const repo = props.match.params.repo;
   const name = props.match.params.name;

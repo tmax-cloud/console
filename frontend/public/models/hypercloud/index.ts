@@ -1498,18 +1498,20 @@ export const HelmChartModel: K8sKind = {
   apiGroup: '',
   apiVersion: '',
   abbr: 'HC',
-  namespaced: true,
+  namespaced: false,
   id: 'helmchart',
   plural: 'helmcharts',
   menuInfo: {
     visible: true,
-    type: MenuLinkType.ResourceNSLink,
+    type: MenuLinkType.HrefLink,
     isMultiOnly: false,
+    href: '/helmcharts',
   },
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_224',
     labelPlural: 'COMMON:MSG_LNB_MENU_223',
   },
+  nonK8SResource: true,
 };
 
 export const HelmReleaseModel: K8sKind = {
@@ -1524,13 +1526,15 @@ export const HelmReleaseModel: K8sKind = {
   plural: 'helmreleases',
   menuInfo: {
     visible: true,
-    type: MenuLinkType.ResourceNSLink,
+    type: MenuLinkType.HrefLink,
     isMultiOnly: false,
+    href: '/helmreleases',
   },
   i18nInfo: {
     label: 'COMMON:MSG_LNB_MENU_204',
     labelPlural: 'COMMON:MSG_LNB_MENU_203',
   },
+  nonK8SResource: true,
 };
 
 export const AWXModel: K8sKind = {

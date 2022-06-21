@@ -19,4 +19,5 @@ export type K8sClaimResourceKind = K8sResourceKind & {
 export type HyperCloudExtension = {
   menuInfo?: MenuInfo;
   i18nInfo?: I18nInfo;
+  nonK8SResource?: boolean,
 };

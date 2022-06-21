@@ -7,6 +7,7 @@ import { Map as ImmutableMap } from 'immutable';
 import { inject } from './inject';
 import { makeReduxID, makeQuery } from './k8s-watcher';
 import * as k8sActions from '../../actions/k8s';
+import { kindObj } from '.'
 
 const shallowMapEquals = (a, b) => {
   if (a === b || (a.size === 0 && b.size === 0)) {
@@ -141,6 +142,8 @@ export const Firehose = connect(
     stopK8sWatch: k8sActions.stopK8sWatch,
     watchK8sObject: k8sActions.watchK8sObject,
     watchK8sList: k8sActions.watchK8sList,
+    watchNonK8sObject: k8sActions.watchNonK8sObject,
+    watchNonK8sList: k8sActions.watchNonK8sList,
   },
   null,
   {
@@ -195,7 +198,7 @@ export const Firehose = connect(
     }
 
     start() {
-      const { watchK8sList, watchK8sObject, resources, k8sModels, inFlight } = this.props;
+      const { watchK8sList, watchK8sObject, watchNonK8sList, watchNonK8sObject, resources, k8sModels, inFlight } = this.props;
 
       let firehoses = [];
       if (!(inFlight && _.some(resources, ({ kind }) => !k8sModels.get(kind)))) {
@@ -229,16 +232,38 @@ export const Firehose = connect(
           });
       }
 
+      resources.map(resource => {
+        if (resource.nonK8SResource === true) {
+          const query = makeQuery(
+            resource.namespace,
+            resource.selector,
+            resource.fieldSelector,
+            resource.name,
+            resource.limit,
+          );
+          const name = resource.name;
+          const k8sKind = kindObj(resource.kind);
+          //const id = makeReduxID(k8sKind, query);
+          const id = resource.kind;
+          const nonK8SResource = resource.nonK8SResource;
+          firehoses.push(_.extend({}, resource, { query, id, k8sKind, nonK8SResource }));
+        }
+      });
+
       // firehoses.forEach(({ id, query, k8sKind, isList, name, namespace, listName }) =>
       //   isList
       //     ? watchK8sList(id, query, k8sKind, null, listName)
       //     : watchK8sObject(id, name, namespace, query, k8sKind),
       // );
-      firehoses.forEach(({ id, query, k8sKind, isList, name, namespace }) =>
-        isList
-          ? watchK8sList(id, query, k8sKind)
-          : watchK8sObject(id, name, namespace, query, k8sKind),
-      );
+      firehoses.forEach(({ id, query, k8sKind, isList, name, namespace, nonK8SResource }) => (
+        nonK8SResource
+          ? isList
+            ? watchNonK8sList(id, query, k8sKind)
+            : watchNonK8sObject(id, name, namespace, query, k8sKind)
+          : isList
+            ? watchK8sList(id, query, k8sKind)
+            : watchK8sObject(id, name, namespace, query, k8sKind)
+      ));
       this.setState({ firehoses });
     }
 

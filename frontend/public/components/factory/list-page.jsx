@@ -321,7 +321,7 @@ export const ListPage = withFallback(props => {
   let { createProps } = props;
   const { t } = useTranslation();
   const ko = kindObj(kind);
-  const { namespaced, plural } = ko;
+  const { namespaced, plural, nonK8SResource } = ko;  
   const label = isK8SResource ? ResourceLabel(ko, t) : props.title;
   const labelPlural = isK8SResource ? ResourceLabelPlural(ko, t) : props.title;
   const title = props.title || labelPlural;
@@ -370,6 +370,7 @@ export const ListPage = withFallback(props => {
       name: name || nameFilter,
       namespaced,
       selector,
+      nonK8SResource,
     },
   ];
 
