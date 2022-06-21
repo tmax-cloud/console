@@ -8,24 +8,7 @@ import { makeReduxID } from '../components/utils/k8s-watcher';
 import { APIServiceModel } from '../models';
 import { coFetchJSON } from '../co-fetch';
 import { referenceForModel, K8sResourceKind, K8sKind } from '../module/k8s';
-
-const nonK8sListUrl = {
-  HelmRelease: 'https://helm.tmaxcloud.org/helm/all-namespaces/releases',
-  HelmChart: 'https://helm.tmaxcloud.org/helm/charts',
-};
-const nonK8sListResult = (kind: string, response: any) => {
-  if (kind === 'HelmRelease') {
-    return response.release;
-  }
-  if (kind === 'HelmChart') {
-    let tempList = [];      
-    let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
-    entriesvalues.map(value => {
-      tempList.push(value[0]);
-    });
-    return tempList;
-  }
-};
+import { nonK8sListUrl, nonK8sListResult } from './utils/nonk8s-utils'
 
 export enum ActionType {
   ReceivedResources = 'resources',
@@ -327,21 +310,10 @@ export const watchNonK8sList = (
       // let .then handle the cleanup
       return;
     }
-    const getURL = nonK8sListUrl[id];
+    const getURL = nonK8sListUrl(id, query);
 
     const response = await coFetchJSON(getURL);
 
-    // const response = await k8sList(
-    //   k8skind,
-    //   {
-    //     limit: paginationLimit,
-    //     ...query,
-    //     ...(continueToken ? { continue: continueToken } : {}),
-    //   },
-    //   true,
-    //   // {},
-    //   // listName
-    // );
     const result = nonK8sListResult(id, response);
 
     if (!REF_COUNTS[id]) {
@@ -357,7 +329,7 @@ export const watchNonK8sList = (
     // if (response.metadata.continue) {
     //   return incrementallyLoad(response.metadata.continue);
     // }
-    return response.metadata?.resourceVersion;
+    return Date.now().toString();
   };
   /**
    * Incrementally fetch list (XHR) using k8s pagination then use its resourceVersion to
