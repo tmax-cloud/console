@@ -142,7 +142,7 @@ export const watchK8sList = (
       return;
     }
 
-    const response = nonK8SResource ? await coFetchJSON(nonK8sListUrl(id, query)) : await k8sList(
+    const response = nonK8SResource ? await coFetchJSON(await nonK8sListUrl(id, query)) : await k8sList(
       k8skind,
       {
         limit: paginationLimit,
