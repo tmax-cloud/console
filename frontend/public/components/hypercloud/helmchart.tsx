@@ -192,7 +192,7 @@ export const HelmchartDetailsPage: React.FC<DetailsPageProps> = props => {
   const helmChartKindObj: any = kindObj(kind);
   return <DetailsPage {...props} kind={kind} pages={[details(detailsPage(HelmChartDetails))]} customData={{ helmRepo: props.match?.params?.repo }} name={props.match?.params?.name} kindObj={helmChartKindObj} />;
 };
-const HelmChartDetails: React.FC<HelmchartDetailsProps> = ({ obj: entry }) => {
+const HelmChartDetails: React.FC<HelmChartDetailsProps> = ({ obj: entry }) => {
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
@@ -211,7 +211,7 @@ const HelmChartDetails: React.FC<HelmchartDetailsProps> = ({ obj: entry }) => {
     </div>
   );
 };
-type HelmchartDetailsProps = {
+type HelmChartDetailsProps = {
   obj: any;
 };
 export const HelmChartDetailsList: React.FC<HelmChartDetailsListProps> = ({ entry }) => {
