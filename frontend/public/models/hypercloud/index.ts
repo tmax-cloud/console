@@ -1,4 +1,4 @@
-import { K8sKind } from '../../module/k8s';
+import { K8sKind, NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 import startsWith from '@console/internal/hypercloud/menu/starts-with';
 
@@ -1491,7 +1491,7 @@ export const TFApplyClaimModel: K8sKind = {
   },
 };
 
-export const HelmChartModel: K8sKind = {
+export const HelmChartModel: NonK8sKind = {
   kind: 'HelmChart',
   label: 'Helm Chart',
   labelPlural: 'Helm Charts',
@@ -1514,7 +1514,7 @@ export const HelmChartModel: K8sKind = {
   nonK8SResource: true,
 };
 
-export const HelmReleaseModel: K8sKind = {
+export const HelmReleaseModel: NonK8sKind = {
   kind: 'HelmRelease',
   label: 'Helm Release',
   labelPlural: 'Helm Releases',
