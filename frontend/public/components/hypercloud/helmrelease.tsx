@@ -8,7 +8,7 @@ import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
-import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown, detailsPage, navFactory } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown, detailsPage, navFactory, KebabAction } from '@console/internal/components/utils';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { history } from '@console/internal/components/utils/router';
 import { getIdToken } from '@console/internal/hypercloud/auth';
@@ -162,10 +162,35 @@ const tableProps: TableProps = {
   },
 };
 
-const { details } = navFactory;
+const { details, editResource } = navFactory;
 export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
   const helmReleaseKindObj: any = kindObj(kind);
-  return <DetailsPage {...props} kind={kind} pages={[details(detailsPage(HelmReleaseDetails))]} customData={{ helmRepo: props.match?.params?.repo }} name={props.match?.params?.name} kindObj={helmReleaseKindObj} />;
+  const name = props.match?.params?.name;
+  const menuActions: KebabAction[] = [
+    () => ({
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
+      href: `/helmreleases/ns/${props.namespace}/${name}/edit`,
+    }),
+    () => ({
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
+      callback: async () => {
+        const host = await getHost();
+        deleteModal({
+          nonk8sProps: {
+            deleteServiceURL: `${host}/helm/ns/${props.namespace}/releases/${name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_203',
+            namespace: props.namespace,
+            name: name,
+            listPath: `/helmreleases/ns/${props.namespace}`,
+          },
+        });
+      },
+    }),
+  ];
+  const capitalizeHelmReleaseStatusReducer = release => {
+    return capitalize(HelmReleaseStatusReducer(release));
+  };
+  return <DetailsPage {...props} kind={kind} pages={[details(detailsPage(HelmReleaseDetails)), editResource()]} name={props.match?.params?.name} kindObj={helmReleaseKindObj} menuActions={menuActions} getResourceStatus={capitalizeHelmReleaseStatusReducer} />;
 };
 const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release }) => {
   const { t } = useTranslation();
@@ -565,11 +590,10 @@ export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) =
 export default HelmReleasePage;
 
 const allPages = [
-  // {
-  //   name: 'COMMON:MSG_DETAILS_TAB_1',
-  //   href: '',
-  //   component: ReleasesDetailsTapPage,
-  // },
+  {
+    name: 'COMMON:MSG_DETAILS_TAB_1',
+    href: '',
+  },
   {
     name: 'COMMON:MSG_DETAILS_TAB_18',
     href: 'edit',
