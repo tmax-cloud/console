@@ -7,7 +7,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
-import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, ResourceLink } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
