@@ -8,7 +8,7 @@ import { makeReduxID } from '../components/utils/k8s-watcher';
 import { APIServiceModel } from '../models';
 import { coFetchJSON } from '../co-fetch';
 import { referenceForModel, K8sResourceKind, K8sKind } from '../module/k8s';
-import { nonK8sListUrl, nonK8sListResult } from './utils/nonk8s-utils'
+import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult } from './utils/nonk8s-utils'
 
 export enum ActionType {
   ReceivedResources = 'resources',
@@ -63,7 +63,7 @@ export const filterList = (id: string, name: string, value: string) => action(Ac
 
 export const startWatchK8sObject = (id: string) => action(ActionType.StartWatchK8sObject, { id });
 
-export const watchK8sObject = (id: string, name: string, namespace: string, query: { [key: string]: string }, k8sType: K8sKind) => (dispatch: Dispatch, getState) => {
+export const watchK8sObject = (id: string, name: string, namespace: string, query: { [key: string]: string }, k8sType: K8sKind, nonK8SResource?: boolean) => (dispatch: Dispatch, getState) => {
   if (id in REF_COUNTS) {
     REF_COUNTS[id] += 1;
     return nop;
@@ -71,13 +71,17 @@ export const watchK8sObject = (id: string, name: string, namespace: string, quer
   dispatch(startWatchK8sObject(id));
   REF_COUNTS[id] = 1;
 
-  if (query.name) {
+  if (!nonK8SResource && query.name) {
     query.fieldSelector = `metadata.name=${query.name}`;
     delete query.name;
   }
-
-  const poller = () => {
-    k8sGet(k8sType, name, namespace).then(
+  const poller = async () => {
+    const url = nonK8SResource ? await nonK8sObjectUrl(id, query) : '';
+    nonK8SResource 
+      ? coFetchJSON(url).then(
+        o => dispatch(modifyObject(id, nonK8sObjectResult(id, o))),
+        e => dispatch(errored(id, e)),)
+      : k8sGet(k8sType, name, namespace).then(
       o => dispatch(modifyObject(id, o)),
       e => dispatch(errored(id, e)),
     );

@@ -9,6 +9,7 @@ import { K8sResourceKindReference, K8sResourceKind, K8sKind, referenceForModel, 
 import { ErrorBoundaryFallback } from '../error';
 import { breadcrumbsForDetailsPage } from '../utils/breadcrumbs';
 import { useTranslation } from 'react-i18next';
+import { isNonK8SResource } from '@console/internal/reducers/utils/nonk8s-utils';
 
 export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...props }) => {
   const resourceKeys = _.map(props.resources, 'prop');
@@ -43,6 +44,8 @@ export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...prop
           namespace: props.namespace,
           isList: false,
           prop: 'obj',
+          nonK8SResource: isNonK8SResource(props.kind),
+          helmRepo: props.customData?.helmRepo,
         } as FirehoseResource,
       ].concat(props.resources || [])}
     >

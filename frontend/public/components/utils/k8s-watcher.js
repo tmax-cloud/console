@@ -12,7 +12,7 @@ export const makeReduxID = (k8sKind = {}, query) => {
 };
 
 /** @type {(namespace: string, labelSelector?: any, fieldSelector?: any, name?: string, limit?: number) => {[key: string]: string}} */
-export const makeQuery = (namespace, labelSelector, fieldSelector, name, limit) => {
+export const makeQuery = (namespace, labelSelector, fieldSelector, name, limit, helmRepo) => {
   const query = {};
 
   if (!_.isEmpty(labelSelector)) {
@@ -34,5 +34,10 @@ export const makeQuery = (namespace, labelSelector, fieldSelector, name, limit) 
   if (limit) {
     query.limit = limit;
   }
+
+  if (helmRepo) {
+    query.helmRepo = helmRepo;
+  }
+
   return query;
 };
