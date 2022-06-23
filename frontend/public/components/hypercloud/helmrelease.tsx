@@ -8,7 +8,7 @@ import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
-import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown, detailsPage, navFactory } from '@console/internal/components/utils';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { history } from '@console/internal/components/utils/router';
 import { getIdToken } from '@console/internal/hypercloud/auth';
@@ -20,13 +20,14 @@ import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { Button, Badge } from '@patternfly/react-core';
 import { deleteModal } from '../modals';
 import { TableProps } from './utils/default-list-component';
-import { ListPage } from '../factory';
+import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
 import { HelmReleaseModel } from '@console/internal/models/hypercloud';
+import { kindObj } from '../utils';
 
 const kind = HelmReleaseModel.kind;
 const getHost = async () => {
@@ -161,86 +162,25 @@ const tableProps: TableProps = {
   },
 };
 
-export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
-  const namespace = match.params.ns;
-  const name = match.params.name;
-  const { t } = useTranslation();
-
-  const [loading, setLoading] = React.useState(false);
-  const [helmReleases, setHelmReleases] = React.useState([]);
-  const [isRefresh, setIsRefresh] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchHelmChart = async () => {
-      const host = await getHost();
-      await coFetchJSON(`${host}/helm/ns/${namespace}/releases/${name}`)
-        .then(res => {
-          setHelmReleases(_.get(res, 'release') || []);
-          if (!_.get(res, 'release')) {
-            history.push(`/helmreleases/ns/${namespace}`);
-          }
-          setLoading(true);
-        })
-        .catch(e => {
-          setIsRefresh(false);
-        });
-    };
-    fetchHelmChart();
-  }, [namespace, isRefresh]);
-  return (
-    <>
-      <Helmet>
-        <title>{t('COMMON:MSG_LNB_MENU_203')}</title>
-      </Helmet>
-
-      <div style={{ background: 'white', height: '100%' }}>
-        <HelmreleasestDetailsHeader namespace={namespace} name={name} helmrelease={loading ? helmReleases[0] : null} />
-        <NavBar pages={allPages} baseURL={`/helmreleases/ns/${namespace}/${name}`} basePath="" />
-        {loading ? <>{helmReleases.length === 0 ? <div style={{ textAlign: 'center' }}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: t('COMMON:MSG_LNB_MENU_203') })}</div> : <ReleasesDetailsTapPage helmRelease={helmReleases[0]} />}</> : <LoadingBox />}
-      </div>
-    </>
-  );
+const { details } = navFactory;
+export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
+  const helmReleaseKindObj: any = kindObj(kind);
+  return <DetailsPage {...props} kind={kind} pages={[details(detailsPage(HelmReleaseDetails))]} customData={{ helmRepo: props.match?.params?.repo }} name={props.match?.params?.name} kindObj={helmReleaseKindObj} />;
 };
-
-type ReleasesDetailsTapPageProps = {
-  helmRelease?: any;
-  match?: any;
-};
-export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = props => {
+const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release }) => {
   const { t } = useTranslation();
-  const { helmRelease } = props;
-
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} />
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(release, t) })} />
       <div className="row">
         <div className="col-lg-6">
-          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')}</dt>
-          <dd>{helmRelease.name}</dd>
-          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')}</dt>
-          <dd>
-            <ResourceLink kind="Namespace" name={helmRelease.namespace} />
-          </dd>
-          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')}</dt>
-          <dd>
-            <Timestamp timestamp={helmRelease.info.first_deployed} />
-          </dd>
+          <dl data-test-id="resource-summary" className="co-m-pane__details">
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')}</dt>
+            <dd>{release.name}</dd>
+          </dl>
         </div>
         <div className="col-lg-6">
-          <dl className="co-m-pane__details">
-            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
-            <dd>
-              <Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} />
-            </dd>
-            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
-            <dd>{helmRelease.chart.metadata.description}</dd>
-            <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
-            <dd>
-              <Link to={`/helmcharts/${helmRelease.chart.metadata.name}`}>{helmRelease.chart.metadata.name}</Link>
-            </dd>
-            <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_2')}</dt>
-            <dd>{helmRelease.version}</dd>
-          </dl>
+          <HelmReleaseDetailsList release={release} />
         </div>
       </div>
       <div className="row">
@@ -254,26 +194,51 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
               </tr>
             </thead>
             <tbody>
-              {Object.keys(helmRelease.objects)
-                .sort((a, b) => {
-                  return resourceSortFunction(a) - resourceSortFunction(b);
-                })
-                .map(k => {
-                  return (
-                    <tr key={'row-' + k}>
-                      <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
-                      <td style={{ padding: '5px' }}>
-                        <ResourceLink kind={k} name={helmRelease.objects[k] as string} namespace={helmRelease.namespace} />
-                      </td>
-                    </tr>
-                  );
-                })}
+              {release.objects &&
+                Object.keys(release.objects)
+                  .sort((a, b) => {
+                    return resourceSortFunction(a) - resourceSortFunction(b);
+                  })
+                  .map(k => {
+                    return (
+                      <tr key={'row-' + k}>
+                        <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
+                        <td style={{ padding: '5px' }}>
+                          <ResourceLink kind={k} name={release.objects[k] as string} namespace={release.namespace} />
+                        </td>
+                      </tr>
+                    );
+                  })}
             </tbody>
           </table>
         </div>
       </div>
     </div>
   );
+};
+type HelmReleaseDetailsProps = {
+  obj: any;
+};
+
+export const HelmReleaseDetailsList: React.FC<HelmReleaseDetailsListProps> = ({ release }) => {
+  const { t } = useTranslation();
+  return (
+    <dl className="co-m-pane__details">
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
+      <dd>
+        <Status status={capitalize(HelmReleaseStatusReducer(release))} />
+      </dd>
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
+      <dd>{release.chart?.metadata?.description}</dd>
+      <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
+      <dd>{release.chart?.metadata?.repo ? <Link to={`/helmcharts/${release.chart?.metadata?.repo}/${release.chart?.metadata?.name}`}>{release.chart?.metadata?.name}</Link> : release.chart?.metadata?.name}</dd>
+      <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_2')}</dt>
+      <dd>{release.version}</dd>
+    </dl>
+  );
+};
+type HelmReleaseDetailsListProps = {
+  release: any;
 };
 
 type HelmreleasestDetailsHeaderProps = {
@@ -600,11 +565,11 @@ export const HelmReleaseEditPage: React.FC<HelmReleasePageProps> = ({ match }) =
 export default HelmReleasePage;
 
 const allPages = [
-  {
-    name: 'COMMON:MSG_DETAILS_TAB_1',
-    href: '',
-    component: ReleasesDetailsTapPage,
-  },
+  // {
+  //   name: 'COMMON:MSG_DETAILS_TAB_1',
+  //   href: '',
+  //   component: ReleasesDetailsTapPage,
+  // },
   {
     name: 'COMMON:MSG_DETAILS_TAB_18',
     href: 'edit',

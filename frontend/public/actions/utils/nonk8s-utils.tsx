@@ -24,7 +24,7 @@ export const nonK8sObjectUrl = async (kind: string, query: any) => {
 export const nonK8sObjectResult = (kind: string, response: any) => {
   switch (kind) {
     case 'HelmRelease':
-      return response.release;
+      return response.release[0];
     case 'HelmChart':
       let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
       return entriesvalues[0][0];
