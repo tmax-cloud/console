@@ -52,29 +52,36 @@ const getClusterAPIPath = ({ apiGroup = 'core', apiVersion}, cluster) => {
   return p;
 };
 
-/** @type {(model: GroupVersionKind, options: {ns?: string, name?: string, path?: string, queryParams?: {[k: string]: string}, cluster?: string, basePath?: string}) => string} */
+/** @type {(model: GroupVersionKind, options: {ns?: string, name?: string, path?: string, queryParams?: {[k: string]: string}, cluster?: string, basePath?: string, customPath?: string}) => string} */
 export const resourceURL = (model, options) => {
+  let u;
   let q = '';
-  let u = getK8sAPIPath(model, options.cluster, options.basePath);
 
-  if (options.ns) {
-    u += `/namespaces/${options.ns}`;
+  if (options.customPath) {
+    u = options.customPath;
+  } else {
+    u = getK8sAPIPath(model, options.cluster, options.basePath);
+
+    if (options.ns) {
+      u += `/namespaces/${options.ns}`;
+    }
+    u += `/${model.plural}`;
+    if (options.name) {
+      // Some resources like Users can have special characters in the name.
+      u += `/${encodeURIComponent(options.name)}`;
+    }
+    if (options.path) {
+      u += `/${options.path}`;
+    }
   }
-  u += `/${model.plural}`;
-  if (options.name) {
-    // Some resources like Users can have special characters in the name.
-    u += `/${encodeURIComponent(options.name)}`;
-  }
-  if (options.path) {
-    u += `/${options.path}`;
-  }
+
   if (!_.isEmpty(options.queryParams)) {
     q = _.map(options.queryParams, function(v, k) {
       return `${k}=${v}`;
     });
-    u += `?${q.join('&')}`;
+    u += `${u.indexOf('?') === -1 ? '?' : '&'}${q.join('&')}`;
   }
-
+  
   return u;
 };
 
@@ -133,16 +140,16 @@ const isNamespaceClaim = (model) => {
   return model.kind === 'NamespaceClaim';
 }
 
-const resourceNamespaceURL = (model) => {
+const resourceNamespaceURL = (model, isWS) => {
   if (isSingleClusterPerspective()) {
     // MEMO : 싱글클러스터의 경우 네임스페이스 조회콜은 kubernetes 콜로 보냄
     const plural = isNamespace(model) ? 'namespaces' : 'namespaceclaims';
     return `${getSingleClusterFullBasePath()}/api/kubernetes/api/v1/${plural}`;
   } else {
     const path = isNamespace(model) ? 'namespace' : 'namespaceClaim';
-    return `${document.location.origin}/api/hypercloud/${path}?userId=${getId()}${getUserGroup()}`;
+    return `${isWS ? '' : document.location.origin}/api/hypercloud/${isWS ? 'websocket/' : ''}${path}?userId=${getId()}${getUserGroup()}`;
   }
-}
+};
 
 export const watchURL = (kind, options) => {
   const opts = options || {};
@@ -307,6 +314,11 @@ export const k8sWatch = (kind, query = {}, wsOptions = {}) => {
 
   if (query.resourceVersion) {
     queryParams.resourceVersion = encodeURIComponent(query.resourceVersion);
+  }
+
+  // Namespace 한정하여 hypercloud-api-server 웹소켓 사용하도록 변경
+  if (isNamespace(kind)) {
+    opts.customPath = resourceNamespaceURL(kind, true);
   }
 
   const path = resourceURL(kind, opts);
