@@ -87,6 +87,10 @@ export interface Config {
   closeOnEscape?: boolean;
   botName?: string;
   composerPlaceholder?: string;
+  /** 봇 아바타 활성화 유무. true 시 아바타가 비활성화 처리됨
+   * Defaults to 'true'  
+   */ 
+  hideBotAvatar?: boolean
   avatarUrl?: string;
   /** Force the display language of the webchat (en, fr, ar, ru, etc..)
    * Defaults to the user's browser language if not set
