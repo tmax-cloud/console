@@ -202,6 +202,14 @@ const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release })
           <dl data-test-id="resource-summary" className="co-m-pane__details">
             <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')}</dt>
             <dd>{release.name}</dd>
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')}</dt>
+            <dd>
+              <ResourceLink kind="Namespace" name={release.namespace} />
+            </dd>
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')}</dt>
+            <dd>
+              <Timestamp timestamp={release.info?.first_deployed} />
+            </dd>
           </dl>
         </div>
         <div className="col-lg-6">
