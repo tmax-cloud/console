@@ -208,7 +208,6 @@ export const Firehose = connect(
               resource.fieldSelector,
               resource.name,
               resource.limit,
-              resource.helmRepo,
             );
             // console.log('firehose중간');
             // console.log(location.href);
@@ -218,7 +217,7 @@ export const Firehose = connect(
 
             const name = resource.name;
             const k8sKind = resource.nonK8SResource ? resource.kindObj : k8sModels.get(resource.kind);
-            const id = resource.nonK8SResource ? resource.kind : makeReduxID(k8sKind, query);
+            const id = resource.nonK8SResource ? (resource.helmRepo ? resource.kind + resource.helmRepo : resource.kind) : makeReduxID(k8sKind, query);
             const nonK8SResource = resource.nonK8SResource;
             // return _.extend({}, resource, { query, id, k8sKind, listName: splitUrl[splitUrl.length - 2] });
             return _.extend({}, resource, { query, id, k8sKind, nonK8SResource });

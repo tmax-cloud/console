@@ -6,15 +6,22 @@ const getHelmHost = async () => {
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
 
+export const getKind = (id: string) => {
+  return id.substring(0, 9) === 'HelmChart' ? id.substring(0, 9) : id;
+}
+export const gethelmRepo = (id: string) => {
+  return id.substring(0, 9) === 'HelmChart' ? id.substring(9) : '';
+}
+
 //get object api url 반환
-export const nonK8sObjectUrl = async (kind: string, query: any) => {
+export const nonK8sObjectUrl = async (urlProps: any) => {
   const helmHost = await getHelmHost();
   
-  switch (kind) {
+  switch (urlProps.kind) {
     case 'HelmRelease':
-      return `${helmHost}/helm/ns/${query.ns}/releases/${query.name}`;
+      return `${helmHost}/helm/ns/${urlProps.namespace}/releases/${urlProps.name}`;
     case 'HelmChart':
-      return `${helmHost}/helm/charts/${query.helmRepo}_${query.name}`;
+      return `${helmHost}/helm/charts/${urlProps.helmRepo}_${urlProps.name}`;
     default:
       return '';
   }
