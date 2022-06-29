@@ -56,7 +56,7 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.helm,
-    innerMenus: [Models.HelmChartModel.kind, Models.HelmReleaseModel.kind],
+    innerMenus: [CustomMenusMap.HelmChart.kind, CustomMenusMap.HelmRelease.kind],
   },
   {
     menuType: MenuType.CONTAINER,

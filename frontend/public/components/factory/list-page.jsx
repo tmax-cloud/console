@@ -265,15 +265,15 @@ FireMan_.propTypes = {
   displayTitleRow: PropTypes.bool,
 };
 
-/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, displayTitleRow?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[]} >} */
+/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, displayTitleRow?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[], isK8sResource?: boolean} >} */
 export const ListPage = withFallback(props => {
-  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, displayTitleRow, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows, tableProps, items } = props;
+  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, displayTitleRow, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows, tableProps, items, isK8sResource = true } = props;
   let { createProps } = props;
   const { t } = useTranslation();
-  const ko = kindObj(kind);
-  const { namespaced, plural, nonK8SResource } = ko;  
-  const label = ResourceLabel(ko, t);
-  const labelPlural = ResourceLabelPlural(ko, t);
+  const ko = isK8sResource ? kindObj(kind) : customData.ko;
+  const { namespaced, plural, nonK8SResource } = ko;
+  const label = isK8sResource ? ResourceLabel(ko, t) : t(ko.i18nInfo?.label);
+  const labelPlural = isK8sResource ? ResourceLabelPlural(ko, t) : t(ko.i18nInfo?.labelPlural);
   const title = props.title || labelPlural;
   const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
 
@@ -320,6 +320,7 @@ export const ListPage = withFallback(props => {
       name: name || nameFilter,
       namespaced,
       selector,
+      kindObj: ko,
       nonK8SResource,
     },
   ];
@@ -387,7 +388,7 @@ export const MultiListPage = props => {
     prop: r.prop || r.kind,
   }));
 
-  const listPageWrapper = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} />
+  const listPageWrapper = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} />;
 
   return (
     <FireMan_

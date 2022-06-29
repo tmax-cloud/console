@@ -1,4 +1,4 @@
-import { K8sKind, NonK8sKind } from '../../module/k8s';
+import { K8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 import startsWith from '@console/internal/hypercloud/menu/starts-with';
 
@@ -1491,51 +1491,6 @@ export const TFApplyClaimModel: K8sKind = {
   },
 };
 
-export const HelmChartModel: NonK8sKind = {
-  kind: 'HelmChart',
-  label: 'Helm Chart',
-  labelPlural: 'Helm Charts',
-  apiGroup: '',
-  apiVersion: '',
-  abbr: 'HC',
-  namespaced: false,
-  id: 'helmchart',
-  plural: 'helmcharts',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmcharts',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_224',
-    labelPlural: 'COMMON:MSG_LNB_MENU_223',
-  },
-  nonK8SResource: true,
-};
-
-export const HelmReleaseModel: NonK8sKind = {
-  kind: 'HelmRelease',
-  label: 'Helm Release',
-  labelPlural: 'Helm Releases',
-  apiGroup: '',
-  apiVersion: '',
-  abbr: 'HR',
-  namespaced: true,
-  id: 'helmrelease',
-  plural: 'helmreleases',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmreleases',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_204',
-    labelPlural: 'COMMON:MSG_LNB_MENU_203',
-  },
-  nonK8SResource: true,
-};
 
 export const AWXModel: K8sKind = {
   kind: 'AWX',

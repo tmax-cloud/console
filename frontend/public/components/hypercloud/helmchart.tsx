@@ -14,9 +14,28 @@ import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
-import { HelmChartModel } from '@console/internal/models/hypercloud';
-import { ResourceLabel } from '../../models/hypercloud/resource-plural';
-import { kindObj } from '../utils';
+import { NonK8sKind } from '../../module/k8s';
+import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
+
+export const HelmChartModel: NonK8sKind = {
+  kind: 'HelmChart',
+  label: 'Helm Chart',
+  labelPlural: 'Helm Charts',
+  abbr: 'HC',
+  namespaced: false,
+  plural: 'helmcharts',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.HrefLink,
+    isMultiOnly: false,
+    href: '/helmcharts',
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_224',
+    labelPlural: 'COMMON:MSG_LNB_MENU_223',
+  },
+  nonK8SResource: true,
+};
 
 const kind = HelmChartModel.kind;
 
@@ -30,7 +49,7 @@ type HelmchartPagetProps = {
 };
 export const HelmchartPage: React.FC<HelmchartPagetProps> = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} />;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, ko: HelmChartModel }} isK8sResource={false} />;
 };
 
 const tableProps: TableProps = {
@@ -189,14 +208,29 @@ export const HelmchartCreatePage = () => {
 
 const { details } = navFactory;
 export const HelmchartDetailsPage: React.FC<DetailsPageProps> = props => {
-  const helmChartKindObj: any = kindObj(kind);
-  return <DetailsPage {...props} kind={kind} pages={[details(detailsPage(HelmChartDetails))]} customData={{ helmRepo: props.match?.params?.repo }} name={props.match?.params?.name} kindObj={helmChartKindObj} />;
+  const { t } = useTranslation();
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      pages={[details(detailsPage(HelmChartDetails))]}
+      customData={{ helmRepo: props.match?.params?.repo, nonK8sResource: true, ko: HelmChartModel }}
+      name={props.match?.params?.name}
+      isK8sResource={false}
+      breadcrumbsFor={() => {
+        return [
+          { name: t(HelmChartModel.i18nInfo.labelPlural), path: '/helmcharts' },
+          { name: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmChartModel.i18nInfo.label) }), path: '' },
+        ];
+      }}
+    />
+  );
 };
 const HelmChartDetails: React.FC<HelmChartDetailsProps> = ({ obj: entry }) => {
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(entry, t) })} />
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmChartModel.i18nInfo.label) })} />
       <div className="row">
         <div className="col-lg-6">
           <dl data-test-id="resource-summary" className="co-m-pane__details">

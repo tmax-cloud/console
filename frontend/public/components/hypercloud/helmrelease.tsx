@@ -26,8 +26,29 @@ import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
-import { HelmReleaseModel } from '@console/internal/models/hypercloud';
-import { kindObj } from '../utils';
+// import { HelmReleaseModel } from '@console/internal/models/hypercloud';
+import { NonK8sKind } from '../../module/k8s';
+import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
+
+export const HelmReleaseModel: NonK8sKind = {
+  kind: 'HelmRelease',
+  label: 'Helm Release',
+  labelPlural: 'Helm Releases',
+  abbr: 'HR',
+  namespaced: true,
+  plural: 'helmreleases',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.HrefLink,
+    isMultiOnly: false,
+    href: '/helmreleases',
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_204',
+    labelPlural: 'COMMON:MSG_LNB_MENU_203',
+  },
+  nonK8SResource: true,
+};
 
 const kind = HelmReleaseModel.kind;
 const getHost = async () => {
@@ -62,7 +83,7 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = props => {
   const { t } = useTranslation();
   const { match } = props;
   const namespace = match.params.ns;
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} hideLabelFilter={true} />;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, ko: HelmReleaseModel }} isK8sResource={false} />;
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {
@@ -164,7 +185,7 @@ const tableProps: TableProps = {
 
 const { details, editResource } = navFactory;
 export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
-  const helmReleaseKindObj: any = kindObj(kind);
+  const { t } = useTranslation();
   const name = props.match?.params?.name;
   const menuActions: KebabAction[] = [
     () => ({
@@ -190,13 +211,30 @@ export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
   const capitalizeHelmReleaseStatusReducer = release => {
     return capitalize(HelmReleaseStatusReducer(release));
   };
-  return <DetailsPage {...props} kind={kind} pages={[details(detailsPage(HelmReleaseDetails)), editResource()]} name={props.match?.params?.name} kindObj={helmReleaseKindObj} menuActions={menuActions} getResourceStatus={capitalizeHelmReleaseStatusReducer} />;
+  return (
+    <DetailsPage
+      {...props}
+      kind={kind}
+      pages={[details(detailsPage(HelmReleaseDetails)), editResource()]}
+      name={props.match?.params?.name}
+      menuActions={menuActions}
+      getResourceStatus={capitalizeHelmReleaseStatusReducer}
+      customData={{ nonK8sResource: true, ko: HelmReleaseModel }}
+      isK8sResource={false}
+      breadcrumbsFor={() => {
+        return [
+          { name: t(HelmReleaseModel.i18nInfo.labelPlural), path: props.namespace ? `/helmreleases/ns/${props.namespace}` : '/helmreleases/all-namespaces' },
+          { name: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmReleaseModel.i18nInfo.label) }), path: '' },
+        ];
+      }}
+    />
+  );
 };
 const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release }) => {
   const { t } = useTranslation();
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(release, t) })} />
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmReleaseModel.i18nInfo.label) })} />
       <div className="row">
         <div className="col-lg-6">
           <dl data-test-id="resource-summary" className="co-m-pane__details">
