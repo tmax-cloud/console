@@ -26,7 +26,6 @@ import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
-// import { HelmReleaseModel } from '@console/internal/models/hypercloud';
 import { NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 
