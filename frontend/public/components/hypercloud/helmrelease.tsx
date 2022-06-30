@@ -82,7 +82,7 @@ export const HelmReleasePage: React.FC<HelmReleasePageProps> = props => {
   const { t } = useTranslation();
   const { match } = props;
   const namespace = match.params.ns;
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, ko: HelmReleaseModel }} isK8sResource={false} />;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmReleaseModel }} isK8sResource={false} />;
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {
@@ -218,7 +218,7 @@ export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
       name={props.match?.params?.name}
       menuActions={menuActions}
       getResourceStatus={capitalizeHelmReleaseStatusReducer}
-      customData={{ nonK8sResource: true, ko: HelmReleaseModel }}
+      customData={{ nonK8sResource: true, kindObj: HelmReleaseModel }}
       isK8sResource={false}
       breadcrumbsFor={() => {
         return [

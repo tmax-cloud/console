@@ -49,7 +49,7 @@ type HelmchartPagetProps = {
 };
 export const HelmchartPage: React.FC<HelmchartPagetProps> = props => {
   const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, ko: HelmChartModel }} isK8sResource={false} />;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel }} isK8sResource={false} />;
 };
 
 const tableProps: TableProps = {
@@ -214,7 +214,7 @@ export const HelmchartDetailsPage: React.FC<DetailsPageProps> = props => {
       {...props}
       kind={kind}
       pages={[details(detailsPage(HelmChartDetails))]}
-      customData={{ helmRepo: props.match?.params?.repo, nonK8sResource: true, ko: HelmChartModel }}
+      customData={{ helmRepo: props.match?.params?.repo, nonK8sResource: true, kindObj: HelmChartModel }}
       name={props.match?.params?.name}
       isK8sResource={false}
       breadcrumbsFor={() => {

@@ -39,7 +39,7 @@ export const DetailsPage = withFallback<DetailsPageProps>(({ pages = [], ...prop
       resources={[
         {
           kind: props.kind,
-          kindObj: props.isK8sResource ? props.kindObj : props.customData?.ko,
+          kindObj: props.isK8sResource ? props.kindObj : props.customData?.kindObj,
           name: props.name,
           namespace: props.namespace,
           isList: false,

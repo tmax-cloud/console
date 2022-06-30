@@ -270,7 +270,7 @@ export const ListPage = withFallback(props => {
   const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, displayTitleRow, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows, tableProps, items, isK8sResource = true } = props;
   let { createProps } = props;
   const { t } = useTranslation();
-  const ko = isK8sResource ? kindObj(kind) : customData.ko;
+  const ko = isK8sResource ? kindObj(kind) : customData.kindObj;
   const { namespaced, plural, nonK8SResource } = ko;
   const label = isK8sResource ? ResourceLabel(ko, t) : t(ko.i18nInfo?.label);
   const labelPlural = isK8sResource ? ResourceLabelPlural(ko, t) : t(ko.i18nInfo?.labelPlural);
