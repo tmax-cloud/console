@@ -1,3 +1,4 @@
+// 헬름 릴리즈 crd 를 보여주는 화면에 관련된 파일입니다. 개발자 - 헬름 -헬름 릴리즈 메뉴 통해서 보이는 화면은 helmrelease.tsx 참고 바랍니다.
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';

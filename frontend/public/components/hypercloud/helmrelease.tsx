@@ -1,3 +1,4 @@
+// 개발자 - 헬름 - 헬름 릴리스 에서 보여주는 화면 내용이 담긴 파일입니다.
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as fuzzy from 'fuzzysearch';
