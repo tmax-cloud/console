@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Map as ImmutableMap } from 'immutable';
 
 import { inject } from './inject';
-import { makeReduxID, makeQuery } from './k8s-watcher';
+import { makeReduxID, makeQuery, makeReduxIDforNonK8sResource } from './k8s-watcher';
 import * as k8sActions from '../../actions/k8s';
 import { kindObj } from '.';
 
@@ -217,7 +217,7 @@ export const Firehose = connect(
 
             const name = resource.name;
             const k8sKind = resource.nonK8SResource ? resource.kindObj : k8sModels.get(resource.kind);
-            const id = resource.nonK8SResource ? (resource.helmRepo ? resource.kind + resource.helmRepo : resource.kind) : makeReduxID(k8sKind, query);
+            const id = resource.nonK8SResource ? makeReduxIDforNonK8sResource(resource.kind, resource.helmRepo) : makeReduxID(k8sKind, query);
             const nonK8SResource = resource.nonK8SResource;
             // return _.extend({}, resource, { query, id, k8sKind, listName: splitUrl[splitUrl.length - 2] });
             return _.extend({}, resource, { query, id, k8sKind, nonK8SResource });
