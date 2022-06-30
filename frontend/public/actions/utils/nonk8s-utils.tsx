@@ -9,19 +9,21 @@ const getHelmHost = async () => {
 export const getKind = (id: string) => {
   return id.substring(0, 9) === 'HelmChart' ? id.substring(0, 9) : id;
 }
-export const gethelmRepo = (id: string) => {
+const getHelmRepo = (id: string) => {
   return id.substring(0, 9) === 'HelmChart' ? id.substring(9) : '';
 }
 
 //get object api url 반환
-export const nonK8sObjectUrl = async (urlProps: any) => {
+export const nonK8sObjectUrl = async (id: string, namespace: string, name: string) => {
   const helmHost = await getHelmHost();
+  const kind = getKind(id);
+  const helmRepo = getHelmRepo(id);
   
-  switch (urlProps.kind) {
+  switch (kind) {
     case 'HelmRelease':
-      return `${helmHost}/helm/ns/${urlProps.namespace}/releases/${urlProps.name}`;
+      return `${helmHost}/helm/ns/${namespace}/releases/${name}`;
     case 'HelmChart':
-      return `${helmHost}/helm/charts/${urlProps.helmRepo}_${urlProps.name}`;
+      return `${helmHost}/helm/charts/${helmRepo}_${name}`;
     default:
       return '';
   }

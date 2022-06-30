@@ -8,7 +8,7 @@ import { makeReduxID } from '../components/utils/k8s-watcher';
 import { APIServiceModel } from '../models';
 import { coFetchJSON } from '../co-fetch';
 import { referenceForModel, K8sResourceKind, K8sKind } from '../module/k8s';
-import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult, getKind, gethelmRepo } from './utils/nonk8s-utils'
+import { nonK8sObjectUrl, nonK8sObjectResult, nonK8sListUrl, nonK8sListResult, getKind } from './utils/nonk8s-utils'
 
 export enum ActionType {
   ReceivedResources = 'resources',
@@ -70,18 +70,12 @@ export const watchK8sObject = (id: string, name: string, namespace: string, quer
   }
   dispatch(startWatchK8sObject(id));
   REF_COUNTS[id] = 1;
-  const urlProps = {
-    kind: getKind(id),
-    name: query.name,
-    namespace: query.ns,
-    helmRepo: gethelmRepo(id),
-  }
   if (!nonK8SResource && query.name) {
     query.fieldSelector = `metadata.name=${query.name}`;
     delete query.name;
   }
   const poller = async () => {
-    const url = nonK8SResource ? await nonK8sObjectUrl(urlProps) : '';
+    const url = nonK8SResource ? await nonK8sObjectUrl(id, query.ns, query.name) : '';
     nonK8SResource 
       ? coFetchJSON(url).then(
         o => dispatch(modifyObject(id, nonK8sObjectResult(getKind(id), o))),
