@@ -1,3 +1,4 @@
+// 헬름 릴리즈 crd 를 보여주는 화면에 관련된 파일입니다. 개발자 - 헬름 -헬름 릴리즈 메뉴 통해서 보이는 화면은 helmrelease.tsx 참고 바랍니다.
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as classNames from 'classnames';
@@ -9,9 +10,32 @@ import { Status } from '@console/shared';
 import { K8sResourceKind } from '../../module/k8s';
 import { DetailsPage, ListPage, Table, TableRow, TableData, RowFunction } from '../factory';
 import { DetailsItem, Kebab, KebabAction, detailsPage, Timestamp, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading } from '../utils';
-import { HelmReleaseModel } from '../../models';
+// import { HelmReleaseModel } from '../../models';
 import { ResourceLabel } from '../../models/hypercloud/resource-plural';
 import { Popover } from '@patternfly/react-core';
+import { K8sKind } from '../../module/k8s';
+import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
+
+export const HelmReleaseModel: K8sKind = {
+  kind: 'HelmRelease',
+  label: 'Helm Release',
+  labelPlural: 'Helm Release',
+  apiGroup: 'helm.fluxcd.io',
+  apiVersion: 'v1',
+  abbr: 'HR',
+  namespaced: true,
+  id: 'helmrelease',
+  plural: 'helmreleases',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.ResourceNSLink,
+    isMultiOnly: false,
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_204',
+    labelPlural: 'COMMON:MSG_LNB_MENU_203',
+  },
+};
 
 export const menuActions: KebabAction[] = [...Kebab.getExtensionsActionsForKind(HelmReleaseModel), ...Kebab.factory.common];
 

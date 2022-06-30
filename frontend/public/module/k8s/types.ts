@@ -875,6 +875,7 @@ export type K8sKind = {
   legacyPluralURL?: boolean;
 } & HyperCloudExtension;
 
+
 export type Cause = {
   field: string;
   message: string;

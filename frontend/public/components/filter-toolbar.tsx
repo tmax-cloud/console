@@ -60,7 +60,7 @@ const getDropdownItems = (rowFilters: RowFilter[], selectedItems, data, props) =
   });
 
 const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props => {
-  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], storeSelectedRows = new Set(), defaultSelectedRows = [], setCheckedRowFilter, setNameFilterText, isK8SResource = true } = props;
+  const { rowFilters = [], data, hideToolbar, hideLabelFilter, location, textFilter = filterTypeMap[FilterType.NAME], storeSelectedRows = new Set(), defaultSelectedRows = [] } = props;
 
   const [inputText, setInputText] = React.useState('');
   const [filterType, setFilterType] = React.useState(FilterType.NAME);
@@ -113,7 +113,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
   const applyFilter = (input: string | string[], type: FilterType) => {
     const filter = filterTypeMap[type];
     const value = type === FilterType.LABEL ? { all: input } : input;
-    isK8SResource && props.reduxIDs.forEach(id => props.filterList(id, filter, value));
+    props.reduxIDs.forEach(id => props.filterList(id, filter, value));
   };
 
   const updateLabelFilter = (filterValues: string[]) => {
@@ -133,7 +133,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
       removeQueryArgument(textFilter);
     }
     setInputText(filterValue);
-    isK8SResource ? applyFilter(filterValue, FilterType.NAME) : setNameFilterText(filterValue); ;
+    applyFilter(filterValue, FilterType.NAME);
   };
 
   const updateExternalNameFilter = (filterValue: string) => {
@@ -169,7 +169,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
       const rowItems = filter.itemsGenerator ? filter.itemsGenerator(props, props?.kinds) : filter.items;
       const all = _.map(rowItems, 'id');
       const recognized = _.intersection(selected, all);
-      isK8SResource && (props.reduxIDs || []).forEach(id => props.filterList(id, filter.type, { selected: new Set(recognized), all }));
+      (props.reduxIDs || []).forEach(id => props.filterList(id, filter.type, { selected: new Set(recognized), all }));
     });
   };
 
@@ -188,7 +188,7 @@ const FilterToolbar_: React.FC<FilterToolbarProps & RouteComponentProps> = props
 
   const updateRowFilterSelected = (id: string[]) => {
     const selectedNew = _.xor(selectedRowFilters, id);
-    isK8SResource ? applyRowFilter(selectedNew) : setCheckedRowFilter(selectedNew.join());
+    applyRowFilter(selectedNew);
     setQueryParameters(selectedNew);
     setOpen(false);
   };
@@ -351,9 +351,6 @@ type FilterToolbarProps = {
   kinds?: any;
   storeSelectedRows?: any;
   defaultSelectedRows?: string[];
-  setCheckedRowFilter?: Function;
-  setNameFilterText?: Function;
-  isK8SResource?: boolean;
 };
 
 export type RowFilter = {

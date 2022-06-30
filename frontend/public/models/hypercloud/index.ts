@@ -1491,26 +1491,6 @@ export const TFApplyClaimModel: K8sKind = {
   },
 };
 
-export const HelmReleaseModel: K8sKind = {
-  kind: 'HelmRelease',
-  label: 'Helm Release',
-  labelPlural: 'Helm Release',
-  apiGroup: 'helm.fluxcd.io',
-  apiVersion: 'v1',
-  abbr: 'HR',
-  namespaced: true,
-  id: 'helmrelease',
-  plural: 'helmreleases',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.ResourceNSLink,
-    isMultiOnly: false,
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_204',
-    labelPlural: 'COMMON:MSG_LNB_MENU_203',
-  },
-};
 
 export const AWXModel: K8sKind = {
   kind: 'AWX',

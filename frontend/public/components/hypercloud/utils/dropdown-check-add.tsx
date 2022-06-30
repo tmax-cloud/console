@@ -87,7 +87,7 @@ const ResourceItem = (isResourceItem, shrinkOnSelectAll, selectAllChipObj, showS
                 if (isChecked !== true) {
                   data.checked = true;
                   data.added = true;
-                  //update checked = ture;
+                  //update checked = true;
                   wihtoutItem.push(data);
                   setValue(wihtoutItem);
                   if (data.label === 'All' && data.value === '*') {

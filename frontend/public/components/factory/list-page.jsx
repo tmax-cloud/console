@@ -39,71 +39,21 @@ export const TextFilter = props => {
 TextFilter.displayName = 'TextFilter';
 
 // TODO (jon) make this into "withListPageFilters" HOC
-/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kinds: string[], filters?:any, flatten?: function, data?: any[], rowFilters?: any[], hideToolbar?: boolean, hideLabelFilter?: boolean, tableProps?: any, items?: any[], isK8SResource?: boolean }>} */
+/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kinds: string[], filters?:any, flatten?: function, data?: any[], rowFilters?: any[], hideToolbar?: boolean, hideLabelFilter?: boolean, tableProps?: any, items?: any[] }>} */
 export const ListPageWrapper_ = props => {
-  const { flatten, ListComponent, reduxIDs, rowFilters, textFilter, hideToolbar, hideLabelFilter, tableProps, items, isK8SResource = true } = props;
+  const { flatten, ListComponent, reduxIDs, rowFilters, textFilter, hideToolbar, hideLabelFilter, tableProps, items } = props;
   const data = flatten ? flatten(props.resources) : [];
   // const Filter = <FilterToolbar rowFilters={rowFilters} data={data} reduxIDs={reduxIDs} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedItems={['Awaiting']} {...this.props} />;
-  if (isK8SResource) {
-    const Filter = <FilterToolbar rowFilters={rowFilters} data={data} reduxIDs={reduxIDs} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} {...props} />;
-    const List = tableProps ? <DefaultListComponent {...props} data={data} /> : <ListComponent {...props} data={data} />;
-    return (
-      <div>
-        {!_.isEmpty(data) && Filter}
-        <div className="row">
-          <div className="col-xs-12">{List}</div>
-        </div>
+  const Filter = <FilterToolbar rowFilters={rowFilters} data={data} reduxIDs={reduxIDs} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} {...props} />;
+  const List = tableProps ? <DefaultListComponent {...props} data={data} /> : <ListComponent {...props} data={data} />;
+  return (
+    <div>
+      {!_.isEmpty(data) && Filter}
+      <div className="row">
+        <div className="col-xs-12">{List}</div>
       </div>
-    );
-  } else {
-    const originalData = items ? items : [];
-    const [checkedRowFilter, setCheckedRowFilter] = React.useState(getQueryArgument(rowFilters ? `rowFilter-${rowFilters[0].type}` : ''));
-    const [nameFilterText, setNameFilterText] = React.useState(getQueryArgument('name'));
-    const [filteredData, setFilteredData] = React.useState(originalData);
-
-    React.useEffect(() => {
-      setFilteredData(
-        originalData.filter(d => {
-          if (nameFilterFunction(d, nameFilterText) && rowFilterFunction(d, checkedRowFilter)) {
-            return true;
-          }
-        }),
-      );
-    }, [originalData, checkedRowFilter, nameFilterText]);
-    const nameFilterFunction = (data, name) => {
-      if (!name || name === '') {
-        return true;
-      } else {
-        if (fuzzy(_.toLower(name), _.toLower(data.name))) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    };
-    const rowFilterFunction = (data, rowFilter) => {
-      const filterList = rowFilter?.split(',');
-      if (!filterList || filterList?.length === 0 || filterList[0] === '') {
-        return true;
-      } else {
-        if (filterList.indexOf(rowFilters[0].reducer(data)) > -1) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    };
-    const Filter = <FilterToolbar {...props} rowFilters={rowFilters} setCheckedRowFilter={setCheckedRowFilter} setNameFilterText={setNameFilterText} textFilter={textFilter} hideToolbar={hideToolbar} hideLabelFilter={true} />;
-    const List = tableProps ? <DefaultListComponent {...props} data={filteredData} loaded={true} /> : <ListComponent {...props} data={filteredData} loaded={true} />;
-    return (
-      <div>
-        {!_.isEmpty(originalData) && Filter}
-        <div className="row">
-          <div className="col-xs-12">{List}</div>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 };
 
 ListPageWrapper_.displayName = 'ListPageWrapper_';
@@ -122,7 +72,7 @@ ListPageWrapper_.propTypes = {
   tableProps: PropTypes.any,
 };
 
-/** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode, unclickableMsg?: String, multiNavBaseURL?: String, isK8SResource?: boolean}>*/
+/** @type {React.FC<<WrappedComponent>, {canCreate?: Boolean, textFilter:string, createAccessReview?: Object, createButtonText?: String, createProps?: Object, fieldSelector?: String, filterLabel?: String, resources: any, badge?: React.ReactNode, unclickableMsg?: String, multiNavBaseURL?: String}> }*/
 export const FireMan_ = connect(null, { filterList })(
   class ConnectedFireMan extends React.PureComponent {
     constructor(props) {
@@ -315,15 +265,15 @@ FireMan_.propTypes = {
   displayTitleRow: PropTypes.bool,
 };
 
-/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, displayTitleRow?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[], isK8SResource?: boolean} >} */
+/** @type {React.SFC<{ListComponent?: React.ComponentType<any>, kind: string, helpText?: any, namespace?: string, filterLabel?: string, textFilter?: string, title?: string, showTitle?: boolean, displayTitleRow?: boolean, rowFilters?: any[], selector?: any, fieldSelector?: string, canCreate?: boolean, createButtonText?: string, createProps?: any, mock?: boolean, badge?: React.ReactNode, createHandler?: any, hideToolbar?: boolean, hideLabelFilter?: boolean, customData?: any, setSidebarDetails?:any, setShowSidebar?:any, setSidebarTitle?: any, multiNavPages?: any, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[], isK8sResource?: boolean} >} */
 export const ListPage = withFallback(props => {
-  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, displayTitleRow, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows, tableProps, items, isK8SResource = true } = props;
+  const { autoFocus, canCreate, createButtonText, createHandler, customData, fieldSelector, filterLabel, filters, helpText, kind, limit, ListComponent, mock, name, nameFilter, namespace, selector, showTitle = true, displayTitleRow, skipAccessReview, textFilter, match, badge, hideToolbar, hideLabelFilter, setSidebarDetails, setShowSidebar, setSidebarTitle, multiNavPages, isClusterScope, defaultSelectedRows, tableProps, items, isK8sResource = true } = props;
   let { createProps } = props;
   const { t } = useTranslation();
-  const ko = kindObj(kind);
-  const { namespaced, plural } = ko;
-  const label = isK8SResource ? ResourceLabel(ko, t) : props.title;
-  const labelPlural = isK8SResource ? ResourceLabelPlural(ko, t) : props.title;
+  const ko = isK8sResource ? kindObj(kind) : customData.kindObj;
+  const { namespaced, plural, nonK8SResource } = ko;
+  const label = isK8sResource ? ResourceLabel(ko, t) : t(ko.i18nInfo?.label);
+  const labelPlural = isK8sResource ? ResourceLabelPlural(ko, t) : t(ko.i18nInfo?.labelPlural);
   const title = props.title || labelPlural;
   const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
 
@@ -370,13 +320,15 @@ export const ListPage = withFallback(props => {
       name: name || nameFilter,
       namespaced,
       selector,
+      kindObj: ko,
+      nonK8SResource,
     },
   ];
 
   // Don't show row filters if props.filters were passed. The content is already filtered and the row filters will have incorrect counts.
   const rowFilters = _.isEmpty(filters) ? props.rowFilters : undefined;
 
-  if (isK8SResource && !namespaced && usedNamespace) {
+  if (!namespaced && usedNamespace) {
     return <ErrorPage404 />;
   }
 
@@ -414,20 +366,19 @@ export const ListPage = withFallback(props => {
       defaultSelectedRows={defaultSelectedRows}
       tableProps={tableProps}
       items={items}
-      isK8SResource={isK8SResource}
     />
   );
 }, ErrorBoundaryFallback);
 
 ListPage.displayName = 'ListPage';
 
-/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, displayTitleRow?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent?: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[], isK8SResource?: boolean } >} */
+/** @type {React.SFC<{canCreate?: boolean, createButtonText?: string, createProps?: any, createAccessReview?: Object, flatten?: Function, title?: string, label?: string, hideTextFilter?: boolean, showTitle?: boolean, displayTitleRow?: boolean, helpText?: any, filterLabel?: string, textFilter?: string, rowFilters?: any[], resources: any[], ListComponent?: React.ComponentType<any>, namespace?: string, customData?: any, badge?: React.ReactNode, hideToolbar?: boolean, hideLabelFilter?: boolean setSidebarDetails?:any setShowSidebar?:any setSidebarTitle?: any, multiNavPages?: any, multiNavBaseURL?: string, isClusterScope?: boolean, defaultSelectedRows?: string[], tableProps?: any, items?: any[] } >} */
 export const MultiListPage = props => {
-  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, displayTitleRow = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows, tableProps, items, isK8SResource = true } = props;
+  const { autoFocus, canCreate, createAccessReview, createButtonText, createProps, filterLabel, flatten, helpText, label, ListComponent, setSidebarDetails, setShowSidebar, setSidebarTitle, mock, namespace, rowFilters, showTitle = true, displayTitleRow = true, staticFilters, textFilter, title, customData, badge, hideToolbar, hideLabelFilter, multiNavPages, multiNavBaseURL, isClusterScope, defaultSelectedRows, tableProps, items } = props;
 
   const { t } = useTranslation();
 
-  const isNSSelected = isK8SResource ? !props.resources?.[0]?.namespaced || namespace : !!namespace;
+  const isNSSelected = !props.resources?.[0]?.namespaced || namespace;
   let unclickableMsg = !isNSSelected && !isClusterScope ? t('COMMON:MSG_COMMON_ERROR_MESSAGE_48') : undefined;
   unclickableMsg = window.location.pathname.startsWith('/k8s/cluster/customresourcedefinitions') ? undefined : unclickableMsg;
   const resources = _.map(props.resources, r => ({
@@ -437,7 +388,7 @@ export const MultiListPage = props => {
     prop: r.prop || r.kind,
   }));
 
-  const listPageWrapper = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} isK8SResource={isK8SResource} />
+  const listPageWrapper = <ListPageWrapper_ flatten={flatten} kinds={_.map(resources, 'kind')} label={label} ListComponent={ListComponent} setSidebarDetails={setSidebarDetails} setShowSidebar={setShowSidebar} setSidebarTitle={setSidebarTitle} textFilter={textFilter} rowFilters={rowFilters} staticFilters={staticFilters} customData={customData} hideToolbar={hideToolbar} hideLabelFilter={hideLabelFilter} defaultSelectedRows={defaultSelectedRows} tableProps={tableProps} items={items} />;
 
   return (
     <FireMan_
@@ -458,7 +409,7 @@ export const MultiListPage = props => {
       multiNavPages={multiNavPages}
       baseURL={multiNavBaseURL}
     >
-      {isK8SResource ? <Firehose resources={mock ? [] : resources}>{listPageWrapper}</Firehose> : listPageWrapper}
+      <Firehose resources={mock ? [] : resources}>{listPageWrapper}</Firehose>
     </FireMan_>
   );
 };

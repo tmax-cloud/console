@@ -4,6 +4,7 @@ import { Map as ImmutableMap, fromJS } from 'immutable';
 import { ActionType, K8sAction } from '../actions/k8s';
 import { getQN, referenceForModel, allModels, K8sResourceKind, K8sKind } from '../module/k8s';
 import { namespacedResources } from '../actions/ui';
+import { isNonK8SResource } from './utils/nonk8s-utils';
 
 const moreRecent = (a, b) => {
   const metaA = a.get('metadata').toJSON();
@@ -48,24 +49,25 @@ const updateList = (list: ImmutableMap<string, any>, nextJS: K8sResourceKind) =>
   return list.set(qualifiedName, next);
 };
 
-const loadList = (oldList, resources) => {
+const loadList = (oldList, resources, id?) => {
   const existingKeys = new Set(oldList.keys());
   return oldList.withMutations((list) => {
     (resources || []).forEach((r) => {
-      const qualifiedName = getQN(r);
+      const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name : getQN(r);
       existingKeys.delete(qualifiedName);
       const next = fromJS(r);
       const current = list.get(qualifiedName);
-      if (!current || moreRecent(next, current)) {
+      if (!current || isNonK8SResource(id) ? true : moreRecent(next, current)) {
         list.set(qualifiedName, next);
       }
     });
     existingKeys.forEach((k) => {
       const r = list.get(k);
-      const metadata = r.get('metadata').toJSON();
+      const metadata = isNonK8SResource(id) ? {} : r.get('metadata').toJSON();
       if (!metadata.deletionTimestamp) {
         // eslint-disable-next-line no-console
-        console.warn(`${metadata.namespace}-${metadata.name} is gone with no deletion timestamp!`);
+        const qualifiedName = isNonK8SResource(id) ? (r.namespace ? `(${r.namespace})-` : '') + r.name : getQN(r);
+        console.warn(`${qualifiedName} is gone with no deletion timestamp!`);
       }
       list.delete(k);
     });
@@ -190,9 +192,8 @@ export default (state: K8sState, action: K8sAction): K8sState => {
       state = state.mergeDeep({
         [action.payload.id]: { loaded: true, loadError: '' },
       });
-      newList = loadList(state.getIn([action.payload.id, 'data']), action.payload.k8sObjects);
+      newList = loadList(state.getIn([action.payload.id, 'data']), action.payload.k8sObjects, action.payload.id);
       break;
-
     case ActionType.UpdateListFromWS:
       newList = state.getIn([action.payload.id, 'data']);
       // k8sObjects is an array of k8s WS Events

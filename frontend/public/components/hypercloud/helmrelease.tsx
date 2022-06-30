@@ -1,3 +1,4 @@
+// 개발자 - 헬름 - 헬름 릴리스 에서 보여주는 화면 내용이 담긴 파일입니다.
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as fuzzy from 'fuzzysearch';
@@ -8,7 +9,7 @@ import { safeDump } from 'js-yaml';
 import { Link } from 'react-router-dom';
 import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
-import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, ResourceLink, Kebab, KebabOption, ActionsMenu, Dropdown, detailsPage, navFactory, KebabAction } from '@console/internal/components/utils';
 import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { history } from '@console/internal/components/utils/router';
 import { getIdToken } from '@console/internal/hypercloud/auth';
@@ -19,14 +20,37 @@ import { Status } from '@console/shared';
 import YAMLEditor from '@console/shared/src/components/editor/YAMLEditor';
 import { Button, Badge } from '@patternfly/react-core';
 import { deleteModal } from '../modals';
-// import { TableProps } from './utils/default-list-component';
-import { ListPage } from '../factory';
+import { TableProps } from './utils/default-list-component';
+import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
+import { NonK8sKind } from '../../module/k8s';
+import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 
+export const HelmReleaseModel: NonK8sKind = {
+  kind: 'HelmRelease',
+  label: 'Helm Release',
+  labelPlural: 'Helm Releases',
+  abbr: 'HR',
+  namespaced: true,
+  plural: 'helmreleases',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.HrefLink,
+    isMultiOnly: false,
+    href: '/helmreleases',
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_204',
+    labelPlural: 'COMMON:MSG_LNB_MENU_203',
+  },
+  nonK8SResource: true,
+};
+
+const kind = HelmReleaseModel.kind;
 const getHost = async () => {
   const mapUrl = (CustomMenusMap as any).Helm.url;
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
@@ -41,11 +65,10 @@ export interface HelmReleasePageProps {
     name?: string;
   }>;
 }
-
 const filters = t => [
   {
     filterGroupName: t('COMMON:MSG_COMMON_FILTER_10'),
-    type: 'helmReleases-status',
+    type: 'helmRelease-status',
     reducer: HelmReleaseStatusReducer,
     items: [
       { id: 'unknown', title: 'Unknown' },
@@ -56,30 +79,11 @@ const filters = t => [
   },
 ];
 
-export const HelmReleasePage: React.FC<HelmReleasePageProps> = ({ match }) => {
+export const HelmReleasePage: React.FC<HelmReleasePageProps> = props => {
   const { t } = useTranslation();
+  const { match } = props;
   const namespace = match.params.ns;
-  const [loading, setLoading] = React.useState(false);
-  const [helmReleases, setHelmReleases] = React.useState([]);
-  const [isRefresh, setIsRefresh] = React.useState(true);
-
-  React.useEffect(() => {
-    const updateHelmReleases = async () => {
-      const host = await getHost();
-      await coFetchJSON(namespace ? `${host}/helm/ns/${namespace}/releases` : `${host}/helm/all-namespaces/releases`)
-        .then(res => {
-          setHelmReleases(_.get(res, 'release') || []);
-          setLoading(true);
-          setIsRefresh(true);
-        })
-        .catch(e => {
-          setIsRefresh(false);
-        });
-    };
-    updateHelmReleases();
-  }, [namespace, isRefresh]);
-
-  return <>{loading ? <ListPage title={t('COMMON:MSG_LNB_MENU_203')} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} canCreate={true} items={helmReleases} rowFilters={filters.bind(null, t)()} kind="helmreleases" tableProps={tableProps(setIsRefresh)} namespace={namespace} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} isK8SResource={false} /> : <LoadingBox />}</>;
+  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} rowFilters={filters.bind(null, t)()} createProps={{ to: `/helmreleases/ns/${namespace}/~new`, items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmReleaseModel }} isK8sResource={false} />;
 };
 
 const ResourceKind: React.FC<ResourceKindProps> = ({ kind }) => {
@@ -90,176 +94,164 @@ type ResourceKindProps = {
   kind: string;
 };
 
-const tableProps = (setIsRefresh: Function) => {
-  return {
-    header: [
+const tableProps: TableProps = {
+  header: [
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+      sortField: 'name',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
+      sortField: 'namespace',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_112',
+      sortFunc: 'HelmReleaseStatusReducer',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_110',
+      sortFunc: 'helmResourcesNumber',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_132',
+      sortField: 'version',
+    },
+    {
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
+      sortField: 'info.first_deployed',
+    },
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
+  ],
+  row: (obj: any) => {
+    const options: KebabOption[] = [
       {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
-        sortField: 'name',
+        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
+        href: `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`,
       },
       {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_2',
-        sortField: 'namespace',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_112',
-        sortFunc: 'HelmReleaseStatusReducer',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_110',
-        sortFunc: 'helmResourcesNumber',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_132',
-        sortField: 'version',
-      },
-      {
-        title: 'COMMON:MSG_MAIN_TABLEHEADER_12',
-        sortField: 'info.first_deployed',
-      },
-      {
-        title: '',
-        transforms: null,
-        props: { className: Kebab.columnClass },
-      },
-    ],
-    row: (obj: any) => {
-      const options: KebabOption[] = [
-        {
-          label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
-          href: `/helmreleases/ns/${obj.namespace}/${obj.name}/edit`,
+        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
+        callback: async () => {
+          const host = await getHost();
+          deleteModal({
+            nonk8sProps: {
+              deleteServiceURL: `${host}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+              stringKey: 'COMMON:MSG_LNB_MENU_203',
+              namespace: obj.namespace,
+              name: obj.name,
+            },
+          });
         },
-        {
-          label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
-          callback: async () => {
-            const host = await getHost();
-            deleteModal({
-              nonk8sProps: {
-                deleteServiceURL: `${host}/helm/ns/${obj.namespace}/releases/${obj.name}`,
-                stringKey: 'COMMON:MSG_LNB_MENU_203',
-                namespace: obj.namespace,
-                name: obj.name,
-                setIsRefresh: setIsRefresh,
-              },
-            });
-          },
-        },
-      ];
-      return [
-        {
-          children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
-        },
-        {
-          className: 'co-break-word',
-          children: <ResourceLink kind="Namespace" name={obj.namespace} title={obj.namespace} />,
-        },
-        {
-          children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
-        },
-        {
-          children: Object.keys(obj.objects)
+      },
+    ];
+    return [
+      {
+        children: <Link to={`/helmreleases/ns/${obj.namespace}/${obj.name}`}>{obj.name}</Link>,
+      },
+      {
+        className: 'co-break-word',
+        children: <ResourceLink kind="Namespace" name={obj.namespace} title={obj.namespace} />,
+      },
+      {
+        children: <Status status={capitalize(HelmReleaseStatusReducer(obj))} />,
+      },
+      {
+        children:
+          obj.objects &&
+          Object.keys(obj.objects)
             .sort((a, b) => {
               return resourceSortFunction(a) - resourceSortFunction(b);
             })
             .map(k => {
               return <ResourceKind key={'resource-' + k} kind={k} />;
             }),
-        },
-        {
-          children: obj.version,
-        },
-        {
-          children: <Timestamp timestamp={obj.info.first_deployed} />,
-        },
-        {
-          className: Kebab.columnClass,
-          children: <Kebab options={options} />,
-        },
-      ];
-    },
-  };
+      },
+      {
+        children: obj.version,
+      },
+      {
+        children: obj.info?.first_deployed && <Timestamp timestamp={obj.info?.first_deployed} />,
+      },
+      {
+        className: Kebab.columnClass,
+        children: <Kebab options={options} />,
+      },
+    ];
+  },
 };
 
-export const HelmReleaseDetailsPage: React.FC<HelmReleasePageProps> = ({ match }) => {
-  const namespace = match.params.ns;
-  const name = match.params.name;
+const { details, editResource } = navFactory;
+export const HelmReleaseDetailsPage: React.FC<DetailsPageProps> = props => {
   const { t } = useTranslation();
-
-  const [loading, setLoading] = React.useState(false);
-  const [helmReleases, setHelmReleases] = React.useState([]);
-  const [isRefresh, setIsRefresh] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchHelmChart = async () => {
-      const host = await getHost();
-      await coFetchJSON(`${host}/helm/ns/${namespace}/releases/${name}`)
-        .then(res => {
-          setHelmReleases(_.get(res, 'release') || []);
-          if (!_.get(res, 'release')) {
-            history.push(`/helmreleases/ns/${namespace}`);
-          }
-          setLoading(true);
-        })
-        .catch(e => {
-          setIsRefresh(false);
+  const name = props.match?.params?.name;
+  const menuActions: KebabAction[] = [
+    () => ({
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_15**COMMON:MSG_LNB_MENU_203',
+      href: `/helmreleases/ns/${props.namespace}/${name}/edit`,
+    }),
+    () => ({
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_203',
+      callback: async () => {
+        const host = await getHost();
+        deleteModal({
+          nonk8sProps: {
+            deleteServiceURL: `${host}/helm/ns/${props.namespace}/releases/${name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_203',
+            namespace: props.namespace,
+            name: name,
+            listPath: `/helmreleases/ns/${props.namespace}`,
+          },
         });
-    };
-    fetchHelmChart();
-  }, [namespace, isRefresh]);
+      },
+    }),
+  ];
+  const capitalizeHelmReleaseStatusReducer = release => {
+    return capitalize(HelmReleaseStatusReducer(release));
+  };
   return (
-    <>
-      <Helmet>
-        <title>{t('COMMON:MSG_LNB_MENU_203')}</title>
-      </Helmet>
-
-      <div style={{ background: 'white', height: '100%' }}>
-        <HelmreleasestDetailsHeader namespace={namespace} name={name} helmrelease={loading ? helmReleases[0] : null} />
-        <NavBar pages={allPages} baseURL={`/helmreleases/ns/${namespace}/${name}`} basePath="" />
-        {loading ? <>{helmReleases.length === 0 ? <div style={{ textAlign: 'center' }}>{t('COMMON:MSG_COMMON_ERROR_MESSAGE_22', { something: t('COMMON:MSG_LNB_MENU_203') })}</div> : <ReleasesDetailsTapPage helmRelease={helmReleases[0]} />}</> : <LoadingBox />}
-      </div>
-    </>
+    <DetailsPage
+      {...props}
+      kind={kind}
+      pages={[details(detailsPage(HelmReleaseDetails)), editResource()]}
+      name={props.match?.params?.name}
+      menuActions={menuActions}
+      getResourceStatus={capitalizeHelmReleaseStatusReducer}
+      customData={{ nonK8sResource: true, kindObj: HelmReleaseModel }}
+      isK8sResource={false}
+      breadcrumbsFor={() => {
+        return [
+          { name: t(HelmReleaseModel.i18nInfo.labelPlural), path: props.namespace ? `/helmreleases/ns/${props.namespace}` : '/helmreleases/all-namespaces' },
+          { name: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmReleaseModel.i18nInfo.label) }), path: '' },
+        ];
+      }}
+    />
   );
 };
-
-type ReleasesDetailsTapPageProps = {
-  helmRelease?: any;
-  match?: any;
-};
-export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = props => {
+const HelmReleaseDetails: React.FC<HelmReleaseDetailsProps> = ({ obj: release }) => {
   const { t } = useTranslation();
-  const { helmRelease } = props;
-
   return (
     <div className="co-m-pane__body">
-      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_203') })} />
+      <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmReleaseModel.i18nInfo.label) })} />
       <div className="row">
         <div className="col-lg-6">
-          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')}</dt>
-          <dd>{helmRelease.name}</dd>
-          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')}</dt>
-          <dd>
-            <ResourceLink kind="Namespace" name={helmRelease.namespace} />
-          </dd>
-          <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')}</dt>
-          <dd>
-            <Timestamp timestamp={helmRelease.info.first_deployed} />
-          </dd>
+          <dl data-test-id="resource-summary" className="co-m-pane__details">
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_5')}</dt>
+            <dd>{release.name}</dd>
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_6')}</dt>
+            <dd>
+              <ResourceLink kind="Namespace" name={release.namespace} />
+            </dd>
+            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_43')}</dt>
+            <dd>
+              <Timestamp timestamp={release.info?.first_deployed} />
+            </dd>
+          </dl>
         </div>
         <div className="col-lg-6">
-          <dl className="co-m-pane__details">
-            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
-            <dd>
-              <Status status={capitalize(HelmReleaseStatusReducer(helmRelease))} />
-            </dd>
-            <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
-            <dd>{helmRelease.chart.metadata.description}</dd>
-            <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
-            <dd>
-              <Link to={`/helmcharts/${helmRelease.chart.metadata.name}`}>{helmRelease.chart.metadata.name}</Link>
-            </dd>
-            <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_2')}</dt>
-            <dd>{helmRelease.version}</dd>
-          </dl>
+          <HelmReleaseDetailsList release={release} />
         </div>
       </div>
       <div className="row">
@@ -273,26 +265,51 @@ export const ReleasesDetailsTapPage: React.FC<ReleasesDetailsTapPageProps> = pro
               </tr>
             </thead>
             <tbody>
-              {Object.keys(helmRelease.objects)
-                .sort((a, b) => {
-                  return resourceSortFunction(a) - resourceSortFunction(b);
-                })
-                .map(k => {
-                  return (
-                    <tr key={'row-' + k}>
-                      <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
-                      <td style={{ padding: '5px' }}>
-                        <ResourceLink kind={k} name={helmRelease.objects[k] as string} namespace={helmRelease.namespace} />
-                      </td>
-                    </tr>
-                  );
-                })}
+              {release.objects &&
+                Object.keys(release.objects)
+                  .sort((a, b) => {
+                    return resourceSortFunction(a) - resourceSortFunction(b);
+                  })
+                  .map(k => {
+                    return (
+                      <tr key={'row-' + k}>
+                        <td style={{ padding: '5px' }}>{t(modelFor(k).i18nInfo.label)}</td>
+                        <td style={{ padding: '5px' }}>
+                          <ResourceLink kind={k} name={release.objects[k] as string} namespace={release.namespace} />
+                        </td>
+                      </tr>
+                    );
+                  })}
             </tbody>
           </table>
         </div>
       </div>
     </div>
   );
+};
+type HelmReleaseDetailsProps = {
+  obj: any;
+};
+
+export const HelmReleaseDetailsList: React.FC<HelmReleaseDetailsListProps> = ({ release }) => {
+  const { t } = useTranslation();
+  return (
+    <dl className="co-m-pane__details">
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_45')}</dt>
+      <dd>
+        <Status status={capitalize(HelmReleaseStatusReducer(release))} />
+      </dd>
+      <dt>{t('COMMON:MSG_DETAILS_TABDETAILS_10')}</dt>
+      <dd>{release.chart?.metadata?.description}</dd>
+      <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_1')}</dt>
+      <dd>{release.chart?.metadata?.repo ? <Link to={`/helmcharts/${release.chart?.metadata?.repo}/${release.chart?.metadata?.name}`}>{release.chart?.metadata?.name}</Link> : release.chart?.metadata?.name}</dd>
+      <dt>{t('SINGLE:MSG_HELMRELEASES_HELMRELEASEDETAILS_TABDETAILS_2')}</dt>
+      <dd>{release.version}</dd>
+    </dl>
+  );
+};
+type HelmReleaseDetailsListProps = {
+  release: any;
 };
 
 type HelmreleasestDetailsHeaderProps = {
@@ -622,7 +639,6 @@ const allPages = [
   {
     name: 'COMMON:MSG_DETAILS_TAB_1',
     href: '',
-    component: ReleasesDetailsTapPage,
   },
   {
     name: 'COMMON:MSG_DETAILS_TAB_18',
