@@ -2,24 +2,24 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: console-ingressroute-hyowook
+  name: console-ingressroute-sihyung
   namespace: api-gateway-system
 spec:
   entryPoints:
     - websecure
   routes:
     - kind: Rule
-      match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`hyowook.tmaxcloud.org`)
+      match: PathPrefix(`/`, `/static/`, `/api/resource/`, `/api/console/`) && Host(`sihyung.tmaxcloud.org`)
       priority: 20
       services:
-        - name: hyowook-service
+        - name: sihyung-service
           namespace: api-gateway-system
           kind: Service
           port: 9000
           scheme: https
           serversTransport: insecure@file
     - kind: Rule
-      match: PathPrefix(`/api/hypercloud`, `/api/multi-hypercloud`,`/api/webhook`) && Host(`hyowook.tmaxcloud.org`)
+      match: PathPrefix(`/api/hypercloud`, `/api/multi-hypercloud`,`/api/webhook`) && Host(`sihyung.tmaxcloud.org`)
       priority: 100
       middlewares:
         - name: api-gateway-system-jwt-decode-auth@kubernetescrd
@@ -32,7 +32,7 @@ spec:
           scheme: https
           serversTransport: insecure@file
     - kind: Rule
-      match: PathPrefix(`/api/kubernetes`) && Host(`hyowook.tmaxcloud.org`)
+      match: PathPrefix(`/api/kubernetes`) && Host(`sihyung.tmaxcloud.org`)
       priority: 100
       middlewares:
         - name: api-gateway-system-jwt-decode-auth@kubernetescrd
@@ -45,7 +45,7 @@ spec:
           scheme: https
           serversTransport: kubernetes@file
     - kind: Rule
-      match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`hyowook.tmaxcloud.org`)
+      match: PathPrefix(`/api/prometheus-tenancy/api`) && Host(`sihyung.tmaxcloud.org`)
       priority: 100
       middlewares:
         - name: api-gateway-system-jwt-decode-auth@kubernetescrd
@@ -57,7 +57,7 @@ spec:
           port: web
           scheme: http
     - kind: Rule
-      match: PathPrefix(`/api/prometheus/api`) && Host(`hyowook.tmaxcloud.org`)
+      match: PathPrefix(`/api/prometheus/api`) && Host(`sihyung.tmaxcloud.org`)
       priority: 100
       middlewares:
         - name: api-gateway-system-jwt-decode-auth@kubernetescrd
@@ -69,7 +69,7 @@ spec:
           port: web
           scheme: http
     - kind: Rule
-      match: PathPrefix(`/api/alertmanager/api`) && Host(`hyowook.tmaxcloud.org`)
+      match: PathPrefix(`/api/alertmanager/api`) && Host(`sihyung.tmaxcloud.org`)
       priority: 100
       middlewares:
         - name: api-gateway-system-jwt-decode-auth@kubernetescrd
@@ -87,7 +87,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: "hyowook-service"
+  name: "sihyung-service"
   namespace: api-gateway-system
 spec:
   ports:
@@ -97,10 +97,10 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: "hyowook-service"
+  name: "sihyung-service"
   namespace: api-gateway-system
 subsets:
   - addresses:
-      - ip: 192.168.8.103
+      - ip: 192.168.8.101
     ports:
       - port: 9000
