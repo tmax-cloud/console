@@ -15,7 +15,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { getPrometheusURL, PrometheusEndpoint } from '@console/internal/components/graphs/helpers';
 import { nodeStatus } from '../../status/node';
 import NodeRoles from './NodeRoles';
-import { menuActions } from './menu-actions';
+import { MarkAsSchedulable, MarkAsUnschedulable } from './menu-actions';
 import { useTranslation } from 'react-i18next';
 import NodeStatus from './NodeStatus';
 
@@ -100,6 +100,8 @@ const NodesTableRow = connect<NodesRowMapFromStateProps, null, NodesTableRowProp
   const totalStrg = metrics?.totalStorage?.[nodeName];
   const storage = Number.isFinite(usedStrg) && Number.isFinite(totalStrg) ? `${humanizeBinaryBytes(usedStrg).string} / ${humanizeBinaryBytes(totalStrg).string}` : '-';
   const pods = metrics?.pods?.[nodeName] ?? '-';
+  const { ModifyLabels, ModifyAnnotations, Edit } = Kebab.factory;
+  const menuActions = [MarkAsSchedulable, MarkAsUnschedulable, ModifyLabels, ModifyAnnotations, Edit];
   return (
     <TableRow id={nodeUID} index={index} trKey={rowKey} style={style}>
       <TableData className={tableColumnClasses[0]}>
