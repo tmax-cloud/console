@@ -53,14 +53,14 @@ class NoticeExpirationModal extends Component {
               <ModalTitle>{t('COMMON:MSG_GNB_SESSION_9')}</ModalTitle>
               <ModalBody>
                 <div className="form-group">
-                  <label className="control-label">
+                  <label className="control-label co-pre-line">
                     {t('COMMON:MSG_GNB_SESSION_10', {
                       0: Math.floor(this.state.time),
                     })}
                   </label>
                 </div>
               </ModalBody>
-              <CustomModalSubmitFooter inProgress={false} leftBtnText={t('COMMON:MSG_GNB_SESSION_9')} rightBtnText={t('COMMON:MSG_GNB_ACCOUNT_2')} onClickLeft={this._extend} onClickRight={this._logout} />
+              <CustomModalSubmitFooter inProgress={false} leftBtnText={t('COMMON:MSG_GNB_SESSION_11')} rightBtnText={t('COMMON:MSG_GNB_ACCOUNT_2')} onClickLeft={this._extend} onClickRight={this._logout} />
             </form>
           </>
         )}
@@ -69,4 +69,4 @@ class NoticeExpirationModal extends Component {
   }
 }
 
-export const NoticeExpirationModal_ = createModalLauncher(props => <Translation>{t => <NoticeExpirationModal path="status" title={t('COMMON:MSG_GNB_SESSION_9')} {...props} />}</Translation>);
+export const NoticeExpirationModal_ = createModalLauncher(props => <Translation>{t => <NoticeExpirationModal path="status" {...props} />}</Translation>);
