@@ -86,11 +86,14 @@ export interface Config {
   /** Defaults to 'true' */
   closeOnEscape?: boolean;
   botName?: string;
+  /** 봇 이름 UI에 대해 텍스트가 아닌 아이콘으로 대체할 지 유무. Default: Hyperbot 아이콘으로 표기 */
+  botNameUrl?: string;
   composerPlaceholder?: string;
   /** 봇 아바타 활성화 유무. true 시 아바타가 비활성화 처리됨
-   * Defaults to 'true'  
-   */ 
-  hideBotAvatar?: boolean
+   * Defaults to 'true'
+   */
+  hideBotAvatar?: boolean;
+  /** Default: Hyperbot 아바타 이미지 */
   avatarUrl?: string;
   /** Force the display language of the webchat (en, fr, ar, ru, etc..)
    * Defaults to the user's browser language if not set
