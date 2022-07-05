@@ -44,7 +44,6 @@ class WebchatLoadedActionHandler implements ActionHandler {
 class WebchatOpenedActionHandler implements ActionHandler {
   execute(): void {
     const chatbotConfig: Config = {
-      botName: '하콘', // TODO: i18n 적용
       locale: window.localStorage.getItem('i18nextLng'),
       showPoweredBy: false,
     };
