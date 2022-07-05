@@ -166,7 +166,7 @@ const sorts = {
         framework = curPredictor;
       }
     });
-    return (isvc?.spec?.predictor[framework]?.storageUri) ? 'N' : 'Y';
+    return isvc?.spec?.predictor[framework]?.storageUri ? 'N' : 'Y';
   },
   TrainedModelPhase: instance => {
     let phase = '';
@@ -184,7 +184,7 @@ const sorts = {
     }
   },
   HelmReleaseStatusReducer: Helmreleases => HelmReleaseStatusReducer(Helmreleases),
-  helmResourcesNumber: Helmreleases => Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0,
+  helmResourcesNumber: Helmreleases => (Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0),
 };
 
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {
@@ -225,13 +225,27 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
       const aValue = getSortValue(a);
       const bValue = getSortValue(b);
       const result: number = Number.isFinite(aValue) && Number.isFinite(bValue) ? aValue - bValue : `${aValue}`.localeCompare(`${bValue}`, lang, compareOpts);
+
+      if (allFilters.name) {
+        const afterFuzzySort = (a, b, value) => {
+          let resultA = a.metadata.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
+          resultA = resultA === -1 ? 20000 : resultA;
+          let resultB = b.metadata.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
+          resultB = resultB === -1 ? 20000 : resultB;
+          return resultA - resultB;
+        };
+        const afterFuzzySortResult = afterFuzzySort(a, b, allFilters.name);
+        if (afterFuzzySortResult !== 0) {
+          return afterFuzzySortResult;
+        }
+      }
       if (result !== 0) {
         return currentSortOrder === SortByDirection.asc ? result : result * -1;
       }
 
       // Use name as a secondary sort for a stable sort.
-      const aName = a?.metadata?.name || '';
-      const bName = b?.metadata?.name || '';
+      const aName = a?.metadata?.name || a?.name || '';
+      const bName = b?.metadata?.name || b?.name || '';
       return aName.localeCompare(bName, lang, compareOpts);
     });
   }
