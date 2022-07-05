@@ -108,6 +108,10 @@ export interface Config {
    * Defaults to 'false'
    */
   hideWidget?: boolean;
+  /** 위젯 아이콘 모드. 'default' 모드는 botpress 기본 아이콘이 표시되며, 'hypercloud' 모드는 hypercloud 아이콘이 표시
+   * Defaults to 'hypercloud'
+   */
+  widgetMode?: 'default' | 'hypercloud';
   /** Disable the slide in / out animations of the webchat
    * Defaults to 'false'
    */
