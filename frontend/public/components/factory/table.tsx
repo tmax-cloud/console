@@ -228,9 +228,9 @@ const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 
 
       if (allFilters.name) {
         const afterFuzzySort = (a, b, value) => {
-          let resultA = a.metadata.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
+          let resultA = a.metadata?.name ? a.metadata.name.indexOf(value) : a.name.indexOf(value);
           resultA = resultA === -1 ? 20000 : resultA;
-          let resultB = b.metadata.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
+          let resultB = b.metadata?.name ? b.metadata.name.indexOf(value) : b.name.indexOf(value);
           resultB = resultB === -1 ? 20000 : resultB;
           return resultA - resultB;
         };
