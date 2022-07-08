@@ -153,7 +153,7 @@ console.log('-------------------------------------------------------------------
 
 (async function main() {
   const commonFile = '16.uiSTR_HyperCloud5.xlsx';
-  const descFile = '16.uiSTR_HyperCloud5_Description.xlsx';
+  const descFile = '16.uiSTR_HyperCloud5_Description_K8s_v1.19.xlsx';
 
   const result = {};
 
