@@ -7,7 +7,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
-import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, Kebab, KebabOption, } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, Kebab, KebabOption, KebabAction } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
@@ -100,7 +100,7 @@ const tableProps: TableProps = {
       props: { className: Kebab.columnClass },
     },
   ],
-  row: (obj: any) => {    
+  row: (obj: any) => {
     const options: KebabOption[] = [
       {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
@@ -117,7 +117,7 @@ const tableProps: TableProps = {
         },
       },
     ];
-    const charts:any[] = helmChartsMap.get(obj.name);
+    const charts: any[] = helmChartsMap.get(obj.name);
     return [
       {
         children: <Link to={`/helmrepositories/${obj.name}`}>{obj.name}</Link>,
@@ -125,8 +125,8 @@ const tableProps: TableProps = {
       {
         children: obj.url,
       },
-      {        
-        children: charts.map(chart => {
+      {
+        children: charts?.map(chart => {
           return <div>{chart.name}</div>;
         }),
       },
@@ -250,6 +250,23 @@ export const HelmrepositoryCreatePage = () => {
 const { details } = navFactory;
 export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
   const { t } = useTranslation();
+  const menuActions: KebabAction[] = [
+    () => ({
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
+      callback: async () => {
+        const host = await getHost();
+        updateModal({
+          nonk8sProps: {
+            deleteServiceURL: `${host}/helm/ns/${props.namespace}/releases/${name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_203',
+            namespace: props.namespace,
+            name: name,
+            listPath: `/helmreleases/ns/${props.namespace}`,
+          },
+        });
+      },
+    }),
+  ];
   return (
     <DetailsPage
       {...props}
@@ -258,6 +275,7 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
       customData={{ helmRepo: props.match?.params?.repo, nonK8sResource: true, kindObj: HelmRepositoryModel }}
       name={props.match?.params?.name}
       isK8sResource={false}
+      menuActions={menuActions}
       breadcrumbsFor={() => {
         return [
           { name: t(HelmRepositoryModel.i18nInfo.labelPlural), path: '/helmcharts' },
@@ -297,7 +315,7 @@ export const HelmRepositoryDetailsList: React.FC<HelmRepositoryDetailsListProps>
       <dd>
         <div>{helmrepository.url}</div>
       </dd>
-      <dt>{t('SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2')}</dt>      
+      <dt>{t('SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2')}</dt>
       <dd>
         <Timestamp timestamp={helmrepository.lastupdated} />
       </dd>
