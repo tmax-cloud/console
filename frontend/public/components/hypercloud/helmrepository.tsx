@@ -88,7 +88,6 @@ const tableProps: TableProps = {
     },
     {
       title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABHELMCHARTS_1',
-      sortField: 'name',
     },
     {
       title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2',
