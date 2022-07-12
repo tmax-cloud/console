@@ -1,6 +1,7 @@
 import * as _ from 'lodash-es';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { getIngressUrl } from '@console/internal/components/hypercloud/utils/ingress-utils';
+import { coFetchJSON } from '../../co-fetch';
 const getHelmHost = async () => {
   const mapUrl = (CustomMenusMap as any).Helm.url;
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
@@ -8,17 +9,17 @@ const getHelmHost = async () => {
 
 export const getKind = (id: string) => {
   return id.substring(0, 9) === 'HelmChart' ? id.substring(0, 9) : id;
-}
+};
 const getHelmRepo = (id: string) => {
   return id.substring(0, 9) === 'HelmChart' ? id.substring(9) : '';
-}
+};
 
 //get object api url 반환
 export const nonK8sObjectUrl = async (id: string, namespace: string, name: string) => {
   const helmHost = await getHelmHost();
   const kind = getKind(id);
   const helmRepo = getHelmRepo(id);
-  
+
   switch (kind) {
     case 'HelmRepository':
       return `${helmHost}/helm/repos/${name}`;
@@ -62,9 +63,23 @@ export const nonK8sListUrl = async (kind: string, query: any) => {
   }
 };
 //get list 결과 정리
-export const nonK8sListResult = (kind: string, response: any) => {
+export const nonK8sListResult = async (kind: string, response: any) => {
   switch (kind) {
     case 'HelmRepository':
+      await (async () => {
+        await Promise.all(
+          response.repoInfo.map(async repoinfo => {
+            const helmHost = await getHelmHost();
+            const response = await coFetchJSON(`${helmHost}/helm/charts?repository=${repoinfo.name}`);
+            let tempList = [];
+            let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
+            entriesvalues.map(value => {
+              tempList.push(value[0]);
+            });
+            repoinfo.charts = tempList;
+          }),
+        );
+      })();
       return response.repoInfo;
     case 'HelmRelease':
       return response.release;

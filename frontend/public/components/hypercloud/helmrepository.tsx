@@ -52,30 +52,6 @@ export const HelmrepositoryPage: React.FC<HelmrepositoryPagetProps> = props => {
   return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createProps={{ to: '/helmrepositories/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmRepositoryModel }} isK8sResource={false} />;
 };
 
-const helmChartsMap = new Map();
-
-const getHelmHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
-
-const initializeChartsMap = async (name: string) => {
-  const helmHost = await getHelmHost();
-  const response = await coFetchJSON(`${helmHost}/helm/charts?repository=${name}`);
-  let tempList = [];
-  let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
-  entriesvalues.map(value => {
-    tempList.push(value[0]);
-  });
-  helmChartsMap.set(name, tempList);
-};
-
-(async () => {
-  const helmHost = await getHelmHost();
-  const repositories = await coFetchJSON(`${helmHost}/helm/repos`);
-  await Promise.all(repositories?.repoInfo?.map(repository => initializeChartsMap(repository.name)));
-})();
-
 const tableProps: TableProps = {
   header: [
     {
@@ -88,6 +64,7 @@ const tableProps: TableProps = {
     },
     {
       title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABHELMCHARTS_1',
+      sortField: 'charts.length',
     },
     {
       title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2',
@@ -116,7 +93,6 @@ const tableProps: TableProps = {
         },
       },
     ];
-    const charts: any[] = helmChartsMap.get(obj.name);
     return [
       {
         children: <Link to={`/helmrepositories/${obj.name}`}>{obj.name}</Link>,
@@ -125,8 +101,8 @@ const tableProps: TableProps = {
         children: obj.url,
       },
       {
-        children: charts?.map(chart => {
-          return <div>{chart.name}</div>;
+        children: obj.charts?.map(chart => {
+          return <div key={chart.name}>{chart.name}</div>;
         }),
       },
       {
