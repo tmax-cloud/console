@@ -48,8 +48,7 @@ type HelmchartPagetProps = {
   match?: any;
 };
 export const HelmchartPage: React.FC<HelmchartPagetProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel }} isK8sResource={false} />;
+  return <ListPage {...props} canCreate={false} tableProps={tableProps} kind={kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel }} isK8sResource={false} />;
 };
 
 const tableProps: TableProps = {
