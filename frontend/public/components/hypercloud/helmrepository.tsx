@@ -7,7 +7,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
-import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, Kebab, KebabOption, } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
@@ -16,6 +16,7 @@ import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
 import { NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
+import { updateModal } from '../modals';
 
 export const HelmRepositoryModel: NonK8sKind = {
   kind: 'HelmRepository',
@@ -93,8 +94,29 @@ const tableProps: TableProps = {
       title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2',
       sortField: 'lastupdated',
     },
+    {
+      title: '',
+      transforms: null,
+      props: { className: Kebab.columnClass },
+    },
   ],
   row: (obj: any) => {    
+    const options: KebabOption[] = [
+      {
+        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
+        callback: async () => {
+          const host = await getHost();
+          updateModal({
+            nonk8sProps: {
+              updateServiceURL: `${host}/helm/ns/${obj.namespace}/releases/${obj.name}`,
+              stringKey: 'COMMON:MSG_LNB_MENU_203',
+              namespace: obj.namespace,
+              name: obj.name,
+            },
+          });
+        },
+      },
+    ];
     const charts:any[] = helmChartsMap.get(obj.name);
     return [
       {
@@ -110,6 +132,10 @@ const tableProps: TableProps = {
       },
       {
         children: <Timestamp timestamp={obj.lastupdated} />,
+      },
+      {
+        className: Kebab.columnClass,
+        children: <Kebab options={options} />,
       },
     ];
   },
