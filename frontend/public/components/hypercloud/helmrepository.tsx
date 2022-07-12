@@ -277,7 +277,7 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
       menuActions={menuActions}
       breadcrumbsFor={() => {
         return [
-          { name: t(HelmRepositoryModel.i18nInfo.labelPlural), path: '/helmcharts' },
+          { name: t(HelmRepositoryModel.i18nInfo.labelPlural), path: '/helmrepositories' },
           { name: t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t(HelmRepositoryModel.i18nInfo.label) }), path: '' },
         ];
       }}
