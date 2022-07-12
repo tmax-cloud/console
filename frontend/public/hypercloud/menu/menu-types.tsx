@@ -239,6 +239,14 @@ export const CustomMenusMap: CustomMenus = {
     url: '',
     isMultiOnly: false,
   },
+  HelmRepository: {
+    kind: 'HelmRepository',
+    visible: true,
+    type: MenuLinkType.HrefLink,
+    defaultLabel: 'COMMON:MSG_LNB_MENU_241',
+    href: '/helmrepositories',
+    isMultiOnly: false,
+  },
   HelmChart: {
     kind: 'HelmChart',
     visible: true,

@@ -20,6 +20,8 @@ export const nonK8sObjectUrl = async (id: string, namespace: string, name: strin
   const helmRepo = getHelmRepo(id);
   
   switch (kind) {
+    case 'HelmRepository':
+      return `${helmHost}/helm/repos/${name}`;
     case 'HelmRelease':
       return `${helmHost}/helm/ns/${namespace}/releases/${name}`;
     case 'HelmChart':
@@ -32,6 +34,8 @@ export const nonK8sObjectUrl = async (id: string, namespace: string, name: strin
 //get object 결과 정리
 export const nonK8sObjectResult = (kind: string, response: any) => {
   switch (kind) {
+    case 'HelmRepository':
+      return response.repoInfo[0];
     case 'HelmRelease':
       return response.release[0];
     case 'HelmChart':
@@ -47,6 +51,8 @@ export const nonK8sListUrl = async (kind: string, query: any) => {
   const helmHost = await getHelmHost();
 
   switch (kind) {
+    case 'HelmRepository':
+      return `${helmHost}/helm/repos`;
     case 'HelmRelease':
       return query?.ns ? `${helmHost}/helm/ns/${query.ns}/releases` : `${helmHost}/helm/all-namespaces/releases`;
     case 'HelmChart':
@@ -58,6 +64,8 @@ export const nonK8sListUrl = async (kind: string, query: any) => {
 //get list 결과 정리
 export const nonK8sListResult = (kind: string, response: any) => {
   switch (kind) {
+    case 'HelmRepository':
+      return response.repoInfo;
     case 'HelmRelease':
       return response.release;
     case 'HelmChart':
