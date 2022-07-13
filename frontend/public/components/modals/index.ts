@@ -66,8 +66,8 @@ export const annotationsModal = (props) =>
 export const deleteModal = (props) =>
   import('./delete-modal' /* webpackChunkName: "delete-modal" */).then((m) => m.deleteModal(props));
 
-export const updateModal = (props) =>
-  import('./update-modal' /* webpackChunkName: "update-modal" */).then((m) => m.updateModal(props));
+export const helmrepositoryUpdateModal = (props) =>
+  import('./helmrepository-update-modal' /* webpackChunkName: "helmrepository-update-modal" */).then((m) => m.helmrepositoryUpdateModal(props));
 
 export const clusterChannelModal = (props) =>
   import('./cluster-channel-modal' /* webpackChunkName: "cluster-channel-modal" */).then((m) =>

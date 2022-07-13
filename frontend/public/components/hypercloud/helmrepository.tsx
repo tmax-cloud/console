@@ -15,7 +15,7 @@ import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
 import { NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
-import { deleteModal, updateModal } from '../modals';
+import { deleteModal, helmrepositoryUpdateModal } from '../modals';
 
 export const HelmRepositoryModel: NonK8sKind = {
   kind: 'HelmRepository',
@@ -81,12 +81,10 @@ const tableProps: TableProps = {
         label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
         callback: async () => {
           const host = await getHost();
-          updateModal({
-            nonk8sProps: {
-              updateServiceURL: `${host}/helm/repos/${obj.name}`,
-              stringKey: 'COMMON:MSG_LNB_MENU_241',
-              name: obj.name,
-            },
+          helmrepositoryUpdateModal({
+            updateServiceURL: `${host}/helm/repos/${obj.name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_241',
+            name: obj.name,
           });
         },
       },
@@ -242,12 +240,10 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
       callback: async () => {
         const host = await getHost();
-        updateModal({
-          nonk8sProps: {
-            deleteServiceURL: `${host}/helm/repos/${name}`,
-            stringKey: 'COMMON:MSG_LNB_MENU_241',
-            name: name,
-          },
+        helmrepositoryUpdateModal({
+          updateServiceURL: `${host}/helm/repos/${name}`,
+          stringKey: 'COMMON:MSG_LNB_MENU_241',
+          name: name,
         });
       },
     }),
