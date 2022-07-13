@@ -44,10 +44,10 @@ const getHost = async () => {
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
 
-type HelmchartPagetProps = {
+type HelmchartPageProps = {
   match?: any;
 };
-export const HelmchartPage: React.FC<HelmchartPagetProps> = props => {
+export const HelmchartPage: React.FC<HelmchartPageProps> = props => {
   return <ListPage {...props} canCreate={false} tableProps={tableProps} kind={kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel }} isK8sResource={false} />;
 };
 
@@ -299,10 +299,10 @@ type HelmChartDetailsListProps = {
   entry: any;
 };
 
-type HelmchartEditPagetProps = {
+type HelmchartEditPageProps = {
   match?: any;
 };
-export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
+export const HelmchartEditPage: React.FC<HelmchartEditPageProps> = props => {
   const name = props.match.params.name;
   const [loading, setLoading] = React.useState(false);
   const [chart, setChart] = React.useState({
