@@ -64,7 +64,7 @@ class DeleteModal extends PromiseComponent {
         <ModalBody className="modal-body">
           {message}
           <div>
-            {nonk8sProps?.namespace || _.has(resource.metadata, 'namespace') ? <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName />, <Namespace />]}</Trans> : <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_25">{[<ResourceName />]}</Trans>}
+            {nonk8sProps?.namespace || (resource?.metadata && _.has(resource?.metadata, 'namespace')) ? <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_6">{[<ResourceName />, <Namespace />]}</Trans> : <Trans i18nKey="COMMON:MSG_MAIN_POPUP_DESCRIPTION_25">{[<ResourceName />]}</Trans>}
             {_.has(kind, 'propagationPolicy') && (
               <div className="checkbox">
                 <label className="control-label">

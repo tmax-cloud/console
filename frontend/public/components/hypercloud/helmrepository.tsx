@@ -16,7 +16,7 @@ import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
 import { NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
-import { updateModal } from '../modals';
+import { deleteModal, updateModal } from '../modals';
 
 export const HelmRepositoryModel: NonK8sKind = {
   kind: 'HelmRepository',
@@ -84,9 +84,21 @@ const tableProps: TableProps = {
           const host = await getHost();
           updateModal({
             nonk8sProps: {
-              updateServiceURL: `${host}/helm/ns/${obj.namespace}/releases/${obj.name}`,
-              stringKey: 'COMMON:MSG_LNB_MENU_203',
-              namespace: obj.namespace,
+              updateServiceURL: `${host}/helm/repos/${obj.name}`,
+              stringKey: 'COMMON:MSG_LNB_MENU_241',
+              name: obj.name,
+            },
+          });
+        },
+      },
+      {
+        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_241',
+        callback: async () => {
+          const host = await getHost();
+          deleteModal({
+            nonk8sProps: {
+              deleteServiceURL: `${host}/helm/repos/${obj.name}`,
+              stringKey: 'COMMON:MSG_LNB_MENU_241',
               name: obj.name,
             },
           });
@@ -225,6 +237,7 @@ export const HelmrepositoryCreatePage = () => {
 const { details } = navFactory;
 export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
   const { t } = useTranslation();
+  const name = props.match?.params?.name;
   const menuActions: KebabAction[] = [
     () => ({
       label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
@@ -232,11 +245,23 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
         const host = await getHost();
         updateModal({
           nonk8sProps: {
-            deleteServiceURL: `${host}/helm/ns/${props.namespace}/releases/${name}`,
-            stringKey: 'COMMON:MSG_LNB_MENU_203',
-            namespace: props.namespace,
+            deleteServiceURL: `${host}/helm/repos/${name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_241',
             name: name,
-            listPath: `/helmreleases/ns/${props.namespace}`,
+          },
+        });
+      },
+    }),
+    () => ({
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_241',
+      callback: async () => {
+        const host = await getHost();
+        deleteModal({
+          nonk8sProps: {
+            deleteServiceURL: `${host}/helm/repos/${name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_241',
+            name: name,
+            listPath: '/helmrepositories',
           },
         });
       },
