@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as _ from 'lodash-es';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { NavBar } from '@console/internal/components/utils/horizontal-nav';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { history } from '@console/internal/components/utils/router';
@@ -325,65 +324,3 @@ export const HelmRepositoryDetailsList: React.FC<HelmRepositoryDetailsListProps>
 type HelmRepositoryDetailsListProps = {
   helmrepository: any;
 };
-
-type HelmrepositoryEditPagetProps = {
-  match?: any;
-};
-export const HelmrepositoryEditPage: React.FC<HelmrepositoryEditPagetProps> = props => {
-  const name = props.match.params.name;
-  const [loading, setLoading] = React.useState(false);
-  const [chart, setChart] = React.useState({
-    indexfile: {},
-    values: {},
-  });
-  const [isRefresh, setIsRefresh] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchHelmRepository = async () => {
-      const host = await getHost();
-      await coFetchJSON(`${host}/helm/charts/${name}`)
-        .then(res => {
-          setChart(prevState => {
-            return { ...prevState, indexfile: res.indexfile, values: res.values };
-          });
-          setLoading(true);
-        })
-        .catch(e => {
-          setIsRefresh(false);
-        });
-    };
-    fetchHelmRepository();
-  }, [isRefresh]);
-
-  return (
-    <>
-      <HelmrepositoryDetailsHeader name={name} />
-      <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath="" />
-      {loading && <HelmrepositoryForm defaultValue={chart} />}
-    </>
-  );
-};
-
-type HelmrepositoryDetailsHeaderProps = {
-  name: string;
-};
-export const HelmrepositoryDetailsHeader: React.FC<HelmrepositoryDetailsHeaderProps> = props => {
-  const { name } = props;
-  const { t } = useTranslation();
-  return (
-    <div style={{ padding: '30px', borderBottom: '1px solid #ccc' }}>
-      <div style={{ display: 'inline-block' }}>
-        <Link to={'/helmcharts'}>{t('COMMON:MSG_LNB_MENU_223')}</Link>
-        {' > ' + t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: t('COMMON:MSG_LNB_MENU_223') })}
-      </div>
-      <h1>{name}</h1>
-    </div>
-  );
-};
-const allPages = [
-  // {
-  //   name: 'COMMON:MSG_DETAILS_TAB_18',
-  //   href: 'edit',
-  //   component: HelmrepositoryEditPage,
-  // },
-];
