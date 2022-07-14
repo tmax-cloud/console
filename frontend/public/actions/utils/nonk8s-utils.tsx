@@ -59,9 +59,7 @@ export const nonK8sListUrl = async (id: string, query: any) => {
     case 'HelmRelease':
       return query?.ns ? `${helmHost}/helm/ns/${query.ns}/releases` : `${helmHost}/helm/all-namespaces/releases`;
     case 'HelmChart':
-      return `${helmHost}/helm/charts`;
-    case 'HelmChartInRepository':
-      return `${helmHost}/helm/charts?repository=${helmRepo}`
+      return helmRepo ? `${helmHost}/helm/charts?repository=${helmRepo}`: `${helmHost}/helm/charts`;    
     default:
       return '';
   }
@@ -89,7 +87,6 @@ export const nonK8sListResult = async (id: string, response: any) => {
     case 'HelmRelease':
       return response.release;
     case 'HelmChart':
-    case 'HelmChartInRepository':
       let tempList = [];
       let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
       entriesvalues.map(value => {

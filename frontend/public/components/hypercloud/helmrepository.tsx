@@ -238,8 +238,8 @@ const chartsPage: (c?: React.ComponentType<any>) => Page = component => ({
   component,
 });
 
-export const HelmChartInRepositoryModel: NonK8sKind = {
-  kind: 'HelmChartInRepository',
+export const HelmChartModel: NonK8sKind = {
+  kind: 'HelmChart',
   label: 'Helm Chart',
   labelPlural: 'Helm Charts',
   abbr: 'HC',
@@ -287,7 +287,7 @@ type ChartListPageProps = {
 };
 export const ChartListPage: React.FC<ChartListPageProps> = props => {
   const { name } = props;
-  return <ListPage tableProps={chartTableProps(name)} kind={HelmChartInRepositoryModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartInRepositoryModel, helmRepo: name }} isK8sResource={false} />;
+  return <ListPage tableProps={chartTableProps(name)} kind={HelmChartModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel, helmRepo: name }} isK8sResource={false} />;
 };
 
 export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
