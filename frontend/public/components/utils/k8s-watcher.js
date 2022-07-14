@@ -11,7 +11,7 @@ export const makeReduxID = (k8sKind = {}, query) => {
   return `${referenceForModel(k8sKind)}${qs}`;
 };
 
-export const makeReduxIDforNonK8sResource = (kind, helmRepo) => {  
+export const makeReduxIDforNonK8sResource = (kind, helmRepo) => {
   return helmRepo ? kind + '~~' + helmRepo : kind;
 };
 

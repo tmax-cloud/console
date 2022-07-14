@@ -59,7 +59,7 @@ export const nonK8sListUrl = async (id: string, query: any) => {
     case 'HelmRelease':
       return query?.ns ? `${helmHost}/helm/ns/${query.ns}/releases` : `${helmHost}/helm/all-namespaces/releases`;
     case 'HelmChart':
-      return helmRepo ? `${helmHost}/helm/charts?repository=${helmRepo}`: `${helmHost}/helm/charts`;    
+      return helmRepo ? `${helmHost}/helm/charts?repository=${helmRepo}` : `${helmHost}/helm/charts`;
     default:
       return '';
   }
