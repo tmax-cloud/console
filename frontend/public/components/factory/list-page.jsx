@@ -276,6 +276,7 @@ export const ListPage = withFallback(props => {
   const labelPlural = isK8sResource ? ResourceLabelPlural(ko, t) : t(ko.i18nInfo?.labelPlural);
   const title = props.title || labelPlural;
   const usedNamespace = !namespace && namespaced ? _.get(match, 'params.ns') : namespace;
+  const helmRepo = customData?.helmRepo ? customData.helmRepo : null;
 
   let href = namespaced ? `/k8s/ns/${usedNamespace || 'default'}/${plural}/~new` : `/k8s/cluster/${plural}/~new`;
 
@@ -322,7 +323,7 @@ export const ListPage = withFallback(props => {
       selector,
       kindObj: ko,
       nonK8SResource,
-      helmRepo: customData.helmRepo,
+      helmRepo,
     },
   ];
 
