@@ -322,6 +322,7 @@ export const ListPage = withFallback(props => {
       selector,
       kindObj: ko,
       nonK8SResource,
+      helmRepo: customData.helmRepo,
     },
   ];
 

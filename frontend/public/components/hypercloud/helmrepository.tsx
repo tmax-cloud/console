@@ -6,7 +6,7 @@ import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { history } from '@console/internal/components/utils/router';
 import { Button } from '@patternfly/react-core';
-import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, Kebab, KebabOption, KebabAction } from '@console/internal/components/utils';
+import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, Kebab, KebabOption, KebabAction, Page } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
@@ -44,10 +44,10 @@ const getHost = async () => {
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
 
-type HelmrepositoryPagetProps = {
+type HelmrepositoryPageProps = {
   match?: any;
 };
-export const HelmrepositoryPage: React.FC<HelmrepositoryPagetProps> = props => {
+export const HelmrepositoryPage: React.FC<HelmrepositoryPageProps> = props => {
   return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createProps={{ to: '/helmrepositories/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmRepositoryModel }} isK8sResource={false} />;
 };
 
@@ -232,6 +232,64 @@ export const HelmrepositoryCreatePage = () => {
 };
 
 const { details } = navFactory;
+const chartsPage: (c?: React.ComponentType<any>) => Page = component => ({
+  href: 'charts',
+  name: 'COMMON:MSG_MAIN_TABLEHEADER_142',
+  component,
+});
+
+export const HelmChartInRepositoryModel: NonK8sKind = {
+  kind: 'HelmChartInRepository',
+  label: 'Helm Chart',
+  labelPlural: 'Helm Charts',
+  abbr: 'HC',
+  namespaced: false,
+  plural: 'helmcharts',
+  menuInfo: {
+    visible: true,
+    type: MenuLinkType.HrefLink,
+    isMultiOnly: false,
+    href: '/helmcharts',
+  },
+  i18nInfo: {
+    label: 'COMMON:MSG_LNB_MENU_224',
+    labelPlural: 'COMMON:MSG_LNB_MENU_223',
+  },
+  nonK8SResource: true,
+};
+const chartTableProps = (repoName: string): TableProps => {
+  return {
+    header: [
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+        sortField: 'name',
+      },
+      {
+        title: 'COMMON:MSG_MAIN_TABLEHEADER_141',
+        sortField: 'version',
+      },
+    ],
+    row: (obj: any) => {
+      return [
+        {
+          children: <Link to={`/helmcharts/${repoName}/${obj.name}`}>{obj.name}</Link>,
+        },
+        {
+          children: obj.version,
+        },
+      ];
+    },
+  };
+};
+
+type ChartListPageProps = {
+  name: string;
+};
+export const ChartListPage: React.FC<ChartListPageProps> = props => {
+  const { name } = props;
+  return <ListPage tableProps={chartTableProps(name)} kind={HelmChartInRepositoryModel.kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartInRepositoryModel, helmRepo: name }} isK8sResource={false} />;
+};
+
 export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
   const { t } = useTranslation();
   const name = props.match?.params?.name;
@@ -266,7 +324,7 @@ export const HelmrepositoryDetailsPage: React.FC<DetailsPageProps> = props => {
     <DetailsPage
       {...props}
       kind={kind}
-      pages={[details(detailsPage(HelmRepositoryDetails))]}
+      pages={[details(detailsPage(HelmRepositoryDetails)), chartsPage(() => ChartListPage({ name }))]}
       customData={{ helmRepo: props.match?.params?.repo, nonK8sResource: true, kindObj: HelmRepositoryModel }}
       name={props.match?.params?.name}
       isK8sResource={false}

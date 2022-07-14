@@ -8,10 +8,10 @@ const getHelmHost = async () => {
 };
 
 export const getKind = (id: string) => {
-  return id.substring(0, 9) === 'HelmChart' ? id.substring(0, 9) : id;
+  return id.split('~~')[0];
 };
 const getHelmRepo = (id: string) => {
-  return id.substring(0, 9) === 'HelmChart' ? id.substring(9) : '';
+  return id.split('~~')[1];
 };
 
 //get object api url 반환
@@ -48,8 +48,10 @@ export const nonK8sObjectResult = (kind: string, response: any) => {
 };
 
 //get list api url 반환
-export const nonK8sListUrl = async (kind: string, query: any) => {
+export const nonK8sListUrl = async (id: string, query: any) => {
   const helmHost = await getHelmHost();
+  const kind = getKind(id);
+  const helmRepo = getHelmRepo(id);
 
   switch (kind) {
     case 'HelmRepository':
@@ -58,12 +60,15 @@ export const nonK8sListUrl = async (kind: string, query: any) => {
       return query?.ns ? `${helmHost}/helm/ns/${query.ns}/releases` : `${helmHost}/helm/all-namespaces/releases`;
     case 'HelmChart':
       return `${helmHost}/helm/charts`;
+    case 'HelmChartInRepository':
+      return `${helmHost}/helm/charts?repository=${helmRepo}`
     default:
       return '';
   }
 };
 //get list 결과 정리
-export const nonK8sListResult = async (kind: string, response: any) => {
+export const nonK8sListResult = async (id: string, response: any) => {
+  const kind = getKind(id);
   switch (kind) {
     case 'HelmRepository':
       await (async () => {
@@ -84,6 +89,7 @@ export const nonK8sListResult = async (kind: string, response: any) => {
     case 'HelmRelease':
       return response.release;
     case 'HelmChart':
+    case 'HelmChartInRepository':
       let tempList = [];
       let entriesvalues = Object.values(_.get(response, 'indexfile.entries'));
       entriesvalues.map(value => {

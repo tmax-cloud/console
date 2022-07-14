@@ -66,7 +66,7 @@ const tableProps: TableProps = {
       sortField: 'repo.url',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_53',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_141',
       sortField: 'version',
     },
     {
@@ -84,7 +84,11 @@ const tableProps: TableProps = {
         ),
       },
       {
-        children: obj.repo?.name,
+        children: (
+          <Link key={'link' + obj.name} to={`/helmrepositories/${obj.repo?.name}`}>
+            {obj.repo?.name}
+          </Link>
+        ),
       },
       {
         children: obj.repo?.url,
