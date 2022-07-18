@@ -93,6 +93,12 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - ImageSigner (이미지 서명자)
 - ImageSignRequest (이미지 서명 요청)
 - ImageScanRequest (이미지 스캔 요청)
+- Kafka (카프카 클러스터)
+- KafkaConnect (카프카 커넥트)
+- KafkaConnector (카프카 커넥터)
+- KafkaBridge (카프카 브릿지)
+- KafkaMirrorMaker2 (카프카 미러 메이커 2)
+- KafkaRebalance (카프카 리밸런스)
 </div>
 <div style="white-space: pre-line; font-size: 13px; display: inline-block; width: 50%;">
 
