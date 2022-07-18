@@ -16,6 +16,7 @@ import { getIngressUrl } from './utils/ingress-utils';
 import { NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 import { deleteModal, helmrepositoryUpdateModal } from '../modals';
+import { Radio } from '@patternfly/react-core';
 
 export const HelmRepositoryModel: NonK8sKind = {
   kind: 'HelmRepository',
@@ -139,6 +140,18 @@ export const HelmrepositoryForm: React.FC<HelmrepositoryFormProps> = props => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const [host, setHost] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const [repositoryType, setRepositoryType] = React.useState('Public');
+
+  const repositoryTypeItems = [
+    {
+      title: 'Public',
+      value: 'Public',
+    },
+    {
+      title: 'Private',
+      value: 'Private',
+    },
+  ];
 
   React.useEffect(() => {
     const updateHost = async () => {
@@ -178,6 +191,9 @@ export const HelmrepositoryForm: React.FC<HelmrepositoryFormProps> = props => {
   const updatePostRepoURL = e => {
     setPostRepoURL(e.target.value);
   };
+  const handleModeChange = e => {
+    setRepositoryType(e.target.value);
+  };
 
   return (
     <div style={{ padding: '30px' }}>
@@ -186,12 +202,25 @@ export const HelmrepositoryForm: React.FC<HelmrepositoryFormProps> = props => {
           <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${host}/helm/repos`}>
             <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
             <div className="co-form-subsection">
+              <Section label={'리포지터리 타입'} id="repositorytype">
+                <Radio value={repositoryType} isChecked={repositoryType === 'Private'} onChange={handleModeChange} id="radio-1" className="ceph-install--no-margin" label="Internal" name="repository-type" />
+              </Section>
               <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
                 <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
               </Section>
               <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
                 <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
               </Section>
+              {repositoryType === 'Private ' && (
+                <>
+                  <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
+                    <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
+                  </Section>
+                  <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
+                    <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
+                  </Section>
+                </>
+              )}
             </div>
             <div className="co-form-section__separator" />
             <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!host}>
