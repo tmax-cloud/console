@@ -19,7 +19,7 @@ const INGRESS_LABEL_VALUES = [
   { labelValue: 'gitlab', menuKey: CustomMenusMap.Git.kind },
   { labelValue: 'grafana', menuKey: CustomMenusMap.Grafana.kind },
   { labelValue: 'kiali', menuKey: CustomMenusMap.Kiali.kind },
-  { labelValue: 'kibana', menuKey: CustomMenusMap.Kibana.kind },
+  { labelValue: 'opensearch-dashboards', menuKey: CustomMenusMap.OpenSearch.kind },
   { labelValue: 'jaeger', menuKey: CustomMenusMap.Trace.kind },
   { labelValue: 'helm-apiserver', menuKey: CustomMenusMap.Helm.kind },
 ];

@@ -164,12 +164,12 @@ export const CustomMenusMap: CustomMenus = {
     url: '',
     isMultiOnly: false,
   },
-  Kibana: {
-    kind: 'Kibana',
+  OpenSearch: {
+    kind: 'OpenSearch',
     visible: true,
     type: MenuLinkType.NewTabLink,
     defaultLabel: 'COMMON:MSG_LNB_MENU_99',
-    url: `${document.location.origin}/api/kibana/`,
+    url: '',
     isMultiOnly: false,
   },
   Git: {
