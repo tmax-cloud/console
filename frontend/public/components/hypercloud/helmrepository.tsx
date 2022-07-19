@@ -1,23 +1,25 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
+import * as classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
 import { history } from '@console/internal/components/utils/router';
-import { Button } from '@patternfly/react-core';
+import { Button, Radio } from '@patternfly/react-core';
+import { sortable, compoundExpand } from '@patternfly/react-table';
 import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory, Kebab, KebabOption, KebabAction, Page } from '@console/internal/components/utils';
 import { Section } from '@console/internal/components/hypercloud/utils/section';
 import { TableProps } from './utils/default-list-component';
-import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
+import { DetailsPage, ListPage, DetailsPageProps, Table } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
 import { NonK8sKind } from '../../module/k8s';
 import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 import { deleteModal, helmrepositoryUpdateModal } from '../modals';
-import { Radio } from '@patternfly/react-core';
-import * as classNames from 'classnames';
+import { TFunction } from 'i18next';
+import { ExpandableInnerTable } from './utils/expandable-inner-table';
 
 export const HelmRepositoryModel: NonK8sKind = {
   kind: 'HelmRepository',
@@ -50,82 +52,168 @@ type HelmrepositoryPageProps = {
   match?: any;
 };
 export const HelmrepositoryPage: React.FC<HelmrepositoryPageProps> = props => {
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createProps={{ to: '/helmrepositories/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmRepositoryModel }} isK8sResource={false} />;
+  return <ListPage {...props} canCreate={true} ListComponent={HelmRepositoriesList} kind={kind} createProps={{ to: '/helmrepositories/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmRepositoryModel }} isK8sResource={false} />;
 };
 
-const tableProps: TableProps = {
-  header: [
+const tableColumnClasses = [
+  '', // name
+  '', // url
+  classNames('pf-m-hidden', 'pf-m-visible-on-sm'), // charts
+  classNames('pf-m-hidden', 'pf-m-visible-on-lg'), // updated
+  Kebab.columnClass, // MENU ACTIONS
+];
+
+const HelmRepositoryExtendTableRow = data => {
+  const returnPromis: any = new Promise(resolve => {
+    const preDataResult = data.reduce((preData, item, index) => {
+      const innerItemsDataResult = item.charts.reduce((innerItemsData, innerItem) => {
+        innerItemsData.push(innerItem);
+        return innerItemsData;
+      }, []);
+
+      if (innerItemsDataResult.length > 0) {
+        preData.push({
+          isOpen: false,
+          cells: HelmRepositoryTableRow(item, innerItemsDataResult.length),
+        });
+        let parentValue = index * 2;
+        preData.push({
+          parent: parentValue,
+          compoundParent: 2,
+          cells: [
+            {
+              title: <ExpandableInnerTable aria-label="Helm Chart Table" header={InnerTableHeader} Row={InnerTableRow(item.name)} data={innerItemsDataResult}></ExpandableInnerTable>,
+              props: { colSpan: 5, className: 'pf-m-no-padding' },
+            },
+          ],
+        });
+      }
+      return preData;
+    }, []);
+    resolve(preDataResult);
+  });
+  return returnPromis;
+};
+
+const HelmRepositoryTableRow = (obj, itemCount) => {
+  const options: KebabOption[] = [
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_1',
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
+      callback: async () => {
+        const host = await getHost();
+        helmrepositoryUpdateModal({
+          updateServiceURL: `${host}/helm/repos/${obj.name}`,
+          stringKey: 'COMMON:MSG_LNB_MENU_241',
+          name: obj.name,
+        });
+      },
+    },
+    {
+      label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_241',
+      callback: async () => {
+        const host = await getHost();
+        deleteModal({
+          nonk8sProps: {
+            deleteServiceURL: `${host}/helm/repos/${obj.name}`,
+            stringKey: 'COMMON:MSG_LNB_MENU_241',
+            name: obj.name,
+          },
+        });
+      },
+    },
+  ];
+  return [
+    {
+      title: <Link to={`/helmrepositories/${obj.name}`}>{obj.name}</Link>,
+      textValue: obj?.name,
+    },
+    {
+      title: obj?.url,
+      textValue: obj?.url,
+    },
+    {
+      title: <a>{obj?.charts?.length}</a>,
+      textValue: obj?.charts?.length,
+      props: {
+        isOpen: false,
+      },
+    },
+    {
+      title: <Timestamp timestamp={obj.lastupdated} />,
+      textValue: obj?.lastupdated,
+    },
+    {
+      title: <Kebab options={options} />,
+    },
+  ];
+};
+
+const InnerTableHeader = [
+  {
+    title: '이름',
+    transforms: [sortable],
+  },
+  {
+    title: '최신버전',
+    transforms: [sortable],
+  },
+];
+
+const InnerTableRow = repoName => {
+  return obj => {
+    return [
+      {
+        title: <Link to={`/helmcharts/${repoName}/${obj.name}`}>{obj.name}</Link>,
+        textValue: obj?.name,
+      },
+      {
+        title: obj.version,
+        textValue: obj.version,
+      },
+    ];
+  };
+};
+
+const HelmRepositoryTableHeader = (t?: TFunction) => {
+  return [
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
       sortField: 'name',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[0] },
     },
     {
-      title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_1',
-      sortField: 'url',
+      title: t('SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_1'),
+      sortFunc: 'url',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[1] },
     },
     {
-      title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABHELMCHARTS_1',
+      title: t('SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABHELMCHARTS_1'),
       sortField: 'charts.length',
+      transforms: [sortable],
+      cellTransforms: [compoundExpand],
+      props: { className: tableColumnClasses[2] },
     },
     {
-      title: 'SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2',
+      title: t('SINGLE:MSG_HELMREPOSITORIES_HELMREPOSITORYDETAILS_TABDETAILS_2'),
       sortField: 'lastupdated',
+      transforms: [sortable],
+      props: { className: tableColumnClasses[3] },
     },
     {
       title: '',
-      transforms: null,
-      props: { className: Kebab.columnClass },
+      props: { className: tableColumnClasses[4] },
     },
-  ],
-  row: (obj: any) => {
-    const options: KebabOption[] = [
-      {
-        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_51**COMMON:MSG_LNB_MENU_241',
-        callback: async () => {
-          const host = await getHost();
-          helmrepositoryUpdateModal({
-            updateServiceURL: `${host}/helm/repos/${obj.name}`,
-            stringKey: 'COMMON:MSG_LNB_MENU_241',
-            name: obj.name,
-          });
-        },
-      },
-      {
-        label: 'COMMON:MSG_MAIN_ACTIONBUTTON_16**COMMON:MSG_LNB_MENU_241',
-        callback: async () => {
-          const host = await getHost();
-          deleteModal({
-            nonk8sProps: {
-              deleteServiceURL: `${host}/helm/repos/${obj.name}`,
-              stringKey: 'COMMON:MSG_LNB_MENU_241',
-              name: obj.name,
-            },
-          });
-        },
-      },
-    ];
-    return [
-      {
-        children: <Link to={`/helmrepositories/${obj.name}`}>{obj.name}</Link>,
-      },
-      {
-        children: obj.url,
-      },
-      {
-        children: obj.charts?.map(chart => {
-          return <div key={chart.name}>{chart.name}</div>;
-        }),
-      },
-      {
-        children: <Timestamp timestamp={obj.lastupdated} />,
-      },
-      {
-        className: Kebab.columnClass,
-        children: <Kebab options={options} />,
-      },
-    ];
-  },
+  ];
 };
+HelmRepositoryTableHeader.displayName = 'HelmRepositoryTableHeader';
+
+const HelmRepositoriesList: React.FC = props => {
+  const { t } = useTranslation();
+  return <Table {...props} aria-label="Helm Repository" Header={HelmRepositoryTableHeader.bind(null, t)} virtualize={false} expandable={true} expandableRows={HelmRepositoryExtendTableRow} />;
+};
+HelmRepositoriesList.displayName = 'HelmRepositoriesList';
 
 type HelmrepositoryFormProps = {
   defaultValue?: any;
