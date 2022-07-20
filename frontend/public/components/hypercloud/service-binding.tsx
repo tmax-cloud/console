@@ -1,12 +1,13 @@
 import * as React from 'react';
 // import * as classNames from 'classnames';
 import { ServiceBindingModel } from '../../models';
-import { Kebab, ResourceKebab, ResourceLink, Timestamp } from '../utils';
+import { DetailsItem, Kebab, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { TableProps } from './utils/default-list-component';
 import { K8sResourceKind } from 'public/module/k8s';
 // import { Status } from '@console/shared';
 import { ListPage } from '../factory';
 import { useTranslation } from 'react-i18next';
+import { ResourceLabel } from 'public/models/hypercloud/resource-plural';
 
 
 const kind = ServiceBindingModel.kind;
@@ -81,15 +82,44 @@ export const ServiceBindingsPage: React.FC = props => {
 };
 
 // 디테일 페이지
-const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: awx }) => {
+export const AWXDetailsList: React.FC<ServiceBindingDetailsListProps> = ({ obj: sb }) => {
+  const { t } = useTranslation();
+  return (
+    <dl className="co-m-pane__details">
+      {/* 상태 */}
+      <DetailsItem label={t('COMMON:MSG_MAIN_TABLEHEADER_3')} obj={sb}>
+        {/* <Status status={AwxStatusReducer(awx)} /> */}
+      </DetailsItem>
+      {/* 애플리케이션 */}
+      <DetailsItem label={t('COMMON:MSG_SERVICEBINDINGS_SERVICEBINDINGDETAILS_TABDETAILS_1')} obj={sb}>
+        {/* <Status status={AwxStatusReducer(awx)} /> */}
+      </DetailsItem>
+
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_2')} obj={awx} path="spec.tower_hostname">
+        {awx.spec?.tower_hostname ? (
+          <a href={`https://${awx.spec?.tower_hostname}`} target="_blank">
+            {awx.spec.tower_hostname}
+          </a>
+        ) : (
+          <div>-</div>
+        )}
+      </DetailsItem>
+      <DetailsItem label={t('MULTI:MSG_MULTI_AWXINSTANCES_AWXINSTANCEDETAILS_3')} obj={awx}>
+        <ImageSummary obj={awx} />
+      </DetailsItem>
+    </dl>
+  );
+};
+
+const ServiceBindingDetails: React.FC<ServiceBindingDetailsProps> = ({ obj: sb }) => {
   const { t } = useTranslation();
   return (
     <>
       <div className="co-m-pane__body">
-        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(awx, t) })} />
+        <SectionHeading text={t('COMMON:MSG_DETAILS_TABDETAILS_DETAILS_1', { 0: ResourceLabel(sb, t) })} />
         <div className="row">
           <div className="col-sm-6">
-            <ResourceSummary resource={awx} showOwner={false} />
+            <ResourceSummary resource={sb} showOwner={false} />
           </div>
           <div className="col-sm-6">
             <AWXDetailsList obj={awx} />
