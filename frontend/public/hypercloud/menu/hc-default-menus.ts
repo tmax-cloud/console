@@ -89,7 +89,7 @@ const MultiNavMenus = [
     menuType: MenuType.REGISTERED_MENU,
     kind: Models.TFApplyClaimModel.kind,
   },
-  // { MEMO : 추후 페더레이션 메뉴 활성화하려면 주석 처리 풀어주면 됨. 
+  // { MEMO : 추후 페더레이션 메뉴 활성화하려면 주석 처리 풀어주면 됨.
   //   menuType: MenuType.CONTAINER,
   //   label: MenuContainerLabels.federation,
   //   innerMenus: [
