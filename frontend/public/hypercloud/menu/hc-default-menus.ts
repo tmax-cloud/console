@@ -51,7 +51,7 @@ const DeveloperNavMenus = [
   {
     menuType: MenuType.CONTAINER,
     label: MenuContainerLabels.servicecatalogs,
-    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind, Models.ServiceBindingModel.kind],
+    innerMenus: [Models.ServiceBrokerModel.kind, Models.ServiceClassModel.kind, Models.ClusterServiceBrokerModel.kind, Models.ClusterServiceClassModel.kind, Models.ServiceInstanceModel.kind, Models.TemplateModel.kind, Models.ClusterTemplateModel.kind, Models.ClusterTemplateClaimModel.kind, Models.TemplateInstanceModel.kind],
   },
   {
     menuType: MenuType.CONTAINER,
@@ -78,6 +78,10 @@ const DeveloperNavMenus = [
     label: MenuContainerLabels.kafka,
     innerMenus: [Models.KafkaClusterModel.kind, Models.KafkaConnectModel.kind, Models.KafkaConnectorModel.kind, Models.KafkaBridgeModel.kind, Models.KafkaMirrorMaker2Model.kind, Models.KafkaRebalanceModel.kind],
   },
+  {
+    menuType: MenuType.REGISTERED_MENU,
+    kind: Models.ServiceBindingModel.kind
+  }
 ];
 
 const MultiNavMenus = [

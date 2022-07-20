@@ -136,7 +136,7 @@ export const hyperCloudDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapVa
   .set(referenceForModel(ClusterServiceClassModel), () => import('./cluster-service-class' /* webpackChunkName: "clusterserviceclass" */).then(m => m.ClusterServiceClassesDetailsPage))
   .set(referenceForModel(ClusterServicePlanModel), () => import('./cluster-service-plan' /* webpackChunkName: "clusterserviceplan" */).then(m => m.ClusterServicePlansDetailsPage))
   .set(referenceForModel(ServiceInstanceModel), () => import('./service-instance' /* webpackChunkName: "serviceinstance" */).then(m => m.ServiceInstancesDetailsPage))
-  .set(referenceForModel(ServiceBindingModel), () => import('./service-binding' /* webpackChunkName: "servicebinding" */).then(m => m.ServiceBindingsDetailsPage))
+  // .set(referenceForModel(ServiceBindingModel), () => import('./service-binding' /* webpackChunkName: "servicebinding" */).then(m => m.ServiceBindingsDetailsPage))
   .set(referenceForModel(ClusterTemplateClaimModel), () => import('./cluster-template-claim' /* webpackChunkName: "clustertemplateclaim" */).then(m => m.ClusterTemplateClaimsDetailsPage))
   .set(referenceForModel(ClusterTemplateModel), () => import('./cluster-template' /* webpackChunkName: "clustertemplate" */).then(m => m.ClusterTemplatesDetailsPage))
   .set(referenceForModel(TemplateModel), () => import('./template' /* webpackChunkName: "template" */).then(m => m.TemplatesDetailsPage))
