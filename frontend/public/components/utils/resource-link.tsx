@@ -80,6 +80,7 @@ export const ResourceLink = connectToModel(
     hideIcon,
     title,
     children,
+    query,
   }) => {
     if (!kind) {
       return null;
@@ -89,6 +90,20 @@ export const ResourceLink = connectToModel(
     const classes = classNames('co-resource-item', className, {
       'co-resource-item--inline': inline,
     });
+    type ColeredValueProps = {
+      query?: string,
+      value?: string,
+    }
+    const ColoredValue:React.FC<ColeredValueProps> = props => {
+      const {query, value} = props;
+      return (
+        <>
+          {value.split(query)[0]}
+          <span style={{ backgroundColor: 'yellow' }}>{query}</span>
+          {value.split(query)[1]}
+        </>
+      )
+    }
 
     return (
       <span className={classes}>
@@ -100,11 +115,11 @@ export const ResourceLink = connectToModel(
             className="co-resource-item__resource-name"
             data-test-id={value}
           >
-            {value}
+            {query ? <ColoredValue query={query} value={value} /> : value}
           </Link>
         ) : (
           <span className="co-resource-item__resource-name" data-test-id={value}>
-            {value}
+            {query ? <ColoredValue query={query} value={value} /> : value}
           </span>
         )}
         {children}
