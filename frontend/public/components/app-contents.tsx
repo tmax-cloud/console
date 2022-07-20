@@ -166,7 +166,7 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/helmreleases/all-namespaces" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
           <LazyRoute path="/helmreleases/all-namespaces/:name" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
           <LazyRoute path="/helmreleases/ns/:ns" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
-          <LazyRoute path="/helmreleases/ns/:ns/~new" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseCreatePage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/~new" exact loader={() => import('./hypercloud/form/helmreleases/create-helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseCreatePage))} />
           <LazyRoute path="/helmreleases/ns/:ns/:name" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseDetailsPage))} />
           <LazyRoute path="/helmreleases/ns/:ns/:name/edit" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseEditPage))} />
           <Route path="/helmreleases" exact component={NamespaceRedirect} />
