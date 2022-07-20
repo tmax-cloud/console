@@ -14,28 +14,7 @@ import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
-import { NonK8sKind } from '../../module/k8s';
-import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
-
-export const HelmChartModel: NonK8sKind = {
-  kind: 'HelmChart',
-  label: 'Helm Chart',
-  labelPlural: 'Helm Charts',
-  abbr: 'HC',
-  namespaced: false,
-  plural: 'helmcharts',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmcharts',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_224',
-    labelPlural: 'COMMON:MSG_LNB_MENU_223',
-  },
-  nonK8SResource: true,
-};
+import { HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
 
 const kind = HelmChartModel.kind;
 

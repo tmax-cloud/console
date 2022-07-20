@@ -15,31 +15,10 @@ import { DetailsPage, ListPage, DetailsPageProps, Table } from '../factory';
 import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
 import { LoadingBox } from '../utils';
 import { getIngressUrl } from './utils/ingress-utils';
-import { NonK8sKind } from '../../module/k8s';
-import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
 import { deleteModal, helmrepositoryUpdateModal } from '../modals';
 import { TFunction } from 'i18next';
 import { ExpandableInnerTable } from './utils/expandable-inner-table';
-
-export const HelmRepositoryModel: NonK8sKind = {
-  kind: 'HelmRepository',
-  label: 'Helm Repository',
-  labelPlural: 'Helm Repositories',
-  abbr: 'HR',
-  namespaced: false,
-  plural: 'helmrepositories',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmrepositories',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_241',
-    labelPlural: 'COMMON:MSG_LNB_MENU_240',
-  },
-  nonK8SResource: true,
-};
+import { HelmRepositoryModel, HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
 
 const kind = HelmRepositoryModel.kind;
 
@@ -365,26 +344,6 @@ const chartsPage: (c?: React.ComponentType<any>) => Page = component => ({
   name: 'COMMON:MSG_MAIN_TABLEHEADER_142',
   component,
 });
-
-export const HelmChartModel: NonK8sKind = {
-  kind: 'HelmChart',
-  label: 'Helm Chart',
-  labelPlural: 'Helm Charts',
-  abbr: 'HC',
-  namespaced: false,
-  plural: 'helmcharts',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmcharts',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_224',
-    labelPlural: 'COMMON:MSG_LNB_MENU_223',
-  },
-  nonK8SResource: true,
-};
 const chartTableProps = (repoName: string): TableProps => {
   return {
     header: [

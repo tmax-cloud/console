@@ -27,28 +27,7 @@ import { getQueryArgument } from '../utils';
 import { LoadingBox } from '../utils';
 import { resourceSortFunction } from './utils/resource-sort';
 import { getIngressUrl } from './utils/ingress-utils';
-import { NonK8sKind } from '../../module/k8s';
-import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
-
-export const HelmReleaseModel: NonK8sKind = {
-  kind: 'HelmRelease',
-  label: 'Helm Release',
-  labelPlural: 'Helm Releases',
-  abbr: 'HR',
-  namespaced: true,
-  plural: 'helmreleases',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmreleases',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_204',
-    labelPlural: 'COMMON:MSG_LNB_MENU_203',
-  },
-  nonK8SResource: true,
-};
+import { HelmReleaseModel } from '@console/internal/models/hypercloud/helm-model';
 
 const kind = HelmReleaseModel.kind;
 const getHost = async () => {
