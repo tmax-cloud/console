@@ -36,7 +36,7 @@ const tableColumnClasses = [
   Kebab.columnClass, // MENU ACTIONS
 ];
 
-const HelmRepositoryExtendTableRow = data => {
+const HelmRepositoryExtendTableRow = (t, data) => {
   const returnPromis: any = new Promise(resolve => {
     const preDataResult = data.reduce((preData, item, index) => {
       const innerItemsDataResult = item.charts.reduce((innerItemsData, innerItem) => {
@@ -55,7 +55,23 @@ const HelmRepositoryExtendTableRow = data => {
           compoundParent: 2,
           cells: [
             {
-              title: <ExpandableInnerTable aria-label="Helm Chart Table" header={InnerTableHeader} Row={InnerTableRow(item.name)} data={innerItemsDataResult}></ExpandableInnerTable>,
+              title: <ExpandableInnerTable aria-label="Helm Chart Table" header={InnerTableHeader(t)} Row={InnerTableRow(item.name)} data={innerItemsDataResult}></ExpandableInnerTable>,
+              props: { colSpan: 5, className: 'pf-m-no-padding' },
+            },
+          ],
+        });
+      } else {
+        preData.push({
+          isOpen: false,
+          cells: HelmRepositoryTableRow(item, innerItemsDataResult.length),
+        });
+        let parentValue = index * 2;
+        preData.push({
+          parent: parentValue,
+          compoundParent: 2,
+          cells: [
+            {
+              title: <div>No data</div>,
               props: { colSpan: 5, className: 'pf-m-no-padding' },
             },
           ],
@@ -121,16 +137,18 @@ const HelmRepositoryTableRow = (obj, itemCount) => {
   ];
 };
 
-const InnerTableHeader = [
-  {
-    title: '이름',
-    transforms: [sortable],
-  },
-  {
-    title: '최신버전',
-    transforms: [sortable],
-  },
-];
+const InnerTableHeader = t => {
+  return [
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_1'),
+      transforms: [sortable],
+    },
+    {
+      title: t('COMMON:MSG_MAIN_TABLEHEADER_141'),
+      transforms: [sortable],
+    },
+  ];
+};
 
 const InnerTableRow = repoName => {
   return obj => {
@@ -184,10 +202,9 @@ HelmRepositoryTableHeader.displayName = 'HelmRepositoryTableHeader';
 
 const HelmRepositoriesList: React.FC = props => {
   const { t } = useTranslation();
-  return <Table {...props} aria-label="Helm Repository" Header={HelmRepositoryTableHeader.bind(null, t)} virtualize={false} expandable={true} expandableRows={HelmRepositoryExtendTableRow} />;
+  return <Table {...props} aria-label="Helm Repository" Header={HelmRepositoryTableHeader.bind(null, t)} virtualize={false} expandable={true} expandableRows={HelmRepositoryExtendTableRow.bind(null, t)} />;
 };
 HelmRepositoriesList.displayName = 'HelmRepositoriesList';
-
 
 const { details } = navFactory;
 const chartsPage: (c?: React.ComponentType<any>) => Page = component => ({
