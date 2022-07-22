@@ -62,11 +62,11 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
         inDo = _.defaultsDeep(data, fixed);
       }
       inDo = props.onSubmitCallback(inDo);
-      if (NonK8sKindModel) {
-        if (inDo.error) {
-          setProgress(false);
-          setError(inDo.error);
-        } else {
+      if (inDo.error) {
+        setProgress(false);
+        setError(inDo.error);
+      } else {
+        if (NonK8sKindModel) {
           setProgress(true);
           const { postUrl } = inDo;
           delete inDo.nonK8sResource;
@@ -81,13 +81,8 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
               setProgress(false);
               setError(`error : ${e.json.error}\ndescription : ${e.json.description}`);
             });
-        }
-      } else {
-        const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
-        if (inDo.error) {
-          setProgress(false);
-          setError(inDo.error);
         } else {
+          const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
           setProgress(true);
           isCreatePage(defaultValues)
             ? k8sCreate(model, inDo)
@@ -107,30 +102,6 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
                   setError(e.message);
                 });
         }
-      }
-      const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
-      if (inDo.error) {
-        setProgress(false);
-        setError(inDo.error);
-      } else {
-        setProgress(true);
-        isCreatePage(defaultValues)
-          ? k8sCreate(model, inDo)
-              .then(() => {
-                history.push(resourceObjPath(inDo, referenceFor(model)));
-              })
-              .catch(e => {
-                setProgress(false);
-                setError(e.message);
-              })
-          : k8sUpdate(model, inDo)
-              .then(() => {
-                history.push(resourceObjPath(inDo, referenceFor(model)));
-              })
-              .catch(e => {
-                setProgress(false);
-                setError(e.message);
-              });
       }
     });
     return (
