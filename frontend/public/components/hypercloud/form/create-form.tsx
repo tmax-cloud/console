@@ -69,11 +69,9 @@ export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?:
         if (NonK8sKindModel) {
           setProgress(true);
           const { postUrl } = inDo;
-          delete inDo.nonK8sResource;
-          delete inDo.kind;
-          delete inDo.postUrl;
+          const payload = _.omit(inDo, ['nonK8sResource', 'kind', 'postUrl']);
           coFetchJSON
-            .post(postUrl, inDo)
+            .post(postUrl, payload)
             .then(() => {
               history.goBack();
             })
