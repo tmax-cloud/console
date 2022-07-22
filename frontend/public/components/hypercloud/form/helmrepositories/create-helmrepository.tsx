@@ -103,7 +103,7 @@ export const CreateRepository: React.FC<CreateRepositoryProps> = props => {
 };
 
 export const onSubmitCallback = data => {
-  const returnDate = {
+  const returnData = {
     nonK8sResource: true,
     kind: 'HelmRepository',
     postUrl: data.postUrl,
@@ -112,10 +112,10 @@ export const onSubmitCallback = data => {
   };
 
   if (data.type === 'Private') {
-    Object.assign(returnDate, { is_private: true, id: data.id, password: data.password });
+    Object.assign(returnData, { is_private: true, id: data.id, password: data.password });
   }
 
-  return returnDate;
+  return returnData;
 };
 
 type CreateRepositoryProps = {
