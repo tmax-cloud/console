@@ -103,18 +103,19 @@ export const CreateRepository: React.FC<CreateRepositoryProps> = props => {
 };
 
 export const onSubmitCallback = data => {
-  return data.type === 'Private'
-    ? {
-        nonK8sResource: true,
-        kind: 'HelmRepository',
-        postUrl: data.postUrl,
-        name: data.name,
-        repoURL: data.repoURL,
-        is_private: true,
-        id: data.id,
-        password: data.password,
-      }
-    : { nonK8sResource: true, kind: 'HelmRepository', postUrl: data.postUrl, name: data.name, repoURL: data.repoURL };
+  const returnDate = {
+    nonK8sResource: true,
+    kind: 'HelmRepository',
+    postUrl: data.postUrl,
+    name: data.name,
+    repoURL: data.repoURL,
+  };
+
+  if (data.type === 'Private') {
+    Object.assign(returnDate, { is_private: true, id: data.id, password: data.password });
+  }
+
+  return returnDate;
 };
 
 type CreateRepositoryProps = {
