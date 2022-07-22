@@ -21,7 +21,7 @@ const getHost = async () => {
   return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
 };
 
-const typeItems = t => [
+const typeItems = [
   // RadioGroup 컴포넌트에 넣어줄 items
   {
     title: 'Public',
@@ -73,7 +73,7 @@ const CreateRepositoryComponent: React.FC<RepositoryFormProps> = props => {
   return (
     <>
       <Section label={'리포지터리 타입'} id="repositorytype">
-        <RadioGroup name="type" items={typeItems.bind(null, t)()} inline={false} initValue={type} />
+        <RadioGroup name="type" items={typeItems} inline={false} initValue={type} />
       </Section>
       <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
         <TextInput inputClassName="pf-c-form-control" id="name" name="name" defaultValue={defaultValues.name} />
