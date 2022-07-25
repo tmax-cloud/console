@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import { ActionGroup, Button } from '@patternfly/react-core';
-import { k8sCreate, k8sUpdate, referenceFor, K8sResourceKind, modelFor } from '../../../module/k8s';
+import { k8sCreate, k8sUpdate, referenceFor, K8sResourceKind, modelFor, NonK8sKind } from '../../../module/k8s';
 import { pluralToKind } from './';
 import { ButtonBar, history, resourceObjPath } from '../../utils';
 import { Section } from '../utils/section';
@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { ResourceLabel } from '../../../models/hypercloud/resource-plural';
 import { Tooltip } from '@patternfly/react-core';
 import { saveButtonDisabledString, isSaveButtonDisabled } from '../utils/button-state';
+import { coFetchJSON } from '@console/internal/co-fetch';
 
 export const isCreatePage = defaultValues => {
   return !_.has(defaultValues, 'metadata.creationTimestamp');
@@ -30,7 +31,7 @@ export const kindToggle = (kindPlural, methods) => {
   return kindPlural;
 };
 
-export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) => {
+export const WithCommonForm = (SubForm, params, defaultValues, NonK8sKindModel?: NonK8sKind) => {
   const { t } = useTranslation();
 
   const isButtonDisabled = defaultValues.status && isSaveButtonDisabled(defaultValues);
@@ -38,12 +39,12 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
   const FormComponent: React.FC<CommonFormProps_> = props => {
     const methods = useForm({ defaultValues: defaultValues });
 
-    const kind = pluralToKind(kindToggle(params.plural, methods));
+    const kind = NonK8sKindModel ? NonK8sKindModel.kind : pluralToKind(kindToggle(params.plural, methods));
     //const kind = pluralToKind(params.plural);
 
     // const title = `${props.titleVerb} ${params?.type === 'form' ? '' : params.type || 'Sample'} ${kind || ''}`;
     //const title = `${isCreatePage(defaultValues) ? 'Create' : 'Edit'} ${kind || 'Sample'}`;
-    const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: ResourceLabel({ kind: kind }, t) })}`;
+    const title = `${isCreatePage(defaultValues) ? t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: NonK8sKindModel ? t(NonK8sKindModel.i18nInfo.label) : ResourceLabel({ kind: kind }, t) }) : t('COMMON:MSG_MAIN_ACTIONBUTTON_15', { 0: NonK8sKindModel ? t(NonK8sKindModel.i18nInfo.label) : ResourceLabel({ kind: kind }, t) })}`;
 
     const [inProgress, setProgress] = React.useState(false);
     const [errorMessage, setError] = React.useState('');
@@ -61,29 +62,44 @@ export const WithCommonForm = (SubForm, params, defaultValues, modal?: boolean) 
         inDo = _.defaultsDeep(data, fixed);
       }
       inDo = props.onSubmitCallback(inDo);
-      const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
       if (inDo.error) {
         setProgress(false);
         setError(inDo.error);
       } else {
-        setProgress(true);
-        isCreatePage(defaultValues)
-          ? k8sCreate(model, inDo)
-              .then(() => {
-                history.push(resourceObjPath(inDo, referenceFor(model)));
-              })
-              .catch(e => {
-                setProgress(false);
-                setError(e.message);
-              })
-          : k8sUpdate(model, inDo)
-              .then(() => {
-                history.push(resourceObjPath(inDo, referenceFor(model)));
-              })
-              .catch(e => {
-                setProgress(false);
-                setError(e.message);
-              });
+        if (NonK8sKindModel) {
+          setProgress(true);
+          const { postUrl } = inDo;
+          const payload = _.omit(inDo, ['nonK8sResource', 'kind', 'postUrl']);
+          coFetchJSON
+            .post(postUrl, payload)
+            .then(() => {
+              history.goBack();
+            })
+            .catch(e => {
+              setProgress(false);
+              setError(`error : ${e.json.error}\ndescription : ${e.json.description}`);
+            });
+        } else {
+          const model = inDo.kind && inDo.kind !== kind ? modelFor(inDo.kind) : kind && modelFor(kind);
+          setProgress(true);
+          isCreatePage(defaultValues)
+            ? k8sCreate(model, inDo)
+                .then(() => {
+                  history.push(resourceObjPath(inDo, referenceFor(model)));
+                })
+                .catch(e => {
+                  setProgress(false);
+                  setError(e.message);
+                })
+            : k8sUpdate(model, inDo)
+                .then(() => {
+                  history.push(resourceObjPath(inDo, referenceFor(model)));
+                })
+                .catch(e => {
+                  setProgress(false);
+                  setError(e.message);
+                });
+        }
       }
     });
     return (
