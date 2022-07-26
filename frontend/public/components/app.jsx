@@ -23,7 +23,7 @@ import CloudShell from '@console/app/src/components/cloud-shell/CloudShell';
 import CloudShellTab from '@console/app/src/components/cloud-shell/CloudShellTab';
 import '../vendor.scss';
 import '../style.scss';
-import './hypercloud/utils/langs/i18n';
+import i18n, { getI18nResources } from './hypercloud/utils/langs/i18n';
 //PF4 Imports
 import { Page } from '@patternfly/react-core';
 // import Keycloak from 'keycloak-js';
@@ -165,6 +165,9 @@ keycloak
     setIdToken(keycloak.idToken);
     setAccessToken(keycloak.token);
     setId(keycloak.idTokenParsed.preferred_username);
+
+    // k8s 버전별 i18n 리소스 적용
+    await getI18nResources();
 
     // Ingress의 host 주소 조회를 통해 링크형 메뉴 주소 설정
     await setUrlFromIngresses();
