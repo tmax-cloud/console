@@ -155,7 +155,7 @@ console.log('-------------------------------------------------------------------
 (async function main() {
   const commonFile = '16.uiSTR_HyperCloud5.xlsx';
 
-  const result = {[k8sVersion[0]] : {}, [k8sVersion[1]]: {}};
+  const result = { [k8sVersion[0]]: {}, [k8sVersion[1]]: {} };
 
   // get common/single/multi string
   for (const key of Object.keys(KeyMap)) {
@@ -172,17 +172,17 @@ console.log('-------------------------------------------------------------------
 
   // get description string
   console.log(`${KeyMap.DESCRIPTION.sheet} sheet conversion start...`);
-  k8sVersion.forEach((version) => {
+  for (const version of k8sVersion) {
     const data = await read(`16.uiSTR_HyperCloud5_Description_K8s_${version}.xlsx`, KeyMap.DESCRIPTION.sheet, KeyMap.DESCRIPTION.column);
     for (const lang of Object.keys(LanguageMap)) {
       result[version][lang] = { ...result[version][lang], [KeyMap.DESCRIPTION.label]: data[lang] };
     }
     // result's size check
     console.log(`[KR] k8s_${version} | ${KeyMap.DESCRIPTION.label} Size:`, Object.keys(result[version].KR.DESCRIPTION).length);
-  });
+  }
 
   // write file
-  for(const version of k8sVersion) {
+  for (const version of k8sVersion) {
     for (const lang of Object.keys(LanguageMap)) {
       write(`${dir}/k8s-${version}/${LanguageMap[lang].file}`, result[version][lang]);
     }
