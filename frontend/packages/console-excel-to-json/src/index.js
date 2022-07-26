@@ -141,6 +141,11 @@ const write = (filePath, data) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
+  for (const version of k8sVersion) {
+    if (!fs.existsSync(`${dir}/k8s-${version}`)) {
+      fs.mkdirSync(`${dir}/k8s-${version}`);
+    }
+  }
   fs.writeFile(filePath, jsonData, { encoding: 'utf8' }, error => {
     if (error) throw error;
     console.log(`Writing to ${filePath} finished successfully!`);
