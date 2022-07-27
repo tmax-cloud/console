@@ -36,9 +36,9 @@ const defaultValuesTemplate = {
 
 const repositoryFormFactory = (params, obj) => {
   const defaultValues = obj || defaultValuesTemplate;
-  return WithCommonForm(CreateRepositoryComponent, params, defaultValues, HelmRepositoryModel);
+  return WithCommonForm(CreateHelmRepositoryComponent, params, defaultValues, HelmRepositoryModel);
 };
-const CreateRepositoryComponent: React.FC<RepositoryFormProps> = props => {
+const CreateHelmRepositoryComponent: React.FC<RepositoryFormProps> = props => {
   const methods = useFormContext();
 
   const {
@@ -90,7 +90,7 @@ const CreateRepositoryComponent: React.FC<RepositoryFormProps> = props => {
   );
 };
 
-export const CreateRepository: React.FC<CreateRepositoryProps> = props => {
+export const CreateHelmRepository: React.FC<CreateHelmRepositoryProps> = props => {
   const formComponent = repositoryFormFactory(props.match.params, props.obj);
   const RepositoryFormComponent = formComponent;
   return <RepositoryFormComponent fixed={{}} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm={false} />;
@@ -112,7 +112,7 @@ export const onSubmitCallback = data => {
   return returnData;
 };
 
-type CreateRepositoryProps = {
+type CreateHelmRepositoryProps = {
   match: RMatch<{
     type?: string;
   }>;
