@@ -38,7 +38,7 @@ const repositoryFormFactory = (params, obj) => {
   const defaultValues = obj || defaultValuesTemplate;
   return WithCommonForm(CreateHelmRepositoryComponent, params, defaultValues, HelmRepositoryModel);
 };
-const CreateHelmRepositoryComponent: React.FC<RepositoryFormProps> = props => {
+const CreateHelmRepositoryComponent: React.FC<HelmRepositoryFormProps> = props => {
   const methods = useFormContext();
 
   const {
@@ -92,8 +92,8 @@ const CreateHelmRepositoryComponent: React.FC<RepositoryFormProps> = props => {
 
 export const CreateHelmRepository: React.FC<CreateHelmRepositoryProps> = props => {
   const formComponent = repositoryFormFactory(props.match.params, props.obj);
-  const RepositoryFormComponent = formComponent;
-  return <RepositoryFormComponent fixed={{}} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm={false} />;
+  const HelmRepositoryFormComponent = formComponent;
+  return <HelmRepositoryFormComponent fixed={{}} explanation={''} titleVerb="Create" onSubmitCallback={onSubmitCallback} isCreate={true} useDefaultForm={false} />;
 };
 
 export const onSubmitCallback = data => {
@@ -124,11 +124,10 @@ type CreateHelmRepositoryProps = {
   obj?: any;
 };
 
-type RepositoryFormProps = {
+type HelmRepositoryFormProps = {
   onChange: Function;
   stringData: {
     [key: string]: string;
   };
   isCreate: boolean;
 };
-
