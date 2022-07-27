@@ -164,6 +164,7 @@ CR 내용수정을 통해 클러스터 환경의 메뉴구성을 설정할 수 �
 - Audit (감사 로그)
 - Search (검색)
 - Dashboard (개요)
+- HelmRepository (헬름 리포지터리)
 - HelmChart (헬름 차트)
 - HelmRelease (헬름 릴리스)
 </div>
