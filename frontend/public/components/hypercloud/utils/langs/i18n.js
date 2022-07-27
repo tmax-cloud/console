@@ -6,6 +6,7 @@ import en from './k8s-v1.19/en.json';
 import ko from './k8s-v1.19/ko.json';
 
 const DEFAULT_K8S_VERSION = 'v1.19';
+const VERSION = ['v1.19', 'v1.22'];
 const LANG = ['en', 'ko'];
 const NS = ['COMMON', 'SINGLE', 'MULTI', 'DESCRIPTION'];
 
@@ -24,7 +25,7 @@ export const getI18nResources = async () => {
   const data = await coFetchJSON('/api/hypercloud/version');
   const k8sVersion = data.find(item => item.name === 'Kubernetes')?.version;
   const version = k8sVersion && k8sVersion.split('.').length > 1 ? `${k8sVersion.split('.')[0]}.${k8sVersion.split('.')[1]}` : DEFAULT_K8S_VERSION;
-  if (version !== DEFAULT_K8S_VERSION) {
+  if (VERSION.includes(version) && version !== DEFAULT_K8S_VERSION) {
     const en = await import(`./k8s-${version}/${LANG[0]}.json`);
     const ko = await import(`./k8s-${version}/${LANG[1]}.json`);
     NS.forEach(ns => {
