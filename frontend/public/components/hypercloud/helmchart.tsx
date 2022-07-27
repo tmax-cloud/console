@@ -1,55 +1,19 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { NavBar } from '@console/internal/components/utils/horizontal-nav';
-import { coFetchJSON } from '@console/internal/co-fetch';
 import { Link } from 'react-router-dom';
-import { history } from '@console/internal/components/utils/router';
-import { Button } from '@patternfly/react-core';
-import { SectionHeading, Timestamp, ButtonBar, detailsPage, navFactory } from '@console/internal/components/utils';
-import { Section } from '@console/internal/components/hypercloud/utils/section';
+import { SectionHeading, Timestamp, detailsPage, navFactory } from '@console/internal/components/utils';
 import { TableProps } from './utils/default-list-component';
 import { DetailsPage, ListPage, DetailsPageProps } from '../factory';
-import { CustomMenusMap } from '@console/internal/hypercloud/menu/menu-types';
-import { LoadingBox } from '../utils';
-import { getIngressUrl } from './utils/ingress-utils';
-import { NonK8sKind } from '../../module/k8s';
-import { MenuLinkType } from '@console/internal/hypercloud/menu/menu-types';
-
-export const HelmChartModel: NonK8sKind = {
-  kind: 'HelmChart',
-  label: 'Helm Chart',
-  labelPlural: 'Helm Charts',
-  abbr: 'HC',
-  namespaced: false,
-  plural: 'helmcharts',
-  menuInfo: {
-    visible: true,
-    type: MenuLinkType.HrefLink,
-    isMultiOnly: false,
-    href: '/helmcharts',
-  },
-  i18nInfo: {
-    label: 'COMMON:MSG_LNB_MENU_224',
-    labelPlural: 'COMMON:MSG_LNB_MENU_223',
-  },
-  nonK8SResource: true,
-};
+import { HelmChartModel } from '@console/internal/models/hypercloud/helm-model';
 
 const kind = HelmChartModel.kind;
 
-const getHost = async () => {
-  const mapUrl = (CustomMenusMap as any).Helm.url;
-  return mapUrl !== '' ? mapUrl : await getIngressUrl('helm-apiserver');
-};
-
-type HelmchartPagetProps = {
+type HelmchartPageProps = {
   match?: any;
 };
-export const HelmchartPage: React.FC<HelmchartPagetProps> = props => {
-  const { t } = useTranslation();
-  return <ListPage {...props} canCreate={true} tableProps={tableProps} kind={kind} createButtonText={t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })} createProps={{ to: '/helmcharts/~new', items: [] }} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel }} isK8sResource={false} />;
+export const HelmchartPage: React.FC<HelmchartPageProps> = props => {
+  return <ListPage {...props} canCreate={false} tableProps={tableProps} kind={kind} hideLabelFilter={true} customData={{ nonK8sResource: true, kindObj: HelmChartModel }} isK8sResource={false} />;
 };
 
 const tableProps: TableProps = {
@@ -67,7 +31,7 @@ const tableProps: TableProps = {
       sortField: 'repo.url',
     },
     {
-      title: 'COMMON:MSG_MAIN_TABLEHEADER_53',
+      title: 'COMMON:MSG_MAIN_TABLEHEADER_141',
       sortField: 'version',
     },
     {
@@ -85,7 +49,11 @@ const tableProps: TableProps = {
         ),
       },
       {
-        children: obj.repo?.name,
+        children: (
+          <Link key={'link' + obj.name} to={`/helmrepositories/${obj.repo?.name}`}>
+            {obj.repo?.name}
+          </Link>
+        ),
       },
       {
         children: obj.repo?.url,
@@ -98,112 +66,6 @@ const tableProps: TableProps = {
       },
     ];
   },
-};
-
-type HelmchartFormProps = {
-  defaultValue?: any;
-};
-export const HelmchartForm: React.FC<HelmchartFormProps> = props => {
-  const { t } = useTranslation();
-  const { defaultValue } = props;
-  const name = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.name : '';
-  const repoURL = defaultValue ? Object.values(defaultValue?.indexfile.entries)[0][0].repo.url : '';
-  const [postName, setPostName] = React.useState(name);
-  const [postRepoURL, setPostRepoURL] = React.useState(repoURL);
-  const [inProgress, setProgress] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const [host, setHost] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    const updateHost = async () => {
-      const tempHost = await getHost();
-      if (!tempHost || tempHost === '') {
-        setErrorMessage('Helm Server is not found');
-      }
-      setHost(tempHost);
-      setLoading(true);
-    };
-    updateHost();
-  }, []);
-
-  const onClick = () => {
-    setProgress(true);
-    const putHelmChart = () => {
-      const url = `${host}/helm/repos`;
-      const payload = {
-        name: postName,
-        repoURL: postRepoURL,
-      };
-      coFetchJSON
-        .post(url, payload)
-        .then(() => {
-          history.goBack();
-        })
-        .catch(e => {
-          setProgress(false);
-          setErrorMessage(`error : ${e.json.error}\ndescription : ${e.json.description}`);
-        });
-    };
-    putHelmChart();
-  };
-  const updatePostName = e => {
-    setPostName(e.target.value);
-  };
-  const updatePostRepoURL = e => {
-    setPostRepoURL(e.target.value);
-  };
-
-  return (
-    <div style={{ padding: '30px' }}>
-      {loading ? (
-        <ButtonBar inProgress={inProgress} errorMessage={errorMessage}>
-          <form className="co-m-pane__body-group co-m-pane__form" method="post" action={`${host}/helm/repos`}>
-            <div className="co-form-section__label">{t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_1')}</div>
-            <div className="co-form-subsection">
-              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_2')} id="name" isRequired={true}>
-                <input className="pf-c-form-control" id="name" name="name" defaultValue={name} onChange={updatePostName} />
-              </Section>
-              <Section label={t('SINGLE:MSG_HELMCHARTS_CREATEFORM_DIV2_3')} id="repoURL" isRequired={true}>
-                <input className="pf-c-form-control" id="repoURL" name="repoURL" defaultValue={repoURL} onChange={updatePostRepoURL} />
-              </Section>
-            </div>
-            <div className="co-form-section__separator" />
-            <Button type="button" variant="primary" id="save" onClick={onClick} isDisabled={!host}>
-              {defaultValue ? t('COMMON:MSG_DETAILS_TAB_18') : t('COMMON:MSG_COMMON_BUTTON_COMMIT_1')}
-            </Button>
-            <Button
-              style={{ marginLeft: '10px' }}
-              type="button"
-              variant="secondary"
-              id="cancel"
-              onClick={() => {
-                history.goBack();
-              }}
-            >
-              {t('COMMON:MSG_COMMON_BUTTON_COMMIT_2')}
-            </Button>
-          </form>
-        </ButtonBar>
-      ) : (
-        <LoadingBox />
-      )}
-    </div>
-  );
-};
-export const HelmchartCreatePage = () => {
-  const { t } = useTranslation();
-  return (
-    <>
-      <Helmet>
-        <title>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })}</title>
-      </Helmet>
-      <div style={{ marginLeft: '15px' }}>
-        <h1>{t('COMMON:MSG_MAIN_CREATEBUTTON_1', { 0: t('SINGLE:MSG_HELMCHARTS_HELMCHARTDETAILS_TABDETAILS_1') })}</h1>
-      </div>
-      <HelmchartForm />
-    </>
-  );
 };
 
 const { details } = navFactory;
@@ -300,44 +162,6 @@ type HelmChartDetailsListProps = {
   entry: any;
 };
 
-type HelmchartEditPagetProps = {
-  match?: any;
-};
-export const HelmchartEditPage: React.FC<HelmchartEditPagetProps> = props => {
-  const name = props.match.params.name;
-  const [loading, setLoading] = React.useState(false);
-  const [chart, setChart] = React.useState({
-    indexfile: {},
-    values: {},
-  });
-  const [isRefresh, setIsRefresh] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchHelmChart = async () => {
-      const host = await getHost();
-      await coFetchJSON(`${host}/helm/charts/${name}`)
-        .then(res => {
-          setChart(prevState => {
-            return { ...prevState, indexfile: res.indexfile, values: res.values };
-          });
-          setLoading(true);
-        })
-        .catch(e => {
-          setIsRefresh(false);
-        });
-    };
-    fetchHelmChart();
-  }, [isRefresh]);
-
-  return (
-    <>
-      <HelmchartDetailsHeader name={name} />
-      <NavBar pages={allPages} baseURL={`/helmcharts/${name}`} basePath="" />
-      {loading && <HelmchartForm defaultValue={chart} />}
-    </>
-  );
-};
-
 type HelmchartDetailsHeaderProps = {
   name: string;
 };
@@ -354,10 +178,3 @@ export const HelmchartDetailsHeader: React.FC<HelmchartDetailsHeaderProps> = pro
     </div>
   );
 };
-const allPages = [
-  // {
-  //   name: 'COMMON:MSG_DETAILS_TAB_18',
-  //   href: 'edit',
-  //   component: HelmchartEditPage,
-  // },
-];
