@@ -18,6 +18,7 @@ const KeyMap = {
 const progressBar = new cliProgress.SingleBar({ format: 'progress [{bar}] {percentage}% | {value}/{total} bytes' }, cliProgress.Presets.lagacy);
 
 const dir = './langs';
+const k8sVersion = ['v1.19', 'v1.22'];
 
 /**
  * EXCEL에 입력된 문자열을 수정
@@ -140,6 +141,11 @@ const write = (filePath, data) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
+  for (const version of k8sVersion) {
+    if (!fs.existsSync(`${dir}/k8s-${version}`)) {
+      fs.mkdirSync(`${dir}/k8s-${version}`);
+    }
+  }
   fs.writeFile(filePath, jsonData, { encoding: 'utf8' }, error => {
     if (error) throw error;
     console.log(`Writing to ${filePath} finished successfully!`);
@@ -153,9 +159,8 @@ console.log('-------------------------------------------------------------------
 
 (async function main() {
   const commonFile = '16.uiSTR_HyperCloud5.xlsx';
-  const descFile = '16.uiSTR_HyperCloud5_Description_K8s_v1.19.xlsx';
 
-  const result = {};
+  const result = { [k8sVersion[0]]: {}, [k8sVersion[1]]: {} };
 
   // get common/single/multi string
   for (const key of Object.keys(KeyMap)) {
@@ -163,24 +168,29 @@ console.log('-------------------------------------------------------------------
       console.log(`${KeyMap[key].sheet} sheet conversion start...`);
       const data = await read(commonFile, KeyMap[key].sheet, KeyMap[key].column);
       for (const lang of Object.keys(LanguageMap)) {
-        result[lang] = { ...result[lang], [KeyMap[key].label]: data[lang] };
+        result[k8sVersion[0]][lang] = { ...result[k8sVersion[0]][lang], [KeyMap[key].label]: data[lang] };
+        result[k8sVersion[1]][lang] = { ...result[k8sVersion[1]][lang], [KeyMap[key].label]: data[lang] };
       }
-      console.log(`[KR] ${key} Size:`, Object.keys(result.KR[key]).length); // result's size check
+      console.log(`[KR] ${key} Size:`, Object.keys(result[k8sVersion[0]].KR[key]).length); // result's size check
     }
   }
 
   // get description string
   console.log(`${KeyMap.DESCRIPTION.sheet} sheet conversion start...`);
-  const data = await read(descFile, KeyMap.DESCRIPTION.sheet, KeyMap.DESCRIPTION.column);
-  for (const lang of Object.keys(LanguageMap)) {
-    result[lang] = { ...result[lang], [KeyMap.DESCRIPTION.label]: data[lang] };
+  for (const version of k8sVersion) {
+    const data = await read(`16.uiSTR_HyperCloud5_Description_K8s_${version}.xlsx`, KeyMap.DESCRIPTION.sheet, KeyMap.DESCRIPTION.column);
+    for (const lang of Object.keys(LanguageMap)) {
+      result[version][lang] = { ...result[version][lang], [KeyMap.DESCRIPTION.label]: data[lang] };
+    }
+    // result's size check
+    console.log(`[KR] k8s_${version} | ${KeyMap.DESCRIPTION.label} Size:`, Object.keys(result[version].KR.DESCRIPTION).length);
   }
-  // result's size check
-  console.log(`[KR] ${KeyMap.DESCRIPTION.label} Size:`, Object.keys(result.KR.DESCRIPTION).length);
 
   // write file
-  for (const lang of Object.keys(LanguageMap)) {
-    write(`${dir}/${LanguageMap[lang].file}`, result[lang]);
+  for (const version of k8sVersion) {
+    for (const lang of Object.keys(LanguageMap)) {
+      write(`${dir}/k8s-${version}/${LanguageMap[lang].file}`, result[version][lang]);
+    }
   }
 })();
 /** script end */
