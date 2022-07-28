@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { ClusterTemplateModel, ServiceBindingModel } from '../../models';
+import { ServiceBindingModel } from '../../models';
 import { DetailsItem, detailsPage, Kebab, navFactory, ResourceKebab, ResourceLink, ResourceSummary, SectionHeading, Timestamp } from '../utils';
 import { TableProps } from './utils/default-list-component';
 import { K8sResourceKind } from 'public/module/k8s';
@@ -14,7 +14,6 @@ import { TFunction } from 'i18next';
 
 
 const kind = ServiceBindingModel.kind;
-const clustertemplate_kind = ClusterTemplateModel.kind;
 
 const filters = (t: TFunction) => [
   {
