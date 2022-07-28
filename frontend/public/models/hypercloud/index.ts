@@ -1186,8 +1186,8 @@ export const ServiceInstanceModel: K8sKind = {
 export const ServiceBindingModel: K8sKind = {
   label: 'Service Binding',
   labelPlural: 'Service Bindings',
-  apiVersion: 'v1beta1',
-  apiGroup: 'servicecatalog.k8s.io',
+  apiVersion: 'v1alpha1',
+  apiGroup: 'binding.operators.coreos.com',
   plural: 'servicebindings',
   abbr: 'SB',
   kind: 'ServiceBinding',

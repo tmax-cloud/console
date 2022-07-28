@@ -233,3 +233,20 @@ export const BareMetalHostStatusReducer = (bmh: any): string => {
 export const HelmReleaseStatusReducer = (hr: any): string => {
   return hr === null ? NO_STATUS : hr?.info?.status;
 };
+
+export const ServiceBindingStatusReducer = (sb: any): string => {
+  for (const c of sb.status.conditions) {
+    if (c.type=="Ready") {
+      if (c.status=="True") {
+        return "Succeeded"
+      }
+      else if (c.status=="False") {
+        return "Failed"
+      }
+      else {
+        return "Unknown"
+      }
+    }
+  }
+
+}
