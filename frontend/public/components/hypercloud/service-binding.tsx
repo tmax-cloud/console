@@ -46,7 +46,7 @@ const tableProps: TableProps = {
     // 상태
     {
       title: 'COMMON:MSG_MAIN_TABLEHEADER_3',
-      sortField: 'ServiceBindingStatusReducer',
+      sortFunc: 'ServiceBindingStatusReducer',
     },
     // 애플리케이션
     {
