@@ -11,7 +11,7 @@ import { getClusterOperatorStatus, getClusterOperatorVersion, getJobTypeAndCompl
 //import LinkedPipelineRunTaskStatus from '../../../packages/dev-console/src/components/pipelineruns/status/LinkedPipelineRunTaskStatus';
 import { pipelineRunFilterReducer } from '@console/dev-console/src/utils/pipeline-filter-reducer';
 import { pipelineRunDuration } from '@console/dev-console/src/utils/pipeline-utils';
-import { HelmReleaseStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
+import { HelmReleaseStatusReducer, ServiceBindingStatusReducer } from '@console/dev-console/src/utils/hc-status-reducers';
 
 import {
   IRowData, // eslint-disable-line no-unused-vars
@@ -185,6 +185,7 @@ const sorts = {
   },
   HelmReleaseStatusReducer: Helmreleases => HelmReleaseStatusReducer(Helmreleases),
   helmResourcesNumber: Helmreleases => Helmreleases?.objects ? Object.keys(Helmreleases?.objects).length : 0,
+  ServiceBindingStatusReducer:  Servicebinding => ServiceBindingStatusReducer(Servicebinding),
 };
 
 const stateToProps = ({ UI }, { customSorts = {}, data = [], defaultSortField = 'metadata.name', defaultSortFunc = undefined, defaultSortOrder = SortByDirection.asc, filters = {}, loaded = false, reduxID = null, reduxIDs = null, staticFilters = [{}], rowFilters = [] }) => {
