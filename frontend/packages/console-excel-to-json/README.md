@@ -4,7 +4,7 @@
 
 ## 실행
 
-1. `console-excel-to-json` 디렉토리의 `root`에 최신 `16.uiSTR_HyperCloud5.xlsx`과 `16.uiSTR_HyperCloud5_Description.xlsx` 파일을 추가합니다.
+1. `console-excel-to-json` 디렉토리의 `root`에 최신 `16.uiSTR_HyperCloud5.xlsx`과 `16.uiSTR_HyperCloud5_Description_K8s_v1.19.xlsx`, `16.uiSTR_HyperCloud5_Description_K8s_v1.22.xlsx` 파일을 추가합니다.
 
 2. 커맨드를 실행합니다.
 
@@ -12,4 +12,4 @@
 npm start
 ```
 
-`langs` 디렉토리에 `ko.json`과 `en.json` 파일이 생성됩니다.
+`langs` 디렉토리에 k8s 버전별 `ko.json`과 `en.json` 파일이 생성됩니다.

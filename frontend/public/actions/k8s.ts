@@ -161,10 +161,12 @@ export const watchK8sList = (
       return;
     }
 
+    const dispatchItems = nonK8SResource ? await nonK8sListResult(id, response) : response.items;
+
     if (!continueToken) {
-      [loaded, extraAction].forEach(f => f && dispatch(f(id, nonK8SResource ? nonK8sListResult(id, response) : response.items)));
+      [loaded, extraAction].forEach(f => f && dispatch(f(id, dispatchItems)));
     } else {
-      dispatch(bulkAddToList(id, nonK8SResource ? nonK8sListResult(id, response) : response.items));
+      dispatch(bulkAddToList(id, dispatchItems));
     }
 
     if (response.metadata?.continue) {

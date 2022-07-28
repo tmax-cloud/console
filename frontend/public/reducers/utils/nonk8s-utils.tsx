@@ -1,5 +1,6 @@
-const nonK8sResourceList = ['HelmChart', 'HelmRelease'];
+const nonK8sResourceList = ['HelmRepository', 'HelmChart', 'HelmRelease'];
 
 export const isNonK8SResource = (id: string) => {
-  return nonK8sResourceList.indexOf(id) > -1;
+  const kind = id.split('~~')[0];
+  return nonK8sResourceList.indexOf(kind) > -1;
 };
