@@ -2,8 +2,8 @@
 
 set -exuo pipefail
 
-myIP=$(hostname -I | awk '{print $1}')
-# myIP=$(ipconfig getifaddr en0)
+#myIP=$(hostname -I | awk '{print $1}')
+ myIP=$(ipconfig getifaddr en0)
 # myIP=localhost
 ## Default K8S Endpoint is public POC environment
 # k8sIP='220.90.208.100'
@@ -49,3 +49,6 @@ echo $id_token
     --app.customProductName="hypercloud" \
     --clusterInfo.kubeAPIServerURL=https://$k8sIP:6443 \
     --clusterInfo.kubeToken="$id_token" \
+    --logInfo.logLevel="debug" \
+    --logInfo.logType="pretty"
+
