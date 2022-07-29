@@ -166,8 +166,8 @@ const AppContents_: React.FC<AppContentsProps> = ({ activePerspective }) => (
           <LazyRoute path="/helmreleases/all-namespaces" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
           <LazyRoute path="/helmreleases/all-namespaces/:name" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
           <LazyRoute path="/helmreleases/ns/:ns" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleasePage))} />
-          <LazyRoute path="/helmreleases/ns/:ns/~new" exact loader={() => import('./hypercloud/form/helmreleases/create-helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseCreatePage))} />
-          <LazyRoute path="/helmreleases/ns/:ns/:name" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseDetailsPage))} />
+          <LazyRoute path="/helmreleases/ns/:ns/~new" exact loader={() => import('./hypercloud/form/helmreleases/create-helmrelease' /* webpackChunkName: "create-helmrelease" */).then(m => NamespaceFromURL(m.CreateHelmRelease))} />
+          <LazyRoute path="/helmreleases/ns/:ns/:name" loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseDetailsPage))} />
           <LazyRoute path="/helmreleases/ns/:ns/:name/edit" exact loader={() => import('./hypercloud/helmrelease' /* webpackChunkName: "helmrelease" */).then(m => NamespaceFromURL(m.HelmReleaseEditPage))} />
           <Route path="/helmreleases" exact component={NamespaceRedirect} />
           <Route path="/k8s/ns/:ns/alertmanagers/:name" exact render={({ match }) => <Redirect to={`/k8s/ns/${match.params.ns}/${referenceForModel(AlertmanagerModel)}/${match.params.name}`} />} />
