@@ -74,7 +74,7 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ message }) => {
         <MsgBox title={t('COMMON:MSG_COMMON_ERROR_MESSAGE_24')} detail={t('COMMON:MSG_COMMON_ERROR_MESSAGE_27')} />
       </Box>
       {_.isString(message) && (
-        <Alert isInline className="co-alert" variant="danger" title={t('COMMON:MSG_MAIN_POPOVER_1')}>
+        <Alert isInline className="co-alert co-alert-space" variant="danger" title={t('COMMON:MSG_MAIN_POPOVER_1')}>
           {message}
         </Alert>
       )}
