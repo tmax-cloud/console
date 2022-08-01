@@ -89,6 +89,7 @@ class RouteActionHandler implements ActionHandler {
     const namespaced = allModels().find(model => model.plural === data.resource)?.namespaced;
     let _path = `/k8s/${data?.namespace ? `ns/${data.namespace}` : namespaced ? 'all-namespaces' : 'cluster'}/${data.resource}`;
 
+    // make a search query
     if (data.status) {
       const status = getResourceStatus(data?.resource);
       if (status) {
