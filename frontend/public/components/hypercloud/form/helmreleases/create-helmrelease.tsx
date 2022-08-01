@@ -98,7 +98,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
             _.merge(tempChartObject, tempObject);
           });
         });
-        if (defaultValues) {
+        if (defaultValues.name !== '') {
           const entry = tempEntriesList.filter(e => {
             if (e.name === tempChartObject[defalutChartName]) return true;
           })[0];
@@ -115,7 +115,8 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
 
   React.useEffect(() => {
     const getVersions = async () => {
-      await coFetchJSON(`${host}/helm/charts/${selectRepoName}_${selectChartName}`).then(res => {
+      const tempHost = await getHost();
+      await coFetchJSON(`${tempHost}/helm/charts/${selectRepoName}_${selectChartName}`).then(res => {
         const tempVersionsList = _.get(res, 'versions');
         if (tempVersionsList) {
           let tempVersionsObject = {};
@@ -129,6 +130,7 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
     };
     getVersions();
     setPostVersion('');
+    methods.setValue('version', '');
     setPostPackageURL('');
     methods.setValue('packageURL', '');
     setPostValues(null);
