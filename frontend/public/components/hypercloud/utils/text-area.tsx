@@ -14,4 +14,5 @@ type TextAreaProps = {
   defaultValue?: string;
   placeholder?: string;
   type?: string;
+  hidden?: boolean;
 } & React.HTMLProps<HTMLInputElement>;

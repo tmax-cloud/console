@@ -19,4 +19,5 @@ type TextInputProps = {
   validation?: any;
   isDisabled?: boolean;
   style?: any;
+  hidden?: boolean;
 } & React.HTMLProps<HTMLInputElement>;
