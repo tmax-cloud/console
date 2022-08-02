@@ -189,14 +189,10 @@ const CreateHelmReleaseComponent: React.FC<HelmReleaseFormProps> = props => {
   return (
     <>
       <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_1')} id="releaseName" isRequired={true}>
-        {defaultReleaseName !== '' ? (
-          <>
-            {defaultReleaseName}
-            <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} hidden={true} />
-          </>
-        ) : (
-          <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} />
-        )}
+        <>
+          <TextInput inputClassName="pf-c-form-control" id="releaseName" name="releaseName" defaultValue={defaultReleaseName} hidden={defaultReleaseName !== ''} />
+          {defaultReleaseName !== '' && <p>{defaultReleaseName}</p>}
+        </>
       </Section>
       {loading && (
         <Section label={t('SINGLE:MSG_HELMRELEASES_CREATEFORM_DIV2_2')} id="chartName" isRequired={true}>
