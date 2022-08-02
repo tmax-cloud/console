@@ -96,12 +96,6 @@
       background-image: url('../../imgs/hypercloud/lnb/filled/storage_filled.svg');
     }
   }
-  &.administration {
-    background-image: url('../../imgs/hypercloud/lnb/management.svg');
-    &.pf-m-current {
-      background-image: url('../../imgs/hypercloud/lnb/filled/management_filled.svg');
-    }
-  }
   &.hosts {
     background-image: url('../../imgs/hypercloud/lnb/host.svg');
     &.pf-m-current {
@@ -112,6 +106,12 @@
     background-image: url('../../imgs/hypercloud/lnb/authentication_authorization.svg');
     &.pf-m-current {
       background-image: url('../../imgs/hypercloud/lnb/filled/authentication_authorization_filled.svg');
+    }
+  }
+  &.administration {
+    background-image: url('../../imgs/hypercloud/lnb/management.svg');
+    &.pf-m-current {
+      background-image: url('../../imgs/hypercloud/lnb/filled/management_filled.svg');
     }
   }
 
